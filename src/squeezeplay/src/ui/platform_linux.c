@@ -138,6 +138,26 @@ static int Hmask = 0;
 static int Hcount = 0;
 
 
+static void print_trace(void)
+{
+	void *array[50];
+	size_t size;
+	char **strings;
+	size_t i;
+
+	size = backtrace(array, sizeof(array));
+	strings = backtrace_symbols(array, size);
+
+	LOG_WARN(log_sp, "Backtrack:");
+
+	for (i = 0; i < size; i++) {
+		LOG_WARN(log_sp, "%s", strings[i]);
+	}
+
+	free(strings);
+}
+
+
 static void quit_hook(lua_State *L, lua_Debug *ar) {
 	/* set the old hook */
 	lua_sethook(L, Hf, Hmask, Hcount);
@@ -155,6 +175,7 @@ static void quit_hook(lua_State *L, lua_Debug *ar) {
 
 static void quit_handler(int signum) {
 	LOG_ERROR(log_sp, "SIGQUIT squeezeplay %s", JIVE_VERSION);
+	print_trace();
 
 	Hf = lua_gethook(Lsig);
 	Hmask = lua_gethookmask(Lsig);
@@ -174,8 +195,7 @@ static void segv_handler(int signum) {
 	sigaction(signum, &sa, NULL);
 
 	LOG_ERROR(log_sp, "SIGSEGV squeezeplay %s", JIVE_VERSION);
-
-	// TODO c stack trace
+	print_trace();
 
 	/* dump core */
 	raise(signum);
