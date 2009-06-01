@@ -914,6 +914,14 @@ end
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
 local function _goNowPlaying(transition)
+	--first hide any "NP related" windows (playlist, track info) that are on top
+	while _getCurrentStep() and _getCurrentStep()._isNpChildWindow do
+		log:info("Hiding NP child window")
+
+		_hideMe(true)
+
+	end
+
 	if not transition then
 		transition = Window.transitionPushLeft
 	end
@@ -2613,6 +2621,7 @@ function showEmptyPlaylist(token)
 
 	_emptyStep = {}
 	_emptyStep.window = window
+	_emptyStep._isNpChildWindow = true
 
 	return window
 
@@ -2725,6 +2734,7 @@ function showTrackOne()
 	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
 	step.window:addActionListener("back", step, _goNowPlayingAction)
 	step.window:show()
+	step._isNpChildWindow = true
 	_pushStep(step)
 
 	-- send the command
@@ -2929,6 +2939,7 @@ function _attachPlayer(self, player)
 	
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
 	_statusStep.actionModifier = "-status"
+	_statusStep._isNpChildWindow = true
 
 	-- showtime for the player
 	_server.comet:startBatch()
