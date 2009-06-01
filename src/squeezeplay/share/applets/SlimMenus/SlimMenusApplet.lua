@@ -640,14 +640,19 @@ function myMusicSelector(self)
 					end,
 					_player:getLastSqueezeCenter())
 	else
-		if _server:isConnected() then
-			log:info("Opening myMusic")
-			jiveMain:openNodeById('_myMusic')
+		if not appletManager:callService("getCurrentPlayer") then
+			appletManager:callService("setupShowSelectPlayer")
 		else
-			log:warn("todo: server not connected, try again??")
+			if _server:isConnected() then
+					jiveMain:openNodeById('_myMusic')
 
-			log:info("Opening myMusic")
-			jiveMain:openNodeById('_myMusic')
+
+			else
+				self:_selectMusicSource(function()
+								jiveMain:openNodeById('_myMusic', true)
+							end,
+							_server)
+			end
 		end
 	end
 end
@@ -709,18 +714,25 @@ function notify_playerCurrent(self, player)
 		
 	end
 
-	-- nothing to do if we don't have a player or server
+	-- nothing to do if we don't have a player
 	-- NOTE don't move this, the code above needs to run when disconnecting
 	-- for all players.
 	if not player then
 		return
 	end
 
+	if not _server and not self.serverInitComplete then
+		--serverInitComplete check to avoid reselecting server on a soft_reset
+		self.serverInitComplete = true
+		_server = appletManager:callService("getInitialSlimServer")
+		log:info("No server, Fetching initial server, ", _server)
+	end
+
 	--can't subscribe to menustatus until we have a server
 	if not player:getSlimServer() then
 		return
 	end
-
+	
 	if not player:getSlimServer():isConnected() then
 		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
 		return

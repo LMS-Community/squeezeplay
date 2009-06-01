@@ -519,6 +519,23 @@ function notify_playerCurrent(self, player)
 end
 
 
+--service method
+function getInitialSlimServer(self)
+	local serverName = self:getSettings().serverInit
+	local ip = serverName and serverName.ip or nil
+
+	if ip then
+		for i, server in SlimServer:iterate() do
+			if server:getInit().ip == ip then
+				return server
+			end
+		end
+	end
+
+	return nil
+end
+
+
 function getCurrentPlayer(self)
 	return Player:getCurrentPlayer()
 end

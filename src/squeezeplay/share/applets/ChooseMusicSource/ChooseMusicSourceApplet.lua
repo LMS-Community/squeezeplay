@@ -182,6 +182,11 @@ end
 function _addServerItem(self, server, address)
 	log:debug("\t_addServerItem ", server, " " , address)
 
+	if not self.serverMenu then
+		--happens on selectMusicSource with specificServer
+		log:info("Ignoring addServer Item when no serverMenu")
+		return
+	end
 	--not sure this is used anymore, consider removing
 	if self.includedServers then
 		local found = false
@@ -286,10 +291,12 @@ function notify_serverConnected(self, server)
 	if not self.waitForConnect or self.waitForConnect.server ~= server then
 		return
 	end
+	log:info("notify_serverConnected")
 
 	iconbar:setServerError("OK")
 
-	-- hide connection error window
+	-- hide connection error window (useful when server was down and comes back up)
+	-- but we need a check here for other case (can't find it now...) where we need to wait until player current 
 	if self.connectingPopup then
 		self:_cancelSelectServer()
 	end
@@ -372,14 +379,16 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 
 
 	-- is the player already connected to the server?
-	if currentPlayer:getSlimServer() == server then
+	if currentPlayer:getSlimServer() == server and currentPlayer:isConnected() then
+
 		if self.playerConnectedCallback then
-			self.playerConnectedCallback(server)
+			local callback = self.playerConnectedCallback
 			self.playerConnectedCallback = nil
+			callback(server)
 		end
 		return
 	end
-	if not currentPlayer:getSlimServer() then
+	if not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server then
        	        self:connectPlayerToServer(currentPlayer, server)
 	else
 		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)
@@ -505,9 +514,11 @@ function connectPlayerToServer(self, player, server)
 					-- with notify_playerNew
 
 					timeout = timeout + 1
-					if timeout == CONNECT_TIMEOUT then
+					if timeout > CONNECT_TIMEOUT then
 						log:warn("Timeout passed, current count: ", timeout)
 
+						--odd, timeout not back to 1 next time around, so reset it
+						timeout = 1
 						self:_connectPlayerFailed(player, server)
 					end
 				end)

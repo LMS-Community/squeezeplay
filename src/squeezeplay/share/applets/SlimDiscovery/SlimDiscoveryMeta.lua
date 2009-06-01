@@ -59,6 +59,7 @@ function registerApplet(meta)
 
 	meta:registerService("getPollList")
 	meta:registerService("setPollList")
+	meta:registerService("getInitialSlimServer")
 end
 
 
