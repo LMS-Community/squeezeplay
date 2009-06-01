@@ -498,7 +498,8 @@ end
 
 					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 --					original: if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
-					if (not _server or not _server:isConnected() or not _server:isSqueezeNetwork()) and self:_canSqueezeNetworkServe(item) then
+					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item))
+					    or item.id == 'radio' then
 						log:warn("switching to SN")
 						log:warn("Do we want to try to reconnect to SC first here?")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
