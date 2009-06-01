@@ -8,6 +8,7 @@
 
 #include "audio/fifo.h"
 #include "audio/fixed_math.h"
+#include "audio/streambuf.h"
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
@@ -47,6 +48,77 @@ static u32_t transition_samples_in_step;
 static fft_fixed track_gain = FIXED_ONE;
 static sample_t track_clip_range[2] = { SAMPLE_MAX, SAMPLE_MIN };
 static s32_t track_inversion[2] = { 1, 1 };
+
+
+/* Upload tests */
+static int upload_fd = 0;
+
+
+static void upload_close(void) {
+	if (upload_fd) {
+		close(upload_fd);
+		upload_fd = 0;
+	}
+}
+
+
+static bool_t upload_open(void) {
+	struct sockaddr_in serv_addr;
+	char *upload_addr;
+	int err;
+
+	upload_addr = getenv("SQUEEZEPLAY_UPLOAD");
+	if (!upload_addr || streambuf_is_copyright()) {
+		return FALSE;
+	}
+
+	upload_close();
+
+	/* Server address and port */
+	memset(&serv_addr, 0, sizeof(serv_addr));
+	serv_addr.sin_addr.s_addr = inet_addr(upload_addr);
+	serv_addr.sin_port = htons(9001);
+	serv_addr.sin_family = AF_INET;
+
+	LOG_INFO(log_audio_decode, "uploading pcm to %s:%d", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
+
+	/* Create socket */
+	upload_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (upload_fd < 0) {
+		LOG_WARN(log_audio_decode, "socket failed (%s)", strerror(errno));
+	}
+
+	/* Connect socket */
+	err = connect(upload_fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+	if (err < 0) {
+		LOG_WARN(log_audio_decode, "connect failed (%s)", strerror(errno));
+		upload_close();
+	}
+
+	return TRUE;
+}
+
+static bool_t upload_samples(sample_t *buffer, u32_t nsamples) {
+	ssize_t n, len;
+
+	if (!upload_fd) {
+		return FALSE;
+	}
+
+	len = SAMPLES_TO_BYTES(nsamples);
+	while (len) {
+		n = send(upload_fd, buffer, len, 0);
+		if (n < 0) {
+			LOG_WARN(log_audio_decode, "send failed (%s)", strerror(errno));
+			upload_close();
+			break;
+		}
+
+		len -= n;
+	}
+
+	return TRUE;
+}
 
 
 void decode_output_begin(void) {
@@ -346,6 +418,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 	fifo_lock(&decode_fifo);
 
 	if (decode_first_buffer) {
+		upload_open();
+
 		crossfade_started = FALSE;
 		track_start_point = decode_fifo.wptr;
 		
@@ -395,6 +469,11 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 
 		check_start_point = TRUE;
 		decode_first_buffer = FALSE;
+	}
+
+	if (upload_samples(buffer, nsamples)) {
+		fifo_unlock(&decode_fifo);
+		return;
 	}
 
 	decode_apply_track_gain(buffer, nsamples);
@@ -517,6 +596,8 @@ int decode_output_samplerate(void) {
 
 
 void decode_output_song_ended(void) {
+	upload_close();
+
 	if (decode_transition_type & TRANSITION_FADE_OUT
 	    && decode_transition_period
 	    && current_audio_state & DECODE_STATE_RUNNING) {

@@ -456,7 +456,7 @@ static int stream_connectL(lua_State *L) {
 	serv_addr.sin_family = AF_INET;
 
 
-	LOG_DEBUG(log_audio_decode, "streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), serv_addr.sin_port);
+	LOG_DEBUG(log_audio_decode, "streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
 
 	/* Create socket */
 	fd = socket(AF_INET, SOCK_STREAM, 0);
