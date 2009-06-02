@@ -436,7 +436,9 @@ end
 			end
 			--END temp hack until we resolve SN/SC radios discrepency
 
-			if v.isANode or item.isANode then
+			if item.id == "settingsPIN" then
+				--ignore, pin no longer shown to users since we use user/pass now
+			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
 					self:_addNode(item, isMenuStatusResponse)
 				else
