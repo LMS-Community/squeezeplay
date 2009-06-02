@@ -1927,6 +1927,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		v = tostring(initialText)
 	end
 
+	local inputValue
 	if inputStyle == 'time' then
 		if not initialText then
 			initialText = '0'
@@ -1934,15 +1935,14 @@ local function _browseInput(self, item, db, inputSpec, last)
 		local timeFormat = _getTimeFormat()
 		local _v = DateTime:timeFromSFM(v, timeFormat)
 		v = Textinput.timeValue(_v, timeFormat)
+		inputValue = v
 	elseif inputStyle == 'ip' then
 		if not initialText then
 			initialText = ''
 		end
 		v = Textinput.ipAddressValue(initialText)
-	end
-
-	local inputValue
-	if tonumber(inputSpec.len) > 0 then
+		inputValue = v
+	elseif tonumber(inputSpec.len) > 0 then
 		inputValue = Textinput.textValue(v, tonumber(inputSpec.len), 200)
 	else
 		inputValue = v
