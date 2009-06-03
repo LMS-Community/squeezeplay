@@ -48,11 +48,11 @@ function _debugWidget(self, screen, widget)
 		local indentString = ""
 		if kids == 0 then
 			if self.lastPeerToString ~= peerToString then
-				log:error("style: ", widget._stylePath , " | widget: ", peerToString, " ", widget:shortWidgetToString())
+				log:warn("style: ", widget._stylePath , " | widget: ", peerToString, " ", widget:shortWidgetToString())
 				local parent = widget:getParent()
 				while parent do
 					indentString = indentString .. "--"
-					log:error(indentString, "style: ", parent._stylePath , " | widget: ", parent:peerToString(), " ", parent:shortWidgetToString())
+					log:warn(indentString, "style: ", parent._stylePath , " | widget: ", parent:peerToString(), " ", parent:shortWidgetToString())
 					parent = parent:getParent()
 				end
 
