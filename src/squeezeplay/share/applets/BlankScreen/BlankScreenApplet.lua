@@ -84,6 +84,17 @@ function _getBrightness(self)
 	return appletManager:callService("getBrightness")
 end
 
+
+--called when an overlay window (such as the power on window) will be shown, allows SS to do actoins at that time, such as turning on the brightess
+function onOverlayWindowShown(self)
+	self:_setBrightness("on")
+end
+
+function onOverlayWindowHidden(self)
+	self:_setBrightness("off")
+end
+
+
 function _setBrightness(self, brightness)
 	appletManager:callService("setBrightness", brightness)
 end

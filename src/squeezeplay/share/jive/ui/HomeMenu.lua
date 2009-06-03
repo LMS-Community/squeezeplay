@@ -78,7 +78,7 @@ function __init(self, name, style, titleStyle)
 
 	obj.window:addListener( EVENT_WINDOW_ACTIVE,
 				function()
-					obj.window:addTimer(    2000,
+					obj.window:addTimer(    1000,
 								function ()
 									obj.window:setButtonAction("lbutton", "power")
 								end,

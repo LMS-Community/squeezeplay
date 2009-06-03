@@ -155,18 +155,7 @@ function _activate(self, the_screensaver)
 
 	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
-		local player = appletManager:callService("getCurrentPlayer")
-
-		if not self:isSoftPowerOn() then
-			log:info("activating off SS")
-			the_screensaver = self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
-		else
-			if player and player:getPlayMode() == "play" then
-				the_screensaver = self:getSettings()["whenPlaying"]
-			else
-				the_screensaver = self:getSettings()["whenStopped"]
-			end
-		end
+		the_screensaver = self:_getDefaultScreensaver()
 	end
 
 	local screensaver = self.screensavers[the_screensaver]
@@ -195,27 +184,59 @@ function isSoftPowerOn(self)
 	return jiveMain:getSoftPowerState() == "on"
 end
 
+
+function _closeAnyPowerOnWindow(self)
+	if self.powerOnWindow then
+		self.powerOnWindow:hide(Window.transitionNone)
+		self.powerOnWindow = nil
+
+		the_screensaver = self:_getDefaultScreensaver()
+
+		if the_screensaver then
+			local screensaver = self.screensavers[the_screensaver]
+			if not screensaver or not screensaver.applet then
+				-- no screensaver, do nothing
+				return
+			end
+
+			local instance = appletManager:loadApplet(screensaver.applet)
+			if instance.onOverlayWindowHidden then
+				instance:onOverlayWindowHidden()
+			end
+		end
+	end
+
+end
+
+
+function _getDefaultScreensaver(self)
+	local ss
+
+	if not self:isSoftPowerOn() then
+		ss = self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
+		log:debug("whenOff")
+	else
+		local player = appletManager:callService("getCurrentPlayer")
+		if player and player:getPlayMode() == "play" then
+			ss = self:getSettings()["whenPlaying"]
+			log:debug("whenPlaying")
+		else
+			ss = self:getSettings()["whenStopped"]
+			log:debug("whenStopped")
+		end
+	end
+
+	return ss
+end
+
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
 	log:debug("Screensaver deactivate")
 
-	if self.powerOnWindow then
-		self.powerOnWindow:hide(Window.transitionNone)
-		self.powerOnWindow = nil
-	end
+	self:_closeAnyPowerOnWindow()
 
 	if not the_screensaver then
-		local player = appletManager:callService("getCurrentPlayer")
-
-		if not self:isSoftPowerOn() then
-			the_screensaver = self:getSettings()["whenOff"]
-		else
-			if player and player:getPlayMode() == "play" then
-				the_screensaver = self:getSettings()["whenPlaying"]
-			else
-				the_screensaver = self:getSettings()["whenStopped"]
-			end
-		end
+		the_screensaver = self:_getDefaultScreensaver()
 	end
 	local screensaver = self.screensavers[the_screensaver]
 
@@ -291,6 +312,20 @@ function _showPowerOnWindow(self)
 		return EVENT_UNUSED
 	end
 
+	the_screensaver = self:_getDefaultScreensaver()
+	if the_screensaver then
+		local screensaver = self.screensavers[the_screensaver]
+		if not screensaver or not screensaver.applet then
+			-- no screensaver, do nothing
+			return
+		end
+
+		local instance = appletManager:loadApplet(screensaver.applet)
+		if instance.onOverlayWindowShown then
+			instance:onOverlayWindowShown()
+		end
+	end
+
 	self.powerOnWindow = Window("power_on_window")
 	self.powerOnWindow:setButtonAction("lbutton", "power")
 	self.powerOnWindow:setButtonAction("rbutton", nil)
@@ -305,10 +340,7 @@ function _showPowerOnWindow(self)
 
 	self.powerOnWindow:addTimer(    5000,
 					function ()
-						if self.powerOnWindow then
-							self.powerOnWindow:hide(Window.transitionNone)
-							self.powerOnWindow = nil
-						end
+						self:_closeAnyPowerOnWindow()
 					end,
 					true)
 end

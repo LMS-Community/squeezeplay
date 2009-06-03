@@ -61,7 +61,7 @@ function init(self)
 	mac = System:getMacAddress()
 	uuid = System:getUUID()
 
-	if not uuid or string.match(mac, "^00:40:20") 
+	if not uuid or string.match(mac, "^00:40:20")
 		or uuid == "00000000-0000-0000-0000-000000000000"
 		or mac == "00:04:20:ff:ff:01" then
 		local window = Window("help_list", self:string("INVALID_MAC_TITLE"))
@@ -138,8 +138,11 @@ local AMBIENT_RAMPSTEPS = 7
 
 -- Initialize Brightness Stuff (Factor)
 function initBrightness(self)
-	self.brightPrev = brightMinMax
-
+	self.brightPrev = self:getBrightness()
+	if self.brightPrev and self.brightPrev == 0 then
+		--don't ever fallback to off
+		self.brightPrev = 32
+	end
 	-- Initialize the Ambient Sensor with a factor of 30
 	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
 	f:write("30")
@@ -363,6 +366,10 @@ end
 
 function setBrightness (self, level)
 	if level == "off" or level == 0 then
+		if not self.brightPrev then
+			self.brightPrev = self:getBrightness()
+		end
+
 		level = 0
 	elseif level == "on" then
 		level = self.brightPrev
