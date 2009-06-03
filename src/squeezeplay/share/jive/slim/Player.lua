@@ -1464,7 +1464,10 @@ function connectToServer(self, server)
 	elseif self.slimServer then
 		local ip, port = server:getIpPort()
 
-		SlimServer:addLocallyRequestedServer(self.slimServer)
+		--disconnect else serverstatus not being sent (TW: but how to force a serverstatus instead)
+		server:disconnect()
+
+		SlimServer:addLocallyRequestedServer(server)
 		self:send({'connect', ip})
 		return true
 
