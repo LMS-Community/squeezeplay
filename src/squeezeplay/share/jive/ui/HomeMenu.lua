@@ -12,6 +12,9 @@ local Window        = require("jive.ui.Window")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
+local EVENT_WINDOW_ACTIVE         = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_WINDOW_INACTIVE       = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_UNUSED                = jive.ui.EVENT_UNUSED
 
 -- our class
 module(..., oo.class)
@@ -69,8 +72,25 @@ function __init(self, name, style, titleStyle)
 	--Avoid inadvertantly quitting the app.
 	obj.window:addActionListener("back", obj, bumpAction)
 
-	-- No back button
-	obj.window:setButtonAction("lbutton", nil)
+
+	-- power button, delayed display so that "back back back power" is avoided
+	obj.window:setButtonAction("lbutton", "power")
+
+	obj.window:addListener( EVENT_WINDOW_ACTIVE,
+				function()
+					obj.window:addTimer(    2000,
+								function ()
+									obj.window:setButtonAction("lbutton", "power")
+								end,
+								true)
+					return EVENT_UNUSED
+				end)
+
+	obj.window:addListener( EVENT_WINDOW_INACTIVE,
+				function()
+					obj.window:setButtonAction("lbutton", nil)
+					return EVENT_UNUSED
+				end)
 
 	return obj
 end

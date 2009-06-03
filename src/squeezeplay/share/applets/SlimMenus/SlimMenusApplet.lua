@@ -436,7 +436,9 @@ end
 			end
 			--END temp hack until we resolve SN/SC radios discrepency
 
-			if item.id == "settingsPIN" then
+			if item.id == "playerpower" then
+				--ignore, playerpower no longer shown to users since we use power button
+			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then

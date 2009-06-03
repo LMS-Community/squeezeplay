@@ -1334,6 +1334,10 @@ function shuffleToggle(self)
 	self:button('shuffle')
 end
 
+function powerToggle(self)
+	self:button('power')
+end
+
 -- used to play favorites
 function numberHold(self, number)
 	self:button(number .. '.hold')
@@ -1370,6 +1374,18 @@ function fwd(self)
 	self:button('jump_fwd')
 end
 
+
+function setPower(self, on)
+	if not self.state then return end
+
+	log:info("Player:setPower(", on, ")")
+
+	if not on then
+		self:call({'power', '0'})
+	else
+		self:call({'power', '1'})
+	end
+end
 
 -- volume
 -- send new volume value to SS, returns a negitive value if the player is muted

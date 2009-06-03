@@ -50,13 +50,9 @@ function init(self)
 		function(event)
 			local type = event:getType()
 			if type == EVENT_WINDOW_ACTIVE then
-				if not self.brightness then
-					self.brightness = self:_getBrightness()
-				end
-				self:_setBrightness(0)
+				self:_setBrightness("off")
 			else
-				self:_setBrightness(self.brightness)
-				self.brightness = nil
+				self:_setBrightness("on")
 			end
 			return EVENT_UNUSED
 		end,

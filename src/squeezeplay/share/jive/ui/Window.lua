@@ -177,7 +177,7 @@ function __init(self, style, title, titleStyle)
 end
 
 
-function _ignoreAllInputListener(self, event, excludedActions)
+function _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
 	if log:isDebug() then
 		log:debug("_ignoreAllInputListener: ", event:tostring())
 	end
@@ -199,6 +199,9 @@ function _ignoreAllInputListener(self, event, excludedActions)
 		if log:isDebug() then
 			log:debug("Ignoring action: ", event:getAction())
 		end
+		if ignoredCallback then
+			ignoredCallback(event)
+		end
 		return EVENT_CONSUME
 	end
 
@@ -211,19 +214,20 @@ function _ignoreAllInputListener(self, event, excludedActions)
 	local actionEvent = Framework:newActionEvent(action)
 
 	--recurse as an action
-	return _ignoreAllInputListener(self, actionEvent, excludedActions)
+	return _ignoreAllInputListener(self, actionEvent, excludedActions, ignoredCallback)
 
 end
 
 --[[
 
-=head2 ignoreAllInputExcept(excludedActions)
+=head2 ignoreAllInputExcept(excludedActions, ignoredCallback)
 
 Consume all input events except for i<excludedActions>. Note: The action "soft_reset" is always included in the excluded actions.
+if ignoredCallback exists, ignoredCallback(actionEvent) will be called for any ignored action.
 
 =cut
 --]]
-function ignoreAllInputExcept(self, excludedActions)
+function ignoreAllInputExcept(self, excludedActions, ignoredCallback)
 	if not self.ignoreAllInputHandle then
 		--also need to remove any hideOnAllButtonInputHandle, since in the ignoreAllInput case
 		-- we want excluded actions to be seen by global listeners. Leaving hideOnAllButtonInputHandle in place would
@@ -240,7 +244,7 @@ function ignoreAllInputExcept(self, excludedActions)
 	
 		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
 								function(event)
-									return _ignoreAllInputListener(self, event, excludedActions)
+									return _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
 								end)
 	end
 

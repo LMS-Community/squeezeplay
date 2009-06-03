@@ -116,6 +116,8 @@ local _globalStrings
 -- should not need to have an id passed when creating it
 local _idTranslations = {}
 
+_softPowerState = "on"
+
 -- Squeezebox remote IR codes
 local irCodes = {
 	[ 0x7689c03f ] = KEY_REW,
@@ -188,6 +190,53 @@ function _goHomeAction(self)
 end
 
 
+function JiveMain:getSoftPowerState()
+	return _softPowerState
+end
+
+
+function JiveMain:setSoftPowerState(softPowerState, doNotUpdatePlayer)
+	_softPowerState = softPowerState
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	if _softPowerState == "off" then
+		log:info("Turn soft power off")
+		if currentPlayer and currentPlayer:isConnected() and not doNotUpdatePlayer then
+			--todo: find way to stop "runon" local music when server is not connected.
+			currentPlayer:setPower(false)
+		end
+		appletManager:callService("activateScreensaver")
+	elseif _softPowerState == "on" then
+		log:info("Turn soft power on")
+		if currentPlayer and currentPlayer:isConnected() and not doNotUpdatePlayer then
+			currentPlayer:setPower(true)
+		end
+
+		appletManager:callService("deactivateScreensaver")
+		appletManager:callService("restartScreenSaverTimer")
+
+	else
+		log:error("unknown desired soft power state: ", _softPowerState)
+	end
+end
+
+function JiveMain:togglePower()
+	local powerState = JiveMain:getSoftPowerState()
+	if powerState == "off" then
+		JiveMain:setSoftPowerState("on")
+	elseif powerState == "on" then
+		JiveMain:setSoftPowerState("off")
+	else
+		log:error("unknown current soft power state: ", powerState)
+	end
+
+end
+
+local function _powerAction()
+	JiveMain:togglePower()
+	return EVENT_CONSUME
+end
+
+
 function _defaultContextMenuAction(self)
 	--do nothing by default
 	return EVENT_CONSUME
@@ -252,6 +301,7 @@ function JiveMain:__init()
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
 	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
 
+	Framework:addActionListener("power", self, _powerAction, 10)
 
 	--Last input type tracker (used by, for instance, Menu, to determine wheter selected style should be displayed)
 	Framework:addListener(EVENT_ALL_INPUT,

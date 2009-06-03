@@ -233,6 +233,7 @@ function skin(self, s)
 	local inputTitleBox           = _loadImageTile(self,  imgpath .. "Titlebar/titlebar.png" )
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
+	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
 	local playlistButton          = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_list_tb.png")
 	local touchToolbarBackground  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_tch_bkgrd.png")
@@ -1193,6 +1194,14 @@ function skin(self, s)
 		bgImg = inputTitleBox,
 	})
 
+	local clearMask = Tile:fillColor(0x00000000)
+
+	s.power_on_window =  _uses(s.window)
+	s.power_on_window.maskImg = clearMask
+	s.power_on_window.title = _uses(s.title, {
+		bgImg = false,
+	})
+
 	-- update window
 	s.update_popup = _uses(s.popup)
 
@@ -1627,12 +1636,14 @@ function skin(self, s)
 
 	-- invisible button
 	s.button_none = _uses(_button, {
-		bgImg    = false
+		bgImg    = false,
+		w = TITLE_BUTTON_WIDTH  - 12,
 	})
 
 	_titleButtonIcon("button_back", backButton)
 	_titleButtonIcon("button_playlist", playlistButton)
 	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
+	_titleButtonIcon("button_power", powerButton)
 	_titleButtonIcon("button_help", helpButton)
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
 

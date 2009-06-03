@@ -32,6 +32,9 @@ SCREENSAVER_PLAYING
 	RU	При воспроизведении
 	SV	Vid uppspelning
 
+SCREENSAVER_OFF
+	EN	When off
+
 SCREENSAVER_STOPPED
 	DA	På pause
 	DE	Bei Pause

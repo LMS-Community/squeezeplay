@@ -39,6 +39,7 @@ local debug            = require("jive.utils.debug")
 local appletManager    = appletManager
 
 local jnt = jnt
+local jiveMain = jiveMain
 
 
 module(..., Framework.constants)
@@ -142,7 +143,7 @@ function _activate(self, the_screensaver)
 	-- check if the top window will allow screensavers, if not then
 	-- set the screensaver to activate 10 seconds after the window
 	-- is closed, assuming we still don't have any activity
-	if not Framework.windowStack[1]:canActivateScreensaver() then
+	if not Framework.windowStack[1]:canActivateScreensaver() and self:isSoftPowerOn() then
 		Framework.windowStack[1]:addListener(EVENT_WINDOW_INACTIVE,
 			function()
 				if not self.timer:isRunning() then
@@ -156,10 +157,15 @@ function _activate(self, the_screensaver)
 	if the_screensaver == nil then
 		local player = appletManager:callService("getCurrentPlayer")
 
-		if player and player:getPlayMode() == "play" then
-			the_screensaver = self:getSettings()["whenPlaying"]
+		if not self:isSoftPowerOn() then
+			log:info("activating off SS")
+			the_screensaver = self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
 		else
-			the_screensaver = self:getSettings()["whenStopped"]
+			if player and player:getPlayMode() == "play" then
+				the_screensaver = self:getSettings()["whenPlaying"]
+			else
+				the_screensaver = self:getSettings()["whenStopped"]
+			end
 		end
 	end
 
@@ -178,17 +184,37 @@ function _activate(self, the_screensaver)
 end
 
 
+
+--service method
+function activateScreensaver(self)
+	self:_activate(nil)
+end
+
+
+function isSoftPowerOn(self)
+	return jiveMain:getSoftPowerState() == "on"
+end
+
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
 	log:debug("Screensaver deactivate")
 
+	if self.powerOnWindow then
+		self.powerOnWindow:hide(Window.transitionNone)
+		self.powerOnWindow = nil
+	end
+
 	if not the_screensaver then
 		local player = appletManager:callService("getCurrentPlayer")
-		
-		if player and player:getPlayMode() == "play" then
-			the_screensaver = self:getSettings()["whenPlaying"]
+
+		if not self:isSoftPowerOn() then
+			the_screensaver = self:getSettings()["whenOff"]
 		else
-			the_screensaver = self:getSettings()["whenStopped"]
+			if player and player:getPlayMode() == "play" then
+				the_screensaver = self:getSettings()["whenPlaying"]
+			else
+				the_screensaver = self:getSettings()["whenStopped"]
+			end
 		end
 	end
 	local screensaver = self.screensavers[the_screensaver]
@@ -204,6 +230,10 @@ end
 
 -- switch screensavers on a player mode change
 function notify_playerModeChange(self, player, mode)
+	if not self:isSoftPowerOn() then
+		return
+	end
+
 	local oldActive = self.active
 
 	if #oldActive == 0 then
@@ -218,6 +248,69 @@ function notify_playerModeChange(self, player, mode)
 	for i, window in ipairs(oldActive) do
 		_deactivate(self, window, self.demoScreensaver)
 	end
+end
+
+
+local _powerAllowedActions = {
+			["play_favorite_0"] = 1,
+			["play_favorite_1"] = 1,
+			["play_favorite_2"] = 1,
+			["play_favorite_3"] = 1,
+			["play_favorite_4"] = 1,
+			["play_favorite_5"] = 1,
+			["play_favorite_6"] = 1,
+			["play_favorite_7"] = 1,
+			["play_favorite_8"] = 1,
+			["play_favorite_9"] = 1,
+			["play"]            = "pause",
+		}
+
+function _powerActionHandler(self, actionEvent)
+	local action = actionEvent:getAction()
+
+	if _powerAllowedActions[action] then
+		--for special allowed actions, turn on power and forward the action
+		jiveMain:setSoftPowerState("on")
+
+		local translatedAction = action
+		if _powerAllowedActions[action] ~= 1 then
+			--certain actions like play during poweroff translate to other actions
+			translatedAction = _powerAllowedActions[action]
+		end
+		Framework:pushAction(translatedAction)
+		return
+	end
+
+	--action not used, so bring up "power on" window if isn't already
+	self:_showPowerOnWindow()
+end
+
+
+function _showPowerOnWindow(self)
+	if self.powerOnWindow then
+		return EVENT_UNUSED
+	end
+
+	self.powerOnWindow = Window("power_on_window")
+	self.powerOnWindow:setButtonAction("lbutton", "power")
+	self.powerOnWindow:setButtonAction("rbutton", nil)
+	self.powerOnWindow:setTransparent(true)
+	self.powerOnWindow:setAlwaysOnTop(true)
+	self.powerOnWindow:setAllowScreensaver(false)
+	self.powerOnWindow:ignoreAllInputExcept({ "power" },
+						function(actionEvent)
+							return self:_powerActionHandler(actionEvent)
+						end)
+	self.powerOnWindow:show(Window.transitionNone)
+
+	self.powerOnWindow:addTimer(    5000,
+					function ()
+						if self.powerOnWindow then
+							self.powerOnWindow:hide(Window.transitionNone)
+							self.powerOnWindow = nil
+						end
+					end,
+					true)
 end
 
 
@@ -254,6 +347,19 @@ function screensaverWindow(self, window)
 				   log:debug("screensaver closed ", #self.active)
 				   return EVENT_UNUSED
 			   end)
+
+	if not self:isSoftPowerOn() then
+
+		window:ignoreAllInputExcept(    { "power" },
+		                                function(actionEvent)
+		                                        self:_powerActionHandler(actionEvent)
+		                                end)
+		window:addListener(     EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+		                        function (event)
+			                        self:_showPowerOnWindow()
+			                        return EVENT_CONSUME
+		                        end)
+	end
 
 	log:debug("Overriding the default window action 'bump' handling to allow action to fall through to framework listeners")
 	window:removeDefaultActionListeners()
@@ -435,8 +541,16 @@ function openSettings(self, menuItem)
 					   end
 			},
 			{
-				text = self:string("SCREENSAVER_DELAY"),
+				text = self:string("SCREENSAVER_OFF"),
 				weight = 2,
+				sound = "WINDOWSHOW",
+				callback = function(event, menu_item)
+						   self:screensaverSetting(menu_item, "whenOff")
+					   end
+			},
+			{
+				text = self:string("SCREENSAVER_DELAY"),
+				weight = 5,
 				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
 						   self:timeoutSetting(menu_item)

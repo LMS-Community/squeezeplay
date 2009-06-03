@@ -138,6 +138,8 @@ local AMBIENT_RAMPSTEPS = 7
 
 -- Initialize Brightness Stuff (Factor)
 function initBrightness(self)
+	self.brightPrev = brightMinMax
+
 	-- Initialize the Ambient Sensor with a factor of 30
 	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
 	f:write("30")
@@ -360,6 +362,13 @@ end
 
 
 function setBrightness (self, level)
+	if level == "off" or level == 0 then
+		level = 0
+	elseif level == "on" then
+		level = self.brightPrev
+	else
+		self.brightPrev = level
+	end
 	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
 	f:write(tostring(level * 4))
 	f:close()

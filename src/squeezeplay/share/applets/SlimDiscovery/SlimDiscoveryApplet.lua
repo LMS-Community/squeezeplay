@@ -472,6 +472,16 @@ function notify_networkConnected(self)
 	end
 end
 
+function notify_playerPower(self,  player, power)
+	if Player:getCurrentPlayer() == player then
+		log:info("notify_playerPower: ", power)
+		if power then
+			jiveMain:setSoftPowerState("on", true)
+		else
+			jiveMain:setSoftPowerState("off", true)
+		end
+	end
+end
 
 function notify_playerCurrent(self, player)
 	local settings = self:getSettings()

@@ -232,6 +232,8 @@ function skin(self, s)
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
+	local powerButton             = _loadImageTile(self,  imgpath .. "../../Fab4Skin/images/Icons/icon_power_button_tb.png")
+
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
 
@@ -1188,10 +1190,57 @@ function skin(self, s)
 	})
 
 
+	local clearMask = Tile:fillColor(0x00000000)
+
+	s.power_on_window =  _uses(s.window)
+	s.power_on_window.maskImg = clearMask
+	s.power_on_window.title = { -- borrowed from fab4 3ft skin until we get a style of our own
+		h = 47,
+		border = 0,
+		position = LAYOUT_NORTH,
+		bgImg = false,
+		padding = { 0, 5, 0, 5 },
+		order = { "lbutton", "text", "rbutton" },
+		lbutton = {
+			border = { 8, 0, 8, 0 },
+			h = WH_FILL,
+		},
+		rbutton = {
+			border = { 8, 0, 8, 0 },
+			h = WH_FILL,
+		},
+		text = {
+			w = WH_FILL,
+			padding = TITLE_PADDING,
+			align = "center",
+			font = _boldfont(TITLE_FONT_SIZE),
+			fg = TEXT_COLOR,
+		}
+	}
+
+
 	-- invisible button
 	s.button_none = _uses(_button, {
-		bgImg    = false
+		bgImg    = false,
+		w = TITLE_BUTTON_WIDTH  - 12,
 	})
+	-- icon button factory
+	local _titleButtonIcon = function(name, icon, attr)
+		s[name] = _uses(_button)
+		s.pressed[name] = _uses(_pressed_button)
+
+		attr = {
+			hidden = 0,
+			img = icon
+		}
+
+		s[name].icon = _uses(_button.icon, attr)
+		s[name].w = 65
+		s.pressed[name].icon = _uses(_pressed_button.icon, attr)
+		s.pressed[name].w = 65
+	end
+
+	_titleButtonIcon("button_power", powerButton)
 
 	s.titleButton = { hidden = 1 }
 	s.button_go_now_playing = _uses(s.titleButton)

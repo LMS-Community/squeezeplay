@@ -457,9 +457,18 @@ function getBrightness(self)
 end
 
 function setBrightness(self, level)
+	log:error("TODO: test 'on'/'off' brightness setting when controller build works here")
+
 	local settings = self:getSettings()
 
 	if level then
+		if level == "off" or level == 0 then
+			level = 0
+		elseif level == "on" then
+			level = self.brightPrev or self:getBrightness()
+		else
+			self.brightPrev = level
+		end
 		settings.brightness = level
 	end
 

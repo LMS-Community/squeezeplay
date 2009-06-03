@@ -83,7 +83,7 @@ function configureApplet(meta)
 		if settings.squeezeNetwork then
 			player:updateInit(nil, settings.playerInit)
 		else
-			player:updateInit(server, settings.playerInit)
+			player:updateInit(nil, settings.playerInit)
 		end
 
 	elseif settings.currentPlayer then
