@@ -144,17 +144,49 @@ static void print_trace(void)
 	size_t size;
 	char **strings;
 	size_t i;
+	int mapfd;
 
+	/* backtrace */
 	size = backtrace(array, sizeof(array));
 	strings = backtrace_symbols(array, size);
 
-	LOG_WARN(log_sp, "Backtrack:");
+	log_category_log(log_sp, LOG_PRIORITY_INFO, "Backtrack:");
 
 	for (i = 0; i < size; i++) {
-		LOG_WARN(log_sp, "%s", strings[i]);
+		log_category_log(log_sp, LOG_PRIORITY_INFO, "%s", strings[i]);
 	}
 
 	free(strings);
+
+	/* link map */
+	mapfd = open("/proc/self/maps", O_RDONLY);
+	if (mapfd != -1) {
+		char buf[256];
+		char *ptr, *str, *end;
+		ssize_t n, offset;
+
+		log_category_log(log_sp, LOG_PRIORITY_INFO, "Memory map:");
+
+		offset = 0;
+		while ((n = read(mapfd, buf + offset, sizeof(buf) - offset)) > 0) {
+			str = ptr = buf;
+			end = buf + n + offset;
+
+			while (ptr < end) {
+				while (ptr < end && *ptr != '\n') ptr++;
+
+				if (ptr < end) {
+					log_category_log(log_sp, LOG_PRIORITY_INFO, "%.*s", ptr-str, str);
+					ptr++;
+					str = ptr;
+				}
+			}
+
+			offset = end - str;
+			memmove(buf, str, offset);
+		}
+		close (mapfd);
+	}
 }
 
 
