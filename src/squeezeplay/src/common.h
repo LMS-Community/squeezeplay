@@ -93,7 +93,12 @@ typedef _W64 int   ssize_t;
 #include "log.h"
 #include "types.h"
 
+/* utilities */
 extern int squeezeplay_find_file(const char *path, char *fullpath);
+
+/* watchdog */
+int watchdog_get();
+int watchdog_keepalive(int watchdog_id, int count);
 
 
 #if WITH_DMALLOC

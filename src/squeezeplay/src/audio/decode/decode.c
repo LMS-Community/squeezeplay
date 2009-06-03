@@ -292,11 +292,17 @@ static Uint32 decode_timer_interval(void) {
 
 
 static int decode_thread_execute(void *unused) {
+	int decode_watchdog;
+
 	LOG_DEBUG(log_audio_decode, "decode_thread_execute");
+
+	decode_watchdog = watchdog_get();
 
 	while (true) {
 		Uint32 timeout; // XXXX timer wrap around
 		mqueue_func_t handler;
+
+		watchdog_keepalive(decode_watchdog, 1);
 
 		timeout = SDL_GetTicks() + decode_timer_interval();
 		//LOG_DEBUG(log_audio_decode, "timeout %d\n", timeout);

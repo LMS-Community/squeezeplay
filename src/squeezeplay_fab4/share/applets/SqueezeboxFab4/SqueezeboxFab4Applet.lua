@@ -87,20 +87,6 @@ function init(self)
 	end
 
 
-	-- watchdog timer
-	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-	if watchdog then
-		io.close(watchdog)
-
-		local timer = Timer(2000, function()
-			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-			io.close(watchdog)
-		end)
-		timer:start()
-	else
-		log:warn("Watchdog timer is disabled")
-	end
-
 	settings.brightness = settings.brightness or 32
 	settings.ambient = settings.ambient or 0
 	settings.brightnessControl = settings.brightnessControl or "manual"

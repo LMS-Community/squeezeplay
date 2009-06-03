@@ -81,6 +81,8 @@ static Uint32 pointer_timeout = 0;
 
 static Uint16 mouse_origin_x, mouse_origin_y;
 
+static int ui_watchdog;
+
 static struct jive_keymap keymap[] = {
 	{ SDLK_RIGHT,		JIVE_KEY_GO },
 	{ SDLK_RETURN,		JIVE_KEY_GO },
@@ -241,6 +243,9 @@ static int jiveL_initSDL(lua_State *L) {
 	lua_newtable(L);
 	lua_setfield(L, -2, "style");
 	lua_pop(L, 2);
+
+	ui_watchdog = watchdog_get();
+	watchdog_keepalive(ui_watchdog, 2); /* 20 seconds to start */
 
 	return 0;
 }
@@ -555,6 +560,9 @@ int jiveL_update_screen(lua_State *L) {
 	/* stack is:
 	 * 1: framework
 	 */
+
+	/* ping watchdog */
+	watchdog_keepalive(ui_watchdog, 1);
 
 	if (!update_screen) {
 		return 0;

@@ -61,6 +61,14 @@ char *platform_get_arch() {
     return "unknown";
 }
 
+int watchdog_get() {
+	return -1;
+}
+
+int watchdog_keepalive(int watchdog_id) {
+	return -1;
+}
+
 void platform_init(lua_State *L) {
 }
 

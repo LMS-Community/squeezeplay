@@ -109,20 +109,6 @@ function init(self)
 	end
 
 
-	-- watchdog timer
-	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-	if watchdog then
-		io.close(watchdog)
-
-		local timer = Timer(2000, function()
-			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-			io.close(watchdog)
-		end)
-		timer:start()
-	else
-		log:warn("Watchdog timer is disabled")
-	end
-
 	-- sync clock to hw clock every 10 minutes
 	clockSyncTimer = Timer(600000, -- 10 minutes
 		function()

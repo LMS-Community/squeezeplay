@@ -131,6 +131,16 @@ char *platform_get_arch() {
 }
 
 
+int watchdog_get() {
+	return -1;
+}
+
+
+int watchdog_keepalive(int watchdog_id, int count) {
+	return -1;
+}
+
+
 static LOG_CATEGORY *log_sp;
 static lua_State *Lsig = NULL;
 static lua_Hook Hf = NULL;
