@@ -55,7 +55,6 @@ function _debugWidget(self, screen, widget)
 					log:error(indentString, "style: ", parent._stylePath , " | widget: ", parent:peerToString(), " ", parent:shortWidgetToString())
 					parent = parent:getParent()
 				end
-				log:error("")
 
 				self.lastPeerToString = peerToString
 			end
