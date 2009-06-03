@@ -366,18 +366,22 @@ end
 
 function setBrightness (self, level)
 	if level == "off" or level == 0 then
-		if not self.brightPrev then
-			self.brightPrev = self:getBrightness()
-		end
-
 		level = 0
 	elseif level == "on" then
 		level = self.brightPrev
 	else
 		self.brightPrev = level
 	end
+	local deviceLevel = level * 4
+	if deviceLevel > 255 then
+		deviceLevel = 255 --max
+	end
+	if deviceLevel < 1 then
+		deviceLevel = 1  --min
+	end
+
 	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
-	f:write(tostring(level * 4))
+	f:write(tostring(deviceLevel))
 	f:close()
 end
 
