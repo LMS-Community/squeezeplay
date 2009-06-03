@@ -372,8 +372,8 @@ function setBrightness (self, level)
 	else
 		self.brightPrev = level
 	end
-	local deviceLevel = level * 4
-	if deviceLevel > 255 then
+	local deviceLevel = (level * 4) - 3 --make sure we can get to 1
+	if deviceLevel > 252 then -- make sure we can get to max
 		deviceLevel = 255 --max
 	end
 	if deviceLevel < 1 then
