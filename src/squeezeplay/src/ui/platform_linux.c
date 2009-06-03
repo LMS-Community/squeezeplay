@@ -10,12 +10,16 @@
 #include "version.h"
 #include "jive.h"
 
+#include <errno.h>
 #include <signal.h>
 #include <syslog.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
 #include <netinet/in.h>
 #include <linux/if.h>
 #include <execinfo.h>
@@ -131,13 +135,70 @@ char *platform_get_arch() {
 }
 
 
+static int wdog_sem_id = -1;
+
+/*
+ * Return a watchdog id, otherwise -1 if an error happens. If nowayout
+ * is true the watchdog remain active when the process exits, causing
+ * a reboot.
+ */
+static int watchdog_sem_get(key_t key, int nowayout)
+{
+	struct sembuf sops[] = {
+		{ 0, -1, IPC_NOWAIT },
+		{ 0, 1, IPC_NOWAIT }
+	};
+	int sem_num;
+
+	if (wdog_sem_id == -1) {
+		wdog_sem_id = semget(key, 10, 0666 | IPC_CREAT);
+		if (wdog_sem_id == -1) {
+			perror("semget");
+			return -1;
+		}
+	}
+
+	if (!nowayout) {
+		sops[0].sem_flg |= SEM_UNDO;
+	}
+
+	sem_num = 0;
+	while (1) {
+		sops[0].sem_num = sem_num;
+		sops[1].sem_num = sem_num + 1;
+
+		if (semop(wdog_sem_id, sops, 2) == 0) {
+			return sem_num;
+		}
+
+		if (errno == EFBIG) {
+			return -1;
+		}
+
+		sem_num += 2;
+	}
+}
+
+/*
+ * Keep the watchdog alive for count intervals.
+ */
+static int watchdog_sem_keepalive(int wdog_id, int count)
+{
+	if (semctl(wdog_sem_id, wdog_id + 1, SETVAL, count) == -1) {
+		perror("semctl");
+		return -1;
+	}
+
+	return 0;
+}
+
 int watchdog_get() {
-	return -1;
+	return watchdog_sem_get(1234, 0);
 }
 
 
 int watchdog_keepalive(int watchdog_id, int count) {
-	return -1;
+	return watchdog_sem_keepalive(watchdog_id, count);
 }
 
 
