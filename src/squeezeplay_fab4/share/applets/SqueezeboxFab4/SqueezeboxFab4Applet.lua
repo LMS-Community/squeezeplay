@@ -419,12 +419,12 @@ function settingsBrightnessShow (self, menuItem)
 				end)
 
 	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
---	window:addWidget(Group("sliderGroup", {
---	       min = Icon("button_slider_min"),
---	       slider = slider,
---	       max = Icon("button_slider_max"),
---	}))
-	window:addWidget(slider)
+	window:addWidget(Group("sliderGroup", {
+	       min = Icon("button_slider_min"),
+	       slider = slider,
+	       max = Icon("button_slider_max"),
+	}))
+--	window:addWidget(slider) - for focus purposes (todo: get style right for this so slider can be focused)
 
 
 	window:addListener(EVENT_WINDOW_POP,

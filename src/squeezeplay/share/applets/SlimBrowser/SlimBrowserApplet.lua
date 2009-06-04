@@ -1248,8 +1248,6 @@ end
 
 
 function _goBrightnessAction()
-	log:error("here")
-
 	_goMenuTableItem("brightnessSetting")
 	return EVENT_CONSUME
 end
