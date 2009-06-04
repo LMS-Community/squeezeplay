@@ -1247,6 +1247,14 @@ function _goRhapsodyAction()
 end
 
 
+function _goBrightnessAction()
+	log:error("here")
+
+	_goMenuTableItem("brightnessSetting")
+	return EVENT_CONSUME
+end
+
+
 function _goRepeatToggleAction()
 	_player:repeatToggle()
 	return EVENT_CONSUME
@@ -1303,6 +1311,7 @@ local _globalActionsNEW = {
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
 	["sleep"] = _goSleepAction,
+	["go_brightness"] = _goBrightnessAction,
 	["play_favorite_0"] = _goPlayFavoriteAction,
 	["play_favorite_1"] = _goPlayFavoriteAction,
 	["play_favorite_2"] = _goPlayFavoriteAction,

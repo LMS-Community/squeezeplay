@@ -13,7 +13,7 @@ charActionMappings.press = {
 	["`"]  = "go_playlists",
 	[";"]  = "go_music_library",
 	[":"]  = "go_favorites",
-	["'"]  = "go_rhapsody",
+	["'"]  = "go_brightness",
 	[","]  = "shuffle_toggle",
 	["."]  = "repeat_toggle",
 	["|"]  = "sleep",
@@ -125,7 +125,7 @@ irActionMappings.press = {
 	["size"]  = "go_playlist",
 	["browse"]  = "go_music_library",
 	["favorites"]  = "go_favorites",
-	["brightness"]  = "go_rhapsody",
+	["brightness"]  = "go_brightness",
 	["shuffle"]  = "shuffle_toggle",
 	["repeat"]  = "repeat_toggle",
 
@@ -152,7 +152,7 @@ irActionMappings.hold = {
 	["size"]  = "go_playlist",
 	["browse"]  = "go_music_library",
 	["favorites"]  = "go_favorites",
-	["brightness"]  = "go_rhapsody",
+	["brightness"]  = "go_brightness",
 	["shuffle"]  = "shuffle_toggle",
 	["repeat"]  = "repeat_toggle",
 
@@ -185,4 +185,5 @@ unassignedActionMappings = {
 	"cursor_left",
 	"cursor_right",
 	"clear",
+	"go_rhapsody",
 }

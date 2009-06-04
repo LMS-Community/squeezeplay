@@ -87,7 +87,7 @@ function init(self)
 	end
 
 
-	settings.brightness = settings.brightness or 32
+	settings.brightness = settings.brightness or 64
 	settings.ambient = settings.ambient or 0
 	settings.brightnessControl = settings.brightnessControl or "manual"
 
@@ -360,7 +360,8 @@ function getBrightness (self)
 	local level = f:read("*a")
 	f:close()
 
-	return tonumber(level / 4)
+	--opposite of setBrigtness translation
+	return math.floor(64 * math.pow(tonumber(level)/255, 1/1.58)) -- gives 0 to 64
 end
 
 
@@ -372,22 +373,23 @@ function setBrightness (self, level)
 	else
 		self.brightPrev = level
 	end
-	local deviceLevel = (level * 4) - 3 --make sure we can get to 1
-	if deviceLevel > 252 then -- make sure we can get to max
+
+	--int((percentage_bright)^(1.58)*255)
+	local deviceLevel = math.ceil(math.pow((level/64.0), 1.58) * 255) -- gives 1 to 1 for first 6, and 255 for max (64)
+	if deviceLevel > 252 then -- make sure we don't exxced
 		deviceLevel = 255 --max
 	end
-	if deviceLevel < 1 then
-		deviceLevel = 1  --min
-	end
+
 
 	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
 	f:write(tostring(deviceLevel))
 	f:close()
+	log:warn(" level: ", level, " deviceLevel:", deviceLevel, " getBrightness: ", self:getBrightness())
 end
 
 
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS"), squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
@@ -417,11 +419,12 @@ function settingsBrightnessShow (self, menuItem)
 				end)
 
 	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
-	window:addWidget(Group("sliderGroup", {
-	       min = Icon("button_slider_min"),
-	       slider = slider,
-	       max = Icon("button_slider_max"),
-	}))
+--	window:addWidget(Group("sliderGroup", {
+--	       min = Icon("button_slider_min"),
+--	       slider = slider,
+--	       max = Icon("button_slider_max"),
+--	}))
+	window:addWidget(slider)
 
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -436,7 +439,7 @@ end
 
 
 function settingsBrightnessAutomaticShow(self, menuItem)
-	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
 	local settings = self:getSettings()
 
 	local group = RadioGroup()
