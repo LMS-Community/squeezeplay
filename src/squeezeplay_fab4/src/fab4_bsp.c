@@ -429,34 +429,3 @@ int luaopen_fab4_bsp(lua_State *L) {
 
 	return 1;
 }
-
-
-/*
-	We are not using this , but it must be here for compilation
-*/
-void syna_print(char const *msg)
-{
-  /*
-   *  Add platform specifc message print function below
-   *  to print diagnostic information.
-   *
-   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
-   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
-   *  !!!!!!!!  The Maximum possible msg string length is 120 chars  !!!!!!!!
-   */
-
-  /*
-   *  Example print function usage.
-   *
-   *  ***** Replace this with similar functions on application platforms *****
-   *  ***** Replace this with similar functions on application platforms *****
-   *  ***** Replace this with similar functions on application platforms *****
-   */
-
-
-
-//#if 0
-//  fprintf(stderr, "syna_print: %s", msg);
-//#endif
-
-}
