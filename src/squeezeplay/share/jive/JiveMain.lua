@@ -196,6 +196,11 @@ end
 
 
 function JiveMain:setSoftPowerState(softPowerState, doNotUpdatePlayer)
+	if _softPowerState == softPowerState then
+		--already in the desired state, leave (can happen for instance when notify_playerPower comes back after a local power change)
+		 return
+	end
+
 	_softPowerState = softPowerState
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if _softPowerState == "off" then
