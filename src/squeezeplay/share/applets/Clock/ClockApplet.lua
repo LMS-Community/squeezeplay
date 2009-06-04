@@ -289,6 +289,8 @@ function Digital:DrawTime()
 	local widget = self.clockGroup:getWidget('h1')
 	if string.sub(theHour, 1, 1) == '0' then
 		widget:setValue('')
+		widget = self.dropShadows:getWidget('s1')
+		widget:setStyle('icon_digitalClockNoShadow')
 	else
 		widget:setValue(string.sub(theHour, 1, 1))
 		widget = self.dropShadows:getWidget('s1')
