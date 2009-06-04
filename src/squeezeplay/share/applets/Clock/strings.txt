@@ -3,22 +3,10 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
-SCREENSAVER_CLOCK_STYLE_ANALOG
-	CS	Analogové hodiny
-	DA	Analogt ur
-	DE	Analoguhr
-	EN	Analog Clock
-	ES	Reloj analógico
-	FI	Analoginen kello
-	FR	Analogique
-	IT	Orologio analogico
-	NL	Analoge klok
-	NO	Analog klokke
-	PL	Zegar analogowy
-	RU	Аналоговые часы
-	SV	Analog klocka
+SCREENSAVER_CLOCK_STYLE_RADIAL
+	EN	Radial Clock
 
-SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
+SCREENSAVER_CLOCK_STYLE_DIGITAL
 	CS	Digitální hodiny
 	DA	Digitalt ur
 	DE	Digitaluhr
@@ -33,18 +21,147 @@ SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE
 	RU	Цифровые часы
 	SV	Digitalklocka
 
-SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED
-	CS	Nástěnné hodiny
-	DA	Elegant ur
-	DE	Elegante Uhr
-	EN	Block Clock
-	ES	Reloj con estilo
-	FI	Harkkokello
-	FR	Stylisée
-	IT	Orologio elegante
-	NL	Gestileerde klok
-	NO	Blokk-klokke
-	PL	Zegar blokowy
-	RU	Блоковые часы
-	SV	Blockklocka
+SCREENSAVER_CLOCK_STYLE_DOTMATRIX
+	EN	Dot Matrix Clock
+
+SCREENSAVER_CLOCK_MONTH_01
+	EN	January
+
+SCREENSAVER_CLOCK_MONTH_02
+	EN	Feburary
+
+SCREENSAVER_CLOCK_MONTH_03
+	EN	March
+
+SCREENSAVER_CLOCK_MONTH_04
+	EN	April
+
+SCREENSAVER_CLOCK_MONTH_05
+	EN	May
+
+SCREENSAVER_CLOCK_MONTH_06
+	EN	June
+
+SCREENSAVER_CLOCK_MONTH_07
+	EN	July
+
+SCREENSAVER_CLOCK_MONTH_08
+	EN	August
+
+SCREENSAVER_CLOCK_MONTH_09
+	EN	September
+
+SCREENSAVER_CLOCK_MONTH_10
+	EN	October
+
+SCREENSAVER_CLOCK_MONTH_11
+	EN	November
+
+SCREENSAVER_CLOCK_MONTH_12
+	EN	December
+
+SCREENSAVER_CLOCK_DAY_0
+	CS	Neděle
+	DA	Søndag
+	DE	Sonntag
+	EN	Sunday
+	ES	Domingo
+	FI	sunnuntai
+	FR	Dimanche
+	IT	Domenica
+	NL	Zondag
+	NO	søndag
+	PL	Niedziela
+	RU	Воскресенье
+	SV	Söndag
+
+SCREENSAVER_CLOCK_DAY_1
+	CS	Pondělí
+	DA	Mandag
+	DE	Montag
+	EN	Monday
+	ES	Lunes
+	FI	maanantai
+	FR	Lundi
+	IT	Lunedì
+	NL	Maandag
+	NO	Mandag
+	PL	Poniedziałek
+	RU	Понедельник
+	SV	Måndag
+
+SCREENSAVER_CLOCK_DAY_2
+	CS	Úterý
+	DA	Tirsdag
+	DE	Dienstag
+	EN	Tuesday
+	ES	Martes
+	FI	tiistai
+	FR	Mardi
+	IT	Martedì
+	NL	Dinsdag
+	NO	Tirsdag
+	PL	Wtorek
+	RU	Вторник
+	SV	Tisdag
+
+SCREENSAVER_CLOCK_DAY_3
+	CS	Středa
+	DA	Onsdag
+	DE	Mittwoch
+	EN	Wednesday
+	ES	Miércoles
+	FI	Keskiviikko
+	FR	Mercredi
+	IT	Mercoledì
+	NL	Woensdag
+	NO	Onsdag
+	PL	Środa
+	RU	Среда
+	SV	Onsdag
+
+SCREENSAVER_CLOCK_DAY_4
+	CS	Čtvrtek
+	DA	Torsdag
+	DE	Donnerstag
+	EN	Thursday
+	ES	Jueves
+	FI	torstai
+	FR	Jeudi
+	IT	Giovedì
+	NL	Donderdag
+	NO	torsdag
+	PL	Czwartek
+	RU	Четверг
+	SV	Torsdag
+
+SCREENSAVER_CLOCK_DAY_5
+	CS	Pátek
+	DA	Fredag
+	DE	Freitag
+	EN	Friday
+	ES	Viernes
+	FI	perjantai
+	FR	Vendredi
+	IT	Venerdì
+	NL	Vrijdag
+	NO	Fredag
+	PL	Piątek
+	RU	Пятница
+	SV	Fredag
+
+SCREENSAVER_CLOCK_DAY_6
+	CS	Sobota
+	DA	Lørdag
+	DE	Samstag
+	EN	Saturday
+	ES	Sábado
+	FI	lauantai
+	FR	Samedi
+	IT	Sabato
+	NL	Zaterdag
+	NO	Lørdag
+	PL	Sobota
+	RU	Суббота
+	SV	Lördag
 

@@ -16,8 +16,7 @@ end
 
 function defaultSettings(self)
 	return {
-		digitalsimple_preset = "White",
-		digitalstyled_preset = "White"
+		-- nothing to see here, move along, move along
 	}
 end
 
@@ -27,22 +26,25 @@ end
 
 function configureApplet(self)
 
+	--[[
+	-- TODO: Radial Clock
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
-		"Clock", 
+		self:string("SCREENSAVER_CLOCK_STYLE_RADIAL"), 
+		"NewClock", 
 		"openAnalogClock", _, _, 20
 	)
+	--]]
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"), 
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL"), 
 		"Clock", 
-		"openStyledClock", _, _, 24
+		"openDetailedClock", _, _, 24
 	)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSIMPLE"), 
+		self:string("SCREENSAVER_CLOCK_STYLE_DOTMATRIX"), 
 		"Clock", 
-		"openDetailedClock", _, _, 26
+		"openStyledClock", _, _, 26
 	)
 end
 

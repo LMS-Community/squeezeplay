@@ -18,7 +18,7 @@ SqueezeboxSkin overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, setmetatable, type = ipairs, pairs, setmetatable, type
+local ipairs, pairs, setmetatable, type, tostring = ipairs, pairs, setmetatable, type, tostring
 
 local oo                     = require("loop.simple")
 
@@ -240,6 +240,7 @@ function skin(self, s)
 	local touchToolbarKeyDivider  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_divider.png")
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
+
 
 	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
 	local fiveItemBox             = _loadHTile(self, {
@@ -551,6 +552,7 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/popup_box_bl.png",
 				       imgpath .. "Popup_Menu/popup_box_l.png",
 			       })
+
 
 
 	local scrollBackground = 
@@ -1873,7 +1875,6 @@ function skin(self, s)
 	local controlHeight = 38
 	local controlWidth = 45
 	local volumeBarWidth = 150
---	local remainingToolbarSpace = screenWidth - 5*controlWidth - volumeBarWidth
 	local buttonPadding = 0
 
 	local _transportControlButton = {
@@ -2142,6 +2143,249 @@ function skin(self, s)
 	
 	s.nowplayingSS = _uses(s.nowplaying)
 
+	----------------------------
+	-- CLOCK STYLES
+	----------------------------
+
+	-- DOT MATRIX CLOCK
+	local dotMatrixBackground = _loadImageTile(self, imgpath .. "Clocks/Dot_Matrix/wallpaper_clock_dotmatrix.png")
+
+	local _dotMatrixDigit = function(self, digit)
+		local fileName = "Clocks/Dot_Matrix/dotmatrix_clock_" .. tostring(digit) .. ".png"
+		return {
+			w = 61,
+			h = 134,
+			img = _loadImage(self, fileName),
+			border = { 6, 0, 6, 0 },
+			align = 'bottom',
+		}
+	end
+
+	local _dotMatrixDate = function(self, digit)
+		local fileName = "Clocks/Dot_Matrix/dotmatrix_date_" .. tostring(digit) .. ".png"
+		return {
+			w = 27,
+			h = 43,
+			img = _loadImage(self, fileName),
+			align = 'bottom',
+			border = { 1, 0, 1, 0 },
+		}
+	end
+
+	s.icon_dotMatrixDigit0 = _dotMatrixDigit(self, 0)
+	s.icon_dotMatrixDigit1 = _dotMatrixDigit(self, 1)
+	s.icon_dotMatrixDigit2 = _dotMatrixDigit(self, 2)
+	s.icon_dotMatrixDigit3 = _dotMatrixDigit(self, 3)
+	s.icon_dotMatrixDigit4 = _dotMatrixDigit(self, 4)
+	s.icon_dotMatrixDigit5 = _dotMatrixDigit(self, 5)
+	s.icon_dotMatrixDigit6 = _dotMatrixDigit(self, 6)
+	s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
+	s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
+	s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+
+	s.icon_dotMatrixDate0 = _dotMatrixDate(self, 0)
+	s.icon_dotMatrixDate1 = _dotMatrixDate(self, 1)
+	s.icon_dotMatrixDate2 = _dotMatrixDate(self, 2)
+	s.icon_dotMatrixDate3 = _dotMatrixDate(self, 3)
+	s.icon_dotMatrixDate4 = _dotMatrixDate(self, 4)
+	s.icon_dotMatrixDate5 = _dotMatrixDate(self, 5)
+	s.icon_dotMatrixDate6 = _dotMatrixDate(self, 6)
+	s.icon_dotMatrixDate7 = _dotMatrixDate(self, 7)
+	s.icon_dotMatrixDate8 = _dotMatrixDate(self, 8)
+	s.icon_dotMatrixDate9 = _dotMatrixDate(self, 9)
+
+	s.icon_dotMatrixDateDot = {
+		align = 'bottom',
+		img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_dot_sm.png")
+	}
+
+	s.icon_dotMatrixDots = {
+		align = 'center',
+		border = { 4, 0, 3, 0 },
+		img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_clock_dots.png"),
+	}
+
+	s.icon_dotMatrixAlarmOn = {
+		align = 'bottom',
+		img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
+		w   = 36,
+		border = { 0, 0, 13, 0 },
+	}
+
+	s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
+		img = false,
+	})
+
+	s.icon_dotMatrixPowerOn = {
+		align = 'bottom-right',
+		img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
+		w   = WH_FILL,
+		border = { 13, 0, 0, 0 },
+	}
+
+	s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
+		img = false,
+	})
+
+
+	s.clockDotMatrix = _uses(s.window, {
+		bgImg = dotMatrixBackground,
+		clock = {
+			position = LAYOUT_WEST,
+			h = 134,
+			w = WH_FILL,
+			border = { 72, 38, 20, 0 },
+			order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+		},
+		date = {
+			position = LAYOUT_SOUTH,
+			w = WH_FILL,
+			align = 'bottom',
+			border = { 72, 0, 23, 38 },
+			order = { 'alarm', 'M1', 'M2', 'dot1', 'D1', 'D2', 'dot2', 'Y1', 'Y2', 'Y3', 'Y4', 'power' },
+		},
+	})
+
+	-- DIGITAL CLOCK
+	local digitalClockBackground = _loadImageTile(self, imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
+	local digitalClockDigit = {
+		font = _font(143),
+		align = 'center',
+		fg = { 0xcc, 0xcc, 0xcc },
+		w = 76,
+	}
+	local shadow = {
+		w = 76,
+	}
+
+	s.icon_digitalClockDropShadow = {
+		img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
+		align = 'center',
+		padding = { 4, 0, 0, 0 },
+		w = 76,
+	}
+	s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+		img = false
+	})
+
+	s.icon_digitalClockHDivider = {
+		w = WH_FILL,
+		img = _loadImage(self, "Clocks/Digital/divider_hort_digital.png"),
+	}
+
+	s.icon_digitalClockVDivider = {
+		w = 3,
+		img = _loadImage(self, "Clocks/Digital/divider_vert_digital.png"),
+		align = 'center',
+	}
+
+	s.icon_digitalDots = {
+		img = _loadImage(self, "Clocks/Digital/clock_dots_digital.png"),
+		align = 'center',
+		w = 40,
+		padding = { 0, 15, 0, 0 },
+	}
+
+	s.icon_blank = {
+		img = false,
+		w = 40,
+	}
+
+	s.clockDigital = {
+		bgImg = digitalClockBackground,
+		clock = {
+			position = LAYOUT_NORTH,
+			w = WH_FILL,
+			zOrder = 2,
+			border = { 45, 60, 45, 0 },
+			order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+			h1 = digitalClockDigit,
+			h2 = digitalClockDigit,
+			m1 = digitalClockDigit,
+			m2 = digitalClockDigit,
+		},
+		dropShadow = {
+			position = LAYOUT_NORTH,
+			align = 'center',
+			w = WH_FILL,
+			h = 18,
+			zOrder = 1,
+			border = { 45, 160, 45, 0 },
+			order = { 's1', 's2', 'dots', 's3', 's4' },
+			s1   =  { w = 76 },
+			s2   =  { w = 76 },
+			dots =  { w = 40 },
+			s3   =  { w = 76 },
+			s4   =  { w = 76 },
+		},
+		ampm = {
+			position = LAYOUT_NONE,
+			x = 390,
+			y = 150,
+			font = _font(20),
+			align = 'bottom',
+			fg = { 0xcc, 0xcc, 0xcc },
+		},
+		alarm = {
+			position = LAYOUT_NONE,
+			x = 20,
+			y = 20,
+		},
+		horizDivider = {
+			position = LAYOUT_NONE,
+			x = 0,
+			y = 193,
+		},
+		date = {
+			position = LAYOUT_SOUTH,
+			order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month', 'year' },
+			w = WH_FILL,
+			h = 76,
+			dayofweek = {
+				align = 'center',
+				w = 190,
+				h = WH_FILL,
+				font = _font(20),
+				fg = { 0, 0xbe, 0xbe },
+			},
+			vdivider1 = {
+				align = 'center',
+				w = 3,
+			},
+			dayofmonth = {
+				font = _font(56),
+				w = 96,
+				h = WH_FILL,
+				align = 'center',
+				fg = { 0xcc, 0xcc, 0xcc },
+			},
+			vdivider2 = {
+				border = { 0, 10, 0, 0 },
+				align = 'center',
+				w = 3,
+			},
+			month = {
+				font = _font(20),
+				w = 140,
+				h = WH_FILL,
+				align = 'left',
+				fg = { 0xcc, 0xcc, 0xcc },
+				padding = { 20, 0, 0, 0 },
+			},
+			year = {
+				font = _boldfont(20),
+				w = 50,
+				h = WH_FILL,
+				align = 'left',
+				fg = { 0xcc, 0xcc, 0xcc },
+			},
+		},
+	}
+
+	-- RADIAL CLOCK
+	s.clockRadial = {
+	}
+	
 	s.debug_canvas = {
 			zOrder = 9999
 	}
