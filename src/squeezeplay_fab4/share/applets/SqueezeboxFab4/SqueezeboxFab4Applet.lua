@@ -384,7 +384,9 @@ function setBrightness (self, level)
 	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
 	f:write(tostring(deviceLevel))
 	f:close()
-	log:warn(" level: ", level, " deviceLevel:", deviceLevel, " getBrightness: ", self:getBrightness())
+	if log:isDebug() then
+		log:debug(" level: ", level, " deviceLevel:", deviceLevel, " getBrightness: ", self:getBrightness())
+	end
 end
 
 
