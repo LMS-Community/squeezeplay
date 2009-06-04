@@ -1610,7 +1610,7 @@ function skin(self, s)
 
 		attr = {
 			hidden = 0,
-			img = icon
+			img = icon,
 		}
 
 		s[name].icon = _uses(_button.icon, attr)
