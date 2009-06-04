@@ -135,6 +135,7 @@ function __init(self, ...)
 	local eatTouchEvents = false
 	Framework:addListener(EVENT_MOUSE_ALL,
 		function(event)
+			self.proximity = PROX_NEAR
 			self:_resetRecentlyNearTimer()
 			if eatTouchEvents then
 				local type = event:getType()
