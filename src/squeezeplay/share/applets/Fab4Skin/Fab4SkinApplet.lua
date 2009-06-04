@@ -1646,6 +1646,7 @@ function skin(self, s)
 	_titleButtonIcon("button_playlist", playlistButton)
 	_titleButtonIcon("button_go_now_playing", nowPlayingButton)
 	_titleButtonIcon("button_power", powerButton)
+	_titleButtonIcon("button_nothing", nil)
 	_titleButtonIcon("button_help", helpButton)
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
 

@@ -302,6 +302,7 @@ function JiveMain:__init()
 	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
 
 	Framework:addActionListener("power", self, _powerAction, 10)
+	Framework:addActionListener("nothing", self, function() return EVENT_CONSUME end, 10)
 
 	--Last input type tracker (used by, for instance, Menu, to determine wheter selected style should be displayed)
 	Framework:addListener(EVENT_ALL_INPUT,

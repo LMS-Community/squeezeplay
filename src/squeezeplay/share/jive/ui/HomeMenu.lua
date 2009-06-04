@@ -88,7 +88,7 @@ function __init(self, name, style, titleStyle)
 
 	obj.window:addListener( EVENT_WINDOW_INACTIVE,
 				function()
-					obj.window:setButtonAction("lbutton", nil)
+					obj.window:setButtonAction("lbutton", "nothing")
 					return EVENT_UNUSED
 				end)
 

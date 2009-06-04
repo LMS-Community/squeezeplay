@@ -186,4 +186,5 @@ unassignedActionMappings = {
 	"cursor_right",
 	"clear",
 	"go_rhapsody",
+	"nothing",
 }
