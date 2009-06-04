@@ -742,7 +742,14 @@ function t_addNetwork(self, ssid, option)
 		request = 'SET_NETWORK ' .. id .. ' proto WPA'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		if #option.psk <= 63 then
+			-- psk is ASCII passphrase (8 - 63 chars) and needs quotes
+			request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		else
+			-- psk is 64 hex-digits (32 bytes) and needs _no_ quotes
+			request = 'SET_NETWORK ' .. id .. ' psk ' .. option.psk
+		end
+
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	elseif option.encryption == "wpa2" then
@@ -754,7 +761,14 @@ function t_addNetwork(self, ssid, option)
 		request = 'SET_NETWORK ' .. id .. ' proto WPA2'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		if #option.psk <= 63 then
+			-- psk is ASCII passphrase (8 - 63 chars) and needs quotes
+			request = 'SET_NETWORK ' .. id .. ' psk "' .. option.psk .. '"'
+		else
+			-- psk is 64 hex-digits (32 bytes) and needs _no_ quotes
+			request = 'SET_NETWORK ' .. id .. ' psk ' .. option.psk
+		end
+
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	else
 		request = 'SET_NETWORK ' .. id .. ' key_mgmt NONE'
@@ -1669,7 +1683,12 @@ function t_wpsStatus(self)
 		fh:close()
 
 		local proto = string.match(wpsconf, "proto=([^%s]+)")
+		-- psk is ASCII passphrase (8 - 63 chars) and has quotes
 		local psk = string.match(wpsconf, "psk=\"([^%s]+)\"")
+		if psk == nil then
+			-- psk is 64 hex-digits (32 bytes) and has _no_ quotes
+			psk = string.match(wpsconf, "psk=([^%s]+)")
+		end
 		local key = string.match(wpsconf, "wep_key0=([^%s]+)")
 
 		-- No encryption
