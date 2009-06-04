@@ -376,7 +376,7 @@ function setBrightness (self, level)
 
 	--int((percentage_bright)^(1.58)*255)
 	local deviceLevel = math.ceil(math.pow((level/64.0), 1.58) * 255) -- gives 1 to 1 for first 6, and 255 for max (64)
-	if deviceLevel > 252 then -- make sure we don't exxced
+	if deviceLevel > 255 then -- make sure we don't exceed
 		deviceLevel = 255 --max
 	end
 
