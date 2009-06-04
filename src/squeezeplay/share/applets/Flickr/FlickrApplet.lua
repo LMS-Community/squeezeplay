@@ -33,6 +33,7 @@ local Font             = require("jive.ui.Font")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
+local Textarea         = require("jive.ui.Textarea")
 local Group            = require("jive.ui.Group")
 local Keyboard         = require("jive.ui.Keyboard")
 local Popup            = require("jive.ui.Popup")
@@ -79,13 +80,13 @@ function openScreensaver(self, menuItem)
 
 	local label
 	if ok then
-		label = Label("text", self:string("SCREENSAVER_FLICKR_LOADING_PHOTO"))
+		label = Label("text", "\n" .. tostring(self:string("SCREENSAVER_FLICKR_LOADING_PHOTO")))
 	else
-		label = Label("text", self:string("SCREENSAVER_FLICKR_ERROR") .. err)
+		label = Label("text", "\n" .. tostring(self:string("SCREENSAVER_FLICKR_ERROR")) .. err)
 	end
 	
 	self.window = self:_window(label)
-	self.window:show()
+	self.window:show(Window.transitionFadeIn)
 end
 
 
@@ -502,6 +503,7 @@ end
 function _window(self, ...)
 	local window = Window("absolute")
 
+	--note: this doesn't appear to have any effect
 	window:setSkin({
 		absolute = {
 			text = {
