@@ -1611,6 +1611,40 @@ function skin(self, s)
                 img = _songProgressBar,
         }
 
+
+	--todo: FIX! is just same as 3ft skin for now
+	s.brightness_group = {
+		order = {  'down', 'div1', 'slider', 'div2', 'up' },
+		position = LAYOUT_SOUTH,
+		h = controlHeight,
+		w = WH_FILL,
+		bgImg = touchToolbarBackground,
+
+		div1 = _uses(_transportControlBorder),
+		div2 = _uses(_transportControlBorder),
+
+		down   = _uses(_transportControlButton, {
+			img = _loadImage(self, "Icons/icon_toolbar_brightness_down.png"),
+		}),
+		up   = _uses(_transportControlButton, {
+			img = _loadImage(self, "Icons/icon_toolbar_brightness_up.png"),
+		}),
+	}
+	s.brightness_group.pressed = {
+
+		down   = _uses(s.brightness_group.down, { bgImg = keyMiddlePressed }),
+		up   = _uses(s.brightness_group.up, { bgImg = keyMiddlePressed }),
+	}
+
+	s.brightness_slider = {
+		w = 380,
+		border = { 5, 3, 5, 0 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = _volumeSliderBackground,
+                img = _volumeSliderBar,
+	}
+	
 	----------------------------
 	-- CLOCK STYLES
 	----------------------------

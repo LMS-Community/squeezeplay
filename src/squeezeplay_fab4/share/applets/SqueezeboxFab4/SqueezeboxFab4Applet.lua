@@ -16,6 +16,8 @@ local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
+local Button                 = require("jive.ui.Button")
+local Event                  = require("jive.ui.Event")
 local Popup                  = require("jive.ui.Popup")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
@@ -87,7 +89,7 @@ function init(self)
 	end
 
 
-	settings.brightness = settings.brightness or 64
+	settings.brightness = settings.brightness or 100
 	settings.ambient = settings.ambient or 0
 	settings.brightnessControl = settings.brightnessControl or "manual"
 
@@ -121,16 +123,16 @@ local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 -- Default/Start Values
 local ambientMax = 0
 local ambientMin = 1
-local brightCur = 64
-local brightMax = 64
-local brightTarget = 64
+local brightCur = 100
+local brightMax = 100
+local brightTarget = 100
 local brightSettings = 0;
 
 local brightOverride = 0
 
 -- Minimum Brightness - Default:1, calculated using settings.brightness
 -- 	- This variable should probably be configurable by the users
-local brightMinMax = 32
+local brightMinMax = 50
 local brightMin = 1
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -141,7 +143,7 @@ function initBrightness(self)
 	self.brightPrev = self:getBrightness()
 	if self.brightPrev and self.brightPrev == 0 then
 		--don't ever fallback to off
-		self.brightPrev = 32
+		self.brightPrev = 50
 	end
 	-- Initialize the Ambient Sensor with a factor of 30
 	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
@@ -191,8 +193,8 @@ function doBrightnessRamping(self, target)
 		
 	brightCur = brightCur + diff	
 
-	if brightCur > 64 then
-		brightCur = 64
+	if brightCur > 100 then
+		brightCur = 100
 	elseif brightCur < 1 then
 		brightCur = 1	
 	end
@@ -222,7 +224,7 @@ function doStaticBrightnessTimer(self)
 	
 	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 	
-	local brightTarget = (64 / staticLuxMax) * luxvalue
+	local brightTarget = (100 / staticLuxMax) * luxvalue
 	
 	self:doBrightnessRamping(brightTarget);
 	
@@ -234,7 +236,7 @@ function doStaticBrightnessTimer(self)
 	
 end
 
--- Valid Brightness goes from 1 - 64, 0 = display off
+-- Valid Brightness goes from 1 - 100, 0 = display off
 function doBrightnessTimer(self)
 	
 	-- First Check if it is automatic or manual brightness control
@@ -264,7 +266,7 @@ function doBrightnessTimer(self)
 		ambientMax = luxvalue
 	end
 		
-	brightTarget = (luxvalue / ambientMax) * 64
+	brightTarget = (luxvalue / ambientMax) * 100
 	
 	-- Ramp Brightness to target unless the brightness setting has changed
 	if settings.brightness != brightSettings then
@@ -361,7 +363,7 @@ function getBrightness (self)
 	f:close()
 
 	--opposite of setBrigtness translation
-	return math.floor(64 * math.pow(tonumber(level)/255, 1/1.58)) -- gives 0 to 64
+	return math.floor(100 * math.pow(tonumber(level)/255, 1/1.38)) -- gives 0 to 100
 end
 
 
@@ -374,8 +376,8 @@ function setBrightness (self, level)
 		self.brightPrev = level
 	end
 
-	--int((percentage_bright)^(1.58)*255)
-	local deviceLevel = math.ceil(math.pow((level/64.0), 1.58) * 255) -- gives 1 to 1 for first 6, and 255 for max (64)
+	--ceil((percentage_bright)^(1.58)*255)
+	local deviceLevel = math.ceil(math.pow((level/100.0), 1.38) * 255) -- gives 1 to 1 for first 6, and 255 for max (100)
 	if deviceLevel > 255 then -- make sure we don't exceed
 		deviceLevel = 255 --max
 	end
@@ -396,20 +398,20 @@ function settingsBrightnessShow (self, menuItem)
 	local settings = self:getSettings()
 	local level = settings.brightness
 
-	local slider = Slider("slider", 1, 64, level,
+	local slider = Slider('brightness_slider', 1, 100, level,
 				function(slider, value, done)
 					settings.brightness = value
 
 					local bright = settings.brightness + settings.ambient
-					if bright > 64 then
-						bright = 64
+					if bright > 100 then
+						bright = 100
 					end
-						  
+
 					if settings.brightnessControl == "manual" then
 						self:setBrightness( bright)
 					end
 					--
-					-- Quick fix to avoid error					
+					-- Quick fix to avoid error
 					if settings.ambient == nil then
 						settings.ambient = 0
 					end
@@ -419,13 +421,47 @@ function settingsBrightnessShow (self, menuItem)
 						window:hide(Window.transitionPushLeft)
 					end
 				end)
+	slider.jumpOnDown = false
+	slider.dragThreshold = 5
 
-	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
-	window:addWidget(Group("sliderGroup", {
-	       min = Icon("button_slider_min"),
-	       slider = slider,
-	       max = Icon("button_slider_max"),
-	}))
+--	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Group('brightness_group', {
+				div6 = Icon('div6'),
+				div7 = Icon('div7'),
+
+
+				down  = Button(
+					Icon('down'),
+					function()
+						local e = Event:new(EVENT_SCROLL, -1)
+						Framework:dispatchEvent(slider, e)
+						return EVENT_CONSUME
+					end
+				),
+				up  = Button(
+					Icon('up'),
+					function()
+						local e = Event:new(EVENT_SCROLL, 1)
+						Framework:dispatchEvent(slider, e)
+						return EVENT_CONSUME
+					end
+				),
+				slider = slider,
+			}))
+
+	window:addActionListener("page_down", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, 1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+	window:addActionListener("page_up", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, -1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+
 --	window:addWidget(slider) - for focus purposes (todo: get style right for this so slider can be focused)
 
 
