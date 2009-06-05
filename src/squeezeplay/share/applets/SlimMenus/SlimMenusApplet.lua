@@ -362,6 +362,7 @@ self:_addNode({
   sound = "WINDOWSHOW",
   weight = 20,
   id = "radios",
+  iconStyle = 'hm_radio',
   text = "Internet Radio (SC)",
   node = "home",
 }, isMenuStatusResponse)
@@ -409,6 +410,10 @@ end
 				else
 					log:debug("todo: how to handle fetching icons from disconnected servers!?")
 				end
+			else
+				-- make a style
+				local iconStyle = 'hm_' .. item.id
+				item.iconStyle = iconStyle
 			end
 
 			-- hack to modify styles from SC

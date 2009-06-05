@@ -53,6 +53,28 @@ icon_verify.png
 icon_restart.png
 icon_playlist_save.png
 icon_playlist_clear.png
+
+icon_favorites.png
+icon_sleep.png
+icon_ml_years.png
+icon_ml_search.png
+icon_ml_random.png
+icon_ml_playlist.png
+icon_ml_new_music.png
+icon_ml_genres.png
+icon_ml_artist.png
+icon_linein.png
+icon_folder.png
+icon_digital_inputs.png
+icon_choose_player.png
+icon_sync.png
+icon_staffpicks.png
+icon_nature_sounds.png
+icon_alarm.png
+icon_RSS.png
+icon_power_off2.png
+icon_blank.png
+
 /);
 
 my $special = {

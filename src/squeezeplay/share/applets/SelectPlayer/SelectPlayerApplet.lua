@@ -157,6 +157,7 @@ function manageSelectPlayerMenu(self)
 
 			local menuItem = {
 				id = 'selectPlayer',
+				iconStyle = 'hm_selectPlayer',
 				node = node,
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",

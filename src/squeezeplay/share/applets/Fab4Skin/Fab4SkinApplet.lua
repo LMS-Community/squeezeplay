@@ -1830,6 +1830,83 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_fab4" .. skinSuffix),
 	})
 
+	-- misc home menu icons
+	s.hm_appletAppGuide = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
+	})
+	s.hm_music_services = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
+	})
+	s.hm_settings = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
+	})
+	s.hm_radio = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
+	})
+	s.hm_myMusic = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
+	})
+	s.hm__myMusic = _uses(s.hm_myMusic)
+	s.hm_favorites = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_favorites" .. skinSuffix),
+	})
+	s.hm_settingsAlarm = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_alarm" .. skinSuffix),
+	})
+	s.hm_settingsSync = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_sync" .. skinSuffix),
+	})
+	s.hm_selectPlayer = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_choose_player" .. skinSuffix),
+	})
+	s.hm_quit = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_power_off2" .. skinSuffix),
+	})
+	s.hm_settingsScreen = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_blank" .. skinSuffix),
+	})
+	s.hm_myMusicArtists = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_artist" .. skinSuffix),
+	})
+	s.hm_myMusicAlbums = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
+	})
+	s.hm_myMusicGenres = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_genres" .. skinSuffix),
+	})
+	s.hm_myMusicYears = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_years" .. skinSuffix),
+	})
+
+	s.hm_myMusicNewMusic = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_new_music" .. skinSuffix),
+	})
+	s.hm_myMusicPlaylists = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_playlist" .. skinSuffix),
+	})
+	s.hm_myMusicSearch = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
+	})
+	s.hm_myMusicSearchArtists = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
+	})
+	s.hm_myMusicSearchSongs = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
+	})
+	s.hm_myMusicSearchPlaylists = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
+	})
+	s.hm_myMusicMusicFolder = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_folder" .. skinSuffix),
+	})
+	s.hm_randomplay = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_random" .. skinSuffix),
+	})
+	s.hm_randomtracks = _uses(s.hm_randomplay)
+	s.hm_randomartists = _uses(s.hm_randomplay)
+	s.hm_randomalbums = _uses(s.hm_randomplay)
+	s.hm_randomyears = _uses(s.hm_randomplay)
+
 	-- indicator icons, on right of menus
 	local _indicator = {
 		align = "center",

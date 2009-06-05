@@ -29,6 +29,6 @@ function registerApplet(self)
 
 	jiveMain:addItem(self:menuItem('appletCustomizeHome', 'settings', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end))
 
-	jiveMain:addItem(self:menuItem('appletCustomizeHome', 'home', "APP_GUIDE", function(applet, ...) applet:appGuide(...) end))
+	jiveMain:addItem(self:menuItem('appletAppGuide', 'home', "APP_GUIDE", function(applet, ...) applet:appGuide(...) end))
 
 end

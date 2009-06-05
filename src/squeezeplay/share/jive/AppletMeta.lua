@@ -132,6 +132,7 @@ is the function executed when the MenuItem is selected.
 function menuItem(self, id, node, label, closure, weight, extras)
 	return {
 		id = id,
+		iconStyle = 'hm_' .. id,
 		node = node,
 		text = self:string(label),
 		weight = weight,

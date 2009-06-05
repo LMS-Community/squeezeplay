@@ -8,6 +8,7 @@ local string        = require("jive.utils.string")
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
+local Icon          = require("jive.ui.Icon")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("squeezeplay.ui")
@@ -305,6 +306,9 @@ function addItem(self, item)
 	assert(item.id)
 	assert(item.node)
 
+	if item.iconStyle then
+		item.icon = Icon(item.iconStyle)
+	end
 	if not item.weight then
 		item.weight = 100
 	end
