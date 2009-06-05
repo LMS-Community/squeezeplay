@@ -1684,7 +1684,7 @@ function t_wpsStatus(self)
 
 		local proto = string.match(wpsconf, "proto=([^%s]+)")
 		-- psk is ASCII passphrase (8 - 63 chars) and has quotes
-		local psk = string.match(wpsconf, "psk=\"([^%s]+)\"")
+		local psk = string.match(wpsconf, "psk=\"(.+)\"\n")
 		if psk == nil then
 			-- psk is 64 hex-digits (32 bytes) and has _no_ quotes
 			psk = string.match(wpsconf, "psk=([^%s]+)")
