@@ -746,10 +746,8 @@ static int decode_init_audio(lua_State *L) {
 
 		tmp = strdup(all_decoders[i]->name);
 
-		printf("%s\n", all_decoders[i]->name);
 		ptr = strtok(tmp, ",");
 		while (ptr) {
-			printf("ptr=%s\n", ptr);
 			lua_getfield(L, 2, "capability");
 			lua_pushvalue(L, 2);
 			lua_pushstring(L, ptr);
