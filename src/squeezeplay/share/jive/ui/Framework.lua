@@ -666,12 +666,15 @@ Returns a new ACTION event or nil if no matching action has been registered.
 =cut
 --]]
 function newActionEvent(self, action)
+	--first look for any action->action translation
+	action = self:getActionToActionTranslation(action)
+
 	local actionIndex = self:_getActionEventIndexByName(action)
 	if not actionIndex then
 		log:error("action name not registered: (" , action, "). Available actions: ", self:dumpActions() )
 		return nil
 	end
-	
+
 	return Event:new(ACTION, actionIndex)
 	
 end
@@ -738,6 +741,15 @@ function getAction(self, event)
 	return action
 end
 
+function getActionToActionTranslation(self, action)
+	local translatedAction = self.inputToActionMap.actionActionMappings[action]
+	if not translatedAction then
+		return action
+	end
+	log:debug("Translated action " , action, " to ", translatedAction )
+	return translatedAction 
+end
+
 
 function registerActions(self, map)
 	self.inputToActionMap = map
@@ -759,6 +771,67 @@ function registerActions(self, map)
 	end
 	for i, action in ipairs(self.inputToActionMap.unassignedActionMappings) do
 		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.actionActionMappings) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.gestureActionMappings) do
+		self:registerAction(action)
+	end
+end
+
+
+function applyInputToActionOverrides(self, overrideMap)
+	self:applyInputToActionOverridesToDestination(overrideMap, self.inputToActionMap)
+end
+
+
+function applyInputToActionOverridesToDestination(self, overrideMap, destinationMap)
+	--future: make/find a fancy table merge function instead of this hardcoding
+
+	if not overrideMap then
+		return
+	end
+
+	if overrideMap.keyActionMappings and overrideMap.keyActionMappings.press then
+		for key, action in pairs(overrideMap.keyActionMappings.press) do
+			destinationMap.keyActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.keyActionMappings and overrideMap.keyActionMappings.hold then
+		for key, action in pairs(overrideMap.keyActionMappings.hold) do
+			destinationMap.keyActionMappings.hold[key] = action
+		end
+	end
+
+	if overrideMap.charActionMappings and overrideMap.charActionMappings.press then
+		for key, action in pairs(overrideMap.charActionMappings.press) do
+			destinationMap.charActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.irActionMappings and overrideMap.irActionMappings.press then
+		for key, action in pairs(overrideMap.irActionMappings.press) do
+			destinationMap.irActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.irActionMappings and overrideMap.irActionMappings.hold then
+		for key, action in pairs(overrideMap.irActionMappings.hold) do
+			destinationMap.irActionMappings.hold[key] = action
+		end
+	end
+
+	if overrideMap.actionActionMappings then
+		for key, action in pairs(overrideMap.actionActionMappings) do
+			destinationMap.actionActionMappings[key] = action
+		end
+	end
+	if overrideMap.gestureActionMappings then
+		for key, action in pairs(overrideMap.gestureActionMappings) do
+			destinationMap.gestureActionMappings[key] = action
+		end
 	end
 end
 

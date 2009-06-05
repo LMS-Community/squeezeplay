@@ -251,17 +251,7 @@ end
 
 
 local function _backButton(self)
-     return Button(
-	Group("button_back", { Icon("icon") }),
-	function()
-		Framework:pushAction("back")
-		return EVENT_CONSUME
-	end,
-	function()
-		Framework:pushAction("go_home")
-		return EVENT_CONSUME
-	end
-     )
+	return Window:createDefaultLeftButton()
 end
 
 
@@ -270,11 +260,19 @@ local function _invisibleButton(self)
 end
 
 
-local function _nowPlayingButton(self)
+local function _nowPlayingButton(self, absolute)
+	if not absolute then
+		return Window:createDefaultRightButton()
+	end
+
 	return Button(
 		Group("button_go_now_playing", { Icon("icon") }),
 		function()
 			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+		end,
+		function()
+			Framework:pushAction("go_playlist")
 			return EVENT_CONSUME
 		end
 	)
@@ -2680,6 +2678,9 @@ function showPlaylist()
 		end
 
 		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
+
+		_statusStep.window:setButtonAction("rbutton", "go_now_playing", "go_playlist")
+
 
 		_statusStep.window:show()
 

@@ -1,0 +1,38 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+SHORTCUTS_TITLE
+	EN	Shortcuts
+
+SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
+	EN	Top left button press
+
+SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
+	EN	Top left button hold
+
+SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
+	EN	Top right button press
+
+SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
+	EN	Top right button hold
+
+SHORTCUTS_INPUT_GESTURE_L_R
+	EN	Left to right swipe
+
+SHORTCUTS_INPUT_GESTURE_R_L
+	EN	Right to left swipe
+
+SHORTCUTS_OUTPUT_BACK
+	EN	Back
+
+SHORTCUTS_OUTPUT_GO_HOME
+	EN	Go Home
+
+SHORTCUTS_OUTPUT_GO_NOW_PLAYING
+	EN	Now playing
+
+SHORTCUTS_OUTPUT_GO_PLAYLIST
+	EN	Now playing playlist
+

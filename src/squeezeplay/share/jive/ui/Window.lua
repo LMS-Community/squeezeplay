@@ -162,12 +162,24 @@ function __init(self, style, title, titleStyle)
 		end
 
 		-- default actions
-		obj:setButtonAction("lbutton", "back", "go_home", "soft_reset")
-
-		-- FIXME nowplaying should not be in Window
-		obj:setButtonAction("rbutton", "go_now_playing")
+		obj:setDefaultLeftButtonAction()
+		obj:setDefaultRightButtonAction()
+		
+		--kind of a hack, always resetting the buttons if default so that ShortcutApplet's overrides can be seen in every window
+		obj:addListener(EVENT_WINDOW_ACTIVE,
+			function(event)
+				local left = obj:getIconWidget("lbutton")
+				if left and left.isDefaultButtonGroup then
+					obj:setDefaultLeftButtonAction()
+				end
+				local right = obj:getIconWidget("rbutton")
+				if right and right.isDefaultButtonGroup then
+					obj:setDefaultRightButtonAction()
+				end
+				return EVENT_UNUSED
+			end)
 	end
-	
+
 	-- by default, hide the window on BACK actions, add this as a
 	-- listener to allow other handlers to act on these events first
 	self.defaultActionListenerHandles = {}
@@ -732,6 +744,15 @@ function setIconWidget(self, widgetKey, widget)
 end
 
 
+function getIconWidget(self, widgetKey)
+	if not self.title then
+		return nil
+	end
+
+	return self.title:getWidget(widgetKey)
+end
+
+
 --[[
 
 Sets the style of a title widget, default options are 'icon', 'lbutton', 'rbutton', 'text'. This probably would only be used to modify the icon style.
@@ -742,12 +763,38 @@ function setIconStyle(self, widgetKey, widgetStyle)
 end
 
 
+function setDefaultLeftButtonAction(self)
+	self:setIconWidget("lbutton", self:createDefaultLeftButton())
+end
+
+
+function setDefaultRightButtonAction(self)
+	self:setIconWidget("rbutton", self:createDefaultRightButton())
+end
+
+
+--static method
+function createDefaultLeftButton(self)
+	return self:createButtonActionButton("title_left_press", "title_left_hold", "soft_reset", true)
+end
+
+--static method
+function createDefaultRightButton(self)
+	return self:createButtonActionButton("title_right_press", "title_right_hold", nil, true)
+end
+
 --[[
 
 Sets a button action. This sets both the action and button style (using "button_" .. buttonAction).
 
 --]]
-function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction, buttonLongHoldAction)
+function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup)
+	self:setIconWidget(buttonKey, self:createButtonActionButton(buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup))
+end
+
+
+--static method
+function createButtonActionButton(self, buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup)
 	local buttonFunc = nil
 	local buttonHoldFunc = nil
 	local buttonLongHoldFunc = nil
@@ -768,12 +815,15 @@ function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction, button
 		end
 	end
 
-	local group = Group("button_" .. (buttonAction or "none"), {
+	local group = Group("button_" .. (Framework:getActionToActionTranslation(buttonAction) or "none"), {
 		icon = Icon("icon"),
 		icon_text = Label("text"),
 	})
 
-	self:setIconWidget(buttonKey, Button(group, buttonFunc, buttonHoldFunc, buttonLongHoldFunc))
+	local button = Button(group, buttonFunc, buttonHoldFunc, buttonLongHoldFunc)
+	button.isDefaultButtonGroup = isDefaultButtonGroup
+
+	return button
 end
 
 

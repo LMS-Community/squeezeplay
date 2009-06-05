@@ -677,17 +677,7 @@ function _createUI(self)
 	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")
 
 	self.titleGroup = Group('title', {
-		lbutton = Button(
-				Group("button_back", { Icon("icon") }), 
-				function() 
-					Framework:pushAction("back")
-					return EVENT_CONSUME 
-					end,
-					function()
-						Framework:pushAction("go_home")
-						return EVENT_CONSUME
-				end
-		),
+		lbutton = window:createDefaultLeftButton(),
 
 		text = Label("text", self:_titleText(self.mainTitle)),
 
