@@ -103,9 +103,6 @@ function _playTone(self, tone)
        	end
 			
 	if localPlayer then
-		decode:stop()
-		decode:flush()
-
 		-- fixed volume (50%)
 		decode:audioGain(0x01000, 0x01000)
 

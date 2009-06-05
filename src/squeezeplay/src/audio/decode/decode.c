@@ -594,18 +594,27 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, decode_fifo.size);
 	lua_setfield(L, -2, "outputSize");
 
-	output = fifo_bytes_used(&decode_fifo);
-	output = (BYTES_TO_SAMPLES(output) * 1000) / current_sample_rate;
+	if (current_sample_rate) {
+		output = fifo_bytes_used(&decode_fifo);
+		output = (BYTES_TO_SAMPLES(output) * 1000) / current_sample_rate;
+	}
+	else {
+		output = 0;
+	}
 	lua_pushinteger(L, (u32_t)output);
 	lua_setfield(L, -2, "outputTime");
 
-	elapsed = decode_elapsed_samples;
-	delay = (decode_audio && decode_audio->delay) ? decode_audio->delay() : 0;
-	if (elapsed > delay) {
-		elapsed -= delay;
+	if (current_sample_rate) {
+		elapsed = decode_elapsed_samples;
+		delay = (decode_audio && decode_audio->delay) ? decode_audio->delay() : 0;
+		if (elapsed > delay) {
+			elapsed -= delay;
+		}
+		elapsed = (elapsed * 1000) / current_sample_rate;
 	}
-	elapsed = (elapsed * 1000) / current_sample_rate;
-
+	else {
+		elapsed = 0;
+	}
 	lua_pushinteger(L, (u32_t)elapsed);
 	lua_setfield(L, -2, "elapsed");
 	
