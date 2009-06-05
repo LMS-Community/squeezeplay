@@ -95,7 +95,7 @@ int watchdog_get() {
 	return -1;
 }
 
-int watchdog_keepalive(int watchdog_id) {
+int watchdog_keepalive(int watchdog_id, int count) {
 	return -1;
 }
 
