@@ -1749,6 +1749,7 @@ function skin(self, s)
 	})
 
 	-- DIGITAL CLOCK
+
 	local digitalClockBackground = _loadImageTile(self, imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
 	local digitalClockDigit = {
 		font = _font(143),
@@ -1784,8 +1785,8 @@ function skin(self, s)
 	s.icon_digitalDots = {
 		img = _loadImage(self, "Clocks/Digital/clock_dots_digital.png"),
 		align = 'center',
-		w = 40,
-		padding = { 0, 15, 0, 0 },
+		w = 11,
+		border = { 14, 20, 12, 0 },
 	}
 
 	s.icon_blank = {
@@ -1799,12 +1800,16 @@ function skin(self, s)
 			position = LAYOUT_NORTH,
 			w = WH_FILL,
 			zOrder = 2,
-			border = { 45, 60, 45, 0 },
+			border = { 47, 54, 47, 0 },
 			order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
 			h1 = digitalClockDigit,
 			h2 = digitalClockDigit,
-			m1 = digitalClockDigit,
-			m2 = digitalClockDigit,
+			m1 = _uses(digitalClockDigit, {
+				border = { 1, 0, 0, 0 },
+			}),
+			m2 = _uses(digitalClockDigit, {
+				border = { 10, 0, 0, 0 },
+			}),
 		},
 		dropShadow = {
 			position = LAYOUT_NORTH,
@@ -1812,7 +1817,7 @@ function skin(self, s)
 			w = WH_FILL,
 			h = 18,
 			zOrder = 1,
-			border = { 45, 160, 45, 0 },
+			border = { 47, 154, 47, 0 },
 			order = { 's1', 's2', 'dots', 's3', 's4' },
 			s1   =  { w = 76 },
 			s2   =  { w = 76 },
@@ -1822,8 +1827,8 @@ function skin(self, s)
 		},
 		ampm = {
 			position = LAYOUT_NONE,
-			x = 390,
-			y = 150,
+			x = 403,
+			y = 144,
 			font = _font(20),
 			align = 'bottom',
 			fg = { 0xcc, 0xcc, 0xcc },
@@ -1836,19 +1841,21 @@ function skin(self, s)
 		horizDivider = {
 			position = LAYOUT_NONE,
 			x = 0,
-			y = 193,
+			y = 194,
 		},
 		date = {
 			position = LAYOUT_SOUTH,
 			order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month', 'year' },
 			w = WH_FILL,
-			h = 76,
+			h = 70,
+			padding = { 0, 0, 0, 6 },
 			dayofweek = {
 				align = 'center',
 				w = 190,
 				h = WH_FILL,
 				font = _font(20),
 				fg = { 0, 0xbe, 0xbe },
+				padding  = { 1, 0, 0, 6 },
 			},
 			vdivider1 = {
 				align = 'center',
@@ -1856,13 +1863,13 @@ function skin(self, s)
 			},
 			dayofmonth = {
 				font = _font(56),
-				w = 96,
+				w = 95,
 				h = WH_FILL,
 				align = 'center',
 				fg = { 0xcc, 0xcc, 0xcc },
+				padding = { 0, 0, 0, 4 },
 			},
 			vdivider2 = {
-				border = { 0, 10, 0, 0 },
 				align = 'center',
 				w = 3,
 			},
@@ -1872,7 +1879,7 @@ function skin(self, s)
 				h = WH_FILL,
 				align = 'left',
 				fg = { 0xcc, 0xcc, 0xcc },
-				padding = { 20, 0, 0, 0 },
+				padding = { 21, 0, 0, 5 },
 			},
 			year = {
 				font = _boldfont(20),
@@ -1880,10 +1887,10 @@ function skin(self, s)
 				h = WH_FILL,
 				align = 'left',
 				fg = { 0xcc, 0xcc, 0xcc },
+				padding = { 3, 0, 0, 5 },
 			},
 		},
 	}
-
 	-- RADIAL CLOCK
 	s.clockRadial = {
 	}

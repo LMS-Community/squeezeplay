@@ -228,6 +228,7 @@ end
 	
 function Digital:Draw()
 
+
 	-- string day of week
 	local dayOfWeek   = os.date("%w")
 	local token = "SCREENSAVER_CLOCK_DAY_" .. tostring(dayOfWeek)
@@ -255,16 +256,46 @@ function Digital:Draw()
 	-- what time is it? it's time to get ill!
 	self:DrawTime()
 	
+	--FOR DEBUG
+	--[[
+	self:DrawMaxTest()
+	self:DrawMinTest()
+	--]]
 end
 	
 -- this method is around for testing the rendering of different elements
 -- it is not called in practice
-function Digital:DrawTest()
+function Digital:DrawMinTest()
 
 	local widget = self.clockGroup:getWidget('h1')
 	widget:setValue('')
 	widget = self.dropShadows:getWidget('s1')
 	widget:setStyle('icon_digitalClockNoShadow')
+	widget = self.clockGroup:getWidget('h2')
+	widget:setValue('7')
+	widget = self.clockGroup:getWidget('m1')
+	widget:setValue('0')
+	widget = self.clockGroup:getWidget('m2')
+	widget:setValue('1')
+
+	self.ampm:setValue('AM')
+
+	widget = self.dateGroup:getWidget('dayofweek')
+	widget:setValue('Monday')
+	widget = self.dateGroup:getWidget('dayofmonth')
+	widget:setValue('01')
+	widget = self.dateGroup:getWidget('month')
+	widget:setValue('May')
+	widget = self.dateGroup:getWidget('year')
+	widget:setValue('09')
+end
+
+-- this method is around for testing the rendering of different elements
+-- it is not called in practice
+function Digital:DrawMaxTest()
+
+	local widget = self.clockGroup:getWidget('h1')
+	widget:setValue('1')
 	widget = self.clockGroup:getWidget('h2')
 	widget:setValue('2')
 	widget = self.clockGroup:getWidget('m1')
@@ -272,13 +303,16 @@ function Digital:DrawTest()
 	widget = self.clockGroup:getWidget('m2')
 	widget:setValue('9')
 	
-	-- Draw AM PM
-	if self.useAmPm then
-		-- localized ampm rendering
-		local ampm = os.date("%p")
-		self.ampm:setValue(ampm)
-	end
+	self.ampm:setValue('PM')
 
+	widget = self.dateGroup:getWidget('dayofweek')
+	widget:setValue('Wednesday')
+	widget = self.dateGroup:getWidget('dayofmonth')
+	widget:setValue('31')
+	widget = self.dateGroup:getWidget('month')
+	widget:setValue('September')
+	widget = self.dateGroup:getWidget('year')
+	widget:setValue('09')
 end
 
 
