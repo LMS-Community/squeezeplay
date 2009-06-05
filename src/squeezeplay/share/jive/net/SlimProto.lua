@@ -159,7 +159,12 @@ local opcodes = {
 		local capabilities = table.concat(self.capabilities, ",")
 
 		-- always clear the syncgroupid after using it
-		self.capabilities.SyncgroupID = nil
+		for i, key in ipairs(self.capabilities) do
+			if string.match(key, "SyncgroupID=") then
+				self.capabilities.remove(table, i)
+				break
+			end
+		end
 
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
