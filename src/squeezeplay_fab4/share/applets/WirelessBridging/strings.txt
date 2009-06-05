@@ -1,0 +1,13 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+BRIDGE
+	EN	Wireless Bridging
+
+BRIDGE_ENABLE
+	EN	Enable Wireless Bridging
+
+BRIDGE_HOWTO
+	EN	Wireless Bridging allows you to connect a wired device via Squeezbox Touch ethernet port to your wireless network.
+

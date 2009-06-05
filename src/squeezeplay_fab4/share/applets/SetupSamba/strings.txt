@@ -1,0 +1,13 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SAMBA
+	EN	Setup Samba
+
+SAMBA_ENABLE
+	EN	Enable Samba
+
+SAMBA_HOWTO
+	EN	Samba allows you to transfer files from your Computer to Squeezbox Touch. User: root Password: 1234
+
