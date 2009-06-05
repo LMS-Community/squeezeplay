@@ -109,6 +109,17 @@ local function unpackNumber(str, pos, len)
 end
 
 
+function _ipstring(ip)
+	local str = {}
+	for i = 4,1,-1 do
+		str[i] = string.format("%d", ip & 0xFF)
+		ip = ip >> 8
+	end
+	str = table.concat(str, ".")
+	return str
+end
+
+
 local function _hexDump(msg, str)
 	local s = msg .. "\n" .. string.format('%04x ', 0)
 	for i = 1, #str do
@@ -145,6 +156,11 @@ local opcodes = {
 			wlanList = wlanList | 0x4000
 		end
 
+		local capabilities = table.concat(self.capabilities, ",")
+
+		-- always clear the syncgroupid after using it
+		self.capabilities.SyncgroupID = nil
+
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
 			packNumber(0, 1),
@@ -153,7 +169,7 @@ local opcodes = {
 			packNumber(wlanList, 2),
 			packNumber(0, 8), -- XXXX bytes received
 			"EN", -- XXXX language
-			table.concat(self.capabilities, ",")
+			capabilities			
 		}
 	end,
 
@@ -287,6 +303,7 @@ local opcodes = {
 	serv = function(self, packet)
 		return {
 			serverip = unpackNumber(packet, 5, 4),
+			syncgroupid = string.sub(packet, 9, 19),
 		}
 	end,
 
@@ -346,16 +363,24 @@ function __init(self, jnt, heloPacket)
 	end)
 
 	obj:subscribe("serv", function(_, data)
-		local server = data.serverip
+		local serverip = data.serverip
 
-		if server == 1 then
-			server = "www.squeezenetwork.com"
+		if serverip == 0 then
+			serverip = obj.lastServerip
+		elseif serverip == 1 then
+			serverip = "www.squeezenetwork.com"
+		elseif serverip == 2 then
+			serverip = "www.beta.squeezenetwork.com"
 		else
-			server = "www.test.squeezenetwork.com"
+			serverip = _ipstring(serverip)
 		end
 
-		log:info("server told us to connect to ", server)
-		obj:connect(server)
+		log:info("server told us to connect to ", serverip, " syncgroupid=", data.syncgroupid)
+
+		-- set syncgroupid
+		obj:capability("SyncgroupID", data.syncgroupid)
+
+		_connectToAddr(obj, serverip)
 	end)
 
 	return obj
@@ -382,11 +407,24 @@ end
 
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, server)
-	Task("slimprotoConnect", self, connectTask):addTask(server)
+	-- the server may have moved, get a fresh ip address
+	local serverip = server and server:getIpPort() or self.serverip
+
+	-- remember last SqueezeCenter for 'serv 0'
+	if not server:isSqueezeNetwork() then
+		self.lastServerip = serverip
+	end
+
+	_connectToAddr(self, serverip, nil)
 end
 
 
-function connectTask(self, server)
+function _connectToAddr(self, serverip)
+	Task("slimprotoConnect", self, connectTask):addTask(serverip)
+end
+
+
+function connectTask(self, serverip)
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -457,14 +495,11 @@ function connectTask(self, server)
 		self.txqueue = {}
 	end
 
-	-- the server may have moved, get a fresh ip address
-	local ip = server and server:getIpPort() or self.serverip
-
 	-- Bug 9900
 	-- Don't allow connections to production SN yet
-	assert(not string.match(ip, "www.squeezenetwork.com"))
+	assert(not string.match(serverip, "www.squeezenetwork.com"))
 
-	if self.state == CONNECTED and self.serverip == ip then
+	if self.state == CONNECTED and self.serverip == serverip then
 		log:debug("already connected to ", self.serverip)
 		return
 	end
@@ -474,11 +509,10 @@ function connectTask(self, server)
 
 	-- update connection state
 	self.state = CONNECTING
-	self.serverip = ip
+	self.serverip = serverip
 	self.txqueue = {}
 
-	if server then
-		self.server = server
+	if serverip then
 		self.reconnect = false
 	end
 
