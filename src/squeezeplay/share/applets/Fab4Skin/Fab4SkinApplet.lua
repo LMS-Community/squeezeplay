@@ -1905,6 +1905,9 @@ function skin(self, s)
 	s.hm_randomplay = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_random" .. skinSuffix),
 	})
+	s.hm_skinTest = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_blank" .. skinSuffix),
+	})
 	s.hm_randomtracks = _uses(s.hm_randomplay)
 	s.hm_randomartists = _uses(s.hm_randomplay)
 	s.hm_randomalbums = _uses(s.hm_randomplay)

@@ -176,7 +176,7 @@ function setup_help_list(self, item)
 	window:addActionListener("help", self, dummy_help)
 	window:setButtonAction("rbutton", "help")
 
-	local textarea = Textarea("help_text", data[1])
+	local textarea = Textarea("help_text_small", data[1])
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data[2]) do
@@ -804,7 +804,21 @@ testData = {
 		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
 	},
 	help_list_one = {
-		"Let's begin by getting\nyou connected to your network.",
+--		"Let's begin by getting\nyou connected to your network.",
+	"For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe \"Diagnostics\" screen, which can be found below.",
+--	"Pokud budete potřebovat další nápovědu k vašemu Squeezebox, navštivte laskavě mysqueezebox.com/support, kde naleznete odpovědi na mnoho otázek, a kontaktujte náš asistenční tým.\nPokud budete kontaktovat náš asistenční tým, můžete být požádáni o technické údaje vašeho Squeezebox poskytnuté Diagnostikou systému, dostupnou níže.",
+--	"Hvis du har brug for yderligere hjælp til din Squeezebox, kan du kigge på mysqueezebox.com/support hvor der er svar på mange spørgsmål og mulighed for at kontakte supportafdelingen.\nHvis du kontakter supportafdelingen, bliver du sandsynligvis bedt om at oplyse tekniske detaljer om din Squeezebox. Dem kan du finde vha. det nye værktøj Systemdiagnosticering som der er et link til nedenfor.",
+--	"Wenn Sie weitere Informationen zur Squeezebox benötigen, rufen Sie mysqueezebox.com/support auf. Dort erhalten Sie Antworten auf viele Fragen und die Möglichkeit, sich an unseren Kundendienst zu wenden.\nBei Kontaktaufnahme mit dem Kundendienst werden Sie eventuell um technische Angaben zur Squeezebox gebeten. Diese finden Sie mit einer Systemdiagnose (siehe unten).",
+--	"Si necesita más ayuda con Squeezebox, visite mysqueezebox.com/support, donde encontrará respuesta a gran cantidad de preguntas y desde donde podrá ponerse en contacto con nuestro equipo de asistencia técnica.\nSi se pone en contacto con el equipo de asistencia técnica, puede que se le pida información técnica sobre Squeezebox proporcionada por Diagnóstico del sistema, disponible más abajo.",
+--	"Jos tarvitset lisäohjeita Squeezeboxin käyttöön, siirry seuraavalle sivulle: mysqueezebox.com/support. Löydät sivulta vastauksia moniin kysymyksiin. Lisäksi voit ottaa sivulla yhteyttä tukitiimiimme.\nJos otat yhteyttä tukitiimiimme, sinulta saatetaan pyytää Squeezeboxia koskevia teknisiä tietoja. Saat ne järjestelmän diagnostiikasta alta.",
+--	"Si vous avez besoin d'aide supplémentaire pour votre Squeezebox, rendez-vous sur le site mysqueezebox.com/support, où vous trouverez les réponses à de nombreuses questions, et contactez notre équipe d'assistance.\nLorsque vous contactez notre équipe d'assistance, vous serez invité à préciser les données techniques de la Squeezebox. Elles sont fournies par le Diagnostic système, disponible ci-dessous.",
+--	"Per ottenere ulteriore assistenza relativamente a Squeezebox, consultare la pagina Web mysqueezebox.com/support, che include risposte a numerose domande e informazioni per contattare il nostro team di assistenza.\nQuando si contatta il team di assistenza, è necessario disporre delle informazioni tecniche su Squeezebox fornite dalla diagnostica del sistema, disponibile di seguito.",
+--	"Als je meer hulp met je Squeezebox nodig hebt, ga dan naar mysqueezebox.com/support. Hier vind je antwoord op veel vragen en kun je contact opnemen met ons supportteam.\nAls je contact opneemt met het supportteam, kun je gevraagd worden om technische details van je Squeezebox. Deze worden geleverd door System Diagnostics (hieronder).",
+--	"Gå til mysqueezebox.com/support hvis du trenger mer hjelp med Squeezebox. Her finner du svar på mange spørsmål, og du kan også kontakte støtteavdelingen.\nHvis du tar kontakt med støtteavdelingen, blir du kanskje bedt om å oppgi noen tekniske opplysninger om Squeezebox fra Systemdiagnose (se nedenfor).",
+--	"Aby uzyskać więcej pomocy związanej z urządzeniem Squeezebox, odwiedź stronę WWW pod adresem mysqueezebox.com/support. Znajdują się tam odpowiedzi na wiele pytań oraz informacje, dzięki którym można skontaktować się z działem pomocy technicznej.\nPracownicy działu pomocy technicznej mogą poprosić o podanie parametrów technicznych urządzenia Squeezebox. Parametry te można sprawdzić, używając narzędzia Diagnostyka systemu, które jest dostępne poniżej.",
+--	"Если вам необходима дополнительная помощь по Squeezebox, посетите\nmysqueezebox.com/support: там вы сможете найти ответы на многие вопросы, а также связаться со службой поддержки. Служба поддержки может попросить вас предоставить техническую информацию о вашем устройстве Squeezebox. Эту информацию можно извлечь с помощью программы Диагностика системы, доступной по ссылке ниже.",
+--	"Om du behöver mer hjälp med Squeezebox, kan du gå till mysqueezebox.com/support där du hittar frågor och svar, och där du kan kontakta teknisk support.\nOm du kontaktar teknisk support, kanske du ombeds att ange teknisk information om din Squeezebox. Den informationen får du via Systemdiagnostik nedan.",
+--]]
 		{ { "Continue" },
 		},
 	},
