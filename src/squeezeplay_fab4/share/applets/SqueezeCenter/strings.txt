@@ -3,22 +3,22 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 START
-	EN	Start SqueezeCenter
+	EN	Start Squeezebox Server
 
 STOP
-	EN	Stop SqueezeCenter
+	EN	Stop Squeezebox Server
 
 STOP_RESCAN_START
 	EN	Stop-Rescan-Restart
 
 STARTING_SQUEEZECENTER
-	EN	Starting SqueezeCenter
+	EN	Starting Squeezebox Server
 	
 STARTING_SQUEEZECENTER_TEXT
 	EN	It should take about a minute to start.
 
 STOPPING_SQUEEZECENTER
-	EN	Stopping SqueezeCenter
+	EN	Stopping Squeezebox Server
 
 RESCAN_SQUEEZECENTER
 	EN	Initiating rescan
@@ -27,10 +27,10 @@ RESCAN_SQUEEZECENTER_TEXT
 	EN	This will probably take several minutes.
 
 STATUS_SQUEEZECENTER_RUNNING
-	EN	SqueezeCenter is starting or running
+	EN	Squeezebox Server is starting or running
 
 STATUS_SCANNER_RUNNING
 	EN	The scanner is running
 
 STATUS_NOTHING
-	EN	Neither SqueezeCenter nor the scanner are running
+	EN	Neither Squeezebox Server nor the scanner are running

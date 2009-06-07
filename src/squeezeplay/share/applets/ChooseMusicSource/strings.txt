@@ -36,19 +36,19 @@ SLIMSERVER_ADD_SERVER
 	EN	Remote Library
 
 SLIMSERVER_HELP
-	CS	Zadejte IP adresu PC, na kterém běží SqueezeCenter
-	DA	Angiv IP-adressen på den computer hvor SqueezeCenter kører
-	DE	IP-Adresse des Computers mit SqueezeCenter eingeben
-	EN	Enter the IP address of the computer running SqueezeCenter
-	ES	Escriba la dirección IP del ordenador que ejecuta SqueezeCenter
-	FI	Anna sen tietokoneen IP-osoite, johon SqueezeCenter on asennettu
-	FR	Spécifiez l'adresse IP de l'ordinateur exécutant SqueezeCenter
-	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione SqueezeCenter
-	NL	Voer het IP-adres in van de computer waarop SqueezeCenter wordt uitgevoerd
-	NO	Oppgi ip-adressen til datamaskinen som kjører SqueezeCenter
-	PL	Wprowadź adres IP komputera, na którym działa program SqueezeCenter
-	RU	Введите IP-адрес компьютера, на котором используется SqueezeCenter
-	SV	Ange IP-adressen till datorn där SqueezeCenter körs
+	CS	Zadejte IP adresu PC, na kterém běží Squeezebox Server
+	DA	Angiv IP-adressen på den computer hvor Squeezebox Server kører
+	DE	IP-Adresse des Computers mit Squeezebox Server eingeben
+	EN	Enter the IP address of the computer running Squeezebox Server
+	ES	Escriba la dirección IP del ordenador que ejecuta Squeezebox Server
+	FI	Anna sen tietokoneen IP-osoite, johon Squeezebox Server on asennettu
+	FR	Spécifiez l'adresse IP de l'ordinateur exécutant Squeezebox Server
+	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione Squeezebox Server
+	NL	Voer het IP-adres in van de computer waarop Squeezebox Server wordt uitgevoerd
+	NO	Oppgi ip-adressen til datamaskinen som kjører Squeezebox Server
+	PL	Wprowadź adres IP komputera, na którym działa program Squeezebox Server
+	RU	Введите IP-адрес компьютера, на котором используется Squeezebox Server
+	SV	Ange IP-adressen till datorn där Squeezebox Server körs
 
 SLIMSERVER_CONNECTING_TO
 	CS	Připojuji se k\n%s
@@ -120,4 +120,4 @@ SQUEEZECENTER_VERSION
 	EN	Update Software
 
 SQUEEZECENTER_VERSION_HELP
-	EN	%s needs to be updated to a newer version of the Squeezebox software.\n\nPlease visit mysqueezebox.com/downloads to download the latest version.
+	EN	%s needs to be updated to a newer version of the Squeezebox Server.\n\nPlease visit mysqueezebox.com/downloads to download the latest version.

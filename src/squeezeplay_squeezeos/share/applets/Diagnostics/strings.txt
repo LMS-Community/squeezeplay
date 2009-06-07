@@ -348,19 +348,19 @@ SN_PORT_9000
 	SV	  TCP-port 9000:
 
 SC_ADDRESS
-	CS	SqueezeCenter:
-	DA	SqueezeCenter:
-	DE	SqueezeCenter:
-	EN	Squeezebox software:
-	ES	SqueezeCenter:
-	FI	SqueezeCenter:
-	FR	SqueezeCenter:
-	IT	SqueezeCenter:
-	NL	SqueezeCenter:
-	NO	SqueezeCenter:
-	PL	SqueezeCenter:
-	RU	SqueezeCenter:
-	SV	SqueezeCenter:
+	CS	Squeezebox Server:
+	DA	Squeezebox Server:
+	DE	Squeezebox Server:
+	EN	Squeezebox Server:
+	ES	Squeezebox Server:
+	FI	Squeezebox Server:
+	FR	Squeezebox Server:
+	IT	Squeezebox Server:
+	NL	Squeezebox Server:
+	NO	Squeezebox Server:
+	PL	Squeezebox Server:
+	RU	Squeezebox Server:
+	SV	Squeezebox Server:
 
 SC_NAME
 	CS	  Název knihovny:
