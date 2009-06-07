@@ -77,6 +77,7 @@ static struct decode_module *all_decoders[] = {
 #endif
 #ifdef WITH_SPPRIVATE
 	&decode_wma,
+	&decode_aac,
 #endif
 	&decode_vorbis,
 	&decode_flac,
@@ -232,7 +233,7 @@ static void decode_start_handler(void) {
 	}
 	mqueue_read_complete(&decode_mqueue);
 
-	for (i = 0; i < sizeof(all_decoders); i++) {
+	for (i=0; i<(sizeof(all_decoders)/sizeof(struct decode_module *)); i++) {
 		if (all_decoders[i]->id == decoder_id) {
 			decoder = all_decoders[i];
 			break;
@@ -743,6 +744,10 @@ static int decode_init_audio(lua_State *L) {
 	/* register codecs */
 	for (i=0; i<(sizeof(all_decoders)/sizeof(struct decode_module *)); i++) {
 		char *tmp, *ptr;
+
+		if (!all_decoders[i]->name) {
+			continue;
+		}
 
 		tmp = strdup(all_decoders[i]->name);
 

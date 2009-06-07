@@ -222,7 +222,7 @@ squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
 squeezeplay_private/Makefile:
-	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} --enable-wma
 
 squeezeplay_private: squeezeplay_private/Makefile
 	cd squeezeplay_private; make PREFIX=${PREFIX} install

@@ -49,6 +49,7 @@ extern struct decode_module decode_wma_win;
 #endif
 #ifdef WITH_SPPRIVATE
 extern struct decode_module decode_wma;
+extern struct decode_module decode_aac;
 #endif
 
 
