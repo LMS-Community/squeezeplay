@@ -96,12 +96,10 @@ function init(self)
 	self:initBrightness()
 	local brightnessTimer = Timer( 2000,
 		function()
-			if settings.brightnessControl == "automatic" or 
-				settings.brightnessControl == "manual" then
-				self:doBrightnessTimer()
-			else 
-				-- fullauto
-				self:doStaticBrightnessTimer()
+			if settings.brightnessControl == "manual" then
+				self:doManualBrightnessTimer()
+			else
+				self:doAutomaticBrightnessTimer()
 			end
 		end)
 	brightnessTimer:start()
@@ -121,8 +119,6 @@ end
 local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 
 -- Default/Start Values
-local ambientMax = 0
-local ambientMin = 1
 local brightCur = 100
 local brightMax = 100
 local brightTarget = 100
@@ -208,7 +204,7 @@ end
 -- so set it somewhere below that
 local staticLuxMax = 2000
 
-function doStaticBrightnessTimer(self)
+function doAutomaticBrightnessTimer(self)
 
 	-- As long as the user is touching the screen don't do anything more
 	if brightOverride > 0 then
@@ -224,7 +220,12 @@ function doStaticBrightnessTimer(self)
 	
 	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 	
-	local brightTarget = (100 / staticLuxMax) * luxvalue
+	if luxvalue > staticLuxMax then
+		-- Fix calculation for very high lux values
+		luxvalue = staticLuxMax
+	end
+	
+	local brightTarget = (100.0 / staticLuxMax) * luxvalue
 	
 	self:doBrightnessRamping(brightTarget);
 	
@@ -237,8 +238,7 @@ function doStaticBrightnessTimer(self)
 end
 
 -- Valid Brightness goes from 1 - 100, 0 = display off
-function doBrightnessTimer(self)
-	
+function doManualBrightnessTimer(self)
 	-- First Check if it is automatic or manual brightness control
 	if settings.brightnessControl == "manual" then
 		if settings.brightness != brightSettings then
@@ -247,48 +247,6 @@ function doBrightnessTimer(self)
 		end
 		return
 	end
-	
-	-- As long as the user is touching the screen don't do anything more
-	if brightOverride > 0 then
-		-- count down once per cycle
-		brightOverride = brightOverride - 1
-		return
-	end
-	
-	-- Now continue with the real ambient code 
-	local f = io.open(AMBIENT_SYSPATH .. "lux")
-	local lux = f:read("*all")
-	f:close()
-
-	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
-
-	if luxvalue > ambientMax then
-		ambientMax = luxvalue
-	end
-		
-	brightTarget = (luxvalue / ambientMax) * 100
-	
-	-- Ramp Brightness to target unless the brightness setting has changed
-	if settings.brightness != brightSettings then
-		-- Directly Set Target
-		brightCur = (settings.brightness/2)
-		
-		-- Update local brightness variables after settings change
-		brightSettings = settings.brightness
-		brightMax = (settings.brightness/2) + brightMinMax
-	else 
-		-- Do Ramping
-		self:doBrightnessRamping(brightTarget)
-		
-	end
-	
-	
-	-- Set Brightness
-	self:setBrightness( math.floor(brightCur) )
-	
-	--log:info("Brightness: " .. settings.brightness)
-	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget) .. " - " .. tostring(brightMax))
-	
 end
 
 ---
@@ -397,6 +355,8 @@ function settingsBrightnessShow (self, menuItem)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
+	
+	settings.brightnessControl = "manual"
 
 	local slider = Slider('brightness_slider', 1, 100, level,
 				function(slider, value, done)
@@ -475,22 +435,13 @@ function settingsBrightnessShow (self, menuItem)
 	return window
 end
 
-
 function settingsBrightnessAutomaticShow(self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
 	local settings = self:getSettings()
 
 	local group = RadioGroup()
-	log:info("Setting: " .. settings.brightnessControl)
+	--log:info("Setting: " .. settings.brightnessControl)
 	local menu = SimpleMenu("menu", {
-		{
-			text = self:string("BSP_BRIGHTNESS_MANUAL"),
-			style = "item_choice",
-			check = RadioButton("radio", group, function(event, menuitem)
-						settings.brightnessControl = "manual"
-					end,
-					settings.brightnessControl == "manual")
-		},
 		{
 			text = self:string("BSP_BRIGHTNESS_AUTOMATIC"),
 			style = "item_choice",
@@ -498,16 +449,7 @@ function settingsBrightnessAutomaticShow(self, menuItem)
 						settings.brightnessControl = "automatic"
 					end,
 					settings.brightnessControl == "automatic")
-		},
-		{
-			text = self:string("BSP_BRIGHTNESS_FULLYAUTOMATIC"),
-			style = "item_choice",
-			check = RadioButton("radio", group, function(event, menuitem)
-						settings.brightnessControl = "fullauto"
-					end,
-					settings.brightnessControl == "fullauto")
-		}
-				
+		}		
 	})
 	
 	window:addListener(EVENT_WINDOW_POP,
@@ -520,6 +462,7 @@ function settingsBrightnessAutomaticShow(self, menuItem)
 	self:tieAndShowWindow(window)
 
 end
+
 
 --[[
 

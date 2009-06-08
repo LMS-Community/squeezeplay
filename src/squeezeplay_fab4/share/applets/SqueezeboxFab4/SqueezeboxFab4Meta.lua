@@ -55,7 +55,6 @@ function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'screenSettings', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessAutomaticShow(...) end))
 
-
 	-- services
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")

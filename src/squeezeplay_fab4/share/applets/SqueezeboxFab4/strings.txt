@@ -68,16 +68,12 @@ BSP_BRIGHTNESS_CTRL
 	DE	Helligkeits Steuerung
 
 BSP_BRIGHTNESS_AUTOMATIC
-	EN	Automatic Brightness (with Bright.Setting )
-	DE	Automatische Hellikeit (mit Kontrolle)
+	EN	Automatic Brightness
+	DE	Automatische Hellikeit
 
 BSP_BRIGHTNESS_MANUAL
 	EN	Manual Brightness
 	DE	Manuelle Helligkeit
-
-BSP_BRIGHTNESS_FULLYAUTOMATIC
-	EN	Automatic Brightness
-	DE	Automatische Helligkeit
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.
