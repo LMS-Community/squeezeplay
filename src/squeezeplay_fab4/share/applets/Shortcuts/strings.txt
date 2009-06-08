@@ -7,22 +7,28 @@ SHORTCUTS_TITLE
 	EN	Shortcuts
 
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
-	EN	Top left button press
+	EN	Left Button Touch
 
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
-	EN	Top left button hold
+	EN	Left Button Hold
 
 SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
-	EN	Top right button press
+	EN	Right Button Touch
 
 SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
-	EN	Top right button hold
+	EN	Right Button Hold
+
+SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
+	EN	Home Left Button Touch
+
+SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
+	EN	Home Left Button Hold
 
 SHORTCUTS_INPUT_GESTURE_L_R
-	EN	Left to right swipe
+	EN	Right Swipe
 
 SHORTCUTS_INPUT_GESTURE_R_L
-	EN	Right to left swipe
+	EN	Left Swipe
 
 SHORTCUTS_OUTPUT_BACK
 	EN	Back
@@ -31,8 +37,17 @@ SHORTCUTS_OUTPUT_GO_HOME
 	EN	Go Home
 
 SHORTCUTS_OUTPUT_GO_NOW_PLAYING
-	EN	Now playing
+	EN	Now Playing
 
 SHORTCUTS_OUTPUT_GO_PLAYLIST
-	EN	Now playing playlist
+	EN	Current Playlist
+
+SHORTCUTS_OUTPUT_DISABLED
+	EN	Disabled
+
+SHORTCUTS_OUTPUT_GO_FAVORITES
+	EN	Favorites
+
+SHORTCUTS_OUTPUT_POWER
+	EN	Power
 

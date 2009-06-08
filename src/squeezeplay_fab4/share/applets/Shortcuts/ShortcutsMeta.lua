@@ -30,6 +30,8 @@ function defaultSettings(meta)
 			["title_left_hold"]  = "go_home",
 			["title_right_press"]  = "go_now_playing",
 			["title_right_hold"]  = "go_playlist",
+			["home_title_left_press"]  = "power",
+			["home_title_left_hold"]  = "power",
 		},
 		gestureActionMappings = {
 			[GESTURE_L_R] = "go_home",
