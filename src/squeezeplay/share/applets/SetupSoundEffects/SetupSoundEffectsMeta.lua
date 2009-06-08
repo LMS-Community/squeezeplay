@@ -37,7 +37,7 @@ end
 
 function defaultSettings(meta)
 	return {
-		_VOLUME = Sample.MAXVOLUME / 3
+		_VOLUME = Sample.MAXVOLUME / 7
 	}
 end
 
