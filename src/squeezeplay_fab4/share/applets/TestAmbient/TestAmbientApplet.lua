@@ -19,6 +19,8 @@ local RadioButton            = require("jive.ui.RadioButton")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local Tile                   = require("jive.ui.Tile")
 
+local appletManager    		 = appletManager
+
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local SYSPATH = "/sys/bus/i2c/devices/0-0039/"
@@ -47,6 +49,15 @@ local tLux = {
 	item = nil,
 	valid = false,
 	text = "Lux: ",
+}
+
+local tBright = {
+	min = -1,
+	max = -1,
+	cur = -1,
+	item = nil,
+	valid = false,
+	text = "Brightness: ",
 }
 
 local mainMenu = nil
@@ -97,6 +108,12 @@ function _updateLabel(self, channel, newValue)
 	mainMenu:updatedItem(channel.item)
 end
 
+function _getBrightness(self)
+        -- store existing brightness levels in self
+        return appletManager:callService("getBrightness")
+end
+
+
 function _update(self)
 
 	-- Open SysFS 
@@ -115,10 +132,14 @@ function _update(self)
 
 	-- Parse Lux
 	local valueLux = string.sub(lux, 0, string.len(lux)-1)
+	
+	-- 
+	local brightness = self:_getBrightness()
 
 	self:_updateLabel(tChannel0, valueChannel0)
 	self:_updateLabel(tChannel1, valueChannel1)
 	self:_updateLabel(tLux, valueLux)
+	self:_updateLabel(tBright, brightness)
 end
 
 function _changeIntegrationTime(self, newValue)
@@ -288,6 +309,10 @@ function openWindow(self)
 	tLux.item = {
 		text = "Lux"
 	}
+	
+	tBright.item = {
+		text = "Brightness"
+	}
 
 	gainItem = {
 		text = "Change Gain (Currently Off)",
@@ -309,10 +334,11 @@ function openWindow(self)
 			self:menuSetFactor()
 			end
 	}
-
+	
 	mainMenu:addItem(tChannel0.item)
 	mainMenu:addItem(tChannel1.item)
 	mainMenu:addItem(tLux.item)
+	mainMenu:addItem(tBright.item)
 	mainMenu:addItem(gainItem)
 	mainMenu:addItem(integrationItem)
 	mainMenu:addItem(factorItem)
