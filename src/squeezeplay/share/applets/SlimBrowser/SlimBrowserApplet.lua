@@ -272,7 +272,11 @@ local function _nowPlayingButton(self, absolute)
 			return EVENT_CONSUME
 		end,
 		function()
-			Framework:pushAction("go_playlist")
+			Framework:pushAction("title_right_hold") 
+			return EVENT_CONSUME
+		end,
+		function()
+			Framework:pushAction("soft_reset")
 			return EVENT_CONSUME
 		end
 	)

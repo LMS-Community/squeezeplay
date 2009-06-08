@@ -219,6 +219,8 @@ actionActionMappings = {
 	["title_left_hold"]  = "go_home", --will be reset by ShortcutsMeta defaults
 	["title_right_press"]  = "go_now_playing", --will be reset by ShortcutsMeta defaults
 	["title_right_hold"]  = "go_playlist", --will be reset by ShortcutsMeta defaults
+	["home_title_left_press"]  = "power", --will be reset by ShortcutsMeta defaults
+	["home_title_left_hold"]  = "power", --will be reset by ShortcutsMeta defaults
 }
 
 -- enter actions here that are triggered in the app but not by any hard input mechanism. Entering them here will get them registered so they can be used
@@ -230,4 +232,5 @@ unassignedActionMappings = {
 	"clear",
 	"go_rhapsody",
 	"nothing",
+	"ignore",
 }

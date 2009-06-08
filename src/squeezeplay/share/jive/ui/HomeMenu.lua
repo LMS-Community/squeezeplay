@@ -74,22 +74,29 @@ function __init(self, name, style, titleStyle)
 	obj.window:addActionListener("back", obj, bumpAction)
 
 
-	-- power button, delayed display so that "back back back power" is avoided
-	obj.window:setButtonAction("lbutton", "power")
+	-- power button, delayed display so that "back back back power" is avoided (if power button is selected as home press
+	obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
 
 	obj.window:addListener( EVENT_WINDOW_ACTIVE,
 				function()
-					obj.window:addTimer(    1000,
-								function ()
-									obj.window:setButtonAction("lbutton", "power")
-								end,
-								true)
+					--only do timer when we know "home press" is power (still might be missing from INACTIVE handling if shortcuts changed recently) 
+					if Framework:getActionToActionTranslation("home_title_left_press") == "power" then
+						obj.window:addTimer(    1000,
+									function ()
+										obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
+									end,
+									true)
+					else
+						obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
+					end
 					return EVENT_UNUSED
 				end)
 
 	obj.window:addListener( EVENT_WINDOW_INACTIVE,
 				function()
-					obj.window:setButtonAction("lbutton", "nothing")
+					if Framework:getActionToActionTranslation("home_title_left_press") == "power" then
+						obj.window:setButtonAction("lbutton", nil)
+					end
 					return EVENT_UNUSED
 				end)
 

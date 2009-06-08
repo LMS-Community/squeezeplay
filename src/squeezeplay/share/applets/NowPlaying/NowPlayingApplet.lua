@@ -686,7 +686,16 @@ function _createUI(self)
 				function() 
 					Framework:pushAction("go") -- go action must work (as ir right and controller go must work also) 
 					return EVENT_CONSUME 
+				end,
+				function()
+					Framework:pushAction("title_right_hold")
+					return EVENT_CONSUME
+				end,
+				function()
+					Framework:pushAction("soft_reset")
+					return EVENT_CONSUME
 				end
+
 		),
 	   })
 	

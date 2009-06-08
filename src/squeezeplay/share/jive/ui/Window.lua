@@ -169,11 +169,11 @@ function __init(self, style, title, titleStyle)
 		obj:addListener(EVENT_WINDOW_ACTIVE,
 			function(event)
 				local left = obj:getIconWidget("lbutton")
-				if left and left.isDefaultButtonGroup then
+				if left and left.isDefaultButtonGroup and obj ~= Framework.windowStack[1] then --exclude home which has alternate button handling due to power
 					obj:setDefaultLeftButtonAction()
 				end
 				local right = obj:getIconWidget("rbutton")
-				if right and right.isDefaultButtonGroup then
+				if right and right.isDefaultButtonGroup and obj ~= Framework.windowStack[1] then --exclude home which has alternate button handling due to power
 					obj:setDefaultRightButtonAction()
 				end
 				return EVENT_UNUSED
@@ -780,7 +780,7 @@ end
 
 --static method
 function createDefaultRightButton(self)
-	return self:createButtonActionButton("title_right_press", "title_right_hold", nil, true)
+	return self:createButtonActionButton("title_right_press", "title_right_hold", "soft_reset", true)
 end
 
 --[[
@@ -815,7 +815,12 @@ function createButtonActionButton(self, buttonAction, buttonHoldAction, buttonLo
 		end
 	end
 
-	local group = Group("button_" .. (Framework:getActionToActionTranslation(buttonAction) or "none"), {
+	local actionStyle = Framework:getActionToActionTranslation(buttonAction)
+	if not actionStyle or actionStyle == "disabled" then
+		actionStyle = "none"
+	end
+
+	local group = Group("button_" .. actionStyle, {
 		icon = Icon("icon"),
 		icon_text = Label("text"),
 	})
