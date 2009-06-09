@@ -88,6 +88,10 @@ function param(self)
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
+		radialClock = {
+			hourTickPath     = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_hr_on.png',
+			minuteTickPath   = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_min_on.png',
+		},
         }
 end
 
@@ -589,6 +593,7 @@ function skin(self, s)
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
+	local TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe }
 
 	local SELECT_COLOR = { 0xE7, 0xE7, 0xE7 }
 	local SELECT_SH_COLOR = { }
@@ -1850,6 +1855,8 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
 	})
 	s.hm__myMusic = _uses(s.hm_myMusic)
+	s.hm_myMusicSelector = _uses(s.hm_myMusic)
+
 	s.hm_favorites = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_favorites" .. skinSuffix),
 	})
@@ -1872,7 +1879,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_ml_artist" .. skinSuffix),
 	})
 	s.hm_myMusicAlbums = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_ml_albums" .. skinSuffix),
 	})
 	s.hm_myMusicGenres = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_genres" .. skinSuffix),
@@ -1900,7 +1907,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
 	})
 	s.hm_myMusicMusicFolder = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_folder" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_ml_folder" .. skinSuffix),
 	})
 	s.hm_randomplay = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_random" .. skinSuffix),
@@ -2403,7 +2410,7 @@ function skin(self, s)
 		border = { 14, 20, 12, 0 },
 	}
 
-	s.icon_blank = {
+	s.icon_digitalClockBlank = {
 		img = false,
 		w = 40,
 	}
@@ -2459,7 +2466,7 @@ function skin(self, s)
 		},
 		date = {
 			position = LAYOUT_SOUTH,
-			order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month', 'year' },
+			order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
 			w = WH_FILL,
 			h = 70,
 			padding = { 0, 0, 0, 6 },
@@ -2468,7 +2475,7 @@ function skin(self, s)
 				w = 190,
 				h = WH_FILL,
 				font = _font(20),
-				fg = { 0, 0xbe, 0xbe },
+				fg = { 0xcc, 0xcc, 0xcc },
 				padding  = { 1, 0, 0, 6 },
 			},
 			vdivider1 = {
@@ -2489,11 +2496,11 @@ function skin(self, s)
 			},
 			month = {
 				font = _font(20),
-				w = 140,
+				w = WH_FILL,
 				h = WH_FILL,
-				align = 'left',
+				align = 'center',
 				fg = { 0xcc, 0xcc, 0xcc },
-				padding = { 21, 0, 0, 5 },
+				padding = { 0, 0, 0, 5 },
 			},
 			year = {
 				font = _boldfont(20),
@@ -2506,8 +2513,101 @@ function skin(self, s)
 		},
 	}
 
+	local blackMask = Tile:fillColor(0x000000ff)
+	s.clockDigitalBlack = _uses(s.clockDigital, {
+		bgImg = blackMask,
+		horizDivider = { hidden = 1 },
+		date = {
+			order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+		},
+		dropShadow = { hidden = 1 },
+	})
+	s.clockDigitalTransparent = _uses(s.clockDigital, {
+		bgImg = false,
+		horizDivider = { hidden = 1 },
+		date = {
+			order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+		},
+		dropShadow = { hidden = 1 },
+	})
+
 	-- RADIAL CLOCK
+	local radialClockBackground = _loadImageTile(self, imgpath .. "Clocks/Radial/wallpaper_clock_radial.png")
+	s.icon_radialClockTicksOff = {
+		img = _loadImage(self, "Clocks/Radial/radial_ticks_off.png"),
+		align = 'center',
+	}
+	s.icon_radialClockMinuteTick = {
+		img = _loadImage(self, "Clocks/Radial/radial_ticks_min_on.png"),
+	}
+	s.icon_radialClockHourTick = {
+		img = _loadImage(self, "Clocks/Radial/radial_ticks_hr_on.png"),
+	}
+
+	s.radialClockToday = {
+		w = 14,
+		align = 'center',
+		font = _font(14),
+		fg = { 0xe6, 0xe6, 0xe6 },
+	}
+	s.radialClockNotToday = {
+		w = 14,
+		align = 'center',
+		font = _font(14),
+		fg = { 0x66, 0x66, 0x66 },
+	}
+	s.icon_radialClockDot = {
+		w   = 26,
+		h   = 18,
+		img = _loadImage(self, "Clocks/Radial/dot_weekday_indicator.png"),
+		padding = { 4, 0, 4, 0 },
+	}
+	s.icon_radialClockBlankDot = {
+		w   = 26,
+		h   = 18,
+		img = false,
+		padding = { 4, 0, 4, 0 },
+	}
+
+	local _dayPosition = function(day)
+		local y = 33*day - 3 
+		return {
+			position = LAYOUT_NONE,
+			x = 6,
+			y = y,
+			w = 42,
+			h = 18,
+			order = { 'dot', 'day' },
+		}
+	end
+
 	s.clockRadial = {
+		bgImg = radialClockBackground,
+		ticks = {
+			position = LAYOUT_CENTER,
+			order = { 'ticksOff' },
+			padding = { 122, 36, 0, 0 },
+		},
+		day1 = _dayPosition(1),
+		day2 = _dayPosition(2),
+		day3 = _dayPosition(3),
+		day4 = _dayPosition(4),
+		day5 = _dayPosition(5),
+		day6 = _dayPosition(6),
+		day7 = _dayPosition(7),
+		dayOfMonth = {
+			position = LAYOUT_EAST,
+			w = 118,
+			h = WH_FILL,
+			align = 'center',
+			padding = { 0, 116, 12, 0 },
+			order = { 'text' },
+			text = {
+				align = 'center',
+				font = _font(32),
+				fg   = { 0xb3, 0xb3, 0xb3 },
+			},
+		},
 	}
 	
 	s.debug_canvas = {

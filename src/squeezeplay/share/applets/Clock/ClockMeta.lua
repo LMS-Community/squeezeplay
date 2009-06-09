@@ -26,14 +26,11 @@ end
 
 function configureApplet(self)
 
-	--[[
-	-- TODO: Radial Clock
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_RADIAL"), 
-		"NewClock", 
-		"openAnalogClock", _, _, 20
+		"Clock", 
+		"openAnalogClock", _, _, 28
 	)
-	--]]
 
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL"), 
@@ -42,9 +39,20 @@ function configureApplet(self)
 	)
 
 	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL_BLACK"), 
+		"Clock", 
+		"openDetailedClockBlack", _, _, 25
+	)
+
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL_TRANSPARENT"), 
+		"Clock", 
+		"openDetailedClockTransparent", _, _, 26
+	)
+	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_DOTMATRIX"), 
 		"Clock", 
-		"openStyledClock", _, _, 26
+		"openStyledClock", _, _, 27
 	)
 end
 

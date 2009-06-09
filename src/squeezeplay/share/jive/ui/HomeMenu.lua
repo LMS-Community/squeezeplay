@@ -224,6 +224,9 @@ function addNode(self, item)
 		item.weight = 100
 	end
 
+	if item.iconStyle then
+		item.icon = Icon(item.iconStyle)
+	end
 	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
 		self.menuTable[item.id].text = item.text

@@ -38,8 +38,6 @@ function defaultSettings(self)
 		whenStopped = "Clock:openDetailedClock",
 		whenPlaying = "NowPlaying:openScreensaver",
 		whenOff = "BlankScreen:openScreensaver",
---		whenOff = "Clock:openDetailedClock",
---		whenOff = "Clock:openAnalogClock",
 		timeout = 30000,
 	}
 end

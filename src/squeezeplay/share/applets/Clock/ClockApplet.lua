@@ -13,6 +13,7 @@ local Font             = require("jive.ui.Font")
 local Framework        = require("jive.ui.Framework")
 local Group            = require("jive.ui.Group")
 local Icon             = require("jive.ui.Icon")
+local Canvas           = require("jive.ui.Canvas")
 local Choice           = require("jive.ui.Choice")
 local Label            = require("jive.ui.Label")
 local RadioButton      = require("jive.ui.RadioButton")
@@ -24,6 +25,7 @@ local Window           = require("jive.ui.Window")
 local datetime         = require("jive.utils.datetime")
 
 local appletManager	= appletManager
+local jiveMain          = jiveMain
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -109,6 +111,8 @@ function DotMatrix:__init(ampm)
 	obj.clock_format_day    = "%d"
 	obj.clock_format_year   = "%Y"
 
+	obj.clock_format = obj.clock_format_hour .. ":" .. obj.clock_format_minute
+
 	return obj
 end
 
@@ -164,7 +168,9 @@ Digital = oo.class({}, Clock)
 function Digital:__init(applet, ampm)
 	log:debug("Init Digital Clock")
 	
-	obj = oo.rawnew(self, Clock('clockDigital'))
+	local windowStyle = applet.windowStyle or 'clockDigital'
+
+	obj = oo.rawnew(self, Clock(windowStyle))
 
 	-- store the applet's self so we can call self.applet:string() for localizations
 	obj.applet = applet
@@ -188,7 +194,6 @@ function Digital:__init(applet, ampm)
 		dayofmonth = Label('dayofmonth'),
 		vdivider2  = Icon('icon_digitalClockVDivider'),
 		month      = Label('month'),
-		year       = Label('year'),
 	})
 
 	obj.ampm = Label('ampm')
@@ -200,7 +205,7 @@ function Digital:__init(applet, ampm)
 	obj.dropShadows = Group('dropShadow', {
 		s1   = Icon('icon_digitalClockDropShadow'),
 		s2   = Icon('icon_digitalClockDropShadow'),
-		dots = Icon('icon_blank'),
+		dots = Icon('icon_digitalClockBlank'),
 		s3   = Icon('icon_digitalClockDropShadow'),
 		s4   = Icon('icon_digitalClockDropShadow'),
 	})
@@ -221,13 +226,15 @@ function Digital:__init(applet, ampm)
 		obj.clock_format_hour = "%H"
 		obj.useAmPm = false
 	end
+	obj.clock_format_minute = "%M"
+
+	obj.clock_format = obj.clock_format_hour .. ":" .. obj.clock_format_minute
 
 	return obj
 end
 
 	
 function Digital:Draw()
-
 
 	-- string day of week
 	local dayOfWeek   = os.date("%w")
@@ -247,11 +254,6 @@ function Digital:Draw()
 	local monthString = self.applet:string(token)
 	widget = self.dateGroup:getWidget('month')
 	widget:setValue(monthString)
-
-	-- two digit numerical year
-	local year = os.date("%y")
-	widget = self.dateGroup:getWidget('year')
-	widget:setValue(year)
 
 	-- what time is it? it's time to get ill!
 	self:DrawTime()
@@ -317,8 +319,8 @@ end
 
 
 function Digital:DrawTime()
-	local theHour = os.date(self.clock_format_hour)
-	local theMinute = os.date("%M")
+	local theHour   = os.date(self.clock_format_hour)
+	local theMinute = os.date(self.clock_format_minute)
 
 	local widget = self.clockGroup:getWidget('h1')
 	if string.sub(theHour, 1, 1) == '0' then
@@ -381,23 +383,168 @@ end
 -- TODO: Radial Clock
 Radial = oo.class({}, Clock)
 
-function Radial:__init()
-	log:debug("Init Radial Clock")
+function Radial:__init(applet, weekstart)
+	log:info("Init Radial Clock")
+
 	obj = oo.rawnew(self, Clock('clockRadial'))
+
+	obj.screen_width, obj.screen_height = Framework:getScreenSize()
+	obj.skinParams = jiveMain:getSkinParam('radialClock')
+
+	-- bring in applet's self so strings are available
+	obj.applet    = applet
+	-- weekstart is "Sunday" or "Monday"
+	obj.weekstart = weekstart
+
+	obj.canvas   = Canvas('debug_canvas', function(screen)
+		obj:_reDraw(screen)
+	end)
+	obj.window:addWidget(obj.canvas)
+
+	obj.ticksOff = Icon('icon_radialClockTicksOff')
+	obj.tickGroup = Group('ticks', {
+		ticksOff = obj.ticksOff
+	})
+
+	local _dayGroup = function() 
+		return {
+			dot = Icon('icon_radialClockBlankDot'),
+			day  = Label('day', '')
+		} 
+	end
+
+	-- days of week
+	obj.day1 = Group('day1', _dayGroup())
+	obj.day2 = Group('day2', _dayGroup())
+	obj.day3 = Group('day3', _dayGroup())
+	obj.day4 = Group('day4', _dayGroup())
+	obj.day5 = Group('day5', _dayGroup())
+	obj.day6 = Group('day6', _dayGroup())
+	obj.day7 = Group('day7', _dayGroup())
+
+	obj.dayOfMonth = Group('dayOfMonth', {
+		text = Label('text', ''),
+	})
+
+	obj.window:addWidget(obj.tickGroup)
+	obj.window:addWidget(obj.day1)
+	obj.window:addWidget(obj.day2)
+	obj.window:addWidget(obj.day3)
+	obj.window:addWidget(obj.day4)
+	obj.window:addWidget(obj.day5)
+	obj.window:addWidget(obj.day6)
+	obj.window:addWidget(obj.day7)
+	obj.window:addWidget(obj.dayOfMonth)
+
 	obj.clock_format = "%H:%M"
 	return obj
 end
 
+
 function Radial:Draw()
+	self:drawDay()
+	self.canvas:reDraw()
+end
+
+
+function Radial:drawDay()
+
+	local dayOfMonth = os.date("%d")
+	if self.today == dayOfMonth then
+		return
+	end
+
+	local dayOfMonthWidget = self.dayOfMonth:getWidget('text')
+	dayOfMonthWidget:setValue(dayOfMonth)
+	self.today = today
+
+	local DAYS_SUN = { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" }
+	local DAYS_MON = { "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" }
+	local days
+
+	-- if week starts with monday, monday = 1 and days start from monday
+        if self.weekstart == "Monday" then
+                dayOfWeek = tonumber(os.date("%u"))
+                days = DAYS_MON
+	-- if week starts with sunday, sunday = 1 and days start from sunday
+	else
+                dayOfWeek = tonumber(os.date("%w"))+1
+                days = DAYS_SUN
+        end
+	local tokenStub = "SCREENSAVER_CLOCK_DAYSHORT_" 
+
+	local monthString = self.applet:string(token)
+	for i = 1, 7 do
+		local token = tokenStub .. tostring(days[i])
+		local key = "day" .. tostring(i)
+		local textWidget = self[key]:getWidget('day')
+		textWidget:setValue(self.applet:string(token))
+
+		-- when i is today, style accordingly
+		local iconWidget = self[key]:getWidget('dot')
+		if i == dayOfWeek then
+			-- style icon to be glowing dot
+			iconWidget:setStyle('icon_radialClockDot')
+			-- style text to be correct color
+			textWidget:setStyle('radialClockToday')
+			
+		else
+			-- not today, so style accordingly
+			textWidget:setStyle('radialClockNotToday')
+			iconWidget:setStyle('icon_radialClockBlankDot')
+		end
+	end
+
+end
+
+
+function Radial:_reDraw(screen)
+
+	-- Draw Background
+	local x, y, facew, faceh
+	
+	-- Setup Time Objects
+	local m = os.date("%M")
+	local h = os.date("%I")
+
+	-- Hour Pointer
+	for i = 0, tonumber(h) do
+		local angle = (360 / 12) * i
+		local hourTick = Surface:loadImage(self.skinParams.hourTickPath)
+		local tmp = hourTick:rotozoom(-angle, 1, 5)
+		facew, faceh = tmp:getSize()
+		x = math.floor((self.screen_width/2) - (facew/2))
+		y = math.floor((self.screen_height/2) - (faceh/2))
+		tmp:blit(screen, x, y)
+	end
+
+	-- Minute Pointer
+	for i = 0, tonumber(m) do
+		local angle = (360 / 60) * i
+		local minuteTick = Surface:loadImage(self.skinParams.minuteTickPath)
+		local tmp = minuteTick:rotozoom(-angle, 1, 5)
+		facew, faceh = tmp:getSize()
+		x = math.floor((self.screen_width/2) - (facew/2))
+		y = math.floor((self.screen_height/2) - (faceh/2))
+		tmp:blit(screen, x, y)
+	end
+
 end
 
 
 -- keep these methods with their legacy names
 -- to ensure backwards compatibility with old settings.lua files
 function openDetailedClock(self)
-	return self:_openScreensaver("Digital")
+	return self:_openScreensaver("Digital", 'clockDigital')
 end
 
+function openDetailedClockBlack(self)
+	return self:_openScreensaver("Digital", 'clockDigitalBlack')
+end
+
+function openDetailedClockTransparent(self)
+	return self:_openScreensaver("Digital", 'clockDigitalTransparent')
+end
 
 function openAnalogClock(self)
 	return self:_openScreensaver("Radial")
@@ -425,11 +572,13 @@ function _tick(self)
 end
 
 
-function _openScreensaver(self, type)
+function _openScreensaver(self, type, windowStyle)
 	log:debug("Type: " .. type)
 
 	-- Global Date/Time Settings
+	local weekstart  = datetime:getWeekstart() 
 	local hours      = datetime:getHours() 
+	local dateFormat = datetime:getDateFormat() 
 
 	hours = (hours == "12")
 
@@ -442,11 +591,12 @@ function _openScreensaver(self, type)
 		self.clock[1] = DotMatrix(hours)
 		self.clock[2] = DotMatrix(hours)
 	elseif type == "Digital" then
+		self.windowStyle = windowStyle
 		self.clock[1] = Digital(self, hours)
 		self.clock[2] = Digital(self, hours)
 	elseif type == "Radial" then
-		self.clock[1] = Radial()
-		self.clock[2] = Radial()
+		self.clock[1] = Radial(self, weekstart)
+		self.clock[2] = Radial(self, weekstart)
 	else
 		log:error("Unknown clock type")
 		return

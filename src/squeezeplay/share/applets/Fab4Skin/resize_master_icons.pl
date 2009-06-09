@@ -64,6 +64,8 @@ icon_ml_new_music.png
 icon_ml_genres.png
 icon_ml_artist.png
 icon_linein.png
+icon_ml_folder.png
+icon_ml_albums.png
 icon_folder.png
 icon_digital_inputs.png
 icon_choose_player.png
