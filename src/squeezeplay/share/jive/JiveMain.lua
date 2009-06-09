@@ -547,7 +547,7 @@ end
 
 
 function JiveMain:getDefaultSkin()
-	return _defaultSkin or "DefaultSkin"
+	return _defaultSkin or "ControllerSkin"
 end
 
 

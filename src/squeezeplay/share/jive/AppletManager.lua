@@ -67,7 +67,7 @@ local _defaultSettingsByAppletName = {}
 -- allowed applets, can be used for debugging to limit applets loaded
 --[[
 local allowedApplets = {
-	DefaultSkin = true,
+	ControllerSkin = true,
 	SqueezeDiscovery = true,
 }
 --]]

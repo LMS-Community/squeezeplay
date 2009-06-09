@@ -409,7 +409,7 @@ function _updateTrack(self, trackinfo, pos, length)
 		
 		--[[ FIXME, reformat trackinfo to one line in certain cases
 		if customStyle == 'large' and windowStyle == 'ss' and 
-			(jiveMain:getSelectedSkin() == 'DefaultSkin' or jiveMain:getSelectedSkin() == 'ControllerSkin') then
+			(jiveMain:getSelectedSkin() == 'ControllerSkin') then
 				trackinfo = string.gsub(trackinfo, "\n", " - ")
 		end
 		--]]

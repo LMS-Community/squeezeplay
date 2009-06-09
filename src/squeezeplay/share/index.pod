@@ -113,8 +113,6 @@ L<jive.utils.table|jive::utils::table>
 
 L<applets.Bounce.BounceApplet|applets::Bounce::BounceApplet>
 
-L<applets.DefaultSkin.DefaultSkinApplet|applets::DefaultSkin::DefaultSkinApplet>
-
 L<applets.Flickr.FlickrApplet|applets::Flickr::FlickrApplet>
 
 L<applets.KeyLock.KeyLockApplet|applets::KeyLock::KeyLockApplet>

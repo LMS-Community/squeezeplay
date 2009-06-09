@@ -39,7 +39,6 @@ function defaultSettings(meta)
 		Fab4Skin       = "fab4_nocturne.png",
 		FullscreenSkin = "jive_midnight.png",
 		ControllerSkin = "jive_sunrise.png",
-		DefaultSkin    = "jive_sunrise.png",
 	}
 end
 
