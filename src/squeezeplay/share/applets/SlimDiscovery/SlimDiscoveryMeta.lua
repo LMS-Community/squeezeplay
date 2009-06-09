@@ -91,6 +91,16 @@ function configureApplet(meta)
 		player = Player(jnt, settings.currentPlayer)
 	end
 
+	if not player then
+		for i, candidatePlayer in Player:iterate() do
+		        if candidatePlayer:isLocal() then
+				log:info("Setting local player as current player since no saved player found and a local player exists")
+		                player = candidatePlayer
+		                break
+		        end
+		end
+	end
+
 	if player then
 		slimDiscovery:setCurrentPlayer(player)
 	end
