@@ -137,7 +137,9 @@ end
 --_activate(the_screensaver)
 --Activates the screensaver C<the_screensaver>. If <the_screensaver> is nil then the
 --screensaver set for the current mode is activated.
-function _activate(self, the_screensaver)
+-- the force arg is set to true for preview, allowing screensavers that might be not shown in certain circumstances to still be previewed
+-- see ClockApplet for example
+function _activate(self, the_screensaver, force)
 	log:debug("Screensaver activate")
 
 	-- check if the top window will allow screensavers, if not then
@@ -167,7 +169,7 @@ function _activate(self, the_screensaver)
 	-- activate the screensaver. it should register any windows with
 	-- screensaverWindow, and open then itself
 	local instance = appletManager:loadApplet(screensaver.applet)
-	if instance[screensaver.method](instance) ~= false then
+	if instance[screensaver.method](instance, force) ~= false then
 		log:info("activating " .. screensaver.applet .. " screensaver")
 	end
 end
@@ -467,7 +469,7 @@ function screensaverSetting(self, menuItem, mode)
 		)
 		local testScreensaverAction = function (self)
 			self.demoScreensaver = key
-			self:_activate(key)
+			self:_activate(key, true)
 			return EVENT_CONSUME
 		end
 

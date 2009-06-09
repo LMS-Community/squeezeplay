@@ -242,7 +242,7 @@ function skin(self, s)
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
 
 	local threeItemSelectionBox   = _loadHTile(self, {
-		 imgpath .. "3_line_lists/menu_sel_box_3line_l.png",
+		nil,
 		 imgpath .. "3_line_lists/menu_sel_box_3line.png",
 		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
 	})

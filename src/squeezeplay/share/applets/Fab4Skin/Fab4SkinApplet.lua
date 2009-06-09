@@ -254,12 +254,12 @@ function skin(self, s)
 		 imgpath .. "5_line_lists/tch_5line_divider_r.png",
 	})
 	local fiveItemSelectionBox    = _loadHTile(self, {
-		 imgpath .. "5_line_lists/menu_sel_box_5line_l.png",
+		 nil,
 		 imgpath .. "5_line_lists/menu_sel_box_5line.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_r.png",
 	})
 	local fiveItemPressedBox      = _loadHTile(self, {
-		 imgpath .. "5_line_lists/menu_sel_box_5line_press_l.png",
+		 nil,
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press_r.png",
 	})

@@ -5,6 +5,7 @@ local math             = require("math")
 local table            = require("table")
 local os	       = require("os")	
 local string	       = require("jive.utils.string")
+local debug	       = require("jive.utils.debug")
 
 local oo               = require("loop.simple")
 
@@ -534,25 +535,24 @@ end
 
 -- keep these methods with their legacy names
 -- to ensure backwards compatibility with old settings.lua files
-function openDetailedClock(self)
-	return self:_openScreensaver("Digital", 'clockDigital')
+function openDetailedClock(self, force)
+	return self:_openScreensaver("Digital", 'clockDigital', force)
 end
 
-function openDetailedClockBlack(self)
-	return self:_openScreensaver("Digital", 'clockDigitalBlack')
+function openDetailedClockBlack(self, force)
+	return self:_openScreensaver("Digital", 'clockDigitalBlack', force)
 end
 
-function openDetailedClockTransparent(self)
-	return self:_openScreensaver("Digital", 'clockDigitalTransparent')
+function openDetailedClockTransparent(self, force)
+	return self:_openScreensaver("Digital", 'clockDigitalTransparent', force)
 end
 
-function openAnalogClock(self)
-	return self:_openScreensaver("Radial")
+function openAnalogClock(self, force)
+	return self:_openScreensaver("Radial", _, force)
 end
 
-
-function openStyledClock(self)
-	return self:_openScreensaver("DotMatrix")
+function openStyledClock(self, force)
+	return self:_openScreensaver("DotMatrix", _, force)
 end
 
 
@@ -572,9 +572,15 @@ function _tick(self)
 end
 
 
-function _openScreensaver(self, type, windowStyle)
+function _openScreensaver(self, type, windowStyle, force)
 	log:debug("Type: " .. type)
 
+	local year = os.date("%Y")
+	if tonumber(year) < 2009 and not force then
+		local time = os.date()
+		log:warn('This device does not seem to have the right time: ', time)
+		return
+	end
 	-- Global Date/Time Settings
 	local weekstart  = datetime:getWeekstart() 
 	local hours      = datetime:getHours() 
