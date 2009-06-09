@@ -332,7 +332,7 @@ function _showPowerOnWindow(self)
 	self.powerOnWindow:setTransparent(true)
 	self.powerOnWindow:setAlwaysOnTop(true)
 	self.powerOnWindow:setAllowScreensaver(false)
-	self.powerOnWindow:ignoreAllInputExcept({ "power" },
+	self.powerOnWindow:ignoreAllInputExcept({ "power", "power_on", "power_off" },
 						function(actionEvent)
 							return self:_powerActionHandler(actionEvent)
 						end)

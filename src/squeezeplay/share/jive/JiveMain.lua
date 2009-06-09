@@ -241,6 +241,16 @@ local function _powerAction()
 	return EVENT_CONSUME
 end
 
+local function _powerOffAction()
+	JiveMain:setSoftPowerState("off")
+	return EVENT_CONSUME
+end
+
+local function _powerOnAction()
+	JiveMain:setSoftPowerState("on")
+	return EVENT_CONSUME
+end
+
 
 function _defaultContextMenuAction(self)
 	--do nothing by default
@@ -307,6 +317,9 @@ function JiveMain:__init()
 	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
 
 	Framework:addActionListener("power", self, _powerAction, 10)
+	Framework:addActionListener("power_off", self, _powerOffAction, 10)
+	Framework:addActionListener("power_on", self, _powerOnAction, 10)
+
 	Framework:addActionListener("nothing", self, function() return EVENT_CONSUME end, 10)
 
 	--Last input type tracker (used by, for instance, Menu, to determine wheter selected style should be displayed)
