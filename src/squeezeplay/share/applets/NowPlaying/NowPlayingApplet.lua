@@ -748,8 +748,12 @@ function _createUI(self)
 	local playIcon = Button(Icon('play'),
 				function() 
 					Framework:pushAction("pause")
-				return EVENT_CONSUME 
-			end
+					return EVENT_CONSUME
+				end,
+				function()
+					Framework:pushAction("stop")
+					return EVENT_CONSUME
+				end
 			)
 	if playerStatus and playerStatus.mode == 'play' then
 		playIcon:setStyle('pause')
