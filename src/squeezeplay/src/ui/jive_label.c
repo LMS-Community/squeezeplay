@@ -7,8 +7,10 @@
 #include "common.h"
 #include "jive.h"
 
-#define SCROLL_FPS	7
-#define SCROLL_OFFSET	6
+
+/* was 7,6 originally - new values might be problematic on baby boom ir or controller*/
+#define SCROLL_FPS	22
+#define SCROLL_OFFSET	3
 
 #define SCROLL_PAD_RIGHT  40
 #define SCROLL_PAD_LEFT   -20
