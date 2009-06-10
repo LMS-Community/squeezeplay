@@ -355,11 +355,14 @@ function settingsBrightnessShow (self, menuItem)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
-	
-	settings.brightnessControl = "manual"
 
 	local slider = Slider('brightness_slider', 1, 100, level,
 				function(slider, value, done)
+					
+					if settings.brightnessControl != "manual" then
+						settings.brightnessControl = "manual"
+					end
+					
 					settings.brightness = value
 
 					local bright = settings.brightness + settings.ambient
