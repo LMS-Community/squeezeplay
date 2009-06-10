@@ -8,7 +8,7 @@
 #include "jive.h"
 
 
-/* was 7,6 originally - new values might be problematic on baby boom ir or controller*/
+/* was 7,6 originally - new values might be problematic on baby boom or controller*/
 #define SCROLL_FPS	22
 #define SCROLL_OFFSET	3
 
