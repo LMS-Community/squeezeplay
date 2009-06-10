@@ -61,6 +61,9 @@ DATETIME_TIMEFORMAT_24H
 	RU	24 часа
 	SV	24 timmar
 
+DATETIME_SHORTDATEFORMAT
+	EN	Short Date Format
+
 DATETIME_DATEFORMAT
 	CS	Formát data
 	DA	Datoformat

@@ -78,6 +78,14 @@ function settingsShow(self, menuItem)
 					end
 			},
 			{
+				text = self:string("DATETIME_SHORTDATEFORMAT"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+						self:shortDateFormatSetting(menuItem)
+						return EVENT_CONSUME
+					end
+			},
+			{
 				text = self:string("DATETIME_WEEKSTART"),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -128,6 +136,41 @@ function timeSetting(self, menuItem)
 	self:tieAndShowWindow(window)
 	return window;
 end
+
+function shortDateFormatSetting(self, menuItem)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
+	local group = RadioGroup()
+
+	local current = self:getSettings()["shortdateformat"]
+
+	local menu = SimpleMenu("menu", {})
+
+	for k,v in pairs(datetime:getAllShortDateFormats()) do
+		local _text = os.date(v)
+		if string.match(v, '%%d') or string.match(v, '%%m') then
+			local _help = _getDateHelpString(v)
+			_text = _text .. " (" .. _help .. ")"
+		end
+--[[		if tostring(v) == '%D' then
+			_text = _text .. " (mm/dd/yy)"
+		end
+--]]
+		menu:addItem({
+				text = _text,
+				style = 'item_choice',
+				check = RadioButton("radio", group, function(event, menuItem)
+						self:setShortDateFormat(v)
+					end,
+				current == v)
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 function dateFormatSetting(self, menuItem)
 	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
@@ -210,6 +253,12 @@ function setDateFormat(self, format)
 	self:getSettings()["dateformat"] = format
 	datetime:setDateFormat(format)
 end
+
+function setShortDateFormat(self, format)
+	self:getSettings()["shortdateformat"] = format
+	datetime:setShortDateFormat(format)
+end
+
 
 function setWeekStart(self, day)
 	self:getSettings()["weekstart"] = day

@@ -39,6 +39,7 @@ function defaultSettings(meta)
 	return {
 		weekstart = "Sunday",
 		dateformat = "%a %d %b %Y",
+		shortdateformat = "%m.%d.%Y",
 		hours = "12",
 	}
 end
@@ -47,6 +48,7 @@ function initDateTimeObject(meta)
 	local dt = datetime
 	dt:setWeekstart(meta:getSettings()["weekstart"])
 	dt:setDateFormat(meta:getSettings()["dateformat"])
+	dt:setShortDateFormat(meta:getSettings()["shortdateformat"])
 	dt:setHours(meta:getSettings()["hours"])
 end
 

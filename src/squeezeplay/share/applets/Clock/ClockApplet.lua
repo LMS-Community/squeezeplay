@@ -67,7 +67,7 @@ end
 
 DotMatrix = oo.class({}, Clock)
 
-function DotMatrix:__init(ampm)
+function DotMatrix:__init(ampm, shortDateFormat)
 	log:debug("Init Dot Matrix Clock")
 
 	obj = oo.rawnew(self, Clock('clockDotMatrix'))
@@ -111,7 +111,18 @@ function DotMatrix:__init(ampm)
 	obj.clock_format_month  = "%m"
 	obj.clock_format_day    = "%d"
 	obj.clock_format_year   = "%Y"
-
+	
+	-- do not allow any format for date here, but instead decide 
+	-- based on the position of %m and %d in shortDateFormat 
+	-- if the format should end up on this clock as MM.DD.YYYY or DD.MM.YYYY
+	local monthSpot = string.find(shortDateFormat, "m")
+	local daySpot   = string.find(shortDateFormat, "d")
+	if daySpot < monthSpot then
+		obj.clock_format_date   = "%d%m%Y"
+	else
+		obj.clock_format_date   = "%m%d%Y"
+	end
+	
 	obj.clock_format = obj.clock_format_hour .. ":" .. obj.clock_format_minute
 
 	return obj
@@ -131,21 +142,19 @@ function DotMatrix:Draw()
 	self:DrawClock(string.sub(theTime, 2, 2), 'm2')
 
 	-- draw month digits
-	theTime = os.date(self.clock_format_month)
+	theTime = os.date(self.clock_format_date)
 	self:DrawDate(string.sub(theTime, 1, 1), 'M1')
 	self:DrawDate(string.sub(theTime, 2, 2), 'M2')
 
 	-- draw day digits
-	theTime = os.date(self.clock_format_day)
-	self:DrawDate(string.sub(theTime, 1, 1), 'D1')
-	self:DrawDate(string.sub(theTime, 2, 2), 'D2')
+	self:DrawDate(string.sub(theTime, 3, 3), 'D1')
+	self:DrawDate(string.sub(theTime, 4, 4), 'D2')
 
 	-- draw year digits
-	theTime = os.date(self.clock_format_year)
-	self:DrawDate(string.sub(theTime, 1, 1), 'Y1')
-	self:DrawDate(string.sub(theTime, 2, 2), 'Y2')
-	self:DrawDate(string.sub(theTime, 3, 3), 'Y3')
-	self:DrawDate(string.sub(theTime, 4, 4), 'Y4')
+	self:DrawDate(string.sub(theTime, 5, 5), 'Y1')
+	self:DrawDate(string.sub(theTime, 6, 6), 'Y2')
+	self:DrawDate(string.sub(theTime, 7, 7), 'Y3')
+	self:DrawDate(string.sub(theTime, 8, 8), 'Y4')
 
 end
 
@@ -582,9 +591,9 @@ function _openScreensaver(self, type, windowStyle, force)
 		return
 	end
 	-- Global Date/Time Settings
-	local weekstart  = datetime:getWeekstart() 
-	local hours      = datetime:getHours() 
-	local dateFormat = datetime:getDateFormat() 
+	local weekstart       = datetime:getWeekstart() 
+	local hours           = datetime:getHours() 
+	local shortDateFormat = datetime:getShortDateFormat() 
 
 	hours = (hours == "12")
 
@@ -594,8 +603,8 @@ function _openScreensaver(self, type, windowStyle, force)
 
 	if type == "DotMatrix" then
 		-- This clock always uses 24 hours mode for now
-		self.clock[1] = DotMatrix(hours)
-		self.clock[2] = DotMatrix(hours)
+		self.clock[1] = DotMatrix(hours, shortDateFormat)
+		self.clock[2] = DotMatrix(hours, shortDateFormat)
 	elseif type == "Digital" then
 		self.windowStyle = windowStyle
 		self.clock[1] = Digital(self, hours)

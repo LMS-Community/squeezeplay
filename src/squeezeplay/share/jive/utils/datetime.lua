@@ -16,6 +16,7 @@ setWeekstart(self, day)
 getWeekstart(self)
 setDateFormat(self, dateformat)
 getDateFormat(self)
+getShortDateFormat(self)
 getCurrentTime(self)
 getTimeZone(self, timezone)
 getAllTimeZones(self)
@@ -44,6 +45,7 @@ module(...)
 -- FIXME: i8n
 local globalWeekstart = "Sunday"
 local globalDateFormat = "%a, %B %d %Y"
+local globalShortDateFormat = "%d.%m.%Y"
 local globalHours = "12"
 local globalTimeZone = "GMT"
 
@@ -82,6 +84,11 @@ local DateFormats = {
 	"%m/%d/%y"
 }
 
+local ShortDateFormats = {
+	"%m.%d.%Y",
+	"%d.%m.%Y",
+}
+
 local TimeZones = {
         GMT = {
                 offset = 0,
@@ -94,7 +101,6 @@ local TimeZones = {
         },
 }
 
-
 --[[
 =head2 getAllDateFormats(self)
 
@@ -105,6 +111,19 @@ Returns all available Date Formats defined in the local table DateFormat
 function getAllDateFormats(self)
 	return DateFormats
 end
+
+
+--[[
+=head2 getAllShortDateFormats(self)
+
+Returns all available Short Date Formats defined in the local table ShortDateFormat
+
+=cut
+--]]
+function getAllShortDateFormats(self)
+	return ShortDateFormats
+end
+
 
 --[[
 =head2 setWeekstart(self, day)
@@ -139,6 +158,31 @@ Returns the current setting for the first day in the week.
 function getWeekstart(self)
 	return globalWeekstart
 end
+
+
+--[[
+=head2 setShortDateFormat(self, dateformat)
+
+Set the default short date format.
+
+=cut
+--]]
+function setShortDateFormat(self, dateformat)
+	globalShortDateFormat = dateformat
+end
+
+
+--[[
+=head2 getShorDateFormat(self)
+
+Return the default short date format.
+
+=cut
+--]]
+function getShortDateFormat(self)
+	return globalShortDateFormat
+end
+
 
 --[[
 =head2 setDateFormat(self, dateformat)
