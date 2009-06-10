@@ -157,30 +157,12 @@ int jive_traceback (lua_State *L) {
 
 
 static int jiveL_initSDL(lua_State *L) {
-	SDL_Rect r;
 	const SDL_VideoInfo *video_info;
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
 
 	/* logging */
 	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
-
-	/* screen properties */
-	lua_getfield(L, 1, "screen");
-	if (lua_isnil(L, -1)) {
-		luaL_error(L, "Framework.screen is ni");
-	}
-
-	lua_getfield(L, -1, "bounds");
-	jive_torect(L, -1, &r);
-	lua_pop(L, 1);
-
-	lua_getfield(L, -1, "bpp");
-	screen_bpp = luaL_optint(L, -1, 0);
-	lua_pop(L, 1);
-
-	screen_w = r.w;
-	screen_h = r.h;
 
 	/* linux fbcon does not need a mouse */
 	SDL_putenv("SDL_NOMOUSE=1");
@@ -194,7 +176,7 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* report video info */
 	video_info = SDL_GetVideoInfo();
-	LOG_INFO(log_ui_draw, "%d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
+	LOG_INFO(log_ui_draw, "%d,%d %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->current_w, video_info->current_h, video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
 	LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
 
 	/* Register callback for additional events (used for multimedia keys)*/
@@ -205,12 +187,9 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
-
-	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, false);
-	if (!srf) {
-		SDL_Quit();
-		exit(-1);
-	}
+	SDL_ShowCursor(SDL_DISABLE);
+	SDL_EnableKeyRepeat (100, 100);
+	SDL_EnableUNICODE(1);
 
 	/* load the icon */
 	icon = jive_surface_load_image("jive/app.png");
@@ -219,23 +198,54 @@ static int jiveL_initSDL(lua_State *L) {
 		jive_surface_free(icon);
 	}
 
-	SDL_ShowCursor(SDL_DISABLE);
-	SDL_EnableKeyRepeat (100, 100);
-	SDL_EnableUNICODE(1);
+	screen_w = video_info->current_w;
+	screen_h = video_info->current_h;
+	screen_bpp = video_info->vfmt->BitsPerPixel;
 
-	tolua_pushusertype(L, srf, "Surface");
-	lua_setfield(L, -2, "surface");
-
-	/* background image */
-	jive_background = jive_tile_fill_color(0x000000FF);
-
-	/* show splash screen */
+	/* load splash screen */
 	splash = jive_surface_load_image("jive/splash.png");
 	if (splash) {
 		jive_surface_get_size(splash, &splash_w, &splash_h);
-		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
+
+		if (screen_w >= 800 || screen_h >= 600) {
+			/* assume desktop */
+			screen_w = splash_w;
+			screen_h = splash_h;
+		}
+	}
+
+	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, false);
+	if (!srf) {
+		SDL_Quit();
+		exit(-1);
+	}
+
+	if (splash) {
+		jive_surface_blit(splash, srf, MIN(0, (screen_w - splash_w) / 2), MIN(0, (screen_h - splash_h) / 2));
 		jive_surface_flip(srf);
 	}
+
+	lua_getfield(L, 1, "screen");
+	if (lua_isnil(L, -1)) {
+		LOG_ERROR(log_ui_draw, "no screen table");
+
+		SDL_Quit();
+		exit(-1);
+	}
+
+	/* store screen surface */
+	tolua_pushusertype(L, srf, "Surface");
+	lua_setfield(L, -2, "surface");
+
+	lua_getfield(L, -1, "bounds");
+	lua_pushinteger(L, screen_w);
+	lua_rawseti(L, -2, 3);
+	lua_pushinteger(L, screen_h);
+	lua_rawseti(L, -2, 4);
+	lua_pop(L, 2);
+
+	/* background image */
+	jive_background = jive_tile_fill_color(0x000000FF);
 
 	/* jive.ui.style = {} */
 	lua_getglobal(L, "jive");

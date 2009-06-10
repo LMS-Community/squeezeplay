@@ -131,7 +131,7 @@ JiveSurface *jive_surface_ref(JiveSurface *srf) {
 static JiveSurface *jive_surface_display_format(JiveSurface *srf) {
 	SDL_Surface *sdl;
 
-	if (srf->sdl == NULL) {
+	if (srf->sdl == NULL || SDL_GetVideoSurface() == NULL) {
 		return srf;
 	}
 
