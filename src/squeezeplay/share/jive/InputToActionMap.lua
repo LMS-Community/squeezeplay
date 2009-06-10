@@ -235,4 +235,6 @@ unassignedActionMappings = {
 	"go_rhapsody",
 	"nothing",
 	"ignore",
+	"power_off",
+	"power_on",
 }
