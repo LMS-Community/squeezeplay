@@ -64,7 +64,7 @@ function settingsShow(self)
 end
 
 -- service to select server for a player. Note a current player must exist before calling this method
-function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry)
+function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected)
 
 	if includedServers then
 		self.includedServers = includedServers
@@ -85,6 +85,7 @@ function selectMusicSource(self, playerConnectedCallback, titleStyle, includedSe
 	jnt:subscribe(self)
 
 	self.serverList = {}
+	self.ignoreServerConnected = ignoreServerConnected
 
 	if specificServer then
 		log:debug("selecting specific server ", specificServer)
@@ -299,7 +300,7 @@ function notify_serverConnected(self, server)
 
 	-- hide connection error window (useful when server was down and comes back up)
 	-- but we need a check here for other case (can't find it now...) where we need to wait until player current 
-	if self.connectingPopup then
+	if self.connectingPopup and not self.ignoreServerConnected then
 		self:_cancelSelectServer()
 	end
 end
@@ -467,6 +468,7 @@ function hideConnectingToServer(self)
 					local callback = self.playerConnectedCallback
 					self.playerConnectedCallback = nil
 					callback(self.waitForConnect.player:getSlimServer())
+					self.ignoreServerConnected = nil
 				end
 			else
 				log:warn("server mismatch for player: ", self.waitForConnect.player, "  Expected: ", self.waitForConnect.server,
@@ -488,20 +490,16 @@ function hideConnectingToServer(self)
 	end
 end
 
--- connect player to server
-function connectPlayerToServer(self, player, server)
-	log:info('connectPlayerToServer() ', player, " ", server)
-	-- if connecting to SqueezeNetwork, first check jive is linked
-	if server:getPin() then
-		appletManager:callService("enterPin", server, nil,
-			       function()
-				       self:connectPlayerToServer(player, server)
-			       end)
-		return
-	end
 
+--service method
+function showConnectToServer(self, playerConnectedCallback, server)
+	log:debug("showConnectToServer", server)
 
-	-- stoppage popup
+	self.playerConnectedCallback = playerConnectedCallback
+	self:_showConnectToServer(appletManager:callService("getCurrentPlayer"), server)
+end
+
+function _showConnectToServer(self, player, server)
 	if not self.connectingPopup then
 		self.connectingPopup = Popup("waiting_popup")
 		local window = self.connectingPopup
@@ -545,6 +543,23 @@ function connectPlayerToServer(self, player, server)
 
 		self:tieAndShowWindow(window)
 	end
+end
+
+
+-- connect player to server
+function connectPlayerToServer(self, player, server)
+	log:info('connectPlayerToServer() ', player, " ", server)
+	-- if connecting to SqueezeNetwork, first check jive is linked
+	if server:getPin() then
+		appletManager:callService("enterPin", server, nil,
+			       function()
+				       self:connectPlayerToServer(player, server)
+			       end)
+		return
+	end
+
+
+	self:_showConnectToServer(player, server)
 
 	-- we are now ready to connect to SqueezeCenter
 	if not server:isSqueezeNetwork() then
@@ -609,6 +624,7 @@ end
 function _cancelSelectServer(self)
 	log:info("Cancelling Server Selection")
 
+	self.ignoreServerConnected = true
 	self.waitForConnect = nil
 	self.playerConnectedCallback = nil
 	self:hideConnectingToServer()

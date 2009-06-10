@@ -129,6 +129,7 @@ end
 function init(self)
 	jnt:subscribe(self)
 
+	self.waitingForPlayerMenuStatus = true
 	self.serverHomeMenuChunks = {}
 end
 
@@ -534,6 +535,7 @@ end
 		if _menuReceived and isMenuStatusResponse and menuDirective ~= 'remove' then
 			log:info("hiding any 'connecting to server' popup after 'add' menustatus response ")
 
+			self.waitingForPlayerMenuStatus = false
 			jnt:notify("playerLoaded", _player)
 			appletManager:callService("hideConnectingToServer")
 		end
@@ -615,6 +617,52 @@ function _addServerNameToHomeTitle(self, name)
 	return name
 end
 
+
+function _showInstallServerWindow(self)
+	local window = Window("help_list", self:string("MENUS_MY_MUSIC"), "setuptitle")
+
+	local textarea = Textarea("help_text", self:string("INSTALL_SC_TEXT"))
+
+	local cancelAction = function()
+		self.playerConnectedCallback = nil
+		window:hide()
+
+		return EVENT_CONSUME
+	end
+
+	window:addActionListener("back", self, cancelAction)
+
+	window:addWidget(textarea)
+
+	window:show()
+end
+
+
+function _anyKnownSqueezeCenters(self)
+	--Note: this logic is a bit of a duplicate of the servers accumulation code in ChooseMusicSource code 
+	-- squeezecenter on the poll list
+	local poll = appletManager:callService("getPollList")
+	for address,_ in pairs(poll) do
+		log:debug("\t", address)
+		if address ~= "255.255.255.255" then
+			log:debug("Found polled server: ", address)
+			return true
+		end
+	end
+
+
+	-- discovered squeezecenters
+	log:debug("Discovered Servers:")
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
+		if not server:isSqueezeNetwork() then
+			log:debug("Found server: ", server)
+			return true
+		end
+	end
+
+	return false
+end
+
 function _selectMusicSource(self, callback, specificServer, serverForRetry)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 --	if not currentPlayer or not currentPlayer.info.connected then
@@ -631,11 +679,18 @@ function _selectMusicSource(self, callback, specificServer, serverForRetry)
 							nil,
 							nil,
 							specificServer,
-							serverForRetry
+							serverForRetry,
+							self.waitingForPlayerMenuStatus
 						)
 end
 
 function myMusicSelector(self)
+	--first check for "new device, no SC situation"
+	if not appletManager:callService("getInitialSlimServer") and not self:_anyKnownSqueezeCenters() then
+		self:_showInstallServerWindow()
+		return
+	end
+
 	if not _server then
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
@@ -653,9 +708,17 @@ function myMusicSelector(self)
 			appletManager:callService("setupShowSelectPlayer")
 		else
 			if _server:isConnected() then
+				if self.waitingForPlayerMenuStatus then
+					log:warn("server found, but menus not loaded, so show waiting popup")
+
+					appletManager:callService("showConnectToServer",
+								function()
+									jiveMain:openNodeById('_myMusic', true)
+								end,
+								_server)
+				else
 					jiveMain:openNodeById('_myMusic')
-
-
+				end
 			else
 				self:_selectMusicSource(function()
 								jiveMain:openNodeById('_myMusic', true)
@@ -708,8 +771,10 @@ function notify_playerCurrent(self, player)
 
 	if _player ~= player then
 		-- free current player, since it has changed from one player to another
-		self:free()
-
+		if _player then
+			self:free()
+		end
+		
 		--recache homemenu items from disconnected server
 		for _,server in appletManager:callService("iterateSqueezeCenters") do
 			if server:isCompatible() and server:isSqueezeNetwork() then
@@ -757,6 +822,7 @@ function notify_playerCurrent(self, player)
 
 	local _playerId = _player:getId()
 
+	self.waitingForPlayerMenuStatus = true
 	log:info('\nSubscribing to /slim/menustatus/\n', _playerId)
 	local cmd = { 'menustatus' }
 	_player:subscribe(
@@ -847,6 +913,8 @@ end
 function free(self)
 
 	self.serverHomeMenuChunks = {}
+
+	self.waitingForPlayerMenuStatus = true
 
 	-- unsubscribe from this player's menustatus
 	if _player then

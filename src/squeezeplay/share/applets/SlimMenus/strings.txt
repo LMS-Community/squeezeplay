@@ -79,3 +79,7 @@ SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
 	PL	Aktualizacja oprogramowania jest dostępna dla urządzenia %s. Aby rozpocząć, naciśnij i przytrzymaj przycisk Brightness na oryginalnym pilocie zdalnego sterowania.
 	RU	Подготовлено обновление ПО для %s. Чтобы начать, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
 	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
+
+INSTALL_SC_TEXT
+	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.\n\n- Insert and SD card into the SD slot.\n\n- Connect a storage device to the USB port.
+
