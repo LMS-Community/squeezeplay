@@ -137,10 +137,9 @@ function init(self)
 		self:_cpuPowerOverride(active)
 	end)
 
-	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
-				      function() 
-					      self:update()
-				      end)
+	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
+	      self:update()
+	end)
 
 	Framework:addListener(EVENT_SWITCH,
 			      function(event)
@@ -313,6 +312,11 @@ end
 
 
 function update(self)
+	 Task("statusbar", self, _updateTask):addTask()
+end
+
+
+function _updateTask(self)
 	-- ac power / battery
 	if self.acpower then
 		if self.batteryPopup then
