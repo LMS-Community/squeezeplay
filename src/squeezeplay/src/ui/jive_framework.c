@@ -207,7 +207,7 @@ static int jiveL_initSDL(lua_State *L) {
 	if (splash) {
 		jive_surface_get_size(splash, &splash_w, &splash_h);
 
-		if (screen_w >= 800 || screen_h >= 600) {
+		if (video_info->wm_available) {
 			/* assume desktop */
 			screen_w = splash_w;
 			screen_h = splash_h;

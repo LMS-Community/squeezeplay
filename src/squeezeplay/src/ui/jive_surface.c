@@ -23,11 +23,21 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	sdl = SDL_GetVideoSurface();
 
 	if (sdl) {
+		const SDL_VideoInfo *video_info;
+		Uint32 mask;
+
 		/* check if we can reuse the existing suface? */
-		Uint32 mask = (SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+		video_info = SDL_GetVideoInfo();
+		if (video_info->wm_available) {
+			mask = (SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+		}
+		else {
+			mask = (SDL_HWSURFACE | SDL_DOUBLEBUF);
+		}
 
 		if ((sdl->w != w) || (sdl->h != h)
-		    || (sdl->format->BitsPerPixel != bpp) || ((sdl->flags & mask) != flags)) {
+		    || (bpp && sdl->format->BitsPerPixel != bpp)
+		    || ((sdl->flags & mask) != flags)) {
 			sdl = NULL;
 		}
 	}
