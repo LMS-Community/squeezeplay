@@ -86,7 +86,7 @@ function configureApplet(meta)
 		server:updateInit(settings.serverInit)
 	end
 
-	meta.state.player:setLastSqueezeCenter(_server)
+	meta.state.player:setLastSqueezeCenter(server)
 	
 	-- Init player
 	if settings.playerInit then

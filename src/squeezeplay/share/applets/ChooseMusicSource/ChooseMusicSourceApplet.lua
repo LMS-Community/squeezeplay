@@ -382,7 +382,7 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 
 
 	-- is the player already connected to the server?
-	if currentPlayer:getSlimServer() == server and currentPlayer:isConnected() then
+	if currentPlayer:getSlimServer() == server and currentPlayer:isConnected() and not self.ignoreServerConnected then
 
 		if self.playerConnectedCallback then
 			local callback = self.playerConnectedCallback

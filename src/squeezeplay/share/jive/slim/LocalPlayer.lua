@@ -112,8 +112,7 @@ end
 
 
 function updateInit(self, server, init)
-	--todo squeezeCenter is nil, is a bug, test fixing it
-	Player.updateInit(self, squeezeCenter, init)
+	Player.updateInit(self, server, init)
 
 	if server then
 		self:connectToServer(server)

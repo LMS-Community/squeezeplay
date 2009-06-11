@@ -529,18 +529,21 @@ function notify_playerCurrent(self, player)
 end
 
 
+--todo:uses serverName but should use uuid when that comes online
 --service method
 function getInitialSlimServer(self)
-	local serverName = self:getSettings().serverInit
-	local ip = serverName and serverName.ip or nil
+	local serverName = self:getSettings().serverName
 
-	if ip then
+	if serverName then
 		for i, server in SlimServer:iterate() do
-			if server:getInit().ip == ip then
+			if server:getName() == serverName then
+				log:debug("found initial server: ", server)
+
 				return server
 			end
 		end
 	end
+	log:debug("could not find initial server: ", server)
 
 	return nil
 end

@@ -691,7 +691,13 @@ function myMusicSelector(self)
 		return
 	end
 
-	if not _server then
+	if not _player then
+		self:_selectMusicSource(function()
+						jiveMain:goHome()
+						jiveMain:openNodeById('_myMusic', true)
+					end,
+					_server)
+	elseif not _server then
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
 						jiveMain:openNodeById('_myMusic', true)
@@ -743,7 +749,7 @@ function notify_playerCurrent(self, player)
 	log:info("SlimMenusApplet:notify_playerCurrent(", player, ")")
 
 	-- has the player actually changed?
-	if _player == player then
+	if _player == player and not self.waitingForPlayerMenuStatus then
 		if player then
 			if _server == player:getSlimServer() then
 				log:debug("player and server didn't change , not changing menus: ", player)
@@ -806,7 +812,7 @@ function notify_playerCurrent(self, player)
 	if not player:getSlimServer() then
 		return
 	end
-	
+
 	if not player:getSlimServer():isConnected() then
 		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
 		return
