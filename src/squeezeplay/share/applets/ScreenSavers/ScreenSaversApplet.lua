@@ -192,10 +192,10 @@ function _closeAnyPowerOnWindow(self)
 		self.powerOnWindow:hide(Window.transitionNone)
 		self.powerOnWindow = nil
 
-		the_screensaver = self:_getDefaultScreensaver()
+		local ss = self:_getOffScreensaver()
 
-		if the_screensaver then
-			local screensaver = self.screensavers[the_screensaver]
+		if ss then
+			local screensaver = self.screensavers[ss]
 			if not screensaver or not screensaver.applet then
 				-- no screensaver, do nothing
 				return
@@ -211,11 +211,16 @@ function _closeAnyPowerOnWindow(self)
 end
 
 
+function _getOffScreensaver(self)
+	return self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
+end
+
+
 function _getDefaultScreensaver(self)
 	local ss
 
 	if not self:isSoftPowerOn() then
-		ss = self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
+		ss = self:_getOffScreensaver()
 		log:debug("whenOff")
 	else
 		local player = appletManager:callService("getCurrentPlayer")
@@ -314,9 +319,10 @@ function _showPowerOnWindow(self)
 		return EVENT_UNUSED
 	end
 
-	the_screensaver = self:_getDefaultScreensaver()
-	if the_screensaver then
-		local screensaver = self.screensavers[the_screensaver]
+	local ss = self:_getOffScreensaver()
+
+	if ss then
+		local screensaver = self.screensavers[ss]
 		if not screensaver or not screensaver.applet then
 			-- no screensaver, do nothing
 			return
