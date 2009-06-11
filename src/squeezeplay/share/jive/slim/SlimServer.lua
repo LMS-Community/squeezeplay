@@ -1074,7 +1074,7 @@ function isCompatible(self)
 	local minVer = string.split("%.", minimumVersion)
 
 	for i,v in ipairs(serVer) do
-		if v < minVer[i] then
+		if minVer[i] and v < minVer[i] then
 			return false
 		end
 	end
