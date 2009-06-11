@@ -37,7 +37,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 
 		if ((sdl->w != w) || (sdl->h != h)
 		    || (bpp && sdl->format->BitsPerPixel != bpp)
-		    || ((sdl->flags & mask) != flags)) {
+		    || ((sdl->flags & mask) != (flags & mask))) {
 			sdl = NULL;
 		}
 	}
