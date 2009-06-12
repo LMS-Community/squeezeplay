@@ -1,5 +1,5 @@
 
-local pairs, ipairs, tonumber, tostring = pairs, ipairs, tonumber, tostring
+local ipairs, pairs, tonumber, setmetatable, type, tostring = ipairs, pairs, tonumber, setmetatable, type, tostring
 
 local math             = require("math")
 local table            = require("table")
@@ -21,6 +21,7 @@ local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
+local Tile             = require("jive.ui.Tile")
 local Window           = require("jive.ui.Window")
                        
 local datetime         = require("jive.utils.datetime")
@@ -28,29 +29,85 @@ local datetime         = require("jive.utils.datetime")
 local appletManager	= appletManager
 local jiveMain          = jiveMain
 
+local LAYER_FRAME            = jive.ui.LAYER_FRAME
+local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
+
+local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
+local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
+local LAYOUT_SOUTH           = jive.ui.LAYOUT_SOUTH
+local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
+local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
+local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
+
+local WH_FILL                = jive.ui.WH_FILL
+
+
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+-- Define useful variables for this skin
+local fontpath = "fonts/"
+local FONT_NAME = "FreeSans"
+local BOLD_PREFIX = "Bold"
+
+local function _imgpath(self)
+	return "applets/" .. self.skinName .. "/images/"
+end
+
+local function _loadImage(self, file)
+	return Surface:loadImage(self.imgpath .. file)
+end
+
+-- define a local function that makes it easier to set fonts
+local function _font(fontSize)
+	return Font:load(fontpath .. FONT_NAME .. ".ttf", fontSize)
+end
+
+-- define a local function that makes it easier to set bold fonts
+local function _boldfont(fontSize)
+	return Font:load(fontpath .. FONT_NAME .. BOLD_PREFIX .. ".ttf", fontSize)
+end
+
+-- defines a new style that inherrits from an existing style
+local function _uses(parent, value)
+	if parent == nil then
+		log:warn("nil parent in _uses at:\n", debug.traceback())
+	end
+	local style = {}
+	setmetatable(style, { __index = parent })
+	for k,v in pairs(value or {}) do
+		if type(v) == "table" and type(parent[k]) == "table" then
+			-- recursively inherrit from parent style
+			style[k] = _uses(parent[k], v)
+		else
+			style[k] = v
+		end
+	end
+
+	return style
+end
 
 function displayName(self)
 	return "Clock (NEW)"
 end
 
+
 Clock  = oo.class()
 
-function Clock:__init(style)
+function Clock:__init(skin, windowStyle)
 	log:debug("Init Clock")
-
-	if not style then
-		style = 'clockDigital'
-	end
 
 	local obj = oo.rawnew(self)
 
 	obj.screen_width, obj.screen_height = Framework:getScreenSize()
 
 	-- create window and icon
-	obj.window = Window(style)
+	if not windowStyle then
+		windowStyle = 'Clock'
+	end
+	obj.window = Window(windowStyle)
+	obj.window:setSkin(skin)
+	obj.window:reSkin()
 
 	obj.window:addListener(EVENT_MOTION,
 		function()
@@ -70,7 +127,10 @@ DotMatrix = oo.class({}, Clock)
 function DotMatrix:__init(ampm, shortDateFormat)
 	log:debug("Init Dot Matrix Clock")
 
-	obj = oo.rawnew(self, Clock('clockDotMatrix'))
+	local skinName   = jiveMain:getSelectedSkin()
+	local skin       = DotMatrix:getDotMatrixClockSkin(skinName)
+
+	obj = oo.rawnew(self, Clock(skin))
 
 	obj.clockGroup = Group('clock', {
 		h1   = Icon("icon_dotMatrixDigit0"),
@@ -178,9 +238,12 @@ Digital = oo.class({}, Clock)
 function Digital:__init(applet, ampm)
 	log:debug("Init Digital Clock")
 	
-	local windowStyle = applet.windowStyle or 'clockDigital'
+	local windowStyle = applet.windowStyle or 'Clock'
 
-	obj = oo.rawnew(self, Clock(windowStyle))
+	local skinName   = jiveMain:getSelectedSkin()
+	local skin       = Digital:getDigitalClockSkin(skinName)
+
+	obj = oo.rawnew(self, Clock(skin, windowStyle))
 
 	-- store the applet's self so we can call self.applet:string() for localizations
 	obj.applet = applet
@@ -396,10 +459,16 @@ Radial = oo.class({}, Clock)
 function Radial:__init(applet, weekstart)
 	log:info("Init Radial Clock")
 
-	obj = oo.rawnew(self, Clock('clockRadial'))
+	local skinName   = jiveMain:getSelectedSkin()
+	local skin       = Radial:getRadialClockSkin(skinName)
 
-	obj.screen_width, obj.screen_height = Framework:getScreenSize()
-	obj.skinParams = jiveMain:getSkinParam('radialClock')
+	obj = oo.rawnew(self, Clock(skin))
+
+	obj.skinParams = Radial:getSkinParams(skinName)
+
+debug.dump(obj.skinParams)
+	obj.hourTick   = Surface:loadImage(obj.skinParams.hourTickPath)
+	obj.minuteTick = Surface:loadImage(obj.skinParams.minuteTickPath)
 
 	-- bring in applet's self so strings are available
 	obj.applet    = applet
@@ -433,7 +502,7 @@ function Radial:__init(applet, weekstart)
 	obj.day7 = Group('day7', _dayGroup())
 
 	obj.dayOfMonth = Group('dayOfMonth', {
-		text = Label('text', ''),
+		DoM = Label('DoM', ''),
 	})
 
 	obj.window:addWidget(obj.tickGroup)
@@ -464,7 +533,7 @@ function Radial:drawDay()
 		return
 	end
 
-	local dayOfMonthWidget = self.dayOfMonth:getWidget('text')
+	local dayOfMonthWidget = self.dayOfMonth:getWidget('DoM')
 	dayOfMonthWidget:setValue(dayOfMonth)
 	self.today = today
 
@@ -520,8 +589,7 @@ function Radial:_reDraw(screen)
 	-- Hour Pointer
 	for i = 0, tonumber(h) do
 		local angle = (360 / 12) * i
-		local hourTick = Surface:loadImage(self.skinParams.hourTickPath)
-		local tmp = hourTick:rotozoom(-angle, 1, 5)
+		local tmp = self.hourTick:rotozoom(-angle, 1, 5)
 		facew, faceh = tmp:getSize()
 		x = math.floor((self.screen_width/2) - (facew/2))
 		y = math.floor((self.screen_height/2) - (faceh/2))
@@ -531,8 +599,7 @@ function Radial:_reDraw(screen)
 	-- Minute Pointer
 	for i = 0, tonumber(m) do
 		local angle = (360 / 60) * i
-		local minuteTick = Surface:loadImage(self.skinParams.minuteTickPath)
-		local tmp = minuteTick:rotozoom(-angle, 1, 5)
+		local tmp = self.minuteTick:rotozoom(-angle, 1, 5)
 		facew, faceh = tmp:getSize()
 		x = math.floor((self.screen_width/2) - (facew/2))
 		y = math.floor((self.screen_height/2) - (faceh/2))
@@ -545,15 +612,15 @@ end
 -- keep these methods with their legacy names
 -- to ensure backwards compatibility with old settings.lua files
 function openDetailedClock(self, force)
-	return self:_openScreensaver("Digital", 'clockDigital', force)
+	return self:_openScreensaver("Digital", 'Clock', force)
 end
 
 function openDetailedClockBlack(self, force)
-	return self:_openScreensaver("Digital", 'clockDigitalBlack', force)
+	return self:_openScreensaver("Digital", 'ClockBlack', force)
 end
 
 function openDetailedClockTransparent(self, force)
-	return self:_openScreensaver("Digital", 'clockDigitalTransparent', force)
+	return self:_openScreensaver("Digital", 'ClockTransparent', force)
 end
 
 function openAnalogClock(self, force)
@@ -622,6 +689,406 @@ function _openScreensaver(self, type, windowStyle, force)
 
 	self.clock[1]:Draw()
 	self.clock[1].window:show(Window.transitionFadeIn)
+end
+
+
+-- DOT MATRIX CLOCK SKIN
+function DotMatrix:getDotMatrixClockSkin(skinName)
+
+	self.skinName = skinName
+	self.imgpath = _imgpath(self)
+
+	local s = {}
+
+	if skinName == 'Fab4Skin' or skinName == 'Fab4RemoteSkin' then
+
+		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/wallpaper_clock_dotmatrix.png")
+
+		local _dotMatrixDigit = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_clock_" .. tostring(digit) .. ".png"
+			return {
+				w = 61,
+				h = 134,
+				img = _loadImage(self, fileName),
+				border = { 6, 0, 6, 0 },
+				align = 'bottom',
+			}
+		end
+	
+		local _dotMatrixDate = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_date_" .. tostring(digit) .. ".png"
+			return {
+				w = 27,
+				h = 43,
+				img = _loadImage(self, fileName),
+				align = 'bottom',
+				border = { 1, 0, 1, 0 },
+			}
+		end
+	
+		s.icon_dotMatrixDigit0 = _dotMatrixDigit(self, 0)
+		s.icon_dotMatrixDigit1 = _dotMatrixDigit(self, 1)
+		s.icon_dotMatrixDigit2 = _dotMatrixDigit(self, 2)
+		s.icon_dotMatrixDigit3 = _dotMatrixDigit(self, 3)
+		s.icon_dotMatrixDigit4 = _dotMatrixDigit(self, 4)
+		s.icon_dotMatrixDigit5 = _dotMatrixDigit(self, 5)
+		s.icon_dotMatrixDigit6 = _dotMatrixDigit(self, 6)
+		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
+		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
+		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+	
+		s.icon_dotMatrixDate0 = _dotMatrixDate(self, 0)
+		s.icon_dotMatrixDate1 = _dotMatrixDate(self, 1)
+		s.icon_dotMatrixDate2 = _dotMatrixDate(self, 2)
+		s.icon_dotMatrixDate3 = _dotMatrixDate(self, 3)
+		s.icon_dotMatrixDate4 = _dotMatrixDate(self, 4)
+		s.icon_dotMatrixDate5 = _dotMatrixDate(self, 5)
+		s.icon_dotMatrixDate6 = _dotMatrixDate(self, 6)
+		s.icon_dotMatrixDate7 = _dotMatrixDate(self, 7)
+		s.icon_dotMatrixDate8 = _dotMatrixDate(self, 8)
+		s.icon_dotMatrixDate9 = _dotMatrixDate(self, 9)
+	
+		s.icon_dotMatrixDateDot = {
+			align = 'bottom',
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_dot_sm.png")
+		}
+	
+		s.icon_dotMatrixDots = {
+			align = 'center',
+			border = { 4, 0, 3, 0 },
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_clock_dots.png"),
+		}
+	
+		s.icon_dotMatrixAlarmOn = {
+			align = 'bottom',
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
+			w   = 36,
+			border = { 0, 0, 13, 0 },
+		}
+	
+		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
+			img = false,
+		})
+	
+		s.icon_dotMatrixPowerOn = {
+			align = 'bottom-right',
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
+			w   = WH_FILL,
+			border = { 13, 0, 0, 0 },
+		}
+	
+		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
+			img = false,
+		})
+	
+
+		s.Clock = {
+			w = 480,
+			h = 272,
+			bgImg = dotMatrixBackground,
+			clock = {
+				position = LAYOUT_WEST,
+				h = 134,
+				w = WH_FILL,
+				border = { 72, 38, 20, 0 },
+				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+			},
+			date = {
+				position = LAYOUT_SOUTH,
+				w = WH_FILL,
+				align = 'bottom',
+				padding = { 72, 0, 0, 38 },
+				order = { 'alarm', 'M1', 'M2', 'dot1', 'D1', 'D2', 'dot2', 'Y1', 'Y2', 'Y3', 'Y4', 'power' },
+			},
+		}
+
+	-- doto matrix for controller
+	elseif skinName == 'ControllerSkin' then
+
+	-- dot matrix for something else
+	elseif skinName == 'SomeOtherSkin' then
+	
+	end
+
+	return s
+end
+
+-- DIGITAL CLOCK SKIN
+function Digital:getDigitalClockSkin(skinName)
+	self.skinName = skinName
+	self.imgpath = _imgpath(self)
+
+	local s = {}
+
+	if skinName == 'Fab4Skin' or skinName == 'Fab4RemoteSkin' then
+
+		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
+		local digitalClockDigit = {
+			font = _font(143),
+			align = 'center',
+			fg = { 0xcc, 0xcc, 0xcc },
+			w = 76,
+		}
+		local shadow = {
+			w = 76,
+		}
+	
+		s.icon_digitalClockDropShadow = {
+			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
+				align = 'center',
+				padding = { 4, 0, 0, 0 },
+				w = 76,
+			}
+			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+				img = false
+		})
+
+		s.icon_digitalClockHDivider = {
+			w = WH_FILL,
+			img = _loadImage(self, "Clocks/Digital/divider_hort_digital.png"),
+		}
+
+		s.icon_digitalClockVDivider = {
+			w = 3,
+			img = _loadImage(self, "Clocks/Digital/divider_vert_digital.png"),
+			align = 'center',
+		}
+
+		s.icon_digitalDots = {
+			img = _loadImage(self, "Clocks/Digital/clock_dots_digital.png"),
+			align = 'center',
+			w = 11,
+			border = { 14, 20, 12, 0 },
+		}
+
+		s.icon_digitalClockBlank = {
+			img = false,
+			w = 40,
+		}
+
+		s.Clock = {
+			bgImg = digitalClockBackground,
+			clock = {
+				position = LAYOUT_NORTH,
+				w = WH_FILL,
+				zOrder = 2,
+				border = { 47, 54, 47, 0 },
+				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+				h1 = digitalClockDigit,
+				h2 = digitalClockDigit,
+				m1 = _uses(digitalClockDigit, {
+					border = { 1, 0, 0, 0 },
+				}),
+				m2 = _uses(digitalClockDigit, {
+					border = { 10, 0, 0, 0 },
+				}),
+			},
+			dropShadow = {
+				position = LAYOUT_NORTH,
+				align = 'center',
+				w = WH_FILL,
+				h = 18,
+				zOrder = 1,
+				border = { 47, 154, 47, 0 },
+				order = { 's1', 's2', 'dots', 's3', 's4' },
+				s1   =  { w = 76 },
+				s2   =  { w = 76 },
+				dots =  { w = 40 },
+				s3   =  { w = 76 },
+				s4   =  { w = 76 },
+			},
+			ampm = {
+				position = LAYOUT_NONE,
+				x = 403,
+				y = 144,
+				font = _font(20),
+				align = 'bottom',
+				fg = { 0xcc, 0xcc, 0xcc },
+			},
+			alarm = {
+				position = LAYOUT_NONE,
+				x = 20,
+				y = 20,
+			},
+			horizDivider = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 194,
+			},
+			date = {
+				position = LAYOUT_SOUTH,
+				order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
+				w = WH_FILL,
+				h = 70,
+				padding = { 0, 0, 0, 6 },
+				dayofweek = {
+					align = 'center',
+					w = 190,
+					h = WH_FILL,
+					font = _font(20),
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding  = { 1, 0, 0, 6 },
+				},
+				vdivider1 = {
+					align = 'center',
+					w = 3,
+				},
+				dayofmonth = {
+					font = _font(56),
+					w = 95,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 4 },
+				},
+				vdivider2 = {
+					align = 'center',
+					w = 3,
+				},
+				month = {
+					font = _font(20),
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 5 },
+				},
+				year = {
+					font = _boldfont(20),
+					w = 50,
+					h = WH_FILL,
+					align = 'left',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 3, 0, 0, 5 },
+				},
+			},
+		}
+	
+		local blackMask = Tile:fillColor(0x000000ff)
+		s.ClockBlack = _uses(s.Clock, {
+			bgImg = blackMask,
+			horizDivider = { hidden = 1 },
+			date = {
+				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+		s.ClockTransparent = _uses(s.Clock, {
+			bgImg = false,
+			horizDivider = { hidden = 1 },
+			date = {
+				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+	elseif skinName == 'ControllerSkin' then
+	end
+
+	return s
+end
+
+-- RADIAL CLOCK
+function Radial:getRadialClockSkin(skinName)
+	self.skinName = skinName
+	self.imgpath = _imgpath(self)
+
+	local s = {}
+
+	if skinName == 'Fab4Skin' or skinName == 'Fab4RemoteSkin' then
+
+		local radialClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Radial/wallpaper_clock_radial.png")
+		s.icon_radialClockTicksOff = {
+			img = _loadImage(self, "Clocks/Radial/radial_ticks_off.png"),
+			align = 'center',
+		}
+		s.icon_radialClockMinuteTick = {
+			img = _loadImage(self, "Clocks/Radial/radial_ticks_min_on.png"),
+		}
+		s.icon_radialClockHourTick = {
+			img = _loadImage(self, "Clocks/Radial/radial_ticks_hr_on.png"),
+		}
+	
+		s.radialClockToday = {
+			w = 14,
+			align = 'center',
+			font = _font(14),
+			fg = { 0xe6, 0xe6, 0xe6 },
+		}
+		s.radialClockNotToday = {
+			w = 14,
+			align = 'center',
+			font = _font(14),
+			fg = { 0x66, 0x66, 0x66 },
+		}
+		s.icon_radialClockDot = {
+			w   = 26,
+			h   = 18,
+			img = _loadImage(self, "Clocks/Radial/dot_weekday_indicator.png"),
+			padding = { 4, 0, 4, 0 },
+		}
+		s.icon_radialClockBlankDot = {
+			w   = 26,
+			h   = 18,
+			img = false,
+			padding = { 4, 0, 4, 0 },
+		}
+	
+		local _dayPosition = function(day)
+			local y = 33*day - 3 
+			return {
+				position = LAYOUT_NONE,
+				x = 6,
+				y = y,
+				w = 42,
+				h = 18,
+				order = { 'dot', 'day' },
+			}
+		end
+	
+		s.Clock = {
+			bgImg = radialClockBackground,
+			ticks = {
+				position = LAYOUT_CENTER,
+				order = { 'ticksOff' },
+				padding = { 122, 36, 0, 0 },
+			},
+			day1 = _dayPosition(1),
+			day2 = _dayPosition(2),
+			day3 = _dayPosition(3),
+			day4 = _dayPosition(4),
+			day5 = _dayPosition(5),
+			day6 = _dayPosition(6),
+			day7 = _dayPosition(7),
+			dayOfMonth = {
+				position = LAYOUT_EAST,
+				w = 80,
+				h = WH_FILL,
+				align = 'center',
+				padding = { 0, 120, 0, 0 },
+				order = { 'DoM' },
+				DoM = {
+					align = 'center',
+					font = _font(32),
+					fg   = { 0xb3, 0xb3, 0xb3 },
+				},
+			},
+		}
+
+	elseif skinName == 'ControllerSkin' then
+
+	elseif skinName == 'SomeOtherSkin' then
+
+	end
+	
+	return s
+
+end
+
+function Radial:getSkinParams(skin)
+        return {
+		hourTickPath     = 'applets/' .. skin .. '/images/Clocks/Radial/radial_ticks_hr_on.png',
+		minuteTickPath   = 'applets/' .. skin .. '/images/Clocks/Radial/radial_ticks_min_on.png',
+	}
 end
 
 
