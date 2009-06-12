@@ -115,15 +115,27 @@ function _updateSettings(meta, player, force)
 		return
 	end
 
-	if not force and
+	local ipChanged = false
+
+	local settingsIp
+	if meta:getSettings().serverInit then
+		settingsIp = meta:getSettings().serverInit.ip
+	end
+	if player and player:getSlimServer() and player:getSlimServer().ip ~= settingsIp then
+		--actual server ip might have changed from what Playback's settings has (re-dhcp, moving locations, etc)
+		log:debug("Updating Playback server on new ip address: ", player:getSlimServer().ip)
+		ipChanged = true
+	end
+
+	if not ipChanged and not force and
 	   settings.serverName == serverName then
 		-- no change
 		return
 	end
 
-	if server and
+	if ipChanged or (server and
 		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
-		  or settings.serverName ~= server:getName() ) then
+		  or settings.serverName ~= server:getName() )) then
 		settings.squeezeNetwork = server:isSqueezeNetwork()
 
 		-- remember server if it's not SN
