@@ -414,6 +414,56 @@ end
 
 
 --[[
+Window:   "context_menu"
+Menu:     "menu"
+Item:     "item_play", "item_add", "item", (styles: selected, pressed, locked)
+--]]
+function window_context_menu(self, item)
+	local data = _itemData(item)
+
+	local window = Popup("context_menu", _itemName(item), "Context Menu")
+	_windowActions(self, item, window)
+
+	-- FIXME: choice items do not work
+	local menu = SimpleMenu("menu")
+	for i, text in ipairs(data[1]) do
+		local style = 'item'
+		if i == 1 then
+			style = 'item_play'
+		elseif i == 2 then
+			style = 'item_add'
+		end
+		menu:addItem({
+			text = text,
+			style = style,
+			sound = "WINDOWSHOW",
+			callback = function(event, item)
+				if selected == item then
+					menu:lock()
+					return
+				end
+
+				if selected then
+					selected.style = "item"
+					menu:updatedItem(selected)
+				end
+
+				item.style = "item_checked"
+				menu:updatedItem(item)
+
+				selected = item
+			end
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
+
+--[[
 Window:   "text_list"
 Menu:     "menu"
 Item:     "item_choice", "item", "item_checked", (styles: selected, pressed, locked)
@@ -767,6 +817,7 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "context_menu", "Context Menu", window_context_menu, },
 	{ "text_list", "Text List", setup_text_list, },
 	{ "help_list_one", "Welcome to Setup", setup_help_list, },
 	{ "help_list_two", "Choose Region", setup_help_list, },
@@ -800,6 +851,9 @@ windows = {
 
 
 testData = {
+	context_menu = {
+		{ "Play", "Add", "Create MusicIP Mix", "Add to Favorites", "Biography", "Album Review" },
+	},
 	text_list = {
 		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
 	},

@@ -558,6 +558,19 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/popup_box_l.png",
 			       })
 
+	local contextMenuBox = 
+		_loadTile(self, {
+				       imgpath .. "Popup_Menu/cm_popup_box.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_tl.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_t.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_tr.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_r.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_br.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_b.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_bl.png",
+				       imgpath .. "Popup_Menu/cm_popup_box_l.png",
+			       })
+
 
 
 	local scrollBackground = 
@@ -1536,6 +1549,55 @@ function skin(self, s)
 			},
 		}
 	})
+
+	-- toast_popup popup with art and text
+	s.context_menu = {
+		x = 16,
+		y = 16,
+		w = screenWidth - 16,
+		h = screenHeight - 32,
+		bgImg = contextMenuBox,
+		title = {
+			h = 52,
+			rbutton  = {
+				bgImg   = false,
+				w       = 43,
+			},
+			lbutton  = {
+				bgImg   = false,
+				w       = 43,
+			},
+		},
+		menu = {
+			item = {
+				order = { "icon", "text", "arrow" },
+				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'left',
+					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+					line = {
+						{
+							font = _boldfont(ALBUMMENU_FONT_SIZE),
+							height = 22,
+						},
+						{
+							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+						},
+					},
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				icon = {
+					h = THUMB_SIZE,
+					padding = MENU_ITEM_ICON_PADDING,
+					align = 'center',
+				},
+				arrow = _uses(s.item.arrow),
+			},
+		},
+	}
 	
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
