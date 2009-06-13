@@ -1590,6 +1590,7 @@ function skin(self, s)
 
 		},
 		menu = {
+			border = { 7, 0, 0, 0 },
 			item = {
 				order = { "icon", "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
@@ -1620,10 +1621,8 @@ function skin(self, s)
 			selected = {
 				item = {
 					bgImg = fiveItemSelectionBox,
---					bgImg = false,
 					order = { "icon", "text", "arrow" },
 					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
-					border = { 0, 0, 0, 0 },
 					text = {
 						w = WH_FILL,
 						h = WH_FILL,
