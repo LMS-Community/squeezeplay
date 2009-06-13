@@ -624,6 +624,8 @@ function skin(self, s)
 	local TEXTAREA_FONT_SIZE = 18
 	local CENTERED_TEXTAREA_FONT_SIZE = 28
 
+	local CM_MENU_HEIGHT = 45
+
 	local TEXTINPUT_FONT_SIZE = 20
 	local TEXTINPUT_SELECTED_FONT_SIZE = 24
 
@@ -1591,7 +1593,13 @@ function skin(self, s)
 		},
 		menu = {
 			border = { 7, 0, 0, 0 },
+			padding = { 0, 0, 0, 100 },
+			-- FIXME: hard-coding the height of the scrollbar here is a bit of a hack
+			scrollbar = { 
+				h = CM_MENU_HEIGHT * 4,
+			},
 			item = {
+				h = CM_MENU_HEIGHT,
 				order = { "icon", "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
 				text = {
@@ -1652,6 +1660,10 @@ function skin(self, s)
 		},
 	}
 	
+	s.context_submenu = _uses(s.context_menu, {
+	        maskImg = false,
+	})
+
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
 		x = 50,
