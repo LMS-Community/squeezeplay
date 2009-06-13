@@ -45,6 +45,7 @@ local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
+local LAYER_TITLE            = jive.ui.LAYER_TITLE
 
 local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
 local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
@@ -236,6 +237,7 @@ function skin(self, s)
 	-- Images and Tiles
 	local inputTitleBox           = _loadImageTile(self,  imgpath .. "Titlebar/titlebar.png" )
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
+	local cancelButton            = _loadImageTile(self,  imgpath .. "Icons/icon_close_button_tb.png")
 	local homeButton              = _loadImageTile(self,  imgpath .. "Icons/icon_home_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
@@ -1549,24 +1551,43 @@ function skin(self, s)
 			},
 		}
 	})
+	local popupMask = Tile:fillColor(0x00000085)
 
 	-- toast_popup popup with art and text
 	s.context_menu = {
-		x = 16,
+		x = 8,
 		y = 16,
 		w = screenWidth - 16,
 		h = screenHeight - 32,
 		bgImg = contextMenuBox,
+	        maskImg = popupMask,
+		layer = LAYER_TITLE,
+
 		title = {
+		layer = LAYER_TITLE,
 			h = 52,
-			rbutton  = {
-				bgImg   = false,
+			padding = {10,10,10,5},
+			bgImg = false,
+			button_cancel  = {
+				layer = LAYER_TITLE,
 				w       = 43,
 			},
-			lbutton  = {
-				bgImg   = false,
-				w       = 43,
+			pressed = {
+				button_cancel  = {
+					bgImg = pressedTitlebarButtonBox,
+					layer = LAYER_TITLE,
+					w       = 43,
+				}
 			},
+			text = {
+				layer = LAYER_TITLE,
+				w = WH_FILL,
+				padding = {0,0,20,0},
+				align = "center",
+				font = _boldfont(TITLE_FONT_SIZE),
+				fg = TEXT_COLOR,
+			},
+
 		},
 		menu = {
 			item = {
@@ -1596,6 +1617,39 @@ function skin(self, s)
 				},
 				arrow = _uses(s.item.arrow),
 			},
+			selected = {
+				item = {
+					bgImg = fiveItemSelectionBox,
+--					bgImg = false,
+					order = { "icon", "text", "arrow" },
+					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+					border = { 0, 0, 0, 0 },
+					text = {
+						w = WH_FILL,
+						h = WH_FILL,
+						align = 'left',
+						font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+						line = {
+							{
+								font = _boldfont(ALBUMMENU_FONT_SIZE),
+								height = 22,
+							},
+							{
+								font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+							},
+						},
+						fg = TEXT_COLOR,
+						sh = TEXT_SH_COLOR,
+					},
+					icon = {
+						h = THUMB_SIZE,
+						padding = MENU_ITEM_ICON_PADDING,
+						align = 'center',
+					},
+					arrow = _uses(s.item.arrow),
+				},
+			},
+
 		},
 	}
 	
@@ -1674,11 +1728,14 @@ function skin(self, s)
 	-- icon button factory
 	local _titleButtonIcon = function(name, icon, attr)
 		s[name] = _uses(_button)
+	--	s[name].layer = LAYER_TITLE
+
 		s.pressed[name] = _uses(_pressed_button)
 
 		attr = {
 			hidden = 0,
 			img = icon,
+	--		layer = LAYER_TITLE,
 		}
 
 		s[name].icon = _uses(_button.icon, attr)
@@ -1711,6 +1768,7 @@ function skin(self, s)
 	})
 
 	_titleButtonIcon("button_back", backButton)
+	_titleButtonIcon("button_cancel", cancelButton)
 	_titleButtonIcon("button_go_home", homeButton)
 	_titleButtonIcon("button_playlist", playlistButton)
 	_titleButtonIcon("button_go_playlist", playlistButton)

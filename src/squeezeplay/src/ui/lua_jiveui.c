@@ -2205,6 +2205,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"LAYOUT_CENTER",JIVE_LAYOUT_CENTER);
    tolua_constant(tolua_S,"LAYOUT_NONE",JIVE_LAYOUT_NONE);
    tolua_constant(tolua_S,"LAYER_FRAME",JIVE_LAYER_FRAME);
+   tolua_constant(tolua_S,"LAYER_TITLE",JIVE_LAYER_TITLE);
    tolua_constant(tolua_S,"LAYER_CONTENT",JIVE_LAYER_CONTENT);
    tolua_constant(tolua_S,"LAYER_CONTENT_OFF_STAGE",JIVE_LAYER_CONTENT_OFF_STAGE);
    tolua_constant(tolua_S,"LAYER_CONTENT_ON_STAGE",JIVE_LAYER_CONTENT_ON_STAGE);
