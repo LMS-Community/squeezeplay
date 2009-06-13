@@ -47,7 +47,7 @@ function configureApplet(meta)
 	end)
 
 	if desktop then
-		appletManager:callService("debugStyle")
+--		appletManager:callService("debugStyle")
 	end
 end
 
