@@ -433,12 +433,6 @@ function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 		return EVENT_CONSUME
 	end
 
-	menu:addItem({
-		text = (self:string("SWITCH_CANCEL")),
-		sound = "WINDOWHIDE",
-		callback = cancelAction,
-	})
-
 	menu:addActionListener("back", self, cancelAction)
 
 	window:addWidget(textarea)
@@ -646,11 +640,6 @@ function _connectPlayerFailed(self, player, server)
 
 	local menu = SimpleMenu("menu",
 				{
-					{
-						text = self:string("SQUEEZEBOX_GO_BACK"),
-						sound = "WINDOWHIDE",
-						callback = cancelAction
-					},
 					{
 						text = self:string("SQUEEZEBOX_TRY_AGAIN"),
 						sound = "WINDOWSHOW",
