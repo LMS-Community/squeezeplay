@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
 #
-# Script to help intelligently copy and update png files from Fab4Skin assets area to skin
+# Script to help intelligently copy and update png files from WQVGAsmallSkin assets area to skin
 #
 # 1. removes all png files from images/ directory, except those in the directory UNOFFICIAL and directory IconsResized
-# 2. copies every png file from assets/Fab4Skin/images area to correct path in images/ directory
+# 2. copies every png file from assets/WQVGAsmallSkin/images area to correct path in images/ directory
 # 3. runs svk status, uses output to create a shell script for doing the necessary svk commands
 #
 # bklaas 03.09
@@ -17,11 +17,11 @@ use File::Copy;
 my $d = {
 	assets => {
 		skinDir => 'images/',
-		assetDir => '../../../../../assets/Fab4Skin/images/',
+		assetDir => '../../../../../assets/WQVGAsmallSkin/images/',
 	},
 	clocks => {
 		skinDir => 'images/Clocks',
-		assetDir => '../../../../../assets/Fab4Skin/Screensavers/Clocks',
+		assetDir => '../../../../../assets/WQVGAsmallSkin/Screensavers/Clocks',
 	},
 };
 
@@ -43,7 +43,7 @@ create_svk_file();
 
 # handle special assets
 my @commands = ( 
-	"cp ../../../../../assets/Fab4Skin/Splash_Screen/bootloader_100.png ../../jive/splash.png",
+	"cp ../../../../../assets/WQVGAsmallSkin/Splash_Screen/bootloader_100.png ../../jive/splash.png",
 	"svk status ../../jive/splash.png 2>&1 ",
 );
 
