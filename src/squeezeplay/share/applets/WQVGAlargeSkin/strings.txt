@@ -3,17 +3,4 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SQUEEZEBOX_REMOTE_SKIN
-	CS	Vzhled Squeezebox Touch Remote
-	DA	Tema til Squeezebox Touch-fjernbetjening
-	DE	Squeezebox Touch Remote-Skin
-	EN	Squeezebox Touch Remote Skin
-	ES	Máscara de mando de Squeezebox Touch
-	FI	Squeezebox Touch Remote Skin
-	FR	Habillage de Squeezebox Touch Remote
-	IT	Interfaccia schermo tattile telecomando di Squeezebox
-	NL	Skin voor Squeezebox Touch-afstandsbediening
-	NO	Squeezebox Touch fjernkontrollskall
-	PL	Karnacja pilota Squeezebox Touch
-	RU	Обложка сенсорного пульта Squeezebox
-	SV	Fjärrkontrollskal för Squeezebox Touch
-
+	EN	WQVGA Large Print Skin
