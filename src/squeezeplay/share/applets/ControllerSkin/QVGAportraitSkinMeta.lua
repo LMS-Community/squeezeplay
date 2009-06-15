@@ -38,7 +38,7 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("CONTROLLER_SKIN"), "ControllerSkin", "skin")
+	jiveMain:registerSkin(self:string("QVGAPORTRAIT_SKIN"), "QVGAportraitSkin", "skin")
 end
 
 
