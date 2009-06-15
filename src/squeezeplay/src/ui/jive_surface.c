@@ -18,6 +18,16 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	SDL_Surface *sdl;
 	Uint32 flags;
 
+#ifdef SCREEN_ROTATION_ENABLED
+	{
+		Uint16 tmp;
+	  
+		tmp = w;
+		w = h;
+		h = tmp;
+	}
+#endif
+
 	if (fullscreen) {
 	    flags = SDL_FULLSCREEN;
 	}
@@ -49,11 +59,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 
 	if (!sdl) {
 		/* create new surface */
-#ifdef SCREEN_ROTATION_ENABLED
-		sdl = SDL_SetVideoMode(h, w, bpp, flags);
-#else
 		sdl = SDL_SetVideoMode(w, h, bpp, flags);
-#endif
 		if (!sdl) {
 			LOG_ERROR(log_ui_draw, "SDL_SetVideoMode(%d,%d,%d): %s",
 				  w, h, bpp, SDL_GetError());
@@ -75,7 +81,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	/* orientaion hack */
 	real_sdl = srf->sdl;
 	bpp = real_sdl->format->BitsPerPixel;
-	srf->sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
+	srf->sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, h, w, bpp, 0, 0, 0, 0);
 	SDL_SetAlpha(srf->sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
 #endif
 
