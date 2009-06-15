@@ -383,7 +383,7 @@ void jive_surface_flip(JiveSurface *srf) {
 
 		for (y=0; y<srf->sdl->h; y++) {
 			srcp = ((Uint16 *)srf->sdl->pixels) + (y * srf->sdl->pitch/2);
-			dstp = ((Uint16 *)real_sdl->pixels) + y + (real_sdl->h * real_sdl->pitch/2);
+			dstp = ((Uint16 *)real_sdl->pixels) + y + ((real_sdl->h - 1) * real_sdl->pitch/2);
 
 			for (x=0; x<srf->sdl->w; x++) {
 				*dstp = *srcp;
@@ -399,7 +399,7 @@ void jive_surface_flip(JiveSurface *srf) {
 
 		for (y=0; y<srf->sdl->h; y++) {
 			srcp = ((Uint32 *)srf->sdl->pixels) + (y * srf->sdl->pitch/4);
-			dstp = ((Uint32 *)real_sdl->pixels) + y + (real_sdl->h * real_sdl->pitch/4);
+			dstp = ((Uint32 *)real_sdl->pixels) + y + ((real_sdl->h - 1) * real_sdl->pitch/4);
 
 			for (x=0; x<srf->sdl->w; x++) {
 				*dstp = *srcp;
