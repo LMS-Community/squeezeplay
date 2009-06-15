@@ -830,15 +830,14 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 
 	self.processWPSTimeout = 0
 
--- xxx
-	if iface:getChipset() == "Marvell" then
+	if iface:isMarvell() then
 		-- Stop wpa_supplicant - cannot run while wpsapp is running
 		iface:stopWPASupplicant()
 		-- Remove wps.conf, (re-)start wpsapp
 		iface:startWPSApp(wpsmethod, wpspin)
 	end
 
-	if iface:getChipset() == "Atheros" then
+	if iface:isAtheros() then
 		_startWPS(self, iface, ssid, wpsmethod, wpspin)
 	end
 
@@ -864,8 +863,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 		end)
 
 	local _stopWPSAction = function(self, event)
--- xxx
-		if iface:getChipset() == "Marvell" then
+		if iface:isMarvell() then
 			iface:stopWPSApp()
 			iface:startWPASupplicant()
 		end
@@ -880,7 +878,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	return popup
 end
 
--- xxx
+
 -- Only for Atheros wlan chipset
 function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 	assert(iface and ssid, debug.traceback())
@@ -899,8 +897,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 		function()
 			log:debug("processWPSTimeout=", self.processWPSTimeout)
 
--- xxx
-			if iface:getChipset() == "Marvell" then
+			if iface:isMarvell() then
 				local status = iface:t_wpsStatus()
 				if not (status.wps_state == "COMPLETED") then
 					self.processWPSTimeout = self.processWPSTimeout + 1
@@ -924,7 +921,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 				end
 			end
 
-			if iface:getChipset() == "Atheros" then
+			if iface:isAtheros() then
 				local status = iface:t_wpaStatus()
 				if not (status.wpa_state == "COMPLETED") then
 					self.processWPSTimeout = self.processWPSTimeout + 1
@@ -950,8 +947,7 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 
 	log:debug("processWPSFailed")
 
--- xxx
-	if iface:getChipset() == "Marvell" then
+	if iface:isMarvell() then
 -- TODO: Remove later (should not be necessary)
 		iface:stopWPSApp()
 
@@ -1058,8 +1054,7 @@ end
 function _selectNetworkTask(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
--- xxx
-	if iface:getChipset() == "Marvell" then
+	if iface:isMarvell() then
 		-- disconnect from existing network
 		iface:t_disconnectNetwork()
 

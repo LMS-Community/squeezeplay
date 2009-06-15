@@ -136,13 +136,36 @@ function __init(self, jnt, interface, isWireless)
 	obj.interface     = interface
 	obj.wireless      = isWireless
 
-	obj.chipset       = "Atheros"
+	obj:detectChipset()
 
 	obj._scanResults = {}
 	obj.responseQueue = {}
 	obj:open()
 
 	return obj
+end
+
+
+function detectChipset(self)
+	local f = io.popen("/sbin/lsmod 2> /dev/null")
+	if f == nil then
+		return
+	end
+
+        while true do
+               	local line = f:read("*l")
+        	if line == nil then
+               		break
+        	end
+
+       		local module = string.match(line, "^(%w+)%s+")
+       		if module == "ar6000" then
+               		self.chipset = "atheros"
+       		elseif module == "sd8686" then
+               		self.chipset = "marvell"
+       		end
+       	end
+       	f:close()
 end
 
 
@@ -273,15 +296,27 @@ end
 
 --[[
 
-=head2 networking:getChipset(self, interface)
+=head2 networking:isAtheros(self)
 
-Returns the chipset of interface object
+Returns true if the system is using Atheros wlan
 
 =cut
 --]]
+function isAtheros(self)
+	return self.chipset == "atheros"
+end
 
-function getChipset(self)
-	return self.chipset
+
+--[[
+
+=head2 networking:isMarvell(self)
+
+Returns true if the system is using Marvell wlan
+
+=cut
+--]]
+function isMarvell(self)
+	return self.chipset == "marvell"
 end
 
 
