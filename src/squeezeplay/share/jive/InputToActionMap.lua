@@ -237,4 +237,5 @@ unassignedActionMappings = {
 	"ignore",
 	"power_off",
 	"power_on",
+	"cancel",
 }

@@ -93,6 +93,7 @@ local LAYER_CONTENT           = jive.ui.LAYER_CONTENT
 local LAYER_CONTENT_OFF_STAGE = jive.ui.LAYER_CONTENT_OFF_STAGE
 local LAYER_CONTENT_ON_STAGE  = jive.ui.LAYER_CONTENT_ON_STAGE
 local LAYER_FRAME             = jive.ui.LAYER_FRAME
+local LAYER_TITLE             = jive.ui.LAYER_TITLE
 local LAYER_LOWER             = jive.ui.LAYER_LOWER
 
 local LAYOUT_NORTH            = jive.ui.LAYOUT_NORTH
@@ -336,6 +337,11 @@ function show(self, transition)
 		return
 	end
 
+-- not using auto-cleanup yet, might be tricky syncing with SlimBrowse steps
+--	if not self.alwaysOnTop and not self.contextMenu then
+--		self:hideContextMenus()
+--	end
+--
 	-- remove the window if it is already in the stack
 	local onstack = table.delete(stack, self)
 
@@ -516,6 +522,11 @@ function showBriefly(self, msecs, callback,
 	self:show(pushTransition)
 end
 
+function hideContextMenus(self)
+	while Framework.windowStack[1] and Framework.windowStack[1]:isContextMenu() do
+		Framework.windowStack[1]:hide()
+	end
+end
 
 --[[
 
@@ -1070,6 +1081,19 @@ function setTransparent(self, transparent)
 end
 
 
+function setContextMenu(self, contextMenu)
+	_assert(type(contextMenu) == "boolean")
+
+	self.contextMenu = contextMenu
+	self:reLayout()
+end
+
+
+function isContextMenu(self)
+	return self.contextMenu
+end
+
+
 function setSkin(self, skin)
 	 self.skin = skin
 end
@@ -1146,7 +1170,7 @@ function transitionBumpDown(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(0, y)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			if not inReturn and frames < 2 then
@@ -1174,7 +1198,7 @@ function transitionBumpUp(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(0, -y)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			if not inReturn and frames < 2 then
@@ -1209,7 +1233,7 @@ function transitionBumpLeft(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(x, 0)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			frames = frames - 1
@@ -1238,7 +1262,7 @@ function transitionBumpRight(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(-x, 0)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			frames = frames - 1
@@ -1249,15 +1273,24 @@ function transitionBumpRight(self)
 end
 
 
+function transitionPushLeftStaticTitle(oldWindow, newWindow)
+	return _transitionPushLeft(oldWindow, newWindow, true)
+end
+
 --[[
 
 =head2 jive.ui.Window:transitionPushLeft(newWindow)
 
-Returns a push left window transition.
+Returns a push right window transition.
 
 =cut
 --]]
 function transitionPushLeft(oldWindow, newWindow)
+	return _transitionPushLeft(oldWindow, newWindow, false)
+end
+
+
+function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
@@ -1275,13 +1308,25 @@ function transitionPushLeft(oldWindow, newWindow)
 			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+			else
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			end
 
 			surface:setOffset(-x, 0)
-			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
+			if staticTitle then
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE )
+			else
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(screenWidth - x, 0)
-			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			else
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(0, 0)
 
@@ -1305,6 +1350,11 @@ Returns a push right window transition.
 =cut
 --]]
 function transitionPushRight(oldWindow, newWindow)
+	return _transitionPushRight(oldWindow, newWindow, false)
+end
+
+
+function _transitionPushRight(oldWindow, newWindow, staticTitle)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
@@ -1322,13 +1372,25 @@ function transitionPushRight(oldWindow, newWindow)
 			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+			else
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			end
 
 			surface:setOffset(x, 0)
-			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
+			if staticTitle then
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE )
+			else
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(x - screenWidth, 0)
-			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			else
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(0, 0)
 
@@ -1352,12 +1414,21 @@ Returns a fade in window transition.
 =cut
 --]]
 function transitionFadeIn(oldWindow, newWindow)
+	return _transitionFadeIn(oldWindow, newWindow, 400)
+end
+
+function transitionFadeInFast(oldWindow, newWindow)
+	return _transitionFadeIn(oldWindow, newWindow, 100)
+end
+
+
+function _transitionFadeIn(oldWindow, newWindow, duration)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
 
 	local startT
-	local transitionDuration = 400
+	local transitionDuration = duration
 	local remaining = transitionDuration
 	local screenWidth = Framework:getScreenSize()
 	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth

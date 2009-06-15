@@ -25,6 +25,7 @@ local oo                     = require("loop.simple")
 local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
+local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -45,6 +46,7 @@ local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 local Timer                  = require("jive.ui.Timer")
 local Keyboard               = require("jive.ui.Keyboard")
 
@@ -64,6 +66,11 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "Context Menu Nav",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmTopWindow()
+				end },
 			{ text = "Button Menu",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -254,6 +261,100 @@ function menu(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function cmTopWindow(self, title)
+	local window = ContextMenuWindow( "More")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Subcontext " .. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "leave context ",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+
+	window:addWidget(menu)
+
+
+	self:tieAndShowWindow(window)
+end
+
+function cmWindow(self, title)
+	local window = ContextMenuWindow( "More")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Textarea " .. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "leave context ",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+end
+
+function cmRegularFinishWindow(self, title)
+	local window = Window("menu", "Somewhere else")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Textarea " .. title})
+	--todo possibly have the cleanup automatic inside Window
+	Window:hideContextMenus()
+	self:tieAndShowWindow(window)
 end
 
 

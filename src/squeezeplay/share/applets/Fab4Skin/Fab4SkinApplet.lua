@@ -1739,14 +1739,14 @@ function skin(self, s)
 	-- icon button factory
 	local _titleButtonIcon = function(name, icon, attr)
 		s[name] = _uses(_button)
-	--	s[name].layer = LAYER_TITLE
+		s[name].layer = LAYER_TITLE
 
 		s.pressed[name] = _uses(_pressed_button)
 
 		attr = {
 			hidden = 0,
 			img = icon,
-	--		layer = LAYER_TITLE,
+			layer = LAYER_TITLE,
 		}
 
 		s[name].icon = _uses(_button.icon, attr)
