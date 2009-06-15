@@ -44,6 +44,7 @@ local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
+local LAYER_TITLE            = jive.ui.LAYER_TITLE
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 
 local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
@@ -327,6 +328,18 @@ function skin(self, s)
 				       imgpath .. "Popup_Menu/popup_box_l.png",
 			       })
 
+        local contextMenuBox =
+		_loadTile(self, {
+					imgpath .. "Popup_Menu/cm_popup_box.png",
+					imgpath .. "Popup_Menu/cm_popup_box_tl.png",
+					imgpath .. "Popup_Menu/cm_popup_box_t.png",
+					imgpath .. "Popup_Menu/cm_popup_box_tr.png",
+					imgpath .. "Popup_Menu/cm_popup_box_r.png",
+					imgpath .. "Popup_Menu/cm_popup_box_br.png",
+					imgpath .. "Popup_Menu/cm_popup_box_b.png",
+					imgpath .. "Popup_Menu/cm_popup_box_bl.png",
+					imgpath .. "Popup_Menu/cm_popup_box_l.png",
+				})
 
 	local scrollBackground = 
 		_loadVTile(self, {
@@ -381,6 +394,7 @@ function skin(self, s)
 	local NONE = { }
 
 	local TITLE_HEIGHT = 55
+	local CM_MENU_HEIGHT = 72
 	local TITLE_FONT_SIZE = 32
 	local ALBUMMENU_FONT_SIZE = 34
 	local ALBUMMENU_SMALL_FONT_SIZE = 18
@@ -1119,6 +1133,90 @@ function skin(self, s)
 		}
 	})
 
+	s.context_menu = {
+		x = 8,
+		y = 16,
+		w = screenWidth - 16,
+		h = screenHeight - 32,
+		bgImg = contextMenuBox,
+	        maskImg = popupMask,
+		layer = LAYER_TITLE,
+
+		title = {
+			hidden = 1,
+		},
+		menu = {
+			border = { 7, 0, 0, 0 },
+			padding = { 0, 0, 0, 100 },
+			-- FIXME: hard-coding the height of the scrollbar here is a bit of a hack
+			scrollbar = { 
+				h = CM_MENU_HEIGHT * 3,
+			},
+			item = {
+				h = CM_MENU_HEIGHT,
+				order = { "icon", "text", "arrow" },
+				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'left',
+					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+					line = {
+						{
+							font = _boldfont(ALBUMMENU_FONT_SIZE),
+							height = 22,
+						},
+						{
+							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+						},
+					},
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				icon = {
+					h = THUMB_SIZE,
+					padding = MENU_ITEM_ICON_PADDING,
+					align = 'center',
+				},
+				arrow = _uses(s.item.arrow),
+			},
+			selected = {
+				item = {
+					bgImg = threeItemSelectionBox,
+					order = { "icon", "text", "arrow" },
+					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+					text = {
+						w = WH_FILL,
+						h = WH_FILL,
+						align = 'left',
+						font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
+						line = {
+							{
+								font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
+								height = 22,
+							},
+							{
+								font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
+							},
+						},
+						fg = TEXT_COLOR,
+						sh = TEXT_SH_COLOR,
+					},
+					icon = {
+						h = THUMB_SIZE,
+						padding = MENU_ITEM_ICON_PADDING,
+						align = 'center',
+					},
+					arrow = _uses(s.item.arrow),
+				},
+			},
+
+		},
+	}
+	
+	s.context_submenu = _uses(s.context_menu, {
+	        maskImg = false,
+	})
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
 		x = 50,
