@@ -7,9 +7,8 @@
 #include "common.h"
 #include "jive.h"
 
-#define ROTATE_HACK
 
-#ifdef ROTATE_HACK
+#ifdef SCREEN_ROTATION_ENABLED
 static SDL_Surface *real_sdl = NULL;
 #endif
 
@@ -50,7 +49,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 
 	if (!sdl) {
 		/* create new surface */
-#ifdef ROTATE_HACK
+#ifdef SCREEN_ROTATION_ENABLED
 		sdl = SDL_SetVideoMode(h, w, bpp, flags);
 #else
 		sdl = SDL_SetVideoMode(w, h, bpp, flags);
@@ -72,7 +71,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	srf->refcount = 1;
 	srf->sdl = sdl;
 
-#ifdef ROTATE_HACK
+#ifdef SCREEN_ROTATION_ENABLED
 	/* orientaion hack */
 	real_sdl = srf->sdl;
 	bpp = real_sdl->format->BitsPerPixel;
@@ -371,7 +370,7 @@ void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w
 }
 
 void jive_surface_flip(JiveSurface *srf) {
-#ifdef ROTATE_HACK
+#ifdef SCREEN_ROTATION_ENABLED
 	int x, y;
 
 	/* orientation hack */
