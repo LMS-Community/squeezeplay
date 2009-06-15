@@ -1054,37 +1054,38 @@ end
 function _selectNetworkTask(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
-	if iface:isMarvell() then
-		-- disconnect from existing network
-		iface:t_disconnectNetwork()
+-- XXXX Felix why is this? it breaks non WPS atheros setup
+--	if iface:isMarvell() then
 
-		-- remove any existing network config
-		if createNetwork then
-			_removeNetworkTask(self, iface, ssid)
-		end
+	-- disconnect from existing network
+	iface:t_disconnectNetwork()
 
-		-- ensure the network state exists
-		_setCurrentSSID(self, nil)
-		if self.scanResults[ssid] == nil then
-			_addNetwork(self, iface, ssid)
-		end
+	-- remove any existing network config
+	if createNetwork then
+		_removeNetworkTask(self, iface, ssid)
+	end
 
-		local id = self.scanResults[ssid].id
+	-- ensure the network state exists
+	_setCurrentSSID(self, nil)
+	if self.scanResults[ssid] == nil then
+		_addNetwork(self, iface, ssid)
+	end
 
-		-- create the network config (if necessary)
-		if id == nil then
-			local option = {
-				encryption = self.encryption,
-				psk = self.psk,
-				key = self.key
-			}
+	local id = self.scanResults[ssid].id
 
-			local id = iface:t_addNetwork(ssid, option)
+	-- create the network config (if necessary)
+	if id == nil then
+		local option = {
+			encryption = self.encryption,
+			psk = self.psk,
+			key = self.key
+		}
 
-			self.createdNetwork = true
-			if self.scanResults[ssid] then
-				self.scanResults[ssid].id = id
-			end
+		local id = iface:t_addNetwork(ssid, option)
+
+		self.createdNetwork = true
+		if self.scanResults[ssid] then
+			self.scanResults[ssid].id = id
 		end
 	end
 
