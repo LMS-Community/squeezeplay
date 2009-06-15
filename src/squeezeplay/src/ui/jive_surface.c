@@ -7,6 +7,12 @@
 #include "common.h"
 #include "jive.h"
 
+#define ROTATE_HACK
+
+#ifdef ROTATE_HACK
+static SDL_Surface *real_sdl = NULL;
+#endif
+
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
@@ -44,7 +50,11 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 
 	if (!sdl) {
 		/* create new surface */
-		sdl = SDL_SetVideoMode (w, h, bpp, flags);
+#ifdef ROTATE_HACK
+		sdl = SDL_SetVideoMode(h, w, bpp, flags);
+#else
+		sdl = SDL_SetVideoMode(w, h, bpp, flags);
+#endif
 		if (!sdl) {
 			LOG_ERROR(log_ui_draw, "SDL_SetVideoMode(%d,%d,%d): %s",
 				  w, h, bpp, SDL_GetError());
@@ -61,6 +71,14 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	srf = calloc(sizeof(JiveSurface), 1);
 	srf->refcount = 1;
 	srf->sdl = sdl;
+
+#ifdef ROTATE_HACK
+	/* orientaion hack */
+	real_sdl = srf->sdl;
+	bpp = real_sdl->format->BitsPerPixel;
+	srf->sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, bpp, 0, 0, 0, 0);
+	SDL_SetAlpha(srf->sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
+#endif
 
 	return srf;
 }
@@ -353,7 +371,55 @@ void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w
 }
 
 void jive_surface_flip(JiveSurface *srf) {
+#ifdef ROTATE_HACK
+	int x, y;
+
+	/* orientation hack */
+	SDL_LockSurface(real_sdl);
+	SDL_LockSurface(srf->sdl);
+
+	switch (real_sdl->format->BytesPerPixel) {
+	case 2: {
+		Uint16 *srcp, *dstp;
+
+		for (y=0; y<srf->sdl->h; y++) {
+			srcp = ((Uint16 *)srf->sdl->pixels) + (y * srf->sdl->pitch/2);
+			dstp = ((Uint16 *)real_sdl->pixels) + y + (real_sdl->h * real_sdl->pitch/2);
+
+			for (x=0; x<srf->sdl->w; x++) {
+				*dstp = *srcp;
+				srcp++;
+				dstp -= real_sdl->pitch/2;
+			}
+		}
+		break;
+	}
+
+	case 4: {
+		Uint32 *srcp, *dstp;
+
+		for (y=0; y<srf->sdl->h; y++) {
+			srcp = ((Uint32 *)srf->sdl->pixels) + (y * srf->sdl->pitch/4);
+			dstp = ((Uint32 *)real_sdl->pixels) + y + (real_sdl->h * real_sdl->pitch/4);
+
+			for (x=0; x<srf->sdl->w; x++) {
+				*dstp = *srcp;
+				srcp++;
+				dstp -= real_sdl->pitch/4;
+			}
+		}
+		break;
+	}
+	}
+
+	SDL_UnlockSurface(srf->sdl);
+	SDL_UnlockSurface(real_sdl);
+
+	SDL_Flip(real_sdl);
+#else
 	SDL_Flip(srf->sdl);
+#endif
+
 }
 
 

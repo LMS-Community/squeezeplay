@@ -136,6 +136,8 @@ function __init(self, jnt, interface, isWireless)
 	obj.interface     = interface
 	obj.wireless      = isWireless
 
+	obj.chipset       = "Atheros"
+
 	obj._scanResults = {}
 	obj.responseQueue = {}
 	obj:open()
@@ -266,6 +268,20 @@ Returns the interface name of interface object
 
 function getName(self)
 	return self.interface
+end
+
+
+--[[
+
+=head2 networking:getChipset(self, interface)
+
+Returns the chipset of interface object
+
+=cut
+--]]
+
+function getChipset(self)
+	return self.chipset
 end
 
 
@@ -1475,12 +1491,15 @@ function request(self, ...)
 	local task = Task:running()
 	assert(task, "Networking:request must be called in a Task")
 
--- 01/27/09 - fm - WPS - begin
--- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
-	if wpaSupplicantRunning == false then
-		return "", "not running"
+-- xxx
+---- 01/27/09 - fm - WPS - begin
+---- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
+	if self.chipset == "Marvell" then
+		if wpaSupplicantRunning == false then
+			return "", "not running"
+		end
 	end
--- 01/27/09 - fm - WPS - end
+---- 01/27/09 - fm - WPS - end
 
 
 	log:info("REQUEST: ", ...)

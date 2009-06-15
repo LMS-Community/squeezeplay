@@ -830,10 +830,17 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 
 	self.processWPSTimeout = 0
 
-	-- Stop wpa_supplicant - cannot run while wpsapp is running
-	iface:stopWPASupplicant()
-	-- Remove wps.conf, (re-)start wpsapp
-	iface:startWPSApp(wpsmethod, wpspin)
+-- xxx
+	if iface:getChipset() == "Marvell" then
+		-- Stop wpa_supplicant - cannot run while wpsapp is running
+		iface:stopWPASupplicant()
+		-- Remove wps.conf, (re-)start wpsapp
+		iface:startWPSApp(wpsmethod, wpspin)
+	end
+
+	if iface:getChipset() == "Atheros" then
+		_startWPS(self, iface, ssid, wpsmethod, wpspin)
+	end
 
 	-- Progress window
 	local popup = Popup("waiting_popup")
@@ -857,8 +864,11 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 		end)
 
 	local _stopWPSAction = function(self, event)
-		iface:stopWPSApp()
-		iface:startWPASupplicant()
+-- xxx
+		if iface:getChipset() == "Marvell" then
+			iface:stopWPSApp()
+			iface:startWPASupplicant()
+		end
 		popup:hide()
 	end
 
@@ -870,6 +880,17 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 	return popup
 end
 
+-- xxx
+-- Only for Atheros wlan chipset
+function _startWPS(self, iface, ssid, wpsmethod, wpspin)
+	assert(iface and ssid, debug.traceback())
+
+	Task("startWPS", self,
+		function()
+			iface:request("WPS_PBC")
+		end):addTask()
+end
+
 
 function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 	assert(iface and ssid, debug.traceback())
@@ -878,26 +899,46 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 		function()
 			log:debug("processWPSTimeout=", self.processWPSTimeout)
 
-			local status = iface:t_wpsStatus()
-			if not (status.wps_state == "COMPLETED") then
-				self.processWPSTimeout = self.processWPSTimeout + 1
-				if self.processWPSTimeout ~= WPS_WALK_TIMEOUT then
+-- xxx
+			if iface:getChipset() == "Marvell" then
+				local status = iface:t_wpsStatus()
+				if not (status.wps_state == "COMPLETED") then
+					self.processWPSTimeout = self.processWPSTimeout + 1
+					if self.processWPSTimeout ~= WPS_WALK_TIMEOUT then
+						return
+					end
+
+					-- WPS walk timeout
+					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 					return
+				else
+					-- Make sure wpa supplicant is running again
+					iface:startWPASupplicant()
+
+					-- Set credentials from WPS
+					self.encryption = status.wps_encryption
+					self.psk = status.wps_psk
+					self.key = status.wps_key
+
+					_connect(self, iface, ssid, true)
 				end
+			end
 
-				-- WPS walk timeout
-				processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
-				return
-			else
-				-- Make sure wpa supplicant is running again
-				iface:startWPASupplicant()
+			if iface:getChipset() == "Atheros" then
+				local status = iface:t_wpaStatus()
+				if not (status.wpa_state == "COMPLETED") then
+					self.processWPSTimeout = self.processWPSTimeout + 1
 
-				-- Set credentials from WPS
-				self.encryption = status.wps_encryption
-				self.psk = status.wps_psk
-				self.key = status.wps_key
+					if self.processWPSTimeout ~= WPS_WALK_TIMEOUT then
+						return
+					end
 
-				_connect(self, iface, ssid, true)
+					-- WPS walk timeout
+					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
+					return
+				else
+					_connect(self, iface, ssid, false)
+				end
 			end
 
 		end):addTask()
@@ -909,10 +950,13 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 
 	log:debug("processWPSFailed")
 
+-- xxx
+	if iface:getChipset() == "Marvell" then
 -- TODO: Remove later (should not be necessary)
-	iface:stopWPSApp()
+		iface:stopWPSApp()
 
-	iface:startWPASupplicant()
+		iface:startWPASupplicant()
+	end
 
 	-- popup failure
 	local window = Window("error", self:string("NETWORK_WPS_PROBLEM"), 'setuptitle')
@@ -1014,35 +1058,38 @@ end
 function _selectNetworkTask(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
-	-- disconnect from existing network
-	iface:t_disconnectNetwork()
+-- xxx
+	if iface:getChipset() == "Marvell" then
+		-- disconnect from existing network
+		iface:t_disconnectNetwork()
 
-	-- remove any existing network config
-	if createNetwork then
-		_removeNetworkTask(self, iface, ssid)
-	end
+		-- remove any existing network config
+		if createNetwork then
+			_removeNetworkTask(self, iface, ssid)
+		end
 
-	-- ensure the network state exists
-	_setCurrentSSID(self, nil)
-	if self.scanResults[ssid] == nil then
-		_addNetwork(self, iface, ssid)
-	end
+		-- ensure the network state exists
+		_setCurrentSSID(self, nil)
+		if self.scanResults[ssid] == nil then
+			_addNetwork(self, iface, ssid)
+		end
 
-	local id = self.scanResults[ssid].id
+		local id = self.scanResults[ssid].id
 
-	-- create the network config (if necessary)
-	if id == nil then
-		local option = {
-			encryption = self.encryption,
-			psk = self.psk,
-			key = self.key
-		}
+		-- create the network config (if necessary)
+		if id == nil then
+			local option = {
+				encryption = self.encryption,
+				psk = self.psk,
+				key = self.key
+			}
 
-		local id = iface:t_addNetwork(ssid, option)
+			local id = iface:t_addNetwork(ssid, option)
 
-		self.createdNetwork = true
-		if self.scanResults[ssid] then
-			self.scanResults[ssid].id = id
+			self.createdNetwork = true
+			if self.scanResults[ssid] then
+				self.scanResults[ssid].id = id
+			end
 		end
 	end
 

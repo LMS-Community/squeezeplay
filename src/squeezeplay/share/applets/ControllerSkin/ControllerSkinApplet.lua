@@ -142,8 +142,8 @@ function skin(self, s, reload, useDefaultSize)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
-                screenWidth = 240
-                screenHeight = 320
+                screenWidth = 320
+                screenHeight = 240
         end
 
         Framework:setVideoMode(screenWidth, screenHeight, 16, jiveMain:isFullscreen())
