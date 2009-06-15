@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.QvgaBaseSkin.QvgaBaseSkinApplet - The skin base for any 320x240 or 240x320 screen 
+applets.QVGAbaseSkin.QVGAbaseSkinApplet - The skin base for any 320x240 or 240x320 screen 
 
 =head1 DESCRIPTION
 
@@ -56,11 +56,11 @@ local appletManager          = appletManager
 
 
 module(..., Framework.constants)
-oo.class(_M, QvgaBaseSkinApplet)
+oo.class(_M, QVGAbaseSkinApplet)
 
 
 -- Define useful variables for this skin
-local imgpath = "applets/QvgaBaseSkin/images/"
+local imgpath = "applets/QVGAbaseSkin/images/"
 local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
 local BOLD_PREFIX = "Bold"

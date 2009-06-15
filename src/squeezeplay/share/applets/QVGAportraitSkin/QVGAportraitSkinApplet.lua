@@ -39,7 +39,7 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
-local QvgaBaseSkinApplet     = require("applets.QvgaBaseSkin.QvgaBaseSkinApplet")
+local QVGAbaseSkinApplet     = require("applets.QVGAbaseSkin.QVGAbaseSkinApplet")
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -58,7 +58,7 @@ local appletManager          = appletManager
 
 
 module(..., Framework.constants)
-oo.class(_M, QvgaBaseSkinApplet)
+oo.class(_M, QVGAbaseSkinApplet)
 
 
 -- Define useful variables for this skin
@@ -72,7 +72,7 @@ local BOLD_PREFIX = "Bold"
 function init(self)
 	self.images = {}
 	-- not yet
-	--QvgaBaseSkinApplet.init(self)
+	--QVGAbaseSkinApplet.init(self)
 end
 
 
@@ -103,7 +103,7 @@ function skin(self, s, reload, useDefaultSize)
 	--init lastInputType so selected item style is not shown on skin load
 	Framework.mostRecentInputType = "scroll"
 
-	QvgaBaseSkinApplet.skin(self, s, reload, useDefaultSize)
+	QVGAbaseSkinApplet.skin(self, s, reload, useDefaultSize)
 end
 
 
