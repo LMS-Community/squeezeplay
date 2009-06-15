@@ -192,19 +192,6 @@ function skin(self, s, reload, useDefaultSize)
 
 	local textinputRightArrow = Tile:loadImage(imgpath .. "Icons/selection_right.png")
 
-	local buttonBox =
-		Tile:loadTiles({
-					nil,
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tl.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_t.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_tr.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_r.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_br.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_b.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_bl.png",
-					imgpath .. "Text_Entry/Keyboard_Touch/button_qwerty_l.png",
-				})
-
 
 	local oneLineItemSelectionBox =
 		Tile:loadTiles({
@@ -297,7 +284,6 @@ function skin(self, s, reload, useDefaultSize)
 	local CHECK_PADDING  = { 0, 0, 0, 0 }
 	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
 
-	--FIXME: paddings here need tweaking for Fab4Skin
 	local MENU_ALBUMITEM_PADDING = { 4, 2, 4, 2 }
 	local MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 }
 	local MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 }
@@ -1201,12 +1187,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_alarm = _uses(_icon, {
 		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
-
-	s.icon_keyboard_divider = {
-		img = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divide.png"),
-		bgImg = _loadImage(self, "Text_Entry/Keyboard_Touch/toolbar_divider.png")
-	}
-
 
 	-- button icons, on left of menus
 	local _buttonicon = {

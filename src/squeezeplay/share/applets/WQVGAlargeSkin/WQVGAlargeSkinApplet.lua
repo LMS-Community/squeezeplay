@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.Fab4Skin.Fab4SkinApplet - The touch skin for the Squeezebox Touch
+applets.WQVGAlargeSkin.WQVGAlargeSkinApplet - skin for large print and 480x272 resolution
 
 =head1 DESCRIPTION
 
-This applet implements the Touch skin for the Squeezebox Touch
+This applet implements the large print skin for 480x272 resolution
 
 =head1 FUNCTIONS
 
@@ -65,8 +65,7 @@ oo.class(_M, Applet)
 
 
 -- Define useful variables for this skin
-local imgpath = "applets/Fab4Skin/images/"
-local sndpath = "applets/Fab4Skin/sounds/"
+local imgpath = "applets/WQVGAsmallSkin/images/"
 local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
 local BOLD_PREFIX = "Bold"
@@ -88,8 +87,8 @@ function param(self)
 		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 180,
 		radialClock = {
-			hourTickPath     = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_hr_on.png',
-			minuteTickPath   = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_min_on.png',
+			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
+			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
 		},
         }
 end
@@ -237,7 +236,7 @@ function skin(self, s)
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
-	local powerButton             = _loadImageTile(self,  imgpath .. "../../Fab4Skin/images/Icons/icon_power_button_tb.png")
+	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
 
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
@@ -302,7 +301,6 @@ function skin(self, s)
 					imgpath .. "Buttons/button_titlebar_l.png",
 				})
 
--- FIXME: do these need updating for Fab4Skin?
 	local helpBox = 
 		_loadTile(self, {
 				       imgpath .. "Popup_Menu/helpbox.png",

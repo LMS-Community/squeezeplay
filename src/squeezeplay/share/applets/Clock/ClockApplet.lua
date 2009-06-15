@@ -694,8 +694,8 @@ end
 -- DOT MATRIX CLOCK SKIN
 function DotMatrix:getDotMatrixClockSkin(skinName)
 
-	if skinName == 'Fab4RemoteSkin' then
-		skinName = 'Fab4Skin'
+	if skinName == 'WQVGAlargeSkin' then
+		skinName = 'WQVGAsmallSkin'
 	end
 
 	self.skinName = skinName
@@ -703,7 +703,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 
 	local s = {}
 
-	if skinName == 'Fab4Skin' then
+	if skinName == 'WQVGAsmallSkin' then
 
 		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/wallpaper_clock_dotmatrix.png")
 
@@ -818,15 +818,15 @@ end
 
 -- DIGITAL CLOCK SKIN
 function Digital:getDigitalClockSkin(skinName)
-	if skinName == 'Fab4RemoteSkin' then
-		skinName = 'Fab4Skin'
+	if skinName == 'WQVGAlargeSkin' then
+		skinName = 'WQVGAsmallSkin'
 	end
 	self.skinName = skinName
 	self.imgpath = _imgpath(self)
 
 	local s = {}
 
-	if skinName == 'Fab4Skin' then
+	if skinName == 'WQVGAsmallSkin' then
 
 		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
 		local digitalClockDigit = {
@@ -995,15 +995,15 @@ end
 
 -- RADIAL CLOCK
 function Radial:getRadialClockSkin(skinName)
-	if skinName == 'Fab4RemoteSkin' then
-		skinName = 'Fab4Skin'
+	if skinName == 'WQVGAlargeSkin' then
+		skinName = 'WQVGAsmallSkin'
 	end
 	self.skinName = skinName
 	self.imgpath = _imgpath(self)
 
 	local s = {}
 
-	if skinName == 'Fab4Skin' then
+	if skinName == 'WQVGAsmallSkin' then
 
 		local radialClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Radial/wallpaper_clock_radial.png")
 		s.icon_radialClockTicksOff = {

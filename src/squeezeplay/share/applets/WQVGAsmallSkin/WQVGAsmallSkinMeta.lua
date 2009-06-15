@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.TouchSkin.TouchSkinMeta - TouchSkin meta-info
+applets.WQVGAsmallSkin.WQVGAsmallSkinMeta 
 
 =head1 DESCRIPTION
 
-See L<applets.TouchSkin.TouchSkinApplet>.
+See L<applets.WQVGAsmallSkin.WQVGAsmallSkinApplet>.
 
 =head1 FUNCTIONS
 
@@ -37,7 +37,7 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("TOUCH_SKIN"), "Fab4Skin", "skin")
+	jiveMain:registerSkin(self:string("WQVGA_SMALL_SKIN"), "WQVGAsmallSkin", "skin")
 end
 
 

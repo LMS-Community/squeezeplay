@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.TouchSkin.TouchSkinMeta - TouchSkin meta-info
+applets.QVGAlandscapeSkin.QVGAlandscapeSkinMeta - QVGAlandscapeSkin meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.TouchSkin.TouchSkinApplet>.
+See L<applets.QVGAlandscapeSkin.QVGAlandscapeSkinApplet>.
 
 =head1 FUNCTIONS
 

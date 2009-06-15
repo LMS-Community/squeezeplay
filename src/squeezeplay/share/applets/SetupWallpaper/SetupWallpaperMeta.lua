@@ -35,10 +35,11 @@ end
 
 function defaultSettings(meta)
 	return { 
-		Fab4RemoteSkin = "fab4_nocturne.png",
-		Fab4Skin       = "fab4_nocturne.png",
+		WQVGAsmallSkin = "fab4_nocturne.png",
+		WQVGAlargeSkin = "fab4_nocturne.png",
 		FullscreenSkin = "jive_midnight.png",
-		ControllerSkin = "jive_sunrise.png",
+		QVGAportraitSkin  = "jive_sunrise.png",
+		QVGAlandscapeSkin = "jive_sunrise.png",
 	}
 end
 

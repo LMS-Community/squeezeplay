@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.TouchSkin.TouchSkinMeta - TouchSkin meta-info
+applets.QVGAbaseSkin.QVGAbaseSkinMeta - base class for 240 x 320 and 320 x 240 resolutions
 
 =head1 DESCRIPTION
 
-See L<applets.TouchSkin.TouchSkinApplet>.
+See L<applets.QVGAbaseSkin.QVGAbaseSkinApplet>.
 
 =head1 FUNCTIONS
 

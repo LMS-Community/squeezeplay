@@ -1991,7 +1991,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		inputSpec.allowedChars
 	)
 
-	--[[ FIXME: removing help (all platforms) for purposes of Fab4.
+	--[[ FIXME: removing help (all platforms) until a per-platform solution can be made for help
 	-- fix up help
 	local helpText
 	if inputSpec.help then

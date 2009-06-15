@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.Fab4Skin.Fab4SkinApplet - The touch skin for the Squeezebox Touch
+applets.WQVGAsmallSkin.WQVGAsmallSkinApplet
 
 =head1 DESCRIPTION
 
-This applet implements the Touch skin for the Squeezebox Touch
+This applet implements a small print skin for 480x272 resolution
 
 =head1 FUNCTIONS
 
@@ -65,8 +65,7 @@ oo.class(_M, Applet)
 
 
 -- Define useful variables for this skin
-local imgpath = "applets/Fab4Skin/images/"
-local sndpath = "applets/Fab4Skin/sounds/"
+local imgpath = "applets/WQVGAsmallSkin/images/"
 local fontpath = "fonts/"
 local FONT_NAME = "FreeSans"
 local BOLD_PREFIX = "Bold"
@@ -90,8 +89,8 @@ function param(self)
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
 		radialClock = {
-			hourTickPath     = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_hr_on.png',
-			minuteTickPath   = 'applets/Fab4Skin/images/Clocks/Radial/radial_ticks_min_on.png',
+			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
+			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
 		},
         }
 end

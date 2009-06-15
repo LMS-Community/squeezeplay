@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.Fab4RemoteSkin.Fab4RemoteMeta - Remote Skin meta-info
+applets.WQVGAlargeSkin.WQVGAlargeSkinMeta - large print skin for 480x272 resolution
 
 =head1 DESCRIPTION
 
-See L<applets.Fab4RemoteSkin.Fab4RemoteSkinApplet>.
+See L<applets.WQVGAlargeSkin.WQVGAlargeSkinApplet>.
 
 =head1 FUNCTIONS
 
@@ -37,7 +37,7 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("SQUEEZEBOX_REMOTE_SKIN"), "Fab4RemoteSkin", "skin")
+	jiveMain:registerSkin(self:string("WQVGA_LARGE_SKIN"), "WQVGAlargeSkin", "skin")
 end
 
 

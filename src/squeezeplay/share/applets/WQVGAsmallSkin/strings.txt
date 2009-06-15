@@ -2,20 +2,8 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-TOUCH_SKIN
-	CS	Vzhled Squeezebox Touch
-	DA	Tema til Squeezebox Touch
-	DE	Squeezebox Touch-Skin
-	EN	Squeezebox Touch Skin
-	ES	Máscara de Squeezebox Touch
-	FI	Squeezebox Touch Skin
-	FR	Habillage de Squeezebox Touch
-	IT	Interfaccia schermo tattile di Squeezebox
-	NL	Skin voor Squeezebox Touch
-	NO	Squeezebox Touch-skall
-	PL	Karnacja Squeezebox Touch
-	RU	Сенсорная обложка Squeezebox
-	SV	Skal för Squeezebox Touch
+WQVGA_SMALL_SKIN
+	EN	WQVGA Small Print Skin
 
 ENTER_SMALL
 	CS	hotovo
