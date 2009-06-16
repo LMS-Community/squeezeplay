@@ -246,14 +246,14 @@ function skin(self, s, reload, useDefaultSize)
 					imgpath .. "Screen_Formats/Scroll_Bar/scrollbar_body_b.png",
 			       })
 
-	local sliderBackground =
+	s.sliderBackground =
 		Tile:loadHTiles({
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_l.png",
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd.png",
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_bkgrd_r.png",
 			       })
 
-	local sliderBar =
+	s.sliderBar =
 		Tile:loadHTiles({
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill_l.png",
 					imgpath .. "Screen_Formats/Song_Progress_Bar/SP_Bar_Remote/rem_progbar_fill.png",
@@ -649,8 +649,8 @@ function skin(self, s, reload, useDefaultSize)
 		border = 5,
 		w = WH_FILL,
 		horizontal = 1,
-		bgImg = sliderBackground,
-		img = sliderBar,
+		bgImg = s.sliderBackground,
+		img = s.sliderBar,
 	}
 
 	s.slider_group = {
@@ -1392,13 +1392,15 @@ function skin(self, s, reload, useDefaultSize)
 	s.iconbar_group = {
 		x = 0,
 		y = screenHeight - 30,
-		w = screenWidth,
+		w = WH_FILL,
 		h = 30,
 		border = { 4, 0, 4, 0 },
+		padding = { 4, 0, 4, 0 },
 		bgImg = background,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
 		order = {'play', 'repeat_mode', 'shuffle', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
+		button_time = { w = WH_FILL },
 
 	}
 
@@ -1625,8 +1627,8 @@ if true then
 
 	s.ssprogressB = {
 		horizontal  = 1,
-		bgImg       = sliderBackground,
-		img         = sliderBar,
+		bgImg       = s.sliderBackground,
+		img         = s.sliderBar,
 		position    = LAYOUT_SOUTH,
 		padding     = { 0, 0, 0, 5 },
 	}
