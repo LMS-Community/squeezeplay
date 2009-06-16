@@ -98,8 +98,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- styles specific to the landscape QVGA skin
 
-	local NP_ARTISTALBUM_FONT_SIZE = 14 
-	local NP_TRACK_FONT_SIZE = 14 
+	local NP_ARTISTALBUM_FONT_SIZE = 16
+	local NP_TRACK_FONT_SIZE = 16
 
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
@@ -128,7 +128,7 @@ function skin(self, s, reload, useDefaultSize)
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
 			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, NP_TITLE_HEIGHT + 20, 20, 10 },
+			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 15, 20, 10 },
 			font       = _boldfont(NP_TRACK_FONT_SIZE), 
 		},
 		npartist  = {
@@ -138,7 +138,7 @@ function skin(self, s, reload, useDefaultSize)
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
 			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, NP_TITLE_HEIGHT + 50, 20, 10 },
+			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 45, 20, 10 },
 			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
 		npalbum = {
@@ -148,7 +148,7 @@ function skin(self, s, reload, useDefaultSize)
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
 			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, NP_TITLE_HEIGHT + 80, 20, 10 },
+			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 75, 20, 10 },
 			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
 	
@@ -172,14 +172,14 @@ function skin(self, s, reload, useDefaultSize)
 		-- Progress bar
 		npprogress = {
 			position = LAYOUT_NONE,
-			x = 10,
+			x = 4,
 			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 2,
 			padding = { 0, 10, 0, 0 },
 			order = { "elapsed", "slider", "remain" },
 			elapsed = {
 				w = 50,
 				align = 'right',
-				padding = { 8, 0, 8, 10 },
+				padding = { 4, 0, 6, 10 },
 				font = _boldfont(10),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
@@ -187,7 +187,7 @@ function skin(self, s, reload, useDefaultSize)
 			remain = {
 				w = 50,
 				align = 'left',
-				padding = { 8, 0, 8, 10 },
+				padding = { 6, 0, 4, 10 },
 				font = _boldfont(10),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
@@ -197,7 +197,7 @@ function skin(self, s, reload, useDefaultSize)
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
 			position = LAYOUT_NONE,
-			x = 10,
+			x = 8,
 			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 2,
 			padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
 			order = { "elapsed" },
@@ -216,7 +216,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- sliders
 	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
 	s.npprogressB = {
-		w = screenWidth - 100,
+		w = screenWidth - 120,
 		h = 25,
 		padding     = { 0, 0, 0, 5 },
                 position = LAYOUT_SOUTH,
