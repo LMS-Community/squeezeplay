@@ -92,7 +92,7 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
-	jiveMain:setDefaultSkin("FullscreenSkin")
+	jiveMain:setDefaultSkin("WQVGAsmallSkin")
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
