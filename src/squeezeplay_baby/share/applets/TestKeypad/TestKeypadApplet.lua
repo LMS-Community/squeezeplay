@@ -87,12 +87,9 @@ end
 
 
 function drawKeypad(self)
-	local w, h = Framework:getScreenSize()
-	local srf  = Surface:newRGB(w, h)
 	local currentKeyUp = 0
 
-	self.background:blit(srf, 0, 0)
-	self.icon:setValue(srf)
+	self.background:blit(self.surface, 0, 0)
 
 	local started = false
 
@@ -100,9 +97,9 @@ function drawKeypad(self)
 		local state = keyState[k.key]
 		if state ~= nil then
 			started = true
-			srf:filledCircle(k.x, k.y, 10, stateToColor[state])
+			self.surface:filledCircle(k.x, k.y, 10, stateToColor[state])
 		else
-			srf:circle(k.x, k.y, 10, 0x00FF00FF)
+			self.surface:circle(k.x, k.y, 10, 0x00FF00FF)
 		end
 	end
 
@@ -148,8 +145,11 @@ function KeypadTest(self)
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestKeypad/Keypad.png")
+	local w, h = self.background:getSize()
 
-	self.icon = Icon("icon")
+	self.surface = Surface:newRGB(w, h)
+
+	self.icon = Icon("icon", self.surface)
 	window:addWidget(self.icon)
 
 	self.help = Textarea("help", self:string("TEST_KEYPAD_HELP"))
