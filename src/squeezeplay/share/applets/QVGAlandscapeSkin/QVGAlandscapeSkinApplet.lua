@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.ControllerSkin.ControllerSkinApplet - The skin for the Squeezebox Controller
+applets.QVGAlandscapeSkin.QVGAlandscapeSkinApplet - The skin for the Squeezebox Controller
 
 =head1 DESCRIPTION
 

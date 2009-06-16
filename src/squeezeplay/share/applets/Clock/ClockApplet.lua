@@ -806,7 +806,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		}
 
 	-- doto matrix for controller
-	elseif skinName == 'ControllerSkin' then
+	elseif skinName == 'QVGAportraitSkin' then
 
 	-- dot matrix for something else
 	elseif skinName == 'SomeOtherSkin' then
@@ -987,7 +987,7 @@ function Digital:getDigitalClockSkin(skinName)
 			},
 			dropShadow = { hidden = 1 },
 		})
-	elseif skinName == 'ControllerSkin' then
+	elseif skinName == 'QVGAportraitSkin' then
 	end
 
 	return s
@@ -1083,7 +1083,7 @@ function Radial:getRadialClockSkin(skinName)
 			},
 		}
 
-	elseif skinName == 'ControllerSkin' then
+	elseif skinName == 'QVGAportraitSkin' then
 
 	elseif skinName == 'SomeOtherSkin' then
 

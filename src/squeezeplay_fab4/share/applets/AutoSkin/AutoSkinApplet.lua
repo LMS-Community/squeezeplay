@@ -44,8 +44,8 @@ local PROX_NEAR = 1
 local PROX_FAR = 0
 
 local skinByProximity = {
-	[PROX_NEAR] = "Fab4Skin",
-	[PROX_FAR] = "Fab4RemoteSkin",
+	[PROX_NEAR] = "WQVGAsmallSkin",
+	[PROX_FAR] = "WQVGAlargeSkin",
 }
 
 module(..., Framework.constants)
@@ -64,8 +64,8 @@ function __init(self, ...)
 	local obj = oo.rawnew(self, Applet(...))
 
 	-- skins, could be configurable via settings
-	local touchSkin = "Fab4Skin"
-	local remoteSkin = "Fab4RemoteSkin"
+	local touchSkin = "WQVGAsmallSkin"
+	local remoteSkin = "WQVGAlargeSkin"
 
 	-- load skins at start up, this makes switching skins faster
 --	local touchSkinApplet = appletManager:loadApplet(touchSkin)

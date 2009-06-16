@@ -560,7 +560,7 @@ end
 
 
 function JiveMain:getDefaultSkin()
-	return _defaultSkin or "ControllerSkin"
+	return _defaultSkin or "QVGAportraitSkin"
 end
 
 

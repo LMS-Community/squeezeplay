@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.ControllerSkin.ControllerSkinApplet - The skin for the Squeezebox Controller
+applets.QVGAportraitSkin.QVGAportraitSkinApplet - The skin for the Squeezebox Controller
 
 =head1 DESCRIPTION
 
@@ -59,14 +59,6 @@ local appletManager          = appletManager
 
 module(..., Framework.constants)
 oo.class(_M, QVGAbaseSkinApplet)
-
-
--- Define useful variables for this skin
-local imgpath = "applets/ControllerSkin/images/"
-local sndpath = "applets/ControllerSkin/sounds/"
-local fontpath = "fonts/"
-local FONT_NAME = "FreeSans"
-local BOLD_PREFIX = "Bold"
 
 
 function init(self)
