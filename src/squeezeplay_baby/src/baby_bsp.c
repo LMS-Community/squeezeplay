@@ -50,7 +50,8 @@ static int handle_msp430_events(int fd) {
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {	
 		Uint32 ev_time = TIMEVAL_TO_TICKS(ev[i].time);
-
+		event.ticks = ev_time;
+		
 		if (ev[i].type == EV_MSC) {
 			//TIMEVAL_TO_TICKS doesn't not really return ticks since these ev times are jiffies, but we won't be comparing against real ticks.
 			Uint32 ir_code = ev[i].value;
