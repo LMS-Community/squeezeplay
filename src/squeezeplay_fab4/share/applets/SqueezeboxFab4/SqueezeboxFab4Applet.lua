@@ -438,7 +438,7 @@ function settingsBrightnessShow (self, menuItem)
 	return window
 end
 
-function settingsBrightnessAutomaticShow(self, menuItem)
+function settingsBrightnessControlShow(self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
 	local settings = self:getSettings()
 
@@ -452,7 +452,16 @@ function settingsBrightnessAutomaticShow(self, menuItem)
 						settings.brightnessControl = "automatic"
 					end,
 					settings.brightnessControl == "automatic")
-		}		
+		},	
+		{
+			text = self:string("BSP_BRIGHTNESS_MANUAL"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuItem)
+						settings.brightnessControl = "manual"
+						self:setBrightness(settings.brightness)
+					end,
+					settings.brightnessControl == "manual")
+		}
 	})
 	
 	window:addListener(EVENT_WINDOW_POP,
