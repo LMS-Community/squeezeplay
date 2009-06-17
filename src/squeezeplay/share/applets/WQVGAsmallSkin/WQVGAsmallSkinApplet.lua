@@ -533,19 +533,6 @@ function skin(self, s)
 					imgpath .. "Buttons/button_titlebar_l.png",
 				})
 
-	local helpBox = 
-		_loadTile(self, {
-				       imgpath .. "Popup_Menu/helpbox.png",
-				       imgpath .. "Popup_Menu/helpbox_tl.png",
-				       imgpath .. "Popup_Menu/helpbox_t.png",
-				       imgpath .. "Popup_Menu/helpbox_tr.png",
-				       imgpath .. "Popup_Menu/helpbox_r.png",
-				       imgpath .. "Popup_Menu/helpbox_br.png",
-				       imgpath .. "Popup_Menu/helpbox_b.png",
-				       imgpath .. "Popup_Menu/helpbox_bl.png",
-				       imgpath .. "Popup_Menu/helpbox_l.png",
-			       })
-
 	local popupBox = 
 		_loadTile(self, {
 				       imgpath .. "Popup_Menu/popup_box.png",
@@ -1310,7 +1297,7 @@ function skin(self, s)
 	})
 	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_play, {
 		arrow = { 
-			img = _loadImage(self, "Icons/selection_song_5line.png")
+			img = _loadImage(self, "Icons/icon_nplay_sel_off.png")
 		},
 		text = { padding = 0, },
 	})
@@ -1329,6 +1316,7 @@ function skin(self, s)
 			bgImg = fiveItemSelectionBox
 		}),
                 albumcurrent       = _uses(s.icon_list.menu.albumcurrent, {
+			--FIXME: need to point to a different asset when it is available
 			bgImg = fiveItemSelectionBox
 		}),
                 item_checked        = _uses(s.icon_list.menu.item_checked, {
