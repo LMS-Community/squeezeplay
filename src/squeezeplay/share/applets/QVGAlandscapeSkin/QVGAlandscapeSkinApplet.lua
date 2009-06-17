@@ -221,8 +221,8 @@ function skin(self, s, reload, useDefaultSize)
 		padding     = { 0, 0, 0, 5 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
-                bgImg = s.sliderBackground,
-                img = s.sliderBar,
+                bgImg = s.img.sliderBackground,
+                img = s.img.sliderBar,
 	}
 
 	s.npvolumeB = { hidden = 1 }
