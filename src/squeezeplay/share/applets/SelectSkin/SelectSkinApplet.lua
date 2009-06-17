@@ -66,18 +66,6 @@ function selectSkin(self, menuItem)
 			)
 		})
 	end
-	menu:addItem({
-		text = self:string("FULLSCREEN_MODE"),
-		style = 'item_choice',
-		check = Checkbox(
-			"checkbox", 
-			function(object, isSelected)
-				JiveMain:setFullscreen(isSelected)
-				JiveMain:reloadSkin()
-			end,
-			JiveMain:isFullscreen()
-		)
-	})
 
 	window:addWidget(menu)
 
