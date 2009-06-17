@@ -33,9 +33,11 @@ static Uint32 bsp_get_realtime_millis() {
 
 
 static int handle_msp430_events(int fd) {
+	JiveEvent event;
 	struct input_event ev[64];
 	size_t rd;
 	int i;
+	Sint16 scroll = 0;
 
 	rd = read(fd, ev, sizeof(struct input_event) * 64);
 
@@ -43,6 +45,8 @@ static int handle_msp430_events(int fd) {
 		perror("read error");
 		return -1;
 	}
+
+	event.type = (JiveEventType) JIVE_EVENT_SCROLL;
 
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {	
 		Uint32 ev_time = TIMEVAL_TO_TICKS(ev[i].time);
@@ -56,19 +60,28 @@ static int handle_msp430_events(int fd) {
 		}
 		else if (ev[i].type == EV_REL) {
 			if (ev[i].code == REL_WHEEL) {
-				JiveEvent event;
-				memset(&event, 0, sizeof(JiveEvent));
-	
-				event.type = JIVE_EVENT_SCROLL;
-				event.ticks = ev_time;
-				event.u.scroll.rel = -ev[i].value;
-				jive_queue_event(&event);
+				int value = -ev[i].value;
+				if ((scroll < 0 && value > 0) ||
+				    (scroll > 0 && value < 0)
+				    ) {
+					event.u.scroll.rel = scroll;
+					jive_queue_event(&event);
+
+					scroll = 0;
+				}
+
+				scroll += value;
 			}
 			else if (ev[i].code == REL_MISC) {
 				jive_send_key_event(JIVE_EVENT_KEY_PRESS, (ev[i].value < 0) ? JIVE_KEY_VOLUME_UP : JIVE_KEY_VOLUME_DOWN);
 			}
 		}
 		// ignore EV_SYN
+	}
+
+	if (scroll != 0) {
+		event.u.scroll.rel = scroll;
+		jive_queue_event(&event);
 	}
 
 	return 0;
