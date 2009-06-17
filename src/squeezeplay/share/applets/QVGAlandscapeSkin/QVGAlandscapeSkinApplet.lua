@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, setmetatable, type = ipairs, pairs, setmetatable, type
+local ipairs, pairs, setmetatable, type, package = ipairs, pairs, setmetatable, type, package
 
 local oo                     = require("loop.simple")
 
@@ -228,6 +228,18 @@ function skin(self, s, reload, useDefaultSize)
 	s.npvolumeB = { hidden = 1 }
 	s.nowplayingSS = _uses(s.nowplaying)
 
+end
+
+
+function free(self)
+	local desktop = not System:isHardware()
+	if desktop then
+		log:warn("reload parent")
+
+		package.loaded["applets.QVGAbaseSkin.QVGAbaseSkinApplet"] = nil
+		QVGAbaseSkinApplet     = require("applets.QVGAbaseSkin.QVGAbaseSkinApplet")
+	end
+        return true
 end
 
 
