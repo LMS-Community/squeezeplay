@@ -53,6 +53,8 @@ local debug           = require("jive.utils.debug")
 local Group           = require("jive.ui.Group")
 local Label           = require("jive.ui.Label")
 local Icon            = require("jive.ui.Icon")
+local Textarea        = require("jive.ui.Textarea")
+local math                 = require("math")
 local Menu            = require("jive.ui.Menu")
 local Widget          = require("jive.ui.Widget")
 
@@ -635,6 +637,73 @@ function setSelectedItem(self, item)
 	if index ~= nil then
 		self:setSelectedIndex(index)
 	end
+end
+
+
+function setHeaderWidget(self, headerWidget)
+	if headerWidget then
+		headerWidget.isHeaderWidget = true
+		headerWidget.parent = self
+	end
+
+	self.headerWidget = headerWidget
+
+end
+
+
+function _removeHeaderItems(self)
+	for i, item in self:iterator() do
+		if item.isHeaderItem then
+			self:removeItem(item)
+		end
+	end
+end
+
+
+--override
+function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
+	Menu.scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
+
+	if self.headerWidget and self.headerWidget.handleMenuHeaderWidgetScrollBy then
+		self.headerWidget:handleMenuHeaderWidgetScrollBy(scroll, self)
+	end
+end
+
+
+--override
+function _layout(self)
+
+	if self.headerWidget then
+		local _wx, _wy, _ww, widgetHeight = self.headerWidget:getPreferredBounds()
+		if not widgetHeight or widgetHeight == 0 then
+			return
+		end
+
+		--textarea specific - gives tighter bounds - is a hack really I think I need headerWidget getPreferredBounds().h - headerWidget.padding top and bottom, but padding is not exposed to lua
+		if oo.instanceof(self.headerWidget, Textarea) then
+
+			widgetHeight = self.headerWidget.numLines * self.headerWidget.lineHeight
+		end
+		--textarea specific end
+
+		local virtualItemCount = math.ceil(widgetHeight/self.itemHeight)   --todo: might want padding
+		if virtualItemCount ~= self.virtualItemCount then
+			--happens on first load and also on a skin reload where virtual
+			self:_removeHeaderItems()
+
+			self.virtualItemCount = virtualItemCount
+			for i = 1, virtualItemCount do
+				self:insertItem({
+					id = "_HEADER_" .. i,
+					text = "",
+					style = "item_blank",
+					isHeaderItem=true,
+				}, 1)
+			end
+		end
+	end
+
+	Menu._layout(self)
 end
 
 function _skin(self)

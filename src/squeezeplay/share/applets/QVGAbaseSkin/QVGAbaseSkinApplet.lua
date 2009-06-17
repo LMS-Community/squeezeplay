@@ -534,6 +534,23 @@ function skin(self, s, reload, useDefaultSize)
 			arrow = s.img.smallSpinny
 		}),
 	}
+	s.item_blank = {
+		padding = {  },
+		text = {},
+	}
+
+	s.pressed.item_blank = _uses(s.item_blank)
+	s.selected.item_blank = _uses(s.item_blank)
+
+	s.header_widget_text = {
+		w = screenWidth - 10,
+		padding = TEXTAREA_PADDING,
+		font = _boldfont(TEXTAREA_FONT_SIZE - 2),
+		lineHeight = TEXTAREA_FONT_SIZE - 2 + 5,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "top-left",
+	}
 
 	s.help_text = {
 		w         = screenWidth - 6,

@@ -682,6 +682,24 @@ function skin(self, s)
 		}),
 	}
 
+	s.item_blank = {
+		padding = {  },
+		text = {},
+	}
+
+	s.pressed.item_blank = _uses(s.item_blank)
+	s.selected.item_blank = _uses(s.item_blank)
+
+	s.header_widget_text = {
+		w = screenWidth - 30,
+		padding = { 18, 18, 10, 18},
+		font = _font(HELP_FONT_SIZE),
+		lineHeight = 21,
+		fg = WHITE,
+		sh = NONE,
+		align = "top-left",
+	}
+
 	s.help_text = {
 		w = WH_FILL,
 		position = LAYOUT_CENTER,

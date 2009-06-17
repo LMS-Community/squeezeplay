@@ -888,6 +888,29 @@ function skin(self, s)
 		}),
 	}
 
+	s.item_blank = {
+		padding = {  },
+		text = {},
+	}
+
+	s.pressed.item_blank = _uses(s.item_blank)
+	s.selected.item_blank = _uses(s.item_blank)
+
+	s.header_widget_text = {
+		w = screenWidth - 30,
+		padding = { 18, 18, 10, 0},
+		font = _font(HELP_FONT_SIZE),
+		lineHeight = 23,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "top-left",
+	}
+	s.header_widget_text_small = _uses(s.header_widget_text,{
+		padding = { 18, 6, 0, 2 },
+		font = _font(14),
+		lineHeight = 16,
+	})
+
 	s.help_text = {
 		w = WH_FILL,
 		position = LAYOUT_CENTER,

@@ -293,6 +293,7 @@ function _eventHandler(self, event)
 
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil
 
+		--Hmm, possible bug, itemHeight is always nil!?! supposed to be lineHeight? 
 		local flickSpeed, flickDirection = self.flick:getFlickSpeed(self.itemHeight)
 
 		if flickSpeed then
@@ -366,6 +367,42 @@ function handleDrag(self, dragAmountY, byItemOnly)
 	end
 end
 
+
+function handleMenuHeaderWidgetScrollBy(self, scroll, menu)
+	local selectedBefore = menu.selected or 1
+	local endItemIndex = menu.topItem + menu.numWidgets - 1
+	local endItem = menu:getItem(endItemIndex)
+
+	if menu:getItem(selectedBefore).isHeaderItem then
+		if scroll > 0 and menu.currentShiftDirection <= 0 then
+			--changing shift direction, move cursor so scroll wil occur
+			menu.currentShiftDirection = 1
+			local selectedAfter = menu.topItem + menu.numWidgets - 1
+
+			if selectedAfter > menu.virtualItemCount then
+				--shift to the first real menu item if it is onscreen 
+				selectedAfter = menu.virtualItemCount
+			end
+
+			menu.selected = selectedAfter + 1
+			menu:_scrollList()
+			menu:reLayout()
+
+		elseif scroll < 0 and menu.currentShiftDirection >= 0 then
+			--changing shift direction, move cursor so scroll wil occur
+			menu.currentShiftDirection = -1
+
+			menu.selected = menu.topItem
+			menu:_scrollList()
+			menu:reLayout()
+		end
+	end
+
+	local itemShift = menu.topItem -1
+	self.pixelOffsetY = -1 * itemShift * menu.itemHeight
+
+	self:reDraw()
+end
 
 --required functions for Drag module
 function isAtBottom(self)

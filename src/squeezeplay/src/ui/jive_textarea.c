@@ -223,6 +223,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	widget_height = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
 	max_height = peer->num_lines * peer->line_height;
 
+	/* todo:why this here, seems to be a vertical centering*/
 	if (max_height < widget_height) {
 		peer->y_offset = (widget_height - max_height) / 2;
 	}
@@ -278,6 +279,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	Uint16 y;
 	int i, top_line, visible_lines, bottom_line, num_lines;
 	Sint16 old_pixel_offset_x, old_pixel_offset_y, new_pixel_offset_y;
+	int y_offset = 0;
 
 	/* stack is:
 	 * 1: widget
@@ -298,12 +300,32 @@ int jiveL_textarea_draw(lua_State *L) {
 		jive_tile_blit(peer->bg_tile, srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.w, peer->w.bounds.h);
 	}
 
+	lua_getfield(L, 1, "isHeaderWidget");
+	if (lua_toboolean(L, -1)) {
+		//y offset not used for header widget, not sure why it should ever auto-apply
+		y_offset = peer->y_offset;
+
+		//adjust clip height so we don't draw below parent's bounds
+		lua_getfield(L, 1, "parent");
+		if (jive_getmethod(L, -1, "getBounds")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+
+			new_clip.h  = lua_tointeger(L, -1) - peer->w.padding.top - peer->w.padding.bottom;
+			lua_pop(L, 4);
+		}
+		lua_pop(L, 1);
+	} else {
+		new_clip.h = peer->w.bounds.h - peer->w.padding.top;
+	}
+
+	lua_pop(L, 1);
+
 	jive_surface_get_clip(srf, &old_clip);
 
 	new_clip.x = peer->w.bounds.x;
 	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
 	new_clip.w = peer->w.bounds.w;
-	new_clip.h = peer->w.bounds.h - peer->w.padding.top;
 	jive_surface_set_clip(srf, &new_clip);
 
 
@@ -317,7 +339,7 @@ int jiveL_textarea_draw(lua_State *L) {
 
 	text = (char *) lua_tostring(L, -1);
 
-	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset + peer->y_offset;
+	y = peer->w.bounds.y + peer->w.padding.top - peer->text_offset + y_offset;
 
 	lua_getfield(L, 1, "topLine");
 	top_line = lua_tointeger(L, -1);

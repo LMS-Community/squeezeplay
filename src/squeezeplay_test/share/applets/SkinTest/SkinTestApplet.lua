@@ -176,7 +176,7 @@ function setup_help_list(self, item)
 	window:addActionListener("help", self, dummy_help)
 	window:setButtonAction("rbutton", "help")
 
-	local textarea = Textarea("help_text_small", data[1])
+	local textarea = Textarea("header_widget_text", data[1])
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data[2]) do
@@ -186,8 +186,8 @@ function setup_help_list(self, item)
 		})
 	end
 
-	window:addWidget(textarea)
 	window:addWidget(menu)
+	menu:setHeaderWidget(textarea)
 
 	self:tieWindow(window)
 	return window
@@ -859,7 +859,7 @@ testData = {
 	},
 	help_list_one = {
 --		"Let's begin by getting\nyou connected to your network.",
-	"For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe \"Diagnostics\" screen, which can be found below.",
+	"111111111111111111111 111111111111 1 1  1 1 1 1 1 1 1  1 1 1\nFor more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe \"Diagnostics\" screen, which can be found below.\nsgfsgfgsdfg",
 --	"Pokud budete potřebovat další nápovědu k vašemu Squeezebox, navštivte laskavě mysqueezebox.com/support, kde naleznete odpovědi na mnoho otázek, a kontaktujte náš asistenční tým.\nPokud budete kontaktovat náš asistenční tým, můžete být požádáni o technické údaje vašeho Squeezebox poskytnuté Diagnostikou systému, dostupnou níže.",
 --	"Hvis du har brug for yderligere hjælp til din Squeezebox, kan du kigge på mysqueezebox.com/support hvor der er svar på mange spørgsmål og mulighed for at kontakte supportafdelingen.\nHvis du kontakter supportafdelingen, bliver du sandsynligvis bedt om at oplyse tekniske detaljer om din Squeezebox. Dem kan du finde vha. det nye værktøj Systemdiagnosticering som der er et link til nedenfor.",
 --	"Wenn Sie weitere Informationen zur Squeezebox benötigen, rufen Sie mysqueezebox.com/support auf. Dort erhalten Sie Antworten auf viele Fragen und die Möglichkeit, sich an unseren Kundendienst zu wenden.\nBei Kontaktaufnahme mit dem Kundendienst werden Sie eventuell um technische Angaben zur Squeezebox gebeten. Diese finden Sie mit einer Systemdiagnose (siehe unten).",

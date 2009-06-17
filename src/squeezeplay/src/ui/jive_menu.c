@@ -67,6 +67,8 @@ int jiveL_menu_layout(lua_State *L) {
 	Uint16 x, y;
 	Uint16 sx, sy, sw, sh, tmp;
 	JiveInset sborder;
+	Uint16 hwx, hwy, hww, hwh, hwtmp;
+	JiveInset hwborder;
 	int numWidgets, listSize;
 
 	peer = jive_getpeer(L, 1, &menuPeerMeta);
@@ -144,6 +146,57 @@ int jiveL_menu_layout(lua_State *L) {
 	sy = peer->w.bounds.y + sborder.top;
 
 
+	/* measure headerWidget */
+	hww = 0;
+	hwh = peer->w.bounds.h;
+	hwborder.left = 0;
+	hwborder.top = 0;
+	hwborder.right = 0;
+	hwborder.bottom = 0;
+
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		if (jive_getmethod(L, -1, "getPreferredBounds")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+
+			if (!lua_isnil(L, -2)) {
+				hwtmp = lua_tointeger(L, -2);
+				if (hwtmp != JIVE_WH_FILL) {
+					hww = hwtmp;
+				}
+			}
+			if (!lua_isnil(L, -1)) {
+				hwtmp = lua_tointeger(L, -1);
+				if (hwtmp != JIVE_WH_FILL) {
+					hwh = hwtmp;
+				}
+			}
+
+			lua_pop(L, 4);
+		}
+
+		if (jive_getmethod(L, -1, "getBorder")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+
+			hwborder.left = lua_tointeger(L, -4);
+			hwborder.top = lua_tointeger(L, -3);
+			hwborder.right = lua_tointeger(L, -2);
+			hwborder.bottom = lua_tointeger(L, -1);
+			lua_pop(L, 4);
+		}
+	}
+	lua_pop(L, 1);
+
+	//todo: fixme: right and bottom are ignored with this code
+	hww += hwborder.left + hwborder.right;
+	hwh += hwborder.top + hwborder.bottom;
+
+	hwx = peer->w.bounds.x + hwborder.left;
+	hwy = peer->w.bounds.y + hwborder.top;
+
+
 	/* position widgets */
 	x = peer->w.bounds.x + peer->w.padding.left;
 	y = peer->w.bounds.y + peer->w.padding.top;
@@ -183,6 +236,20 @@ int jiveL_menu_layout(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
+	/* position headerWidget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		if (jive_getmethod(L, -1, "setBounds")) {
+			lua_pushvalue(L, -2);
+			lua_pushinteger(L, hwx);
+			lua_pushinteger(L, hwy);
+			lua_pushinteger(L, hww - hwborder.left - hwborder.right);
+			lua_pushinteger(L, hwh - hwborder.top - hwborder.bottom);
+			lua_call(L, 5, 0);
+		}
+	}
+	lua_pop(L, 1);
+
 	return 0;
 }
 
@@ -211,6 +278,15 @@ int jiveL_menu_iterate(lua_State *L) {
 		lua_pushvalue(L, -2);
 		lua_call(L, 1, 0);
 	}	
+	lua_pop(L, 1);
+
+	/* iterate header widget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, -2);
+		lua_call(L, 1, 0);
+	}
 	lua_pop(L, 1);
 
 	return 0;
@@ -294,6 +370,16 @@ int jiveL_menu_draw(lua_State *L) {
 		}	
 		lua_pop(L, 1);
 	}
+
+	/* draw header widget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
+		lua_pushvalue(L, -2);
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, 3);
+		lua_call(L, 3, 0);
+	}
+	lua_pop(L, 1);
 
 	return 0;
 }
