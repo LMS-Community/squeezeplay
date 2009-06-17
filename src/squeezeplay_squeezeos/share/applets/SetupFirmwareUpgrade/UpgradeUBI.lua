@@ -65,9 +65,26 @@ function _upgrade(self)
 		return nil, err
 	end
 
-	-- remove old image
-	self:rmvol("kernel_bak")
-	self:rmvol("cramfs_bak")
+	-- parse the current root volume
+	t, err = self:parseCmdLine()
+	if not t then
+		log:warn("parseCmdLine failed")
+		return nil, err
+	end 
+
+	if self._backup then
+		log:info("upgrading main image")
+
+		-- this path means that the system now won't boot normally,
+		-- however this is unavoidable without storing a third image
+		-- on flash
+		self:rmvol(kernel)
+		self:rmvol(cramfs)
+	else
+		-- remove old image
+		self:rmvol(kernel_bak)
+		self:rmvol(cramfs_bak)
+	end
 
 	-- remove any failed upgrades
 	self:rmvol("kernel_upg")
@@ -83,9 +100,7 @@ function _upgrade(self)
 
 	-- check the correct ubi volumes exist
 	local oldvol = self:parseUbi()
-	assert(oldvol.kernel)
 	assert(oldvol.kernel_upg)
-	assert(oldvol.cramfs)
 	assert(oldvol.cramfs_upg)
 
 
@@ -97,21 +112,31 @@ function _upgrade(self)
 	self:checksum("cramfs_upg")
 
 	-- automically rename volumes
-	self:renamevol({
-		["kernel"] = "kernel_bak",
-		["kernel_upg"] = "kernel",
-		["cramfs"] = "cramfs_bak",
-		["cramfs_upg"] = "cramfs",
-	})
+	if self._backup then
+		self:renamevol({
+			["kernel_upg"] = "kernel",
+			["cramfs_upg"] = "cramfs",
+		})
+	else
+		self:renamevol({
+			["kernel"] = "kernel_bak",
+			["kernel_upg"] = "kernel",
+			["cramfs"] = "cramfs_bak",
+			["cramfs_upg"] = "cramfs",
+		})
+	end
 
 	-- check the volume rename worked
 	local newvol = self:parseUbi()
 	assert(newvol.kernel)
-	assert(newvol.kernel_bak)
 	assert(newvol.cramfs)
-	assert(newvol.cramfs_bak)
-	assert(newvol.kernel ~= oldvol.kernel)
-	assert(newvol.cramfs ~= oldvol.cramfs)
+	if self._backup then
+		assert(newvol.kernel ~= oldvol.kernel_bak)
+		assert(newvol.cramfs ~= oldvol.cramfs_bak)
+	else
+		assert(newvol.kernel ~= oldvol.kernel)
+		assert(newvol.cramfs ~= oldvol.cramfs)
+	end
 
 	-- reboot
 	self._callback(true, "UPDATE_REBOOT")
@@ -123,6 +148,23 @@ function _upgrade(self)
 	end
 
 	os.execute("/bin/busybox reboot -f")
+
+	return true
+end
+
+
+-- utility function to parse /proc/cmdline
+function parseCmdLine(self)
+	local fh, err = io.open("/proc/cmdline")
+	if fh == nil then
+		return fh, err
+	end
+
+	local t = fh:read("*all")
+	fh:close()
+
+	local rootfs = string.lower(string.match(t, "root.+:([%w_]+)"))
+	self._backup = (rootfs == "cramfs_bak")
 
 	return true
 end
