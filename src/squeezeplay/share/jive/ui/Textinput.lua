@@ -467,6 +467,7 @@ function _eventHandler(self, event)
 	local type = event:getType()
 
 	if Framework:isMostRecentInput("ir") or
+		Framework:isMostRecentInput("key") or
 		Framework:isMostRecentInput("scroll") or
 		self:_isPresetButtonPressEvent(event) then
 		self.cursorWidth = 1
@@ -1105,6 +1106,7 @@ function ipAddressValue(default)
 	setmetatable(obj, {
 		__tostring = function(obj)
 			if not (Framework:isMostRecentInput("ir")
+				or Framework:isMostRecentInput("key")
 				or Framework:isMostRecentInput("scroll")) then
 				return obj.str
 			end
@@ -1158,6 +1160,7 @@ function ipAddressValue(default)
 			getChars = function(obj, cursor)
 				-- keyboard input
 				if not (Framework:isMostRecentInput("ir")
+					or Framework:isMostRecentInput("key")
 					or Framework:isMostRecentInput("scroll")) then
 					if #obj.v < 4 then
 						return "0123456789."
