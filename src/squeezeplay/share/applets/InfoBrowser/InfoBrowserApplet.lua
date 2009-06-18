@@ -65,7 +65,8 @@ function menu(self, menuItem)
 	if self.server then
 		self:request(nil, 0, window, menu, list)
 		self.timer = Timer(5000, function()
-									 window:addWidget(Textarea("help_text", self:string('INFOBROWSER_NORESPONSE')))
+									 menu:setHeaderWidget(Textarea("help_text", self:string('INFOBROWSER_NORESPONSE')))
+									 menu:reSkin()
 								 end)
 		self.timer:start()
 	end
@@ -108,7 +109,8 @@ function response(self, result, window, widget, list, prevmenu, locked)
 
 	-- display help if no feeds found
 	if result.loop_loop == nil then
-		window:addWidget(Textarea("help_text", self:string( 'INFOBROWSER_NOINFO_' .. (self.server:isSqueezeNetwork() and 'SN' or 'SC') ) ) )
+		prevmenu:setHeaderWidget(Textarea("help_text", self:string( 'INFOBROWSER_NOINFO_' .. (self.server:isSqueezeNetwork() and 'SN' or 'SC') ) ) )
+		prevmenu:reSkin()
 		return
 	end
 

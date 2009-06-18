@@ -453,7 +453,7 @@ function _chooseEnterSSID(self, iface)
 		},
 	})
 
-	window:addWidget(textarea)
+	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
 
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
@@ -788,7 +788,6 @@ function _chooseWPSPin(self, iface, ssid)
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -799,6 +798,7 @@ function _chooseWPSPin(self, iface, ssid)
 			end
 		},
 	})
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
 	window:addWidget(menu)
 
 	_helpAction(self, window)
@@ -812,7 +812,6 @@ function _chooseWPSPbc(self, iface, ssid)
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_ENTER_PBC_HINT")))
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -823,6 +822,7 @@ function _chooseWPSPbc(self, iface, ssid)
 			end
 		},
 	})
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PBC_HINT")))
 	window:addWidget(menu)
 
 	_helpAction(self, window)
@@ -984,7 +984,7 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 		},
 	})
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
 	window:addWidget(menu)
 
 	_helpAction(self, window)
@@ -1302,7 +1302,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 
 	if password and password ~= "" then
-		window:addWidget(Textarea("help_text", helpText))
+		menu:setHeaderWidget(Textarea("help_text", helpText))
 	end
 
 	window:addWidget(menu)
@@ -1362,7 +1362,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 		},
 	})
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
 	window:addWidget(menu)
 
 	_helpAction(self, window)
@@ -1405,7 +1405,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 		},
 	})
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
 	window:addWidget(menu)
 
 	_helpAction(self, window)

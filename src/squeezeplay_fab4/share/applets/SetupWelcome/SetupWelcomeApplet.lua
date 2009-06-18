@@ -375,7 +375,7 @@ function _squeezenetworkError(self, squeezenetwork, message)
 		weight = 1
 	})
 
-	window:addWidget(Textarea("help_text", self:string(message)))
+	menu:setHeaderWidget(Textarea("help_text", self:string(message)))
 	window:addWidget(menu)
 
 	-- back goes back to network selection
@@ -521,7 +521,7 @@ function setupWelcomeShow(self, setupNext)
 		weight = 1
 	})
 	
-	window:addWidget(textarea)
+	continueButton:setHeaderWidget(textarea)
 	window:addWidget(continueButton)
 
 	self:tieAndShowWindow(window)

@@ -30,7 +30,6 @@ function settingsShow( self, menuItem)
 	local window = Window( "text_list", menuItem.text, 'settingstitle')
 	
 	self.howto = Textarea( "help_text", self:string( "SAMBA_HOWTO"))
-	window:addWidget( self.howto)
 
 	local menu = SimpleMenu( "menu", {
 					{
@@ -49,6 +48,7 @@ function settingsShow( self, menuItem)
 					},
 				})
 
+	menu:setHeaderWidget( self.howto)
 	window:addWidget( menu)
 
 	self.window = window

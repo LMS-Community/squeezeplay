@@ -80,7 +80,7 @@ function _enterPin(self, force, server, player, next)
 						nil)
 		      end)
 
-	window:addWidget(Textarea("help_text", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
+	menu:setHeaderWidget(Textarea("help_text", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

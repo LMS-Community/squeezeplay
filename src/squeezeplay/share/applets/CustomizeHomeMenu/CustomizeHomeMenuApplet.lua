@@ -207,7 +207,7 @@ function restoreDefaultsMenu(self, id)
 		},
 	})
 
-	window:addWidget(Textarea("help_text", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
         window:addWidget(menu)
 	window:show()
 end

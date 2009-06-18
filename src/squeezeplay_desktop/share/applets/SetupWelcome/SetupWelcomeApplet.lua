@@ -159,7 +159,7 @@ function setupDone(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("help_text", self:string("DONE_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

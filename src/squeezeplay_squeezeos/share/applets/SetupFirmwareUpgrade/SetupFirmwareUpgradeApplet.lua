@@ -139,12 +139,12 @@ function _findUpgrades(self, url, urlHelp, server)
 			for entry in lfs.dir(path) do
 				local url = "file:" .. path .. entry
 				local version = self:_firmwareVersion(url)
-	
+
 				if version or entry == machine .. ".bin" then
 					upgrades[#upgrades + 1] = {
 						url = url,
 						version = version,
-					}			
+					}
 				end
 			end
 		end
@@ -200,7 +200,7 @@ function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 		end,
 	})
 
-	window:addWidget(text)
+	menu:setHeaderWidget(text)
 	window:addWidget(menu)
 
 	if disallowScreensaver then
@@ -372,7 +372,7 @@ function _chargeBattery(self)
 	})
 
 	local help = Textarea("help_text", self:string("UPDATE_BATTERY_HELP"))
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -498,7 +498,7 @@ function _upgradeFailed(self)
 				})
 
 	local help = Textarea("help_text", self:string("UPDATE_FAILURE_HELP"))
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

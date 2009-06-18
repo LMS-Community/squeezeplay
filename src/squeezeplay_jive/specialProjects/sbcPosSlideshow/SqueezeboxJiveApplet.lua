@@ -783,9 +783,9 @@ function settingsPowerDown(self, menuItem)
         log:debug("powerDown menu")
 	-- add window
 	local window = Window("text_list", menuItem.text, 'settingstitle')
-	window:addWidget(Textarea("help_text", self:string("POWER_DOWN_HELP")))
 
 	local menu = SimpleMenu("menu")
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_DOWN_HELP")))
 	window:addWidget(menu)
 
 
@@ -962,7 +962,7 @@ function settingsTestSuspend(self, menuItem)
 		},
 	})
 
-	window:addWidget(Textarea("help_text", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,

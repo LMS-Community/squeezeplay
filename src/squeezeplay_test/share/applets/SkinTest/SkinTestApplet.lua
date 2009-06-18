@@ -176,7 +176,7 @@ function setup_help_list(self, item)
 	window:addActionListener("help", self, dummy_help)
 	window:setButtonAction("rbutton", "help")
 
-	local textarea = Textarea("header_widget_text", data[1])
+	local textarea = Textarea("help_text", data[1])
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data[2]) do

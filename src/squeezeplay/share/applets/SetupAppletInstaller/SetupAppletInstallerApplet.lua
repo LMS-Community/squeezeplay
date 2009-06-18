@@ -111,7 +111,7 @@ function menuSink(self, data)
 	self.help = Textarea("help_text", self:string("HELP"))
 	self.menu = SimpleMenu("menu")
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-	self.window:addWidget(self.help)
+	self.menu:setHeaderWidget(self.help)
 	self.window:addWidget(self.menu)
 
 	self.todownload = {}

@@ -83,7 +83,7 @@ function init(self)
 			},
 		})
 
-		window:addWidget(text)
+		menu:setHeaderWidget(text)
 		window:addWidget(menu)
 		window:show()
 	end

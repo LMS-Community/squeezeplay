@@ -266,7 +266,7 @@ function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 			     callback = setupNetwork,
 		     })
 	
-	window:addWidget(Textarea("help_text", self:string("CONNECT_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("CONNECT_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -285,7 +285,7 @@ function setupDoneShow(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("help_text", self:string("DONE_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

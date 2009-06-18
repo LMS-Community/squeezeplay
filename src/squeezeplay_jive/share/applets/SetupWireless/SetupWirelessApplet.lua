@@ -93,7 +93,7 @@ function setupRegionShow(self, setupNext)
 	end
 
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -124,7 +124,7 @@ function settingsRegionShow(self)
 			     })
 	end
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_REGION_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -247,7 +247,7 @@ function _networksShow(self, title, help)
 			       end)
 
 	local help = Textarea("help_text", help)
-	window:addWidget(help)
+	self.scanMenu:setHeaderWidget(help)
 	window:addWidget(self.scanMenu)
 
 	self:tieAndShowWindow(window)
@@ -446,7 +446,7 @@ function enterPassword(self)
 		local help = Textarea("help_text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP"))
 --"WPA-EAP and WPA2-EAP are not supported encryption types.")
 
-		window:addWidget(help)
+		menu:setHeaderWidget(help)
 		window:addWidget(menu)
 
 		self:tieAndShowWindow(window)		
@@ -508,7 +508,7 @@ function chooseEncryption(self)
 				})
 
 	local help = Textarea("help_text", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -541,7 +541,7 @@ function chooseWEPLength(self)
 				})
 
 	local help = Textarea("help_text", self:string("NETWORK_WIRELESS_ENCRYPTION_HELP"))
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -882,7 +882,7 @@ function connectFailed(self, reason)
 
 	local help = Textarea("help_text", helpText)
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieWindow(window)
@@ -1062,7 +1062,7 @@ function failedDHCPandWPA(self)
 
 	local help = Textarea("help_text", self:string("NETWORK_ADDRESS_HELP"))
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1119,7 +1119,7 @@ function failedDHCPandWEP(self)
 
 	local help = Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP"))
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1326,7 +1326,7 @@ function deleteConfirm(self, ssid)
 					},
 				})
 
-	window:addWidget(Textarea("help_text", self:string("NETWORK_FORGET_HELP", ssid)))
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_FORGET_HELP", ssid)))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -28,7 +28,6 @@ function settingsShow(self, menuItem)
 	local statusText = self:string(_getStatus())
 	self.status = Textarea("help_text", statusText)
 	
-	window:addWidget(self.status)
 
 	local menu = SimpleMenu("menu", {
 					{
@@ -54,6 +53,7 @@ function settingsShow(self, menuItem)
 					},
 				})
 
+	menu:setHeaderWidget(self.status)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

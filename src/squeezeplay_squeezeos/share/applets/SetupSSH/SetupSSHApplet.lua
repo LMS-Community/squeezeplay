@@ -65,7 +65,8 @@ function _enableSSH(self, window)
 	log:warn("password = ", password)
 
 	self.howto = Textarea("help_text", self:string("SSH_HOWTO", tostring(password), tostring(ipaddr)))
-	self.window:addWidget(self.howto)
+	self.menu:setHeaderWidget(self.howto)
+	self.menu:reLayout()
 
 	-- FIXME currently the last widget added to the window has focus, until this is fixed
 	-- pass events from the textarea to the menu.

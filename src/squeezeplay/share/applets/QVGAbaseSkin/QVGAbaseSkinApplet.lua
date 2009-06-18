@@ -542,7 +542,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.pressed.item_blank = _uses(s.item_blank)
 	s.selected.item_blank = _uses(s.item_blank)
 
-	s.header_widget_text = {
+	s.help_text = {
 		w = screenWidth - 10,
 		padding = TEXTAREA_PADDING,
 		font = _boldfont(TEXTAREA_FONT_SIZE - 2),
@@ -552,18 +552,18 @@ function skin(self, s, reload, useDefaultSize)
 		align = "top-left",
 	}
 
-	s.help_text = {
-		w         = screenWidth - 6,
-		position  = LAYOUT_SOUTH,
-		padding   = 12,
-		font      = _font(HELP_FONT_SIZE),
-		fg        = TEXT_COLOR,
-		bgImg     = s.img.helpBox,
-		align     = "left",
-		scrollbar = {
-			w = 0,
-		},
-	}
+--	s.help_text = {
+--		w         = screenWidth - 6,
+--		position  = LAYOUT_SOUTH,
+--		padding   = 12,
+--		font      = _font(HELP_FONT_SIZE),
+--		fg        = TEXT_COLOR,
+--		bgImg     = s.img.helpBox,
+--		align     = "left",
+--		scrollbar = {
+--			w = 0,
+--		},
+--	}
 
 	s.scrollbar = {
 		w          = 9,

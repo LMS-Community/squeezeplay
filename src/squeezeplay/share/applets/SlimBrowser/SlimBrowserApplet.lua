@@ -1132,7 +1132,7 @@ local function _browseSink(step, chunk, err)
 					if step.menu then
 						step.window:removeWidget(step.menu)
 					end
-					step.window:addWidget(textarea)
+					step.menu:setHeaderWidget(textarea)
 					-- menu back, in thank you
 					step.window:addWidget(step.menu)
 				end
@@ -2053,13 +2053,13 @@ end
 _newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug("_newDestination():")
 	log:debug(windowSpec)
-	
+
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
 	
 	-- create a window in all cases
 	local window = Window(windowSpec.windowStyle or 'text_list')
-	
+
 	local menu
 	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
@@ -2516,7 +2516,7 @@ function _problemConnecting(self, server)
 						end)
 
 
-	window:addWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
+	menu:setHeaderWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window

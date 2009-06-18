@@ -194,7 +194,7 @@ function settingsShow(self)
 
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	-- Macro menus

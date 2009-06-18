@@ -62,7 +62,7 @@ function crashLogPrompt(self, file)
 		},
 	})
 
-	window:addWidget(text)
+	menu:setHeaderWidget(text)
 	window:addWidget(menu)
 	window:show(Window.transitionNone)
 end

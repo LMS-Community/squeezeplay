@@ -146,7 +146,7 @@ function setupSqueezeboxSettingsShow(self, keepOldEntries)
 				     end)
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_HELP"))
-	window:addWidget(help)
+	self.scanMenu:setHeaderWidget(help)
 	window:addWidget(self.scanMenu)
 
 	self:tieAndShowWindow(window)
@@ -373,7 +373,7 @@ function _wiredOrWireless(self)
 				})
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_CONNECT_HELP"))
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -1149,7 +1149,7 @@ function _chooseSlimserver(self)
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_MUSIC_SOURCE_HELP", self.squeezeboxIPAddr))
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self.slimserverMenu = menu
@@ -1536,7 +1536,7 @@ function _setupFailed(self)
 
 	local help = Textarea("help_text", helpText)
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -435,7 +435,7 @@ function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 
 	menu:addActionListener("back", self, cancelAction)
 
-	window:addWidget(textarea)
+	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
 
 	window._isChooseMusicSourceWindow = true
@@ -661,7 +661,7 @@ function _connectPlayerFailed(self, player, server)
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 	window._isChooseMusicSourceWindow = true
 

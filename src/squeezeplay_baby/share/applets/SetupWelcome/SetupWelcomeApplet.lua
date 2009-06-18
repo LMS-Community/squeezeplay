@@ -520,8 +520,8 @@ function setupWelcomeShow(self, setupNext)
 		callback = setupNext,
 		weight = 1
 	})
-	
-	window:addWidget(textarea)
+
+	continueButton:setHeaderWidget(textarea)
 	window:addWidget(continueButton)
 
 	self:tieAndShowWindow(window)

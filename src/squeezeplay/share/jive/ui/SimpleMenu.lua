@@ -701,6 +701,14 @@ function _layout(self)
 				}, 1)
 			end
 		end
+
+	   if (not self.selected) and self.numWidgets > self.virtualItemCount and self:numItems() <= self.numWidgets then
+		   --shift to the first onscreen menu item if no selected item (and all real items onscreen, avoids issue off selecting last items on screen which would shift page downif there is a scrollbar)
+		   self.selected = self.virtualItemCount + 1
+		   self:_scrollList()
+		   self:reLayout()
+	   end
+
 	end
 
 	Menu._layout(self)

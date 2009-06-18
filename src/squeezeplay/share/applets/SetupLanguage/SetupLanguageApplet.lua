@@ -84,7 +84,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	end
 
 	if helpText ~= false then
-		window:addWidget(Textarea("help_text", self:string("CHOOSE_LANGUAGE_HELP")))
+		menu:setHeaderWidget(Textarea("help_text", self:string("CHOOSE_LANGUAGE_HELP")))
 	end
 	window:addWidget(menu)
 

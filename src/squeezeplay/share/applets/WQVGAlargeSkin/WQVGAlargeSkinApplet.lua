@@ -690,30 +690,30 @@ function skin(self, s)
 	s.pressed.item_blank = _uses(s.item_blank)
 	s.selected.item_blank = _uses(s.item_blank)
 
-	s.header_widget_text = {
+	s.help_text = {
 		w = screenWidth - 30,
-		padding = { 18, 18, 10, 18},
+		padding = { 18, 4, 10, 0},
 		font = _font(HELP_FONT_SIZE),
-		lineHeight = 21,
+		lineHeight = 22,
 		fg = WHITE,
 		sh = NONE,
 		align = "top-left",
 	}
 
-	s.help_text = {
-		w = WH_FILL,
-		position = LAYOUT_CENTER,
-		font = _font(HELP_FONT_SIZE),
-		fg = WHITE,
-		sh = NONE,
-		bgImg = titleBox,
-		align = "left",
-		scrollbar = {
-			w = 0,
-		},
-		padding = { 18, 18, 10, 18},
-		lineHeight = 23,
-	}
+--	s.help_text = {
+--		w = WH_FILL,
+--		position = LAYOUT_CENTER,
+--		font = _font(HELP_FONT_SIZE),
+--		fg = WHITE,
+--		sh = NONE,
+--		bgImg = titleBox,
+--		align = "left",
+--		scrollbar = {
+--			w = 0,
+--		},
+--		padding = { 18, 18, 10, 18},
+--		lineHeight = 23,
+--	}
 
 	s.scrollbar = {
 		w = 42,
