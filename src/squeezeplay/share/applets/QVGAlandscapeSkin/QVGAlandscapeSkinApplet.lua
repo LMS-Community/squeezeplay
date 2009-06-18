@@ -68,7 +68,7 @@ end
 
 function param(self)
 	return {
-		THUMB_SIZE = 56,
+		THUMB_SIZE = 41,
 		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 154,
 		nowPlayingSSArtworkSize     = 186,
@@ -82,6 +82,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
+	local imgpath = 'applets/QVGAlandscapeSkin/'
 
 	if useDefaultSize or screenWidth < 320 or screenHeight < 240 then
                 screenWidth = 320
@@ -97,6 +98,29 @@ function skin(self, s, reload, useDefaultSize)
 	QVGAbaseSkinApplet.skin(self, s, reload, useDefaultSize)
 
 	-- styles specific to the landscape QVGA skin
+
+	s.img.scrollBackground =
+                Tile:loadVTiles({
+                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd_t.png",
+                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd.png",
+                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd_b.png",
+                                })
+
+	s.img.scrollBar =
+                Tile:loadVTiles({
+                                        imgpath .. "images/Scroll_Bar/scrollbar_body_t.png",
+                                        imgpath .. "images/Scroll_Bar/scrollbar_body.png",
+                                        imgpath .. "images/Scroll_Bar/scrollbar_body_b.png",
+                               })
+
+        s.scrollbar = {
+                w          = 20,
+                border     = { 4, 0, 0, 0 },  -- bug in jive_menu, makes it so bottom and right values are ignored
+                horizontal = 0,
+                bgImg      = s.img.scrollBackground,
+                img        = s.img.scrollBar,
+                layer      = LAYER_CONTENT_ON_STAGE,
+        }
 
 	local NP_ARTISTALBUM_FONT_SIZE = 16
 	local NP_TRACK_FONT_SIZE = 16
@@ -162,7 +186,7 @@ function skin(self, s, reload, useDefaultSize)
 				align = "center",
 				padding = 0,
 				-- FIXME: this is a placeholder
-				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
+				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_154.png"),
 			},
 		},
 	
@@ -173,7 +197,7 @@ function skin(self, s, reload, useDefaultSize)
 		npprogress = {
 			position = LAYOUT_NONE,
 			x = 4,
-			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 2,
+			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 6,
 			padding = { 0, 10, 0, 0 },
 			order = { "elapsed", "slider", "remain" },
 			elapsed = {
@@ -218,7 +242,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.npprogressB = {
 		w = screenWidth - 120,
 		h = 25,
-		padding     = { 0, 0, 0, 5 },
+		padding     = { 0, 0, 0, 15 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = s.img.sliderBackground,

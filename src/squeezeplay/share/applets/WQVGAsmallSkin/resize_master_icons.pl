@@ -28,6 +28,15 @@ my $resize = {
 
 # only convert these icons
 my @iconConvertList = (qw/ 
+icon_settings_brightness.png
+icon_settings_repeat.png
+icon_settings_shuffle.png
+icon_settings_sleep.png
+icon_settings_screen.png
+icon_settings_home.png
+icon_settings_audio.png
+icon_loading.png
+icon_settings_plugin.png
 icon_album_noart.png
 icon_app_guide.png
 icon_boom.png
