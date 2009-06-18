@@ -390,7 +390,7 @@ function screensaverWindow(self, window)
 
 	if not self:isSoftPowerOn() then
 
-		window:ignoreAllInputExcept(    { "power" },
+		window:ignoreAllInputExcept(    { "power", "power_on", "power_off" },
 		                                function(actionEvent)
 		                                        self:_powerActionHandler(actionEvent)
 		                                end)
@@ -399,6 +399,11 @@ function screensaverWindow(self, window)
 			                        self:_showPowerOnWindow()
 			                        return EVENT_CONSUME
 		                        end)
+		window:addListener(     EVENT_SCROLL,
+					function ()
+						self:_showPowerOnWindow()
+					end)
+
 	end
 
 	log:debug("Overriding the default window action 'bump' handling to allow action to fall through to framework listeners")

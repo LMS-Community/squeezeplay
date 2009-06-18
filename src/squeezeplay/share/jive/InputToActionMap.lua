@@ -85,6 +85,7 @@ keyActionMappings.press = {
 	[KEY_VOLUME_UP] = "volume_up",
 	[KEY_VOLUME_DOWN] = "volume_down",
 	[KEY_PRINT] = "take_screenshot",
+	[KEY_POWER] = "power",
 }
 
 --Hmm, this won't work yet since we still look for KEY_PRESS in a lot of places, and would get double responses
@@ -113,6 +114,7 @@ keyActionMappings.hold = {
 	[KEY_VOLUME_UP] = "volume_up",
 	[KEY_VOLUME_DOWN] = "volume_down",
 	[KEY_REW | KEY_PAUSE] = "take_screenshot",  -- a stab at how to handle multi-press
+	[KEY_POWER] = "power",
 }
 
 irActionMappings = {}
