@@ -211,6 +211,8 @@ function setBrightness (self, level)
 	-- FIXME a quick hack to prevent the display from dimming
 	if level == "off" then
 		level = 0
+	elseif level == "on" then
+		level = 32
 	elseif level == nil then
 		return
 	end
