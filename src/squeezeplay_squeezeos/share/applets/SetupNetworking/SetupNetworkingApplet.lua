@@ -183,6 +183,12 @@ function _wirelessRegion(self, wlan, transition)
 		return _connectionType(self)
 	end
 
+	-- skip region for atheros wlan as it supports 'world' region that
+	-- automatically configures the radio based on ap beacons
+	if wlan:isAtheros() then
+		return _connectionType(self)
+	end
+
 	local window = Window("text_list", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
 
