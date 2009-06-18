@@ -236,7 +236,7 @@ function skin(self, s)
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
-	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
+	local powerButton             = _loadImageTile(self,  imgpath .. "../../WQVGAsmallSkin/images/Icons/icon_power_button_tb.png")
 
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
