@@ -1309,69 +1309,42 @@ function getSNR(self)
 		return 0
 	end
 
-	local stdout = ""
-	local proc = Process(self.jnt, "/sbin/iwpriv " .. self.interface .. " getSNR 1")
-	proc:read(function(chunk, err)
-		if chunk then
-			stdout = stdout .. chunk
+	if self:isAtheros() then
+		local proc = Process(self.jnt, "/lib/atheros/wmiconfig --getTargetStats")
+
+		local stdout = ""
+		proc:read(function(chunk, err)
+			if chunk then
+				stdout = stdout .. chunk
+			end
+		end)
+
+		while proc:status() ~= "dead" do
+			-- wait for the process to complete
+			Task:yield()
 		end
-	end)
 
-	while proc:status() ~= "dead" do
-		-- wait for the process to complete
-		Task:yield()
+		return tonumber(string.match(stdout, "cs_snr = (%d+)"))
+	
+	elseif self:isMarvell(self) then
+		local proc = Process(self.jnt, "/sbin/iwpriv " .. self.interface .. " getSNR 1")
+
+		local stdout = ""
+		proc:read(function(chunk, err)
+			if chunk then
+				stdout = stdout .. chunk
+			end
+		end)
+
+		while proc:status() ~= "dead" do
+			-- wait for the process to complete
+			Task:yield()
+		end
+
+		return tonumber(string.match(stdout, ":(%d+)"))
 	end
 
-	return tonumber(string.match(stdout, ":(%d+)"))
-end
-
-
---[[
-
-=head2 jive.net.Networking:getRSSI()
-
-returns Received Signal Strength Indication (signal power) of a wireless interface
-=cut
---]]
-
-function getRSSI(self)
-	if type(self.interface) ~= 'string' then
-		return 0
-	end
-	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getRSSI 1")
-	if f == nil then
-		return 0
-	end
-
-	local t = f:read("*all")
-	f:close()
-
-	return tonumber(string.match(t, ":(%-?%d+)"))
-end
-
-
---[[
-
-=head2 jive.net.Networking:getNF()
-
-returns NF (?) of a wireless interface
-
-=cut
---]]
-
-function getNF(self)
-	if type(self.interface) ~= 'string' then
-		return 0
-	end
-	local f = io.popen("/sbin/iwpriv " .. self.interface .. " getNF 1")
-	if f == nil then
-		return 0
-	end
-
-	local t = f:read("*all")
-	f:close()
-
-	return tonumber(string.match(t, ":(%-?%d+)"))
+	return 0
 end
 
 
