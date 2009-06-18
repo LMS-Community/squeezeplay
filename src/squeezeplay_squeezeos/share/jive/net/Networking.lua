@@ -59,6 +59,7 @@ local oo          = require("loop.simple")
 
 local io          = require("io")
 local os          = require("os")
+local math        = require("math")
 local string      = require("jive.utils.string")
 local table       = require("jive.utils.table")
 local ltn12       = require("ltn12")
@@ -72,20 +73,14 @@ local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
 local network     = require("jiveWireless")
 
--- 01/27/09 - fm - WPS - begin
-local math        = require("math")
--- 01/27/09 - fm - WPS - end
-
 module("jive.net.Networking")
 oo.class(_M, Socket)
 
 
 local SSID_TIMEOUT = 20000
 
--- 01/27/09 - fm - WPS - begin
 -- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
 local wpaSupplicantRunning = true
--- 01/27/09 - fm - WPS - end
 
 
 -- wpa scan results signal level -> quality
@@ -1500,14 +1495,12 @@ function request(self, ...)
 	assert(task, "Networking:request must be called in a Task")
 
 -- xxx
----- 01/27/09 - fm - WPS - begin
 ---- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
 	if self.chipset == "Marvell" then
 		if wpaSupplicantRunning == false then
 			return "", "not running"
 		end
 	end
----- 01/27/09 - fm - WPS - end
 
 
 	log:info("REQUEST: ", ...)
@@ -1561,8 +1554,6 @@ function _sync()
 	os.execute("sync")
 end
 
-
--- 01/27/09 - fm - WPS - begin
 
 --[[
 
@@ -1743,7 +1734,6 @@ function t_wpsStatus(self)
 
 	return status
 end
--- 01/27/09 - fm - WPS - end
 
 
 --[[
