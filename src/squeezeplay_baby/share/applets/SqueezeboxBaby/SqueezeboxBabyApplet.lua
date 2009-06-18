@@ -13,10 +13,13 @@ local math                   = require("math")
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 
+local Networking             = require("jive.net.Networking")
+
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Popup                  = require("jive.ui.Popup")
+local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
@@ -99,6 +102,12 @@ function init(self)
 		log:warn("Watchdog timer is disabled")
 	end
 
+	-- status bar updates
+	self:update()
+	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
+	      self:update()
+	end)
+
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
 	-- find out when we connect to player
@@ -167,6 +176,22 @@ function setDate(self, date)
 end
 
 
+function update(self)
+	 Task("statusbar", self, _updateTask):addTask()
+end
+
+
+function _updateTask(self)
+	-- FIXME ac power / battery
+
+	self.wireless = Networking:wirelessInterface(jnt)
+
+	-- wireless strength
+	local quality = self.wireless:getLinkQuality()
+	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+end
+
+
 function getBrightness (self)
 	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "r")
 	local level = f:read("*a")
@@ -177,6 +202,13 @@ end
 
 
 function setBrightness (self, level)
+	-- FIXME a quick hack to prevent the display from dimming
+	if level == "off" then
+		level = 0
+	elseif level == nil then
+		return
+	end
+
 	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "w")
 	f:write(tostring(level * 4))
 	f:close()
