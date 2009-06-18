@@ -235,6 +235,33 @@ end
 
 --[[
 
+Returns the active interface
+
+--]]
+function activeInterface(self)
+	local active = nil
+
+        local f = assert(io.open("/etc/network/interfaces"))
+	while true do
+        	local line = f:read("*l")
+		if line == nil then
+			break
+		end
+
+		local iface = string.match(line, "auto (%w+)")
+		if iface ~= nil and iface ~= 'lo' then
+			active = iface
+			break
+		end
+	end
+	f:close()
+
+	return interfaceTable[active]
+end
+
+
+--[[
+
 =head2 jive.net.Networking:wirelessInterface(jnt)
 
 Convience method to return first wireless interface object.
@@ -1624,7 +1651,7 @@ function startWPSApp(self, wpsmethod, wpspin)
 --	 first stopping a still running wpsapp, then starting the new one.
 --	Seems to be an issue lately - maybe since using the RT kernel?
 --	self:stopWPSApp()
-	log:warn("startWPSApp")
+	log:info("startWPSApp")
 	os.execute("rm /usr/sbin/wps/wps.conf 2>1 > /dev/null &")
 	if( wpsmethod == "pbc") then
 		os.execute("killall wpsapp; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
@@ -1644,7 +1671,7 @@ Stops the wpsapp (Marvell) to get passphrase etc. via WPS
 --]]
 
 function stopWPSApp(self)
-	log:warn("stopWPSApp")
+	log:info("stopWPSApp")
 	os.execute("killall wpsapp 2>1 > /dev/null &")
 end
 
@@ -1658,7 +1685,7 @@ Starts wpa supplicant
 --]]
 
 function startWPASupplicant(self)
-	log:warn("startWPASupplicant")
+	log:info("startWPASupplicant")
 	os.execute("/usr/sbin/wpa_supplicant -B -Dmarvell -i" .. self.interface .. " -c/etc/wpa_supplicant.conf")
 	wpaSupplicantRunning = true
 end
@@ -1673,7 +1700,7 @@ Stops wpa supplicant
 --]]
 
 function stopWPASupplicant(self)
-	log:warn("stopWPASupplicant")
+	log:info("stopWPASupplicant")
 	wpaSupplicantRunning = false
 	os.execute("killall wpa_supplicant 2>1 > /dev/null &")
 	self:close()
