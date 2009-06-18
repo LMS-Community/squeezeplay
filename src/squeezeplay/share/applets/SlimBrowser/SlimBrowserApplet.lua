@@ -1132,7 +1132,7 @@ local function _browseSink(step, chunk, err)
 					if step.menu then
 						step.window:removeWidget(step.menu)
 					end
-					step.menu:setHeaderWidget(textarea)
+					step.window:addWidget(textarea)
 					-- menu back, in thank you
 					step.window:addWidget(step.menu)
 				end
