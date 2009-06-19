@@ -71,19 +71,19 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 		}
 
 		LOG_DEBUG(log_ui_draw, "Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift);
+
+#ifdef SCREEN_ROTATION_ENABLED
+		/* orientaion hack */
+		real_sdl = sdl;
+		bpp = sdl->format->BitsPerPixel;
+		sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, h, w, bpp, 0, 0, 0, 0);
+		SDL_SetAlpha(sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
+#endif
 	}
 
 	srf = calloc(sizeof(JiveSurface), 1);
 	srf->refcount = 1;
 	srf->sdl = sdl;
-
-#ifdef SCREEN_ROTATION_ENABLED
-	/* orientaion hack */
-	real_sdl = srf->sdl;
-	bpp = real_sdl->format->BitsPerPixel;
-	srf->sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, h, w, bpp, 0, 0, 0, 0);
-	SDL_SetAlpha(srf->sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
-#endif
 
 	return srf;
 }

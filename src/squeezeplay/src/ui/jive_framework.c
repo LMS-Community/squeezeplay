@@ -27,11 +27,6 @@ static Uint32 next_jive_origin = 0;
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 
-/* Frame rate calculations */
-//static Uint32 framedue = 0;
-//static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
-
-
 /* button hold threshold 1 seconds */
 #define HOLD_TIMEOUT 1000
 
@@ -198,19 +193,34 @@ static int jiveL_initSDL(lua_State *L) {
 		jive_surface_free(icon);
 	}
 
+#ifdef SCREEN_ROTATION_ENABLED
+	screen_w = video_info->current_h;
+	screen_h = video_info->current_w;
+#else
 	screen_w = video_info->current_w;
 	screen_h = video_info->current_h;
+#endif
 	screen_bpp = video_info->vfmt->BitsPerPixel;
 
-	/* load splash screen */
-	splash = jive_surface_load_image("jive/splash.png");
-	if (splash) {
-		jive_surface_get_size(splash, &splash_w, &splash_h);
+	if (video_info->wm_available) {
+		/* desktop build */
+		splash = jive_surface_load_image("jive/splash.png");
+		if (splash) {
+			jive_surface_get_size(splash, &splash_w, &splash_h);
 
-		if (video_info->wm_available) {
-			/* assume desktop */
 			screen_w = splash_w;
 			screen_h = splash_h;
+		}
+	}
+	else {
+		/* product build */
+		char splashfile[40];
+
+		sprintf(splashfile, "jive/splash%dx%d.png", screen_w, screen_h);
+
+		splash = jive_surface_load_image(splashfile);
+		if (splash) {
+			jive_surface_get_size(splash, &splash_w, &splash_h);
 		}
 	}
 
