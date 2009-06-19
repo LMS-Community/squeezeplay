@@ -5,7 +5,7 @@
 #------
 # Compiler and linker settings
 # for Linux
-CC=gcc
+#CC=gcc
 DEF=-DLUASOCKET_DEBUG 
 CFLAGS= $(LUAINC) $(DEF) -pedantic -Wall -O2 -fpic
 LDFLAGS=-O -shared -fpic

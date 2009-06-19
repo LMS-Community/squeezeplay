@@ -6,7 +6,7 @@
 # Compiler and linker settings
 # for Mac OS X
 #
-CC=gcc
+#CC=gcc
 DEF= -DLUASOCKET_DEBUG -DUNIX_HAS_SUN_LEN
 CFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fno-common
 LDFLAGS=-bundle -undefined dynamic_lookup
