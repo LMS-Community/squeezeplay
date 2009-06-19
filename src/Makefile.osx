@@ -137,7 +137,7 @@ lua:
 
 # luasocket (requires lua)
 luasocket:
-	cd luasocket-2.0.1; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
+	cd luasocket-2.0.2; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
 
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=osx
@@ -306,7 +306,7 @@ clean:
 	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luasocket"
-	-cd luasocket-2.0.1; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
+	-cd luasocket-2.0.2; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luaprofiler"
 	-cd luaprofiler-2.0; make -f Makefile.darwin clean ; rm -rf x86; rm -rf ppc

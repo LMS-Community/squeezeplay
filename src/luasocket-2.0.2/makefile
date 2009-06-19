@@ -2,6 +2,7 @@
 # Load configuration
 #
 include config
+include config_include.${PLATFORM}
 
 #------
 # Hopefully no need to change anything below this line
