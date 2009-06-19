@@ -402,14 +402,14 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.item_choice = _uses(s.item, {
-		order  = { 'text', 'check' },
+		order  = { 'icon', 'text', 'check' },
 		check = {
 			align = 'right',
 			h = WH_FILL,
 		},
 	})
 	s.item_checked = _uses(s.item, {
-		order = { "text", "check" },
+		order = { 'icon', "text", "check" },
 		check = s.img.checkMark,
 	})
 
@@ -438,7 +438,7 @@ function skin(self, s, reload, useDefaultSize)
 		sh = SELECT_SH_COLOR,
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
-		order = { 'text', 'check' },
+		order = { 'icon', 'text', 'check' },
 		check = {
 			align = 'right',
 			font = _boldfont(TEXTMENU_FONT_SIZE),
@@ -1138,6 +1138,37 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_randomartists = _uses(s.hm_randomplay)
 	s.hm_randomalbums = _uses(s.hm_randomplay)
 	s.hm_randomyears = _uses(s.hm_randomplay)
+
+	s.hm_settingsBrightness = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_brightness" .. skinSuffix),
+	})
+	s.hm_settingsRepeat = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_repeat" .. skinSuffix),
+	})
+	s.hm_settingsShuffle = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_shuffle" .. skinSuffix),
+	})
+	s.hm_settingsSleep = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_sleep" .. skinSuffix),
+	})
+	s.hm_settingsScreen = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_screen" .. skinSuffix),
+	})
+	s.hm_appletCustomizeHome = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_home" .. skinSuffix),
+	})
+	s.hm_settingsAudio = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_audio" .. skinSuffix),
+	})
+
+	-- ??
+	s.hm_loading = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+	})
+	-- ??
+	s.hm_settingsPlugin = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_plugin" .. skinSuffix),
+	})
 
 	-- indicator icons, on right of menus
 	s._indicator = {

@@ -2061,6 +2061,34 @@ function skin(self, s)
 	s.hm_randomalbums = _uses(s.hm_randomplay)
 	s.hm_randomyears = _uses(s.hm_randomplay)
 
+        s.hm_settingsRepeat = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_repeat" .. skinSuffix),
+        })
+        s.hm_settingsShuffle = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_shuffle" .. skinSuffix),
+        })
+        s.hm_settingsSleep = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_sleep" .. skinSuffix),
+        })
+        s.hm_settingsScreen = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_screen" .. skinSuffix),
+        })
+        s.hm_appletCustomizeHome = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_home" .. skinSuffix),
+        })
+        s.hm_settingsAudio = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_audio" .. skinSuffix),
+        })
+
+        -- ??
+        s.hm_loading = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+        })
+        -- ??
+        s.hm_settingsPlugin = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_settings_plugin" .. skinSuffix),
+        })
+
 	-- indicator icons, on right of menus
 	local _indicator = {
 		align = "center",
