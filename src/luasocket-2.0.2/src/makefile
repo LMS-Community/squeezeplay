@@ -50,13 +50,13 @@ UNIX_OBJS:=\
 all: $(SOCKET_SO) $(MIME_SO) 
 
 $(SOCKET_SO): $(SOCKET_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(SOCKET_OBJS)
+	$(LD) $(MYLDFLAGS) $(LDFLAGS) -o $@ $(SOCKET_OBJS)
 
 $(MIME_SO): $(MIME_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(MIME_OBJS)
+	$(LD) $(MYLDFLAGS) $(LDFLAGS) -o $@ $(MIME_OBJS)
 
 $(UNIX_SO): $(UNIX_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(UNIX_OBJS)
+	$(LD) $(MYLDFLAGS) $(LDFLAGS) -o $@ $(UNIX_OBJS)
 
 #------
 # List of dependencies
