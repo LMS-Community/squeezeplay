@@ -9,4 +9,4 @@
 DEF=-DLUASOCKET_DEBUG 
 CFLAGS= $(LUAINC) $(DEF) -pedantic -Wall -O2 -fpic
 LDFLAGS=-O -shared -fpic
-LD=gcc 
+#LD=gcc 

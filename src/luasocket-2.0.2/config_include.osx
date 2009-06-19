@@ -10,4 +10,4 @@
 DEF= -DLUASOCKET_DEBUG -DUNIX_HAS_SUN_LEN
 CFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fno-common
 LDFLAGS=-bundle -undefined dynamic_lookup
-LD=export MACOSX_DEPLOYMENT_TARGET="10.3"; gcc
+LD=gcc -arch i386 -arch ppc
