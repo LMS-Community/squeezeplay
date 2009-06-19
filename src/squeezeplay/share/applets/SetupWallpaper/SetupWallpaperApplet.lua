@@ -116,6 +116,9 @@ function settingsShow(self)
 
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	
+	local screenWidth, screenHeight = Framework:getScreenSize()
+	log:warn(screenWidth, '|', screenHeight)
+
 	-- read all files in the wallpaper/ directory and into self.wallpapers
 	-- this step is done first so images aren't read twice, 
 	-- once from source area and once from build area
@@ -131,8 +134,18 @@ function settingsShow(self)
 		if self:_isImg(parts[2]) then
 			-- token is represented by uppercase of the filename
 			local token = string.upper(parts[1])
+
+			-- limit self.wallpapers when screenWidth and screenHeight are certain parameters
+			local pattern = nil
+			if screenWidth == 320 and screenHeight == 240 then
+				pattern = 'BB_'
+			elseif screenWidth == 240 and screenHeight == 320 then
+				pattern = 'JIVE_'
+			elseif screenWidth == 480 and screenHeight == 272 then
+				pattern = 'FAB4_'
+			end
 	
-			if not self.wallpapers[name] then
+			if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(token, pattern) ) ) then
 				self.wallpapers[name] = {
 					token    = token,
 					suffix   = parts[2],
@@ -143,6 +156,7 @@ function settingsShow(self)
 	end
 
 	for name, details in pairs(self.wallpapers) do
+		log:warn(name, "|", details.token)
 			self.menu:addItem({
 				-- anything local goes to the top 
 				-- (i.e., higher precendence than SC-delivered custom wallpaper)

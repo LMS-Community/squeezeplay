@@ -468,3 +468,36 @@ FAB4_SYMPHONY
 FAB4_VIBRATO
 	EN	Vibrato
 
+JIVE_VIBRATO
+	EN	Vibrato
+
+BB_ALLEGRO
+	EN	Allegro
+
+BB_ENCORE
+	EN	Encore
+
+BB_ENCORE_RED
+	EN	Encore Red
+
+BB_HARMONY
+	EN	Harmony
+
+BB_NOCTURNE
+	EN	Nocturne
+
+BB_QUARTET
+	EN	Quartet
+
+BB_SONATA
+	EN	Sonata
+
+BB_SYMPHONY
+	EN	Symphony
+
+BB_VIBRATO
+	EN	Vibrato
+
+JIVE_NOCTURNE
+	EN	Nocturne
+
