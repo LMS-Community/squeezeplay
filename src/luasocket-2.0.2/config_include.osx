@@ -7,7 +7,11 @@
 # for Mac OS X
 #
 #CC=gcc
-DEF= -DLUASOCKET_DEBUG -DUNIX_HAS_SUN_LEN
-CFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fno-common
-LDFLAGS=-bundle -undefined dynamic_lookup
+DEF=-DLUASOCKET_DEBUG -DUNIX_HAS_SUN_LEN
+MYCFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fno-common
+MYLDFLAGS=-bundle -undefined dynamic_lookup
 LD=gcc -arch i386 -arch ppc
+
+#------
+# End of makefile platform specific configuration
+#
