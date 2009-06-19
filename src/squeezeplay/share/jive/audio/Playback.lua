@@ -189,7 +189,7 @@ function _timerCallback(self)
 		if not self.sentDecoderUnderrunEvent and
 			(not self.stream or status.decodeState & DECODE_ERROR ~= 0) then
 			if status.decodeState & DECODE_NOT_SUPPORTED ~= 0 then
-				-- XXXX not supported event
+				self:sendStatus(status, "STMn")
 			end
 
 			log:debug("status DECODE UNDERRUN")
