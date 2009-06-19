@@ -768,9 +768,18 @@ function __init(self, style, value, closure, allowedChars)
 	obj.maxWidth = 0
 	obj.value = value
 
-	-- default cursor to end to string
-	if obj.value then
-		obj.cursor = #tostring(obj.value) + 1
+-- Removed per Dean, but contradicts bug fix 11508; reopening 11508 and leaving this old code here until that is resolved.
+--	-- default cursor to end to string
+--	if obj.value then
+--		obj.cursor = #tostring(obj.value) + 1
+--	end
+
+	if Framework:isMostRecentInput("ir") or
+		Framework:isMostRecentInput("key") or
+		Framework:isMostRecentInput("scroll") then
+		obj.cursorWidth = 1
+	else
+		obj.cursorWidth = 0
 	end
 
 	obj.closure = closure
