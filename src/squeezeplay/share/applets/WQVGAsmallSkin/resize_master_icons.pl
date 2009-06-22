@@ -26,67 +26,7 @@ my $resize = {
 };
 
 
-# only convert these icons
-my @iconConvertList = (qw/ 
-icon_settings_brightness.png
-icon_settings_repeat.png
-icon_settings_shuffle.png
-icon_settings_sleep.png
-icon_settings_screen.png
-icon_settings_home.png
-icon_settings_audio.png
-icon_loading.png
-icon_settings_plugin.png
-icon_album_noart.png
-icon_app_guide.png
-icon_boom.png
-icon_controller.png
-icon_ethernet.png
-icon_fab4.png
-icon_internet_radio.png
-icon_mymusic.png
-icon_power_off2.png
-icon_receiver.png
-icon_region_americas.png
-icon_region_other.png
-icon_SB1n2.png
-icon_SB3.png
-icon_settings.png
-icon_slimp3.png
-icon_softsqueeze.png
-icon_squeezeplay.png
-icon_transporter.png
-icon_wireless.png
-icon_firmware_update.png
-icon_verify.png
-icon_restart.png
-icon_playlist_save.png
-icon_playlist_clear.png
-
-icon_favorites.png
-icon_sleep.png
-icon_ml_years.png
-icon_ml_search.png
-icon_ml_random.png
-icon_ml_playlist.png
-icon_ml_new_music.png
-icon_ml_genres.png
-icon_ml_artist.png
-icon_linein.png
-icon_ml_folder.png
-icon_ml_albums.png
-icon_folder.png
-icon_digital_inputs.png
-icon_choose_player.png
-icon_sync.png
-icon_staffpicks.png
-icon_nature_sounds.png
-icon_alarm.png
-icon_RSS.png
-icon_power_off2.png
-icon_blank.png
-
-/);
+my @iconConvertList = get_icon_list();
 
 my $special = {
 "icon_firmware_update.png"	=>	{ touch	=> 100,	remote	=> 100 },
@@ -150,7 +90,7 @@ sub create_svk_file {
 	close(PROG);
 
 	if ($commands[0]) {
-		open(OUT, ">svkUpdate.bash");
+		open(OUT, ">svkResizedIcons.bash");
 		print OUT "#!/bin/bash\n\n";
 		for (@commands) {
 			print OUT $_;
@@ -180,4 +120,18 @@ sub copy_assets {
 		$newImage =~ s/$assetDir/$resizedIconDir/;
 		copy($image, $newImage);
 	}
+}
+
+sub get_icon_list {
+	my $file = "masterIconList.txt";
+	my @return;
+
+	open(IN, "<$file") or die "$!";
+	while(<IN>) {
+		chomp;
+		next if /^#/ || /^$/;
+		push @return, $_;
+	}
+	close(IN);
+	return @return;
 }

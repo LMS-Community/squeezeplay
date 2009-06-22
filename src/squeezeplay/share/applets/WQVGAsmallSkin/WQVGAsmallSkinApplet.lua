@@ -2079,6 +2079,9 @@ function skin(self, s)
         s.hm_settingsAudio = _uses(s._buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_audio" .. skinSuffix),
         })
+        s.hm_linein = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_linein" .. skinSuffix),
+        })
 
         -- ??
         s.hm_loading = _uses(s._buttonicon, {
