@@ -275,9 +275,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.smallSpinny = {
 		-- FIXME: need this asset
-		img = _loadImage(self, "MISSING_SMALL_SPINNY"),
-		frameRate = 5,
-		frameWidth = 10,
+		img = _loadImage(self, "UNOFFICIAL/wifi_connecting_sm.png"),
+		frameRate = 8,
+		frameWidth = 26,
 		padding = { 4, 0, 0, 0 },
 		h = WH_FILL,
 	}
@@ -989,14 +989,14 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.icon_connecting = _uses(s._icon, {
-		img = _loadImage(self, "MISSING_WIFI_CONNECTING_ICON"),
+		img = _loadImage(self, "UNOFFICIAL/wifi_connecting.png"),
 		frameRate = 8,
-		frameWidth = 161,
+		frameWidth = 120,
 		padding = { 0, 20, 0, 10 }
 	})
 
 	s.icon_connected = _uses(s._icon, {
-		img = _loadImage(self, "MISSING_WIFI_CONNECTED_ICON"),
+		img = _loadImage(self, "UNOFFICIAL/connecting_success_icon.png"),
 	})
 
 	s.icon_software_update = _uses(s.icon_connecting)
