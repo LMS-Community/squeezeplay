@@ -36,8 +36,10 @@ end
 
 
 function defaultSettings(meta)
+	-- Don't modify this default effects volume, instead add a per
+	-- platform attenuation in the Squeezebox<Platform>Meta files.
 	return {
-		_VOLUME = Sample.MAXVOLUME / 7
+		_VOLUME = (Sample.MAXVOLUME / 4) * 3
 	}
 end
 

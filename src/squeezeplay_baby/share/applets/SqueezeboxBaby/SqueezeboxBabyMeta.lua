@@ -5,6 +5,8 @@ local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
 
+local Sample        = require("squeezeplay.sample")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
@@ -31,6 +33,9 @@ function registerApplet(meta)
 
 	-- Set the minimum support server version
 	SlimServer:setMinimumVersion("7.4")
+
+	-- System sound effects attenuation
+	Sample:setEffectAttenuation(Sample.MAXVOLUME / 25)
 
 	-- Bug 9900
 	-- Use SN test during development
