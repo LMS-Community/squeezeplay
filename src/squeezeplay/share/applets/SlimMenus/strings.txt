@@ -20,21 +20,6 @@ MENUS_MY_MUSIC
 MENUS_OTHER_LIBRARY
 	EN	Other Library
 
-SLIMBROWSER_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung mit %s
-	EN	Connecting to\n%s
-	ES	Conectando a\n%s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à %s
-	IT	Connessione a %s
-	NL	Er wordt een verbinding met %s gemaakt
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
-
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren

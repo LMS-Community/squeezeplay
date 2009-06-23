@@ -500,8 +500,10 @@ function _showConnectToServer(self, player, server)
 		window:addWidget(Icon("icon_connecting"))
 		window:setAutoHide(false)
 
-		local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO", server:getName()))
+		local statusLabel = Label("text", self:string("SLIMSERVER_CONNECTING_TO"))
+		local statusSubLabel = Label("subtext", server:getName())
 		window:addWidget(statusLabel)
+		window:addWidget(statusSubLabel)
 
 		local timeout = 1
 

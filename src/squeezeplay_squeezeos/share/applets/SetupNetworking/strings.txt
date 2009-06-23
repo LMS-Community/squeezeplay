@@ -532,19 +532,19 @@ NETWORK_WIRELESS_PASSWORD_HELP_BODY
 	SV	Om du ansluter via ett trådlöst nätverk och inte känner till lösenordet kan du prova med följande:\n\n1. Kontrollera om du har lösenordet nedskrivet.\n2. Fråga någon annan som använder nätverket om de känner till lösenordet.\n3. Hör med personen som konfigurerade hemmanätverket.\n\nOBS! Lösenord går ibland under beteckningen säkerhetsnyckel.\nOBS! Squeezebox har inte stöd för WEP-lösenord i ASCII-format. Du kan fortfarande ansluta Squeezebox till nätverket, men du måste först omvandla ASCII-lösenordet till hexadecimalt format. Det finns gott om omvandlingsprogram på nätet. Du kan även gå in på www.mysqueezebox.com/support för mer information.
 
 NETWORK_CONNECTING_TO_SSID
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung mit\n%s
-	EN	Connecting to\n%s
-	ES	Conectando a\n%s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à\n%s
-	IT	Connessione a\n%s
-	NL	Bezig verbinding te maken met\n%s
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
+	CS	Připojuji se k
+	DA	Etablerer forbindelse til
+	DE	Verbindung mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistetään kohteeseen
+	FR	Connexion à
+	IT	Connessione a
+	NL	Bezig verbinding te maken met
+	NO	Kopler til
+	PL	Łączenie z
+	RU	Подключение к
+	SV	Ansluter till
 
 NETWORK_ETHERNET
 	CS	Ethernet
@@ -562,19 +562,19 @@ NETWORK_ETHERNET
 	SV	Ethernet
 
 NETWORK_CONNECTED_TO
-	CS	Připojeno k\n%s
-	DA	Afspilleren er tilsluttet\n%s
-	DE	Verbunden mit\n%s
-	EN	Connected to\n%s
-	ES	Conexión a\n%s
-	FI	Yhdistetty kohteeseen\n%s
-	FR	Connecté à\n%s
-	IT	Connesso a\n%s
-	NL	Verbonden met\n%s
-	NO	Koplet til\n%s
-	PL	Połączono z\n%s
-	RU	Установлено подключение к\n%s
-	SV	Ansluten till\n%s
+	CS	Připojeno k
+	DA	Afspilleren er tilsluttet
+	DE	Verbunden mit
+	EN	Connected to
+	ES	Conexión a
+	FI	Yhdistetty kohteeseen
+	FR	Connecté à
+	IT	Connesso a
+	NL	Verbonden met
+	NO	Koplet til
+	PL	Połączono z
+	RU	Установлено подключение к
+	SV	Ansluten till
 
 NETWORK_TRY_AGAIN
 	CS	Zkuste to znovu
@@ -1291,19 +1291,19 @@ NETWORK_WPS_PROGRESS_PBC
 	SV	Anslutningsknapp
 
 NETWORK_WPS_PROGRESS_PIN
-	CS	Zadejte tento PIN\n%s
-	DA	Indtast denne pinkode\n%s
-	DE	Diese PIN\n%s eingeben
-	EN	Enter This PIN\n%s
-	ES	Introduzca este PIN\n%s
-	FI	Anna tämä PIN\n%s
-	FR	Entrer ce PIN\n%s
-	IT	Immettere questo PIN\n%s
-	NL	Deze PIN\n%s invoeren
-	NO	Angi denne pin-koden\n%s
-	PL	Wprowadź ten kod PIN\n%s
-	RU	Введите этот PIN-код\n%s
-	SV	Ange PIN-kod\n%s
+	CS	Zadejte tento PIN: %s
+	DA	Indtast denne pinkode: %s
+	DE	Diese PIN: %s eingeben
+	EN	Enter This PIN: %s
+	ES	Introduzca este PIN: %s
+	FI	Anna tämä PIN: %s
+	FR	Entrer ce PIN: %s
+	IT	Immettere questo PIN: %s
+	NL	Deze PIN: %s invoeren
+	NO	Angi denne pin-koden: %s
+	PL	Wprowadź ten kod PIN: %s
+	RU	Введите этот PIN-код: %s
+	SV	Ange PIN-kod: %s
 
 NETWORK_WPS_PROBLEM
 	CS	Vypršení doby WPS

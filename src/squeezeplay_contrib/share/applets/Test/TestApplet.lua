@@ -641,8 +641,8 @@ function downloadingSoftware(self, menuItem)
 
 	--FIXME, this window does not layout correctly (Bug 5412)
 	local icon = Icon("icon_connecting")
-	local text = Label("text", "\nDownloading Firmware")
-	local label = Label("text", "0%")
+	local text = Label("text", "Downloading Firmware")
+	local label = Label("subtext", "0%")
 
 	popup:addWidget(label)
 	popup:addWidget(icon)
@@ -687,10 +687,12 @@ function ignoreAllInputPopup(self, menuItem)
 	local popup = Popup("waiting_popup")
 
 	local icon = Icon("icon_connecting")
-	local label = Label("text", "All input is ignored, except:\n'soft_reset', 'back', 'go'")
+	local label = Label("text", "All input is ignored, except:")
+	local sublabel = Label('subtext', "'soft_reset', 'back', 'go'")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
+	popup:addWidget(sublabel)
 
 	-- disable input
 	popup:ignoreAllInputExcept({"go", "back"})
@@ -708,21 +710,23 @@ function connectingPopup(self, menuItem)
 	local popup = Popup("waiting_popup")
 
 	local icon = Icon("icon_connecting")
-	local label = Label("text", "")
+	local label = Label("text", "Connecting to")
+	local label2 = Label("subtext", "Ficticious Network")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
-
+	popup:addWidget(label2)
 
 	local state = 1
 	popup:addTimer(4000, function()
 				       if state == 1 then
-					       label:setValue("\na long test string!")
+					       label:setValue("a long test string!")
 				       elseif state == 2 then
-					       label:setValue("\na very very very long test string!")
+					       label:setValue("a very very very long test string!")
 				       elseif state == 3 then
-					       icon:setStyle("icon_connected")
-					       label:setValue("Connected to\na test string!")
+						icon:setStyle("icon_connected")
+						label:setValue("Connected to")
+						label2:setStyle('subtext_connected')
 				       else
 					       popup:hide()
 				       end

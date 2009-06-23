@@ -421,7 +421,7 @@ Item:     "item_play", "item_add", "item", (styles: selected, pressed, locked)
 function window_context_menu(self, item)
 	local data = _itemData(item)
 
-	local window = Popup("context_menu", _itemName(item), "Context Menu")
+	local window = Window("context_menu", _itemName(item), "Context Menu")
 	_windowActions(self, item, window)
 
 	-- FIXME: choice items do not work
@@ -836,7 +836,6 @@ windows = {
 
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
-	{ "waiting_1line_popup", "Connecting to", setup_waiting_popup, },
 	{ "error", "Error", setup_error, },
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "track_info", "Track Info", window_track_info, },
@@ -900,7 +899,7 @@ testData = {
 	"At this stage, we need to get your Squeezebox connected to your wireless network. To do this, you'll need to know your network name and password (if you have an open network, you won't need a password).\n\nIf you don't know your network name or password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have them written down somewhere.\n2. Ask someone else in your home if they know them.\n3. Contact the person who set up your home network.\n4. Check your router manual.\n5. Contact your router manufacturer for assistance.\n\nNOTE: A network name is sometimes referred to as an SSID, and a password is sometimes referred to as a wireless key, or security key.\n\nIf your network does not appear on the list of wireless networks, try one or more of the following:\n\n1. Make sure the Squeezebox is within range of your wireless network.\n2. Go to your computer to make sure your network is working.\n3. If your router is configured to not broadcast your network name (SSID), select 'I don't see my network' at the bottom of the list of networks, and enter yours.\n4. Unplug your router, wait 30 seconds, and plug it back in.\n5. Refer to your router documentation or contact the manufacturer for assistance."
 	},
 	waiting_popup = {
-		"Connecting to\na crazy long text string so we can see how this renders wireless network...", "all your base", "icon_connecting",
+		"Connecting to...", "all your base", "icon_connecting",
 	},
 	waiting_1line_popup = {
 		"Just one main line on this screen", "all your base", "icon_connecting",

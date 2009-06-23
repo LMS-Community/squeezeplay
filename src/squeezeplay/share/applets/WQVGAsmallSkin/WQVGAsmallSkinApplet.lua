@@ -1219,6 +1219,10 @@ function skin(self, s)
 		sh = TEXT_SH_COLOR,
 	}
 
+	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
+		fg = TEXT_COLOR_TEAL,
+	})
+
 	-- input window (including keyboard)
 	s.input = _uses(s.window)
 	s.input.title = _uses(s.title, {

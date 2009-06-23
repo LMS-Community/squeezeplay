@@ -240,6 +240,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	local MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 }
 	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
+        local TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe }
 	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
 	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
 
@@ -255,8 +256,8 @@ function skin(self, s, reload, useDefaultSize)
         local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14
         local TEXTMENU_FONT_SIZE = 15
         local TEXTMENU_SELECTED_FONT_SIZE = 18
-        local POPUP_TEXT_SIZE_1 = 14
-        local POPUP_TEXT_SIZE_2 = 22
+        local POPUP_TEXT_SIZE_1 = 22
+        local POPUP_TEXT_SIZE_2 = 16
         local TEXTAREA_FONT_SIZE = 16
         local CENTERED_TEXTAREA_FONT_SIZE = 28
         local TEXTINPUT_FONT_SIZE = 16
@@ -608,34 +609,27 @@ function skin(self, s, reload, useDefaultSize)
 	s.waiting_popup = _uses(s.popup)
 
 	s.waiting_popup.text = {
-		padding = { 0, 0, 0, 40 },
+		padding = { 0, 29, 0, 0 },
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		align = "center",
-		position = LAYOUT_SOUTH ,
-		h = 16
-	}
-
-	s.waiting_popup.text.line = {
-		{
-			font = _boldfont(POPUP_TEXT_SIZE_1),
-			height = 16,
-		},
-		{
-			font = _boldfont(POPUP_TEXT_SIZE_2),
-		},
+		align = "top",
+		position = LAYOUT_NORTH,
+		font = _font(POPUP_TEXT_SIZE_1),
 	}
 
 	s.waiting_popup.subtext = {
-		padding = { 0, 0, 0, 32 },
+		padding = { 0, 0, 0, 34 },
 		font = _boldfont(POPUP_TEXT_SIZE_2),
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
-		align = "center",
+		align = "top",
 		position = LAYOUT_SOUTH,
---		h = 40,
+		w = WH_FILL,
 	}
 
+	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
+		fg = TEXT_COLOR_TEAL,
+	})
 	-- input window (including keyboard)
 	-- XXX: needs layout
 	s.input = _uses(s.window)
@@ -992,10 +986,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "UNOFFICIAL/wifi_connecting.png"),
 		frameRate = 8,
 		frameWidth = 120,
-		padding = { 0, 20, 0, 10 }
+		padding = { 0, 25, 0, 5 }
 	})
 
-	s.icon_connected = _uses(s._icon, {
+	s.icon_connected = _uses(s.icon_connecting, {
 		img = _loadImage(self, "UNOFFICIAL/connecting_success_icon.png"),
 	})
 

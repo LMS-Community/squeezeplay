@@ -230,19 +230,35 @@ DIM_WHEN_CHARGING
 	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
-	CS	Dochází baterie\nDobijte ji prosím
-	DA	Batteriet er næsten fladt\nDet skal lades op
-	DE	Batterie schwach\nBitte aufladen
-	EN	Battery Low\nPlease Charge Me
-	ES	Pila baja\nNecesita carga
-	FI	Vähäinen akun lataus\nLataa minut
-	FR	Batterie faible\nRechargez la télécommande
-	IT	Livello batteria insufficiente\nCaricare batteria
-	NL	Batterij bijna leeg\nOpladen alsjeblieft
-	NO	Lavt batterinivå\nLad meg opp
-	PL	Niski poziom baterii\nNaładuj urządzenie
-	RU	Батарея разряжена\nНеобходима зарядка
-	SV	Låg batterinivå\nLadda batteriet
+	CS	Dochází baterie
+	DA	Batteriet er næsten fladt
+	DE	Batterie schwach
+	EN	Battery Low
+	ES	Pila baja
+	FI	Vähäinen akun lataus
+	FR	Batterie faible
+	IT	Livello batteria insufficiente
+	NL	Batterij bijna leeg
+	NO	Lavt batterinivå
+	PL	Niski poziom baterii
+	RU	Батарея разряжена
+	SV	Låg batterinivå
+
+
+BATTERY_LOW_2
+	CS	Dobijte ji prosím
+	DA	Det skal lades op
+	DE	Bitte aufladen
+	EN	Please Charge Me
+	ES	Necesita carga
+	FI	Lataa minut
+	FR	Rechargez la télécommande
+	IT	Caricare batteria
+	NL	Opladen alsjeblieft
+	NO	Lad meg opp
+	PL	Naładuj urządzenie
+	RU	Необходима зарядка
+	SV	Ladda batteriet
 
 POWER_DOWN
 	CS	Vypnout
@@ -290,34 +306,34 @@ POWER_DOWN_SLEEP
 	SV	Viloläge
 
 GOODBYE
-	CS	\nNashledanou
-	DA	\nFarvel
-	DE	\nAuf Wiedersehen
-	EN	\nGoodbye
-	ES	\nAdiós
-	FI	\nNäkemiin
-	FR	\nA bientôt
-	IT	\nA presto
-	NL	\nTot ziens
-	NO	\nFarvel
-	PL	\nDo widzenia
-	RU	\nПрощайте
-	SV	\nHej då!
+	CS	Nashledanou
+	DA	Farvel
+	DE	Auf Wiedersehen
+	EN	Goodbye
+	ES	Adiós
+	FI	Näkemiin
+	FR	A bientôt
+	IT	A presto
+	NL	Tot ziens
+	NO	Farvel
+	PL	Do widzenia
+	RU	Прощайте
+	SV	Hej då!
 
 SLEEPING
-	CS	\nUsínám
-	DA	\nSlumrer
-	DE	\nSchlafmodus aktiv
-	EN	\nSleeping
-	ES	\nSuspensión
-	FI	\nUnitilassa
-	FR	\nMise en veille
-	IT	\nSospensione
-	NL	\nSluimermodus
-	NO	\nHviler
-	PL	\nUśpienie
-	RU	\nСпящий режим
-	SV	\nI viloläge
+	CS	Usínám
+	DA	Slumrer
+	DE	Schlafmodus aktiv
+	EN	Sleeping
+	ES	Suspensión
+	FI	Unitilassa
+	FR	Mise en veille
+	IT	Sospensione
+	NL	Sluimermodus
+	NO	Hviler
+	PL	Uśpienie
+	RU	Спящий режим
+	SV	I viloläge
 
 POWER_DOWN_HELP
 	CS	Zrušit nebo potvrdit pokles výkonu ovladače
@@ -335,19 +351,19 @@ POWER_DOWN_HELP
 	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
-	CS	\nČekejte prosím
-	DA	\nVent lidt
-	DE	\nBitte warten
-	EN	\nPlease wait
-	ES	\nEspere un momento
-	FI	\nOdota
-	FR	\nVeuillez patienter
-	IT	\nAttendere
-	NL	\nEen ogenblik geduld
-	NO	\nVent litt
-	PL	\nCzekaj
-	RU	\nПодождите, пожалуйста
-	SV	\nVänta
+	CS	Čekejte prosím
+	DA	Vent lidt
+	DE	Bitte warten
+	EN	Please wait
+	ES	Espere un momento
+	FI	Odota
+	FR	Veuillez patienter
+	IT	Attendere
+	NL	Een ogenblik geduld
+	NO	Vent litt
+	PL	Czekaj
+	RU	Подождите, пожалуйста
+	SV	Vänta
 
 INVALID_MAC_TITLE
 	CS	Chyba

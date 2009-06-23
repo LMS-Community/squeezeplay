@@ -51,19 +51,19 @@ SLIMSERVER_HELP
 	SV	Ange IP-adressen till datorn där Squeezebox Server körs
 
 SLIMSERVER_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung wird hergestellt mit\n%s
-	EN	Connecting to\n%s
-	ES	Conectando a\n%s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à\n%s
-	IT	Connessione a \n%s
-	NL	Bezig verbinding te maken met\n%s
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
+	CS	Připojuji se k
+	DA	Etablerer forbindelse til
+	DE	Verbindung wird hergestellt mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistetään kohteeseen
+	FR	Connexion à
+	IT	Connessione a
+	NL	Bezig verbinding te maken met
+	NO	Kopler til
+	PL	Łączenie z
+	RU	Подключение к
+	SV	Ansluter till
 
 SQUEEZEBOX_PROBLEM
 	CS	Problém s připojováním

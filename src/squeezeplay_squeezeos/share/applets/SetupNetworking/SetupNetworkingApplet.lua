@@ -1047,7 +1047,8 @@ function _connect_1(self, iface, ssid, createNetwork)
 	if self.scanResults[ssid] then
 		name = self.scanResults[ssid].item.text
 	end
-	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
+	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID")))
+	popup:addWidget(Label("subtext", name))
 
 	self:tieAndShowWindow(popup)
 
@@ -1238,8 +1239,10 @@ function _connectSuccess(self, iface, ssid)
 	popup:ignoreAllInputExcept({"back"})
 
 	local name = self.scanResults[ssid].item.text
-	local text = Label("text", self:string("NETWORK_CONNECTED_TO", name))
+	local text = Label("text", self:string("NETWORK_CONNECTED_TO"))
+	local subtext = Label("subtext_connected", name)
 	popup:addWidget(text)
+	popup:addWidget(subtext)
 
 	popup:addTimer(2000,
 			function(event)
@@ -1644,7 +1647,8 @@ function _setStaticIP(self, iface, ssid)
 	popup:ignoreAllInputExcept({"back"})
 
 	local name = self.scanResults[ssid].item.text
-	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID", name)))
+	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID")))
+	popup:addWidget(Label("subtext", name))
 
 	self:tieAndShowWindow(popup)
 

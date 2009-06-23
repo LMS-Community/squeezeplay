@@ -828,6 +828,7 @@ function batteryLowShow(self)
 
 	popup:addWidget(Icon("icon_battery_low"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
+	popup:addWidget(Label("subtext", self:string("BATTERY_LOW_2")))
 
 	-- make sure this popup remains on screen
 	popup:setAllowScreensaver(false)

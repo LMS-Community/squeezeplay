@@ -2411,7 +2411,8 @@ function _problemConnectingPopup(self, server)
 	-- popup
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
-	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
+	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO")))
+	popup:addWidget(Label("subtext", server:getName()))
 
 	popup:ignoreAllInputExcept({"back"})
 	popup:addActionListener("back", self,   function ()

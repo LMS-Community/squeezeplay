@@ -428,6 +428,7 @@ styles = {
 
 	"waiting_popup.icon_connecting",
 	"waiting_popup.subtext",
+	"waiting_popup.subtext_connected",
 	"waiting_popup.text",
 }
 
