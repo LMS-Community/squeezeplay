@@ -372,9 +372,8 @@ function skin(self, s, reload, useDefaultSize)
 			sh = TEXT_SH_COLOR,
 		},
 		icon = {
-			border = MENU_ITEM_ICON_PADDING,
+			padding = MENU_ITEM_ICON_PADDING,
 			align = 'center',
-			w = THUMB_SIZE,
 			h = THUMB_SIZE,
 		},
 		arrow = s.img.rightArrow,
