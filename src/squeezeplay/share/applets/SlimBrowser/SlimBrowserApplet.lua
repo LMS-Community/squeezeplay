@@ -1266,6 +1266,11 @@ function _goShuffleToggleAction()
 	return EVENT_CONSUME
 end
 
+--doesn't work yet (SC issue I think), mutes but doesn't unmute (volume just goes to 0)
+function _goMuteToggleAction()
+	_player:mute(true)
+	return EVENT_CONSUME
+end
 
 function _goSleepAction()
 	_player:sleepToggle()
@@ -1273,7 +1278,7 @@ function _goSleepAction()
 end
 
 
-function _goPlayFavoriteAction(self, event)
+function _goPlayPresetAction(self, event)
 	local action = event:getAction()
 	local number = string.sub(action, -1 , -1)
 	if not number or not string.find(number, "%d") then
@@ -1310,18 +1315,19 @@ local _globalActionsNEW = {
 	["go_current_track_details"] = _goCurrentTrackDetailsAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
+	["mute"] = _goMuteToggleAction,
 	["sleep"] = _goSleepAction,
 	["go_brightness"] = _goBrightnessAction,
-	["play_favorite_0"] = _goPlayFavoriteAction,
-	["play_favorite_1"] = _goPlayFavoriteAction,
-	["play_favorite_2"] = _goPlayFavoriteAction,
-	["play_favorite_3"] = _goPlayFavoriteAction,
-	["play_favorite_4"] = _goPlayFavoriteAction,
-	["play_favorite_5"] = _goPlayFavoriteAction,
-	["play_favorite_6"] = _goPlayFavoriteAction,
-	["play_favorite_7"] = _goPlayFavoriteAction,
-	["play_favorite_8"] = _goPlayFavoriteAction,
-	["play_favorite_9"] = _goPlayFavoriteAction,
+	["play_preset_0"] = _goPlayPresetAction,
+	["play_preset_1"] = _goPlayPresetAction,
+	["play_preset_2"] = _goPlayPresetAction,
+	["play_preset_3"] = _goPlayPresetAction,
+	["play_preset_4"] = _goPlayPresetAction,
+	["play_preset_5"] = _goPlayPresetAction,
+	["play_preset_6"] = _goPlayPresetAction,
+	["play_preset_7"] = _goPlayPresetAction,
+	["play_preset_8"] = _goPlayPresetAction,
+	["play_preset_9"] = _goPlayPresetAction,
 	
 	["go_home_or_now_playing"] = function()
 		local windowStack = Framework.windowStack
@@ -1680,6 +1686,12 @@ local _actionToActionName = {
 	["pause"]   = 'pause',
 	["stop"]   = 'pause-hold',
 	["play"]    = 'play',
+	["set_preset_1"]    = 'set-preset-1',
+	["set_preset_2"]    = 'set-preset-2',
+	["set_preset_3"]    = 'set-preset-3',
+	["set_preset_4"]    = 'set-preset-4',
+	["set_preset_5"]    = 'set-preset-5',
+	["set_preset_6"]    = 'set-preset-6',
 	["context_menu"]    = 'more',
 	["create_mix"]    = 'play-hold',
 	["add"]     = 'add',
