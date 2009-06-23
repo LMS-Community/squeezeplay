@@ -194,6 +194,13 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Menu_Lists/menu_sel_box_r.png",
 			       })
 
+        s.img.progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
+
+        s.img.progressBar = Tile:loadHTiles({
+                nil,
+                imgpath .. "Alerts/alert_progress_bar_body.png",
+        })
+
 	s.img.sliderBackground =
 		Tile:loadHTiles({
 					imgpath .. "Song_Progress_Bar/progressbar_bkgrd_l.png",
@@ -638,6 +645,44 @@ function skin(self, s, reload, useDefaultSize)
 	s.error = _uses(s.window)
 
 	-- update window
+     -- update window
+        s.update_popup = _uses(s.popup)
+
+        s.update_popup.text = {
+                w = WH_FILL,
+                h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
+                position = LAYOUT_NORTH,
+                border = { 0, 20, 0, 4 },
+                padding = { 15, 0, 15, 0 },
+                align = "center",
+                font = _font(POPUP_TEXT_SIZE_1),
+                lineHeight = POPUP_TEXT_SIZE_1 + 8,
+                fg = TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+        }
+
+        s.update_popup.subtext = {
+                w = WH_FILL,
+                -- note this is a hack as the height and padding push
+                -- the content out of the widget bounding box.
+                h = 30,
+                padding = { 0, 0, 0, 30 },
+                font = _boldfont(UPDATE_SUBTEXT_SIZE),
+                fg = TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+                align = "bottom",
+                position = LAYOUT_SOUTH,
+        }
+
+        s.update_popup.progress = {
+                border = { 24, 7, 24, 7 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = s.img.progressBackground,
+                img = s.img.progressBar,
+        }
+
+--[[
 	s.update_popup = _uses(s.popup)
 
 	s.update_popup.subtext = {
@@ -666,6 +711,7 @@ function skin(self, s, reload, useDefaultSize)
 			font = _boldfont(POPUP_TEXT_SIZE_2),
 		},
 	}
+--]]
 
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
@@ -992,7 +1038,13 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "UNOFFICIAL/connecting_success_icon.png"),
 	})
 
-	s.icon_software_update = _uses(s.icon_connecting)
+	s.icon_software_update = _uses(s._icon, {
+                img = _loadImage(self, "IconsResized/icon_firmware_update.png"),
+        })
+
+        s.icon_restart = _uses(s._icon, {
+                img = _loadImage(self, "IconsResized/icon_restart.png"),
+        })
 
 	s.icon_power = _uses(s._icon, {
 		img = _loadImage(self, "MISSING_POWER_ICON"),
