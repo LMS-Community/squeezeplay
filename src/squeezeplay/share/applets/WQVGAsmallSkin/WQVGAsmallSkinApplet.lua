@@ -2042,15 +2042,13 @@ function skin(self, s)
 	s.hm_myMusicSearch = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
 	})
-	s.hm_myMusicSearchArtists = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
-	})
-	s.hm_myMusicSearchSongs = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
-	})
-	s.hm_myMusicSearchPlaylists = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
-	})
+	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchSongs     = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
+	s.hm_homeSearchRecent       = _uses(s.hm_myMusicSearch)
+
 	s.hm_myMusicMusicFolder = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_folder" .. skinSuffix),
 	})
@@ -2065,34 +2063,34 @@ function skin(self, s)
 	s.hm_randomalbums = _uses(s.hm_randomplay)
 	s.hm_randomyears = _uses(s.hm_randomplay)
 
-        s.hm_settingsRepeat = _uses(s._buttonicon, {
+        s.hm_settingsRepeat = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_repeat" .. skinSuffix),
         })
-        s.hm_settingsShuffle = _uses(s._buttonicon, {
+        s.hm_settingsShuffle = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_shuffle" .. skinSuffix),
         })
-        s.hm_settingsSleep = _uses(s._buttonicon, {
+        s.hm_settingsSleep = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_sleep" .. skinSuffix),
         })
-        s.hm_settingsScreen = _uses(s._buttonicon, {
+        s.hm_settingsScreen = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_screen" .. skinSuffix),
         })
-        s.hm_appletCustomizeHome = _uses(s._buttonicon, {
+        s.hm_appletCustomizeHome = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_home" .. skinSuffix),
         })
-        s.hm_settingsAudio = _uses(s._buttonicon, {
+        s.hm_settingsAudio = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_audio" .. skinSuffix),
         })
-        s.hm_linein = _uses(s._buttonicon, {
+        s.hm_linein = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_linein" .. skinSuffix),
         })
 
         -- ??
-        s.hm_loading = _uses(s._buttonicon, {
+        s.hm_loading = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
         })
         -- ??
-        s.hm_settingsPlugin = _uses(s._buttonicon, {
+        s.hm_settingsPlugin = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_plugin" .. skinSuffix),
         })
 
