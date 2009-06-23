@@ -78,19 +78,35 @@ DONE_HELP
 	SV	Nu har du tillgång till all din musik via Squeezebox!
 
 CONNECTING_TO_SN
-	CS	Připojování k \nmysqueezebox.com
-	DA	Etablerer forbindelse til\nmysqueezebox.com
-	DE	Verbindung zu\nmysqueezebox.com
-	EN	Connecting to\nmysqueezebox.com
-	ES	Conectando a\nmysqueezebox.com
-	FI	Muodostetaan yhteyttä kohteeseen\nmysqueezebox.com
-	FR	Connexion à\nmysqueezebox.com
-	IT	Connessione a\nmysqueezebox.com
-	NL	Bezig verbinding te maken met \nmysqueezebox.com
-	NO	Kopler til\nmysqueezebox.com
-	PL	Nawiązywanie połączenia z\nmysqueezebox.com
-	RU	Подключение к\nmysqueezebox.com
-	SV	Ansluter till\nmysqueezebox.com
+	CS	Připojování k 
+	DA	Etablerer forbindelse til
+	DE	Verbindung zu
+	EN	Connecting to
+	ES	Conectando a
+	FI	Muodostetaan yhteyttä kohteeseen
+	FR	Connexion à
+	IT	Connessione a
+	NL	Bezig verbinding te maken met 
+	NO	Kopler til
+	PL	Nawiązywanie połączenia z
+	RU	Подключение к
+	SV	Ansluter till
+
+MYSQUEEZEBOX_DOT_COM
+	CS	mysqueezebox.com
+	DA	mysqueezebox.com
+	DE	mysqueezebox.com
+	EN	mysqueezebox.com
+	ES	mysqueezebox.com
+	FI	mysqueezebox.com
+	FR	mysqueezebox.com
+	IT	mysqueezebox.com
+	NL	mysqueezebox.com
+	NO	mysqueezebox.com
+	PL	mysqueezebox.com
+	RU	mysqueezebox.com
+	SV	mysqueezebox.com
+
 
 CANT_CONNECT
 	CS	Nemohu připojit
