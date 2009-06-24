@@ -508,12 +508,12 @@ function _showConnectToServer(self, player, server)
 		local timeout = 1
 
 		local cancelAction = function()
-			self.connectingPopup:hide()
-			self.connectingPopup = nil
 			--sometimes timeout not back to 1 next time around, so reset it
 			timeout = 1
 			self:_connectPlayerFailed(player, server)
 
+			self.connectingPopup:hide()
+			self.connectingPopup = nil
 		end
 
 		-- disable input
