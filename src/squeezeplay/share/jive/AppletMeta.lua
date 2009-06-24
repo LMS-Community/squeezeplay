@@ -129,10 +129,13 @@ is the function executed when the MenuItem is selected.
 
 =cut
 --]]
-function menuItem(self, id, node, label, closure, weight, extras)
+function menuItem(self, id, node, label, closure, weight, extras, iconStyle)
+	if not iconStyle then
+		iconStyle = 'hm_' .. id
+	end
 	return {
 		id = id,
-		iconStyle = 'hm_' .. id,
+		iconStyle = iconStyle,
 		node = node,
 		text = self:string(label),
 		weight = weight,
