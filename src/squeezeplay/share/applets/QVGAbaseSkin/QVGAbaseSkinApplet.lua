@@ -338,7 +338,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.popup = _uses(s.window, {
 		border = { 0, 0, 0, 0 },
-		maskImg = s.img.popupMask,
+		maskImg = s.img.blackBackground,
 	})
 
 	s.title = {
