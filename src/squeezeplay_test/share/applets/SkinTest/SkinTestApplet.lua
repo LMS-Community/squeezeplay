@@ -309,7 +309,7 @@ end
 Popup:    "update_popup"
 Label:    "text"
 Slider:   "progress"
-Icon:     X
+Icon:     "icon_software_update"
 --]]
 function setup_update_popup(self, item)
 	local data = _itemData(item)
@@ -320,7 +320,7 @@ function setup_update_popup(self, item)
 	local label = Label("text", data[1])
 	local cent = Label("subtext", "")
 	local icon = Icon(data[2])
-	local progress = Slider("progress", 1, 100, 1)
+	local progress = Slider("progress", 1, 100, 30)
 
 	local count = 1
 	popup:addTimer(500, function()
@@ -817,6 +817,7 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "context_menu", "Context Menu", window_context_menu, },
 	{ "text_list", "Text List", setup_text_list, },
 	{ "help_list_one", "Welcome to Setup", setup_help_list, },
@@ -837,7 +838,6 @@ windows = {
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
 	{ "error", "Error", setup_error, },
-	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "track_info", "Track Info", window_track_info, },
 	{ "track_list", "Track List", window_track_list, },
 	{ "playlist", "Playlist", window_playlist, },
@@ -945,7 +945,7 @@ testData = {
 		},
 	},
 	update_popup = {
-		"Installing\nSoftware Update...", "icon_software_update",
+		"Downloading", "icon_software_update",
 	},
 	track_info = {
 		"Play this song",
