@@ -987,8 +987,168 @@ function Digital:getDigitalClockSkin(skinName)
 			},
 			dropShadow = { hidden = 1 },
 		})
-	elseif skinName == 'QVGAportraitSkin' then
-	end
+	elseif skinName == 'QVGAlandscapeSkin' then
+
+		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
+		local digitalClockDigit = {
+			font = _font(100),
+			align = 'center',
+			fg = { 0xcc, 0xcc, 0xcc },
+			w = 62,
+		}
+		local shadow = {
+			w = 62,
+		}
+	
+		s.icon_digitalClockDropShadow = {
+			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
+				align = 'center',
+				padding = { 4, 0, 0, 0 },
+				w = 62,
+			}
+			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+				img = false
+		})
+
+		s.icon_digitalClockHDivider = {
+			w = WH_FILL,
+			img = _loadImage(self, "Clocks/Digital/divider_hort_digital.png"),
+		}
+
+		s.icon_digitalClockVDivider = {
+			w = 3,
+			img = _loadImage(self, "Clocks/Digital/divider_vert_digital.png"),
+			align = 'center',
+		}
+
+		s.icon_digitalDots = {
+			img = Surface:loadImage('applets/QVGAbaseSkin/images/UNOFFICIAL/clock_dots_digital.png'),
+			align = 'center',
+			w = 11,
+			border = { 14, 20, 12, 0 },
+		}
+
+		s.icon_digitalClockBlank = {
+			img = false,
+			w = 40,
+		}
+
+		s.Clock = {
+			bgImg = digitalClockBackground,
+			clock = {
+				position = LAYOUT_NORTH,
+				w = WH_FILL,
+				zOrder = 2,
+				border = { 20, 40, 20, 0 },
+				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+				h1 = digitalClockDigit,
+				h2 = digitalClockDigit,
+				m1 = _uses(digitalClockDigit, {
+					border = { 1, 0, 0, 0 },
+				}),
+				m2 = _uses(digitalClockDigit, {
+					border = { 1, 0, 0, 0 },
+				}),
+			},
+			dropShadow = {
+				position = LAYOUT_NORTH,
+				align = 'center',
+				w = WH_FILL,
+				h = 18,
+				zOrder = 1,
+				border = { 47, 154, 47, 0 },
+				order = { 's1', 's2', 'dots', 's3', 's4' },
+				s1   =  { w = 76 },
+				s2   =  { w = 76 },
+				dots =  { w = 40 },
+				s3   =  { w = 76 },
+				s4   =  { w = 76 },
+			},
+			ampm = {
+				position = LAYOUT_NONE,
+				x = 280,
+				y = 100,
+				font = _font(20),
+				align = 'bottom',
+				fg = { 0xcc, 0xcc, 0xcc },
+			},
+			alarm = {
+				position = LAYOUT_NONE,
+				x = 20,
+				y = 20,
+			},
+			horizDivider = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 175,
+			},
+			date = {
+				position = LAYOUT_SOUTH,
+				order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
+				w = WH_FILL,
+				h = 70,
+				padding = { 0, 0, 0, 6 },
+				dayofweek = {
+					align = 'center',
+					w = 115,
+					h = WH_FILL,
+					font = _font(20),
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding  = { 1, 0, 0, 6 },
+				},
+				vdivider1 = {
+					align = 'center',
+					w = 2,
+				},
+				dayofmonth = {
+					font = _font(48),
+					w = 86,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 4 },
+				},
+				vdivider2 = {
+					align = 'center',
+					w = 2,
+				},
+				month = {
+					font = _font(20),
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 5 },
+				},
+				year = {
+					font = _boldfont(20),
+					w = 50,
+					h = WH_FILL,
+					align = 'left',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 3, 0, 0, 5 },
+				},
+			},
+		}
+	
+		local blackMask = Tile:fillColor(0x000000ff)
+		s.ClockBlack = _uses(s.Clock, {
+			bgImg = blackMask,
+			horizDivider = { hidden = 1 },
+			date = {
+				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+		s.ClockTransparent = _uses(s.Clock, {
+			bgImg = false,
+			horizDivider = { hidden = 1 },
+			date = {
+				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+end
 
 	return s
 end
