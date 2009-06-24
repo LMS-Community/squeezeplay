@@ -83,7 +83,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
-	local imgpath = 'applets/QVGAlandscapeSkin/'
+	local imgpath = 'applets/QVGAlandscapeSkin/images/'
 
 	if useDefaultSize or screenWidth < 320 or screenHeight < 240 then
                 screenWidth = 320
@@ -98,20 +98,22 @@ function skin(self, s, reload, useDefaultSize)
 	-- almost all styles come directly from QVGAbaseSkinApplet
 	QVGAbaseSkinApplet.skin(self, s, reload, useDefaultSize)
 
-	-- styles specific to the landscape QVGA skin
+	-- c is for constants
+	local c = s.CONSTANTS
 
+	-- styles specific to the landscape QVGA skin
 	s.img.scrollBackground =
                 Tile:loadVTiles({
-                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd_t.png",
-                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd.png",
-                                        imgpath .. "images/Scroll_Bar/scrollbar_bkgrd_b.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd_t.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd_b.png",
                                 })
 
 	s.img.scrollBar =
                 Tile:loadVTiles({
-                                        imgpath .. "images/Scroll_Bar/scrollbar_body_t.png",
-                                        imgpath .. "images/Scroll_Bar/scrollbar_body.png",
-                                        imgpath .. "images/Scroll_Bar/scrollbar_body_b.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_body_t.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_body.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_body_b.png",
                                })
 
         s.scrollbar = {
@@ -122,6 +124,50 @@ function skin(self, s, reload, useDefaultSize)
                 img        = s.img.scrollBar,
                 layer      = LAYER_CONTENT_ON_STAGE,
         }
+
+	s.img.progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
+	s.img.progressBar = Tile:loadHTiles({
+                nil,
+                imgpath .. "Alerts/alert_progress_bar_body.png",
+        })
+
+	-- software update window
+	s.update_popup = _uses(s.popup)
+
+	s.update_popup.text = {
+                w = WH_FILL,
+                h = (c.POPUP_TEXT_SIZE_1 + 8 ) * 2,
+                position = LAYOUT_NORTH,
+                border = { 0, 14, 0, 0 },
+                padding = { 12, 0, 12, 0 },
+                align = "center",
+                font = _font(c.POPUP_TEXT_SIZE_1),
+                lineHeight = c.POPUP_TEXT_SIZE_1 + 8,
+                fg = c.TEXT_COLOR,
+                sh = c.TEXT_SH_COLOR,
+        }
+
+        s.update_popup.subtext = {
+                w = WH_FILL,
+                -- note this is a hack as the height and padding push
+                -- the content out of the widget bounding box.
+                h = 30,
+                padding = { 0, 0, 0, 36 },
+                font = _boldfont(c.UPDATE_SUBTEXT_SIZE),
+                fg = c.TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+                align = "bottom",
+                position = LAYOUT_SOUTH,
+        }
+	s.update_popup.progress = {
+                border = { 12, 0, 12, 12 },
+                --padding = { 0, 0, 0, 24 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = s.img.progressBackground,
+                img = s.img.progressBar,
+        }
+
 
 	local NP_ARTISTALBUM_FONT_SIZE = 16
 	local NP_TRACK_FONT_SIZE = 16

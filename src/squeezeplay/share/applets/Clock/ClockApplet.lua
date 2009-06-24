@@ -108,6 +108,7 @@ function Clock:__init(skin, windowStyle)
 	obj.window = Window(windowStyle)
 	obj.window:setSkin(skin)
 	obj.window:reSkin()
+	obj.window:setShowFrameworkWidgets(false)
 
 	obj.window:addListener(EVENT_MOTION,
 		function()

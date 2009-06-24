@@ -232,54 +232,51 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.blackBackground = Tile:fillColor(0x000000ff)
 
-	local THUMB_SIZE = self:param().THUMB_SIZE
+	-- constants table
+	-- by putting this in the skin table "s", it's available to child skins
+	s.CONSTANTS = {
+		THUMB_SIZE = self:param().THUMB_SIZE,
 
-	local TITLE_PADDING  = 0
-	local CHECK_PADDING  = { 0, 0, 0, 0 }
-	local CHECKBOX_RADIO_PADDING  = { 2, 8, 8, 0 }
+		CHECK_PADDING  = { 0, 0, 0, 0 },
 
-	local MENU_ALBUMITEM_PADDING = { 4, 2, 4, 2 }
-	local MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 }
-	local MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 }
+		MENU_ALBUMITEM_PADDING = { 4, 2, 4, 2 },
+		MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 },
+		MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 },
 
-	local MENU_CURRENTALBUM_TEXT_PADDING = { 6, 20, 0, 10 }
-	local TEXTAREA_PADDING = { 13, 8, 8, 8 }
+		TEXTAREA_PADDING = { 13, 8, 8, 8 },
+		MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 },
 
-	local MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 }
-	local TEXT_COLOR = { 0xE7, 0xE7, 0xE7 }
-        local TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe }
-	local TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 }
-	local TEXT_SH_COLOR = { 0x37, 0x37, 0x37 }
+		TEXT_COLOR = { 0xE7, 0xE7, 0xE7 },
+        	TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe },
+		TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 },
+		TEXT_SH_COLOR = { 0x37, 0x37, 0x37 },
 
-	local SELECT_COLOR = TEXT_COLOR
-	local SELECT_SH_COLOR = { }
+		SELECT_COLOR = { 0xE7, 0xE7, 0xE7 },
+		SELECT_SH_COLOR = { },
 
+        	TITLE_FONT_SIZE = 18,
+        	ALBUMMENU_TITLE_FONT_SIZE = 14,
+        	ALBUMMENU_FONT_SIZE = 14,
+        	ALBUMMENU_SMALL_FONT_SIZE = 14,
+        	ALBUMMENU_SELECTED_FONT_SIZE = 14,
+        	ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14,
+        	TEXTMENU_FONT_SIZE = 15,
+        	TEXTMENU_SELECTED_FONT_SIZE = 18,
+        	POPUP_TEXT_SIZE_1 = 22,
+        	POPUP_TEXT_SIZE_2 = 16,
+        	TEXTAREA_FONT_SIZE = 16,
+        	TEXTINPUT_FONT_SIZE = 16,
+        	TEXTINPUT_SELECTED_FONT_SIZE = 24,
+        	HELP_FONT_SIZE = 16,
+		UPDATE_SUBTEXT_SIZE = 16,
+		ICONBAR_FONT = 12,
 
-        local TITLE_FONT_SIZE = 18
-        local ALBUMMENU_TITLE_FONT_SIZE = 14
-        local ALBUMMENU_FONT_SIZE = 14
-        local ALBUMMENU_SMALL_FONT_SIZE = 14
-        local ALBUMMENU_SELECTED_FONT_SIZE = 14
-        local ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14
-        local TEXTMENU_FONT_SIZE = 15
-        local TEXTMENU_SELECTED_FONT_SIZE = 18
-        local POPUP_TEXT_SIZE_1 = 22
-        local POPUP_TEXT_SIZE_2 = 16
-        local TEXTAREA_FONT_SIZE = 16
-        local CENTERED_TEXTAREA_FONT_SIZE = 28
-        local TEXTINPUT_FONT_SIZE = 16
-        local TEXTINPUT_SELECTED_FONT_SIZE = 24
-        local HELP_FONT_SIZE = 16
-	local UPDATE_SUBTEXT_SIZE = 20
-	local ICONBAR_FONT = 12
+		ITEM_ICON_ALIGN   = 'right',
+		FOUR_LINE_ITEM_HEIGHT = 45,
+	}
 
-	local ITEM_ICON_ALIGN   = 'right'
-	local ONE_LINE_ITEM_HEIGHT = 27
-	local FOUR_LINE_ITEM_HEIGHT = 45
-	local TITLE_BUTTON_WIDTH = 76
-	local TITLE_BUTTON_HEIGHT = 47
-	local TITLE_BUTTON_PADDING = { 4, 0, 4, 0 }
-
+	-- c is for constants
+	local c = s.CONSTANTS
 
 	s.img.smallSpinny = {
 		-- FIXME: need this asset
@@ -311,13 +308,13 @@ function skin(self, s, reload, useDefaultSize)
 		align = "center",
 	}
 	s.img.checkMark = {
-		align = ITEM_ICON_ALIGN,
-		padding = CHECK_PADDING,
+		align = c.ITEM_ICON_ALIGN,
+		padding = c.CHECK_PADDING,
 		img = _loadImage(self, "Icons/icon_check_off.png"),
 	}
 	s.img.checkMarkSelected = {
-		align = ITEM_ICON_ALIGN,
-		padding = CHECK_PADDING,
+		align = c.ITEM_ICON_ALIGN,
+		padding = c.CHECK_PADDING,
 		img = _loadImage(self, "Icons/icon_check_sel.png"),
 	}
 
@@ -352,9 +349,9 @@ function skin(self, s, reload, useDefaultSize)
 			h = WH_FILL,
 			padding = { 8, 6, 8, 0 },
 			align = 'center',
-			font = _boldfont(TITLE_FONT_SIZE),
-			fg = SELECT_COLOR,
-			sh = SELECT_SH_COLOR,
+			font = _boldfont(c.TITLE_FONT_SIZE),
+			fg = c.SELECT_COLOR,
+			sh = c.SELECT_SH_COLOR,
 		},
 	}
 
@@ -363,7 +360,7 @@ function skin(self, s, reload, useDefaultSize)
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 0 },
 		border = { 0, 0, 0, 0 },
-		itemHeight = FOUR_LINE_ITEM_HEIGHT,
+		itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
 	}
 
 	s.item = {
@@ -374,14 +371,14 @@ function skin(self, s, reload, useDefaultSize)
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
-			font = _boldfont(TEXTMENU_FONT_SIZE),
-			fg = TEXT_COLOR,
-			sh = TEXT_SH_COLOR,
+			font = _boldfont(c.TEXTMENU_FONT_SIZE),
+			fg = c.TEXT_COLOR,
+			sh = c.TEXT_SH_COLOR,
 		},
 		icon = {
-			padding = MENU_ITEM_ICON_PADDING,
+			padding = c.MENU_ITEM_ICON_PADDING,
 			align = 'center',
-			h = THUMB_SIZE,
+			h = c.THUMB_SIZE,
 		},
 		arrow = s.img.rightArrow,
 	}
@@ -402,9 +399,9 @@ function skin(self, s, reload, useDefaultSize)
 		
 	s.choice = {
 		align = 'right',
-		font = _boldfont(TEXTMENU_FONT_SIZE),
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
+		font = _boldfont(c.TEXTMENU_FONT_SIZE),
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 		h = WH_FILL,
 	}
 
@@ -432,25 +429,25 @@ function skin(self, s, reload, useDefaultSize)
 	s.selected.item = _uses(s.item, {
 		order = { 'icon', 'text', 'arrow' },
 		text = {
-			font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
-			fg = SELECT_COLOR,
-			sh = SELECT_SH_COLOR
+			font = _boldfont(c.TEXTMENU_SELECTED_FONT_SIZE),
+			fg = c.SELECT_COLOR,
+			sh = c.SELECT_SH_COLOR
 		},
 		bgImg = s.img.oneLineItemSelectionBox,
 		arrow = s.img.rightArrowSel,
 	})
 	--FIXME: doesn't seem to take effect...
 	s.selected.choice = _uses(s.choice, {
-		fg = SELECT_COLOR,
-		sh = SELECT_SH_COLOR,
+		fg = c.SELECT_COLOR,
+		sh = c.SELECT_SH_COLOR,
 	})
 	s.selected.item_choice = _uses(s.selected.item, {
 		order = { 'icon', 'text', 'check' },
 		check = {
 			align = 'right',
-			font = _boldfont(TEXTMENU_FONT_SIZE),
-			fg = SELECT_COLOR,
-			sh = SELECT_SH_COLOR,
+			font = _boldfont(c.TEXTMENU_FONT_SIZE),
+			fg = c.SELECT_COLOR,
+			sh = c.SELECT_SH_COLOR,
 		},
 	})
 
@@ -526,11 +523,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_text = {
 		w = screenWidth - 10,
-		padding = TEXTAREA_PADDING,
-		font = _boldfont(TEXTAREA_FONT_SIZE - 2),
-		lineHeight = TEXTAREA_FONT_SIZE - 2 + 5,
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
+		padding = c.TEXTAREA_PADDING,
+		font = _boldfont(c.TEXTAREA_FONT_SIZE - 2),
+		lineHeight = c.TEXTAREA_FONT_SIZE - 2 + 5,
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
 	}
 
@@ -542,10 +539,10 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.text = {
 		w = screenWidth,
-		padding = TEXTAREA_PADDING,
-		font = _boldfont(TEXTAREA_FONT_SIZE),
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
+		padding = c.TEXTAREA_PADDING,
+		font = _boldfont(c.TEXTAREA_FONT_SIZE),
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 		align = "left",
 	}
 
@@ -571,11 +568,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.textinput = {
 		border     = { 8, -5, 8, 0 },
 		padding    = { 6, 0, 6, 0 },
-		font       = _font(TEXTINPUT_FONT_SIZE),
-		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
-		wheelFont  = _boldfont(TEXTINPUT_FONT_SIZE),
-		charHeight = TEXTINPUT_SELECTED_FONT_SIZE + 2,
-		fg         = TEXT_COLOR_BLACK,
+		font       = _font(c.TEXTINPUT_FONT_SIZE),
+		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
+		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
+		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 2,
+		fg         = c.TEXT_COLOR_BLACK,
 		wh         = { 0x55, 0x55, 0x55 },
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
@@ -596,12 +593,12 @@ function skin(self, s, reload, useDefaultSize)
 		text = {
 			line = {
 					{
-						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE + 5),
-						height = ALBUMMENU_TITLE_FONT_SIZE + 6,
+						font = _boldfont(c.ALBUMMENU_TITLE_FONT_SIZE + 5),
+						height = c.ALBUMMENU_TITLE_FONT_SIZE + 6,
 					},
 					{
-						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE - 4),
-						height = ALBUMMENU_TITLE_FONT_SIZE -5,
+						font = _boldfont(c.ALBUMMENU_TITLE_FONT_SIZE - 4),
+						height = c.ALBUMMENU_TITLE_FONT_SIZE -5,
 					},
 					{
 						--minimize visibility of this...
@@ -616,25 +613,25 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.waiting_popup.text = {
 		padding = { 0, 29, 0, 0 },
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 		align = "top",
 		position = LAYOUT_NORTH,
-		font = _font(POPUP_TEXT_SIZE_1),
+		font = _font(c.POPUP_TEXT_SIZE_1),
 	}
 
 	s.waiting_popup.subtext = {
 		padding = { 0, 0, 0, 34 },
-		font = _boldfont(POPUP_TEXT_SIZE_2),
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
+		font = _boldfont(c.POPUP_TEXT_SIZE_2),
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 		align = "top",
 		position = LAYOUT_SOUTH,
 		w = WH_FILL,
 	}
 
 	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
-		fg = TEXT_COLOR_TEAL,
+		fg = c.TEXT_COLOR_TEAL,
 	})
 	-- input window (including keyboard)
 	-- XXX: needs layout
@@ -644,100 +641,31 @@ function skin(self, s, reload, useDefaultSize)
 	-- XXX: needs layout
 	s.error = _uses(s.window)
 
-	-- update window
-     -- update window
-        s.update_popup = _uses(s.popup)
-
-        s.update_popup.text = {
-                w = WH_FILL,
-                h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
-                position = LAYOUT_NORTH,
-                border = { 0, 20, 0, 4 },
-                padding = { 15, 0, 15, 0 },
-                align = "center",
-                font = _font(POPUP_TEXT_SIZE_1),
-                lineHeight = POPUP_TEXT_SIZE_1 + 8,
-                fg = TEXT_COLOR,
-                sh = TEXT_SH_COLOR,
-        }
-
-        s.update_popup.subtext = {
-                w = WH_FILL,
-                -- note this is a hack as the height and padding push
-                -- the content out of the widget bounding box.
-                h = 30,
-                padding = { 0, 0, 0, 30 },
-                font = _boldfont(UPDATE_SUBTEXT_SIZE),
-                fg = TEXT_COLOR,
-                sh = TEXT_SH_COLOR,
-                align = "bottom",
-                position = LAYOUT_SOUTH,
-        }
-
-        s.update_popup.progress = {
-                border = { 24, 7, 24, 7 },
-                position = LAYOUT_SOUTH,
-                horizontal = 1,
-                bgImg = s.img.progressBackground,
-                img = s.img.progressBar,
-        }
-
---[[
-	s.update_popup = _uses(s.popup)
-
-	s.update_popup.subtext = {
-		padding = { 0, 0, 0, 60 },
-		font = _boldfont(POPUP_TEXT_SIZE_1),
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
-		align = "center",
-		position = LAYOUT_SOUTH,
-	}
-
-	s.update_popup.text = {
-		padding = { 0, 14, 0, 0 },
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
-		align = "center",
-		position = LAYOUT_SOUTH ,
-	}
-
-	s.update_popup.text.line = {
-		{
-			font = _boldfont(POPUP_TEXT_SIZE_1),
-			height = 16,
-		},
-		{
-			font = _boldfont(POPUP_TEXT_SIZE_2),
-		},
-	}
---]]
-
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = _uses(s.menu, {
-			itemHeight = FOUR_LINE_ITEM_HEIGHT,
+			itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
 			item = {
 				order = { "icon", "text", "arrow" },
-				padding = MENU_ALBUMITEM_PADDING,
+				padding = c.MENU_ALBUMITEM_PADDING,
 				text = {
 					align = "top-left",
 					w = WH_FILL,
 					h = WH_FILL,
-					padding = MENU_ALBUMITEM_TEXT_PADDING,
-					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+					padding = c.MENU_ALBUMITEM_TEXT_PADDING,
+					font = _font(c.ALBUMMENU_SMALL_FONT_SIZE),
 					line = {
 						{
-							font = _boldfont(ALBUMMENU_FONT_SIZE),
-							height = ALBUMMENU_FONT_SIZE + 2
+							font = _boldfont(c.ALBUMMENU_FONT_SIZE),
+							height = c.ALBUMMENU_FONT_SIZE + 2
 						}
 					},
-					fg = TEXT_COLOR,
-					sh = TEXT_SH_COLOR,
+					fg = c.TEXT_COLOR,
+					sh = c.TEXT_SH_COLOR,
 				},
 				icon = {
-					w = THUMB_SIZE,
-					h = THUMB_SIZE,
+					w = c.THUMB_SIZE,
+					h = c.THUMB_SIZE,
 				},
 				arrow = s.img.rightArrow,
 			},
@@ -748,8 +676,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_list.menu.item_checked = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'check' },
 		check = {
-			align = ITEM_ICON_ALIGN,
-			padding = CHECK_PADDING,
+			align = c.ITEM_ICON_ALIGN,
+			padding = c.CHECK_PADDING,
 			img = _loadImage(self, "Icons/icon_check_off.png")
 		},
 	})
@@ -764,8 +692,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_list.menu.selected.item = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'arrow' },
 		text = {
-			fg = SELECT_COLOR,
-			sh = SELECT_SH_COLOR,
+			fg = c.SELECT_COLOR,
+			sh = c.SELECT_SH_COLOR,
 		},
 		bgImg = s.img.oneLineItemSelectionBox,
 		arrow = s.img.rightArrowSel,
@@ -839,23 +767,23 @@ function skin(self, s, reload, useDefaultSize)
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		h = FOUR_LINE_ITEM_HEIGHT - 1,
+		h = c.FOUR_LINE_ITEM_HEIGHT - 1,
 		border = 4,
 		order = { 'icon', 'text' },
 		icon  = {
-			w = THUMB_SIZE,
+			w = c.THUMB_SIZE,
 			h = WH_FILL,
 			padding = { 9,0,0,0 },
 		},
 		text = {
-			padding = MENU_ALBUMITEM_TEXT_PADDING,
+			padding = c.MENU_ALBUMITEM_TEXT_PADDING,
 			align = "top-left",
-			font = _font(ALBUMMENU_TITLE_FONT_SIZE),
-			lineHeight = ALBUMMENU_TITLE_FONT_SIZE + 1,
+			font = _font(c.ALBUMMENU_TITLE_FONT_SIZE),
+			lineHeight = c.ALBUMMENU_TITLE_FONT_SIZE + 1,
 			line = {
 					{
-						font = _boldfont(ALBUMMENU_TITLE_FONT_SIZE),
-						height = ALBUMMENU_TITLE_FONT_SIZE + 2,
+						font = _boldfont(c.ALBUMMENU_TITLE_FONT_SIZE),
+						height = c.ALBUMMENU_TITLE_FONT_SIZE + 2,
 					}
 			},
 		},
@@ -870,13 +798,13 @@ function skin(self, s, reload, useDefaultSize)
 		menu = {
 			item = {
 				text = {
-					padding = MENU_PLAYLISTITEM_TEXT_PADDING,
-					font = _font(ALBUMMENU_FONT_SIZE),
+					padding = c.MENU_PLAYLISTITEM_TEXT_PADDING,
+					font = _font(c.ALBUMMENU_FONT_SIZE),
 					lineHeight = 16,
 					line = {
 						{
-							font = _boldfont(ALBUMMENU_FONT_SIZE),
-							height = ALBUMMENU_FONT_SIZE + 3
+							font = _boldfont(c.ALBUMMENU_FONT_SIZE),
+							height = c.ALBUMMENU_FONT_SIZE + 3
 						},
 					},
 				},
@@ -886,16 +814,16 @@ function skin(self, s, reload, useDefaultSize)
 	s.play_list.menu.item_checked = _uses(s.play_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 		check = {
-			align = ITEM_ICON_ALIGN,
-			padding = CHECK_PADDING,
+			align = c.ITEM_ICON_ALIGN,
+			padding = c.CHECK_PADDING,
 			img = _loadImage(self, "Icons/icon_check_off.png")
 		},
 	})
 	s.play_list.menu.selected = {
                 item = _uses(s.play_list.menu.item, {
 			text = {
-				fg = SELECT_COLOR,
-				sh = SELECT_SH_COLOR,
+				fg = c.SELECT_COLOR,
+				sh = c.SELECT_SH_COLOR,
 			},
 			bgImg = s.img.oneLineItemSelectionBox,
 		}),
@@ -930,11 +858,11 @@ function skin(self, s, reload, useDefaultSize)
 				align = 'top-left',
 				w = WH_FILL,
 				h = WH_FILL,
-				font = _font(HELP_FONT_SIZE),
+				font = _font(c.HELP_FONT_SIZE),
 				lineHeight = 17,
 				line = {
 					{
-						font = _boldfont(HELP_FONT_SIZE),
+						font = _boldfont(c.HELP_FONT_SIZE),
 						height = 17
 					},
 				},
@@ -945,7 +873,7 @@ function skin(self, s, reload, useDefaultSize)
 				-- FIXME: need this asset
 				img = _loadImage(self, "MISSING_PLACEHOLDER_ARTWORK"),
 				h = WH_FILL,
-				w = THUMB_SIZE,
+				w = c.THUMB_SIZE,
 			}
 		}
 	}
@@ -959,8 +887,8 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.helpBox,
 		title = {
 		      border = 10,
-		      fg = TEXT_COLOR,
-		      font = _boldfont(HELP_FONT_SIZE),
+		      fg = c.TEXT_COLOR,
+		      font = _boldfont(c.HELP_FONT_SIZE),
 		      align = "center",
 		      bgImg = false,
 		},
@@ -978,9 +906,9 @@ function skin(self, s, reload, useDefaultSize)
 				w = 75,
 				align = 'right',
 				padding = { 8, 0, 8, 15 },
-				font = _boldfont(HELP_FONT_SIZE),
-				fg = TEXT_COLOR,
-				sh = TEXT_SH_COLOR,
+				font = _boldfont(c.HELP_FONT_SIZE),
+				fg = c.TEXT_COLOR,
+				sh = c.TEXT_SH_COLOR,
 			}
 		},
 	}
@@ -1023,8 +951,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_no_artwork = {
 		--FIXME: need this asset
 		img = _loadImage(self, "MISSING_PLACEHOLDER_ARTWORK"),
-		w   = THUMB_SIZE,
-		h   = THUMB_SIZE,
+		w   = c.THUMB_SIZE,
+		h   = c.THUMB_SIZE,
 	}
 
 	s.icon_connecting = _uses(s._icon, {
@@ -1040,6 +968,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.icon_software_update = _uses(s._icon, {
                 img = _loadImage(self, "IconsResized/icon_firmware_update.png"),
+		padding = { 0, 0, 0, 44 },
         })
 
         s.icon_restart = _uses(s._icon, {
@@ -1060,9 +989,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- button icons, on left of menus
 	s._buttonicon = {
-		border = MENU_ITEM_ICON_PADDING,
+		border = c.MENU_ITEM_ICON_PADDING,
 		align = 'center',
-		h = THUMB_SIZE,
+		h = c.THUMB_SIZE,
 	}
 
 	s.player_transporter = _uses(s._buttonicon, {
@@ -1362,8 +1291,8 @@ function skin(self, s, reload, useDefaultSize)
 		align = "right",
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		fg = TEXT_COLOR,
-		font = _boldfont(ICONBAR_FONT),
+		fg = c.TEXT_COLOR,
+		font = _boldfont(c.ICONBAR_FONT),
 	}
 
 	s.iconbar_group = {
