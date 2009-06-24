@@ -767,9 +767,11 @@ function _resetIdleTimer(self)
 	if not self.idleTimer then
 		self.idleTimer = Timer( 0,
 					function()
-						log:debug("Comet disconnect after idleTimeout: ", idleTimeout )
-						self.idleTimeoutTriggered = true
-						self:disconnect()
+						if self.state == CONNECTED then
+							log:debug(self, " disconnect after idleTimeout: ", self.idleTimeout)
+							self.idleTimeoutTriggered = true
+							_disconnect(self)
+						end
 					end,
 					true)
 	end
