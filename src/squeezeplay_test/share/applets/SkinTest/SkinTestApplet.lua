@@ -320,7 +320,7 @@ function setup_update_popup(self, item)
 	local label = Label("text", data[1])
 	local cent = Label("subtext", "")
 	local icon = Icon(data[2])
-	local progress = Slider("progress", 1, 100, 30)
+	local progress = Slider("progress", 1, 100, 1)
 
 	local count = 1
 	popup:addTimer(500, function()
