@@ -545,7 +545,7 @@ function JiveMain:reloadSkin(reload)
 end
 
 function JiveMain:freeSkin()
-	log:error("self.selectedSkin: ", self.selectedSkin)
+	log:info("freeSkin: self.selectedSkin: ", self.selectedSkin)
 
 	if not self.skins[self.selectedSkin] then
 		return false

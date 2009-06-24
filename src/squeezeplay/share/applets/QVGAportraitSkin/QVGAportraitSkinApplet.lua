@@ -34,6 +34,7 @@ local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Tile                   = require("jive.ui.Tile")
 local Window                 = require("jive.ui.Window")
+local System                 = require("jive.System")
 
 local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
