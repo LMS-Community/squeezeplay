@@ -1335,16 +1335,16 @@ function skin(self, s, reload, useDefaultSize)
 
 	s._button_wireless = _uses(s._iconbar_icon)
 	s.button_wireless_1 = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_wireless_1_sel.png"),
+		img = _loadImage(self, "Icons/icon_wireless_1.png"),
 	})
 	s.button_wireless_2 = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_wireless_2_sel.png"),
+		img = _loadImage(self, "Icons/icon_wireless_2.png"),
 	})
 	s.button_wireless_3 = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_wireless_3_sel.png"),
+		img = _loadImage(self, "Icons/icon_wireless_3.png"),
 	})
 	s.button_wireless_4 = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_wireless_4_sel.png"),
+		img = _loadImage(self, "Icons/icon_wireless_4.png"),
 	})
 	s.button_wireless_ERROR = _uses(s._button_wireless, {
 		img = _loadImage(self, "Icons/icon_wireless_disabled.png"),
