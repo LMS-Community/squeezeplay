@@ -263,4 +263,5 @@ unassignedActionMappings = {
 	"power_off",
 	"power_on",
 	"cancel",
+	"mute",
 }
