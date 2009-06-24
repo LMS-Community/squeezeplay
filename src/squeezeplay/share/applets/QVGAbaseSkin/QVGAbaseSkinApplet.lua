@@ -342,7 +342,7 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.title = {
-		h = 31,
+		h = 35,
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = s.img.titleBox,
@@ -350,7 +350,7 @@ function skin(self, s, reload, useDefaultSize)
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
-			padding = { 8, 7, 0, 9 },
+			padding = { 8, 6, 8, 0 },
 			align = 'center',
 			font = _boldfont(TITLE_FONT_SIZE),
 			fg = SELECT_COLOR,
@@ -359,10 +359,10 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.menu = {
-		h = 243,
+		h = screenHeight - 35,
 		position = LAYOUT_CENTER,
-		padding = { 0, 0, 4, 2 },
-		border = { 0, 0, 5, 0 },
+		padding = { 0, 0, 0, 0 },
+		border = { 0, 0, 0, 0 },
 		itemHeight = FOUR_LINE_ITEM_HEIGHT,
 	}
 
@@ -1062,7 +1062,6 @@ function skin(self, s, reload, useDefaultSize)
 	s._buttonicon = {
 		border = MENU_ITEM_ICON_PADDING,
 		align = 'center',
-		w = THUMB_SIZE,
 		h = THUMB_SIZE,
 	}
 
@@ -1205,10 +1204,6 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.hm_linein = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_linein" .. skinSuffix),
-	})
-	-- ??
-	s.hm_loading = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
 	})
 	-- ??
 	s.hm_settingsPlugin = _uses(s._buttonicon, {
