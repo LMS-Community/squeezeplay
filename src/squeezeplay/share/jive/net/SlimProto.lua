@@ -412,12 +412,15 @@ end
 
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, server)
-	-- the server may have moved, get a fresh ip address
-	local serverip = server and server:getIpPort() or self.serverip
-
-	-- remember last SqueezeCenter for 'serv 0'
-	if not server:isSqueezeNetwork() then
-		self.lastServerip = serverip
+	local serverip = self.serverip
+	if server then
+		-- the server may have moved, get a fresh ip address
+		serverip = server:getIpPort()
+		
+		-- remember last SqueezeCenter for 'serv 0'
+		if not server:isSqueezeNetwork() then
+			self.lastServerip = serverip
+		end
 	end
 
 	_connectToAddr(self, serverip, nil)
