@@ -17,6 +17,9 @@ MENUS_MY_MUSIC
 	RU	Моя музыка
 	SV	Min musik
 
+MENUS_INTERNET_RADIO
+	EN	Internet Radio
+
 MENUS_OTHER_LIBRARY
 	EN	Other Library
 

@@ -366,8 +366,24 @@ self:_addNode({
   id = "radios",
   iconStyle = 'hm_radio',
   text = "Internet Radio (SC)",
-  node = "home",
+  node = "hidden",
 }, isMenuStatusResponse)
+
+
+	--remove this when bug 12304 fixed
+	jiveMain:removeItemById('internetRadioSelector')
+	local menuItem = {
+				id = 'internetRadioSelector',
+				iconStyle = 'hm_radio',
+				node = "home",
+				text = self:string("MENUS_INTERNET_RADIO"),
+				sound = "WINDOWSHOW",
+				callback = function() self:internetRadioSelector() end,
+				weight = 8,
+			}
+	jiveMain:addItem(menuItem)
+
+
 end
 
 		for k, v in pairs(menuItems) do
@@ -436,6 +452,7 @@ end
 			if item.id == "radio" then
 				--temp mark for debugging purposes
 				item.text = item.text .. " (SN)"
+				item.node= "hidden"
 			end
 			if item.id == "radios" then
 				--temp mark for debugging purposes
@@ -683,6 +700,15 @@ function _selectMusicSource(self, callback, specificServer, serverForRetry)
 							serverForRetry,
 							self.waitingForPlayerMenuStatus
 						)
+end
+
+--remove this when bug 12304
+function internetRadioSelector(self)
+	if _server and (_server:isSqueezeNetwork() or not _server:isConnected()) then
+		jiveMain:getMenuTable()["radio"].callback()
+	else
+		jiveMain:openNodeById('radios')
+	end
 end
 
 function myMusicSelector(self)
@@ -934,6 +960,9 @@ function free(self)
 		jiveMain:removeItem(v)
 	end
 	_playerMenus = {}
+
+	--remove this when bug 12304 is fixed
+	jiveMain:removeItemById('internetRadioSelector')
 
 	-- make sure any home menu itema are unlocked
 	if _lockedItem then
