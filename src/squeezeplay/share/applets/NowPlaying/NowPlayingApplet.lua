@@ -227,6 +227,7 @@ function notify_playerCurrent(self, player)
 	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
 		jiveMain:addItem({
 			id = 'appletNowPlaying',
+			iconStyle = 'hm_appletNowPlaying',
 			node = 'home',
                         text = self:string('SCREENSAVER_NOWPLAYING'),
 			sound = 'WINDOWSHOW',
