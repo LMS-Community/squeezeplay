@@ -361,6 +361,9 @@ function skin(self, s, reload, useDefaultSize)
 		padding = 0,
 		border = { 0, 36, 0, 0 },
 		itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
+		font = _boldfont(120),
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 	}
 
 	s.item = {
