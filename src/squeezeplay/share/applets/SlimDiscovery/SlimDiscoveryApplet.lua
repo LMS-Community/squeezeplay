@@ -68,6 +68,7 @@ local function _slimDiscoverySource()
 		'IPAD', string.char(0x00),                                     -- request IP address of server
 		'NAME', string.char(0x00),                                     -- request Name of server
 		'JSON', string.char(0x00),                                     -- request JSONRPC port 
+		'VERS', string.char(0x00),                                     -- request version 
 		'JVID', string.char(0x06, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34), -- My ID - FIXME mac of no use!
 	}
 end
@@ -86,7 +87,7 @@ local function _slimDiscoverySink(self, chunk, err)
 		return
 	end
 
-	local name, ip, port = nil, chunk.ip, nil
+	local name, ip, port, version = nil, chunk.ip, nil, nil
 
 	local ptr = 2
 	while (ptr <= chunk.data:len() - 5) do
@@ -99,13 +100,14 @@ local function _slimDiscoverySink(self, chunk, err)
 			if     t == 'NAME' then name = v
 			elseif t == 'IPAD' then ip = v
 			elseif t == 'JSON' then port = v
+			elseif t == 'VERS' then version = v
 			end
 		end
 	end
 
 	if name and ip and port then
 		-- get instance for SqueezeCenter
-		local server = SlimServer(jnt, name)
+		local server = SlimServer(jnt, name, version)
 
 		-- update SqueezeCenter address
 		self:_serverUpdateAddress(server, ip, port)

@@ -327,7 +327,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer(jnt, ip, name)
+=head2 jive.slim.SlimServer(jnt, ip, name, version)
 
 Create a SlimServer object at IP address I<ip> with name I<name>. Once created, the
 object will immediately connect to slimserver to discover players and other attributes
@@ -335,7 +335,7 @@ of the server.
 
 =cut
 --]]
-function __init(self, jnt, name)
+function __init(self, jnt, name, version)
 	-- Only create one server object per server. This avoids duplicates
 	-- following a server disconnect.
 
@@ -395,6 +395,8 @@ function __init(self, jnt, name)
 		-- loaded images
 		imageCache = {},
 	})
+
+	obj.state.version = version
 
 	-- subscribe to server status, max 50 players every 60 seconds.
 	-- FIXME: what if the server has more than 50 players?
