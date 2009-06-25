@@ -54,3 +54,4 @@ icon_alarm.png
 icon_RSS.png
 icon_power_off2.png
 icon_blank.png
+icon_nowplaying.png
