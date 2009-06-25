@@ -356,10 +356,10 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.menu = {
-		h = screenHeight - 35,
-		position = LAYOUT_CENTER,
-		padding = { 0, 0, 0, 0 },
-		border = { 0, 0, 0, 0 },
+		h = screenHeight - 60,
+		position = LAYOUT_NORTH,
+		padding = 0,
+		border = { 0, 36, 0, 0 },
 		itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
 	}
 
@@ -1297,11 +1297,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.iconbar_group = {
 		x = 0,
-		y = screenHeight - 23,
+		y = screenHeight - 24,
 		w = WH_FILL,
-		h = 23,
+		h = 24,
 		border = 0,
-		padding = { 4, 2, 4, 0 },
+		padding = { 4, 0, 4, 0 },
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
