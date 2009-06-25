@@ -48,9 +48,7 @@ end
 -- create a new menu
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
-		-- FIXME, this removes miniicon support, as it probably needs reworking post skin reorg
-		--window = Window(style or "text_list", name, titleStyle),
-		window = Window(style or "text_list", name),
+		window = Window(style or "home_menu", name),
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
@@ -252,8 +250,11 @@ function addNode(self, item)
 	end
 	--]]
 
-	-- instead just do this
-	window = Window("text_list", item.text)
+	if item.windowStyle then
+		window = Window(item.windowStyle, item.text)
+	else
+		window = Window("home_menu", item.text)
+	end
 
 	local menuStyle = 'menu'
 	if item.window and item.window.menuStyle then

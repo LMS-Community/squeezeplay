@@ -68,23 +68,7 @@ local BOLD_PREFIX = "Bold"
 
 function init(self)
 	self.images = {}
-	-- not just yet
---	self.C = self:getConstants()
 end
-
-
-function getConstants(self)
-	-- define common constants
-	local CONSTANTS =  {
-	}
-	self:addChildConstants(CONSTANTS)
-end
-
-
-function addChildConstants(self, CONSTANTS)
-	assert(false)
-end
-
 
 function param(self)
 	return {
@@ -194,13 +178,6 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Menu_Lists/menu_sel_box_r.png",
 			       })
 
-        s.img.progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
-
-        s.img.progressBar = Tile:loadHTiles({
-                nil,
-                imgpath .. "Alerts/alert_progress_bar_body.png",
-        })
-
 	s.img.sliderBackground =
 		Tile:loadHTiles({
 					imgpath .. "Song_Progress_Bar/progressbar_bkgrd_l.png",
@@ -274,6 +251,8 @@ function skin(self, s, reload, useDefaultSize)
 		ITEM_ICON_ALIGN   = 'right',
 		FOUR_LINE_ITEM_HEIGHT = 45,
 	}
+
+	local skinSuffix = '_selected.png'
 
 	-- c is for constants
 	local c = s.CONSTANTS
@@ -643,6 +622,23 @@ function skin(self, s, reload, useDefaultSize)
 	-- error window
 	-- XXX: needs layout
 	s.error = _uses(s.window)
+
+	s.home_menu = _uses(s.text_list, {
+		menu = {
+			item = _uses(s.item, {
+				icon = {
+					img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+				},
+			}),
+			selected = {
+				item = _uses(s.selected.item, {
+					icon = {
+						img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+					},
+				}),
+			},
+		},
+	})
 
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
@@ -1033,7 +1029,6 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	-- misc home menu icons
-	local skinSuffix = '_selected.png'
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})

@@ -1277,6 +1277,23 @@ function skin(self, s)
 		img = _progressBar,
 	}
 
+	s.home_menu = _uses(s.text_list, {
+		menu = {
+			item = _uses(s.item, {
+				icon = {
+					img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix)
+				},
+			}),
+			selected = {
+				item = _uses(s.selected.item, {
+					icon = {
+						img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+					},
+				}),
+			},
+		},
+	})
+
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = {

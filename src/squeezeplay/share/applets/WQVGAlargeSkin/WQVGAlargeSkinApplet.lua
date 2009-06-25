@@ -868,6 +868,8 @@ function skin(self, s)
 		img = _progressBar,
 	}
 
+	s.home_menu = _uses(s.text_list)
+
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = {
