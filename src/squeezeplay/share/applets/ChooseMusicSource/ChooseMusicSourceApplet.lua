@@ -434,6 +434,7 @@ function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 	end
 
 	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self, cancelAction)
 
 	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
@@ -517,8 +518,9 @@ function _showConnectToServer(self, player, server)
 		end
 
 		-- disable input
-		window:ignoreAllInputExcept({"back"})
+		window:ignoreAllInputExcept({"back", "go_home"})
 		window:addActionListener("back", self, cancelAction)
+		window:addActionListener("go_home", self, cancelAction)
 
 		window:addTimer(1000,
 				function()
@@ -660,6 +662,7 @@ function _connectPlayerFailed(self, player, server)
 				})
 
 	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self, cancelAction)
 
 	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
 

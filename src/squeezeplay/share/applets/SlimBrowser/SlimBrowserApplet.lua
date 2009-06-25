@@ -2416,6 +2416,7 @@ function _removeRequestAndUnlock(self, server)
 end
 
 function _problemConnectingPopup(self, server)
+	log:info("_problemConnectingPopup")
 	-- attempt to reconnect, this may send WOL
 	server:wakeOnLan()
 	server:connect()
@@ -2426,14 +2427,18 @@ function _problemConnectingPopup(self, server)
 	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO")))
 	popup:addWidget(Label("subtext", server:getName()))
 
-	popup:ignoreAllInputExcept({"back"})
-	popup:addActionListener("back", self,   function ()
-							self:_removeRequestAndUnlock(server)
-							self.serverErrorWindow = nil
-							popup:hide()
+	popup:ignoreAllInputExcept({"back", "go_home"})
+	local cancelAction =    function ()
+					log:info("Cancel reconnect window")
 
-							return EVENT_CONSUME
-						end)
+					self:_removeRequestAndUnlock(server)
+					self.serverErrorWindow = nil
+					popup:hide()
+
+					return EVENT_CONSUME
+				end
+	popup:addActionListener("back", self,  cancelAction )
+	popup:addActionListener("go_home", self,  cancelAction )
 
 	local count = 0
 	popup:addTimer(1000,

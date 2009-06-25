@@ -190,6 +190,7 @@ function _updatingPlayer(self)
 	end
 
 	popup:addActionListener("back", self, disconnectPlayer)
+	popup:addActionListener("go_home", self, disconnectPlayer)
 
 	popup:show()
 
@@ -238,6 +239,7 @@ function _userTriggeredUpdate(self)
 	end
 
 	window:addActionListener("back", self, disconnectPlayer)
+	window:addActionListener("go_home", self, disconnectPlayer)
 
 	window:show()
 
@@ -649,6 +651,7 @@ function _showInstallServerWindow(self)
 	end
 
 	window:addActionListener("back", self, cancelAction)
+	window:addActionListener("go_home", self, cancelAction)
 
 	window:addWidget(textarea)
 
