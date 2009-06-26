@@ -222,6 +222,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		TEXTAREA_PADDING = { 13, 8, 8, 8 },
 		MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 },
+		SELECTED_MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 },
 
 		TEXT_COLOR = { 0xE7, 0xE7, 0xE7 },
         	TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe },
@@ -252,6 +253,10 @@ function skin(self, s, reload, useDefaultSize)
 		FOUR_LINE_ITEM_HEIGHT = 45,
 	}
 
+	--[[ not yet
+	local skinSuffix = '.png'
+	local selectedSkinSuffix = '_selected.png'
+	--]]
 	local skinSuffix = '_selected.png'
 
 	-- c is for constants
@@ -344,6 +349,7 @@ function skin(self, s, reload, useDefaultSize)
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 	}
+	s.menu.selected = {}
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
@@ -639,6 +645,8 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
+
+
 
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
@@ -992,6 +1000,11 @@ function skin(self, s, reload, useDefaultSize)
 		align = 'center',
 		h = c.THUMB_SIZE,
 	}
+	s._selectedButtonicon = {
+		border = c.SELECTED_MENU_ITEM_ICON_PADDING,
+		align = 'center',
+		h = c.THUMB_SIZE,
+	}
 
 	s.player_transporter = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_transporter.png"),
@@ -1032,6 +1045,12 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
+	--[[ not yet
+	s.home_menu.menu.selected.item.hm_appletNowPlaying = _uses(s._selectedButtonicon, {
+		img = _loadImage(self, "IconsResized/icon_nowplaying" .. selectedSkinSuffix),
+	})
+	--]]
+ 
 	s.hm_appletAppGuide = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
 	})
@@ -1309,6 +1328,16 @@ function skin(self, s, reload, useDefaultSize)
 		order = {'play', 'repeat_mode', 'shuffle', 'spacer', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
 		spacer = { w = 100 },
 
+	}
+
+	s.demo_text = {
+		font = _boldfont(14),
+		position = LAYOUT_SOUTH,
+		w = screenWidth,
+		align = 'center',
+		padding = { 6, 0, 6, 10 },
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
 	}
 
 	s.keyboard = { hidden = 1 }

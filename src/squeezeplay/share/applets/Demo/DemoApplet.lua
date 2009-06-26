@@ -4,8 +4,8 @@
 local pairs, setmetatable, tostring, tonumber  = pairs, setmetatable, tostring, tonumber
 
 local oo            = require("loop.simple")
-local string        = require("string")
 local lfs           = require("lfs")
+local string        = require("jive.utils.string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
@@ -46,14 +46,15 @@ oo.class(_M, Applet)
 -- main setting menu
 function enableDemo(self)
 	-- keyboard window to enter code
-        self.window = Window('text_list', self:string("DEMO"))
+        self.window = Window('text_list', self:string("DEMO_ENTER_CODE"))
 	local input = Textinput("textinput", "",
 		function(_, value)
 			self.code = value
 			self.window:playSound("WINDOWSHOW")
 			confirmDemo(self)
 			return true
-		end)
+		end, 
+		'0123456789')
 	local keyboard = Keyboard("keyboard", 'ip', input)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
@@ -68,13 +69,13 @@ function confirmDemo(self)
 
 	-- the code is '1234'
 	if tonumber(self.code) == 1234 then
-		local window = Window("information", self:string("DEMO_START_DEMO"))
+		local window = Window("text_list", self:string("DEMO_START_DEMO"))
 		window:setAllowScreensaver(false)
 
 		local menu = SimpleMenu("menu", items)
 		menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 		local textArea = Textarea('text', self:string('DEMO_START_DEMO_WARNING'))
-		window:addWidget(textArea)
+		menu:setHeaderWidget(textArea)
 		window:addWidget(menu)
 	
 		menu:addItem({
@@ -104,15 +105,23 @@ function startDemo(self)
 	self:storeSettings()
 
 	self.currentImage = 1
-	self.screenWidth, self.screenHeight = Framework:getScreenSize()
 
 	self.mp3file = "applets/Demo/content/demo.mp3"
 
-	self.slides = {}
+	self.slides  = {}
+	self.strings = {}
 	--each entry in slides directory is a slide to display
 	for entry in self:readdir("slides") do
 		table.insert(self.slides, entry)
+
+		local substrings = string.split('/', entry)
+		local filename   = substrings[#substrings]
+		substrings       = string.split('%.', filename)
+		filename         = substrings[1]
+		local token      = string.upper(filename)
+		table.insert(self.strings, token)
 	end
+
 	if #self.slides > 0 then
 		self:_playSlides()
 		if System:findFile(self.mp3file) then
@@ -126,7 +135,7 @@ end
 
 function _playSlides(self)
 	self:_showNextSlide()
-	self.nextSlideTimer = Timer(3000, 
+	self.nextSlideTimer = Timer(6000, 
 		function()
 			self:_nextImage()
 			self:_showNextSlide()
@@ -145,6 +154,7 @@ end
 function _showNextSlide(self)
 	local slide = self.slides[self.currentImage]
 
+	self.screenWidth, self.screenHeight = Framework:getScreenSize()
 	local totImg = Surface:newRGBA(self.screenWidth, self.screenHeight)
 	totImg:filledRectangle(0, 0, self.screenWidth, self.screenHeight, 0x000000FF)
 
@@ -152,10 +162,14 @@ function _showNextSlide(self)
 	local w, h = image:getSize()
 	local x, y = (self.screenWidth - w) / 2, (self.screenHeight - h) / 2
 	-- draw image
-	image:blit(totImg, x, y)
+	image:blit(totImg, 0, 0)
 
 	local window = Window('window')
 	window:addWidget(Icon("background", totImg))
+
+	-- draw text
+	local label = Textarea('demo_text', self:string(self.strings[self.currentImage]))
+	window:addWidget(label)
 
 	-- replace the window if it's already there
 	if self.window then

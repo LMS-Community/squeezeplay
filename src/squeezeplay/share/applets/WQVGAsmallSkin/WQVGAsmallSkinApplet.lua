@@ -2465,6 +2465,16 @@ function skin(self, s)
 			zOrder = 9999
 	}
 
+        s.demo_text = {
+                font = _boldfont(18),
+                position = LAYOUT_SOUTH,
+                w = screenWidth,
+                align = 'center',
+                padding = { 6, 0, 6, 10 },
+                fg = TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+        }
+
 
 end
 
