@@ -203,7 +203,7 @@ libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
 
-libjivenet_la_LIBADD = -lSDL
+libjivenet_la_LIBADD = -lSDL -lresolv
 
 
 # Program: jivebrowser
