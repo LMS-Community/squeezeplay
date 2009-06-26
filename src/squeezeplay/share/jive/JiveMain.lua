@@ -438,6 +438,30 @@ function JiveMain:jiveMainNodes(globalStrings)
 
 end
 
+--[[
+
+=head2 jive.JiveMain:addHelpMenuItem()
+
+Adds a 'Help' menu item to I<menu> if the most recent input was not touch or mouse (which generally would have a help button instead)
+
+=cut
+--]]
+function JiveMain:addHelpMenuItem(menu, obj, callback, textToken)
+	if not Framework:isMostRecentInput("mouse") then
+		menu:addItem({
+			iconStyle = "_BOGUS_",
+			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("HELP"),
+			sound = "WINDOWSHOW",
+			callback =      function ()
+						callback(obj)
+					end,
+			weight = 100
+		})
+	end
+end
+
+
+
 -- reload
 -- 
 function JiveMain:reload()

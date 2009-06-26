@@ -806,7 +806,7 @@ end
 
 
 -- add a help button to a window with the data from the help arg delivered in the help window
-local function _addHelpButton(self, help, setupWindow)
+local function _addHelpButton(self, help, setupWindow, menu)
 	local titleText = self:getTitle()
 	local helpWindow = function()
 		Framework:playSound('WINDOWSHOW')
@@ -829,6 +829,10 @@ local function _addHelpButton(self, help, setupWindow)
 	end
 	self:addActionListener("help", _, helpWindow)
 	self:setButtonAction("rbutton", "help")
+	if menu then
+		jiveMain:addHelpMenuItem(menu, self, helpWindow)
+	end
+
 end
 	
 
@@ -1138,7 +1142,7 @@ local function _browseSink(step, chunk, err)
 				end
 				-- contextual help comes from data.window.help
 				if data.window and data.window.help then
-					_addHelpButton(step.window, data.window.help, data.window.setupWindow)
+					_addHelpButton(step.window, data.window.help, data.window.setupWindow, step.menu)
 				end
 			end
 

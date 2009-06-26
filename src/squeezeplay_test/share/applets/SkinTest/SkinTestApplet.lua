@@ -38,6 +38,7 @@ local Surface             = require("jive.ui.Surface")
 local Textarea            = require("jive.ui.Textarea")
 local Textinput           = require("jive.ui.Textinput")
 local Window              = require("jive.ui.Window")
+local jiveMain            = jiveMain
 
 local debug               = require("jive.utils.debug")
 
@@ -185,6 +186,7 @@ function setup_help_list(self, item)
 			iconStyle = subdata[2],
 		})
 	end
+	jiveMain:addHelpMenuItem(menu, self, dummy_help)
 
 	window:addWidget(menu)
 	menu:setHeaderWidget(textarea)

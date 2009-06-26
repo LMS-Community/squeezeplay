@@ -392,6 +392,9 @@ function _squeezenetworkError(self, squeezenetwork, message)
 		Framework:playSound("WINDOWSHOW")
 		appletManager:callService("supportMenu")
 	end)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 
 	window:addTimer(1000, function()

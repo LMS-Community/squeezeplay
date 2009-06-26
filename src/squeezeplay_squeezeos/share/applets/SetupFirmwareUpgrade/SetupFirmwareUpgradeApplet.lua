@@ -199,6 +199,9 @@ function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 			self:_upgrade(upgrades[1].url)
 		end,
 	})
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 	menu:setHeaderWidget(text)
 	window:addWidget(menu)
@@ -297,6 +300,9 @@ function _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 			end,
 		})
 	end
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 	return window
 end
@@ -373,6 +379,9 @@ function _chargeBattery(self)
 
 	local help = Textarea("help_text", self:string("UPDATE_BATTERY_HELP"))
 	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -499,6 +508,9 @@ function _upgradeFailed(self)
 
 	local help = Textarea("help_text", self:string("UPDATE_FAILURE_HELP"))
 	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

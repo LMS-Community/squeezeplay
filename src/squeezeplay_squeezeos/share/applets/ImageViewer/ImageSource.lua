@@ -25,7 +25,9 @@ local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 local Textarea		= require("jive.ui.Textarea")
 local Window        = require("jive.ui.Window")
-local Framework		= require("jive.ui.Framework")local log 			= require("jive.utils.log").logger("applet.ImageViewer")
+local Framework		= require("jive.ui.Framework")
+local log 			= require("jive.utils.log").logger("applet.ImageViewer")
+local jiveMain         = jiveMain
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS
@@ -58,28 +60,34 @@ function popupMessage(self, title, msg)
 	self.applet:tieAndShowWindow(popup)
 end
 
-function _helpAction(self, window, titleText, bodyText)
+function _helpAction(self, window, titleText, bodyText, menu)
 	if titleText or bobyText then
-		window:addActionListener("help", self, function()
-			local window = Window("help_info", self.applet:string(titleText), "helptitle")
-			window:setAllowScreensaver(false)
+		local helpAction =      function()
+						local window = Window("help_info", self.applet:string(titleText), "helptitle")
+						window:setAllowScreensaver(false)
 
-			-- no more help menu yet
-			--[[
-			window:setButtonAction("rbutton", "more_help")
-			window:addActionListener("more_help", self, function()
-				window:playSound("WINDOWSHOW")
+						-- no more help menu yet
+						--[[
+						window:setButtonAction("rbutton", "more_help")
+						window:addActionListener("more_help", self, function()
+							window:playSound("WINDOWSHOW")
 
-				appletManager:callService("supportMenu")
-			end)
-			--]]
+							appletManager:callService("supportMenu")
+						end)
+						--]]
 
-			local textarea = Textarea("text", self.applet:string(bodyText))
-			window:addWidget(textarea)
-			self:tieAndShowWindow(window)
+						local textarea = Textarea("text", self.applet:string(bodyText))
+						window:addWidget(textarea)
+						self:tieAndShowWindow(window)
 
-			window:playSound("WINDOWSHOW")
-		end)
+						window:playSound("WINDOWSHOW")
+					end
+					
+		window:addActionListener("help", self, helpAction)
+		if menu then
+			jiveMain:addHelpMenuItem(menu, self, helpAction)
+		end
+
 	end
 
 	window:setButtonAction("rbutton", "help")
@@ -113,4 +121,5 @@ end
 function getText(self)
 	assert(false, "please implement in derived class")
 end
-
+
+

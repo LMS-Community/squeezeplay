@@ -41,6 +41,7 @@ local Networking             = require("jive.net.Networking")
 
 local appletManager          = appletManager
 local jnt                    = jnt
+local jiveMain               = jiveMain
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -70,25 +71,40 @@ function init(self)
 end
 
 
-function _helpAction(self, window, titleText, bodyText)
+function _helpAction(self, window, titleText, bodyText, menu)
 	if titleText or bobyText then
-		window:addActionListener("help", self, function()
-			local window = Window("help_info", self:string(titleText), "helptitle")
-			window:setAllowScreensaver(false)
+		local moreHelpAction =  function()
+						window:playSound("WINDOWSHOW")
+						appletManager:callService("supportMenu")
+					end
+		local helpAction =      function()
+						local window = Window("help_info", self:string(titleText), "helptitle")
+						window:setAllowScreensaver(false)
 
-			window:setButtonAction("rbutton", "more_help")
-			window:addActionListener("more_help", self, function()
-				window:playSound("WINDOWSHOW")
+						window:setButtonAction("rbutton", "more_help")
+						window:addActionListener("more_help", self, moreHelpAction)
+						local menu = SimpleMenu("menu")
+						jiveMain:addHelpMenuItem(menu, self, moreHelpAction, "SUPPORT")
 
-				appletManager:callService("supportMenu")
-			end)
+						local textarea = Textarea("text", self:string(bodyText))
+						window:addWidget(menu)
+						menu:setHeaderWidget(textarea)
+						self:tieAndShowWindow(window)
 
-			local textarea = Textarea("text", self:string(bodyText))
-			window:addWidget(textarea)
-			self:tieAndShowWindow(window)
+						window:playSound("WINDOWSHOW")
+					end
 
-			window:playSound("WINDOWSHOW")
-		end)
+		window:addActionListener("help", self, helpAction)
+		if menu then
+			jiveMain:addHelpMenuItem(menu, self, helpAction)
+		end
+	else
+		if menu then
+	                        jiveMain:addHelpMenuItem(menu, self,    function()
+                        							appletManager:callService("supportMenu")
+                        						end)
+
+		end
 	end
 
 	window:setButtonAction("rbutton", "help")
@@ -168,7 +184,7 @@ function _connectionType(self)
 
 	window:addWidget(connectionMenu)
 
-	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
+	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY", connectionMenu)
 
 	self:tieAndShowWindow(window)
 end
@@ -221,7 +237,7 @@ function _wirelessRegion(self, wlan, transition)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_REGION_HELP", "NETWORK_REGION_HELP_BODY")
+	_helpAction(self, window, "NETWORK_REGION_HELP", "NETWORK_REGION_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window, transition)
 end
@@ -355,7 +371,7 @@ function _networkScanComplete(self, iface)
 			end)
 		end)
 
-	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", self.scanMenu)
 
 	self:tieAndShowWindow(window)
 end
@@ -456,7 +472,7 @@ function _chooseEnterSSID(self, iface)
 	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -493,7 +509,7 @@ function _enterSSID(self, iface)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY') 
+	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -601,7 +617,7 @@ function _chooseEncryption(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -635,7 +651,7 @@ function _chooseWEPLength(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -728,7 +744,7 @@ function _enterEAP(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -775,7 +791,7 @@ function _chooseWPS(self, iface, ssid)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
+	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -801,7 +817,7 @@ function _chooseWPSPin(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -825,7 +841,7 @@ function _chooseWPSPbc(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PBC_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -987,7 +1003,7 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1127,8 +1143,10 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 
 	window:setButtonAction("rbutton", nil)
 
+	local menu = SimpleMenu("menu")
 	local textarea = Textarea('help_text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
-	window:addWidget(textarea)
+	window:addWidget(menu)
+	menu:setHeaderWidget(textarea)
 
 	window:addTimer(500,
 		function(event)
@@ -1147,7 +1165,7 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 		end
 	)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1310,7 +1328,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1368,7 +1386,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1411,7 +1429,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end

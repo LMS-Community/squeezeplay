@@ -32,6 +32,36 @@ MY_MUSIC
 	RU	Моя музыка
 	SV	Min musik
 
+HELP
+	CS	Nápověda
+	DA	Hjælp
+	DE	Hilfe
+	EN	Help
+	ES	Ayuda
+	FI	Ohje
+	FR	Aide
+	IT	Guida
+	NL	Help
+	NO	Hjelp
+	PL	Pomoc
+	RU	Справка
+	SV	Hjälp
+
+SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Informationen
+	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная помощь
+	SV	Ytterligare hjälp
+
 REMOTE_SETTINGS
 	CS	Nastavení ovladače
 	DA	Indstillinger for Controller
