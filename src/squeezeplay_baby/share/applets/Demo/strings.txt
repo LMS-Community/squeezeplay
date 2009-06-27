@@ -93,16 +93,16 @@ SLIDE_06
 	NO	En nesten ubegrenset tillgang til musikk
 
 SLIDE_07
-	EN	Play all your music. Even from your iPod.
-	FR	Jouez toute votre musique. Même depuis votre iPod.
+	EN	Play all your music. Even from your iPod™.
+	FR	Jouez toute votre musique. Même depuis votre iPod™.
 	FI	Soita kaikkea musiikkiasi. Jopa iPodiltasi.
-	SV	Spela all din musik. Även från din iPod.
-	DA	Afspil alt dit music. Selv fra din iPod.
-	ES	Toda su música a su alcance. Incluso la de su iPod.
-	IT	Ascolta tutta la tua musica, persino dal tuo ipod
-	DE	Hören Sie all Ihre Musik. Auch die von Ihrem iPod.
-	NL	Draai al je muziek, ook van je iPod
-	NO	Spill all din musikk. Også fra din iPod
+	SV	Spela all din musik. Även från din iPod™.
+	DA	Afspil alt dit music. Selv fra din iPod™.
+	ES	Toda su música a su alcance. Incluso la de su iPod™.
+	IT	Ascolta tutta la tua musica, persino dal tuo ipod™
+	DE	Hören Sie all Ihre Musik. Auch die von Ihrem iPod™.
+	NL	Draai al je muziek, ook van je iPod™
+	NO	Spill all din musikk. Også fra din iPod™
 
 SLIDE_08
 	EN	Internet Radio. Listen in any room.
