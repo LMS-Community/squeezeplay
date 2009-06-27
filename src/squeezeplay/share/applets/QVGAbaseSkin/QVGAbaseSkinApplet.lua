@@ -1191,11 +1191,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- button icons, on left of menus
 	s._iconbar_icon = {
-		h = WH_FILL,
-		w = s.iconbar_icon_width,
-		padding = { 0,0,0,0 },
-		border = { 3, 0, 3, 0 },
-		layer = LAYER_FRAME,
+		h        = WH_FILL,
+		w        = s.iconbar_icon_width,
+		padding  = { 0, 3, 0, 0 },
+		border   = { 3, 0, 3, 0 },
+		layer    = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
 	}
 
