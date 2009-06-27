@@ -39,6 +39,7 @@ local hasBSP, BSP            = pcall(require, "jiveBSP")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
+local jiveMain               = jiveMain
 local appletManager          = appletManager
 
 local JIVE_VERSION           = jive.JIVE_VERSION
