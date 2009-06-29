@@ -5,6 +5,7 @@ local pairs, setmetatable, tostring, tonumber  = pairs, setmetatable, tostring, 
 
 local oo            = require("loop.simple")
 local lfs           = require("lfs")
+local math          = require("math")
 local string        = require("jive.utils.string")
 local table         = require("jive.utils.table")
 
@@ -23,6 +24,7 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
+local Slider        = require("jive.ui.Slider")
 local Keyboard      = require("jive.ui.Keyboard")
 local Group         = require("jive.ui.Group")
 local Popup         = require("jive.ui.Popup")
@@ -42,6 +44,57 @@ local appletManager = appletManager
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+local VOLUME_STEP = 100 / 40
+-- volumeMap has the correct gain settings for volume settings 1-100.
+local volumeMap = { 
+232, 246, 260, 276, 292, 309, 327, 346, 366, 388, 411, 435, 460, 487, 516, 546, 578, 612, 648, 686, 726, 769, 814, 862, 912, 966, 1022, 1082, 1146, 1213, 1284, 1359, 1439, 1523, 1613, 1707, 1807, 1913, 2026, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3072, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 5888, 6400, 6656, 7168, 7424, 7936, 8448, 8960, 9472, 9984, 10496, 11264, 11776, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19712, 20992, 22272, 23552, 24832, 26368, 27904, 29440, 31232, 33024, 35072, 37120, 39168, 41472, 44032, 46592, 49408, 52224, 55296, 58368, 61952, 65536, 
+}
+
+function _updateVolume(self)
+
+        local new
+
+	-- acceleration
+	local now = Framework:getTicks()
+	if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
+		self.accelCount = 0
+	end
+
+	self.accelCount = math.min(self.accelCount + 1, 20)
+	self.accelDelta = self.delta
+	self.lastUpdate = now
+
+	-- change volume
+	local accel = self.accelCount / 4
+	new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
+
+        if new > 100 then
+                new = 100
+        elseif new < 0 then
+                new = 0
+        end
+
+	if self.volume == new then
+		return
+	end
+
+	local setVolume = volumeMap[new]
+	log:warn('set volume to : ', new, '(', setVolume, ')')
+	decode:audioGain(setVolume, setVolume)
+
+	self.volume = new
+
+end
+
+function volEvent(self, volumeEvent)
+	if volumeEvent:getAction() == 'volume_up' then
+		self.delta = 1
+	else
+		self.delta = -1
+	end
+	_updateVolume(self)
+	return EVENT_CONSUME
+end
 
 -- main setting menu
 function enableDemo(self)
@@ -181,11 +234,17 @@ function _showNextSlide(self)
 		self.window:show(Window.transitionFadeIn)
 	end
 
+	-- don't allow anything but vol up and vol down
 	self.window:ignoreAllInputExcept({ "volume_up", "volume_down" },
                         function(actionEvent)
                             return EVENT_CONSUME
                         end
 	)
+	-- there is no escape, resistance is futile!
+	self.window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
+
+	self.window:addActionListener('volume_up', self, volEvent)
+	self.window:addActionListener('volume_down', self, volEvent)
 	
 	-- FIXME: add handlers for volume_up and volume_down to adjust 
 	-- volume up (to 100?) and down (to something a bit higher than fully off?)
@@ -204,9 +263,10 @@ function _playTone(self)
        	end
 			
 	if localPlayer then
-		-- fixed volume (50%)
-		decode:audioGain(0x01000, 0x01000)
+		-- start at volume of 51 
+		self.volume = 51
 
+		decode:audioGain(4096, 4096)
 		localPlayer:playFileInLoop(self.mp3file)
 	end
 end
