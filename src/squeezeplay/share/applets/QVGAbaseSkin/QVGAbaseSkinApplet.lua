@@ -351,6 +351,10 @@ function skin(self, s, reload, useDefaultSize)
 	}
 	s.menu.selected = {}
 
+	s.menu_hidden = _uses(s.menu, {
+		hidden = 1,
+	})
+
 	s.item = {
 		order = { "icon", "text", "arrow" },
 		padding = { 10, 6, 6, 6 },

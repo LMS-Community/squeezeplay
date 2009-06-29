@@ -744,6 +744,10 @@ function skin(self, s)
 		font = _boldfont(250),
 	}
 
+	s.menu_hidden = _uses(s.menu, {
+		hidden = 1,
+	})
+	
 	s.item = {
 		order = { "icon", "text", "arrow" },
 		padding = { ITEM_LEFT_PADDING, 0, 8, 0 },

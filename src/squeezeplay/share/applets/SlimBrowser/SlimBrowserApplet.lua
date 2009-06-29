@@ -1132,16 +1132,49 @@ local function _browseSink(step, chunk, err)
 				if data.window and data.window.textarea then
 					local text = string.gsub(data.window.textarea, '\\n', "\n")
 					local textarea = Textarea('help_text', text)
-					-- remove the menu
 					if step.menu then
-						step.window:removeWidget(step.menu)
+						local item_loop = _safeDeref(step.menu, 'list', 'db', 'last_chunk', "item_loop")
+						if item_loop then
+							local maxItems = 100
+							if #item_loop > maxItems then
+								log:warn("item_loop exceeds max items, not showing textarea: ", #item_loop)
+							else
+								step.menu:setStyle("menu_hidden")
+								-- Make a SimpleMenu to support headerWidget, in place of the step menu, but keep the step menu around, which has the item listener logic
+								local menu = SimpleMenu("menu")
+
+								for i, item in ipairs(item_loop) do
+									menu:addItem( {
+											text = item.text,
+											sound = "WINDOWSHOW",
+											callback = function(event, menuItem)
+												--hack alert, selecting item from hidden step menu, but since not really rendered, forcing numWidgets size to 100 so all
+												--  step menu widgets are available. Limits menu size to maxItems for menus with textarea
+												step.menu:setSelectedIndex(i)
+												step.menu.numWidgets = maxItems
+												step.menu:_updateWidgets()
+												step.menu:_event(Event:new(EVENT_ACTION))
+											end,
+									})
+								end
+
+								if data.window and data.window.help  then
+									_addHelpButton(step.window, data.window.help, data.window.setupWindow, menu)
+								end
+
+
+								step.window:addWidget(menu)
+								menu:setHeaderWidget(textarea)
+							end
+
+						else
+							log:warn("Can't extract item loop, not showing textarea")
+
+						end
 					end
-					step.window:addWidget(textarea)
-					-- menu back, in thank you
-					step.window:addWidget(step.menu)
 				end
 				-- contextual help comes from data.window.help
-				if data.window and data.window.help then
+				if data.window and data.window.help and not data.window.textarea then
 					_addHelpButton(step.window, data.window.help, data.window.setupWindow, step.menu)
 				end
 			end
@@ -1830,7 +1863,7 @@ local function _browseMenuRenderer(menu, step, widgets, toRenderIndexes, toRende
 			
 			-- the widget in widgets[widgetIndex] shall correspond to data[dataIndex]
 --			log:debug(
---				"_browseMenuRenderer: rendering widgetIndex:", 
+--				"_browseMenuRenderer: rendering widgetIndex:",
 --				widgetIndex, ", dataIndex:", dbIndex, ")"
 --			)
 			
