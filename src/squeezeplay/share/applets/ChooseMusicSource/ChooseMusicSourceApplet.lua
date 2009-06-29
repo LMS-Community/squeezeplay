@@ -108,6 +108,7 @@ function _showMusicSourceList(self)
 	window:setAllowScreensaver(false)
 
 	menu:addActionListener("back", self,  function ()
+							window:playSound("WINDOWHIDE")
 							self:_cancelSelectServer()
 							window:hide()
 
