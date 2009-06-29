@@ -31,6 +31,7 @@ local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
 local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
+local System           = require("jive.System")
 local Textarea         = require("jive.ui.Textarea")
 local string           = require("string")
 local table            = require("jive.utils.table")
@@ -309,8 +310,10 @@ function _powerActionHandler(self, actionEvent)
 		return
 	end
 
-	--action not used, so bring up "power on" window if isn't already
-	self:_showPowerOnWindow()
+	--action not used, so bring up "power on" window if isn't already to let user know device is in off state-- not for baby though for bug 12541  
+	if System:getMachine() ~= "baby" then
+		self:_showPowerOnWindow()
+	end
 end
 
 
