@@ -35,7 +35,7 @@ B<horizontal> : true if the slider is horizontal, otherwise the slider is vertia
 
 
 -- stuff we use
-local tostring, type = tostring, type
+local tonumber, tostring, type = tonumber, tostring, type
 
 local oo	= require("loop.simple")
 local math      = require("math")
@@ -149,16 +149,16 @@ Set the slider value to I<value>.
 =cut
 --]]
 function setValue(self, value)
-	if self.size == value then
+	if self.size == tonumber(value) then
 		return
 	end
 
-	self.size = value or 0
+	self.size = tonumber(value) or 0
 
-	if self.size < self.min then
-		self.size = self.min
+	if tonumber(self.size) < tonumber(self.min) then
+		self.size = tonumber(self.min)
 	elseif self.size > self.range then
-		self.size = self.range
+		self.size = tonumber(self.range)
 	end
 
 	self:reDraw()
