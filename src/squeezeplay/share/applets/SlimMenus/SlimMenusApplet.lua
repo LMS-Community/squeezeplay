@@ -367,7 +367,7 @@ self:_addNode({
   weight = 20,
   id = "radios",
   iconStyle = 'hm_radio',
-  text = "Internet Radio (SC)",
+  text = "Internet Radio",
   node = "hidden",
 }, isMenuStatusResponse)
 
@@ -452,13 +452,7 @@ end
 			--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 			--BEGIN
 			if item.id == "radio" then
-				--temp mark for debugging purposes
-				item.text = item.text .. " (SN)"
 				item.node= "hidden"
-			end
-			if item.id == "radios" then
-				--temp mark for debugging purposes
-				item.text = item.text .. " (SC)"
 			end
 			--END temp hack until we resolve SN/SC radios discrepency
 
