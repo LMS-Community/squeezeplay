@@ -697,8 +697,6 @@ function _storeSettings(entry)
 	file:write(dumper.dump(entry.settings, "settings", true))
 	file:close()
 
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
 end
 
 

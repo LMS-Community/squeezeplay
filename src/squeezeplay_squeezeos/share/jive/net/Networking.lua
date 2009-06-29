@@ -462,7 +462,6 @@ function setRegion(self, region)
 	log:info("setRegion: ", cmd)
 	os.execute(cmd)
 
-	_sync()
 end
 
 
@@ -1056,7 +1055,6 @@ function _ifUp(self, ssid)
 		request = 'SAVE_CONFIG'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		_sync()
 	end
 
 	-- bring interface up
@@ -1133,7 +1131,6 @@ function _ifDown(self)
 			request = 'SAVE_CONFIG'
 			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-			_sync()
 		end
 	end
 end
@@ -1210,7 +1207,6 @@ function _editAutoInterfaces(self, ssid)
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-	_sync()
 end
 
 
@@ -1279,7 +1275,6 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 	fo:close()
 
 	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-	_sync()
 end
 
 
@@ -1576,10 +1571,6 @@ function detach(self)
 end
 
 
-function _sync()
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
-end
 
 
 --[[

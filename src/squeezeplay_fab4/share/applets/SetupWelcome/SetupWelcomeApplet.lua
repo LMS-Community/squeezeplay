@@ -503,8 +503,6 @@ function _setupDone(self, setupDone, registerDone)
 	settings.registerDone = registerDone
 	self:storeSettings()
 
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
 end
 
 
