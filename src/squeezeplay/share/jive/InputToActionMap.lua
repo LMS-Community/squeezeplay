@@ -205,41 +205,6 @@ irActionMappings.hold = {
 
 }
 
-irActionMappings.hold = {
-	["sleep"]  = "sleep",
-	["power"]  = "power",
-	["home"]   = "go_home",
-	["search"]   = "go_search",
-	["now_playing"]  = "go_now_playing",
-	["size"]  = "go_playlist",
-	["browse"]  = "go_music_library",
-	["favorites"]  = "go_favorites",
-	["brightness"]  = "go_brightness",
-	["shuffle"]  = "shuffle_toggle",
-	["repeat"]  = "repeat_toggle",
-
-	["arrow_left"]  = "go_home",
-	["arrow_right"]  = "go_hold",
-	["play"]  = "create_mix",
-	["pause"]  = "stop",
-	["add"]  = "add_next",
-	["fwd"]  = "scanner_fwd",
-	["rew"]  = "scanner_rew",
-	["volup"]  = "volume_up",
-	["voldown"]  = "volume_down",
-	["0"]  = "play_favorite_0",
-	["1"]  = "play_favorite_1",
-	["2"]  = "play_favorite_2",
-	["3"]  = "play_favorite_3",
-	["4"]  = "play_favorite_4",
-	["5"]  = "play_favorite_5",
-	["6"]  = "play_favorite_6",
-	["7"]  = "play_favorite_7",
-	["8"]  = "play_favorite_8",
-	["9"]  = "play_favorite_9",
-
-}
-
 
 actionActionMappings = {
 	["title_left_press"]  = "back", --will be reset by ShortcutsMeta defaults
