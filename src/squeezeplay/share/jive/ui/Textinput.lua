@@ -717,11 +717,10 @@ function __init(self, style, value, closure, allowedChars)
 	obj.maxWidth = 0
 	obj.value = value
 
--- Removed per Dean, but contradicts bug fix 11508; reopening 11508 and leaving this old code here until that is resolved.
---	-- default cursor to end to string
---	if obj.value then
---		obj.cursor = #tostring(obj.value) + 1
---	end
+	-- default cursor to end to string unless defaultCursorToStart true
+	if obj.value and not (obj.value.defaultCursorToStart and obj.value:defaultCursorToStart()) then
+		obj.cursor = #tostring(obj.value) + 1
+	end
 
 	if Framework:isMostRecentInput("ir") or
 		Framework:isMostRecentInput("key") or
@@ -1163,6 +1162,14 @@ function ipAddressValue(default)
 
 			reverseScrollPolarityOnUpDownInput = function()
 				return true
+			end,
+
+			defaultCursorToStart = function()
+				if not default or default == "" then
+					return true
+				else
+					return false
+				end
 			end,
 
 			isValid = function(obj, cursor)
