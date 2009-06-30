@@ -1,6 +1,7 @@
 /*
 ** Copyright 2007 Logitech. All Rights Reserved.
 **
+**
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
