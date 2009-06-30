@@ -22,6 +22,70 @@ static enum log_priority appender_syslog = LOG_PRIORITY_OFF;
 
 static struct log_category *category_head = NULL;
 
+#if defined(WIN32)
+
+#if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)
+  #define DELTA_EPOCH_IN_MICROSECS  11644473600000000Ui64
+#else
+  #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+#endif
+
+struct tm *gmtime_r (const time_t *, struct tm *);
+
+struct tm *
+gmtime_r (const time_t *timer, struct tm *result)
+{
+   struct tm *local_result;
+   local_result = gmtime (timer);
+
+   if (local_result == NULL || result == NULL)
+     return NULL;
+
+   memcpy (result, local_result, sizeof (result));
+   return result;
+} 
+
+struct timezone 
+{
+  int  tz_minuteswest; /* minutes W of Greenwich */
+  int  tz_dsttime;     /* type of dst correction */
+};
+ 
+int gettimeofday(struct timeval *tv, struct timezone *tz)
+{
+  FILETIME ft;
+  unsigned __int64 tmpres = 0;
+  static int tzflag;
+ 
+  if (NULL != tv)
+  {
+    GetSystemTimeAsFileTime(&ft);
+ 
+    tmpres |= ft.dwHighDateTime;
+    tmpres <<= 32;
+    tmpres |= ft.dwLowDateTime;
+ 
+    /*converting file time to unix epoch*/
+    tmpres /= 10;  /*convert into microseconds*/
+    tmpres -= DELTA_EPOCH_IN_MICROSECS; 
+    tv->tv_sec = (long)(tmpres / 1000000UL);
+    tv->tv_usec = (long)(tmpres % 1000000UL);
+  }
+ 
+  if (NULL != tz)
+  {
+    if (!tzflag)
+    {
+      _tzset();
+      tzflag++;
+    }
+    tz->tz_minuteswest = _timezone / 60;
+    tz->tz_dsttime = _daylight;
+  }
+ 
+  return 0;
+}
+#endif
 
 void log_init() {
 #ifdef HAVE_SYSLOG
@@ -97,12 +161,20 @@ void log_category_vlog(struct log_category *category, enum log_priority priority
 			color = "\033[0;34m";
 		}
 
+#if defined(WIN32)
+		printf("%02d.%03ld %-6s %s - %s\n",
+		       t.tv_sec,
+		       (long)(t.tv_usec / 1000),
+		       log_priority_to_string(priority), category->name, buf);
+#else
 		printf("%s%04d%02d%02d %02d:%02d:%02d.%03ld %-6s %s - %s\033[0m\n",
 		       color,
 		       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 		       tm.tm_hour, tm.tm_min, tm.tm_sec,
 		       (long)(t.tv_usec / 1000),
 		       log_priority_to_string(priority), category->name, buf);
+
+#endif
 	}
 
 #ifdef HAVE_SYSLOG

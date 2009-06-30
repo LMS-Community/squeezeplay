@@ -121,7 +121,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="h:\include\lua5.1"
+				AdditionalIncludeDirectories="&quot;..\lua-5.1.1\src&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUASOCKET_EXPORTS;LUASOCKET_API=__declspec(dllexport);  LUASOCKET_DEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -141,7 +141,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib"
-				OutputFile="$(OutDir)/socket.dll"
+				OutputFile="$(OutDir)\$(ProjectName)\core.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="h:\lib"
 				GenerateDebugInformation="true"
