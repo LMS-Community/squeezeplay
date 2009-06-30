@@ -20,19 +20,19 @@ xcopy jive\rsc\jiveapp.png %1\lua\jive\*.* /S/Y
 md %1\lua\loop
 xcopy loop-2.2-alpha\loop\*.* %1\lua\loop\*.* /S/Y
 
-xcopy luasocket-2.0.1\src\socket.lua %1\lua /Y
-xcopy luasocket-2.0.1\src\ltn12.lua %1\lua /Y
-xcopy luasocket-2.0.1\src\mime.lua %1\lua /Y
+xcopy luasocket-2.0.2\src\socket.lua %1\lua /Y
+xcopy luasocket-2.0.2\src\ltn12.lua %1\lua /Y
+xcopy luasocket-2.0.2\src\mime.lua %1\lua /Y
 xcopy lualogging-1.1.2\src\logging\logging.lua %1\lua /Y
 
 md %1\lua\socket
-xcopy luasocket-2.0.1\src\ftp.lua %1\lua\socket /Y
-xcopy luasocket-2.0.1\src\http.lua %1\lua\socket /Y
-xcopy luasocket-2.0.1\src\smtp.lua %1\lua\socket /Y
-xcopy luasocket-2.0.1\src\tp.lua %1\lua\socket /Y
-xcopy luasocket-2.0.1\src\url.lua %1\lua\socket /Y
+xcopy luasocket-2.0.2\src\ftp.lua %1\lua\socket /Y
+xcopy luasocket-2.0.2\src\http.lua %1\lua\socket /Y
+xcopy luasocket-2.0.2\src\smtp.lua %1\lua\socket /Y
+xcopy luasocket-2.0.2\src\tp.lua %1\lua\socket /Y
+xcopy luasocket-2.0.2\src\url.lua %1\lua\socket /Y
 
 md %1\fonts
-xcopy freefont-20060126\*.ttf %1\fonts /Y
+xcopy freefont-20090104\*.ttf %1\fonts /Y
 
 xcopy SDL_image-1.2.5\VisualC\graphics\lib\*.dll %1 /Y
