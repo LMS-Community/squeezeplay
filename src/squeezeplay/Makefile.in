@@ -313,7 +313,7 @@ libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
 libjivenet_la_SOURCES = \
 	src/net/jive_dns.c
 
-libjivenet_la_LIBADD = -lSDL
+libjivenet_la_LIBADD = -lSDL -lresolv
 
 # Test programs: jiveblit
 testdir = $(bindir)
@@ -1141,7 +1141,7 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
 	-lSystemStubs \
-	-lz
+	-lz -lresolv
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)
 SqueezePlay_bundle: SqueezePlay
