@@ -32,7 +32,7 @@ MY_MUSIC
 	RU	Моя музыка
 	SV	Min musik
 
-HELP
+GLOBAL_HELP
 	CS	Nápověda
 	DA	Hjælp
 	DE	Hilfe
@@ -47,7 +47,7 @@ HELP
 	RU	Справка
 	SV	Hjälp
 
-SUPPORT
+GLOBAL_SUPPORT
 	CS	Další nápověda
 	DA	Mere hjælp
 	DE	Weitere Informationen

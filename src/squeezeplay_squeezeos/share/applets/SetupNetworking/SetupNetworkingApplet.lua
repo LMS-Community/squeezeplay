@@ -84,7 +84,7 @@ function _helpAction(self, window, titleText, bodyText, menu)
 						window:setButtonAction("rbutton", "more_help")
 						window:addActionListener("more_help", self, moreHelpAction)
 						local menu = SimpleMenu("menu")
-						jiveMain:addHelpMenuItem(menu, self, moreHelpAction, "SUPPORT")
+						jiveMain:addHelpMenuItem(menu, self, moreHelpAction, "GLOBAL_SUPPORT")
 
 						local textarea = Textarea("text", self:string(bodyText))
 						window:addWidget(menu)
@@ -1370,7 +1370,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 			text = self:string("STATIC_ADDRESS"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				_enterIP(self, iface, ssid)
+				_enterIPHelp(self, iface, ssid)
 			end
 		},
 		{
@@ -1512,6 +1512,30 @@ function _sigusr1(process)
 	end
 end
 
+function _enterIPHelp(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
+	local window = Window("help_list", self:string("STATIC_ADDRESS_CONNECT_MANUALLY"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("help_text", self:string("STATIC_ADDRESS_CONNECT_MANUALLY_BODY"))
+
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("SETUP_NETWORKING_CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				_enterIP(self, iface, ssid)
+			end
+		},
+	})
+
+	menu:setHeaderWidget(textarea)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+
+end
 
 function _enterIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())

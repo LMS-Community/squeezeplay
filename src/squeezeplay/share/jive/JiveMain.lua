@@ -450,7 +450,7 @@ function JiveMain:addHelpMenuItem(menu, obj, callback, textToken)
 	if not Framework:isMostRecentInput("mouse") then
 		menu:addItem({
 			iconStyle = "_BOGUS_",
-			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("HELP"),
+			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("GLOBAL_HELP"),
 			sound = "WINDOWSHOW",
 			callback =      function ()
 						callback(obj)

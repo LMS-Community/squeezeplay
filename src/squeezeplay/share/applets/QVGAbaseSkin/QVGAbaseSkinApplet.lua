@@ -522,7 +522,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.selected.item_blank = _uses(s.item_blank)
 
 	s.help_text = {
-		w = screenWidth - 10,
+		w = screenWidth - 20,
 		padding = c.TEXTAREA_PADDING,
 		font = _boldfont(c.TEXTAREA_FONT_SIZE - 2),
 		lineHeight = c.TEXTAREA_FONT_SIZE - 2 + 5,
@@ -532,11 +532,7 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.textareaBackground,
 	}
 
-        s.help_text_small = _uses(s.help_text,{
-                padding = { 18, 6, 0, 2 },
-                font = _font(14),
-                lineHeight = 16,
-        })
+        s.help_text_small = _uses(s.help_text)
 
 	s.text = {
 		w = screenWidth,
