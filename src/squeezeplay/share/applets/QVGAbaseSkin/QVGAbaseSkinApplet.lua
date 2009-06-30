@@ -377,7 +377,11 @@ function skin(self, s, reload, useDefaultSize)
 		arrow = s.img.rightArrow,
 	}
 
-	s.item_play = _uses(s.item)
+	s.item_play = _uses(s.item, {
+		arrow = {
+			img = false
+		},
+	})
 	s.item_add = _uses(s.item)
 
 	-- Checkbox
@@ -446,7 +450,9 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.selected.item_play = _uses(s.selected.item, {
-		arrow = s.img.playArrow
+		arrow = {
+			img = false
+		},
 	})
 	s.selected.item_add = _uses(s.selected.item, {
 		arrow = s.img.addArrow
