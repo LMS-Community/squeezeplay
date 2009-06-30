@@ -23,6 +23,7 @@ typedef struct textinput_widget {
 	Sint32 char_offset_y;
 	JiveTile *bg_tile;
 	JiveTile *wheel_tile;
+	JiveTile *wheel_mask_tile;
 	JiveTile *cursor_tile;
 	JiveTile *enter_tile;
 } TextinputWidget;
@@ -73,6 +74,14 @@ int jiveL_textinput_skin(lua_State *L) {
 			jive_tile_free(peer->wheel_tile);
 		}
 		peer->wheel_tile = jive_tile_ref(tile);
+	}
+
+	tile = jive_style_tile(L, 1, "wheelMask", NULL);
+	if (tile != peer->wheel_mask_tile) {
+		if (peer->wheel_mask_tile) {
+			jive_tile_free(peer->wheel_mask_tile);
+		}
+		peer->wheel_mask_tile = jive_tile_ref(tile);
 	}
 
 	tile = jive_style_tile(L, 1, "cursorImg", NULL);
@@ -170,7 +179,13 @@ int jiveL_textinput_draw(lua_State *L) {
 	text_cy = text_y + (peer->char_height / 2);
 	text_w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
 
-	jive_tile_get_min_size(peer->cursor_tile, &cursor_w, &cursor_h);
+	if (peer->cursor_tile) {
+		jive_tile_get_min_size(peer->cursor_tile, &cursor_w, &cursor_h);
+	} else {
+		//doesn't work well, but at least doesn't crash jive, really cursorImg needs to be set
+		cursor_w = 0;
+		cursor_h = 0;
+	}
 
 	/* measure text */
 	len_1 = jive_font_nwidth(peer->font, text, cursor - cursor_width);
@@ -386,6 +401,14 @@ int jiveL_textinput_draw(lua_State *L) {
 		}
 	}
 
+	/* draw wheel mask */
+	if (drawLayer && peer->wheel_mask_tile && strlen(validchars)) {
+		int w = cursor_w;
+		int h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+		jive_tile_blit_centered(peer->wheel_mask_tile, srf, cursor_x + (w / 2), peer->w.bounds.y + peer->w.padding.top + (h / 2), w, h);
+	}
+
+
 	jive_surface_set_clip(srf, &old_clip);
 
 	lua_pop(L, 4);
@@ -446,6 +469,10 @@ int jiveL_textinput_gc(lua_State *L) {
 	if (peer->wheel_tile) {
 		jive_tile_free(peer->wheel_tile);
 		peer->wheel_tile = NULL;
+	}
+	if (peer->wheel_mask_tile) {
+		jive_tile_free(peer->wheel_mask_tile);
+		peer->wheel_mask_tile = NULL;
 	}
 	if (peer->cursor_tile) {
 		jive_tile_free(peer->cursor_tile);

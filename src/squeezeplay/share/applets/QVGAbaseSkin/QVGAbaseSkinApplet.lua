@@ -589,7 +589,7 @@ function skin(self, s, reload, useDefaultSize)
 		wheelImg   = s.img.textinputWheel,
 	-- FIXME: no support for this yet
 		-- cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		-- wheelMask = s.img.textinputWheelMask,
+		 wheelMask = s.img.textinputWheelMask,
 		enterImg   = s.img.textinputRightArrow,
 	}
 
