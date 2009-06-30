@@ -411,6 +411,17 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 	return err;
 }
 
+#ifndef timersub
+#define	timersub(a, b, result) \
+do { \
+	(result)->tv_sec = (a)->tv_sec - (b)->tv_sec; \
+	(result)->tv_usec = (a)->tv_usec - (b)->tv_usec; \
+	if ((result)->tv_usec < 0) { \
+		--(result)->tv_sec; \
+		(result)->tv_usec += 1000000; \
+	} \
+} while (0)
+#endif
 
 static void *audio_thread_execute(void *data) {
 	struct decode_alsa *state = (struct decode_alsa *)data;
@@ -439,6 +450,12 @@ static void *audio_thread_execute(void *data) {
 
 		pcm_state = snd_pcm_state(state->pcm);
 		if (pcm_state == SND_PCM_STATE_XRUN) {
+			struct timeval now, diff, tstamp;
+			gettimeofday(&now, 0);
+			snd_pcm_status_get_trigger_tstamp(status, &tstamp);
+			timersub(&now, &tstamp, &diff);
+			LOG_WARN(log_audio_output, "underrun!!! (at least %.3f ms long)\n", diff.tv_sec * 1000 + diff.tv_usec / 1000.0);
+
 			if ((err = xrun_recovery(state, -EPIPE)) < 0) {
 				LOG_ERROR(log_audio_output, "XRUN recovery failed: %s", snd_strerror(err));
 			}
@@ -452,6 +469,7 @@ static void *audio_thread_execute(void *data) {
 
 		avail = snd_pcm_avail_update(state->pcm);
 		if (avail < 0) {
+			LOG_WARN(log_audio_output, "xrun (avail_update)");
 			if ((err = xrun_recovery(state, avail)) < 0) {
 				LOG_ERROR(log_audio_output, "Avail update failed: %s", snd_strerror(err));
 			}
@@ -473,6 +491,7 @@ static void *audio_thread_execute(void *data) {
 			}
 			else {
 				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
+					LOG_WARN(log_audio_output, "xrun (snd_pcm_wait)");
 					if ((err = xrun_recovery(state, avail)) < 0) {
 						LOG_ERROR(log_audio_output, "PCM wait failed: %s", snd_strerror(err));
 					}
@@ -493,6 +512,7 @@ static void *audio_thread_execute(void *data) {
 			frames = size;
 
 			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
+				LOG_WARN(log_audio_output, "xrun (snd_pcm_mmap_begin)");
 				if ((err = xrun_recovery(state, err)) < 0) {
 					LOG_ERROR(log_audio_output, "mmap begin failed: %s", snd_strerror(err));
 				}
@@ -517,6 +537,7 @@ static void *audio_thread_execute(void *data) {
 
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
+				LOG_WARN(log_audio_output, "xrun (snd_pcm_mmap_commit)");
 				if ((err = xrun_recovery(state, commitres)) < 0) {
 					LOG_ERROR(log_audio_output, "mmap commit failed: %s", snd_strerror(err));
 				}
