@@ -1070,6 +1070,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_settings = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
 	})
+	s.hm_advancedSettings = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_adv" .. skinSuffix),
+	})
 	s.hm_radio = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
 	})
