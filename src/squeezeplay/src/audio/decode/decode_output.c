@@ -12,6 +12,11 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
+#if defined(WIN32)
+
+#include <winsock2.h>
+
+#endif
 
 /* The start point of the last track */
 static bool_t check_start_point = FALSE;

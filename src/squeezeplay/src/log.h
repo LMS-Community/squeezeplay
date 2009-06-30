@@ -13,6 +13,9 @@
  * Lightweight logging api with a compatible api to log4c
  */
 
+#ifdef _WIN32
+	#define __func__ __FUNCTION__
+#endif
 
 /* Priority levels, that correspond to syslog */
 enum log_priority {

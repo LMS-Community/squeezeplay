@@ -6,7 +6,14 @@
 
 #include "common.h"
 #include <time.h>
+#ifdef HAVE_SYSLOG
 #include <syslog.h>
+#endif
+
+#if defined(WIN32)
+#include <winsock2.h>
+#define strcasecmp stricmp
+#endif
 
 #define LOG_BUFFER_SIZE 512
 
