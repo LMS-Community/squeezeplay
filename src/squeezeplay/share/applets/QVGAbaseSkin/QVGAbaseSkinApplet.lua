@@ -158,16 +158,26 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Titlebar/titlebar.png",
 				       imgpath .. "Titlebar/titlebar_shadow.png",
 			       })
-	s.img.textinputBackground =
-		Tile:loadHTiles({
-					imgpath .. "UNOFFICIAL/text_entry_bkgrd_l.png",
-					imgpath .. "UNOFFICIAL/text_entry_bkgrd.png",
-					imgpath .. "UNOFFICIAL/text_entry_bkgrd_r.png",
-			       })
 
-	s.img.textinputWheel      = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_select.png")
+	s.img.textinputWheel       = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert.png")
+	s.img.textinputWheelMask   = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_overlay.png")
+	s.img.textinputBackground  = Tile:loadTiles({
+		imgpath .. "Text_Entry/text_entry_bkgrd.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_tl.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_t.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_tr.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_r.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_br.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_b.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_bl.png",
+		imgpath .. "Text_Entry/text_entry_bkgrd_l.png",
+	})
+
+	-- FIXME: these will crash jive if they are removed
+	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_letter.png")
 	s.img.textinputRightArrow = Tile:loadImage(imgpath .. "Icons/selection_right_sel.png")
+
 	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
 
@@ -231,6 +241,9 @@ function skin(self, s, reload, useDefaultSize)
 		TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 },
 		TEXT_SH_COLOR = { 0x37, 0x37, 0x37 },
 
+		TEXTINPUT_WHEEL_COLOR = { 0xB3, 0xB3, 0xB3 },
+		TEXTINPUT_WHEEL_SELECTED_COLOR = { 0xE6, 0xE6, 0xE6 },
+
 		SELECT_COLOR = { 0xE7, 0xE7, 0xE7 },
 		SELECT_SH_COLOR = { },
 
@@ -245,8 +258,8 @@ function skin(self, s, reload, useDefaultSize)
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
         	TEXTAREA_FONT_SIZE = 16,
-        	TEXTINPUT_FONT_SIZE = 16,
-        	TEXTINPUT_SELECTED_FONT_SIZE = 24,
+        	TEXTINPUT_FONT_SIZE = 24,
+        	TEXTINPUT_SELECTED_FONT_SIZE = 32,
         	HELP_FONT_SIZE = 16,
 		UPDATE_SUBTEXT_SIZE = 16,
 		ICONBAR_FONT = 12,
@@ -570,13 +583,20 @@ function skin(self, s, reload, useDefaultSize)
 		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
 		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 2,
 		fg         = c.TEXT_COLOR_BLACK,
-		wh         = { 0x55, 0x55, 0x55 },
+		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
 		wheelImg   = s.img.textinputWheel,
+	-- FIXME: no support for this yet
+		-- cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
+		-- wheelMask = s.img.textinputWheelMask,
 		enterImg   = s.img.textinputRightArrow,
 	}
 
+	-- soft buttons
+	s.softButtons = {
+		hidden = 1
+	}
 
 --------- WINDOW STYLES ---------
 	--
