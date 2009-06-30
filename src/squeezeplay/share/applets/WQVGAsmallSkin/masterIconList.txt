@@ -55,3 +55,6 @@ icon_RSS.png
 icon_power_off2.png
 icon_blank.png
 icon_nowplaying.png
+icon_ml_other_library.png
+icon_image_viewer.png
+

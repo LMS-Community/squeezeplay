@@ -168,6 +168,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.img.textinputWheel      = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_select.png")
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_letter.png")
 	s.img.textinputRightArrow = Tile:loadImage(imgpath .. "Icons/selection_right_sel.png")
+	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
 
 	s.img.oneLineItemSelectionBox =
@@ -177,6 +178,7 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Menu_Lists/menu_sel_box.png",
 				       imgpath .. "Menu_Lists/menu_sel_box_r.png",
 			       })
+
 
 	s.img.sliderBackground =
 		Tile:loadHTiles({
@@ -521,6 +523,7 @@ function skin(self, s, reload, useDefaultSize)
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
+		bgImg = s.img.textareaBackground,
 	}
 
         s.help_text_small = _uses(s.help_text,{
@@ -1046,6 +1049,9 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	-- misc home menu icons
+	s.hm_appletImageViewer = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+        })
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
@@ -1071,6 +1077,9 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
 	})
 	s.hm__myMusic = _uses(s.hm_myMusic)
+	s.hm_otherLibrary = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_ml_other_library" .. skinSuffix),
+	})
 	s.hm_myMusicSelector = _uses(s.hm_myMusic)
 
 	s.hm_favorites = _uses(s._buttonicon, {

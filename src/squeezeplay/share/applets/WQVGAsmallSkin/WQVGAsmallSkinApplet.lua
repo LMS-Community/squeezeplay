@@ -2005,6 +2005,9 @@ function skin(self, s)
 	})
 
 	-- misc home menu icons
+	s.hm_appletImageViewer = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+	})
 	s.hm_appletAppGuide = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
 	})
@@ -2024,6 +2027,9 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
 	})
 	s.hm__myMusic = _uses(s.hm_myMusic)
+   	s.hm_otherLibrary = _uses(_buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_ml_other_library" .. skinSuffix),
+        })
 	s.hm_myMusicSelector = _uses(s.hm_myMusic)
 
 	s.hm_favorites = _uses(_buttonicon, {
