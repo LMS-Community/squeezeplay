@@ -128,6 +128,7 @@ keyActionMappings.hold = {
 	[KEY_VOLUME_UP] = "volume_up",
 	[KEY_VOLUME_DOWN] = "volume_down",
 	[KEY_REW | KEY_PAUSE] = "take_screenshot",  -- a stab at how to handle multi-press
+	[KEY_BACK | KEY_PLAY] = "start_demo", 
 	[KEY_POWER] = "power",
 }
 

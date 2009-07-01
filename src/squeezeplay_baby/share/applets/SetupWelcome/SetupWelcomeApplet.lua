@@ -508,12 +508,17 @@ function _setupDone(self, setupDone, registerDone)
 end
 
 
+function _jumpToDemo(self)
+	appletManager:callService("jumpToInStoreDemo")
+end
+
 function setupWelcomeShow(self, setupNext)
 	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
 
+	window:addActionListener('start_demo', self, _jumpToDemo)
 	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")

@@ -9,7 +9,7 @@ DEMO_START_DEMO
 	EN	Start Demo
 
 DEMO_START_DEMO_WARNING
-	EN	Warning: after starting this demo, the ONLY way to restore this device to a normally functioning squeezebox is through a factory reset.
+	EN	Warning: after starting this demo, the ONLY way to restore this device to a normally functioning squeezebox is through a factory reset. This can be accomplished by holding the + button down continuously while plugging in and through the boot sequence.
 
 DEMO_ERROR
 	EN	Error

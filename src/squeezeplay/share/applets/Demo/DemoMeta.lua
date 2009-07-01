@@ -22,6 +22,7 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService("jumpToInStoreDemo")
 end
 
 function defaultSettings(meta)
@@ -43,8 +44,8 @@ function configureApplet(meta)
 		return
 	end
 
-	local demo = appletManager:loadApplet('Demo')
 	if meta:getSettings()['startDemo'] then
+		local demo = appletManager:loadApplet('Demo')
 	        demo:startDemo()
 	end
 

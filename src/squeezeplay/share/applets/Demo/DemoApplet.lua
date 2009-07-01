@@ -118,10 +118,14 @@ function enableDemo(self)
 	self.window:show()
 end
 
-function confirmDemo(self)
+function jumpToInStoreDemo(self)
+	confirmDemo(self, true)
+end
+
+function confirmDemo(self, force)
 
 	-- the code is '1234'
-	if tonumber(self.code) == 1234 then
+	if tonumber(self.code) == 1234 or force == true then
 		local window = Window("text_list", self:string("DEMO_START_DEMO"))
 		window:setAllowScreensaver(false)
 
