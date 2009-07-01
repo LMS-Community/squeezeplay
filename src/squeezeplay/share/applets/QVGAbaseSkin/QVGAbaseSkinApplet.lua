@@ -610,21 +610,15 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- soft buttons
 	s.softButtons = {
-		order = { 'softButton1', 'softButton2' },
+		order = { 'spacer' },
 		position = LAYOUT_SOUTH,
-		softButton1 = {
-			font = _boldfont(10),
-			bgImg = s.img.softbutton,
-			w = 104,
-			h = 51,
-		},
-		softButton2 = {
-			font = _boldfont(10),
-			bgImg = s.img.softbutton,
-			h = 51,
-		},
 		h = 51,
 		w = WH_FILL,
+		spacer = {
+			w = WH_FILL,
+			font = _font(10),
+			fg = TEXT_COLOR,
+		},
 		bgImg = s.img.softbuttonBackground,
 		padding = { 8, 8, 8, 8 },
 	}
@@ -1053,6 +1047,25 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_alarm = _uses(s._icon, {
 		img = _loadImage(self, "MISSING_ALARM_ICON"),
 	})
+
+	s.presetPointer3 = {
+		w = WH_FILL,
+		h = WH_FILL,
+		position = LAYOUT_NONE,
+		x = 10,
+		y = screenHeight - 46,
+		img = _loadImage(self, "UNOFFICIAL/preset3.png"),
+	}
+
+	s.presetPointer6 = {
+		w = WH_FILL,
+		h = WH_FILL,
+		position = LAYOUT_NONE,
+		x = screenWidth - 100,
+		y = screenHeight - 46,
+		img = _loadImage(self, "UNOFFICIAL/preset6.png"),
+	}
+
 
 	-- button icons, on left of menus
 	s._buttonicon = {
