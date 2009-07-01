@@ -596,14 +596,14 @@ function skin(self, s, reload, useDefaultSize)
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
-		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 4,
+		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 8,
+		wheelCharHeight = c.TEXTINPUT_FONT_SIZE + 4,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
 		wheelImg   = s.img.textinputWheel,
-		-- FIXME: no support for this yet
-		-- cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
+--		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
 		wheelMask = s.img.textinputWheelMask,
 		charOffsetY = 10,
 	}
