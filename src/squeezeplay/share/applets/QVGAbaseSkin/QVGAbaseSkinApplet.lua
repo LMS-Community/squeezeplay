@@ -173,10 +173,22 @@ function skin(self, s, reload, useDefaultSize)
 		imgpath .. "Text_Entry/text_entry_bkgrd_l.png",
 	})
 
+	s.img.softbuttonBackground = Tile:loadImage(imgpath .. "Text_Entry/soft_key_bkgrd.png")
+	s.img.softbutton = Tile:loadTiles({
+		imgpath .. "Text_Entry/soft_key_button.png",
+		imgpath .. "Text_Entry/soft_key_button_tl.png",
+		imgpath .. "Text_Entry/soft_key_button_t.png",
+		imgpath .. "Text_Entry/soft_key_button_tr.png",
+		imgpath .. "Text_Entry/soft_key_button_r.png",
+		imgpath .. "Text_Entry/soft_key_button_br.png",
+		imgpath .. "Text_Entry/soft_key_button_b.png",
+		imgpath .. "Text_Entry/soft_key_button_bl.png",
+		imgpath .. "Text_Entry/soft_key_button_l.png",
+	})
+
 	-- FIXME: these will crash jive if they are removed
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
-	s.img.textinputCursor     = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_letter.png")
-	s.img.textinputRightArrow = Tile:loadImage(imgpath .. "Icons/selection_right_sel.png")
+	s.img.textinputCursor     = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_letter_blank.png")
 
 	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
@@ -576,26 +588,44 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- text input
 	s.textinput = {
-		border     = { 8, -5, 8, 0 },
-		padding    = { 6, 0, 6, 0 },
+		--FIXME: for unknown reasons the top border has to be negative for the textinput background to render at all, 
+		--       but this also causes it to bleed into the titlebar
+		border     = { 8, -1, 8, -1 },
+		padding    = { 10, 0, 10, 0 },
+		align = 'center',
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
-		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 2,
+		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 4,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
 		wheelImg   = s.img.textinputWheel,
-	-- FIXME: no support for this yet
+		-- FIXME: no support for this yet
 		-- cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		 wheelMask = s.img.textinputWheelMask,
-		enterImg   = s.img.textinputRightArrow,
+		wheelMask = s.img.textinputWheelMask,
 	}
 
 	-- soft buttons
 	s.softButtons = {
-		hidden = 1
+		order = { 'softButton1', 'softButton2' },
+		position = LAYOUT_SOUTH,
+		softButton1 = {
+			font = _boldfont(10),
+			bgImg = s.img.softbutton,
+			w = 104,
+			h = 51,
+		},
+		softButton2 = {
+			font = _boldfont(10),
+			bgImg = s.img.softbutton,
+			h = 51,
+		},
+		h = 51,
+		w = WH_FILL,
+		bgImg = s.img.softbuttonBackground,
+		padding = { 8, 8, 8, 8 },
 	}
 
 --------- WINDOW STYLES ---------
