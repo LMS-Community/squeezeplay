@@ -605,6 +605,7 @@ function skin(self, s, reload, useDefaultSize)
 		-- FIXME: no support for this yet
 		-- cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
 		wheelMask = s.img.textinputWheelMask,
+		charOffsetY = 10,
 	}
 
 	-- soft buttons
