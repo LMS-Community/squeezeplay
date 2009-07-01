@@ -2,7 +2,7 @@
 local tonumber, tostring = tonumber, tostring
 
 -- board specific driver
-local baby_bsp               = require("baby_bsp")
+local bsp                    = require("baby_bsp")
 
 local oo                     = require("loop.simple")
 local os                     = require("os")
@@ -88,20 +88,6 @@ function init(self)
 		window:show()
 	end
 
-	-- watchdog timer
-	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-	if watchdog then
-		io.close(watchdog)
-
-		local timer = Timer(2000, function()
-			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-			io.close(watchdog)
-		end)
-		timer:start()
-	else
-		log:warn("Watchdog timer is disabled")
-	end
-
 	-- status bar updates
 	self:update()
 	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
@@ -110,10 +96,29 @@ function init(self)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
+	Framework:addListener(EVENT_SWITCH, function(event)
+		local sw,val = event:getSwitch()
+
+		if sw == 1 then
+			-- headphone
+			self:_headphoneJack(val)
+		end
+	end)
+
+	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
 	self:storeSettings()
+end
+
+
+function _headphoneJack(self, val)
+	if val == 0 then
+		bsp:setMixer("Endpoint", "Speaker")
+	else
+		bsp:setMixer("Endpoint", "Headphone")
+	end
 end
 
 
