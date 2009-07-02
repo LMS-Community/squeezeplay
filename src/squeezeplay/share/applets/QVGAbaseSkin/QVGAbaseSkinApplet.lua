@@ -160,7 +160,7 @@ function skin(self, s, reload, useDefaultSize)
 			       })
 
 	s.img.textinputWheel       = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert.png")
-	s.img.textinputWheelMask   = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_overlay.png")
+	s.img.textinputWheelMask   = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_overlay-1.png")
 	s.img.textinputBackground  = Tile:loadTiles({
 		imgpath .. "Text_Entry/text_entry_bkgrd.png",
 		imgpath .. "Text_Entry/text_entry_bkgrd_tl.png",
@@ -1192,10 +1192,12 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_myMusicSearch = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
 	})
-        s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicSearch)
-        s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicSearch)
-        s.hm_myMusicSearchSongs     = _uses(s.hm_myMusicSearch)
-        s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicSearch)
+        s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
+        s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
+        s.hm_myMusicSearchSongs     = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+	})
+        s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
         s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
         s.hm_homeSearchRecent       = _uses(s.hm_myMusicSearch)
 
