@@ -909,7 +909,12 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 		function()
 			iface:request("DISCONNECT")
 
-			iface:request("WPS_PBC")
+			if( wpsmethod == "pbc") then
+				iface:request("WPS_PBC")
+			elseif( wpsmethod == "pin") then
+				-- 'any' need to be lowercase
+				iface:request("WPS_PIN any " .. wpspin)
+			end
 		end):addTask()
 end
 
