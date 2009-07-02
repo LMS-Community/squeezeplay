@@ -35,6 +35,7 @@ icon_playlist_clear.png
 icon_favorites.png
 icon_sleep.png
 icon_ml_years.png
+icon_ml_songs.png
 icon_ml_search.png
 icon_ml_random.png
 icon_ml_playlist.png

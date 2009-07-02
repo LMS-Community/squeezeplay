@@ -47,6 +47,7 @@ sub convert_files {
 	#for my $file (sort keys %$assets) {
 	for my $f (@iconConvertList) {
 		my $file = $assetDir . "/" . $f;
+		next unless -e $file;
 		for my $skin (sort keys %$resize) {
 			my $size = $resize->{$skin};
 			my $basename = fileparse($file, qr/\.[^.]*/);
@@ -114,15 +115,6 @@ sub get_assets {
 		}
 	}
 	return \%return;
-}
-
-sub copy_assets {
-	my $assets = shift;
-	for my $image (@$assets) {
-		my $newImage = $image;
-		$newImage =~ s/$assetDir/$resizedIconDir/;
-		copy($image, $newImage);
-	}
 }
 
 sub get_icon_list {
