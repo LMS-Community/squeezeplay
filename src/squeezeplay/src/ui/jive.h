@@ -417,6 +417,8 @@ JiveFont *jive_font_ref(JiveFont *font);
 void jive_font_free(JiveFont *font);
 int jive_font_width(JiveFont *font, const char *str);
 int jive_font_nwidth(JiveFont *font, const char *str, size_t len);
+int jive_font_miny_char(JiveFont *font, Uint16 ch);
+int jive_font_maxy_char(JiveFont *font, Uint16 ch);
 int jive_font_height(JiveFont *font);
 int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);

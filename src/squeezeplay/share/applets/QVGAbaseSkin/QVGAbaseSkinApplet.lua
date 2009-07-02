@@ -188,7 +188,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- FIXME: these will crash jive if they are removed
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
-	s.img.textinputCursor     = Tile:loadImage(imgpath .. "UNOFFICIAL/text_entry_letter_blank.png")
+	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 
 	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
@@ -270,7 +270,7 @@ function skin(self, s, reload, useDefaultSize)
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
         	TEXTAREA_FONT_SIZE = 16,
-        	TEXTINPUT_FONT_SIZE = 24,
+        	TEXTINPUT_FONT_SIZE = 18,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
         	HELP_FONT_SIZE = 16,
 		UPDATE_SUBTEXT_SIZE = 16,
@@ -590,22 +590,23 @@ function skin(self, s, reload, useDefaultSize)
 	s.textinput = {
 		--FIXME: for unknown reasons the top border has to be negative for the textinput background to render at all, 
 		--       but this also causes it to bleed into the titlebar
-		border     = { 8, -1, 8, -1 },
+		h=WH_FILL ,
+		border     = { 8, 0, 8, 0 },
 		padding    = { 10, 0, 10, 0 },
 		align = 'center',
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
 		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 8,
-		wheelCharHeight = c.TEXTINPUT_FONT_SIZE + 4,
+		wheelCharHeight =  c.TEXTINPUT_FONT_SIZE + 1,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
 		wheelImg   = s.img.textinputWheel,
---		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		wheelMask = s.img.textinputWheelMask,
-		charOffsetY = 10,
+		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
+--		wheelMask   = s.img.textinputWheelMask,
+		charOffsetY = 9 ,
 	}
 
 	-- soft buttons

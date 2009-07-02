@@ -121,12 +121,32 @@ int jive_font_nwidth(JiveFont *font, const char *str, size_t len) {
 	tmp = malloc(len + 1);
 	strncpy(tmp, str, len);
 	*(tmp + len) = '\0';
-	
+
 	w = font->width(font, tmp);
 
 	free(tmp);
 
 	return w;
+}
+
+int jive_font_miny_char(JiveFont *font, Uint16 ch) {
+	int miny;
+
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	TTF_GlyphMetrics(font->ttf, ch, NULL, NULL, &miny, NULL, NULL);
+
+	return miny;
+}
+
+int jive_font_maxy_char(JiveFont *font, Uint16 ch) {
+	int maxy;
+
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	TTF_GlyphMetrics(font->ttf, ch, NULL, NULL, NULL, &maxy, NULL);
+
+	return maxy;
 }
 
 int jive_font_capheight(JiveFont *font) {

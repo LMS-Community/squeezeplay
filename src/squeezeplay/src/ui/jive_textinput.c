@@ -378,11 +378,11 @@ int jiveL_textinput_draw(lua_State *L) {
 			else if (ptr > validchars_end) {
 				ptr = validchars;
 			}
-		
+
 			offset_x = (cursor_w - jive_font_nwidth(peer->wheel_font, ptr, 1)) / 2;
 			
 			tsrf = jive_font_ndraw_text(peer->wheel_font, peer->wh, ptr, 1);
-			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_cy - (cursor_h / 2) - ((i - 1) * peer->wheel_char_height) - jive_font_height(peer->wheel_font));
+			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_cy - (cursor_h / 2) + (-i * peer->wheel_char_height) + jive_font_miny_char(peer->wheel_font, ptr[0]));
 			jive_surface_free(tsrf);
 
 			ptr--; // FIXME utf8
@@ -397,7 +397,7 @@ int jiveL_textinput_draw(lua_State *L) {
 			else if (ptr > validchars_end) {
 				ptr = validchars;
 			}
-			
+
 			offset_x = (cursor_w - jive_font_nwidth(peer->wheel_font, ptr, 1)) / 2;
 			
 			tsrf = jive_font_ndraw_text(peer->wheel_font, peer->wh, ptr, 1);
