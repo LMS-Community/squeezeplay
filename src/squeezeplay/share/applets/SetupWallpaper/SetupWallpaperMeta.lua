@@ -39,7 +39,7 @@ function defaultSettings(meta)
 		WQVGAlargeSkin = "fab4_nocturne.png",
 		FullscreenSkin = "jive_midnight.png",
 		QVGAportraitSkin  = "jive_sunrise.png",
-		QVGAlandscapeSkin = "jive_sunrise.png",
+		QVGAlandscapeSkin = "bb_encore.png",
 	}
 end
 
