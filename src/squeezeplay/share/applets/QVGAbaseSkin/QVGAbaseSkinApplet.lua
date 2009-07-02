@@ -190,7 +190,19 @@ function skin(self, s, reload, useDefaultSize)
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 
-	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
+	s.img.textareaBackground  = 
+		Tile:loadTiles({
+					imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
+					nil,
+					nil,
+					nil,
+					imgpath .. "Titlebar/tb_dropdwn_bkrgd_r.png",
+					imgpath .. "Titlebar/titlebar_shadow_r.png",
+					imgpath .. "Titlebar/titlebar_shadow.png",
+					nil, 
+					nil,
+			       })
+
 
 
 	s.img.oneLineItemSelectionBox =
@@ -244,6 +256,8 @@ function skin(self, s, reload, useDefaultSize)
 		MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 },
 		MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 },
 
+		--HELP_TEXT_PADDING = { 10, 10, 5, 8 },
+		HELP_TEXT_PADDING = { 10, 10, 5, 8 },
 		TEXTAREA_PADDING = { 13, 8, 8, 8 },
 		MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 },
 		SELECTED_MENU_ITEM_ICON_PADDING = { 0, 0, 10, 0 },
@@ -269,6 +283,7 @@ function skin(self, s, reload, useDefaultSize)
         	TEXTMENU_SELECTED_FONT_SIZE = 18,
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
+        	HELP_TEXT_FONT_SIZE = 14,
         	TEXTAREA_FONT_SIZE = 16,
         	TEXTINPUT_FONT_SIZE = 18,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
@@ -549,13 +564,13 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_text = {
 		w = screenWidth - 20,
-		padding = c.TEXTAREA_PADDING,
-		font = _boldfont(c.TEXTAREA_FONT_SIZE - 2),
-		lineHeight = c.TEXTAREA_FONT_SIZE - 2 + 5,
+		padding = c.HELP_TEXT_PADDING,
+		font = _font(c.HELP_TEXT_FONT_SIZE),
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
-		bgImg = s.img.textareaBackground,
+	-- FIXME: using a bgImg for help_text currently causes many UI issues
+	--	bgImg = s.img.textareaBackground,
 	}
 
         s.help_text_small = _uses(s.help_text)
@@ -1080,6 +1095,14 @@ function skin(self, s, reload, useDefaultSize)
 		align = 'center',
 		h = c.THUMB_SIZE,
 	}
+
+
+        s.region_US = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_region_americas" .. skinSuffix),
+        })
+        s.region_XX = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_region_other" .. skinSuffix),
+        })
 
 	s.player_transporter = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_transporter.png"),
