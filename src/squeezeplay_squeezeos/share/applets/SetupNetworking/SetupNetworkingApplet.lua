@@ -336,7 +336,7 @@ function _networkScanComplete(self, iface)
 	if not iface:isWireless() then
 		_scanResults(self, iface)
 
-		return _connect(self, iface, iface:getName(), true)
+		return _connect(self, iface, iface:getName(), true, false)
 	end
 
 	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
@@ -526,7 +526,7 @@ function _enterPassword(self, iface, ssid, nocheck)
 
 	-- is the ssid already configured
 	if nocheck ~= "config" and self.scanResults[ssid].id ~= nil then
-		return _connect(self, iface, ssid, false)
+		return _connect(self, iface, ssid, false, false)
 	end
 
 	local flags = self.scanResults[ssid].flags
@@ -534,11 +534,11 @@ function _enterPassword(self, iface, ssid, nocheck)
 
 	if flags == "" then
 		self.encryption = "none"
-		return _connect(self, iface, ssid, true)
+		return _connect(self, iface, ssid, true, false)
 
 	elseif string.find(flags, "ETH") then
 		self.encryption = "none"
-		return _connect(self, iface, ssid, true)
+		return _connect(self, iface, ssid, true, false)
 
 	elseif nocheck ~= "wps" and string.find(flags, "WPS") then
 		self.encryption = "wpa2"
@@ -578,7 +578,7 @@ function _chooseEncryption(self, iface, ssid)
 			sound = "WINDOWSHOW",
 			callback = function()
 				self.encryption = "none"
-				_connect(self, iface, ssid, true)
+				_connect(self, iface, ssid, true, false)
 			end
 		},
 		{
@@ -677,7 +677,7 @@ function _enterWEPKey(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    _connect(self, iface, ssid, true)
+					    _connect(self, iface, ssid, true, false)
 					    return true
 				    end
 			    )
@@ -709,7 +709,7 @@ function _enterPSK(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    _connect(self, iface, ssid, true)
+					    _connect(self, iface, ssid, true, false)
 					    return true
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
@@ -907,6 +907,8 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 
 	Task("startWPS", self,
 		function()
+			iface:request("DISCONNECT")
+
 			iface:request("WPS_PBC")
 		end):addTask()
 end
@@ -939,7 +941,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					self.psk = status.wps_psk
 					self.key = status.wps_key
 
-					_connect(self, iface, ssid, true)
+					_connect(self, iface, ssid, true, false)
 				end
 			end
 
@@ -956,7 +958,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 					return
 				else
-					_connect(self, iface, ssid, false)
+					_connect(self, iface, ssid, false, true)
 				end
 			end
 
@@ -1013,7 +1015,7 @@ end
 
 
 -- start to connect
-function _connect(self, iface, ssid, createNetwork)
+function _connect(self, iface, ssid, createNetwork, useSupplicantWPS)
 	assert(iface and ssid, debug.traceback())
 
 	if not iface:isWireless() then
@@ -1027,16 +1029,16 @@ function _connect(self, iface, ssid, createNetwork)
 					return _attachEthernet(self, iface, ssid, createNetwork)
 				end
 
-				_connect_1(self, iface, ssid, createNetwork)
+				_connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 
 			end
 		):addTask()
 	else
-		_connect_1(self, iface, ssid, createNetwork)
+		_connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 	end
 end
 
-function _connect_1(self, iface, ssid, createNetwork)
+function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
@@ -1069,19 +1071,22 @@ function _connect_1(self, iface, ssid, createNetwork)
 	self:tieAndShowWindow(popup)
 
 	-- Select/create the network in a background task
-	Task("networkSelect", self, _selectNetworkTask):addTask(iface, ssid, createNetwork)
+	Task("networkSelect", self, _selectNetworkTask):addTask(iface, ssid, createNetwork, useSupplicantWPS)
 end
 
 
 -- task to modify network configuration
-function _selectNetworkTask(self, iface, ssid, createNetwork)
+function _selectNetworkTask(self, iface, ssid, createNetwork, useSupplicantWPS)
 	assert(iface and ssid, debug.traceback())
-
--- XXXX Felix why is this? it breaks non WPS atheros setup
---	if iface:isMarvell() then
 
 	-- disconnect from existing network
 	iface:t_disconnectNetwork()
+
+  if useSupplicantWPS then
+
+	iface:t_addWPSNetwork(ssid)
+
+  else
 
 	-- remove any existing network config
 	if createNetwork then
@@ -1111,6 +1116,7 @@ function _selectNetworkTask(self, iface, ssid, createNetwork)
 			self.scanResults[ssid].id = id
 		end
 	end
+  end
 
 	-- select new network
 	iface:t_selectNetwork(ssid)
@@ -1158,7 +1164,7 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 					if status.link then
 						log:debug("connected")
 						window:hide()
-						_connect(self, iface, ssid, createNetwork)
+						_connect(self, iface, ssid, createNetwork, false)
 					end
              			end
 			):addTask()
@@ -1362,7 +1368,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 			callback = function()
 				-- poke udhcpto try again
 				_sigusr1("udhcpc")
-				_connect(self, iface, ssid, false)
+				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
 			end
 		},
@@ -1406,7 +1412,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 			callback = function()
 				-- poke udhcpto try again
 				_sigusr1("udhcpc")
-				_connect(self, iface, ssid, false)
+				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
 			end
 		},

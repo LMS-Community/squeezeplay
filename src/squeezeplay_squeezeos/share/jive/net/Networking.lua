@@ -765,6 +765,24 @@ end
 
 --[[
 
+=head2 jive.net.Networking:t_addWPSNetwork(ssid)
+
+wpa_supplicant using with Atheros already adds the network
+to wpa_supplicant.conf when using WPS but it still needs to
+be added to the interfaces file
+
+=cut
+--]]
+
+function t_addWPSNetwork(self, ssid)
+	assert(Task:running(), "Networking:addNetwork must be called in a Task")
+
+	-- Set to use dhcp by default
+	self:_editNetworkInterfaces(ssid, "dhcp", "script /etc/network/udhcpc_action")
+end
+
+--[[
+
 =head2 jive.net.Networking:t_addNetwork(ssid, option)
 
 adds a network to the list of discovered networks
