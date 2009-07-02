@@ -190,7 +190,11 @@ function skin(self, s, reload, useDefaultSize)
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 
-	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
+	s.img.textareaBackground  = Tile:loadHTiles({
+		nil,
+		imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
+		imgpath .. "Titlebar/tb_dropdwn_bkrgd_r.png",
+	})
 	s.img.textareaBackgroundBottom  = 
 		Tile:loadTiles({
 					imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
@@ -565,6 +569,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.pressed.item_blank = _uses(s.item_blank)
 	s.selected.item_blank = _uses(s.item_blank)
+	s.pressed.item_blank_bottom = _uses(s.item_blank_bottom)
+	s.selected.item_blank_bottom = _uses(s.item_blank_bottom)
 
 	s.help_text = {
 		w = screenWidth - 20,
