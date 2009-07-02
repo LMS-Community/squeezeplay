@@ -327,12 +327,17 @@ function _cursorAtEnd(self)
 end
 
 
-function _deleteAction(self, alwaysBackspace)
-	if _delete(self, alwaysBackspace) then
-		self:playSound("CLICK")
+function _deleteAction(self, event, alwaysBackspace)
+	if self.cursor == 1 and not alwaysBackspace then
+		self:playSound("WINDOWHIDE")
+		self:hide()
 	else
-		self:playSound("BUMP")
-		self:getWindow():bumpRight()
+		if _delete(self, alwaysBackspace) then
+			self:playSound("CLICK")
+		else
+			self:playSound("BUMP")
+			self:getWindow():bumpRight()
+		end
 	end
 	return EVENT_CONSUME
 
@@ -482,7 +487,7 @@ function _eventHandler(self, event)
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
 			self.numberLetterTimer:stop()
-			return _deleteAction(self)
+			return _goAction(self)
 		end
 		if event:isIRCode("add") then
 			self.numberLetterTimer:stop()
@@ -494,7 +499,7 @@ function _eventHandler(self, event)
 
 		--handle right and left on the up while at the ends of the text so that hold/repeat doesn't push past the ends of the screen
 		if event:isIRCode("arrow_left") and self.cursor == 1 then
-			self:_cursorBackAction()
+			self:_deleteAction()
 		end
 		if event:isIRCode("arrow_right") and self:_cursorAtEnd() then
 			self:_goAction()
@@ -517,7 +522,7 @@ function _eventHandler(self, event)
 					 --So, on the ends only move on a new press
 					if direction < 0 then
 						if self.cursor ~= 1 then
-							self:_cursorBackAction()
+							self:_deleteAction()
 						elseif type == EVENT_IR_DOWN then
 							self.upHandlesCursor = true
 						end
@@ -621,7 +626,7 @@ function _eventHandler(self, event)
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
 		if (keyboardEntry == "\b") then --backspace
-			return _deleteAction(self, true)
+			return _deleteAction(self, event, true)
 
 		elseif (keyboardEntry == "\27") then --escape
 			return _escapeAction(self)
@@ -684,7 +689,7 @@ function _eventHandler(self, event)
 				self:getWindow():bumpRight()
 			end
 		elseif keycode == KEY_BACK then
-			return _cursorBackAction(self)
+			return _deleteAction(self)
 
 		end
 	end
@@ -749,7 +754,7 @@ function __init(self, style, value, closure, allowedChars)
 					end,
 					true)
 
-	obj:addActionListener("play", obj, _deleteAction)
+	obj:addActionListener("play", obj, _goAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
 
