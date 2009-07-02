@@ -190,7 +190,8 @@ function skin(self, s, reload, useDefaultSize)
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 
-	s.img.textareaBackground  = 
+	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
+	s.img.textareaBackgroundBottom  = 
 		Tile:loadTiles({
 					imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
 					nil,
@@ -202,7 +203,6 @@ function skin(self, s, reload, useDefaultSize)
 					nil, 
 					nil,
 			       })
-
 
 
 	s.img.oneLineItemSelectionBox =
@@ -557,7 +557,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.item_blank = {
 		padding = {  },
 		text = {},
+		bgImg = s.img.textareaBackground,
 	}
+	s.item_blank_bottom = _uses(s.item_blank, {
+		bgImg = s.img.textareaBackgroundBottom,
+	})
 
 	s.pressed.item_blank = _uses(s.item_blank)
 	s.selected.item_blank = _uses(s.item_blank)
@@ -569,8 +573,6 @@ function skin(self, s, reload, useDefaultSize)
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
-	-- FIXME: using a bgImg for help_text currently causes many UI issues
-	--	bgImg = s.img.textareaBackground,
 	}
 
         s.help_text_small = _uses(s.help_text)
