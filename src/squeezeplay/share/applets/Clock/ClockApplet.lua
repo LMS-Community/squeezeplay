@@ -990,7 +990,7 @@ function Digital:getDigitalClockSkin(skinName)
 		})
 	elseif skinName == 'QVGAlandscapeSkin' then
 
-		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/wallpaper_clock_digital.png")
+		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/bb_clock_digital.png")
 		local digitalClockDigit = {
 			font = _font(100),
 			align = 'center',
@@ -1025,13 +1025,12 @@ function Digital:getDigitalClockSkin(skinName)
 		s.icon_digitalDots = {
 			img = Surface:loadImage('applets/QVGAbaseSkin/images/UNOFFICIAL/clock_dots_digital.png'),
 			align = 'center',
-			w = 11,
-			border = { 14, 20, 12, 0 },
+			w = 16,
+			border = { 6, 20, 6, 0 },
 		}
 
 		s.icon_digitalClockBlank = {
 			img = false,
-			w = 40,
 		}
 
 		s.Clock = {
@@ -1040,7 +1039,7 @@ function Digital:getDigitalClockSkin(skinName)
 				position = LAYOUT_NORTH,
 				w = WH_FILL,
 				zOrder = 2,
-				border = { 20, 40, 20, 0 },
+				border = { 20, 50, 20, 0 },
 				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
 				h1 = digitalClockDigit,
 				h2 = digitalClockDigit,
@@ -1051,25 +1050,29 @@ function Digital:getDigitalClockSkin(skinName)
 					border = { 1, 0, 0, 0 },
 				}),
 			},
+
+			dropShadow = { hidden = 1 },
+			--FIXME: PUNT THE DROP SHADOWS FOR NOW
+			--[[ 
 			dropShadow = {
 				position = LAYOUT_NORTH,
 				align = 'center',
 				w = WH_FILL,
 				h = 18,
 				zOrder = 1,
-				border = { 47, 154, 47, 0 },
+				border = { 20, 110, 20, 0 },
 				order = { 's1', 's2', 'dots', 's3', 's4' },
-				s1   =  { w = 76 },
-				s2   =  { w = 76 },
-				dots =  { w = 40 },
-				s3   =  { w = 76 },
-				s4   =  { w = 76 },
+				s1   =  { w = 62 },
+				s2   =  { w = 62 },
+				s3   =  { w = 62 },
+				s4   =  { w = 62 },
 			},
+			--]]
 			ampm = {
 				position = LAYOUT_NONE,
-				x = 280,
-				y = 100,
-				font = _font(20),
+				x = 295,
+				y = 114,
+				font = _font(11),
 				align = 'bottom',
 				fg = { 0xcc, 0xcc, 0xcc },
 			},
@@ -1081,19 +1084,19 @@ function Digital:getDigitalClockSkin(skinName)
 			horizDivider = {
 				position = LAYOUT_NONE,
 				x = 0,
-				y = 175,
+				y = 180,
 			},
 			date = {
 				position = LAYOUT_SOUTH,
 				order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
 				w = WH_FILL,
-				h = 70,
-				padding = { 0, 0, 0, 6 },
+				h = 65,
+				padding = { 0, 10, 0, 0 },
 				dayofweek = {
 					align = 'center',
 					w = 115,
 					h = WH_FILL,
-					font = _font(20),
+					font = _font(16),
 					fg = { 0xcc, 0xcc, 0xcc },
 					padding  = { 1, 0, 0, 6 },
 				},
@@ -1114,7 +1117,7 @@ function Digital:getDigitalClockSkin(skinName)
 					w = 2,
 				},
 				month = {
-					font = _font(20),
+					font = _font(16),
 					w = WH_FILL,
 					h = WH_FILL,
 					align = 'center',
@@ -1122,7 +1125,7 @@ function Digital:getDigitalClockSkin(skinName)
 					padding = { 0, 0, 0, 5 },
 				},
 				year = {
-					font = _boldfont(20),
+					font = _boldfont(16),
 					w = 50,
 					h = WH_FILL,
 					align = 'left',
