@@ -310,6 +310,7 @@ static void decode_fade_out(void) {
 	LOG_DEBUG(log_audio_decode, "Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
 
 	if (!interval) {
+		fifo_unlock(&decode_fifo);
 		return;
 	}
 
