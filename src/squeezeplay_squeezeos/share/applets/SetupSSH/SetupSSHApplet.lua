@@ -147,7 +147,7 @@ end
 
 
 function _fileSub(file, pattern, repl)
-	local data
+	local data = ""
 
 	local fi = io.open(file, "r")
 	for line in fi:lines() do
