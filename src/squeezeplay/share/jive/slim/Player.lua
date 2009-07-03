@@ -227,7 +227,7 @@ local function _formatShowBrieflyText(msg)
 
 	-- table msg needs to have elements of only strings/numbers so table.concat will work
 	for i, v in ipairs(msg) do
-		if type(v) ~= 'string' or type(v) ~= 'number' then
+		if type(v) ~= 'string' and type(v) ~= 'number' then
 			table.remove(msg, i)
 		end
 	end
