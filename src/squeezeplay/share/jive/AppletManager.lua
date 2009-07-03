@@ -693,10 +693,8 @@ function _storeSettings(entry)
 
 	log:info("store settings: ", entry.appletName)
 
-	local file = assert(io.open(entry.settingsFilepath, "w"))
-	file:write(dumper.dump(entry.settings, "settings", true))
-	file:close()
-
+	System:atomicWrite(entry.settingsFilepath,
+		dumper.dump(entry.settings, "settings", true))
 end
 
 

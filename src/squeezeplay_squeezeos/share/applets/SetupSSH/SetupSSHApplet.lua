@@ -9,6 +9,7 @@ local math                   = require("math")
 local string                 = require("string")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
@@ -146,19 +147,16 @@ end
 
 
 function _fileSub(file, pattern, repl)
-	local fi = io.open(file, "r")
-	local fo = io.open(file .. ".tmp", "w")
+	local data
 
+	local fi = io.open(file, "r")
 	for line in fi:lines() do
 		line = string.gsub(line, pattern, repl)
-		fo:write(line)
-		fo:write("\n")
+		data = data .. line .. "\n"
 	end
-
 	fi:close()
-	fo:close()
-	
-	os.execute("/bin/mv " .. file .. ".tmp " .. file)
+
+	System:atomicWrite(file, data)
 end
 
 

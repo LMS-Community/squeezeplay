@@ -452,10 +452,9 @@ function setRegion(self, region)
 	end
 
 	-- save config file
-	local fh = assert(io.open("/etc/network/config", "w"))
-	fh:write("REGION=" .. region .. "\n")
-	fh:write("REGIONCODE=" .. mapping[1] .. "\n")
-	fh:close()
+	System:atomicWrite("/etc/network/config",
+		"REGION=" .. region .. "\n" ..
+		"REGIONCODE=" .. mapping[1] .. "\n")
 
 	-- set new region
 	local cmd = "/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
@@ -1195,6 +1194,7 @@ function _editAutoInterfaces(self, ssid)
 
 	log:debug('writing /etc/network/interfaces, enabling auto for ', autoInterface)
 
+	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 	local autoSet = false
@@ -1224,7 +1224,7 @@ function _editAutoInterfaces(self, ssid)
 	fi:close()
 	fo:close()
 
-	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
+	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
 end
 
 
@@ -1250,6 +1250,7 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 
 	log:debug('WRITING /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
 
+	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 
@@ -1292,7 +1293,7 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 	fi:close()
 	fo:close()
 
-	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
+	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
 end
 
 

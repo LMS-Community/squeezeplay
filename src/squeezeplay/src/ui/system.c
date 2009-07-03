@@ -261,6 +261,47 @@ int squeezeplay_find_file(const char *path, char *fullpath) {
 }
 
 
+/*
+ * 
+ */
+static int system_atomic_write(lua_State *L)
+{
+	const char *fname, *fdata;
+	char *tname;
+	size_t len;
+	FILE *fp;
+#if HAVE_FSYNC
+	DIR *dp;
+#endif
+
+	fname = lua_tostring(L, 2);
+	fdata = lua_tolstring(L, 3, &len);
+
+	tname = alloca(strlen(fname) + 5);
+	strcpy(tname, fname);
+	strcat(tname, ".new");
+
+	fp = fopen(tname, "w");
+	fwrite(fdata, len, 1, fp);
+
+	fflush(fp);
+#if HAVE_FSYNC
+	fsync(fileno(fp));
+#endif
+	fclose(fp);
+
+	rename(tname, fname);
+
+#if HAVE_FSYNC
+	dp = opendir(dirname(tname));
+	fsync(dirfd(dp));
+	closedir(dp);
+#endif
+
+	return 0;
+}
+
+
 static const struct luaL_Reg squeezeplay_system_methods[] = {
 	{ "getArch", system_get_arch },
 	{ "getMachine", system_get_machine },
@@ -269,6 +310,7 @@ static const struct luaL_Reg squeezeplay_system_methods[] = {
 	{ "getUptime", system_get_uptime },
 	{ "getUserDir", system_get_user_dir },
 	{ "findFile", system_find_file },
+	{ "atomicWrite", system_atomic_write },
 	{ "init", system_init },
 	{ NULL, NULL }
 };

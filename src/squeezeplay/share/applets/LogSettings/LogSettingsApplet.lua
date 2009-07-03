@@ -125,9 +125,7 @@ function _saveLogconf()
 	-- save configuration
 	local confout = System:getUserDir() .. "/logconf.lua"
 
-	local file = assert(io.open(confout, "w"))
-	file:write(dumper.dump(logconf, nil, false))
-	file:close()
+	System:atomicWrite(confout, dumper.dump(logconf, nil, false))
 end
 
 

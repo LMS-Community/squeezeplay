@@ -93,9 +93,7 @@ end
 
 
 function saveConfig(self)
-	local file = assert(io.open(self.configFile, "w"))
-	file:write(dumper.dump(self.config, nil, false))
-	file:close()
+	System:atomicWrite(self.configFile, dumper.dump(self.config, nil, false))
 end
 
 
