@@ -140,6 +140,10 @@ function confirmDemo(self, force)
 			sound = "WINDOWSHOW",
 			weight = 2,
 			callback = function(event, menuItem)
+				-- add setting to immediately start demo on boot
+				self:getSettings()['startDemo'] = true
+				self:storeSettings()
+
 				self:startDemo()
 			end,
 		})
@@ -156,10 +160,6 @@ function confirmDemo(self, force)
 end
 
 function startDemo(self)
-
-	-- add setting to immediately start demo on boot
-	self:getSettings()['startDemo'] = true
-	self:storeSettings()
 
 	self.currentImage = 1
 
