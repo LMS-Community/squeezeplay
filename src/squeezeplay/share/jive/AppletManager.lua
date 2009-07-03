@@ -693,10 +693,15 @@ function _storeSettings(entry)
 
 	log:info("store settings: ", entry.appletName)
 
-	local file = assert(io.open(entry.settingsFilepath, "w"))
+	local filepath = entry.settingsFilepath .. ".new"
+
+	local file = assert(io.open(filepath, "w"))
 	file:write(dumper.dump(entry.settings, "settings", true))
+	file:flush()
+	file:fsync()
 	file:close()
 
+	os.rename(filepath, entry.settingsFilepath)
 end
 
 

@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#if !defined (_MSC_VER)
+#include <unistd.h>
+#endif
 
 #define liolib_c
 #define LUA_LIB
@@ -512,6 +515,24 @@ static int f_flush (lua_State *L) {
 }
 
 
+static int io_fsync (lua_State *L) {
+#if !defined (_MSC_VER)
+  return pushresult(L, fsync(fileno(getiofile(L, IO_OUTPUT))) == 0, NULL);
+#else
+  return pushresult(L, 0);
+#endif
+}
+
+
+static int f_fsync (lua_State *L) {
+#if !defined (_MSC_VER)
+  return pushresult(L, fsync(fileno(tofile(L))) == 0, NULL);
+#else
+  return pushresult(L, 0);
+#endif
+}
+
+
 static int io_fileno (lua_State *L) {
   lua_pushinteger(L, fileno(tofile(L)));
   return 1;
@@ -521,6 +542,7 @@ static int io_fileno (lua_State *L) {
 static const luaL_Reg iolib[] = {
   {"close", io_close},
   {"flush", io_flush},
+  {"fsync", io_fsync},
   {"input", io_input},
   {"lines", io_lines},
   {"open", io_open},
@@ -537,6 +559,7 @@ static const luaL_Reg iolib[] = {
 static const luaL_Reg flib[] = {
   {"close", io_close},
   {"flush", f_flush},
+  {"fsync", f_fsync},
   {"lines", f_lines},
   {"read", f_read},
   {"seek", f_seek},
