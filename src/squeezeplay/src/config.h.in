@@ -1,5 +1,8 @@
 /* src/config.h.in.  Generated from configure.in by autoheader.  */
 
+/* Define for fsync workaround */
+#undef FSYNC_WORKAROUND_ENABLED
+
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 

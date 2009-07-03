@@ -270,10 +270,9 @@ static int system_atomic_write(lua_State *L)
 	char *tname;
 	size_t len;
 	FILE *fp;
-#if HAVE_FSYNC
+#if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
 	DIR *dp;
 #endif
-
 	fname = lua_tostring(L, 2);
 	fdata = lua_tolstring(L, 3, &len);
 
@@ -285,14 +284,17 @@ static int system_atomic_write(lua_State *L)
 	fwrite(fdata, len, 1, fp);
 
 	fflush(fp);
-#if HAVE_FSYNC
+#if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
 	fsync(fileno(fp));
 #endif
 	fclose(fp);
 
 	rename(tname, fname);
 
-#if HAVE_FSYNC
+#ifdef FSYNC_WORKAROUND_ENABLED
+	/* sync filesystem if fsync is broken */
+	sync();
+#elif HAVE_FSYNC
 	dp = opendir(dirname(tname));
 	fsync(dirfd(dp));
 	closedir(dp);
