@@ -266,7 +266,7 @@ static int pcm_open(struct decode_alsa *state) {
 
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
-		LOG_ERROR(log_audio_output, "Resampling setup failed: %s\n", snd_strerror(err));
+		LOG_ERROR(log_audio_output, "Resampling setup failed: %s", snd_strerror(err));
 		return err;
 	}
 
@@ -394,7 +394,7 @@ static int pcm_test(const char *name, unsigned int *max_rate) {
 static int xrun_recovery(struct decode_alsa *state, int err) {
 	if (err == -EPIPE) {	/* under-run */
 		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
-			LOG_ERROR(log_audio_output, "Can't recover from underrun, prepare failed: %s\n", snd_strerror(err));
+			LOG_ERROR(log_audio_output, "Can't recover from underrun, prepare failed: %s", snd_strerror(err));
 		}
 		return 0;
 	} else if (err == -ESTRPIPE) {
@@ -403,7 +403,7 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 		}
 		if (err < 0) {
 			if ((err = snd_pcm_prepare(state->pcm)) < 0) {
-				LOG_ERROR(log_audio_output, "Can't recover from suspend, prepare failed: %s\n", snd_strerror(err));
+				LOG_ERROR(log_audio_output, "Can't recover from suspend, prepare failed: %s", snd_strerror(err));
 			}
 		}
 		return 0;
@@ -454,7 +454,7 @@ static void *audio_thread_execute(void *data) {
 			gettimeofday(&now, 0);
 			snd_pcm_status_get_trigger_tstamp(status, &tstamp);
 			timersub(&now, &tstamp, &diff);
-			LOG_WARN(log_audio_output, "underrun!!! (at least %.3f ms long)\n", diff.tv_sec * 1000 + diff.tv_usec / 1000.0);
+			LOG_WARN(log_audio_output, "underrun!!! (at least %.3f ms long)", diff.tv_sec * 1000 + diff.tv_usec / 1000.0);
 
 			if ((err = xrun_recovery(state, -EPIPE)) < 0) {
 				LOG_ERROR(log_audio_output, "XRUN recovery failed: %s", snd_strerror(err));
@@ -479,7 +479,7 @@ static void *audio_thread_execute(void *data) {
 
 		/* this is needed to ensure the sound works on resume */
 		if (( err = snd_pcm_status(state->pcm, status)) < 0) {
-			LOG_ERROR(log_audio_output, "snd_pcm_status err=%d\n", err);
+			LOG_ERROR(log_audio_output, "snd_pcm_status err=%d", err);
 		}
 
 		if (avail < state->period_size) {
@@ -725,7 +725,7 @@ static void decode_alsa_copyright(bool_t copyright) {
 
 	snd_ctl_elem_value_set_iec958(control, &iec958);
 
-	LOG_DEBUG(log_audio_output, "iec958 status: %02x %02x %02x %02x\n",
+	LOG_DEBUG(log_audio_output, "iec958 status: %02x %02x %02x %02x",
 		  iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
 
 	if ((err = snd_hctl_elem_write(playback_state->iec958_elem, control)) < 0) {
@@ -770,7 +770,7 @@ static int decode_alsa_init(lua_State *L) {
 		effects_device = NULL;
 	}
 
-	LOG_DEBUG(log_audio_output, "Playback device: %s\n", playback_device);
+	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
 
 	lua_getfield(L, 2, "alsaPlaybackBufferTime");
 	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
@@ -786,7 +786,7 @@ static int decode_alsa_init(lua_State *L) {
 					);
 
 	if (effects_device) {
-		LOG_DEBUG(log_audio_output, "Effects device: %s\n", effects_device);
+		LOG_DEBUG(log_audio_output, "Effects device: %s", effects_device);
 
 		lua_getfield(L, 2, "alsaEffectsBufferTime");
 		buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
