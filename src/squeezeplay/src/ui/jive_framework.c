@@ -1383,6 +1383,7 @@ static const struct luaL_Reg slider_methods[] = {
 static const struct luaL_Reg textarea_methods[] = {
 	{ "getPreferredBounds", jiveL_textarea_get_preferred_bounds },
 	{ "_skin", jiveL_textarea_skin },
+	{ "invalidate", jiveL_textarea_invalidate },
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
 	{ NULL, NULL }

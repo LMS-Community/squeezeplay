@@ -124,7 +124,9 @@ static void prepare(lua_State *L) {
 	int max_width = 0;
 	int total_height = 0;
 	size_t num_lines = 0;
-	const char *str, *ptr;
+	const char *str, *ptr, *nptr;
+	char *tmp;
+	u32_t c;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
@@ -154,18 +156,22 @@ static void prepare(lua_State *L) {
 		return;
 	}
 
+	tmp = alloca(strlen(ptr));
+
 	do {
-		char *tmp;
 		LabelLine *line;
 		JiveFont *font;
 		Uint32 fg, sh;
 		bool is_sh;
+		size_t len;
 
 		/* find line ending */
-		/* FIXME correct utf8 handling! */
-		if (*ptr != '\0' && *ptr != '\n' && *ptr != '\r') {
-			continue;
+		c = utf8_get_char(ptr, &nptr);
+		while (c != '\0' && c != '\n' && c != '\r') {
+			ptr = nptr;
+			c = utf8_get_char(ptr, &nptr);
 		}
+		len = nptr - str - 1;
 
 		peer->num_lines = num_lines + 1;
 		peer->line = realloc(peer->line, peer->num_lines * sizeof(LabelLine));
@@ -197,14 +203,11 @@ static void prepare(lua_State *L) {
 		line = &peer->line[num_lines++];
 
 		/* shadow and foreground text */
-		//tmp = strndup(str, ptr - str);
-		tmp = malloc(ptr - str + 1);
-		strncpy(tmp, str, ptr - str + 1);
-		tmp[ptr - str] = '\0';
+		strncpy(tmp, str, len);
+		tmp[len] = '\0';
 
 		line->text_sh = is_sh ? jive_font_draw_text(font, sh, tmp) : NULL;
 		line->text_fg = jive_font_draw_text(font, fg, tmp);
-		free(tmp);
 
 		/* label dimensions */
 		jive_surface_get_size(line->text_fg, &width, NULL);
@@ -215,11 +218,13 @@ static void prepare(lua_State *L) {
 		line->textOffset = offset;
 
 		/* skip white space */
-		while (*ptr == '\n' || *ptr == '\r' || *ptr == ' ') {
-			ptr++;
+		while (c == '\n' || c == '\r' || c == ' ') {
+			ptr = nptr;
+			c = utf8_get_char(ptr, &nptr);
 		}
+
 		str = ptr;
-	} while (*ptr++ != '\0');
+	} while (c != '\0');
 
 	/* text width and height */
 	peer->text_h = total_height;

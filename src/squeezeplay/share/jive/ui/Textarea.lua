@@ -153,6 +153,7 @@ Sets the text in the Textarea to I<text>.
 --]]
 function setValue(self, text)
 	self.text = text
+	self:invalidate()
 	self:reLayout()
 end
 

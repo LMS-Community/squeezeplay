@@ -425,6 +425,7 @@ int jive_font_ascend(JiveFont *font);
 int jive_font_offset(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);
+u32_t utf8_get_char(const char *ptr, const char **nptr);
 
 
 /* C helper functions */
@@ -520,6 +521,7 @@ int jiveL_menu_gc(lua_State *L);
 
 int jiveL_textarea_get_preferred_bounds(lua_State *L);
 int jiveL_textarea_skin(lua_State *L);
+int jiveL_textarea_invalidate(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);
