@@ -341,7 +341,8 @@ Uint32 utf8_get_char(const char *ptr, const char **nptr)
 		v = 0xFFFD;
 	}
 
-	*nptr = (const char *)uptr;
-
+	if (nptr) {
+		*nptr = (const char *)uptr;
+	}
 	return v;
 }

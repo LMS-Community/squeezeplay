@@ -16,6 +16,7 @@ typedef struct textarea_widget {
 	int *lines;
 	Uint16 line_width;
 	bool has_scrollbar;
+	bool is_header_widget;
 
 	// style
 	JiveFont *font;
@@ -216,6 +217,10 @@ int jiveL_textarea_layout(lua_State *L) {
 		invalidate(peer);
 		peer->line_width = peer->w.bounds.w;
 	}
+
+	lua_getfield(L, 1, "isHeaderWidget");
+	peer->is_header_widget = lua_toboolean(L, -1);
+	lua_pop(L, 1);
 
 	/* word wrap text */
 	lua_getglobal(L, "tostring");
@@ -432,7 +437,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	jive_surface_set_clip(srf, &old_clip);
 
 	/* draw scrollbar */
-	if (peer->has_scrollbar) {
+	if (peer->has_scrollbar && !peer->is_header_widget) {
 		lua_getfield(L, 1, "scrollbar");
 		if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
 			lua_pushvalue(L, -2);
@@ -492,7 +497,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 	}
 
 	peer->has_scrollbar = has_scrollbar;
-	if (has_scrollbar) {
+	if (has_scrollbar && !peer->is_header_widget) {
 		width -= scrollbar_width;
 	}
 
@@ -505,7 +510,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 
 		switch (code) {
 		case '\n':
-			// Line break
+			/* Line break */
 			ptr = next;
 			word_break = NULL;
 
@@ -519,12 +524,18 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 			line_width = 0;
 			continue;
 
+		case '.':
+		    /* Word break, but exclude urls */
+		    if (utf8_get_char(next, NULL) != ' ') {
+			break;
+		    }
+
 		case ' ':
 		case ',':
-		case '.':
 		case '-':
-			// Word break
+			/* Word break */
 			word_break = next;
+			break;
 		}
 
 		// Calculate width of string to char
@@ -547,7 +558,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 		// Next line
 		line_width = 0;
 
-		if (!has_scrollbar && num_lines > visible_lines) {
+		if (!has_scrollbar && num_lines > visible_lines && !peer->is_header_widget) {
 			free(lines);
 			return wordwrap(peer, text, visible_lines, scrollbar_width, true);
 		}
