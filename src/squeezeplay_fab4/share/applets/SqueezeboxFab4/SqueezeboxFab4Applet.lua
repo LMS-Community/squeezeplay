@@ -151,6 +151,9 @@ function initBrightness(self)
 		settings.brightness = brightMax
 	end
 
+	-- Set Brightness after reboot
+	self:setBrightness(settings.brightness)	
+	
 	brightSettings = settings.brightness
 	brightMax = (settings.brightness/2) + brightMinMax
 		
