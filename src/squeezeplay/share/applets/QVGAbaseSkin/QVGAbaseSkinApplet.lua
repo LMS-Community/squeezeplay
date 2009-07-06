@@ -1295,41 +1295,47 @@ function skin(self, s, reload, useDefaultSize)
 	-- indicator icons, on right of menus
 	s._indicator = {
 		align = "right",
+		padding = { 0, 6, 3, 0 },
 	}
 
 	s.wirelessLevel0 = _uses(s._indicator, {
 		img = _loadImage(self, "Icons/icon_wireless_0_off.png")
 	})
 	s.menu.selected.item.wirelessLevel0 = _uses(s.wirelessLevel0, {
-		img = _loadImage(self, "Icons/icon_wireless_0_sel.png")
+		img = _loadImage(self, "Icons/icon_wireless_0_sel.png"),
+		padding = { 0, 6, 0, 0 },
 	})
 
 	s.wirelessLevel1 = _uses(s._indicator, {
 		img = _loadImage(self, "Icons/icon_wireless_1_off.png")
 	})
 	s.menu.selected.item.wirelessLevel1 = _uses(s.wirelessLevel1, {
-		img = _loadImage(self, "Icons/icon_wireless_1_sel.png")
+		img = _loadImage(self, "Icons/icon_wireless_1_sel.png"),
+		padding = { 0, 6, 0, 0 },
 	})
 
 	s.wirelessLevel2 = _uses(s._indicator, {
 		img = _loadImage(self, "Icons/icon_wireless_2_off.png")
 	})
 	s.menu.selected.item.wirelessLevel2 = _uses(s.wirelessLevel2, {
-		img = _loadImage(self, "Icons/icon_wireless_2_sel.png")
+		img = _loadImage(self, "Icons/icon_wireless_2_sel.png"),
+		padding = { 0, 6, 0, 0 },
 	})
 
 	s.wirelessLevel3 = _uses(s._indicator, {
 		img = _loadImage(self, "Icons/icon_wireless_3_off.png")
 	})
 	s.menu.selected.item.wirelessLevel3 = _uses(s.wirelessLevel3, {
-		img = _loadImage(self, "Icons/icon_wireless_3_sel.png")
+		img = _loadImage(self, "Icons/icon_wireless_3_sel.png"),
+		padding = { 0, 6, 0, 0 },
 	})
 
 	s.wirelessLevel4 = _uses(s._indicator, {
 		img = _loadImage(self, "Icons/icon_wireless_4_off.png")
 	})
 	s.menu.selected.item.wirelessLevel4 = _uses(s.wirelessLevel4, {
-		img = _loadImage(self, "Icons/icon_wireless_4_sel.png")
+		img = _loadImage(self, "Icons/icon_wireless_4_sel.png"),
+		padding = { 0, 6, 0, 0 },
 	})
 
 
