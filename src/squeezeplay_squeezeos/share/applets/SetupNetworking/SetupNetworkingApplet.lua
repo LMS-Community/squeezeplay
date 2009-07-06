@@ -1529,7 +1529,7 @@ function _enterIPHelp(self, iface, ssid)
 	local window = Window("help_list", self:string("STATIC_ADDRESS_CONNECT_MANUALLY"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("help_text", self:string("STATIC_ADDRESS_CONNECT_MANUALLY_BODY"))
+	local textarea = Textarea("help_text", self:string("NETWORK_IP_ADDRESS_HELP_BODY"))
 
 	local menu = SimpleMenu("menu", {
 		{
