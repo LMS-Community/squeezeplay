@@ -404,7 +404,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 10, 6, 6, 6 },
+		padding = { 10, 6, 5, 6 },
 		text = {
 			padding = { 0, 0, 0, 0 },
 			align = "left",
@@ -430,13 +430,19 @@ function skin(self, s, reload, useDefaultSize)
 	s.item_add = _uses(s.item)
 
 	-- Checkbox
-        s.checkbox = {}
+        s.checkbox = { 
+		h = WH_FILL, 
+		padding = { 0, 5, 3, 5 },
+	}
         s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
-        s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off_sel.png")
+        s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
 
 
         -- Radio button
-        s.radio = {}
+        s.radio = { 
+		h = WH_FILL, 
+		padding = { 0, 5, 3, 5 },
+	}
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
 		
@@ -491,6 +497,16 @@ function skin(self, s, reload, useDefaultSize)
 			font = _boldfont(c.TEXTMENU_FONT_SIZE),
 			fg = c.SELECT_COLOR,
 			sh = c.SELECT_SH_COLOR,
+		},
+		radio = {
+        		img_on = _loadImage(self, "Icons/radiobutton_on_sel.png"),
+			img_off = _loadImage(self, "Icons/radiobutton_off_sel.png"),
+			padding = { 0, 5, 0, 5 },
+		},
+		checkbox = {
+        		img_on = _loadImage(self, "Icons/checkbox_on_sel.png"),
+			img_off = _loadImage(self, "Icons/checkbox_off_sel.png"),
+			padding = { 0, 5, 0, 5 },
 		},
 	})
 
