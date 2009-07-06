@@ -139,6 +139,17 @@ function _updateVolume(self, mute, directSet, noAccel)
 	else
 		if noAccel then
 			new = math.abs(self.volume) + self.delta
+			local now = Framework:getTicks()
+			if (now - self.lastUpdate) < 350 then
+				--add any additional delta suppressed by rate limiting
+
+				new = new + self.rateLimitDelta
+				self.rateLimitDelta = 0
+			else
+				--beyond time where built up delta from rate limiting is abandoned
+				self.rateLimitDelta = 0
+			end
+			self.lastUpdate = now
 		else
 			-- accelation
 			local now = Framework:getTicks()
@@ -163,8 +174,13 @@ function _updateVolume(self, mute, directSet, noAccel)
 	elseif new < 0 then
 		new = 0
 	end
+	local remoteVolume = self.player:volume(new)
 
-	self.volume = self.player:volume(new) or self.volume
+	if not remoteVolume then
+		self.rateLimitDelta = self.rateLimitDelta + self.delta
+	end
+
+	self.volume = remoteVolume or self.volume
 	_updateDisplay(self)
 end
 
@@ -175,6 +191,7 @@ function __init(self, applet)
 	obj.applet = applet
 	obj.muting = false
 	obj.lastUpdate = 0
+	obj.rateLimitDelta = 0
 	obj.timer = Timer(100, function()
 				       _updateVolume(obj)
 			       end)
