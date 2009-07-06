@@ -64,16 +64,25 @@ BSP_BRIGHTNESS
 	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_CTRL
-	EN	Brightness Control
+	CS	Ovládání jasu
 	DE	Helligkeits Steuerung
+	EN	Brightness Control
+	PL	Regulacja jasności
+	RU	Управление яркостью
 
 BSP_BRIGHTNESS_AUTOMATIC
-	EN	Automatic Brightness
+	CS	Automatický jas
 	DE	Automatische Hellikeit
+	EN	Automatic Brightness
+	PL	Automatyczna regulacja jasności
+	RU	Автонастройка яркости
 
 BSP_BRIGHTNESS_MANUAL
-	EN	Manual Brightness
+	CS	Manuální jas
 	DE	Manuelle Helligkeit
+	EN	Manual Brightness
+	PL	Ręczna regulacja jasności
+	RU	Ручная настройка яркости
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.

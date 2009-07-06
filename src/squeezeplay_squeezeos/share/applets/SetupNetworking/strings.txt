@@ -19,7 +19,10 @@ NETWORK
 	SV	Trådlöst nätverk
 
 NETWORK_NETWORKING
+	CS	Připojování do sítě
 	EN	Networking
+	PL	Sieć
+	RU	Работа в сети
 
 NETWORK_FINDING_NETWORKS
 	CS	Hledání sítí...
@@ -217,7 +220,7 @@ NETWORK_STATE_CONNECTED
 	SV	Ansluten
 
 NETWORK_STATUS
-	CS	Stav sítě
+	CS	Status sítě
 	DA	Netværksstatus
 	DE	Netzwerkstatus
 	EN	Network Status
@@ -337,7 +340,7 @@ NETWORK_REGION_HELP
 	SV	Hjälp om regioner
 
 NETWORK_REGION_HELP_BODY
-	CS	Pokud se nacházíte ve Spojených Státech, Kanadě nebo Mexiku, zvolte "Severní Amerika"\n\nPro všechna další místa zvolte "Všechny ostatní regiony." Na tuto otázku se ptáme, aby bylo zajištěno splnění lokálních pravidel týkajícícíh se bezdrátových frekvencí.
+	CS	Pokud se nacházíte ve Spojených státech, Kanadě nebo Mexiku, zvolte laskavě "Severní Amerika."\n\nPro zbytek světa zvolte "Všechny ostatní regiony."\n\nNa tuto otázku se ptáme za účelem dodržení místních předpisů týkajících se bezdrátových frekvencí.
 	DA	Hvis du befinder dig i USA, Canada eller Mexico, skal du vælge Nordamerika.\n\nHvis du bor et andet sted i verden, skal du vælge Alle andre områder. Du bliver spurgt om dette af hensyn til særlige lokale love og bestemmelser mht. hvilke frekvenser der må bruges til trådløse netværk i de forskellige områder og lande.
 	DE	Wählen Sie 'Nordamerika', wenn Sie in den USA, Kanada oder Mexiko leben.\n\nWählen Sie bei sonstigen Ländern die Option 'Alle anderen Regionen'. Wir benötigen diese Information zur Einhaltung regionaler Vorschriften im Hinblick auf Frequenzen in einem kabellosen Netzwerk.
 	EN	If you are located in the United States, Canada, or Mexico, please select "North America."\n\nFor the rest of the world, select "All Other Regions."\n\nWe ask this question in order to comply with local rules regarding wireless frequencies.
@@ -347,8 +350,8 @@ NETWORK_REGION_HELP_BODY
 	IT	Selezionare Nord America se ci si trova negli Stati Uniti, in Canada o in Messico.\n\nPer tutte le altre aree geografiche, selezionare Tutte le altre aree geografiche. Poniamo questa domanda per conformarci alle normative locali in merito alle frequenze delle reti senza fili.
 	NL	Als u zich in de V.S, Canada of Mexico bevindt, selecteer dan 'Noord-Amerika'.\n\nSelecteer 'Alle overige regio's' voor andere locaties. Deze vraag is vereist om aan lokale regels voor draadloze frequenties te voldoen.
 	NO	Hvis du er i USA, Canada eller Mexico, velger du Nord-Amerika.\n\nHvis du er et annet sted, velger du Alle andre områder. Vi spør om dette for å kunne overholde lokale regelverk for trådløse frekvenser.
-	PL	Jeśli przebywasz w Stanach Zjednoczonych, Kanadzie lub Meksyku, wybierz opcję „Ameryka Północna”.\n\nDla pozostałych lokalizacji wybierz opcję „Wszystkie inne regiony”. Zadajemy to pytanie, aby zachować zgodność z lokalnymi przepisami dotyczącymi częstotliwości bezprzewodowych.
-	RU	Если вы находитесь в США, Канаде или Мексике , выберите "Северная Америка".\n\nДля других стран выберите "Другие регионы". Этот вопрос позволяет обеспечить соответствие локальным правилам частот беспроводной связи.
+	PL	Jeśli przebywasz w Stanach Zjednoczonych, Kanadzie lub Meksyku, wybierz opcję „Ameryka Północna”.\n\nDla pozostałych lokalizacji wybierz opcję „Wszystkie inne regiony”.\n\nZadajemy to pytanie, aby zachować zgodność z lokalnymi przepisami dotyczącymi częstotliwości bezprzewodowych.
+	RU	Если вы находитесь в США, Канаде или Мексике, выберите "Северная Америка."\n\nДля других стран выберите "Другие регионы".\n\nЭтот вопрос позволяет обеспечить соответствие локальным правилам для частот беспроводной связи.
 	SV	Om du befinner dig i USA, Kanada eller Mexiko väljer du "Nordamerika".\n\nAnnars väljer du "Alla övriga regioner". Vi ställer den här frågan för att följa lokal regler avseende trådlösa frekvenser.
 
 NETWORK_WIRELESS_NETWORKS
@@ -442,7 +445,7 @@ NETWORK_WEP_128
 	SV	128-bitars WEP (26 tecken)
 
 NETWORK_WPA
-	CS	WPA osobní
+	CS	WPA Personal
 	DA	WPA Personal
 	DE	WPA Personal
 	EN	WPA Personal
@@ -457,7 +460,7 @@ NETWORK_WPA
 	SV	WPA-Personal
 
 NETWORK_WPA2
-	CS	WPA2 osobní
+	CS	WPA2 Personal
 	DA	WPA2 Personal
 	DE	WPA2-Personal
 	EN	WPA2 Personal
@@ -532,7 +535,7 @@ NETWORK_WIRELESS_PASSWORD_HELP_BODY
 	SV	Om du ansluter via ett trådlöst nätverk och inte känner till lösenordet kan du prova med följande:\n\n1. Kontrollera om du har lösenordet nedskrivet.\n2. Fråga någon annan som använder nätverket om de känner till lösenordet.\n3. Hör med personen som konfigurerade hemmanätverket.\n\nOBS! Lösenord går ibland under beteckningen säkerhetsnyckel.\nOBS! Squeezebox har inte stöd för WEP-lösenord i ASCII-format. Du kan fortfarande ansluta Squeezebox till nätverket, men du måste först omvandla ASCII-lösenordet till hexadecimalt format. Det finns gott om omvandlingsprogram på nätet. Du kan även gå in på www.mysqueezebox.com/support för mer information.
 
 NETWORK_CONNECTING_TO_SSID
-	CS	Připojuji se k
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to
@@ -542,8 +545,8 @@ NETWORK_CONNECTING_TO_SSID
 	IT	Connessione a
 	NL	Bezig verbinding te maken met
 	NO	Kopler til
-	PL	Łączenie z
-	RU	Подключение к
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till
 
 NETWORK_ETHERNET
@@ -562,7 +565,7 @@ NETWORK_ETHERNET
 	SV	Ethernet
 
 NETWORK_CONNECTED_TO
-	CS	Připojeno k
+	CS	Připojeno k\n%s
 	DA	Afspilleren er tilsluttet
 	DE	Verbunden mit
 	EN	Connected to
@@ -572,8 +575,8 @@ NETWORK_CONNECTED_TO
 	IT	Connesso a
 	NL	Verbonden met
 	NO	Koplet til
-	PL	Połączono z
-	RU	Установлено подключение к
+	PL	Połączono z\n%s
+	RU	Установлено подключение к\n%s
 	SV	Ansluten till
 
 NETWORK_TRY_AGAIN
@@ -767,8 +770,8 @@ ZEROCONF_ADDRESS
 	IT	IP autoassegnato
 	NL	Zelftoegekend IP-adres
 	NO	Selvtildelt IP
-	PL	Samoprzydzielony IP
-	RU	IP самоназначен
+	PL	Samoprzypisany adres
+	RU	Самоназначить адрес
 	SV	Egentilldelad IP-adress
 
 NETWORK_WEP_DHCP
@@ -967,7 +970,7 @@ NETWORK_FOUND_NETWORKS
 	SV	Följande nätverk upptäcktes: %s
 
 NETWORK_CONNECTION_TYPE
-	CS	Zvolte typ připojení
+	CS	Zvolte typ sítě
 	DA	Vælg netværkstype
 	DE	Netzwerktyp wählen
 	EN	Choose network type
@@ -977,12 +980,12 @@ NETWORK_CONNECTION_TYPE
 	IT	Scegli tipo rete
 	NL	Netwerktype kiezen
 	NO	Velg nettverkstype
-	PL	Wybierz typ połączenia
-	RU	Выберите тип подключения
+	PL	Wybierz typ sieci
+	RU	Выберите тип сети
 	SV	Välj nätverkstyp
 
 NETWORK_CONNECTION_TYPE_WIRELESS
-	CS	Bezdrátová technologie
+	CS	Připojit k bezdrátové síti
 	DA	Opret forbindelse til trådløst netværk
 	DE	Verbindung mit drahtlosem Netzwerk herstellen
 	EN	Connect to wireless network
@@ -992,12 +995,12 @@ NETWORK_CONNECTION_TYPE_WIRELESS
 	IT	Connetti a rete senza fili
 	NL	Met draadloos netwerk verbinden
 	NO	Kople til trådløst nettverk
-	PL	Bezprzewodowa
-	RU	Беспроводная
+	PL	Połącz z siecią bezprzewodową
+	RU	Подключиться к беспроводной сети
 	SV	Anslut till trådlöst nätverk
 
 NETWORK_CONNECTION_TYPE_WIRED
-	CS	Kabelová
+	CS	Připojit k ethernetové síti
 	DA	Opret forbindelse til Ethernet-netværk
 	DE	Mit Ethernet-Netzwerk verbinden
 	EN	Connect to ethernet network
@@ -1007,8 +1010,8 @@ NETWORK_CONNECTION_TYPE_WIRED
 	IT	Connetti a rete Ethernet
 	NL	Met ethernetnetwerk verbinden
 	NO	Kople til ethernet-nettverk
-	PL	Przewodowa
-	RU	Проводная
+	PL	Połącz z siecią Ethernet
+	RU	Подключиться к сети Ethernet
 	SV	Anslut till Ethernet-nätverk
 
 NETWORK_CONNECTION_HELP
@@ -1177,7 +1180,7 @@ NETWORK_WPS_METHOD_PIN
 	SV	Använd PIN-kod
 
 NETWORK_WPS_METHOD_PSK
-	CS	Vložte heslo WPA
+	CS	Vložit heslo pro bezdrátovou síť
 	DA	Indtast WPA-adgangskode
 	DE	WPA-Kennwort eingeben
 	EN	Enter Wireless Password
@@ -1187,8 +1190,8 @@ NETWORK_WPS_METHOD_PSK
 	IT	Immettere la password WPA
 	NL	WPA-wachtwoord invoeren
 	NO	Angi WPA-passord
-	PL	Wprowadź hasło WPA
-	RU	Введите пароль WPA
+	PL	Wprowadź hasło sieci bezprzewodowej
+	RU	Введите пароль беспроводной сети
 	SV	Ange WPA-lösenordet
 
 NETWORK_WPS_HELP
@@ -1312,7 +1315,7 @@ NETWORK_WPS_PROGRESS_PBC
 	SV	Anslutningsknapp
 
 NETWORK_WPS_PROGRESS_PIN
-	CS	Zadejte tento PIN: %s
+	CS	Zadejte tento PIN\n%s
 	DA	Indtast denne pinkode: %s
 	DE	Diese PIN: %s eingeben
 	EN	Enter This PIN: %s
@@ -1322,8 +1325,8 @@ NETWORK_WPS_PROGRESS_PIN
 	IT	Immettere questo PIN: %s
 	NL	Deze PIN: %s invoeren
 	NO	Angi denne pin-koden: %s
-	PL	Wprowadź ten kod PIN: %s
-	RU	Введите этот PIN-код: %s
+	PL	Wprowadź ten kod PIN\n%s
+	RU	Введите этот PIN-код\n%s
 	SV	Ange PIN-kod: %s
 
 NETWORK_WPS_PROBLEM
@@ -1447,7 +1450,10 @@ NETWORK_CANT_CONNECT
 	SV	Det går inte att ansluta
 
 NETWORK_LIST_HELP_BODY
+	CS	V této fázi potřebujeme, aby se váš Squeezebox připojil k vaší bezdrátové síti. Abyste to mohli provést, potřebujete znát název vaší sítě a heslo (pokud máte otevřenou síť, heslo nebudete potřebovat).\n\nPokud neznáte název vaší sítě nebo heslo a máte bezdrátovou síť, zkuste jeden nebo více z následujících kroků:\n\n1. Přesvědčte se, jestli jste si je někam nezapsali.\n2. Zeptejte se někoho ve vaší domácnosti, jestli je nezná.\n3. Kontaktujte osobu, která instalovala vaši domácí síť.\n4. Nahlédněte do manuálu vašeho routeru.\n5. Požádejte o pomoc výrobce vašeho routeru.\n\nPOZNÁMKA: Název sítě se někdy nazývá  SSID, a heslo je někdy označováno jako bezdrátový klíč nebo bezpečnostní klíč.\n\nPokud se vaše síť neobjeví v seznamu bezdrátových sítí, zkuste jeden nebo více následujících kroků:\n\n1. Ujistěte se, že Squeezebox je v dosahu vaší bezdrátové sítě.\n2. Jděte ke svému počítači a přesvědčte se, že vaše síť je v provozu.\n3. Pokud je váš router konfigurován tak, aby nevysílal název vaší sítě (SSID), zvolte "Nevidím svou síť" na spodu seznamu sítí a vložte svou síť.\n4. Odpojte router, počkejte 30 sekund a znovu jej zapojte.\n5. Nahlédněte do dokumentace vašeho routeru nebo zkontaktujte výrobce kvůli asistenci.
 	EN	At this stage, we need to get your Squeezebox connected to your wireless network. To do this, you'll need to know your network name and password (if you have an open network, you won't need a password).\n\nIf you don't know your network name or password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have them written down somewhere.\n2. Ask someone else in your home if they know them.\n3. Contact the person who set up your home network.\n4. Check your router manual.\n5. Contact your router manufacturer for assistance.\n\nIf your network does not appear on the list of wireless networks, try one or more of the following:\n\n1. Make sure the Squeezebox is within range of your wireless network.\n2. Go to your computer to make sure your network is working.\n3. If your router is configured to not broadcast your network name (SSID), select "I don't see my network" at the bottom of the list of networks, and enter yours.\n4. Unplug your router, wait 30 seconds, and plug it back in.\n5. Refer to your router documentation or contact the manufacturer for assistance.\n\nNOTE: A network name is sometimes referred to as an SSID, and a password is sometimes referred to as a wireless key, or security key.\n\nNOTE: Squeezebox does not support ASCII-formatted WEP passwords. You can still connect your Squeezebox to your network, but you will need to convert the ASCII password to Hexadecimal format. You can likely find a converter tool somewhere online. Or visit www.mysqueezebox.com/support for more information.
+	PL	Na tym etapie należy podłączyć urządzenie Squeezebox do sieci bezprzewodowej. W tym celu wymagana jest nazwa sieci i hasła (w przypadku otwartej sieci hasło nie jest wymagane).\n\nJeśli nie znasz nazwy sieci lub hasła, a używana jest sieć bezprzewodowa, wypróbuj jedną lub kilka poniższych metod:\n\n1. Sprawdź, czy te informacje nie zostało gdzieś zapisane.\n2. Zapytaj innego domownika, czy zna te informacje.\n3. Skontaktuj się z osobą, która skonfigurowała sieć w domu.\n4. Sprawdź instrukcję obsługi routera.\n5. Skontaktuj się z producentem routera w celu uzyskania pomocy.\n\nUWAGA: Nazwa sieci jest czasami nazywana identyfikatorem SSID, a hasło jest czasami nazywane kluczem sieci bezprzewodowej lub kluczem zabezpieczeń.\n\nJeśli sieć nie pojawia się na liście sieci bezprzewodowych, wypróbuj jedną lub kilka poniższych metod:\n\n1. Upewnij się, że urządzenie Squeezebox znajduje się w zasięgu sieci bezprzewodowej.\n2. Sprawdź na komputerze, czy sieć działa.\n3. Jeśli router nie jest skonfigurowany na rozgłaszanie nazwy sieci (SSID), wybierz pozycję „Nie widzę mojej sieci” na dole listy sieci i wprowadź nazwę swojej sieci.\n4. Odłącz router, poczekaj 30 sekund i podłącz go ponownie.\n5. Zapoznaj się z dokumentacją routera lub skontaktuj się z routerem, aby uzyskać pomoc.
+	RU	На этом этапе необходимо подключить Squeezebox к беспроводной сети. Для этого вы должны знать имя вашей сети и пароль (для открытой сети пароль не потребуется).\n\nЕсли вы не знаете имя сети или пароль и используете беспроводную сеть, попробуйте выполнить следующие действия.:\n\n1. Проверьте, не записали ли вы где-нибудь эти данные.\n2. Спросите кого-нибудь из домашних, не знают ли они имя сети и пароль.\n3. Обратитесь к лицу, настроившему вашу домашнюю сеть.\n4. Посмотрите в руководстве маршрутизатора.\n5. Обратитесь за помощью к изготовителю маршрутизатора.\n\nПРИМЕЧАНИЕ. Имя сети иногда называют идентификатором SSID, а пароль — беспроводным ключом или ключом безопасности.\n\nЕсли ваша сеть не появляется в списке беспроводных сетей, попробуйте выполнить следующие действия:\n\n1. Убедитесь, что Squeezebox находится в диапазоне беспроводной сети.\n2. Убедитесь, что сеть работает.\n3. Если маршрутизатор не настроен на вещание имени вашей сети (SSID), выберите параметр "Я не вижу свою сеть" снизу в списке сетей и введите свою.\n4. Отсоедините маршрутизатор, подождите 30 секунд и снова подсоедините его.\n5. Обратитесь за помощью к документации маршрутизатора или к его изготовителю.
 
 NETWORK_LIST_HELP
 	CS	Nápověda pro bezdrátovou síť

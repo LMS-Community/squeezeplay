@@ -29,7 +29,7 @@ WELCOME
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
-	RU	Добро пожаловать
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH

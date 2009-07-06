@@ -34,7 +34,7 @@ LANGUAGE
 	SV	Språk
 
 LANGUAGE_NO
-	CS	Norsk
+	CS	Norština
 	DA	Norsk
 	DE	Norsk
 	EN	Norsk
@@ -45,11 +45,11 @@ LANGUAGE_NO
 	NL	Norsk
 	NO	Norsk
 	PL	Norsk
-	RU	Norsk
+	RU	норвежский
 	SV	Norsk
 
 LANGUAGE_SV
-	CS	Svenska
+	CS	Švédština
 	DA	Svenska
 	DE	Svenska
 	EN	Svenska
@@ -60,7 +60,7 @@ LANGUAGE_SV
 	NL	Svenska
 	NO	Svenska
 	PL	Svenska
-	RU	Svenska
+	RU	шведский
 	SV	Svenska
 
 LANGUAGE_FI
@@ -75,11 +75,11 @@ LANGUAGE_FI
 	NL	Suomi
 	NO	Suomi
 	PL	Suomi
-	RU	Suomi
+	RU	финский
 	SV	Suomi
 
 LANGUAGE_DA
-	CS	Dansk
+	CS	Dánština
 	DA	Dansk
 	DE	Dansk
 	EN	Dansk
@@ -90,11 +90,11 @@ LANGUAGE_DA
 	NL	Dansk
 	NO	Dansk
 	PL	Dansk
-	RU	Dansk
+	RU	датский
 	SV	Dansk
 
 LANGUAGE_DE
-	CS	Deutsch
+	CS	Němčina
 	DA	Deutsch
 	DE	Deutsch
 	EN	Deutsch
@@ -105,11 +105,11 @@ LANGUAGE_DE
 	NL	Deutsch
 	NO	Deutsch
 	PL	Deutsch
-	RU	Deutsch
+	RU	немецкий
 	SV	Deutsch
 
 LANGUAGE_EN
-	CS	English
+	CS	Česky
 	DA	English
 	DE	English
 	EN	English
@@ -119,8 +119,8 @@ LANGUAGE_EN
 	IT	English
 	NL	English
 	NO	English
-	PL	English
-	RU	English
+	PL	Polski
+	RU	английский
 	SV	English
 
 LANGUAGE_ES
@@ -135,7 +135,7 @@ LANGUAGE_ES
 	NL	Español
 	NO	Español
 	PL	Español
-	RU	Español
+	RU	испанский
 	SV	Español
 
 LANGUAGE_FR
@@ -150,11 +150,11 @@ LANGUAGE_FR
 	NL	Français
 	NO	Français
 	PL	Français
-	RU	Français
+	RU	Французский
 	SV	Français
 
 LANGUAGE_IT
-	CS	Italiano
+	CS	Italština
 	DA	Italiano
 	DE	Italiano
 	EN	Italiano
@@ -165,11 +165,11 @@ LANGUAGE_IT
 	NL	Italiano
 	NO	Italiano
 	PL	Italiano
-	RU	Italiano
+	RU	итальянский
 	SV	Italiano
 
 LANGUAGE_NL
-	CS	Nederlands
+	CS	Holandština
 	DA	Nederlands
 	DE	Nederlands
 	EN	Nederlands
@@ -180,11 +180,11 @@ LANGUAGE_NL
 	NL	Nederlands
 	NO	Nederlands
 	PL	Nederlands
-	RU	Nederlands
+	RU	голландский
 	SV	Nederlands
 
 LANGUAGE_RU
-	CS	Русский
+	CS	Ruština
 	DA	Русский
 	DE	Русский
 	EN	Русский
@@ -195,11 +195,11 @@ LANGUAGE_RU
 	NL	Русский
 	NO	Русский
 	PL	Русский
-	RU	Русский
+	RU	русский
 	SV	Русский
 
 LANGUAGE_PL
-	CS	Polski
+	CS	Polština
 	DA	Polski
 	DE	Polski
 	EN	Polski
@@ -225,7 +225,7 @@ LANGUAGE_CS
 	NL	Čeština
 	NO	Čeština
 	PL	Čeština
-	RU	Čeština
+	RU	чешский
 	SV	Čeština
 
 CHOOSE_LANGUAGE_HELP
@@ -244,7 +244,7 @@ CHOOSE_LANGUAGE_HELP
 	SV	Välj språk med hjälp av rullningshjulet. Tryck på mittenknappen för att gå vidare.
 
 LOADING_LANGUAGE
-	CS	Nahrávám češtinu
+	CS	Nahrávám angličtinu
 	DA	Indlæser dansk
 	DE	Deutsch wird geladen
 	EN	Loading English

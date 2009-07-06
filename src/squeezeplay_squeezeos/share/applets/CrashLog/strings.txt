@@ -3,10 +3,20 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CRASH_TITLE
+	CS	Pád systému
 	EN	System crash
+	PL	Zawieszenie systemu
+	RU	Сбой системы
 
 CRASH_TEXT
+	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
 	EN	A system crash has been detected. A log file is being sent to Logitech for analysis.
+	PL	Wykryto zawieszenie systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
+	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
 
 CRASH_CONTINUE
+	CS	Pokračovat
 	EN	Continue
+	PL	Kontynuuj
+	RU	Продолжить
+

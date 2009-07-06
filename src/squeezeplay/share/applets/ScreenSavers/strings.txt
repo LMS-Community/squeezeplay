@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SCREENSAVERS
-	CS	Šetřiče obrazovky
+	CS	Spořiče obrazovky
 	DA	Pauseskærme
 	DE	Bildschirmschoner
 	EN	Screensavers
@@ -195,7 +195,7 @@ DELAY_30_MIN
 	SV	30 minuter
 
 SCREENSAVER_NONE
-	CS	Žádná
+	CS	Žádný
 	DA	Ingen
 	DE	Keine
 	EN	None

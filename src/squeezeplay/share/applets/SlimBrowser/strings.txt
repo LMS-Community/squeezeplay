@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SN_SIGNUP
-	CS	Přihlášení do Squeezenetwork
+	CS	Přihlášení do mysqueezebox.com
 	DA	Tilmelding til Squeezenetwork
 	DE	Anmeldung bei SqueezeNetwork
 	EN	Squeezenetwork Signup
@@ -13,12 +13,15 @@ SN_SIGNUP
 	IT	Iscrizione a Squeezenetwork
 	NL	Aanmelding bij Squeezenetwork
 	NO	Squeezenetwork-registrering
-	PL	Rejestracja w usłudze Squeezenetwork
-	RU	Подписка Squeezenetwork
+	PL	Rejestracja w usłudze mysqueezebox.com
+	RU	Подписка mysqueezebox.com
 	SV	Registrering för Squeezenetwork
 
 SLIMBROWSER_PLAYLIST
+	CS	Aktuální seznam skladeb
 	EN	Current Playlist
+	PL	Aktualna lista odtwarzania
+	RU	Текущий плей-лист
 
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno
@@ -231,7 +234,7 @@ SLIMBROWSER_ENTER_PASSWORD
 	SV	Ange lösenord
 
 SLIMBROWSER_CONNECTING_TO
-	CS	Připojuji se k
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to
@@ -241,7 +244,7 @@ SLIMBROWSER_CONNECTING_TO
 	IT	Connessione a
 	NL	Er wordt een verbinding met gemaakt
 	NO	Kopler til
-	PL	Łączenie z
-	RU	Подключение к
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till
 

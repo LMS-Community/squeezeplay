@@ -230,7 +230,7 @@ DIM_WHEN_CHARGING
 	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
-	CS	Dochází baterie
+	CS	Dochází baterie\nDobijte ji prosím
 	DA	Batteriet er næsten fladt
 	DE	Batterie schwach
 	EN	Battery Low
@@ -240,10 +240,9 @@ BATTERY_LOW
 	IT	Livello batteria insufficiente
 	NL	Batterij bijna leeg
 	NO	Lavt batterinivå
-	PL	Niski poziom baterii
-	RU	Батарея разряжена
+	PL	Niski poziom baterii\nNaładuj urządzenie
+	RU	Батарея разряжена\nНеобходима зарядка
 	SV	Låg batterinivå
-
 
 BATTERY_LOW_2
 	CS	Dobijte ji prosím
@@ -306,7 +305,7 @@ POWER_DOWN_SLEEP
 	SV	Viloläge
 
 GOODBYE
-	CS	Nashledanou
+	CS	\nNashledanou
 	DA	Farvel
 	DE	Auf Wiedersehen
 	EN	Goodbye
@@ -316,12 +315,12 @@ GOODBYE
 	IT	A presto
 	NL	Tot ziens
 	NO	Farvel
-	PL	Do widzenia
-	RU	Прощайте
+	PL	\nDo widzenia
+	RU	\nПрощайте
 	SV	Hej då!
 
 SLEEPING
-	CS	Usínám
+	CS	\nUsínám
 	DA	Slumrer
 	DE	Schlafmodus aktiv
 	EN	Sleeping
@@ -331,8 +330,8 @@ SLEEPING
 	IT	Sospensione
 	NL	Sluimermodus
 	NO	Hviler
-	PL	Uśpienie
-	RU	Спящий режим
+	PL	\nUśpienie
+	RU	\nСпящий режим
 	SV	I viloläge
 
 POWER_DOWN_HELP
@@ -351,7 +350,7 @@ POWER_DOWN_HELP
 	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
-	CS	Čekejte prosím
+	CS	\nČekejte prosím
 	DA	Vent lidt
 	DE	Bitte warten
 	EN	Please wait
@@ -361,8 +360,8 @@ PLEASE_WAIT
 	IT	Attendere
 	NL	Een ogenblik geduld
 	NO	Vent litt
-	PL	Czekaj
-	RU	Подождите, пожалуйста
+	PL	\nCzekaj
+	RU	\nПодождите, пожалуйста
 	SV	Vänta
 
 INVALID_MAC_TITLE

@@ -18,43 +18,73 @@ IMAGE_VIEWER
 	SV	Bildvisare
 
 IMAGE_VIEWER_ERROR
+	CS	Chyba
 	DE	Fehler
 	EN	Error
+	PL	Błąd
+	RU	Ошибка
 
 IMAGE_VIEWER_EMPTY_LIST
+	CS	Nic k zobrazení, seznam obrázků je prázdný
 	DE	Nichts anzuzeigen, die Bilderliste ist leer
 	EN	Nothing to display, the image list is empty
+	PL	Nie ma nic do wyświetlenia, lista obrazów jest pusta
+	RU	Нет элементов для отображения, список изображений пуст
 
 IMAGE_VIEWER_SETTINGS
+	CS	Nastavení prohlížeče obrázků
 	DE	Bilder-Anzeige Einstellungen
 	EN	Image Viewer Settings
+	PL	Ustawienia przeglądarki obrazów
+	RU	Настройки просмотра изображений
 
 IMAGE_VIEWER_SOURCE
+	CS	Zdroje
 	DE	Quellen
 	EN	Sources
+	PL	Źródła
+	RU	Источники
 
 IMAGE_VIEWER_SOURCE_SETTINGS
+	CS	Nastavení specifické pro zdroj
 	DE	Quellspezifische Einstellungen
 	EN	Source specific settings
+	PL	Ustawienia specyficzne dla źródła
+	RU	Настройки для источника
 
 IMAGE_VIEWER_SOURCE_CARD
+	CS	Paměťová karta
 	DE	Memory-Karte
 	EN	Memory card
+	PL	Karta pamięci
+	RU	Карта памяти
 
 IMAGE_VIEWER_SOURCE_SC
+	CS	Squeezebox Server
 	DE	Squeeze Center
 	EN	Squeeze center
+	PL	Squeezebox Server
+	RU	Squeezebox Server
 
 IMAGE_VIEWER_SOURCE_HTTP
+	CS	Seznam URL
 	DE	URL Liste
 	EN	URL list
+	PL	Lista adresów URL
+	RU	Список URL-адресов
 
 IMAGE_VIEWER_SOURCE_FLICKR
+	CS	Flickr
 	EN	Flickr
+	PL	Flickr
+	RU	Flickr
 
 IMAGE_VIEWER_DELAY
+	CS	Prodleva
 	DE	Verzögerung
 	EN	Delay
+	PL	Opóźnienie
+	RU	Задержка
 
 IMAGE_VIEWER_DELAY_10_SEC
 	CS	10 s
@@ -117,16 +147,25 @@ IMAGE_VIEWER_DELAY_1_MIN
 	SV	1 min
 
 IMAGE_VIEWER_ORDERING
+	CS	Objednávání
 	DE	Reihenfolge
 	EN	Ordering
+	PL	Kolejność
+	RU	Порядок
 
 IMAGE_VIEWER_ORDERING_SEQUENTIAL
+	CS	sekvenční
 	DE	sequentiell
 	EN	sequential
+	PL	sekwencyjne
+	RU	последовательно
 
 IMAGE_VIEWER_ORDERING_RANDOM
+	CS	náhodně
 	DE	zufällig
 	EN	random
+	PL	losowo
+	RU	в случайном порядке
 
 IMAGE_VIEWER_TRANSITION
 	CS	Přechody
@@ -159,8 +198,11 @@ IMAGE_VIEWER_TRANSITION_RANDOM
 	SV	Slumpmässiga övergångar
 
 IMAGE_VIEWER_TRANSITION_FADE
+	CS	Zatmívání obrázků
 	DE	Bilder überblenden
 	EN	Fade images
+	PL	Zanikanie obrazów
+	RU	Затухание изображений
 
 IMAGE_VIEWER_TRANSITION_INSIDE_OUT
 	CS	Prosvětlit ze středu ven
@@ -238,52 +280,88 @@ IMAGE_VIEWER_TRANSITION_RIGHT_LEFT
 	SV	Tona från höger till vänster
 
 IMAGE_VIEWER_TRANSITION_PUSH_RIGHT
+	CS	posunout doprava
 	DE	nach rechts schieben
 	EN	push to right
+	PL	wypychanie w prawo
+	RU	сдвинуть вправо
 
 IMAGE_VIEWER_TRANSITION_PUSH_LEFT
+	CS	posunout doleva
 	DE	nach links schieben
 	EN	push to left
+	PL	wypychanie w lewo
+	RU	сдвинуть влево
 
 IMAGE_VIEWER_ROTATION
+	CS	Automatické otáčení
 	DE	Automatisches Drehen
 	EN	Auto-rotate
+	PL	Autoobracanie
+	RU	Автоповорот
 
 IMAGE_VIEWER_ROTATION_YES
+	CS	Vždy otáčet
 	DE	Bilder werden immer gedreht
 	EN	Always rotate
+	PL	Zawsze obracaj
+	RU	Всегда поворачивать
 
 IMAGE_VIEWER_ROTATION_AUTO
+	CS	Otáčení pouze u mobilních zařízení
 	DE	Drehung nur bei mobilen Geräten
 	EN	Rotation on mobile devices only
+	PL	Obracanie tylko na urządzeniach mobilnych
+	RU	Поворот только на мобильных устройствах
 
 IMAGE_VIEWER_ROTATION_NO
+	CS	Bez otáčení
 	DE	Bilder nicht drehen
 	EN	No rotation
+	PL	Bez obracania
+	RU	Без поворота
 
 IMAGE_VIEWER_ZOOM
+	CS	Přiblížení obrázku
 	DE	Anpassung Bilder
 	EN	Image zoom
+	PL	Powiększenie obrazu
+	RU	Масштаб изображения
 
 IMAGE_VIEWER_ZOOM_PICTURE
+	CS	Zobrazit celý obrázek
 	DE	Gesamtes Bild zeigen
 	EN	Show complete image
+	PL	Pokaż cały obraz
+	RU	Показать изображение полностью
 
 IMAGE_VIEWER_ZOOM_SCREEN
+	CS	Zaplnit celou obrazovku
 	DE	Bildschirm ausfüllen
 	EN	Fill complete screen
+	PL	Wypełnij cały ekran
+	RU	Во весь экран
 
 IMAGE_VIEWER_TEXTINFO
+	CS	Dodatečné info o obrázku
 	DE	Zusatzinfos zum Bild
 	EN	Additional info about picture
+	PL	Dodatkowe informacje o obrazie
+	RU	Дополнительные сведения об изображении
 
 IMAGE_VIEWER_TEXTINFO_YES
+	CS	Zobrazit dodatečné info o obrázku
 	DE	Zusatzinfos zum Bild anzeigen
 	EN	Show additional info about picture
+	PL	Pokaż dodatkowe informacje o obrazie
+	RU	Показать дополнительные сведения об изображении
 
 IMAGE_VIEWER_TEXTINFO_NO
+	CS	Skrýt dodatečné info o obrázku
 	DE	Zusatzinfos zum Bild verbergen
 	EN	Hide additional info about picture
+	PL	Ukryj dodatkowe informacje o obrazie
+	RU	Скрыть дополнительные сведения об изображении
 
 #
 # Strings for Card Source
@@ -293,12 +371,18 @@ IMAGE_VIEWER_CARD_PATH
 	EN	Defines the search path for images. You can use a '*' as placeholder
 
 IMAGE_VIEWER_CARD_PATH_HELP
+	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
 	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
 	EN	Defines the search path for images. You can use a '*' as placeholder
+	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
+	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
 
 IMAGE_VIEWER_CARD_ERROR
+	CS	Nenalezeny žádné obrázky. Ujistěte se laskavě, že obrázky jsou umístěny ve správném umístění a v podporovaném formátu.
 	DE	Es konnten keine Bilder gefunden werden. Bitte stellen Sie sicher, dass die Bilder im richtigen Pfad / Format vorliegen.
 	EN	No images found. Please make sure that images are located in the correct path and in a supported format.
+	PL	Nie znaleziono obrazów. Upewnij się, że obrazy znajdują się w prawidłowej ścieżce i są w obsługiwanym formacie.
+	RU	Изображения не найдены. Убедитесь, что указан правильный путь и изображения имеют поддерживаемый формат.
 
 #
 # Strings for HTTP Source
@@ -308,12 +392,18 @@ IMAGE_VIEWER_HTTP_PATH
 	EN	Defines the location of the image list
 
 IMAGE_VIEWER_HTTP_PATH_HELP
+	CS	Definuje umístění seznamu obrázků
 	DE	Legt die URL fest, von welcher die Bilderliste geladen wird
 	EN	Defines the location of the image list
+	PL	Definiuje lokalizację listy obrazów
+	RU	Определяет расположение списка изображений
 
 IMAGE_VIEWER_HTTP_ERROR
+	CS	Není možné získat seznam URL. Zkontrolujte laskavě, jestli je definované URL správné.
 	DE	Die Bilderliste konnte nicht geladen werden. Bitte überprüfen Sie, ob die erfasste URL korrekt ist.
 	EN	Could not retrieve URL list. Please check whether the defined URL is correct.
+	PL	Nie można pobrać listy adresów URL. Sprawdź, czy zdefiniowany adres URL jest prawidłowy.
+	RU	Не удалось получить список URL-адресов. Убедитесь, что задан правильный URL-адрес.
 
 #
 # Strings for Flickr Source
@@ -335,7 +425,7 @@ IMAGE_VIEWER_FLICKR_LOADING_PHOTO
 	SV	Flickr läser in foto ...
 
 IMAGE_VIEWER_FLICKR_ERROR
-	CS	Chyba Flickru
+	CS	Chyba Flickr
 	DA	Flickr-fejl
 	DE	Flickr Fehler
 	EN	Flickr error
@@ -440,7 +530,7 @@ IMAGE_VIEWER_FLICKR_DISPLAY_RECENT
 	SV	Nyligen tillagda bilder
 
 IMAGE_VIEWER_FLICKR_FLICKR_ID
-	CS	Uživatel Flickru
+	CS	Uživatel Flickr
 	DA	Flickr-bruger
 	DE	Flickr Benutzer
 	EN	Flickr User

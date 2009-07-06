@@ -3,16 +3,28 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SLIMSERVER_SERVERS
+	CS	Knihovny
 	EN	Libraries
+	PL	Biblioteki
+	RU	Медиатеки
 
 SWITCH_SERVER_TITLE
+	CS	Přepnout knihovnu
 	EN	Switch Library
+	PL	Przełącz bibliotekę
+	RU	Сменить медиатеку
 
 SWITCH_SERVER_TEXT
+	CS	Provedli jste volbu, která způsobí, že tento přehrávač se připojí k jiné knihovně. Přehrávání se zastaví atd...
 	EN	You have made a selection that will cause this player to connect to a different library. Playback will stop, etc...
+	PL	Dokonano wyboru, który spowoduje połączenie tego odtwarzacza z inną biblioteką. Odtwarzanie zostanie zatrzymane itp.
+	RU	Выбранное действие приведет к подключению плеера к другой медиатеке. Воспроизведение остановится и т. д.
 
 SWITCH_BUTTON
+	CS	Přepnout na knihovnu: %s
 	EN	Switch to library: %s
+	PL	Przełącz na bibliotekę: %s
+	RU	Подключиться к медиатеке: %s
 
 SWITCH_CANCEL
 	CS	Storno
@@ -30,10 +42,16 @@ SWITCH_CANCEL
 	SV	Avbryt
 
 CHOOSE_RETRY
+	CS	Znovu zkusit aktuální knihovnu: %s
 	EN	Retry current library: %s
+	PL	Ponów próbę dla bieżącej biblioteki: %s
+	RU	Повторить попытку доступа к текущей медиатеке: %s
 
 SLIMSERVER_ADD_SERVER
+	CS	Vzdálená knihovna
 	EN	Remote Library
+	PL	Zdalna biblioteka
+	RU	Удаленная медиатека
 
 SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží Squeezebox Server
@@ -51,7 +69,7 @@ SLIMSERVER_HELP
 	SV	Ange IP-adressen till datorn där Squeezebox Server körs
 
 SLIMSERVER_CONNECTING_TO
-	CS	Připojuji se k
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til
 	DE	Verbindung wird hergestellt mit
 	EN	Connecting to
@@ -61,8 +79,8 @@ SLIMSERVER_CONNECTING_TO
 	IT	Connessione a
 	NL	Bezig verbinding te maken met
 	NO	Kopler til
-	PL	Łączenie z
-	RU	Подключение к
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till
 
 SQUEEZEBOX_PROBLEM
@@ -111,13 +129,26 @@ SQUEEZEBOX_TRY_AGAIN
 	SV	Försök igen
 
 CHOOSE_OTHER_LIBRARY
+	CS	Jiná knihovna
 	EN	Other Library
+	PL	Inna biblioteka
+	RU	Другая медиатека
 
 SQUEEZEBOX_PROBLEM_HELP
+	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
 	EN	Couldn't connect your Squeezebox (todo: need new text here)
+	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.
+	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
 
 SQUEEZECENTER_VERSION
+	CS	Aktualizovat software
 	EN	Update Software
+	PL	Aktualizuj oprogramowanie
+	RU	Обновить ПО
 
 SQUEEZECENTER_VERSION_HELP
+	CS	%s vyžaduje aktualizaci na novější verzi Squeezebox Server.\n\nPro stažení nejnovější verze navštivte laskavě mysqueezebox.com/downloads.
 	EN	%s needs to be updated to a newer version of the Squeezebox Server.\n\nPlease visit mysqueezebox.com/downloads to download the latest version.
+	PL	%s wymaga aktualizacji do nowszej wersji programu Squeezebox Server.\n\nOdwiedź witrynę mysqueezebox.com/downloads, aby pobrać najnowszą wersję.
+	RU	%s необходимо обновить до более новой версии Squeezebox Server.\n\nПосетите mysqueezebox.com/downloads, чтобы загрузить последнюю версию.
+

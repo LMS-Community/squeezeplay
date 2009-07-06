@@ -18,7 +18,7 @@ SETTINGS
 	SV	Inställningar
 
 MY_MUSIC
-	CS	Moje hudba
+	CS	Hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
@@ -141,7 +141,7 @@ FACTORY_TEST
 	SV	Fabrikstestning
 
 DEBUG_LOG
-	CS	Přihlašování
+	CS	Protokolování
 	DA	Logføring
 	DE	Protokoll
 	EN	Logging
@@ -186,7 +186,7 @@ GAMES
 	SV	Spel
 
 INSERT
-	CS	Insert
+	CS	Vložit
 	DA	Indsæt
 	DE	Einfügen
 	EN	Insert

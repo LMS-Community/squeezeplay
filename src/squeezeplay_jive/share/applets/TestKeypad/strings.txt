@@ -34,6 +34,7 @@ TEST_KEYPAD_HELP
 	SV	Slutför genom att trycka på samtliga knappar och rulla på hjulet.
 
 TEST_COMPLETE
+	CS	Test ukončen
 	DA	Test fuldført
 	DE	Test abgeschlossen
 	EN	Test Complete
@@ -41,3 +42,6 @@ TEST_COMPLETE
 	FR	Test terminé
 	IT	Test completato
 	NL	Test voltooid
+	PL	Test został ukończony
+	RU	Тесты завершены
+

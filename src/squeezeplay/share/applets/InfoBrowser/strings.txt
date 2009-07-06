@@ -31,7 +31,7 @@ INFOBROWSER_NORESPONSE
 	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
 
 INFOBROWSER_NOINFO_SN
-	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu SqueezeNetwork a přidejte informační kanály.
+	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu mysqueezebox.com a přidejte informační kanály.
 	DA	Der blev ikke fundet nogen informationsfeeds. Log på SqueezeNetwork-konto, og tilføj nogen.
 	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem SqueezeNetwork-Konto an und fügen Sie Info-Feeds hinzu.
 	EN	No information feeds found.  Please login to your SqueezeNetwork account and add information feeds.
@@ -41,8 +41,8 @@ INFOBROWSER_NOINFO_SN
 	IT	Nessun feed di informazioni trovato. Accedere all'account SqueezeNetwork e aggiungere i feed di informazioni.
 	NL	Geen informatiekanalen gevonden. Meld je aan bij je SqueezeNetwork-account en voeg informatiekanalen toe.
 	NO	Fant ingen informasjonsfeeder. Logg på SqueezeNetwork-kontoen og legg til informasjonsfeeder.
-	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto SqueezeNetwork i dodaj kanały informacji.
-	RU	Не найдены каналы информации. Войдите с учетной записью SqueezeNetwork и добавьте каналы информации.
+	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto mysqueezebox.com i dodaj kanały informacji.
+	RU	Каналы информации не найдены. Войдите в учетную запись mysqueezebox.com и добавьте каналы информации.
 	SV	Inga informationsflöden hittades. Logga in på SqueezeNetwork-kontot och lägg till informationsflöden.
 
 INFOBROWSER_NOINFO_SC

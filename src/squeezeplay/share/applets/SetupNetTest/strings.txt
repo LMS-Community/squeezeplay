@@ -1,7 +1,7 @@
 #
 
 SETUPNETTEST
-	CS	Síťový test
+	CS	Test sítě
 	DA	Test af netværk
 	DE	Netzwerktest
 	EN	Network Test

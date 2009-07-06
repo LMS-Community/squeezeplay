@@ -4,50 +4,98 @@
 #
 
 SHORTCUTS_TITLE
+	CS	Klávesové zkratky
 	EN	Shortcuts
+	PL	Skróty
+	RU	Ярлыки
 
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
+	CS	Stisknutí levého tlačítka
 	EN	Left Button Touch
+	PL	Naciśnięcie lewego przycisku
+	RU	Касание левой кнопки
 
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
+	CS	Přidržení levého tlačítka
 	EN	Left Button Hold
+	PL	Przytrzymanie lewego przycisku
+	RU	Удержание левой кнопки
 
 SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
+	CS	Stisknutí pravého tlačítka
 	EN	Right Button Touch
+	PL	Naciśnięcie prawego przycisku
+	RU	Касание правой кнопки
 
 SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
+	CS	Přidržení pravého tlačítka
 	EN	Right Button Hold
+	PL	Przytrzymanie prawego przycisku
+	RU	Удержание правой кнопки
 
 SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
+	CS	Home Stisknutí levého tlačítka
 	EN	Home Left Button Touch
+	PL	Dotknięcie lewego przycisku Home
+	RU	Касание левой кнопки "Домой"
 
 SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
+	CS	Home Přidržení levého tlačítka
 	EN	Home Left Button Hold
+	PL	Przytrzymanie lewego przycisku Home
+	RU	Удержание левой кнопки "Домой"
 
 SHORTCUTS_INPUT_GESTURE_L_R
+	CS	Pravá páčka
 	EN	Right Swipe
+	PL	Przeciągnięcie po prawym przycisku
+	RU	Резкое движение вправо
 
 SHORTCUTS_INPUT_GESTURE_R_L
+	CS	Levá páčka
 	EN	Left Swipe
+	PL	Przeciągnięcie po lewym przycisku
+	RU	Резкое движение влево
 
 SHORTCUTS_OUTPUT_BACK
+	CS	Zpět
 	EN	Back
+	PL	Wstecz
+	RU	Назад
 
 SHORTCUTS_OUTPUT_GO_HOME
+	CS	Přejít Domů
 	EN	Go Home
+	PL	Powrót do początku
+	RU	Домой
 
 SHORTCUTS_OUTPUT_GO_NOW_PLAYING
+	CS	Právě hraje
 	EN	Now Playing
+	PL	Teraz odtwarzane
+	RU	Воспроизводится
 
 SHORTCUTS_OUTPUT_GO_PLAYLIST
+	CS	Aktuální seznam skladeb
 	EN	Current Playlist
+	PL	Aktualna lista odtwarzania
+	RU	Текущий плей-лист
 
 SHORTCUTS_OUTPUT_DISABLED
+	CS	Zakázáno
 	EN	Disabled
+	PL	Wyłączone
+	RU	Отключено
 
 SHORTCUTS_OUTPUT_GO_FAVORITES
+	CS	Oblíbené položky
 	EN	Favorites
+	PL	Ulubione
+	RU	Выбранное
 
 SHORTCUTS_OUTPUT_POWER
+	CS	Napájení
 	EN	Power
+	PL	Zasilanie
+	RU	Питание
 

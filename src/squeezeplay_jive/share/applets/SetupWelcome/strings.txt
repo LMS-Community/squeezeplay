@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
+	CS	Vítejte
 	DA	Velkommen
 	DE	Willkommen
 	EN	Welcome
@@ -12,9 +13,12 @@ WELCOME
 	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
+	CS	Začneme tím, že Vás připojíme k vaší síti a hudbě.
 	DA	Lad os komme i gang med at få dig tilsluttet dit netværk og din musik.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
 	EN	Let's get started by getting you connected to your network and music.
@@ -24,9 +28,12 @@ WELCOME_WALKTHROUGH
 	IT	Iniziamo con il collegamento alla rete e alla musica.
 	NL	We gaan je eerst met je netwerk en muziek verbinden.
 	NO	La oss starte med å kople deg til nettverket ditt og musikken din.
+	PL	Rozpocznij od nawiązania połączenia z siecią i muzyką.
+	RU	Начнем работу, подключив вас к сети и музыке.
 	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
 
 WELCOME_HELP
+	CS	Až budete chtít pokračovat, stiskněte prostřední tlačítko.
 	DA	Tryk midterknappen når du er klar til at fortsætte.
 	DE	Drücken Sie die mittlere Taste, wenn Sie so weit sind.
 	EN	Press the center button when you are ready to move on.
@@ -36,6 +43,8 @@ WELCOME_HELP
 	IT	Premere il pulsante centrale per proseguire.
 	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
 	NO	Trykk på midtknappen når du er klar for å gå videre.
+	PL	Naciśnij klawisz strzałki w prawo, kiedy będzie można kontynuować.
+	RU	Нажмите центральную кнопку, когда вы будете готовы продолжить.
 	SV	Tryck på mittenknappen när du vill gå vidare.
 
 WIRELESS_CONNECTION
@@ -99,6 +108,7 @@ CONNECT_HELP
 	SV	Du kan ansluta till nätverket med Squeezebox eller med en annan trådlös anslutningspunkt.
 
 DONE
+	CS	A je to!
 	DA	Færdig!
 	DE	Fertig!
 	EN	That's it!
@@ -108,9 +118,12 @@ DONE
 	IT	Fatto!
 	NL	Klaar!
 	NO	Det var det!
+	PL	To już wszystko!
+	RU	Сделано!
 	SV	Sedan är det bara att sätta igång!
 
 DONE_CONTINUE
+	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
@@ -120,9 +133,12 @@ DONE_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
 	SV	Fortsätt
 
 DONE_HELP
+	CS	Nyní můžete používat svůj ovladač Squeezebox pro přístup k veškeré hudbě. Pokračujte stiskem prostředního tlačítka.
 	DA	Du kan nu anvende din Squeezebox Controller til at tilgå al din musik. Tryk midterknappen for at fortsætte.
 	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
@@ -132,5 +148,7 @@ DONE_HELP
 	IT	Ora è possibile utilizzare Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
 	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
 	NO	Du kan nå bruke Squeezebox-kontrollen til å få tilgang på all musikken din. Trykk på midtknappen for å fortsette.
+	PL	Teraz możesz użyć programu urządzenia sterującego Squeezebox w celu uzyskania dostępu do całej swojej muzyki. Naciśnij środkowy przycisk, aby kontynuować.
+	RU	Теперь вы с помощью SqueezePlay получаете доступ к своей музыке. Для продолжения нажмите центральную кнопку.
 	SV	Nu har du tillgång till all din musik via Squeezebox Controller. Tryck på mittenknappen för att fortsätta.
 

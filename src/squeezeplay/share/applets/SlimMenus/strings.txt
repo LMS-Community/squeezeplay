@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 MENUS_MY_MUSIC
-	CS	Moje hudba
+	CS	Hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
@@ -21,7 +21,10 @@ MENUS_INTERNET_RADIO
 	EN	Internet Radio
 
 MENUS_OTHER_LIBRARY
+	CS	Jiná knihovna
 	EN	Other Library
+	PL	Inna biblioteka
+	RU	Другая медиатека
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu

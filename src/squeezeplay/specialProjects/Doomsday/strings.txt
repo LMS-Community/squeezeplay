@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DOOMSDAY
-	CS	Doomsday (Soudný den)
+	CS	Doomsday
 	DA	Dommedag
 	DE	Doomsday
 	EN	Doomsday
@@ -13,12 +13,12 @@ DOOMSDAY
 	IT	Il giorno del giudizio
 	NL	Doomsday
 	NO	Dommedag
-	PL	Dzień zagłady
+	PL	Doomsday
 	RU	Doomsday
 	SV	Doomsday
 
 DOOMSDAY_OPTION1
-	CS	Naléhavé varování 1
+	CS	Dire Warning 1
 	DA	Advarsel 1
 	DE	Dire Warning 1
 	EN	Dire Warning 1
@@ -28,12 +28,12 @@ DOOMSDAY_OPTION1
 	IT	Minaccia 1
 	NL	Dire Warning 1
 	NO	Første seriøse advarsel
-	PL	Poważne ostrzeżenie 1
+	PL	Dire Warning 1
 	RU	Dire Warning 1
 	SV	Dire Warning 1
 
 DOOMSDAY_OPTION2
-	CS	Naléhavé varování 2
+	CS	Dire Warning 2
 	DA	Advarsel 2
 	DE	Dire Warning 2
 	EN	Dire Warning 2
@@ -43,12 +43,12 @@ DOOMSDAY_OPTION2
 	IT	Minaccia 2
 	NL	Dire Warning 2
 	NO	Andre seriøse advarsel
-	PL	Poważne ostrzeżenie 2
+	PL	Dire Warning 2
 	RU	Dire Warning 2
 	SV	Dire Warning 2
 
 DOOMSDAY_OPTION3
-	CS	Naléhavé varování 3
+	CS	Dire Warning 3
 	DA	Advarsel 3
 	DE	Dire Warning 3
 	EN	Dire Warning 3
@@ -58,12 +58,12 @@ DOOMSDAY_OPTION3
 	IT	Minaccia 3
 	NL	Dire Warning 3
 	NO	Tredje seriøse advarsel
-	PL	Poważne ostrzeżenie 3
+	PL	Dire Warning 3
 	RU	Dire Warning 3
 	SV	Dire Warning 3
 
 DOOMSDAY_OPTION4
-	CS	Naléhavé varování 4
+	CS	Dire Warning 4
 	DA	Advarsel 4
 	DE	Dire Warning 4
 	EN	Dire Warning 4
@@ -73,12 +73,12 @@ DOOMSDAY_OPTION4
 	IT	Minaccia 4
 	NL	Dire Warning 4
 	NO	Fjerde seriøse advarsel
-	PL	Poważne ostrzeżenie 4
+	PL	Dire Warning 4
 	RU	Dire Warning 4
 	SV	Dire Warning 4
 
 DOOMSDAY_MESSAGE0
-	CS	Strach je cítit ve vzduchu!
+	CS	Fear is in the air!
 	DA	Der er frygt i luften.
 	DE	Fear is in the air!
 	EN	Fear is in the air!
@@ -88,12 +88,12 @@ DOOMSDAY_MESSAGE0
 	IT	Fear is in the air!
 	NL	Fear is in the air!
 	NO	Det er redsel å spore!
-	PL	Panuje strach!
+	PL	Fear is in the air!
 	RU	Fear is in the air!
 	SV	Fear is in the air!
 
 DOOMSDAY_MESSAGE1
-	CS	Konec se blíží!
+	CS	The End is Nigh!
 	DA	Enden er nær!
 	DE	The End is Nigh!
 	EN	The End is Nigh!
@@ -103,12 +103,12 @@ DOOMSDAY_MESSAGE1
 	IT	The End is Nigh!
 	NL	The End is Nigh!
 	NO	Enden er nær!
-	PL	Koniec jest blisko!
+	PL	The End is Nigh!
 	RU	The End is Nigh!
 	SV	The End is Nigh!
 
 DOOMSDAY_MESSAGE2
-	CS	Uteč do kopců!
+	CS	Run for the hills!
 	DA	Løb for livet.
 	DE	Run for the hills!
 	EN	Run for the hills!
@@ -118,12 +118,12 @@ DOOMSDAY_MESSAGE2
 	IT	Run for the hills!
 	NL	Run for the hills!
 	NO	Løp for livet!
-	PL	Uciekaj!
+	PL	Run for the hills!
 	RU	Run for the hills!
 	SV	Run for the hills!
 
 DOOMSDAY_MESSAGE3
-	CS	Dej si věci do pořádku!
+	CS	Get your affairs in order!
 	DA	Se at få styr på det!
 	DE	Get your affairs in order!
 	EN	Get your affairs in order!
@@ -133,7 +133,7 @@ DOOMSDAY_MESSAGE3
 	IT	Get your affairs in order!
 	NL	Get your affairs in order!
 	NO	Skriv testamente!
-	PL	Uporządkuj swoje sprawy!
+	PL	Get your affairs in order!
 	RU	Get your affairs in order!
 	SV	Get your affairs in order!
 
@@ -148,7 +148,7 @@ DOOMSDAY_MESSAGE4
 	IT	DUCK!
 	NL	DUCK!
 	NO	DUKK!
-	PL	KRYJ SIĘ!
+	PL	DUCK!
 	RU	DUCK!
 	SV	DUCK!
 

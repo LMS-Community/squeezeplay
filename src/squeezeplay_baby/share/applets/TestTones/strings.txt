@@ -3,13 +3,26 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 TEST_TONES
+	CS	Otestovat tóny
 	EN	Test tones
+	PL	Testuj dźwięki
+	RU	Тестировать тона
 
 TONE_STOP
+	CS	Zastavit
 	EN	Stop
+	PL	Zatrzymaj
+	RU	Стоп
 
 TONE_1KHZ_44100_1S_STEREO_MP3
+	CS	1KHz 44.1k
 	EN	1KHz 44.1k
+	PL	1 kHz 44,1 kb
+	RU	1 кГц 44.1 кГц
 
 TONE_1KHZ_48000_1S_STEREO_MP3
+	CS	1KHz 48k
 	EN	1KHz 48k
+	PL	1 kHz 48 kb
+	RU	1 кГц 48 кГц
+

@@ -3,34 +3,68 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 START
+	CS	Spustit Squeezebox Server
 	EN	Start Squeezebox Server
+	PL	Uruchom program Squeezebox Server
+	RU	Запустить Squeezebox Server
 
 STOP
+	CS	Zastavit Squeezebox Server
 	EN	Stop Squeezebox Server
+	PL	Zatrzymaj program Squeezebox Server
+	RU	Остановить Squeezebox Server
 
 STOP_RESCAN_START
+	CS	Zastavit-Znovu prohledat-Znovu spustit
 	EN	Stop-Rescan-Restart
+	PL	Zatrzymaj-Przeszukaj ponownie-Uruchom ponownie
+	RU	Остановить-Пересканировать-Перезапустить
 
 STARTING_SQUEEZECENTER
+	CS	Spouštění Squeezebox Server
 	EN	Starting Squeezebox Server
-	
+	PL	Squeezebox Server — uruchamianie
+	RU	Squeezebox Server запускается
+
 STARTING_SQUEEZECENTER_TEXT
+	CS	Spuštění by mělo trvat asi minutu.
 	EN	It should take about a minute to start.
+	PL	Przygotowanie do uruchomienia powinno trwać około minuty.
+	RU	Приложение запустится через минуту.
 
 STOPPING_SQUEEZECENTER
+	CS	Zastavování Squeezebox Server
 	EN	Stopping Squeezebox Server
+	PL	Zatrzymywanie programu Squeezebox Server
+	RU	Squeezebox Server останавливается
 
 RESCAN_SQUEEZECENTER
+	CS	Zahajování opětovného prohledávání
 	EN	Initiating rescan
+	PL	Rozpoczynanie ponownego przeszukiwania
+	RU	Запуск повторного сканирования
 
 RESCAN_SQUEEZECENTER_TEXT
+	CS	Bude to pravděpodobně trvat několik minut.
 	EN	This will probably take several minutes.
+	PL	To potrwa kilka minut.
+	RU	Вероятно, это займет несколько минут.
 
 STATUS_SQUEEZECENTER_RUNNING
+	CS	Squeezebox Server se spouští nebo již běží
 	EN	Squeezebox Server is starting or running
+	PL	Trwa uruchamianie programu Squeezebox Server lub program jest uruchomiony
+	RU	Squeezebox Server запускается или выполняется
 
 STATUS_SCANNER_RUNNING
+	CS	Scanner běží
 	EN	The scanner is running
+	PL	Moduł przeszukiwania jest uruchomiony
+	RU	Сканер выполняется
 
 STATUS_NOTHING
+	CS	Neběží ani Squeezebox Server ani scanner
 	EN	Neither Squeezebox Server nor the scanner are running
+	PL	Program Squeezebox Server i moduł przeszukiwania nie są uruchomione
+	RU	Squeezebox Server и сканер не выполняются
+

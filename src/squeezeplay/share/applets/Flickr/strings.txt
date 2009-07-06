@@ -48,7 +48,7 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 	SV	Flickr läser in foto ...
 
 SCREENSAVER_FLICKR_ERROR
-	CS	Chyba Flickru
+	CS	Chyba Flickr
 	DA	Flickr-fejl
 	DE	Flickr Fehler
 	EN	Flickr error
@@ -228,7 +228,7 @@ SCREENSAVER_FLICKR_DISPLAY_RECENT
 	SV	Nyligen tillagda bilder
 
 SCREENSAVER_FLICKR_FLICKR_ID
-	CS	Uživatel Flickru
+	CS	Uživatel Flickr
 	DA	Flickr-bruger
 	DE	Flickr Benutzer
 	EN	Flickr User

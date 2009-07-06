@@ -3,11 +3,20 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 BRIDGE
+	CS	Bezdrátové přemostění
 	EN	Wireless Bridging
+	PL	Most bezprzewodowy
+	RU	Режим беспроводного моста
 
 BRIDGE_ENABLE
+	CS	Povolit bezdrátové přemostění
 	EN	Enable Wireless Bridging
+	PL	Włącz funkcję Most bezprzewodowy
+	RU	Включить режим беспроводного моста
 
 BRIDGE_HOWTO
+	CS	Bezdrátové přemostění vám umožňuje připojení kabelového zařízení přes ethernetový port Squeezebox Touch k vaší bezdrátové síti.
 	EN	Wireless Bridging allows you to connect a wired device via Squeezbox Touch ethernet port to your wireless network.
+	PL	Funkcja Most bezprzewodowy umożliwia podłączenie urządzenia przewodowego przez port ethernetowy urządzenia Squeezbox Touch do sieci bezprzewodowej.
+	RU	Режим беспроводного моста позволяет подключить проводное устройство к беспроводной сети через Ethernet-порт Squeezbox Touch.
 

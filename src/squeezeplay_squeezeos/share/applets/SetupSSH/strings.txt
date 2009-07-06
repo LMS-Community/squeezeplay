@@ -33,7 +33,7 @@ SSH_ENABLE
 	SV	Aktivera SSH
 
 SSH_HOWTO
-	CS	Heslo uživatele root pro toto zařízení je %s a můžete se k němu připojit na adrese %s
+	CS	Kořenové heslo pro toto zařízení je %s a můžete se k němu připojit na adrese %s
 	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
 	DE	Root-Kennwort dieses Geräts ist %s und Sie können über Adresse %s eine Verbindung herstellen
 	EN	The root password for this device is %s and you can connect to it on address %s

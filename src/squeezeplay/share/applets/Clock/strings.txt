@@ -4,7 +4,10 @@
 
 
 SCREENSAVER_CLOCK_STYLE_RADIAL
+	CS	Paprskové hodiny
 	EN	Radial Clock
+	PL	Zegar promieniowy
+	RU	Радиальные часы
 
 SCREENSAVER_CLOCK_STYLE_DIGITAL
 	CS	Digitální hodiny
@@ -22,49 +25,94 @@ SCREENSAVER_CLOCK_STYLE_DIGITAL
 	SV	Digitalklocka
 
 SCREENSAVER_CLOCK_STYLE_DIGITAL_BLACK
+	CS	Digitální hodiny (černé)
 	EN	Digital Clock (Black)
+	PL	Zegar cyfrowy (czarny)
+	RU	Цифровые часы (черн.)
 
 SCREENSAVER_CLOCK_STYLE_DIGITAL_TRANSPARENT
+	CS	Digitální hodiny (průhledné)
 	EN	Digital Clock (Transparent)
+	PL	Zegar cyfrowy (przezroczysty)
+	RU	Цифровые часы (прозрачн.)
 
 SCREENSAVER_CLOCK_STYLE_DOTMATRIX
+	CS	Hodiny bodového generátoru
 	EN	Dot Matrix Clock
+	PL	Zegar diodowy
+	RU	Часы с точечной матрицей
 
 SCREENSAVER_CLOCK_MONTH_01
+	CS	Leden
 	EN	January
+	PL	Styczeń
+	RU	Январь
 
 SCREENSAVER_CLOCK_MONTH_02
+	CS	Únor
 	EN	Feburary
+	PL	Luty
+	RU	Февраль
 
 SCREENSAVER_CLOCK_MONTH_03
+	CS	Březen
 	EN	March
+	PL	Marzec
+	RU	Март
 
 SCREENSAVER_CLOCK_MONTH_04
+	CS	Duben
 	EN	April
+	PL	Kwiecień
+	RU	Апрель
 
 SCREENSAVER_CLOCK_MONTH_05
+	CS	Květen
 	EN	May
+	PL	Maj
+	RU	Май
 
 SCREENSAVER_CLOCK_MONTH_06
+	CS	Červen
 	EN	June
+	PL	Czerwiec
+	RU	Июнь
 
 SCREENSAVER_CLOCK_MONTH_07
+	CS	Červenec
 	EN	July
+	PL	Lipiec
+	RU	Июль
 
 SCREENSAVER_CLOCK_MONTH_08
+	CS	Říjen
 	EN	August
+	PL	Sierpień
+	RU	Август
 
 SCREENSAVER_CLOCK_MONTH_09
+	CS	Září
 	EN	September
+	PL	Wrzesień
+	RU	Сентябрь
 
 SCREENSAVER_CLOCK_MONTH_10
+	CS	Říjen
 	EN	October
+	PL	Październik
+	RU	Октябрь
 
 SCREENSAVER_CLOCK_MONTH_11
+	CS	Listopad
 	EN	November
+	PL	Listopad
+	RU	Ноябрь
 
 SCREENSAVER_CLOCK_MONTH_12
+	CS	Prosinec
 	EN	December
+	PL	Grudzień
+	RU	Декабрь
 
 SCREENSAVER_CLOCK_DAY_0
 	CS	Neděle
@@ -172,23 +220,44 @@ SCREENSAVER_CLOCK_DAY_6
 	SV	Lördag
 
 SCREENSAVER_CLOCK_DAYSHORT_MONDAY
+	CS	Po
 	EN	M
+	PL	P
+	RU	M
 
 SCREENSAVER_CLOCK_DAYSHORT_TUESDAY
+	CS	Út
 	EN	T
+	PL	W
+	RU	Чт
 
 SCREENSAVER_CLOCK_DAYSHORT_WEDNESDAY
+	CS	St
 	EN	W
+	PL	Ś
+	RU	Ср
 
 SCREENSAVER_CLOCK_DAYSHORT_THURSDAY
+	CS	Čt
 	EN	T
+	PL	W
+	RU	Чт
 
 SCREENSAVER_CLOCK_DAYSHORT_FRIDAY
+	CS	Pá
 	EN	F
+	PL	P
+	RU	Пт
 
 SCREENSAVER_CLOCK_DAYSHORT_SATURDAY
+	CS	So
 	EN	S
+	PL	S
+	RU	Сб
 
 SCREENSAVER_CLOCK_DAYSHORT_SUNDAY
+	CS	Ne
 	EN	S
+	PL	N
+	RU	Сб
 

@@ -155,7 +155,7 @@ JIVE_BLACK
 	IT	Nero
 	NL	Zwart
 	NO	Svart
-	PL	Kolor czarny
+	PL	Czarny
 	RU	Черный
 	SV	Svart
 
@@ -380,7 +380,7 @@ JIVE_NOTE
 	IT	Note
 	NL	Muzieknoten
 	NO	Noter
-	PL	Uwagi
+	PL	Nuty
 	RU	Примечания
 	SV	Noter
 
@@ -445,28 +445,52 @@ WAVE2
 	SV	Vågform 2
 
 FAB4_ALLEGRO
+	CS	Allegro
 	EN	Allegro
+	PL	Allegro
+	RU	Аллегро
 
 FAB4_ENCORE
+	CS	Přídavek
 	EN	Encore
+	PL	Bis
+	RU	На бис
 
 FAB4_HARMONY
+	CS	Harmonie
 	EN	Harmony
+	PL	Harmonia
+	RU	Harmony
 
 FAB4_NOCTURNE
+	CS	Nokturno
 	EN	Nocturne
+	PL	Nokturn
+	RU	Ноктюрн
 
 FAB4_QUARTET
+	CS	Kvartet
 	EN	Quartet
+	PL	Kwartet
+	RU	Квартет
 
 FAB4_SONATA
+	CS	Sonáta
 	EN	Sonata
+	PL	Sonata
+	RU	Соната
 
 FAB4_SYMPHONY
+	CS	Symfonie
 	EN	Symphony
+	PL	Symfonia
+	RU	Симфония
 
 FAB4_VIBRATO
+	CS	Vibráto
 	EN	Vibrato
+	PL	Vibrato
+	RU	Вибрато
 
 JIVE_VIBRATO
 	EN	Vibrato

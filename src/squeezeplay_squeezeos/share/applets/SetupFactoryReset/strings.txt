@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
-	CS	Nastavení hodnot z továrny
+	CS	Nastavení továrních hodnot
 	DA	Gendan fabriksindstillinger
 	DE	Standardeinstellungen
 	EN	Factory Reset
@@ -48,7 +48,7 @@ RESET_CONTINUE
 	SV	Fortsätt
 
 RESET_RESETTING
-	CS	Restartuji
+	CS	\nRestartování
 	DA	Genstarter
 	DE	Neustart
 	EN	Restarting

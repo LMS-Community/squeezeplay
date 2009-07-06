@@ -3,11 +3,20 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SAMBA
+	CS	Nastavit Samba
 	EN	Samba
-	
+	PL	Samba — konfiguruj
+	RU	Настроить Samba
+
 SAMBA_ENABLE
+	CS	Povolit Samba
 	EN	Enable Samba
+	PL	Samba — włącz
+	RU	Включить Samba
 
 SAMBA_HOWTO
+	CS	Samba vám umožňuje převádět soubory z vašeho počítače do Squeezbox Touch. Uživatel: kořenové Heslo: 1234
 	EN	Samba allows you to transfer files from your Computer to Squeezbox Touch. User: root Password: 1234
+	PL	Samba umożliwia przesyłanie plików z komputera do urządzenia Squeezbox Touch. Użytkownik: root Hasło: 1234
+	RU	Samba позволяет переносить файлы с компьютера в Squeezbox Touch. Пользователь: root Пароль: 1234
 

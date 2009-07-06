@@ -123,7 +123,7 @@ UPDATE_TRY_AGAIN
 	SV	Försök igen ...
 
 UPDATE_DOWNLOAD
-	CS	Kopíruji aktualizaci
+	CS	Stahování
 	DA	Kopierer opdateringen
 	DE	Aktualisierung wird kopiert
 	EN	Downloading
@@ -133,12 +133,12 @@ UPDATE_DOWNLOAD
 	IT	Copia aggiornamento in corso
 	NL	Updates kopiëren
 	NO	Kopierer oppdatering
-	PL	Kopiowanie aktualizacji
-	RU	Копирование обновления
+	PL	Pobieranie
+	RU	Загрузка
 	SV	Kopierar uppdatering
 
 UPDATE_VERIFY
-	CS	Ověřuji aktualizaci
+	CS	\nInstalace
 	DA	Kontrollerer opdateringen
 	DE	Aktualisierung wird geprüft
 	EN	Installing
@@ -148,12 +148,12 @@ UPDATE_VERIFY
 	IT	Verifica aggiornamento
 	NL	Update verifiëren
 	NO	Bekrefter oppdatering
-	PL	Sprawdzanie aktualizacji
-	RU	Проверка обновления
+	PL	Instalowanie
+	RU	Установка
 	SV	Verifierar uppdatering
 
 UPDATE_REBOOT
-	CS	Restartuji
+	CS	\nRestartování
 	DA	Genstarter
 	DE	Neustart
 	EN	Restarting
@@ -198,7 +198,7 @@ UPDATE_BEGIN_REINSTALL
 	SV	Fjärrkontrollens programvara är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
 
 UPDATE_BEGIN_REMOVABLE_MEDIA
-	CS	Instalujtel %s z výměnného média.
+	CS	Instalovat %s z výměnného média.
 	DA	Installer %s fra flytbart medie.
 	DE	%s vom Wechseldatenträger installieren.
 	EN	Install %s from removable media.
