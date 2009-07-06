@@ -12,7 +12,7 @@ NETWORK
 	FI	Langaton verkko
 	FR	Réseau sans fil
 	IT	Rete senza fili
-	NL	Draadloos netwerk
+	NL	Draadloze netwerk
 	NO	Trådløst nettverk
 	PL	Sieć bezprzewodowa
 	RU	Беспроводная сеть
@@ -27,6 +27,7 @@ NETWORK_NETWORKING
 	FI	Verkko
 	FR	Mise en réseau
 	IT	Connessione alla rete in corso
+	NL	Netwerken
 	NO	Nettverk
 	PL	Sieć
 	RU	Работа в сети
@@ -41,7 +42,7 @@ NETWORK_FINDING_NETWORKS
 	FI	Etsitään verkkoja...
 	FR	Recherche de réseaux...
 	IT	Rilevamento delle reti in corso...
-	NL	Bezig met zoeken naar netwerken...
+	NL	Bezig met het zoeken naar netwerken...
 	NO	Finner nettverk ...
 	PL	Trwa wyszukiwanie sieci...
 	RU	Поиск сетей...
@@ -176,7 +177,7 @@ NETWORK_STATE_SCANNING
 	FI	Tarkistetaan
 	FR	Analyse
 	IT	Analisi in corso
-	NL	Bezig met scannen
+	NL	Scannen
 	NO	Søker
 	PL	Przeszukiwanie
 	RU	Сканирование
@@ -356,7 +357,7 @@ NETWORK_REGION_HELP_BODY
 	FI	Jos sijaintipaikkasi on Yhdysvallat, Kanada tai Meksiko, valitse "Pohjois-Amerikka".\n\nKaikilla muilla alueilla valitse "Kaikki muut alueet".\n\nTätä kysytään, jotta voisimme toimia paikallisten langattomia taajuuksia koskevien sääntöjen mukaisesti.
 	FR	Si vous êtes aux Etats-Unis, au Canada ou au Mexique, sélectionnez "Amérique du Nord".\n\nPour tous les autres pays, sélectionnez "Toutes les autres régions". \n\nNous posons cette question afin de respecter les règlements locaux concernant les fréquences sans fil.
 	IT	Selezionare Nord America se ci si trova negli Stati Uniti, in Canada o in Messico.\n\nPer tutti gli altri paesi, selezionare Tutte le altre aree geografiche. Poniamo questa domanda per conformarci alle normative locali in merito alle frequenze delle reti senza fili.
-	NL	Als u zich in de V.S, Canada of Mexico bevindt, selecteer dan 'Noord-Amerika'.\n\nSelecteer 'Alle overige regio's' voor andere locaties. Deze vraag is vereist om aan lokale regels voor draadloze frequenties te voldoen.
+	NL	Als je je in de Verenigde Staten, Canada of Mexico bevindt, selecteer je 'Noord-Amerika'.\n\nSelecteer 'Alle andere regio's' voor de rest van de wereld."\n\nWij vragen dit om aan lokale regels betreffende draadloze frequenties te voldoen.
 	NO	Hvis du befinner deg i USA, Canada eller Mexico, velger du Nord-Amerika.\n\nHvis du bor et annet sted, velger du Alle andre områder.\n\nVi stiller dette spørsmålet for å kunne etterkomme lokal lovgivning relatert til trådløse frekvenser.
 	PL	Jeśli przebywasz w Stanach Zjednoczonych, Kanadzie lub Meksyku, wybierz opcję „Ameryka Północna”.\n\nDla pozostałych lokalizacji wybierz opcję „Wszystkie inne regiony”.\n\nZadajemy to pytanie, aby zachować zgodność z lokalnymi przepisami dotyczącymi częstotliwości bezprzewodowych.
 	RU	Если вы находитесь в США, Канаде или Мексике, выберите "Северная Америка."\n\nДля других стран выберите "Другие регионы".\n\nЭтот вопрос позволяет обеспечить соответствие локальным правилам для частот беспроводной связи.
@@ -491,7 +492,7 @@ NETWORK_WIRELESS_ENCRYPTION_HELP
 	FI	Valitse verkossa käytetyn salausavaimen koko. Avaimessa voidaan käyttää numeroita 0-9 ja kirjaimia A-F. 64-bittiset avaimet ovat 10 merkkiä pitkiä, 128-bittiset 26 merkkiä pitkiä.
 	FR	Sélectionnez le type de chiffrement de votre réseau. La clé peut inclure des chiffres de 0 à 9 et des lettres de A à F. Les clés 64 bits contiennent 10 chiffres ou lettres, et les clés 128 bits en contiennent 26.
 	IT	Scegliere le dimensioni della chiave di crittografia utilizzata dalla rete. La chiave può essere composta dai numeri da 0 a 9 e dalle lettere da A a F. Le chiavi da 64 bit contengono 10 caratteri, quelle da 128 bit ne contengono 26.
-	NL	Kies de grootte van de coderingssleutel die je netwerk gebruikt. De sleutel kan cijfers van 0 t/m 9 en letters van A t/m F bevatten. 64-bits sleutels bestaan uit 10 cijfers en 128-bits netwerken bestaan uit 26 cijfers.
+	NL	Kies de grootte van de coderingssleutel die je netwerk gebruikt. De sleutel kan cijfers (0-9) en letters (A-F) bevatten. 64-bits sleutels zijn 10 tekens lang, 128-bits sleutels zijn 26 tekens lang.
 	NO	Velg størrelsen på krypteringsnøkkel som nettverket bruker. Nøkkelen kan inneholde tallene 0–9 og bokstavene A–F. 64-biters nøkler er på 10 tegn, 128-biters nøkler er på 26 tegn.
 	PL	Wybierz wielkość klucza szyfrowania, który jest używany w sieci. Klucz może zawierać cyfry 0-9 i litery A-F. Klucze 64-bitowe zawierają 10 znaków, a klucze 128-bitowe zawierają 26 znaków.
 	RU	Выберите размер ключа шифрования, используемый сетью. Ключ должен содержать цифры 0–9 и буквы A–F. Длина 64-разрядных ключей 10 разрядов, 128-разрядных — 26 разрядов.
@@ -551,7 +552,7 @@ NETWORK_CONNECTING_TO_SSID
 	FI	Yhdistetään kohteeseen\n%s
 	FR	Connexion à\n%s
 	IT	Connessione a \n%s
-	NL	Bezig verbinding te maken met
+	NL	Er wordt verbinding gemaakt met\n%s
 	NO	Kopler til\n%s
 	PL	Łączenie z\n%s
 	RU	Подключение к\n%s
@@ -581,7 +582,7 @@ NETWORK_CONNECTED_TO
 	FI	Yhdistetty kohteeseen\n%s
 	FR	Connecté à\n%s
 	IT	Connesso a\n%s
-	NL	Verbonden met
+	NL	Verbonden met\n%s
 	NO	Koplet til\n%s
 	PL	Połączono z\n%s
 	RU	Установлено подключение к\n%s
@@ -776,7 +777,7 @@ ZEROCONF_ADDRESS
 	FI	Määritä osoite itse
 	FR	Attribuer l'adresse automatiquement
 	IT	Indirizzo assegnato automaticamente
-	NL	Zelftoegekend IP-adres
+	NL	Adres zelf toewijzen
 	NO	Tildel adresse manuelt
 	PL	Samoprzypisany adres
 	RU	Самоназначить адрес
@@ -839,7 +840,7 @@ NETWORK_ADDRESS_HELP
 	FI	Verkon DHCP-osoitteen hankkimisessa oli ongelma.
 	FR	Une erreur s'est produite en obtenant l'adresse DHCP sur votre réseau.
 	IT	Impossibile ottenere un indirizzo DHCP nella rete.
-	NL	Er heeft zich een probleem voorgedaan met het verkrijgen van een DHCP-adres op je netwerk.
+	NL	Er is een probleem opgetreden bij het ophalen van een DHCP-adres op je netwerk.
 	NO	Det oppsto et problem med å finne en DHCP-adresse på nettverket.
 	PL	Wystąpił problem z uzyskaniem adresu DHCP w sieci.
 	RU	Ошибка при получении DHCP-адреса сети.
@@ -1193,7 +1194,7 @@ NETWORK_WPS_METHOD_PSK
 	FI	Anna langattoman verkon salasana
 	FR	Entrer le mot de passe sans fil
 	IT	Immettere password rete senza fili
-	NL	WPA-wachtwoord invoeren
+	NL	Wachtwoord voor draadloos invoeren
 	NO	Angi trådløst passord
 	PL	Wprowadź hasło sieci bezprzewodowej
 	RU	Введите пароль беспроводной сети
@@ -1328,7 +1329,7 @@ NETWORK_WPS_PROGRESS_PIN
 	FI	Anna tämä PIN\n%s
 	FR	Entrer ce PIN\n%s
 	IT	Immettere questo PIN\n%s
-	NL	Deze PIN: %s invoeren
+	NL	Deze PIN\n%s invoeren
 	NO	Angi denne pin-koden\n%s
 	PL	Wprowadź ten kod PIN\n%s
 	RU	Введите этот PIN-код\n%s
@@ -1463,7 +1464,7 @@ NETWORK_LIST_HELP_BODY
 	FI	Tässä vaiheessa Squeezeboxisi pitää saada yhdistettyä langattomaan verkkoosi. Tätä varten sinun täytyy tietää verkkosi nimi ja salasana (jos sinulla on avoin verkko, et tarvitse salasanaa).\n\nJos et tiedä verkkosi nimeä tai salasanaa ja käytät langatonta verkkoa, kokeile yhtä tai useampia seuraavista keinoista:\n\n1. Tarkista, oletko kirjoittanut ne johonkin ylös.\n2. Kysy, tietääkö kukaan muu kotonasi asuva niitä.\n3. Ota yhteyttä henkilöön, joka asensi kotiverkkosi.\n4. Tarkista reitittimen käyttöohje.\n5. Ota yhteyttä reitittimen valmistajaan ja pyydä apua.\n\nHUOMAUTUS: Verkon nimeen viitataan joskus termillä SSID. Salasanaa kutsutaan joskus langattomaksi avaimeksi tai suojausavaimeksi.\n\nJos verkkosi ei tule näkyviin langattomien verkkojen luetteloon, kokeile yhtä tai useampia seuraavista keinoista:\n\n1. Varmista, että Squeezebox on langattoman verkkosi ulottuvilla.\n2. Tarkista tietokoneeltasi, että verkko toimii.\n3. Jos reitittimesi on määritetty olemaan lähettämättä verkon nimeä (SSID), valitse "En näe verkkoani" verkkoluettelon alalaidasta ja anna omasi.\n4. Irrota reititin, odota 30 sekuntia ja kytke se uudestaan.\n5. Katso lisätietoja reitittimen käyttöohjeesta tai ota yhteyttä reitittimen valmistajaan.
 	FR	A ce stade, vous devez connecter la Squeezebox à votre réseau sans fil. Pour ce faire, vous devez connaître le nom et le mot de passe de votre réseau (dans le cas d'un réseau ouvert, le mot de passe n'est pas demandé).\n\nSi vous ignorez le nom ou le mot de passe de votre réseau sans fil, essayez une ou plusieurs des solutions suivantes:\n\n1. Vérifiez si vous les avez notés quelque part.\n2. Demandez aux membres de votre foyer s'ils les connaissent.\n3. Contactez la personne ayant configuré votre réseau local.\n4. Consultez le manuel du routeur.\n5. Demandez l'aide du fabricant du routeur.\n\nREMARQUE: un nom de réseau est souvent appelé SSID et son mot de passe est souvent désigné comme clé sans fil ou clé de sécurité.\n\nSi votre réseau ne figure pas dans la liste des réseaux sans fil, essayez une ou plusieurs des solutions suivantes:\n\n1. Assurez-vous que la Squeezebox est à portée du réseau sans fil.\n2. Sur votre ordinateur, vérifiez que le réseau fonctionne.\n3. Si le routeur est configuré de manière à ne pas afficher le nom de votre réseau (le SSID), sélectionnez l'option "Je ne vois pas mon réseau" située au bas de la liste et entrez votre réseau.\n4. Débranchez votre routeur, attendez 30 secondes, puis rebranchez-le.\n5. Consultez la documentation du routeur ou demandez de l'aide auprès du fabricant.
 	IT	A questo punto è necessario connettere lo Squeezebox alla rete senza fili. A tale fine è necessario conoscere il nome e la password della rete (se si utilizza una rete aperta, la password non è necessaria).\n\nSe non si conosce il nome o la password della rete e si utilizza una rete senza fili, provare quanto segue:\n\n\n1. Controllare se queste informazioni sono state scritte da qualche parte.\n2. Chiedere a qualcuno in casa se ne è a conoscenza.\n3. Contattare la persona che ha configurato la rete di casa.\n4. Controllare il manuale d'uso del router.\n5. Contattare il produttore del router per assistenza.\n\nNOTA: a volte il nome della rete è anche detto SSID e la password è detta chiave senza fili o chiave di sicurezza.\n\nSe la rete non è inclusa nell'elenco delle reti senza fili, provare quanto segue:\n\n1. Assicurarsi che lo Squeezebox sia nella portata della rete senza fili.\n2. Verificare con il computer che la rete funzioni.\n3. Se il router è configurato per non diffondere il nome della rete (SSID), selezionare La mia rete non è visualizzata in fondo all'elenco delle reti e immettere il nome della rete utilizzata.\n4. Scollegare il router, attendere 30 secondi e ricollegarlo.\n5. Consultare il manuale d'uso del router o contattare il produttore per assistenza.
-	NL	Nu moeten we je Squeezebox met je draadloze netwerk verbinden. Hiervoor heb je je netwerknaam en -wachtwoord nodig (voor een open netwerk heb je geen wachtwoord nodig).\n\nAls je je netwerknaam of -wachtwoord niet weet en je een draadloos netwerk hebt, probeer dan een of meer van de volgende handelingen:\n\n1. Controleer of je ze ergens hebt opgeschreven.\n2. Vraag anderen thuis of zij het weten.\n3. Neem contact op met degene die je thuisnetwerk heeft ingesteld.\n4. Controleer je router handmatig.\n5. Neem contact op met de fabrikant van je router voor hulp.\n\nAls je netwerk niet voorkomt op de lijst met draadloze netwerken, probeer dan een of meer van de volgende handelingen:\n\n1. Zorg dat de Squeezebox zich binnen bereik van je draadloze netwerk bevindt.\n2. Ga naar je computer en controleer of je netwerk actief is.\n3. Als je router zo geconfigureerd is dat de netwerknaam (SSID) niet wordt weergegeven, selecteer dan 'Ik zie mijn netwerk niet' onder aan de lijst met netwerken en maak opnieuw verbinding.\n4. Ontkoppel je router, wacht 30 seconden, en sluit deze opnieuw aan.\n5. Raadpleeg de documentatie van je router of neem contact op met de fabrikant van je router voor hulp.\n\nN.B. Een netwerknaam wordt soms een SSID genoemd, een wachtwoord ook wel een draadloze sleutel of verbindingssleutel.\n\nN.B. Squeezebox ondersteunt geen ASCII-geformatteerde WEP-wachtwoorden. Je kunt je Squeezebox nog steeds op je netwerk aansluiten, maar je moet het ASCII-wachtwoord naar een hexadecimale indeling converteren.  Je kunt waarschijnlijk online een converteertool te vinden.  Of bezoek www.mysqueezebox.com/support voor meer informatie.
+	NL	We moeten er nu voor zorgen dat je Squeezebox met je draadloze netwerk wordt verbonden. Je moet hiervoor de naam en het wachtwoord van het netwerk weten (als je een open netwerk hebt, heb je geen wachtwoord nodig).\n\nAls je de naam en het wachtwoord van het netwerk niet weet, en je hebt een draadloos netwerk, probeer dan een of meer van de volgende opties:\n\n1. Controleer of je de informatie ergens hebt opgeschreven.\n2. Vraag iemand anders in je huis of zij de informatie hebben.\n3. Neem contact op met degene die je thuisnetwerk heeft geïnstalleerd.\n4. Raadpleeg de handleiding van je router.\n5. Neem contact op met de fabrikant van de router voor hulp.\n\nN.B. Een netwerknaam wordt soms een SSID genoemd, en een wachtwoord een draadloze of beveiligingssleutel.\n\nAls jouw netwerk niet in de lijst met draadloze netwerken verschijnt, probeer dan een of meer van de volgende opties:\n\n1. Zorg dat de Squeezebox zich binnen het bereik van het draadloze netwerk bevindt.\n2. Ga naar je computer en controleer of je netwerk functioneert.\n3. Als je router zo is geconfigureerd dat je netwerknaam (SSID) niet wordt uitgezonden, selecteer je 'I don't see my network' onder aan de lijst met netwerken en voer je jouw netwerk in.\n4. Ontkoppel de router, wacht 30 seconden en sluit deze weer aan.\n5. Raadpleeg de documentatie van de router of neem contact op met de fabrikant voor hulp.
 	NO	Nå må Squeezebox koples til det trådløse nettverket. Du trenger nettverksnavnet og nettverkspassordet for å kunne gjøre dette (hvis du har et åpent nettverk, trenger du ikke et passord).\n\nHvis du ikke vet hva navnet på nettverket og passordet er, og du har et trådløst nettverk, kan du prøve et av følgende:\n\n1. Se etter om du har skrevet denne informasjonen ned et sted.\n2. Spør noen andre i huset om de kjenner til denne informasjonen.\n3. Ta kontakt med personen som konfigurerte hjemmenettverket.\n4. Se i bruksanvisningen til ruteren.\n5. Ta kontakt med ruterprodusenten.\n\nMERK: Nettverksnavnet kalles noen ganger SSID, og passordet kalles noen ganger en trådløs nøkkel eller sikkerhetsnøkkel.\n\nHvis nettverket ditt ikke er oppført på listen over trådløse nettverk, kan du prøve et av følgende:\n\n1. Sørg for at Squeezebox er plassert innenfor rekkevidden til det trådløse nettverket.\n2. Sjekk at nettverket fungerer via datamaskinen.\n3. Hvis ruteren er konfigurert slik at den ikke kringkaster nettverksnavnet ditt (SSID), velger du "Jeg ser ikke nettverket" nederst på listen med nettverk, og oppgir deretter nettverksinformasjonen din.\n4. Kople fra ruteren, vent i 30 sekunder og kople den deretter til på nytt.\n5. Se i dokumentasjonen som fulgte med ruteren, eller ta kontakt med produsenten for å få hjelp.
 	PL	Na tym etapie należy podłączyć urządzenie Squeezebox do sieci bezprzewodowej. W tym celu wymagana jest nazwa sieci i hasła (w przypadku otwartej sieci hasło nie jest wymagane).\n\nJeśli nie znasz nazwy sieci lub hasła, a używana jest sieć bezprzewodowa, wypróbuj jedną lub kilka poniższych metod:\n\n1. Sprawdź, czy te informacje nie zostało gdzieś zapisane.\n2. Zapytaj innego domownika, czy zna te informacje.\n3. Skontaktuj się z osobą, która skonfigurowała sieć w domu.\n4. Sprawdź instrukcję obsługi routera.\n5. Skontaktuj się z producentem routera w celu uzyskania pomocy.\n\nUWAGA: Nazwa sieci jest czasami nazywana identyfikatorem SSID, a hasło jest czasami nazywane kluczem sieci bezprzewodowej lub kluczem zabezpieczeń.\n\nJeśli sieć nie pojawia się na liście sieci bezprzewodowych, wypróbuj jedną lub kilka poniższych metod:\n\n1. Upewnij się, że urządzenie Squeezebox znajduje się w zasięgu sieci bezprzewodowej.\n2. Sprawdź na komputerze, czy sieć działa.\n3. Jeśli router nie jest skonfigurowany na rozgłaszanie nazwy sieci (SSID), wybierz pozycję „Nie widzę mojej sieci” na dole listy sieci i wprowadź nazwę swojej sieci.\n4. Odłącz router, poczekaj 30 sekund i podłącz go ponownie.\n5. Zapoznaj się z dokumentacją routera lub skontaktuj się z routerem, aby uzyskać pomoc.
 	RU	На этом этапе необходимо подключить Squeezebox к беспроводной сети. Для этого вы должны знать имя вашей сети и пароль (для открытой сети пароль не потребуется).\n\nЕсли вы не знаете имя сети или пароль и используете беспроводную сеть, попробуйте выполнить следующие действия.:\n\n1. Проверьте, не записали ли вы где-нибудь эти данные.\n2. Спросите кого-нибудь из домашних, не знают ли они имя сети и пароль.\n3. Обратитесь к лицу, настроившему вашу домашнюю сеть.\n4. Посмотрите в руководстве маршрутизатора.\n5. Обратитесь за помощью к изготовителю маршрутизатора.\n\nПРИМЕЧАНИЕ. Имя сети иногда называют идентификатором SSID, а пароль — беспроводным ключом или ключом безопасности.\n\nЕсли ваша сеть не появляется в списке беспроводных сетей, попробуйте выполнить следующие действия:\n\n1. Убедитесь, что Squeezebox находится в диапазоне беспроводной сети.\n2. Убедитесь, что сеть работает.\n3. Если маршрутизатор не настроен на вещание имени вашей сети (SSID), выберите параметр "Я не вижу свою сеть" снизу в списке сетей и введите свою.\n4. Отсоедините маршрутизатор, подождите 30 секунд и снова подсоедините его.\n5. Обратитесь за помощью к документации маршрутизатора или к его изготовителю.

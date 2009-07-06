@@ -26,7 +26,7 @@ RESET_CANCEL
 	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
-	NL	Annuleer
+	NL	Annuleren
 	NO	Avbryt
 	PL	Anuluj
 	RU	Отмена

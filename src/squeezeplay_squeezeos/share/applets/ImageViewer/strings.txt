@@ -26,6 +26,7 @@ IMAGE_VIEWER_ERROR
 	FI	Virhe
 	FR	Erreur
 	IT	Errore
+	NL	Fout
 	NO	Feil
 	PL	Błąd
 	RU	Ошибка
@@ -40,6 +41,7 @@ IMAGE_VIEWER_EMPTY_LIST
 	FI	Ei mitään näytettävää, kuvaluettelo on tyhjä
 	FR	Rien à afficher, la liste d'images est vide
 	IT	Nulla da visualizzare. L'elenco delle immagini è vuoto.
+	NL	Niets om weer te geven, de afbeeldingenlijst is leeg
 	NO	Ingenting å vise, bildelisten er tom
 	PL	Nie ma nic do wyświetlenia, lista obrazów jest pusta
 	RU	Нет элементов для отображения, список изображений пуст
@@ -54,6 +56,7 @@ IMAGE_VIEWER_SETTINGS
 	FI	Image Viewerin asetukset
 	FR	Réglages de l'afficheur d'images
 	IT	Impostazioni del visualizzatore immagini
+	NL	Instellingen van Image Viewer
 	NO	Innstillinger for bildevisning
 	PL	Ustawienia przeglądarki obrazów
 	RU	Настройки просмотра изображений
@@ -68,6 +71,7 @@ IMAGE_VIEWER_SOURCE
 	FI	Lähteet
 	FR	Sources
 	IT	Origini
+	NL	Bronnen
 	NO	Kilder
 	PL	Źródła
 	RU	Источники
@@ -82,6 +86,7 @@ IMAGE_VIEWER_SOURCE_SETTINGS
 	FI	Lähdekohtaiset asetukset
 	FR	Réglages spécifiques à la source
 	IT	Impostazioni specifiche dell'origine
+	NL	Bronspecifieke instellingen
 	NO	Kildespesifikke innstillinger
 	PL	Ustawienia specyficzne dla źródła
 	RU	Настройки для источника
@@ -96,6 +101,7 @@ IMAGE_VIEWER_SOURCE_CARD
 	FI	Muistikortti
 	FR	Carte mémoire
 	IT	Scheda di memoria
+	NL	Geheugenkaart
 	NO	Minnekort
 	PL	Karta pamięci
 	RU	Карта памяти
@@ -110,6 +116,7 @@ IMAGE_VIEWER_SOURCE_SC
 	FI	Squeezebox Server
 	FR	Squeezebox Server
 	IT	Squeezebox Server
+	NL	Squeezebox Server
 	NO	Squeezebox Server
 	PL	Squeezebox Server
 	RU	Squeezebox Server
@@ -124,6 +131,7 @@ IMAGE_VIEWER_SOURCE_HTTP
 	FI	URL-luettelo
 	FR	Liste d'URL
 	IT	Elenco URL
+	NL	URL-lijst
 	NO	Url-liste
 	PL	Lista adresów URL
 	RU	Список URL-адресов
@@ -138,6 +146,7 @@ IMAGE_VIEWER_SOURCE_FLICKR
 	FI	Flickr
 	FR	Flickr
 	IT	Flickr
+	NL	Flickr
 	NO	Flickr
 	PL	Flickr
 	RU	Flickr
@@ -152,6 +161,7 @@ IMAGE_VIEWER_DELAY
 	FI	Viive
 	FR	Retard
 	IT	Ritardo
+	NL	Vertraging
 	NO	Forsinkelse
 	PL	Opóźnienie
 	RU	Задержка
@@ -226,6 +236,7 @@ IMAGE_VIEWER_ORDERING
 	FI	Tilaaminen
 	FR	Classement
 	IT	Ordinamento
+	NL	Volgorde
 	NO	Sortering
 	PL	Kolejność
 	RU	Порядок
@@ -240,6 +251,7 @@ IMAGE_VIEWER_ORDERING_SEQUENTIAL
 	FI	peräkkäinen
 	FR	séquentiel
 	IT	sequenziale
+	NL	opeenvolgend
 	NO	i rekkefølge
 	PL	sekwencyjne
 	RU	последовательно
@@ -254,6 +266,7 @@ IMAGE_VIEWER_ORDERING_RANDOM
 	FI	satunnainen
 	FR	aléatoire
 	IT	casuale
+	NL	willekeurig
 	NO	tilfeldig
 	PL	losowo
 	RU	в случайном порядке
@@ -298,6 +311,7 @@ IMAGE_VIEWER_TRANSITION_FADE
 	FI	Häivytä kuvat
 	FR	Fondu d'images
 	IT	Dissolvi immagini
+	NL	Afbeeldingen vervagen
 	NO	Ton bilder
 	PL	Zanikanie obrazów
 	RU	Затухание изображений
@@ -387,6 +401,7 @@ IMAGE_VIEWER_TRANSITION_PUSH_RIGHT
 	FI	työnnä oikealle
 	FR	pousser vers la droite
 	IT	sposta a destra
+	NL	naar rechts plaatsen
 	NO	dytt til høyre
 	PL	wypychanie w prawo
 	RU	сдвинуть вправо
@@ -401,6 +416,7 @@ IMAGE_VIEWER_TRANSITION_PUSH_LEFT
 	FI	työnnä vasemmalle
 	FR	pousser vers la gauche
 	IT	sposta a sinistra
+	NL	naar links plaatsen
 	NO	dytt til venstre
 	PL	wypychanie w lewo
 	RU	сдвинуть влево
@@ -415,6 +431,7 @@ IMAGE_VIEWER_ROTATION
 	FI	Käännä automaattisesti
 	FR	Rotation automatique
 	IT	Rotazione automatica
+	NL	Autom. roteren
 	NO	Automatisk rotering
 	PL	Autoobracanie
 	RU	Автоповорот
@@ -429,6 +446,7 @@ IMAGE_VIEWER_ROTATION_YES
 	FI	Käännä aina
 	FR	Toujours faire pivoter
 	IT	Ruota sempre
+	NL	Altijd roteren
 	NO	Alltid roter
 	PL	Zawsze obracaj
 	RU	Всегда поворачивать
@@ -443,6 +461,7 @@ IMAGE_VIEWER_ROTATION_AUTO
 	FI	Kääntäminen ainoastaan mobiililaitteissa
 	FR	Rotation uniquement sur les dispositifs mobiles
 	IT	Rotazione solo sui dispositivi portatili
+	NL	Alleen rotatie op mobiele apparaten
 	NO	Rotering kun på bærbare enheter
 	PL	Obracanie tylko na urządzeniach mobilnych
 	RU	Поворот только на мобильных устройствах
@@ -457,6 +476,7 @@ IMAGE_VIEWER_ROTATION_NO
 	FI	Ei kääntöä
 	FR	Sans rotation
 	IT	Nessuna rotazione
+	NL	Geen rotatie
 	NO	Ingen rotering
 	PL	Bez obracania
 	RU	Без поворота
@@ -471,6 +491,7 @@ IMAGE_VIEWER_ZOOM
 	FI	Kuvan zoomaus
 	FR	Zoom sur image
 	IT	Zoom immagine
+	NL	Afbeelding zoomen
 	NO	Bildezoom
 	PL	Powiększenie obrazu
 	RU	Масштаб изображения
@@ -485,6 +506,7 @@ IMAGE_VIEWER_ZOOM_PICTURE
 	FI	Näytä täydellinen kuva
 	FR	Afficher l'image complète
 	IT	Mostra immagine intera
+	NL	Hele afbeelding weergeven
 	NO	Vis hele bildet
 	PL	Pokaż cały obraz
 	RU	Показать изображение полностью
@@ -499,6 +521,7 @@ IMAGE_VIEWER_ZOOM_SCREEN
 	FI	Täytä koko näyttö
 	FR	Occuper tout l'écran
 	IT	Riempi tutto lo schermo
+	NL	Volledig scherm vullen
 	NO	Fyll hele skjermen
 	PL	Wypełnij cały ekran
 	RU	Во весь экран
@@ -513,6 +536,7 @@ IMAGE_VIEWER_TEXTINFO
 	FI	Lisätietoa kuvasta
 	FR	Infos supplémentaires sur l'image
 	IT	Ulteriori informazioni sull'immagine
+	NL	Aanvullende informatie over afbeelding
 	NO	Tilleggsinformasjon om bildet
 	PL	Dodatkowe informacje o obrazie
 	RU	Дополнительные сведения об изображении
@@ -527,6 +551,7 @@ IMAGE_VIEWER_TEXTINFO_YES
 	FI	Näytä kuvan lisätiedot
 	FR	Afficher les infos supplémentaires sur l'image
 	IT	Mostra ulteriori informazioni sull'immagine
+	NL	Aanvullende info over afbeelding weergeven
 	NO	Vis tilleggsinformasjon om bildet
 	PL	Pokaż dodatkowe informacje o obrazie
 	RU	Показать дополнительные сведения об изображении
@@ -541,6 +566,7 @@ IMAGE_VIEWER_TEXTINFO_NO
 	FI	Piilota kuvan lisätiedot
 	FR	Masquer les infos supplémentaires sur l'image
 	IT	Nascondi ulteriori informazioni sull'immagine
+	NL	Aanvullende info over afbeelding verbergen
 	NO	Skjul tilleggsinformasjon om bildet
 	PL	Ukryj dodatkowe informacje o obrazie
 	RU	Скрыть дополнительные сведения об изображении
@@ -562,6 +588,7 @@ IMAGE_VIEWER_CARD_PATH_HELP
 	FI	Määrittää kuvien hakupolun. Voit käyttää merkkiä * paikkamerkkinä
 	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
 	IT	Specifica il percorso di ricerca delle immagini. È possibile utilizzare un asterisco (*) come segnaposto.
+	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
 	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
 	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
 	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
@@ -576,6 +603,7 @@ IMAGE_VIEWER_CARD_ERROR
 	FI	Kuvia ei löytynyt. Varmista, että kuvat sijaitsevat oikeassa polussa ja että ne ovat tuetussa muodossa.
 	FR	Aucune image trouvée. Assurez-vous que le chemin d'accès aux images spécifié est correct et que leur format est pris en charge.
 	IT	Nessuna immagine trovata. Verificare che le immagini si trovino nel percorso corretto e che siano in un formato supportato.
+	NL	Geen afbeeldingen gevonden. Controleer of de afbeeldingen zich op de juiste locatie bevinden en de juiste indeling hebben.
 	NO	Fant ingen bilder. Sjekk at du har angitt riktig bane for bildene, og at formatet de er i, støttes.
 	PL	Nie znaleziono obrazów. Upewnij się, że obrazy znajdują się w prawidłowej ścieżce i są w obsługiwanym formacie.
 	RU	Изображения не найдены. Убедитесь, что указан правильный путь и изображения имеют поддерживаемый формат.
@@ -597,6 +625,7 @@ IMAGE_VIEWER_HTTP_PATH_HELP
 	FI	Määrittää kuvaluettelon sijainnin
 	FR	Définit l'emplacement de la liste d'images
 	IT	Specifica la posizione dell'elenco di immagini
+	NL	Hiermee wordt de locatie van de afbeeldingenlijst gedefinieerd.
 	NO	Angir plasseringen av bildelisten
 	PL	Definiuje lokalizację listy obrazów
 	RU	Определяет расположение списка изображений
@@ -611,6 +640,7 @@ IMAGE_VIEWER_HTTP_ERROR
 	FI	URL-luetteloa ei voitu noutaa. Tarkista määritetty URL-osoite.
 	FR	Impossible de récupérer la liste d'URL. Vérifiez si l'URL spécifié est correct.
 	IT	Impossibile recuperare l'elenco degli URL. Verificare che l'URL specificato sia corretto.
+	NL	Kan URL-lijst niet ophalen. Controleer of de opgegeven URL juist is.
 	NO	Kunne ikke hente url-liste. Sjekk at den angitte url-en er korrekt.
 	PL	Nie można pobrać listy adresów URL. Sprawdź, czy zdefiniowany adres URL jest prawidłowy.
 	RU	Не удалось получить список URL-адресов. Убедитесь, что задан правильный URL-адрес.
@@ -659,7 +689,7 @@ IMAGE_VIEWER_FLICKR_DISPLAY
 	FI	Näyttö
 	FR	Affichage
 	IT	Visualizza
-	NL	Weergeven
+	NL	Display
 	NO	Skjerm
 	PL	Wyświetlacz
 	RU	Экран

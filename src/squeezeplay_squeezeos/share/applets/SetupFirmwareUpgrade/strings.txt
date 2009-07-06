@@ -131,7 +131,7 @@ UPDATE_DOWNLOAD
 	FI	Ladataan
 	FR	Téléchargement en cours…
 	IT	Download in corso…
-	NL	Updates kopiëren
+	NL	Downloaden
 	NO	Laster ned
 	PL	Pobieranie
 	RU	Загрузка
@@ -146,7 +146,7 @@ UPDATE_VERIFY
 	FI	Asentaminen
 	FR	Installation
 	IT	Installazione
-	NL	Update verifiëren
+	NL	Installeren
 	NO	Det er nok å installere
 	PL	Instalowanie
 	RU	Установка

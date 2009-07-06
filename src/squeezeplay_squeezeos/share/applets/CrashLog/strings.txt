@@ -11,6 +11,7 @@ CRASH_TITLE
 	FI	Järjestelmä kaatui
 	FR	Panne du système
 	IT	Arresto anomalo del sistema
+	NL	Systeemcrash
 	NO	Systemkrasj
 	PL	Zawieszenie systemu
 	RU	Сбой системы
@@ -25,6 +26,7 @@ CRASH_TEXT
 	FI	Havaittiin järjestelmän kaatuminen. Logitechille lähetetään lokitiedosto analysoitavaksi.
 	FR	Une panne du système a été détectée. Un fichier journal a été envoyé à Logitech pour analyse.
 	IT	È stato rilevato un arresto anomalo del sistema. Verrà inviato un file di registro a Logitech per essere analizzato.
+	NL	Er is een systeemcrash gedetecteerd. Er wordt een logbestand naar Logitech gestuurd ter analyse.
 	NO	Vi har registrert et systemkrasj. En loggfil sendes til Logitech for analysering.
 	PL	Wykryto zawieszenie systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
 	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
@@ -39,6 +41,7 @@ CRASH_CONTINUE
 	FI	Jatka
 	FR	Continuer
 	IT	Continua
+	NL	Verdergaan
 	NO	Fortsett
 	PL	Kontynuuj
 	RU	Продолжить
