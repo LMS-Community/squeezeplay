@@ -44,7 +44,8 @@ local appletManager = appletManager
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-local VOLUME_STEP = 100 / 40
+local VOLUME_STEP = 3
+
 -- volumeMap has the correct gain settings for volume settings 1-100.
 local volumeMap = { 
 232, 246, 260, 276, 292, 309, 327, 346, 366, 388, 411, 435, 460, 487, 516, 546, 578, 612, 648, 686, 726, 769, 814, 862, 912, 966, 1022, 1082, 1146, 1213, 1284, 1359, 1439, 1523, 1613, 1707, 1807, 1913, 2026, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3072, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 5888, 6400, 6656, 7168, 7424, 7936, 8448, 8960, 9472, 9984, 10496, 11264, 11776, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19712, 20992, 22272, 23552, 24832, 26368, 27904, 29440, 31232, 33024, 35072, 37120, 39168, 41472, 44032, 46592, 49408, 52224, 55296, 58368, 61952, 65536, 
@@ -54,22 +55,12 @@ function _updateVolume(self)
 
         local new
 
-	-- acceleration
-	local now = Framework:getTicks()
-	if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
-		self.accelCount = 0
-	end
-
-	self.accelCount = math.min(self.accelCount + 1, 20)
-	self.accelDelta = self.delta
-	self.lastUpdate = now
-
-	-- change volume
-	local accel = self.accelCount / 4
-	new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
+	new = math.abs(self.volume) + self.delta
 
         if new > 100 then
                 new = 100
+        elseif new <= VOLUME_STEP and new > 0 then
+                new = 1 -- lowest volume
         elseif new < 0 then
                 new = 0
         end
@@ -88,9 +79,9 @@ end
 
 function volEvent(self, volumeEvent)
 	if volumeEvent:getAction() == 'volume_up' then
-		self.delta = 1
+		self.delta = VOLUME_STEP
 	else
-		self.delta = -1
+		self.delta = -1 * VOLUME_STEP
 	end
 	_updateVolume(self)
 	return EVENT_CONSUME
