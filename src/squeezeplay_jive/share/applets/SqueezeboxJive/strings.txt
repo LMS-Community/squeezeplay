@@ -7,13 +7,13 @@
 BSP_SCREEN_LOCKED
 	CS	Zamčeno
 	DA	Låst
-	DE	LCD gesperrt. Drücken Sie HINZUFÜGEN und WIEDERGABE.
+	DE	Gesperrt
 	EN	Locked
-	ES	Pantalla bloqueada. Pulse AGREGAR y REPRODUCIR para desbloquear.
+	ES	Bloqueado
 	FI	Lukittu
-	FR	Ecran verrouillé. Appuyez sur ADD et PLAY pour le déverrouiller.
-	IT	Schermo bloccato. Premere AGGIUNGI e RIPRODUCI per sbloccarlo.
-	NL	Scherm vergrendeld. Druk op TOEVOEGEN en AFSPELEN om het te ontgrendelen.
+	FR	Verrouillé
+	IT	Bloccato
+	NL	Vergrendeld
 	NO	Låst
 	PL	Zablokowane
 	RU	Блокировано
@@ -172,7 +172,7 @@ BSP_TIMER_1_MIN
 BSP_TIMER_2_MIN
 	CS	2 minuty
 	DA	2 minutter
-	DE	2 Minute
+	DE	2 Minuten
 	EN	2 minute
 	ES	2 minutos
 	FI	2 minuuttia
@@ -187,7 +187,7 @@ BSP_TIMER_2_MIN
 BSP_TIMER_5_MIN
 	CS	5 minut
 	DA	5 minutter
-	DE	5 Minute
+	DE	5 Minuten
 	EN	5 minute
 	ES	5 minutos
 	FI	5 minuuttia
@@ -262,7 +262,7 @@ BATTERY_LOW_2
 POWER_DOWN
 	CS	Vypnout
 	DA	Sluk
-	DE	Herunterfahren
+	DE	Ausschalten
 	EN	Turn Off
 	ES	Apagar
 	FI	Sammuta
@@ -305,7 +305,7 @@ POWER_DOWN_SLEEP
 	SV	Viloläge
 
 GOODBYE
-	CS	\nNashledanou
+	CS	Nashledanou
 	DA	Farvel
 	DE	Auf Wiedersehen
 	EN	Goodbye
@@ -315,12 +315,12 @@ GOODBYE
 	IT	A presto
 	NL	Tot ziens
 	NO	Farvel
-	PL	\nDo widzenia
-	RU	\nПрощайте
+	PL	Do widzenia
+	RU	Прощайте
 	SV	Hej då!
 
 SLEEPING
-	CS	\nUsínám
+	CS	Usínám
 	DA	Slumrer
 	DE	Schlafmodus aktiv
 	EN	Sleeping
@@ -330,8 +330,8 @@ SLEEPING
 	IT	Sospensione
 	NL	Sluimermodus
 	NO	Hviler
-	PL	\nUśpienie
-	RU	\nСпящий режим
+	PL	Uśpienie
+	RU	Спящий режим
 	SV	I viloläge
 
 POWER_DOWN_HELP
@@ -350,7 +350,7 @@ POWER_DOWN_HELP
 	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
-	CS	\nČekejte prosím
+	CS	Čekejte prosím
 	DA	Vent lidt
 	DE	Bitte warten
 	EN	Please wait
@@ -360,8 +360,8 @@ PLEASE_WAIT
 	IT	Attendere
 	NL	Een ogenblik geduld
 	NO	Vent litt
-	PL	\nCzekaj
-	RU	\nПодождите, пожалуйста
+	PL	Czekaj
+	RU	Подождите, пожалуйста
 	SV	Vänta
 
 INVALID_MAC_TITLE
@@ -386,10 +386,10 @@ INVALID_MAC_TEXT
 	EN	Invalid mac address or uuid. Please contact support.
 	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
 	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
-	FR	Adresse MAC ou UUID non valide. Veuillez contacter l'assistance.
+	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
 	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
-	NO	Ugyldig mac-adresse eller uuid. Vennligst ta kontakt med kundestøtte.
+	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
 	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
 	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
 	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.

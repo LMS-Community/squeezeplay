@@ -59,7 +59,7 @@ WELCOME_HELP
 	NL	Druk op het rechterpijltje om verder te gaan.
 	NO	Trykk på høyreknappen når du er klar til å gå videre.
 	PL	Naciśnij klawisz strzałki w prawo, kiedy będzie można kontynuować.
-	RU	Нажмите клавишу "стрелка вправо", когда будете готовы продолжить
+	RU	Нажмите клавишу "стрелка вправо", когда вы будете готовы продолжить.
 	SV	Tryck på högerpilen när du är klar att gå vidare.
 
 DONE
@@ -67,7 +67,7 @@ DONE
 	DA	Det var det.
 	DE	Fertig!
 	EN	That's it!
-	ES	Y esto es todo.
+	ES	¡Ya está!
 	FI	Siinä kaikki!
 	FR	La procédure est terminée.
 	IT	Fatto!

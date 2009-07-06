@@ -8,7 +8,7 @@ MENUS_MY_MUSIC
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Musiikkilähde
+	FI	Omat musiikkitiedostot
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -22,9 +22,17 @@ MENUS_INTERNET_RADIO
 
 MENUS_OTHER_LIBRARY
 	CS	Jiná knihovna
+	DA	Andre biblioteker
+	DE	Andere Musiksammlung
 	EN	Other Library
+	ES	Otra biblioteca
+	FI	Toinen kirjasto
+	FR	Other Library
+	IT	Altra libreria
+	NL	Andere bibliotheek
 	PL	Inna biblioteka
 	RU	Другая медиатека
+	SV	Annat bibliotek
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu

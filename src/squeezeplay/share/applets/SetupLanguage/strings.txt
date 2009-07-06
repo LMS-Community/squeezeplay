@@ -76,7 +76,7 @@ LANGUAGE_FI
 	NO	Suomi
 	PL	Suomi
 	RU	финский
-	SV	Suomi
+	SV	Finska
 
 LANGUAGE_DA
 	CS	Dánština
@@ -111,9 +111,9 @@ LANGUAGE_DE
 LANGUAGE_EN
 	CS	Česky
 	DA	English
-	DE	English
+	DE	Deutsch
 	EN	English
-	ES	English
+	ES	Español
 	FI	English
 	FR	English
 	IT	English
@@ -121,7 +121,7 @@ LANGUAGE_EN
 	NO	English
 	PL	Polski
 	RU	английский
-	SV	English
+	SV	Engelska
 
 LANGUAGE_ES
 	CS	Español
@@ -136,7 +136,7 @@ LANGUAGE_ES
 	NO	Español
 	PL	Español
 	RU	испанский
-	SV	Español
+	SV	Spanska
 
 LANGUAGE_FR
 	CS	Français
@@ -151,7 +151,7 @@ LANGUAGE_FR
 	NO	Français
 	PL	Français
 	RU	Французский
-	SV	Français
+	SV	Franska
 
 LANGUAGE_IT
 	CS	Italština
@@ -166,7 +166,7 @@ LANGUAGE_IT
 	NO	Italiano
 	PL	Italiano
 	RU	итальянский
-	SV	Italiano
+	SV	Italienska
 
 LANGUAGE_NL
 	CS	Holandština
@@ -186,29 +186,29 @@ LANGUAGE_NL
 LANGUAGE_RU
 	CS	Ruština
 	DA	Русский
-	DE	Русский
+	DE	Russisch
 	EN	Русский
 	ES	Русский
 	FI	Русский
 	FR	Русский
 	IT	Русский
 	NL	Русский
-	NO	Русский
+	NO	Russisk
 	PL	Русский
 	RU	русский
-	SV	Русский
+	SV	Ryska
 
 LANGUAGE_PL
 	CS	Polština
 	DA	Polski
-	DE	Polski
+	DE	Polnisch
 	EN	Polski
 	ES	Polski
 	FI	Polski
-	FR	Polski
+	FR	Polonais
 	IT	Polski
 	NL	Polski
-	NO	Polski
+	NO	Polsk
 	PL	Polski
 	RU	Polski
 	SV	Polski
@@ -216,17 +216,17 @@ LANGUAGE_PL
 LANGUAGE_CS
 	CS	Čeština
 	DA	Čeština
-	DE	Čeština
+	DE	Tschechisch
 	EN	Čeština
 	ES	Čeština
 	FI	Čeština
 	FR	Čeština
 	IT	Čeština
 	NL	Čeština
-	NO	Čeština
+	NO	Tsjekkisk
 	PL	Čeština
 	RU	чешский
-	SV	Čeština
+	SV	Tjeckiska
 
 CHOOSE_LANGUAGE_HELP
 	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.

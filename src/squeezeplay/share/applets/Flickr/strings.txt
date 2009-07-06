@@ -20,7 +20,7 @@ SCREENSAVER_FLICKR
 SCREENSAVER_FLICKR_SETTINGS
 	CS	Nastavení služby Flickr
 	DA	Indstillinger for Flickr
-	DE	Flickr Einstellungen
+	DE	Flickr-Einstellungen
 	EN	Flickr Settings
 	ES	Configuración de Flickr
 	FI	Flickr-asetukset
@@ -35,7 +35,7 @@ SCREENSAVER_FLICKR_SETTINGS
 SCREENSAVER_FLICKR_LOADING_PHOTO
 	CS	Flickr nahrává foto...
 	DA	Flickr indlæser billede...
-	DE	Flickr lädt photo...
+	DE	Foto wird in Flickr geladen...
 	EN	Flickr loading photo...
 	ES	Flickr al cargar foto...
 	FI	Flickr lataa valokuvaa...
@@ -50,7 +50,7 @@ SCREENSAVER_FLICKR_LOADING_PHOTO
 SCREENSAVER_FLICKR_ERROR
 	CS	Chyba Flickr
 	DA	Flickr-fejl
-	DE	Flickr Fehler
+	DE	Flickr-Fehler
 	EN	Flickr error
 	ES	Error de Flickr
 	FI	Flickr-virhe
@@ -127,7 +127,7 @@ SCREENSAVER_FLICKR_DELAY_1_MIN
 	DA	1 min.
 	DE	1 Min.
 	EN	1 min
-	ES	1 m
+	ES	1 min
 	FI	1 min
 	FR	1 min
 	IT	1 min
@@ -142,7 +142,7 @@ SCREENSAVER_FLICKR_DISPLAY
 	DA	Display
 	DE	Anzeige
 	EN	Display
-	ES	Mostrar
+	ES	Pantalla
 	FI	Näyttö
 	FR	Affichage
 	IT	Visualizza
@@ -230,7 +230,7 @@ SCREENSAVER_FLICKR_DISPLAY_RECENT
 SCREENSAVER_FLICKR_FLICKR_ID
 	CS	Uživatel Flickr
 	DA	Flickr-bruger
-	DE	Flickr Benutzer
+	DE	Flickr-Benutzer
 	EN	Flickr User
 	ES	Usuario de Flickr
 	FI	Flickr-käyttäjä
@@ -365,7 +365,7 @@ SCREENSAVER_FLICKR_TRANSITION_RIGHT_LEFT
 SCREENSAVER_FLICKR_USERID_ERROR
 	CS	Zadané číslo pro službu Flickr nelze přidělit k účtu uživatele Flickr! Opravte zadanou hodnotu.\n\nPokračujte stiskem jakékoliv klávesy.
 	DA	Der blev ikke fundet en Flickr-brugerkonto som svarer til det indtastede Flickr-id. Du skal rette brugernavnet.\n\nTryk på en vilkårlig knap for at fortsætte.
-	DE	Für den eingegebenen Flickr Benutzernamen kann keine Flickr ID gefunden werden. Bitte korrigieren Sie ihre Eingabe.\n\nBitte drücken Sie eine Taste für weiter.
+	DE	Für den eingegebenen Flickr-Benutzernamen kann keine Flickr-ID gefunden werden. Korrigieren Sie Ihre Eingabe.\n\nDrücken Sie zum Fortfahren eine beliebige Taste.
 	EN	The entered flickr id could not be resolved to a flicker user account! Please correct your entry.\n\nPress any key to continue.
 	ES	El ID de Flickr indicado no se ha podido resolver en una cuenta de usuario de Flickr. Debe corregir el ID.\n\nPulse una tecla cualquiera para continuar.
 	FI	Antamaasi flickr-tunnusta ei voitu käyttää flicker-tilin kanssa. Anna oikea tunnus.\n\nJatka painamalla mitä tahansa näppäintä.
@@ -380,7 +380,7 @@ SCREENSAVER_FLICKR_USERID_ERROR
 SCREENSAVER_FLICKR_INVALID_DISPLAY_OPTION
 	CS	Vaše identifikační číslo pro službu Flickr zatím není nastaveno. Nastavte platné číslo nebo zvolte jinou volbu zobrazení.\n\nPokračujte stiskem jakékoliv klávesy.
 	DA	Dit Flickr-id er ikke defineret. Angiv et gyldigt Flickr-id, eller vælg en anden visningsmulighed.\n\nTryk på en tast for at fortsætte.
-	DE	Ihre Flickr ID ist noch nicht gesetzt. Bitte setzen Sie die Flickr ID, oder wählen Sie eine andere Anzeige-Option.\n\nBitte drücken Sie eine Taste für weiter.
+	DE	Ihre Flickr-ID ist noch nicht festgelegt. Legen Sie eine gültige Flickr-ID fest oder wählen Sie eine andere Anzeige-Option.\n\nDrücken Sie zum Fortfahren eine beliebige Taste.
 	EN	Your flickr id is not set yet. Please set a valid flickr id, or choose another display option.\n\nPress any key to continue.
 	ES	Aún no hay un ID de Flickr configurado. Indique un ID válido o elija otra opción de pantalla.\n\nPulse una tecla cualquiera para continuar.
 	FI	Flickr-tunnusta ei ole vielä määritetty. Määritä kelvollinen flickr-tunnus tai valitse jokin toinen näyttöasetus.\n\nJatka painamalla mitä tahansa näppäintä.

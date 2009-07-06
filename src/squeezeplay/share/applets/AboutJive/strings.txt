@@ -6,7 +6,7 @@
 ABOUT_JIVE
 	CS	O aplikaci
 	DA	Om
-	DE	Über
+	DE	Info
 	EN	About
 	ES	Acerca de
 	FI	Tietoja

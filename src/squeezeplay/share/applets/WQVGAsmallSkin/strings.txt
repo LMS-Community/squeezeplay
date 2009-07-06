@@ -23,12 +23,12 @@ ENTER_SMALL
 SPACEBAR_SMALL
 	CS	mezera
 	DA	mellemrum
-	DE	Leerzeichen
+	DE	Leertaste
 	EN	space
 	ES	espacio
 	FI	välinäppäin
-	FR	espace
-	IT	barra spaz.
+	FR	space
+	IT	spazio
 	NL	spatie
 	NO	mellomrom
 	PL	spacja
@@ -52,7 +52,7 @@ HELP
 
 MORE_HELP
 	CS	Další
-	DA	Mere
+	DA	Mere...
 	DE	Mehr
 	EN	More
 	ES	Más

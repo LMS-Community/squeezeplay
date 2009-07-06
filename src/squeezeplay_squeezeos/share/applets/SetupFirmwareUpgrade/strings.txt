@@ -5,7 +5,7 @@
 UPDATE
 	CS	Aktualizace softwaru
 	DA	Softwareopdatering
-	DE	Software-Aktualisierung
+	DE	Software-Update
 	EN	Software Update
 	ES	Actualización de software
 	FI	Ohjelmiston päivitys
@@ -20,7 +20,7 @@ UPDATE
 BEGIN_UPDATE
 	CS	Zahájit aktualizaci
 	DA	Start opdateringen
-	DE	Aktualisierung starten
+	DE	Update starten
 	EN	Begin update
 	ES	Iniciar actualización
 	FI	Aloita päivitys
@@ -80,7 +80,7 @@ UPDATE_TO_X
 UPDATE_FAILURE
 	CS	Aktualizace selhala
 	DA	Opdateringen mislykkedes
-	DE	Fehler bei Aktualisierung
+	DE	Update-Fehler
 	EN	Update failed
 	ES	Fallo al actualizar
 	FI	Päivitys epäonnistui
@@ -124,33 +124,33 @@ UPDATE_TRY_AGAIN
 
 UPDATE_DOWNLOAD
 	CS	Stahování
-	DA	Kopierer opdateringen
-	DE	Aktualisierung wird kopiert
+	DA	Henter
+	DE	Daten werden heruntergeladen
 	EN	Downloading
-	ES	Copiando actualización
-	FI	Kopioidaan päivitystä
-	FR	Copie de la mise à jour
-	IT	Copia aggiornamento in corso
+	ES	Descargando
+	FI	Ladataan
+	FR	Téléchargement en cours…
+	IT	Download in corso…
 	NL	Updates kopiëren
-	NO	Kopierer oppdatering
+	NO	Laster ned
 	PL	Pobieranie
 	RU	Загрузка
-	SV	Kopierar uppdatering
+	SV	Hämtar
 
 UPDATE_VERIFY
 	CS	\nInstalace
-	DA	Kontrollerer opdateringen
-	DE	Aktualisierung wird geprüft
+	DA	Installerer
+	DE	Installieren
 	EN	Installing
-	ES	Comprobando actualización
-	FI	Tarkistetaan päivitystä
-	FR	Vérification des mises à jour
-	IT	Verifica aggiornamento
+	ES	Instalar
+	FI	Asentaminen
+	FR	Installation
+	IT	Installazione
 	NL	Update verifiëren
-	NO	Bekrefter oppdatering
+	NO	Det er nok å installere
 	PL	Instalowanie
 	RU	Установка
-	SV	Verifierar uppdatering
+	SV	Det
 
 UPDATE_REBOOT
 	CS	\nRestartování
@@ -185,7 +185,7 @@ UPDATE_BEGIN_UPGRADE
 UPDATE_BEGIN_REINSTALL
 	CS	Software pro toto dálkové ovládání je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
 	DA	Softwaren til denne fjernbetjening er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
-	DE	Die Software für diese Fernbedienung ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Aktualisierung starten'.
+	DE	Die Software für diese Fernbedienung ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
 	EN	The software for this remote is up to date. If you'd like to reinstall version %s, choose Begin Update.
 	ES	El software de este mando a distancia está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
 	FI	Tämän kaukosäätimen ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.

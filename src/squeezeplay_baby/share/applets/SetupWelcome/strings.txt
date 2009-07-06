@@ -10,7 +10,7 @@ WELCOME
 	ES	Bienvenido
 	FI	Tervetuloa
 	FR	Bienvenue
-	IT	Benvenuto
+	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
@@ -19,18 +19,18 @@ WELCOME
 
 WELCOME_WALKTHROUGH
 	CS	Vítejte do Squeezebox Radio. Začněme vaším připojením k vaší síti.
-	DA	Lad os begynde med at slutte afspilleren til netværket.
-	DE	Jetzt stellen wir die Verbindung zum Netzwerk her.
+	DA	Velkommen til Squeezebox Radio. Lad os begynde med at slutte afspilleren til netværket.
+	DE	Willkommen bei Squeezebox Radio. Jetzt stellen wir die Verbindung zum Netzwerk her.
 	EN	Welcome to Squeezebox Radio. Let's start by getting you connected to your network.
-	ES	Para empezar, nos conectaremos a la red.
-	FI	Aloitetaan yhteydenmuodostamisella verkkoosi.
-	FR	Commençons par vous connecter à votre réseau.
-	IT	Iniziamo con il collegamento alla rete.
-	NL	Ga aan de slag door verbinding te maken met je netwerk.
-	NO	La oss starte med å kople deg til nettverket.
+	ES	Bienvenido a Squeezebox Radio. Para empezar, nos conectaremos a la red.
+	FI	Tervetuloa Squeezebox Radioiin. Aloitetaan muodostamalla yhteys verkkoosi.
+	FR	Bienvenue dans Squeezebox Radio. Commençons par vous connecter à votre réseau.
+	IT	Benvenuti in Squeezebox Radio. Iniziamo con il collegamento alla rete.
+	NL	Welkom bij Squeezebox Radio. Ga aan de slag door verbinding te maken met je netwerk.
+	NO	Velkommen til Squeezebox Radio. La oss starte med å kople deg til nettverket.
 	PL	Squeezebox Radio — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
 	RU	Добро пожаловать в Squeezebox Radio. Начнем с подключения к сети.
-	SV	Vi börjar med att ansluta till nätverket.
+	SV	Välkommen till Squeezebox Radio. Vi börjar med att ansluta till nätverket.
 
 CONTINUE
 	CS	Pokračovat
@@ -78,7 +78,7 @@ DONE_HELP
 	SV	Nu har du tillgång till all din musik via Squeezebox!
 
 CONNECTING_TO_SN
-	CS	Připojování k \nmysqueezebox.com
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung zu
 	EN	Connecting to
@@ -88,8 +88,8 @@ CONNECTING_TO_SN
 	IT	Connessione a
 	NL	Bezig verbinding te maken met 
 	NO	Kopler til
-	PL	Nawiązywanie połączenia z\nmysqueezebox.com
-	RU	Подключение к\nmysqueezebox.com
+	PL	Nawiązywanie połączenia z
+	RU	Подключение к
 	SV	Ansluter till
 
 MYSQUEEZEBOX_DOT_COM
@@ -155,9 +155,18 @@ SN_DNS_FAILED
 
 SN_SYSTEM_ERROR
 	CS	Došlo k systémové chybě. Zkuste znovu později.
+	DA	Der opstod en systemfejl. Prøv igen senere.
+	DE	Ein Systemfehler ist aufgetreten. Versuchen Sie es später noch einmal.
 	EN	A system error has happened. Please try again later.
+	ES	Se ha producido un error del sistema. Vuelva a intentarlo más tarde.
+	FI	Tapahtui järjestelmävirhe. Yritä myöhemmin uudelleen.
+	FR	Une erreur système s'est produite. Réessayez plus tard.
+	IT	Si è verificato un errore di sistema. Riprovare più tardi.
+	NL	Er heeft zich een systeemfout voorgedaan. Probeer het later opnieuw.
+	NO	Det har oppstått en systemfeil. Prøv igjen senere.
 	PL	Wystąpił błąd systemowy. Spróbuj ponownie później.
 	RU	Произошла системная ошибка. Повторите попытку позднее.
+	SV	Ett systemfel har inträffat. Försök igen senare.
 
 SN_TRY_AGAIN
 	CS	Zkuste připojit znovu

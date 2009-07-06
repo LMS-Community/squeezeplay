@@ -23,7 +23,7 @@ MY_MUSIC
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Musiikkilähde
+	FI	Omat musiikkitiedostot
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -123,11 +123,11 @@ ADVANCED_SETTINGS
 	NO	Avansert
 	PL	Zaawansowane
 	RU	Дополнительно
-	SV	Avancerad
+	SV	Avancerat
 
 FACTORY_TEST
 	CS	Tovární zkouška
-	DA	Test af standardindstillinger
+	DA	Fabrikstest
 	DE	Fabriktest
 	EN	Factory Test
 	ES	Prueba de fábrica
@@ -138,7 +138,7 @@ FACTORY_TEST
 	NO	Fabrikktest
 	PL	Test fabryczny
 	RU	Фабричный тест
-	SV	Fabrikstestning
+	SV	Test av fabriksinställningar
 
 DEBUG_LOG
 	CS	Protokolování
