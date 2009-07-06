@@ -75,7 +75,7 @@ static int handle_msp430_events(int fd) {
 				scroll += value;
 			}
 			else if (ev[i].code == REL_MISC) {
-				jive_send_key_event(JIVE_EVENT_KEY_PRESS, (ev[i].value < 0) ? JIVE_KEY_VOLUME_UP : JIVE_KEY_VOLUME_DOWN);
+				jive_send_char_press_event((ev[i].value < 0) ? "+" : "-");
 			}
 		}
 		// ignore EV_SYN

@@ -111,7 +111,7 @@ local function _openPopup(self)
 end
 
 
-function _updateVolume(self, mute, directSet)
+function _updateVolume(self, mute, directSet, noAccel)
 	if not self.popup then
 		self.timer:stop()
 		return
@@ -137,23 +137,29 @@ function _updateVolume(self, mute, directSet)
 	if directSet then
 		new = math.floor(directSet)
 	else
-		-- accelation
-		local now = Framework:getTicks()
-		if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
-			self.accelCount = 0
+		if noAccel then
+			new = math.abs(self.volume) + self.delta
+		else
+			-- accelation
+			local now = Framework:getTicks()
+			if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
+				self.accelCount = 0
+			end
+
+			self.accelCount = math.min(self.accelCount + 1, 20)
+			self.accelDelta = self.delta
+			self.lastUpdate = now
+
+			-- change volume
+			local accel = self.accelCount / 4
+			new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 		end
-
-		self.accelCount = math.min(self.accelCount + 1, 20)
-		self.accelDelta = self.delta
-		self.lastUpdate = now
-
-		-- change volume
-		local accel = self.accelCount / 4
-		new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 	end
 
 	if new > 100 then
 		new = 100
+	elseif new > 0 and self.delta < 0 and new <= math.abs(self.delta) then
+		new = 1 -- when negative delta is greater than 1, always allow for stop at lowest value, so lowest volume can be heard, used for instanve by volume_down ACTION handling which goes down in steps
 	elseif new < 0 then
 		new = 0
 	end
@@ -206,14 +212,14 @@ function event(self, event)
 	elseif type == ACTION then
 		local action = event:getAction()
 		if action == "volume_up" then
-			self.delta = 1
-			_updateVolume(self)
+			self.delta = 3
+			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
 		end
 		if action == "volume_down" then
-			self.delta = -1
-			_updateVolume(self)
+			self.delta = -3
+			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
 		end

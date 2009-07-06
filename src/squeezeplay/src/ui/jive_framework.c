@@ -299,6 +299,17 @@ void jive_send_gesture_event(JiveGesture code) {
 	jive_queue_event(&event);
 }
 
+void jive_send_char_press_event(Uint16 unicode) {
+	JiveEvent event;
+	memset(&event, 0, sizeof(JiveEvent));
+
+	event.type = JIVE_EVENT_CHAR_PRESS;
+	event.ticks = SDL_GetTicks();
+	event.u.text.unicode = unicode;
+	jive_queue_event(&event);
+}
+
+
 static int jiveL_quit(lua_State *L) {
 
 	/* de-reference all windows */
