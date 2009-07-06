@@ -126,7 +126,7 @@ static void prepare(lua_State *L) {
 	size_t num_lines = 0;
 	const char *str, *ptr, *nptr;
 	char *tmp;
-	u32_t c;
+	Uint32 c;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 

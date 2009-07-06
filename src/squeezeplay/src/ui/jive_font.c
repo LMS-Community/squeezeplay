@@ -297,9 +297,9 @@ binary 			hex 	decimal 	notes
 11111110-11111111 	FE-FF 	254-255 	Invalid: not defined by original UTF-8 specification
 */
 
-u32_t utf8_get_char(const char *ptr, const char **nptr)
+Uint32 utf8_get_char(const char *ptr, const char **nptr)
 {
-	u32_t c, v;
+	Uint32 c, v;
 	const unsigned char *uptr = (const unsigned char *)ptr;
 
 	c = *uptr++;

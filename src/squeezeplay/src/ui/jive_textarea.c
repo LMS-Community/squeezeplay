@@ -501,7 +501,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 	while (*ptr) {
 		char c;
 		char *next;
-		u32_t code = utf8_get_char(ptr, (const char **)&next);
+		Uint32 code = utf8_get_char(ptr, (const char **)&next);
 
 		switch (code) {
 		case '\n':

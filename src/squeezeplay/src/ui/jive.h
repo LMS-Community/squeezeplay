@@ -425,7 +425,7 @@ int jive_font_ascend(JiveFont *font);
 int jive_font_offset(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);
-u32_t utf8_get_char(const char *ptr, const char **nptr);
+Uint32 utf8_get_char(const char *ptr, const char **nptr);
 
 
 /* C helper functions */
