@@ -190,28 +190,18 @@ function skin(self, s, reload, useDefaultSize)
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 
-	s.img.textareaBackground  = Tile:loadHTiles({
-		nil,
-		imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
-		imgpath .. "Titlebar/tb_dropdwn_bkrgd_r.png",
-	})
+	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
+
 	s.img.textareaBackgroundBottom  = 
-		Tile:loadTiles({
+		Tile:loadVTiles({
+					nil,
 					imgpath .. "Titlebar/tb_dropdwn_bkrgd.png",
-					nil,
-					nil,
-					nil,
-					imgpath .. "Titlebar/tb_dropdwn_bkrgd_r.png",
-					imgpath .. "Titlebar/titlebar_shadow_r.png",
 					imgpath .. "Titlebar/titlebar_shadow.png",
-					nil, 
-					nil,
 			       })
 
 
 	s.img.oneLineItemSelectionBox =
 		Tile:loadHTiles({
-				       --imgpath .. "Menu_Lists/menu_sel_box_l.png",
 					nil,
 				       imgpath .. "Menu_Lists/menu_sel_box.png",
 				       imgpath .. "Menu_Lists/menu_sel_box_r.png",
@@ -299,11 +289,7 @@ function skin(self, s, reload, useDefaultSize)
 		FOUR_LINE_ITEM_HEIGHT = 45,
 	}
 
-	--[[ not yet
 	local skinSuffix = '.png'
-	local selectedSkinSuffix = '_selected.png'
-	--]]
-	local skinSuffix = '_selected.png'
 
 	-- c is for constants
 	local c = s.CONSTANTS
@@ -633,7 +619,7 @@ function skin(self, s, reload, useDefaultSize)
 		--       but this also causes it to bleed into the titlebar
 		h=WH_FILL ,
 		border     = { 8, 0, 8, 0 },
-		padding    = { 10, 0, 10, 0 },
+		padding    = { 8, 0, 8, 0 },
 		align = 'center',
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
@@ -1171,12 +1157,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
-	--[[ not yet
-	s.home_menu.menu.selected.item.hm_appletNowPlaying = _uses(s._selectedButtonicon, {
-		img = _loadImage(self, "IconsResized/icon_nowplaying" .. selectedSkinSuffix),
-	})
-	--]]
- 
 	s.hm_appletAppGuide = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
 	})

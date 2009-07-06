@@ -21,8 +21,7 @@ my $convertCommand = "/opt/local/bin/convert";
 
 # define skins and dimensions for each
 my $resize = { 
-		'selected'	=>	41,
-		'off'      =>	37,
+		'off'      =>	41,
 };
 
 
@@ -52,6 +51,7 @@ sub convert_files {
 			my $size = $resize->{$skin};
 			my $basename = fileparse($file, qr/\.[^.]*/);
 			my $filename = $resizedIconDir . "/" . $f;
+			# $skin is never 'selected' now, but this is what we'd do if it were
 			if ($skin eq 'selected') {
 				$filename = $resizedIconDir . "/" . $basename . "_" . $skin . ".png";
 			}

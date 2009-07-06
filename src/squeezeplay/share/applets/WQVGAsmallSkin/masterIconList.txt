@@ -59,3 +59,5 @@ icon_nowplaying.png
 icon_ml_other_library.png
 icon_image_viewer.png
 icon_settings_adv.png
+icon_help.png
+

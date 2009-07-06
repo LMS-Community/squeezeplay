@@ -35,8 +35,8 @@ end
 
 function defaultSettings(meta)
 	return { 
-		WQVGAsmallSkin = "fab4_nocturne.png",
-		WQVGAlargeSkin = "fab4_nocturne.png",
+		WQVGAsmallSkin = "fab4_encore.png",
+		WQVGAlargeSkin = "fab4_encore.png",
 		FullscreenSkin = "jive_midnight.png",
 		QVGAportraitSkin  = "jive_sunrise.png",
 		QVGAlandscapeSkin = "bb_encore.png",
