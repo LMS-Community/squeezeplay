@@ -191,14 +191,18 @@ function _updateTask(self)
 
 	local iface = Networking:activeInterface()
 
-	if iface:isWireless() then
-		-- wireless strength
-		local quality = iface:getLinkQuality()
-		iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-	else
-		-- wired
-		local status = iface:t_wpaStatus()
-		iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+	if not iface then
+		iconbar:setWirelessSignal(nil)
+	else	
+		if iface:isWireless() then
+			-- wireless strength
+			local quality = iface:getLinkQuality()
+			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+		else
+			-- wired
+			local status = iface:t_wpaStatus()
+			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+		end
 	end
 end
 
