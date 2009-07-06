@@ -731,6 +731,7 @@ function skin(self, s)
 
 	s.text = {
 		w = screenWidth,
+		h = WH_FILL,
 		padding = TEXTAREA_PADDING,
 		font = _boldfont(TEXTAREA_FONT_SIZE),
 		lineHeight = TEXTAREA_FONT_SIZE + 10,

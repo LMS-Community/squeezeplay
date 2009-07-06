@@ -122,7 +122,7 @@ function confirmDemo(self, force)
 
 		local menu = SimpleMenu("menu", items)
 		menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-		local textArea = Textarea('text', self:string('DEMO_START_DEMO_WARNING'))
+		local textArea = Textarea('help_text', self:string('DEMO_START_DEMO_WARNING'))
 		menu:setHeaderWidget(textArea)
 		window:addWidget(menu)
 	

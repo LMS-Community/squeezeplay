@@ -601,6 +601,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.text = {
 		w = screenWidth,
+		h = WH_FILL,
 		padding = c.TEXTAREA_PADDING,
 		font = _boldfont(c.TEXTAREA_FONT_SIZE),
 		fg = c.TEXT_COLOR,
@@ -1485,6 +1486,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.demo_text = {
+		h = 36,
 		font = _boldfont(14),
 		position = LAYOUT_SOUTH,
 		w = screenWidth,
