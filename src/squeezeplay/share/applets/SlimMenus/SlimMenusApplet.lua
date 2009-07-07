@@ -507,10 +507,12 @@ end
 									_lockedItem = false
 								end)
 
-							_lockedItem = item
-							jiveMain:lockItem(item, function()
-								appletManager:callService("browserCancel", step)
-							end)
+							if not v.input then -- no locks for an input item, which is immediate
+								_lockedItem = item
+								jiveMain:lockItem(item, function()
+									appletManager:callService("browserCancel", step)
+								end)
+							end
 						end
 
 				item.callback = function()
