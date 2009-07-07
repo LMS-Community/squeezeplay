@@ -2563,13 +2563,14 @@ function _problemConnecting(self, server)
 			     })
 	end
 
-	menu:addActionListener("back", self,  function ()
-							self:_removeRequestAndUnlock(server)
-							window:hide()
+	local cancelAction =    function ()
+					self:_removeRequestAndUnlock(server)
+					window:hide()
 
-							return EVENT_CONSUME
-						end)
-
+					return EVENT_CONSUME
+				end
+	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self,  cancelAction )
 
 	menu:setHeaderWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
