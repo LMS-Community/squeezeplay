@@ -798,14 +798,15 @@ function window_slider_popup(self, item)
 	local popup = Popup("slider_popup")
 	_windowActions(self, item, popup)
 
-	local title = Label("text", data[1])
+	local title = Label("heading", data[1])
+
 	local slider = Slider("volume_slider", -1, 100, 50)
 
 	popup:addWidget(title)
+	popup:addWidget(Icon('icon_popup_volume'))
+
 	popup:addWidget(Group("slider_group", {
-		min = Icon("button_volume_min"),
 		slider = slider,
-		max = Icon("button_volume_max")
 	}))
 
 	return popup
