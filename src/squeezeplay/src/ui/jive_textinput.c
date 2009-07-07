@@ -342,7 +342,7 @@ int jiveL_textinput_draw(lua_State *L) {
 			jive_surface_free(tsrf);
 		}
 
-		if (cursor > text_len && peer->enter_tile) {
+		if ((cursor > text_len || cursor == 0) && peer->enter_tile) {
 			/* draw enter in cursor */
 			jive_tile_blit_centered(peer->enter_tile, srf, text_x + len_1 + (cursor_w / 2), text_cy, 0, 0);
 		}
