@@ -20,6 +20,10 @@
 #include <alsa/asoundlib.h>
 
 
+/* debug switches */
+#define TEST_LATENCY 0
+#define TEST_OUTPUT_NOISE 0
+
 
 #define FLAG_STREAM_PLAYBACK 0x01
 #define FLAG_STREAM_EFFECTS  0x02
@@ -65,7 +69,97 @@ static struct decode_alsa *playback_state;
 static struct decode_alsa *effects_state;
 
 
-static void decode_alsa_copyright(bool_t copyright);
+#ifndef timersub
+#define	timersub(a, b, result) \
+do { \
+	(result)->tv_sec = (a)->tv_sec - (b)->tv_sec; \
+	(result)->tv_usec = (a)->tv_usec - (b)->tv_usec; \
+	if ((result)->tv_usec < 0) { \
+		--(result)->tv_sec; \
+		(result)->tv_usec += 1000000; \
+	} \
+} while (0)
+#endif
+
+
+#ifdef TEST_LATENCY
+#define TIMER_INIT(TOUT)			\
+		struct timeval _t1, _t2, _td;	\
+		float _tf, _tout = TOUT;	\
+		gettimeofday(&_t1, 0);
+
+#define TIMER_CHECK(NAME) {					\
+		gettimeofday(&_t2, 0);					\
+		timersub(&_t2, &_t1, &_td);				\
+		_tf = _td.tv_sec * 1000 + _td.tv_usec / 1000.0;		\
+		if (_tf > _tout) {					\
+			LOG_WARN(log_audio_output, NAME " took too long %.3f ms", _tf); \
+		}							\
+		memcpy(&_t1, &_t2, sizeof(struct timeval));		\
+	}
+#else
+#define TIMER_START(TOUT)
+#define TIMER_CHECK(NAME)
+#endif
+
+
+#ifdef TEST_OUTPUT_NOISE
+static void generate_noise(void *outputBuffer,
+			   unsigned long framesPerBuffer) {
+	sample_t val, *output_ptr = (sample_t *)outputBuffer;
+
+	while (framesPerBuffer--) {
+		val = rand() % 256 - 127;
+		*output_ptr++ = val << 16;
+		*output_ptr++ = 0;
+	}
+}
+
+#else
+
+static void decode_alsa_copyright(bool_t copyright) {
+	snd_ctl_elem_value_t *control;
+	snd_aes_iec958_t iec958;
+	int err;
+
+	LOG_DEBUG(log_audio_output, "copyright %s asserted", (copyright)?"is":"not");
+
+	if (!playback_state->iec958_elem) {
+		/* not supported */
+		return;
+	}
+
+	/* dies with warning on GCC 4.2:
+	 * snd_ctl_elem_value_alloca(&control);
+	 */
+	control = (snd_ctl_elem_value_t *) alloca(snd_ctl_elem_value_sizeof());
+	memset(control, 0, snd_ctl_elem_value_sizeof());
+
+	if ((err = snd_hctl_elem_read(playback_state->iec958_elem, control)) < 0) {
+		LOG_ERROR(log_audio_output, "snd_hctl_elem_read error: %s", snd_strerror(err));
+		return;
+	}
+
+	snd_ctl_elem_value_get_iec958(control, &iec958);
+
+	/* 0 = copyright, 1 = not copyright */
+	if (copyright) {
+		iec958.status[0] &= ~(1<<2);
+	}
+	else {
+		iec958.status[0] |= (1<<2);
+	}
+
+	snd_ctl_elem_value_set_iec958(control, &iec958);
+
+	LOG_DEBUG(log_audio_output, "iec958 status: %02x %02x %02x %02x",
+		  iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
+
+	if ((err = snd_hctl_elem_write(playback_state->iec958_elem, control)) < 0) {
+		LOG_ERROR(log_audio_output, "snd_hctl_elem_write error: %s", snd_strerror(err));
+		return;
+	}
+}
 
 
 /*
@@ -207,6 +301,8 @@ static void effects_callback(struct decode_alsa *state,
 
 	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
 }
+
+#endif /* GENERATE_NOISE */
 
 
 static int pcm_close(struct decode_alsa *state) {
@@ -392,6 +488,8 @@ static int pcm_test(const char *name, unsigned int *max_rate) {
 
 
 static int xrun_recovery(struct decode_alsa *state, int err) {
+	snd_pcm_state_t pcm_state;
+
 	if (err == -EPIPE) {	/* under-run */
 		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
 			LOG_ERROR(log_audio_output, "Can't recover from underrun, prepare failed: %s", snd_strerror(err));
@@ -411,17 +509,6 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 	return err;
 }
 
-#ifndef timersub
-#define	timersub(a, b, result) \
-do { \
-	(result)->tv_sec = (a)->tv_sec - (b)->tv_sec; \
-	(result)->tv_usec = (a)->tv_usec - (b)->tv_usec; \
-	if ((result)->tv_usec < 0) { \
-		--(result)->tv_sec; \
-		(result)->tv_usec += 1000000; \
-	} \
-} while (0)
-#endif
 
 static void *audio_thread_execute(void *data) {
 	struct decode_alsa *state = (struct decode_alsa *)data;
@@ -429,24 +516,25 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_uframes_t size;
 	snd_pcm_sframes_t avail;
 	snd_pcm_status_t *status;
-	int err, first = 1;
+	int err, new_rate = 1, first = 1;
 
 	LOG_DEBUG(log_audio_output, "audio_thread_execute");
 	
 	status = malloc(snd_pcm_hw_params_sizeof());
 
 	while (1) {
-		fifo_lock(&decode_fifo);
+		TIMER_INIT(10.0f); /* 10 ms limit */
 
-		if (state->new_sample_rate) {
+		if (new_rate) {
 			if ((err = pcm_open(state)) < 0) {
 				LOG_ERROR(log_audio_output, "Open failed: %s", snd_strerror(err));
 				goto thread_error_unlock;
 			}
+			new_rate = 0;
 			first = 1;
 		}
 
-		fifo_unlock(&decode_fifo);
+		TIMER_CHECK("OPEN");
 
 		pcm_state = snd_pcm_state(state->pcm);
 		if (pcm_state == SND_PCM_STATE_XRUN) {
@@ -482,6 +570,8 @@ static void *audio_thread_execute(void *data) {
 			LOG_ERROR(log_audio_output, "snd_pcm_status err=%d", err);
 		}
 
+		TIMER_CHECK("STATE");
+
 		if (avail < state->period_size) {
 			if (first) {
 				first = 0;
@@ -502,6 +592,8 @@ static void *audio_thread_execute(void *data) {
 			continue;
 		}
 
+		TIMER_CHECK("WAIT");
+
 		size = state->period_size;
 		while (size > 0) {
 			const snd_pcm_channel_area_t *areas;
@@ -519,9 +611,17 @@ static void *audio_thread_execute(void *data) {
 				first = 1;
 			}
 
-			fifo_lock(&decode_fifo);
+			TIMER_CHECK("BEGIN");
 
 			buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
+
+
+#ifdef TEST_OUTPUT_NOISE
+			generate_noise(buf, frames);
+			TIMER_CHECK("NOISE");
+#else
+			fifo_lock(&decode_fifo);
+			TIMER_CHECK("LOCK");
 
 			if (state->flags & FLAG_STREAM_PLAYBACK) {
 				playback_callback(state, buf, frames);
@@ -529,21 +629,32 @@ static void *audio_thread_execute(void *data) {
 			else {
 				memset(buf, 0, SAMPLES_TO_BYTES(frames));
 			}
+			TIMER_CHECK("PLAYBACK");
+
 			if (state->flags & FLAG_STREAM_EFFECTS) {
 				effects_callback(state, buf, frames);
 			}
 
+			/* sample rate changed? we do this check while the
+			 * fifo is locked, so we don't need to lock it twice
+			 * per loop.
+			 */
+			new_rate = state->new_sample_rate;
+
 			fifo_unlock(&decode_fifo);
+			TIMER_CHECK("EFFECTS");
+#endif
 
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
-				LOG_WARN(log_audio_output, "xrun (snd_pcm_mmap_commit)");
+				LOG_WARN(log_audio_output, "xrun (snd_pcm_mmap_commit) err=%d", commitres);
 				if ((err = xrun_recovery(state, commitres)) < 0) {
 					LOG_ERROR(log_audio_output, "mmap commit failed: %s", snd_strerror(err));
 				}
 				first = 1;
 			}
 			size -= frames;
+			TIMER_CHECK("COMMIT");
 		}
 	}
 
@@ -687,51 +798,6 @@ static void decode_alsa_stop(void) {
 static void decode_alsa_gain(s32_t left_gain, s32_t right_gain) {
 	playback_state->lgain = left_gain;
 	playback_state->rgain = right_gain;
-}
-
-
-static void decode_alsa_copyright(bool_t copyright) {
-	snd_ctl_elem_value_t *control;
-	snd_aes_iec958_t iec958;
-	int err;
-
-	LOG_DEBUG(log_audio_output, "copyright %s asserted", (copyright)?"is":"not");
-
-	if (!playback_state->iec958_elem) {
-		/* not supported */
-		return;
-	}
-
-	/* dies with warning on GCC 4.2:
-	 * snd_ctl_elem_value_alloca(&control);
-	 */
-	control = (snd_ctl_elem_value_t *) alloca(snd_ctl_elem_value_sizeof());
-	memset(control, 0, snd_ctl_elem_value_sizeof());
-
-	if ((err = snd_hctl_elem_read(playback_state->iec958_elem, control)) < 0) {
-		LOG_ERROR(log_audio_output, "snd_hctl_elem_read error: %s", snd_strerror(err));
-		return;
-	}
-
-	snd_ctl_elem_value_get_iec958(control, &iec958);
-
-	/* 0 = copyright, 1 = not copyright */
-	if (copyright) {
-		iec958.status[0] &= ~(1<<2);
-	}
-	else {
-		iec958.status[0] |= (1<<2);
-	}
-
-	snd_ctl_elem_value_set_iec958(control, &iec958);
-
-	LOG_DEBUG(log_audio_output, "iec958 status: %02x %02x %02x %02x",
-		  iec958.status[0], iec958.status[1], iec958.status[2], iec958.status[3]);
-
-	if ((err = snd_hctl_elem_write(playback_state->iec958_elem, control)) < 0) {
-		LOG_ERROR(log_audio_output, "snd_hctl_elem_write error: %s", snd_strerror(err));
-		return;
-	}
 }
 
 
