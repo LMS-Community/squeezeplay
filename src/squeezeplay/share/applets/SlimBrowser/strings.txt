@@ -183,19 +183,19 @@ SLIMBROWSER_OFF
 	SV	Av
 
 SLIMBROWSER_VOLUME
-	CS	Hlasitost
-	DA	Lydstyrke
-	DE	Lautstärke
-	EN	Volume
-	ES	Volumen
-	FI	Äänenvoimakkuus
-	FR	Volume
-	IT	Volume
-	NL	Volume
-	NO	Volum
-	PL	Głośność
-	RU	Громкость
-	SV	Volym
+	CS	Hlasitost (%s)
+	DA	Lydstyrke (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
 
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)

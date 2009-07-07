@@ -189,7 +189,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- FIXME: these will crash jive if they are removed
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
-
+	s.img.textinputEnterImg   = Tile:loadImage(imgpath .. "Icons/selection_right_textentry.png")
 	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
 	s.img.textareaBackgroundBottom  = 
@@ -223,17 +223,18 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.volumeBar =
 		Tile:loadHTiles({
-					-- FIXME: need these still
-					imgpath .. "MISSING_VOLUME_BAR",
-					nil, nil
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill_r.png",
 			       })
 
 	s.img.volumeBackground =
 		Tile:loadHTiles({
-					-- FIXME: need these still
-					imgpath .. "MISSING_VOLUME_BACKGROUND",
-					nil, nil
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_bkgrd_l.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_bkgrd.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_bkgrd_r.png",
 				})
+
 	s.img.popupBox  = Tile:loadTiles({
 		imgpath .. "Popup_Menu/popup_box.png",
 		imgpath .. "Popup_Menu/popup_box_tl.png",
@@ -617,8 +618,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.slider_group = {
 		w = WH_FILL,
-		border = { 15, 5, 7, 10 },
-		order = { "min", "slider", "max" },
+		order = { "slider" },
 	}
 
 
@@ -642,6 +642,7 @@ function skin(self, s, reload, useDefaultSize)
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
 		cursorImg  = s.img.textinputCursor,
+		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
 --		wheelMask   = s.img.textinputWheelMask,
@@ -986,45 +987,18 @@ function skin(self, s, reload, useDefaultSize)
 		w = screenWidth - 38,
 		h = 145,
 		bgImg = s.img.popupBox,
-		title_group = {
+		heading = {
 			w = WH_FILL,
 			align = 'center',
-			order = {'heading'},
-			heading = {
-				w = WH_FILL,
-				align = 'center',
-				padding = { 4, 18, 4, 8 },
-				font = _boldfont(c.TITLE_FONT_SIZE),
-				fg = c.TEXT_COLOR,
-			},
-		},
-		icon_group = {
-			w = WH_FILL,
-			align = 'center',
-			icon = {
-				w = WH_FILL,
-				align = 'center',
-				img = _loadImage(self, "MISSING_VOLUME_ICON"),
-			},
+			padding = { 4, 16, 4, 8 },
+			font = _boldfont(c.TITLE_FONT_SIZE),
+			fg = c.TEXT_COLOR,
 		},
 		slider_group = {
 			w = WH_FILL,
-			--border = { 0, 5, 0, 10 },
-			order = { "min", "slider", "max" },
-			max = {
-				align = 'right',
-			},
-			min = {
-				align = 'left',
-			},
-			text = {
-				w = 75,
-				align = 'right',
-				padding = { 8, 0, 8, 15 },
-				font = _boldfont(c.HELP_FONT_SIZE),
-				fg = c.TEXT_COLOR,
-				sh = c.TEXT_SH_COLOR,
-			}
+			align = 'center',
+			border = { 8, 2, 8, 0 },
+			order = { "slider" },
 		},
 	}
 
@@ -1101,6 +1075,17 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_alarm = _uses(s._icon, {
 		img = _loadImage(self, "MISSING_ALARM_ICON"),
 	})
+
+	s._popupIcon = {
+		w = WH_FILL,
+		h = 70,
+		align = 'center',
+		padding = 0,
+	}
+	s.icon_popup_volume = _uses(s._popupIcon, {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
+	})
+
 
 	s.presetPointer3 = {
 		w = WH_FILL,

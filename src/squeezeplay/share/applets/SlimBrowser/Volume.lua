@@ -43,12 +43,12 @@ module(..., oo.class)
 
 
 local function _updateDisplay(self)
-	if self.volume < 0 then
+	if self.volume <= 0 then
 		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME_MUTED"))
 		self.slider:setValue(0)
 
 	else
-		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME"))
+		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME", tostring(self.volume) ) )
 		self.slider:setValue(self.volume)
 	end
 end
@@ -69,8 +69,10 @@ local function _openPopup(self)
 	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
 
-	local title = Label("text", "")
+	local title = Label("heading", "")
 	popup:addWidget(title)
+
+        popup:addWidget(Icon('icon_popup_volume'))
 
 	--slider is focused widget so it will receive events before popup gets a chance
 	local slider = Slider("volume_slider", -1, 100, self.volume,
@@ -80,9 +82,7 @@ local function _openPopup(self)
                               end)
 
 	popup:addWidget(Group("slider_group", {
-		min = Icon("button_volume_min"),
 		slider = slider,
-		max = Icon("button_volume_max")
 	}))
 
 	popup:focusWidget(nil)
