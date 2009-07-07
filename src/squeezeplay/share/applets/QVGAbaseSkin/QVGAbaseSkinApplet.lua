@@ -160,7 +160,6 @@ function skin(self, s, reload, useDefaultSize)
 			       })
 
 	s.img.textinputWheel       = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert.png")
-	s.img.textinputWheelMask   = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_overlay-1.png")
 	s.img.textinputBackground  = Tile:loadTiles({
 		imgpath .. "Text_Entry/text_entry_bkgrd.png",
 		imgpath .. "Text_Entry/text_entry_bkgrd_tl.png",
@@ -644,7 +643,6 @@ function skin(self, s, reload, useDefaultSize)
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
---		wheelMask   = s.img.textinputWheelMask,
 		charOffsetY = 9 ,
 	}
 
