@@ -228,7 +228,13 @@ local function _decideFirstChunk(step, jsonAction)
 	log:debug('We\'ve been here before, lastBrowse index was: ', lastBrowse.index)
 	_player.lastKeyTable = lastBrowse
 	_player.menuAnchorSet = false
-	
+
+	--don't use anchor if position is first element, breaks windows that have zero sized menu (textarea, for example), and
+	-- by default the first item is selected without the need of menuAnchor
+	if _player.menuAnchor and _player.menuAnchor == 1 then
+		_player.menuAnchor = nil
+	end
+
 	return from, qty
 
 end
