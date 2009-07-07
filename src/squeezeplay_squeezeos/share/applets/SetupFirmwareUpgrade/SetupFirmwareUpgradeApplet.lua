@@ -193,8 +193,13 @@ function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 
 	local menu = SimpleMenu("menu")
 
+	local itemString = self:string("BEGIN_UPDATE")
+	itemString = itemString.str or itemString
+	if upgrades[1].version then
+		itemString = itemString .. " (" .. upgrades[1].version .. ")"
+	end
 	menu:addItem({
-		text = self:string("BEGIN_UPDATE"),
+		text = itemString,
 		sound = "WINDOWSHOW",
 		callback = function()
 			self:_upgrade(upgrades[1].url)
