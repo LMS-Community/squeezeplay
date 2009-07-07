@@ -82,7 +82,7 @@ do { \
 #endif
 
 
-#ifdef TEST_LATENCY
+#if TEST_LATENCY
 #define TIMER_INIT(TOUT)			\
 		struct timeval _t1, _t2, _td;	\
 		float _tf, _tout = TOUT;	\
@@ -98,12 +98,12 @@ do { \
 		memcpy(&_t1, &_t2, sizeof(struct timeval));		\
 	}
 #else
-#define TIMER_START(TOUT)
+#define TIMER_INIT(TOUT)
 #define TIMER_CHECK(NAME)
 #endif
 
 
-#ifdef TEST_OUTPUT_NOISE
+#if TEST_OUTPUT_NOISE
 static void generate_noise(void *outputBuffer,
 			   unsigned long framesPerBuffer) {
 	sample_t val, *output_ptr = (sample_t *)outputBuffer;
@@ -488,8 +488,6 @@ static int pcm_test(const char *name, unsigned int *max_rate) {
 
 
 static int xrun_recovery(struct decode_alsa *state, int err) {
-	snd_pcm_state_t pcm_state;
-
 	if (err == -EPIPE) {	/* under-run */
 		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
 			LOG_ERROR(log_audio_output, "Can't recover from underrun, prepare failed: %s", snd_strerror(err));
@@ -616,7 +614,7 @@ static void *audio_thread_execute(void *data) {
 			buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
 
 
-#ifdef TEST_OUTPUT_NOISE
+#if TEST_OUTPUT_NOISE
 			generate_noise(buf, frames);
 			TIMER_CHECK("NOISE");
 #else
