@@ -234,6 +234,18 @@ function skin(self, s, reload, useDefaultSize)
 					imgpath .. "MISSING_VOLUME_BACKGROUND",
 					nil, nil
 				})
+	s.img.popupBox  = Tile:loadTiles({
+		imgpath .. "Popup_Menu/popup_box.png",
+		imgpath .. "Popup_Menu/popup_box_tl.png",
+		imgpath .. "Popup_Menu/popup_box_t.png",
+		imgpath .. "Popup_Menu/popup_box_tr.png",
+		imgpath .. "Popup_Menu/popup_box_r.png",
+		imgpath .. "Popup_Menu/popup_box_br.png",
+		imgpath .. "Popup_Menu/popup_box_b.png",
+		imgpath .. "Popup_Menu/popup_box_bl.png",
+		imgpath .. "Popup_Menu/popup_box_l.png",
+	})
+
 
 	s.img.popupMask = Tile:fillColor(0x000000e5)
 
@@ -273,7 +285,7 @@ function skin(self, s, reload, useDefaultSize)
         	ALBUMMENU_SMALL_FONT_SIZE = 14,
         	ALBUMMENU_SELECTED_FONT_SIZE = 14,
         	ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14,
-        	TEXTMENU_FONT_SIZE = 15,
+        	TEXTMENU_FONT_SIZE = 18,
         	TEXTMENU_SELECTED_FONT_SIZE = 18,
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
@@ -934,11 +946,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- toast_popup popup
 	s.toast_popup = {
-		x = 0,
-		y = screenHeight - 93,
-		w = screenWidth,
-		h = 93,
-		bgImg = s.img.helpBox,
+		x = 19,
+		y = 46,
+		w = screenWidth - 38,
+		h = 145,
+		bgImg = s.img.popupBox,
 		group = {
 			padding = { 12, 12, 12, 0 },
 			order = { 'icon', 'text' },
@@ -947,7 +959,7 @@ function skin(self, s, reload, useDefaultSize)
 				align = 'top-left',
 				w = WH_FILL,
 				h = WH_FILL,
-				font = _font(c.HELP_FONT_SIZE),
+				font = _font(c.TITLE_FONT_SIZE),
 				lineHeight = 17,
 				line = {
 					{
@@ -969,17 +981,31 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
-		x = 0,
-		y = screenHeight - 80,
-		w = screenWidth,
-		h = 80,
-		bgImg = s.img.helpBox,
-		title = {
-		      border = 10,
-		      fg = c.TEXT_COLOR,
-		      font = _boldfont(c.HELP_FONT_SIZE),
-		      align = "center",
-		      bgImg = false,
+		x = 19,
+		y = 46,
+		w = screenWidth - 38,
+		h = 145,
+		bgImg = s.img.popupBox,
+		title_group = {
+			w = WH_FILL,
+			align = 'center',
+			order = {'heading'},
+			heading = {
+				w = WH_FILL,
+				align = 'center',
+				padding = { 4, 18, 4, 8 },
+				font = _boldfont(c.TITLE_FONT_SIZE),
+				fg = c.TEXT_COLOR,
+			},
+		},
+		icon_group = {
+			w = WH_FILL,
+			align = 'center',
+			icon = {
+				w = WH_FILL,
+				align = 'center',
+				img = _loadImage(self, "MISSING_VOLUME_ICON"),
+			},
 		},
 		slider_group = {
 			w = WH_FILL,
