@@ -741,7 +741,7 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 
-
+	s.help_list = _uses(s.text_list)
 
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
