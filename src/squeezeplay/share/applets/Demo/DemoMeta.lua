@@ -49,7 +49,9 @@ function configureApplet(meta)
 	        demo:startDemo()
 	end
 
-	jiveMain:addItem(meta:menuItem('appletDemo', 'factoryTest', "DEMO", function(applet, ...) applet:enableDemo() end))
+	--Bug 12703: for now, do not add an item in factory test for the in-store demo
+	-- might be a permanent change, but leaving this line in but commented for now
+	--jiveMain:addItem(meta:menuItem('appletDemo', 'factoryTest', "DEMO", function(applet, ...) applet:enableDemo() end))
 end
 
 
