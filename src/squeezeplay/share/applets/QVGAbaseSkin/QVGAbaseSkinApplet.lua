@@ -286,7 +286,7 @@ function skin(self, s, reload, useDefaultSize)
         	ALBUMMENU_SELECTED_FONT_SIZE = 14,
         	ALBUMMENU_SELECTED_SMALL_FONT_SIZE = 14,
         	TEXTMENU_FONT_SIZE = 18,
-        	TEXTMENU_SELECTED_FONT_SIZE = 18,
+        	TEXTMENU_SELECTED_FONT_SIZE = 21,
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
         	HELP_TEXT_FONT_SIZE = 15,
@@ -757,7 +757,7 @@ function skin(self, s, reload, useDefaultSize)
 					line = {
 						{
 							font = _boldfont(c.ALBUMMENU_FONT_SIZE),
-							height = c.ALBUMMENU_FONT_SIZE + 2
+							height = c.ALBUMMENU_FONT_SIZE + 2,
 						}
 					},
 					fg = c.TEXT_COLOR,
