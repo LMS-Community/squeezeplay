@@ -180,6 +180,7 @@ function menuSink(self, data)
 	else
 		self.menu:addItem( {
 			text = self:string("NONE_FOUND"), 
+			iconStyle = 'item_no_arrow',
 			weight = 2
 		})
 	end
