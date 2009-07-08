@@ -39,10 +39,10 @@ my $d = {
 		assetDir => '../../../../../assets/QVGASkin/Landscape/Screensavers/Clocks',
 		skinDir => '../QVGAlandscapeSkin/images/Clocks',
 	},
-#	portraitClocks => {
-#		assetDir => '../../../../../assets/QVGASkin/Portrait/Screensavers/Clocks',
-#		skinDir => '../QVGAportraitSkin/images/Clocks',
-#	},
+	portraitClocks => {
+		assetDir => '../../../../../assets/QVGASkin/Portrait/Screensavers/Clocks',
+		skinDir => '../QVGAportraitSkin/images/Clocks',
+	},
 	# copy landscape wallpaper to squeezeplay_baby
 	landscapeWallpaper => {
 		assetDir => '../../../../../assets/QVGAskin/Landscape/Wallpaper',
@@ -79,7 +79,7 @@ my $portraitAssets  = get_assets($d->{portraitAssets}{assetDir});
 
 # clocks?
 my $landscapeClocks = get_assets($d->{landscapeClocks}{assetDir});
-#my $portraitClocks = get_assets($d->{portraitClocks}{assetDir});
+my $portraitClocks = get_assets($d->{portraitClocks}{assetDir});
 
 # handle wallpapers?
 my $landscapeWallpaper = get_assets($d->{landscapeWallpaper}{assetDir});
@@ -101,6 +101,7 @@ copy_assets($portraitAssets, 'portraitAssets');
 
 # copy clock assets
 copy_assets($landscapeClocks, 'landscapeClocks');
+copy_assets($portraitClocks, 'portraitClocks');
 
 # copy wallpaper assets
 copy_assets($landscapeWallpaper, 'landscapeWallpaper');
