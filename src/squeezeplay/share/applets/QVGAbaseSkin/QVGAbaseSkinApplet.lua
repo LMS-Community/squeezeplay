@@ -590,6 +590,7 @@ function skin(self, s, reload, useDefaultSize)
 		w = screenWidth - 20,
 		padding = c.HELP_TEXT_PADDING,
 		font = _font(c.HELP_TEXT_FONT_SIZE),
+		lineHeight = c.HELP_TEXT_FONT_SIZE + 3,
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
