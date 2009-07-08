@@ -367,7 +367,7 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.title = {
-		h = 35,
+		h = 36,
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = s.img.titleBox,
@@ -387,7 +387,7 @@ function skin(self, s, reload, useDefaultSize)
 		h = screenHeight - 60,
 		position = LAYOUT_NORTH,
 		padding = 0,
-		border = { 0, 35, 0, 0 },
+		border = { 0, 36, 0, 0 },
 		itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
 		font = _boldfont(120),
 		fg = c.TEXT_COLOR,
@@ -1464,9 +1464,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.iconbar_group = {
 		x = 0,
-		y = screenHeight - 26,
+		y = screenHeight - 24,
 		w = WH_FILL,
-		h = 26,
+		h = 24,
 		border = 0,
 		padding = { 4, 0, 4, 0 },
 		bgImg = s.img.iconBackground,
