@@ -124,7 +124,6 @@ int jiveL_textinput_layout(lua_State *L) {
 
 
 int jiveL_textinput_draw(lua_State *L) {
-	Uint16 x;
 	Uint16 offset_x, offset_y, offset_cursor_y;
 	JiveSurface *tsrf;
 
@@ -346,14 +345,17 @@ int jiveL_textinput_draw(lua_State *L) {
 			/* draw enter in cursor */
 			jive_tile_blit_centered(peer->enter_tile, srf, text_x + len_1 + (cursor_w / 2), text_cy, 0, 0);
 		}
+/*
+		//removed per the whims of the ui guys
 		else if (peer->enter_tile) {
-			/* draw enter */
+			//draw enter
 			Uint16 cw, ch;
 
 			x = len_1 + cursor_w + len_3;
 			jive_tile_get_min_size(peer->enter_tile, &cw, &ch);
 			jive_tile_blit_centered(peer->enter_tile, srf, text_x + x + (cw / 2), text_cy, 0, 0);
 		}
+*/
 	}
 
 	if (drawLayer) {
