@@ -2,19 +2,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
-	CS	Datum a čas
-	DA	Dato og klokkeslæt
-	DE	Datum & Zeit
-	EN	Date & Time
-	ES	Fecha & Hora
-	FI	Pvm ja aika
-	FR	Date & Heure
-	IT	Data & ora
-	NL	Datum & tijd
-	NO	Tid og dato
-	PL	Data i godzina
-	RU	Дата и время
-	SV	Datum och tid
+	EN	Date/Time Formats
 
 DATETIME_TIMEFORMAT
 	CS	Formát času

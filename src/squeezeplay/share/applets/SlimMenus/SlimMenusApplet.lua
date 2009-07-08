@@ -80,6 +80,8 @@ local itemMap = {
 	opmlrhapsodydirect = { "opmlrhapsodydirect", "home", 30 },
 	opmlpandora = { "opmlpandora", "home", 30 },
 	opmlsirius = { "opmlsirius", "home", 30 },
+	settingsPlaylistMode = { "settingsPlaylistMode", "advancedSettingsBetaFeatures", 100 },
+	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
 }
 
 -- legacy map of items for "app guide"
@@ -460,6 +462,12 @@ end
 				--ignore, playerpower no longer shown to users since we use power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
+			elseif item.id == "settingsPlayerNameChange" and not isMenuStatusResponse then
+				--ignore, only applicable to currently selected server
+			elseif item.id == "settingsSleep" and not isMenuStatusResponse then
+				--ignore, only applicable to currently selected server
+			elseif item.id == "settingsAudio"  then
+				--ignore, now shown locally
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
 					self:_addNode(item, isMenuStatusResponse)

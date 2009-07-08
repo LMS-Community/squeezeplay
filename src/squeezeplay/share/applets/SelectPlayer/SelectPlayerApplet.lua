@@ -152,7 +152,7 @@ function manageSelectPlayerMenu(self)
 			local weight = 80
 			if System:getMachine() ~= "jive" then
 				node = "settings"
-				weight = nil
+				weight = 50
 			end
 
 			local menuItem = {

@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletWirelessBridging', 'advancedSettings', "Wireless Bridging", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletWirelessBridging', 'networkSettings', "Wireless Bridging", function(applet, ...) applet:settingsShow(...) end))
 end
 
 

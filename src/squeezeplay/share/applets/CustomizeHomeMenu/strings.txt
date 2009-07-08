@@ -18,19 +18,7 @@ APP_GUIDE
 	SV	Programguide
 
 CUSTOMIZE_HOME
-	CS	Výchozí menu
-	DA	Hovedmenu
-	DE	Hauptmenü
-	EN	Home Menu
-	ES	Menú Inicio
-	FI	Kotivalikko
-	FR	Personnalisation du Menu principal
-	IT	Menu iniziale
-	NL	Hoofdmenu
-	NO	Hovedmeny
-	PL	Menu główne
-	RU	Главное меню
-	SV	Hem-meny
+	EN	Customize Home Menu
 
 CUSTOMIZE_RESTORE_DEFAULTS
 	CS	Obnovit výchozí
