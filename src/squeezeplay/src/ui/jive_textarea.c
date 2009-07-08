@@ -283,7 +283,7 @@ int jiveL_textarea_layout(lua_State *L) {
 			lua_pushinteger(L, sx);
 			lua_pushinteger(L, sy);
 			lua_pushinteger(L, sw);
-			lua_pushinteger(L, sh);
+			lua_pushinteger(L, sh - sborder.top); //match jive_menu code
 			lua_call(L, 5, 0);
 		}
 
@@ -491,10 +491,6 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 		return;
 	}
 
-	if (peer->num_lines) {
-		/* cached */
-		return;
-	}
 
 	peer->has_scrollbar = has_scrollbar;
 	if (has_scrollbar && !peer->is_header_widget) {
