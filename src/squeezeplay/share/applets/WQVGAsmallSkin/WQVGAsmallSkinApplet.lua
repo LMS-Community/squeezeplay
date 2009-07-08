@@ -1865,6 +1865,9 @@ function skin(self, s)
 	s.region_XX = _uses(_buttonicon, { 
 		img = _loadImage(self, "IconsResized/icon_region_other" .. skinSuffix),
 	})
+	s.icon_help = _uses(_buttonicon, { 
+		img = _loadImage(self, "IconsResized/icon_help" .. skinSuffix),
+	})
 	s.wlan = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_wireless" .. skinSuffix),
 	})

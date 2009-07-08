@@ -1123,6 +1123,10 @@ function skin(self, s, reload, useDefaultSize)
                 img = _loadImage(self, "IconsResized/icon_region_other" .. skinSuffix),
         })
 
+        s.icon_help = _uses(s._buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_help" .. skinSuffix),
+        })
+
 	s.player_transporter = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_transporter.png"),
 	})
