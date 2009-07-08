@@ -72,7 +72,7 @@ end
 
 
 function _helpAction(self, window, titleText, bodyText, menu)
-	if titleText or bobyText then
+	if titleText or bodyText then
 		local moreHelpAction =  function()
 						window:playSound("WINDOWSHOW")
 						appletManager:callService("supportMenu")
