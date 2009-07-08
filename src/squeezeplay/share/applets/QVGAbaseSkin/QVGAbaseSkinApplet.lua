@@ -627,9 +627,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.textinput = {
 		--FIXME: for unknown reasons the top border has to be negative for the textinput background to render at all, 
 		--       but this also causes it to bleed into the titlebar
-		h=WH_FILL ,
+		h          = WH_FILL,
 		border     = { 8, 0, 8, 0 },
-		padding    = { 8, 0, 8, 0 },
+		padding    = 0,
 		align = 'center',
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
@@ -643,7 +643,7 @@ function skin(self, s, reload, useDefaultSize)
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		charOffsetY = 9 ,
+		charOffsetY = 12 ,
 	}
 
 	-- soft buttons
