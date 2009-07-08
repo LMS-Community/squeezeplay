@@ -20,6 +20,36 @@ DEMO_WRONG_CODE
 DEMO_ENTER_CODE
 	EN	In-store Demo: Enter Code
 
+DEMO_VOLUME
+	CS	Hlasitost (%s)
+	DA	Lydstyrke (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
+
+DEMO_VOLUME_MUTED
+	CS	Hlasitost  (ztlumeno)
+	DA	Volumen (lyden er slået fra)
+	DE	Lautstärke (Stumm)
+	EN	Volume (Muted)
+	ES	Volumen (silenciado)
+	FI	Äänenvoimakkuus (mykistetty)
+	FR	Volume (SOURDINE)
+	IT	Volume (DISATTIVATO)
+	NL	Volume (gedempt)
+	NO	Volum (av)
+	PL	Głośność (wyciszona)
+	RU	Громкость (приглушенная)
+	SV	Volym (av)
+
 SLIDE_01
 	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
 	FR	Radio Internet Wi-Fi
