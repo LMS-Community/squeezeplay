@@ -51,7 +51,113 @@ local volumeMap = {
 232, 246, 260, 276, 292, 309, 327, 346, 366, 388, 411, 435, 460, 487, 516, 546, 578, 612, 648, 686, 726, 769, 814, 862, 912, 966, 1022, 1082, 1146, 1213, 1284, 1359, 1439, 1523, 1613, 1707, 1807, 1913, 2026, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3072, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 5888, 6400, 6656, 7168, 7424, 7936, 8448, 8960, 9472, 9984, 10496, 11264, 11776, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19712, 20992, 22272, 23552, 24832, 26368, 27904, 29440, 31232, 33024, 35072, 37120, 39168, 41472, 44032, 46592, 49408, 52224, 55296, 58368, 61952, 65536, 
 }
 
-function _updateVolume(self)
+function __init(self)
+	local obj = oo.rawnew(self, {})
+
+	obj.delta = 0
+	obj.volume = 51
+	obj.idleTimer = Timer(
+		30000, 
+		function()
+			_volumeAutoAdjust(obj)
+		end
+	)
+
+        return obj
+end
+
+function _volumeAutoAdjust(self)
+	if self.volume > 80 then
+		log:warn('idle timeout, setting the volume to 20')
+		self.delta = 20 - self.volume 
+		_updateVolume(self, 20, true)
+		_openPopup(self)
+	end
+	self.idleTimer:stop()
+end
+
+function _updateDisplay(self)
+	if self.volume <= 0 then
+		self.title:setValue(self:string("DEMO_VOLUME_MUTED"))
+		self.slider:setValue(0)
+
+	else
+		self.title:setValue(self:string("DEMO_VOLUME", tostring(self.volume) ) )
+		self.slider:setValue(self.volume)
+	end
+end
+
+function _openPopup(self)
+	if self.popup then
+		return
+	end
+
+	local popup = Popup("slider_popup")
+	popup:setAutoHide(false)
+
+	local title = Label("heading", "")
+	popup:addWidget(title)
+
+        popup:addWidget(Icon('icon_popup_volume'))
+
+	--slider is focused widget so it will receive events before popup gets a chance
+	local slider = Slider("volume_slider", -1, 100, self.volume,
+                              function(slider, value, done)
+					self.delta = value - self.volume
+					self:_updateVolume(value)
+                              end)
+
+	popup:addWidget(Group("slider_group", {
+		slider = slider,
+	}))
+
+	popup:focusWidget(nil)
+	popup:addListener(ACTION | EVENT_KEY_ALL,
+			  function(event)
+				  return self:event(event)
+			  end)
+
+	-- we handle events
+	popup.brieflyHandler = false
+
+	self:_windowListeners(popup)
+
+	-- open the popup
+	self.popup = popup
+	self.title = title
+	self.slider = slider
+
+	_updateDisplay(self)
+
+	popup:showBriefly(3000,
+		function()
+			self.popup = nil
+		end,
+		Window.transitionPushPopupUp,
+		Window.transitionPushPopupDown
+	)
+end
+
+function _windowListeners(self, window)
+       -- don't allow anything but vol up and vol down
+        window:ignoreAllInputExcept({ "volume_up", "volume_down" },
+                        function(actionEvent)
+                            return EVENT_CONSUME
+                        end
+        )
+        -- there is no escape, resistance is futile!
+        window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
+
+        window:addActionListener('volume_up', self, volEvent)
+        window:addActionListener('volume_down', self, volEvent)
+end
+
+
+function _updateVolume(self, force)
+
+	if not self.popup and not force then
+		return
+	end
 
         local new
 
@@ -73,17 +179,29 @@ function _updateVolume(self)
 	log:warn('set volume to : ', new, '(', setVolume, ')')
 	decode:audioGain(setVolume, setVolume)
 
+	self.delta  = 0
 	self.volume = new
+	self.idleTimer:restart()
+
+	_updateDisplay(self)
 
 end
 
 function volEvent(self, volumeEvent)
+	local onscreen = true
+	if not self.popup then
+		onscreen = false
+		_openPopup(self)
+	end
+
 	if volumeEvent:getAction() == 'volume_up' then
 		self.delta = VOLUME_STEP
 	else
 		self.delta = -1 * VOLUME_STEP
 	end
-	_updateVolume(self)
+	if onscreen then
+		_updateVolume(self)
+	end
 	return EVENT_CONSUME
 end
 
@@ -221,6 +339,9 @@ function _showNextSlide(self)
 
 	-- replace the window if it's already there
 	if self.window then
+		if self.popup then
+			self.popup:hide()
+		end
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window
 	-- otherwise it's new
@@ -229,17 +350,7 @@ function _showNextSlide(self)
 		self.window:show(Window.transitionFadeIn)
 	end
 
-	-- don't allow anything but vol up and vol down
-	self.window:ignoreAllInputExcept({ "volume_up", "volume_down" },
-                        function(actionEvent)
-                            return EVENT_CONSUME
-                        end
-	)
-	-- there is no escape, resistance is futile!
-	self.window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
-
-	self.window:addActionListener('volume_up', self, volEvent)
-	self.window:addActionListener('volume_down', self, volEvent)
+	self:_windowListeners(self.window)
 	
 	-- FIXME: add handlers for volume_up and volume_down to adjust 
 	-- volume up (to 100?) and down (to something a bit higher than fully off?)
@@ -260,9 +371,14 @@ function _playTone(self)
 	if localPlayer then
 		-- start at volume of 51 
 		self.volume = 51
-
-		decode:audioGain(4096, 4096)
-		localPlayer:playFileInLoop(self.mp3file)
+		-- hack to give 2 second delay for startup sound before kicking in demo audio
+		local timer = Timer(2000, 
+			function()
+				localPlayer:playFileInLoop(self.mp3file)
+				decode:audioGain(4096, 4096)
+			end,
+			true)
+		timer:start()
 	end
 end
 
