@@ -643,7 +643,7 @@ function skin(self, s, reload, useDefaultSize)
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		charOffsetY = 12 ,
+		charOffsetY = 10,
 	}
 
 	-- soft buttons
