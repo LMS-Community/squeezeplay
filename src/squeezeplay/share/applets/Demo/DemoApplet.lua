@@ -67,7 +67,7 @@ function __init(self)
 end
 
 function _volumeAutoAdjust(self)
-	if self.volume > 80 then
+	if self.volume > 60 then
 		log:warn('idle timeout, setting the volume to 20')
 		self.delta = 20 - self.volume 
 		_updateVolume(self, 20, true)
