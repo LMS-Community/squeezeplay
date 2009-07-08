@@ -375,7 +375,7 @@ function skin(self, s, reload, useDefaultSize)
 		text = {
 			w = WH_FILL,
 			h = WH_FILL,
-			padding = { 10, 5, 10, 0 },
+			padding = { 10, 3, 10, 0 },
 			align = 'left',
 			font = _boldfont(c.TITLE_FONT_SIZE),
 			fg = c.SELECT_COLOR,
