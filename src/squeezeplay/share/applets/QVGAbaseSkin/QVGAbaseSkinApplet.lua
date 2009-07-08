@@ -289,7 +289,7 @@ function skin(self, s, reload, useDefaultSize)
         	TEXTMENU_SELECTED_FONT_SIZE = 18,
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
-        	HELP_TEXT_FONT_SIZE = 14,
+        	HELP_TEXT_FONT_SIZE = 15,
         	TEXTAREA_FONT_SIZE = 16,
         	TEXTINPUT_FONT_SIZE = 18,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
