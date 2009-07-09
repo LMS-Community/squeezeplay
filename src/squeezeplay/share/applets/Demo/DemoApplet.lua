@@ -1,7 +1,7 @@
 
 
 -- stuff we use
-local pairs, setmetatable, tostring, tonumber  = pairs, setmetatable, tostring, tonumber
+local ipairs, pairs, setmetatable, tostring, tonumber  = ipairs, pairs, setmetatable, tostring, tonumber
 
 local oo            = require("loop.simple")
 local lfs           = require("lfs")
@@ -94,6 +94,7 @@ function _openPopup(self)
 
 	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
+	popup:setAlwaysOnTop(true)
 
 	local title = Label("heading", "")
 	popup:addWidget(title)
@@ -131,7 +132,21 @@ function _openPopup(self)
 
 	popup:showBriefly(3000,
 		function()
-			self.popup = nil
+
+			--This happens on ANY window pop, not necessarily the popup window's pop
+			local isPopupOnStack = false
+			local stack = Framework.windowStack
+			for i in ipairs(stack) do
+				if stack[i] == popup then
+					isPopupOnStack = true
+					break
+				end
+			end
+
+			--don't clear it out if the pop was from another window
+			if not isPopupOnStack then
+				self.popup = nil
+			end
 		end,
 		Window.transitionPushPopupUp,
 		Window.transitionPushPopupDown
@@ -338,7 +353,7 @@ function _showNextSlide(self)
 
 	-- replace the window if it's already there
 	if self.window then
-		window:replace(self.window, Window.transitionFadeIn)
+		window:showInstead(Window.transitionFadeIn)
 		self.window = window
 	-- otherwise it's new
 	else
