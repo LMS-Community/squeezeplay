@@ -99,6 +99,7 @@ struct decode_audio {
 	/* track state */
 	bool_t check_start_point;
 	size_t track_start_point;
+	bool_t track_copyright;
 	u32_t track_sample_rate;
 	u32_t elapsed_samples;
 	u32_t num_tracks_started;

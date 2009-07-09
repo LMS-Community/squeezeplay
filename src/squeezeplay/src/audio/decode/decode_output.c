@@ -13,9 +13,7 @@
 #include "audio/decode/decode_priv.h"
 
 #if defined(WIN32)
-
 #include <winsock2.h>
-
 #endif
 
 /* Has the audio output been initialized? */
@@ -276,7 +274,6 @@ static void decode_fade_out(void) {
 	LOG_DEBUG(log_audio_decode, "Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
 
 	if (!interval) {
-		fifo_unlock(&decode_fifo);
 		return;
 	}
 
@@ -437,6 +434,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 			transition_samples_in_step = 0;
 		}
 
+		decode_audio->track_copyright = streambuf_is_copyright();
 		decode_audio->track_sample_rate = sample_rate;
 
 		decode_audio->check_start_point = TRUE;
