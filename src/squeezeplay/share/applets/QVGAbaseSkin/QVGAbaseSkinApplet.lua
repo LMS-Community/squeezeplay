@@ -308,7 +308,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.smallSpinny = {
 		-- FIXME: this is the right asset but Noah needs to update so it gets put in Alerts/
-		img = _loadImage(self, "UNOFFICIAL/wifi_connecting_sm.png"),
+		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
 		padding = { 4, 0, 0, 0 },
@@ -1043,14 +1043,14 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.icon_connecting = _uses(s._icon, {
-		img = _loadImage(self, "UNOFFICIAL/wifi_connecting.png"),
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		frameRate = 8,
 		frameWidth = 120,
 		padding = { 0, 25, 0, 5 }
 	})
 
 	s.icon_connected = _uses(s.icon_connecting, {
-		img = _loadImage(self, "UNOFFICIAL/connecting_success_icon.png"),
+		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
 	})
 
 	s.icon_software_update = _uses(s._icon, {
