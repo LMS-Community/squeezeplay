@@ -14,7 +14,9 @@ typedef struct textarea_widget {
 	// pointer to start of lines
 	Uint16 num_lines;
 	int *lines;
+	Uint16 line_width;
 	bool has_scrollbar;
+	bool is_header_widget;
 
 	// style
 	JiveFont *font;
@@ -36,8 +38,8 @@ static JivePeerMeta textareaPeerMeta = {
 };
 
 
-static unsigned utf8decode(unsigned char **utf8);
-static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_lines, Uint16 sw, bool has_scrollbar);
+static void invalidate(TextareaWidget *peer);
+static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16 sw, bool has_scrollbar);
 
 
 int jiveL_textarea_skin(lua_State *L) {
@@ -76,6 +78,8 @@ int jiveL_textarea_skin(lua_State *L) {
 	peer->text_offset = jive_font_offset(peer->font);
 
 	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_TOP_LEFT);
+
+	invalidate(peer);
 
 	return 0;
 }
@@ -129,6 +133,20 @@ int jiveL_textarea_get_preferred_bounds(lua_State *L) {
 }
 
 
+int jiveL_textarea_invalidate(lua_State *L) {
+	TextareaWidget *peer;
+
+	/* stack is:
+	 * 1: widget
+	 */
+
+	peer = jive_getpeer(L, 1, &textareaPeerMeta);
+	invalidate(peer);
+
+	return 0;
+}
+
+
 int jiveL_textarea_layout(lua_State *L) {
 	TextareaWidget *peer;
 	Uint16 sx, sy, sw, sh, tmp;
@@ -142,7 +160,6 @@ int jiveL_textarea_layout(lua_State *L) {
 	 */
 
 	peer = jive_getpeer(L, 1, &textareaPeerMeta);
-
 
 	/* scrollbar size */
 	sw = 0;
@@ -195,6 +212,16 @@ int jiveL_textarea_layout(lua_State *L) {
 	sy = peer->w.bounds.y + sborder.top;
 
 
+	/* invalidate wordwrap if width changed */
+	if (peer->line_width != peer->w.bounds.w) {
+		invalidate(peer);
+		peer->line_width = peer->w.bounds.w;
+	}
+
+	lua_getfield(L, 1, "isHeaderWidget");
+	peer->is_header_widget = lua_toboolean(L, -1);
+	lua_pop(L, 1);
+
 	/* word wrap text */
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "text");
@@ -213,7 +240,7 @@ int jiveL_textarea_layout(lua_State *L) {
 	text = lua_tostring(L, -1);
 
 	visible_lines = peer->w.bounds.h / peer->line_height;
-	wordwrap(peer, (unsigned char*) text, visible_lines, sw, false);
+	wordwrap(peer, (char *) text, visible_lines, sw, false);
 
 	lua_pushinteger(L, peer->num_lines);
 	lua_setfield(L, 1, "numLines");
@@ -256,7 +283,7 @@ int jiveL_textarea_layout(lua_State *L) {
 			lua_pushinteger(L, sx);
 			lua_pushinteger(L, sy);
 			lua_pushinteger(L, sw);
-			lua_pushinteger(L, sh);
+			lua_pushinteger(L, sh - sborder.top); //match jive_menu code
 			lua_call(L, 5, 0);
 		}
 
@@ -410,7 +437,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	jive_surface_set_clip(srf, &old_clip);
 
 	/* draw scrollbar */
-	if (peer->has_scrollbar) {
+	if (peer->has_scrollbar && !peer->is_header_widget) {
 		lua_getfield(L, 1, "scrollbar");
 		if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
 			lua_pushvalue(L, -2);
@@ -425,89 +452,61 @@ int jiveL_textarea_draw(lua_State *L) {
 }
 
 
-static unsigned utf8decode(unsigned char **utf8) {
-	int len;
-	unsigned ucs;
-
-	unsigned char *ptr = *utf8;
-	unsigned char c = *ptr++;
-
-	if ( (c & 0xE0) == 0xC0) { /* U-00000080 - U-000007FF, 2 bytes */
-		len = 1;
-		ucs = c & 0x1F;
+static void invalidate(TextareaWidget *peer)
+{
+	if (peer->lines) {
+		free(peer->lines);
+		peer->num_lines = 0;
+		peer->lines = NULL;
 	}
-	else if ( (c & 0xF0) == 0xE0) { /* U-00000800 - U-0000FFFF, 3 bytes */
-		len = 2;
-		ucs = c & 0x0F;
-	}
-	else if ( (c & 0xF8) == 0xF0) { /* U-00010000 - U-001FFFFF, 4 bytes */
-		len = 3;
-		ucs = c & 0x07;
-	}
-	else if ( (c & 0xFC) == 0xF8) { /* U-00200000 - U-03FFFFFF, 5 bytes */
-		len = 4;
-		ucs = c & 0x03;
-	}
-	else if ( (c & 0xFE) == 0xFC) { /* U-04000000 - U-7FFFFFFF, 6 bytes */
-		len = 5;
-		ucs = c & 0x01;
-	}
-	else {
-		// ASCII or invalid UTF-8
-		(*utf8)++;
-		return c;
-	}
-
-	c = *ptr++;
-	while(len-- && c) {
-		if ( (c & 0xC0) == 0x80) {
-			ucs = (ucs << 6) | (c & 0x3F);
-		}
-		else {
-			// Invalid UTF-8
-			c = **utf8;
-			(*utf8)++;
-			return c;
-		}
-
-		c = *ptr++;
-	}
-
-	*utf8 = ptr;
-	return ucs;
 }
 
 
-static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_lines, Uint16 scrollbar_width, bool has_scrollbar) {
-
+static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16 scrollbar_width, bool has_scrollbar) {
 	// maximum text width
-	Uint16 width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
+	int width = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
 
 	// lines points to the start of each line
 	int max_lines = 100;
 	unsigned int *lines = malloc(sizeof(int) * max_lines);
 	int num_lines = 0;
 
-	unsigned char *ptr = text;
-	unsigned char *line_start = ptr;
-	unsigned char *word_break = NULL;
+	char *ptr = text;
+	char *line_start = ptr;
+	char *word_break = NULL;
 	Uint16 line_width = 0;
 
+	/* optimization, don't wrap text with width = 0 */
+	if (width <= 0) {
+		lines[0] = 0;
+		lines[1] = strlen(ptr);
+
+		if (peer->lines) {
+			free(peer->lines);
+		}
+
+		peer->num_lines = 1;
+		peer->lines = realloc(lines, sizeof(int) * (1 + 1));
+
+		return;
+	}
+
+
 	peer->has_scrollbar = has_scrollbar;
-	if (has_scrollbar) {
+	if (has_scrollbar && !peer->is_header_widget) {
 		width -= scrollbar_width;
 	}
 
 	lines[num_lines++] = (ptr - text);
 
 	while (*ptr) {
-		unsigned char c;
-		unsigned char *next = ptr;
-		unsigned code = utf8decode(&next);
+		char c;
+		char *next;
+		Uint32 code = utf8_get_char(ptr, (const char **)&next);
 
 		switch (code) {
 		case '\n':
-			// Line break
+			/* Line break */
 			ptr = next;
 			word_break = NULL;
 
@@ -521,12 +520,18 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 			line_width = 0;
 			continue;
 
+		case '.':
+		    /* Word break, but exclude urls */
+		    if (utf8_get_char(next, NULL) != ' ') {
+			break;
+		    }
+
 		case ' ':
 		case ',':
-		case '.':
 		case '-':
-			// Word break
+			/* Word break */
 			word_break = next;
+			break;
 		}
 
 		// Calculate width of string to char
@@ -549,7 +554,7 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 		// Next line
 		line_width = 0;
 
-		if (!has_scrollbar && num_lines > visible_lines) {
+		if (!has_scrollbar && num_lines > visible_lines && !peer->is_header_widget) {
 			free(lines);
 			return wordwrap(peer, text, visible_lines, scrollbar_width, true);
 		}
@@ -560,13 +565,16 @@ static void wordwrap(TextareaWidget *peer, unsigned char *text, int visible_line
 		}
 
 		/* trim extra \n caused by line breaks */
-		if (*ptr == '\n') {
-			ptr++;
+		code = utf8_get_char(ptr, (const char **)&next);
+		if (code == '\n') {
+			ptr = next;
+			code = utf8_get_char(ptr, (const char **)&next);
 		}
 
 		/* trim leading space on line break */
-	  	while (*ptr && isspace(*ptr)) {
-			ptr++;
+	  	while (code != 0 && code == ' ') {
+			ptr = next;
+			code = utf8_get_char(ptr, (const char **)&next);
 		}
 
 		line_start = ptr;

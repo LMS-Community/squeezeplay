@@ -56,7 +56,7 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
 	-lSystemStubs \
-	-lz
+	-lz -lresolv
 
 BUNDLE_NAME = SqueezePlay.app
 APP_NAME = SqueezePlay Beta

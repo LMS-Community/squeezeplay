@@ -59,6 +59,7 @@ local log         = require("jive.utils.log").logger("squeezebox.server")
 local logcache    = require("jive.utils.log").logger("squeezebox.server.cache")
 
 local JIVE_VERSION = jive.JIVE_VERSION
+local jnt          = jnt
 
 local SERVER_DISCONNECT_LAG_TIME = 10000
 
@@ -760,7 +761,7 @@ end
 
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
-local function _getArtworkThumbSink(self, cacheKey, size)
+local function _getArtworkThumbSink(self, cacheKey, size, url)
 
 	assert(size)
 	
@@ -774,11 +775,11 @@ local function _getArtworkThumbSink(self, cacheKey, size)
 
 		-- on error, print something...
 		if err then
-			logcache:error("_getArtworkThumbSink(", iconId, ", ", size, ") error: ", err)
+			logcache:error("_getArtworkThumbSink(", url, ") error: ", err)
 		end
 		-- if we have data
 		if chunk then
-			logcache:debug("_getArtworkThumbSink(", iconId, ", ", size, ")")
+			logcache:debug("_getArtworkThumbSink(", url, ", ", size, ")")
 
 			-- store the compressed artwork in the cache
 			self.artworkCache:set(cacheKey, chunk)
@@ -806,7 +807,7 @@ function processArtworkQueue(self)
 
 			--log:debug("ARTWORK ID=", entry.key)
 			local req = RequestHttp(
-				_getArtworkThumbSink(self, entry.key, entry.size),
+				_getArtworkThumbSink(self, entry.key, entry.size, entry.url),
 				'GET',
 				entry.url
 			)
@@ -937,12 +938,19 @@ function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
 		-- if the iconId is a number, this is cover art
 		url = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
 	else
-		url = string.gsub(iconId, "(%a+)(%.%a+)", "%1" .. resizeFrag .. "%2")
+		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
+		if string.find(iconId, "^http") then
+			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&f=' .. imgFormat .. '&u=' .. iconId
+		else
+			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
 
-		if not string.find(url, "^/") then
-			-- Bug 7123, Add a leading slash if needed
-			url = "/" .. url
+			if not string.find(url, "^/") then
+				-- Bug 7123, Add a leading slash if needed
+				url = "/" .. url
+			end
 		end
+		
+		logcache:debug(self, ":fetchArtworkThumb(", iconId, " => ", url, ")")
 	end
 
 	return _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
@@ -962,6 +970,10 @@ function fetchArtworkURL(self, url, icon, size)
 
 	assert(size)
 	local cacheKey = url .. "@" .. size
+	
+	-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
+	url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&u=' .. url
+	
 
 	return _fetchArtworkURL(self, icon, nil, size, cacheKey, url)
 end

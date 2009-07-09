@@ -42,12 +42,6 @@ local KEY_LEFT          = jive.ui.KEY_LEFT
 local KEY_RIGHT         = jive.ui.KEY_RIGHT
 local KEY_PLAY          = jive.ui.KEY_PLAY
 local KEY_ADD           = jive.ui.KEY_ADD
-local KEY_PRESET_1      = jive.ui.KEY_PRESET_1
-local KEY_PRESET_2      = jive.ui.KEY_PRESET_2
-local KEY_PRESET_3      = jive.ui.KEY_PRESET_3
-local KEY_PRESET_4      = jive.ui.KEY_PRESET_4
-local KEY_PRESET_5      = jive.ui.KEY_PRESET_5
-local KEY_PRESET_6      = jive.ui.KEY_PRESET_6
 
 local NUMBER_LETTER_OVERSHOOT_TIME = 150 --ms
 local NUMBER_LETTER_TIMER_TIME = 1100 --ms
@@ -68,15 +62,6 @@ local numberLettersMixed = {
 	[0x7689a857] = 'pqrsPQRS7',  -- 7
 	[0x76896897] = 'tuvTUV8',    -- 8
 	[0x7689e817] = 'wxyzWXYZ9'   -- 9
-}
-
-local numberLettersMixedPresets = {
-	[KEY_PRESET_1] = 'abcdeABCDE1',             -- 1
-	[KEY_PRESET_2] = 'fghijFGHIJ2',             -- 2
-	[KEY_PRESET_3] = 'klmnoKLMNO',              -- 3
-	[KEY_PRESET_4] = 'pqrstPQRST',              -- 4
-	[KEY_PRESET_5] = 'uvwxyzUVWXYZ',            -- 5
-	[KEY_PRESET_6] = ' 67890.,"?!@-',           -- 6
 }
 
 -- return valid characters at cursor position.
@@ -342,12 +327,17 @@ function _cursorAtEnd(self)
 end
 
 
-function _deleteAction(self, alwaysBackspace)
-	if _delete(self, alwaysBackspace) then
-		self:playSound("CLICK")
+function _deleteAction(self, event, alwaysBackspace)
+	if self.cursor == 1 and not alwaysBackspace then
+		self:playSound("WINDOWHIDE")
+		self:hide()
 	else
-		self:playSound("BUMP")
-		self:getWindow():bumpRight()
+		if _delete(self, alwaysBackspace) then
+			self:playSound("CLICK")
+		else
+			self:playSound("BUMP")
+			self:getWindow():bumpRight()
+		end
 	end
 	return EVENT_CONSUME
 
@@ -468,8 +458,7 @@ function _eventHandler(self, event)
 
 	if Framework:isMostRecentInput("ir") or
 		Framework:isMostRecentInput("key") or
-		Framework:isMostRecentInput("scroll") or
-		self:_isPresetButtonPressEvent(event) then
+		Framework:isMostRecentInput("scroll") then
 		self.cursorWidth = 1
 	else
 		self.cursorWidth = 0
@@ -477,8 +466,20 @@ function _eventHandler(self, event)
 
 	--hold and press left works as cursor left. hold added here since it is intuitive to hold down left to go back several characters.
 	--todo: also handle longhold when this is added.
-	if (type == EVENT_IR_HOLD or type == EVENT_IR_PRESS) and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
-		--left and right and in down/repeat handling; consume so that it is not seen as an action
+	if (type == EVENT_IR_HOLD or type == EVENT_IR_PRESS) and
+	   (event:isIRCode("arrow_left") or
+	     event:isIRCode("arrow_right") or
+	     event:isIRCode("0") or
+	     event:isIRCode("1") or
+	     event:isIRCode("2") or
+	     event:isIRCode("3") or
+	     event:isIRCode("4") or
+	     event:isIRCode("5") or
+	     event:isIRCode("6") or
+	     event:isIRCode("7") or
+	     event:isIRCode("8") or
+	     event:isIRCode("9")) then
+		--left and right and number keys handled in down/repeat handling; consume so that it is not seen as an action
 		return EVENT_CONSUME
 	end
 
@@ -486,7 +487,7 @@ function _eventHandler(self, event)
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
 			self.numberLetterTimer:stop()
-			return _deleteAction(self)
+			return _goAction(self)
 		end
 		if event:isIRCode("add") then
 			self.numberLetterTimer:stop()
@@ -498,7 +499,7 @@ function _eventHandler(self, event)
 
 		--handle right and left on the up while at the ends of the text so that hold/repeat doesn't push past the ends of the screen
 		if event:isIRCode("arrow_left") and self.cursor == 1 then
-			self:_cursorBackAction()
+			self:_deleteAction()
 		end
 		if event:isIRCode("arrow_right") and self:_cursorAtEnd() then
 			self:_goAction()
@@ -521,7 +522,7 @@ function _eventHandler(self, event)
 					 --So, on the ends only move on a new press
 					if direction < 0 then
 						if self.cursor ~= 1 then
-							self:_cursorBackAction()
+							self:_deleteAction()
 						elseif type == EVENT_IR_DOWN then
 							self.upHandlesCursor = true
 						end
@@ -625,7 +626,7 @@ function _eventHandler(self, event)
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
 		if (keyboardEntry == "\b") then --backspace
-			return _deleteAction(self, true)
+			return _deleteAction(self, event, true)
 
 		elseif (keyboardEntry == "\27") then --escape
 			return _escapeAction(self)
@@ -659,55 +660,8 @@ function _eventHandler(self, event)
 		_moveCursor(self, 0)
 
 	elseif type == EVENT_KEY_PRESS then
-		local keycode = event:getKeycode()
-
-		if self:_isPresetButtonPressEvent(event) then
-			local timerWasRunning = self.numberLetterTimer:isRunning()
-
-			local numberLetters = numberLettersMixedPresets[keycode]
-
-			if numberLetters then
-				self.numberLetterTimer:stop()
-				if timerWasRunning and self.lastNumberLetterKeyCode and keycode != self.lastNumberLetterKeyCode then
-					                                        log:warn("here")
-					_moveCursor(self, 1)
-					self:reDraw()
-
-					_scroll(self, 1, tostring(_getMatchingChars(self, numberLetters)), true)
-				else
-					---First check for "overshoot"
-					if self.lastNumberLetterT then
-						local numberLetterTimeDelta = event:getTicks() - self.lastNumberLetterT
-						if not timerWasRunning and numberLetterTimeDelta > NUMBER_LETTER_TIMER_TIME and
-								numberLetterTimeDelta < NUMBER_LETTER_TIMER_TIME + NUMBER_LETTER_OVERSHOOT_TIME then
-							--If timer has just fired and another press on the same key is entered,
-							 -- follow observed SC behavior: don't use the input, making for
-							 -- less unexpected input due to the key press happening right
-							 -- as the timer fired even though the user meant for the press to refer to the last letter.
-							return EVENT_CONSUME
-						end
-					end
-
-					----continue scroll if timer was active, otherwise start new scroll
-					local availableNumberLetters = tostring(_getMatchingChars(self, numberLetters))
-
-					local resetNumberLettersIndex = not timerWasRunning or self:_cursorAtEnd()
-					_scroll(self, 1, availableNumberLetters, resetNumberLettersIndex)
-				end
-
-				self.lastNumberLetterKeyCode = keycode
-
-				self.lastNumberLetterT = event:getTicks()
-				self.numberLetterTimer:restart()
-
-				return EVENT_CONSUME
-
-			end
-
-			return EVENT_CONSUME
-		end
-
 		self.numberLetterTimer:stop()
+		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
 			self.cursor = 1
@@ -735,7 +689,7 @@ function _eventHandler(self, event)
 				self:getWindow():bumpRight()
 			end
 		elseif keycode == KEY_BACK then
-			return _cursorBackAction(self)
+			return _deleteAction(self)
 
 		end
 	end
@@ -768,11 +722,10 @@ function __init(self, style, value, closure, allowedChars)
 	obj.maxWidth = 0
 	obj.value = value
 
--- Removed per Dean, but contradicts bug fix 11508; reopening 11508 and leaving this old code here until that is resolved.
---	-- default cursor to end to string
---	if obj.value then
---		obj.cursor = #tostring(obj.value) + 1
---	end
+	-- default cursor to end to string unless defaultCursorToStart true
+	if obj.value and not (obj.value.defaultCursorToStart and obj.value:defaultCursorToStart()) then
+		obj.cursor = #tostring(obj.value) + 1
+	end
 
 	if Framework:isMostRecentInput("ir") or
 		Framework:isMostRecentInput("key") or
@@ -801,7 +754,7 @@ function __init(self, style, value, closure, allowedChars)
 					end,
 					true)
 
-	obj:addActionListener("play", obj, _deleteAction)
+	obj:addActionListener("play", obj, _goAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
 
@@ -1214,6 +1167,14 @@ function ipAddressValue(default)
 
 			reverseScrollPolarityOnUpDownInput = function()
 				return true
+			end,
+
+			defaultCursorToStart = function()
+				if not default or default == "" then
+					return true
+				else
+					return false
+				end
 			end,
 
 			isValid = function(obj, cursor)

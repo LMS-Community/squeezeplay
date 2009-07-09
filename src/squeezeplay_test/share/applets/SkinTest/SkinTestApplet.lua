@@ -38,6 +38,7 @@ local Surface             = require("jive.ui.Surface")
 local Textarea            = require("jive.ui.Textarea")
 local Textinput           = require("jive.ui.Textinput")
 local Window              = require("jive.ui.Window")
+local jiveMain            = jiveMain
 
 local debug               = require("jive.utils.debug")
 
@@ -180,11 +181,17 @@ function setup_help_list(self, item)
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data[2]) do
+		local iconStyle = nil
+		if subdata[2] then
+			iconStyle = subdata[2]
+		end
+		log:warn(iconStyle)
 		menu:addItem({
 			text = subdata[1],
-			iconStyle = subdata[2],
+			iconStyle = iconStyle,
 		})
 	end
+	jiveMain:addHelpMenuItem(menu, self, dummy_help)
 
 	window:addWidget(menu)
 	menu:setHeaderWidget(textarea)
@@ -796,14 +803,15 @@ function window_slider_popup(self, item)
 	local popup = Popup("slider_popup")
 	_windowActions(self, item, popup)
 
-	local title = Label("text", data[1])
+	local title = Label("heading", data[1])
+
 	local slider = Slider("volume_slider", -1, 100, 50)
 
 	popup:addWidget(title)
+	popup:addWidget(Icon('icon_popup_volume'))
+
 	popup:addWidget(Group("slider_group", {
-		min = Icon("button_volume_min"),
 		slider = slider,
-		max = Icon("button_volume_max")
 	}))
 
 	return popup
@@ -885,11 +893,11 @@ testData = {
 		"Is text allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
-		  { "Option 1", "" },
-		  { "Option 2", "" },
-		  { "Option 3", "" },
-		  { "Option 4", "" },
-		  { "Option 5", "" },
+		  { "Option 1" },
+		  { "Option 2" },
+		  { "Option 3" },
+		  { "Option 4" },
+		  { "Option 5" },
 		},
 	},
 	help_info = {

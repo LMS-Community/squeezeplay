@@ -3,6 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WELCOME
+	CS	Vítejte
 	DA	Velkommen
 	DE	Willkommen
 	EN	Welcome
@@ -12,10 +13,13 @@ WELCOME
 	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
-	DA	Lad os komme i gang med at få dig tilsluttet dit netværk og din musik.
+	CS	Začneme tím, že Vás připojíme k vaší síti a hudbě.
+	DA	Lad os begynde med at slutte afspilleren til netværket og din musiksamling.
 	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
 	EN	Let's get started by getting you connected to your network and music.
 	ES	Comencemos por realizar la conexión a la red y música.
@@ -24,18 +28,23 @@ WELCOME_WALKTHROUGH
 	IT	Iniziamo con il collegamento alla rete e alla musica.
 	NL	We gaan je eerst met je netwerk en muziek verbinden.
 	NO	La oss starte med å kople deg til nettverket ditt og musikken din.
+	PL	Rozpocznij od nawiązania połączenia z siecią i muzyką.
+	RU	Начнем работу, подключив вас к сети и музыке.
 	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
 
 WELCOME_HELP
+	CS	Až budete chtít pokračovat, stiskněte prostřední tlačítko.
 	DA	Tryk midterknappen når du er klar til at fortsætte.
-	DE	Drücken Sie die mittlere Taste, wenn Sie so weit sind.
+	DE	Drücken Sie zum  Fortfahren die mittlere Taste.
 	EN	Press the center button when you are ready to move on.
 	ES	Pulse el botón central cuando esté listo para continuar.
 	FI	Paina keskipainiketta, kun olet valmis jatkamaan.
 	FR	Appuyez sur le bouton central pour continuer.
 	IT	Premere il pulsante centrale per proseguire.
 	NL	Druk op de middelste knop wanneer je klaar bent om verder te gaan.
-	NO	Trykk på midtknappen når du er klar for å gå videre.
+	NO	Trykk på midtknappen når du er klar til å gå videre.
+	PL	Naciśnij klawisz strzałki w prawo, kiedy będzie można kontynuować.
+	RU	Нажмите центральную кнопку, когда вы будете готовы продолжить.
 	SV	Tryck på mittenknappen när du vill gå vidare.
 
 WIRELESS_CONNECTION
@@ -56,14 +65,14 @@ WIRELESS_CONNECTION
 CONNECT_USING_SQUEEZEBOX
 	CS	Připojit pomocí Squeezeboxu
 	DA	Etabler forbindelse vha. Squeezebox
-	DE	Verbinden mit Squeezebox
+	DE	Verbindung mit Squeezebox
 	EN	Connect using Squeezebox
 	ES	Conectar mediante Squeezebox
 	FI	Yhdistä Squeezeboxilla
 	FR	Connexion à l'aide de la Squeezebox
 	IT	Connetti tramite Squeezebox
 	NL	Verbinding maken via Squeezebox
-	NO	Kople til gjennom Squeezebox
+	NO	Kople til med Squeezebox
 	PL	Połącz przy użyciu urządzenia Squeezebox
 	RU	Подключиться с помощью Squeezebox
 	SV	Anslut med Squeezebox
@@ -71,7 +80,7 @@ CONNECT_USING_SQUEEZEBOX
 CONNECT_USING_NETWORK
 	CS	Připojit k jiné bezdrátové sítě
 	DA	Opret forbindelse til et andet trådløst netværk
-	DE	Mit anderem kabellosem Netz verbinden
+	DE	Mit anderem kabellosem Netzwerk verbinden
 	EN	Connect to other wireless network
 	ES	Conectar a otra red inalámbrica
 	FI	Yhdistä toiseen langattomaan verkkoon
@@ -85,7 +94,7 @@ CONNECT_USING_NETWORK
 
 CONNECT_HELP
 	CS	Váš Squeezebox můžete použít k připojení k vaší síti nebo k jinému bezdrátovému přístupovému bodu.
-	DA	Du kan bruge din Squeezebox til at etablere forbindelse til afspilleren, eller du kan bruge et andet trådløst adgangspunkt.
+	DA	Du kan bruge din Squeezebox til at oprette forbindelse til afspilleren, eller du kan bruge et andet trådløst adgangspunkt.
 	DE	Sie können Squeezebox mit Ihrem Netzwerk oder einem anderen kabellosen Zugriffspunkt verbinden.
 	EN	You can use your Squeezebox to connect to your network or use another wireless access point.
 	ES	Puede usar Squeezebox para conectarse a la red o usar otro punto de acceso inalámbrico.
@@ -93,24 +102,28 @@ CONNECT_HELP
 	FR	Vous pouvez utiliser la Squeezebox pour vous connecter au réseau ou utiliser un autre point d'accès.
 	IT	È possibile utilizzare Squeezebox per collegarsi alla rete o a un altro punto di accesso senza fili.
 	NL	Je kunt via je Squeezebox een verbinding met je netwerk of een ander draadloos toegangspunt maken.
-	NO	Du kan bruke Squeezebox til å kople til nettverkene dine, eller til å bruke andre trådløse tilkoplingspunkter.
+	NO	Du kan bruke Squeezebox til å kople til nettverket ditt, eller bruke et annet trådløst tilkoplingspunkt.
 	PL	Możesz użyć urządzenia Squeezebox do połączenia z siecią lub użyć innego bezprzewodowego punktu dostępowego.
 	RU	Вы можете использовать Squeezebox для подключения к своей сети или использовать другую точку беспроводного доступа.
 	SV	Du kan ansluta till nätverket med Squeezebox eller med en annan trådlös anslutningspunkt.
 
 DONE
-	DA	Færdig!
+	CS	A je to!
+	DA	Det var det!
 	DE	Fertig!
 	EN	That's it!
-	ES	Y esto es todo.
+	ES	¡Ya está!
 	FI	Siinä kaikki!
 	FR	La procédure est terminée.
 	IT	Fatto!
 	NL	Klaar!
-	NO	Det var det!
+	NO	Ferdig!
+	PL	To już wszystko!
+	RU	Сделано!
 	SV	Sedan är det bara att sätta igång!
 
 DONE_CONTINUE
+	CS	Pokračovat
 	DA	Fortsæt
 	DE	Weiter
 	EN	Continue
@@ -120,11 +133,14 @@ DONE_CONTINUE
 	IT	Continua
 	NL	Verdergaan
 	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
 	SV	Fortsätt
 
 DONE_HELP
-	DA	Du kan nu anvende din Squeezebox Controller til at tilgå al din musik. Tryk midterknappen for at fortsætte.
-	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre Musik zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
+	CS	Nyní můžete používat svůj ovladač Squeezebox pro přístup k veškeré hudbě. Pokračujte stiskem prostředního tlačítka.
+	DA	Du kan nu bruge din Squeezebox Controller til at lytte til al din musik. Tryk på midterknappen for at fortsætte.
+	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
 	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
 	FI	Voit nyt ohjata kaikkia musiikkitiedostojasi Squeezebox-kaukosäätimelläsi. Jatka painamalla keskipainiketta.
@@ -132,5 +148,7 @@ DONE_HELP
 	IT	Ora è possibile utilizzare Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
 	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
 	NO	Du kan nå bruke Squeezebox-kontrollen til å få tilgang på all musikken din. Trykk på midtknappen for å fortsette.
+	PL	Teraz możesz użyć programu urządzenia sterującego Squeezebox w celu uzyskania dostępu do całej swojej muzyki. Naciśnij środkowy przycisk, aby kontynuować.
+	RU	Теперь вы с помощью SqueezePlay получаете доступ к своей музыке. Для продолжения нажмите центральную кнопку.
 	SV	Nu har du tillgång till all din musik via Squeezebox Controller. Tryck på mittenknappen för att fortsätta.
 

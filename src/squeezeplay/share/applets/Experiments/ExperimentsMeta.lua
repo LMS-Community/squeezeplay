@@ -25,7 +25,7 @@ end
 
 function registerApplet(meta)
 --	jiveMain:addItem(meta:menuItem('uiExperiments', 'home', "UI Experiments", function(applet, ...) applet:menu(...) end, .5))
-	jiveMain:addItem(meta:menuItem('uiExperiments', 'advancedSettings', "UI Experiments", function(applet, ...) applet:menu(...) end, 3))
+	jiveMain:addItem(meta:menuItem('uiExperiments', 'advancedSettingsBetaFeatures', "UI Experiments", function(applet, ...) applet:menu(...) end, 100))
 
 end
 

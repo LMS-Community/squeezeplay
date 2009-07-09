@@ -108,7 +108,6 @@ int jive_font_width(JiveFont *font, const char *str) {
 }
 
 int jive_font_nwidth(JiveFont *font, const char *str, size_t len) {
-	int w;
 	char *tmp;
 
 	assert(font && font->magic == JIVE_FONT_MAGIC);
@@ -118,15 +117,31 @@ int jive_font_nwidth(JiveFont *font, const char *str, size_t len) {
 	}
 
 	// FIXME use utf8 len
-	tmp = malloc(len + 1);
+	tmp = alloca(len + 1);
 	strncpy(tmp, str, len);
 	*(tmp + len) = '\0';
-	
-	w = font->width(font, tmp);
 
-	free(tmp);
+	return font->width(font, tmp);
+}
 
-	return w;
+int jive_font_miny_char(JiveFont *font, Uint16 ch) {
+	int miny;
+
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	TTF_GlyphMetrics(font->ttf, ch, NULL, NULL, &miny, NULL, NULL);
+
+	return miny;
+}
+
+int jive_font_maxy_char(JiveFont *font, Uint16 ch) {
+	int maxy;
+
+	assert(font && font->magic == JIVE_FONT_MAGIC);
+
+	TTF_GlyphMetrics(font->ttf, ch, NULL, NULL, NULL, &maxy, NULL);
+
+	return maxy;
 }
 
 int jive_font_capheight(JiveFont *font) {
@@ -256,18 +271,78 @@ JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) 
 }
 
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len) {
-	JiveSurface *srf;
 	char *tmp;
 
 	// FIXME use utf8 len
 
-	tmp = malloc(len + 1);
+	tmp = alloca(len + 1);
 	strncpy(tmp, str, len);
 	*(tmp + len) = '\0';
 	
-	srf = jive_font_draw_text(font, color, tmp);
+	return jive_font_draw_text(font, color, tmp);
+}
 
-	free(tmp);
 
-	return srf;
+/*
+binary 			hex 	decimal 	notes
+00000000-01111111 	00-7F 	0-127	 	US-ASCII (single byte)
+10000000-10111111 	80-BF 	128-191 	Second, third, or fourth byte of a multi-byte sequence
+11000000-11000001 	C0-C1 	192-193 	Overlong encoding: start of a 2-byte sequence, but code point <= 127
+11000010-11011111 	C2-DF 	194-223 	Start of 2-byte sequence
+11100000-11101111 	E0-EF 	224-239 	Start of 3-byte sequence
+11110000-11110100 	F0-F4 	240-244 	Start of 4-byte sequence
+11110101-11110111 	F5-F7 	245-247 	Restricted by RFC 3629: start of 4-byte sequence for codepoint above 10FFFF
+11111000-11111011 	F8-FB 	248-251 	Restricted by RFC 3629: start of 5-byte sequence
+11111100-11111101 	FC-FD 	252-253 	Restricted by RFC 3629: start of 6-byte sequence
+11111110-11111111 	FE-FF 	254-255 	Invalid: not defined by original UTF-8 specification
+*/
+
+Uint32 utf8_get_char(const char *ptr, const char **nptr)
+{
+	Uint32 c, v;
+	const unsigned char *uptr = (const unsigned char *)ptr;
+
+	c = *uptr++;
+
+	if (c <= 127) {
+		/* US-ASCII */
+		v = c & 0x7F;
+	}
+	else if (c <= 191) {
+		/* error */
+		v = 0xFFFD;
+	}
+	else if (c <= 223) {
+		/* 2-bytes */
+		v = (c & 0x1F) << 6;
+		c = *uptr++;
+		v |= (c & 0x3F);
+	}
+	else if (c <= 239) {
+		/* 3-byte */
+		v = (c & 0x0F) << 12;
+		c = *uptr++;
+		v |= (c & 0x3F) << 6;
+		c = *uptr++;
+		v |= (c & 0x3F);
+	}
+	else if (c <= 244) {
+		/* 4-byte */
+		v = (c & 0x07) << 18;
+		c = *uptr++;
+		v |= (c & 0x3F) << 12;
+		c = *uptr++;
+		v |= (c & 0x3F) << 6;
+		c = *uptr++;
+		v |= (c & 0x3F);
+	}
+	else {
+		/* error */
+		v = 0xFFFD;
+	}
+
+	if (nptr) {
+		*nptr = (const char *)uptr;
+	}
+	return v;
 }

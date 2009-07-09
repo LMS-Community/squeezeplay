@@ -1,6 +1,7 @@
 /*
 ** Copyright 2007 Logitech. All Rights Reserved.
 **
+**
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
@@ -15,6 +16,7 @@ typedef SOCKET socket_t;
 
 #else
 #include <sys/stat.h>
+#include <resolv.h>
 
 typedef int socket_t;
 #define CLOSESOCKET(s) close(s)
@@ -195,9 +197,13 @@ static int dns_resolver_thread(void *p) {
 			return 0;
 		}
 		buf[len] = '\0';
-
-
-		if (failed_error && !stat_resolv_conf()) {
+		if (failed_error && stat_resolv_conf()) {
+			#ifndef _WIN32
+			//reload resolv.conf
+			res_init();
+			#endif
+		}
+		else if (failed_error && !stat_resolv_conf()) {
 			Uint32 now = SDL_GetTicks();
 			
 			if (now - failed_timeout < RESOLV_TIMEOUT) {

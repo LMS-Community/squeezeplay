@@ -1147,9 +1147,9 @@ function setGlobalSetting(self, key, value)
 	end
 
 	self._global_settings[key] = value
-	local file = _assert(io.open(global_settings_file, "w"))
-	file:write(dumper.dump(self._global_settings, "global_settings", true))
-	file:close()
+
+	System:atomicWrite(global_settings_file,
+		dumper.dump(self._global_settings, "global_settings", true))
 end
 
 

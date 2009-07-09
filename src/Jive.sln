@@ -27,12 +27,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tolua++", "tolua++-1.0.92\V
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua-5.1.1\VisualC\lua.vcproj", "{432D23FC-5507-446F-AA7A-689166AA92EF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket", "luasocket-2.0.1\socket.vcproj", "{66E3CE14-884D-4AEA-9F20-15A0BEAF8C5A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket", "luasocket-2.0.2\socket.vcproj", "{66E3CE14-884D-4AEA-9F20-15A0BEAF8C5A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{432D23FC-5507-446F-AA7A-689166AA92EF} = {432D23FC-5507-446F-AA7A-689166AA92EF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mime", "luasocket-2.0.1\mime.vcproj", "{128E8BD0-174A-48F0-8771-92B1E8D18713}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mime", "luasocket-2.0.2\mime.vcproj", "{128E8BD0-174A-48F0-8771-92B1E8D18713}"
 	ProjectSection(ProjectDependencies) = postProject
 		{432D23FC-5507-446F-AA7A-689166AA92EF} = {432D23FC-5507-446F-AA7A-689166AA92EF}
 	EndProjectSection

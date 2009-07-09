@@ -323,6 +323,7 @@ extern int (*jive_sdlevent_pump)(lua_State *L);
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
 void jive_send_gesture_event(JiveGesture code);
+void jive_send_char_press_event(Uint16 unicode);
 
 
 /* platform functions */
@@ -417,12 +418,15 @@ JiveFont *jive_font_ref(JiveFont *font);
 void jive_font_free(JiveFont *font);
 int jive_font_width(JiveFont *font, const char *str);
 int jive_font_nwidth(JiveFont *font, const char *str, size_t len);
+int jive_font_miny_char(JiveFont *font, Uint16 ch);
+int jive_font_maxy_char(JiveFont *font, Uint16 ch);
 int jive_font_height(JiveFont *font);
 int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);
 int jive_font_offset(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);
+Uint32 utf8_get_char(const char *ptr, const char **nptr);
 
 
 /* C helper functions */
@@ -518,6 +522,7 @@ int jiveL_menu_gc(lua_State *L);
 
 int jiveL_textarea_get_preferred_bounds(lua_State *L);
 int jiveL_textarea_skin(lua_State *L);
+int jiveL_textarea_invalidate(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);

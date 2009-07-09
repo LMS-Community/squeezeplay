@@ -2,24 +2,12 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DATETIME_TITLE
-	CS	Datum a čas
-	DA	Dato og klokkeslæt
-	DE	Datum & Zeit
-	EN	Date & Time
-	ES	Fecha & Hora
-	FI	Pvm ja aika
-	FR	Date & Heure
-	IT	Data & ora
-	NL	Datum & tijd
-	NO	Tid og dato
-	PL	Data i godzina
-	RU	Дата и время
-	SV	Datum och tid
+	EN	Date/Time Formats
 
 DATETIME_TIMEFORMAT
-	CS	Time Format (Formát času)
+	CS	Formát času
 	DA	Klokkeslætformat
-	DE	Zeit Format
+	DE	Zeitformat
 	EN	Time Format
 	ES	Formato de hora
 	FI	Ajan muoto
@@ -62,7 +50,18 @@ DATETIME_TIMEFORMAT_24H
 	SV	24 timmar
 
 DATETIME_SHORTDATEFORMAT
+	CS	Formát krátkého data
+	DA	Kort datoformat
+	DE	Kurzes Datumsformat
 	EN	Short Date Format
+	ES	Formato de fecha corto
+	FI	Lyhyt päivämäärämuoto
+	FR	Date au format court
+	IT	Formato data breve
+	NL	Korte datumnotatie
+	PL	Format krótkiej daty
+	RU	Краткий формат даты
+	SV	Kort datumformat
 
 DATETIME_DATEFORMAT
 	CS	Formát data

@@ -69,7 +69,7 @@ SCREENSAVER_NOWPLAYING_OF
 	SV	%s av %s
 
 SCREENSAVER_OFF
-	CS	Vypnuto
+	CS	Při vypnutí
 	DA	Fra
 	DE	Aus
 	EN	Off
@@ -79,8 +79,8 @@ SCREENSAVER_OFF
 	IT	Disattivato
 	NL	Uit
 	NO	Av
-	PL	wył.
-	RU	Выкл.
+	PL	Po wyłączeniu
+	RU	При выкл.
 	SV	Av
 
 SCREENSAVER_ARTWORK_SIZE
@@ -94,7 +94,7 @@ SCREENSAVER_ARTWORK_SIZE
 	IT	Dimensioni copertina brano in riproduzione
 	NL	Grootte hoesafbeelding bij 'Speelt nu'
 	NO	Omslagsstørrelse på Spiller av nå
-	PL	Wielkość okładki utworu
+	PL	Wielkość okładki odtwarzanego utworu
 	RU	Размер обложки, которая воспроизводится
 	SV	Storlek på omslag för album som spelas
 

@@ -41,6 +41,7 @@ local Networking             = require("jive.net.Networking")
 
 local appletManager          = appletManager
 local jnt                    = jnt
+local jiveMain               = jiveMain
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -70,25 +71,40 @@ function init(self)
 end
 
 
-function _helpAction(self, window, titleText, bodyText)
-	if titleText or bobyText then
-		window:addActionListener("help", self, function()
-			local window = Window("help_info", self:string(titleText), "helptitle")
-			window:setAllowScreensaver(false)
+function _helpAction(self, window, titleText, bodyText, menu)
+	if titleText or bodyText then
+		local moreHelpAction =  function()
+						window:playSound("WINDOWSHOW")
+						appletManager:callService("supportMenu")
+					end
+		local helpAction =      function()
+						local window = Window("help_info", self:string(titleText), "helptitle")
+						window:setAllowScreensaver(false)
 
-			window:setButtonAction("rbutton", "more_help")
-			window:addActionListener("more_help", self, function()
-				window:playSound("WINDOWSHOW")
+						window:setButtonAction("rbutton", "more_help")
+						window:addActionListener("more_help", self, moreHelpAction)
+						local menu = SimpleMenu("menu")
+						jiveMain:addHelpMenuItem(menu, self, moreHelpAction, "GLOBAL_SUPPORT")
 
-				appletManager:callService("supportMenu")
-			end)
+						local textarea = Textarea("text", self:string(bodyText))
+						window:addWidget(menu)
+						menu:setHeaderWidget(textarea)
+						self:tieAndShowWindow(window)
 
-			local textarea = Textarea("text", self:string(bodyText))
-			window:addWidget(textarea)
-			self:tieAndShowWindow(window)
+						window:playSound("WINDOWSHOW")
+					end
 
-			window:playSound("WINDOWSHOW")
-		end)
+		window:addActionListener("help", self, helpAction)
+		if menu then
+			jiveMain:addHelpMenuItem(menu, self, helpAction)
+		end
+	else
+		if menu then
+	                        jiveMain:addHelpMenuItem(menu, self,    function()
+                        							appletManager:callService("supportMenu")
+                        						end)
+
+		end
 	end
 
 	window:setButtonAction("rbutton", "help")
@@ -168,7 +184,7 @@ function _connectionType(self)
 
 	window:addWidget(connectionMenu)
 
-	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY")
+	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY", connectionMenu)
 
 	self:tieAndShowWindow(window)
 end
@@ -221,7 +237,7 @@ function _wirelessRegion(self, wlan, transition)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_REGION_HELP", "NETWORK_REGION_HELP_BODY")
+	_helpAction(self, window, "NETWORK_REGION_HELP", "NETWORK_REGION_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window, transition)
 end
@@ -320,7 +336,7 @@ function _networkScanComplete(self, iface)
 	if not iface:isWireless() then
 		_scanResults(self, iface)
 
-		return _connect(self, iface, iface:getName(), true)
+		return _connect(self, iface, iface:getName(), true, false)
 	end
 
 	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
@@ -355,7 +371,7 @@ function _networkScanComplete(self, iface)
 			end)
 		end)
 
-	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", self.scanMenu)
 
 	self:tieAndShowWindow(window)
 end
@@ -456,7 +472,7 @@ function _chooseEnterSSID(self, iface)
 	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY")
+	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -493,7 +509,7 @@ function _enterSSID(self, iface)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
         window:focusWidget(group)
 
-	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY') 
+	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -510,7 +526,7 @@ function _enterPassword(self, iface, ssid, nocheck)
 
 	-- is the ssid already configured
 	if nocheck ~= "config" and self.scanResults[ssid].id ~= nil then
-		return _connect(self, iface, ssid, false)
+		return _connect(self, iface, ssid, false, false)
 	end
 
 	local flags = self.scanResults[ssid].flags
@@ -518,11 +534,11 @@ function _enterPassword(self, iface, ssid, nocheck)
 
 	if flags == "" then
 		self.encryption = "none"
-		return _connect(self, iface, ssid, true)
+		return _connect(self, iface, ssid, true, false)
 
 	elseif string.find(flags, "ETH") then
 		self.encryption = "none"
-		return _connect(self, iface, ssid, true)
+		return _connect(self, iface, ssid, true, false)
 
 	elseif nocheck ~= "wps" and string.find(flags, "WPS") then
 		self.encryption = "wpa2"
@@ -562,7 +578,7 @@ function _chooseEncryption(self, iface, ssid)
 			sound = "WINDOWSHOW",
 			callback = function()
 				self.encryption = "none"
-				_connect(self, iface, ssid, true)
+				_connect(self, iface, ssid, true, false)
 			end
 		},
 		{
@@ -601,7 +617,7 @@ function _chooseEncryption(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -635,7 +651,7 @@ function _chooseWEPLength(self, iface, ssid)
 	window:addWidget(menu)
 
 	--_helpAction(self, window, "NETWORK_WIRELESS_ENCRYPTION", "NETWORK_WIRELESS_ENCRYPTION_HELP")
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -661,7 +677,7 @@ function _enterWEPKey(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    _connect(self, iface, ssid, true)
+					    _connect(self, iface, ssid, true, false)
 					    return true
 				    end
 			    )
@@ -693,7 +709,7 @@ function _enterPSK(self, iface, ssid)
 
 					    widget:playSound("WINDOWSHOW")
 
-					    _connect(self, iface, ssid, true)
+					    _connect(self, iface, ssid, true, false)
 					    return true
 				    end,
 				    self:string("ALLOWEDCHARS_WPA")
@@ -728,7 +744,7 @@ function _enterEAP(self, iface, ssid)
 	})
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -775,7 +791,7 @@ function _chooseWPS(self, iface, ssid)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY")
+	_helpAction(self, window, "NETWORK_WPS_HELP", "NETWORK_WPS_HELP_BODY", menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -801,7 +817,7 @@ function _chooseWPSPin(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PIN_HINT", tostring(wpspin))))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -825,7 +841,7 @@ function _chooseWPSPbc(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ENTER_PBC_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		
 end
@@ -891,7 +907,14 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 
 	Task("startWPS", self,
 		function()
-			iface:request("WPS_PBC")
+			iface:request("DISCONNECT")
+
+			if( wpsmethod == "pbc") then
+				iface:request("WPS_PBC")
+			elseif( wpsmethod == "pin") then
+				-- 'any' need to be lowercase
+				iface:request("WPS_PIN any " .. wpspin)
+			end
 		end):addTask()
 end
 
@@ -923,7 +946,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					self.psk = status.wps_psk
 					self.key = status.wps_key
 
-					_connect(self, iface, ssid, true)
+					_connect(self, iface, ssid, true, false)
 				end
 			end
 
@@ -940,7 +963,7 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 					return
 				else
-					_connect(self, iface, ssid, false)
+					_connect(self, iface, ssid, false, true)
 				end
 			end
 
@@ -987,7 +1010,7 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_WPS_PROBLEM_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -997,7 +1020,7 @@ end
 
 
 -- start to connect
-function _connect(self, iface, ssid, createNetwork)
+function _connect(self, iface, ssid, createNetwork, useSupplicantWPS)
 	assert(iface and ssid, debug.traceback())
 
 	if not iface:isWireless() then
@@ -1011,16 +1034,16 @@ function _connect(self, iface, ssid, createNetwork)
 					return _attachEthernet(self, iface, ssid, createNetwork)
 				end
 
-				_connect_1(self, iface, ssid, createNetwork)
+				_connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 
 			end
 		):addTask()
 	else
-		_connect_1(self, iface, ssid, createNetwork)
+		_connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 	end
 end
 
-function _connect_1(self, iface, ssid, createNetwork)
+function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
@@ -1053,19 +1076,22 @@ function _connect_1(self, iface, ssid, createNetwork)
 	self:tieAndShowWindow(popup)
 
 	-- Select/create the network in a background task
-	Task("networkSelect", self, _selectNetworkTask):addTask(iface, ssid, createNetwork)
+	Task("networkSelect", self, _selectNetworkTask):addTask(iface, ssid, createNetwork, useSupplicantWPS)
 end
 
 
 -- task to modify network configuration
-function _selectNetworkTask(self, iface, ssid, createNetwork)
+function _selectNetworkTask(self, iface, ssid, createNetwork, useSupplicantWPS)
 	assert(iface and ssid, debug.traceback())
-
--- XXXX Felix why is this? it breaks non WPS atheros setup
---	if iface:isMarvell() then
 
 	-- disconnect from existing network
 	iface:t_disconnectNetwork()
+
+  if useSupplicantWPS then
+
+	iface:t_addWPSNetwork(ssid)
+
+  else
 
 	-- remove any existing network config
 	if createNetwork then
@@ -1095,6 +1121,7 @@ function _selectNetworkTask(self, iface, ssid, createNetwork)
 			self.scanResults[ssid].id = id
 		end
 	end
+  end
 
 	-- select new network
 	iface:t_selectNetwork(ssid)
@@ -1127,8 +1154,10 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 
 	window:setButtonAction("rbutton", nil)
 
+	local menu = SimpleMenu("menu")
 	local textarea = Textarea('help_text', self:string("NETWORK_ATTACH_CABLE_DETAILED"))
-	window:addWidget(textarea)
+	window:addWidget(menu)
+	menu:setHeaderWidget(textarea)
 
 	window:addTimer(500,
 		function(event)
@@ -1140,14 +1169,14 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 					if status.link then
 						log:debug("connected")
 						window:hide()
-						_connect(self, iface, ssid, createNetwork)
+						_connect(self, iface, ssid, createNetwork, false)
 					end
              			end
 			):addTask()
 		end
 	)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1310,7 +1339,7 @@ function _connectFailed(self, iface, ssid, reason)
 
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1344,7 +1373,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 			callback = function()
 				-- poke udhcpto try again
 				_sigusr1("udhcpc")
-				_connect(self, iface, ssid, false)
+				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
 			end
 		},
@@ -1352,7 +1381,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 			text = self:string("STATIC_ADDRESS"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				_enterIP(self, iface, ssid)
+				_enterIPHelp(self, iface, ssid)
 			end
 		},
 		{
@@ -1368,7 +1397,7 @@ function _failedDHCPandWPA(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_DHCP_ERROR_HINT")))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1388,7 +1417,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 			callback = function()
 				-- poke udhcpto try again
 				_sigusr1("udhcpc")
-				_connect(self, iface, ssid, false)
+				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
 			end
 		},
@@ -1411,7 +1440,7 @@ function _failedDHCPandWEP(self, iface, ssid)
 	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_ADDRESS_HELP_WEP", tostring(self.key))))
 	window:addWidget(menu)
 
-	_helpAction(self, window)
+	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)
 end
@@ -1494,6 +1523,30 @@ function _sigusr1(process)
 	end
 end
 
+function _enterIPHelp(self, iface, ssid)
+	assert(iface and ssid, debug.traceback())
+
+	local window = Window("help_list", self:string("STATIC_ADDRESS_CONNECT_MANUALLY"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	local textarea = Textarea("help_text", self:string("NETWORK_IP_ADDRESS_HELP_BODY"))
+
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("SETUP_NETWORKING_CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				_enterIP(self, iface, ssid)
+			end
+		},
+	})
+
+	menu:setHeaderWidget(textarea)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+
+end
 
 function _enterIP(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())

@@ -1,6 +1,18 @@
 
 DIAGNOSTICS
+	CS	Diagnostika
+	DA	Diagnosticering
+	DE	Diagnose
 	EN	Diagnostics
+	ES	Diagnósticos
+	FI	Diagnostiikka
+	FR	Diagnostic
+	IT	Diagnostica
+	NL	Diagnostische gegevens
+	NO	Diagnose
+	PL	Diagnostyka
+	RU	Диагностика
+	SV	Diagnostik
 
 NOT_CONNECTED
 	CS	Nepřipojeno
@@ -19,18 +31,18 @@ NOT_CONNECTED
 
 PORT_FAIL
 	CS	Nemohu připojit
-	DA	Ikke tilsluttet
-	DE	Nicht verbunden
+	DA	Der kan ikke etableres forbindelse
+	DE	Verbindung kann nicht hergestellt werden
 	EN	Can't connect
 	ES	No se puede conectar
 	FI	Ei voi yhdistää
 	FR	Connexion impossible
 	IT	Impossibile connettersi
-	NL	Niet verbonden
+	NL	Kan geen verbinding maken
 	NO	Kan ikke kople til
-	PL	Niepołączony
-	RU	Не подключено
-	SV	Ej ansluten
+	PL	Nie można nawiązać połączenia
+	RU	Подключение невозможно
+	SV	Det gick inte att ansluta
 
 PORT_OK
 	CS	OK
@@ -84,7 +96,7 @@ PING_FAIL
 	EN	Can't ping
 	ES	No se puede hacer ping
 	FI	Ei voi suorittaa ping-toimintoa
-	FR	Connexion impossible
+	FR	Impossible d'exécuter la commande PING
 	IT	Impossibile eseguire il ping
 	NL	Kan de opdracht Ping niet uitvoeren
 	NO	Kan ikke sende ping
@@ -139,32 +151,32 @@ WLAN_SNR
 
 FIRMWARE_VERSION
 	CS	Verze:
-	DA	Version:
-	DE	Version:
+	DA	Firmwareversion:
+	DE	Firmware-Version:
 	EN	Firmware Version:
-	ES	Versión:
-	FI	Versio:
-	FR	Version:
-	IT	Versione:
-	NL	Versie:
-	NO	Versjon:
-	PL	Wersja:
-	RU	Версия:
-	SV	Version:
+	ES	Versión de firmware:
+	FI	Laitteisto-ohjelmiston versio:
+	FR	Version du micrologiciel:
+	IT	Versione firmware:
+	NL	Firmwareversie:
+	NO	Fastvareversjon:
+	PL	Wersja oprogramowania układowego:
+	RU	Версия микропрограммы:
+	SV	Inbyggd programvaruversion:
 
 MAC_ADDRESS
-	CS	ID přehrávače:
-	DA	Afspiller-id:
+	CS	ID přehrávače
+	DA	Afspiller-id
 	DE	Player-ID:
 	EN	Player ID:
 	ES	ID de reproductor:
 	FI	Soittimen tunnus:
-	FR	ID du lecteur:
+	FR	ID platine
 	IT	ID lettore:
-	NL	Speler-id:
+	NL	Muzieksysteem-ID:
 	NO	Spiller-ID:
 	PL	Identyfikator odtwarzacza:
-	RU	ID плеера:
+	RU	ID плеера
 	SV	Spelar-ID:
 
 WLAN_SSID
@@ -369,12 +381,12 @@ SC_NAME
 	EN	  Library name:
 	ES	  Nombre de biblioteca:
 	FI	  Kirjaston nimi:
-	FR	  Nom de la bibliothèque :
+	FR	  Nom de la collection:
 	IT	  Nome libreria:
-	NL	  Naam van muziekcollectie:
+	NL	  Naam van collectie:
 	NO	  Navn på bibliotek:
 	PL	  Nazwa biblioteki:
-	RU	  Имя библиотеки:
+	RU	  Имя медиатеки:
 	SV	  Bibliotekets namn:
 
 SC_PING
@@ -425,7 +437,7 @@ SC_PORT_9000
 SUPPORT
 	CS	Další nápověda
 	DA	Mere hjælp
-	DE	Weitere Informationen
+	DE	Weitere Hilfe
 	EN	More Help
 	ES	Más ayuda
 	FI	Lisäohjeita
@@ -434,28 +446,28 @@ SUPPORT
 	NL	Meer Help
 	NO	Ytterligere hjelp
 	PL	Więcej pomocy
-	RU	Дополнительная помощь
+	RU	Дополнительная справка
 	SV	Ytterligare hjälp
 
 SUPPORT_HELP
-	CS	Pokud budete potřebovat další nápovědu k vašemu Squeezebox, navštivte laskavě mysqueezebox.com/support, kde naleznete odpovědi na mnoho otázek, a kontaktujte náš asistenční tým.\nPokud budete kontaktovat náš asistenční tým, můžete být požádáni o technické údaje vašeho Squeezebox poskytnuté Diagnostikou systému, dostupnou níže.
-	DA	Hvis du har brug for yderligere hjælp til din Squeezebox, kan du kigge på mysqueezebox.com/support hvor der er svar på mange spørgsmål og mulighed for at kontakte supportafdelingen.\nHvis du kontakter supportafdelingen, bliver du sandsynligvis bedt om at oplyse tekniske detaljer om din Squeezebox. Dem kan du finde vha. det nye værktøj Systemdiagnosticering som der er et link til nedenfor.
-	DE	Wenn Sie weitere Informationen zur Squeezebox benötigen, rufen Sie mysqueezebox.com/support auf. Dort erhalten Sie Antworten auf viele Fragen und die Möglichkeit, sich an unseren Kundendienst zu wenden.\nBei Kontaktaufnahme mit dem Kundendienst werden Sie eventuell um technische Angaben zur Squeezebox gebeten. Diese finden Sie mit einer Systemdiagnose (siehe unten).
+	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.mysqueezebox.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
+	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.mysqueezebox.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
+	DE	Weitere Informationen und Kundendient erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
 	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
-	ES	Si necesita más ayuda con Squeezebox, visite mysqueezebox.com/support, donde encontrará respuesta a gran cantidad de preguntas y desde donde podrá ponerse en contacto con nuestro equipo de asistencia técnica.\nSi se pone en contacto con el equipo de asistencia técnica, puede que se le pida información técnica sobre Squeezebox proporcionada por Diagnóstico del sistema, disponible más abajo.
-	FI	Jos tarvitset lisäohjeita Squeezeboxin käyttöön, siirry seuraavalle sivulle: mysqueezebox.com/support. Löydät sivulta vastauksia moniin kysymyksiin. Lisäksi voit ottaa sivulla yhteyttä tukitiimiimme.\nJos otat yhteyttä tukitiimiimme, sinulta saatetaan pyytää Squeezeboxia koskevia teknisiä tietoja. Saat ne järjestelmän diagnostiikasta alta.
-	FR	Si vous avez besoin d'aide supplémentaire pour votre Squeezebox, rendez-vous sur le site mysqueezebox.com/support, où vous trouverez les réponses à de nombreuses questions, et contactez notre équipe d'assistance.\nLorsque vous contactez notre équipe d'assistance, vous serez invité à préciser les données techniques de la Squeezebox. Elles sont fournies par le Diagnostic système, disponible ci-dessous.
-	IT	Per ottenere ulteriore assistenza relativamente a Squeezebox, consultare la pagina Web mysqueezebox.com/support, che include risposte a numerose domande e informazioni per contattare il nostro team di assistenza.\nQuando si contatta il team di assistenza, è necessario disporre delle informazioni tecniche su Squeezebox fornite dalla diagnostica del sistema, disponibile di seguito.
-	NL	Als je meer hulp met je Squeezebox nodig hebt, ga dan naar mysqueezebox.com/support. Hier vind je antwoord op veel vragen en kun je contact opnemen met ons supportteam.\nAls je contact opneemt met het supportteam, kun je gevraagd worden om technische details van je Squeezebox. Deze worden geleverd door System Diagnostics (hieronder).
-	NO	Gå til mysqueezebox.com/support hvis du trenger mer hjelp med Squeezebox. Her finner du svar på mange spørsmål, og du kan også kontakte støtteavdelingen.\nHvis du tar kontakt med støtteavdelingen, blir du kanskje bedt om å oppgi noen tekniske opplysninger om Squeezebox fra Systemdiagnose (se nedenfor).
-	PL	Aby uzyskać więcej pomocy związanej z urządzeniem Squeezebox, odwiedź stronę WWW pod adresem mysqueezebox.com/support. Znajdują się tam odpowiedzi na wiele pytań oraz informacje, dzięki którym można skontaktować się z działem pomocy technicznej.\nPracownicy działu pomocy technicznej mogą poprosić o podanie parametrów technicznych urządzenia Squeezebox. Parametry te można sprawdzić, używając narzędzia Diagnostyka systemu, które jest dostępne poniżej.
-	RU	Если вам необходима дополнительная помощь по Squeezebox, посетите\nmysqueezebox.com/support: там вы сможете найти ответы на многие вопросы, а также связаться со службой поддержки. Служба поддержки может попросить вас предоставить техническую информацию о вашем устройстве Squeezebox. Эту информацию можно извлечь с помощью программы Диагностика системы, доступной по ссылке ниже.
-	SV	Om du behöver mer hjälp med Squeezebox, kan du gå till mysqueezebox.com/support där du hittar frågor och svar, och där du kan kontakta teknisk support.\nOm du kontaktar teknisk support, kanske du ombeds att ange teknisk information om din Squeezebox. Den informationen får du via Systemdiagnostik nedan.
+	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.mysqueezebox.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
+	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.mysqueezebox.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
+	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.mysqueezebox.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
+	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.mysqueezebox.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
+	NL	Ga naar \nwww.mysqueezebox.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
+	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.mysqueezebox.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
+	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.mysqueezebox.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
+	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.mysqueezebox.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
+	SV	Mer information och kundsupport finns på \nwww.mysqueezebox.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
 
 SOFTWARE_UPDATE
 	CS	Aktualizace softwaru
 	DA	Softwareopdatering
-	DE	Software-Aktualisierung
+	DE	Software-Update
 	EN	Software Update
 	ES	Actualización de software
 	FI	Ohjelmiston päivitys

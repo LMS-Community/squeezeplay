@@ -39,6 +39,7 @@ local hasBSP, BSP            = pcall(require, "jiveBSP")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
+local jiveMain               = jiveMain
 local appletManager          = appletManager
 
 local JIVE_VERSION           = jive.JIVE_VERSION
@@ -192,13 +193,21 @@ function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
 
 	local menu = SimpleMenu("menu")
 
+	local itemString = self:string("BEGIN_UPDATE")
+	itemString = itemString.str or itemString
+	if upgrades[1].version then
+		itemString = itemString .. " (" .. upgrades[1].version .. ")"
+	end
 	menu:addItem({
-		text = self:string("BEGIN_UPDATE"),
+		text = itemString,
 		sound = "WINDOWSHOW",
 		callback = function()
 			self:_upgrade(upgrades[1].url)
 		end,
 	})
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 	menu:setHeaderWidget(text)
 	window:addWidget(menu)
@@ -297,6 +306,9 @@ function _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 			end,
 		})
 	end
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 	return window
 end
@@ -373,6 +385,9 @@ function _chargeBattery(self)
 
 	local help = Textarea("help_text", self:string("UPDATE_BATTERY_HELP"))
 	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -499,6 +514,9 @@ function _upgradeFailed(self)
 
 	local help = Textarea("help_text", self:string("UPDATE_FAILURE_HELP"))
 	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

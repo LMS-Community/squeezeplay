@@ -392,6 +392,9 @@ function _squeezenetworkError(self, squeezenetwork, message)
 		Framework:playSound("WINDOWSHOW")
 		appletManager:callService("supportMenu")
 	end)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 
 	window:addTimer(1000, function()
@@ -500,8 +503,6 @@ function _setupDone(self, setupDone, registerDone)
 	settings.registerDone = registerDone
 	self:storeSettings()
 
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
 end
 
 

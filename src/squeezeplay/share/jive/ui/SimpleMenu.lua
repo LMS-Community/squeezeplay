@@ -679,13 +679,6 @@ function _layout(self)
 			return
 		end
 
-		--textarea specific - gives tighter bounds - is a hack really I think I need headerWidget getPreferredBounds().h - headerWidget.padding top and bottom, but padding is not exposed to lua
-		if oo.instanceof(self.headerWidget, Textarea) then
-
-			widgetHeight = self.headerWidget.numLines * self.headerWidget.lineHeight
-		end
-		--textarea specific end
-
 		local virtualItemCount = math.ceil(widgetHeight/self.itemHeight)   --todo: might want padding
 		if virtualItemCount ~= self.virtualItemCount then
 			--happens on first load and also on a skin reload where virtual
@@ -693,6 +686,10 @@ function _layout(self)
 
 			self.virtualItemCount = virtualItemCount
 			for i = 1, virtualItemCount do
+				local style = "item_blank"
+				if i == virtualItemCount then
+					style = "item_blank_bottom"
+				end
 				self:insertItem({
 					id = "_HEADER_" .. i,
 					text = "",

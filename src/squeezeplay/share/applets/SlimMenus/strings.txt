@@ -3,12 +3,12 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 MENUS_MY_MUSIC
-	CS	Moje hudba
+	CS	Hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Musiikkilähde
+	FI	Omat musiikkitiedostot
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -21,7 +21,18 @@ MENUS_INTERNET_RADIO
 	EN	Internet Radio
 
 MENUS_OTHER_LIBRARY
+	CS	Jiná knihovna
+	DA	Andre biblioteker
+	DE	Andere Musiksammlung
 	EN	Other Library
+	ES	Otra biblioteca
+	FI	Toinen kirjasto
+	FR	Other Library
+	IT	Altra libreria
+	NL	Andere bibliotheek
+	PL	Inna biblioteka
+	RU	Другая медиатека
+	SV	Annat bibliotek
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu
@@ -69,5 +80,5 @@ SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
 	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
 
 INSTALL_SC_TEXT
-	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.\n\n- Insert and SD card into the SD slot.\n\n- Connect a storage device to the USB port.
+	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.\n\n- Insert a SD card into the SD slot.\n\n- Connect a storage device to the USB port.
 

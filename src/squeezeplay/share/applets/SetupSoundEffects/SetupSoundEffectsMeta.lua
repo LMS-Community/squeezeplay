@@ -53,7 +53,7 @@ function registerApplet(meta)
 	meta:registerService("loadSounds")
 
 	-- add a menu to load us
-	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'settingsAudio', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
 
 	-- The startup sound needs to be played with the minimum
 	-- delay, load and play it first

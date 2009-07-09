@@ -3,10 +3,47 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CRASH_TITLE
+	CS	Pád systému
+	DA	Systemnedbrud
+	DE	Systemabsturz
 	EN	System crash
+	ES	Bloqueo del sistema
+	FI	Järjestelmä kaatui
+	FR	Panne du système
+	IT	Arresto anomalo del sistema
+	NL	Systeemcrash
+	NO	Systemkrasj
+	PL	Zawieszenie systemu
+	RU	Сбой системы
+	SV	Systemkrasch
 
 CRASH_TEXT
+	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
+	DA	Systemet gik ned, og der er sendt en logfil til analyse hos Logitech.
+	DE	Es wurd ein Systemabsturz erkannt. Eine Protokolldatei wird an Logitech zur Analyse gesendet.
 	EN	A system crash has been detected. A log file is being sent to Logitech for analysis.
+	ES	Se ha detectado un bloqueo del sistema. Se está enviando un archivo de registro a Logitech para analizarlo.
+	FI	Havaittiin järjestelmän kaatuminen. Logitechille lähetetään lokitiedosto analysoitavaksi.
+	FR	Une panne du système a été détectée. Un fichier journal a été envoyé à Logitech pour analyse.
+	IT	È stato rilevato un arresto anomalo del sistema. Verrà inviato un file di registro a Logitech per essere analizzato.
+	NL	Er is een systeemcrash gedetecteerd. Er wordt een logbestand naar Logitech gestuurd ter analyse.
+	NO	Vi har registrert et systemkrasj. En loggfil sendes til Logitech for analysering.
+	PL	Wykryto zawieszenie systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
+	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
+	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
 
 CRASH_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
 	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+

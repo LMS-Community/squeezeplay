@@ -21,8 +21,7 @@ my $convertCommand = "/opt/local/bin/convert";
 
 # define skins and dimensions for each
 my $resize = { 
-		'selected'	=>	41,
-		'off'      =>	37,
+		'off'      =>	41,
 };
 
 
@@ -47,10 +46,12 @@ sub convert_files {
 	#for my $file (sort keys %$assets) {
 	for my $f (@iconConvertList) {
 		my $file = $assetDir . "/" . $f;
+		next unless -e $file;
 		for my $skin (sort keys %$resize) {
 			my $size = $resize->{$skin};
 			my $basename = fileparse($file, qr/\.[^.]*/);
 			my $filename = $resizedIconDir . "/" . $f;
+			# $skin is never 'selected' now, but this is what we'd do if it were
 			if ($skin eq 'selected') {
 				$filename = $resizedIconDir . "/" . $basename . "_" . $skin . ".png";
 			}
@@ -114,15 +115,6 @@ sub get_assets {
 		}
 	}
 	return \%return;
-}
-
-sub copy_assets {
-	my $assets = shift;
-	for my $image (@$assets) {
-		my $newImage = $image;
-		$newImage =~ s/$assetDir/$resizedIconDir/;
-		copy($image, $newImage);
-	}
 }
 
 sub get_icon_list {

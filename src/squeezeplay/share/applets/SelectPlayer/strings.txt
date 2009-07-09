@@ -19,14 +19,14 @@ SELECT_PLAYER
 
 SQUEEZEBOX_SETUP
 	CS	Nastavit přijímač
-	DA	Indstillinger for Receiver
-	DE	Squeezebox einrichten
+	DA	Konfiguration af modtager
+	DE	Receiver einrichten
 	EN	Set Up Receiver
-	ES	Configuración de Squeezebox
+	ES	Configuración de receptor
 	FI	Ota vastaanotin käyttöön
-	FR	Configuration de la Squeezebox
-	IT	Configura Squeezebox
-	NL	Squeezebox instellen
+	FR	Configuration du récepteur
+	IT	Configura Receiver
+	NL	Ontvanger instellen
 	NO	Konfigurer mottaker
 	PL	Skonfiguruj odbiornik
 	RU	Установить ресивер

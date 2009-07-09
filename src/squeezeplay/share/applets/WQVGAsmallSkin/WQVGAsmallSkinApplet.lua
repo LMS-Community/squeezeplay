@@ -744,6 +744,10 @@ function skin(self, s)
 		font = _boldfont(250),
 	}
 
+	s.menu_hidden = _uses(s.menu, {
+		hidden = 1,
+	})
+	
 	s.item = {
 		order = { "icon", "text", "arrow" },
 		padding = { ITEM_LEFT_PADDING, 0, 8, 0 },
@@ -943,6 +947,7 @@ function skin(self, s)
 
 	s.text = {
 		w = screenWidth,
+		h = WH_FILL,
 		padding = TEXTAREA_PADDING,
 		font = _boldfont(TEXTAREA_FONT_SIZE),
 		fg = TEXT_COLOR,
@@ -1860,6 +1865,9 @@ function skin(self, s)
 	s.region_XX = _uses(_buttonicon, { 
 		img = _loadImage(self, "IconsResized/icon_region_other" .. skinSuffix),
 	})
+	s.icon_help = _uses(_buttonicon, { 
+		img = _loadImage(self, "IconsResized/icon_help" .. skinSuffix),
+	})
 	s.wlan = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_wireless" .. skinSuffix),
 	})
@@ -1932,7 +1940,7 @@ function skin(self, s)
         })
 
         s.icon_popup_shuffle2 = _uses(_popupicon, {
-                img = _loadImage(self, "Icons/icon_popup_box_shuffle_ablum.png"),
+                img = _loadImage(self, "Icons/icon_popup_box_shuffle_album.png"),
         })
 
 	s.icon_popup_repeat0 = _uses(_popupicon, {
@@ -2001,6 +2009,9 @@ function skin(self, s)
 	})
 
 	-- misc home menu icons
+	s.hm_appletImageViewer = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+	})
 	s.hm_appletAppGuide = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
 	})
@@ -2013,6 +2024,9 @@ function skin(self, s)
 	s.hm_settings = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
 	})
+	s.hm_advancedSettings = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_adv" .. skinSuffix),
+	})
 	s.hm_radio = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
 	})
@@ -2020,6 +2034,9 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
 	})
 	s.hm__myMusic = _uses(s.hm_myMusic)
+   	s.hm_otherLibrary = _uses(_buttonicon, {
+                img = _loadImage(self, "IconsResized/icon_ml_other_library" .. skinSuffix),
+        })
 	s.hm_myMusicSelector = _uses(s.hm_myMusic)
 
 	s.hm_favorites = _uses(_buttonicon, {
@@ -2062,10 +2079,12 @@ function skin(self, s)
 	s.hm_myMusicSearch = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
 	})
-	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicSearch)
-	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicSearch)
-	s.hm_myMusicSearchSongs     = _uses(s.hm_myMusicSearch)
-	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
+	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
+	s.hm_myMusicSearchSongs     = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+	})
+	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
 	s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
 	s.hm_homeSearchRecent       = _uses(s.hm_myMusicSearch)
 
@@ -2464,6 +2483,16 @@ function skin(self, s)
 	s.debug_canvas = {
 			zOrder = 9999
 	}
+
+        s.demo_text = {
+                font = _boldfont(18),
+                position = LAYOUT_SOUTH,
+                w = screenWidth,
+                align = 'center',
+                padding = { 6, 0, 6, 10 },
+                fg = TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+        }
 
 
 end

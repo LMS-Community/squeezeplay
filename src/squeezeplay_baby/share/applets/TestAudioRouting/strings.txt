@@ -1,0 +1,16 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+TEST_AUDIO_ROUTING
+	EN	Audio Routing
+
+ENABLE_LINE_IN_PASSTHROUGH
+	EN	Line In Passthrough
+
+LINE_IN_SENSE
+	EN	Line In Sense
+
+HEADPHONE_SENSE
+	EN	Headphone Sense
+

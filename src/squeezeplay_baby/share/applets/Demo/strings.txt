@@ -1,0 +1,194 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+DEMO
+	EN	In-store Demo
+
+DEMO_START_DEMO
+	EN	Start Demo
+
+DEMO_START_DEMO_WARNING
+	EN	Warning: after starting this demo, the ONLY way to restore this device to a normally functioning squeezebox is through a factory reset. This can be accomplished by holding the + button down continuously while plugging in and through the boot sequence.
+
+DEMO_ERROR
+	EN	Error
+
+DEMO_WRONG_CODE
+	EN	Wrong code
+
+DEMO_ENTER_CODE
+	EN	In-store Demo: Enter Code
+
+DEMO_VOLUME
+	CS	Hlasitost (%s)
+	DA	Lydstyrke (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
+
+DEMO_VOLUME_MUTED
+	CS	Hlasitost  (ztlumeno)
+	DA	Volumen (lyden er slået fra)
+	DE	Lautstärke (Stumm)
+	EN	Volume (Muted)
+	ES	Volumen (silenciado)
+	FI	Äänenvoimakkuus (mykistetty)
+	FR	Volume (SOURDINE)
+	IT	Volume (DISATTIVATO)
+	NL	Volume (gedempt)
+	NO	Volum (av)
+	PL	Głośność (wyciszona)
+	RU	Громкость (приглушенная)
+	SV	Volym (av)
+
+SLIDE_01
+	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
+	FR	Squeezebox™ Radio\nRadio Internet Wi-Fi
+	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
+	SV	Squeezebox™ Radio\nWi-Fi Internet Radio
+	DA	Squeezebox™ Radio\nWi-Fi Internetradio
+	ES	Squeezebox™ Radio\nRadio por internet vía WiFi
+	IT	Squeezebox™ Radio\nWi-Fi Internet Radio
+	DE	Squeezebox™ Radio\nWLAN-Internetradio
+	NL	Squeezebox™ Radio\nWi-Fi Internet Radio
+	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
+	PL	Squeezebox™ Radio\ Radio Internetowe
+	RU	Squeezebox™ Radio\Wi-Fi Интернет-радио
+
+SLIDE_02
+	EN	Discover a world of digital music.
+	FR	Découvrez un monde de musique digitale. 
+	FI	Koe digitaalisen musiikin maailma.
+	SV	Upptäck en värld av digital musik.
+	DA	Opdag en verden af digital music.
+	ES	Descubra el mundo de la música digital.
+	IT	Scopri un mondo di musica digitale.
+	DE	Entdecken Sie eine Welt voll digitaler Musik. 
+	NL	Ontdek digital music.
+	NO	Opplev en verden av digital musikk.
+	PL	Odkryj świat cyfrowej muzyki.
+	RU	Открой для себя мир цифровой музыки.
+
+SLIDE_03
+	EN	From thousands of free Internet radio stations…
+	FR	De milliers de stations de radio Internet gratuites…
+	FI	Tuhansien ilmaisten Internet radiokanavien joukosta…
+	SV	Från tusentals gratis webradiokanaler…
+	DA	Fra tusinder af gratis internet radiostationer…
+	ES	Desde miles de emisoras de radio gratuitas por internet…
+	IT	Migliaia di stazioni radio…
+	DE	Von Tausenden kostenlosen Internetradiosendern… 
+	NL	Duizenden gratis Internet Radio stations…
+	NO	Fra tusenvis av gratis radiostasjoner på internet…
+	PL	Od tysiąca darmowych, Internetowych stacji radiowych…
+	RU	Тысячи бесплатных радио-станций в Интернет…
+
+SLIDE_04
+	EN	…to your own personal music collection…
+	FR	…à votre collection de musique personnelle…
+	FI	…omaan musiikkikokoelmaasi…
+	SV	…till din egen personliga musik…
+	DA	…til din egen personlige musiksamling…
+	ES	…hasta su propia colección personal de música…
+	IT	…La Tua Collezione di musica personale… 
+	DE	…über Ihre ganz persönliche Musiksammlung…
+	NL	…je eigen muziek verzameling…
+	NO	…til din egen personlige musikk kolleksjon…
+	PL	…do Twojej prywatnej kolekcji muzyki…
+	RU	…Тысячи бесплатных радио-станций в Интернет…
+
+SLIDE_05
+	EN	…to the hottest online music services.
+	FR	…au meilleurs services de musique en ligne.  
+	FI	…suosituimpiin online musiikkipalveluihin…
+	SV	…till de hetaste online musiktjänsterna.
+	DA	…til de bedste online musiktjenester.
+	ES	…e incluso los servicios de música online más actuales.
+	IT	…I servizi online piu in voga.
+	DE	…bis hin zu den heißesten Online-Musik-Diensten.
+	NL	…de beste online muziek services.
+	NO	…til de mest spennende online musikk tjenester.
+	PL	…do najlepszych Internetowych usług muzycznych.
+	RU	…с использованием передовых музыкальных онлайн-сервисов.
+                
+SLIDE_06
+	EN	A virtually unlimited music collection.
+	FR	Une collection de musique virtuellement illimitée.
+	FI	Käytännössä rajoittamaton musiikkikokoelma.
+	SV	En nästan obegränsad musiksamling.
+	DA	En nærmest ubegrænset musiksamling.
+	ES	Una colección de música virtualmente ilimitada.
+	IT	Una collezione di musica quasi illimitata.
+	DE	Eine nahezu unbegrenzte Musiksammlung.
+	NL	Muziek zonder grenzen.
+	NO	En nesten ubegrenset tillgang til musikk.
+	PL	Nieskończona kolekcja muzyki.
+	RU	Виртуальная, бесконечная музыкальная коллекция.
+
+SLIDE_07
+	EN	Play all your music. Even from your iPod™.
+	FR	Jouez toute votre musique. Même depuis votre iPod™.
+	FI	Soita kaikkea musiikkiasi. Jopa iPodiltasi.
+	SV	Spela all din musik. Även från din iPod™.
+	DA	Afspil alt dit music. Selv fra din iPod™.
+	ES	Toda su música a su alcance. Incluso la de su iPod™.
+	IT	Ascolta tutta la tua musica. Persino dal tuo iPod™.
+	DE	Hören Sie all Ihre Musik. Auch die von Ihrem iPod™.
+	NL	Draai al je muziek, ook van je iPod™.
+	NO	Spill all din musikk. Også fra din iPod™.
+	PL	Odtwarzaj całą swoją muzykę. Nawet z Twojego iPoda™.
+	RU	Слушай любимую музыку. Даже с iPod™.
+
+
+SLIDE_08
+	EN	Internet Radio. Listen in any room.
+	FR	Radio Internet. Écoutez ou vous voulez. 
+	FI	Internet radio. Kuuntele missä tahansa huoneessa.
+	SV	Internet Radio. Lyssna i vilket rum som helst.
+	DA	Lyt til internetradio i ethvert rum.
+	ES	Radio por internet. Escuche su música en cualquier rincón de la casa.
+	IT	Radio Internet, ascolta ovunque in casa.
+	DE	Internetradio. Hören Sie es in jedem Raum.
+	NL	Internet Radio, overal.
+	NO	Internett Radio. Lytt i alle rom.
+	PL	Radio Internetowe w każdym pokoju.
+	RU	Интернет-радио. Слушай в любой комнате.
+
+SLIDE_09
+	EN	Small package. Big Sound.
+	FR	Design compact, son puissant.
+	FI	Pieni koko. Iso soundi.
+	SV	Litet paket. Stort ljud.
+	DA	Lille pakke. Stor lyd.
+	ES	Un pequeño reproductor. Un gran sonido.
+	IT	Piccole dimensioni. Grande suono.
+	DE	Kleines Gehäuse. Großer Sound.  
+	NL	Compact en een fantastisch geluid.
+	NO	Liten i størrelse. Kraftig lyd.
+	PL	Kompaktowe rozmiary. Ponadprzeciętna jakość dźwięku.
+	RU	Небольшие габариты. Превосходный звук.
+
+SLIDE_10
+	EN	\n
+	FR	\n
+	FI	\n
+	SV	\n
+	DA	\n
+	ES	\n
+	IT	\n
+	DE	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+
+

@@ -2,7 +2,7 @@
 local tonumber, tostring = tonumber, tostring
 
 -- board specific driver
-local baby_bsp               = require("baby_bsp")
+local bsp                    = require("baby_bsp")
 
 local oo                     = require("loop.simple")
 local os                     = require("os")
@@ -39,8 +39,8 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	local uuid, mac
-
+	local uuid, mac, serial
+	
 	settings = self:getSettings()
 
 	-- read device uuid
@@ -51,8 +51,17 @@ function init(self)
 				uuid = string.match(line, "UUID%s+:%s+([%x-]+)")
 				uuid = string.gsub(uuid, "[^%x]", "")
 			end
+
+			if string.match(line, "Serial") then
+				serial = string.match(line, "Serial%s+:%s+([%x-]+)")
+				self._serial = string.gsub(serial, "[^%x]", "")
+			end
 		end
 		f:close()
+	end
+
+	if not self._serial then
+		log:warn("Serial not found")
 	end
 
 	System:init({
@@ -88,20 +97,6 @@ function init(self)
 		window:show()
 	end
 
-	-- watchdog timer
-	local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-	if watchdog then
-		io.close(watchdog)
-
-		local timer = Timer(2000, function()
-			local watchdog = io.open("/var/run/squeezeplay.wdog", "w")
-			io.close(watchdog)
-		end)
-		timer:start()
-	else
-		log:warn("Watchdog timer is disabled")
-	end
-
 	-- status bar updates
 	self:update()
 	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
@@ -110,10 +105,47 @@ function init(self)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
+	Framework:addListener(EVENT_SWITCH, function(event)
+		local sw,val = event:getSwitch()
+
+		if sw == 1 then
+			-- headphone
+			self:_headphoneJack(val)
+		end
+	end)
+
+	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
 	self:storeSettings()
+end
+
+function getDefaultWallpaper(self)
+	local wallpaper = "bb_encore.png" -- default, if none found examining serial
+	if self._serial then
+		local colorCode = self._serial:sub(11,12)
+
+		if colorCode == "00" then
+			log:debug("case is black")
+			wallpaper = "bb_encore.png"
+		elseif colorCode == "01" then
+			log:debug("case is red")
+			wallpaper = "bb_encore_red.png"
+		else
+			log:warn("No case color found (assuming black) examining serial: ", self._serial )
+		end
+	end
+
+	return wallpaper
+end
+
+function _headphoneJack(self, val)
+	if val == 0 then
+		bsp:setMixer("Endpoint", "Speaker")
+	else
+		bsp:setMixer("Endpoint", "Headphone")
+	end
 end
 
 
@@ -186,14 +218,18 @@ function _updateTask(self)
 
 	local iface = Networking:activeInterface()
 
-	if iface:isWireless() then
-		-- wireless strength
-		local quality = iface:getLinkQuality()
-		iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-	else
-		-- wired
-		local status = iface:t_wpaStatus()
-		iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+	if not iface then
+		iconbar:setWirelessSignal(nil)
+	else	
+		if iface:isWireless() then
+			-- wireless strength
+			local quality = iface:getLinkQuality()
+			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+		else
+			-- wired
+			local status = iface:t_wpaStatus()
+			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+		end
 	end
 end
 

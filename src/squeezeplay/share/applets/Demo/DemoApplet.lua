@@ -1,11 +1,12 @@
 
 
 -- stuff we use
-local pairs, setmetatable, tostring, tonumber  = pairs, setmetatable, tostring, tonumber
+local ipairs, pairs, setmetatable, tostring, tonumber  = ipairs, pairs, setmetatable, tostring, tonumber
 
 local oo            = require("loop.simple")
-local string        = require("string")
 local lfs           = require("lfs")
+local math          = require("math")
+local string        = require("jive.utils.string")
 local table         = require("jive.utils.table")
 
 local Applet        = require("jive.Applet")
@@ -23,6 +24,7 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
+local Slider        = require("jive.ui.Slider")
 local Keyboard      = require("jive.ui.Keyboard")
 local Group         = require("jive.ui.Group")
 local Popup         = require("jive.ui.Popup")
@@ -42,18 +44,211 @@ local appletManager = appletManager
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+local VOLUME_STEP = 1
+
+-- volumeMap has the correct gain settings for volume settings 1-100. Based on Boom volume curve
+local volumeMap = {
+16, 18, 22, 26, 31, 36, 43, 51, 61, 72, 85, 101, 120, 142, 168, 200, 237, 281, 333, 395, 468, 555, 658, 781, 926, 980, 1037, 1098, 1162, 1230, 1302, 1378, 1458, 1543, 1634, 1729, 1830, 1937, 2050, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3328, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 6144, 6400, 6656, 7168, 7680, 7936, 8448, 8960, 9472, 9984, 10752, 11264, 12032, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19968, 20992, 22272, 23552, 24832, 26368, 27904, 29696, 31232, 33024, 35072, 37120, 39424, 41728, 44032, 46592, 49408, 52224, 55296, 58624, 61952, 65536,
+}
+
+function __init(self)
+	local obj = oo.rawnew(self, {})
+
+	obj.delta = 0
+	obj.volume = 51
+
+	obj.idleTimer = Timer(
+		30000, 
+		function()
+			_volumeAutoAdjust(obj)
+		end
+	)
+	obj.volumePrefSaver = Timer(
+		60000,
+		function()
+			_saveVolPref(obj)
+		end
+	)
+
+        return obj
+end
+
+
+function _saveVolPref(self)
+	local currentSetting = self:getSettings()['volumeSetting']
+	if currentSetting != self.volume then
+		log:info('saving volume pref for demo to: ', self.volume)
+		self:getSettings()['volumeSetting'] = self.volume
+		self:storeSettings()
+	end	
+end
+
+
+function _volumeAutoAdjust(self)
+	if self.volume > 60 then
+		log:warn('idle timeout, setting the volume to 20')
+		self.delta = 20 - self.volume 
+		_updateVolume(self, 20, true)
+		_openPopup(self)
+	end
+	self.idleTimer:stop()
+end
+
+function _updateDisplay(self)
+	if self.volume <= 0 then
+		self.title:setValue(self:string("DEMO_VOLUME_MUTED"))
+		self.slider:setValue(0)
+
+	else
+		self.title:setValue(self:string("DEMO_VOLUME", tostring(self.volume) ) )
+		self.slider:setValue(self.volume)
+	end
+end
+
+function _openPopup(self)
+	if self.popup then
+		return
+	end
+
+	local popup = Popup("slider_popup")
+	popup:setAutoHide(false)
+	popup:setAlwaysOnTop(true)
+
+	local title = Label("heading", "")
+	popup:addWidget(title)
+
+        popup:addWidget(Icon('icon_popup_volume'))
+
+	--slider is focused widget so it will receive events before popup gets a chance
+	local slider = Slider("volume_slider", -1, 100, self.volume,
+                              function(slider, value, done)
+					self.delta = value - self.volume
+					self:_updateVolume(value)
+                              end)
+
+	popup:addWidget(Group("slider_group", {
+		slider = slider,
+	}))
+
+	popup:focusWidget(nil)
+	popup:addListener(ACTION | EVENT_KEY_ALL,
+			  function(event)
+				  return self:event(event)
+			  end)
+
+	-- we handle events
+	popup.brieflyHandler = false
+
+	self:_windowListeners(popup)
+
+	-- open the popup
+	self.popup = popup
+	self.title = title
+	self.slider = slider
+
+	_updateDisplay(self)
+
+	popup:showBriefly(3000,
+		function()
+
+			--This happens on ANY window pop, not necessarily the popup window's pop
+			local isPopupOnStack = false
+			local stack = Framework.windowStack
+			for i in ipairs(stack) do
+				if stack[i] == popup then
+					isPopupOnStack = true
+					break
+				end
+			end
+
+			--don't clear it out if the pop was from another window
+			if not isPopupOnStack then
+				self.popup = nil
+			end
+		end,
+		Window.transitionPushPopupUp,
+		Window.transitionPushPopupDown
+	)
+end
+
+function _windowListeners(self, window)
+       -- don't allow anything but vol up and vol down
+        window:ignoreAllInputExcept({ "volume_up", "volume_down" },
+                        function(actionEvent)
+                            return EVENT_CONSUME
+                        end
+        )
+        -- there is no escape, resistance is futile!
+        window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
+
+        window:addActionListener('volume_up', self, volEvent)
+        window:addActionListener('volume_down', self, volEvent)
+end
+
+
+function _updateVolume(self, force)
+
+	if not self.popup and not force then
+		return
+	end
+	-- keep the popup window open
+	self.popup:showBriefly()
+
+        local new
+
+	new = math.abs(self.volume) + self.delta
+
+        if new > 100 then
+                new = 100
+        elseif new <= VOLUME_STEP and new > 0 then
+                new = 1 -- lowest volume
+        elseif new < 0 then
+                new = 0
+        end
+
+	if self.volume == new then
+		return
+	end
+
+	local setVolume = volumeMap[new]
+	log:info('set volume to : ', new, '(', setVolume, ')')
+	decode:audioGain(setVolume, setVolume)
+
+	self.delta  = 0
+	self.volume = new
+	self.idleTimer:restart()
+
+	_updateDisplay(self)
+
+end
+
+function volEvent(self, volumeEvent)
+	if not self.popup then
+		_openPopup(self)
+	end
+
+	if volumeEvent:getAction() == 'volume_up' then
+		self.delta = VOLUME_STEP
+	else
+		self.delta = -1 * VOLUME_STEP
+	end
+
+	_updateVolume(self)
+	return EVENT_CONSUME
+end
 
 -- main setting menu
 function enableDemo(self)
 	-- keyboard window to enter code
-        self.window = Window('text_list', self:string("DEMO"))
+        self.window = Window('text_list', self:string("DEMO_ENTER_CODE"))
 	local input = Textinput("textinput", "",
 		function(_, value)
 			self.code = value
 			self.window:playSound("WINDOWSHOW")
 			confirmDemo(self)
 			return true
-		end)
+		end, 
+		'0123456789')
 	local keyboard = Keyboard("keyboard", 'ip', input)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
@@ -64,17 +259,21 @@ function enableDemo(self)
 	self.window:show()
 end
 
-function confirmDemo(self)
+function jumpToInStoreDemo(self)
+	confirmDemo(self, true)
+end
+
+function confirmDemo(self, force)
 
 	-- the code is '1234'
-	if tonumber(self.code) == 1234 then
-		local window = Window("information", self:string("DEMO_START_DEMO"))
+	if tonumber(self.code) == 1234 or force == true then
+		local window = Window("text_list", self:string("DEMO_START_DEMO"))
 		window:setAllowScreensaver(false)
 
 		local menu = SimpleMenu("menu", items)
 		menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-		local textArea = Textarea('text', self:string('DEMO_START_DEMO_WARNING'))
-		window:addWidget(textArea)
+		local textArea = Textarea('help_text', self:string('DEMO_START_DEMO_WARNING'))
+		menu:setHeaderWidget(textArea)
 		window:addWidget(menu)
 	
 		menu:addItem({
@@ -82,6 +281,10 @@ function confirmDemo(self)
 			sound = "WINDOWSHOW",
 			weight = 2,
 			callback = function(event, menuItem)
+				-- add setting to immediately start demo on boot
+				self:getSettings()['startDemo'] = true
+				self:storeSettings()
+
 				self:startDemo()
 			end,
 		})
@@ -99,20 +302,24 @@ end
 
 function startDemo(self)
 
-	-- add setting to immediately start demo on boot
-	self:getSettings()['startDemo'] = true
-	self:storeSettings()
-
 	self.currentImage = 1
-	self.screenWidth, self.screenHeight = Framework:getScreenSize()
 
 	self.mp3file = "applets/Demo/content/demo.mp3"
 
-	self.slides = {}
+	self.slides  = {}
+	self.strings = {}
 	--each entry in slides directory is a slide to display
 	for entry in self:readdir("slides") do
 		table.insert(self.slides, entry)
+
+		local substrings = string.split('/', entry)
+		local filename   = substrings[#substrings]
+		substrings       = string.split('%.', filename)
+		filename         = substrings[1]
+		local token      = string.upper(filename)
+		table.insert(self.strings, token)
 	end
+
 	if #self.slides > 0 then
 		self:_playSlides()
 		if System:findFile(self.mp3file) then
@@ -126,7 +333,7 @@ end
 
 function _playSlides(self)
 	self:_showNextSlide()
-	self.nextSlideTimer = Timer(3000, 
+	self.nextSlideTimer = Timer(5000, 
 		function()
 			self:_nextImage()
 			self:_showNextSlide()
@@ -145,6 +352,7 @@ end
 function _showNextSlide(self)
 	local slide = self.slides[self.currentImage]
 
+	self.screenWidth, self.screenHeight = Framework:getScreenSize()
 	local totImg = Surface:newRGBA(self.screenWidth, self.screenHeight)
 	totImg:filledRectangle(0, 0, self.screenWidth, self.screenHeight, 0x000000FF)
 
@@ -152,10 +360,14 @@ function _showNextSlide(self)
 	local w, h = image:getSize()
 	local x, y = (self.screenWidth - w) / 2, (self.screenHeight - h) / 2
 	-- draw image
-	image:blit(totImg, x, y)
+	image:blit(totImg, 0, 0)
 
 	local window = Window('window')
 	window:addWidget(Icon("background", totImg))
+
+	-- draw text
+	local label = Textarea('demo_text', self:string(self.strings[self.currentImage]))
+	window:addWidget(label)
 
 	-- replace the window if it's already there
 	if self.window then
@@ -167,11 +379,7 @@ function _showNextSlide(self)
 		self.window:show(Window.transitionFadeIn)
 	end
 
-	self.window:ignoreAllInputExcept({ "volume_up", "volume_down" },
-                        function(actionEvent)
-                            return EVENT_CONSUME
-                        end
-	)
+	self:_windowListeners(self.window)
 	
 	-- FIXME: add handlers for volume_up and volume_down to adjust 
 	-- volume up (to 100?) and down (to something a bit higher than fully off?)
@@ -190,10 +398,20 @@ function _playTone(self)
        	end
 			
 	if localPlayer then
-		-- fixed volume (50%)
-		decode:audioGain(0x01000, 0x01000)
-
-		localPlayer:playFileInLoop(self.mp3file)
+		if self:getSettings()['volumeSetting'] then
+			self.volume = self:getSettings()['volumeSetting']
+		end
+	
+		-- hack to give 2 second delay for startup sound before kicking in demo audio
+		local timer = Timer(2000, 
+			function()
+				localPlayer:playFileInLoop(self.mp3file)
+				decode:audioGain(volumeMap[self.volume], volumeMap[self.volume])
+			end,
+			true)
+		timer:start()
+		-- also save the volume preference save timer
+		self.volumePrefSaver:start()
 	end
 end
 

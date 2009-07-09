@@ -432,11 +432,44 @@ function JiveMain:jiveMainNodes(globalStrings)
 	jiveMain:addNode( { id = '_myMusic', iconStyle = 'hm_myMusic', node = 'hidden', text = _globalStrings:str("MY_MUSIC"), weight = 50  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', iconStyle = 'hm_settings', node = 'home', noCustom = 1, text = _globalStrings:str("SETTINGS"), weight = 70, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'advancedSettings', iconStyle = 'hm_settings', node = 'settings', noCustom = 1, text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 110, titleStyle = 'settings', windowStyle = 'text_list' })
-	jiveMain:addNode( { id = 'screenSettings', iconStyle = 'hm_settingsScreen', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("FACTORY_TEST"), weight = 105, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'advancedSettings', iconStyle = 'hm_advancedSettings', node = 'settings', noCustom = 1, text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 105, titleStyle = 'settings', windowStyle = 'text_list' })
+	jiveMain:addNode( { id = 'screenSettings', iconStyle = 'hm_settingsScreen', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 60, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("FACTORY_TEST"), weight = 120, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'advancedSettingsBetaFeatures', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("BETA_FEATURES"), weight = 100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'networkSettings', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("NETWORK_NETWORKING"), weight = 100, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'settingsAudio', iconStyle = "hm_settingsAudio", node = 'settings', noCustom = 1, text = _globalStrings:str("AUDIO_SETTINGS"), weight = 40, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'settingsBrightness', iconStyle = "hm_settingsBrightness", node = 'settings', noCustom = 1, text = _globalStrings:str("BRIGHTNESS_SETTINGS"), weight = 45, titleStyle = 'settings' })
+
 
 end
+
+--[[
+
+=head2 jive.JiveMain:addHelpMenuItem()
+
+Adds a 'Help' menu item to I<menu> if the most recent input was not touch or mouse (which generally would have a help button instead)
+
+=cut
+--]]
+function JiveMain:addHelpMenuItem(menu, obj, callback, textToken, iconStyle)
+	-- only deliver an icon if specified
+	if not iconStyle then
+		iconStyle = "_BOGUS_"
+	end
+	if not Framework:isMostRecentInput("mouse") then
+		menu:addItem({
+			iconStyle = iconStyle,
+			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("GLOBAL_HELP"),
+			sound = "WINDOWSHOW",
+			callback =      function ()
+						callback(obj)
+					end,
+			weight = 100
+		})
+	end
+end
+
+
 
 -- reload
 -- 

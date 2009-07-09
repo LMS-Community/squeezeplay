@@ -79,7 +79,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS([malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog])
+AC_CHECK_FUNCS([malloc calloc fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog])
 
 # Test programs
 AC_ARG_ENABLE(tests,
@@ -117,6 +117,15 @@ AC_HELP_STRING([--enable-screen-rotation], [Enable the screen rotation [[default
               , enable_screen_rotation=no)
 if test x$enable_screen_rotation == xyes; then
     AC_DEFINE(SCREEN_ROTATION_ENABLED, 1, [Define for screen rotation])
+fi
+
+
+dnl broken fsync
+AC_ARG_ENABLE(fsync_workaround,
+AC_HELP_STRING([--enable-fsync-workaround], [Enable workaround for broken fsync [[default=no]]]),
+              , enable_fsync_workaround=no)
+if test x$enable_fsync_workaround == xyes; then
+    AC_DEFINE(FSYNC_WORKAROUND_ENABLED, 1, [Define for fsync workaround])
 fi
 
 

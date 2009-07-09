@@ -452,17 +452,15 @@ function setRegion(self, region)
 	end
 
 	-- save config file
-	local fh = assert(io.open("/etc/network/config", "w"))
-	fh:write("REGION=" .. region .. "\n")
-	fh:write("REGIONCODE=" .. mapping[1] .. "\n")
-	fh:close()
+	System:atomicWrite("/etc/network/config",
+		"REGION=" .. region .. "\n" ..
+		"REGIONCODE=" .. mapping[1] .. "\n")
 
 	-- set new region
 	local cmd = "/sbin/iwpriv " .. self.interface .. " setregioncode " .. mapping[1]
 	log:info("setRegion: ", cmd)
 	os.execute(cmd)
 
-	_sync()
 end
 
 
@@ -766,6 +764,24 @@ end
 
 --[[
 
+=head2 jive.net.Networking:t_addWPSNetwork(ssid)
+
+wpa_supplicant using with Atheros already adds the network
+to wpa_supplicant.conf when using WPS but it still needs to
+be added to the interfaces file
+
+=cut
+--]]
+
+function t_addWPSNetwork(self, ssid)
+	assert(Task:running(), "Networking:addNetwork must be called in a Task")
+
+	-- Set to use dhcp by default
+	self:_editNetworkInterfaces(ssid, "dhcp", "script /etc/network/udhcpc_action")
+end
+
+--[[
+
 =head2 jive.net.Networking:t_addNetwork(ssid, option)
 
 adds a network to the list of discovered networks
@@ -1056,7 +1072,6 @@ function _ifUp(self, ssid)
 		request = 'SAVE_CONFIG'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-		_sync()
 	end
 
 	-- bring interface up
@@ -1133,7 +1148,6 @@ function _ifDown(self)
 			request = 'SAVE_CONFIG'
 			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-			_sync()
 		end
 	end
 end
@@ -1180,6 +1194,7 @@ function _editAutoInterfaces(self, ssid)
 
 	log:debug('writing /etc/network/interfaces, enabling auto for ', autoInterface)
 
+	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 	local autoSet = false
@@ -1209,8 +1224,7 @@ function _editAutoInterfaces(self, ssid)
 	fi:close()
 	fo:close()
 
-	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-	_sync()
+	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
 end
 
 
@@ -1236,6 +1250,7 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 
 	log:debug('WRITING /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
 
+	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
 	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
 
@@ -1278,8 +1293,7 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 	fi:close()
 	fo:close()
 
-	os.execute("/bin/mv /etc/network/interfaces.tmp /etc/network/interfaces")
-	_sync()
+	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
 end
 
 
@@ -1576,10 +1590,6 @@ function detach(self)
 end
 
 
-function _sync()
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
-end
 
 
 --[[

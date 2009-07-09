@@ -59,7 +59,7 @@ function registerApplet(meta)
 		return
 	end
 
-	jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettings', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end))
+	jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettingsBetaFeatures', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end))
 end
 
 

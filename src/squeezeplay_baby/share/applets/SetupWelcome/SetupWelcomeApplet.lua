@@ -392,6 +392,9 @@ function _squeezenetworkError(self, squeezenetwork, message)
 		Framework:playSound("WINDOWSHOW")
 		appletManager:callService("supportMenu")
 	end)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 
 
 	window:addTimer(1000, function()
@@ -505,12 +508,17 @@ function _setupDone(self, setupDone, registerDone)
 end
 
 
+function _jumpToDemo(self)
+	appletManager:callService("jumpToInStoreDemo")
+end
+
 function setupWelcomeShow(self, setupNext)
 	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
 	window:setAllowScreensaver(false)
 
 	window:setButtonAction("rbutton", nil)
 
+	window:addActionListener('start_demo', self, _jumpToDemo)
 	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")

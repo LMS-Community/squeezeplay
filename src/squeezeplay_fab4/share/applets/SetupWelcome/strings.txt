@@ -10,7 +10,7 @@ WELCOME
 	ES	Bienvenido
 	FI	Tervetuloa
 	FR	Bienvenue
-	IT	Benvenuto
+	IT	Benvenuti
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
@@ -18,19 +18,19 @@ WELCOME
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
-	CS	Začněme vaším připojením k vaší síti.
-	DA	Lad os begynde med at slutte afspilleren til netværket.
-	DE	Jetzt stellen wir die Verbindung zum Netzwerk her.
+	CS	Vítejte do Squeezebox Touch. Začněme vaším připojením k vaší síti.
+	DA	Velkommen til Squeezebox Touch. Lad os begynde med at slutte afspilleren til netværket.
+	DE	Willkommen bei Squeezebox Touch. Jetzt stellen wir die Verbindung zum Netzwerk her.
 	EN	Welcome to Squeezebox Touch. Let's start by getting you connected to your network.
-	ES	Para empezar, nos conectaremos a la red.
-	FI	Aloitetaan yhteydenmuodostamisella verkkoosi.
-	FR	Commençons par vous connecter à votre réseau.
-	IT	Iniziamo con il collegamento alla rete.
-	NL	Ga aan de slag door verbinding te maken met je netwerk.
-	NO	La oss starte med å kople deg til nettverket.
-	PL	Rozpocznij od nawiązania połączenia z siecią.
-	RU	Начнем с подключения к сети.
-	SV	Vi börjar med att ansluta till nätverket.
+	ES	Bienvenido a Squeezebox Touch. Para empezar, nos conectaremos a la red.
+	FI	Tervetuloa Squeezebox Touchiin. Aloitetaan muodostamalla yhteys verkkoosi.
+	FR	Bienvenue dans Squeezebox Touch. Commençons par vous connecter à votre réseau.
+	IT	Benvenuti in Squeezebox Touch. Iniziamo con il collegamento alla rete.
+	NL	Welkom bij Squeezebox Touch. Ga aan de slag door verbinding te maken met je netwerk.
+	NO	Velkommen til Squeezebox Touch. La oss starte med å kople deg til nettverket.
+	PL	Squeezebox Touch — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
+	RU	Добро пожаловать в Squeezebox Touch. Начнем с подключения к сети.
+	SV	Välkommen till Squeezebox Touch. Vi börjar med att ansluta till nätverket.
 
 CONTINUE
 	CS	Pokračovat
@@ -48,7 +48,7 @@ CONTINUE
 	SV	Fortsätt
 
 DONE
-	CS	Hotovo!
+	CS	A je to!
 	DA	Det var det!
 	DE	Fertig!
 	EN	That's it!
@@ -78,7 +78,7 @@ DONE_HELP
 	SV	Nu har du tillgång till all din musik via Squeezebox!
 
 CONNECTING_TO_SN
-	CS	Připojování k 
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung zu
 	EN	Connecting to
@@ -134,7 +134,7 @@ SN_DNS_WORKED
 	NL	Een firewall of ander mechanisme lijkt je verbinding te blokkeren. Neem voor extra hulp contact op met de fabrikant van je router of met je netwerkbeheerder, of bezoek www.mysqueezebox.com/support.
 	NO	Det ser ut til at en brannmur eller liknende blokkerer tilkoplingen. Kontakt ruterprodusenten eller nettverksansvarlig hvis du trenger hjelp, eller gå til www.mysqueezebox.com/support.
 	PL	Połączenie jest blokowane przez zaporę lub inny mechanizm. Skontaktuj się z producentem routera lub administratorem sieci, aby uzyskać dalszą pomoc, albo odwiedź stronę www.mysqueezebox.com/support.
-	RU	По-видимому, брандмауэр или другой механизм блокирует подключение. За помощью обратитесь к изготовителю маршрутизатора или администратору сети либо посетите  www.mysqueezebox.com/support.
+	RU	По-видимому, брандмауэр или другой механизм блокирует подключение. Обратитесь за помощью к изготовителю маршрутизатора или администратору сети либо посетите  www.mysqueezebox.com/support.
 	SV	Det verkar som om anslutningen blockeras av en brandvägg (eller av något annat skydd). Ta kontakt med routerns tillverkare eller nätverksadministratören. Du kan också gå in på www.mysqueezebox.com/support.
 
 SN_DNS_FAILED
@@ -153,7 +153,19 @@ SN_DNS_FAILED
 	SV	Det verkar som om Internetanslutningen inte fungerar. Kontrollera att nätverket är i gång och fungerar som det ska.
 
 SN_SYSTEM_ERROR
+	CS	Došlo k systémové chybě. Zkuste znovu později.
+	DA	Der opstod en systemfejl. Prøv igen senere.
+	DE	Ein Systemfehler ist aufgetreten. Versuchen Sie es später noch einmal.
 	EN	A system error has happened. Please try again later.
+	ES	Se ha producido un error del sistema. Vuelva a intentarlo más tarde.
+	FI	Tapahtui järjestelmävirhe. Yritä myöhemmin uudelleen.
+	FR	Une erreur système s'est produite. Réessayez plus tard.
+	IT	Si è verificato un errore di sistema. Riprovare più tardi.
+	NL	Er heeft zich een systeemfout voorgedaan. Probeer het later opnieuw.
+	NO	Det har oppstått en systemfeil. Prøv igjen senere.
+	PL	Wystąpił błąd systemowy. Spróbuj ponownie później.
+	RU	Произошла системная ошибка. Повторите попытку позднее.
+	SV	Ett systemfel har inträffat. Försök igen senare.
 
 SN_TRY_AGAIN
 	CS	Zkuste připojit znovu

@@ -20,6 +20,9 @@
 #include <alsa/asoundlib.h>
 
 
+/* debug switches */
+#define TEST_LATENCY 0
+#define TEST_OUTPUT_NOISE 0
 
 #define ALSA_DEFAULT_DEVICE "default"
 #define ALSA_DEFAULT_BUFFER_TIME 30000

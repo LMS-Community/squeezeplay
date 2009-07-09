@@ -80,6 +80,8 @@ local itemMap = {
 	opmlrhapsodydirect = { "opmlrhapsodydirect", "home", 30 },
 	opmlpandora = { "opmlpandora", "home", 30 },
 	opmlsirius = { "opmlsirius", "home", 30 },
+	settingsPlaylistMode = { "settingsPlaylistMode", "advancedSettingsBetaFeatures", 100 },
+	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
 }
 
 -- legacy map of items for "app guide"
@@ -367,7 +369,7 @@ self:_addNode({
   weight = 20,
   id = "radios",
   iconStyle = 'hm_radio',
-  text = "Internet Radio (SC)",
+  text = "Internet Radio",
   node = "hidden",
 }, isMenuStatusResponse)
 
@@ -442,6 +444,10 @@ end
 			end
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
+			if item.node == "appguide" then
+				item.guide = true
+			end
+
 			_massageItem(item, item)
 
 			-- a problem, we lose the icons..
@@ -452,13 +458,7 @@ end
 			--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 			--BEGIN
 			if item.id == "radio" then
-				--temp mark for debugging purposes
-				item.text = item.text .. " (SN)"
 				item.node= "hidden"
-			end
-			if item.id == "radios" then
-				--temp mark for debugging purposes
-				item.text = item.text .. " (SC)"
 			end
 			--END temp hack until we resolve SN/SC radios discrepency
 
@@ -466,6 +466,12 @@ end
 				--ignore, playerpower no longer shown to users since we use power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
+			elseif item.id == "settingsPlayerNameChange" and not isMenuStatusResponse then
+				--ignore, only applicable to currently selected server
+			elseif item.id == "settingsSleep" and not isMenuStatusResponse then
+				--ignore, only applicable to currently selected server
+			elseif item.id == "settingsAudio"  then
+				--ignore, now shown locally
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
 					self:_addNode(item, isMenuStatusResponse)
@@ -513,10 +519,12 @@ end
 									_lockedItem = false
 								end)
 
-							_lockedItem = item
-							jiveMain:lockItem(item, function()
-								appletManager:callService("browserCancel", step)
-							end)
+							if not v.input then -- no locks for an input item, which is immediate
+								_lockedItem = item
+								jiveMain:lockItem(item, function()
+									appletManager:callService("browserCancel", step)
+								end)
+							end
 						end
 
 				item.callback = function()
@@ -525,6 +533,7 @@ end
 					 -- if not, can SN provide the content?
 					 -- if so, switch server to SN and provide content
 
+					--todo check canLocalSCServe() for things that are only on SN
 
 					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 --					original: if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then

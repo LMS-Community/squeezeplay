@@ -140,6 +140,7 @@
 				AdditionalDependencies="ws2_32.lib Iphlpapi.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="0"
@@ -209,6 +210,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\log.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\audio\mqueue.h"
 				>
 			</File>
@@ -260,10 +265,6 @@
 			</File>
 			<File
 				RelativePath="..\src\audio\decode\decode_sample.c"
-				>
-			</File>
-			<File
-				RelativePath="..\src\audio\decode\decode_tones.c"
 				>
 			</File>
 			<File
@@ -360,6 +361,10 @@
 			</File>
 			<File
 				RelativePath="..\src\ui\jive_window.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\log.c"
 				>
 			</File>
 			<File

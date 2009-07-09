@@ -108,6 +108,7 @@ function _showMusicSourceList(self)
 	window:setAllowScreensaver(false)
 
 	menu:addActionListener("back", self,  function ()
+							window:playSound("WINDOWHIDE")
 							self:_cancelSelectServer()
 							window:hide()
 
@@ -458,6 +459,11 @@ function hideConnectingToServer(self)
 			log:info("waiting for ", self.waitForConnect.player, " on ", self.waitForConnect.server)
 
 			if self.waitForConnect.server == self.waitForConnect.player:getSlimServer() then
+				if self.waitForConnect.server.upgradeForce then
+					--finish up, don't steal focus away from upgrade applet, which will have an upgrade window up in this state
+					self:_cancelSelectServer(true)
+					return
+				end
 
 				if self.playerConnectedCallback then
 					local callback = self.playerConnectedCallback
@@ -619,13 +625,15 @@ function _playerRegisterFailed(self, error)
 end
 
 
-function _cancelSelectServer(self)
+function _cancelSelectServer(self, noHide)
 	log:info("Cancelling Server Selection")
 
 	self.ignoreServerConnected = true
 	self.waitForConnect = nil
 	self.playerConnectedCallback = nil
-	self:hideConnectingToServer()
+	if not noHide then
+		self:hideConnectingToServer()
+	end
 
 end
 

@@ -7,6 +7,7 @@ local oo                     = require("loop.base")
 local os                     = require("os")
 local math                   = require("math")
 
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
@@ -43,12 +44,12 @@ module(..., oo.class)
 
 
 local function _updateDisplay(self)
-	if self.volume < 0 then
+	if self.volume <= 0 then
 		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME_MUTED"))
 		self.slider:setValue(0)
 
 	else
-		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME"))
+		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME", tostring(self.volume) ) )
 		self.slider:setValue(self.volume)
 	end
 end
@@ -69,8 +70,10 @@ local function _openPopup(self)
 	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
 
-	local title = Label("text", "")
+	local title = Label("heading", "")
 	popup:addWidget(title)
+
+        popup:addWidget(Icon('icon_popup_volume'))
 
 	--slider is focused widget so it will receive events before popup gets a chance
 	local slider = Slider("volume_slider", -1, 100, self.volume,
@@ -80,9 +83,7 @@ local function _openPopup(self)
                               end)
 
 	popup:addWidget(Group("slider_group", {
-		min = Icon("button_volume_min"),
 		slider = slider,
-		max = Icon("button_volume_max")
 	}))
 
 	popup:focusWidget(nil)
@@ -111,7 +112,7 @@ local function _openPopup(self)
 end
 
 
-function _updateVolume(self, mute, directSet)
+function _updateVolume(self, mute, directSet, noAccel)
 	if not self.popup then
 		self.timer:stop()
 		return
@@ -137,28 +138,55 @@ function _updateVolume(self, mute, directSet)
 	if directSet then
 		new = math.floor(directSet)
 	else
-		-- accelation
-		local now = Framework:getTicks()
-		if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
-			self.accelCount = 0
+		if noAccel then
+			if self.volume == 0 and self.delta > 1 then
+				--allow lowest possible level (1) from 0 (for use in cases like knob where volume moves in multiple steps/event
+				self.delta = 1
+			end
+
+			new = math.abs(self.volume) + self.delta
+			local now = Framework:getTicks()
+			if (now - self.lastUpdate) < 350 then
+				--add any additional delta suppressed by rate limiting
+
+				new = new + self.rateLimitDelta
+				self.rateLimitDelta = 0
+			else
+				--beyond time where built up delta from rate limiting is abandoned
+				self.rateLimitDelta = 0
+			end
+			self.lastUpdate = now
+		else
+			-- accelation
+			local now = Framework:getTicks()
+			if self.accelDelta ~= self.delta or (now - self.lastUpdate) > 350 then
+				self.accelCount = 0
+			end
+
+			self.accelCount = math.min(self.accelCount + 1, 20)
+			self.accelDelta = self.delta
+			self.lastUpdate = now
+
+			-- change volume
+			local accel = self.accelCount / 4
+			new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 		end
-
-		self.accelCount = math.min(self.accelCount + 1, 20)
-		self.accelDelta = self.delta
-		self.lastUpdate = now
-
-		-- change volume
-		local accel = self.accelCount / 4
-		new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 	end
 
 	if new > 100 then
 		new = 100
+	elseif new > 0 and self.delta < 0 and new <= math.abs(self.delta) then
+		new = 1 -- when negative delta is greater than 1, always allow for stop at lowest value, so lowest volume can be heard, used for instanve by volume_down ACTION handling which goes down in steps
 	elseif new < 0 then
 		new = 0
 	end
+	local remoteVolume = self.player:volume(new)
 
-	self.volume = self.player:volume(new) or self.volume
+	if not remoteVolume then
+		self.rateLimitDelta = self.rateLimitDelta + self.delta
+	end
+
+	self.volume = remoteVolume or self.volume
 	_updateDisplay(self)
 end
 
@@ -169,6 +197,7 @@ function __init(self, applet)
 	obj.applet = applet
 	obj.muting = false
 	obj.lastUpdate = 0
+	obj.rateLimitDelta = 0
 	obj.timer = Timer(100, function()
 				       _updateVolume(obj)
 			       end)
@@ -207,13 +236,13 @@ function event(self, event)
 		local action = event:getAction()
 		if action == "volume_up" then
 			self.delta = 1
-			_updateVolume(self)
+			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
 		end
 		if action == "volume_down" then
 			self.delta = -1
-			_updateVolume(self)
+			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
 		end
@@ -236,8 +265,22 @@ function event(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
+		--Baby volume keys have no down/up and must have unique handling
+		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:getMachine() == "baby" then
+			--handle keyboard volume change
+			if (keycode == KEY_VOLUME_UP) then
+				self.delta = 1
+				_updateVolume(self, nil, nil, true)
+				self.delta = 0
+			end
+			if (keycode == KEY_VOLUME_DOWN) then
+				self.delta = -1
+				_updateVolume(self, nil, nil, true)
+				self.delta = 0
+			end
+		end
 
-		-- volume + and - for mute
+		-- volume + and - pressed at same time for mute
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
 			_updateVolume(self, self.volume >= 0)
 			return EVENT_CONSUME

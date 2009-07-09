@@ -18,12 +18,12 @@ SETTINGS
 	SV	Inställningar
 
 MY_MUSIC
-	CS	Moje hudba
+	CS	Hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Musiikkilähde
+	FI	Omat musiikkitiedostot
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -31,6 +31,36 @@ MY_MUSIC
 	PL	Moja muzyka
 	RU	Моя музыка
 	SV	Min musik
+
+GLOBAL_HELP
+	CS	Nápověda
+	DA	Hjælp
+	DE	Hilfe
+	EN	Help
+	ES	Ayuda
+	FI	Ohje
+	FR	Aide
+	IT	Guida
+	NL	Help
+	NO	Hjelp
+	PL	Pomoc
+	RU	Справка
+	SV	Hjälp
+
+GLOBAL_SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Informationen
+	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная помощь
+	SV	Ytterligare hjälp
 
 REMOTE_SETTINGS
 	CS	Nastavení ovladače
@@ -93,11 +123,47 @@ ADVANCED_SETTINGS
 	NO	Avansert
 	PL	Zaawansowane
 	RU	Дополнительно
-	SV	Avancerad
+	SV	Avancerat
+
+AUDIO_SETTINGS
+	EN	Audio Settings
+
+BETA_FEATURES
+	EN	Beta Features
+
+BRIGHTNESS_SETTINGS
+	CS	Jas
+	DA	Lysstyrke
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
+	SV	Ljusstyrka
+
+NETWORK_NETWORKING
+	CS	Připojování do sítě
+	DA	Netværk
+	DE	Netzwerke
+	EN	Networking
+	ES	Redes
+	FI	Verkko
+	FR	Mise en réseau
+	IT	Connessione alla rete in corso
+	NL	Netwerken
+	NO	Nettverk
+	PL	Sieć
+	RU	Работа в сети
+	SV	Nätverk
 
 FACTORY_TEST
 	CS	Tovární zkouška
-	DA	Test af standardindstillinger
+	DA	Fabrikstest
 	DE	Fabriktest
 	EN	Factory Test
 	ES	Prueba de fábrica
@@ -108,10 +174,10 @@ FACTORY_TEST
 	NO	Fabrikktest
 	PL	Test fabryczny
 	RU	Фабричный тест
-	SV	Fabrikstestning
+	SV	Test av fabriksinställningar
 
 DEBUG_LOG
-	CS	Přihlašování
+	CS	Protokolování
 	DA	Logføring
 	DE	Protokoll
 	EN	Logging
@@ -156,7 +222,7 @@ GAMES
 	SV	Spel
 
 INSERT
-	CS	Insert
+	CS	Vložit
 	DA	Indsæt
 	DE	Einfügen
 	EN	Insert

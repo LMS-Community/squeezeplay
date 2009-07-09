@@ -155,7 +155,7 @@ JIVE_BLACK
 	IT	Nero
 	NL	Zwart
 	NO	Svart
-	PL	Kolor czarny
+	PL	Czarny
 	RU	Черный
 	SV	Svart
 
@@ -341,7 +341,7 @@ JIVE_WEATHERED_RED
 
 JIVE_PURPLENOTE
 	CS	Nachové noty
-	DA	Lilla noter
+	DA	Lilla noder
 	DE	Violette Noten
 	EN	Purple Notes
 	ES	Notas moradas
@@ -371,18 +371,18 @@ JIVE_ORANGEMARBLE
 
 JIVE_NOTE
 	CS	Poznámky
-	DA	Noter
-	DE	Noten
+	DA	Noder
+	DE	Notes
 	EN	Notes
 	ES	Notas
-	FI	Nuotit
+	FI	Huomautukset
 	FR	Notes
 	IT	Note
 	NL	Muzieknoten
 	NO	Noter
-	PL	Uwagi
+	PL	Nuty
 	RU	Примечания
-	SV	Noter
+	SV	Anteckningar
 
 JIVE_FLOWERSGREEN
 	CS	Zelené květiny
@@ -445,28 +445,116 @@ WAVE2
 	SV	Vågform 2
 
 FAB4_ALLEGRO
+	CS	Allegro
+	DA	Allegro
+	DE	Allegro
 	EN	Allegro
+	ES	Allegro
+	FI	Allegro
+	FR	Allegro
+	IT	Allegro
+	NL	Allegro
+	PL	Allegro
+	RU	Аллегро
+	SV	Allegro
 
 FAB4_ENCORE
+	CS	Přídavek
+	DA	Ekstranummer
+	DE	Encore
 	EN	Encore
+	ES	Bis
+	FI	Ylimääräinen numero
+	FR	Encore
+	IT	Encore
+	NL	Encore
+	PL	Bis
+	RU	На бис
+	SV	Encore
 
 FAB4_HARMONY
+	CS	Harmonie
+	DA	Harmoni
+	DE	Harmony
 	EN	Harmony
+	ES	Armonía
+	FI	Harmonia
+	FR	Harmony
+	IT	Armonia
+	NL	Harmony
+	PL	Harmonia
+	RU	Harmony
+	SV	Harmony
 
 FAB4_NOCTURNE
+	CS	Nokturno
+	DA	Nocturne
+	DE	Nocturne
 	EN	Nocturne
+	ES	Nocturno
+	FI	Nokturni
+	FR	Nocturne
+	IT	Notturno
+	NL	Nocturne
+	PL	Nokturn
+	RU	Ноктюрн
+	SV	Nocturne
 
 FAB4_QUARTET
+	CS	Kvartet
+	DA	Kvartet
+	DE	Quartet
 	EN	Quartet
+	ES	Cuarteto
+	FI	Kvartetti
+	FR	Quartet
+	IT	Quartetto
+	NL	Kwartet
+	PL	Kwartet
+	RU	Квартет
+	SV	Quartet
 
 FAB4_SONATA
+	CS	Sonáta
+	DA	Sonate
+	DE	Sonata
 	EN	Sonata
+	ES	Sonata
+	FI	Sonaatti
+	FR	Sonata
+	IT	Sonata
+	NL	Sonate
+	PL	Sonata
+	RU	Соната
+	SV	Sonata
 
 FAB4_SYMPHONY
+	CS	Symfonie
+	DA	Symfoni
+	DE	Symphony
 	EN	Symphony
+	ES	Sinfonía
+	FI	Sinfonia
+	FR	Symphony
+	IT	Sinfonia
+	NL	Symfonie
+	PL	Symfonia
+	RU	Симфония
+	SV	Symphony
 
 FAB4_VIBRATO
+	CS	Vibráto
+	DA	Vibrato
+	DE	Vibrato
 	EN	Vibrato
+	ES	Vibrato
+	FI	Vibrato
+	FR	Vibrato
+	IT	Vibrato
+	NL	Vibrato
+	PL	Vibrato
+	RU	Вибрато
+	SV	Vibrato
 
 JIVE_VIBRATO
 	EN	Vibrato

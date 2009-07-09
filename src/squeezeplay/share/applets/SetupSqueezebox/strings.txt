@@ -45,7 +45,7 @@ SQUEEZEBOX_CONNECT_HELP
 SQUEEZEBOX_WIRELESS
 	CS	Bezdrátová technologie
 	DA	Trådløst
-	DE	Drahtlos
+	DE	Kabellos
 	EN	Wireless
 	ES	Inalámbrica
 	FI	Langaton
@@ -103,7 +103,7 @@ SQUEEZEBOX_FINDING_SOURCES
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
-	CS	Připojuji se k %s
+	CS	Připojuji se k\n%s
 	DA	Etablerer forbindelse til %s
 	DE	Verbindung mit %s
 	EN	Connecting to %s
@@ -111,10 +111,10 @@ SQUEEZEBOX_CONNECTING_TO
 	FI	Yhdistetään kohteeseen %s
 	FR	Connexion à %s
 	IT	Connessione a %s
-	NL	Er wordt een verbinding met %s gemaakt
+	NL	Er wordt verbinding gemaakt met %s
 	NO	Kopler til %s
-	PL	Łączenie z %s
-	RU	Подключение к %s
+	PL	Łączenie z\n%s
+	RU	Подключение к\n%s
 	SV	Ansluter till %s
 
 SQUEEZEBOX_SETUP_COMPLETE
@@ -148,7 +148,7 @@ SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	EN	Try again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Réessayer
+	FR	Veuillez réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen

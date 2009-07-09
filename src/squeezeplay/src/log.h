@@ -13,6 +13,9 @@
  * Lightweight logging api with a compatible api to log4c
  */
 
+#ifdef _WIN32
+	#define __func__ __FUNCTION__
+#endif
 
 /* Priority levels, that correspond to syslog */
 enum log_priority {
@@ -42,7 +45,7 @@ extern const char *log_priority_to_string(enum log_priority priority);
 extern enum log_priority log_priority_to_int(const char *str);
 
 
-static inline void log_category_log(struct log_category *category, enum log_priority priority, const char *format, ...) {
+static __inline void log_category_log(struct log_category *category, enum log_priority priority, const char *format, ...) {
 	if (category->priority >= priority) {
 		va_list va;
 		va_start(va, format);

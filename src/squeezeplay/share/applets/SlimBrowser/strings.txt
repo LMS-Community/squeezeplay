@@ -3,22 +3,34 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SN_SIGNUP
-	CS	Přihlášení do Squeezenetwork
-	DA	Tilmelding til Squeezenetwork
-	DE	Anmeldung bei SqueezeNetwork
-	EN	Squeezenetwork Signup
-	ES	Registro de Squeezenetwork
-	FI	Squeezenetwork-rekisteröityminen
-	FR	Inscription à SqueezeNetwork
-	IT	Iscrizione a Squeezenetwork
-	NL	Aanmelding bij Squeezenetwork
+	CS	Přihlášení do mysqueezebox.com
+	DA	Tilmelding til mysqueezebox.com
+	DE	Anmeldung bei mysqueezebox.com
+	EN	mysqueezebox.com Signup
+	ES	Registro de mysqueezebox.com
+	FI	mysqueezebox.com-rekisteröityminen
+	FR	mysqueezebox.com Signup
+	IT	Iscrizione a mysqueezebox.com
+	NL	Aanmelding bij mysqueezebox.com
 	NO	Squeezenetwork-registrering
-	PL	Rejestracja w usłudze Squeezenetwork
-	RU	Подписка Squeezenetwork
-	SV	Registrering för Squeezenetwork
+	PL	Rejestracja w usłudze mysqueezebox.com
+	RU	Подписка mysqueezebox.com
+	SV	Registrering för mysqueezebox.com
 
 SLIMBROWSER_PLAYLIST
+	CS	Aktuální seznam skladeb
+	DA	Nuværende afspilningsliste
+	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
+	ES	Lista de reproducción actual
+	FI	Nykyinen soittoluettelo
+	FR	Liste de lecture en cours
+	IT	El. di riproduz. corrente
+	NL	Huidige playlist
+	NO	Spilleliste
+	PL	Aktualna lista odtwarzania
+	RU	Текущий плей-лист
+	SV	Aktuell spellista
 
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno
@@ -59,7 +71,7 @@ SLIMBROWSER_SEARCH_HELP
 	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
 	FR	Utiliser la molette pour choisir une lettre, puis appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
 	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
-	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
+	NL	Gebruik het scrollwiel om naar een andere letter te gaan. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
 	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
 	RU	Прокручивайте колесико до нужной буквы и нажимайте для выбора центральную кнопку. Затем нажмите центральную кнопку еще раз, чтобы начать поиск.
@@ -87,7 +99,7 @@ SLIMBROWSER_TRY_AGAIN
 	EN	Try Again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Réessayer
+	FR	Veuillez réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
@@ -113,11 +125,11 @@ SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 SLIMBROWSER_CHOOSE_PLAYER
 	CS	Zvolit přehrávač
 	DA	Vælg afspiller
-	DE	Player auswählen
+	DE	Player wählen
 	EN	Choose Player
 	ES	Elegir reproductor
 	FI	Valitse soitin
-	FR	Sélectionner lecteur
+	FR	Sélectionner une platine
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
 	NO	Velg spiller
@@ -171,19 +183,19 @@ SLIMBROWSER_OFF
 	SV	Av
 
 SLIMBROWSER_VOLUME
-	CS	Hlasitost
-	DA	Lydstyrke
-	DE	Lautstärke
-	EN	Volume
-	ES	Volumen
-	FI	Äänenvoimakkuus
-	FR	Volume
-	IT	Volume
-	NL	Volume
-	NO	Volum
-	PL	Głośność
-	RU	Громкость
-	SV	Volym
+	CS	Hlasitost (%s)
+	DA	Lydstyrke (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
 
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)

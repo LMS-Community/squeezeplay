@@ -26,77 +26,69 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function settingsShow( self, menuItem)
-	local window = Window( "text_list", menuItem.text, 'settingstitle')
+function settingsShow(self, menuItem)
+	local window = Window("help_text", menuItem.text, 'settingstitle')
 	
-	self.howto = Textarea( "help_text", self:string( "SAMBA_HOWTO"))
+	local sambaEnabled = _fileMatch("/etc/samba/status", "enabled")
 
-	local menu = SimpleMenu( "menu", {
+	self.howto = Textarea("help_text", self:string("SAMBA_HOWTO"))
+	
+        local menu = SimpleMenu("menu", {
 					{
-						text = self:string( "SAMBA_ENABLE"),
+						text = self:string("SAMBA_ENABLE"),
 						style = 'item_choice',
-						check = Checkbox( "checkbox",
-								function( _, isSelected)
+						check = Checkbox("checkbox",
+								function(_, isSelected)
 									if isSelected then
 										self:_enableSamba()
 									else
 										self:_disableSamba()
 									end
 								end,
-								self:_sambaEnabled()
+								sambaEnabled
 							)
 					},
 				})
-
-	menu:setHeaderWidget( self.howto)
-	window:addWidget( menu)
+				
+	menu:setHeaderWidget(self.howto)
+	window:addWidget(menu)
 
 	self.window = window
 	self.menu = menu
 
-	self:tieAndShowWindow( window)
+	self:tieAndShowWindow(window)
 	return window
 end
 
 
 function _enableSamba(self, window)
-	os.execute( "/etc/init.d/samba start");
+	-- enable Samba	
+	log:info("Enabling Samba Access")
+	os.execute("echo enabled > /etc/samba/status");
+	os.execute("/etc/init.d/samba restart");
 end
 
 
 function _disableSamba(self, window)
-	os.execute( "/etc/init.d/samba stop");
+	-- disable Samba	
+	log:info("Disabling Samba Access")
+	os.execute("echo disabled > /etc/samba/status");
+	os.execute("/etc/init.d/samba stop");
 end
 
+function _fileMatch(file, pattern)
+	local fi = io.open(file, "r")
 
-function _sambaEnabled()
-	local samba = _pidfor( 'smb')
-	
-	if( samba ~= nil) then
-		return true
+	for line in fi:lines() do
+		if string.match(line, pattern) then
+			fi:close()
+			return true
+		end
 	end
+	fi:close()
 	
 	return false
 end
-
-
-function _pidfor( process)
-	local pid
-
-	local pattern = "%s*(%d+).*" .. process
-
-	log:warn( "pattern is ", pattern)
-
-	local cmd = io.popen( "/bin/ps -o pid,command")
-	for line in cmd:lines() do
-		pid = string.match( line, pattern)
-		if pid then break end
-	end
-	cmd:close()
-
-	return pid
-end
-
 
 --[[
 

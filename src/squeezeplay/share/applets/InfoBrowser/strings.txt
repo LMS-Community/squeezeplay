@@ -31,19 +31,19 @@ INFOBROWSER_NORESPONSE
 	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
 
 INFOBROWSER_NOINFO_SN
-	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu SqueezeNetwork a přidejte informační kanály.
-	DA	Der blev ikke fundet nogen informationsfeeds. Log på SqueezeNetwork-konto, og tilføj nogen.
-	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem SqueezeNetwork-Konto an und fügen Sie Info-Feeds hinzu.
-	EN	No information feeds found.  Please login to your SqueezeNetwork account and add information feeds.
-	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta de SqueezeNetwork y agregue fuentes de información.
-	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu SqueezeNetwork-tiliisi ja lisää syötteitä.
-	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte SqueezeNetwork et ajoutez des flux d'informations.
-	IT	Nessun feed di informazioni trovato. Accedere all'account SqueezeNetwork e aggiungere i feed di informazioni.
-	NL	Geen informatiekanalen gevonden. Meld je aan bij je SqueezeNetwork-account en voeg informatiekanalen toe.
+	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu mysqueezebox.com a přidejte informační kanály.
+	DA	Der blev ikke fundet nogen informationsfeeds. Log på din mysqueezebox.com-konto, og tilføj nogen.
+	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem mysqueezebox.com-Konto an und fügen Sie Info-Feeds hinzu.
+	EN	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
+	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta mysqueezebox.com y agregue fuentes de información.
+	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu mysqueezebox.com-tiliisi ja lisää syötteitä.
+	FR	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
+	IT	Nessun feed di informazioni trovato. Accedere all'account mysqueezebox.com e aggiungere i feed di informazioni.
+	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op mysqueezebox.com en voeg informatiekanalen toe.
 	NO	Fant ingen informasjonsfeeder. Logg på SqueezeNetwork-kontoen og legg til informasjonsfeeder.
-	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto SqueezeNetwork i dodaj kanały informacji.
-	RU	Не найдены каналы информации. Войдите с учетной записью SqueezeNetwork и добавьте каналы информации.
-	SV	Inga informationsflöden hittades. Logga in på SqueezeNetwork-kontot och lägg till informationsflöden.
+	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto mysqueezebox.com i dodaj kanały informacji.
+	RU	Каналы информации не найдены. Войдите в учетную запись mysqueezebox.com и добавьте каналы информации.
+	SV	Inga informationsflöden hittades. Logga in på mysqueezebox.com-kontot och lägg till informationsflöden.
 
 INFOBROWSER_NOINFO_SC
 	CS	Nenalezeny žádné informační kanály. K přidání infokanálů pod nabídku Extra/Prohlížeč informací použijte webové rozhraní Squeezebox Server.
@@ -54,8 +54,8 @@ INFOBROWSER_NOINFO_SC
 	FI	Informaatiosyötteitä ei löytynyt.  Lisää syötteitä Squeezebox Serverin internet-käyttöliittymän kohdassa Muut/Informaatioselain.
 	FR	Aucun flux d'informations n'a été trouvé. Utilisez l'interface Web Squeezebox Server pour ajouter des flux d'informations sous Extras/Navigateur info.
 	IT	Nessun feed di informazioni trovato. Utilizzare l'interfaccia Web di Squeezebox Server per aggiungere i feed di informazioni in Extra/Browser informazioni.
-	NL	Geen informatiekanalen gevonden. Gebruik de Squeezebox Server-webinterface om informatiekanalen onder 'Extra's/Infobrowser' toe te voegen.
-	NO	Fant ingen informasjonsfeeder. Bruk Squeezebox Server-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
+	NL	Geen informatiekanalen gevonden. Gebruik de webinterface van Squeezebox Server om informatiekanalen onder 'Extra's/Infobrowser' toe te voegen.
+	NO	Fant ingen informasjonsfeeder. Bruk SqueezeCenter-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
 	PL	Nie znaleziono żadnych kanałów informacji. Użyj interfejsu internetowego programu Squeezebox Server, aby dodać kanały informacji na ekranie Dodatki/Przeglądarka informacji.
 	RU	Не найдены каналы информации. Используйте веб-интерфейс Squeezebox Server, чтобы добавить каналы информации в группе "Дополнения/Информационный браузер".
 	SV	Inga informationsflöden hittades. Använd Squeezebox Servers webbgränssnitt för att lägga till informationsflöden under Extrafunktioner/Infoläsaren.

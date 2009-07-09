@@ -64,16 +64,49 @@ BSP_BRIGHTNESS
 	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_CTRL
+	CS	Ovládání jasu
+	DA	Lysstyrkeregulering
+	DE	Helligkeitsregelung
 	EN	Brightness Control
-	DE	Helligkeits Steuerung
+	ES	Control de brillo
+	FI	Kirkkauden säätö
+	FR	Contrôle de luminosité
+	IT	Controllo della luminosità
+	NL	Helderheidscontrole
+	NO	Lysstyrke
+	PL	Regulacja jasności
+	RU	Управление яркостью
+	SV	Ljusstyrkekontroll
 
 BSP_BRIGHTNESS_AUTOMATIC
+	CS	Automatický jas
+	DA	Automatisk lysstyrke
+	DE	Automatische Helligkeit
 	EN	Automatic Brightness
-	DE	Automatische Hellikeit
+	ES	Brillo automático
+	FI	Automaattinen kirkkaus
+	FR	Luminosité automatique
+	IT	Luminosità automatica
+	NL	Automatische helderheid
+	NO	Automatisk lysstyrke
+	PL	Automatyczna regulacja jasności
+	RU	Автонастройка яркости
+	SV	Automatisk ljusstyrka
 
 BSP_BRIGHTNESS_MANUAL
-	EN	Manual Brightness
+	CS	Manuální jas
+	DA	Manuel lysstyrke
 	DE	Manuelle Helligkeit
+	EN	Manual Brightness
+	ES	Brillo manual
+	FI	Manuaalinen kirkkaus
+	FR	Luminosité manuelle
+	IT	Luminosità manuale
+	NL	Handmatige helderheid
+	NO	Manuell lysstyrke
+	PL	Ręczna regulacja jasności
+	RU	Ручная настройка яркости
+	SV	Manuell ljusstyrka
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.
@@ -82,7 +115,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
 	FI	Voit säätää kirkkautta kiekolla.
-	FR	Utilisez la molette pour ajuster la luminosité.
+	FR	Utilisez la molette pour régler la luminosité.
 	IT	Usare la rotellina per regolare la luminosità.
 	NL	Gebruik het wiel om de helderheid aan te passen.
 	NO	Bruk hjulet til å justere lysstyrken.

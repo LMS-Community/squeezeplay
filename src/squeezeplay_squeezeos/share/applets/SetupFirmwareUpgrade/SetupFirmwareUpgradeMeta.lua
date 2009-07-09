@@ -23,7 +23,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:showFirmwareUpgradeMenu() end))
+	jiveMain:addItem(meta:menuItem('appletSetupFirmwareUpgrade', 'advancedSettings', "UPDATE", function(applet) applet:showFirmwareUpgradeMenu() end, 115))
 
 	meta:registerService("firmwareUpgrade")
 	meta:registerService("showFirmwareUpgradeMenu")
@@ -53,7 +53,11 @@ end
 function notify_firmwareAvailable(meta, server)
 	local url, force = server:getUpgradeUrl()
 
-	if force then
+
+	if force and not url then
+		log:warn("sometimes force is true but url is nil, seems like a server bug: server:", server)
+	end
+	if force and url then
 		local player = appletManager:callService("getCurrentPlayer")
 
 		if player and player:getSlimServer() == server then

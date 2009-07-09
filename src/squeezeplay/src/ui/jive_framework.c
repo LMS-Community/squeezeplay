@@ -299,6 +299,17 @@ void jive_send_gesture_event(JiveGesture code) {
 	jive_queue_event(&event);
 }
 
+void jive_send_char_press_event(Uint16 unicode) {
+	JiveEvent event;
+	memset(&event, 0, sizeof(JiveEvent));
+
+	event.type = JIVE_EVENT_CHAR_PRESS;
+	event.ticks = SDL_GetTicks();
+	event.u.text.unicode = unicode;
+	jive_queue_event(&event);
+}
+
+
 static int jiveL_quit(lua_State *L) {
 
 	/* de-reference all windows */
@@ -1383,6 +1394,7 @@ static const struct luaL_Reg slider_methods[] = {
 static const struct luaL_Reg textarea_methods[] = {
 	{ "getPreferredBounds", jiveL_textarea_get_preferred_bounds },
 	{ "_skin", jiveL_textarea_skin },
+	{ "invalidate", jiveL_textarea_invalidate },
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
 	{ NULL, NULL }

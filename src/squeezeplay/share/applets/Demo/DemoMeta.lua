@@ -22,6 +22,7 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService("jumpToInStoreDemo")
 end
 
 function defaultSettings(meta)
@@ -43,12 +44,14 @@ function configureApplet(meta)
 		return
 	end
 
-	local demo = appletManager:loadApplet('Demo')
 	if meta:getSettings()['startDemo'] then
+		local demo = appletManager:loadApplet('Demo')
 	        demo:startDemo()
 	end
 
-	jiveMain:addItem(meta:menuItem('appletDemo', 'factoryTest', "DEMO", function(applet, ...) applet:enableDemo() end))
+	--Bug 12703: for now, do not add an item in factory test for the in-store demo
+	-- might be a permanent change, but leaving this line in but commented for now
+	--jiveMain:addItem(meta:menuItem('appletDemo', 'factoryTest', "DEMO", function(applet, ...) applet:enableDemo() end))
 end
 
 

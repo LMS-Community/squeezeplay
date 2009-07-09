@@ -5,6 +5,7 @@ local io                     = require("io")
 local os                     = require("os")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -72,7 +73,7 @@ function _factoryReset(self)
 				     log:info("Factory reset...")
 
 				     -- touch .factoryreset and reboot
-				     io.open("/.factoryreset", "w"):close()
+				     System:atomicWrite("/.factoryreset", "")
 				     os.execute("/bin/busybox reboot -f")
 			      end)
 
