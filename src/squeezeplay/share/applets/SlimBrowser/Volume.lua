@@ -7,6 +7,7 @@ local oo                     = require("loop.base")
 local os                     = require("os")
 local math                   = require("math")
 
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
@@ -234,13 +235,13 @@ function event(self, event)
 	elseif type == ACTION then
 		local action = event:getAction()
 		if action == "volume_up" then
-			self.delta = 3
+			self.delta = 1
 			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
 		end
 		if action == "volume_down" then
-			self.delta = -3
+			self.delta = -1
 			_updateVolume(self, nil, nil, true)
 			self.delta = 0
 			return EVENT_CONSUME
@@ -264,8 +265,22 @@ function event(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
+		--Baby volume keys have no down/up and must have unique handling
+		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:getMachine() == "baby" then
+			--handle keyboard volume change
+			if (keycode == KEY_VOLUME_UP) then
+				self.delta = 1
+				_updateVolume(self, nil, nil, true)
+				self.delta = 0
+			end
+			if (keycode == KEY_VOLUME_DOWN) then
+				self.delta = -1
+				_updateVolume(self, nil, nil, true)
+				self.delta = 0
+			end
+		end
 
-		-- volume + and - for mute
+		-- volume + and - pressed at same time for mute
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == (KEY_VOLUME_UP|KEY_VOLUME_DOWN) then
 			_updateVolume(self, self.volume >= 0)
 			return EVENT_CONSUME
