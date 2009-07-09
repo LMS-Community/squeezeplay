@@ -158,6 +158,8 @@ function _updateVolume(self, force)
 	if not self.popup and not force then
 		return
 	end
+	-- keep the popup window open
+	self.popup:showBriefly()
 
         local new
 
@@ -188,9 +190,7 @@ function _updateVolume(self, force)
 end
 
 function volEvent(self, volumeEvent)
-	local onscreen = true
 	if not self.popup then
-		onscreen = false
 		_openPopup(self)
 	end
 
@@ -199,9 +199,8 @@ function volEvent(self, volumeEvent)
 	else
 		self.delta = -1 * VOLUME_STEP
 	end
-	if onscreen then
-		_updateVolume(self)
-	end
+
+	_updateVolume(self)
 	return EVENT_CONSUME
 end
 
@@ -339,10 +338,7 @@ function _showNextSlide(self)
 
 	-- replace the window if it's already there
 	if self.window then
-		if self.popup then
-			self.popup:hide()
-		end
-		window:showInstead(Window.transitionFadeIn)
+		window:replace(self.window, Window.transitionFadeIn)
 		self.window = window
 	-- otherwise it's new
 	else
