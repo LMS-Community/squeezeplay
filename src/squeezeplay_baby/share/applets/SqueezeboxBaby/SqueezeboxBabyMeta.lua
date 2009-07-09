@@ -52,6 +52,7 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 30000)
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 3)
 
+	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 
 	-- settings
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
@@ -60,6 +61,7 @@ function registerApplet(meta)
 	-- services
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")
+	meta:registerService("getDefaultWallpaper")
 end
 
 
