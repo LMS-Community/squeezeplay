@@ -704,21 +704,6 @@ function skin(self, s)
 		align = "top-left",
 	}
 
---	s.help_text = {
---		w = WH_FILL,
---		position = LAYOUT_CENTER,
---		font = _font(HELP_FONT_SIZE),
---		fg = WHITE,
---		sh = NONE,
---		bgImg = titleBox,
---		align = "left",
---		scrollbar = {
---			w = 0,
---		},
---		padding = { 18, 18, 10, 18},
---		lineHeight = 23,
---	}
-
 	s.scrollbar = {
 		w = 42,
 		border = 0,
