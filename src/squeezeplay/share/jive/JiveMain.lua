@@ -451,10 +451,14 @@ Adds a 'Help' menu item to I<menu> if the most recent input was not touch or mou
 
 =cut
 --]]
-function JiveMain:addHelpMenuItem(menu, obj, callback, textToken)
+function JiveMain:addHelpMenuItem(menu, obj, callback, textToken, iconStyle)
+	-- only deliver an icon if specified
+	if not iconStyle then
+		iconStyle = "_BOGUS_"
+	end
 	if not Framework:isMostRecentInput("mouse") then
 		menu:addItem({
-			iconStyle = "icon_help",
+			iconStyle = iconStyle,
 			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("GLOBAL_HELP"),
 			sound = "WINDOWSHOW",
 			callback =      function ()
