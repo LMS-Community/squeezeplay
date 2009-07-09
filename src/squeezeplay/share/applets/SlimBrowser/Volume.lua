@@ -138,6 +138,11 @@ function _updateVolume(self, mute, directSet, noAccel)
 		new = math.floor(directSet)
 	else
 		if noAccel then
+			if self.volume == 0 and self.delta > 1 then
+				--allow lowest possible level (1) from 0 (for use in cases like knob where volume moves in multiple steps/event
+				self.delta = 1
+			end
+
 			new = math.abs(self.volume) + self.delta
 			local now = Framework:getTicks()
 			if (now - self.lastUpdate) < 350 then
