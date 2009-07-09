@@ -273,12 +273,14 @@ static void decode_song_ended_handler(void) {
 }
 
 
-static Uint32 decode_timer_interval(void) {
+/* returns true if decode can run */
+static bool_t decode_timer_interval(u32_t *delay) {
 	size_t free_bytes, used_bytes, max_samples;
-	u32_t state, sample_rate, delay;
+	u32_t state, sample_rate;
 
 	if (!decoder || !(current_decoder_state & DECODE_STATE_RUNNING)) {
-		return DECODE_MAX_INTERVAL;
+		*delay = DECODE_MAX_INTERVAL;
+		return false;
 	}
 
 	max_samples = decoder->samples(decoder_data);
@@ -291,18 +293,17 @@ static Uint32 decode_timer_interval(void) {
 	decode_audio_unlock();
 
 	if (SAMPLES_TO_BYTES(max_samples) < free_bytes) {
-		delay = 1;
+		*delay = 1;
+		return true;
 	}
 	else {
-		delay = ((max_samples * 1000) / sample_rate) + 1; /* ms */
+		*delay = ((max_samples * 1000) / sample_rate) + 1; /* ms */
 
 		/* don't decode for every buffer, do it every other one */
-		delay *= 2;
+		*delay *= 2;
+
+		return false;
 	}
-
-	//LOG_DEBUG(log_audio_decode, "freebytes %d maxsamples %d delay %d used %d%%\n", free_bytes, max_samples, delay, (used_bytes * 100) / (used_bytes + free_bytes));
-
-	return delay;
 }
 
 
@@ -314,24 +315,21 @@ static int decode_thread_execute(void *unused) {
 	decode_watchdog = watchdog_get();
 
 	while (true) {
-		Uint32 timeout; // XXXX timer wrap around
 		mqueue_func_t handler;
+		u32_t timeout, delay; // XXXX timer wrap around
+		bool_t can_decode;
 
 		watchdog_keepalive(decode_watchdog, 1);
 
-		timeout = SDL_GetTicks() + decode_timer_interval();
-		//LOG_DEBUG(log_audio_decode, "timeout %d\n", timeout);
+		can_decode = decode_timer_interval(&delay);
 
+		timeout = SDL_GetTicks() + delay;
 		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
 			LOG_DEBUG(log_audio_decode, "handling message");
 			handler();
 		}
 
-		// XXXX new track started
-
-		// XXXX check decoder state
-		if (decoder && (current_decoder_state & DECODE_STATE_RUNNING)) {
-			//LOG_DEBUG(log_audio_decode, "decode callback outbuf=%d", fifo_bytes_used(decode_fifo_rptr, decode_fifo_wptr, DECODE_FIFO_SIZE));
+		if (can_decode) {
 			decoder->callback(decoder_data);
 		}
 
