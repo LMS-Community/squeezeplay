@@ -76,7 +76,7 @@ end
 
 function _getPassThroughState(self)
 	local result = self:_getAmixerValue("Line In Test")
-	return result and result == "on"
+	return result and result:sub(1,2) == "on"
 end
 
 
@@ -94,7 +94,7 @@ function _setPassThroughState(self, on)
 	if on then
 		state = "on"
 	end
-	os.execute("amixer cget name=\"Line In Test\" " .. state)
+	os.execute("amixer cset name=\"Line In Test\" " .. state)
 end
 
 --[[
