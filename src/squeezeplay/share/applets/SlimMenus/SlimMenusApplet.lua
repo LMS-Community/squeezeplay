@@ -444,6 +444,10 @@ end
 			end
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
+			if item.node == "appguide" then
+				item.guide = true
+			end
+
 			_massageItem(item, item)
 
 			-- a problem, we lose the icons..
@@ -529,6 +533,7 @@ end
 					 -- if not, can SN provide the content?
 					 -- if so, switch server to SN and provide content
 
+					--todo check canLocalSCServe() for things that are only on SN
 
 					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 --					original: if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
