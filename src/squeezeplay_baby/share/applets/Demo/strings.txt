@@ -52,11 +52,11 @@ DEMO_VOLUME_MUTED
 
 SLIDE_01
 	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
-	FR	Radio Internet Wi-Fi
+	FR	Squeezebox™ Radio\nRadio Internet Wi-Fi
 	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
 	SV	Squeezebox™ Radio\nWi-Fi Internet Radio
 	DA	Squeezebox™ Radio\nWi-Fi Internetradio
-	ES	Squeezebox™ Radio\nRadio por internet vía WiFi.
+	ES	Squeezebox™ Radio\nRadio por internet vía WiFi
 	IT	Squeezebox™ Radio\nWi-Fi Internet Radio
 	DE	Squeezebox™ Radio\nWLAN-Internetradio
 	NL	Squeezebox™ Radio\nWi-Fi Internet Radio
@@ -64,63 +64,63 @@ SLIDE_01
 
 SLIDE_02
 	EN	Discover a world of digital music.
-	FR	Découvrez un monde de musique digitale 
+	FR	Découvrez un monde de musique digitale. 
 	FI	Koe digitaalisen musiikin maailma.
-	SV	Upptäck en värld av digital musik
+	SV	Upptäck en värld av digital musik.
 	DA	Opdag en verden af digital music.
 	ES	Descubra el mundo de la música digital.
-	IT	Scopri un mondo di musica digitale
+	IT	Scopri un mondo di musica digitale.
 	DE	Entdecken Sie eine Welt voll digitaler Musik. 
-	NL	Ontdek digital music
+	NL	Ontdek digital music.
 	NO	Opplev en verden av digital musikk.
 
 SLIDE_03
 	EN	From thousands of free Internet radio stations…
-	FR	De milliers de stations de radio Internet gratuites ..
+	FR	De milliers de stations de radio Internet gratuites…
 	FI	Tuhansien ilmaisten Internet radiokanavien joukosta…
 	SV	Från tusentals gratis webradiokanaler…
-	DA	Fra tusinder af gratis internet radiostationer
+	DA	Fra tusinder af gratis internet radiostationer…
 	ES	Desde miles de emisoras de radio gratuitas por internet…
-	IT	Migliaia di stazioni radio
+	IT	Migliaia di stazioni radio…
 	DE	Von Tausenden kostenlosen Internetradiosendern… 
-	NL	Duizenden gratis Internet Radio stations
-	NO	Fra tusenvis av gratis radiostasjoner på internet.
+	NL	Duizenden gratis Internet Radio stations…
+	NO	Fra tusenvis av gratis radiostasjoner på internet…
 
 SLIDE_04
 	EN	…to your own personal music collection…
-	FR	… à votre collection de musique personnelle ..
+	FR	…à votre collection de musique personnelle…
 	FI	…omaan musiikkikokoelmaasi…
-	SV	…till din egen personliga musik …
-	DA	… til din egen personlige musiksamling.
-	ES	… hasta su propia colección personal de música…
-	IT	La Tua Collezione di musica personale 
+	SV	…till din egen personliga musik…
+	DA	…til din egen personlige musiksamling…
+	ES	…hasta su propia colección personal de música…
+	IT	…La Tua Collezione di musica personale… 
 	DE	…über Ihre ganz persönliche Musiksammlung…
-	NL	…je eigen muziek verzameling
-	NO	…til din egen personlige musikk kolleksjon
+	NL	…je eigen muziek verzameling…
+	NO	…til din egen personlige musikk kolleksjon…
 
 SLIDE_05
 	EN	…to the hottest online music services.
-	FR	.. au meilleurs services de musique en ligne.  
+	FR	…au meilleurs services de musique en ligne.  
 	FI	…suosituimpiin online musiikkipalveluihin…
-	SV	...till de hetaste online musiktjänsterna...
-	DA	… til de bedste online musiktjenester.
-	ES	… e incluso los servicios de música online más actuales.
-	IT	I servizi online piu in voga
+	SV	…till de hetaste online musiktjänsterna.
+	DA	…til de bedste online musiktjenester.
+	ES	…e incluso los servicios de música online más actuales.
+	IT	…I servizi online piu in voga.
 	DE	…bis hin zu den heißesten Online-Musik-Diensten.
-	NL	…de beste online muziek services
-	NO	...til de mest spennende online musikk tjenester
+	NL	…de beste online muziek services.
+	NO	…til de mest spennende online musikk tjenester.
                 
 SLIDE_06
 	EN	A virtually unlimited music collection.
-	FR	Une collection de musique virtuellement illimitée 
+	FR	Une collection de musique virtuellement illimitée.
 	FI	Käytännössä rajoittamaton musiikkikokoelma.
-	SV	En nästan obegränsad musiksamling
+	SV	En nästan obegränsad musiksamling.
 	DA	En nærmest ubegrænset musiksamling.
 	ES	Una colección de música virtualmente ilimitada.
-	IT	Una collezione di musica quasi illimitata
+	IT	Una collezione di musica quasi illimitata.
 	DE	Eine nahezu unbegrenzte Musiksammlung.
-	NL	Muziek zonder grenzen
-	NO	En nesten ubegrenset tillgang til musikk
+	NL	Muziek zonder grenzen.
+	NO	En nesten ubegrenset tillgang til musikk.
 
 SLIDE_07
 	EN	Play all your music. Even from your iPod™.
@@ -129,10 +129,10 @@ SLIDE_07
 	SV	Spela all din musik. Även från din iPod™.
 	DA	Afspil alt dit music. Selv fra din iPod™.
 	ES	Toda su música a su alcance. Incluso la de su iPod™.
-	IT	Ascolta tutta la tua musica, persino dal tuo ipod™
+	IT	Ascolta tutta la tua musica. Persino dal tuo iPod™.
 	DE	Hören Sie all Ihre Musik. Auch die von Ihrem iPod™.
-	NL	Draai al je muziek, ook van je iPod™
-	NO	Spill all din musikk. Også fra din iPod™
+	NL	Draai al je muziek, ook van je iPod™.
+	NO	Spill all din musikk. Også fra din iPod™.
 
 SLIDE_08
 	EN	Internet Radio. Listen in any room.
@@ -141,22 +141,22 @@ SLIDE_08
 	SV	Internet Radio. Lyssna i vilket rum som helst.
 	DA	Lyt til internetradio i ethvert rum.
 	ES	Radio por internet. Escuche su música en cualquier rincón de la casa.
-	IT	Radio Internet, ascolta ovunque in casa
+	IT	Radio Internet, ascolta ovunque in casa.
 	DE	Internetradio. Hören Sie es in jedem Raum.
-	NL	Internet Radio, overal
-	NO	Internett Radio. Lytt i alle rom
+	NL	Internet Radio, overal.
+	NO	Internett Radio. Lytt i alle rom.
 
 SLIDE_09
 	EN	Small package. Big Sound.
-	FR	Design compact, son puissant 
+	FR	Design compact, son puissant.
 	FI	Pieni koko. Iso soundi.
 	SV	Litet paket. Stort ljud.
 	DA	Lille pakke. Stor lyd.
 	ES	Un pequeño reproductor. Un gran sonido.
-	IT	Piccole dimensioni. Grande suono
+	IT	Piccole dimensioni. Grande suono.
 	DE	Kleines Gehäuse. Großer Sound.  
-	NL	Compact en een fantastisch geluid
-	NO	Liten i størrelse. Kraftig lyd
+	NL	Compact en een fantastisch geluid.
+	NO	Liten i størrelse. Kraftig lyd.
 
 SLIDE_10
 	EN	\n
