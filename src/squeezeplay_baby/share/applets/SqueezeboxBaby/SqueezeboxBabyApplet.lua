@@ -114,6 +114,8 @@ function init(self)
 		end
 	end)
 
+--	self:_setupCrossover()
+
 	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
 	jnt:subscribe(self)
@@ -140,11 +142,68 @@ function getDefaultWallpaper(self)
 	return wallpaper
 end
 
+function _setupCrossover(self)
+	log:warn("here")
+
+	bsp:setMixer("Audio Codec Digital Filter Control" , "0")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N0 Coefficient", "22555,65072")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N1 Coefficient", "42981,65072")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N2 Coefficient", "22555,65072")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N3 Coefficient", "32767,32767")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N3 Coefficient", "32767,32767")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N3 Coefficient", "32767,32767")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N3 Coefficient", "32767,32767")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N4 Coefficient", "0,0")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter N5 Coefficient", "0,0")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D1 Coefficient", "24546,24546")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D2 Coefficient", "47149,47149")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D4 Coefficient", "0,0")
+	log:warn("here")
+	bsp:setMixer("Audio Effects Filter D5 Coefficient", "0,0")
+end
+
+
+function _enableCrossover(self)
+	log:warn("here")
+	bsp:setMixer("Audio Codec Digital Filter Control" , "10")
+end
+
+function _disableCrossover(self)
+	log:warn("here")
+	bsp:setMixer("Audio Codec Digital Filter Control" , "0")
+end
+
 function _headphoneJack(self, val)
 	if val == 0 then
+--		self:_enableCrossover()
 		bsp:setMixer("Endpoint", "Speaker")
 	else
 		bsp:setMixer("Endpoint", "Headphone")
+--		self:_disableCrossover()
 	end
 end
 
