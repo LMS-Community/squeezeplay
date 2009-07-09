@@ -158,7 +158,7 @@ function KeypadTest(self)
 	self:drawKeypad()
 
 	self.window:focusWidget(nil)
-	window:addListener(EVENT_KEY_ALL | EVENT_SCROLL | ACTION,
+	window:addListener(EVENT_KEY_ALL | EVENT_SCROLL,
 		function(event)
 			local eventtype = event:getType()
 
@@ -166,12 +166,6 @@ function KeypadTest(self)
 				if eventtype == EVENT_SCROLL then
 					window:playSound("CLICK")
 					self:_scroll(event:getScroll())
-
-				-- special handling for volume knob
-				elseif eventtype == ACTION and event:getAction() == 'volume_up' then
-					keyState[KEY_VOLUME_UP] = EVENT_KEY_UP
-				elseif eventtype == ACTION and event:getAction() == 'volume_down' then
-					keyState[KEY_VOLUME_DOWN] = EVENT_KEY_UP
 
 				elseif eventtype | EVENT_KEY_ALL then
 					window:playSound("SELECT")
@@ -186,6 +180,13 @@ function KeypadTest(self)
 					end
 				end
 
+				-- special handling for volume knob
+				if keyState[KEY_VOLUME_UP] ~= nil then
+					keyState[KEY_VOLUME_UP] = EVENT_KEY_UP
+				end
+				if keyState[KEY_VOLUME_DOWN] ~= nil then
+					keyState[KEY_VOLUME_DOWN] = EVENT_KEY_UP
+				end
 
 				-- redraw keypad
 				self:drawKeypad()
