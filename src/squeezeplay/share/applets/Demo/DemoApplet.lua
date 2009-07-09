@@ -56,15 +56,33 @@ function __init(self)
 
 	obj.delta = 0
 	obj.volume = 51
+
 	obj.idleTimer = Timer(
 		30000, 
 		function()
 			_volumeAutoAdjust(obj)
 		end
 	)
+	obj.volumePrefSaver = Timer(
+		60000,
+		function()
+			_saveVolPref(obj)
+		end
+	)
 
         return obj
 end
+
+
+function _saveVolPref(self)
+	local currentSetting = self:getSettings()['volumeSetting']
+	if currentSetting != self.volume then
+		log:info('saving volume pref for demo to: ', self.volume)
+		self:getSettings()['volumeSetting'] = self.volume
+		self:storeSettings()
+	end	
+end
+
 
 function _volumeAutoAdjust(self)
 	if self.volume > 60 then
@@ -193,7 +211,7 @@ function _updateVolume(self, force)
 	end
 
 	local setVolume = volumeMap[new]
-	log:warn('set volume to : ', new, '(', setVolume, ')')
+	log:info('set volume to : ', new, '(', setVolume, ')')
 	decode:audioGain(setVolume, setVolume)
 
 	self.delta  = 0
@@ -380,16 +398,20 @@ function _playTone(self)
        	end
 			
 	if localPlayer then
-		-- start at volume of 51 
-		self.volume = 51
+		if self:getSettings()['volumeSetting'] then
+			self.volume = self:getSettings()['volumeSetting']
+		end
+	
 		-- hack to give 2 second delay for startup sound before kicking in demo audio
 		local timer = Timer(2000, 
 			function()
 				localPlayer:playFileInLoop(self.mp3file)
-				decode:audioGain(4096, 4096)
+				decode:audioGain(volumeMap[self.volume], volumeMap[self.volume])
 			end,
 			true)
 		timer:start()
+		-- also save the volume preference save timer
+		self.volumePrefSaver:start()
 	end
 end
 
