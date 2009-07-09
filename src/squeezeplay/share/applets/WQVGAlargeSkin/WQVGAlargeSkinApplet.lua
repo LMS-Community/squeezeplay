@@ -419,9 +419,9 @@ function skin(self, s)
 	local TITLE_BUTTON_WIDTH = 76
 
 	local smallSpinny = {
-		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
+		img = _loadImage(self, "Alerts/wifi_connecting_med.png"),
 		frameRate = 8,
-		frameWidth = 26,
+		frameWidth = 32,
 		padding = 0,
 		h = WH_FILL,
 	}
