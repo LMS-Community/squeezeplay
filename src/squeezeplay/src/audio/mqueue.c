@@ -12,7 +12,7 @@
 
 
 void mqueue_init(struct mqueue *mqueue, void *buffer, size_t buffer_size) {
-	fifo_init(&mqueue->fifo, buffer_size);
+	fifo_init(&mqueue->fifo, buffer_size, false);
 	mqueue->buffer = buffer;
 }
 

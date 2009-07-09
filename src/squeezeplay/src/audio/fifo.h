@@ -12,8 +12,15 @@
 
 
 struct fifo {
+#ifdef HAVE_LIBPTHREAD
+	/* linux multi-process locking */
+	pthread_mutex_t mutex;
+	pthread_cond_t cond;
+#else
+	/* cross platform locking */
 	SDL_mutex *mutex;
 	SDL_cond *cond;
+#endif
 	bool_t lock;
 
 	size_t rptr;
@@ -21,8 +28,9 @@ struct fifo {
 	size_t size;
 };
 
+#define ASSERT_FIFO_LOCKED(fifo) assert((fifo)->lock)
 
-extern void fifo_init(struct fifo *fifo, size_t size);
+extern int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit);
 extern void fifo_free(struct fifo *fifo);
 extern bool_t fifo_empty(struct fifo *fifo);
 extern size_t fifo_bytes_used(struct fifo *fifo);

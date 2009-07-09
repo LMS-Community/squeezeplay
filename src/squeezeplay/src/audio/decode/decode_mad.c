@@ -18,7 +18,7 @@
  */
 #define INPUT_BUFFER_SIZE 2890
 
-#define OUTPUT_BUFFER_FRAMES 2048
+#define OUTPUT_BUFFER_FRAMES 2304 /* always 1,152 samples per frame */
 #define OUTPUT_BUFFER_BYTES (OUTPUT_BUFFER_FRAMES * sizeof(sample_t))
 
 #define ID3_TAG_FLAG_FOOTERPRESENT 0x10
@@ -328,11 +328,6 @@ static void decode_mad_output(struct decode_mad *self) {
 
 	pcm = &self->synth.pcm;
 
-	if (!decode_output_can_write(SAMPLES_TO_BYTES(pcm->length), self->sample_rate)) {
-		self->state = MAD_STATE_PCM_READY;
-		return;
-	}
-
 	/* parse xing header */
 	if (self->frames++ == 0) {
 		/* Bug 5720, files with CRC will have the ptr in the
@@ -428,10 +423,6 @@ static bool_t decode_mad_callback(void *data) {
 		return FALSE;
 	}
 
-	if (!decode_output_can_write(OUTPUT_BUFFER_BYTES, self->sample_rate)) {
-		return 0;
-	}
-
 	if (self->state == MAD_STATE_OK) {
 		decode_mad_frame(self);
 	}
@@ -444,15 +435,8 @@ static bool_t decode_mad_callback(void *data) {
 }
 
 
-static u32_t decode_mad_period(void *data) {
-	struct decode_mad *self = (struct decode_mad *) data;
-
-	if (self->sample_rate <= 48000) {
-		return 8;
-	}
-	else {
-		return 4;
-	}
+static size_t decode_mad_samples(void *data) {
+	return BYTES_TO_SAMPLES(OUTPUT_BUFFER_BYTES);
 }
 
 
@@ -504,6 +488,6 @@ struct decode_module decode_mad = {
 	"mp3",
 	decode_mad_start,
 	decode_mad_stop,
-	decode_mad_period,
+	decode_mad_samples,
 	decode_mad_callback,
 };

@@ -27,6 +27,10 @@
 #include <libgen.h>
 #endif
 
+#ifdef HAVE_LIBPTHREAD
+#include <pthread.h>
+#endif
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -41,6 +45,10 @@
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
+
+#ifdef HAVE_SYS_SHM_H
+#include <sys/shm.h>
 #endif
 
 #ifdef HAVE_SYS_SOCKET_H

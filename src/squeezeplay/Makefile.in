@@ -49,7 +49,7 @@ DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(top_srcdir)/src/config.h.in config/config.guess \
 	config/config.sub config/depcomp config/install-sh \
 	config/ltmain.sh config/missing install-sh missing
-bin_PROGRAMS = jive$(EXEEXT)
+bin_PROGRAMS = jive$(EXEEXT) jive_alsa$(EXEEXT)
 @TEST_PROGRAMS_TRUE@test_PROGRAMS = jiveblit$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -63,30 +63,36 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
-libjiveaudio_la_DEPENDENCIES =
-am_libjiveaudio_la_OBJECTS = fifo.lo fixed_math.lo mqueue.lo \
-	streambuf.lo decode.lo decode_alsa.lo decode_flac.lo \
-	decode_mad.lo decode_output.lo decode_pcm.lo \
-	decode_portaudio.lo decode_sample.lo decode_vorbis.lo
-libjiveaudio_la_OBJECTS = $(am_libjiveaudio_la_OBJECTS)
-libjivenet_la_DEPENDENCIES =
-am_libjivenet_la_OBJECTS = jive_dns.lo
-libjivenet_la_OBJECTS = $(am_libjivenet_la_OBJECTS)
-libjiveui_la_DEPENDENCIES =
-am_libjiveui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
+libaudio_la_LIBADD =
+am_libaudio_la_OBJECTS = audio_helper.lo fifo.lo fixed_math.lo
+libaudio_la_OBJECTS = $(am_libaudio_la_OBJECTS)
+libdecode_la_DEPENDENCIES = libaudio.la
+am_libdecode_la_OBJECTS = mqueue.lo streambuf.lo decode.lo \
+	decode_alsa.lo decode_flac.lo decode_mad.lo decode_output.lo \
+	decode_pcm.lo decode_portaudio.lo decode_sample.lo \
+	decode_vorbis.lo
+libdecode_la_OBJECTS = $(am_libdecode_la_OBJECTS)
+libnet_la_DEPENDENCIES =
+am_libnet_la_OBJECTS = jive_dns.lo
+libnet_la_OBJECTS = $(am_libnet_la_OBJECTS)
+libui_la_DEPENDENCIES =
+am_libui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
 	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
 	platform_osx.lo platform_linux.lo jive_slider.lo jive_style.lo \
 	jive_surface.lo system.lo jive_textarea.lo jive_textinput.lo \
 	jive_tile.lo jive_utils.lo jive_widget.lo jive_window.lo \
 	lua_jiveui.lo
-libjiveui_la_OBJECTS = $(am_libjiveui_la_OBJECTS)
+libui_la_OBJECTS = $(am_libui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 testPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
 am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) log.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
-jive_DEPENDENCIES = libjiveui.la libjiveaudio.la libjivenet.la
+jive_DEPENDENCIES = libui.la libdecode.la libnet.la
+am_jive_alsa_OBJECTS = decode_alsa_backend.$(OBJEXT)
+jive_alsa_OBJECTS = $(am_jive_alsa_OBJECTS)
+jive_alsa_DEPENDENCIES = libaudio.la
 am_jiveblit_OBJECTS = jiveblit.$(OBJEXT)
 jiveblit_OBJECTS = $(am_jiveblit_OBJECTS)
 jiveblit_DEPENDENCIES =
@@ -101,10 +107,12 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libjiveaudio_la_SOURCES) $(libjivenet_la_SOURCES) \
-	$(libjiveui_la_SOURCES) $(jive_SOURCES) $(jiveblit_SOURCES)
-DIST_SOURCES = $(libjiveaudio_la_SOURCES) $(libjivenet_la_SOURCES) \
-	$(libjiveui_la_SOURCES) $(jive_SOURCES) $(jiveblit_SOURCES)
+SOURCES = $(libaudio_la_SOURCES) $(libdecode_la_SOURCES) \
+	$(libnet_la_SOURCES) $(libui_la_SOURCES) $(jive_SOURCES) \
+	$(jive_alsa_SOURCES) $(jiveblit_SOURCES)
+DIST_SOURCES = $(libaudio_la_SOURCES) $(libdecode_la_SOURCES) \
+	$(libnet_la_SOURCES) $(libui_la_SOURCES) $(jive_SOURCES) \
+	$(jive_alsa_SOURCES) $(jiveblit_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -266,12 +274,12 @@ DMG_TMP_IMAGE_FILENAME = $(DMG_TEMP_DIR).dmg
 DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
 # Convenience library:
-noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
+noinst_LTLIBRARIES = libui.la libaudio.la libdecode.la libnet.la
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
 	src/version.h
 
-libjiveui_la_SOURCES = \
+libui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -293,10 +301,13 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_window.c \
 	src/ui/lua_jiveui.c
 
-libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
-libjiveaudio_la_SOURCES = \
+libui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
+libaudio_la_SOURCES = \
+	src/audio/decode/audio_helper.c \
 	src/audio/fifo.c \
-	src/audio/fixed_math.c \
+	src/audio/fixed_math.c
+
+libdecode_la_SOURCES = \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
@@ -309,11 +320,11 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_sample.c \
 	src/audio/decode/decode_vorbis.c
 
-libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
-libjivenet_la_SOURCES = \
+libdecode_la_LIBADD = libaudio.la -lSDL -lFLAC -lmad -lvorbisidec
+libnet_la_SOURCES = \
 	src/net/jive_dns.c
 
-libjivenet_la_LIBADD = -lSDL
+libnet_la_LIBADD = -lSDL -lresolv
 
 # Test programs: jiveblit
 testdir = $(bindir)
@@ -322,7 +333,11 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua
+jive_alsa_SOURCES = \
+	src/audio/decode/decode_alsa_backend.c
+
+jive_alsa_LDADD = libaudio.la -lasound
 
 # Test program: jiveblit
 jiveblit_SOURCES = \
@@ -393,12 +408,14 @@ clean-noinstLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libjiveaudio.la: $(libjiveaudio_la_OBJECTS) $(libjiveaudio_la_DEPENDENCIES) 
-	$(LINK)  $(libjiveaudio_la_LDFLAGS) $(libjiveaudio_la_OBJECTS) $(libjiveaudio_la_LIBADD) $(LIBS)
-libjivenet.la: $(libjivenet_la_OBJECTS) $(libjivenet_la_DEPENDENCIES) 
-	$(LINK)  $(libjivenet_la_LDFLAGS) $(libjivenet_la_OBJECTS) $(libjivenet_la_LIBADD) $(LIBS)
-libjiveui.la: $(libjiveui_la_OBJECTS) $(libjiveui_la_DEPENDENCIES) 
-	$(LINK)  $(libjiveui_la_LDFLAGS) $(libjiveui_la_OBJECTS) $(libjiveui_la_LIBADD) $(LIBS)
+libaudio.la: $(libaudio_la_OBJECTS) $(libaudio_la_DEPENDENCIES) 
+	$(LINK)  $(libaudio_la_LDFLAGS) $(libaudio_la_OBJECTS) $(libaudio_la_LIBADD) $(LIBS)
+libdecode.la: $(libdecode_la_OBJECTS) $(libdecode_la_DEPENDENCIES) 
+	$(LINK)  $(libdecode_la_LDFLAGS) $(libdecode_la_OBJECTS) $(libdecode_la_LIBADD) $(LIBS)
+libnet.la: $(libnet_la_OBJECTS) $(libnet_la_DEPENDENCIES) 
+	$(LINK)  $(libnet_la_LDFLAGS) $(libnet_la_OBJECTS) $(libnet_la_LIBADD) $(LIBS)
+libui.la: $(libui_la_OBJECTS) $(libui_la_DEPENDENCIES) 
+	$(LINK)  $(libui_la_LDFLAGS) $(libui_la_OBJECTS) $(libui_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
@@ -458,6 +475,9 @@ clean-testPROGRAMS:
 jive$(EXEEXT): $(jive_OBJECTS) $(jive_DEPENDENCIES) 
 	@rm -f jive$(EXEEXT)
 	$(LINK) $(jive_LDFLAGS) $(jive_OBJECTS) $(jive_LDADD) $(LIBS)
+jive_alsa$(EXEEXT): $(jive_alsa_OBJECTS) $(jive_alsa_DEPENDENCIES) 
+	@rm -f jive_alsa$(EXEEXT)
+	$(LINK) $(jive_alsa_LDFLAGS) $(jive_alsa_OBJECTS) $(jive_alsa_LDADD) $(LIBS)
 jiveblit$(EXEEXT): $(jiveblit_OBJECTS) $(jiveblit_DEPENDENCIES) 
 	@rm -f jiveblit$(EXEEXT)
 	$(LINK) $(jiveblit_LDFLAGS) $(jiveblit_OBJECTS) $(jiveblit_LDADD) $(LIBS)
@@ -468,8 +488,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/audio_helper.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alsa.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alsa_backend.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_flac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_mad.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_output.Plo@am__quote@
@@ -527,6 +549,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+audio_helper.lo: src/audio/decode/audio_helper.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT audio_helper.lo -MD -MP -MF "$(DEPDIR)/audio_helper.Tpo" -c -o audio_helper.lo `test -f 'src/audio/decode/audio_helper.c' || echo '$(srcdir)/'`src/audio/decode/audio_helper.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/audio_helper.Tpo" "$(DEPDIR)/audio_helper.Plo"; else rm -f "$(DEPDIR)/audio_helper.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/audio_helper.c' object='audio_helper.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o audio_helper.lo `test -f 'src/audio/decode/audio_helper.c' || echo '$(srcdir)/'`src/audio/decode/audio_helper.c
 
 fifo.lo: src/audio/fifo.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT fifo.lo -MD -MP -MF "$(DEPDIR)/fifo.Tpo" -c -o fifo.lo `test -f 'src/audio/fifo.c' || echo '$(srcdir)/'`src/audio/fifo.c; \
@@ -807,6 +836,20 @@ log.obj: src/log.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/log.c' object='log.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o log.obj `if test -f 'src/log.c'; then $(CYGPATH_W) 'src/log.c'; else $(CYGPATH_W) '$(srcdir)/src/log.c'; fi`
+
+decode_alsa_backend.o: src/audio/decode/decode_alsa_backend.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_alsa_backend.o -MD -MP -MF "$(DEPDIR)/decode_alsa_backend.Tpo" -c -o decode_alsa_backend.o `test -f 'src/audio/decode/decode_alsa_backend.c' || echo '$(srcdir)/'`src/audio/decode/decode_alsa_backend.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_alsa_backend.Tpo" "$(DEPDIR)/decode_alsa_backend.Po"; else rm -f "$(DEPDIR)/decode_alsa_backend.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_alsa_backend.c' object='decode_alsa_backend.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_alsa_backend.o `test -f 'src/audio/decode/decode_alsa_backend.c' || echo '$(srcdir)/'`src/audio/decode/decode_alsa_backend.c
+
+decode_alsa_backend.obj: src/audio/decode/decode_alsa_backend.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_alsa_backend.obj -MD -MP -MF "$(DEPDIR)/decode_alsa_backend.Tpo" -c -o decode_alsa_backend.obj `if test -f 'src/audio/decode/decode_alsa_backend.c'; then $(CYGPATH_W) 'src/audio/decode/decode_alsa_backend.c'; else $(CYGPATH_W) '$(srcdir)/src/audio/decode/decode_alsa_backend.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_alsa_backend.Tpo" "$(DEPDIR)/decode_alsa_backend.Po"; else rm -f "$(DEPDIR)/decode_alsa_backend.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_alsa_backend.c' object='decode_alsa_backend.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_alsa_backend.obj `if test -f 'src/audio/decode/decode_alsa_backend.c'; then $(CYGPATH_W) 'src/audio/decode/decode_alsa_backend.c'; else $(CYGPATH_W) '$(srcdir)/src/audio/decode/decode_alsa_backend.c'; fi`
 
 jiveblit.o: src/jiveblit.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jiveblit.o -MD -MP -MF "$(DEPDIR)/jiveblit.Tpo" -c -o jiveblit.o `test -f 'src/jiveblit.c' || echo '$(srcdir)/'`src/jiveblit.c; \

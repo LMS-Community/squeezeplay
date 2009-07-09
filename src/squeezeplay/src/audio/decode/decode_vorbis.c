@@ -94,9 +94,7 @@ static bool_t decode_vorbis_callback(void *data) {
 	s16_t *rptr;
 	sample_t *wptr;
 
-	while (!(current_decoder_state & DECODE_STATE_ERROR) &&
-	       decode_output_can_write(OUTPUT_BUFFER_SIZE, self->sample_rate)) {
-
+	while (!(current_decoder_state & DECODE_STATE_ERROR)) {
 		switch (self->state) {
 		case OGG_STATE_INIT:
 			LOG_DEBUG(log_audio_codec, "Calling ov_open_callbacks");
@@ -199,8 +197,8 @@ static bool_t decode_vorbis_callback(void *data) {
 }
 
 
-static u32_t decode_vorbis_period(void *data) {
-	return 1;
+static size_t decode_vorbis_samples(void *data) {
+	return BYTES_TO_SAMPLES(OUTPUT_BUFFER_SIZE);
 }
 
 
@@ -234,6 +232,6 @@ struct decode_module decode_vorbis = {
 	"ogg",
 	decode_vorbis_start,
 	decode_vorbis_stop,
-	decode_vorbis_period,
+	decode_vorbis_samples,
 	decode_vorbis_callback,
 };

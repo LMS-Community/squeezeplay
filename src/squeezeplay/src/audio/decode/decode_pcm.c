@@ -92,11 +92,6 @@ static bool_t decode_pcm_callback(void *data) {
 	sample_t sample;
 	size_t sz;
 
-
-	if (!decode_output_can_write(sizeof(sample_t) * BLOCKSIZE, self->sample_rate)) {
-		return FALSE;
-	}
-
 	sz = streambuf_read(self->read_buffer + self->leftover, 0, BLOCKSIZE - self->leftover, NULL);
 	if (!sz) {
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
@@ -140,15 +135,8 @@ static bool_t decode_pcm_callback(void *data) {
 }		
 
 
-static u32_t decode_pcm_period(void *data) {
-	struct decode_pcm *self = (struct decode_pcm *) data;
-
-	if (self->sample_rate <= 48000) {
-		return 8;
-	}
-	else {
-		return 1;
-	}
+static size_t decode_pcm_samples(void *data) {
+	return BLOCKSIZE;
 }
 
 
@@ -191,6 +179,6 @@ struct decode_module decode_pcm = {
 	"pcm",
 	decode_pcm_start,
 	decode_pcm_stop,
-	decode_pcm_period,
+	decode_pcm_samples,
 	decode_pcm_callback,
 };

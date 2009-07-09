@@ -12,11 +12,12 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
+
 #ifdef WITH_SPPRIVATE
 extern int luaopen_spprivate(lua_State *L);
 #endif
 
-#define DECODE_MAX_INTERVAL 100
+#define DECODE_MAX_INTERVAL 1000
 
 #define DECODE_MQUEUE_SIZE 512
 
@@ -34,20 +35,14 @@ static SDL_Thread *decode_thread = NULL;
 
 /* current decoder state */
 u32_t current_decoder_state = 0;
-u32_t current_audio_state = 0;
+
 
 /* state variables for the current track */
-u32_t decode_num_tracks_started = 0;
-u32_t decode_elapsed_samples = 0;
 bool_t decode_first_buffer = FALSE;
-u32_t current_sample_rate = 44100;
-size_t skip_ahead_bytes = 0;
-int add_silence_ms = 0;
 
 
 /* decoder fifo used to store decoded samples */
-u8_t decode_fifo_buf[DECODE_FIFO_SIZE];
-struct fifo decode_fifo;
+u8_t *decode_fifo_buf;
 
 
 /* decoder mqueue */
@@ -90,7 +85,7 @@ static void decode_resume_decoder_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	current_decoder_state = DECODE_STATE_RUNNING;
-	LOG_DEBUG(log_audio_decode, "resume_decoder decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "resume_decoder decode state: %x audio state %x", current_decoder_state, decode_audio->state);
 }
 
 
@@ -106,22 +101,22 @@ static void decode_resume_audio_handler(void) {
 	
 	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_interval=%d", start_interval);
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (start_interval) {
-		add_silence_ms = start_interval;
+		decode_audio->add_silence_ms = start_interval;
 	}
 
-	if (!fifo_empty(&decode_fifo)) {
-		current_audio_state = DECODE_STATE_RUNNING;
+	if (!fifo_empty(&decode_audio->fifo)) {
+		decode_audio->state = DECODE_STATE_RUNNING;
 		if (decode_audio) {
-			decode_audio->resume();
+			decode_audio->f->resume();
 		}
 	}
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
-	LOG_DEBUG(log_audio_decode, "resume_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "resume_audio decode state: %x audio state %x", current_decoder_state, decode_audio->state);
 }
 
 
@@ -133,20 +128,20 @@ static void decode_pause_audio_handler(void) {
 
 	LOG_DEBUG(log_audio_decode, "decode_pause_handler interval=%d", interval);
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (interval) {
-		add_silence_ms = interval;
+		decode_audio->add_silence_ms = interval;
 	} else {
-		current_audio_state &= ~DECODE_STATE_RUNNING;
+		decode_audio->state &= ~DECODE_STATE_RUNNING;
 		if (decode_audio) {
-			decode_audio->pause();
+			decode_audio->f->pause();
 		}
 	}
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
-	LOG_DEBUG(log_audio_decode, "pause_audio decode state: %x audio state %x", current_decoder_state, current_audio_state);
+	LOG_DEBUG(log_audio_decode, "pause_audio decode state: %x audio state %x", current_decoder_state, decode_audio->state);
 }
 
 
@@ -157,8 +152,12 @@ static void decode_skip_ahead_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	LOG_DEBUG(log_audio_decode, "decode_skip_ahead_handler interval=%d", interval);
-	
-	skip_ahead_bytes = SAMPLES_TO_BYTES((u32_t)((interval * current_sample_rate) / 1000));
+
+	decode_audio_lock();
+
+	decode_audio->skip_ahead_bytes = SAMPLES_TO_BYTES((u32_t)((interval * decode_audio->track_sample_rate) / 1000));
+
+	decode_audio_unlock();
 }
 
 
@@ -167,10 +166,10 @@ static void decode_stop_handler(void) {
 
 	LOG_DEBUG(log_audio_decode, "decode_stop_handler");
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	current_decoder_state = 0;
-	current_audio_state = 0;
+	decode_audio->state = 0;
 
 	if (decoder) {
 		decoder->stop(decoder_data);
@@ -179,13 +178,13 @@ static void decode_stop_handler(void) {
 		decoder_data = NULL;
 	}
 
+	decode_audio->num_tracks_started = 0;
 	decode_first_buffer = FALSE;
-	decode_num_tracks_started = 0;
 	decode_output_end();
 
 	streambuf_flush();
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
@@ -194,7 +193,7 @@ static void decode_flush_handler(void) {
 
 	LOG_DEBUG(log_audio_decode, "decode_flush_handler");
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	current_decoder_state = 0;
 
@@ -208,7 +207,7 @@ static void decode_flush_handler(void) {
 	decode_first_buffer = FALSE;
 	decode_output_flush();
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
@@ -247,19 +246,17 @@ static void decode_start_handler(void) {
 
 	LOG_INFO(log_audio_decode, "init decoder %s", decoder->name);
 
-	fifo_lock(&decode_fifo);
-
-	decoder_data = decoder->start(params, num_params);
-
 	decode_first_buffer = TRUE;
 	// XXXX decode_set_output_threshold(output_threshold);
 	decode_output_set_transition(transition_type, transition_period);
 	decode_output_set_track_gain(replay_gain);
 	decode_set_track_polarity_inversion(polarity_inversion);
 
-	decode_output_begin();
+	decoder_data = decoder->start(params, num_params);
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_lock();
+	decode_output_begin();
+	decode_audio_unlock();
 }
 
 
@@ -268,27 +265,44 @@ static void decode_song_ended_handler(void) {
 
 	LOG_DEBUG(log_audio_decode, "decode_song_ended_handler");
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	decode_output_song_ended();
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
 static Uint32 decode_timer_interval(void) {
-	size_t used;
+	size_t free_bytes, used_bytes, max_samples;
+	u32_t state, sample_rate, delay;
 
-	if (decoder) {
-		used = decode_output_percent_used();
-		if (used > 80) {
-			return DECODE_MAX_INTERVAL;
-		} else if (used > 50) {
-			return DECODE_MAX_INTERVAL / 2;
-		}
-		return decoder->period(decoder_data);
+	if (!decoder || !(current_decoder_state & DECODE_STATE_RUNNING)) {
+		return DECODE_MAX_INTERVAL;
 	}
-	return DECODE_MAX_INTERVAL;
+
+	max_samples = decoder->samples(decoder_data);
+
+	decode_audio_lock();
+	state = decode_audio->state;
+	sample_rate = decode_audio->track_sample_rate;
+	free_bytes = fifo_bytes_free(&decode_audio->fifo);
+	used_bytes = fifo_bytes_used(&decode_audio->fifo);
+	decode_audio_unlock();
+
+	if (SAMPLES_TO_BYTES(max_samples) < free_bytes) {
+		delay = 1;
+	}
+	else {
+		delay = ((max_samples * 1000) / sample_rate) + 1; /* ms */
+
+		/* don't decode for every buffer, do it every other one */
+		delay *= 2;
+	}
+
+	//LOG_DEBUG(log_audio_decode, "freebytes %d maxsamples %d delay %d used %d%%\n", free_bytes, max_samples, delay, (used_bytes * 100) / (used_bytes + free_bytes));
+
+	return delay;
 }
 
 
@@ -321,8 +335,6 @@ static int decode_thread_execute(void *unused) {
 			decoder->callback(decoder_data);
 		}
 
-		// XXXX visualizer
-
 		// XXXX buffer underrun
 	}
 
@@ -345,7 +357,7 @@ void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metad
 
 
 void decode_queue_packet(void *data, size_t len) {
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (packet_data) {
 		/* if this happens often we need to implement a queue */
@@ -356,7 +368,7 @@ void decode_queue_packet(void *data, size_t len) {
 	packet_data = data;
 	packet_len = len;
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
@@ -365,10 +377,10 @@ static int decode_dequeue_packet(lua_State *L) {
 	 * 1: self
 	 */
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (!packet_data) {
-		fifo_unlock(&decode_fifo);
+		decode_audio_unlock();
 		return 0;
 	}
 
@@ -383,7 +395,7 @@ static int decode_dequeue_packet(lua_State *L) {
 	free(packet_data);
 	packet_data = NULL;
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
 	return 1;
 }
@@ -585,19 +597,23 @@ static int decode_status(lua_State *L) {
 	u32_t bytesL, bytesH;
 	u64_t elapsed, delay, output;
 
+	if (!decode_audio) {
+		return 0;
+	}
+
 	lua_newtable(L);
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
-	lua_pushinteger(L, fifo_bytes_used(&decode_fifo));
+	lua_pushinteger(L, fifo_bytes_used(&decode_audio->fifo));
 	lua_setfield(L, -2, "outputFull");
 
-	lua_pushinteger(L, decode_fifo.size);
+	lua_pushinteger(L, decode_audio->fifo.size);
 	lua_setfield(L, -2, "outputSize");
 
-	if (current_sample_rate) {
-		output = fifo_bytes_used(&decode_fifo);
-		output = (BYTES_TO_SAMPLES(output) * 1000) / current_sample_rate;
+	if (decode_audio->track_sample_rate) {
+		output = fifo_bytes_used(&decode_audio->fifo);
+		output = (BYTES_TO_SAMPLES(output) * 1000) / decode_audio->track_sample_rate;
 	}
 	else {
 		output = 0;
@@ -605,13 +621,14 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, (u32_t)output);
 	lua_setfield(L, -2, "outputTime");
 
-	if (current_sample_rate) {
-		elapsed = decode_elapsed_samples;
-		delay = (decode_audio && decode_audio->delay) ? decode_audio->delay() : 0;
+	if (decode_audio->track_sample_rate) {
+		elapsed = decode_audio->elapsed_samples;
+		// XXXX need to discuss delay with alan 
+		delay = decode_audio->delay;
 		if (elapsed > delay) {
 			elapsed -= delay;
 		}
-		elapsed = (elapsed * 1000) / current_sample_rate;
+		elapsed = (elapsed * 1000) / decode_audio->track_sample_rate;
 	}
 	else {
 		elapsed = 0;
@@ -623,7 +640,7 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, (u32_t)SDL_GetTicks());
 	lua_setfield(L, -2, "elapsed_jiffies");
 	
-	lua_pushinteger(L, decode_num_tracks_started);
+	lua_pushinteger(L, decode_audio->num_tracks_started);
 	lua_setfield(L, -2, "tracksStarted");
 
 	if (decoder) {
@@ -631,7 +648,10 @@ static int decode_status(lua_State *L) {
 		lua_setfield(L, -2, "decoder");
 	}
 
-	fifo_unlock(&decode_fifo);
+	lua_pushinteger(L, decode_audio->state);
+	lua_setfield(L, -2, "audioState");
+
+	decode_audio_unlock();
 
 
 	streambuf_get_status(&size, &usedbytes, &bytesL, &bytesH);
@@ -648,12 +668,8 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, bytesH);
 	lua_setfield(L, -2, "bytesReceivedH");
 
-
 	lua_pushinteger(L, current_decoder_state);
 	lua_setfield(L, -2, "decodeState");
-
-	lua_pushinteger(L, current_audio_state);
-	lua_setfield(L, -2, "audioState");
 
 	return 1;
 }
@@ -675,7 +691,10 @@ static int decode_audio_gain(lua_State *L) {
 	rgain = lua_tointeger(L, 3);
 
 	if (decode_audio) {
-		decode_audio->gain(lgain, rgain);
+		decode_audio_lock();
+		decode_audio->lgain = lgain;
+		decode_audio->rgain = rgain;
+		decode_audio_unlock();
 	}
 
 	return 0;
@@ -696,11 +715,11 @@ static int decode_vumeter(lua_State *L) {
 	sample_accumulator[0] = 0;
 	sample_accumulator[1] = 0;
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
-	if (current_audio_state & DECODE_STATE_RUNNING) {
-		ptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.rptr);
-		samples_until_wrap = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_fifo));
+	if (decode_audio->state & DECODE_STATE_RUNNING) {
+		ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+		samples_until_wrap = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_audio->fifo));
 
 		for (i=0; i<num_samples; i++) {
 			sample = (*ptr++) >> 24;
@@ -718,7 +737,7 @@ static int decode_vumeter(lua_State *L) {
 		}
 	}
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
 	sample_accumulator[0] /= num_samples;
 	sample_accumulator[1] /= num_samples;
@@ -766,14 +785,16 @@ static int decode_init_audio(lua_State *L) {
 
 	/* max sample rate */
 	if (decode_audio) {
-		unsigned int rate_max;
+		u32_t max_rate;
 
-		decode_audio->info(&rate_max);
+		decode_audio_lock();
+		max_rate = decode_audio->max_rate;
+		decode_audio_unlock();
 
 		lua_getfield(L, 2, "capability");
 		lua_pushvalue(L, 2);
 		lua_pushstring(L, "MaxSampleRate");
-		lua_pushinteger(L, rate_max);
+		lua_pushinteger(L, max_rate);
 		lua_call(L, 3, 0);
 	}
 
@@ -782,36 +803,46 @@ static int decode_init_audio(lua_State *L) {
 
 
 static int decode_audio_open(lua_State *L) {
+	struct decode_audio_func *f = NULL;
+
+	if (decode_audio || decode_thread) {
+		/* already initialized */
+		lua_pushboolean(L, 1);
+		return 1;
+	}
 
 	/* initialise audio output */
 #ifdef HAVE_LIBASOUND
-	decode_audio = &decode_alsa;
+	f = &decode_alsa;
 #endif
 #ifdef HAVE_LIBPORTAUDIO
-	if (!decode_audio) {
-		decode_audio = &decode_portaudio;
+	if (!f) {
+		f = &decode_portaudio;
 	}
 #endif
-	if (!decode_audio) {
+	if (!f) {
 		/* no audio support */
 		lua_pushnil(L);
 		lua_pushstring(L, "No audio support");
 		return 2;
 	}
 
-	if (!decode_audio->init(L)) {
+	/* audio initialization */
+	if (!f->init(L)) {
 		/* audio init failed */
-		decode_audio = NULL;
-
 		lua_pushnil(L);
 		lua_pushstring(L, "Error in audio init");
 		return 2;
 	}
 
+	assert(decode_audio);
+	assert(decode_fifo_buf);
+
+	decode_audio->f = f;
+
 	/* start decoder thread */
-	if (!decode_thread) {
-		decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
-	}
+	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
+	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
 
 	lua_pushboolean(L, 1);
 	return 1;
@@ -847,10 +878,6 @@ int luaopen_decode(lua_State *L) {
 
 	/* register sample playback */
 	decode_sample_init(L);
-
-	fifo_init(&decode_fifo, DECODE_FIFO_SIZE);
-
-	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
 
 	/* register lua functions */
 	luaL_register(L, "squeezeplay.decode", decode_f);

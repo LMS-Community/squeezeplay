@@ -121,21 +121,21 @@ static int decode_sample_obj_play(lua_State *L) {
 	 */
 
 	snd = *(struct jive_sample **)lua_touserdata(L, -1);
-	if (!snd->enabled) {
+	if (!snd->enabled || !decode_audio) {
 		return 0;
 	}
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (sample[snd->mixer] != NULL) {
 		/* slot if not free */
-		fifo_unlock(&decode_fifo);
+		decode_audio_unlock();
 		return 0;
 	}
 
 	sample[snd->mixer] = snd;
 	sample[snd->mixer]->refcount++;
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
 	return 0;
 }

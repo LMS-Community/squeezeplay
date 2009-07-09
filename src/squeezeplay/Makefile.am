@@ -140,7 +140,7 @@ squeezeplay-deb:
 	cd ../platforms; fakeroot dpkg-buildpackage -b; ls -lah ../squeezeplay*.deb
 
 # Convenience library:
-noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
+noinst_LTLIBRARIES = libui.la libaudio.la libdecode.la libnet.la
 
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
@@ -158,7 +158,7 @@ src/version.h: FORCE
 
 FORCE:
 
-libjiveui_la_SOURCES = \
+libui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -180,11 +180,14 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_window.c \
 	src/ui/lua_jiveui.c
 
-libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
+libui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 
-libjiveaudio_la_SOURCES = \
+libaudio_la_SOURCES = \
+	src/audio/decode/audio_helper.c \
 	src/audio/fifo.c \
-	src/audio/fixed_math.c \
+	src/audio/fixed_math.c
+
+libdecode_la_SOURCES = \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
 	src/audio/decode/decode.c \
@@ -198,16 +201,16 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_vorbis.c
 
 
-libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
+libdecode_la_LIBADD = libaudio.la -lSDL -lFLAC -lmad -lvorbisidec
 
-libjivenet_la_SOURCES = \
+libnet_la_SOURCES = \
 	src/net/jive_dns.c
 
-libjivenet_la_LIBADD = -lSDL
+libnet_la_LIBADD = -lSDL -lresolv
 
 
 # Program: jivebrowser
-bin_PROGRAMS = jive
+bin_PROGRAMS = jive jive_alsa
 
 
 # Test programs: jiveblit
@@ -224,7 +227,12 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua
+
+jive_alsa_SOURCES = \
+	src/audio/decode/decode_alsa_backend.c
+
+jive_alsa_LDADD = libaudio.la -lasound
 
 
 # Test program: jiveblit

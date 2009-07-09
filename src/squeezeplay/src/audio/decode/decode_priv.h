@@ -31,9 +31,13 @@ typedef s32_t sample_t;
 struct decode_module {
 	u32_t id;
 	char *name;
+	/* start the decode, params is from SC */
 	void *(*start)(u8_t *params, u32_t num_params);
+	/* stop and free the decode */
 	void (*stop)(void *data);
-	u32_t (*period)(void *data);
+	/* max samples to be written to output buffer */
+	size_t (*samples)(void *data);
+	/* callback to decode samples to output buffer */
 	bool_t (*callback)(void *data);
 };
 
@@ -55,9 +59,6 @@ extern struct decode_module decode_aac;
 
 /* Private decoder api */
 extern u32_t current_decoder_state;
-extern u32_t current_audio_state;
-
-extern bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate);
 
 extern u32_t decode_output_percent_used(void);
 
@@ -76,21 +77,53 @@ extern void decode_output_set_track_gain(u32_t replay_gain);
 extern void decode_set_track_polarity_inversion(u8_t inversion);
 
 
-/* Audio output api */
-struct decode_audio {
+/* Audio output backends */
+struct decode_audio_func {
 	int (*init)(lua_State *L);
 	void (*start)(void);
 	void (*pause)(void);
 	void (*resume)(void);
 	void (*stop)(void);
-	u32_t (*delay)(void);
-	void (*gain)(s32_t lgain, s32_t rgain);
-	void (*info)(unsigned int *rate_max);
 };
 
-extern struct decode_audio decode_alsa;
-extern struct decode_audio decode_portaudio;
+struct decode_audio {
+	struct decode_audio_func *f;
+	struct fifo fifo;
+
+	/* playback state */
+	u32_t state;
+	s32_t lgain, rgain;
+	u32_t set_sample_rate;
+	u32_t delay;
+
+	/* track state */
+	bool_t check_start_point;
+	size_t track_start_point;
+	u32_t track_sample_rate;
+	u32_t elapsed_samples;
+	u32_t num_tracks_started;
+
+	/* sync state */
+	size_t skip_ahead_bytes;
+	int add_silence_ms;
+
+	/* effects */
+	// XXXX
+
+	/* device info */
+	u32_t max_rate;
+};
+
 extern struct decode_audio *decode_audio;
+
+#define decode_audio_lock() fifo_lock(&(decode_audio->fifo))
+#define decode_audio_unlock() fifo_unlock(&(decode_audio->fifo))
+
+#define ASSERT_AUDIO_LOCKED() ASSERT_FIFO_LOCKED(&(decode_audio->fifo))
+
+/* Audio output backends */
+extern struct decode_audio_func decode_alsa;
+extern struct decode_audio_func decode_portaudio;
 
 
 /* Decode output api */
@@ -112,16 +145,11 @@ extern void decode_sample_mix(Uint8 *buffer, size_t buflen);
 #define BYTES_TO_SAMPLES(n)  ((n) / (2 * sizeof(sample_t)))
 
 /* State variables for the current track */
-extern u32_t decode_num_tracks_started;
-extern u32_t decode_elapsed_samples;
 extern bool_t decode_first_buffer;
-extern u32_t current_sample_rate;
-extern size_t skip_ahead_bytes;
-extern int add_silence_ms;
+
 
 /* The fifo used to store decoded samples */
-extern u8_t decode_fifo_buf[DECODE_FIFO_SIZE];
-extern struct fifo decode_fifo;
+extern u8_t *decode_fifo_buf;
 
 /* Decode message queue */
 extern struct mqueue decode_mqueue;

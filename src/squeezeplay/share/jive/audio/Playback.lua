@@ -51,7 +51,7 @@ function __init(self, jnt, slimproto)
 	obj.slimproto = slimproto
 
 	obj.slimproto:statusPacketCallback(function(_, event, serverTimestamp)
-		local status = decode:status()
+		local status = decode:status() or {}
 
 		status.opcode = "STAT"
 		status.event = event
@@ -149,6 +149,9 @@ end
 
 function _timerCallback(self)
 	local status = decode:status()
+	if status == nil then
+		return
+	end
 
 	-- cpu power saving
 	local outputFullness = status.outputFull / status.outputSize * 100
