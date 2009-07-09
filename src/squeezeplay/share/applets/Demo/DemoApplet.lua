@@ -300,7 +300,7 @@ end
 
 function _playSlides(self)
 	self:_showNextSlide()
-	self.nextSlideTimer = Timer(6000, 
+	self.nextSlideTimer = Timer(5000, 
 		function()
 			self:_nextImage()
 			self:_showNextSlide()
