@@ -307,7 +307,7 @@ function skin(self, s, reload, useDefaultSize)
 	local c = s.CONSTANTS
 
 	s.img.smallSpinny = {
-		-- FIXME: need this asset
+		-- FIXME: this is the right asset but Noah needs to update so it gets put in Alerts/
 		img = _loadImage(self, "UNOFFICIAL/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
