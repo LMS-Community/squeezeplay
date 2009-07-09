@@ -376,8 +376,8 @@ function _squeezenetworkError(self, squeezenetwork, message)
 		weight = 1
 	})
 
-	window:addWidget(Textarea("help_text", self:string(message)))
 	window:addWidget(menu)
+	menu:setHeaderWidget(Textarea("help_text", self:string(message)))
 
 	-- back goes back to network selection
 	-- note add listener to menu, as it has the focus
