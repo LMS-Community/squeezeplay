@@ -1940,7 +1940,7 @@ function skin(self, s)
         })
 
         s.icon_popup_shuffle2 = _uses(_popupicon, {
-                img = _loadImage(self, "Icons/icon_popup_box_shuffle_ablum.png"),
+                img = _loadImage(self, "Icons/icon_popup_box_shuffle_album.png"),
         })
 
 	s.icon_popup_repeat0 = _uses(_popupicon, {
