@@ -22,10 +22,7 @@ static PaStreamParameters outputParam;
 static PaStream *stream;
 
 /* Stream sample rate */
-static bool_t change_sample_rate;
 static u32_t stream_sample_rate;
-
-static fft_fixed lgain, rgain;
 
 
 static void decode_portaudio_openstream(void);
@@ -42,6 +39,7 @@ static int callback(const void *inputBuffer,
 		    PaStreamCallbackFlags statusFlags,
 		    void *userData) {
 	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
+	int add_silence_ms;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 
@@ -53,23 +51,24 @@ static int callback(const void *inputBuffer,
 
 	len = SAMPLES_TO_BYTES(framesPerBuffer);
 
+	decode_audio_lock();
+
 	/* audio running? */
-	if (!(current_audio_state & DECODE_STATE_RUNNING)) {
+	if (!(decode_audio->state & DECODE_STATE_RUNNING)) {
 		memset(outputArray, 0, len);
 
 		/* mix in sound effects */
 		goto mixin_effects;
 	}
 
-	fifo_lock(&decode_fifo);
-
+	add_silence_ms = decode_audio->add_silence_ms;
 	if (add_silence_ms) {
-		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * current_sample_rate) / 1000));
+		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * stream_sample_rate) / 1000));
 		if (add_bytes > len) add_bytes = len;
 		memset(outputArray, 0, add_bytes);
 		outputArray += add_bytes;
 		len -= add_bytes;
-		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / current_sample_rate;
+		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / stream_sample_rate;
 		if (add_silence_ms < 2)
 			add_silence_ms = 0;
 		if (!len) {
@@ -77,13 +76,13 @@ static int callback(const void *inputBuffer,
 		}
 	}
 
-	bytes_used = fifo_bytes_used(&decode_fifo);	
+	bytes_used = fifo_bytes_used(&decode_audio->fifo);	
 
 	/* only skip if it will not cause an underrun */
-	if (bytes_used >= len && skip_ahead_bytes > 0) {
+	if (bytes_used >= len && decode_audio->skip_ahead_bytes > 0) {
 		skip_bytes = bytes_used - len;
-		if (skip_bytes > skip_ahead_bytes) {
-			skip_bytes = skip_ahead_bytes;			
+		if (skip_bytes > decode_audio->skip_ahead_bytes) {
+			skip_bytes = decode_audio->skip_ahead_bytes;			
 		}
 	}
 
@@ -93,18 +92,18 @@ static int callback(const void *inputBuffer,
 
 	/* audio underrun? */
 	if (bytes_used == 0) {
-		current_audio_state |= DECODE_STATE_UNDERRUN;
+		decode_audio->state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray, 0, len);
 
 		goto unlock_mixin_effects;
 	}
 
 	if (bytes_used < len) {
-		current_audio_state |= DECODE_STATE_UNDERRUN;
+		decode_audio->state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray + bytes_used, 0, len - bytes_used);
 	}
 	else {
-		current_audio_state &= ~DECODE_STATE_UNDERRUN;
+		decode_audio->state &= ~DECODE_STATE_UNDERRUN;
 	}
 
 	if (skip_bytes) {
@@ -112,25 +111,25 @@ static int callback(const void *inputBuffer,
 
 		LOG_DEBUG(log_audio_output, "Skipping %d bytes", (int) skip_bytes);
 		
-		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
+		wrap = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
 
 		if (wrap < skip_bytes) {
-			fifo_rptr_incby(&decode_fifo, wrap);
+			fifo_rptr_incby(&decode_audio->fifo, wrap);
 			skip_bytes -= wrap;
-			skip_ahead_bytes -= wrap;
-			decode_elapsed_samples += BYTES_TO_SAMPLES(wrap);
+			decode_audio->skip_ahead_bytes -= wrap;
+			decode_audio->elapsed_samples += BYTES_TO_SAMPLES(wrap);
 		}
 
-		fifo_rptr_incby(&decode_fifo, skip_bytes);
-		skip_ahead_bytes -= skip_bytes;
-		decode_elapsed_samples += BYTES_TO_SAMPLES(skip_bytes);
+		fifo_rptr_incby(&decode_audio->fifo, skip_bytes);
+		decode_audio->skip_ahead_bytes -= skip_bytes;
+		decode_audio->elapsed_samples += BYTES_TO_SAMPLES(skip_bytes);
 	}
 
 	while (bytes_used) {
 		size_t wrap, bytes_write, samples_write;
 		sample_t *output_ptr, *decode_ptr;
 
-		wrap = fifo_bytes_until_rptr_wrap(&decode_fifo);
+		wrap = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
 
 		bytes_write = bytes_used;
 		if (wrap < bytes_write) {
@@ -140,30 +139,32 @@ static int callback(const void *inputBuffer,
 		samples_write = BYTES_TO_SAMPLES(bytes_write);
 
 		output_ptr = (sample_t *)outputArray;
-		decode_ptr = (sample_t *)(decode_fifo_buf + decode_fifo.rptr);
+		decode_ptr = (sample_t *)(decode_fifo_buf + decode_audio->fifo.rptr);
 		while (samples_write--) {
-			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
-			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++));
 		}
 
-		fifo_rptr_incby(&decode_fifo, bytes_write);
-		decode_elapsed_samples += BYTES_TO_SAMPLES(bytes_write);
+		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
+		decode_audio->elapsed_samples += BYTES_TO_SAMPLES(bytes_write);
 
 		outputArray += bytes_write;
 		bytes_used -= bytes_write;
 	}
 
 	reached_start_point = decode_check_start_point();
-	if (reached_start_point && current_sample_rate != stream_sample_rate) {
-		change_sample_rate = true;
+	if (reached_start_point && decode_audio->track_sample_rate != stream_sample_rate) {
+		decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 	}
 
  unlock_mixin_effects:
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
  mixin_effects:
+#if 0
 	/* mix in sound effects */
 	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
+#endif
 
 	return paContinue;
 }
@@ -181,7 +182,7 @@ static void finished_handler(void) {
  * different sample rate.
  */
 static void finished(void *userData) {
-	if (change_sample_rate) {
+	if (decode_audio->set_sample_rate) {
 		/* We can't change the sample rate in this thread, so queue a request for
 		 * the decoder thread to service
 		 */
@@ -198,20 +199,25 @@ static void finished(void *userData) {
 static void decode_portaudio_start(void) {
 	LOG_DEBUG(log_audio_output, "decode_portaudio_start");
 
+	ASSERT_AUDIO_LOCKED();
+
 	decode_portaudio_openstream();
 }
 
 static void decode_portaudio_pause(void) {
+	ASSERT_AUDIO_LOCKED();
 }
 
 static void decode_portaudio_resume(void) {
+	ASSERT_AUDIO_LOCKED();
 }
 
 static void decode_portaudio_stop(void) {
 	LOG_DEBUG(log_audio_output, "decode_portaudio_stop");
 
-	current_sample_rate = 44100;
-	change_sample_rate = false;
+	ASSERT_AUDIO_LOCKED();
+
+	decode_audio->set_sample_rate = 44100;
 
 	decode_portaudio_openstream();
 }
@@ -219,6 +225,7 @@ static void decode_portaudio_stop(void) {
 
 static void decode_portaudio_openstream(void) {
 	PaError err;
+	u32_t set_sample_rate;
 
 	if (stream) {
 		if ((err = Pa_CloseStream(stream)) != paNoError) {
@@ -226,11 +233,16 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
+	decode_audio_lock();
+	set_sample_rate = decode_audio->set_sample_rate;
+	decode_audio->set_sample_rate = 0;
+	decode_audio_unlock();
+
 	if ((err = Pa_OpenStream(
 			&stream,
 			NULL,
 			&outputParam,
-			current_sample_rate,
+			set_sample_rate,
 			paFramesPerBufferUnspecified,
 			paPrimeOutputBuffersUsingStreamCallback,
 			callback,
@@ -238,8 +250,7 @@ static void decode_portaudio_openstream(void) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
 
-	change_sample_rate = false;
-	stream_sample_rate = current_sample_rate;
+	stream_sample_rate = set_sample_rate;
 
 	/* playout to the end of this stream before changing the sample rate */
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
@@ -263,7 +274,7 @@ static int decode_portaudio_init(lua_State *L) {
 	const PaHostApiInfo *host_info;
 
 	if ((err = Pa_Initialize()) != paNoError) {
-		goto err;
+		goto err0;
 	}
 
 	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
@@ -299,39 +310,38 @@ static int decode_portaudio_init(lua_State *L) {
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
 
+	/* allocate decoder memory */
+	if (!(decode_fifo_buf = malloc(DECODE_FIFO_SIZE))) {
+		goto err0;
+	}
+
+	if (!(decode_audio = malloc(sizeof(struct decode_audio)))) {
+		goto err1;
+	}
+
+	decode_audio->max_rate = 48000;
+	decode_audio->set_sample_rate = 44100;
+	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, false);
+
 	/* open stream */
 	decode_portaudio_openstream();
 
 	return 1;
 
- err:
+ err1:
+	free(decode_audio);
+ err0:
 	LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	return 0;
 }
 
 
-static void decode_portaudio_gain(s32_t left_gain, s32_t right_gain)
-{
-	lgain = left_gain;
-	rgain = right_gain;
-}
-
-
-static void decode_portaudio_info(unsigned int *rate_max) {
-	// FIXME
-	*rate_max = 48000;
-}
-
-
-struct decode_audio decode_portaudio = {
+struct decode_audio_func decode_portaudio = {
 	decode_portaudio_init,
 	decode_portaudio_start,
 	decode_portaudio_pause,
 	decode_portaudio_resume,
 	decode_portaudio_stop,
-	NULL,
-	decode_portaudio_gain,
-	decode_portaudio_info,
 };
 
 #endif // HAVE_PORTAUDIO

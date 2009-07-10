@@ -773,8 +773,7 @@ static const struct luaL_Reg stream_m[] = {
 
 
 int luaopen_streambuf(lua_State *L) {
-
-	fifo_init(&streambuf_fifo, STREAMBUF_SIZE);
+	fifo_init(&streambuf_fifo, STREAMBUF_SIZE, false);
 
 	/* stream methods */
 	luaL_newmetatable(L, "squeezeplay.stream");

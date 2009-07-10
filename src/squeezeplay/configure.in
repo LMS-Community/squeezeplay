@@ -69,7 +69,7 @@ fi
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/socket.h unistd.h netdb.h arpa/inet.h])
+AC_CHECK_HEADERS([dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h unistd.h netdb.h arpa/inet.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

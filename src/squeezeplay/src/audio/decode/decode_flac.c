@@ -153,10 +153,6 @@ static bool_t decode_flac_callback(void *data) {
 		return FALSE;
 	}
 
-	if (! decode_output_can_write(2 * 4608 * sizeof(sample_t), self->sample_rate)) {
-		return FALSE;
-	}
-	
 	/* Because FLAC__stream_decoder_process_single() will keep calling the read
 	 * callback, in a hard loop, until it gets a full frame, we want to avoid calling
 	 * it unless it is likely to get a full frame. The absolute maximum size of a
@@ -180,15 +176,8 @@ static bool_t decode_flac_callback(void *data) {
 }		
 
 
-static u32_t decode_flac_period(void *data) {
-	struct decode_flac *self = (struct decode_flac *) data;
-
-	if (self->sample_rate <= 48000) {
-		return 8;
-	}
-	else {
-		return 4;
-	}
+static size_t decode_flac_samples(void *data) {
+	return 2 * 4608;
 }
 
 
@@ -247,6 +236,6 @@ struct decode_module decode_flac = {
 	"flc",
 	decode_flac_start,
 	decode_flac_stop,
-	decode_flac_period,
+	decode_flac_samples,
 	decode_flac_callback,
 };

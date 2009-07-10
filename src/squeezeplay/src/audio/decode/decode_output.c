@@ -13,14 +13,8 @@
 #include "audio/decode/decode_priv.h"
 
 #if defined(WIN32)
-
 #include <winsock2.h>
-
 #endif
-
-/* The start point of the last track */
-static bool_t check_start_point = FALSE;
-static size_t track_start_point = 0;
 
 /* Has the audio output been initialized? */
 static bool_t output_started = FALSE;
@@ -129,8 +123,10 @@ static bool_t upload_samples(sample_t *buffer, u32_t nsamples) {
 void decode_output_begin(void) {
 	/* call with the decode fifo locked */
 
+	ASSERT_AUDIO_LOCKED();
+
 	if (decode_audio) {
-		decode_audio->start();
+		decode_audio->f->start();
 	}
 
 	if (output_started) {
@@ -139,80 +135,44 @@ void decode_output_begin(void) {
 
 	output_started = TRUE;
 
-	decode_fifo.rptr = 0;
-	decode_fifo.wptr = 0;
+	decode_audio->fifo.rptr = 0;
+	decode_audio->fifo.wptr = 0;
 }
 
 
 void decode_output_end(void) {
 	/* call with the decode fifo locked */
 
+	ASSERT_AUDIO_LOCKED();
+
 	output_started = FALSE;
 
 	if (decode_audio) {
-		decode_audio->stop();
+		decode_audio->f->stop();
 	}
 
 	crossfade_started = FALSE;
 	transition_gain_step = 0;
-	decode_elapsed_samples = 0;
+	decode_audio->elapsed_samples = 0;
 }
 
 
 void decode_output_flush(void) {
 	/* call with the decode fifo locked */
 
-	if (check_start_point) {
-		decode_fifo.wptr = track_start_point;
+	ASSERT_AUDIO_LOCKED();
+
+	if (decode_audio->check_start_point) {
+		decode_audio->fifo.wptr = decode_audio->track_start_point;
 	}
 	else {
-		decode_fifo.rptr = decode_fifo.wptr;
+		decode_audio->fifo.rptr = decode_audio->fifo.wptr;
 
 		/* abort audio playback */
 		if (decode_audio) {
-			decode_audio->stop();
+			decode_audio->f->stop();
 		}
 	}
-}
-
-
-bool_t decode_check_start_point(void) {
-	bool_t reached_start_point;
-	long track_start_offset;
-
-	if (!check_start_point) {
-		/* We are past the start point */
-		return false;
-	}
-	
-	/* We mark the start point of a track in the decode FIFO. This function
-	 * tells us whether we've played past that point.
-	 */
-	if (decode_fifo.wptr > track_start_point) {
-		reached_start_point = ((decode_fifo.rptr > track_start_point) &&
-			(decode_fifo.rptr <= decode_fifo.wptr));
-	}
-	else {
-		reached_start_point = ((decode_fifo.rptr > track_start_point) ||
-			(decode_fifo.rptr <= decode_fifo.wptr));
-	}
-
-	if (!reached_start_point) {
-		/* We have not reached the start point */
-		return false;
-	}
-	
-	track_start_offset = decode_fifo.rptr - track_start_point;
-	if (track_start_offset < 0) {
-		track_start_offset += DECODE_FIFO_SIZE;
-	}
-
-	/* Past the start point */
-	check_start_point = FALSE;
-	decode_num_tracks_started++;
-	decode_elapsed_samples = BYTES_TO_SAMPLES(track_start_offset);
-
-	return true;
 }
 
 
@@ -268,7 +228,9 @@ static fft_fixed determine_transition_interval(int sample_rate, u32_t transition
 	size_t bytes_used, sample_step_bytes;
 	fft_fixed interval, interval_step;
 
-	bytes_used = fifo_bytes_used(&decode_fifo);
+	ASSERT_AUDIO_LOCKED();
+
+	bytes_used = fifo_bytes_used(&decode_audio->fifo);
 	*nbytes = SAMPLES_TO_BYTES(TRANSITION_MINIMUM_SECONDS * sample_rate);
 	if (bytes_used < *nbytes) {
 		return 0;
@@ -291,8 +253,10 @@ static fft_fixed determine_transition_interval(int sample_rate, u32_t transition
 
 /* How many bytes till we're done with the transition.
  */
-static size_t decode_transition_bytes_remaining(size_t ptr) {
-	return (ptr >= decode_fifo.wptr) ? (ptr - decode_fifo.wptr) : (decode_fifo.wptr - ptr + decode_fifo.size);
+static inline size_t decode_transition_bytes_remaining(size_t ptr) {
+	ASSERT_AUDIO_LOCKED();
+
+	return (ptr >= decode_audio->fifo.wptr) ? (ptr - decode_audio->fifo.wptr) : (decode_audio->fifo.wptr - ptr + decode_audio->fifo.size);
 }
 
 
@@ -303,31 +267,30 @@ static void decode_fade_out(void) {
 	size_t nbytes, ptr;
 	fft_fixed interval;
 
-	fifo_lock(&decode_fifo);
+	ASSERT_AUDIO_LOCKED();
 
-	interval = determine_transition_interval(current_sample_rate, decode_transition_period, &nbytes);
+	interval = determine_transition_interval(decode_audio->track_sample_rate, decode_transition_period, &nbytes);
 
 	LOG_DEBUG(log_audio_decode, "Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
 
 	if (!interval) {
-		fifo_unlock(&decode_fifo);
 		return;
 	}
 
-	ptr = decode_fifo.wptr;
-	decode_fifo.wptr = (nbytes <= decode_fifo.wptr) ? (decode_fifo.wptr - nbytes) : (decode_fifo.wptr - nbytes + decode_fifo.size);
+	ptr = decode_audio->fifo.wptr;
+	decode_audio->fifo.wptr = (nbytes <= decode_audio->fifo.wptr) ? (decode_audio->fifo.wptr - nbytes) : (decode_audio->fifo.wptr - nbytes + decode_audio->fifo.size);
 
 	transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
 	transition_gain = FIXED_ONE;
-	transition_sample_step = current_sample_rate / TRANSITION_STEPS_PER_SECOND;
+	transition_sample_step = decode_audio->track_sample_rate / TRANSITION_STEPS_PER_SECOND;
 	transition_samples_in_step = 0;
 
-	while (decode_fifo.wptr != ptr) {
+	while (decode_audio->fifo.wptr != ptr) {
 		size_t s, bytes_read, samples_read, wrap, bytes_remaining;
 		sample_t *sptr;
 
 		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
-		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
+		wrap = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
 		bytes_remaining = decode_transition_bytes_remaining(ptr);
 
 		if (bytes_remaining < wrap) {
@@ -340,13 +303,13 @@ static void decode_fade_out(void) {
 
 		samples_read = BYTES_TO_SAMPLES(bytes_read);
 
-		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.wptr);
+		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
 		for (s = 0; s < samples_read * 2; s++) {
 			*sptr = fixed_mul(transition_gain, *sptr);
 			sptr++;
 		}
 
-		fifo_wptr_incby(&decode_fifo, bytes_read);
+		fifo_wptr_incby(&decode_audio->fifo, bytes_read);
 
 		transition_samples_in_step += samples_read;
 		while (transition_gain && transition_samples_in_step >= transition_sample_step) {
@@ -354,8 +317,6 @@ static void decode_fade_out(void) {
 			transition_gain -= transition_gain_step;
 		}
 	}
-
-	fifo_unlock(&decode_fifo);
 }
 
 
@@ -369,6 +330,8 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 	size_t bytes_read;
 	fft_fixed in_gain, out_gain;
 
+	ASSERT_AUDIO_LOCKED();
+
 	while (nbytes) {
 		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
 
@@ -378,7 +341,7 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 
 		nsamples = BYTES_TO_SAMPLES(bytes_read);
 
-		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_fifo.wptr);
+		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
 
 		in_gain = transition_gain;
 		out_gain = FIXED_ONE - in_gain;
@@ -396,7 +359,7 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 			}
 		}
 
-		fifo_wptr_incby(&decode_fifo, bytes_read);
+		fifo_wptr_incby(&decode_audio->fifo, bytes_read);
 		nbytes -= bytes_read;
 
 		transition_samples_in_step += nsamples;
@@ -421,13 +384,13 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 
 	// XXXX full port from ip3k
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	if (decode_first_buffer) {
 		upload_open();
 
 		crossfade_started = FALSE;
-		track_start_point = decode_fifo.wptr;
+		decode_audio->track_start_point = decode_audio->fifo.wptr;
 		
 		if (decode_transition_type & TRANSITION_CROSSFADE) {
 			size_t crossfadeBytes;
@@ -441,10 +404,10 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 				LOG_DEBUG(log_audio_decode, "Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)crossfadeBytes);
 
 				/* Buffer position to stop crossfade */
-				crossfade_ptr = decode_fifo.wptr;
+				crossfade_ptr = decode_audio->fifo.wptr;
 
 				/* Buffer position to start crossfade */
-				decode_fifo.wptr = (crossfadeBytes <= decode_fifo.wptr) ? (decode_fifo.wptr - crossfadeBytes) : (decode_fifo.wptr - crossfadeBytes + decode_fifo.size);
+				decode_audio->fifo.wptr = (crossfadeBytes <= decode_audio->fifo.wptr) ? (decode_audio->fifo.wptr - crossfadeBytes) : (decode_audio->fifo.wptr - crossfadeBytes + decode_audio->fifo.size);
 
 				/* Gain steps */
 				transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
@@ -452,7 +415,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 				transition_samples_in_step = 0;
 
 				crossfade_started = TRUE;
-				track_start_point = decode_fifo.wptr;
+				decode_audio->track_start_point = decode_audio->fifo.wptr;
 			}
 			/* 
 			 * else there aren't enough leftover samples from the
@@ -471,14 +434,15 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 			transition_samples_in_step = 0;
 		}
 
-		current_sample_rate = sample_rate;
+		decode_audio->track_copyright = streambuf_is_copyright();
+		decode_audio->track_sample_rate = sample_rate;
 
-		check_start_point = TRUE;
+		decode_audio->check_start_point = TRUE;
 		decode_first_buffer = FALSE;
 	}
 
 	if (upload_samples(buffer, nsamples)) {
-		fifo_unlock(&decode_fifo);
+		decode_audio_unlock();
 		return;
 	}
 
@@ -492,7 +456,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		/* The size of the output write is limied by the
 		 * space untill our fifo wraps.
 		 */
-		wrap = fifo_bytes_until_wptr_wrap(&decode_fifo);
+		wrap = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
 
 		/* When crossfading limit the output write to the
 		 * end of the transition.
@@ -512,7 +476,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		if (transition_gain_step) {
 			decode_transition_copy_bytes(buffer, bytes_write);
 
-			if ((crossfade_started && decode_fifo.wptr == crossfade_ptr)
+			if ((crossfade_started && decode_audio->fifo.wptr == crossfade_ptr)
 			    || transition_gain >= FIXED_ONE) {
 				LOG_DEBUG(log_audio_decode, "Completed transition");
 
@@ -521,15 +485,15 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 			}
 		}
 		else {
-			memcpy(decode_fifo_buf + decode_fifo.wptr, buffer, bytes_write);
-			fifo_wptr_incby(&decode_fifo, bytes_write);
+			memcpy(decode_fifo_buf + decode_audio->fifo.wptr, buffer, bytes_write);
+			fifo_wptr_incby(&decode_audio->fifo, bytes_write);
 		}
 
 		buffer += (bytes_write / sizeof(sample_t));
 		bytes_out -= bytes_write;
 	}
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
@@ -537,33 +501,21 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 	size_t freebytes;
 
+	LOG_ERROR(log_audio_decode, "function is deprecated");
+
 	// XXXX full port from ip3k
 	
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
-	freebytes = fifo_bytes_free(&decode_fifo);
+	freebytes = fifo_bytes_free(&decode_audio->fifo);
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 
 	if (freebytes >= buffer_size) {
 		return TRUE;
 	}
 
 	return FALSE;
-}
-
-u32_t decode_output_percent_used(void) {
-	size_t usedbytes;
-	size_t freebytes;
-
-	fifo_lock(&decode_fifo);
-
-	usedbytes = fifo_bytes_free(&decode_fifo);
-	freebytes = fifo_bytes_free(&decode_fifo);
-
-	fifo_unlock(&decode_fifo);
-
-	return (usedbytes * 100) / (usedbytes + freebytes);
 }
 
 
@@ -575,38 +527,46 @@ void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
 
 	LOG_DEBUG(log_audio_decode, "Removing %d bytes padding from buffer", (unsigned int)buffer_size);
 
-	fifo_lock(&decode_fifo);
+	decode_audio_lock();
 
 	/* have we already started playing the padding? */
-	if (fifo_bytes_used(&decode_fifo) <= buffer_size) {
-		fifo_unlock(&decode_fifo);
+	if (fifo_bytes_used(&decode_audio->fifo) <= buffer_size) {
+		decode_audio_unlock();
 
 		LOG_DEBUG(log_audio_decode, "- already playing padding");
 		return;
 	}
 
-	if (decode_fifo.wptr < buffer_size) {
-		decode_fifo.wptr += decode_fifo.size - buffer_size;
+	if (decode_audio->fifo.wptr < buffer_size) {
+		decode_audio->fifo.wptr += decode_audio->fifo.size - buffer_size;
 	}
 	else {
-		decode_fifo.wptr -= buffer_size;
+		decode_audio->fifo.wptr -= buffer_size;
 	}
 
-	fifo_unlock(&decode_fifo);
+	decode_audio_unlock();
 }
 
 
 int decode_output_samplerate(void) {
-	return current_sample_rate;
+	u32_t sample_rate;
+
+	decode_audio_lock();
+	sample_rate = decode_audio->track_sample_rate;
+	decode_audio_unlock();
+
+	return sample_rate;
 }
 
 
 void decode_output_song_ended(void) {
+	ASSERT_AUDIO_LOCKED();
+
 	upload_close();
 
-	if (decode_transition_type & TRANSITION_FADE_OUT
+	if (decode_transition_type & TRANSITION_FADE_OUT 
 	    && decode_transition_period
-	    && current_audio_state & DECODE_STATE_RUNNING) {
+	    && decode_audio->state & DECODE_STATE_RUNNING) {
 		decode_fade_out();
 	}
 }
