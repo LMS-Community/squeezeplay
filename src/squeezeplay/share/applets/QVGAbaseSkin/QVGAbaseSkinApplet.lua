@@ -628,7 +628,7 @@ function skin(self, s, reload, useDefaultSize)
 		--       but this also causes it to bleed into the titlebar
 		h          = WH_FILL,
 		border     = { 8, 0, 8, 0 },
-		padding    = 0,
+		padding    = { 8, 0, 8, 0 },
 		align = 'center',
 		font       = _font(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
