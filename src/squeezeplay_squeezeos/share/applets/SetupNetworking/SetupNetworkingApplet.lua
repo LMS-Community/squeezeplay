@@ -86,7 +86,7 @@ function _helpAction(self, window, titleText, bodyText, menu)
 						local menu = SimpleMenu("menu")
 						jiveMain:addHelpMenuItem(menu, self, moreHelpAction, "GLOBAL_SUPPORT")
 
-						local textarea = Textarea("text", self:string(bodyText))
+						local textarea = Textarea("help_text", self:string(bodyText))
 						window:addWidget(menu)
 						menu:setHeaderWidget(textarea)
 						self:tieAndShowWindow(window)
@@ -731,7 +731,6 @@ function _enterEAP(self, iface, ssid)
 	local window = Window("error", self:string('NETWORK_ERROR'), 'setuptitle')
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Textarea("text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP")))
 
 	local menu = SimpleMenu("menu", {
 		{
@@ -743,7 +742,7 @@ function _enterEAP(self, iface, ssid)
 		},
 	})
 	window:addWidget(menu)
-
+	menu:setHeaderWidget(Textarea("help_text", self:string("NETWORK_UNSUPPORTED_TYPES_HELP")))
 	_helpAction(self, window, nil, nil, menu)
 
 	self:tieAndShowWindow(window)		

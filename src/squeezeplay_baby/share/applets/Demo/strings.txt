@@ -63,6 +63,7 @@ SLIDE_01
 	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
 	PL	Squeezebox™ Radio\ Radio Internetowe
 	RU	Squeezebox™ Radio\Wi-Fi Интернет-радио
+	CS	Squeezebox™ Radio\nWi-Fi Internet Radio
 
 SLIDE_02
 	EN	Discover a world of digital music.
@@ -77,6 +78,7 @@ SLIDE_02
 	NO	Opplev en verden av digital musikk.
 	PL	Odkryj świat cyfrowej muzyki.
 	RU	Открой для себя мир цифровой музыки.
+	CS	Objevte svět digitální hudby.
 
 SLIDE_03
 	EN	From thousands of free Internet radio stations…
@@ -91,6 +93,7 @@ SLIDE_03
 	NO	Fra tusenvis av gratis radiostasjoner på internet…
 	PL	Od tysiąca darmowych, Internetowych stacji radiowych…
 	RU	Тысячи бесплатных радио-станций в Интернет…
+	CS	Více jak tisícovka internetových radio stanic…
 
 SLIDE_04
 	EN	…to your own personal music collection…
@@ -105,6 +108,7 @@ SLIDE_04
 	NO	…til din egen personlige musikk kolleksjon…
 	PL	…do Twojej prywatnej kolekcji muzyki…
 	RU	…Тысячи бесплатных радио-станций в Интернет…
+	CS	…nebo vaše vlastní hudební kolekce digitální hudby…
 
 SLIDE_05
 	EN	…to the hottest online music services.
@@ -119,6 +123,7 @@ SLIDE_05
 	NO	…til de mest spennende online musikk tjenester.
 	PL	…do najlepszych Internetowych usług muzycznych.
 	RU	…с использованием передовых музыкальных онлайн-сервисов.
+	CS	…společně s nabídkou nejlepších hudebních serverů.
                 
 SLIDE_06
 	EN	A virtually unlimited music collection.
@@ -133,6 +138,7 @@ SLIDE_06
 	NO	En nesten ubegrenset tillgang til musikk.
 	PL	Nieskończona kolekcja muzyki.
 	RU	Виртуальная, бесконечная музыкальная коллекция.
+	CS	Téměř neomezená nabídka kolekce digitální hudby.
 
 SLIDE_07
 	EN	Play all your music. Even from your iPod™.
@@ -147,6 +153,7 @@ SLIDE_07
 	NO	Spill all din musikk. Også fra din iPod™.
 	PL	Odtwarzaj całą swoją muzykę. Nawet z Twojego iPoda™.
 	RU	Слушай любимую музыку. Даже с iPod™.
+	CS	Přehdávejte svou hudbu i z vašeho iPod přehrávače.
 
 
 SLIDE_08
@@ -162,6 +169,7 @@ SLIDE_08
 	NO	Internett Radio. Lytt i alle rom.
 	PL	Radio Internetowe w każdym pokoju.
 	RU	Интернет-радио. Слушай в любой комнате.
+	CS	Internetová rádia. Poslouchejte kdekoliv.
 
 SLIDE_09
 	EN	Small package. Big Sound.
@@ -176,6 +184,7 @@ SLIDE_09
 	NO	Liten i størrelse. Kraftig lyd.
 	PL	Kompaktowe rozmiary. Ponadprzeciętna jakość dźwięku.
 	RU	Небольшие габариты. Превосходный звук.
+	CS	Malé rozměry. Velkolepý zvuk.
 
 SLIDE_10
 	EN	\n
@@ -190,5 +199,7 @@ SLIDE_10
 	NO	\n
 	PL	\n
 	RU	\n
+	CS	\n
+
 
 
