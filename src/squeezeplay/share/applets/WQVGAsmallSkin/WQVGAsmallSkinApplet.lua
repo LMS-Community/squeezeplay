@@ -909,31 +909,6 @@ function skin(self, s)
 		sh = TEXT_SH_COLOR,
 		align = "top-left",
 	}
-	s.help_text_small = _uses(s.help_text,{
-		padding = { 18, 6, 0, 2 },
-		font = _font(14),
-		lineHeight = 16,
-	})
-
---	s.help_text = {
---		w = WH_FILL,
---		position = LAYOUT_CENTER,
---		font = _font(HELP_FONT_SIZE),
---		fg = TEXT_COLOR,
---		bgImg = titleBox,
---		align = "left",
---		scrollbar = {
---			w = 0,
---		},
---		padding = { 18, 18, 10, 18},
---		lineHeight = 23,
---	}
---
---	s.help_text_small = _uses(s.help_text, {
---		font = _font(14),
---		lineHeight = 16,
---		padding = { 18, 6, 0, 2 },
---	})
 
 	s.scrollbar = {
 		w = 42,

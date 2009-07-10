@@ -131,10 +131,6 @@ function _openPopup(self)
 	}))
 
 	popup:focusWidget(nil)
-	popup:addListener(ACTION | EVENT_KEY_ALL,
-			  function(event)
-				  return self:event(event)
-			  end)
 
 	-- we handle events
 	popup.brieflyHandler = false

@@ -289,7 +289,7 @@ function skin(self, s, reload, useDefaultSize)
         	TEXTMENU_SELECTED_FONT_SIZE = 21,
         	POPUP_TEXT_SIZE_1 = 22,
         	POPUP_TEXT_SIZE_2 = 16,
-        	HELP_TEXT_FONT_SIZE = 15,
+        	HELP_TEXT_FONT_SIZE = 16,
         	TEXTAREA_FONT_SIZE = 16,
         	TEXTINPUT_FONT_SIZE = 18,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
@@ -308,7 +308,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.smallSpinny = {
 		-- FIXME: this is the right asset but Noah needs to update so it gets put in Alerts/
-		img = _loadImage(self, "UNOFFICIAL/wifi_connecting_sm.png"),
+		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
 		padding = { 4, 0, 0, 0 },
@@ -590,13 +590,11 @@ function skin(self, s, reload, useDefaultSize)
 		w = screenWidth - 20,
 		padding = c.HELP_TEXT_PADDING,
 		font = _font(c.HELP_TEXT_FONT_SIZE),
-		lineHeight = c.HELP_TEXT_FONT_SIZE + 3,
+		lineHeight = c.HELP_TEXT_FONT_SIZE + 4,
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 		align = "top-left",
 	}
-
-        s.help_text_small = _uses(s.help_text)
 
 	s.text = {
 		w = screenWidth,
@@ -1043,14 +1041,14 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.icon_connecting = _uses(s._icon, {
-		img = _loadImage(self, "UNOFFICIAL/wifi_connecting.png"),
+		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		frameRate = 8,
 		frameWidth = 120,
 		padding = { 0, 25, 0, 5 }
 	})
 
 	s.icon_connected = _uses(s.icon_connecting, {
-		img = _loadImage(self, "UNOFFICIAL/connecting_success_icon.png"),
+		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
 	})
 
 	s.icon_software_update = _uses(s._icon, {
