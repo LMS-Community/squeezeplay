@@ -533,7 +533,6 @@ static void *audio_thread_execute(void *data) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
 
 		if (new_rate && new_rate != state->pcm_sample_rate) {
-			u32_t old_rate = state->pcm_sample_rate;
 			if ((err = pcm_open(state)) < 0) {
 				LOG_ERROR("Open failed: %s", snd_strerror(err));
 				goto thread_error;

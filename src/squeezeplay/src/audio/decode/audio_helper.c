@@ -89,7 +89,7 @@ static void decode_mix_effects_ch(int ch, void *outputBuffer,
 			bytes_write = bytes_used;
 		}
 
-		effect_ptr = (effect_t *)(effect_fifo_buf[ch] + ch_fifo->rptr);
+		effect_ptr = (effect_t *)(void *)(effect_fifo_buf[ch] + ch_fifo->rptr);
 
 		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
 			s = (*effect_ptr++) << 16;

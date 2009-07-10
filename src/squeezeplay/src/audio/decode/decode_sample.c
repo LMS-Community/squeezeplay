@@ -26,6 +26,7 @@ struct jive_sample {
 u8_t *effect_fifo_buf[MAX_EFFECT_SAMPLES];
 
 #define MAXVOLUME 100
+fft_fixed effect_gain = FIXED_ONE;
 static int effect_volume = MAXVOLUME;
 static int effect_attn = MAXVOLUME;
 
@@ -75,6 +76,8 @@ static int decode_sample_obj_play(lua_State *L) {
 
 	decode_audio_lock();
 	fifo_lock(ch_fifo);
+
+	decode_audio->effect_gain = effect_gain;
 
 	if (!fifo_empty(ch_fifo)) {
 		/* effect already playing in this channel */
@@ -233,16 +236,11 @@ static int decode_sample_set_effect_volume(lua_State *L) {
 		effect_volume = MAXVOLUME;
 	}
 
-	decode_audio_lock();
-
-	decode_audio->effect_gain = 
-		fixed_mul(fixed_div(s32_to_fixed(effect_volume),
-				    s32_to_fixed(MAXVOLUME)),
-			  fixed_div(s32_to_fixed(effect_attn),
-				    s32_to_fixed(MAXVOLUME))
-			  );
-
-	decode_audio_unlock();
+	effect_gain = fixed_mul(fixed_div(s32_to_fixed(effect_volume),
+					  s32_to_fixed(MAXVOLUME)),
+				fixed_div(s32_to_fixed(effect_attn),
+					  s32_to_fixed(MAXVOLUME))
+				);
 
 	return 0;
 }
@@ -269,16 +267,11 @@ static int decode_sample_set_effect_attenuation(lua_State *L) {
 		effect_attn = MAXVOLUME;
 	}
 
-	decode_audio_lock();
-
-	decode_audio->effect_gain =
-		fixed_mul(fixed_div(s32_to_fixed(effect_volume),
-				    s32_to_fixed(MAXVOLUME)),
-			  fixed_div(s32_to_fixed(effect_attn),
-				    s32_to_fixed(MAXVOLUME))
-			  );
-
-	decode_audio_unlock();
+	effect_gain = fixed_mul(fixed_div(s32_to_fixed(effect_volume),
+					  s32_to_fixed(MAXVOLUME)),
+				fixed_div(s32_to_fixed(effect_attn),
+					  s32_to_fixed(MAXVOLUME))
+				);
 
 	return 0;
 }

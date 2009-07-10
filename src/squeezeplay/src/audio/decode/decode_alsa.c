@@ -163,8 +163,6 @@ static int decode_alsa_init(lua_State *L) {
 
 	decode_audio->set_sample_rate = 44100;
 	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, true);
-
-	decode_audio->effect_gain = FIXED_ONE;
 	fifo_init(&decode_audio->effect_fifo[0], EFFECT_FIFO_SIZE, true);
 	fifo_init(&decode_audio->effect_fifo[1], EFFECT_FIFO_SIZE, true);
 
