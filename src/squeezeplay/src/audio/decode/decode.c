@@ -329,7 +329,8 @@ static int decode_thread_execute(void *unused) {
 			handler();
 		}
 
-		if (can_decode) {
+		if (can_decode && decoder
+		    && (current_decoder_state & DECODE_STATE_RUNNING)) {
 			decoder->callback(decoder_data);
 		}
 
