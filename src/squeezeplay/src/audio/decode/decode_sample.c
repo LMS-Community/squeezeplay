@@ -97,38 +97,6 @@ static int decode_sample_obj_play(lua_State *L) {
 			size -= n;
 		}
 
-
-#if 0
-		frames = snd->frames;
-		while (frames) {
-			sample_t *output_ptr, s;
-			effect_t *effect_ptr;
-			size_t i, n, sample_size, samples_write;
-
-			sample_size = SAMPLES_TO_BYTES(frames);
-			
-			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
-			if (n > sample_size) {
-				n = sample_size;
-			}
-
-			samples_write = BYTES_TO_SAMPLES(n);
-
-			output_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
-			effect_ptr = (effect_t *)(void *)snd->data;
-
-			for (i=0; i<samples_write; i++) {
-				s = (*effect_ptr++) << 16;
-
-				*output_ptr++ = s;
-				*output_ptr++ = s;
-			}
-
-			fifo_wptr_incby(&decode_audio->fifo, n);
-			frames -= samples_write;
-		}
-#endif
-
 		decode_audio->state |= DECODE_STATE_EFFECT;
 
 		decode_audio_unlock();
