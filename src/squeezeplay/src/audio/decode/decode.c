@@ -169,7 +169,7 @@ static void decode_stop_handler(void) {
 	decode_audio_lock();
 
 	current_decoder_state = 0;
-	decode_audio->state = 0;
+	decode_audio->state &= DECODE_STATE_EFFECT;
 
 	if (decoder) {
 		decoder->stop(decoder_data);

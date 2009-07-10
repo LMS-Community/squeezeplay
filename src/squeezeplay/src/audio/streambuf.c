@@ -397,13 +397,13 @@ static int stream_load_loopL(lua_State *L) {
 
 	fifo_lock(&streambuf_fifo);
 
-	n = streambuf_get_freebytes();
+	n = fifo_bytes_free(&streambuf_fifo);
 	if ((len = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
 		goto read_err;
 	}
 	fifo_wptr_incby(&streambuf_fifo, len);
 
-	n = streambuf_get_freebytes();
+	n = fifo_bytes_free(&streambuf_fifo);
 	if (n) {
 		if ((n = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
 			goto read_err;

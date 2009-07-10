@@ -67,8 +67,8 @@ static int decode_sample_obj_play(lua_State *L) {
 		return 0;
 	}
 
-	if (snd->mixer == 2) {
-		size_t frames;
+	if (snd->mixer == MAX_EFFECT_SAMPLES) {
+		size_t size, n;
 
 		/* HACK ALERT:
 		 *
@@ -78,46 +78,33 @@ static int decode_sample_obj_play(lua_State *L) {
 
 		decode_audio_lock();
 
-		frames = snd->frames;
-		while (frames) {
-			sample_t *output_ptr, s;
-			effect_t *effect_ptr;
-			size_t i, n, sample_size, samples_write;
+		decode_audio->effect_gain = effect_gain;
 
-			sample_size = SAMPLES_TO_BYTES(frames);
-			
-			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
-			if (n > sample_size) {
-				n = sample_size;
-			}
-
-			samples_write = BYTES_TO_SAMPLES(n);
-
-			//printf("size=%d samples_write=%d %d %d\n", frames, samples_write, n, DECODE_FIFO_SIZE);
-
-			output_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
-			effect_ptr = (effect_t *)(void *)snd->data;
-
-			for (i=0; i<samples_write; i++) {
-				s = (*effect_ptr++) << 16;
-
-				*output_ptr++ = s;
-				*output_ptr++ = s;
-			}
-
-			fifo_wptr_incby(&decode_audio->fifo, n);
-			frames -= samples_write;
+		if (decode_audio->state & DECODE_STATE_RUNNING) {
+			/* buffer in use */
+			return 0;
 		}
 
-		decode_audio->state |= DECODE_STATE_RUNNING;
-		decode_audio->lgain = effect_gain;
-		decode_audio->rgain = effect_gain;
+		size = MIN(snd->frames * sizeof(effect_t), DECODE_FIFO_SIZE);
+		while (size) {
+			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
+			if (n > size) {
+				n = size;
+			}
+
+			memcpy(decode_fifo_buf + decode_audio->fifo.wptr, snd->data, n);
+			fifo_wptr_incby(&decode_audio->fifo, n);
+			size -= n;
+		}
+
+		decode_audio->state |= DECODE_STATE_EFFECT;
 
 		decode_audio_unlock();
 	}
 	else {
 		struct fifo *ch_fifo;
 		size_t size, n;
+		u8_t *data;
 		int ch;
 
 		/* effect channel */
@@ -138,6 +125,7 @@ static int decode_sample_obj_play(lua_State *L) {
 			return 0;
 		}
 
+		data = snd->data;
 		size = MIN(snd->frames * sizeof(effect_t), EFFECT_FIFO_SIZE);
 		while (size) {
 			n = fifo_bytes_until_wptr_wrap(ch_fifo);
@@ -145,8 +133,10 @@ static int decode_sample_obj_play(lua_State *L) {
 				n = size;
 			}
 
-			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, snd->data, n);
+			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, data, n);
+
 			fifo_wptr_incby(ch_fifo, n);
+			data += n;
 			size -= n;
 		}
 
