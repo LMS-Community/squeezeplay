@@ -104,6 +104,7 @@ static int decode_sample_obj_play(lua_State *L) {
 	else {
 		struct fifo *ch_fifo;
 		size_t size, n;
+		u8_t *data;
 		int ch;
 
 		/* effect channel */
@@ -124,6 +125,7 @@ static int decode_sample_obj_play(lua_State *L) {
 			return 0;
 		}
 
+		data = snd->data;
 		size = MIN(snd->frames * sizeof(effect_t), EFFECT_FIFO_SIZE);
 		while (size) {
 			n = fifo_bytes_until_wptr_wrap(ch_fifo);
@@ -131,8 +133,10 @@ static int decode_sample_obj_play(lua_State *L) {
 				n = size;
 			}
 
-			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, snd->data, n);
+			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, data, n);
+
 			fifo_wptr_incby(ch_fifo, n);
+			data += n;
 			size -= n;
 		}
 
