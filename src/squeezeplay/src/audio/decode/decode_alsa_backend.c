@@ -123,12 +123,15 @@ static void debug_pagefaults()
 {
  	static struct rusage last_usage;
    	struct rusage usage;
+	long majflt, minflt;
    
    	getrusage(RUSAGE_SELF, &usage);
-   
-   	LOG_DEBUG("Pagefaults, Major:%ld Minor:%ld",
-		  usage.ru_majflt - last_usage.ru_majflt,
-		  usage.ru_minflt - last_usage.ru_minflt);
+
+	majflt = usage.ru_majflt - last_usage.ru_majflt;
+	minflt = usage.ru_minflt - last_usage.ru_minflt;
+	if (majflt > 0 || minflt > 0) {
+		LOG_WARN("Pagefaults, Major:%ld Minor:%ld", majflt, minflt);
+	}
 
 	memcpy(&last_usage, &usage, sizeof(struct rusage));
 }
