@@ -188,7 +188,12 @@ function _updateVolume(self, force)
 		return
 	end
 	-- keep the popup window open
-	self.popup:showBriefly()
+	if self.popup then
+		self.popup:showBriefly()
+	-- or open it (in the case of force for auto vol adjust)
+	else
+		_openPopup(self)
+	end
 
         local new
 
