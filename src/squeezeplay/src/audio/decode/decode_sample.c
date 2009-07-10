@@ -8,6 +8,7 @@
 #include "common.h"
 #include "ui/jive.h"
 #include "audio/fixed_math.h"
+#include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
 
@@ -56,9 +57,6 @@ static int decode_sample_obj_gc(lua_State *L) {
 
 static int decode_sample_obj_play(lua_State *L) {
 	struct jive_sample *snd;
-	struct fifo *ch_fifo;
-	size_t size, n;
-	int ch;
 
 	/* stack is:
 	 * 1: sound
@@ -69,37 +67,92 @@ static int decode_sample_obj_play(lua_State *L) {
 		return 0;
 	}
 
-	// XXXX don't lock channels?
+	if (snd->mixer == 2) {
+		size_t frames;
 
-	ch = snd->mixer;
-	ch_fifo = &decode_audio->effect_fifo[ch];
+		/* HACK ALERT:
+		 *
+		 * special channel, write to output buffer
+		 * used for startup and shutdown sounds only
+		 */
 
-	decode_audio_lock();
-	fifo_lock(ch_fifo);
+		decode_audio_lock();
 
-	decode_audio->effect_gain = effect_gain;
+		frames = snd->frames;
+		while (frames) {
+			sample_t *output_ptr, s;
+			effect_t *effect_ptr;
+			size_t i, n, sample_size, samples_write;
 
-	if (!fifo_empty(ch_fifo)) {
-		/* effect already playing in this channel */
-		fifo_unlock(ch_fifo);
-		decode_audio_unlock();
-		return 0;
-	}
+			sample_size = SAMPLES_TO_BYTES(frames);
+			
+			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
+			if (n > sample_size) {
+				n = sample_size;
+			}
 
-	size = MIN(snd->frames * sizeof(effect_t), EFFECT_FIFO_SIZE);
-	while (size) {
-		n = fifo_bytes_until_wptr_wrap(ch_fifo);
-		if (n > size) {
-			n = size;
+			samples_write = BYTES_TO_SAMPLES(n);
+
+			//printf("size=%d samples_write=%d %d %d\n", frames, samples_write, n, DECODE_FIFO_SIZE);
+
+			output_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
+			effect_ptr = (effect_t *)(void *)snd->data;
+
+			for (i=0; i<samples_write; i++) {
+				s = (*effect_ptr++) << 16;
+
+				*output_ptr++ = s;
+				*output_ptr++ = s;
+			}
+
+			fifo_wptr_incby(&decode_audio->fifo, n);
+			frames -= samples_write;
 		}
 
-		memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, snd->data, n);
-		fifo_wptr_incby(ch_fifo, n);
-		size -= n;
-	}
+		decode_audio->state |= DECODE_STATE_RUNNING;
+		decode_audio->lgain = effect_gain;
+		decode_audio->rgain = effect_gain;
 
-	fifo_unlock(ch_fifo);
-	decode_audio_unlock();
+		decode_audio_unlock();
+	}
+	else {
+		struct fifo *ch_fifo;
+		size_t size, n;
+		int ch;
+
+		/* effect channel */
+		// XXXX don't lock channels?
+		
+		ch = snd->mixer;
+		ch_fifo = &decode_audio->effect_fifo[ch];
+
+		decode_audio_lock();
+		fifo_lock(ch_fifo);
+
+		decode_audio->effect_gain = effect_gain;
+
+		if (!fifo_empty(ch_fifo)) {
+			/* effect already playing in this channel */
+			fifo_unlock(ch_fifo);
+			decode_audio_unlock();
+			return 0;
+		}
+
+		size = MIN(snd->frames * sizeof(effect_t), EFFECT_FIFO_SIZE);
+		while (size) {
+			n = fifo_bytes_until_wptr_wrap(ch_fifo);
+			if (n > size) {
+				n = size;
+			}
+
+			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, snd->data, n);
+			fifo_wptr_incby(ch_fifo, n);
+			size -= n;
+		}
+
+		fifo_unlock(ch_fifo);
+		decode_audio_unlock();
+	}
 
 	return 0;
 }
@@ -157,7 +210,7 @@ static struct jive_sample *load_sound(char *filename, int mixer) {
 	cvt.buf = malloc(len * cvt.len_mult);
 	memcpy(cvt.buf, data, len);
 	cvt.len = len;
-	
+
 	if (SDL_ConvertAudio(&cvt) < 0) {
 		LOG_WARN(log_audio_decode, "Couldn't convert audio: %s\n", SDL_GetError());
 		SDL_FreeWAV(data);
