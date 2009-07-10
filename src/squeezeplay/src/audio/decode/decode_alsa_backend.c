@@ -46,8 +46,8 @@ static int is_debug = 0;
 
 
 u8_t *decode_fifo_buf;
+u8_t *effect_fifo_buf[MAX_EFFECT_SAMPLES];
 struct decode_audio *decode_audio;
-
 
 #define FLAG_STREAM_PLAYBACK 0x01
 #define FLAG_STREAM_EFFECTS  0x02
@@ -332,19 +332,6 @@ static void playback_callback(struct decode_alsa *state,
 }
 
 
-#ifdef XXXX
-/*
- * This function is called by to copy effects to the alsa buffer.
- */
-static void effects_callback(struct decode_alsa *state,
-			      void *outputBuffer,
-			      unsigned long framesPerBuffer) {
-
-	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
-}
-#endif
-
-
 static int pcm_close(struct decode_alsa *state) {
 	int err;
 
@@ -441,7 +428,8 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 
 	/* set the stream rate */
-	if ((err = snd_pcm_hw_params_set_rate_near(state->pcm, state->hw_params, &set_sample_rate, 0)) < 0) {
+	val = set_sample_rate;
+	if ((err = snd_pcm_hw_params_set_rate_near(state->pcm, state->hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Rate not available: %s", snd_strerror(err));
 		return err;
 	}
@@ -545,6 +533,7 @@ static void *audio_thread_execute(void *data) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
 
 		if (new_rate && new_rate != state->pcm_sample_rate) {
+			u32_t old_rate = state->pcm_sample_rate;
 			if ((err = pcm_open(state)) < 0) {
 				LOG_ERROR("Open failed: %s", snd_strerror(err));
 				goto thread_error;
@@ -666,11 +655,9 @@ static void *audio_thread_execute(void *data) {
 			}
 			TIMER_CHECK("PLAYBACK");
 
-#ifdef XXXX
 			if (state->flags & FLAG_STREAM_EFFECTS) {
-				effects_callback(state, buf, frames);
+				decode_mix_effects(buf, frames);
 			}
-#endif
 
 			/* sample rate changed? we do this check while the
 			 * fifo is locked, so we don't need to lock it twice
@@ -732,7 +719,7 @@ static int decode_realtime_process()
 
 static int decode_lock_memory()
 {
-	size_t i, page_size;
+	size_t i, page_size, shmsize;
 
 	/* lock all current and future pages into ram */
 	if (mlockall(MCL_CURRENT | MCL_FUTURE)) {
@@ -749,7 +736,8 @@ static int decode_lock_memory()
 	page_size = sysconf(_SC_PAGESIZE);
 
 	/* touch each page of buffer */
-	for (i=0; i<DECODE_FIFO_SIZE; i+=page_size) {
+	shmsize = sizeof(struct decode_audio) + DECODE_FIFO_SIZE + (EFFECT_FIFO_SIZE * 2);
+	for (i=0; i<shmsize; i+=page_size) {
 		*(decode_fifo_buf + i) = 0;
 	}
 
@@ -761,18 +749,18 @@ static int decode_lock_memory()
 
 static int decode_alsa_shared_mem_attach(void)
 {
-	size_t shmsize;
 	int shmid;
 
 	/* attach to shared memory */
-	shmsize = DECODE_FIFO_SIZE + sizeof(struct decode_audio);
-	shmid = shmget(1234, shmsize, 0600 | IPC_CREAT);
+	shmid = shmget(1234, 0, 0600 | IPC_CREAT);
 	// XXXX errors
 
 	decode_audio = shmat(shmid, 0, 0);
 	// XXXX errors
 
 	decode_fifo_buf = (((u8_t *)decode_audio) + sizeof(struct decode_audio));
+	effect_fifo_buf[0] = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
+	effect_fifo_buf[1] = ((u8_t *)effect_fifo_buf[0]) + EFFECT_FIFO_SIZE;
 
 	return 0;
 }

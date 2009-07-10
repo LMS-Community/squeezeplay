@@ -56,3 +56,65 @@ bool_t decode_check_start_point(void) {
 
 	return true;
 }
+
+
+static void decode_mix_effects_ch(int ch, void *outputBuffer,
+				  size_t framesPerBuffer)
+{
+	struct fifo *ch_fifo;
+	size_t len, bytes_used;
+	sample_t *output_ptr;
+
+	ASSERT_AUDIO_LOCKED();
+
+	len = framesPerBuffer * sizeof(effect_t);
+
+	// XXXX don't lock channels?
+	ch_fifo = &decode_audio->effect_fifo[ch];
+	fifo_lock(ch_fifo);
+
+	bytes_used = fifo_bytes_used(ch_fifo);
+	if (bytes_used > len) {
+		bytes_used = len;
+	}
+
+	output_ptr = (sample_t *)(void *)outputBuffer;
+	while (bytes_used > 0) {
+		effect_t *effect_ptr;
+		sample_t s;
+		size_t i, bytes_write;
+
+		bytes_write = fifo_bytes_until_rptr_wrap(ch_fifo);
+		if (bytes_write > bytes_used) {
+			bytes_write = bytes_used;
+		}
+
+		effect_ptr = (effect_t *)(effect_fifo_buf[ch] + ch_fifo->rptr);
+
+		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
+			s = (*effect_ptr++) << 16;
+
+			s = fixed_mul(decode_audio->effect_gain, s);
+
+			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			output_ptr++;
+
+			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			output_ptr++;
+		}
+
+		fifo_rptr_incby(ch_fifo, bytes_write);
+		bytes_used -= bytes_write;
+	}
+
+	fifo_unlock(ch_fifo);
+}
+
+/*
+ * This function is called by to copy effects to the audio buffer.
+ */
+void decode_mix_effects(void *outputBuffer, size_t framesPerBuffer)
+{
+	decode_mix_effects_ch(0, outputBuffer, framesPerBuffer);
+	decode_mix_effects_ch(1, outputBuffer, framesPerBuffer);
+}

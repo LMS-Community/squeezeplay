@@ -146,7 +146,7 @@ static int decode_alsa_init(lua_State *L) {
 		shmctl(shmid, IPC_RMID, NULL);
 	}
 
-	shmsize = DECODE_FIFO_SIZE + sizeof(struct decode_audio);
+	shmsize = sizeof(struct decode_audio) + DECODE_FIFO_SIZE + (EFFECT_FIFO_SIZE * 2);
 	shmid = shmget(1234, shmsize, 0600 | IPC_CREAT);
 	if (shmid == -1) {
 		// XXXX errors
@@ -164,7 +164,13 @@ static int decode_alsa_init(lua_State *L) {
 	decode_audio->set_sample_rate = 44100;
 	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, true);
 
-	decode_fifo_buf = (((u8_t *)decode_audio) + sizeof(struct decode_audio));
+	decode_audio->effect_gain = FIXED_ONE;
+	fifo_init(&decode_audio->effect_fifo[0], EFFECT_FIFO_SIZE, true);
+	fifo_init(&decode_audio->effect_fifo[1], EFFECT_FIFO_SIZE, true);
+
+	decode_fifo_buf = ((u8_t *)decode_audio) + sizeof(struct decode_audio);
+	effect_fifo_buf[0] = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
+	effect_fifo_buf[1] = ((u8_t *)effect_fifo_buf[0]) + EFFECT_FIFO_SIZE;
 
 
 	/* start threads */

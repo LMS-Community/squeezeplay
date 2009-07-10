@@ -161,8 +161,10 @@ static int callback(const void *inputBuffer,
 	decode_audio_unlock();
 
  mixin_effects:
+#if 0
 	/* mix in sound effects */
 	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
+#endif
 
 	return paContinue;
 }
