@@ -67,8 +67,8 @@ static int decode_sample_obj_play(lua_State *L) {
 		return 0;
 	}
 
-	if (snd->mixer == 2) {
-		size_t frames;
+	if (snd->mixer == MAX_EFFECT_SAMPLES) {
+		size_t size, n;
 
 		/* HACK ALERT:
 		 *
@@ -78,6 +78,27 @@ static int decode_sample_obj_play(lua_State *L) {
 
 		decode_audio_lock();
 
+		decode_audio->effect_gain = effect_gain;
+
+		if (decode_audio->state & DECODE_STATE_RUNNING) {
+			/* buffer in use */
+			return 0;
+		}
+
+		size = MIN(snd->frames * sizeof(effect_t), DECODE_FIFO_SIZE);
+		while (size) {
+			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
+			if (n > size) {
+				n = size;
+			}
+
+			memcpy(decode_fifo_buf + decode_audio->fifo.wptr, snd->data, n);
+			fifo_wptr_incby(&decode_audio->fifo, n);
+			size -= n;
+		}
+
+
+#if 0
 		frames = snd->frames;
 		while (frames) {
 			sample_t *output_ptr, s;
@@ -93,8 +114,6 @@ static int decode_sample_obj_play(lua_State *L) {
 
 			samples_write = BYTES_TO_SAMPLES(n);
 
-			//printf("size=%d samples_write=%d %d %d\n", frames, samples_write, n, DECODE_FIFO_SIZE);
-
 			output_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
 			effect_ptr = (effect_t *)(void *)snd->data;
 
@@ -108,10 +127,9 @@ static int decode_sample_obj_play(lua_State *L) {
 			fifo_wptr_incby(&decode_audio->fifo, n);
 			frames -= samples_write;
 		}
+#endif
 
-		decode_audio->state |= DECODE_STATE_RUNNING;
-		decode_audio->lgain = effect_gain;
-		decode_audio->rgain = effect_gain;
+		decode_audio->state |= DECODE_STATE_EFFECT;
 
 		decode_audio_unlock();
 	}
