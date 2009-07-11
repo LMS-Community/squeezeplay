@@ -41,7 +41,7 @@ function drawDisplay(self)
 		srf:filledRectangle(0, 0, w, h, 0x000000FF)
 		srf:line(   0,   0, w-1,   0, 0xFFFFFFFF)
 		srf:line( w-1,   0, w-1, h-1, 0xFFFFFFFF)
-		srf:line( w-1, h-1,   0, h-2, 0xFFFFFFFF)
+		srf:line( w-1, h-1,   0, h-1, 0xFFFFFFFF)
 		srf:line(   0, h-1,   0,   0, 0xFFFFFFFF)
 
 	elseif self.state == 2 then
