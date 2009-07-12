@@ -50,7 +50,7 @@ local debug			= require("jive.utils.debug")
 local ImageSource		= require("applets.ImageViewer.ImageSource")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
 local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
---local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
+local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
 
 local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
@@ -79,12 +79,8 @@ function initImageSource(self)
 		self.imgSource = ImageSourceCard(self)
 	elseif src == "http" then
 		self.imgSource = ImageSourceHttp(self)
-	--[[
 	elseif src == "flickr" then
 		self.imgSource = ImageSourceFlickr(self)
-	elseif src == "sc" then
-		self.imgSource = ImageSourceFlickr(self)
-	--]]
 	end	
 
 	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, 
@@ -605,7 +601,8 @@ function defineSource(self, menuItem)
                     end,
                     source == "http"
                 ),
-            },            --[[
+            },
+            --[[
 			{
                 text = self:string("IMAGE_VIEWER_SOURCE_SC"),
 				style = 'item_choice',
