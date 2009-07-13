@@ -210,8 +210,11 @@ libnet_la_LIBADD = -lSDL -lresolv
 
 
 # Program: jivebrowser
+if ALSA_ENABLED
+bin_PROGRAMS = jive
+else
 bin_PROGRAMS = jive jive_alsa
-
+endif
 
 # Test programs: jiveblit
 testdir = $(bindir)

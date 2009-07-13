@@ -119,6 +119,7 @@ if test x$enable_screen_rotation == xyes; then
     AC_DEFINE(SCREEN_ROTATION_ENABLED, 1, [Define for screen rotation])
 fi
 
+AM_CONDITIONAL(ALSA_ENABLED, test "x$enable_alsa" = "xyes")
 
 dnl broken fsync
 AC_ARG_ENABLE(fsync_workaround,
