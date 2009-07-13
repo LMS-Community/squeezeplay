@@ -17,7 +17,7 @@
 extern int luaopen_spprivate(lua_State *L);
 #endif
 
-#define DECODE_MAX_INTERVAL 1000
+#define DECODE_MAX_INTERVAL 500
 
 #define DECODE_MQUEUE_SIZE 512
 
@@ -169,7 +169,7 @@ static void decode_stop_handler(void) {
 	decode_audio_lock();
 
 	current_decoder_state = 0;
-	decode_audio->state &= DECODE_STATE_EFFECT;
+	decode_audio->state = 0;
 
 	if (decoder) {
 		decoder->stop(decoder_data);
@@ -334,7 +334,7 @@ static int decode_thread_execute(void *unused) {
 			decoder->callback(decoder_data);
 		}
 
-		// XXXX buffer underrun
+		decode_sample_fill_buffer();
 	}
 
 	return 0;

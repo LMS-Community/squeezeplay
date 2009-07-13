@@ -134,9 +134,8 @@ static int decode_alsa_init(lua_State *L) {
 	const char *effects_device;
 	unsigned int buffer_time;
 	unsigned int period_count;
-	size_t shmsize;
 	int shmid;
-
+	void *buf;
 
 	/* allocate memory */
 
@@ -146,29 +145,21 @@ static int decode_alsa_init(lua_State *L) {
 		shmctl(shmid, IPC_RMID, NULL);
 	}
 
-	shmsize = sizeof(struct decode_audio) + DECODE_FIFO_SIZE + (EFFECT_FIFO_SIZE * 2);
-	shmid = shmget(1234, shmsize, 0600 | IPC_CREAT);
+	shmid = shmget(1234, DECODE_AUDIO_BUFFER_SIZE, 0600 | IPC_CREAT);
 	if (shmid == -1) {
 		// XXXX errors
 		LOG_ERROR(log_audio_codec, "shmget error %s", strerror(errno));
 		return 0;
 	}
 
-	decode_audio = shmat(shmid, 0, 0);
-	if ((int)decode_audio == -1) {
+	buf = shmat(shmid, 0, 0);
+	if ((int)buf == -1) {
 		// XXXX errors
 		LOG_ERROR(log_audio_codec, "shmgat error %s", strerror(errno));
 		return 0;
 	}
 
-	decode_audio->set_sample_rate = 44100;
-	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, true);
-	fifo_init(&decode_audio->effect_fifo[0], EFFECT_FIFO_SIZE, true);
-	fifo_init(&decode_audio->effect_fifo[1], EFFECT_FIFO_SIZE, true);
-
-	decode_fifo_buf = ((u8_t *)decode_audio) + sizeof(struct decode_audio);
-	effect_fifo_buf[0] = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
-	effect_fifo_buf[1] = ((u8_t *)effect_fifo_buf[0]) + EFFECT_FIFO_SIZE;
+	decode_init_buffers(buf);
 
 
 	/* start threads */

@@ -161,10 +161,8 @@ static int callback(const void *inputBuffer,
 	decode_audio_unlock();
 
  mixin_effects:
-#if 0
 	/* mix in sound effects */
-	decode_sample_mix(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
-#endif
+	decode_mix_effects(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
 
 	return paContinue;
 }
@@ -272,6 +270,7 @@ static int decode_portaudio_init(lua_State *L) {
 	int num_devices, i;
 	const PaDeviceInfo *device_info;
 	const PaHostApiInfo *host_info;
+	void *buf;
 
 	if ((err = Pa_Initialize()) != paNoError) {
 		goto err0;
@@ -310,26 +309,20 @@ static int decode_portaudio_init(lua_State *L) {
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
 
-	/* allocate decoder memory */
-	if (!(decode_fifo_buf = malloc(DECODE_FIFO_SIZE))) {
+	/* allocate output memory */
+	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
+	if (!buf) {
 		goto err0;
 	}
 
-	if (!(decode_audio = malloc(sizeof(struct decode_audio)))) {
-		goto err1;
-	}
-
+	decode_init_buffers(buf);
 	decode_audio->max_rate = 48000;
-	decode_audio->set_sample_rate = 44100;
-	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, false);
 
 	/* open stream */
 	decode_portaudio_openstream();
 
 	return 1;
 
- err1:
-	free(decode_audio);
  err0:
 	LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	return 0;
