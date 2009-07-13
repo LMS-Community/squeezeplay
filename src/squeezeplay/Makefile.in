@@ -49,7 +49,8 @@ DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(top_srcdir)/src/config.h.in config/config.guess \
 	config/config.sub config/depcomp config/install-sh \
 	config/ltmain.sh config/missing install-sh missing
-bin_PROGRAMS = jive$(EXEEXT) jive_alsa$(EXEEXT)
+@ALSA_ENABLED_FALSE@bin_PROGRAMS = jive$(EXEEXT) jive_alsa$(EXEEXT)
+@ALSA_ENABLED_TRUE@bin_PROGRAMS = jive$(EXEEXT)
 @TEST_PROGRAMS_TRUE@test_PROGRAMS = jiveblit$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -127,6 +128,8 @@ GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
+ALSA_ENABLED_FALSE = @ALSA_ENABLED_FALSE@
+ALSA_ENABLED_TRUE = @ALSA_ENABLED_TRUE@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
