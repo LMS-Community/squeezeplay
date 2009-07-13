@@ -512,18 +512,21 @@ end
 			else
 				local action = function ()
 							log:debug("send browserActionRequest request")
-
+							local alreadyUnlocked = false
 							local step = appletManager:callService("browserActionRequest", nil, v,
 								function()
 									jiveMain:unlockItem(item)
 									_lockedItem = false
+									alreadyUnlocked = true
 								end)
 
 							if not v.input then -- no locks for an input item, which is immediate
 								_lockedItem = item
-								jiveMain:lockItem(item, function()
-									appletManager:callService("browserCancel", step)
-								end)
+								if not alreadyUnlocked  then
+									jiveMain:lockItem(item, function()
+										appletManager:callService("browserCancel", step)
+									end)
+								end
 							end
 						end
 

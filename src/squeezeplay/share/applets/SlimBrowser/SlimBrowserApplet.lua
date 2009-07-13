@@ -2369,12 +2369,15 @@ function browserActionRequest(self, server, v, loadedCallback)
 	if goAction or (doAction and v.input) then
 		log:debug(v.nextWindow)
 		if v.nextWindow then
+			if loadedCallback then
+				loadedCallback(step)
+			end
 			if v.nextWindow == 'home' then
-				sink = goHome
+				sink = function () goHome() end
 			elseif v.nextWindow == 'playlist' then
 				sink = _goPlaylist
 			elseif v.nextWindow == 'nowPlaying' then
-				sink = _goNowPlaying
+				sink = function () _goNowPlaying() end
 			end
 		else
 			step, sink =_newDestination(nil,
