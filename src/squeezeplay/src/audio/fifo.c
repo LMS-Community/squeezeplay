@@ -7,7 +7,7 @@
 #include "common.h"
 #include "audio/fifo.h"
 
-//#define DEBUG_FIFO 1
+#define DEBUG_FIFO 1
 
 
 /*
@@ -28,7 +28,6 @@ wrap(r):6	6	6	1	1	4  (note: can never be zero)
 
 #ifdef DEBUG_FIFO
 
-#include <linux/if.h>
 #include <execinfo.h>
 
 static void print_trace(void)
