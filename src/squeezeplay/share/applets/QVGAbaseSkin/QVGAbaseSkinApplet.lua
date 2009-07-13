@@ -624,8 +624,6 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- text input
 	s.textinput = {
-		--FIXME: for unknown reasons the top border has to be negative for the textinput background to render at all, 
-		--       but this also causes it to bleed into the titlebar
 		h          = WH_FILL,
 		border     = { 8, 0, 8, 0 },
 		padding    = { 8, 0, 8, 0 },
