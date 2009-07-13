@@ -23,6 +23,20 @@ typedef s32_t sample_t;
 #define SAMPLE_MAX (sample_t)0x7FFFFFFF
 #define SAMPLE_MIN (sample_t)0x80000000
 
+static inline sample_t sample_clip(sample_t a, sample_t b) {
+	s64_t s = a + b;
+
+	if (s < SAMPLE_MIN) {
+		return SAMPLE_MIN;
+	} else if (s > SAMPLE_MAX) {
+		return SAMPLE_MAX;
+	}
+	else {
+		return s;
+	}
+}
+
+
 /* Effect sample, 16-bits. */
 typedef s16_t effect_t;
 

@@ -105,13 +105,12 @@ void decode_mix_effects(void *outputBuffer,
 
 		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
 			s = (*effect_ptr++) << 16;
-
 			s = fixed_mul(decode_audio->effect_gain, s);
 
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			*output_ptr = sample_clip(*output_ptr, s);
 			output_ptr++;
 
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			*output_ptr = sample_clip(*output_ptr, s);
 			output_ptr++;
 		}
 
