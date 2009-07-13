@@ -146,7 +146,7 @@ extern struct decode_audio_func decode_portaudio;
 
 
 /* Decode output api */
-extern void decode_init_buffers(void *buf);
+extern void decode_init_buffers(void *buf, bool_t prio_inherit);
 extern void decode_output_begin(void);
 extern void decode_output_end(void);
 extern void decode_output_flush(void);

@@ -25,7 +25,7 @@ static PaStream *stream;
 static u32_t stream_sample_rate;
 
 
-static void decode_portaudio_openstream(void);
+static void decode_portaudio_openstream(bool_t locked);
 
 
 /*
@@ -72,7 +72,7 @@ static int callback(const void *inputBuffer,
 		if (add_silence_ms < 2)
 			add_silence_ms = 0;
 		if (!len) {
-			goto unlock_mixin_effects;
+			goto mixin_effects;
 		}
 	}
 
@@ -95,7 +95,7 @@ static int callback(const void *inputBuffer,
 		decode_audio->state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray, 0, len);
 
-		goto unlock_mixin_effects;
+		goto mixin_effects;
 	}
 
 	if (bytes_used < len) {
@@ -157,12 +157,11 @@ static int callback(const void *inputBuffer,
 		decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 	}
 
- unlock_mixin_effects:
-	decode_audio_unlock();
-
  mixin_effects:
 	/* mix in sound effects */
-	decode_mix_effects(outputBuffer, SAMPLES_TO_BYTES(framesPerBuffer));
+	decode_mix_effects(outputBuffer, framesPerBuffer);
+
+	decode_audio_unlock();
 
 	return paContinue;
 }
@@ -171,7 +170,7 @@ static int callback(const void *inputBuffer,
 static void finished_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
-	decode_portaudio_openstream();
+	decode_portaudio_openstream(false);
 }
 
 
@@ -199,7 +198,7 @@ static void decode_portaudio_start(void) {
 
 	ASSERT_AUDIO_LOCKED();
 
-	decode_portaudio_openstream();
+	decode_portaudio_openstream(true);
 }
 
 static void decode_portaudio_pause(void) {
@@ -217,11 +216,11 @@ static void decode_portaudio_stop(void) {
 
 	decode_audio->set_sample_rate = 44100;
 
-	decode_portaudio_openstream();
+	decode_portaudio_openstream(true);
 }
 
 
-static void decode_portaudio_openstream(void) {
+static void decode_portaudio_openstream(bool_t locked) {
 	PaError err;
 	u32_t set_sample_rate;
 
@@ -231,10 +230,20 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
-	decode_audio_lock();
+	if (!locked) {
+		decode_audio_lock();
+	}
+
 	set_sample_rate = decode_audio->set_sample_rate;
 	decode_audio->set_sample_rate = 0;
-	decode_audio_unlock();
+
+	if (!locked) {
+		decode_audio_unlock();
+	}
+
+	if (!set_sample_rate) {
+		return;
+	}
 
 	if ((err = Pa_OpenStream(
 			&stream,
@@ -315,11 +324,11 @@ static int decode_portaudio_init(lua_State *L) {
 		goto err0;
 	}
 
-	decode_init_buffers(buf);
+	decode_init_buffers(buf, false);
 	decode_audio->max_rate = 48000;
 
 	/* open stream */
-	decode_portaudio_openstream();
+	decode_portaudio_openstream(false);
 
 	return 1;
 

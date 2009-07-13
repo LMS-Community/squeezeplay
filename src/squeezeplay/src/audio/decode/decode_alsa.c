@@ -159,7 +159,7 @@ static int decode_alsa_init(lua_State *L) {
 		return 0;
 	}
 
-	decode_init_buffers(buf);
+	decode_init_buffers(buf, true);
 
 
 	/* start threads */

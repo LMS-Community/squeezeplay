@@ -13,14 +13,15 @@
 #include "audio/decode/decode_priv.h"
 
 
-void decode_init_buffers(void *buf) {
+void decode_init_buffers(void *buf, bool_t prio_inherit) {
 	decode_audio = buf;
 	decode_fifo_buf = ((u8_t *)decode_audio) + sizeof(struct decode_audio);
 	effect_fifo_buf = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
 
+	memset(decode_audio, 0, sizeof(struct decode_audio));
 	decode_audio->set_sample_rate = 44100;
-	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, true);
-	fifo_init(&decode_audio->effect_fifo, EFFECT_FIFO_SIZE, true);
+	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, prio_inherit);
+	fifo_init(&decode_audio->effect_fifo, EFFECT_FIFO_SIZE, prio_inherit);
 }
 
 
