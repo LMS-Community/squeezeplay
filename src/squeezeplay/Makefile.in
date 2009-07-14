@@ -91,8 +91,8 @@ PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
 am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) log.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
 am__DEPENDENCIES_1 =
-jive_DEPENDENCIES = $(am__DEPENDENCIES_1) libui.la libdecode.la \
-	libnet.la
+jive_DEPENDENCIES = libui.la libdecode.la libnet.la \
+	$(am__DEPENDENCIES_1)
 am_jive_alsa_OBJECTS = decode_alsa_backend.$(OBJEXT)
 jive_alsa_OBJECTS = $(am_jive_alsa_OBJECTS)
 jive_alsa_DEPENDENCIES = libaudio.la
@@ -339,7 +339,7 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = ${SPPRIVATE_LIB} libui.la libdecode.la libnet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
 jive_alsa_SOURCES = \
 	src/audio/decode/decode_alsa_backend.c
 
