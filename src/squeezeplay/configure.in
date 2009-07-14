@@ -64,7 +64,7 @@ if test "x$enable_alsa" = "xyes"
 then
 	# check for portaudio
 	AC_CHECK_LIB([asound], [snd_pcm_drop])
-	AM_CONDITIONAL(ALSA_ENABLED, 1)
+	AM_CONDITIONAL(ALSA_ENABLED, true)
 fi	  
 
 # Checks for header files.
