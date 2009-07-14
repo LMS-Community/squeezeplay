@@ -503,12 +503,12 @@ function _cont(self, data)
 
 	if data.loop == 1 then
 		self.isLooping = true
-		self.stream:markLoop()
+		Stream:markLoop()
 	end
 
 	-- icy metainterval
 	if data.icyMetaInterval > 0 then
-		self.stream:icyMetaInterval(data.icyMetaInterval)
+		Stream:icyMetaInterval(data.icyMetaInterval)
 	end
 
 	-- XXXX wma guid's
