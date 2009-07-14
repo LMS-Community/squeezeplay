@@ -56,6 +56,8 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "alsaEffectsPeriodCount", 3)
 
 
+	jiveMain:setDefaultSkin("WQVGAsmallSkin")
+
 	-- settings
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'settingsBrightness', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessControlShow(...) end))
