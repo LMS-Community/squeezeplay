@@ -1107,7 +1107,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
 		--FIXME: need this asset
-		img = _loadImage(self, "MISSING_PLACEHOLDER_ARTWORK"),
+		img = _loadImage(self, "IconsResized/icon_album_noart.png"),
 		w   = c.THUMB_SIZE,
 		h   = c.THUMB_SIZE,
 	}
