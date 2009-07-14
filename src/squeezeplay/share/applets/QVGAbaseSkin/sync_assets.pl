@@ -139,11 +139,15 @@ sub create_svk_file {
 	}
 
 	if ($commands[0]) {
+		print STDOUT "-------------\n";
 		open(OUT, ">svkUpdate.bash");
 		print OUT "#!/bin/bash\n\n";
+		print STDOUT "#!/bin/bash\n\n";
 		for (@commands) {
 			print OUT $_;
+			print STDOUT $_;
 		}
+		close(OUT);
 	}
 }
 

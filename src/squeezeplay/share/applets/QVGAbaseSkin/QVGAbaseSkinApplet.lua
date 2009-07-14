@@ -1307,7 +1307,7 @@ function skin(self, s, reload, useDefaultSize)
         s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
         s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
         s.hm_myMusicSearchSongs     = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_ml_songs" .. skinSuffix),
 	})
         s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
         s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
