@@ -100,11 +100,12 @@ AC_ARG_WITH(spprivate,
 [if test "$withval" = yes; then
   AC_MSG_RESULT(yes)
   AC_DEFINE(WITH_SPPRIVATE,1,[Define if using spprivate package])
-  LIBS="$LIBS -lspprivate"
+  SPPRIVATE_LIB="-lspprivate"
 else
   AC_MSG_RESULT(no)
 fi], [AC_MSG_RESULT(no)])
 ])
+AC_SUBST([SPPRIVATE_LIB])
 
 AU_DEFUN([fp_WITH_SPPRIVATE], [AM_WITH_SPPRIVATE])
 
