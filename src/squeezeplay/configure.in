@@ -63,9 +63,9 @@ AC_ARG_ENABLE(alsa, [  --disable-alsa          disable alsa [[default=yes]] ],
 if test "x$enable_alsa" = "xyes"
 then
 	# check for portaudio
-	AC_CHECK_LIB([asound], [snd_pcm_drop], [], [])
-fi
-
+	AC_CHECK_LIB([asound], [snd_pcm_drop])
+	AM_CONDITIONAL(ALSA_ENABLED, 1)
+fi	  
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -118,8 +118,6 @@ AC_HELP_STRING([--enable-screen-rotation], [Enable the screen rotation [[default
 if test x$enable_screen_rotation == xyes; then
     AC_DEFINE(SCREEN_ROTATION_ENABLED, 1, [Define for screen rotation])
 fi
-
-AM_CONDITIONAL(ALSA_ENABLED, test "x$enable_alsa" = "xyes")
 
 dnl broken fsync
 AC_ARG_ENABLE(fsync_workaround,
