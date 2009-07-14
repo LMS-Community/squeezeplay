@@ -299,19 +299,23 @@ function openWindow(self)
 	mainMenu = SimpleMenu("menu")
 
 	tChannel0.item = {
-		text = "Channel 0"
+		text = "Channel 0",
+		style = 'item_no_arrow',
 	}
 
 	tChannel1.item = {
-		text = "Channel 1"
+		text = "Channel 1",
+		style = 'item_no_arrow',
 	}
 
 	tLux.item = {
-		text = "Lux"
+		text = "Lux",
+		style = 'item_no_arrow',
 	}
 	
 	tBright.item = {
-		text = "Brightness"
+		text = "Brightness",
+		style = 'item_no_arrow',
 	}
 
 	gainItem = {

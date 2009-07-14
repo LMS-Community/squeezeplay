@@ -2,11 +2,10 @@
 --[[
 =head1 NAME
 
-applets.ImageViewer.ImageSourceCard - Image source for Image Viewer
+applets.ImageViewer.ImageSourceFlickr - Image source for Image Viewer
 
 =head1 DESCRIPTION
-
-Finds images from removable media
+Reads image list from Flickr
 
 =head1 FUNCTIONS
 
@@ -17,118 +16,188 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs = setmetatable, tonumber, tostring, ipairs
+local setmetatable, tonumber, tostring, ipairs, locale, type, pairs = setmetatable, tonumber, tostring, ipairs, locale, type, pairs
 
-local io		= require("io")
-local oo		= require("loop.simple")
-local math		= require("math")
-local table		= require("jive.utils.table")
-local string	= require("jive.utils.string")
-local lfs		= require('lfs')
-
+local Applet		= require("jive.Applet")
+local appletManager	= require("jive.AppletManager")
+local Event			= require("jive.ui.Event")
+local io			= require("io")
+local oo			= require("loop.simple")
+local math			= require("math")
+local table			= require("jive.utils.table")
+local string		= require("jive.utils.string")
+local lfs			= require('lfs')
+local Group			= require("jive.ui.Group")
+local Keyboard		= require("jive.ui.Keyboard")
+local SimpleMenu	= require("jive.ui.SimpleMenu")
 local RadioButton	= require("jive.ui.RadioButton")
 local RadioGroup	= require("jive.ui.RadioGroup")
+local Textarea		= require("jive.ui.Textarea")
+local Textinput     = require("jive.ui.Textinput")
+local Window        = require("jive.ui.Window")
+local SocketHttp	= require("jive.net.SocketHttp")
+local RequestHttp	= require("jive.net.RequestHttp")
+local URL       	= require("socket.url")
 local Surface		= require("jive.ui.Surface")
 local Process		= require("jive.net.Process")
-local Window		= require("jive.ui.Window")
-local require = require
-local log 		= require("jive.utils.log").logger("applet.ImageViewer")
-
+local json		= require("json")
 local jnt = jnt
+local apiKey		= "6505cb025e34a7e9b3f88daa9fa87a04"
+
+local log 		= require("jive.utils.log").logger("applet.ImageViewer")
+local require = require
+local ImageSource	= require("applets.ImageViewer.ImageSource")
 
 module(...)
 oo.class(_M, ImageSource)
 
-local imgFiles = {}
-
-function __init(self)
-
+function __init(self, applet)
 	log:info("initialize ImageSourceFlickr")
+	obj = oo.rawnew(self, ImageSource(applet))
 
-	-- find directories /media/*/images to parse
-    for dir in lfs.dir("/media") do
-        if lfs.attributes("/media/" .. dir .. "/images", "mode") == "directory" then
+	obj.imgFiles = {}
+	obj:readImageList()
+	obj.photo = nil
 
-			local imageDir = "/media/" .. dir .. "/images"
-			local relPath = imageDir
+	return obj
+end
 
-			local cmd = 'cd ' .. imageDir .. ' && ls -1 *.*'
-			-- filename search format:
-			-- an image file extension, .png, .jpg, .gif
-			local filePattern = '%w+.*%p%a%a%a'
-			local proc = Process(jnt, cmd)
-			proc:read(
-				function(chunk, err)
-					if err then
-						return nil
-					end
+function readImageList(self)
+	local method, args
 
-					if chunk ~=nil then
-						local files = string.split("\n", chunk)
-						for _, file in ipairs(files) do
-							if string.find(file, "%pjpe*g")
-								or string.find(file, "%ppng") 
-								or string.find(file, "%pgif") 
-								 then
-       			                 	table.insert(imgFiles, relPath .. "/" .. file)
-							end
-						end
-					end
-					return 1
-			end)
-	
-		end
+	local displaysetting = self.applet:getSettings()["flickr.display"]
+	if displaysetting == nil then
+		displaysetting = "interesting"
 	end
 
-	return self
+	if displaysetting == "recent" then
+		method = "flickr.photos.getRecent"
+		args = { per_page = 1, extras = "owner_name" }
+	elseif displaysetting == "contacts" then
+		method = "flickr.photos.getContactsPublicPhotos"
+		args = { per_page = 100, extras = "owner_name", user_id = self.applet:getSettings()["flickr.id"], include_self = 1 }
+	elseif displaysetting == "own" then
+		method = "flickr.people.getPublicPhotos"
+		args = { per_page = 100, extras = "owner_name", user_id = self.applet:getSettings()["flickr.id"] }
+	elseif displaysetting == "favorites" then
+		method = "flickr.favorites.getPublicList"
+		args = { per_page = 100, extras = "owner_name", user_id = self.applet:getSettings()["flickr.id"] }
+	else 
+		method = "flickr.interestingness.getList"
+		args = { per_page = 100, extras = "owner_name" }
+	end
+
+	local host, port, path = self:_flickrApi(method, args)
+	if host then
+		local socket = SocketHttp(jnt, host, port, "flickr")
+		local req = RequestHttp(
+			function(chunk, err)
+				if chunk then
+					log:debug("got chunk ", chunk)
+					local obj = json.decode(chunk)
+
+					-- add photos to queue
+					for i,photo in ipairs(obj.photos.photo) do
+						self.imgFiles[#self.imgFiles + 1] = photo
+					end
+				end
+				self.lstReady = true
+			end,
+			'GET',
+			path)
+		socket:fetch(req)
+
+		return true
+	else
+		return false, port -- port is err!
+	end
 end
+
+
+function _getPhotoUrl(self, photo, size)
+	local server = "farm" .. photo.farm .. ".static.flickr.com"
+	local path = "/" .. photo.server .. "/" .. photo.id .. "_" .. photo.secret .. (size or "") .. ".jpg"
+
+	return server, 80, path
+end
+
 
 function getImage(self)
-	local image = Surface:loadImage(imgFiles[self.currentImage])
-	return image
+	return self.image
 end
 
+
 function nextImage(self, ordering)
+	if #self.imgFiles == 0 then
+		self.lstReady = false
+		self.imgReady = false
+		self.photo = nil
+		self:readImageList()
+		return
+	end
 	if ordering == "random" then
-		self.currentImage = math.random(#imgFiles)
+		self.currentImage = math.random(#self.imgFiles)
 	else
 		self.currentImage = self.currentImage + 1
 		if self.currentImage > #imgFiles then
 			self.currentImage = 1
 		end
 	end
+	self:requestImage()
 end
 
+
 function previousImage(self, ordering)
-	if ordering == "random" then
-		self.currentImage = math.random(#imgFiles)
-	else
-		self.currentImage = self.currentImage - 1
-		if self.currentImage > 1 then
-			self.currentImage = #imgFiles
-		end
-	end
+	self:nextImage(ordering)
+end
+
+function requestImage(self)
+	log:debug("request new image")
+	-- request current image
+	self.imgReady = false
+
+	-- get URL from configuration
+	photo = table.remove(self.imgFiles, self.currentImage)
+	
+	local host, port, path = self:_getPhotoUrl(photo)
+	log:info("photo URL: ", host, ":", port, path)
+
+	-- request photo
+	-- create a HTTP socket (see L<jive.net.SocketHttp>)
+	local http = SocketHttp(jnt, host, port, "ImageSourceHttp")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				local image = Surface:loadImageData(chunk, #chunk)
+				self.image = image
+				self.imgReady = true
+				log:debug("image ready")
+			elseif err then
+				log:debug("error loading picture")
+			end
+		end,
+		'GET', path)
+	http:fetch(req)
 end
 
 function getText(self)
-	return "",imgFiles[self.currentImage],""
+	return photo.owner,"",photo.title
 end
 
---[[
-function settings(self, menuItem)
-	local window = Window("text_list", menuItem.text, 'settingstitle')
+
+function settings(self, window)
+
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
-				text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY"), 
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY"), 
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:defineDisplay(menuItem)
+					self:displaySetting(menuItem)
 					return EVENT_CONSUME
 				end
 			},
 			{
-				text = self:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"),
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
 					self:defineFlickrId(menuItem)
@@ -137,91 +206,16 @@ function settings(self, menuItem)
 			},
 		}))
 
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function defineDisplay(self, menuItem)
-	local group = RadioGroup()
-
-	local display = self:getSettings()["flickr.display"]
-	
-	local window = Window("text_list", menuItem.text, flickrTitleStyle)
-	window:addWidget(SimpleMenu("menu",
-		{
-            {
-                text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY_OWN"),
-		style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setDisplay("own")
-                    end,
-                    display == "own"
-	            ),
-            },
-            {
-                text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY_FAVORITES"),
-		style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setDisplay("favorites")
-                    end,
-                    display == "favorites"
-	            ),
-            },           
-            {
-                text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY_CONTACTS"),
-		style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setDisplay("contacts")
-                    end,
-                    display == "contacts"
-                ),
-            },
- 			{
-				text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY_INTERESTING"), 
-				style = 'item_choice',
-				check = RadioButton(
-				   "radio", 
-				   group, 
-				   function() 
-					   self:setDisplay("interesting") 
-				   end,
-				   display == "interesting"
-				),
-			},
-			{ 
-				text = self:string("IMAGE_VIEWER_FLICKR_DISPLAY_RECENT"), 
-				style = 'item_choice',
-				check = RadioButton(
-				   "radio", 
-				   group, 
-				   function() 
-					   self:setDisplay("recent") 
-				   end,
-				   display == "recent"
-			   ),
-			},
-		}))
-
-	self:tieAndShowWindow(window)
-	return window
+    return window
 end
 
 function defineFlickrId(self, menuItem)
 
-    local window = Window("text_list", self:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"), 'settingstitle')
+    local window = Window("text_list", self.applet:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"), flickrTitleStyle)
 
-	local flickrid = self:getSettings()["flickr.idstring"]
+	local flickrid = self.applet:getSettings()["flickr.idstring"]
 	if flickrid == nil then
-		flickrid = " "
+		flickrid = ""
 	end
 
 	local input = Textinput("textinput", flickrid,
@@ -230,45 +224,208 @@ function defineFlickrId(self, menuItem)
 				return false
 			end
 
-			log:debug("Input " .. value)
-			self:setFlickrIdString(value)
+			local v = string.gsub(value, " ", "")
+
+			log:debug("Input " .. v)
+			self:setFlickrIdString(v)
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
 			return true
 		end)
 
-    local help = Textarea("help_text", self:string("IMAGE_VIEWER_FLICKR_FLICKR_ID_HELP"))
+	local keyboard  = Keyboard("keyboard", "qwerty", input)
+        local backspace = Keyboard.backspace()
+        local group     = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
-    window:addWidget(help)
-    window:addWidget(input)
+        window:addWidget(group)
+        window:addWidget(keyboard)
+        window:focusWidget(group)
 
-    self:tieAndShowWindow(window)
+    self.applet:tieAndShowWindow(window)
     return window
 end
 
+function displaySetting(self, menuItem)
+	local group = RadioGroup()
+
+	local display = self.applet:getSettings()["flickr.display"]
+	
+	local window = Window("text_list", menuItem.text, flickrTitleStyle)
+	window:addWidget(SimpleMenu("menu",
+		{
+			{
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_OWN"),
+				style = 'item_choice',
+				check = RadioButton(
+					"radio",
+					group,
+					function()
+						self:setDisplay("own")
+					end,
+					display == "own"
+				),
+			},
+			{
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_FAVORITES"),
+				style = 'item_choice',
+				check = RadioButton(
+					"radio",
+					group,
+					function()
+						self:setDisplay("favorites")
+					end,
+					display == "favorites"
+				),
+			},           
+			{
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_CONTACTS"),
+				style = 'item_choice',
+				check = RadioButton(
+					"radio",
+					group,
+					function()
+						self:setDisplay("contacts")
+					end,
+					display == "contacts"
+				),
+			},
+			{
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_INTERESTING"), 
+				style = 'item_choice',
+				check = RadioButton(
+					"radio", 
+					group, 
+					function() 
+						self:setDisplay("interesting") 
+					end,
+					display == "interesting"
+				),
+			},
+			{ 
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_RECENT"), 
+				style = 'item_choice',
+				check = RadioButton(
+					"radio", 
+					group, 
+					function() 
+						self:setDisplay("recent") 
+					end,
+					display == "recent"
+				),
+			},
+		}
+	))
+	
+	self.applet:tieAndShowWindow(window)
+	return window
+end
+
 function setDisplay(self, display)
-	if self:getSettings()["flickr.id"] == "" and (display == "own" or display == "contacts" or display == "favorites") then
-		self:popupMessage(self:string("IMAGE_VIEWER_FLICKR_ERROR"), self:string("IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION"))
+	if self.applet:getSettings()["flickr.id"] == "" and (display == "own" or display == "contacts" or display == "favorites") then
+		self:popupMessage(self.applet:string("IMAGE_VIEWER_FLICKR_ERROR"), self.applet:string("IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION"))
 	else
-		self:getSettings()["flickr.display"] = display
-		self:storeSettings()
+		self.applet:getSettings()["flickr.display"] = display
+		self.applet:storeSettings()
 	end
 end
 
-function setFlickrId(self, flickrid)
-	self:getSettings()["flickr.id"] = flickrid
-	self:storeSettings()
-end
-
-
 function setFlickrIdString(self, flickridString)
-	self:getSettings()["flickr.idstring"] = flickridString
-	self:getSettings()["flickr.id"] = ""
-	self:storeSettings()
+	self.applet:getSettings()["flickr.idstring"] = flickridString
+	self.applet:getSettings()["flickr.id"] = ""
+	self.applet:storeSettings()
 	self:resolveFlickrIdByEmail(flickridString)
 end
---]]
+
+function setFlickrId(self, flickrid)
+	self.applet:getSettings()["flickr.id"] = flickrid
+	self.applet:storeSettings()
+end
+
+function _flickrApi(self, method, args)
+	local url = {}	
+	url[#url + 1] = "method=" .. method
+
+	for k,v in pairs(args) do
+		url[#url + 1] = k .. "=" .. v
+	end
+
+	url[#url + 1] = "api_key=" .. apiKey
+	url[#url + 1] = "format=json"
+	url[#url + 1] = "nojsoncallback=1"
+	
+	url = "/services/rest/?" .. table.concat(url, "&")
+	log:info("service=", url)
+
+	return "api.flickr.com", 80, url
+end
+
+function _findFlickrIdByEmail(self, searchText)
+	return self:_flickrApi("flickr.people.findByEmail",
+		{
+			find_email = searchText
+		}
+	)
+end
+
+
+function _findFlickrIdByUserID(self, searchText)
+	return self:_flickrApi("flickr.people.findByUsername",
+		{
+			username = searchText
+		}
+	)
+end
+
+function resolveFlickrIdByEmail(self, searchText)
+	-- check whether searchText is an email
+	local host, port, path = self:_findFlickrIdByEmail(searchText)
+	log:info("find by email: ", host, ":", port, path)
+
+	local http = SocketHttp(jnt, host, port, "flickr3")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				local obj = json.decode(chunk)
+				if obj.stat == "ok" then
+					log:info("flickr id found: " .. obj.user.nsid)
+					self:setFlickrId(obj.user.nsid)
+				else
+					log:warn("search by email failed: ", searchText)
+					self:resolveFlickrIdByUsername(searchText)
+				end
+			end
+		end,
+		'GET',
+		path)
+	http:fetch(req)
+
+	return true
+end
+
+function resolveFlickrIdByUsername(self, searchText)
+	-- check whether searchText is a username
+	local host, port, path = self:_findFlickrIdByUserID(searchText)
+	log:info("find by userid: ", host, ":", port, path)
+	local http = SocketHttp(jnt, host, port, "flickr4")
+	local req = RequestHttp(function(chunk, err)
+			if chunk then
+				local obj = json.decode(chunk)
+				if obj.stat == "ok" then
+					log:info("flickr id found: " .. obj.user.nsid)
+					self:setFlickrId(obj.user.nsid)
+				else
+					log:warn("search by userid failed")
+					self:popupMessage(self.applet:string("IMAGE_VIEWER_FLICKR_ERROR"), self.applet:string("IMAGE_VIEWER_FLICKR_USERID_ERROR"))
+				end
+			end
+		end,
+		'GET',
+		path)
+	http:fetch(req)
+
+	return true
+end
+
 
 
 --[[

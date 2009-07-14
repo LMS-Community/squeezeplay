@@ -799,9 +799,6 @@ STATIC_ADDRESS
 	RU	Ввести информацию IP вручную
 	SV	Ange IP-uppgifterna manuellt
 
-STATIC_ADDRESS_CONNECT_MANUALLY
-	EN	Connect Manually
-
 SETUP_NETWORKING_CONTINUE
 	CS	Pokračovat
 	DA	Fortsæt

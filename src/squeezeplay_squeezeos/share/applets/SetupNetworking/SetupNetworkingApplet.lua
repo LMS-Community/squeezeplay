@@ -1525,7 +1525,7 @@ end
 function _enterIPHelp(self, iface, ssid)
 	assert(iface and ssid, debug.traceback())
 
-	local window = Window("help_list", self:string("STATIC_ADDRESS_CONNECT_MANUALLY"), 'setuptitle')
+	local window = Window("help_list", self:string("NETWORK_IP_ADDRESS_HELP"), 'setuptitle')
 	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("help_text", self:string("NETWORK_IP_ADDRESS_HELP_BODY"))
