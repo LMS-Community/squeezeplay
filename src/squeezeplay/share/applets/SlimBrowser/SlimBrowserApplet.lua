@@ -49,6 +49,7 @@ local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
@@ -321,6 +322,10 @@ end
 
 
 local function _pushStep(step)
+	if step.window and not step.window:isContextMenu() then
+		Window:hideContextMenus()
+	end
+
 	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
 
 	table.insert(_stepStack, step)
@@ -385,7 +390,7 @@ end
 -- _newWindowSpec
 -- returns a Window spec based on the concatenation of base and item
 -- window definition
-local function _newWindowSpec(db, item)
+local function _newWindowSpec(db, item, isContextMenu)
 	log:debug("_newWindowSpec()")
 	
 	local bWindow
@@ -402,6 +407,7 @@ local function _newWindowSpec(db, item)
 	local windowStyle = (iWindow and iWindow['windowStyle']) or menu2window[menuStyle] or 'text_list'
 
 	return {
+		["isContextMenu"]    = isContextMenu,
 		["windowStyle"]      = windowStyle,
 		["labelTitleStyle"]  = 'title',
 		["menuStyle"]        = "menu",
@@ -1071,8 +1077,8 @@ local function _browseSink(step, chunk, err)
 			if not data.window and (data.base and data.base.window) then
 				data.window =  data.base.window
 			end
-			if data.window or data.base and data.base.window then
-				local windowStyle = data.window and data.window.windowStyle or 
+			if not step.window:isContextMenu() and (data.window or data.base and data.base.window) then
+				local windowStyle = data.window and data.window.windowStyle or
 							data.base and data.base.window and data.base.window.windowStyle
 				if windowStyle then
 					step.window:setStyle(data.window['windowStyle'])
@@ -1537,6 +1543,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
 		iNextWindow = item['nextWindow']
 
+		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
+			or _safeDeref(chunk, 'base', 'actions', actionName, 'window', 'isContextMenu')
+
 		-- is there a nextWindow on the action
 		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow') 
 	
@@ -1656,7 +1665,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					or ( item['playAction'] == 'go' and actionName == 'play' )
 					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' )
 					or ( item['addAction'] == 'go' and actionName == 'add' ) then
-					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
+
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
@@ -1670,7 +1680,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					log:debug('Context Menu')
 
 
-					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
@@ -2111,9 +2121,13 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
-	
-	-- create a window in all cases
-	local window = Window(windowSpec.windowStyle or 'text_list')
+
+	local window
+	if windowSpec.isContextMenu then
+		window = ContextMenuWindow("More") -- todo localize or decide what title text should be
+	else
+		window = Window(windowSpec.windowStyle or 'text_list')
+	end
 
 	local menu
 	-- if the item has an input field or fields, we must ask for it
@@ -2178,7 +2192,10 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	log:debug("new step: " , step)
 
-	window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
+	if not windowSpec.isContextMenu then
+		window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
+	end
+
 	if step.menu then
 		_stepSetMenuItems(step)
 	end

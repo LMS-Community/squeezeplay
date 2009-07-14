@@ -58,7 +58,6 @@ function show(self)
 	end
 
 	if topwindow:isContextMenu() then
-		log:error("herer")
 		Window.show(self, Window.transitionPushLeftStaticTitle)
 		self:setStyle("context_submenu")
 	else
