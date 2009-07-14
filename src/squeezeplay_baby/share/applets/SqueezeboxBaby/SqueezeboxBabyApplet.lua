@@ -115,7 +115,7 @@ function init(self)
 		end
 	end)
 
-	self:_setupCrossover()
+--	self:_setupCrossover()
 
 	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
@@ -192,11 +192,11 @@ end
 
 function _headphoneJack(self, val)
 	if val == 0 then
-		self:_enableCrossover()
+--		self:_enableCrossover()
 		bsp:setMixer("Endpoint", "Speaker")
 	else
 		bsp:setMixer("Endpoint", "Headphone")
-		self:_disableCrossover()
+--		self:_disableCrossover()
 	end
 end
 
