@@ -1006,7 +1006,7 @@ function skin(self, s, reload, useDefaultSize)
 		--FIXME, something very wrong here. space still being allocated for hidden, no height title
      		title = {
 			layer = LAYER_TITLE,
-			hidden = 0,
+			hidden = 1,
 	                h = 0,
 	                text = {
 				hidden = 1,
