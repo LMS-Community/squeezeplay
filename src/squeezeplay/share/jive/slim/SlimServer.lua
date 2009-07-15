@@ -839,7 +839,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:artworkThumbCached(iconId, size)
+=head2 jive.slim.SlimServer:artworkThumbCached(iconId, size, imgFormat)
 
 Returns true if artwork for iconId and size are in the cache.  This may be used to decide
 whether to display the thumb straight away or wait before fetching it.
@@ -848,8 +848,12 @@ whether to display the thumb straight away or wait before fetching it.
 
 --]]
 
-function artworkThumbCached(self, iconId, size)
-	local cacheKey = iconId .. "@" .. (size)
+function artworkThumbCached(self, iconId, size, imgFormat)
+	if not imgFormat then
+		imgFormat = 'jpg'
+	end
+	
+	local cacheKey = iconId .. "@" .. size .. "/" .. imgFormat
 	if self.artworkCache:get(cacheKey) then
 		return true
 	else
