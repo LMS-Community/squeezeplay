@@ -22,6 +22,11 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+local _headphoneSenseTokens = {
+	["0"] = "AUDIO_ROUTING_NO",
+	["1"] = "AUDIO_ROUTING_YES",
+	["3"] = "HEADPHONE_STATE_WITH_MIC",
+}
 
 
 function audioRoutingMenu(self)
@@ -69,10 +74,25 @@ end
 
 
 function _reportSenseValues(self)
-	self.lineInSenseLabel:setValue(self:_getAmixerValue("Line In Switch"))
-	self.headphoneSenseLabel:setValue(self:_getAmixerValue("Headphone Switch"))
+	self.lineInSenseLabel:setValue(self:_getLineInSenseState())
+	self.headphoneSenseLabel:setValue(self:_getHeadphoneSenseState())
 end
 
+
+function _getLineInSenseState(self)
+	local result = self:_getAmixerValue("Line In Switch")
+	if result:sub(1,2) == "on" then
+		return self:string("AUDIO_ROUTING_YES")
+	else
+		return self:string("AUDIO_ROUTING_NO")
+	end
+end
+
+function _getHeadphoneSenseState(self)
+	local result = self:_getAmixerValue("Headphone Switch")
+	local state = result:sub(1,1)
+	return self:string(_headphoneSenseTokens[state])
+end
 
 function _getPassThroughState(self)
 	local result = self:_getAmixerValue("Line In Test")
