@@ -908,7 +908,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, size, imgFormat)
+=head2 jive.slim.SlimServer:fetchArtwork(iconId, icon, size, imgFormat)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
@@ -917,8 +917,8 @@ argument to control the image format.
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
-	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
+function fetchArtwork(self, iconId, icon, size, imgFormat)
+	logcache:debug(self, ":fetchArtwork(", iconId, ", ", size, ", ", imgFormat, ")")
 
 	assert(size)
 
@@ -927,7 +927,49 @@ function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
 		imgFormat = 'jpg'
 	end
 
-	local cacheKey = iconId .. "@" .. size
+	local cacheKey = iconId .. "@" .. size .. "/" .. imgFormat
+
+	-- do we have an image already cached?
+	local image = self.imageCache[cacheKey]
+	if image then
+		logcache:debug("..image in cache")
+
+		-- are we requesting it already?
+		if image == true then
+			if icon then
+				icon:setValue(nil)
+				self.artworkThumbIcons[icon] = cacheKey
+			end
+			return
+		else
+			if icon then
+				icon:setValue(image)
+				self.artworkThumbIcons[icon] = nil
+			end
+			return
+		end
+	end
+	
+	-- or is the compressed artwork cached?
+	local artwork = self.artworkCache:get(cacheKey)
+	if artwork then
+		if artwork == true then
+			logcache:debug("..artwork already requested")
+			if icon then
+				icon:setValue(nil)
+				self.artworkThumbIcons[icon] = cacheKey
+			end
+			return
+		else
+			logcache:debug("..artwork in cache")
+			if icon then
+				image = _loadArtworkImage(self, cacheKey, artwork, size)
+				icon:setValue(image)
+				self.artworkThumbIcons[icon] = nil
+			end
+			return
+		end
+	end
 
 	-- request SqueezeCenter resizes the thumbnail, use 'o' for
 	-- original aspect ratio
@@ -950,81 +992,10 @@ function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
 			end
 		end
 		
-		logcache:debug(self, ":fetchArtworkThumb(", iconId, " => ", url, ")")
+		logcache:debug(self, ":fetchArtwork(", iconId, " => ", url, ")")
 	end
 
-	return _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
-end
-
---[[
-
-=head2 jive.slim.SlimServer:fetchArtworkURL(url, icon, size)
-
-Same as fetchArtworkThumb except it fetches the artwork from a remote URL.
-This method is in the SlimServer class so it can reuse the other artwork code.
-
-=cut
---]]
-function fetchArtworkURL(self, url, icon, size)
-	logcache:debug(self, ":fetchArtworkURL(", url, ")")
-
-	assert(size)
-	local cacheKey = url .. "@" .. size
-	
-	-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
-	url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&u=' .. url
-	
-
-	return _fetchArtworkURL(self, icon, nil, size, cacheKey, url)
-end
-
-
--- common parts of fetchArtworkThumb and fetchArtworkURL
-function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
-
-	-- do we have an image cached
-	local image = self.imageCache[cacheKey]
-	if image then
-		logcache:debug("..image in cache")
-
-		-- are we requesting it already?
-		if image == true then
-			if icon then
-				icon:setValue(nil)
-				self.artworkThumbIcons[icon] = cacheKey
-			end
-			return
-		else
-			if icon then
-				icon:setValue(image)
-				self.artworkThumbIcons[icon] = nil
-			end
-			return
-		end
-	end
-
-	-- or do is the compressed artwork cached
-	local artwork = self.artworkCache:get(cacheKey)
-	if artwork then
-		if artwork == true then
-			logcache:debug("..artwork already requested")
-			if icon then
-				icon:setValue(nil)
-				self.artworkThumbIcons[icon] = cacheKey
-			end
-			return
-		else
-			logcache:debug("..artwork in cache")
-			if icon then
-				image = _loadArtworkImage(self, cacheKey, artwork, size)
-				icon:setValue(image)
-				self.artworkThumbIcons[icon] = nil
-			end
-			return
-		end
-	end
-
-	-- no luck, generate a request for the artwork
+	-- generate a request for the artwork
 	self.artworkCache:set(cacheKey, true)
 	if icon then
 		icon:setValue(nil)

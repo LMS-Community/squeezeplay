@@ -1172,11 +1172,7 @@ function _process_displaystatus(self, event)
 			s = self.currentSong
 			s.text:setValue(textValue)
 			s.artIcon:setStyle("icon")
-			if display['icon'] then
-				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'))
-			else
-				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
-			end
+			self.slimServer:fetchArtwork(display["icon-id"] or display["icon"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
 		else
 			s = self.popupInfo
 			s.textarea:setValue(textValue)

@@ -93,35 +93,18 @@ local function _getIcon(self, item, icon, remote)
 
 	-- FIXME, need to fix this for all styles of window including when NP artwork size set to 'large'
 	ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingBrowseArtworkSize")
+	
+	local iconId
+	if item then
+		iconId = item["icon-id"] or item["icon"]
+	end
 
-	if item and item["icon-id"] then
+	if iconId then
 		-- Fetch an image from SlimServer
-		server:fetchArtworkThumb(item["icon-id"], icon, ARTWORK_SIZE) 
-	elseif item and item["icon"] then
-		-- Fetch a remote image URL, sized to ARTWORK_SIZE x ARTWORK_SIZE
-		local remoteContent = string.find(item['icon'], 'http://')
-		-- sometimes this is static content
-		if remoteContent then
-			server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
-		else
-			if server:isSqueezeNetwork() then
-				-- Artwork on SN must be fetched as a normal URL
-				local ip, port = server:getIpPort()
-				
-				-- Bug 7123, Add a leading slash if needed
-				if not string.find(item["icon"], "^/") then
-					item["icon"] = "/" .. item["icon"]
-				end
-				
-				item["icon"] = 'http://' .. ip .. ':' .. port .. item["icon"]
-				server:fetchArtworkURL(item["icon"], icon, ARTWORK_SIZE)
-			else
-				server:fetchArtworkThumb(item["icon"], icon, ARTWORK_SIZE)
-			end
-		end
+		server:fetchArtwork(iconId, icon, ARTWORK_SIZE) 
 	elseif item and item["params"] and item["params"]["track_id"] then
 		-- this is for placeholder artwork, either for local tracks or radio streams with no art
-		server:fetchArtworkThumb(item["params"]["track_id"], icon, ARTWORK_SIZE, 'png') 
+		server:fetchArtwork(item["params"]["track_id"], icon, ARTWORK_SIZE, 'png') 
 	elseif icon then
 		icon:setValue(nil)
 	end

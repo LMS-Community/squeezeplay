@@ -429,23 +429,16 @@ local function _artworkItem(step, item, group, menuAccel)
 
 	local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
 	iconSize = THUMB_SIZE
+	
+	local iconId = item["icon-id"] or item["item"]
 
-	if item["icon-id"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon-id"], iconSize) then
+	if iconId then
+		if menuAccel and not _server:artworkThumbCached(iconId, iconSize) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtworkThumb(item["icon-id"], icon, iconSize)
-		end
-
-	elseif item["icon"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon"], iconSize) then
-			-- Don't load artwork while accelerated
-			_server:cancelArtwork(icon)
-		else
-			-- Fetch a remote image URL, sized to iconSize x iconSize (artwork from a streamed source)
-			_server:fetchArtworkURL(item["icon"], icon, iconSize)
+			_server:fetchArtwork(iconId, icon, iconSize)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], iconSize) then
@@ -453,7 +446,7 @@ local function _artworkItem(step, item, group, menuAccel)
 			_server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			_server:fetchArtworkThumb(item["params"]["track_id"], icon, iconSize, 'png')
+			_server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
 		end
 	else
 		_server:cancelArtwork(icon)
@@ -863,12 +856,15 @@ local function _bigArtworkPopup(chunk, err)
 	if screenW > screenH then
 		shortDimension = screenH
 	end
+	
+	local artworkId
+	if chunk.data then
+		artworkId = chunk.data.artworkId or chunk.data.artworkUrl
+	end
 
 	log:debug("Artwork width/height will be ", shortDimension)
-	if chunk.data and chunk.data.artworkId then
-		_server:fetchArtworkThumb(chunk.data.artworkId, icon, shortDimension)
-	elseif chunk.data and chunk.data.artworkUrl then
-		_server:fetchArtworkURL(chunk.data.artworkUrl, icon, shortDimension)
+	if artworkId then
+		_server:fetchArtwork(artworkId, icon, shortDimension)
 	end
 	popup:addWidget(icon)
 	popup:show()
@@ -1084,7 +1080,7 @@ local function _browseSink(step, chunk, err)
 					step.window:setStyle(data.window['windowStyle'])
 				end
 				-- if a titleStyle is being sent or prevWindow or setupWindow params are given, we need to setTitleWidget completely
-				if data.window.titleStyle or data.window['icon-id'] or data.window.setupWindow == 1 or data.window.prevWindow == 0 then
+				if data.window.titleStyle or data.window['icon-id'] or data.window['icon'] or data.window.setupWindow == 1 or data.window.prevWindow == 0 then
 
 					local titleText, titleStyle, titleIcon
 					local titleWidget = step.window:getTitleWidget()
@@ -1104,11 +1100,13 @@ local function _browseSink(step, chunk, err)
 					else
 						titleStyle = step.window:getTitleStyle()
 					end
+					
 					-- add the icon if it's been specified in the window params
-					if data.window['icon-id'] then
+					local iconId = data.window['icon-id'] or data.window['icon']
+					if iconId then
 						-- Fetch an image from SlimServer
 						titleIcon = Icon("icon")
-						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, jiveMain:getSkinParam("THUMB_SIZE"))
+						_server:fetchArtwork(iconId, titleIcon, jiveMain:getSkinParam("THUMB_SIZE"))
 					-- only allow the existing icon to stay if titleStyle isn't being changed
 					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
 						titleIcon = titleWidget:getWidget('icon')

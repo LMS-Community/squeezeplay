@@ -407,14 +407,22 @@ end
 --				item.text = item.text .. "(SN!)"
 --			end
 
-			local itemIcon = v.window  and v.window['icon-id'] or v['icon-id']
+			local itemIcon
+			if v.window then
+				itemIcon = v.window['icon-id'] or v.window['icon']
+			else
+				itemIcon = v['icon-id'] or v['icon']
+			end
+			
 			if itemIcon then
-				if isMenuStatusResponse  then
+				-- Fetch artwork if we're connected, or it's remote
+				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed
+				if isMenuStatusResponse or string.find(itemIcon, "^http") then
 					--item["icon-id"] = itemIcon
 
 					local _size = jiveMain:getSkinParam('THUMB_SIZE')
 					item.icon = Icon('icon')
-					_server:fetchArtworkThumb(itemIcon, item.icon, _size)
+					_server:fetchArtwork(itemIcon, item.icon, _size)
 
 					-- Hack alert: redefine the checkSkin function
 					-- to reload images when the skin changes. We
@@ -424,7 +432,7 @@ end
 						local s = jiveMain:getSkinParam('THUMB_SIZE')
 						if s ~= _size then
 							_size = s
-							_server:fetchArtworkThumb(itemIcon, item.icon, _size)
+							_server:fetchArtwork(itemIcon, item.icon, _size)
 						end
 
 						_style(...)
