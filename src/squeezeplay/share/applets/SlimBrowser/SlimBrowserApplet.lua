@@ -3024,8 +3024,7 @@ function _attachPlayer(self, player)
 				window = { 
 					["menuStyle"] = "album", 
 				}
-			},
-			'currentplaylist'
+			}
 		),
 		_statusSink
 	)
