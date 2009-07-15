@@ -183,19 +183,6 @@ static int decode_alsa_init(lua_State *L) {
 #endif
 
 
-	/* playback device */
-	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
-
-	lua_getfield(L, 2, "alsaPlaybackBufferTime");
-	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
-	lua_getfield(L, 2, "alsaPlaybackPeriodCount");
-	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
-	lua_pop(L, 2);
-
-	decode_alsa_fork(playback_device, buffer_time, period_count,
-			 (effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS);
-
-
 	/* effects device */
 	if (effects_device) {
 		LOG_DEBUG(log_audio_output, "Effects device: %s", effects_device);
@@ -208,6 +195,19 @@ static int decode_alsa_init(lua_State *L) {
 
 		decode_alsa_fork(effects_device, buffer_time, period_count, FLAG_STREAM_EFFECTS);
 	}
+
+
+	/* playback device */
+	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
+
+	lua_getfield(L, 2, "alsaPlaybackBufferTime");
+	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
+	lua_getfield(L, 2, "alsaPlaybackPeriodCount");
+	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
+	lua_pop(L, 2);
+
+	decode_alsa_fork(playback_device, buffer_time, period_count,
+			 (effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS);
 
 	lua_pop(L, 2);
 
