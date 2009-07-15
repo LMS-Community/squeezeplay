@@ -334,9 +334,19 @@ function _networkScanComplete(self, iface)
 
 	-- for ethernet, automatically connect
 	if not iface:isWireless() then
-		_scanResults(self, iface)
+		local nextStep =        function()
+						_scanResults(self, iface)
 
-		return _connect(self, iface, iface:getName(), true, false)
+						_connect(self, iface, iface:getName(), true, false)
+					end
+
+		if appletManager:callService("performHalfDuplexBugTest") then
+			_halfDuplexBugTest(self, iface, nextStep)
+			return
+		else
+			nextStep()
+			return
+		end
 	end
 
 	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
@@ -442,6 +452,60 @@ function _scanResults(self, iface)
 	_setCurrentSSID(self, associated)
 end
 
+function _halfDuplexBugTest(self, iface, nextStep, useShowInstead)
+	log:info("_halfDuplexBugTest:")
+	local status = iface:t_wpaStatus()
+	if not status.link or (status.link and status.fullduplex) then
+		log:info("_halfDuplexBugTest: success. Link status: ", status.link)
+		if nextStep then
+			nextStep()
+		end
+		return
+	end
+
+	local window = Window("help_info", self:string("NETWORK_CONNECTION_PROBLEM"), "helptitle")
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = (self:string("NETWORK_TRY_AGAIN")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			log:info("_halfDuplexBugTest: try again")
+			_halfDuplexBugTest(self, iface, nextStep, true)
+		end,
+		weight = 1
+	})
+
+	menu:addItem({
+		text = (self:string("NETWORK_CONNECTION_TYPE_WIRELESS")),
+		sound = "WINDOWSHOW",
+		callback = function()
+			_networkScan(self, self.wlanIface)
+		end,
+		weight = 2
+	})
+
+	window:addWidget(menu)
+
+	_helpAction(self, window, nil, nil, menu)
+
+
+	local textarea = Textarea("help_text", self:string("NETWORK_HALF_SPEED_HUB"))
+	window:addWidget(menu)
+	menu:setHeaderWidget(textarea)
+
+	if not useShowInstead then
+		self:tieAndShowWindow(window)
+	else
+		window:showInstead()
+	end
+
+--	window:playSound("WINDOWSHOW")
+
+
+end
 
 -------- WIRELESS SSID AND PASSWORD --------
 
