@@ -543,9 +543,8 @@ end
 					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item))
 					    or item.id == 'radio' then
 						log:warn("switching to SN")
-						log:warn("Do we want to try to reconnect to SC first here?")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
-						_player and _player:getLastSqueezeCenter() or nil)
+						_player and _player:getLastSqueezeCenter() or nil, true)
 
 					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
 --					original: elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
@@ -553,7 +552,7 @@ end
 					        or item.node == 'radios' then
 						log:warn("switching from SN to last SqueezeCenter")
 
-						self:_selectMusicSource(action, _player:getLastSqueezeCenter())
+						self:_selectMusicSource(action, _player:getLastSqueezeCenter(), nil, true)
 
 --					elseif not either then
 					else
@@ -696,7 +695,7 @@ function _anyKnownSqueezeCenters(self)
 	return false
 end
 
-function _selectMusicSource(self, callback, specificServer, serverForRetry)
+function _selectMusicSource(self, callback, specificServer, serverForRetry, confirmOnChange)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 --	if not currentPlayer or not currentPlayer.info.connected then
 	--todo: handle situation where player is down; above code also fails when server is down, not what we want
@@ -713,7 +712,8 @@ function _selectMusicSource(self, callback, specificServer, serverForRetry)
 							nil,
 							specificServer,
 							serverForRetry,
-							self.waitingForPlayerMenuStatus
+							self.waitingForPlayerMenuStatus,
+							confirmOnChange
 						)
 end
 
@@ -750,7 +750,7 @@ function myMusicSelector(self)
 		self:_selectMusicSource(function()
 						jiveMain:openNodeById('_myMusic', true)
 					end,
-					_player:getLastSqueezeCenter())
+					_player:getLastSqueezeCenter(), nil, true)
 	else
 		if not appletManager:callService("getCurrentPlayer") then
 			appletManager:callService("setupShowSelectPlayer")

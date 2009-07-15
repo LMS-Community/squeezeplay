@@ -49,7 +49,8 @@ DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(top_srcdir)/src/config.h.in config/config.guess \
 	config/config.sub config/depcomp config/install-sh \
 	config/ltmain.sh config/missing install-sh missing
-bin_PROGRAMS = jive$(EXEEXT) jive_alsa$(EXEEXT)
+@ALSA_ENABLED_FALSE@bin_PROGRAMS = jive$(EXEEXT) jive_alsa$(EXEEXT)
+@ALSA_ENABLED_TRUE@bin_PROGRAMS = jive$(EXEEXT)
 @TEST_PROGRAMS_TRUE@test_PROGRAMS = jiveblit$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -89,7 +90,9 @@ testPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
 am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) log.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
-jive_DEPENDENCIES = libui.la libdecode.la libnet.la
+am__DEPENDENCIES_1 =
+jive_DEPENDENCIES = libui.la libdecode.la libnet.la \
+	$(am__DEPENDENCIES_1)
 am_jive_alsa_OBJECTS = decode_alsa_backend.$(OBJEXT)
 jive_alsa_OBJECTS = $(am_jive_alsa_OBJECTS)
 jive_alsa_DEPENDENCIES = libaudio.la
@@ -127,6 +130,8 @@ GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
+ALSA_ENABLED_FALSE = @ALSA_ENABLED_FALSE@
+ALSA_ENABLED_TRUE = @ALSA_ENABLED_TRUE@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
@@ -184,6 +189,7 @@ SDL_LIBS = @SDL_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPPRIVATE_LIB = @SPPRIVATE_LIB@
 STRIP = @STRIP@
 TEST_PROGRAMS_FALSE = @TEST_PROGRAMS_FALSE@
 TEST_PROGRAMS_TRUE = @TEST_PROGRAMS_TRUE@
@@ -333,7 +339,7 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libui.la libdecode.la libnet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
 jive_alsa_SOURCES = \
 	src/audio/decode/decode_alsa_backend.c
 

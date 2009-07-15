@@ -496,7 +496,7 @@ function skin(self, s)
 
 	local textinputBackground     = 
 		_loadTile(self, {
-				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box.png",
+				 imgpath .. "Text_Entry/Keyboard_Touch/titlebar_box.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tl.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_t.png",
 				 imgpath .. "Text_Entry/Keyboard_Touch/text_entry_titlebar_box_tr.png",
@@ -2057,7 +2057,7 @@ function skin(self, s)
 	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
 	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
 	s.hm_myMusicSearchSongs     = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_ml_songs" .. skinSuffix),
 	})
 	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
 	s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)

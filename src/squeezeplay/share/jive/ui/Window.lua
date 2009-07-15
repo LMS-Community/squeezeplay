@@ -1341,6 +1341,11 @@ function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 end
 
 
+function transitionPushRightStaticTitle(oldWindow, newWindow)
+	return _transitionPushRight(oldWindow, newWindow, true)
+end
+
+
 --[[
 
 =head2 jive.ui.Window:transitionPushRight(newWindow)

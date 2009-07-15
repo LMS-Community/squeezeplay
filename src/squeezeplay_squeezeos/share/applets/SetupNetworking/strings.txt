@@ -1063,6 +1063,9 @@ NETWORK_ETH_SPEED
 	RU	Скорость
 	SV	Hastighet
 
+NETWORK_HALF_SPEED_HUB
+	EN	You are using a half-duplex ethernet hub that is not supported by this Squeezebox.\n\nPlease attach a full-duplex ethernet device, or choose an available wireless network.  For more information, please contact customer support.
+
 NETWORK_ETH_MBPS
 	CS	%s Mb/s
 	DA	%s Mbps

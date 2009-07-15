@@ -64,7 +64,7 @@ function settingsShow(self)
 end
 
 -- service to select server for a player. Note a current player must exist before calling this method
-function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected)
+function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected, confirmOnChange)
 
 	if includedServers then
 		self.includedServers = includedServers
@@ -86,6 +86,7 @@ function selectMusicSource(self, playerConnectedCallback, titleStyle, includedSe
 
 	self.serverList = {}
 	self.ignoreServerConnected = ignoreServerConnected
+	self.confirmOnChange = confirmOnChange
 
 	if specificServer then
 		log:debug("selecting specific server ", specificServer)
@@ -392,7 +393,7 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 		end
 		return
 	end
-	if not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server then
+	if not self.confirmOnChange or not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server then
        	        self:connectPlayerToServer(currentPlayer, server)
 	else
 		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)

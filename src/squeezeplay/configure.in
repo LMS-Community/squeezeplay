@@ -63,9 +63,9 @@ AC_ARG_ENABLE(alsa, [  --disable-alsa          disable alsa [[default=yes]] ],
 if test "x$enable_alsa" = "xyes"
 then
 	# check for portaudio
-	AC_CHECK_LIB([asound], [snd_pcm_drop], [], [])
-fi
-
+	AC_CHECK_LIB([asound], [snd_pcm_drop])
+	AM_CONDITIONAL(ALSA_ENABLED, true)
+fi	  
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -100,11 +100,12 @@ AC_ARG_WITH(spprivate,
 [if test "$withval" = yes; then
   AC_MSG_RESULT(yes)
   AC_DEFINE(WITH_SPPRIVATE,1,[Define if using spprivate package])
-  LIBS="$LIBS -lspprivate"
+  SPPRIVATE_LIB="-lspprivate"
 else
   AC_MSG_RESULT(no)
 fi], [AC_MSG_RESULT(no)])
 ])
+AC_SUBST([SPPRIVATE_LIB])
 
 AU_DEFUN([fp_WITH_SPPRIVATE], [AM_WITH_SPPRIVATE])
 
@@ -118,7 +119,6 @@ AC_HELP_STRING([--enable-screen-rotation], [Enable the screen rotation [[default
 if test x$enable_screen_rotation == xyes; then
     AC_DEFINE(SCREEN_ROTATION_ENABLED, 1, [Define for screen rotation])
 fi
-
 
 dnl broken fsync
 AC_ARG_ENABLE(fsync_workaround,

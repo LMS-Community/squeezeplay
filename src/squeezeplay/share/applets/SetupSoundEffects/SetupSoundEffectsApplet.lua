@@ -63,8 +63,8 @@ local sounds = {
 	SELECT     = { default = "select.wav",    chan = 0 },
 	PLAYBACK   = { default = "select.wav",    chan = 0 },
 	DOCKING    = { default = "docking.wav",   chan = 1 },
-	STARTUP    = { default = "splash.wav",    chan = 2 },
-	SHUTDOWN   = { default = "shutdown.wav",  chan = 2 }
+	STARTUP    = { default = "splash.wav",    chan = 1 },
+	SHUTDOWN   = { default = "shutdown.wav",  chan = 1 }
 }
 
 local groups = {

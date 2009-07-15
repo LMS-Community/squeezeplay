@@ -46,7 +46,7 @@ static int is_debug = 0;
 
 
 u8_t *decode_fifo_buf;
-u8_t *effect_fifo_buf[MAX_EFFECT_SAMPLES];
+u8_t *effect_fifo_buf;
 struct decode_audio *decode_audio;
 
 #define FLAG_STREAM_PLAYBACK 0x01
@@ -718,7 +718,7 @@ static int decode_realtime_process()
 
 static int decode_lock_memory()
 {
-	size_t i, page_size, shmsize;
+	size_t i, page_size;
 
 	/* lock all current and future pages into ram */
 	if (mlockall(MCL_CURRENT | MCL_FUTURE)) {
@@ -735,8 +735,7 @@ static int decode_lock_memory()
 	page_size = sysconf(_SC_PAGESIZE);
 
 	/* touch each page of buffer */
-	shmsize = sizeof(struct decode_audio) + DECODE_FIFO_SIZE + (EFFECT_FIFO_SIZE * 2);
-	for (i=0; i<shmsize; i+=page_size) {
+	for (i=0; i<DECODE_AUDIO_BUFFER_SIZE; i+=page_size) {
 		*(decode_fifo_buf + i) = 0;
 	}
 
@@ -758,8 +757,7 @@ static int decode_alsa_shared_mem_attach(void)
 	// XXXX errors
 
 	decode_fifo_buf = (((u8_t *)decode_audio) + sizeof(struct decode_audio));
-	effect_fifo_buf[0] = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
-	effect_fifo_buf[1] = ((u8_t *)effect_fifo_buf[0]) + EFFECT_FIFO_SIZE;
+	effect_fifo_buf = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
 
 	return 0;
 }

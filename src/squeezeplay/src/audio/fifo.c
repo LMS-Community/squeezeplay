@@ -28,7 +28,6 @@ wrap(r):6	6	6	1	1	4  (note: can never be zero)
 
 #ifdef DEBUG_FIFO
 
-#include <linux/if.h>
 #include <execinfo.h>
 
 static void print_trace(void)
@@ -57,6 +56,10 @@ static void print_trace(void)
 int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 #ifdef HAVE_LIBPTHREAD
 
+#ifndef _POSIX_THREAD_PROCESS_SHARED
+#error "no _POSIX_THREAD_PROCESS_SHARED"
+#endif /* _POSIX_THREAD_PROCESS_SHARED */
+
 	/* linux multi-process locking */
 	pthread_mutexattr_t mutex_attr;
 	pthread_condattr_t cond_attr;
@@ -65,20 +68,16 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 	if ((err = pthread_mutexattr_init(&mutex_attr)) < 0) {
 		return err;
 	}
-#ifdef _POSIX_THREAD_PROCESS_SHARED
-	if ((err = pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED)) < 0) {
-		return err;
-	}
-#else
-	#error "no _POSIX_THREAD_PROCESS_SHARED"
-#endif /* _POSIX_THREAD_PROCESS_SHARED */
-#ifdef _POSIX_THREAD_PRIO_INHERIT
 	if (prio_inherit) {
+		if ((err = pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED)) < 0) {
+			return err;
+		}
+#ifdef _POSIX_THREAD_PRIO_INHERIT
 		if ((err = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT)) < 0) {
 			return err;
 		}
-	}
 #endif /* _POSIX_THREAD_PRIO_INHERIT */
+	}
 	if ((err = pthread_mutex_init(&fifo->mutex, &mutex_attr)) < 0) {
 		return err;
 	}

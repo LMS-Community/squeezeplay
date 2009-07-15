@@ -210,8 +210,11 @@ libnet_la_LIBADD = -lSDL -lresolv
 
 
 # Program: jivebrowser
+if ALSA_ENABLED
+bin_PROGRAMS = jive
+else
 bin_PROGRAMS = jive jive_alsa
-
+endif
 
 # Test programs: jiveblit
 testdir = $(bindir)
@@ -227,7 +230,7 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libui.la libdecode.la libnet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
 
 jive_alsa_SOURCES = \
 	src/audio/decode/decode_alsa_backend.c

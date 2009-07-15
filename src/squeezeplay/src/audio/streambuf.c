@@ -503,6 +503,7 @@ static int stream_connectL(lua_State *L) {
 
 	streambuf_clear_loop();
 	streambuf_bytes_received = 0;
+	streambuf_copyright = FALSE;
 	streambuf_filter = streambuf_next_filter;
 	streambuf_next_filter = NULL;
 
@@ -529,9 +530,6 @@ static int stream_disconnectL(lua_State *L) {
 		CLOSESOCKET(stream->fd);
 		stream->fd = 0;
 	}
-
-	streambuf_bytes_received = 0;
-	streambuf_copyright = FALSE;
 
 	return 0;
 }
@@ -756,6 +754,8 @@ static int stream_icy_metaintervalL(lua_State *L) {
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
 	{ "loadLoop", stream_load_loopL },
+	{ "markLoop", stream_mark_loopL },
+	{ "icyMetaInterval", stream_icy_metaintervalL },
 	{ NULL, NULL }
 };
 
@@ -766,8 +766,6 @@ static const struct luaL_Reg stream_m[] = {
 	{ "getfd", stream_getfdL },
 	{ "read", stream_readL },
 	{ "write", stream_writeL },
-	{ "markLoop", stream_mark_loopL },
-	{ "icyMetaInterval", stream_icy_metaintervalL },
 	{ NULL, NULL }
 };
 

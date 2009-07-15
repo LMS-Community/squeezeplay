@@ -24,12 +24,16 @@ struct jive_sample {
 
 
 /* mixer channels */
-u8_t *effect_fifo_buf[MAX_EFFECT_SAMPLES];
+#define MAX_EFFECT_SAMPLES 2
+static struct jive_sample *sample[MAX_EFFECT_SAMPLES];
+static bool_t is_playing = false;
+u8_t *effect_fifo_buf;
 
 #define MAXVOLUME 100
 fft_fixed effect_gain = FIXED_ONE;
 static int effect_volume = MAXVOLUME;
 static int effect_attn = MAXVOLUME;
+
 
 
 static void sample_free(struct jive_sample *sample) {
@@ -44,104 +48,174 @@ static void sample_free(struct jive_sample *sample) {
 }
 
 
-static int decode_sample_obj_gc(lua_State *L) {
-	struct jive_sample *sample = *(struct jive_sample **)lua_touserdata(L, 1);
+static void decode_sample_mix(int i, Uint8 *buffer, size_t buflen) {
+	const s32_t max_sample = 0x7fff;
+	const s32_t min_sample = -0x8000;
+	effect_t *s, *d;
+	size_t buf_frames, frames, j;
 
-	if (sample) {
-		sample_free(sample);
+	/* fixme: this crudely mixes the samples onto the buffer */
+
+	buf_frames = buflen / sizeof(effect_t);	
+
+	frames = sample[i]->frames - sample[i]->pos;
+	if (frames > buf_frames) {
+		frames = buf_frames;
 	}
 
-	return 0;
+	d = (effect_t *)(void *)buffer;
+	s = ((effect_t *)(void *)sample[i]->data) + sample[i]->pos;
+	
+	for (j=0; j<frames; j++) {
+		s32_t tmp = *s++;
+	
+		tmp += *d;
+	
+		if (tmp >= max_sample) {
+			tmp = max_sample;
+		}
+		else if (tmp <= min_sample) {
+			tmp = min_sample;
+		}
+		*d++ = tmp;
+	}
+
+	sample[i]->pos += frames;
+
+	if (sample[i]->pos == sample[i]->frames) {
+		sample[i]->pos = 0;
+			
+		sample_free(sample[i]);
+		sample[i] = NULL;
+	}
+}
+
+
+static void decode_sample_fill_buffer_locked(void)
+{
+	size_t i, n, size;
+
+	size = fifo_bytes_free(&decode_audio->effect_fifo);
+	size = (size / sizeof(effect_t)) * sizeof(effect_t);
+
+	while (size > 0) {
+		n = fifo_bytes_until_wptr_wrap(&decode_audio->effect_fifo);
+		if (n > size) {
+			n = size;
+		}
+
+		memset(effect_fifo_buf + decode_audio->effect_fifo.wptr, 0, n);
+
+		for (i=0; i<MAX_EFFECT_SAMPLES; i++) {
+			if (sample[i]) {
+				decode_sample_mix(i, effect_fifo_buf + decode_audio->effect_fifo.wptr, n);
+			}
+		}
+
+		fifo_wptr_incby(&decode_audio->effect_fifo, n);
+
+		size -= n;
+	}
+
+	/* sound effects still playing? */
+	is_playing = false;
+	for (i=0; i<MAX_EFFECT_SAMPLES; i++) {
+		if (sample[i]) {
+			is_playing = true;
+			break;
+		}
+	}
+}
+
+
+void decode_sample_fill_buffer()
+{
+	decode_audio_lock();
+
+	if (!is_playing) {
+		/* no sound effects playing */
+		decode_audio_unlock();
+		return;
+	}
+
+	/* fill buffer */
+	fifo_lock(&decode_audio->effect_fifo);
+
+	decode_audio->effect_gain = effect_gain;
+
+	decode_sample_fill_buffer_locked();
+	
+	fifo_unlock(&decode_audio->effect_fifo);
+	decode_audio_unlock();
 }
 
 
 static int decode_sample_obj_play(lua_State *L) {
 	struct jive_sample *snd;
+	size_t n, size;
+	int ch;
 
 	/* stack is:
 	 * 1: sound
 	 */
 
 	snd = *(struct jive_sample **)lua_touserdata(L, -1);
-	if (!snd->enabled || !decode_audio) {
+	if (!snd->enabled) {
 		return 0;
 	}
 
-	if (snd->mixer == MAX_EFFECT_SAMPLES) {
-		size_t size, n;
+	decode_audio_lock();
 
-		/* HACK ALERT:
-		 *
-		 * special channel, write to output buffer
-		 * used for startup and shutdown sounds only
-		 */
-
-		decode_audio_lock();
-
-		decode_audio->effect_gain = effect_gain;
-
-		if (decode_audio->state & DECODE_STATE_RUNNING) {
-			/* buffer in use */
-			return 0;
-		}
-
-		size = MIN(snd->frames * sizeof(effect_t), DECODE_FIFO_SIZE);
-		while (size) {
-			n = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
-			if (n > size) {
-				n = size;
-			}
-
-			memcpy(decode_fifo_buf + decode_audio->fifo.wptr, snd->data, n);
-			fifo_wptr_incby(&decode_audio->fifo, n);
-			size -= n;
-		}
-
-		decode_audio->state |= DECODE_STATE_EFFECT;
-
+	ch = snd->mixer;	
+	if (sample[ch] != NULL) {
+		/* slot is not free */
 		decode_audio_unlock();
+		return 0;
 	}
-	else {
-		struct fifo *ch_fifo;
-		size_t size, n;
-		u8_t *data;
-		int ch;
 
-		/* effect channel */
-		// XXXX don't lock channels?
+	/* queue sound effect */
+	sample[ch] = snd;
+	sample[ch]->refcount++;
+
+	fifo_lock(&decode_audio->effect_fifo);
+
+	size = fifo_bytes_used(&decode_audio->effect_fifo);
+	if (size > 0) {
+		/* mix in to effects fifo now at the readptr, we want the
+		 * effect to play without delay */
+		n = fifo_bytes_until_rptr_wrap(&decode_audio->effect_fifo);
+		if (n > size) {
+			n = size;
+		}
 		
-		ch = snd->mixer;
-		ch_fifo = &decode_audio->effect_fifo[ch];
-
-		decode_audio_lock();
-		fifo_lock(ch_fifo);
-
-		decode_audio->effect_gain = effect_gain;
-
-		if (!fifo_empty(ch_fifo)) {
-			/* effect already playing in this channel */
-			fifo_unlock(ch_fifo);
-			decode_audio_unlock();
-			return 0;
+		if (sample[ch]) {
+			decode_sample_mix(ch, effect_fifo_buf + decode_audio->effect_fifo.rptr, n);
 		}
+		size -= n;
 
-		data = snd->data;
-		size = MIN(snd->frames * sizeof(effect_t), EFFECT_FIFO_SIZE);
-		while (size) {
-			n = fifo_bytes_until_wptr_wrap(ch_fifo);
-			if (n > size) {
-				n = size;
-			}
-
-			memcpy(effect_fifo_buf[ch] + ch_fifo->wptr, data, n);
-
-			fifo_wptr_incby(ch_fifo, n);
-			data += n;
-			size -= n;
+		if (size && sample[ch]) {
+			decode_sample_mix(ch, effect_fifo_buf, size);
 		}
+	}
 
-		fifo_unlock(ch_fifo);
-		decode_audio_unlock();
+	if (sample[ch]) {
+		/* fill remained of the effects fifo */
+		is_playing = true;
+		decode_sample_fill_buffer_locked();
+	}
+
+	fifo_unlock(&decode_audio->effect_fifo);
+	decode_audio_unlock();
+
+	return 0;
+}
+
+
+static int decode_sample_obj_gc(lua_State *L) {
+	struct jive_sample *sample = *(struct jive_sample **)lua_touserdata(L, 1);
+
+	if (sample) {
+		sample_free(sample);
 	}
 
 	return 0;

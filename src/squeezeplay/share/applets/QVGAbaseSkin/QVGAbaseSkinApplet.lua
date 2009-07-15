@@ -41,6 +41,7 @@ local autotable              = require("jive.utils.autotable")
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
+local LAYER_TITLE            = jive.ui.LAYER_TITLE
 
 local LAYOUT_NORTH           = jive.ui.LAYOUT_NORTH
 local LAYOUT_EAST            = jive.ui.LAYOUT_EAST
@@ -246,8 +247,21 @@ function skin(self, s, reload, useDefaultSize)
 		imgpath .. "Popup_Menu/popup_box_l.png",
 	})
 
+	s.img.contextMenuBox =
+                Tile:loadTiles({
+			imgpath .. "Popup_Menu/cm_popup_box.png",
+			imgpath .. "Popup_Menu/cm_popup_box_tl.png",
+			imgpath .. "Popup_Menu/cm_popup_box_t.png",
+			imgpath .. "Popup_Menu/cm_popup_box_tr.png",
+			imgpath .. "Popup_Menu/cm_popup_box_r.png",
+			imgpath .. "Popup_Menu/cm_popup_box_br.png",
+			imgpath .. "Popup_Menu/cm_popup_box_b.png",
+			imgpath .. "Popup_Menu/cm_popup_box_bl.png",
+			imgpath .. "Popup_Menu/cm_popup_box_l.png",
+		})
 
-	s.img.popupMask = Tile:fillColor(0x000000e5)
+
+	s.img.popupMask = Tile:fillColor(0x00000085)
 
 	s.img.blackBackground = Tile:fillColor(0x000000ff)
 
@@ -272,6 +286,8 @@ function skin(self, s, reload, useDefaultSize)
         	TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe },
 		TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 },
 		TEXT_SH_COLOR = { 0x37, 0x37, 0x37 },
+
+		CM_MENU_HEIGHT = 41,
 
 		TEXTINPUT_WHEEL_COLOR = { 0xB3, 0xB3, 0xB3 },
 		TEXTINPUT_WHEEL_SELECTED_COLOR = { 0xE6, 0xE6, 0xE6 },
@@ -974,6 +990,64 @@ function skin(self, s, reload, useDefaultSize)
 		}
 	}
 
+	-- toast_popup popup with art and text
+	s.context_menu = {
+
+		x = 0,
+		y = 19,
+		w = screenWidth - 20,
+		h = screenHeight - 32,
+
+		bgImg = s.img.contextMenuBox,
+	        maskImg = s.img.popupMask,
+		layer = LAYER_TITLE,
+
+		--FIXME, something very wrong here. space still being allocated for hidden, no height title
+     		title = {
+			layer = LAYER_TITLE,
+			hidden = 1,
+	                h = 0,
+		},
+		menu = {
+			scrollbar = { 
+				h = c.CM_MENU_HEIGHT * 5,
+			},
+			item = {
+				h = c.CM_MENU_HEIGHT,
+				order = { "text", "arrow" },
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'left',
+					font = _boldfont(c.TEXTMENU_FONT_SIZE),
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				arrow = _uses(s.item.arrow),
+			},
+			selected = {
+				item = {
+					bgImg = s.img.oneLineItemSelectionBox,
+					order = { "text", "arrow" },
+					text = {
+						w = WH_FILL,
+						h = WH_FILL,
+						align = 'left',
+						font = _boldfont(c.TEXTMENU_SELECTED_FONT_SIZE),
+						fg = c.TEXT_COLOR,
+						sh = c.TEXT_SH_COLOR,
+					},
+					arrow = _uses(s.item.arrow),
+				},
+			},
+
+		},
+	}
+	
+	s.context_submenu = _uses(s.context_menu, {
+	        maskImg = false,
+	})
+
 	-- slider popup (volume/scanner)
 	s.slider_popup = {
 		x = 19,
@@ -1033,7 +1107,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
 		--FIXME: need this asset
-		img = _loadImage(self, "MISSING_PLACEHOLDER_ARTWORK"),
+		img = _loadImage(self, "IconsResized/icon_album_noart.png"),
 		w   = c.THUMB_SIZE,
 		h   = c.THUMB_SIZE,
 	}
@@ -1233,7 +1307,7 @@ function skin(self, s, reload, useDefaultSize)
         s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
         s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
         s.hm_myMusicSearchSongs     = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_ml_songs" .. skinSuffix),
 	})
         s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
         s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)

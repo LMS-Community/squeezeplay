@@ -13,6 +13,18 @@
 #include "audio/decode/decode_priv.h"
 
 
+void decode_init_buffers(void *buf, bool_t prio_inherit) {
+	decode_audio = buf;
+	decode_fifo_buf = ((u8_t *)decode_audio) + sizeof(struct decode_audio);
+	effect_fifo_buf = ((u8_t *)decode_fifo_buf) + DECODE_FIFO_SIZE;
+
+	memset(decode_audio, 0, sizeof(struct decode_audio));
+	decode_audio->set_sample_rate = 44100;
+	fifo_init(&decode_audio->fifo, DECODE_FIFO_SIZE, prio_inherit);
+	fifo_init(&decode_audio->effect_fifo, EFFECT_FIFO_SIZE, prio_inherit);
+}
+
+
 bool_t decode_check_start_point(void) {
 	bool_t reached_start_point;
 	size_t track_start_point;
@@ -58,10 +70,12 @@ bool_t decode_check_start_point(void) {
 }
 
 
-static void decode_mix_effects_ch(int ch, void *outputBuffer,
-				  size_t framesPerBuffer)
+/*
+ * This function is called by to copy effects to the audio buffer.
+ */
+void decode_mix_effects(void *outputBuffer,
+			size_t framesPerBuffer)
 {
-	struct fifo *ch_fifo;
 	size_t len, bytes_used;
 	sample_t *output_ptr;
 
@@ -70,10 +84,9 @@ static void decode_mix_effects_ch(int ch, void *outputBuffer,
 	len = framesPerBuffer * sizeof(effect_t);
 
 	// XXXX don't lock channels?
-	ch_fifo = &decode_audio->effect_fifo[ch];
-	fifo_lock(ch_fifo);
+	fifo_lock(&decode_audio->effect_fifo);
 
-	bytes_used = fifo_bytes_used(ch_fifo);
+	bytes_used = fifo_bytes_used(&decode_audio->effect_fifo);
 	if (bytes_used > len) {
 		bytes_used = len;
 	}
@@ -84,93 +97,27 @@ static void decode_mix_effects_ch(int ch, void *outputBuffer,
 		sample_t s;
 		size_t i, bytes_write;
 
-		bytes_write = fifo_bytes_until_rptr_wrap(ch_fifo);
+		bytes_write = fifo_bytes_until_rptr_wrap(&decode_audio->effect_fifo);
 		if (bytes_write > bytes_used) {
 			bytes_write = bytes_used;
 		}
 
-		effect_ptr = (effect_t *)(void *)(effect_fifo_buf[ch] + ch_fifo->rptr);
+		effect_ptr = (effect_t *)(void *)(effect_fifo_buf + decode_audio->effect_fifo.rptr);
 
 		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
 			s = (*effect_ptr++) << 16;
-
 			s = fixed_mul(decode_audio->effect_gain, s);
 
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			*output_ptr = sample_clip(*output_ptr, s);
 			output_ptr++;
 
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
+			*output_ptr = sample_clip(*output_ptr, s);
 			output_ptr++;
 		}
 
-		fifo_rptr_incby(ch_fifo, bytes_write);
+		fifo_rptr_incby(&decode_audio->effect_fifo, bytes_write);
 		bytes_used -= bytes_write;
 	}
 
-	fifo_unlock(ch_fifo);
-}
-
-static void decode_mix_effects_buf(void *outputBuffer,
-				   size_t framesPerBuffer)
-{
-	size_t len, bytes_used;
-	sample_t *output_ptr;
-
-	ASSERT_AUDIO_LOCKED();
-
-	if (!(decode_audio->state & DECODE_STATE_EFFECT)) {
-		return;
-	}
-
-	len = framesPerBuffer * sizeof(effect_t);
-
-	bytes_used = fifo_bytes_used(&decode_audio->fifo);
-	if (bytes_used > len) {
-		bytes_used = len;
-	}
-
-	output_ptr = (sample_t *)(void *)outputBuffer;
-	while (bytes_used > 0) {
-		effect_t *effect_ptr;
-		sample_t s;
-		size_t i, bytes_write;
-
-		bytes_write = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
-		if (bytes_write > bytes_used) {
-			bytes_write = bytes_used;
-		}
-
-		effect_ptr = (effect_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-
-		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
-			s = (*effect_ptr++) << 16;
-
-			s = fixed_mul(decode_audio->effect_gain, s);
-
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
-			output_ptr++;
-
-			*output_ptr = (*output_ptr >> 1) + (s >> 1);
-			output_ptr++;
-		}
-
-		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
-		bytes_used -= bytes_write;
-	}
-
-	if (fifo_empty(&decode_audio->fifo)) {
-		decode_audio->state &= ~DECODE_STATE_EFFECT;
-	}
-}
-
-/*
- * This function is called by to copy effects to the audio buffer.
- */
-void decode_mix_effects(void *outputBuffer, size_t framesPerBuffer)
-{
-	ASSERT_AUDIO_LOCKED();
-
-  	decode_mix_effects_buf(outputBuffer, framesPerBuffer);
-	decode_mix_effects_ch(0, outputBuffer, framesPerBuffer);
-	decode_mix_effects_ch(1, outputBuffer, framesPerBuffer);
+	fifo_unlock(&decode_audio->effect_fifo);
 }

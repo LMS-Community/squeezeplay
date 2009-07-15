@@ -23,6 +23,20 @@ typedef s32_t sample_t;
 #define SAMPLE_MAX (sample_t)0x7FFFFFFF
 #define SAMPLE_MIN (sample_t)0x80000000
 
+static inline sample_t sample_clip(sample_t a, sample_t b) {
+	s64_t s = a + b;
+
+	if (s < SAMPLE_MIN) {
+		return SAMPLE_MIN;
+	} else if (s > SAMPLE_MAX) {
+		return SAMPLE_MAX;
+	}
+	else {
+		return s;
+	}
+}
+
+
 /* Effect sample, 16-bits. */
 typedef s16_t effect_t;
 
@@ -113,7 +127,7 @@ struct decode_audio {
 
 	/* effects */
 	fft_fixed effect_gain;
-	struct fifo effect_fifo[2];
+	struct fifo effect_fifo;
 
 	/* device info */
 	u32_t max_rate;
@@ -132,6 +146,7 @@ extern struct decode_audio_func decode_portaudio;
 
 
 /* Decode output api */
+extern void decode_init_buffers(void *buf, bool_t prio_inherit);
 extern void decode_output_begin(void);
 extern void decode_output_end(void);
 extern void decode_output_flush(void);
@@ -141,7 +156,7 @@ extern void decode_mix_effects(void *outputBuffer, size_t framesPerBuffer);
 
 /* Sample playback api (sound effects) */
 extern int decode_sample_init(lua_State *L);
-extern void decode_sample_mix(Uint8 *buffer, size_t buflen);
+extern void decode_sample_fill_buffer(void);
 
 
 /* Internal state */
@@ -157,9 +172,10 @@ extern bool_t decode_first_buffer;
 #define DECODE_FIFO_SIZE (10 * 2 * 44100 * sizeof(sample_t)) 
 extern u8_t *decode_fifo_buf;
 
-#define MAX_EFFECT_SAMPLES 2
-#define EFFECT_FIFO_SIZE ((size_t)(0.5 * 1 * 44100 * sizeof(effect_t)))
-extern u8_t *effect_fifo_buf[MAX_EFFECT_SAMPLES];
+#define EFFECT_FIFO_SIZE (1 * 1 * 44100 * sizeof(effect_t))
+extern u8_t *effect_fifo_buf;
+
+#define DECODE_AUDIO_BUFFER_SIZE (sizeof(struct decode_audio) + DECODE_FIFO_SIZE + EFFECT_FIFO_SIZE)
 
 /* Decode message queue */
 extern struct mqueue decode_mqueue;
