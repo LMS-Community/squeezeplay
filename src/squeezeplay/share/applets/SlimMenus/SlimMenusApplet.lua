@@ -422,7 +422,7 @@ end
 
 					local _size = jiveMain:getSkinParam('THUMB_SIZE')
 					item.icon = Icon('icon')
-					_server:fetchArtwork(itemIcon, item.icon, _size)
+					_server:fetchArtwork(itemIcon, item.icon, _size, 'png')
 
 					-- Hack alert: redefine the checkSkin function
 					-- to reload images when the skin changes. We
@@ -432,7 +432,7 @@ end
 						local s = jiveMain:getSkinParam('THUMB_SIZE')
 						if s ~= _size then
 							_size = s
-							_server:fetchArtwork(itemIcon, item.icon, _size)
+							_server:fetchArtwork(itemIcon, item.icon, _size, 'png')
 						end
 
 						_style(...)
