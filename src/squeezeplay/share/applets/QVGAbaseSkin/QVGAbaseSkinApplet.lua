@@ -993,11 +993,12 @@ function skin(self, s, reload, useDefaultSize)
 	-- toast_popup popup with art and text
 	s.context_menu = {
 
-		x = 0,
-		y = 19,
+		x = 10,
+		y = 10,
 		w = screenWidth - 20,
-		h = screenHeight - 32,
-
+		h = screenHeight - 17,
+		border = 0,
+		padding = 0,
 		bgImg = s.img.contextMenuBox,
 	        maskImg = s.img.popupMask,
 		layer = LAYER_TITLE,
@@ -1005,12 +1006,27 @@ function skin(self, s, reload, useDefaultSize)
 		--FIXME, something very wrong here. space still being allocated for hidden, no height title
      		title = {
 			layer = LAYER_TITLE,
-			hidden = 1,
+			hidden = 0,
 	                h = 0,
+	                text = {
+				hidden = 1,
+			},
+			bgImg = false,
+			border = 0,
 		},
+
+
 		menu = {
+			h = screenHeight - 33,
+			w = screenWidth - 33,
+			x = 7,
+			y = 7,
+			border = 0,
+			itemHeight = c.CM_MENU_HEIGHT,
+			position = LAYOUT_NORTH,
 			scrollbar = { 
-				h = c.CM_MENU_HEIGHT * 5,
+				h = c.CM_MENU_HEIGHT * 5 - 8,
+				border = {0,4,0,0},
 			},
 			item = {
 				h = c.CM_MENU_HEIGHT,
