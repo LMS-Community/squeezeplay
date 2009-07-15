@@ -814,11 +814,7 @@ function processArtworkQueue(self)
 
 			self.artworkFetchCount = self.artworkFetchCount + 1
 
-
-			if entry.id then
-				-- slimserver icon id
-				self.artworkPool:queue(req)
-			else
+			if string.find(entry.url, "^http") then
 				-- image from remote server
 
 				-- XXXX manage pool of connections to remote server
@@ -826,6 +822,9 @@ function processArtworkQueue(self)
 				local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
  
 				http:fetch(req)
+			elseif self.artworkPool then
+				-- slimserver icon id
+				self.artworkPool:queue(req)
 			end
 
 			-- try again
