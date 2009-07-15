@@ -268,7 +268,7 @@ static int system_atomic_write(lua_State *L)
 {
 	const char *fname, *fdata;
 	char *tname;
-	size_t len;
+	size_t n, len;
 	FILE *fp;
 #if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
 	DIR *dp;
@@ -279,25 +279,55 @@ static int system_atomic_write(lua_State *L)
 	tname = alloca(strlen(fname) + 5);
 	strcpy(tname, fname);
 	strcat(tname, ".new");
+	
+	if (!(fp = fopen(tname, "w"))) {
+		return luaL_error(L, "fopen: %s", strerror(errno));
+	}
 
-	fp = fopen(tname, "w");
-	fwrite(fdata, len, 1, fp);
+	n = 0;
+	while (n < len) {
+		n += fwrite(fdata + n, 1, len - n, fp);
 
-	fflush(fp);
+		if (ferror(fp)) {
+			fclose(fp);
+			return luaL_error(L, "fwrite: %s", strerror(errno));
+		}
+	}
+
+	if (fflush(fp) != 0) {
+		fclose(fp);
+		return luaL_error(L, "fflush: %s", strerror(errno));
+	}
 #if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
-	fsync(fileno(fp));
+	if (fsync(fileno(fp)) != 0) {
+		fclose(fp);
+		return luaL_error(L, "fsync: %s", strerror(errno));
+	}
 #endif
-	fclose(fp);
+	if (fclose(fp) != 0) {
+		return luaL_error(L, "fclose: %s", strerror(errno));
+	}
 
-	rename(tname, fname);
+	if (rename(tname, fname) != 0) {
+		return luaL_error(L, "rename: %s", strerror(errno));
+	}
 
 #ifdef FSYNC_WORKAROUND_ENABLED
 	/* sync filesystem if fsync is broken */
 	sync();
 #elif HAVE_FSYNC
-	dp = opendir(dirname(tname));
-	fsync(dirfd(dp));
-	closedir(dp);
+	if (!(dp = opendir(dirname(tname)))) {
+		return luaL_error(L, "opendir: %s", strerror(errno));
+	}
+	
+	if (fsync(dirfd(dp)) != 0) {
+		closedir(dp);
+		return luaL_error(L, "fsync: %s", strerror(errno));
+	}
+
+	if (closedir(dp) != 0) {
+		return luaL_error(L, "closedir: %s", strerror(errno));
+	}
 #endif
 
 	return 0;
