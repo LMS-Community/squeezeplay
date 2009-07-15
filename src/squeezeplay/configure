@@ -20566,7 +20566,7 @@ fi
 
 
 
-if 1; then
+if true; then
   ALSA_ENABLED_TRUE=
   ALSA_ENABLED_FALSE='#'
 else
