@@ -928,6 +928,8 @@ end
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
 local function _goNowPlaying(transition)
+	Window:hideContextMenus()
+	
 	--first hide any "NP related" windows (playlist, track info) that are on top
 	while _getCurrentStep() and _getCurrentStep()._isNpChildWindow do
 		log:info("Hiding NP child window")
