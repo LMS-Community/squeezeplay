@@ -6,6 +6,10 @@
 
 #include "common.h"
 
+#ifdef HAVE_SYSLOG
+#include <syslog.h>
+#endif
+
 #include "audio/fifo.h"
 #include "audio/fixed_math.h"
 #include "audio/mqueue.h"
@@ -34,11 +38,46 @@
 
 static int is_debug = 0;
 
-#define LOG_DEBUG(FMT, ...) printf(FMT "\n", ##__VA_ARGS__)
-#define LOG_INFO(FMT, ...) printf(FMT "\n", ##__VA_ARGS__)
-#define LOG_WARN(FMT, ...) printf(FMT "\n", ##__VA_ARGS__)
-#define LOG_ERROR(FMT, ...) printf(FMT "\n", ##__VA_ARGS__)
-#define IS_LOG_PRIORITY(LEVEL) (1)
+static __inline void log_printf(int level, const char *format, ...) {
+	char buf[255];
+	va_list va;
+
+	va_start(va, format);
+	vsnprintf(buf, sizeof(buf), format, va);
+	va_end(va);
+
+	if (is_debug) {
+		char *lstr;
+
+		switch (level) {
+		case LOG_PRIORITY_ERROR:
+			lstr = "ERROR";
+			break;
+		case LOG_PRIORITY_WARN:
+			lstr = "WARN";
+			break;
+		case LOG_PRIORITY_INFO:
+			lstr = "INFO";
+			break;
+		default:
+		case LOG_PRIORITY_DEBUG:
+			lstr = "DEBUG";
+			break;
+		}
+
+		printf("%-6s %s\n", lstr, buf);
+	}
+
+#ifdef HAVE_SYSLOG
+	syslog(level, "%s", buf);
+#endif
+}
+
+#define LOG_DEBUG(FMT, ...) { if (is_debug) log_printf(LOG_PRIORITY_DEBUG, "%s:%d " FMT, __func__, __LINE__, ##__VA_ARGS__); }
+#define LOG_INFO(FMT, ...) log_printf(LOG_PRIORITY_INFO, "%s:%d " FMT, __func__, __LINE__, ##__VA_ARGS__)
+#define LOG_WARN(FMT, ...) log_printf(LOG_PRIORITY_WARN, "%s:%d " FMT, __func__, __LINE__, ##__VA_ARGS__)
+#define LOG_ERROR(FMT, ...) log_printf(LOG_PRIORITY_ERROR, "%s:%d " FMT, __func__, __LINE__, ##__VA_ARGS__)
+#define IS_LOG_PRIORITY(LEVEL) ((LEVEL==LOG_PRIORITY_DEBUG)?is_debug:1)
 
 
 /* debug switches */
@@ -790,6 +829,10 @@ int main(int argv, char **argc)
 		printf("Usage: %s [-v] -d <device> -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
 		exit(-1);
 	}
+
+#ifdef HAVE_SYSLOG
+	openlog("squeezeplay", LOG_ODELAY | LOG_CONS, LOG_USER);
+#endif
 
 	/* attach to shared memory buffer */
 	if (decode_alsa_shared_mem_attach() != 0) {

@@ -18,6 +18,7 @@
 
 #include <pthread.h>
 #include <alsa/asoundlib.h>
+#include <sys/wait.h>
 
 
 #define ALSA_DEFAULT_DEVICE "default"
@@ -29,12 +30,36 @@
 #define FLAG_STREAM_NOISE    0x04
 
 
+pid_t effect_pid = -1;
+pid_t playback_pid = -1;
+
+
+static void decode_alsa_check_pids(void) {
+	if (effect_pid >= 0) {
+		if (waitpid(effect_pid, NULL, WNOHANG) == effect_pid) {
+			/* child is dead, exit */
+			LOG_ERROR(log_audio_output, "exit, effect child is dead");
+			exit(-1);
+		}
+	}
+	if (playback_pid >= 0) {
+		if (waitpid(playback_pid, NULL, WNOHANG) == playback_pid) {
+			/* child is dead, exit */
+			LOG_ERROR(log_audio_output, "exit, playback child is dead");
+			exit(-1);
+		}
+	}
+}
+
+
 static void decode_alsa_start(void) {
 	LOG_DEBUG(log_audio_output, "decode_alsa_start");
 
 	ASSERT_AUDIO_LOCKED();
 
 	decode_audio->set_sample_rate = decode_audio->track_sample_rate;
+
+	decode_alsa_check_pids();
 }
 
 
@@ -44,6 +69,8 @@ static void decode_alsa_resume(void) {
 	ASSERT_AUDIO_LOCKED();
 
 	decode_audio->set_sample_rate = decode_audio->track_sample_rate;
+
+	decode_alsa_check_pids();
 }
 
 
@@ -53,6 +80,8 @@ static void decode_alsa_pause(void) {
 	ASSERT_AUDIO_LOCKED();
 
 	decode_audio->set_sample_rate = 44100;
+
+	decode_alsa_check_pids();
 }
 
 
@@ -62,10 +91,12 @@ static void decode_alsa_stop(void) {
 	ASSERT_AUDIO_LOCKED();
 
 	decode_audio->set_sample_rate = 44100;
+
+	decode_alsa_check_pids();
 }
 
 
-static void decode_alsa_fork(const char *device, unsigned int buffer_time, unsigned int period_count, u32_t flags)
+static pid_t decode_alsa_fork(const char *device, unsigned int buffer_time, unsigned int period_count, u32_t flags)
 {
 	char *path, b[10], p[10], f[10];
 	char *cmd[20];
@@ -117,7 +148,7 @@ static void decode_alsa_fork(const char *device, unsigned int buffer_time, unsig
 	pid = vfork();
 	if (pid < 0) {
 		LOG_ERROR(log_audio_output, "fork failed %d", errno);
-		return;
+		return -1;
 	}
 	if (pid == 0) {
 		/* child */
@@ -126,6 +157,8 @@ static void decode_alsa_fork(const char *device, unsigned int buffer_time, unsig
 		LOG_ERROR(log_audio_output, "execv failed %d", errno);
 		_exit(-1);
 	}
+
+	return pid;
 }
 
 
@@ -193,7 +226,7 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		decode_alsa_fork(effects_device, buffer_time, period_count, FLAG_STREAM_EFFECTS);
+		effect_pid = decode_alsa_fork(effects_device, buffer_time, period_count, FLAG_STREAM_EFFECTS);
 	}
 
 
@@ -206,8 +239,8 @@ static int decode_alsa_init(lua_State *L) {
 	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 	lua_pop(L, 2);
 
-	decode_alsa_fork(playback_device, buffer_time, period_count,
-			 (effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS);
+	playback_pid = decode_alsa_fork(playback_device, buffer_time, period_count,
+					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS);
 
 	lua_pop(L, 2);
 
