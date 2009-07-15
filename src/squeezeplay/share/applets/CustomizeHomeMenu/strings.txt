@@ -18,7 +18,7 @@ APP_GUIDE
 	SV	Programguide
 
 CUSTOMIZE_HOME
-	EN	Customize Home Menu
+	EN	Edit Home Menu
 
 CUSTOMIZE_RESTORE_DEFAULTS
 	CS	Obnovit výchozí
