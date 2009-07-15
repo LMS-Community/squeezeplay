@@ -3,19 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 APP_GUIDE
-	CS	Průvodce aplikací
-	DA	Programvejledning
-	DE	Anwendungen
-	EN	App Guide
-	ES	Manual de la aplicación
-	FI	Sovellusopas
-	FR	Guide de l'application
-	IT	Servizi di musica
-	NL	Lijst met toepassingen
-	NO	Tjenesteliste
-	PL	Przewodnik po aplikacji
-	RU	Руководство приложения
-	SV	Programguide
+	EN	App Gallery
 
 CUSTOMIZE_HOME
 	EN	Edit Home Menu
