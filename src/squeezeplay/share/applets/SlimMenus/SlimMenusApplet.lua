@@ -874,6 +874,19 @@ function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
 	end
 end
 
+-- notify_playerDelete
+-- this is called when the player disappears
+function notify_playerDelete(self, player)
+	log:debug("notify_playerDelete(", player, ")")
+
+	if _player == player then
+		-- unsubscribe from this player's menustatus
+		if _player then
+			_player:unsubscribe('/slim/menustatus/' .. _player:getId())
+		end
+	end
+end
+
 
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
