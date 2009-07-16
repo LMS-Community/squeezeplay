@@ -426,7 +426,7 @@ local function _eventHandler(self, event)
 			else
 				--in body area
 				--return _showContextMenuAction(self, event)
-				Framework:pushAction('context_menu')
+				Framework:pushAction("add")
 				return EVENT_CONSUME
 			end
 		end

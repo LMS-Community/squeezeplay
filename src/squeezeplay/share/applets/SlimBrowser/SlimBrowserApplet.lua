@@ -1751,7 +1751,6 @@ local _actionToActionName = {
 	["set_preset_4"]    = 'set-preset-4',
 	["set_preset_5"]    = 'set-preset-5',
 	["set_preset_6"]    = 'set-preset-6',
-	["context_menu"]    = 'more',
 	["create_mix"]    = 'play-hold',
 	["add"]     = 'more',
 	["add_next"]     = 'add-hold',

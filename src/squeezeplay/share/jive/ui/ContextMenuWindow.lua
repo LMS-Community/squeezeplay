@@ -36,7 +36,7 @@ function __init(self, title)
 	obj:setButtonAction("rbutton", "cancel")
 
 	obj:addActionListener("cancel", obj, _cancelContextMenuAction)
-	obj:addActionListener("context_menu", obj, _cancelContextMenuAction)
+	obj:addActionListener("add", obj, _cancelContextMenuAction)
 
 	return obj
 end

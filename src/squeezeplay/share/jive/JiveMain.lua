@@ -310,7 +310,7 @@ function JiveMain:__init()
 		10)		
 
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
-	Framework:addActionListener("context_menu", self, _defaultContextMenuAction, 10)
+	Framework:addActionListener("add", self, _defaultContextMenuAction, 10)
 
 	--Consume up and down actions
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
