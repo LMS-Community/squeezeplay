@@ -35,6 +35,7 @@ static SDL_Thread *decode_thread = NULL;
 
 /* current decoder state */
 u32_t current_decoder_state = 0;
+int decode_watchdog = -1;
 
 
 /* state variables for the current track */
@@ -62,6 +63,7 @@ struct decode_audio *decode_audio;
 /* decoder instance */
 static struct decode_module *decoder;
 static void *decoder_data;
+
 
 
 /* installed decoders */
@@ -307,9 +309,12 @@ static bool_t decode_timer_interval(u32_t *delay) {
 }
 
 
-static int decode_thread_execute(void *unused) {
-	int decode_watchdog;
+void decode_keepalive(int ticks) {
+	watchdog_keepalive(decode_watchdog, 1);
+}
 
+
+static int decode_thread_execute(void *unused) {
 	LOG_DEBUG(log_audio_decode, "decode_thread_execute");
 
 	decode_watchdog = watchdog_get();

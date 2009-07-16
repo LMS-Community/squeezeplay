@@ -80,6 +80,13 @@ size_t streambuf_get_usedbytes(void) {
 
 	return n;
 }
+
+size_t streambuf_fast_usedbytes(void) {
+	ASSERT_FIFO_LOCKED(&streambuf_fifo);
+
+	return fifo_bytes_used(&streambuf_fifo);
+}
+
 /* returns true if the stream is still open but cannot yet supply the requested bytes */
 bool_t streambuf_would_wait_for(size_t bytes) {
 	size_t n;
@@ -218,6 +225,8 @@ ssize_t streambuf_feed_fd(int fd) {
 
 size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	size_t sz, w;
+
+	ASSERT_FIFO_LOCKED(&streambuf_fifo);
 
 	if (streaming) {
 		*streaming = streambuf_streaming;

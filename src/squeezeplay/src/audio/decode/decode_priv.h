@@ -77,6 +77,8 @@ extern struct decode_module decode_aac;
 /* Private decoder api */
 extern u32_t current_decoder_state;
 
+extern void decode_keepalive(int ticks);
+
 extern u32_t decode_output_percent_used(void);
 
 extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_rate);
