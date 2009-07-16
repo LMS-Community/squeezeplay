@@ -518,7 +518,6 @@ function connectTask(self, serverip)
 	-- update connection state
 	self.state = CONNECTING
 	self.serverip = serverip
-	self.txqueue = {}
 
 	if serverip then
 		self.reconnect = false
@@ -542,6 +541,7 @@ function connectTask(self, serverip)
 	-- connect
 	self.socket:t_connect()
 	self.state = CONNECTED
+	self.txqueue = {}
 
 	-- SC and SN ping the player every 5 and 30 seconds respectively.
 	-- This timeout could be made shorter in the SC case.
