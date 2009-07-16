@@ -239,9 +239,14 @@ function appGuide(self)
 				selected = (item.node == 'home')
 			end
 
+			local iconStyle
+			if not item.icon then
+				iconStyle = item.iconStyle
+			end
 			appGuideItems[#appGuideItems + 1] = {
 				text = item.text,
 				icon = item.icon,
+				iconStyle = item.iconStyle,
 				style = 'item_choice',
 				check = Checkbox(
 					"checkbox",
