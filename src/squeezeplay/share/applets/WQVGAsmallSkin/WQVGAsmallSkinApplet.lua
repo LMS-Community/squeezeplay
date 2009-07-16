@@ -2163,6 +2163,7 @@ function skin(self, s)
 
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
+	local artworkSize     = tostring(ARTWORK_SIZE)
 
 	local controlHeight = 38
 	local controlWidth = 45
@@ -2250,8 +2251,7 @@ function skin(self, s)
 			artwork = {
 				align = "center",
 				padding = 0,
-				-- FIXME: this is a placeholder
-				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_190.png"),
+				img = _loadImage(self, "IconsResized/icon_album_noart_" .. artworkSize .. ".png"),
 			},
 		},
 	

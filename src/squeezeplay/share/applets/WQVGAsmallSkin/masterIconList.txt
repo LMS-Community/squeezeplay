@@ -62,4 +62,8 @@ icon_settings_adv.png
 icon_help.png
 icon_settings_name.png
 icon_tunein_url.png
-
+icon_playlist_noart.png
+icon_my_apps.png
+icon_tutorial.png
+icon_baby.png
+icon_iradio_noart.png

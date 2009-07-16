@@ -56,16 +56,28 @@ sub convert_files {
 			}
 			my $basename = fileparse($file, qr/\.[^.]*/);
 			my $filename = $resizedIconDir . "/" . $basename . "_" . $skin . ".png";
-			my $resizeMe = "$convertCommand -geometry ${size}x${size} $file $filename";
-			open(PROG, "$resizeMe |") or die "Could not run convert command: $!";
-			print STDOUT "$resizeMe\n";
-			while(<PROG>) {
-			}
-			close(PROG);
+			resize_me($file, $filename, $size);
 		}
 	}
+
+	# special case, no album artwork for now playing screen. we still want the thumb size one for lists,
+        # but also a larger one as a default artwork for NP screen
+        my $source = $assetDir . "/" . "icon_album_noart.png";
+	for my $size (143, 180) {
+	        my $dest   = $resizedIconDir . "/" . "icon_album_noart_" . $size . ".png";
+	        resize_me($source, $dest, $size);
+	}
+
 }
 
+sub resize_me {
+	my ($file, $filename, $size) = @_;
+	my $resizeMe = "$convertCommand -geometry ${size}x${size} $file $filename";
+	open(PROG, "$resizeMe |") or die "Could not run convert command: $!";
+	print STDOUT "$resizeMe\n";
+	while(<PROG>) { }
+	close(PROG);
+}
 sub remove_images {
 	my $images = shift;
 	for my $image (keys %$images) {

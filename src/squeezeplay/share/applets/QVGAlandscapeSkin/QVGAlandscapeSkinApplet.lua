@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, setmetatable, type, package = ipairs, pairs, setmetatable, type, package
+local ipairs, pairs, setmetatable, type, package, tostring = ipairs, pairs, setmetatable, type, package, tostring
 
 local oo                     = require("loop.simple")
 
@@ -73,7 +73,7 @@ function param(self)
 	return {
 		THUMB_SIZE = 41,
 		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = 154,
+		nowPlayingBrowseArtworkSize = 143,
 		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,
         }
@@ -86,6 +86,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
 	local imgpath = 'applets/QVGAlandscapeSkin/images/'
+	local baseImgpath = 'applets/QVGAbaseSkin/images/'
 
 	if useDefaultSize or screenWidth < 320 or screenHeight < 240 then
                 screenWidth = 320
@@ -177,6 +178,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
+	local noArtSize       = tostring(ARTWORK_SIZE)
 
 	local controlHeight   = 38
 	local controlWidth    = 45
@@ -235,8 +237,7 @@ function skin(self, s, reload, useDefaultSize)
 			artwork = {
 				align = "center",
 				padding = 0,
-				-- FIXME: this is a placeholder
-				img = _loadImage(self, "UNOFFICIAL/icon_album_noartwork_154.png"),
+				img = Tile:loadImage( baseImgpath .. "IconsResized/icon_album_noart_" .. noArtSize .. ".png"),
 			},
 		},
 	
