@@ -276,6 +276,7 @@ end
 
 
 function str(self, token, ...)
+	token = token.str or token
 	local machineToken = token .. globalMachine
 
 	if select('#', ...) == 0 then
