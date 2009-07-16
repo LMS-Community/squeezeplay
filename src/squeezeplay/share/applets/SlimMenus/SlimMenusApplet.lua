@@ -441,6 +441,8 @@ local function _menuSink(self, cmd, server)
 				--ignore, only applicable to currently selected server
 			elseif item.id == "settingsAudio"  then
 				--ignore, now shown locally
+			elseif item.id == "radios" then
+				--ignore, shown locally
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
 					self:_addNode(item, isMenuStatusResponse)
@@ -553,11 +555,6 @@ function _canSqueezeNetworkServe(self, item)
 		end
 	end
 
-	--
-	if item.node == 'radios' then
-		log:error("probably broken hack to deal with radio discrepency (SN does server up individual subitem items as home menue items), returning SN can server for: ", item.id)
-		return true
-	end
 
 	log:debug("SN can not serve item: ", item.id)
 
@@ -680,14 +677,6 @@ function _selectMusicSource(self, callback, specificServer, serverForRetry, conf
 						)
 end
 
---remove this when bug 12304
-function internetRadioSelector(self)
-	if _server and (_server:isSqueezeNetwork() or not _server:isConnected()) then
-		jiveMain:getMenuTable()["radio"].callback()
-	else
-		jiveMain:openNodeById('radios')
-	end
-end
 
 function myMusicSelector(self)
 	--first check for "new device, no SC situation"
@@ -939,8 +928,6 @@ function free(self)
 	end
 	_playerMenus = {}
 
-	--remove this when bug 12304 is fixed
-	jiveMain:removeItemById('internetRadioSelector')
 
 	-- make sure any home menu itema are unlocked
 	if _lockedItem then
