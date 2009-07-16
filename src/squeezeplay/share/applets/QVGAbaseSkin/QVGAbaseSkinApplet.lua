@@ -478,14 +478,14 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.item_checked = _uses(s.item, {
-		order = { 'icon', "text", "check" },
+		order = { 'icon', "text", "check", "arrow" },
 		check = s.img.checkMark,
 	})
 
 	s.item_no_arrow = _uses(s.item, {
 		order = { 'icon', 'text' },
 	})
-	s.item_checked_no_arrow = _uses(s.item, {
+	s.item_checked_no_arrow = _uses(s.item_checked, {
 		order = { 'icon', 'text', 'check' },
 	})
 
@@ -535,14 +535,14 @@ function skin(self, s, reload, useDefaultSize)
 		arrow = s.img.addArrow
 	})
 	s.selected.item_checked = _uses(s.selected.item, {
-		order = { "text", "check", "arrow" },
+		order = { "icon", "text", "check", "arrow" },
 		check = s.img.checkMarkSelected,
 	})
         s.selected.item_no_arrow = _uses(s.selected.item, {
 		order = { 'text' },
 	})
-        s.selected.item_checked_no_arrow = _uses(s.selected.item, {
-		order = { 'text', 'check' },
+        s.selected.item_checked_no_arrow = _uses(s.selected.item_checked, {
+		order = { 'icon', 'text', 'check' },
 		check = s.img.checkMark,
 	})
 
