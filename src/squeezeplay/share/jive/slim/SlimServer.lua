@@ -849,11 +849,7 @@ whether to display the thumb straight away or wait before fetching it.
 --]]
 
 function artworkThumbCached(self, iconId, size, imgFormat)
-	if not imgFormat then
-		imgFormat = 'jpg'
-	end
-	
-	local cacheKey = iconId .. "@" .. size .. "/" .. imgFormat
+	local cacheKey = iconId .. "@" .. size .. "/" .. (imgFormat or '')	
 	if self.artworkCache:get(cacheKey) then
 		return true
 	else
@@ -925,12 +921,7 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 
 	assert(size)
 
-	-- we want jpg if it wasn't specified
-	if not imgFormat then
-		imgFormat = 'jpg'
-	end
-
-	local cacheKey = iconId .. "@" .. size .. "/" .. imgFormat
+	local cacheKey = iconId .. "@" .. size .. "/" .. (imgFormat or '')
 
 	-- do we have an image already cached?
 	local image = self.imageCache[cacheKey]
@@ -981,11 +972,14 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	local url
 	if string.match(iconId, "^%d+$") then
 		-- if the iconId is a number, this is cover art
-		url = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
+		url = '/music/' .. iconId .. '/cover' .. resizeFrag
+		if imgFormat then
+		 	url = url .. "." .. imgFormat
+		end
 	else
 		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
 		if string.find(iconId, "^http") then
-			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&f=' .. imgFormat .. '&u=' .. iconId
+			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&f=' .. (imgFormat or '') .. '&u=' .. iconId
 		else
 			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
 
