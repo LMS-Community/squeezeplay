@@ -140,6 +140,8 @@ local function _openPopup(self)
 		self.autoinvokeTime = AUTOINVOKE_INTERVAL_LOCAL
 	end
 
+	popup:focusWidget(nil)
+
 	_updateDisplay(self)
 
 	popup:showBriefly(POPUP_AUTOCLOSE_INTERVAL,
@@ -239,7 +241,18 @@ function event(self, event)
 
 	local type = event:getType()
 	
-	if type == ACTION then
+        if type == EVENT_SCROLL then
+                local scroll = event:getScroll()
+
+                if scroll > 0 then
+                        self.delta = 1
+                elseif scroll < 0 then
+                        self.delta = -1
+                else
+                        self.delta = 0
+                end
+                _updateSelectedTime(self)
+	elseif type == ACTION then
 		local action = event:getAction()
 
 		-- GO closes the popup & executes any pending change
