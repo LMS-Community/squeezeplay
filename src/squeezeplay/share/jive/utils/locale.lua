@@ -41,6 +41,9 @@ setmetatable(loadedFiles, { __mode = "v" })
 -- weak table containing global strings
 local globalStrings = {}
 
+-- contains type of machine
+local globalMachine = false
+
 --[[
 =head 2 setLocale(newLocale)
 
@@ -128,6 +131,8 @@ end
 
 function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 	log:debug("parsing ", myFilePath)
+
+	globalMachine = "_" .. string.upper(System:getMachine())
 
 	local stringsFile = io.open(myFilePath)
 	if stringsFile == nil then
@@ -271,10 +276,14 @@ end
 
 
 function str(self, token, ...)
+	local machineToken = token .. globalMachine
+
 	if select('#', ...) == 0 then
-		return self[token] or token
+		return self[machineToken] or self[token] or token
 	else
-		if self[token] then
+		if self[machineToken] then
+			return string.format(self[machineToken].str or machineToken, ...)
+		elseif self[token] then
 			return string.format(self[token].str or token, ...)
 		else
 			return string.format(token, ...)
