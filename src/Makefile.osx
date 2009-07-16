@@ -227,7 +227,7 @@ tremor: Tremor/Makefile
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-alsa --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
