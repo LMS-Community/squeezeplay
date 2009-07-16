@@ -17,6 +17,9 @@ SETTINGS
 	RU	Настройки
 	SV	Inställningar
 
+INTERNET_RADIO
+	EN	Internet Radio
+
 MY_MUSIC
 	CS	Hudba
 	DA	Musik
