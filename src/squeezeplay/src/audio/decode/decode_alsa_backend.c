@@ -399,7 +399,7 @@ static int pcm_close(struct decode_alsa *state) {
 
 
 static int pcm_open(struct decode_alsa *state) {
-	int err, dir;
+	int err;
 	unsigned int val;
 	snd_pcm_uframes_t size;
 	snd_ctl_elem_id_t *id;
@@ -438,7 +438,7 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_get_rate_max(state->hw_params, &decode_audio->max_rate, &dir)) < 0) {
+	if ((err = snd_pcm_hw_params_get_rate_max(state->hw_params, &decode_audio->max_rate, 0)) < 0) {
 		return err;
 	}
 
@@ -474,15 +474,14 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 
 	/* set buffer and period times */
-	val = state->buffer_time;
-	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
-		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
+	val = state->period_count;
+	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
-
-	val = state->period_count;
-	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &val, &dir)) < 0) {
-		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
+	val = state->buffer_time;
+	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
 
@@ -492,7 +491,7 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_get_period_size(state->hw_params, &size, &dir)) < 0) {
+	if ((err = snd_pcm_hw_params_get_period_size(state->hw_params, &size, 0)) < 0) {
 		LOG_ERROR("Unable to get period size: %s", snd_strerror(err));
 		return err;
 	}
