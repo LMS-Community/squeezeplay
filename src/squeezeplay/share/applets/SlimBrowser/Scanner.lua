@@ -1,5 +1,5 @@
 
--- Private class to handle player position scanner 
+-- Private class to handle player position scanner
 
 local tostring, tonumber = tostring, tonumber
 
@@ -71,8 +71,8 @@ local function _updateDisplay(self)
 	local strElapsed = _secondsToString(self.elapsed)
 	local strRemain = "-" .. _secondsToString(self.duration - self.elapsed)
 
-	self.scannerGroup:setWidgetValue("elapsed", strElapsed)
-	self.scannerGroup:setWidgetValue("remain", strRemain)
+	self.scannerGroup:setWidgetValue("min", strElapsed)
+	self.scannerGroup:setWidgetValue("max", strRemain)
 end
 
 
