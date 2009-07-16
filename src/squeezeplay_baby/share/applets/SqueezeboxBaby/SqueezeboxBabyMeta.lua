@@ -62,6 +62,7 @@ function registerApplet(meta)
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")
 	meta:registerService("getDefaultWallpaper")
+	meta:registerService("performHalfDuplexBugTest")
 end
 
 

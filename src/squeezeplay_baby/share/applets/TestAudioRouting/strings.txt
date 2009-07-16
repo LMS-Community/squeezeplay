@@ -9,8 +9,17 @@ ENABLE_LINE_IN_PASSTHROUGH
 	EN	Line In Passthrough
 
 LINE_IN_SENSE
-	EN	Line In Sense
+	EN	Line In Detected
 
 HEADPHONE_SENSE
-	EN	Headphone Sense
+	EN	Headphone Detected
+
+HEADPHONE_STATE_WITH_MIC
+	EN	Yes - with mic
+
+AUDIO_ROUTING_YES
+	EN	Yes
+
+AUDIO_ROUTING_NO
+	EN	No
 

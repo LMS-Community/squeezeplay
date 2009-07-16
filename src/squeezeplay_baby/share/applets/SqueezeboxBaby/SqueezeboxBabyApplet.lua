@@ -124,6 +124,14 @@ function init(self)
 	self:storeSettings()
 end
 
+
+--service method
+function performHalfDuplexBugTest(self)
+	return true
+end
+
+
+--service method
 function getDefaultWallpaper(self)
 	local wallpaper = "bb_encore.png" -- default, if none found examining serial
 	if self._serial then
