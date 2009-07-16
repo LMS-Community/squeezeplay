@@ -39,6 +39,8 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
+local log                    = require("jive.utils.log").logger("applet.QVGAbaseSkin")
+
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
 local LAYER_TITLE            = jive.ui.LAYER_TITLE
@@ -794,11 +796,17 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 
-	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_checked)
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_no_arrow = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_checked_no_arrow = _uses(s.icon_list.menu.item_checked)
+	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item, {
+		arrow = {
+			img = _loadImage(self, "Icons/icon_nplay_off.png"),
+		},
+		text = { padding = 0, },
+	})
+
 
 	s.icon_list.menu.selected = {}
 	s.icon_list.menu.selected.item = _uses(s.icon_list.menu.item, {
@@ -814,10 +822,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_list.menu.selected.item_checked          = _uses(s.icon_list.menu.selected.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
 	})
-	s.icon_list.menu.selected.albumcurrent          = _uses(s.icon_list.menu.selected.item, {
-	})
 	s.icon_list.menu.selected.item_play             = _uses(s.icon_list.menu.selected.item, {
 		arrow = s.img.playArrow,
+	})
+	s.icon_list.menu.selected.albumcurrent          = _uses(s.icon_list.menu.selected.item, {
+		arrow = {
+			img = _loadImage(self, "Icons/icon_nplay_sel.png"),
+		},
 	})
 	s.icon_list.menu.selected.item_add              = _uses(s.icon_list.menu.selected.item, {
 		arrow = s.img.addArrow,

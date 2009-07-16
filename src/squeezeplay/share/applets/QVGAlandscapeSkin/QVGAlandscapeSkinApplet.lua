@@ -40,6 +40,8 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
+local log                    = require("jive.utils.log").logger("applet.QVGAlandscapeSkin")
+
 local QVGAbaseSkinApplet     = require("applets.QVGAbaseSkin.QVGAbaseSkinApplet")
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME

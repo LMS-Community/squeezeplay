@@ -40,6 +40,8 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 local autotable              = require("jive.utils.autotable")
 
+local log                    = require("jive.utils.log").logger("applet.WQVGAlargeSkin")
+
 local EVENT_ACTION           = jive.ui.EVENT_ACTION
 local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
 local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
@@ -906,7 +908,7 @@ function skin(self, s)
 	})
 	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_play, {
 		arrow = {
-			img = _loadImage(self, "Icons/icon_song_3line_off.png"),
+			img = _loadImage(self, "Icons/icon_nplay_3line_off.png"),
 		},
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
@@ -926,7 +928,7 @@ function skin(self, s)
                 albumcurrent       = _uses(s.icon_list.menu.albumcurrent, {
 			bgImg = threeItemSelectionBox,
 			arrow = {
-				img = _loadImage(self, "Icons/icon_song_3line_on.png"),
+				img = _loadImage(self, "Icons/icon_nplay_3line_sel.png"),
 			},
 		}),
                 item_checked        = _uses(s.icon_list.menu.item_checked, {
