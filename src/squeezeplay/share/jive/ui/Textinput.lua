@@ -415,11 +415,13 @@ end
 
 function _cursorLeftAction(self)
 	self:_cursorBackAction(_, true)
+	return EVENT_CONSUME
 end
 
 
 function _cursorRightAction(self)
 	self:_goAction(_, true)
+	return EVENT_CONSUME
 end
 
 
@@ -664,30 +666,9 @@ function _eventHandler(self, event)
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
-			self.cursor = 1
-			self:playSound("WINDOWHIDE")
-			self:hide()
-			return EVENT_CONSUME
-
+			return _cursorLeftAction(self) 
 		elseif keycode == KEY_FWD then
-			if isValid(self) then
-				local valid = false
-
-				if self.closure then
-					valid = self.closure(self, self:getValue())
-				end
-
-				if valid then
-					-- forward to end of input
-					self.cursor = #tostring(self.value) + 1
-				else
-					self:playSound("BUMP")
-					self:getWindow():bumpRight()
-				end
-			else
-				self:playSound("BUMP")
-				self:getWindow():bumpRight()
-			end
+			return _cursorRightAction(self)
 		elseif keycode == KEY_BACK then
 			return _deleteAction(self)
 
