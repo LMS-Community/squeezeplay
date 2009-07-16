@@ -1297,6 +1297,11 @@ function _goRhapsodyAction()
 	return EVENT_CONSUME
 end
 
+function _goAlarmsAction()
+	_goMenuTableItem("settingsAlarm")
+	return EVENT_CONSUME
+end
+
 
 function _goBrightnessAction()
 	_goMenuTableItem("brightnessSetting")
@@ -1361,6 +1366,7 @@ local _globalActionsNEW = {
 	["go_playlists"] = _goPlaylistsAction,
 	["go_music_library"] = _goMusicLibraryAction,
 	["go_rhapsody"] = _goRhapsodyAction,
+	["go_alarms"] = _goAlarmsAction,
 	["go_current_track_details"] = _goCurrentTrackDetailsAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
