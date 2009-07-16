@@ -69,6 +69,7 @@ sub create_svk_file {
 	close(PROG);
 
 	if ($commands[0]) {
+		print STDOUT "-------------\n";
 		open(OUT, ">svkUpdate.bash");
 		print OUT "#!/bin/bash\n\n";
 		print STDOUT "#!/bin/bash\n\n";
@@ -76,6 +77,7 @@ sub create_svk_file {
 			print OUT $_;
 			print STDOUT $_;
 		}
+		close(OUT);
 	}
 }
 

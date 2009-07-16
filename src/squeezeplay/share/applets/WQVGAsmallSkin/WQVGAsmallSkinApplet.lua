@@ -1977,7 +1977,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_squeezeplay" .. skinSuffix),
 	})
 	s.player_http = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_softsqueeze" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_tunein_url" .. skinSuffix),
 	})
 	s.player_fab4 = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_fab4" .. skinSuffix),
@@ -2019,6 +2019,12 @@ function skin(self, s)
 	})
 	s.hm_settingsAlarm = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_alarm" .. skinSuffix),
+	})
+	s.hm_settingsPlayerNameChange = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_name" .. skinSuffix),
+	})
+	s.hm_settingsBrightness = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_brightness" .. skinSuffix),
 	})
 	s.hm_settingsSync = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_sync" .. skinSuffix),

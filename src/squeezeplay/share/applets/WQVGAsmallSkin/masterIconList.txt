@@ -60,4 +60,6 @@ icon_ml_other_library.png
 icon_image_viewer.png
 icon_settings_adv.png
 icon_help.png
+icon_settings_name.png
+icon_tunein_url.png
 

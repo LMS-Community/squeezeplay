@@ -1245,8 +1245,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_squeezeplay.png"),
 	})
 	s.player_http = _uses(s._buttonicon, {
-		--FIXME: need an asset for this
-		img = _loadImage(self, "MISSING_HTTPSTREAMING_PLAYER_ICON"),
+		img = _loadImage(self, "IconsResized/icon_tunein_url.png"),
 	})
 
 	-- misc home menu icons
@@ -1285,6 +1284,12 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.hm_settingsAlarm = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_alarm" .. skinSuffix),
+	})
+	s.hm_settingsPlayerNameChange = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_name" .. skinSuffix),
+	})
+	s.hm_settingsBrightness = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_brightness" .. skinSuffix),
 	})
 	s.hm_settingsSync = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_sync" .. skinSuffix),
