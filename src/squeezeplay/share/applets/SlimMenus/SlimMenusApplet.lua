@@ -136,11 +136,20 @@ function init(self)
 end
 
 
-function notify_serverLinked(self, server)
-	log:debug("***linked\t", server)
-	--linked seems to be the best status to indicate serverstatus is complete (and thus version info, etc is now known)
-	if server:isCompatible() and server:isSqueezeNetwork() then
-		log:info("***linked SN\t", server)
+--function notify_serverLinked(self, server)
+--	log:debug("***linked\t", server)
+--	--linked seems to be the best status to indicate serverstatus is complete (and thus version info, etc is now known)
+--	if server:isCompatible() and server:isSqueezeNetwork() then
+--		log:info("***linked SN\t", server)
+--		self:_fetchServerMenu(server)
+--	end
+--end
+
+
+function notify_serverConnected(self, server)
+	log:debug("***serverConnected\t", server)
+	if server:isSqueezeNetwork() then
+		log:debug("***serverConnected SN\t", server)
 		self:_fetchServerMenu(server)
 	end
 end
@@ -389,33 +398,36 @@ local function _menuSink(self, cmd, server)
 			if itemIcon then
 				-- Fetch artwork if we're connected, or it's remote
 				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed
-				if isMenuStatusResponse or string.find(itemIcon, "^http") then
-					--item["icon-id"] = itemIcon
-
-					local _size = jiveMain:getSkinParam('THUMB_SIZE')
-					item.icon = Icon('icon')
-					_server:fetchArtwork(itemIcon, item.icon, _size, 'png')
-
-					-- Hack alert: redefine the checkSkin function
-					-- to reload images when the skin changes. We
-					-- should replace this with resizable icons.
-					local _style = item.icon.checkSkin
-					item.icon.checkSkin = function(...)
-						local s = jiveMain:getSkinParam('THUMB_SIZE')
-						if s ~= _size then
-							_size = s
-							_server:fetchArtwork(itemIcon, item.icon, _size, 'png')
-						end
-
-						_style(...)
-					end
+				--item["icon-id"] = itemIcon
+				local iconServer
+				if server then
+					iconServer = server
 				else
-					log:debug("todo: how to handle fetching icons from disconnected servers!?")
+					iconServer = _server
+				end
+				local _size = jiveMain:getSkinParam('THUMB_SIZE')
+				item.icon = Icon('icon')
+				iconServer:fetchArtwork(itemIcon, item.icon, _size, 'png')
+
+				-- Hack alert: redefine the checkSkin function
+				-- to reload images when the skin changes. We
+				-- should replace this with resizable icons.
+				local _style = item.icon.checkSkin
+				item.icon.checkSkin = function(...)
+					local s = jiveMain:getSkinParam('THUMB_SIZE')
+					if s ~= _size then
+						_size = s
+						iconServer:fetchArtwork(itemIcon, item.icon, _size, 'png')
+					end
+
+					_style(...)
 				end
 			else
 				-- make a style
-				local iconStyle = 'hm_' .. item.id
-				item.iconStyle = iconStyle
+				if item.id then
+					local iconStyle = 'hm_' .. item.id
+					item.iconStyle = iconStyle
+				end
 			end
 
 			-- hack to modify styles from SC
@@ -431,7 +443,9 @@ local function _menuSink(self, cmd, server)
 			_massageItem(item, item)
 
 
-			if item.id == "playerpower" then
+			if not item.id then
+				log:info("no id for menu item: ", item.text)
+			elseif item.id == "playerpower" then
 				--ignore, playerpower no longer shown to users since we use power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
@@ -891,7 +905,11 @@ end
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
 
-	server:userRequest(_sinkSetServerMenuChunk(self, server) , nil, { 'menu', 0, 100 })
+	local _playerId
+	if _player then
+		playerId = _player:getId()
+	end
+	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100 })
 
 end
 
