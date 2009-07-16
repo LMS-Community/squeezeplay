@@ -362,34 +362,6 @@ local function _menuSink(self, cmd, server)
 		_menuReceived = true
 
 
-if _menuReceived then
--- a problem, we lose the icons..
-self:_addNode({
-  sound = "WINDOWSHOW",
-  weight = 20,
-  id = "radios",
-  iconStyle = 'hm_radio',
-  text = "Internet Radio",
-  node = "hidden",
-}, isMenuStatusResponse)
-
-
-	--remove this when bug 12304 fixed
-	jiveMain:removeItemById('internetRadioSelector')
-	local menuItem = {
-				id = 'internetRadioSelector',
-				iconStyle = 'hm_radio',
-				node = "home",
-				text = self:string("MENUS_INTERNET_RADIO"),
-				sound = "WINDOWSHOW",
-				callback = function() self:internetRadioSelector() end,
-				weight = 8,
-			}
-	jiveMain:addItem(menuItem)
-
-
-end
-
 		for k, v in pairs(menuItems) do
 
 			local item = {
@@ -458,17 +430,6 @@ end
 
 			_massageItem(item, item)
 
-			-- a problem, we lose the icons..
-			if item.id == "radios" then
-				v.isANode = true
-			end
-
-			--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
-			--BEGIN
-			if item.id == "radio" then
-				item.node= "hidden"
-			end
-			--END temp hack until we resolve SN/SC radios discrepency
 
 			if item.id == "playerpower" then
 				--ignore, playerpower no longer shown to users since we use power button
@@ -546,18 +507,12 @@ end
 
 					--todo check canLocalSCServe() for things that are only on SN
 
-					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
---					original: if (not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item) then
-					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item))
-					    or item.id == 'radio' then
+					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item)) then
 						log:warn("switching to SN")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
 						_player and _player:getLastSqueezeCenter() or nil, true)
 
-					--temp hack until we resolve SN/SC radios discrepency, show both since we can't merge (SC uses node and subitem, SN uses single item)
---					original: elseif (not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item) then
-					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item))
-					        or item.node == 'radios' then
+					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item)) then
 						log:warn("switching from SN to last SqueezeCenter")
 
 						self:_selectMusicSource(action, _player:getLastSqueezeCenter(), nil, true)

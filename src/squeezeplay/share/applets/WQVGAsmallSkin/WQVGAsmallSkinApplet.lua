@@ -2005,6 +2005,9 @@ function skin(self, s)
 	s.hm_radio = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
 	})
+	s.hm_radios = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
+	})
 	s.hm_myMusic = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_mymusic" .. skinSuffix),
 	})
