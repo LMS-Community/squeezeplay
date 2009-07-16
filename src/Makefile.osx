@@ -285,6 +285,8 @@ clean:
 	-cd jpeg-6b; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: squeezeplay"
+	# Makefile might be missing, so also remove configure to force a reconfigure next build (to resolve build server issues)
+	-cd squeezeplay; rm configure
 	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
