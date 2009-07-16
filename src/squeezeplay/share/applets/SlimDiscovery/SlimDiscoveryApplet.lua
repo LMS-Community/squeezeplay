@@ -535,6 +535,9 @@ end
 --service method
 function getInitialSlimServer(self)
 	local serverName = self:getSettings().serverName
+	if self:getSettings().squeezeNetwork then
+		serverName = "mysqueezebox.com"
+	end
 
 	if serverName then
 		for i, server in SlimServer:iterate() do
