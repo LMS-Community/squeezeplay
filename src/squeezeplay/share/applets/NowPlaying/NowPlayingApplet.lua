@@ -716,6 +716,7 @@ function _createUI(self)
 	self.progressNBGroup = Group('npprogressNB', {
 		      elapsed = Label("elapsed", "")
 	})
+	self.progressNBGroup:addTimer(1000, function() self:_updatePosition() end)
 
 	if showProgressBar then
 		self.progressGroup = self.progressBarGroup
