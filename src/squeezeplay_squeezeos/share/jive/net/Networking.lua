@@ -1535,9 +1535,7 @@ function request(self, ...)
 	local task = Task:running()
 	assert(task, "Networking:request must be called in a Task")
 
--- xxx
----- TODO: Remove when wpsapp is replaced with WPS capable wpa_supplicant
-	if self.chipset == "Marvell" then
+	if self:isMarvell(self) then
 		if wpaSupplicantRunning == false then
 			return "", "not running"
 		end

@@ -600,6 +600,11 @@ function _enterPassword(self, iface, ssid, nocheck)
 		self.encryption = "none"
 		return _connect(self, iface, ssid, true, false)
 
+	-- A WPS capable AP with encryption set to none
+	elseif flags == "[WPS]" then
+		self.encryption = "none"
+		return _connect(self, iface, ssid, true, false)
+
 	elseif string.find(flags, "ETH") then
 		self.encryption = "none"
 		return _connect(self, iface, ssid, true, false)
@@ -952,6 +957,15 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 			iface:stopWPSApp()
 			iface:startWPASupplicant()
 		end
+
+		if iface:isAtheros() then
+			Task("stopWPS", self,
+				function()
+				-- Set ap_scan back to 2
+				iface:request("AP_SCAN 2")
+			end):addTask()
+		end
+
 		popup:hide()
 	end
 
@@ -971,6 +985,10 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 	Task("startWPS", self,
 		function()
 			iface:request("DISCONNECT")
+
+			-- Make sure ap_scan is set to 1 else WPS won't work
+			-- Will be set back to 2 after WPS is done
+			iface:request("AP_SCAN 1")
 
 			if( wpsmethod == "pbc") then
 				iface:request("WPS_PBC")
@@ -1026,6 +1044,9 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 					return
 				else
+					-- Set ap_scan back to 2
+					iface:request("AP_SCAN 2")
+
 					_connect(self, iface, ssid, false, true)
 				end
 			end
@@ -1044,6 +1065,11 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 		iface:stopWPSApp()
 
 		iface:startWPASupplicant()
+	end
+
+	if iface:isAtheros() then
+		-- Set ap_scan back to 2
+		iface:request("AP_SCAN 2")
 	end
 
 	-- popup failure
