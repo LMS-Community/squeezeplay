@@ -72,6 +72,7 @@ function initImageSource(self)
 
 	self.imgSource = nil
 	self.listCheckCount = 0
+	self.initialized = false
 
 	local src = self:getSettings()["source"]
 	
@@ -91,7 +92,8 @@ function startSlideshow(self, menuItem)
 	log:info("start image viewer")
 	-- initialize the chosen image source
 	self:initImageSource()
-	
+	self.initialized = true
+
 	self:startSlideshowWhenReady()
 end
 
@@ -141,7 +143,7 @@ function setupEventHandlers(self, window)
 		self:displaySlide()
 		return EVENT_CONSUME
 	end
-	
+
 	window:addActionListener("add", self, openSettings)
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
@@ -172,6 +174,11 @@ function free(self)
 end
 
 function displaySlide(self)
+	if not self.initialized then
+		self:initImageSource()
+		self.initialized = true
+	end
+
 	if not self.imgSource:imageReady() then
 		-- try again in 1000 ms
 		log:debug("image not ready, try again...")
@@ -323,11 +330,11 @@ end
 
 -- Configuration menu
 
-function openSettings(self, menuItem)
+function openSettings(self)
 	log:info("image viewer settings")
 	self:initImageSource()
 
-	local window = Window("text_list", menuItem.text, 'settingstitle')
+	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
 	window:addWidget(SimpleMenu("menu",
 		{
 			{

@@ -35,10 +35,8 @@ end
 
 
 function registerApplet(meta)
-	local item = meta:menuItem('appletImageViewer', 'appguide', "IMAGE_VIEWER",
-			function(applet, ...) applet:startSlideshow(...) end, 100)
-	item.guide = true
-	jiveMain:addItem(item)
+		jiveMain:addItem(meta:menuItem('appletImageViewer', 'home', "IMAGE_VIEWER", 
+			function(applet, ...) applet:startSlideshow(...) end, 100))
 end
 
 

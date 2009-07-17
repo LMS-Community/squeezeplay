@@ -78,7 +78,7 @@ function _helpAction(self, window, titleText, bodyText, menu)
 
 						local textarea = Textarea("text", self.applet:string(bodyText))
 						window:addWidget(textarea)
-						self:tieAndShowWindow(window)
+						self.applet:tieAndShowWindow(window)
 
 						window:playSound("WINDOWSHOW")
 					end
@@ -96,6 +96,10 @@ end
 
 function emptyListError(self)
 	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_EMPTY_LIST"))
+end
+
+function listNotReadyError(self)
+	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_LIST_NOT_READY"))
 end
 
 function imageReady(self)

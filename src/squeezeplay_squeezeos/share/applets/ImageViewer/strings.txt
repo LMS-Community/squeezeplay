@@ -47,6 +47,9 @@ IMAGE_VIEWER_EMPTY_LIST
 	RU	Нет элементов для отображения, список изображений пуст
 	SV	Det finns inget att visa. Bildlistan är tom.
 
+IMAGE_VIEWER_LIST_NOT_READY
+	EN	Reading/creating the image list was not possible (tried several times). Please check you settings.
+
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
 	DA	Indstillinger for billedfremviser
@@ -770,6 +773,9 @@ IMAGE_VIEWER_FLICKR_DISPLAY_RECENT
 	RU	Последние добавленные изображения
 	SV	Nyligen tillagda bilder
 
+IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED
+	EN	Tagged images
+
 IMAGE_VIEWER_FLICKR_FLICKR_ID
 	CS	Uživatel Flickr
 	DA	Flickr-bruger
@@ -829,4 +835,10 @@ IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION
 	PL	Identyfikator w usłudze Flickr nie został jeszcze ustawiony. Ustaw poprawny identyfikator w usłudze Flickr lub wybierz inną opcję wyświetlania.\n\nNaciśnij dowolny klawisz, aby kontynuować.
 	RU	Ваш ID в flickr еще не установлен. Установите действительный ID в flickr или выберите другой параметр отображения.\n\nДля продолжения нажмите любую клавишу.
 	SV	Du har inte angett något Flickr-namn än. Ange ett giltigt Flickr-namn eller välj ett annat visningsalternativ.\n\nTryck på valfri tangent för att fortsätta.
+
+IMAGE_VIEWER_FLICKR_TAGS
+	EN	Tag Keywords
+
+IMAGE_VIEWER_FLICKR_QUERY_TAGS
+	EN	Please enter the keyword(s) to search for in the tag information. You can separated tags with a comma.
 

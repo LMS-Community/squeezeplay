@@ -32,6 +32,7 @@ local Keyboard		= require("jive.ui.Keyboard")
 local SimpleMenu	= require("jive.ui.SimpleMenu")
 local RadioButton	= require("jive.ui.RadioButton")
 local RadioGroup	= require("jive.ui.RadioGroup")
+local Label			= require("jive.ui.Label")
 local Textarea		= require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Window        = require("jive.ui.Window")
@@ -82,6 +83,9 @@ function readImageList(self)
 	elseif displaysetting == "favorites" then
 		method = "flickr.favorites.getPublicList"
 		args = { per_page = 100, extras = "owner_name", user_id = self.applet:getSettings()["flickr.id"] }
+	elseif displaysetting == "tagged" then
+		method = "flickr.photos.search"
+		args = { per_page = 100, extras = "owner_name", tags = URL.escape(self.applet:getSettings()["flickr.tags"]) }
 	else 
 		method = "flickr.interestingness.getList"
 		args = { per_page = 100, extras = "owner_name" }
@@ -189,6 +193,14 @@ function settings(self, window)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:defineFlickrId(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+			{
 				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY"), 
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -197,14 +209,13 @@ function settings(self, window)
 				end
 			},
 			{
-				text = self.applet:string("IMAGE_VIEWER_FLICKR_FLICKR_ID"),
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_TAGS"),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:defineFlickrId(menuItem)
+					self:defineTags(menuItem)
 					return EVENT_CONSUME
 				end
-			},
-		}))
+			},		}))
 
     return window
 end
@@ -245,6 +256,39 @@ function defineFlickrId(self, menuItem)
     self.applet:tieAndShowWindow(window)
     return window
 end
+
+function defineTags(self, menuItem)
+
+    local window = Window("text_list", self.applet:string("IMAGE_VIEWER_FLICKR_TAGS"), flickrTitleStyle)
+
+	local tags = self.applet:getSettings()["flickr.tags"]
+	if tags == nil then
+		tags = ""
+	end
+
+	local input = Textinput("textinput", tags,
+		function(_, value)
+			self:setTags(value)
+
+			window:playSound("WINDOWSHOW")
+			window:hide(Window.transitionPushLeft)
+			return true
+		end)
+
+	local keyboard  = Keyboard("keyboard", "qwerty", input)
+        local backspace = Keyboard.backspace()
+        local group     = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+        window:addWidget(group)
+        window:addWidget(keyboard)
+        window:focusWidget(group)
+
+	self:_helpAction(window, "IMAGE_VIEWER_FLICKR_TAGS", "IMAGE_VIEWER_FLICKR_QUERY_TAGS")
+    self.applet:tieAndShowWindow(window)
+
+    return window
+end
+
 
 function displaySetting(self, menuItem)
 	local group = RadioGroup()
@@ -314,6 +358,18 @@ function displaySetting(self, menuItem)
 					display == "recent"
 				),
 			},
+			{ 
+				text = self.applet:string("IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED"), 
+				style = 'item_choice',
+				check = RadioButton(
+					"radio", 
+					group, 
+					function() 
+						self:setDisplay("tagged") 
+					end,
+					display == "tagged"
+				),
+			},
 		}
 	))
 	
@@ -339,6 +395,11 @@ end
 
 function setFlickrId(self, flickrid)
 	self.applet:getSettings()["flickr.id"] = flickrid
+	self.applet:storeSettings()
+end
+
+function setTags(self, tags)
+	self.applet:getSettings()["flickr.tags"] = tags
 	self.applet:storeSettings()
 end
 
