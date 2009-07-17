@@ -1483,6 +1483,15 @@ local _defaultActions = {
 -- Liberace says: "touch is play"
 _defaultActions['go-status'] = _defaultActions['play-status']
 
+
+--maps actionName to item action alias
+local _actionAliasMap = {
+	["play"]      = "playAction",
+	["play-hold"] = "playHoldAction",
+	["add"]       = "addAction",
+}
+
+
 -- _actionHandler
 -- sorts out the action business: item action, base action, default action...
 _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, selectedIndex)
@@ -1512,6 +1521,17 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
 			return EVENT_UNUSED
+		end
+
+		--if item instructs us to use a different Action for the given action, tranform to the new Action
+		--todo handle all alias names and handle base aliases
+		local aliasName = _actionAliasMap[actionName]
+		if aliasName then
+			local aliasActionName = item[aliasName]
+			if aliasActionName then
+				actionName = aliasActionName
+				log:debug("item for action after transform: ", actionName )
+			end
 		end
 
 		-- special cases for go action:
@@ -1666,22 +1686,17 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_refreshMe()
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
-				elseif actionName == 'go'
-					-- when we want play or add action to do the same thing as 'go', and give us a new window
-					or ( item['playAction'] == 'go' and actionName == 'play' )
-					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' )
-					or ( item['addAction'] == 'go' and actionName == 'add' ) then
-
+				elseif actionName == 'go' then
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
 				-- context menu handler
 				elseif actionName == 'more' or
-					item['addAction'] == 'more' or
+					actionName == "add" and (item['addAction'] == 'more' or
 					-- using addAction is temporary to ensure backwards compatibility 
 					-- until all 'add' commands are removed in SC in favor of 'more'
-					_safeDeref(chunk, 'base', 'addAction') == 'more' then
+					_safeDeref(chunk, 'base', 'addAction') == 'more') then
 
 					log:debug('Context Menu')
 
