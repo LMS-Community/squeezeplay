@@ -13,6 +13,7 @@ local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
+local Player                 = require("jive.slim.Player")
 local Slider                 = require("jive.ui.Slider")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
@@ -145,16 +146,10 @@ function _updateVolume(self, mute, directSet, noAccel)
 			end
 
 			new = math.abs(self.volume) + self.delta
-			local now = Framework:getTicks()
-			if (now - self.lastUpdate) < 350 then
-				--add any additional delta suppressed by rate limiting
 
-				new = new + self.rateLimitDelta
-				self.rateLimitDelta = 0
-			else
-				--beyond time where built up delta from rate limiting is abandoned
-				self.rateLimitDelta = 0
-			end
+			local now = Framework:getTicks()
+			new = new + self.rateLimitDelta
+			self.rateLimitDelta = 0
 			self.lastUpdate = now
 		else
 			-- accelation
@@ -173,21 +168,56 @@ function _updateVolume(self, mute, directSet, noAccel)
 		end
 	end
 
-	if new > 100 then
-		new = 100
-	elseif new > 0 and self.delta < 0 and new <= math.abs(self.delta) then
-		new = 1 -- when negative delta is greater than 1, always allow for stop at lowest value, so lowest volume can be heard, used for instanve by volume_down ACTION handling which goes down in steps
-	elseif new < 0 then
-		new = 0
-	end
+	new = self:_coerceVolume(new)
+
 	local remoteVolume = self.player:volume(new)
 
-	if not remoteVolume then
-		self.rateLimitDelta = self.rateLimitDelta + self.delta
+	if not remoteVolume then -- player suppressed volume due to rate limiting, hold onto difference lost
+		self.rateLimitDelta = new - self.volume
 	end
 
 	self.volume = remoteVolume or self.volume
 	_updateDisplay(self)
+
+	if not self.rateLimiterCleanupTimer then
+		local delay = Player:getRateLimitTime()
+		self.rateLimiterCleanupTimer = Timer(   delay,
+							function()
+								if self.rateLimitDelta and self.rateLimitDelta ~= 0 then
+
+									local rateLimitCleanupVolume = math.abs(self.volume) + self.rateLimitDelta
+									self.rateLimitDelta = 0
+									rateLimitCleanupVolume = self:_coerceVolume(rateLimitCleanupVolume)
+
+									log:debug("**Sending cleanup volume: ", rateLimitCleanupVolume)
+
+									local returnedVolume = self.player:volume(rateLimitCleanupVolume, true)
+									if not returnedVolume then
+										log:warn("any timer set volume value should always go through, since send param is 'true'" )
+										return
+									end
+									self.volume = returnedVolume or self.volume
+									_updateDisplay(self)
+								end
+							end,
+							true)
+	end
+	self.rateLimiterCleanupTimer:restart()
+
+end
+
+
+function _coerceVolume(self, volume)
+	local new = volume
+	if volume > 100 then
+		new = 100
+	elseif volume > 0 and self.delta < 0 and volume <= math.abs(self.delta) then
+		new = 1 -- when negative delta is greater than 1, always allow for stop at lowest value, so lowest volume can be heard, used for instanve by volume_down ACTION handling which goes down in steps
+	elseif volume < 0 then
+		new = 0
+	end
+
+	return new
 end
 
 
@@ -278,6 +308,8 @@ function event(self, event)
 				_updateVolume(self, nil, nil, true)
 				self.delta = 0
 			end
+
+			return EVENT_CONSUME
 		end
 
 		-- volume + and - pressed at same time for mute
