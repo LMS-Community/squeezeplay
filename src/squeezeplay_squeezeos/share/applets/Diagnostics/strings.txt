@@ -479,3 +479,17 @@ SOFTWARE_UPDATE
 	RU	Обновление ПО
 	SV	Programvaruuppdatering
 
+DIAGNOSTICS_NETWORKING
+	CS	Připojování do sítě
+	DA	Netværk
+	DE	Netzwerke
+	EN	Networking
+	ES	Redes
+	FI	Verkko
+	FR	Mise en réseau
+	IT	Connessione alla rete in corso
+	NL	Netwerken
+	NO	Nettverk
+	PL	Sieć
+	RU	Работа в сети
+	SV	Nätverk

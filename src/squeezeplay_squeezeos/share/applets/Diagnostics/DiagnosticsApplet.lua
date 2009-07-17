@@ -250,7 +250,7 @@ function dovalues(self, menu)
 end
 
 
-function diagnosticsMenu(self)
+function diagnosticsMenu(self, suppressNetworkingItem)
 	local window = Window("text_list", self:string("DIAGNOSTICS"))
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
@@ -269,15 +269,26 @@ function diagnosticsMenu(self)
 		})
 	end
 
-	menu:addItem({
-		text = self:string("SOFTWARE_UPDATE"),
-		style = 'item',
-		callback = function ()
-			--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
-			appletManager:callService("firmwareUpgrade", nil, true)
-		end
-	})
+	if System:isHardware() then
+		menu:addItem({
+			text = self:string("SOFTWARE_UPDATE"),
+			style = 'item',
+			callback = function ()
+				--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
+				appletManager:callService("firmwareUpgrade", nil, true)
+			end
+		})
 
+		if not suppressNetworkingItem then
+			menu:addItem({
+				text = self:string("DIAGNOSTICS_NETWORKING"),
+				style = 'item',
+				callback = function ()
+					appletManager:callService("settingsNetworking")
+				end
+			})
+		end
+	end
 	dovalues(self, menu)
 	menu:addTimer(5000, function()
 		dovalues(self, menu)
@@ -302,7 +313,7 @@ function supportMenu(self)
 		text = self:string("DIAGNOSTICS"),
 		sound = "WINDOWSHOW",		
 		callback = function()
-			self:diagnosticsMenu()
+			self:diagnosticsMenu(true)
 		end,
 	})
 
