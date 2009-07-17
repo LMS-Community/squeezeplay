@@ -67,6 +67,7 @@ local ltn12       = require("ltn12")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local System      = require("jive.System")
 local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
 local Process     = require("jive.net.Process")
