@@ -1001,7 +1001,14 @@ function skin(self, s, reload, useDefaultSize)
 		}
 	}
 
-	-- toast_popup popup with art and text
+	-- toast without artwork
+	s.toast_popup_text = _uses(s.toast_popup, {
+		group = {
+			order = { 'text' },
+                }
+        })
+
+	-- context menu window
 	s.context_menu = {
 
 		x = 10,
