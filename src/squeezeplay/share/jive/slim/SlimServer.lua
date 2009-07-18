@@ -493,10 +493,12 @@ function updateAddress(self, ip, port)
 			})
 		end
 
-		-- artwork http pool
-		self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
+		if not self:isSqueezeNetwork() then
+			-- artwork http pool
+			self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
+		end
 
-		-- commet
+		-- comet
 		self.comet:setEndpoint(ip, port, '/cometd')
 
 		-- reconnect, if we were already connected
@@ -585,7 +587,10 @@ function connect(self)
 	log:debug(self, ":connect")
 
 	assert(self.comet)
-	assert(self.artworkPool)
+	
+	if not self:isSqueezeNetwork() then
+		assert(self.artworkPool)
+	end
 
 	self.netstate = 'connecting'
 
@@ -598,7 +603,10 @@ function _disconnectServerInternals(self)
 
 	self.netstate = 'disconnected'
 
-	self.artworkPool:close()
+	if not self:isSqueezeNetwork() then
+		self.artworkPool:close()
+	end
+	
 	self.comet:disconnect()
 
 end
@@ -825,6 +833,9 @@ function processArtworkQueue(self)
 			elseif self.artworkPool then
 				-- slimserver icon id
 				self.artworkPool:queue(req)
+			else
+				log:error("Server ", self.name, " cannot handle artwork for ", entry.url)
+				self.artworkFetchCount = self.artworkFetchCount - 1
 			end
 
 			-- try again
