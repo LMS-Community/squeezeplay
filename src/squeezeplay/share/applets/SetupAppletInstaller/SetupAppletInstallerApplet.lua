@@ -34,6 +34,8 @@ local lfs              = require("lfs")
 local Applet           = require("jive.Applet")
 local SlimServer       = require("jive.slim.SlimServer")
 
+local System           = require("jive.System")
+
 local RequestHttp      = require("jive.net.RequestHttp")
 local SocketHttp       = require("jive.net.SocketHttp")
 
@@ -86,7 +88,7 @@ function menu(self, menuItem)
 				end
 			end,
 			false,
-			{ "jiveapplets", "target:jive", "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
+			{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
 		)
 	end
 

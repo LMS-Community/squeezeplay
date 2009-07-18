@@ -189,7 +189,7 @@ function settingsShow(self)
 
 		local x, y = Framework:getScreenSize()
 		local screen = x .. "x" .. y
-		if screen ~= "480x272" and screen ~= "240x320" then
+		if screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" then
 			screen = nil
 		end
 
