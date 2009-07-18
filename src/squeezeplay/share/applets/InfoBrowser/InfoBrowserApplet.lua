@@ -140,23 +140,26 @@ function response(self, result, window, widget, list, prevmenu, locked)
 				widget = Textarea("text")
 				window:addWidget(widget)
 			end
+
+			-- update the display, ensuring we go back to the top
+			widget.topLine = 0
 			widget:setValue(entry.description)
 
-                        local _navigateEntriesAction =  function (self, event)
-                        	local pre, c = _split(id)
-                        	if event:getAction() == "play" and c+1 < prevmenu.listSize then
-                        		c = c + 1
-                        	elseif event:getAction() == "add" and c > 0 then
-                        		c = c - 1
-                        	else
-                        		window:bumpRight()
-                        	end
-                        	-- fetch next item and update index on previous menu to match
-                        	self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
-                        	prevmenu:setSelectedIndex(c+1)
-                        	return EVENT_CONSUME
-                        
-                        end
+			local _navigateEntriesAction =  function (self, event)
+												local pre, c = _split(id)
+												if event:getAction() == "play" and c+1 < prevmenu.listSize then
+													c = c + 1
+												elseif event:getAction() == "add" and c > 0 then
+													c = c - 1
+												else
+													window:bumpRight()
+												end
+												-- fetch next item and update index on previous menu to match
+												self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
+												prevmenu:setSelectedIndex(c+1)
+												return EVENT_CONSUME
+												
+											end
 			
 			widget:addActionListener("play", self, _navigateEntriesAction)
 			widget:addActionListener("add", self, _navigateEntriesAction)
