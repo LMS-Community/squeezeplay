@@ -1269,7 +1269,7 @@ function _goSearchAction()
 end
 
 function _goMusicLibraryAction()
-	_goMenuTableItem("myMusic")
+	_goMenuTableItem("_myMusic")
 	return EVENT_CONSUME
 end
 
