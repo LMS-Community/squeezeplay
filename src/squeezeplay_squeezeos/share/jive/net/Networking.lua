@@ -1348,42 +1348,27 @@ function getSNR(self)
 		return 0
 	end
 
-	if self:isAtheros() then
-		local proc = Process(self.jnt, "/lib/atheros/wmiconfig --getTargetStats")
-
-		local stdout = ""
-		proc:read(function(chunk, err)
-			if chunk then
-				stdout = stdout .. chunk
-			end
-		end)
-
-		while proc:status() ~= "dead" do
-			-- wait for the process to complete
-			Task:yield()
-		end
-
-		return tonumber(string.match(stdout, "cs_snr = (%d+)"))
-	
-	elseif self:isMarvell(self) then
-		if not self.t_sock then
-			return 0
-		end
-
-		local t = self.t_sock:getSNR()
-		if t == nil then
-			log:error("getSNR() failed")
-			return 0
-		end
-
-		-- t[1] : Beacon non-average
-		-- t[2] : Beacon average
-		-- t[3] : Data non-average
-		-- t[4] : Data average
-		return t[2]
+	if not self.t_sock then
+		return 0
 	end
 
-	return 0
+	local t = self.t_sock:getSNR()
+	if t == nil then
+		log:error("getSNR() failed")
+		return 0
+	end
+
+	-- == Marvell ==
+	-- t[1] : Beacon non-average
+	-- t[2] : Beacon average
+	-- t[3] : Data non-average
+	-- t[4] : Data average
+	-- == Atheros ==
+	-- t[1] : Beacon non-average
+	-- t[2] : Beacon average
+	-- t[3] : 0
+	-- t[4] : 0
+	return t[2]
 end
 
 
