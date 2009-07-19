@@ -132,7 +132,9 @@ function __init(self, jnt, interface, isWireless)
 	obj.interface     = interface
 	obj.wireless      = isWireless
 
-	obj:detectChipset()
+	if isWireless then
+		obj:detectChipset()
+	end
 
 	obj._scanResults = {}
 	obj.responseQueue = {}
@@ -1364,21 +1366,21 @@ function getSNR(self)
 		return tonumber(string.match(stdout, "cs_snr = (%d+)"))
 	
 	elseif self:isMarvell(self) then
-		local proc = Process(self.jnt, "/sbin/iwpriv " .. self.interface .. " getSNR 1")
-
-		local stdout = ""
-		proc:read(function(chunk, err)
-			if chunk then
-				stdout = stdout .. chunk
-			end
-		end)
-
-		while proc:status() ~= "dead" do
-			-- wait for the process to complete
-			Task:yield()
+		if not self.t_sock then
+			return 0
 		end
 
-		return tonumber(string.match(stdout, ":(%d+)"))
+		local t = self.t_sock:getSNR()
+		if t == nil then
+			log:error("getSNR() failed")
+			return 0
+		end
+
+		-- t[1] : Beacon non-average
+		-- t[2] : Beacon average
+		-- t[3] : Data non-average
+		-- t[4] : Data average
+		return t[2]
 	end
 
 	return 0
@@ -1456,8 +1458,9 @@ function open(self)
 
 	local err
 
-	log:debug('Open wireless socket')
-	self.t_sock, err = network:open(self.interface, self.wireless)
+	log:debug('Open network socket')
+	-- self.wireless and self.chipset are only valid for wireless interfaces
+	self.t_sock, err = network:open(self.interface, self.wireless, self.chipset)
 	if err then
 		log:warn(err)
 	

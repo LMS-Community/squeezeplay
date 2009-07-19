@@ -24,6 +24,7 @@ struct net_data {
 	char *iface;
 	struct wpa_ctrl *ctrl;
 	int fd;
+	char *chipset;	// wireless chipset: "marvell" or "atheros"
 };
 
 
@@ -35,7 +36,8 @@ static int jive_net_wpa_ctrl_open(lua_State *L) {
 	/* stack is:
 	 * 1: jive.network class
 	 * 2: iface
-	 * 3: isWireless
+	 * 3: isWireless (nil for wired interfaces)
+	 * 4: chipset (nil for wired interfaces)
 	 */
 
 	data = lua_newuserdata(L, sizeof(struct net_data));
@@ -79,6 +81,10 @@ static int jive_net_wpa_ctrl_open(lua_State *L) {
 			lua_pushnil(L);
 			lua_pushstring(L, "wpa_ctrl attach timeout");
 			return 2;
+		}
+
+		if (lua_isstring(L, 4)) {
+			data->chipset = strdup(lua_tostring(L, 4));
 		}
 	}
 
@@ -259,6 +265,54 @@ static int jive_net_wlan_set_power(lua_State *L) {
 };
 
 
+static int jive_net_wlan_get_snr( lua_State *L) {
+	struct net_data *data;
+	struct iwreq wrq;
+
+	int buf[4];
+
+	// These two values work with Marvell wireless drivers
+	// They might be different for other wireless drivers
+	int ioctl_val = 0x8BFD;
+	int subioctl_val = 0xA;
+
+	data = (struct net_data *) lua_touserdata( L, 1);
+
+	if( !data->fd) {
+		lua_pushnil( L);
+		lua_pushstring( L, "wlan closed");
+		return 2;
+	}
+
+	strncpy( wrq.ifr_ifrn.ifrn_name, data->iface, IFNAMSIZ);
+
+	memset( buf, 0, sizeof(buf));
+
+	wrq.u.data.pointer = buf;
+	wrq.u.data.length = 0;			// We want all four values
+	wrq.u.data.flags = subioctl_val;
+
+	if( ioctl( data->fd, ioctl_val, &wrq) < 0) {
+		lua_pushnil( L);
+		lua_pushfstring( L, "ioctl error: %s", strerror( errno));
+		return 2;
+	}
+
+	lua_newtable( L);
+
+	lua_pushinteger( L, buf[0]);
+	lua_rawseti( L, -2, 1);
+	lua_pushinteger( L, buf[1]);
+	lua_rawseti( L, -2, 2);
+	lua_pushinteger( L, buf[2]);
+	lua_rawseti( L, -2, 3);
+	lua_pushinteger( L, buf[3]);
+	lua_rawseti( L, -2, 4);
+
+	return 1;
+}
+
+
 static int jive_net_eth_status(lua_State *L) {
 	struct net_data *data;
 	struct ifreq ifr;
@@ -327,6 +381,7 @@ static const struct luaL_Reg jive_net_methods[] = {
 	{ "getfd", jive_net_wpa_ctrl_get_fd },
       	{ "getPower", jive_net_wlan_get_power },
 	{ "setPower", jive_net_wlan_set_power },
+      	{ "getSNR", jive_net_wlan_get_snr },
 	{ "ethStatus", jive_net_eth_status },
 	{ NULL, NULL },
 };
