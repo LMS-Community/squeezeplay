@@ -167,6 +167,11 @@ function isConnected(self)
 end
 
 
+function setSignalStrength(self, signalStrength)
+	self.playback:setSignalStrength(signalStrength)
+end
+
+
 function __tostring(self)
 	return "LocalPlayer {" .. self:getName() .. "}"
 end

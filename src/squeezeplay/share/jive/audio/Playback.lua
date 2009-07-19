@@ -58,7 +58,8 @@ function __init(self, jnt, slimproto)
 		status.serverTimestamp = serverTimestamp
 		status.isStreaming = (obj.stream ~= nil)
 		status.isLooping = obj.isLooping
-		
+		status.signalStrength = obj.signalStrength
+
 		return status
 	end)
 
@@ -137,10 +138,16 @@ function playFileInLoop(self, file)
 end
 
 
+function setSignalStrength(self, signalStrength)
+	self.signalStrength = signalStrength
+end
+
+
 function sendStatus(self, status, event, serverTimestamp)
 	status.opcode = "STAT"
 	status.event = event
 	status.serverTimestamp = serverTimestamp
+	status.signalStrength = obj.signalStrength
 
 	self.slimproto:send(status)
 	self.statusTimestamp = Framework:getTicks()
@@ -246,7 +253,8 @@ function _timerCallback(self)
 
 
 	-- Cannot test of stream is not nil because stream may be complete (and closed) before track start
-	if status.decodeState & DECODE_RUNNING and (self.tracksStarted < status.tracksStarted) then
+	if status.decodeState & DECODE_RUNNING ~= 0
+		and (self.tracksStarted < status.tracksStarted) then
 
 		log:debug("status TRACK STARTED")
 		self:sendStatus(status, "STMs")
@@ -289,7 +297,7 @@ function _timerCallback(self)
 		end
 	end
 
-	if status.decodeState & DECODE_RUNNING and 
+	if status.decodeState & DECODE_RUNNING ~= 0 and 
 		Framework:getTicks() > self.statusTimestamp + 1000
 	then
 		self:sendStatus(status, "STMt")

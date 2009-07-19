@@ -197,7 +197,7 @@ local opcodes = {
 			packNumber(data.decodeFull, 4),
 			packNumber(data.bytesReceivedH, 4),
 			packNumber(data.bytesReceivedL, 4),
-			packNumber(data.signalStrength or 0, 2),
+			packNumber(data.signalStrength or 0xffff, 2),
 			packNumber(data.elapsed_jiffies, 4),
 			packNumber(data.outputSize, 4),
 			packNumber(data.outputFull, 4),
