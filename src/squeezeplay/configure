@@ -20564,9 +20564,11 @@ _ACEOF
 
 fi
 
+fi
 
 
-if true; then
+
+if test "x$enable_alsa" = "xyes"; then
   ALSA_ENABLED_TRUE=
   ALSA_ENABLED_FALSE='#'
 else
@@ -20574,7 +20576,6 @@ else
   ALSA_ENABLED_FALSE=
 fi
 
-fi
 
 # Checks for header files.
 { echo "$as_me:$LINENO: checking for ANSI C header files" >&5
