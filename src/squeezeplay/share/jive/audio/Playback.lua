@@ -147,7 +147,7 @@ function sendStatus(self, status, event, serverTimestamp)
 	status.opcode = "STAT"
 	status.event = event
 	status.serverTimestamp = serverTimestamp
-	status.signalStrength = obj.signalStrength
+	status.signalStrength = self.signalStrength
 
 	self.slimproto:send(status)
 	self.statusTimestamp = Framework:getTicks()
