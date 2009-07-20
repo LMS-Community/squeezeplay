@@ -16,6 +16,8 @@ local System                 = require("jive.System")
 
 local Networking             = require("jive.net.Networking")
 
+local Player                 = require("jive.slim.Player")
+
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
@@ -277,18 +279,27 @@ function _updateTask(self)
 	-- FIXME ac power / battery
 
 	local iface = Networking:activeInterface()
+	local player = Player:getLocalPlayer()
 
 	if not iface then
 		iconbar:setWirelessSignal(nil)
 	else	
 		if iface:isWireless() then
 			-- wireless strength
-			local quality = iface:getLinkQuality()
+			local quality, snr = iface:getLinkQuality()
 			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+
+			if player then
+				player:setSignalStrength(snr)
+			end
 		else
 			-- wired
 			local status = iface:t_wpaStatus()
 			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+
+			if player then
+				player:setSignalStrength(nil)
+			end
 		end
 	end
 end
