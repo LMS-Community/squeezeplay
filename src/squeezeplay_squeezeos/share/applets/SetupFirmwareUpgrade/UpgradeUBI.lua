@@ -78,12 +78,12 @@ function _upgrade(self)
 		-- this path means that the system now won't boot normally,
 		-- however this is unavoidable without storing a third image
 		-- on flash
-		self:rmvol(kernel)
-		self:rmvol(cramfs)
+		self:rmvol("kernel")
+		self:rmvol("cramfs")
 	else
 		-- remove old image
-		self:rmvol(kernel_bak)
-		self:rmvol(cramfs_bak)
+		self:rmvol("kernel_bak")
+		self:rmvol("cramfs_bak")
 	end
 
 	-- remove any failed upgrades
@@ -336,7 +336,8 @@ function upgradeSink(self)
 			-- new file
 			local filename = chunk.filename
 
-			if string.match(filename, "^zImage") then
+			if string.match(filename, "^zImage") or
+			   string.match(filename, "^Image") then
 				if not self:verifyPlatformRevision() then
 					self.sinkErr = "Incompatible firmware"
 					return nil
