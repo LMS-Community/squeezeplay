@@ -13,12 +13,17 @@ local math                   = require("math")
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 
+local Networking             = require("jive.net.Networking")
+
+local Player                 = require("jive.slim.Player")
+
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Button                 = require("jive.ui.Button")
 local Event                  = require("jive.ui.Event")
 local Popup                  = require("jive.ui.Popup")
+local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
@@ -103,6 +108,12 @@ function init(self)
 			end
 		end)
 	brightnessTimer:start()
+
+	-- status bar updates
+	self:update()
+	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
+	      self:update()
+	end)
 	
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
@@ -315,6 +326,40 @@ function setDate(self, date)
 	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	iconbar:update()
+end
+
+
+function update(self)
+	 Task("statusbar", self, _updateTask):addTask()
+end
+
+
+function _updateTask(self)
+	local iface = Networking:activeInterface()
+	local player = Player:getLocalPlayer()
+
+	if not iface then
+		iconbar:setWirelessSignal(nil)
+		player:setSignalStrength(nil)
+	else	
+		if iface:isWireless() then
+			-- wireless strength
+			local quality, snr = iface:getLinkQuality()
+			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+
+			if player then
+				player:setSignalStrength(snr)
+			end
+		else
+			-- wired
+			local status = iface:t_wpaStatus()
+			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
+
+			if player then
+				player:setSignalStrength(nil)
+			end
+		end
+	end
 end
 
 
