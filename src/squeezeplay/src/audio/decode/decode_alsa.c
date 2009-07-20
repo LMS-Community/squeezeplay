@@ -240,7 +240,7 @@ static int decode_alsa_init(lua_State *L) {
 	lua_pop(L, 2);
 
 	playback_pid = decode_alsa_fork(playback_device, buffer_time, period_count,
-					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS);
+					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS /*| FLAG_STREAM_NOISE*/);
 
 	lua_pop(L, 2);
 

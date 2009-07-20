@@ -184,8 +184,8 @@ static void generate_noise(void *outputBuffer,
 
 	while (framesPerBuffer--) {
 		val = rand() % 256 - 127;
-		*output_ptr++ = val << 16;
-		*output_ptr++ = 0;
+		*output_ptr++ += val << 15;
+		output_ptr++;
 	}
 }
 
@@ -684,12 +684,14 @@ static void *audio_thread_execute(void *data) {
 			if (state->flags & FLAG_STREAM_PLAYBACK) {
 				playback_callback(state, buf, frames);
 			}
-			else if (state->flags & FLAG_STREAM_PLAYBACK) {
-				generate_noise(buf, frames);
-			}
 			else {
 				memset(buf, 0, SAMPLES_TO_BYTES(frames));
 			}
+
+			if (state->flags & FLAG_STREAM_NOISE) {
+				generate_noise(buf, frames);
+			}
+
 			TIMER_CHECK("PLAYBACK");
 
 			if (state->flags & FLAG_STREAM_EFFECTS) {
