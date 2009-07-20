@@ -648,7 +648,7 @@ function skin(self, s, reload, useDefaultSize)
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
 		wheelFont  = _boldfont(24),
 		charHeight = 46,
-		wheelCharHeight =  25,
+		wheelCharHeight =  24,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
