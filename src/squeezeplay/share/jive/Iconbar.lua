@@ -196,7 +196,6 @@ function __init(self)
 		iconBattery = Icon("button_battery_NONE"),
 		iconWireless = Icon("button_wireless_NONE"),
 		button_time = Label("button_time", "XXXX"),
-		spacer = Label('spacer', ''),
 	})
 
 	obj.iconbarGroup = Group("iconbar_group", {
@@ -204,7 +203,6 @@ function __init(self)
 					repeat_mode = obj.iconRepeat,  -- repeat is a Lua reserved word
 					shuffle = obj.iconShuffle,
 					battery = obj.iconBattery,
-					spacer = obj.spacer,
 					wireless = obj.iconWireless,
 					button_time = obj.button_time,
 				})

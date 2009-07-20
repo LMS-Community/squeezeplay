@@ -1458,7 +1458,9 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "MISSING_PARTY_MODE_ICON"),
 	})
 
-	s._button_shuffle = _uses(s._iconbar_icon)
+	s._button_shuffle = _uses(s._iconbar_icon, {
+		border = { 3, 0, 27, 0 },
+	})
 	s.button_shuffle_OFF = _uses(s._button_shuffle, {
 		img = false,
 	})
@@ -1472,7 +1474,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_shuffle_album.png"),
 	})
 
-	s._button_battery = _uses(s._iconbar_icon)
+	s._button_battery = _uses(s._iconbar_icon, {
+		padding  = { 0, 6, 0, 0 },
+		border   = { 0, 0, 5, 0 },
+	})
 	s.button_battery_AC = _uses(s._button_battery, {
 		img = _loadImage(self, "Icons/icon_battery_AC.png"),
 	})
@@ -1500,7 +1505,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 
-	s._button_wireless = _uses(s._iconbar_icon)
+	s._button_wireless = _uses(s._iconbar_icon, {
+		w = 16,
+		border = { 5, 0, 10, 0 },
+	})
 	s.button_wireless_1 = _uses(s._button_wireless, {
 		img = _loadImage(self, "Icons/icon_wireless_1.png"),
 	})
@@ -1525,8 +1533,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- time
 	s.button_time = {
-		w = 55,
-		align = "right",
+		w = WH_FILL,
+		align = "left",
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
 		fg = c.TEXT_COLOR,
@@ -1539,12 +1547,11 @@ function skin(self, s, reload, useDefaultSize)
 		w = WH_FILL,
 		h = 24,
 		border = 0,
-		padding = { 4, 0, 4, 0 },
+		padding = { 4, 0, 0, 0 },
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		order = {'play', 'repeat_mode', 'shuffle', 'spacer', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
-		spacer = { w = 100 },
+		order = {'play', 'repeat_mode', 'shuffle', 'button_time', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
 
 	}
 
