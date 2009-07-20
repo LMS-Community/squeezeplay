@@ -1303,7 +1303,7 @@ end
 --[[
 =head2 jive.net.Networking:getLinkQuality()
 
-returns "quality" of wireless interface
+returns "quality" and snr of wireless interface
 used for dividing SNR values into categorical levels of signal quality
 
 	quality of 1 indicates SNR of 0
@@ -1315,11 +1315,10 @@ used for dividing SNR values into categorical levels of signal quality
 --]]
 
 function getLinkQuality(self)
-
 	local snr = self:getSNR()
 
 	if snr == nil or snr == 0 then
-		return nil
+		return nil, snr
 	end
 
 	local quality = 1
@@ -1330,7 +1329,7 @@ function getLinkQuality(self)
 		quality = i
 	end
 
-	return quality
+	return quality, snr
 end
 
 
