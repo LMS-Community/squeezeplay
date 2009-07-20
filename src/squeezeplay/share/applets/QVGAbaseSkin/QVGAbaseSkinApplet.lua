@@ -307,7 +307,7 @@ function skin(self, s, reload, useDefaultSize)
         	POPUP_TEXT_SIZE_2 = 16,
         	HELP_TEXT_FONT_SIZE = 16,
         	TEXTAREA_FONT_SIZE = 16,
-        	TEXTINPUT_FONT_SIZE = 18,
+        	TEXTINPUT_FONT_SIZE = 20,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
         	HELP_FONT_SIZE = 16,
 		UPDATE_SUBTEXT_SIZE = 16,
@@ -644,11 +644,11 @@ function skin(self, s, reload, useDefaultSize)
 		border     = { 8, 0, 8, 0 },
 		padding    = { 8, 0, 8, 0 },
 		align = 'center',
-		font       = _font(c.TEXTINPUT_FONT_SIZE),
+		font       = _boldfont(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
-		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
-		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 8,
-		wheelCharHeight =  c.TEXTINPUT_FONT_SIZE + 1,
+		wheelFont  = _boldfont(24),
+		charHeight = 46,
+		wheelCharHeight =  25,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
@@ -656,7 +656,7 @@ function skin(self, s, reload, useDefaultSize)
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		charOffsetY = 10,
+		charOffsetY = 14,
 	}
 
 	-- soft buttons
