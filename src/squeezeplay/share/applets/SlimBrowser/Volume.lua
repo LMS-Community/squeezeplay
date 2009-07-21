@@ -348,7 +348,10 @@ function event(self, event)
 
 		-- we're only interested in volume keys
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == 0 then
-			return EVENT_CONSUME
+			-- anything but volume keys should hide the popup
+			self.popup:hide()
+			-- and then not consume the action so it still happens
+			return EVENT_UNUSED
 		end
 
 		-- stop volume update on key up
