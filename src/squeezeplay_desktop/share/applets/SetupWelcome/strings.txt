@@ -75,7 +75,7 @@ DONE
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!
-	SV	Klart!
+	SV	Sedan är det bara att sätta igång!
 
 DONE_CONTINUE
 	CS	Pokračovat

@@ -9,7 +9,7 @@ SLIMSERVER_SERVERS
 	EN	Libraries
 	ES	Bibliotecas
 	FI	Kirjastot
-	FR	Libraries
+	FR	Collections
 	IT	Librerie
 	NL	Bibliotheken
 	NO	Min musikk
@@ -24,7 +24,7 @@ SWITCH_SERVER_TITLE
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
-	FR	Switch Library
+	FR	Changer de collection
 	IT	Cambia libreria
 	NL	Bibliotheek veranderen
 	PL	Przełącz bibliotekę
@@ -38,12 +38,12 @@ SWITCH_SERVER_TEXT
 	EN	You have made a selection that will cause this player to connect to a different library. Playback will stop, etc...
 	ES	Ha realizado una selección que hará que el reproductor se conecte a otra biblioteca. La reproducción se detendrá, etc...
 	FI	Olet tehnyt valinnan, jonka johdosta soitin muodostaa yhteyden eri kirjastoon. Toisto keskeytyy jne...
-	FR	You have made a selection that will cause this player to connect to a different library. Playback will stop, etc...
+	FR	Cette sélection entraînera la connexion de la platine en cours à une autre collection. La lecture en cours s'arrêtera, etc.
 	IT	In seguito alla selezione effettuata questo lettore si connetterà a una libreria differente, la riproduzione verrà interrotta e così via.
 	NL	Je hebt een selectie gemaakt waardoor dit muzieksysteem verbinding maakt met een andere bibliotheek. Het afspelen wordt gestopt, etc...
 	PL	Dokonano wyboru, który spowoduje połączenie tego odtwarzacza z inną biblioteką. Odtwarzanie zostanie zatrzymane itp.
 	RU	Выбранное действие приведет к подключению плеера к другой медиатеке. Воспроизведение остановится и т. д.
-	SV	Ditt val gör att den här spelaren ansluter till ett annat bibliotek. Uppspelningen stoppas bland annat ...
+	SV	Ditt val innebär att spelaren ansluter till ett annat bibliotek och att uppspelningen stoppas.
 
 SWITCH_BUTTON
 	CS	Přepnout na knihovnu: %s
@@ -52,7 +52,7 @@ SWITCH_BUTTON
 	EN	Switch to library: %s
 	ES	Cambiar a biblioteca: %s
 	FI	Vaihda kirjastoon: %s
-	FR	Switch to library: %s
+	FR	Passer à la collection: %s
 	IT	Passa alla libreria: %s
 	NL	Overstappen op bibiliotheek: %s
 	PL	Przełącz na bibliotekę: %s
@@ -81,7 +81,7 @@ CHOOSE_RETRY
 	EN	Retry current library: %s
 	ES	Reintentar biblioteca actual: %s
 	FI	Yritä uudelleen nykyistä kirjastoa: %s
-	FR	Retry current library: %s
+	FR	Réessayer de lire la collection actuelle: %s
 	IT	Riprova libreria corrente: %s
 	NL	Huidige bibliotheek opnieuw proberen: %s
 	PL	Ponów próbę dla bieżącej biblioteki: %s
@@ -95,7 +95,7 @@ SLIMSERVER_ADD_SERVER
 	EN	Remote Library
 	ES	Biblioteca remota
 	FI	Etäkirjasto
-	FR	Remote Library
+	FR	Collection à distance
 	IT	Libreria remota
 	NL	Externe bibliotheek
 	NO	Annen server
@@ -121,13 +121,13 @@ SLIMSERVER_HELP
 SLIMSERVER_CONNECTING_TO
 	CS	Připojuji se k
 	DA	Etablerer forbindelse til
-	DE	Verbindung wird hergestellt mit
+	DE	Verbindung mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
 	IT	Connessione a
-	NL	Bezig verbinding te maken met
+	NL	Er wordt verbinding gemaakt met
 	NO	Kopler til
 	PL	Łączenie z
 	RU	Подключение к
@@ -185,7 +185,7 @@ CHOOSE_OTHER_LIBRARY
 	EN	Other Library
 	ES	Otra biblioteca
 	FI	Toinen kirjasto
-	FR	Other Library
+	FR	Autre collection
 	IT	Altra libreria
 	NL	Andere bibliotheek
 	PL	Inna biblioteka
@@ -194,7 +194,15 @@ CHOOSE_OTHER_LIBRARY
 
 SQUEEZEBOX_PROBLEM_HELP
 	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
-	EN	Couldn't connect your Squeezebox (todo: need new text here)
+	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
+	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
+	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
+	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	FI	Squeezeboxin ja langattoman verkon välille ei voitu muodostaa yhteyttä. Varmista, että laite on langattoman verkon kantamalla.
+	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
+	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
+	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
+	NO	Kunne ikke kople Squeezebox til det trådløse nettverket. Forsikre deg om at den er innenfor rekkevidden til det trådløse nettverket ditt.
 	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.
 	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
 	SV	Det gick inte att ansluta Squeezebox till det trådlösa nätverket. Se till att spelaren är placerad inom räckvidden för det trådlösa nätverket.
@@ -220,10 +228,10 @@ SQUEEZECENTER_VERSION_HELP
 	EN	%s needs to be updated to a newer version of the Squeezebox Server.\n\nPlease visit mysqueezebox.com/downloads to download the latest version.
 	ES	%s debe actualizarse a una versión nueva de Squeezebox Server.\n\nVisite mysqueezebox.com/downloads para descargar la versión más reciente.
 	FI	%s täytyy päivittää Squeezebox Serverin uudempaan versioon.\n\nLataa uusin versio osoitteesta mysqueezebox.com/downloads.
-	FR	%s needs to be updated to a newer version of the Squeezebox Server.\n\nPlease visit mysqueezebox.com/downloads to download the latest version.
+	FR	Vous devez mettre %s à jour à la dernière version du Squeezebox Server.\n\nVisitez mysqueezebox.com/downloads pour télécharger la dernière version.
 	IT	È necessario aggiornare %s a una versione più recente di Squeezebox Server.\n\nVisitare mysqueezebox.com/downloads per scaricarla.
 	NL	%s moet worden bijgewerkt naar een recentere versie van de Squeezebox Server.\n\nGa naar mysqueezebox.com/downloads om de nieuwste versie te downloaden.
 	PL	%s wymaga aktualizacji do nowszej wersji programu Squeezebox Server.\n\nOdwiedź witrynę mysqueezebox.com/downloads, aby pobrać najnowszą wersję.
 	RU	%s необходимо обновить до более новой версии Squeezebox Server.\n\nПосетите mysqueezebox.com/downloads, чтобы загрузить последнюю версию.
-	SV	%s måste uppdateras till en senare version av Squeezebox Server.\n\nGå till mysqueezebox.com/nerladdningar för att ladda ner den senaste versionen.
+	SV	%s måste uppdateras till en senare version av Squeezebox Server.\n\nGå till mysqueezebox.com/downloads för att ladda ner den senaste versionen.
 

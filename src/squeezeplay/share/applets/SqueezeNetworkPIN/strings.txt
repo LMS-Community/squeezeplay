@@ -22,7 +22,7 @@ SQUEEZENETWORK_PIN
 	FI	Soittimen PIN: %s
 	FR	PIN de la platine: %s
 	IT	PIN lettore: %s
-	NL	Systeem-PIN: %s
+	NL	Muzieksysteem-PIN: %s
 	NO	Pin-kode for spiller: %s
 	PL	Kod PIN odtwarzacza: %s
 	RU	PIN-код плеера: %s

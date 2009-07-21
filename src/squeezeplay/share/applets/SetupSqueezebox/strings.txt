@@ -103,19 +103,19 @@ SQUEEZEBOX_FINDING_SOURCES
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til %s
-	DE	Verbindung mit %s
-	EN	Connecting to %s
-	ES	Conectando a %s
-	FI	Yhdistetään kohteeseen %s
-	FR	Connexion à %s
-	IT	Connessione a %s
-	NL	Er wordt verbinding gemaakt met %s
-	NO	Kopler til %s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till %s
+	CS	Připojuji se k
+	DA	Etablerer forbindelse til
+	DE	Verbindung mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistetään kohteeseen
+	FR	Connexion à
+	IT	Connessione a
+	NL	Er wordt verbinding gemaakt met
+	NO	Kopler til
+	PL	Łączenie z
+	RU	Подключение к
+	SV	Ansluter till
 
 SQUEEZEBOX_SETUP_COMPLETE
 	CS	Váš squeezebox je nyní nastaven.

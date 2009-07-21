@@ -76,7 +76,7 @@ BSP_BRIGHTNESS_CTRL
 	NO	Lysstyrke
 	PL	Regulacja jasności
 	RU	Управление яркостью
-	SV	Ljusstyrkekontroll
+	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_AUTOMATIC
 	CS	Automatický jas

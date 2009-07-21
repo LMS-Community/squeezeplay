@@ -9,7 +9,7 @@ SN_SIGNUP
 	EN	mysqueezebox.com Signup
 	ES	Registro de mysqueezebox.com
 	FI	mysqueezebox.com-rekisteröityminen
-	FR	mysqueezebox.com Signup
+	FR	Inscription à mysqueezebox.com
 	IT	Iscrizione a mysqueezebox.com
 	NL	Aanmelding bij mysqueezebox.com
 	NO	Squeezenetwork-registrering
@@ -144,7 +144,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	EN	There is a problem connecting to %s
 	ES	Problema al conectar a %s
 	FI	Yhteyttä ei voida muodostaa kohteeseen %s
-	FR	%s ne peut se connecter à %s
+	FR	Impossible de se connecter à %s
 	IT	Problema di connessione a %s
 	NL	Probleem bij verbinden met %s
 	NO	Klarer ikke å kople til %s
@@ -183,19 +183,19 @@ SLIMBROWSER_OFF
 	SV	Av
 
 SLIMBROWSER_VOLUME
-	CS	Hlasitost (%s)
-	DA	Lydstyrke (%s)
-	DE	Lautstärke (%s)
-	EN	Volume (%s)
-	ES	Volumen (%s)
-	FI	Äänenvoimakkuus (%s)
-	FR	Volume (%s)
-	IT	Volume (%s)
-	NL	Volume (%s)
-	NO	Volum (%s)
-	PL	Głośność (%s)
-	RU	Громкость (%s)
-	SV	Volym (%s)
+	CS	Hlasitost
+	DA	Lydstyrke
+	DE	Lautstärke
+	EN	Volume
+	ES	Volumen
+	FI	Äänenvoimakkuus
+	FR	Volume
+	IT	Volume
+	NL	Volume
+	NO	Volum
+	PL	Głośność
+	RU	Громкость
+	SV	Volym
 
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)
@@ -251,7 +251,7 @@ SLIMBROWSER_CONNECTING_TO
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
 	IT	Connessione a
-	NL	Er wordt een verbinding met gemaakt
+	NL	Er wordt verbinding gemaakt met
 	NO	Kopler til
 	PL	Łączenie z
 	RU	Подключение к

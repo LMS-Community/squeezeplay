@@ -91,7 +91,7 @@ SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
 	NO	Trykk på venstre knapp med hovedmenyen åpen
 	PL	Dotknięcie lewego przycisku Home
 	RU	Касание левой кнопки "Домой"
-	SV	Tryck på vänster knapp i Hemmenyn
+	SV	Tryck på vänster knapp i Startmenyn
 
 SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
 	CS	Home Přidržení levého tlačítka
@@ -106,7 +106,7 @@ SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
 	NO	Hold nede venstre knapp med hovedmenyen åpen
 	PL	Przytrzymanie lewego przycisku Home
 	RU	Удержание левой кнопки "Домой"
-	SV	Håll ned vänster knapp i Hemmenyn
+	SV	Håll ned vänster knapp i Startmenyn
 
 SHORTCUTS_INPUT_GESTURE_L_R
 	CS	Pravá páčka
@@ -166,7 +166,7 @@ SHORTCUTS_OUTPUT_GO_HOME
 	NO	Gå til hovedmenyen
 	PL	Powrót do początku
 	RU	Домой
-	SV	Hem
+	SV	Startsida
 
 SHORTCUTS_OUTPUT_GO_NOW_PLAYING
 	CS	Právě hraje
@@ -242,7 +242,6 @@ SHORTCUTS_OUTPUT_POWER
 	PL	Zasilanie
 	RU	Питание
 	SV	Av/på
-
 
 SHORTCUTS_OUTPUT_SETTINGS
 	EN	Settings

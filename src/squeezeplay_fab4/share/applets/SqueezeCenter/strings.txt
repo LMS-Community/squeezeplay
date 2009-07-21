@@ -105,7 +105,7 @@ RESCAN_SQUEEZECENTER
 	NO	Starter nytt søk
 	PL	Rozpoczynanie ponownego przeszukiwania
 	RU	Запуск повторного сканирования
-	SV	Startar ny sökning
+	SV	En ny sökning påbörjas
 
 RESCAN_SQUEEZECENTER_TEXT
 	CS	Bude to pravděpodobně trvat několik minut.

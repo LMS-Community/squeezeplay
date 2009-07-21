@@ -114,7 +114,7 @@ IMAGE_VIEWER_SOURCE_SC
 	CS	Squeezebox Server
 	DA	Squeezebox Server
 	DE	Squeezebox Server
-	EN	Squeeze center
+	EN	Squeezebox Server
 	ES	Squeezebox Server
 	FI	Squeezebox Server
 	FR	Squeezebox Server

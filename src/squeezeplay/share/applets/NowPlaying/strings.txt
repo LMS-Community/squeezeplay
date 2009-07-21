@@ -49,9 +49,18 @@ SCREENSAVER_WHEN_STOPPED
 
 SCREENSAVER_STOPPED
 	CS	Při zastavení
-	EN	Stopped
+	DA	Når den er stoppet
+	DE	Wenn angehalten
+	EN	When stopped
+	ES	Al detener
+	FI	Keskeytettynä
+	FR	A l'arrêt
+	IT	Quando la riproduzione è interrotta
+	NL	Wanneer gestopt
+	NO	Ved stopp
 	PL	Po zatrzymaniu
 	RU	При остановке
+	SV	I stoppat läge
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
@@ -70,18 +79,18 @@ SCREENSAVER_NOWPLAYING_OF
 
 SCREENSAVER_OFF
 	CS	Při vypnutí
-	DA	Fra
-	DE	Aus
-	EN	Off
-	ES	Desactivado
-	FI	Ei käytössä
-	FR	Désactivé
-	IT	Disattivato
-	NL	Uit
+	DA	Når den er slukket
+	DE	Wenn aus
+	EN	When off
+	ES	Al apagar
+	FI	Laitteen ollessa pois päältä
+	FR	En état éteint
+	IT	Se disattivato
+	NL	Wanneer uit
 	NO	Av
 	PL	Po wyłączeniu
 	RU	При выкл.
-	SV	Av
+	SV	I avstängt läge
 
 SCREENSAVER_ARTWORK_SIZE
 	CS	Velikost obalu právě přehrávané skladby

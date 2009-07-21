@@ -27,7 +27,7 @@ MENUS_OTHER_LIBRARY
 	EN	Other Library
 	ES	Otra biblioteca
 	FI	Toinen kirjasto
-	FR	Other Library
+	FR	Autre collection
 	IT	Altra libreria
 	NL	Andere bibliotheek
 	PL	Inna biblioteka

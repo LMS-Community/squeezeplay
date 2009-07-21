@@ -6,7 +6,7 @@ SAMBA
 	CS	Nastavit Samba
 	DA	Konfigurer Samba
 	DE	Samba einrichten
-	EN	Samba
+	EN	Setup Samba
 	ES	Configurar Samba
 	FI	Määritä Samban asetukset
 	FR	Configurer Samba
@@ -45,5 +45,5 @@ SAMBA_HOWTO
 	NO	Med Samba kan du overføre filer fra datamaskinen til Squeezebox Touch. Bruker: root Passord: 1234
 	PL	Samba umożliwia przesyłanie plików z komputera do urządzenia Squeezbox Touch. Użytkownik: root Hasło: 1234
 	RU	Samba позволяет переносить файлы с компьютера в Squeezbox Touch. Пользователь: root Пароль: 1234
-	SV	Du kan överföra filer från datorn till Squeezbox Touch med Samba. Användare: rotlösenord: 1234
+	SV	Du kan överföra filer från datorn till Squeezbox Touch med Samba. Användare: root. Lösenord: 1234
 

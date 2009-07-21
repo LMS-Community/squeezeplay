@@ -60,7 +60,7 @@ DONE
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!
-	SV	Klart!
+	SV	Sedan är det bara att sätta igång!
 
 DONE_HELP
 	CS	Nyní můžete použít váš Squeezebox pro přístup k vaší hudbě!
@@ -86,7 +86,7 @@ CONNECTING_TO_SN
 	FI	Muodostetaan yhteyttä kohteeseen
 	FR	Connexion à
 	IT	Connessione a
-	NL	Bezig verbinding te maken met 
+	NL	Er wordt verbinding gemaakt met
 	NO	Kopler til
 	PL	Nawiązywanie połączenia z
 	RU	Подключение к

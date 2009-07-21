@@ -37,7 +37,7 @@ INFOBROWSER_NOINFO_SN
 	EN	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
 	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta mysqueezebox.com y agregue fuentes de información.
 	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu mysqueezebox.com-tiliisi ja lisää syötteitä.
-	FR	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
+	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte mysqueezebox.com et ajoutez des flux d'informations.
 	IT	Nessun feed di informazioni trovato. Accedere all'account mysqueezebox.com e aggiungere i feed di informazioni.
 	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op mysqueezebox.com en voeg informatiekanalen toe.
 	NO	Fant ingen informasjonsfeeder. Logg på SqueezeNetwork-kontoen og legg til informasjonsfeeder.

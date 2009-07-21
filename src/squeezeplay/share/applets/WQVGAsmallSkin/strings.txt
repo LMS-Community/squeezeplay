@@ -27,7 +27,7 @@ SPACEBAR_SMALL
 	EN	space
 	ES	espacio
 	FI	välinäppäin
-	FR	space
+	FR	espace
 	IT	spazio
 	NL	spatie
 	NO	mellomrom

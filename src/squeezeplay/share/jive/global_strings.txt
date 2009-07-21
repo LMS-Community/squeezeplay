@@ -177,7 +177,7 @@ FACTORY_TEST
 	NO	Fabrikktest
 	PL	Test fabryczny
 	RU	Фабричный тест
-	SV	Test av fabriksinställningar
+	SV	Test av ursprungsinställningar
 
 DEBUG_LOG
 	CS	Protokolování

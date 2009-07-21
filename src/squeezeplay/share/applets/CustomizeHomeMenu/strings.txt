@@ -6,7 +6,19 @@ APP_GUIDE
 	EN	App Gallery
 
 CUSTOMIZE_HOME
-	EN	Edit Home Menu
+	CS	Výchozí menu
+	DA	Hovedmenu
+	DE	Hauptmenü
+	EN	Home Menu
+	ES	Menú Inicio
+	FI	Kotivalikko
+	FR	Personnalisation du Menu principal
+	IT	Menu iniziale
+	NL	Hoofdmenu
+	NO	Hovedmeny
+	PL	Menu główne
+	RU	Главное меню
+	SV	Hem-meny
 
 CUSTOMIZE_RESTORE_DEFAULTS
 	CS	Obnovit výchozí

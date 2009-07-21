@@ -3,7 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 UPDATE
-	EN	Update Software
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
 
 BEGIN_UPDATE
 	CS	Zahájit aktualizaci

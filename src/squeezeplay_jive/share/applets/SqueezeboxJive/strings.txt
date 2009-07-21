@@ -230,7 +230,7 @@ DIM_WHEN_CHARGING
 	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
-	CS	Dochází baterie\nDobijte ji prosím
+	CS	Dochází baterie
 	DA	Batteriet er næsten fladt
 	DE	Batterie schwach
 	EN	Battery Low
@@ -240,8 +240,8 @@ BATTERY_LOW
 	IT	Livello batteria insufficiente
 	NL	Batterij bijna leeg
 	NO	Lavt batterinivå
-	PL	Niski poziom baterii\nNaładuj urządzenie
-	RU	Батарея разряжена\nНеобходима зарядка
+	PL	Niski poziom baterii
+	RU	Батарея разряжена
 	SV	Låg batterinivå
 
 BATTERY_LOW_2
@@ -343,7 +343,7 @@ POWER_DOWN_HELP
 	FI	Peruuta tai Vahvista kaukosäätimen sammuttaminen
 	FR	Annulez ou confirmez la désactivation du contrôleur.
 	IT	Annullare o confermare la disattivazione del telecomando
-	NL	Annuleer of bevestig het uitzetten van je controller
+	NL	Het uitzetten van je controller annuleren of bevestigen
 	NO	Avbryt eller Bekreft at du vil slå av fjernkontrollen
 	PL	Anuluj lub potwierdź wyłączenie urządzenia sterującego
 	RU	Отмените или подтвердите выключение питания контроллера
@@ -388,11 +388,11 @@ INVALID_MAC_TEXT
 	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
 	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
-	NL	MAC-adres of UUID ongeldig. Neem contact op met support.
+	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
 	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
 	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
 	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
-	SV	Ogiltig MAC-adress eller ogiltigt UUID Kontakta supportavdelningen.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID. Ta kontakt med supportavdelningen.
 
 INVALID_MAC_CONTINUE
 	CS	Pokračovat

@@ -20,7 +20,7 @@ CRASH_TITLE
 CRASH_TEXT
 	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
 	DA	Systemet gik ned, og der er sendt en logfil til analyse hos Logitech.
-	DE	Es wurd ein Systemabsturz erkannt. Eine Protokolldatei wird an Logitech zur Analyse gesendet.
+	DE	Es wurde ein Systemabsturz erkannt. Eine Protokolldatei wird an Logitech zur Analyse gesendet.
 	EN	A system crash has been detected. A log file is being sent to Logitech for analysis.
 	ES	Se ha detectado un bloqueo del sistema. Se está enviando un archivo de registro a Logitech para analizarlo.
 	FI	Havaittiin järjestelmän kaatuminen. Logitechille lähetetään lokitiedosto analysoitavaksi.

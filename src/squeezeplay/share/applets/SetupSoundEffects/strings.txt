@@ -3,7 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SOUND_EFFECTS
-	EN	System Sound Effects
+	CS	Zvukové efekty
+	DA	Lydeffekter
+	DE	Soundeffekte
+	EN	Sound Effects
+	ES	Efectos de sonido
+	FI	Äänitehosteet
+	FR	Effets sonores
+	IT	Effetti sonori
+	NL	Geluidseffecten
+	NO	Lydeffekter
+	PL	Efekty dźwiękowe
+	RU	Звуковые эффекты
+	SV	Ljudeffekter
 
 SOUND_SCROLL
 	CS	Posun

@@ -465,12 +465,12 @@ FAB4_ENCORE
 	EN	Encore
 	ES	Bis
 	FI	Ylimääräinen numero
-	FR	Encore
+	FR	Bis
 	IT	Encore
 	NL	Encore
 	PL	Bis
 	RU	На бис
-	SV	Encore
+	SV	Dakapo
 
 FAB4_HARMONY
 	CS	Harmonie
@@ -479,7 +479,7 @@ FAB4_HARMONY
 	EN	Harmony
 	ES	Armonía
 	FI	Harmonia
-	FR	Harmony
+	FR	Harmonie
 	IT	Armonia
 	NL	Harmony
 	PL	Harmonia
@@ -512,7 +512,7 @@ FAB4_QUARTET
 	NL	Kwartet
 	PL	Kwartet
 	RU	Квартет
-	SV	Quartet
+	SV	Kvartett
 
 FAB4_SONATA
 	CS	Sonáta
@@ -521,12 +521,12 @@ FAB4_SONATA
 	EN	Sonata
 	ES	Sonata
 	FI	Sonaatti
-	FR	Sonata
+	FR	Sonate
 	IT	Sonata
 	NL	Sonate
 	PL	Sonata
 	RU	Соната
-	SV	Sonata
+	SV	Sonat
 
 FAB4_SYMPHONY
 	CS	Symfonie
@@ -535,12 +535,12 @@ FAB4_SYMPHONY
 	EN	Symphony
 	ES	Sinfonía
 	FI	Sinfonia
-	FR	Symphony
+	FR	Symphonie
 	IT	Sinfonia
 	NL	Symfonie
 	PL	Symfonia
 	RU	Симфония
-	SV	Symphony
+	SV	Symfoni
 
 FAB4_VIBRATO
 	CS	Vibráto

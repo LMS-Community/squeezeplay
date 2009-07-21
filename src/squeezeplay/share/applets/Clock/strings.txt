@@ -10,7 +10,7 @@ SCREENSAVER_CLOCK_STYLE_RADIAL
 	EN	Radial Clock
 	ES	Reloj radial
 	FI	Radiaalikello
-	FR	Radial Clock
+	FR	Horloge radiale
 	IT	Orologio radiale
 	NL	Analoge klok
 	PL	Zegar promieniowy
@@ -39,7 +39,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITAL_BLACK
 	EN	Digital Clock (Black)
 	ES	Reloj digital (negro)
 	FI	Digitaalikello (musta)
-	FR	Digital Clock (Black)
+	FR	Horloge numérique (noire)
 	IT	Orologio digitale (nero)
 	NL	Digitale klok (Zwart)
 	PL	Zegar cyfrowy (czarny)
@@ -53,7 +53,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITAL_TRANSPARENT
 	EN	Digital Clock (Transparent)
 	ES	Reloj digital (transparente)
 	FI	Digitaalikello (läpinäkyvä)
-	FR	Digital Clock (Transparent)
+	FR	Horloge numérique (transparente)
 	IT	Orologio digitale (trasparente)
 	NL	Digitale klok (Transparant)
 	PL	Zegar cyfrowy (przezroczysty)
@@ -67,7 +67,7 @@ SCREENSAVER_CLOCK_STYLE_DOTMATRIX
 	EN	Dot Matrix Clock
 	ES	Reloj de matriz de puntos
 	FI	Pistematriisikello
-	FR	Dot Matrix Clock
+	FR	Horloge avec matrice à points
 	IT	Orologio a matrice di punti
 	NL	Digitale clock
 	PL	Zegar diodowy
