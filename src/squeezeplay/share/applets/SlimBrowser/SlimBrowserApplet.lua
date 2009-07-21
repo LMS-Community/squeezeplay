@@ -56,7 +56,6 @@ local Volume                 = require("applets.SlimBrowser.Volume")
 local Scanner                = require("applets.SlimBrowser.Scanner")
 
 local debug                  = require("jive.utils.debug")
-
 -- log automatically assigned
 local logd                   = require("jive.utils.log").logger("applet.SlimBrowser.data")
 
@@ -64,6 +63,7 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
+local json                   = json 
 
 
 module(..., Framework.constants)
@@ -177,7 +177,9 @@ local function _stringifyJsonRequest(jsonAction)
 	if jsonAction.params then
 		local sortedParams = table.sort(jsonAction.params)
 		for k in table.pairsByKeys (jsonAction.params) do
-			command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
+			if jsonAction.params[k] ~= json.null then
+				command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
+			end
 		end
 	end
 
@@ -660,7 +662,9 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 					table.insert( newparams, k .. ":" .. _lastInput )
 				end
 			else
-				table.insert( newparams, k .. ":" .. v )
+				if v ~= json.null then
+					table.insert( newparams, k .. ":" .. v )
+				end
 			end
 		end
 		-- tells SC to give response that includes context menu handler
