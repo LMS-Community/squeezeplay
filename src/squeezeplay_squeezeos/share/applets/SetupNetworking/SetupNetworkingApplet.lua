@@ -957,15 +957,6 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 			iface:stopWPSApp()
 			iface:startWPASupplicant()
 		end
-
-		if iface:isAtheros() then
-			Task("stopWPS", self,
-				function()
-				-- Set ap_scan back to 2
-				iface:request("AP_SCAN 2")
-			end):addTask()
-		end
-
 		popup:hide()
 	end
 
@@ -987,7 +978,6 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 			iface:request("DISCONNECT")
 
 			-- Make sure ap_scan is set to 1 else WPS won't work
-			-- Will be set back to 2 after WPS is done
 			iface:request("AP_SCAN 1")
 
 			if( wpsmethod == "pbc") then
@@ -1044,9 +1034,6 @@ function _timerWPS(self, iface, ssid, wpsmethod, wpspin)
 					processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 					return
 				else
-					-- Set ap_scan back to 2
-					iface:request("AP_SCAN 2")
-
 					_connect(self, iface, ssid, false, true)
 				end
 			end
@@ -1065,11 +1052,6 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 		iface:stopWPSApp()
 
 		iface:startWPASupplicant()
-	end
-
-	if iface:isAtheros() then
-		-- Set ap_scan back to 2
-		iface:request("AP_SCAN 2")
 	end
 
 	-- popup failure
