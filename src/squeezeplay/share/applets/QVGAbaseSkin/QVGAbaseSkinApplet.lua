@@ -1574,7 +1574,6 @@ function skin(self, s, reload, useDefaultSize)
 		font = _boldfont(c.ICONBAR_FONT),
 	}
 
-	local _centerGroupWidth = 50
 	s.iconbar_group = {
 		x = 0,
 		y = screenHeight - 24,
@@ -1585,35 +1584,9 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		order = { 'left_group', 'center_group', 'right_group' },
-		left_group = { w = screenWidth/2 - _centerGroupWidth },
-		center_group = { w = _centerGroupWidth },
-		right_group = { w = screenWidth/2 - _centerGroupWidth },
-		--order = {'play', 'repeat_mode', 'shuffle', 'spacer', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
---		order = {'play', 'repeat_mode', 'shuffle', "button_time", 'spacer', 'wireless', 'battery'  }, --'repeat' is a Lua reserved word
---		spacer = { w = 100 },
+		order = {'play', 'repeat_mode', 'shuffle', 'spacer', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
+		spacer = { w = 100 },
 
-	}
-	s.iconbar_left_group = {
-		order = {'play', 'repeat_mode', 'shuffle' },
-		w = WH_FILL,
-		h = 24,
-		border = 0,
-		layer = LAYER_FRAME,
-	}
-	s.iconbar_center_group = {
-		order = { 'button_time' },
-		w = WH_FILL,
-		h = 24,
-		border = 0,
-		layer = LAYER_FRAME,
-	}
-	s.iconbar_right_group = {
-		order = {'wireless', 'battery'},
-		w = WH_FILL,
-		h = 24,
-		border = 0,
-		layer = LAYER_FRAME,
 	}
 
 	s.demo_text = {
