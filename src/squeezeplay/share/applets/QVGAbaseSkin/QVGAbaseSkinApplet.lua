@@ -309,7 +309,7 @@ function skin(self, s, reload, useDefaultSize)
         	POPUP_TEXT_SIZE_2 = 16,
         	HELP_TEXT_FONT_SIZE = 16,
         	TEXTAREA_FONT_SIZE = 16,
-        	TEXTINPUT_FONT_SIZE = 18,
+        	TEXTINPUT_FONT_SIZE = 20,
         	TEXTINPUT_SELECTED_FONT_SIZE = 32,
         	HELP_FONT_SIZE = 16,
 		UPDATE_SUBTEXT_SIZE = 16,
@@ -646,11 +646,11 @@ function skin(self, s, reload, useDefaultSize)
 		border     = { 8, 0, 8, 0 },
 		padding    = { 8, 0, 8, 0 },
 		align = 'center',
-		font       = _font(c.TEXTINPUT_FONT_SIZE),
+		font       = _boldfont(c.TEXTINPUT_FONT_SIZE),
 		cursorFont = _boldfont(c.TEXTINPUT_SELECTED_FONT_SIZE),
-		wheelFont  = _boldfont(c.TEXTINPUT_FONT_SIZE),
-		charHeight = c.TEXTINPUT_SELECTED_FONT_SIZE + 8,
-		wheelCharHeight =  c.TEXTINPUT_FONT_SIZE + 1,
+		wheelFont  = _boldfont(24),
+		charHeight = 46,
+		wheelCharHeight =  24,
 		fg         = c.TEXT_COLOR_BLACK,
 		wh         = c.TEXTINPUT_WHEEL_COLOR,
 		bgImg      = s.img.textinputBackground,
@@ -658,7 +658,7 @@ function skin(self, s, reload, useDefaultSize)
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
-		charOffsetY = 10,
+		charOffsetY = 14,
 	}
 
 	-- soft buttons
@@ -1499,7 +1499,9 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "MISSING_PARTY_MODE_ICON"),
 	})
 
-	s._button_shuffle = _uses(s._iconbar_icon)
+	s._button_shuffle = _uses(s._iconbar_icon, {
+		border = { 3, 0, 27, 0 },
+	})
 	s.button_shuffle_OFF = _uses(s._button_shuffle, {
 		img = false,
 	})
@@ -1513,7 +1515,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_shuffle_album.png"),
 	})
 
-	s._button_battery = _uses(s._iconbar_icon)
+	s._button_battery = _uses(s._iconbar_icon, {
+		padding  = { 0, 6, 0, 0 },
+		border   = { 0, 0, 5, 0 },
+	})
 	s.button_battery_AC = _uses(s._button_battery, {
 		img = _loadImage(self, "Icons/icon_battery_AC.png"),
 	})
@@ -1541,7 +1546,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 
-	s._button_wireless = _uses(s._iconbar_icon)
+	s._button_wireless = _uses(s._iconbar_icon, {
+		w = 16,
+		border = { 5, 0, 10, 0 },
+	})
 	s.button_wireless_1 = _uses(s._button_wireless, {
 		img = _loadImage(self, "Icons/icon_wireless_1.png"),
 	})
@@ -1566,8 +1574,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- time
 	s.button_time = {
-		w = 55,
-		align = "right",
+		w = WH_FILL,
+		align = "left",
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
 		fg = c.TEXT_COLOR,
@@ -1580,12 +1588,11 @@ function skin(self, s, reload, useDefaultSize)
 		w = WH_FILL,
 		h = 24,
 		border = 0,
-		padding = { 4, 0, 4, 0 },
+		padding = { 4, 0, 0, 0 },
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		order = {'play', 'repeat_mode', 'shuffle', 'spacer', 'wireless', 'battery', 'button_time' }, --'repeat' is a Lua reserved word
-		spacer = { w = 100 },
+		order = {'play', 'repeat_mode', 'shuffle', 'button_time', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
 
 	}
 
