@@ -173,8 +173,8 @@ function skin(self, s, reload, useDefaultSize)
         }
 
 
-	local NP_ARTISTALBUM_FONT_SIZE = 16
-	local NP_TRACK_FONT_SIZE = 16
+	local NP_ARTISTALBUM_FONT_SIZE = 18
+	local NP_TRACK_FONT_SIZE = 21
 
 	-- Artwork
 	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
@@ -185,6 +185,7 @@ function skin(self, s, reload, useDefaultSize)
 	local volumeBarWidth  = 150
 	local buttonPadding   = 0
 	local NP_TITLE_HEIGHT = 31
+	local NP_TRACKINFO_RIGHT_PADDING = 40
 
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
@@ -196,6 +197,13 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.nowplaying = _uses(s.window, {
+		title = {
+			h = 60,
+			padding = { 24, 0, 24, 0 },
+			text = {
+				hidden = 1,
+			},
+		},
 		-- Song metadata
 		nptrack =  {
 			border     = _tracklayout.border,
@@ -204,39 +212,32 @@ function skin(self, s, reload, useDefaultSize)
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
 			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 15, 20, 10 },
+			padding    = { 10, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
 			font       = _boldfont(NP_TRACK_FONT_SIZE), 
 		},
-		npartist  = {
+		npartistalbum  = {
 			border     = _tracklayout.border,
 			position   = _tracklayout.position,
 			w          = _tracklayout.w,
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
 			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 45, 20, 10 },
+			fg = { 0xb3, 0xb3, 0xb3 },
+			padding    = { 10, NP_TRACK_FONT_SIZE + 14, 10, 0 },
 			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
-		npalbum = {
-			border     = _tracklayout.border,
-			position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 10, NP_TITLE_HEIGHT + 75, 20, 10 },
-			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
-		},
+		npalbum = { hidden = 1},
+		npartist = { hidden = 1},
 	
 		-- cover art
 		npartwork = {
-			w = ARTWORK_SIZE,
-			border = { 8, NP_TITLE_HEIGHT + 6, 10, 0 },
 			position = LAYOUT_WEST,
+			w = WH_FILL,
 			align = "center",
 			artwork = {
+				w = WH_FILL,
 				align = "center",
-				padding = 0,
+				padding = { 0, 68, 0, 0 },
 				img = Tile:loadImage( baseImgpath .. "IconsResized/icon_album_noart_" .. noArtSize .. ".png"),
 			},
 		},
@@ -246,44 +247,16 @@ function skin(self, s, reload, useDefaultSize)
 	
 		-- Progress bar
 		npprogress = {
-			position = LAYOUT_NONE,
-			x = 4,
-			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 6,
-			padding = { 0, 10, 0, 0 },
-			order = { "elapsed", "slider", "remain" },
-			elapsed = {
-				w = 50,
-				align = 'right',
-				padding = { 4, 0, 6, 10 },
-				font = _boldfont(10),
-				fg = { 0xe7,0xe7, 0xe7 },
-				sh = { 0x37, 0x37, 0x37 },
-			},
-			remain = {
-				w = 50,
-				align = 'left',
-				padding = { 6, 0, 4, 10 },
-				font = _boldfont(10),
-				fg = { 0xe7,0xe7, 0xe7 },
-				sh = { 0x37, 0x37, 0x37 },
-			},
+			position = LAYOUT_NORTH,
+			padding = { 0, 0, 0, 0 },
+			border = { 0, 60, 0, 0 },
+			w = WH_FILL,
+			order = { "slider" },
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
-			position = LAYOUT_NONE,
-			x = 8,
-			y = NP_TITLE_HEIGHT + ARTWORK_SIZE + 2,
-			padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
-			order = { "elapsed" },
-			elapsed = {
-				w = WH_FILL,
-				align = "left",
-				padding = { 0, 0, 0, 5 },
-				font = _boldfont(10),
-				fg = { 0xe7, 0xe7, 0xe7 },
-				sh = { 0x37, 0x37, 0x37 },
-			},
+			hidden = 1,
 		},
 	
 	})
@@ -291,13 +264,11 @@ function skin(self, s, reload, useDefaultSize)
 	-- sliders
 	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
 	s.npprogressB = {
-		w = screenWidth - 120,
-		h = 25,
-		padding     = { 0, 0, 0, 15 },
-                position = LAYOUT_SOUTH,
+		w = screenWidth,
+		align = 'center',
                 horizontal = 1,
-                bgImg = s.img.sliderBackground,
-                img = s.img.sliderBar,
+                bgImg = s.img.songProgressBackground,
+                img = s.img.songProgressBar,
 	}
 
 	s.npvolumeB = { hidden = 1 }

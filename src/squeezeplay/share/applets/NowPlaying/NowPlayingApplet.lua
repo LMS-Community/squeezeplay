@@ -391,6 +391,14 @@ function _updateTrack(self, trackinfo, pos, length)
 		local artist    = trackTable[2]
 		local album     = trackTable[3]
 		
+		local artistalbum = ''
+		if artist ~= nil and album ~= nil then
+			artistalbum = artist .. ' - ' .. album
+		elseif artist ~= nil then
+			artistalbum = artist
+		elseif album ~= nil then
+			artistalbum = album
+		end
 		--[[ FIXME, reformat trackinfo to one line in certain cases
 		if customStyle == 'large' and windowStyle == 'ss' and 
 			(jiveMain:getSelectedSkin() == 'QVGAportraitSkin') then
@@ -401,6 +409,7 @@ function _updateTrack(self, trackinfo, pos, length)
 		self.trackTitle:setValue(track)
 		self.albumTitle:setValue(album)
 		self.artistTitle:setValue(artist)
+		self.artistalbumTitle:setValue(artistalbum)
 	end
 end
 
@@ -687,6 +696,7 @@ function _createUI(self)
 		self.trackTitle  = Label('nptrack', "")
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
+		self.artistalbumTitle = Label('npartistalbum', "")
 
 	if not self.gotoTimer then
 		self.gotoTimer = Timer(400,
@@ -847,6 +857,7 @@ function _createUI(self)
 	window:addWidget(self.trackTitle)
 	window:addWidget(self.albumTitle)
 	window:addWidget(self.artistTitle)
+	window:addWidget(self.artistalbumTitle)
 	window:addWidget(self.artworkGroup)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
