@@ -67,6 +67,7 @@ local ltn12       = require("ltn12")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local System      = require("jive.System")
 local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
 local Process     = require("jive.net.Process")
@@ -1200,7 +1201,6 @@ function _ifUpDown(self, cmd)
 end
 
 
-
 function _editAutoInterfaces(self, ssid)
 	local interface = self.interface
 
@@ -1218,49 +1218,51 @@ function _editAutoInterfaces(self, ssid)
 
 	log:debug('writing /etc/network/interfaces, enabling auto for ', autoInterface)
 
-	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
-	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
+	local outStr = ""
+
 	local autoSet = false
 	for line in fi:lines() do
 		if string.match(line, "^auto%s") then
 			-- if the interface is to be enabled, it should continue to be set to auto 
 			if string.matchLiteral(line, autoInterface) then
-				fo:write(line .. "\n")
+				outStr = outStr .. line .. "\n"
 				autoSet = true
 			elseif string.match(line, "lo") then
-				fo:write(line .. "\n")
+				outStr = outStr .. line .. "\n"
 			else
 				log:debug('disabling interface: ', line)
 			end
 		elseif string.match(line, "^iface%s") then
 			if not autoSet and string.matchLiteral(line, iface_name) then
 				log:debug('enabling interface:', autoInterface)
-				fo:write("auto " .. autoInterface .. "\n")
+				outStr = outStr .. "auto " .. autoInterface .. "\n"
 				autoSet = true
 			end
-			fo:write(line .. "\n")
+			outStr = outStr .. line .. "\n"
 		else
-			fo:write(line .. "\n")
+			outStr = outStr .. line .. "\n"
 		end
 	end
 
 	fi:close()
-	fo:close()
 
-	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
+	System:atomicWrite("/etc/network/interfaces", outStr)
 end
 
 
-function _editNetworkInterfacesBlock( self, fo, iface_name, method, ...)
+function _editNetworkInterfacesBlock( self, outStr, iface_name, method, ...)
+
 	if method then
-		fo:write("iface " .. iface_name .. " inet " .. method .. "\n")
+		outStr = outStr .. "iface " .. iface_name .. " inet " .. method .. "\n"
 		log:debug("WRITING: ", "iface ", iface_name, " inet ", method)
 		for _,v in ipairs{...} do
-			fo:write("\t" .. v .. "\n")
+			outStr = outStr .. "\t" .. v .. "\n"
 			log:debug("WRITING:\t", v)
 		end
 	end
+
+	return outStr
 end
 
 
@@ -1274,9 +1276,8 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 
 	log:debug('WRITING /etc/network/interfaces for ', iface, ', ssid: ', ssid , ' method: ', method)
 
-	-- FIXME use System:atomicWrite()
 	local fi = assert(io.open("/etc/network/interfaces", "r+"))
-	local fo = assert(io.open("/etc/network/interfaces.tmp", "w"))
+	local outStr = ""
 
 	local iface_name
 
@@ -1298,26 +1299,25 @@ function _editNetworkInterfaces( self, ssid, method, ...)
 			network = string.match(line, "^iface%s([^%s]+)%s")
 			-- when network is iface_name, write a new block for it
 			if network == iface_name then
-				self:_editNetworkInterfacesBlock( fo, network, method, ...)
+				outStr = self:_editNetworkInterfacesBlock( outStr, network, method, ...)
 				-- mark that we're done writing the iface_name block
 				done = true
 			end
 		end
 		-- write any line except what previously existed for the iface_name block
 		if network ~= iface_name then
-			fo:write(line .. "\n")
+			outStr = outStr .. line .. "\n"
 		end
 	end
 
 	-- if we haven't written the block for iface_name, do it now
 	if not done then
-		self:_editNetworkInterfacesBlock( fo, iface_name, method, ...)
+		outStr = self:_editNetworkInterfacesBlock( outStr, iface_name, method, ...)
 	end
 
 	fi:close()
-	fo:close()
 
-	os.rename("/etc/network/interfaces.tmp", "/etc/network/interfaces")
+	System:atomicWrite("/etc/network/interfaces", outStr)
 end
 
 
