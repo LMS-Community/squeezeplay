@@ -1627,6 +1627,9 @@ function skin(self, s)
                 	padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 120, 20, 10 },
 	                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
+		npartistalbum = {
+			hidden = 1,
+		},
 		npartwork = {
 			w          = ARTWORK_SIZE,
 			border     = { 10, TITLE_HEIGHT + 4, 10, 0 },
