@@ -228,19 +228,7 @@ SLIMBROWSER_SCANNER
 	SV	Spårets placering
 
 SLIMBROWSER_ENTER_PASSWORD
-	CS	Zadejte heslo
-	DA	Indtast adgangskode
-	DE	Kennwort eingeben
-	EN	Enter Password
-	ES	Introduzca la contraseña
-	FI	Anna salasana
-	FR	Saisir le mot de passe
-	IT	Immettere password
-	NL	Wachtwoord invoeren
-	NO	Skriv inn passord
-	PL	Wprowadź hasło
-	RU	Введите пароль
-	SV	Ange lösenord
+	EN	Create Password
 
 SLIMBROWSER_CONFIRM_ACCOUNT
 	EN	Confirm Account
