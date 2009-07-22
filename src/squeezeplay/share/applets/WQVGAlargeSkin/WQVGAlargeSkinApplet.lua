@@ -787,6 +787,7 @@ function skin(self, s)
 
 	-- typical text list window
 	s.text_list = _uses(s.window)
+	s.text_only = _uses(s.text_list)
 
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)

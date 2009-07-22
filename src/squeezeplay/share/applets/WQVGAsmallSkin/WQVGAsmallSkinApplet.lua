@@ -1172,6 +1172,20 @@ function skin(self, s)
 	-- typical text list window
 	s.text_list = _uses(s.window)
 
+	-- text_only removes icons
+        s.text_only = _uses(s.text_list, {
+		menu = {
+			item = {
+				order = { 'text', 'arrow', },
+			},
+			selected = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
+		},
+	})
+
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 

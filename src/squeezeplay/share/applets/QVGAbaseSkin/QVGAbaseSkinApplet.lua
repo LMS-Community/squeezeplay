@@ -695,8 +695,22 @@ function skin(self, s, reload, useDefaultSize)
 	--
 	-- These styles override the default styles for a specific window
 
-	-- typical text list window
+	-- text_list is the standard window style
 	s.text_list = _uses(s.window)
+
+	-- text_only removes icons
+	s.text_only = _uses(s.text_list, {
+		menu = {
+			item = {
+				order = { 'text', 'arrow', },
+			},
+			selected = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
+		},
+	})
 
 	--hack until SC changes are in place
 	s.text_list.title = _uses(s.title, {
@@ -751,7 +765,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- XXX: needs layout
 	s.error = _uses(s.window)
 
-	s.home_menu = _uses(s.text_list, {
+	s.home_menu = _uses(s.window, {
 		menu = {
 			item = _uses(s.item, {
 				icon = {
