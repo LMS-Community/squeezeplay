@@ -95,7 +95,7 @@ function _getHeadphoneSenseState(self)
 --	Headphone type detection does not work at the moment
 --	return self:string(_headphoneSenseTokens[state])
 
-	if state == 0 then
+	if state == "0" then
                 return self:string("AUDIO_ROUTING_NO")
 	else
                 return self:string("AUDIO_ROUTING_YES")
