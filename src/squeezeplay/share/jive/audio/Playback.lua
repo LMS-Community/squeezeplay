@@ -519,7 +519,10 @@ function _cont(self, data)
 		Stream:icyMetaInterval(data.icyMetaInterval)
 	end
 
-	-- XXXX wma guid's
+	-- wma guid's
+	if data.guid_len then
+		decode:setGuid(data.guid_len, data.guid)
+	end
 
 	self.autostart = (self.autostart == '2') and '0' or '1'
 end

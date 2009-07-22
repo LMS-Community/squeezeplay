@@ -55,6 +55,8 @@ static Uint32 decode_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
 static void *packet_data = NULL;
 static size_t packet_len = 0;
 
+static size_t wma_guid_len;
+static u8_t *wma_guid;
 
 /* audio instance */
 struct decode_audio *decode_audio;
@@ -348,8 +350,61 @@ static int decode_thread_execute(void *unused) {
 /*
  * stream metadata interface
  */
+int decode_set_wma_guid(lua_State *L)
+{
+	size_t guid_len;
+	const u8_t *guid;
+
+	/*
+	 * 1: self
+	 * 2: guid_len
+	 * 3: guid
+	 */
+
+	guid_len = lua_tointeger(L, 2);
+	guid = (const u8_t *) lua_tostring(L, 3);
+
+	if (wma_guid) {
+		free(wma_guid);
+	}
+
+	wma_guid_len = guid_len;
+	wma_guid = malloc(guid_len);
+	if (!wma_guid) {
+		return 0;
+	}
+
+	memcpy(wma_guid, guid, guid_len);
+
+	return 0;
+}
+
 void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metadata_len) {
 	char *buf;
+
+	if (type == WMA_GUID) {
+		size_t i;
+		bool_t match = false;
+
+		if (wma_guid_len == 0) {
+			return;
+		}
+
+		if (wma_guid_len == 0xFFFF) {
+			/* for debugging */
+			match = true;
+		}
+
+		for (i=0; i<wma_guid_len; i+=16) {
+			if (memcmp(wma_guid+i, metadata, 16) == 0) {
+				match = true;
+			}
+		}
+
+		if (!match) {
+			return;
+		}
+	}
 
 	buf = malloc(metadata_len + 4);
 	strncpy(buf, "META", 4);
@@ -866,6 +921,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "songEnded", decode_song_ended },
 	{ "status", decode_status },
 	{ "dequeuePacket", decode_dequeue_packet },
+	{ "setGuid", decode_set_wma_guid },
 	{ "audioEnable", decode_audio_enable },
 	{ "audioGain", decode_audio_gain },
 	{ "vumeter", decode_vumeter },

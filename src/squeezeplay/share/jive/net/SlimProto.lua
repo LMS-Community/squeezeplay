@@ -297,7 +297,8 @@ local opcodes = {
 		return {
 			icyMetaInterval = unpackNumber(packet, 5, 4),
 			loop = unpackNumber(packet, 9, 1),
-			-- XXXX read wma guid's
+			guid_len = unpackNumber(packet, 10, 2),
+			guid = string.sub(packet, 12)
 		}
 	end,
 
