@@ -673,7 +673,7 @@ function _connectPlayerFailed(self, player, server)
 	menu:addActionListener("back", self, cancelAction)
 	menu:addActionListener("go_home", self, cancelAction)
 
-	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", player:getName(), server:getName()))
+	local help = Textarea("help_text", self:string("SQUEEZEBOX_PROBLEM_HELP", server:getName()))
 
 	menu:setHeaderWidget(help)
 	window:addWidget(menu)

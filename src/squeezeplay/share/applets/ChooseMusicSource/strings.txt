@@ -134,19 +134,7 @@ SLIMSERVER_CONNECTING_TO
 	SV	Ansluter till
 
 SQUEEZEBOX_PROBLEM
-	CS	Problém s připojováním
-	DA	Problem med forbindelsen
-	DE	Verbindungsproblem
-	EN	Problem Connecting
-	ES	Problema de conexión
-	FI	Yhteyttä ei voi muodostaa
-	FR	Problème de connexion
-	IT	Problema di connessione
-	NL	Probleem bij verbinden
-	NO	Klarer ikke å kople til
-	PL	Problem podczas nawiązywania połączenia
-	RU	Ошибка при подключении
-	SV	Det uppstod ett problem vid anslutningen
+	EN	Can't Connect to Library
 
 SQUEEZEBOX_GO_BACK
 	CS	Jít zpět
@@ -193,19 +181,7 @@ CHOOSE_OTHER_LIBRARY
 	SV	Annat bibliotek
 
 SQUEEZEBOX_PROBLEM_HELP
-	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
-	DA	Kunne ikke tilslutte din Squeezebox til dit trådløse netværk. Sikre dig at den er indenfor rækkevidde for dit trådløse netværk.
-	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
-	EN	Couldn't connect your Squeezebox to your wireless network. Make sure it is within range of your wireless network.
-	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
-	FI	Squeezeboxin ja langattoman verkon välille ei voitu muodostaa yhteyttä. Varmista, että laite on langattoman verkon kantamalla.
-	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
-	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
-	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
-	NO	Kunne ikke kople Squeezebox til det trådløse nettverket. Forsikre deg om at den er innenfor rekkevidden til det trådløse nettverket ditt.
-	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.
-	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
-	SV	Det gick inte att ansluta Squeezebox till det trådlösa nätverket. Se till att spelaren är placerad inom räckvidden för det trådlösa nätverket.
+	EN	We couldn't connect to %s.  If this problem persists, please check Squeezebox Server to make sure it is running properly, and that you have a reliable network connection.
 
 SQUEEZECENTER_VERSION
 	CS	Aktualizovat software
