@@ -91,7 +91,15 @@ end
 function _getHeadphoneSenseState(self)
 	local result = self:_getAmixerValue("Headphone Switch")
 	local state = result:sub(1,1)
-	return self:string(_headphoneSenseTokens[state])
+
+--	Headphone type detection does not work at the moment
+--	return self:string(_headphoneSenseTokens[state])
+
+	if state == 0 then
+                return self:string("AUDIO_ROUTING_NO")
+	else
+                return self:string("AUDIO_ROUTING_YES")
+	end
 end
 
 function _getPassThroughState(self)
