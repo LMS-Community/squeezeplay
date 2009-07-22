@@ -242,6 +242,18 @@ SLIMBROWSER_ENTER_PASSWORD
 	RU	Введите пароль
 	SV	Ange lösenord
 
+SLIMBROWSER_CONFIRM_ACCOUNT
+	EN	Confirm Account
+
+SLIMBROWSER_CONFIRM_MESSAGE
+	EN	You are about to create an account with the following information:\nemail: %s\npassword: %s
+
+SLIMBROWSER_CREATE_ACCOUNT
+	EN	Create this account
+
+SLIMBROWSER_REENTER_INFORMATION
+	EN	Re-enter email and password
+
 SLIMBROWSER_CONNECTING_TO
 	CS	Připojuji se k
 	DA	Etablerer forbindelse til
