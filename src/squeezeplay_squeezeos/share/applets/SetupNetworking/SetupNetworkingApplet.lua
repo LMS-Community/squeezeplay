@@ -265,8 +265,22 @@ end
 
 -- scan menu: add network
 function _addNetwork(self, iface, ssid)
+
+	local mSsid = ""
+	if iface:isWireless() then
+		-- I am pretty sure there is a more elegant Lua solution to
+		--  replace every character above 127 with a question mark...
+		local tSsid = {ssid:byte( 1, -1)}
+		for i = 1, #tSsid do
+			if tSsid[i] < 32 or tSsid[i] >= 127 then
+				tSsid[i] = string.byte( '?')
+			end
+			mSsid = mSsid .. string.char( tSsid[i])
+		end
+	end
+
 	local item = {
-		text = iface:isWireless() and ssid or tostring(self:string("NETWORK_ETHERNET")),
+		text = iface:isWireless() and mSsid or tostring(self:string("NETWORK_ETHERNET")),
 		arrow = Icon("icon"),
 		sound = "WINDOWSHOW",
 		callback = function()
