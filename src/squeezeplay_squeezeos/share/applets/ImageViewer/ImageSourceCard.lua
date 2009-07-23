@@ -60,41 +60,37 @@ function listNotReadyError(self)
 	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_ERROR"))
 end
 
-function readImageList(self)
-	-- find directories /media/*/images to parse
-    for dir in lfs.dir("/media") do
-        if lfs.attributes("/media/" .. dir .. "/images", "mode") == "directory" then
-
-			local imageDir = "/media/" .. dir .. "/images"
-			local relPath = imageDir
-
-			local cmd = 'cd ' .. imageDir .. ' && ls -1 *.*'
-			-- filename search format:
-			-- an image file extension, .png, .jpg, .gif
-			local filePattern = '%w+.*%p%a%a%a'
-			local proc = Process(jnt, cmd)
-			proc:read(
-				function(chunk, err)
-					if err then
-						return nil
-					end
-
-					if chunk ~=nil then
-						local files = string.split("\n", chunk)
-						for _, file in ipairs(files) do
-							if string.find(file, "%pjpe*g")
-								or string.find(file, "%ppng") 
-								or string.find(file, "%pgif") 
-								 then
-									log:info(relPath .. "/" .. file)
-									table.insert(self.imgFiles, relPath .. "/" .. file)
-							end
-						end
-					end
-					self.lstReady = true
-					return 1
-			end)
+function scanFolder(self, folder)
+	for f in lfs.dir(folder) do
+		local fullpath = folder.."/"..f
+		if lfs.attributes(fullpath, "mode") == "directory" then
+			-- scan this directory recusivly
+			-- exclude "." and ".."
+			if f != "." and f != ".." then
+				self:scanFolder(fullpath)
+			end
+		elseif lfs.attributes(fullpath, "mode") == "file" then
+			-- check for supported file type
+			if string.find(fullpath, "%pjpe*g")
+					or string.find(fullpath, "%ppng") 
+					or string.find(fullpath, "%pgif") then
+				-- log:info(fullpath)
+				table.insert(self.imgFiles, fullpath)
+			end
 		end
+	end
+end
+
+
+function readImageList(self)
+
+	local imgpath = self.applet:getSettings()["card.path"]
+
+	if lfs.attributes(imgpath, "mode") == "directory" then
+		self:scanFolder(imgpath)
+		self.lstReady = true
+	else
+		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_NOT_DIRECTORY"))
 	end
 end
 

@@ -114,7 +114,7 @@ IMAGE_VIEWER_SOURCE_SC
 	CS	Squeezebox Server
 	DA	Squeezebox Server
 	DE	Squeezebox Server
-	EN	Squeezebox Server
+	EN	Squeeze center
 	ES	Squeezebox Server
 	FI	Squeezebox Server
 	FR	Squeezebox Server
@@ -612,6 +612,9 @@ IMAGE_VIEWER_CARD_ERROR
 	RU	Изображения не найдены. Убедитесь, что указан правильный путь и изображения имеют поддерживаемый формат.
 	SV	Inga bilder hittades. Kontrollera att sökvägarna till bilderna är korrekta och att de har rätt format.
 
+IMAGE_VIEWER_CARD_NOT_DIRECTORY
+	EN	The defined search path is not a directory. Please provide a valid directory path name.
+ 
 #
 # Strings for HTTP Source
 #
