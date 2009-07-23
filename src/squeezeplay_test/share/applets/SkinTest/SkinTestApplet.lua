@@ -792,7 +792,7 @@ function window_toast_popup_withicon(self, item)
 end
 
 --[[
-Popup:   "toast_popup"
+Popup:   "slider_popup"
 Group:	 "group"
   Label:   "text"
   Icon:    "icon"
@@ -809,6 +809,31 @@ function window_slider_popup(self, item)
 
 	popup:addWidget(title)
 	popup:addWidget(Icon('icon_popup_volume'))
+
+	popup:addWidget(Group("slider_group", {
+		slider = slider,
+	}))
+
+	return popup
+end
+
+--[[
+Popup:   "slider_popup"
+Group:	 "group"
+  Label:   "text"
+  Icon:    "icon"
+--]]
+function window_scanner_popup(self, item)
+	local data = _itemData(item)
+
+	local popup = Popup("scanner_popup")
+	_windowActions(self, item, popup)
+
+	local title = Label("heading", data[1])
+
+	local slider = Slider("scanner_slider", -1, 100, 50)
+
+	popup:addWidget(title)
 
 	popup:addWidget(Group("slider_group", {
 		slider = slider,
@@ -853,6 +878,7 @@ windows = {
 	{ "information", "Information Window", window_information, },
 	{ "toast_popup", "Popup Toast", window_toast_popup, },
 	{ "toast_popup_withicon", "Popup Toast w/art", window_toast_popup_withicon, },
+	{ "scanner_popup", "Song Position", window_scanner_popup, },
 	{ "slider_popup", "Volume", window_slider_popup, },
 }
 
@@ -996,5 +1022,8 @@ testData = {
 	},
 	slider_popup = {
 		"Volume",
-	}
+	},
+	scanner_popup = {
+		"3:16",
+	},
 }
