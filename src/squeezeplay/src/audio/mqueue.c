@@ -40,7 +40,7 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 	int err;
 
 	ticks = SDL_GetTicks();
-	if (timeout <= ticks) {
+	if (timeout && timeout <= ticks) {
 		return NULL;
 	}
 
@@ -56,6 +56,11 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 
 		/* Mutex remains locked until mqueue_read_complete */
 		return func;
+	}
+
+	if (timeout == 0) {
+		fifo_unlock(&mqueue->fifo);
+		return NULL;
 	}
 
 	/* Wait until timeout */
@@ -104,6 +109,12 @@ Uint32 mqueue_read_u32(struct mqueue *mqueue) {
 	Uint32 v;
 	mqueue_read_buf(mqueue, (Uint8 *)&v, sizeof(v));
 	return v;
+}
+
+
+void mqueue_read_array(struct mqueue *mqueue, Uint8 *array, size_t len)
+{
+	mqueue_read_buf(mqueue, array, len);
 }
 
 
@@ -165,3 +176,9 @@ void mqueue_write_u16(struct mqueue *mqueue, Uint16 val) {
 void mqueue_write_u32(struct mqueue *mqueue, Uint32 val) {
 	mqueue_write_buf(mqueue, (Uint8 *)&val, sizeof(val));
 }
+
+void mqueue_write_array(struct mqueue *mqueue, Uint8 *array, size_t len)
+{
+	mqueue_write_buf(mqueue, array, len);
+}
+

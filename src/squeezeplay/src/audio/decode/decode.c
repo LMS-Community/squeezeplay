@@ -52,11 +52,12 @@ static Uint32 decode_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
 
 
 /* meta data mqueue */
-static void *packet_data = NULL;
-static size_t packet_len = 0;
+struct mqueue metadata_mqueue;
+static Uint32 metadata_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
 
 static size_t wma_guid_len;
 static u8_t *wma_guid;
+
 
 /* audio instance */
 struct decode_audio *decode_audio;
@@ -347,6 +348,7 @@ static int decode_thread_execute(void *unused) {
 	return 0;
 }
 
+
 /*
  * stream metadata interface
  */
@@ -379,6 +381,7 @@ int decode_set_wma_guid(lua_State *L)
 	return 0;
 }
 
+
 void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metadata_len) {
 	char *buf;
 
@@ -406,55 +409,50 @@ void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metad
 		}
 	}
 
-	buf = malloc(metadata_len + 4);
+	buf = alloca(metadata_len + 4);
 	strncpy(buf, "META", 4);
 	memcpy(buf + 4, metadata, metadata_len);
 
 	decode_queue_packet(buf, metadata_len + 4);
-	/* decode_queue_packet will free buf */
 }
 
 
 void decode_queue_packet(void *data, size_t len) {
-	decode_audio_lock();
-
-	if (packet_data) {
-		/* if this happens often we need to implement a queue */
-		LOG_ERROR(log_audio_decode, "dropped queued packet");
-		free(packet_data);
+	if (mqueue_write_request(&metadata_mqueue, (void *)1, sizeof(Uint32) + len)) {
+		mqueue_write_u32(&metadata_mqueue, len);
+		mqueue_write_array(&metadata_mqueue, data, len);
+		mqueue_write_complete(&metadata_mqueue);
 	}
-
-	packet_data = data;
-	packet_len = len;
-
-	decode_audio_unlock();
+	else {
+		LOG_ERROR(log_audio_decode, "dropped queued packet");
+	}
 }
 
 
 static int decode_dequeue_packet(lua_State *L) {
+	void *data;
+	size_t len;
+
 	/*
 	 * 1: self
 	 */
 
-	decode_audio_lock();
-
-	if (!packet_data) {
-		decode_audio_unlock();
+	if (!mqueue_read_request(&metadata_mqueue, 0)) {
 		return 0;
 	}
 
+	len = mqueue_read_u32(&metadata_mqueue);
+	data = alloca(len);
+	mqueue_read_array(&metadata_mqueue, data, len);
+	mqueue_read_complete(&metadata_mqueue);
+
 	lua_newtable(L);
 
-	lua_pushlstring(L, (const char *)packet_data, 4);
+	lua_pushlstring(L, (const char *)data, 4);
 	lua_setfield(L, 2, "opcode");
 
-	lua_pushlstring(L, (const char *)packet_data + 4, packet_len - 4);
+	lua_pushlstring(L, (const char *)data + 4, len - 4);
 	lua_setfield(L, 2, "data");
-
-	free(packet_data);
-	packet_data = NULL;
-
-	decode_audio_unlock();
 
 	return 1;
 }
@@ -901,6 +899,7 @@ static int decode_audio_open(lua_State *L) {
 
 	/* start decoder thread */
 	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
+	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
 	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
 
 	lua_pushboolean(L, 1);
