@@ -103,7 +103,7 @@ function step1(self)
 end
 
 function step2(self)
-	return self:setupWelcome(function() self:step3() end)
+	return self:setupWelcomeShow(function() self:step3() end)
 end
 
 function step3(self)
@@ -128,27 +128,29 @@ function step4(self)
 end
 
 
-function setupWelcome(self, setupNext)
-	local window = Window("text_list", self:string("WELCOME"), welcomeTitleStyle)
+function setupWelcomeShow(self, setupNext)
+	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("text", self:string("WELCOME_WALKTHROUGH"))
-	local help = Textarea("help_text", self:string("WELCOME_HELP"))
+	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(textarea)
-	window:addWidget(help)
+	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
-        local setupNextAction = function (self)
-		window:playSound("WINDOWSHOW")
-        	setupNext()
-        	return EVENT_CONSUME
-        end
+	local continueButton = SimpleMenu("menu")
 
-	window:addActionListener("go", self, setupNextAction)
+	continueButton:addItem({
+		text = (self:string("DONE_CONTINUE")),
+		sound = "WINDOWSHOW",
+		callback = setupNext,
+		weight = 1
+	})
+
+	continueButton:setHeaderWidget(textarea)
+	window:addWidget(continueButton)
 
 	self:tieAndShowWindow(window)
 	return window
 end
-
 
 function setupDone(self, setupNext)
 	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
