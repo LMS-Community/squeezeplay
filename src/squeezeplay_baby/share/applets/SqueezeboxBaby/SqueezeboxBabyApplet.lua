@@ -37,6 +37,8 @@ local iconbar                = iconbar
 local jiveMain               = jiveMain
 local settings	             = nil
 
+local brightnessTable        = {}
+
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
@@ -118,6 +120,8 @@ function init(self)
 	end)
 
 --	self:_setupCrossover()
+
+	self:_initBrightnessTable()
 
 	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
@@ -305,12 +309,27 @@ function _updateTask(self)
 end
 
 
+function _initBrightnessTable( self)
+	local pwm_steps = 256
+	local brightness_step_percent = 10
+	local k = 1
+
+	brightnessTable[k] = 1
+	for step = 1, pwm_steps, 1 do
+		if 100 * ( step - brightnessTable[k]) / brightnessTable[k] >= brightness_step_percent then
+			k = k + 1
+			brightnessTable[k] = step
+		end
+	end
+end
+
+
 function getBrightness (self)
 	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "r")
 	local level = f:read("*a")
 	f:close()
 
-	return tonumber(level / 4)
+	return tonumber(level)
 end
 
 
@@ -319,13 +338,13 @@ function setBrightness (self, level)
 	if level == "off" then
 		level = 0
 	elseif level == "on" then
-		level = 32
+		level = 70
 	elseif level == nil then
 		return
 	end
 
 	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "w")
-	f:write(tostring(level * 4))
+	f:write(tostring(level))
 	f:close()
 end
 
@@ -336,27 +355,29 @@ function settingsBrightnessShow (self, menuItem)
 	local settings = self:getSettings()
 	local level = settings.brightness
 
-	local slider = Slider("slider", 1, 64, level,
-			      function(slider, value, done)
-				      settings.brightness = value
+	local slider = Slider("slider", 1, #brightnessTable, level,
+		function(slider, value, done)
+			settings.brightness = value
 
-			              local bright = settings.brightness
-			              if bright > 64 then
-			                bright = 64
-			              end
-			              self:setBrightness( bright)
+			local bright = brightnessTable[value]
 
-				      if done then
-					      window:playSound("WINDOWSHOW")
-					      window:hide(Window.transitionPushLeft)
-				      end
-			      end)
+			if bright > 255 then
+				bright = 255
+			end
+
+			self:setBrightness( bright)
+
+			if done then
+				window:playSound("WINDOWSHOW")
+				window:hide(Window.transitionPushLeft)
+			end
+	end)
 
 	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
-	       min = Icon("button_slider_min"),
-	       slider = slider,
-	       max = Icon("button_slider_max"),
+		min = Icon("button_slider_min"),
+		slider = slider,
+		max = Icon("button_slider_max"),
 	}))
 
 	window:addListener(EVENT_WINDOW_POP,
