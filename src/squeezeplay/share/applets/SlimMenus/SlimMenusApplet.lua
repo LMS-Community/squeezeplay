@@ -904,10 +904,14 @@ end
 
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
-
-	local _playerId
+	
+	local playerId
 	if _player then
 		playerId = _player:getId()
+	else
+		-- Use local player ID if we don't have a controlling player
+		local localPlayer = Player:getLocalPlayer()
+		playerId = localPlayer:getId()
 	end
 	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100 })
 
