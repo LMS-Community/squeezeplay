@@ -103,6 +103,22 @@ SLIMSERVER_ADD_SERVER
 	RU	Удаленная медиатека
 	SV	Fjärrbibliotek
 
+REMOTE_LIBRARIES
+	EN	Remote Libraries
+
+REMOVE_LIBRARY
+	EN	Remove Library
+
+ADD_NEW_LIBRARY
+	EN	Add New Library
+
+LIBRARY_ADDED
+	EN	Library Added
+
+CONNECT_TO_THIS_LIBRARY
+	EN	Connect to this library
+
+
 SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží Squeezebox Server
 	DA	Angiv IP-adressen på den computer hvor Squeezebox Server kører
@@ -210,4 +226,5 @@ SQUEEZECENTER_VERSION_HELP
 	PL	%s wymaga aktualizacji do nowszej wersji programu Squeezebox Server.\n\nOdwiedź witrynę mysqueezebox.com/downloads, aby pobrać najnowszą wersję.
 	RU	%s необходимо обновить до более новой версии Squeezebox Server.\n\nПосетите mysqueezebox.com/downloads, чтобы загрузить последнюю версию.
 	SV	%s måste uppdateras till en senare version av Squeezebox Server.\n\nGå till mysqueezebox.com/downloads för att ladda ner den senaste versionen.
+
 
