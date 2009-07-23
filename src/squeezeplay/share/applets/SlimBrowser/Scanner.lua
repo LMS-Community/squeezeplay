@@ -69,10 +69,8 @@ local function _updateDisplay(self)
 	self.title:setValue(self.applet:string("SLIMBROWSER_SCANNER"))
 	self.slider:setValue(tonumber(self.elapsed))
 	local strElapsed = _secondsToString(self.elapsed)
-	local strRemain = "-" .. _secondsToString(self.duration - self.elapsed)
 
-	self.scannerGroup:setWidgetValue("min", strElapsed)
-	self.scannerGroup:setWidgetValue("max", strRemain)
+	self.heading:setValue(strElapsed)
 end
 
 
@@ -101,10 +99,10 @@ local function _openPopup(self)
 		return
 	end
 	
-	local popup = Popup("slider_popup")
+	local popup = Popup("scanner_popup")
 	popup:setAutoHide(false)
 
-	local title = Label("text", "")
+	local title = Label("heading", "")
 	popup:addWidget(title)
 
 	local slider = Slider("scanner_slider", 0, tonumber(self.duration), tonumber(self.elapsed),
@@ -113,11 +111,11 @@ local function _openPopup(self)
 				self.elapsed = value
 				_updateSelectedTime(self)
 			end)
+	self.heading = title
 	self.scannerGroup = Group("slider_group", {
-		min = Label("text", ""),
 		slider = slider,
-		max = Label("text", ""),
 	})
+
 	popup:addWidget(self.scannerGroup)
 	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)

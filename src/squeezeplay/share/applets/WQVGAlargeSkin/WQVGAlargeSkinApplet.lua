@@ -303,18 +303,6 @@ function skin(self, s)
 					imgpath .. "Buttons/button_titlebar_l.png",
 				})
 
-	local helpBox = 
-		_loadTile(self, {
-				       imgpath .. "Popup_Menu/helpbox.png",
-				       imgpath .. "Popup_Menu/helpbox_tl.png",
-				       imgpath .. "Popup_Menu/helpbox_t.png",
-				       imgpath .. "Popup_Menu/helpbox_tr.png",
-				       imgpath .. "Popup_Menu/helpbox_r.png",
-				       imgpath .. "Popup_Menu/helpbox_br.png",
-				       imgpath .. "Popup_Menu/helpbox_b.png",
-				       imgpath .. "Popup_Menu/helpbox_bl.png",
-				       imgpath .. "Popup_Menu/helpbox_l.png",
-			       })
 	local popupBox = 
 		_loadTile(self, {
 				       imgpath .. "Popup_Menu/popup_box.png",
@@ -1096,7 +1084,7 @@ function skin(self, s)
 		y = screenHeight - 93,
 		w = screenWidth,
 		h = 93,
-		bgImg = helpBox,
+		bgImg = popupBox,
 		group = {
 			padding = 10,
 			order = { 'icon', 'text' },
@@ -1231,33 +1219,38 @@ function skin(self, s)
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
 	})
-	-- slider popup (volume/scanner)
+
+
+	-- FIXME: this is not to any spec yet
+	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
                 y = screenHeight/2 - 50,
                 w = screenWidth - 100,
                 h = 125,
 		position = LAYOUT_NONE,
-		bgImg = helpBox,
-		title = {
-		      border = 10,
-		      fg = WHITE,
-			sh = NONE,
-		      font = FONT_BOLD_15px,
-		      align = "center",
-		      bgImg = false,
+		bgImg = popupBox,
+		heading = {
+			w = WH_FILL,
+			border = 10,
+			fg = WHITE,
+			sh = {},
+			font = _boldfont(22),
+			align = "center",
+			bgImg = false,
+			padding = { 4, 16, 4, 0 },
 		},
-		--FIXME, padding/border doesn't seem to work in the text table here
-		text = _uses(s.text, {
-			padding = { 20, 20, 0, 10 }
-		}),
+--		text = _uses(s.text),
 		slider_group = {
 			w = WH_FILL,
 			h = WH_FILL,
-			padding = { 10, 10, 10, 10 },
-			order = { "min", "slider", "max" },
+			padding = { 10, 0, 10, 0 },
+			order = { 'slider' },
 		},
 	}
+
+	-- FIXME: this is not to any spec yet
+	s.scanner_popup = _uses(s.slider_popup)
 
 	s.image_popup = _uses(s.popup, {
 		image = {
@@ -1275,6 +1268,8 @@ function skin(self, s)
 		border = 0,
 	})
 
+	-- FIXME: this is not to any spec yet
+	s.scanner_slider = _uses(s.volume_slider)
 
 --------- BUTTONS ---------
 

@@ -1693,29 +1693,38 @@ function skin(self, s)
 	        maskImg = false,
 	})
 
-	-- slider popup (volume/scanner)
+	-- FIXME: this is not to any spec yet
+	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
 		y = screenHeight/2 - 50,
 		w = screenWidth - 100,
 		h = 100,
 		bgImg = popupBox,
-		title = {
+		heading = {
+			w = WH_FILL,
 		      border = 10,
 		      fg = TEXT_COLOR,
-		      font = FONT_BOLD_15px,
+		      font = _boldfont(22),
+			padding = { 4, 16, 4, 0 },
 		      align = "center",
 		      bgImg = false,
 		},
 		text = _uses(s.text, {
-			padding = { 20, 20, 0, 10 },
+			--padding = { 20, 20, 0, 10 },
 		}),
 		slider_group = {
 			w = WH_FILL,
+			align = 'center',
 			padding = { 10, 0, 10, 0 },
-			order = { "min", "slider", "max" },
+			order = { 'slider' },
 		},
 	}
+
+
+	-- FIXME: this is not to any spec yet
+       -- scanner popup
+	s.scanner_popup = _uses(s.slider_popup)
 
 	s.image_popup = _uses(s.popup, {
 		image = {
@@ -1727,13 +1736,16 @@ function skin(self, s)
 --------- SLIDERS ---------
 
 
+	-- FIXME: this is not to any spec yet
 	s.volume_slider = {
 		w = WH_FILL,
 		border = { 0, 0, 0, 10 },
                 bgImg = _volumeSliderBackground,
                 img = _volumeSliderBar,
 	}
-
+	-- FIXME: this is not to any spec yet
+        s.scanner_slider = _uses(s.volume_slider)
+	
 --------- BUTTONS ---------
 
 	-- base button
@@ -2214,6 +2226,7 @@ function skin(self, s)
 	s.nowplaying = _uses(s.window, {
 		--title bar
 		title = _uses(s.title, {
+			zOrder = 1,
 			rbutton  = {
 				font    = _font(14),
 				fg      = TEXT_COLOR,

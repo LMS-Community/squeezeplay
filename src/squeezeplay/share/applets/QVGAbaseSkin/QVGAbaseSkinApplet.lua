@@ -1111,7 +1111,7 @@ function skin(self, s, reload, useDefaultSize)
 	        maskImg = false,
 	})
 
-	-- slider popup (volume/scanner)
+	-- slider popup (volume)
 	s.slider_popup = {
 		x = 19,
 		y = 46,
@@ -1133,6 +1133,19 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	}
 
+	-- scanner popup
+	s.scanner_popup = _uses(s.slider_popup, {
+		y = screenHeight/2 - 34,
+		h = 68,
+		heading = {
+			padding = { 4, 16, 4, 0 },
+		},
+		slider_group = {
+			border = { 8, 2, 8, 0 },
+		},
+	})
+
+
 	s.image_popup = _uses(s.popup, {
 		image = {
 			align = "center",
@@ -1149,8 +1162,8 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.scanner_slider = _uses(s.slider, {
-		img = s.img.volumeBar,
-		bgImg = s.img.volumeBackground,
+		img = s.img.sliderBar,
+		bgImg = s.img.sliderBackground,
 	})
 
 
