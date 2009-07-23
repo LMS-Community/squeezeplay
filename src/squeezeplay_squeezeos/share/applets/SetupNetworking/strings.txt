@@ -1399,34 +1399,13 @@ NETWORK_ATTACH_CABLE
 	SV	Ej ansluten
 
 NETWORK_ATTACH_CABLE_DETAILED
-	CS	Nemůžeme nalézt kabelové připojení. Pokud jste nepřipojili svůj Squeezebox k vaší síti ethernetovým kabelem, laskavě tak učiňte teď.
-	DA	Der blev ikke fundet en kableforbindelse. Hvis du ikke har sluttet din Squeezebox til netværket med et Ethernet-kabel, skal du gøre det nu.
-	DE	Es konnte keine verkabelte Verbindung erkannt werden. Verbinden Sie die Squeezebox mithilfe eines Ethernet-Kabels mit dem Netzwerk , falls dies noch nicht erfolgt ist.
-	EN	We can't detect a wired connection. If you haven't connected your Squeezebox to your network with an ethernet cable, please do so now.
-	ES	No se puede detectar una conexión con cable. Si no ha conectado Squeezebox a la red con un cable Ethernet, hágalo ahora.
-	FI	Langallista yhteyttä ei havaita. Jollet jo ole liittänyt Squeezeboxia verkkoon ethernet-kaapeliila, tee se nyt.
-	FR	Nous ne détectons aucune connexion filaire. Si vous n'avez pas connecté votre Squeezebox à votre réseau par un câble Ethernet, faites-le maintenant.
-	IT	Impossibile rilevare una connessione cablata. Se Squeezebox non è collegato alla rete con un cavo Ethernet, collegarlo adesso.
-	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Als je je Squeezebox niet met een ethernetkabel verbonden hebt, doe dit dan nu.
-	NO	Finner ikke en trådet tilkopling. Hvis du ikke har koplet Squeezebox til nettverket med en ethernet-kabel, må du gjøre det nå.
-	PL	Nie można wykryć połączenia przewodowego. Jeśli urządzenie Squeezebox nie zostało przyłączone do sieci przy użyciu kabla Ethernet, zrób to teraz.
-	RU	Не удалось обнаружить проводное подключение. Если вы не подключили Squeezebox к сети кабелем ethernet, сделайте это.
-	SV	Ingen kabelanslutning upptäcktes. Om du du inte har anslutit Squeezebox till ett nätverk via en ethernetkabel bör du göra det nu.
+	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
+
+NETWORK_NO_WIRELESS_DETAILED
+	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
 
 NETWORK_ERROR
-	CS	Chyba připojení
-	DA	Forbindelsesfejl
-	DE	Verbindungsfehler
-	EN	Connection Error
-	ES	Error de conexión
-	FI	Yhteysvirhe
-	FR	Erreur de connexion
-	IT	Errore di connessione
-	NL	Verbindingsfout
-	NO	Tilkoplingsfeil
-	PL	Błąd połączenia
-	RU	Ошибка подключения
-	SV	Anslutningsfel
+	EN	Connection Problem
 
 NETWORK_CANT_CONNECT
 	CS	Nemohu připojit
