@@ -991,9 +991,6 @@ function _startWPS(self, iface, ssid, wpsmethod, wpspin)
 		function()
 			iface:request("DISCONNECT")
 
-			-- Make sure ap_scan is set to 1 else WPS won't work
-			iface:request("AP_SCAN 1")
-
 			if( wpsmethod == "pbc") then
 				iface:request("WPS_PBC")
 			elseif( wpsmethod == "pin") then

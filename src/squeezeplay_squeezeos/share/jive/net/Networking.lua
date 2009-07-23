@@ -885,18 +885,6 @@ function t_addNetwork(self, ssid, option)
 	-- Disconnect from existing network
 	self:_ifDown()
 
-	-- Atheros needs ap_scan=2 for hidden ssid
-	if self:isAtheros() then
-		request = 'GET_NETWORK ' .. id .. ' scan_ssid'
-		if self:request(request) == "1" then
-			request = 'AP_SCAN 2'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		else
-			request = 'AP_SCAN 1'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-		end
-	end
-
 	-- Use select network to disable all other networks
 	request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
@@ -1075,18 +1063,6 @@ function _ifUp(self, ssid)
 		-- Disconnect from existing network
 		local request = 'DISCONNECT'
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-		-- Atheros needs ap_scan=2 for hidden ssid
-		if self:isAtheros() then
-			request = 'GET_NETWORK ' .. id .. ' scan_ssid'
-			if self:request(request) == "1" then
-				request = 'AP_SCAN 2'
-				assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-			else
-				request = 'AP_SCAN 1'
-				assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-			end
-		end
 
 		local request = 'SELECT_NETWORK ' .. id
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
