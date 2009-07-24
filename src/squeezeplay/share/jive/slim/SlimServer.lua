@@ -990,7 +990,7 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	else
 		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
 		if string.find(iconId, "^http") then
-			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&f=' .. (imgFormat or '') .. '&u=' .. iconId
+			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&h=' .. size .. '&f=' .. (imgFormat or '') .. '&u=' .. iconId
 		else
 			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
 
