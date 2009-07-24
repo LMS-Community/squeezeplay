@@ -392,11 +392,11 @@ function _updateTrack(self, trackinfo, pos, length)
 		local album     = trackTable[3]
 		
 		local artistalbum = ''
-		if artist ~= nil and album ~= nil then
+		if artist ~= '' and album ~= '' then
 			artistalbum = artist .. ' - ' .. album
-		elseif artist ~= nil then
+		elseif artist ~= '' then
 			artistalbum = artist
-		elseif album ~= nil then
+		elseif album ~= '' then
 			artistalbum = album
 		end
 		--[[ FIXME, reformat trackinfo to one line in certain cases
