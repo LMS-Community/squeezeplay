@@ -21,18 +21,7 @@ MENUS_INTERNET_RADIO
 	EN	Internet Radio
 
 MENUS_OTHER_LIBRARY
-	CS	Jiná knihovna
-	DA	Andre biblioteker
-	DE	Andere Musiksammlung
-	EN	Other Library
-	ES	Otra biblioteca
-	FI	Toinen kirjasto
-	FR	Autre collection
-	IT	Altra libreria
-	NL	Andere bibliotheek
-	PL	Inna biblioteka
-	RU	Другая медиатека
-	SV	Annat bibliotek
+	EN	Switch Library
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu

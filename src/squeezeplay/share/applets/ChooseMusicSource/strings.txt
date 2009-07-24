@@ -183,18 +183,7 @@ SQUEEZEBOX_TRY_AGAIN
 	SV	Försök igen
 
 CHOOSE_OTHER_LIBRARY
-	CS	Jiná knihovna
-	DA	Andre biblioteker
-	DE	Andere Musiksammlung
-	EN	Other Library
-	ES	Otra biblioteca
-	FI	Toinen kirjasto
-	FR	Autre collection
-	IT	Altra libreria
-	NL	Andere bibliotheek
-	PL	Inna biblioteka
-	RU	Другая медиатека
-	SV	Annat bibliotek
+	EN	Switch Library
 
 SQUEEZEBOX_PROBLEM_HELP
 	EN	We couldn't connect to %s.  If this problem persists, please check Squeezebox Server to make sure it is running properly, and that you have a reliable network connection.
