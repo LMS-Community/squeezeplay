@@ -204,12 +204,12 @@ function __init(self)
 					shuffle = obj.iconShuffle,
 					battery = obj.iconBattery,
 					wireless = obj.iconWireless,
-					button_time = obj.button_time,
 				})
 
 	obj:update()
 
 	Framework:addWidget(obj.iconbarGroup)
+	Framework:addWidget(obj.button_time)
 
 	obj.button_time:addTimer(1000,  -- every second
 			      function() 
