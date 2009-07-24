@@ -34,7 +34,8 @@ end
 
 
 function registerApplet(self)
-	jiveMain:registerSkin(self:string("DESKTOP_SKIN"), 'FullscreenSkin', 'skin')
+	-- This skin is basically broken right now. Disabling...
+	--jiveMain:registerSkin(self:string("DESKTOP_SKIN"), 'FullscreenSkin', 'skin')
 end
 
 --[[
