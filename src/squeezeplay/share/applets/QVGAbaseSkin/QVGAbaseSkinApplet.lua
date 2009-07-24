@@ -1228,6 +1228,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_popup_volume = _uses(s._popupIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
 	})
+	s.icon_popup_mute = _uses(s._popupIcon, {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
+	})
 
 
 	s.presetPointer3 = {

@@ -1225,9 +1225,9 @@ function skin(self, s)
 	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
-                y = screenHeight/2 - 50,
+                y = screenHeight/2 - 100,
                 w = screenWidth - 100,
-                h = 125,
+                h = 200,
 		position = LAYOUT_NONE,
 		bgImg = popupBox,
 		heading = {
@@ -1406,7 +1406,7 @@ function skin(self, s)
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 10 }
 	}
-	local _popupicon = _uses(_icon, { padding = 0 })
+	local _popupicon = _uses(_icon, { padding = 0, h = 80 })
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
@@ -1447,6 +1447,12 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	})
 
+	s.icon_popup_volume = _uses(_popupicon, {
+                img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
+        })
+        s.icon_popup_mute = _uses(_popupicon, {
+                img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
+        })
 	s.icon_popup_shuffle0 = _uses(_popupicon, {
 		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
 	})

@@ -1697,9 +1697,9 @@ function skin(self, s)
 	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
-		y = screenHeight/2 - 50,
+		y = screenHeight/2 - 100,
 		w = screenWidth - 100,
-		h = 100,
+		h = 200,
 		bgImg = popupBox,
 		heading = {
 			w = WH_FILL,
@@ -1893,6 +1893,7 @@ function skin(self, s)
 
 	local _popupicon = {
 		w = WH_FILL,
+		h = 80,
 		align = 'center',
 		position = LAYOUT_CENTER,
 	}
@@ -1934,6 +1935,13 @@ function skin(self, s)
 	s.icon_popup_stop = _uses(_popupicon, {
 		--FIXME, need a stop icon for this
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
+
+	s.icon_popup_volume = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
+	})
+	s.icon_popup_mute = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
 	})
 
 	s.icon_popup_shuffle0 = _uses(_popupicon, {

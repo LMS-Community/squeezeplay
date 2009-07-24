@@ -46,11 +46,13 @@ module(..., oo.class)
 
 local function _updateDisplay(self)
 	if self.volume <= 0 then
-		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME_MUTED"))
+		self.title:setValue(self.applet:string("SLIMBROWSER_MUTED"))
+		self.icon:setStyle('icon_popup_mute')
 		self.slider:setValue(0)
 
 	else
-		self.title:setValue(self.applet:string("SLIMBROWSER_VOLUME", tostring(self.volume) ) )
+		self.title:setValue(tostring(self.volume) )
+		self.icon:setStyle('icon_popup_volume')
 		self.slider:setValue(self.volume)
 	end
 end
@@ -74,7 +76,8 @@ local function _openPopup(self)
 	local title = Label("heading", "")
 	popup:addWidget(title)
 
-        popup:addWidget(Icon('icon_popup_volume'))
+	local icon = Icon('icon_popup_volume')
+        popup:addWidget(icon)
 
 	--slider is focused widget so it will receive events before popup gets a chance
 	local slider = Slider("volume_slider", -1, 100, self.volume,
@@ -97,8 +100,9 @@ local function _openPopup(self)
 	popup.brieflyHandler = false
 
 	-- open the popup
-	self.popup = popup
-	self.title = title
+	self.popup  = popup
+	self.title  = title
+	self.icon   = icon
 	self.slider = slider
 
 	_updateDisplay(self)
@@ -179,6 +183,8 @@ function _updateVolume(self, mute, directSet, noAccel)
 	self.volume = remoteVolume or self.volume
 	_updateDisplay(self)
 
+-- FIXME: I do not know what is trying to be achieved here, but there is no such function as Player:getRateLimitTime()
+--[[
 	if not self.rateLimiterCleanupTimer then
 		local delay = Player:getRateLimitTime()
 		self.rateLimiterCleanupTimer = Timer(   delay,
@@ -203,6 +209,7 @@ function _updateVolume(self, mute, directSet, noAccel)
 							true)
 	end
 	self.rateLimiterCleanupTimer:restart()
+--]]
 
 end
 

@@ -197,6 +197,9 @@ SLIMBROWSER_VOLUME
 	RU	Громкость
 	SV	Volym
 
+SLIMBROWSER_MUTED
+	EN	Muted
+
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)
 	DA	Volumen (lyden er slået fra)
