@@ -198,7 +198,20 @@ SLIMBROWSER_VOLUME
 	SV	Volym
 
 SLIMBROWSER_MUTED
+	CS	Ztlumeno
+	DA	Lyden er slået fra
+	DE	Stumm
 	EN	Muted
+	ES	Silenciado
+	FI	Mykistetty
+	FR	En sourdine
+	IT	Audio disattivato
+	NL	Gedempt
+	NO	Stille
+	PL	Bez dźwięku
+	PT	Silencioso
+	RU	Без звука
+	SV	Inget ljud
 
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)
