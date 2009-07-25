@@ -1143,6 +1143,8 @@ local function _browseSink(step, chunk, err)
 				-- change the text as specified if no titleStyle param was also sent
 				elseif data.window.text then
 					step.window:setTitle(data.window.text)
+				elseif data.title then
+					step.window:setTitle(data.title)
 				end
 				-- textarea data for the window
 				if data.window and data.window.textarea then
