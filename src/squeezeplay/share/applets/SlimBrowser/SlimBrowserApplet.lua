@@ -1162,18 +1162,20 @@ local function _browseSink(step, chunk, err)
 								local menu = SimpleMenu("menu")
 
 								for i, item in ipairs(item_loop) do
-									menu:addItem( {
-											text = item.text,
-											sound = "WINDOWSHOW",
-											callback = function(event, menuItem)
-												--hack alert, selecting item from hidden step menu, but since not really rendered, forcing numWidgets size to 100 so all
-												--  step menu widgets are available. Limits menu size to maxItems for menus with textarea
-												step.menu:setSelectedIndex(i)
-												step.menu.numWidgets = maxItems
-												step.menu:_updateWidgets()
-												step.menu:_event(Event:new(EVENT_ACTION))
-											end,
-									})
+									if item.text then
+										menu:addItem( {
+												text = item.text,
+												sound = "WINDOWSHOW",
+												callback = function(event, menuItem)
+													--hack alert, selecting item from hidden step menu, but since not really rendered, forcing numWidgets size to 100 so all
+													--  step menu widgets are available. Limits menu size to maxItems for menus with textarea
+													step.menu:setSelectedIndex(i)
+													step.menu.numWidgets = maxItems
+													step.menu:_updateWidgets()
+													step.menu:_event(Event:new(EVENT_ACTION))
+												end,
+										})
+									end
 								end
 
 								if data.window and data.window.help  then
