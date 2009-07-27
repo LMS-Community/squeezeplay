@@ -74,6 +74,30 @@ SCREENSAVER_SELECT_HELP
 	RU	Нажмите центральную кнопку, чтобы выбрать экранную заставку и воспроизвести для просмотра.
 	SV	Tryck på mittenknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
 
+SCREENSAVER_SELECT_PLAYING_HELP
+	EN	Press the center button to select a screensaver to be shown when this Squeezebox is playing.
+
+SCREENSAVER_SELECT_STOPPED_HELP
+	EN	Press the center button to select a screensaver to be shown when this Squeezebox is not playing.
+
+SCREENSAVER_SELECT_OFF_HELP
+	EN	Press the center button to select a screensaver to be shown when this Squeezebox is off.
+
+SCREENSAVER_SELECT_PLAYING_HELP_FAB4
+	EN	Touch to select a screensaver to be shown when this Squeezebox is playing.
+
+SCREENSAVER_SELECT_STOPPED_HELP_FAB4
+	EN	Touch to select a screensaver to be shown when this Squeezebox is not playing.
+
+SCREENSAVER_SELECT_OFF_HELP_FAB4
+	EN	Touch to select a screensaver to be shown when this Squeezebox is off.
+
+SCREENSAVER_PREVIEW_HELP
+	EN	Press play to preview a screensaver.
+
+SCREENSAVER_PREVIEW_HELP_FAB4
+	EN	Touch and hold to preview a screensaver.
+
 DELAY_10_SEC
 	CS	10 vteřin
 	DA	10 sekunder
