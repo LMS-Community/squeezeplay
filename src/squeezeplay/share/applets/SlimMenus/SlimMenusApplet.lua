@@ -132,7 +132,7 @@ function init(self)
 	jnt:subscribe(self)
 
 	self.waitingForPlayerMenuStatus = true
-	self.serverHomeMenuChunks = {}
+	self.serverHomeMenuItems = {}
 end
 
 
@@ -148,7 +148,7 @@ end
 
 function notify_serverConnected(self, server)
 	log:debug("***serverConnected\t", server)
-	if server:isSqueezeNetwork() then
+	if server:isSqueezeNetwork() and server ~= _server then
 		log:debug("***serverConnected SN\t", server)
 		self:_fetchServerMenu(server)
 	end
@@ -170,7 +170,7 @@ end
 -- _updatingPlayer
 -- full screen popup that appears until menus are loaded
 function _updatingPlayer(self)
-	log:warn("_updatingPlayer popup show")
+	log:debug("_updatingPlayer popup show")
 
 	if _updatingPromptPopup then
 		_hidePlayerUpdating()
@@ -212,7 +212,7 @@ end
 -- _userTriggeredUpdate
 -- full screen popup that appears until user hits brightness on player to start upgrade
 function _userTriggeredUpdate(self)
-	log:warn("_userTriggeredUpdate popup show")
+	log:debug("_userTriggeredUpdate popup show")
 
 
 	if _updatingPromptPopup then
@@ -337,7 +337,6 @@ end
 -- this sink receives all the data from our Comet interface
 local function _menuSink(self, cmd, server)
 	return function(chunk, err)
-		log:info("_menuSink() ", server)
 		local isMenuStatusResponse = not server
 
 		local menuItems, menuDirective, playerId
@@ -362,14 +361,20 @@ local function _menuSink(self, cmd, server)
 				log:debug("This player is: ", _player:getId())
 				return
 			end
+
+			if _server then
+				self.serverHomeMenuItems[_server] = menuItems
+			end
 		else
 			--this is a response from a "menu" command for a non-connected player
 			menuItems = chunk.data.item_loop
 
 		end
+
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
+		log:info("_menuSink() ", server)
 
 		for k, v in pairs(menuItems) do
 
@@ -524,12 +529,12 @@ local function _menuSink(self, cmd, server)
 					--todo check canLocalSCServe() for things that are only on SN
 
 					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item)) then
-						log:warn("switching to SN")
+						log:info("switching to SN")
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
 						_player and _player:getLastSqueezeCenter() or nil, true)
 
 					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item)) then
-						log:warn("switching from SN to last SqueezeCenter")
+						log:info("switching from SN to last SqueezeCenter")
 
 						self:_selectMusicSource(action, _player:getLastSqueezeCenter(), nil, true)
 
@@ -554,14 +559,13 @@ end
 
 
 function _canSqueezeNetworkServe(self, item)
-	local sn, menuChunk = self:_getSqueezeNetwork()
-	if not menuChunk then
+	local sn, menuItems = self:_getSqueezeNetwork()
+	if not menuItems then
 		log:error("SN can not serve, SN menus not here (yet). item: ", item.id)
 
 	        return false
 	end
 
-	local menuItems = menuChunk.data.item_loop
 	for key, value in pairs(menuItems) do
 		if value.id == item.id then
 		log:debug("SN can serve item: ", item.id)
@@ -569,17 +573,15 @@ function _canSqueezeNetworkServe(self, item)
 		end
 	end
 
-
 	log:debug("SN can not serve item: ", item.id)
-
 
 	return false
 end
 
 function _getSqueezeNetwork(self, item)
-	for server, chunk in pairs(self.serverHomeMenuChunks) do
+	for server, items in pairs(self.serverHomeMenuItems) do
 		if server:isSqueezeNetwork() then
-			return server, chunk
+			return server, items
 		end
 	end
 
@@ -790,16 +792,17 @@ function notify_playerCurrent(self, player)
 		end
 		
 		--recache homemenu items from disconnected server
-		for _,server in appletManager:callService("iterateSqueezeCenters") do
-			if server:isCompatible() and server:isSqueezeNetwork() then
-				self:_fetchServerMenu(server)
-			elseif not server:getVersion() then
-				log:warn("Compatibility not yet known, menu data may be lost: ", server)
-			else
-				log:debug("not compatible: ", server)
+		if self.serverInitComplete then
+			for _,server in appletManager:callService("iterateSqueezeCenters") do
+				if server:isCompatible() and server:isSqueezeNetwork() and server ~= _server then
+					self:_fetchServerMenu(server)
+				elseif not server:getVersion() then
+					log:warn("Compatibility not yet known, menu data may be lost: ", server)
+				else
+					log:debug("not compatible: ", server)
+				end
 			end
 		end
-		
 	end
 
 	-- nothing to do if we don't have a player
@@ -919,26 +922,33 @@ end
 
 function _sinkSetServerMenuChunk(self, server)
 	return function(chunk, err)
-		for _, item in pairs(chunk.data.item_loop) do
+		local menuItems = chunk.data.item_loop
+		for _, item in pairs(menuItems) do
 			local oldId = item.id
 
 			_massageItem(item)
 		end
 
-		self.serverHomeMenuChunks[server] = chunk
-		self:_mergeServerMenuToHomeMenu(server, chunk)
+		self.serverHomeMenuItems[server] = menuItems
+		self:_mergeServerMenuToHomeMenu(server, menuItems)
 	end
 end
 
 
 
 
-function _mergeServerMenuToHomeMenu(self, server, chunk)
+function _mergeServerMenuToHomeMenu(self, server, menuItems)
 	--this might be the current server so handle that gracefully
 --	log:warn("TODO - MERGE: ", server)
 
 	if server:isSqueezeNetwork() then
-		log:warn("MERGE SN menus")
+		log:debug("MERGE SN menus")
+
+		--create chunk wrapper
+		local chunk = {}
+		chunk.data = {}
+		chunk.data.item_loop = menuItems
+
 		_menuSink(self, nil, server)(chunk)
 	end
 
@@ -947,7 +957,7 @@ end
 
 function free(self)
 
-	self.serverHomeMenuChunks = {}
+	self.serverHomeMenuItems = {}
 
 	self.waitingForPlayerMenuStatus = true
 
