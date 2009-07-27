@@ -1683,6 +1683,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif nextWindow == 'playlist' then
 					_goPlaylist()
 				elseif nextWindow == 'home' then
+					-- bit of a hack to notify serverLinked after factory reset SN menu
+					if item['serverLinked'] then
+						_server.jnt:notify('serverLinked', _server)
+					end
+					
 					goHome()
 				elseif nextWindow == 'parent' then
 					_hideMe()
