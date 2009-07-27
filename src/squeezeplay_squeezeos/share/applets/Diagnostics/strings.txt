@@ -165,19 +165,19 @@ FIRMWARE_VERSION
 	SV	Inbyggd programvaruversion:
 
 MAC_ADDRESS
-	CS	ID přehrávače
-	DA	Afspiller-id
-	DE	Player-ID:
-	EN	Player ID:
-	ES	ID de reproductor:
-	FI	Soittimen tunnus:
-	FR	ID platine
-	IT	ID lettore:
-	NL	Muzieksysteem-ID:
-	NO	Spiller-ID:
-	PL	Identyfikator odtwarzacza:
-	RU	ID плеера
-	SV	Spelar-ID:
+	CS	Adresa MAC:
+	DA	MAC-adresse:
+	DE	MAC-Adresse:
+	EN	MAC Address:
+	ES	Dirección MAC:
+	FI	MAC-osoite:
+	FR	Adresse MAC:
+	IT	Indirizzo MAC:
+	NL	MAC-adres:
+	NO	MAC-adresse:
+	PL	Adres MAC:
+	RU	MAC-адрес:
+	SV	MAC-adress:
 
 WLAN_SSID
 	CS	Bezdrátová síť:
