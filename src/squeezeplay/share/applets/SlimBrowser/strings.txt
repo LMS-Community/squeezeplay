@@ -243,36 +243,6 @@ SLIMBROWSER_SCANNER
 	RU	Позиция песни
 	SV	Spårets placering
 
-SLIMBROWSER_ENTER_PASSWORD
-	EN	Create Password
-
-SLIMBROWSER_CONFIRM_ACCOUNT
-	EN	Confirm Account
-
-SLIMBROWSER_CONFIRM_MESSAGE
-	EN	You are about to create an account with the following information:\nemail: %s\npassword: %s
-
-SLIMBROWSER_ACCOUNT_CREATED
-	EN	Account Created
-
-SLIMBROWSER_ACCOUNT_CREATED_BODY
-	EN	Squeezebox account created!
-
-SLIMBROWSER_EMAIL_ENTERED
-	EN	Email Entered
-
-SLIMBROWSER_EMAIL_ENTERED_BODY
-	EN	You entered:\n%s
-
-SLIMBROWSER_ENTER_PASSWORD
-	EN	Enter Password
-
-SLIMBROWSER_CREATE_ACCOUNT
-	EN	Create this account
-
-SLIMBROWSER_REENTER_INFORMATION
-	EN	Re-enter email and password
-
 SLIMBROWSER_CONNECTING_TO
 	CS	Připojuji se k
 	DA	Etablerer forbindelse til
