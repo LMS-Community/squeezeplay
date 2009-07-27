@@ -329,6 +329,9 @@ RETURN_TO_SETUP
 	RU	Вернуться к установке
 	SV	Återgå till installationen
 
+SHORTCUTS_RESET
+	EN	Reset to Defaults
+
 KEYBOARD_DONE
 	CS	hotovo
 	DA	udført
