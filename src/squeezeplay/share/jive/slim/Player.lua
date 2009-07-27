@@ -74,6 +74,7 @@ local ACTION           = jive.ui.ACTION
 local jnt            = jnt
 local jiveMain       = jiveMain
 local iconbar        = iconbar
+local json           = json 
 
 
 local fmt = string.format
@@ -144,6 +145,11 @@ end
 -- class method, returns whether the player is local
 function isLocal(self)
 	return false
+end
+
+--class method, returns the delay used before which consecutive commands like volume will be suppressed 
+function getRateLimitTime(self)
+	return MIN_KEY_INT
 end
 
 -- class method, returns the first local player found
@@ -1051,8 +1057,8 @@ function updateIconbar(self)
 		iconbar:setShuffle(self.state["playlist shuffle"])
 
 		-- set the playlist mode (nil, 0=off, 1=playlist, 2=party)
-		if self.state['playlist mode'] and 
-			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' ) 
+		if self.state['playlist mode'] and
+			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' or self.state['playlist mode'] == json.null )
 			then
 			iconbar:setPlaylistMode('off')
 			iconbar:setRepeat(self.state["playlist repeat"])

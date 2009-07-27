@@ -183,8 +183,6 @@ function _updateVolume(self, mute, directSet, noAccel)
 	self.volume = remoteVolume or self.volume
 	_updateDisplay(self)
 
--- FIXME: I do not know what is trying to be achieved here, but there is no such function as Player:getRateLimitTime()
---[[
 	if not self.rateLimiterCleanupTimer then
 		local delay = Player:getRateLimitTime()
 		self.rateLimiterCleanupTimer = Timer(   delay,
@@ -209,7 +207,6 @@ function _updateVolume(self, mute, directSet, noAccel)
 							true)
 	end
 	self.rateLimiterCleanupTimer:restart()
---]]
 
 end
 
