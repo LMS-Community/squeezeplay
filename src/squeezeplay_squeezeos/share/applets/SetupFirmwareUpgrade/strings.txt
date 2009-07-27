@@ -122,6 +122,12 @@ UPDATE_TRY_AGAIN
 	RU	Повторите попытку...
 	SV	Försök igen ...
 
+UPDATE_USB
+	EN	USB
+
+UPDATE_SD
+	EN	SD
+
 UPDATE_DOWNLOAD
 	CS	Stahování
 	DA	Henter
