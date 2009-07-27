@@ -17,6 +17,9 @@ SLIMSERVER_SERVERS
 	RU	Медиатеки
 	SV	Bibliotek
 
+CHOOOSE_DIFFERENT_NETWORK
+	EN	Choose Different Network
+
 SWITCH_SERVER_TITLE
 	CS	Přepnout knihovnu
 	DA	Skift bibliotek
