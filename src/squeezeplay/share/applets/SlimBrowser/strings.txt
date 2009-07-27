@@ -252,6 +252,12 @@ SLIMBROWSER_CONFIRM_ACCOUNT
 SLIMBROWSER_CONFIRM_MESSAGE
 	EN	You are about to create an account with the following information:\nemail: %s\npassword: %s
 
+SLIMBROWSER_ACCOUNT_CREATED
+	EN	Account Created
+
+SLIMBROWSER_ACCOUNT_CREATED_BODY
+	EN	Squeezebox account created!
+
 SLIMBROWSER_CREATE_ACCOUNT
 	EN	Create this account
 
