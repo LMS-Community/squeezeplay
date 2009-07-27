@@ -48,7 +48,7 @@ IMAGE_VIEWER_EMPTY_LIST
 	SV	Det finns inget att visa. Bildlistan är tom.
 
 IMAGE_VIEWER_LIST_NOT_READY
-	EN	Reading/creating the image list was not possible (tried several times). Please check you settings.
+	EN	Several attempts at reading / creating the image list failed.  Please check the Image Viewer settings.
 
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
