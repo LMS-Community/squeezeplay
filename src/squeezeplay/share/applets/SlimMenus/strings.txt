@@ -72,6 +72,6 @@ INSTALL_SC_TEXT
 	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.\n\n- Insert a SD card into the SD slot.\n\n- Connect a storage device to the USB port.
 
 INSTALL_SC_TEXT_BABY
-	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.
+	EN	To enable "My Music", download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.
 
 
