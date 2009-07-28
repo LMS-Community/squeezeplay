@@ -3,19 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CRASH_TITLE
-	CS	Pád systému
-	DA	Systemnedbrud
-	DE	Systemabsturz
-	EN	System crash
-	ES	Bloqueo del sistema
-	FI	Järjestelmä kaatui
-	FR	Panne du système
-	IT	Arresto anomalo del sistema
-	NL	Systeemcrash
-	NO	Systemkrasj
-	PL	Zawieszenie systemu
-	RU	Сбой системы
-	SV	Systemkrasch
+	EN	System Error
 
 CRASH_TEXT
 	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
@@ -32,11 +20,14 @@ CRASH_TEXT
 	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
 	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
 
+CRASH_TEXT_QUESTION
+	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
+
 CRASH_YES_SEND
-	EN	Yes, send diagnostic information
+	EN	Yes, always send
 
 CRASH_NO_NEVER_SEND
-	EN	No, never send information
+	EN	No, never send
 
 CRASH_CONTINUE
 	CS	Pokračovat
