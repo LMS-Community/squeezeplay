@@ -1600,7 +1600,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 			
 			-- not item action, look for a base one
-			elseif bAction then
+			-- Bug 13097, if we have nextWindow, don't look for an action
+			elseif bAction and not nextWindow then
 				log:debug("_actionHandler(", actionName, "): base action")
 			
 				-- found a json command
