@@ -20,7 +20,7 @@ function defaultSettings(self)
 end
 
 function configureApplet(self)
-	jiveMain:addItem(self:menuItem('appletAppGuide', 'home', "APP_GUIDE", function(applet, ...) applet:appGuide(...) end))
+	
 end
 
 

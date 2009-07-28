@@ -1317,12 +1317,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
-	s.hm_appletAppGuide = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
-	})
-	s.hm_music_services = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
-	})
 	s.hm_settings = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
 	})

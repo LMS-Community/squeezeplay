@@ -2025,14 +2025,8 @@ function skin(self, s)
 	s.hm_appletImageViewer = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
 	})
-	s.hm_appletAppGuide = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
-	})
 	s.hm_appletNowPlaying = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
-	})
-	s.hm_music_services = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_app_guide" .. skinSuffix),
 	})
 	s.hm_settings = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),

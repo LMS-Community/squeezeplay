@@ -84,24 +84,6 @@ local itemMap = {
 	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
 }
 
--- legacy map of items for "app guide"
-local guideMap = {
-	opmlamazon = true,
-	opmlclassical = true,
-	opmllma = true,
-	opmllfm = true,
-	opmlmp3tunes = true,
-	opmlmediafly = true,
-	opmlnapster = true,
-	opmlpandora = true,
-	podcast = true,
-	opmlrhapsodydirect = true,
-	opmlslacker = true,
-	opmlsounds = true,
-	opmlmusic = true,
-	opmlsirius = true,
-	opmlradioio = true,
-}
 
 local idMismatchMap = {
 	ondemand = "music_services",
@@ -305,12 +287,6 @@ function _massageItem(item)
 		item.id = idMismatchMap[item.id]
 	end
 
-	-- hack to modify menu structure from SC
-	if guideMap[item.id] then
-		item.guide = true
-		item.node = "appguide"
-		item.weight = 30
-	end
 	if itemMap[item.id] then
 		local id = item.id
 		item.id = itemMap[id][1]
@@ -441,12 +417,7 @@ local function _menuSink(self, cmd, server)
 			end
 			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
 
-			if item.node == "appguide" then
-				item.guide = true
-			end
-
 			_massageItem(item, item)
-
 
 			if not item.id then
 				log:info("no id for menu item: ", item.text)
