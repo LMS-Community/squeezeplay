@@ -727,22 +727,6 @@ local function _inputInProgress(self, msg)
 end
 
 
--- _renderTextArea
--- special case when single SlimBrowse item is a textarea
-local function _renderTextArea(step, item)
-
-	if not step and step.window then
-		return
-	end
-	_assert(item)
-	_assert(item.textArea)
-
-	local textArea = Textarea("text", item.textArea)
-	step.window:addWidget(textArea)
-
-end
-
-
 -- _renderSlider
 -- special case when SlimBrowse item is configured for a slider widget
 local function _renderSlider(step, item)
@@ -1027,29 +1011,28 @@ local function _browseSink(step, chunk, err)
 				step.window:setTitle(_string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 				step.window:addWidget(textArea)
 			end
-		elseif step.window and data and data.window and data.window.textArea then
-			if step.menu then
-				step.window:removeWidget(step.menu)
-			end
-			local textArea = Textarea("text", data.window.textArea)
-			step.window:addWidget(textArea)
-		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and (data.item_loop[1].slider or data.item_loop[1].textArea) then
+		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and data.item_loop[1].slider then
 			-- no menus here, thankyouverymuch
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
 
-			if data.item_loop[1].slider then
-				_renderSlider(step, data.item_loop[1])
-			else
-				_renderTextArea(step, data.item_loop[1])
-			end
+			_renderSlider(step, data.item_loop[1])
 
 		-- avoid infinite request loop on count == 0
 		elseif step.menu and data and data.count and data.count == 0 then
 			-- this will render a blank menu, which is typically undesirable 
 			-- but we don't want to reach the next clause
 			-- count == 0 responses should not be typical
+
+			--textarea only case
+			if step.window and data and data.window and data.window.textarea then
+				if step.menu then
+					step.window:removeWidget(step.menu)
+				end
+				local textArea = Textarea("text", data.window.textarea)
+				step.window:addWidget(textArea)
+			end
 		elseif step.menu then
 			_stepSetMenuItems(step, data)
 			if _player and _player.menuAnchor and not _player.menuAnchorSet then
