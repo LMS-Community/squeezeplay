@@ -35,18 +35,7 @@ SWITCH_SERVER_TITLE
 	SV	Byt bibliotek
 
 SWITCH_SERVER_TEXT
-	CS	Provedli jste volbu, která způsobí, že tento přehrávač se připojí k jiné knihovně. Přehrávání se zastaví atd...
-	DA	Du har valgt noget som vil få afspilleren til at etablere forbindelse til et andet bibliotek. Afspilningen vil stoppe osv.
-	DE	Sie haben eine Option ausgewählt, durch die dieser Player einer Verbindung zu einer anderen Musiksammlung herstellt. Wiedergabe wird beendet, usw...
-	EN	You have made a selection that will cause this player to connect to a different library. Playback will stop, etc...
-	ES	Ha realizado una selección que hará que el reproductor se conecte a otra biblioteca. La reproducción se detendrá, etc...
-	FI	Olet tehnyt valinnan, jonka johdosta soitin muodostaa yhteyden eri kirjastoon. Toisto keskeytyy jne...
-	FR	Cette sélection entraînera la connexion de la platine en cours à une autre collection. La lecture en cours s'arrêtera, etc.
-	IT	In seguito alla selezione effettuata questo lettore si connetterà a una libreria differente, la riproduzione verrà interrotta e così via.
-	NL	Je hebt een selectie gemaakt waardoor dit muzieksysteem verbinding maakt met een andere bibliotheek. Het afspelen wordt gestopt, etc...
-	PL	Dokonano wyboru, który spowoduje połączenie tego odtwarzacza z inną biblioteką. Odtwarzanie zostanie zatrzymane itp.
-	RU	Выбранное действие приведет к подключению плеера к другой медиатеке. Воспроизведение остановится и т. д.
-	SV	Ditt val innebär att spelaren ansluter till ett annat bibliotek och att uppspelningen stoppas.
+	EN	You have made a selection that will connect to a different library, which will stop playback.
 
 SWITCH_BUTTON
 	CS	Přepnout na knihovnu: %s
