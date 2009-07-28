@@ -1989,7 +1989,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		titleText = inputSpec.title
 	end
 
-	local newTitleWidget = Group('title', { 
+	local newTitleWidget = Group('title', {
 		text = Label("text", titleText),
 		lbutton = _backButton(),
 		rbutton = nowPlayingButton,
@@ -2145,6 +2145,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		window = Window(windowSpec.windowStyle or 'text_list')
 	end
 
+	local titleWidgetComplete = false
 	local menu
 	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
@@ -2165,7 +2166,8 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		else
 			_browseInput(window, item, db, inputSpec, true)
 		end
-
+		titleWidgetComplete = true
+		
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
 		local textArea = Textarea("text", item['textArea'])
@@ -2208,7 +2210,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	log:debug("new step: " , step)
 
-	if not windowSpec.isContextMenu then
+	if not windowSpec.isContextMenu and not titleWidgetComplete then
 		window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
 	end
 
