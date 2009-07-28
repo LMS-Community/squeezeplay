@@ -426,24 +426,9 @@ function step8(self, squeezenetwork)
 	if force then
       		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
-	elseif pin then
-		self:_registerRequest(squeezenetwork)
 	else
-		self:_resetRequest(squeezenetwork)
-	end
-end
-
-
-function _resetRequest(self, squeezenetwork)
-	if self.resetRequest then
-		return
-	end
-	self.resetRequest = true
-
-	log:info("player reset on SN")
-	squeezenetwork:userRequest(function()
 		self:_registerRequest(squeezenetwork)
-	end, nil, { "playerReset" })
+	end
 end
 
 
