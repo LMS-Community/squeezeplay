@@ -521,12 +521,6 @@ local function _menuSink(self, cmd, server)
 						end
 
 				item.callback = function()
-					--todo:
-					 -- check: is server accesible
-					 -- if not, can SN provide the content?
-					 -- if so, switch server to SN and provide content
-
-					--todo check canLocalSCServe() for things that are only on SN
 
 					if ((not _server or not _server:isConnected()) and (not _server or not _server:isSqueezeNetwork()) and self:_canSqueezeNetworkServe(item)) then
 						log:info("switching to SN from ", _server)
