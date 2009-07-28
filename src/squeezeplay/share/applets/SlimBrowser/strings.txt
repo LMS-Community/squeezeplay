@@ -228,6 +228,12 @@ SLIMBROWSER_VOLUME_MUTED
 	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
+SLIMBROWSER_ADD_NEXT_1
+	EN	Play Next
+
+SLIMBROWSER_ADD_NEXT_2
+	EN	Add Next
+
 SLIMBROWSER_PASSWORD_WRONG
 	EN	Username/Password Invalid
 
