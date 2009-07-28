@@ -77,9 +77,6 @@ local itemMap = {
 	music_stores = { "_music_stores", "hidden" },
 
 	-- items
-	opmlrhapsodydirect = { "opmlrhapsodydirect", "home", 30 },
-	opmlpandora = { "opmlpandora", "home", 30 },
-	opmlsirius = { "opmlsirius", "home", 30 },
 	settingsPlaylistMode = { "settingsPlaylistMode", "advancedSettingsBetaFeatures", 100 },
 	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
 }
