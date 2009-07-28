@@ -2032,7 +2032,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		end
 		v = Textinput.ipAddressValue(initialText)
 		inputValue = v
-	elseif tonumber(inputSpec.len) > 0 then
+	elseif inputSpec.len and tonumber(inputSpec.len) > 0 then
 		inputValue = Textinput.textValue(v, tonumber(inputSpec.len), 200)
 	else
 		inputValue = v
