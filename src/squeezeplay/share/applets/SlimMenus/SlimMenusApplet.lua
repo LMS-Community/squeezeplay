@@ -362,7 +362,7 @@ local function _menuSink(self, cmd, server)
 				return
 			end
 
-			if _server then
+			if _server and self.waitingForPlayerMenuStatus and menuDirective == "add" then
 				self.serverHomeMenuItems[_server] = menuItems
 			end
 		else
@@ -581,7 +581,7 @@ function _canServerServe(self, server, item)
 
 	for key, value in pairs(menuItems) do
 		if value.id == item.id then
-		log:debug("Server can serve item: ", item.id, " server: ", server)
+			log:debug("Server can serve item: ", item.id, " server: ", server)
 			return true
 		end
 	end
