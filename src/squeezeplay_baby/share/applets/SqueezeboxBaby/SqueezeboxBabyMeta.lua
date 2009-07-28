@@ -50,7 +50,7 @@ function registerApplet(meta)
 
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 30000)
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 3)
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
 
 	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 
