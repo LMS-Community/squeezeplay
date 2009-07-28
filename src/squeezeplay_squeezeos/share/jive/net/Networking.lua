@@ -161,6 +161,8 @@ function detectChipset(self)
                		self.chipset = "atheros"
        		elseif module == "sd8686" then
                		self.chipset = "marvell"
+       		elseif module == "gspi8xxx" then
+               		self.chipset = "marvell"
        		end
        	end
        	f:close()
