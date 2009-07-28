@@ -32,6 +32,12 @@ CRASH_TEXT
 	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
 	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
 
+CRASH_YES_SEND
+	EN	Yes, send diagnostic information
+
+CRASH_NO_NEVER_SEND
+	EN	No, never send information
+
 CRASH_CONTINUE
 	CS	Pokračovat
 	DA	Fortsæt
