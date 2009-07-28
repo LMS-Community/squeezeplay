@@ -188,8 +188,11 @@ SQUEEZEBOX_TRY_AGAIN
 CHOOSE_OTHER_LIBRARY
 	EN	Switch Library
 
-SQUEEZEBOX_PROBLEM_HELP
+SQUEEZEBOX_PROBLEM_HELP_GENERIC
 	EN	We couldn't connect to %s.  If this problem persists, please check Squeezebox Server to make sure it is running properly, and that you have a reliable network connection.
+
+SQUEEZEBOX_PROBLEM_HELP
+	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Squeezebox Server is currently running.
 
 SQUEEZECENTER_VERSION
 	CS	Aktualizovat software
