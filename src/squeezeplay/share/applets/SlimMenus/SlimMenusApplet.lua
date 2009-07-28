@@ -528,17 +528,21 @@ local function _menuSink(self, cmd, server)
 
 					--todo check canLocalSCServe() for things that are only on SN
 
-					if ((not _server or not _server:isConnected()) and self:_canSqueezeNetworkServe(item)) then
-						log:info("switching to SN")
+					if ((not _server or not _server:isConnected()) and not _server:isSqueezeNetwork() and self:_canSqueezeNetworkServe(item)) then
+						log:info("switching to SN from ", _server)
 						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
 						_player and _player:getLastSqueezeCenter() or nil, true)
 
 					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item)) then
-						log:info("switching from SN to last SqueezeCenter")
+						log:info("switching to last SqueezeCenter from SN")
 
 						self:_selectMusicSource(action, _player:getLastSqueezeCenter(), nil, true)
 
---					elseif not either then
+					elseif (_server and not _server:isSqueezeNetwork()) and not self:_canCurrentServerServe(item) then
+						log:info("switching to SN for 'SN-only' item")
+						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
+						_player and _player:getLastSqueezeCenter() or nil, true)
+
 					else
 						--current server is available, go direct
 						action()
@@ -558,30 +562,39 @@ local function _menuSink(self, cmd, server)
 end
 
 
+function _canCurrentServerServe(self, item)
+	return self:_canServerServe(_server, item)
+end
+
 function _canSqueezeNetworkServe(self, item)
-	local sn, menuItems = self:_getSqueezeNetwork()
+	return self:_canServerServe(self:_getSqueezeNetwork(), item)
+end
+
+
+function _canServerServe(self, server, item)
+	local menuItems = self.serverHomeMenuItems[server]
 	if not menuItems then
-		log:error("SN can not serve, SN menus not here (yet). item: ", item.id)
+		log:error("server can not serve, menus not here (yet). item: ", item.id, " server: ", server)
 
 	        return false
 	end
 
 	for key, value in pairs(menuItems) do
 		if value.id == item.id then
-		log:debug("SN can serve item: ", item.id)
+		log:debug("Server can serve item: ", item.id, " server: ", server)
 			return true
 		end
 	end
 
-	log:debug("SN can not serve item: ", item.id)
+	log:debug("Server can not serve item: ", item.id, " server: ", server)
 
 	return false
 end
 
-function _getSqueezeNetwork(self, item)
+function _getSqueezeNetwork(self)
 	for server, items in pairs(self.serverHomeMenuItems) do
 		if server:isSqueezeNetwork() then
-			return server, items
+			return server
 		end
 	end
 
