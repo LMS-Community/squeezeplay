@@ -1968,6 +1968,7 @@ end
 -- self in this function is the input/keyboard window
 local function _browseInput(self, item, db, inputSpec, last)
 
+	local titleWidgetComplete = false
 	if not inputSpec then
 		log:error('no input spec')
 		return
@@ -1988,6 +1989,10 @@ local function _browseInput(self, item, db, inputSpec, last)
 	local titleText = self:getTitle()
 	if inputSpec.title then
 		titleText = inputSpec.title
+	end
+
+	if titleText then
+		titleWidgetComplete = true
 	end
 
 	local newTitleWidget = Group('title', {
@@ -2122,6 +2127,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 	self:addWidget(keyboard)
 	self:focusWidget(group)
 
+	return titleWidgetComplete
 end
 
 -- _newDestination
@@ -2161,14 +2167,13 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				if i == #inputSpec then
 					last = true
 				end
-				_browseInput(window, item, db, v, last)
+				titleWidgetComplete = _browseInput(window, item, db, v, last)
 			end
 		-- single input
 		else
-			_browseInput(window, item, db, inputSpec, true)
+			titleWidgetComplete = _browseInput(window, item, db, inputSpec, true)
 		end
-		titleWidgetComplete = true
-		
+
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
 		local textArea = Textarea("text", item['textArea'])
