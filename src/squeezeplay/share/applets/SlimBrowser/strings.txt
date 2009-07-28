@@ -228,6 +228,12 @@ SLIMBROWSER_VOLUME_MUTED
 	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
+SLIMBROWSER_PASSWORD_WRONG
+	EN	Username/Password Invalid
+
+SLIMBROWSER_PASSWORD_WRONG_BODY
+	EN	The username or password you entered is not valid.
+
 SLIMBROWSER_SCANNER
 	CS	Pozice skladby
 	DA	Nummerets placering
