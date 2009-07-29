@@ -127,8 +127,10 @@ end
 
 function notify_serverConnected(self, server)
 	log:debug("***serverConnected\t", server)
-	if server:isSqueezeNetwork() and server ~= _server then
-		log:debug("***serverConnected SN\t", server)
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	local lastSc = currentPlayer and currentPlayer:getLastSqueezeCenter() or nil
+
+	if (server:isSqueezeNetwork() or server == lastSc) and server ~= _server then
 		self:_fetchServerMenu(server)
 	end
 end
@@ -489,25 +491,84 @@ local function _menuSink(self, cmd, server)
 						end
 
 				item.callback = function()
+					local switchToSn =
+						function()
+							self:_selectMusicSource(action, self:_getSqueezeNetwork(),
+							  _player and _player:getLastSqueezeCenter() or nil, true)
+						end
 
-					if ((not _server or not _server:isConnected()) and (not _server or not _server:isSqueezeNetwork()) and self:_canSqueezeNetworkServe(item)) then
-						log:info("switching to SN from ", _server)
-						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
-						_player and _player:getLastSqueezeCenter() or nil, true)
+					local switchToSc =
+						function()
+							self:_selectMusicSource(action, _player:getLastSqueezeCenter(),
+							  self:_getSqueezeNetwork(), true)
+						end
 
-					elseif ((not _server or _server:isSqueezeNetwork()) and not self:_canSqueezeNetworkServe(item)) then
-						log:info("switching to last SqueezeCenter from SN")
+					local switchToSnForSnOnlyItem =
+						function()
+							self:_selectMusicSource(action, self:_getSqueezeNetwork(),
+							 nil, true)
+						end
 
-						self:_selectMusicSource(action, _player:getLastSqueezeCenter(), nil, true)
+					local switchToScForScOnlyItem =
+						function()
+							self:_selectMusicSource(action, _player:getLastSqueezeCenter(),
+							  nil, true)
+						end
 
-					elseif (_server and not _server:isSqueezeNetwork()) and not self:_canCurrentServerServe(item) then
-						log:info("switching to SN for 'SN-only' item")
-						self:_selectMusicSource(action, self:_getSqueezeNetwork(),
-						_player and _player:getLastSqueezeCenter() or nil, true)
+					local currentPlayer = appletManager:callService("getCurrentPlayer")
 
+					if not _server then
+						--should only happen if we load SN disconnected items and user selects one prior to _server being set on notify_playerCurrent
+						-- maybe we should wait in this case until it is loaded, but for how long, and then what after timeout?
+						--this case is a bit ugly. We don't know if SC will be able to serve it, so we shouldn't switch to SC
+						local initServer = appletManager:callService("getInitialSlimServer")
+						if not initServer  or (initServer and not initServer:isSqueezeNetwork() and  self:_canSqueezeNetworkServe(item)) then
+							log:debug("Switch to SN when _server is nil")
+							switchToSn()
+						else
+							log:debug("Switch to SC when _server is nil")
+							switchToSc()
+						end
 					else
-						--current server is available, go direct
-						action()
+						--_server exists
+						if self.playerOrServerChangeInProgress then
+							--happens on failed attempt to chose a different server, re-connect to same
+							if _server:isSqueezeNetwork() then
+								log:debug("switching to SN from SC, server change failure: ", _server)
+								_server:disconnect()
+								switchToSn()
+							else
+								log:debug("switching to SC from SN, server change failure: ", _server)
+								_server:disconnect()
+								switchToSc()
+							end
+						else
+							if not _server:isConnected() then
+								if not _server:isSqueezeNetwork() and self:_canSqueezeNetworkServe(item) then
+									log:debug("switching to SN from SC, connection issue: ", _server)
+									switchToSn()
+								elseif _server:isSqueezeNetwork() and self:_canSqueezeCenterServe(item) then
+									log:debug("switching to SC from SN, connection issue: ", _server)
+									switchToSc()
+								else
+									log:debug("only the current server can serve, let slim browse handle the connection issue")
+									action()
+								end
+							else
+								--server is connected
+								if _server:isSqueezeNetwork() and not self:_canSqueezeNetworkServe(item) then
+									log:debug("switching to SC for SC-only item: ", _server)
+									switchToScForScOnlyItem()
+								elseif not _server:isSqueezeNetwork() and not self:_canSqueezeCenterServe(item) then
+									log:debug("switching to SN for SN-only item ")
+									switchToSnForSnOnlyItem()
+								else
+									log:debug("Current server can serve: ", server)
+									action()
+								end
+							end
+
+						end
 					end
 				end
 				self:_addItem(item, isMenuStatusResponse)
@@ -524,8 +585,10 @@ local function _menuSink(self, cmd, server)
 end
 
 
-function _canCurrentServerServe(self, item)
-	return self:_canServerServe(_server, item)
+function _canSqueezeCenterServe(self, item)
+	local sc = _server:isSqueezeNetwork() and _player:getLastSqueezeCenter() or _server
+	--_player:getLastSqueezeCenter() will fail for remote player
+	return self:_canServerServe(sc, item)
 end
 
 function _canSqueezeNetworkServe(self, item)
@@ -736,7 +799,7 @@ function notify_playerCurrent(self, player)
 	-- has the player actually changed?
 	if _player == player and not self.waitingForPlayerMenuStatus then
 		if player then
-			if _server == player:getSlimServer() then
+			if _server == player:getSlimServer() and not self.playerOrServerChangeInProgress then
 				log:debug("player and server didn't change , not changing menus: ", player)
 				return
 			else
@@ -768,10 +831,12 @@ function notify_playerCurrent(self, player)
 		
 		--recache homemenu items from disconnected server
 		if self.serverInitComplete then
+			local lastSc = player and player:getLastSqueezeCenter() or nil
 			for _,server in appletManager:callService("iterateSqueezeCenters") do
-				if server:isCompatible() and server:isSqueezeNetwork() and server ~= _server then
+				if server:isCompatible() and (server:isSqueezeNetwork() or server == lastSc) and server ~= _server then
 					self:_fetchServerMenu(server)
 				elseif not server:getVersion() then
+					--todo: server version can now be learned from discovery data
 					log:warn("Compatibility not yet known, menu data may be lost: ", server)
 				else
 					log:debug("not compatible: ", server)
@@ -803,6 +868,8 @@ function notify_playerCurrent(self, player)
 		log:info("player changed from:", _player, " to ", player, " but server not yet connected")
 		return
 	end
+
+	self.playerOrServerChangeInProgress = false
 
 	-- unsubscribe from this player's menustatus for previous server
 	player:unsubscribe('/slim/menustatus/' .. player:getId())
@@ -876,13 +943,14 @@ function notify_playerDelete(self, player)
 		if _player then
 			_player:unsubscribe('/slim/menustatus/' .. _player:getId())
 		end
+		self.playerOrServerChangeInProgress = true
 	end
 end
 
 
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
-	
+
 	local playerId
 	if _player then
 		playerId = _player:getId()
@@ -891,7 +959,7 @@ function _fetchServerMenu(self, server)
 		local localPlayer = Player:getLocalPlayer()
 		playerId = localPlayer:getId()
 	end
-	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100 })
+	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100, "direct:1" })
 
 end
 
@@ -913,19 +981,13 @@ end
 
 
 function _mergeServerMenuToHomeMenu(self, server, menuItems)
-	--this might be the current server so handle that gracefully
---	log:warn("TODO - MERGE: ", server)
+	log:debug("MERGE menus")
+	--create chunk wrapper
+	local chunk = {}
+	chunk.data = {}
+	chunk.data.item_loop = menuItems
 
-	if server:isSqueezeNetwork() then
-		log:debug("MERGE SN menus")
-
-		--create chunk wrapper
-		local chunk = {}
-		chunk.data = {}
-		chunk.data.item_loop = menuItems
-
-		_menuSink(self, nil, server)(chunk)
-	end
+	_menuSink(self, nil, server)(chunk)
 
 end
 
