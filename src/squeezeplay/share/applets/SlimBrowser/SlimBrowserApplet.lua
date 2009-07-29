@@ -2574,21 +2574,29 @@ function _problemConnecting(self, server)
 		})
 	end
 
+	--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
+	menu:addItem({
+			text = "Go Home", --todo bug 13122 - borrow translations from ShortcutsApplet when latest SLT returns.
+			callback = function()
+				self:_removeRequestAndUnlock(server)
+				goHome()
+			end,
+		})
 	-- change music source, only for udap players
-	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
-		menu:addItem({
-				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
-				     callback = function()
-				                        self:_removeRequestAndUnlock(server)
-							appletManager:callService("selectMusicSource")
-
-							--todo autoswitch - test Receiver setup
---							appletManager:callService("setCurrentPlayer", nil)
---							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
-						end,
-				     sound = "WINDOWSHOW",
-			     })
-	end
+--	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
+--		menu:addItem({
+--				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+--				     callback = function()
+--				                        self:_removeRequestAndUnlock(server)
+--							appletManager:callService("selectMusicSource")
+--
+--							--todo autoswitch - test Receiver setup
+----							appletManager:callService("setCurrentPlayer", nil)
+----							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
+--						end,
+--				     sound = "WINDOWSHOW",
+--			     })
+--	end
 
 	-- change player, only if multiple players
 	-- NOTE also only display this if we have a player selected, this is
