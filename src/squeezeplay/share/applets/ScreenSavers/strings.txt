@@ -33,16 +33,34 @@ SCREENSAVER_PLAYING
 	SV	Vid uppspelning
 
 SCREENSAVER_OFF
+	CS	Při vypnutí
+	DA	Når den er slukket
+	DE	Wenn aus
 	EN	When off
+	ES	Al apagar
+	FI	Laitteen ollessa pois päältä
+	FR	En état éteint
+	IT	Se disattivato
+	NL	Wanneer uit
+	NO	Av
+	PL	Po wyłączeniu
+	RU	При выкл.
+	SV	I avstängt läge
 
 SCREENSAVER_STOPPED
-	DA	På pause
-	DE	Bei Pause
+	CS	Při zastavení
+	DA	Når den er stoppet
+	DE	Wenn angehalten
 	EN	When stopped
 	ES	Al detener
+	FI	Keskeytettynä
 	FR	A l'arrêt
 	IT	Quando la riproduzione è interrotta
 	NL	Wanneer gestopt
+	NO	Ved stopp
+	PL	Po zatrzymaniu
+	RU	При остановке
+	SV	I stoppat läge
 
 SCREENSAVER_DELAY
 	CS	Prodleva
