@@ -127,6 +127,31 @@ static int open_input_devices(void) {
 }
 
 
+static snd_hctl_elem_t *find_element(snd_hctl_t *hctl, snd_ctl_elem_id_t *id)
+{
+	snd_hctl_elem_t *elem;
+	int err;
+
+	elem = snd_hctl_find_elem(hctl, id);
+	if (elem) {
+		return elem;
+	}
+
+	/* try reloading the element */
+	if ((err = snd_hctl_free(hctl)) != 0) {
+		fprintf(stderr, "snd_hctl_free err=%d\n", err);
+		return NULL;
+	}
+
+	if ((err = snd_hctl_load(hctl)) != 0) {
+		fprintf(stderr, "snd_hctl_load err=%d\n", err);
+		return NULL;
+	}
+
+	return snd_hctl_find_elem(hctl, id);
+}
+
+
 static int handle_mixer_events()
 {
 	snd_ctl_event_t *event;
@@ -155,7 +180,7 @@ static int handle_mixer_events()
 	}
 
 	snd_ctl_event_elem_get_id(event, id);
-	elem = snd_hctl_find_elem(hctl, id);
+	elem = find_element(hctl, id);
 	if (!elem) {
 		return 0;
 	}
@@ -275,7 +300,7 @@ static int l_get_mixer(lua_State *L)
 	snd_ctl_elem_id_set_name(id, lua_tostring(L, 2));
 
 	/* find element and info */
-	elem = snd_hctl_find_elem(hctl, id);
+	elem = find_element(hctl, id);
 	if (!elem) {
 		return luaL_error(L, "mixer element %s not found", lua_tostring(L, 2));
 	}
@@ -371,7 +396,7 @@ static int l_set_mixer(lua_State *L)
 	snd_ctl_elem_id_set_name(id, lua_tostring(L, 2));
 
 	/* find element and info */
-	elem = snd_hctl_find_elem(hctl, id);
+	elem = find_element(hctl, id);
 	if (!elem) {
 		return luaL_error(L, "mixer element %s not found", lua_tostring(L, 2));
 	}
