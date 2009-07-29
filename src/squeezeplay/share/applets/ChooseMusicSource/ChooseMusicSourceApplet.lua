@@ -55,7 +55,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local CONNECT_TIMEOUT = 15
+local CONNECT_TIMEOUT = 20
 
 
 --temp during dev
