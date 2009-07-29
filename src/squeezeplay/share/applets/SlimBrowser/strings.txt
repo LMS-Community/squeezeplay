@@ -209,7 +209,6 @@ SLIMBROWSER_MUTED
 	NL	Gedempt
 	NO	Stille
 	PL	Bez dźwięku
-	PT	Silencioso
 	RU	Без звука
 	SV	Inget ljud
 

@@ -78,16 +78,19 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	local menu = SimpleMenu("menu")
 
 	for _, locale in ipairs(locale:getAllLocales()) do 
-		menu:addItem({
-			locale = locale,
-			text = locales[locale],
-			sound = "WINDOWSHOW",
-			callback = function()
-					   self:setLang(locale, setupNext)
-				   end,
-			focusGained = function() self:_showLang(locale) end
-		})
-
+		if not locales[locale] then
+			log:warn("unknown lang ", locale)
+		else
+			menu:addItem({
+				locale = locale,
+				text = locales[locale],
+				sound = "WINDOWSHOW",
+				callback = function()
+					self:setLang(locale, setupNext)
+				end,
+				focusGained = function() self:_showLang(locale) end
+			})
+		end
 	end
 
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
@@ -133,20 +136,23 @@ function settingsShow(self, menuItem)
 
 	local group = RadioGroup()
 	for _, locale in ipairs(locale:getAllLocales()) do 
-		local button = RadioButton(
-			"radio", 
-			group, 
-			function() self:setLang(locale) end, 
-			locale == currentLocale
-		)
-		menu:addItem({
-			locale = locale,
-			text = locales[locale],
-			style = 'item_choice',
-			check = button,
-			focusGained = function() self:_showLang(locale) end
-		})
-
+		if not locales[locale] then
+			log:warn("unknown lang ", locale)
+		else
+			local button = RadioButton(
+				"radio", 
+				group, 
+				function() self:setLang(locale) end, 
+				locale == currentLocale
+			)
+			menu:addItem({
+				locale = locale,
+				text = locales[locale],
+				style = 'item_choice',
+				check = button,
+				focusGained = function() self:_showLang(locale) end
+			})
+		end
 	end
 	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
