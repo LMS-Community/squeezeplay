@@ -156,6 +156,9 @@ static int handle_mixer_events()
 
 	snd_ctl_event_elem_get_id(event, id);
 	elem = snd_hctl_find_elem(hctl, id);
+	if (!elem) {
+		return 0;
+	}
 
 	snd_hctl_elem_read(elem, value);
 
