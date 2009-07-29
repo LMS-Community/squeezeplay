@@ -27,6 +27,7 @@ local EVENT_IR_PRESS    = jive.ui.EVENT_IR_PRESS
 local EVENT_IR_UP       = jive.ui.EVENT_IR_UP
 local EVENT_IR_ALL       = jive.ui.EVENT_IR_ALL
 local EVENT_KEY_PRESS   = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_HOLD    = jive.ui.EVENT_KEY_HOLD
 local EVENT_CHAR_PRESS   = jive.ui.EVENT_CHAR_PRESS
 local EVENT_SCROLL      = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
@@ -404,14 +405,27 @@ end
 
 
 function _escapeAction(self)
-	self.cursor = 1
-	self.indent = 0
+	self:_goToStartAction()
 
 	self:playSound("WINDOWHIDE")
 	self:hide()
 	return EVENT_CONSUME
 end
 
+function _goToStartAction(self)
+	self.cursor = 1
+	self.indent = 0
+	self:reDraw()
+
+	return EVENT_CONSUME
+end
+
+function _goToEndAction(self)
+	self.cursor = #tostring(self.value) + 1
+	self:reDraw()
+
+	return EVENT_CONSUME
+end
 
 function _cursorLeftAction(self)
 	self:_cursorBackAction(_, true)
@@ -426,15 +440,15 @@ end
 
 
 function _doneAction(self)
-	self.cursor = #tostring(self.value) + 1
+	self:_goToEndAction()
 	return self:_goAction()
 end
 
 
 function _clearAction(self)
 	self:setValue("")
-	self.cursor = 1
-	self.indent = 0
+	self:_goToStartAction()
+
 	return EVENT_CONSUME
 end
 
@@ -511,6 +525,14 @@ function _eventHandler(self, event)
 
 	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
+		if type == EVENT_IR_HOLD then
+			if event:isIRCode("rew") then
+				return _goToStartAction(self)
+			elseif event:isIRCode("fwd") then
+				return _goToEndAction(self)
+			end
+		end
+
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
 
 			--IR left/right
@@ -673,6 +695,15 @@ function _eventHandler(self, event)
 			return _deleteAction(self)
 
 		end
+	elseif type == EVENT_KEY_HOLD then
+		self.numberLetterTimer:stop()
+		local keycode = event:getKeycode()
+
+		if keycode == KEY_REW then
+			return _goToStartAction(self)
+		elseif keycode == KEY_FWD then
+			return _goToEndAction(self)
+		end
 	end
 
 	return EVENT_UNUSED
@@ -746,8 +777,12 @@ function __init(self, style, value, closure, allowedChars)
 	obj:addActionListener("cursor_left", obj, _cursorLeftAction)
 	obj:addActionListener("cursor_right", obj, _cursorRightAction)
 	obj:addActionListener("clear", obj, _clearAction)
+	obj:addActionListener("jump_rew", obj, _cursorLeftAction)
+	obj:addActionListener("jump_fwd", obj, _cursorRightAction)
+	obj:addActionListener("scanner_rew", obj, _goToStartAction)
+	obj:addActionListener("scanner_fwd", obj, _goToEndAction)
 
-	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
+	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
 			function(event)
 				return _eventHandler(obj, event)
 			end)
