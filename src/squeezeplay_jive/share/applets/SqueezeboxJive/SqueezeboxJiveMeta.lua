@@ -7,6 +7,7 @@ local SlimServer    = require("jive.slim.SlimServer")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jnt           = jnt
 
 
 module(...)
@@ -46,11 +47,22 @@ function registerApplet(meta)
 	-- Set player device type
 	LocalPlayer:setDeviceType("controller", "Controller")
 
+	-- Bug 9900
+	-- Use SN test during development
+	jnt:setSNHostname("fab4.squeezenetwork.com")
+
 	-- Set the minimum support server version
 	SlimServer:setMinimumVersion("7.0")
 
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
+
+	-- audio playback defaults
+	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
+
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 30000)
+	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
 
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
