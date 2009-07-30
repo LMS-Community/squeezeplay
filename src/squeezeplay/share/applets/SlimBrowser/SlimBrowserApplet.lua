@@ -1600,8 +1600,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 			
 			-- not item action, look for a base one
-			-- Bug 13097, if we have nextWindow, don't look for an action
-			elseif bAction and not nextWindow then
+			-- Bug 13097, if we have nextWindow, don't look for an action,------ breaks "touch to play", reverted
+			elseif bAction then
 				log:debug("_actionHandler(", actionName, "): base action")
 			
 				-- found a json command
