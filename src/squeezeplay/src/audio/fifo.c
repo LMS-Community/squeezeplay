@@ -7,6 +7,8 @@
 #include "common.h"
 #include "audio/fifo.h"
 
+#include "valgrind.h"
+
 //#define DEBUG_FIFO 1
 
 
@@ -73,9 +75,11 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 			return err;
 		}
 #ifdef _POSIX_THREAD_PRIO_INHERIT
+	if (!RUNNING_ON_VALGRIND) {
 		if ((err = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT)) < 0) {
 			return err;
 		}
+	}
 #endif /* _POSIX_THREAD_PRIO_INHERIT */
 	}
 	if ((err = pthread_mutex_init(&fifo->mutex, &mutex_attr)) < 0) {
