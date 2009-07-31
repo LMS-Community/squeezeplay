@@ -427,12 +427,12 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
+	/* get maxmimum supported rate */
 	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
 		return err;
 	}
 
-	/* get maxmimum supported rate */
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 0)) < 0) {
 		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
 		return err;
@@ -443,6 +443,11 @@ static int pcm_open(struct decode_alsa *state) {
 	}
 
 	/* set hardware resampling */
+	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
+		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
+		return err;
+	}
+
 	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
 		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
 		return err;
