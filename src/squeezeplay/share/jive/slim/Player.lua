@@ -58,6 +58,7 @@ local Udap           = require("jive.net.Udap")
 local debug          = require("jive.utils.debug")
 local string         = require("jive.utils.string")
 local log            = require("jive.utils.log").logger("squeezebox.player")
+local socket         = require("socket")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
@@ -1514,9 +1515,7 @@ function _udapConnect(self, server)
 
 		if sn_hostname == "www.squeezenetwork.com" then
 			data.server_address = Udap.packNumber(1, 4)
-		elseif sn_hostname == "www.test.squeezenetwork.com"
-		    or sn_hostname == "baby.squeezenetwork.com"
-		    or sn_hostname == "fab4.squeezenetwork.com" then
+		elseif sn_hostname == "www.test.squeezenetwork.com" then
 			data.server_address = Udap.packNumber(1, 4)
 			-- XXX the above should be this when "serv 2" in all firmware:
 			-- data.server_address = Udap.packNumber(2, 4)
