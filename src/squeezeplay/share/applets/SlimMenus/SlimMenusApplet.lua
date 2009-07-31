@@ -957,7 +957,9 @@ function _fetchServerMenu(self, server)
 	else
 		-- Use local player ID if we don't have a controlling player
 		local localPlayer = Player:getLocalPlayer()
-		playerId = localPlayer:getId()
+		if playerId then --might not have a local player either
+			playerId = localPlayer:getId()
+		end
 	end
 	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100, "direct:1" })
 

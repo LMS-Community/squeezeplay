@@ -113,7 +113,7 @@ end
 
 -- class method to set the current server
 function setCurrentServer(class, server)
-	if (server and lastCurrentServer ~= server) or (not server and lastCurrentServer)  then
+	if lastCurrentServer and ( (server and lastCurrentServer ~= server) or (not server and lastCurrentServer) ) then
 		log:debug("setting lastServerSwitchT for server: ", server)
 
 		lastServerSwitchT = Framework:getTicks()
