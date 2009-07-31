@@ -80,8 +80,7 @@ static struct decode_module *all_decoders[] = {
 	&decode_aac,
 #endif
 	&decode_vorbis,
-	// FIXME alac does not work fully yet, see Bug 12421
-	// &decode_alac,
+	&decode_alac,
 	&decode_flac,
 	&decode_pcm,
 	&decode_mad,
