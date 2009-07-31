@@ -188,8 +188,10 @@ libaudio_la_SOURCES = \
 	src/audio/fixed_math.c
 
 libdecode_la_SOURCES = \
+	src/audio/mp4.c \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
+	src/audio/alac/alac.c \
 	src/audio/decode/decode.c \
 	src/audio/decode/decode_alsa.c \
 	src/audio/decode/decode_flac.c \
@@ -198,7 +200,8 @@ libdecode_la_SOURCES = \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
 	src/audio/decode/decode_sample.c \
-	src/audio/decode/decode_vorbis.c
+	src/audio/decode/decode_vorbis.c \
+	src/audio/decode/decode_alac.c
 
 
 libdecode_la_LIBADD = libaudio.la -lSDL -lFLAC -lmad -lvorbisidec

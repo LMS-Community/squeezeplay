@@ -21532,9 +21532,10 @@ echo "${ECHO_T}${enable_profiling-no}" >&6; }
 
 if test x"$GCC" = x"yes"
 then
-	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
+	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-unused-function"
 fi
 
+CFLAGS="$CFLAGS -DSQUEEZEPLAY"
 
 test -n "$profile" && CFLAGS="$CFLAGS $profile" LDFLAGS="$LDFLAGS $profile"
 

@@ -507,7 +507,7 @@ end
 
 
 function _cont(self, data)
-	log:debug("cont loop=", data.loop)
+	log:debug("cont loop=", data.loop, " icy=", data.icyMetaInterval)
 
 	if data.loop == 1 then
 		self.isLooping = true

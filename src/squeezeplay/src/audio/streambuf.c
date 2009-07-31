@@ -255,6 +255,18 @@ size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming)
 		streambuf_fifo.rptr = streambuf_lptr;
 	}
 
+#if 0
+	{
+		static FILE *fp = NULL;
+		
+		if (!fp) {
+			fp = fopen("stream.dat", "w");
+		}
+
+		fwrite(buf, sz, 1, fp);
+	}
+#endif
+
 	return sz;
 }
 
