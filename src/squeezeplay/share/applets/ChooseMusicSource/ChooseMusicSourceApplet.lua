@@ -594,7 +594,6 @@ end
 
 function _doConnectPlayer(self, player, server)
 	-- tell the player to move servers
-	log:error("waitForConnect")
 
 	self.waitForConnect = {
 		player = player,
