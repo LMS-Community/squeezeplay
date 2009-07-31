@@ -349,7 +349,7 @@ function _debug(self)
 	log:info("CurrentServer: ", SlimServer:getCurrentServer())
 	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
-		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
+		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()), " version=", server:getVersion())
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
