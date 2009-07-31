@@ -370,7 +370,7 @@ function _shutdown(self)
 
 	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("icon_power"))
+	popup:addWidget(Icon("icon_restart"))
 	popup:addWidget(Label("subtext", self:string("GOODBYE")))
 
 	-- make sure this popup remains on screen
