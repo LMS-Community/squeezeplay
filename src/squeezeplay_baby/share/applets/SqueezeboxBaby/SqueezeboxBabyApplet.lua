@@ -21,6 +21,7 @@ local Player                 = require("jive.slim.Player")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
+local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
 local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
@@ -35,7 +36,7 @@ local debug                  = require("jive.utils.debug")
 local jnt                    = jnt
 local iconbar                = iconbar
 local jiveMain               = jiveMain
-local settings	             = nil
+local appletManager          = appletManager
 
 local brightnessTable        = {}
 
@@ -46,8 +47,6 @@ oo.class(_M, Applet)
 function init(self)
 	local uuid, mac, serial
 	
-	settings = self:getSettings()
-
 	-- read device uuid
 	local f = io.open("/proc/cpuinfo")
 	if f then
@@ -109,6 +108,9 @@ function init(self)
 	end)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
+
+        Framework:addActionListener("shutdown", self, _shutdown)
+
 
 	Framework:addListener(EVENT_SWITCH, function(event)
 		local sw,val = event:getSwitch()
@@ -388,6 +390,34 @@ function settingsBrightnessShow (self, menuItem)
 
 	window:show()
 	return window
+end
+
+
+function _shutdown(self)
+	log:info("Shuting down ...")
+
+	-- disconnect from SqueezeCenter
+	appletManager:callService("disconnectPlayer")
+
+	local popup = Popup("waiting_popup")
+
+	popup:addWidget(Icon("icon_restart"))
+	popup:addWidget(Label("text", self:string("GOODBYE")))
+
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:ignoreAllInputExcept({})
+
+	popup:show()
+
+	popup:playSound("SHUTDOWN")	
+
+	local timer = Timer(3500, function()
+		os.execute("/sbin/poweroff")
+	end)
+	timer:start()
 end
 
 

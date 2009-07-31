@@ -78,3 +78,17 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
 
+GOODBYE
+	CS	Nashledanou
+	DA	Farvel
+	DE	Auf Wiedersehen
+	EN	Goodbye
+	ES	Adiós
+	FI	Näkemiin
+	FR	A bientôt
+	IT	A presto
+	NL	Tot ziens
+	NO	Farvel
+	PL	Do widzenia
+	RU	Прощайте
+	SV	Hej då!
