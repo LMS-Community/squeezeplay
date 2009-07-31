@@ -161,7 +161,7 @@ local opcodes = {
 		-- always clear the syncgroupid after using it
 		for i, key in ipairs(self.capabilities) do
 			if string.match(key, "SyncgroupID=") then
-				self.capabilities.remove(table, i)
+				table.remove(self.capabilities, i)
 				break
 			end
 		end
