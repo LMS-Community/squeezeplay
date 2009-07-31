@@ -301,8 +301,11 @@ function notify_serverConnected(self, server)
 	iconbar:setServerError("OK")
 
 	-- hide connection error window (useful when server was down and comes back up)
-	-- but we need a check here for other case (can't find it now...) where we need to wait until player current 
-	if self.connectingPopup and not self.ignoreServerConnected then
+	-- but we need a check here for other case (can't find it now...) where we need to wait until player current
+	local isLocalPlayer = self.waitForConnect.player:isLocal()
+	-- cancelling here not applicable for remote players since serverConnected is always called for a remote server switch, but there
+	--  may be cases where with a remote player the cancel doesn't occur. I currently don't have a use case for that 
+	if self.connectingPopup and not self.ignoreServerConnected and isLocalPlayer then
 		self:_cancelSelectServer()
 	end
 end
@@ -591,6 +594,8 @@ end
 
 function _doConnectPlayer(self, player, server)
 	-- tell the player to move servers
+	log:error("waitForConnect")
+
 	self.waitForConnect = {
 		player = player,
 		server = server
