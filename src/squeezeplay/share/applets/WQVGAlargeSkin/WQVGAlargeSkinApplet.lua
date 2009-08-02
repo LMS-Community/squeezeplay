@@ -88,6 +88,7 @@ function param(self)
 		THUMB_SIZE = 64,
 		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 180,
+		nowPlayingTitleStatusLabel  = "title",
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
@@ -1593,6 +1594,21 @@ function skin(self, s)
 
 	s.nowplaying = _uses(s.window, {
 		title = _uses(s.title, {
+			text = {
+				line = {
+						{
+							font = _boldfont(TITLE_FONT_SIZE),
+							height = 34,
+						},
+						{
+							font = _font(1),
+							height = 1,
+						},
+						{
+							font = _font(TITLE_FONT_SIZE - 14),
+						},
+				},
+			},
 			rbutton = {
 				hidden = 1,
 			},

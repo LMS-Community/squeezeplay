@@ -78,6 +78,7 @@ function param(self)
 		nowPlayingBrowseArtworkSize = 154,
 		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,
+		nowPlayingTitleStatusLabel  = "artist",
         }
 end
 

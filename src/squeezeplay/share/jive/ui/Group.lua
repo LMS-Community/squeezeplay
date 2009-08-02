@@ -208,14 +208,14 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:setWidgetValue(widget, value)
+=head2 jive.ui.Widget:setWidgetValue(widget, value, ...)
 
 Set the value of a widget in this Group.
 
 =cut
 --]]
-function setWidgetValue(self, w, value)
-	return self.widgets[w]:setValue(value)
+function setWidgetValue(self, w, value, ...)
+	return self.widgets[w]:setValue(value, ...)
 end
 
 

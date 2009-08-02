@@ -128,6 +128,42 @@ function notify_playerRepeatModeChange(self, player, repeatMode)
 	self:_updateRepeat(repeatMode)
 end
 
+function _setMainTitle(self)
+	self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
+end
+
+
+function _setTitleStatus(self, text, duration)
+	log:debug("_setTitleStatus", text)
+
+	local nowPlayingTitleStatusLabel = jiveMain:getSkinParam("nowPlayingTitleStatusLabel")
+	if nowPlayingTitleStatusLabel == "artist" then
+		--artist and artistalbumTitle widget are used as title
+		local msgs = string.split("\n", text)
+
+		self.trackTitle:setValue(msgs[1], duration)
+
+		if #msgs > 1 then
+			self.artistalbumTitle:setValue(msgs[2], duration)
+		end
+	else
+		--use title widget
+		--only use first two lines, and slightly hackishly produce 3 lines with newline in between to get spacing right
+		local msgs = string.split("\n", text)
+
+		text = msgs[1]
+		if #msgs > 1 then
+			text = text .. "\n.\n" .. msgs[2]
+		end
+		self.titleGroup:setWidgetValue("text", text, duration)
+
+	end
+end
+
+function notify_playerTitleStatus(self, player, text, duration)
+	self:_setTitleStatus(text, duration)
+end
+
 function notify_playerPower(self, player, power)
 	if player ~= self.player then
 		return
@@ -491,10 +527,8 @@ function _updatePlaylist(self, enabled, nr, count)
 	if enabled == true and count and tonumber(count) > 1 then
 		nr = nr + 1
 		self.xofy = self:string("SCREENSAVER_NOWPLAYING_OF", nr, count)
-		self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
-	else 
-		self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
 	end
+	self:_setMainTitle()
 end
 
 

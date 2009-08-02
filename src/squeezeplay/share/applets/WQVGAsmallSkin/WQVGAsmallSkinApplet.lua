@@ -90,6 +90,7 @@ function param(self)
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
+		nowPlayingTitleStatusLabel  = "title",
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
@@ -2229,6 +2230,21 @@ function skin(self, s)
 		--title bar
 		title = _uses(s.title, {
 			zOrder = 1,
+			text = {
+				line = {
+						{
+							font = _boldfont(TITLE_FONT_SIZE),
+							height = 16,
+						},
+						{
+							font = _font(1),
+							height = 10,
+						},
+						{
+							font = _font(TITLE_FONT_SIZE - 6),
+						},
+				},
+			},
 			rbutton  = {
 				font    = _font(14),
 				fg      = TEXT_COLOR,

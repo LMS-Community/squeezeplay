@@ -51,6 +51,7 @@ local _assert, string, tostring, type = _assert, string, tostring, type
 local oo           = require("loop.simple")
 local Widget       = require("jive.ui.Widget")
 local Icon         = require("jive.ui.Icon")
+local Timer            = require("jive.ui.Timer")
 
 local log          = require("jive.utils.log").logger("squeezeplay.ui")
 
@@ -109,9 +110,38 @@ end
 
 Sets the text displayed in the label.
 
+If I<priorityDuration>, value will be set for priorityDuration ms, after which the value will revert to the previous text.
+Only another setValue with a priorityDuration will replace the current text during the priorityDuration time.
+
 =cut
 --]]
-function setValue(self, value)
+function setValue(self, value, priorityDuration)
+
+	if priorityDuration then
+		if not self.priorityTimer then
+			self.priorityTimer = Timer(
+						0,
+							function ()
+								if not self.previousPersistentValue then
+									self.previousPersistentValue = ""
+								end
+								self:_setValue(self.previousPersistentValue)
+							end,
+						true)
+		end
+		self:_setValue(value)
+		self.priorityTimer:restart(priorityDuration)
+
+	else
+		if not (self.priorityTimer and self.priorityTimer:isRunning()) then
+			self:_setValue(value)
+		end
+		self.previousPersistentValue = value
+	end
+end
+
+
+function _setValue(self, value)
 	if self.value ~= value then
 		self.value = value
 		self:reLayout()
