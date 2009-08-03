@@ -22,8 +22,26 @@ end
 
 
 function defaultSettings(meta)
-	return { 
+	return {
+		brightness = 60,		-- max
+		initTimeout = 60000,		-- 60 seconds
+		dimmedTimeout = 30000,		-- 30 seconds
 	}
+end
+
+
+function upgradeSettings(meta, settings)
+	if not settings.brightness then
+		settings.brightness = 60	-- max
+	end
+	if not settings.initTimeout then
+		settings.initTimeout = 60000	-- 60 seconds
+	end
+	if not settings.dimmedTimeout then
+		settings.dimmedTimeout = 30000	-- 30 seconds
+	end
+
+	return settings
 end
 
 

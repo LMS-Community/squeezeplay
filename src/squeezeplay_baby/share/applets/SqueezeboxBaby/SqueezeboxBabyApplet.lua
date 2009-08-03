@@ -44,6 +44,51 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+local function _sysOpen(self, path, attr, mode)
+	if not mode or string.match(mode, "r") then
+		local fh = io.open(path .. attr, "r")
+		if not fh then
+			log:warn("Can't open (read) ", path, attr)
+			return
+		end
+
+		self["sysr_" .. attr] = fh
+	end
+
+	if mode and string.match(mode, "w") then
+		local fh = io.open(path .. attr, "w")
+		if not fh then
+			log:warn("Can't open (read) ", path, attr)
+			return
+		end
+
+		self["sysw_" .. attr] = fh
+	end
+end
+
+
+local function _sysReadNumber(self, attr)
+	local fh = self["sysr_" .. attr]
+	if not fh then
+		return -1
+	end
+
+	fh:seek("set")
+	return tonumber(fh:read("*a"))
+end
+
+
+local function _sysWrite(self, attr, val)
+	local fh = self["sysw_" .. attr]
+	if not fh then
+		return -1
+	end
+
+	fh:write(val)
+	fh:flush(val)
+end
+
+
 function init(self)
 	local uuid, mac, serial
 	
@@ -101,11 +146,32 @@ function init(self)
 		window:show()
 	end
 
-	settings.brightness = settings.brightness or 100
-	
+	local settings = self:getSettings()
+
+	-- sys interface
+	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
+	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
+	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
+	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
+
+	-- register wakeup/sleep functions
+	Framework:registerWakeup(function() wakeup(self) end)
+	Framework:addListener(EVENT_ALL_INPUT,
+		function(event)
+			Framework.wakeup()
+		end, true)
+
+	self.powerTimer = Timer(settings.initTimeout,
+		function() sleep(self) end)
+
+	-- initial power settings
+	self:_initBrightnessTable()
+	self.lcdBrightness = brightnessTable[settings.brightness]
+	self:setPowerState("active")
+
 	-- status bar updates
 	self:update()
-	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
+	iconbar.iconWireless:addTimer(2000, function()  -- every two seconds
 	      self:update()
 	end)
 
@@ -122,10 +188,6 @@ function init(self)
 			self:_headphoneJack(val)
 		end
 	end)
-
---	self:_setupCrossover()
-
-	self:_initBrightnessTable()
 
 	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
 	-- find out when we connect to player
@@ -161,60 +223,14 @@ function getDefaultWallpaper(self)
 	return wallpaper
 end
 
-function _amixerCommand(self, name, ...)
-	local value = table.concat({...}, ",")
-	log:debug("amixer: ", name, " value: ", value)
-
---      uncomment to call os amixer command directly for debug comparison
---	log:warn("os command")
---	os.execute('amixer sset "' .. name .. '" ' .. value)
-
-	bsp:setMixer(name, ...)
-end
-
-function _setupCrossover(self)
-	log:info("_setupCrossover")
-
-	self:_amixerCommand("Audio Codec Digital Filter Control" , "0")
-	self:_amixerCommand("Audio Effects Filter N0 Coefficient", "22555", "65072")
-	self:_amixerCommand("Audio Effects Filter N1 Coefficient", "42981", "65072")
-	self:_amixerCommand("Audio Effects Filter N2 Coefficient", "22555", "65072")
-	self:_amixerCommand("Audio Effects Filter N3 Coefficient", "32767", "32767")
-	self:_amixerCommand("Audio Effects Filter N3 Coefficient", "32767", "32767")
-	self:_amixerCommand("Audio Effects Filter N3 Coefficient", "32767", "32767")
-	self:_amixerCommand("Audio Effects Filter N3 Coefficient", "32767", "32767")
-	self:_amixerCommand("Audio Effects Filter N4 Coefficient", "0", "0")
-	self:_amixerCommand("Audio Effects Filter N5 Coefficient", "0", "0")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D1 Coefficient", "24546", "24546")
-	self:_amixerCommand("Audio Effects Filter D2 Coefficient", "47149", "47149")
-	self:_amixerCommand("Audio Effects Filter D4 Coefficient", "0", "0")
-	self:_amixerCommand("Audio Effects Filter D5 Coefficient", "0", "0")
-end
-
-
-function _enableCrossover(self)
-	log:info("_enableCrossover")
-	self:_amixerCommand("Audio Codec Digital Filter Control" , "10")
-end
-
-function _disableCrossover(self)
-	log:info("_enableCrossover")
-	self:_amixerCommand("Audio Codec Digital Filter Control" , "0")
-end
 
 function _headphoneJack(self, val)
 	if val == 0 then
---		self:_enableCrossover()
+		bsp:setMixer("Crossover", true)
 		bsp:setMixer("Endpoint", "Speaker")
 	else
 		bsp:setMixer("Endpoint", "Headphone")
---		self:_disableCrossover()
+		bsp:setMixer("Crossover", false)
 	end
 end
 
@@ -283,9 +299,7 @@ function update(self)
 end
 
 
-function _updateTask(self)
-	-- FIXME ac power / battery
-
+local function _updateWireless(self)
 	local iface = Networking:activeInterface()
 	local player = Player:getLocalPlayer()
 
@@ -313,6 +327,77 @@ function _updateTask(self)
 end
 
 
+local function _updatePower(self)
+	local wallVoltage = _sysReadNumber(self, "wall_voltage")
+	local batteryCharge = _sysReadNumber(self, "battery_charge")
+	local batteryCapacity = _sysReadNumber(self, "battery_capacity")
+
+	log:debug("wallVoltage=", wallVoltage,
+		" batteryCharge=", batteryCharge,
+		" batteryCapacity=", batteryCapacity)
+
+	if batteryCharge == 0 then
+		-- no battery
+		log:debug("no battery")
+		iconbar:setBattery(nil)
+
+	elseif wallVoltage > 16000 then    -- FIXME 16000 is just a guess
+		if batteryCharge == batteryCapacity then
+			log:debug("on ac, fully charged")
+			iconbar:setBattery("AC")
+
+		else
+			log:debug("on ac, charging")
+			iconbar:setBattery("CHARGING")
+
+		end
+	else
+		local batteryRemain = (batteryCharge / batteryCapacity) * 100
+		log:debug("on battery power ", batteryRemain, "%")
+
+		iconbar:setBattery(math.max(math.floor(batteryRemain / 25) + 1, 4))
+	end
+end
+
+
+function sleep(self)
+	self:setPowerState("dimmed")
+end
+
+
+function wakeup(self)
+	self:setPowerState("active")
+end
+
+
+function setPowerState(self, state)
+	local settings = self:getSettings()
+
+	if self.powerState == state then
+		return
+	end
+
+	self.powerState = state
+
+	if state == "active" then
+		self.powerTimer:restart(settings.dimmedTimeout)
+
+	elseif state == "dimmed" then
+		self.powerTimer:stop()
+
+	end
+
+	_setBrightness(self, self.lcdBrightness)
+end
+
+function _updateTask(self)
+	-- FIXME ac power / battery
+
+	_updatePower(self)
+	_updateWireless(self)
+end
+
+
 function _initBrightnessTable( self)
 	local pwm_steps = 256
 	local brightness_step_percent = 10
@@ -328,12 +413,20 @@ function _initBrightnessTable( self)
 end
 
 
-function getBrightness (self)
-	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "r")
-	local level = f:read("*a")
-	f:close()
+function _setBrightness(self, level)
+	self.lcdBrightness = level
 
-	return tonumber(level)
+	-- 60% brightness in dimmed power mode
+	if self.powerState == "dimmed" then
+		level = math.floor(level * 0.6)
+	end
+
+	_sysWrite(self, "brightness", level)
+end
+
+
+function getBrightness (self)
+	return _sysReadNumber(self, "brightness")
 end
 
 
@@ -347,9 +440,7 @@ function setBrightness (self, level)
 		return
 	end
 
-	local f = io.open("/sys/class/backlight/mxc_lcdc_bl.0/brightness", "w")
-	f:write(tostring(level))
-	f:close()
+	_setBrightness(self, level)
 end
 
 
@@ -364,12 +455,11 @@ function settingsBrightnessShow (self, menuItem)
 			settings.brightness = value
 
 			local bright = brightnessTable[value]
-
 			if bright > 255 then
 				bright = 255
 			end
 
-			self:setBrightness( bright)
+			self:setBrightness(bright)
 
 			if done then
 				window:playSound("WINDOWSHOW")
