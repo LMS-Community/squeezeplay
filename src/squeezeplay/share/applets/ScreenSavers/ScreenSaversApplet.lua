@@ -281,16 +281,16 @@ end
 
 
 local _powerAllowedActions = {
-			["play_favorite_0"] = 1,
-			["play_favorite_1"] = 1,
-			["play_favorite_2"] = 1,
-			["play_favorite_3"] = 1,
-			["play_favorite_4"] = 1,
-			["play_favorite_5"] = 1,
-			["play_favorite_6"] = 1,
-			["play_favorite_7"] = 1,
-			["play_favorite_8"] = 1,
-			["play_favorite_9"] = 1,
+			["play_preset_0"] = 1,
+			["play_preset_1"] = 1,
+			["play_preset_2"] = 1,
+			["play_preset_3"] = 1,
+			["play_preset_4"] = 1,
+			["play_preset_5"] = 1,
+			["play_preset_6"] = 1,
+			["play_preset_7"] = 1,
+			["play_preset_8"] = 1,
+			["play_preset_9"] = 1,
 			["play"]            = "pause",
 		}
 
