@@ -83,17 +83,19 @@ end
 
 function showMainWindow(self)
 	self.window:addWidget(Label("graphtitle", self:string('SETUPNETTEST_CURRENT')))
+	local sw, sh = Framework:getScreenSize()
 
-	self.graph1 = Surface:newRGBA(200, 80)
-	self.graph1:filledRectangle(0, 0, 200, 80, graphBG)
+	local graphHeight =  sh / 7
+	self.graph1 = Surface:newRGBA(200, graphHeight)
+	self.graph1:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon1 = Icon("icon", self.graph1)
 	self.window:addWidget(icon1)
 	icon1:setPosition(20, 20)
 
 	self.window:addWidget(Label("graphtitle", self:string('SETUPNETTEST_HISTORY')))
 
-	self.graph2 = Surface:newRGBA(200, 80)
-	self.graph2:filledRectangle(0, 0, 200, 80, graphBG)
+	self.graph2 = Surface:newRGBA(200, graphHeight)
+	self.graph2:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon2 = Icon("icon", self.graph2)
 	self.window:addWidget(icon2)
 	icon2:setPosition(20, 180)
