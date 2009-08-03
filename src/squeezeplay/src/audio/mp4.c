@@ -305,11 +305,14 @@ static void mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r)
 	// FIXME parse this correctly
 
 #if 0
-	for (i=35; i<mp4->box_size; i++) {
-		printf("%02x %c ", mp4->ptr[i], isalnum(mp4->ptr[i])?mp4->ptr[i]:'.');
-		if (i % 8 == 7) printf("\n");
+	{
+		size_t i;
+		for (i=35; i<mp4->box_size; i++) {
+			printf("%02x %c ", mp4->ptr[i], isalnum(mp4->ptr[i])?mp4->ptr[i]:'.');
+			if (i % 8 == 7) printf("\n");
+		}
+		printf("\n");
 	}
-	printf("\n");
 #endif
 
 	track->conf_size = 10;
@@ -350,10 +353,36 @@ static void mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r)
 {
 	int i;
 
+	if (r < 12) {
+		mp4->box_size = 16;
+		return;
+	}
+
+	/* skip any wide atom */
+	if (strncmp((const char *)(mp4->ptr + 4), "wide", 4) == 0) {
+		mp4->ptr += 8;
+
+		/* skip extra mdat atom */
+		if (strncmp((const char *)(mp4->ptr + 4), "mdat", 4) == 0) {
+			mp4->ptr += 8;
+		}
+	}
+
 	LOG_DEBUG(log_audio_codec, "tracks: %d", mp4->track_count);
 	for (i=0; i<mp4->track_count; i++) {
 		LOG_DEBUG(log_audio_codec, "%d:\t%d, %.4s", i, mp4->track[i].track_id, mp4->track[i].data_format);
 	}
+
+
+	{
+		size_t i;
+		for (i=0; i<20; i++) {
+			printf("%02x %c ", mp4->ptr[i], isalnum(mp4->ptr[i])?mp4->ptr[i]:'.');
+			if (i % 8 == 7) printf("\n");
+		}
+		printf("\n");
+	}
+
 
 	/* start streaming content */
 	mp4->track_idx = 0;
