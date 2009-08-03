@@ -101,6 +101,8 @@ function init(self)
 		window:show()
 	end
 
+	settings.brightness = settings.brightness or 100
+	
 	-- status bar updates
 	self:update()
 	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
