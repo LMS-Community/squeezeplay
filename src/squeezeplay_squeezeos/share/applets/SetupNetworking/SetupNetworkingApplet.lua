@@ -1460,6 +1460,14 @@ function _failedDHCPandWPA(self, iface, ssid)
 			end
 		},
 		{
+			text = self:string("NETWORK_TRY_PASSWORD"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
+			end
+		},		
+		{
 			text = self:string("STATIC_ADDRESS"),
 			sound = "WINDOWSHOW",
 			callback = function()
@@ -1501,6 +1509,14 @@ function _failedDHCPandWEP(self, iface, ssid)
 				_sigusr1("udhcpc")
 				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
+			end
+		},
+		{
+			text = self:string("NETWORK_TRY_PASSWORD"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
 			end
 		},
 		{
