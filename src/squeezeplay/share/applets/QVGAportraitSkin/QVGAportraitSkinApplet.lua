@@ -144,7 +144,7 @@ function skin(self, s, reload, useDefaultSize)
                 w = WH_FILL,
                 h = (c.POPUP_TEXT_SIZE_1 + 8 ) * 2,
                 position = LAYOUT_NORTH,
-                border = { 0, 14, 0, 0 },
+                border = { 0, 28, 0, 0 },
                 padding = { 12, 0, 12, 0 },
                 align = "center",
                 font = _font(c.POPUP_TEXT_SIZE_1),
@@ -153,21 +153,22 @@ function skin(self, s, reload, useDefaultSize)
                 sh = c.TEXT_SH_COLOR,
         }
 
+	s.icon_software_update.padding = { 0, 22, 0, 0 }
+
         s.update_popup.subtext = {
                 w = WH_FILL,
                 -- note this is a hack as the height and padding push
                 -- the content out of the widget bounding box.
                 h = 30,
                 padding = { 0, 0, 0, 36 },
-                font = _boldfont(c.UPDATE_SUBTEXT_SIZE),
+                font = _boldfont(18),
                 fg = c.TEXT_COLOR,
                 sh = TEXT_SH_COLOR,
                 align = "bottom",
                 position = LAYOUT_SOUTH,
         }
 	s.update_popup.progress = {
-                border = { 12, 0, 12, 12 },
-                --padding = { 0, 0, 0, 24 },
+                border = { 12, 0, 12, 20 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = s.img.progressBackground,
