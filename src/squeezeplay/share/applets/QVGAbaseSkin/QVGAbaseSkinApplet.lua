@@ -1497,7 +1497,9 @@ function skin(self, s, reload, useDefaultSize)
 		position = LAYOUT_SOUTH,
 	}
 
-	s._button_playmode = _uses(s._iconbar_icon)
+	s._button_playmode = _uses(s._iconbar_icon, {
+		border = { 10, 0, 5, 0 },
+	})
 	s.button_playmode_OFF = _uses(s._button_playmode, {
 		img = false,
 	})
@@ -1618,6 +1620,8 @@ function skin(self, s, reload, useDefaultSize)
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
 		fg = c.TEXT_COLOR,
+		-- this needs to layer on top of iconbar_group
+		zOrder = 101,
 		font = _boldfont(c.ICONBAR_FONT),
 	}
 
@@ -1627,7 +1631,8 @@ function skin(self, s, reload, useDefaultSize)
 		w = WH_FILL,
 		h = 24,
 		border = 0,
-		padding = { 4, 0, 0, 0 },
+		-- status bar typically sits on top of everything
+		zOrder = 100,
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,

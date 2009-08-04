@@ -187,10 +187,10 @@ function skin(self, s, reload, useDefaultSize)
 	local volumeBarWidth  = 150
 	local buttonPadding   = 0
 	local NP_TITLE_HEIGHT = 31
-	local NP_TRACKINFO_RIGHT_PADDING = 21
+	local NP_TRACKINFO_RIGHT_PADDING = 8
 
 	local _tracklayout = {
-		border = { 4, 0, 4, 0 },
+		border = 0,
 		position = LAYOUT_NORTH,
 		w = WH_FILL,
 		align = "left",
@@ -198,10 +198,53 @@ function skin(self, s, reload, useDefaultSize)
 		fg = { 0xe7, 0xe7, 0xe7 },
 	}
 
+	local _iconbarBorder = { 3, 0, 3, 0 }
+
+	s._button_playmode.border               = { 6, 0, 3, 0 }
+	s.button_playmode_OFF.border            = s._button_playmode.border
+	s.button_playmode_STOP.border           = s._button_playmode.border
+	s.button_playmode_PLAY.border           = s._button_playmode.border
+	s.button_playmode_PAUSE.border          = s._button_playmode.border 
+
+	s._button_repeat.border                 = _iconbarBorder 
+	s.button_repeat_OFF.border              = s._button_repeat.border
+	s.button_repeat_0.border                = s._button_repeat.border
+	s.button_repeat_1.border                = s._button_repeat.border
+	s.button_repeat_2.border                = s._button_repeat.border
+
+	s.button_playlist_mode_OFF.border       = _iconbarBorder
+	s.button_playlist_mode_DISABLED.border  = _iconbarBorder 
+	s.button_playlist_mode_ON.border        = _iconbarBorder 
+	s.button_playlist_mode_PARTY.border     = _iconbarBorder
+
+	s._button_shuffle.border                = _iconbarBorder
+	s.button_shuffle_OFF.border             = s._button_shuffle.border
+	s.button_shuffle_0.border               = s._button_shuffle.border
+	s.button_shuffle_1.border               = s._button_shuffle.border
+	s.button_shuffle_2.border               = s._button_shuffle.border
+
+	s._button_battery.border                = _iconbarBorder
+	s.button_battery_AC.border              = s._button_battery.border
+	s.button_battery_CHARGING.border        = s._button_battery.border
+	s.button_battery_0.border               = s._button_battery.border
+	s.button_battery_1.border               = s._button_battery.border
+	s.button_battery_2.border               = s._button_battery.border
+	s.button_battery_3.border               = s._button_battery.border
+	s.button_battery_4.border               = s._button_battery.border
+	s.button_battery_NONE.border            = s._button_battery.border
+
+	s._button_wireless.border               = { 3, 0, 6, 0 }
+	s.button_wireless_1.border              = s._button_wireless.border
+	s.button_wireless_2.border              = s._button_wireless.border
+	s.button_wireless_3.border              = s._button_wireless.border
+	s.button_wireless_4.border              = s._button_wireless.border
+	s.button_wireless_ERROR.border          = s._button_wireless.border
+	s.button_wireless_SERVERERROR.border    = s._button_wireless.border
+	s.button_wireless_NONE.border           = s._button_wireless.border
+
 	s.nowplaying = _uses(s.window, {
 		title = {
 			h = 79,
-			padding = { 10, 0, 10, 0 },
 			text = {
 				hidden = 1,
 			},
@@ -223,9 +266,8 @@ function skin(self, s, reload, useDefaultSize)
 			w          = _tracklayout.w,
 			align      = _tracklayout.align,
 			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
 			fg = { 0xb3, 0xb3, 0xb3 },
-			padding    = { 10, NP_TRACK_FONT_SIZE + 14, 10, 0 },
+			padding    = { 10, NP_TRACK_FONT_SIZE + 18, 10, 0 },
 			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
 		npalbum = { hidden = 1},
@@ -234,7 +276,7 @@ function skin(self, s, reload, useDefaultSize)
 		-- cover art
 		npartwork = {
 			position = LAYOUT_WEST,
-			zOrder = 10,
+			zOrder = 1,
 			w = WH_FILL,
 			align = "center",
 			artwork = {
@@ -251,15 +293,34 @@ function skin(self, s, reload, useDefaultSize)
 		-- Progress bar
 		npprogress = {
 			position = LAYOUT_NORTH,
-			padding = { 0, 0, 0, 0 },
-			border = { 0, 60, 0, 0 },
+			padding = { 10, 0, 10, 0 },
+			border = { 0, 63, 0, 0 },
 			w = WH_FILL,
-			order = { "slider" },
+			order = { 'elapsed', 'slider', 'remain' },
+			elapsed = {
+				font = _boldfont(12),
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
+			remain = {
+				font = _boldfont(12),
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
-			hidden = 1,
+			position = LAYOUT_NORTH,
+			padding = { 0, 0, 0, 0 },
+			border = { 0, 63, 0, 0 },
+			align = 'center',
+			w = WH_FILL,
+			order = { 'elapsed' },
+			elapsed = {
+				align = 'center',
+				font = _boldfont(12),
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
+			
 		},
 	
 	})
@@ -267,8 +328,10 @@ function skin(self, s, reload, useDefaultSize)
 	-- sliders
 	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
 	s.npprogressB = {
-		w = screenWidth,
+		w = WH_FILL,
 		align = 'center',
+		padding = { 0, 8, 0, 0 },
+		border = { 10, 0, 10, 0 },
                 horizontal = 1,
                 bgImg = s.img.songProgressBackground,
                 img = s.img.songProgressBar,
