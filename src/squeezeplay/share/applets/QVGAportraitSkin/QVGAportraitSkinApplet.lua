@@ -140,8 +140,15 @@ function skin(self, s, reload, useDefaultSize)
 	-- misc layout tweaks from base for portrait
 	s.icon_software_update.padding     = { 0, 22, 0, 0 }
 	s.icon_connecting.padding          = { 0, 52, 0, 0 }
+	s.icon_connected.padding           = { 0, 52, 0, 0 }
+	s.icon_restart.padding             = { 0, 52, 0, 0 }
 	s.waiting_popup.text.padding       = { 0, 42, 0, 0 }
 	s.waiting_popup.subtext.padding    = { 0, 0, 0, 46 }
+        -- slider popup (volume)
+        s.slider_popup.x = 6
+        s.slider_popup.y = 88
+        s.slider_popup.w = screenWidth - 12
+	
 
 	-- software update window
 	s.update_popup = _uses(s.popup)
