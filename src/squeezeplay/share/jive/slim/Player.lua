@@ -184,8 +184,7 @@ end
 
 
 function getLastSqueezeCenter(self)
-	log:error("TODO: how to determine a non-local player's last SqueezeCenter")
-
+	--not used for remote SC, since the controller isn't the decider for where to return to, the local player is.
 	return nil
 end
 
