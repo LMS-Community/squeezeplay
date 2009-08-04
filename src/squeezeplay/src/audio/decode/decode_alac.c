@@ -157,7 +157,7 @@ static void decode_alac_stop(void *data) {
 }
 
 
-static u32_t decode_alac_samples(void *data) {
+static size_t decode_alac_samples(void *data) {
 	return BYTES_TO_SAMPLES(OUTPUT_BUFFER_SIZE);
 }
 
