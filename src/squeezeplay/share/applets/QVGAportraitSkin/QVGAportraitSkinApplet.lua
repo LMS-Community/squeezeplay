@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, setmetatable, type, package = ipairs, pairs, setmetatable, type, package
+local ipairs, pairs, setmetatable, type, package, tostring = ipairs, pairs, setmetatable, type, package, tostring
 
 local oo                     = require("loop.simple")
 
@@ -73,10 +73,10 @@ end
 
 function param(self)
 	return {
-		THUMB_SIZE = 56,
+		THUMB_SIZE = 39,
 		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = 154,
-		nowPlayingSSArtworkSize     = 186,
+		nowPlayingBrowseArtworkSize = 240,
+		nowPlayingSSArtworkSize     = 240,
 		nowPlayingLargeArtworkSize  = 240,
 		nowPlayingTitleStatusLabel  = "artist",
         }
@@ -88,6 +88,8 @@ function skin(self, s, reload, useDefaultSize)
 	
 
 	local screenWidth, screenHeight = Framework:getScreenSize()
+	local imgpath = 'applets/QVGAportraitSkin/images/'
+	local baseImgpath = 'applets/QVGAbaseSkin/images/'
 
 	if useDefaultSize or screenWidth < 240 or screenHeight < 320 then
                 screenWidth = 240
@@ -100,6 +102,183 @@ function skin(self, s, reload, useDefaultSize)
 	Framework.mostRecentInputType = "scroll"
 
 	QVGAbaseSkinApplet.skin(self, s, reload, useDefaultSize)
+
+	-- c is for constants
+	local c = s.CONSTANTS
+
+	-- styles specific to the landscape QVGA skin
+	s.img.scrollBackground =
+                Tile:loadVTiles({
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd_t.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_bkgrd_b.png",
+                                })
+
+	s.img.scrollBar =
+                Tile:loadVTiles({
+                                        imgpath .. "Scroll_Bar/scrollbar_body_t.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_body.png",
+                                        imgpath .. "Scroll_Bar/scrollbar_body_b.png",
+                               })
+
+        s.scrollbar = {
+                w          = 20,
+		h          = c.FOUR_LINE_ITEM_HEIGHT * 4 - 8,
+                border     = { 0, 4, 0, 0},  -- bug in jive_menu, makes it so bottom and right values are ignored
+                horizontal = 0,
+                bgImg      = s.img.scrollBackground,
+                img        = s.img.scrollBar,
+                layer      = LAYER_CONTENT_ON_STAGE,
+        }
+
+	s.img.progressBackground = Tile:loadImage(imgpath .. "Alerts/alert_progress_bar_bkgrd.png")
+	s.img.progressBar = Tile:loadHTiles({
+                nil,
+                imgpath .. "Alerts/alert_progress_bar_body.png",
+        })
+
+	-- software update window
+	s.update_popup = _uses(s.popup)
+
+	s.update_popup.text = {
+                w = WH_FILL,
+                h = (c.POPUP_TEXT_SIZE_1 + 8 ) * 2,
+                position = LAYOUT_NORTH,
+                border = { 0, 14, 0, 0 },
+                padding = { 12, 0, 12, 0 },
+                align = "center",
+                font = _font(c.POPUP_TEXT_SIZE_1),
+                lineHeight = c.POPUP_TEXT_SIZE_1 + 8,
+                fg = c.TEXT_COLOR,
+                sh = c.TEXT_SH_COLOR,
+        }
+
+        s.update_popup.subtext = {
+                w = WH_FILL,
+                -- note this is a hack as the height and padding push
+                -- the content out of the widget bounding box.
+                h = 30,
+                padding = { 0, 0, 0, 36 },
+                font = _boldfont(c.UPDATE_SUBTEXT_SIZE),
+                fg = c.TEXT_COLOR,
+                sh = TEXT_SH_COLOR,
+                align = "bottom",
+                position = LAYOUT_SOUTH,
+        }
+	s.update_popup.progress = {
+                border = { 12, 0, 12, 12 },
+                --padding = { 0, 0, 0, 24 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = s.img.progressBackground,
+                img = s.img.progressBar,
+        }
+
+
+	local NP_ARTISTALBUM_FONT_SIZE = 15
+	local NP_TRACK_FONT_SIZE = 21
+
+	-- Artwork
+	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
+	local noArtSize       = tostring(ARTWORK_SIZE)
+
+	local controlHeight   = 38
+	local controlWidth    = 45
+	local volumeBarWidth  = 150
+	local buttonPadding   = 0
+	local NP_TITLE_HEIGHT = 31
+	local NP_TRACKINFO_RIGHT_PADDING = 21
+
+	local _tracklayout = {
+		border = { 4, 0, 4, 0 },
+		position = LAYOUT_NORTH,
+		w = WH_FILL,
+		align = "left",
+		lineHeight = NP_TRACK_FONT_SIZE,
+		fg = { 0xe7, 0xe7, 0xe7 },
+	}
+
+	s.nowplaying = _uses(s.window, {
+		title = {
+			h = 79,
+			padding = { 10, 0, 10, 0 },
+			text = {
+				hidden = 1,
+			},
+		},
+		-- Song metadata
+		nptrack =  {
+			border     = _tracklayout.border,
+			position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			padding    = { 10, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
+			font       = _boldfont(NP_TRACK_FONT_SIZE), 
+		},
+		npartistalbum  = {
+			border     = _tracklayout.border,
+			position   = _tracklayout.position,
+			w          = _tracklayout.w,
+			align      = _tracklayout.align,
+			lineHeight = _tracklayout.lineHeight,
+			fg         = _tracklayout.fg,
+			fg = { 0xb3, 0xb3, 0xb3 },
+			padding    = { 10, NP_TRACK_FONT_SIZE + 14, 10, 0 },
+			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+		},
+		npalbum = { hidden = 1},
+		npartist = { hidden = 1},
+	
+		-- cover art
+		npartwork = {
+			position = LAYOUT_WEST,
+			zOrder = 10,
+			w = WH_FILL,
+			align = "center",
+			artwork = {
+				w = WH_FILL,
+				align = "center",
+				padding = { 0, 79, 0, 0 },
+				img = Tile:loadImage( baseImgpath .. "IconsResized/icon_album_noart_" .. noArtSize .. ".png"),
+			},
+		},
+	
+		--transport controls
+		npcontrols = { hidden = 1 },
+	
+		-- Progress bar
+		npprogress = {
+			position = LAYOUT_NORTH,
+			padding = { 0, 0, 0, 0 },
+			border = { 0, 60, 0, 0 },
+			w = WH_FILL,
+			order = { "slider" },
+		},
+	
+		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
+		npprogressNB = {
+			hidden = 1,
+		},
+	
+	})
+
+	-- sliders
+	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
+	s.npprogressB = {
+		w = screenWidth,
+		align = 'center',
+                horizontal = 1,
+                bgImg = s.img.songProgressBackground,
+                img = s.img.songProgressBar,
+	}
+
+	s.npvolumeB = { hidden = 1 }
+	s.nowplayingSS = _uses(s.nowplaying)
+
+
+
 end
 
 
