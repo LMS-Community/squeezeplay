@@ -274,13 +274,11 @@ function _timerCallback(self)
 
 	-- Start the audio when enough encoded data is been received
 	if status.bytesReceivedL > self.threshold and
-		status.outputTime > 50 and
-		status.audioState & DECODE_RUNNING == 0 then
+		status.outputTime > 50 then
 
 --	FIXME in a future release we may change the the threshold to use
 --	the amount of audio buffered, see Bug 6442
---	if status.outputTime / 10 > self.threshold and
---		status.audioState & DECODE_RUNNING == 0 then
+--	if status.outputTime / 10 > self.threshold then
 
 		if self.autostart == '1' and not self.sentResume then
 			log:debug("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
