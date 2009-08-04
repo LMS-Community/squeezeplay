@@ -1136,7 +1136,7 @@ function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 	local icon  = Icon("icon_connecting")
 	icon:addTimer(1000,
 		function()
-			_connectTimer(self, iface, ssid)
+			_connectTimer(self, iface, ssid, createNetwork)
 		end)
 	popup:addWidget(icon)
 	popup:ignoreAllInputExcept({"back"})
@@ -1265,7 +1265,7 @@ end
 
 
 -- timer to check connection state
-function _connectTimer(self, iface, ssid)
+function _connectTimer(self, iface, ssid, createNetwork)
 	assert(iface and ssid, debug.traceback())
 
 	local completed = false
@@ -1290,6 +1290,11 @@ function _connectTimer(self, iface, ssid)
 				return
 			end
 
+			-- Check if ethernet cable has been removed / fallen out in the mean time
+			if not (iface:isWireless() or status.link) then
+				return _attachEthernet(self, iface, ssid, createNetwork)
+			end
+
 			-- connection timed out
 			_connectFailed(self, iface, ssid, "timeout")
 			return
@@ -1300,6 +1305,11 @@ function _connectTimer(self, iface, ssid)
 			self.dhcpTimeout = self.dhcpTimeout + 1
 			if self.dhcpTimeout ~= CONNECT_TIMEOUT then
 				return
+			end
+
+			-- Check if ethernet cable has been removed / fallen out in the mean time
+			if not (iface:isWireless() or status.link) then
+				return _attachEthernet(self, iface, ssid, createNetwork)
 			end
 
 			-- dhcp timed out
@@ -1460,6 +1470,14 @@ function _failedDHCPandWPA(self, iface, ssid)
 			end
 		},
 		{
+			text = self:string("NETWORK_TRY_PASSWORD"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
+			end
+		},		
+		{
 			text = self:string("STATIC_ADDRESS"),
 			sound = "WINDOWSHOW",
 			callback = function()
@@ -1501,6 +1519,14 @@ function _failedDHCPandWEP(self, iface, ssid)
 				_sigusr1("udhcpc")
 				_connect(self, iface, ssid, false, false)
 				window:hide(Window.transitionNone)
+			end
+		},
+		{
+			text = self:string("NETWORK_TRY_PASSWORD"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				_networkScanAgain(self, iface, true)
+				_enterPassword(self, iface, ssid, "config")
 			end
 		},
 		{
