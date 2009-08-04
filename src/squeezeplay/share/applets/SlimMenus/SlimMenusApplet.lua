@@ -961,7 +961,9 @@ function _fetchServerMenu(self, server)
 			playerId = localPlayer:getId()
 		end
 	end
-	server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100, "direct:1" })
+	if playerId then
+		server:userRequest(_sinkSetServerMenuChunk(self, server) , playerId, { 'menu', 0, 100, "direct:1" })
+	end
 
 end
 
