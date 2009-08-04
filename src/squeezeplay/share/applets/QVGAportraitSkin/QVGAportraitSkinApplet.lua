@@ -123,7 +123,7 @@ function skin(self, s, reload, useDefaultSize)
 
         s.scrollbar = {
                 w          = 20,
-		h          = c.FOUR_LINE_ITEM_HEIGHT * 4 - 8,
+		h          = c.FOUR_LINE_ITEM_HEIGHT * 6 - 18,
                 border     = { 0, 4, 0, 0},  -- bug in jive_menu, makes it so bottom and right values are ignored
                 horizontal = 0,
                 bgImg      = s.img.scrollBackground,
@@ -136,6 +136,12 @@ function skin(self, s, reload, useDefaultSize)
                 nil,
                 imgpath .. "Alerts/alert_progress_bar_body.png",
         })
+
+	-- misc layout tweaks from base for portrait
+	s.icon_software_update.padding     = { 0, 22, 0, 0 }
+	s.icon_connecting.padding          = { 0, 52, 0, 0 }
+	s.waiting_popup.text.padding       = { 0, 42, 0, 0 }
+	s.waiting_popup.subtext.padding    = { 0, 0, 0, 46 }
 
 	-- software update window
 	s.update_popup = _uses(s.popup)
@@ -153,7 +159,6 @@ function skin(self, s, reload, useDefaultSize)
                 sh = c.TEXT_SH_COLOR,
         }
 
-	s.icon_software_update.padding = { 0, 22, 0, 0 }
 
         s.update_popup.subtext = {
                 w = WH_FILL,
