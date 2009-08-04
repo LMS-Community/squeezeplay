@@ -307,7 +307,7 @@ end
 function _networkScan(self, iface)
 	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
         popup:addWidget(Icon("icon_connecting"))
         popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
@@ -1139,7 +1139,7 @@ function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 			_connectTimer(self, iface, ssid, createNetwork)
 		end)
 	popup:addWidget(icon)
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	-- XXXX popup text, including dhcp detection text
 
@@ -1357,7 +1357,7 @@ function _connectSuccess(self, iface, ssid)
 	-- popup confirmation
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO"))
@@ -1805,7 +1805,7 @@ function _setStaticIP(self, iface, ssid)
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	local name = self.scanResults[ssid].item.text
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID")))
