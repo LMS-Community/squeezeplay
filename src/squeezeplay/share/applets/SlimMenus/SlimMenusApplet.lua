@@ -957,7 +957,7 @@ function _fetchServerMenu(self, server)
 	else
 		-- Use local player ID if we don't have a controlling player
 		local localPlayer = Player:getLocalPlayer()
-		if playerId then --might not have a local player either
+		if localPlayer then --might not have a local player either
 			playerId = localPlayer:getId()
 		end
 	end
