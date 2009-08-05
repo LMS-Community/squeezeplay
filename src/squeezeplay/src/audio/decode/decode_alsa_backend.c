@@ -427,21 +427,6 @@ static int pcm_open(struct decode_alsa *state) {
 		return err;
 	}
 
-	/* get maxmimum supported rate */
-	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
-		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
-		return err;
-	}
-
-	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 0)) < 0) {
-		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
-		return err;
-	}
-
-	if ((err = snd_pcm_hw_params_get_rate_max(state->hw_params, &decode_audio->max_rate, 0)) < 0) {
-		return err;
-	}
-
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
@@ -484,8 +469,9 @@ static int pcm_open(struct decode_alsa *state) {
 		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
-	val = state->buffer_time;
-	if ((err = snd_pcm_hw_params_set_buffer_time_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+
+	val = state->buffer_time / state->period_count;
+	if ((err = snd_pcm_hw_params_set_period_time_near(state->pcm, state->hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
@@ -559,6 +545,51 @@ static int xrun_recovery(struct decode_alsa *state, int err) {
 }
 
 
+static int pcm_test(struct decode_alsa *state) {
+	snd_pcm_t *pcm;
+	snd_pcm_hw_params_t *hw_params;
+	int err;
+
+	/* Open pcm */
+	if ((err = snd_pcm_open(&pcm, state->device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+		LOG_ERROR("Playback open error: %s", snd_strerror(err));
+		return err;
+	}
+
+	/* Set hardware parameters */
+	snd_pcm_hw_params_alloca(&hw_params);
+
+	/* get maxmimum supported rate */
+	if ((err = snd_pcm_hw_params_any(pcm, hw_params)) < 0) {
+		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
+		goto err;
+	}
+
+	if ((err = snd_pcm_hw_params_set_rate_resample(pcm, hw_params, 0)) < 0) {
+		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
+		goto err;
+	}
+
+	if ((err = snd_pcm_hw_params_get_rate_max(hw_params, &decode_audio->max_rate, 0)) < 0) {
+		goto err;
+	}
+	LOG_DEBUG("max sample rate %d", decode_audio->max_rate);
+
+	if ((err = snd_pcm_close(pcm)) < 0) {
+		LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+	}
+
+	return 0;
+
+err:
+	if ((err = snd_pcm_close(pcm)) < 0) {
+		LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+	}
+
+	return -1;
+}
+
+
 static void *audio_thread_execute(void *data) {
 	struct decode_alsa *state = (struct decode_alsa *)data;
 	snd_pcm_state_t pcm_state;
@@ -571,6 +602,8 @@ static void *audio_thread_execute(void *data) {
 	LOG_DEBUG("audio_thread_execute");
 	
 	status = malloc(snd_pcm_hw_params_sizeof());
+
+	pcm_test(state);
 
 	while (1) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
