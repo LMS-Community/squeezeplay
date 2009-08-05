@@ -133,7 +133,9 @@ function settingsShow(self)
 		-- if the suffix represents an image format (see _isImg() method), translate and add to the menu
 		if self:_isImg(parts[2]) then
 			-- token is represented by uppercase of the filename
-			local token = string.upper(parts[1])
+			local splitFurther = string.split("_", parts[1])
+			local stringToken = string.upper(splitFurther[#splitFurther])
+			local patternMatch = string.upper(parts[1])
 
 			-- limit self.wallpapers when screenWidth and screenHeight are certain parameters
 			local pattern = nil
@@ -144,10 +146,10 @@ function settingsShow(self)
 			elseif screenWidth == 480 and screenHeight == 272 then
 				pattern = 'FAB4_'
 			end
-	
-			if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(token, pattern) ) ) then
+
+			if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
 				self.wallpapers[name] = {
-					token    = token,
+					token    = stringToken,
 					suffix   = parts[2],
 					fullpath = fullpath,
 				}
@@ -182,16 +184,19 @@ function settingsShow(self)
 
 		end
 
-	self.menu:addItem(self:_licenseMenuItem())
+	local x, y = Framework:getScreenSize()
+	local screen = x .. "x" .. y
+	if screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" then
+		screen = nil
+	end
+
+
+	if screen == '240x320' then
+		self.menu:addItem(self:_licenseMenuItem())
+	end
 
 	-- get list of downloadable wallpapers from the server
 	if self.server then
-
-		local x, y = Framework:getScreenSize()
-		local screen = x .. "x" .. y
-		if screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" then
-			screen = nil
-		end
 
 		log:debug("found server - requesting wallpapers list ", screen)
 

@@ -99,7 +99,7 @@ CREDITS_BY
 	RU	Рисунки от:
 	SV	Bilder av:
 
-JIVE_CONCRETE
+CONCRETE
 	CS	Beton
 	DA	Cement
 	DE	Beton
@@ -114,7 +114,7 @@ JIVE_CONCRETE
 	RU	Бетон
 	SV	Betong
 
-JIVE_MIDNIGHT
+MIDNIGHT
 	CS	Půlnoc
 	DA	Midnat
 	DE	Mitternacht
@@ -129,7 +129,7 @@ JIVE_MIDNIGHT
 	RU	Полночь
 	SV	Midnatt
 
-JIVE_PEA
+PEA
 	CS	Hrášek
 	DA	Ært
 	DE	Erbse
@@ -144,7 +144,7 @@ JIVE_PEA
 	RU	Горошек
 	SV	Ärta
 
-JIVE_BLACK
+BLACK
 	CS	Černá
 	DA	Sort
 	DE	Schwarz
@@ -159,7 +159,7 @@ JIVE_BLACK
 	RU	Черный
 	SV	Svart
 
-JIVE_STONE
+STONE
 	CS	Kámen
 	DA	Sten
 	DE	Stein
@@ -174,7 +174,7 @@ JIVE_STONE
 	RU	Камень
 	SV	Sten
 
-JIVE_DUNES
+DUNES
 	CS	Duny
 	DA	Klitter
 	DE	Dünen
@@ -189,7 +189,7 @@ JIVE_DUNES
 	RU	Дюны
 	SV	Sanddyner
 
-JIVE_TULIP
+TULIP
 	CS	Tulipán
 	DA	Tulipan
 	DE	Tulpe
@@ -204,7 +204,7 @@ JIVE_TULIP
 	RU	Тюльпан
 	SV	Tulpan
 
-JIVE_SMOKE
+SMOKE
 	CS	Dým
 	DA	Røg
 	DE	Rauch
@@ -219,7 +219,7 @@ JIVE_SMOKE
 	RU	Дым
 	SV	Rök
 
-JIVE_AMBER
+AMBER
 	CS	Oranžová
 	DA	Rav
 	DE	Bernstein
@@ -234,7 +234,7 @@ JIVE_AMBER
 	RU	Янтарно-желтый
 	SV	Bärnsten
 
-JIVE_FLAME
+FLAME
 	CS	Plamen
 	DA	Flamme
 	DE	Flamme
@@ -249,7 +249,7 @@ JIVE_FLAME
 	RU	Пламя
 	SV	Flamma
 
-JIVE_GRAFFITI
+GRAFFITI
 	CS	Graffiti
 	DA	Graffiti
 	DE	Graffiti
@@ -264,7 +264,7 @@ JIVE_GRAFFITI
 	RU	Граффити
 	SV	Graffiti
 
-JIVE_WEATHERED_WOOD
+WEATHEREDWOOD
 	CS	Zvětralé dřevo
 	DA	Slidt træ
 	DE	Verwittertes Holz
@@ -294,7 +294,7 @@ SUNRISE
 	RU	Восход
 	SV	Soluppgång
 
-JIVE_SUNLIGHT
+SUNLIGHT
 	CS	Sluneční svit
 	DA	Sollys
 	DE	Sonnenschein
@@ -309,7 +309,7 @@ JIVE_SUNLIGHT
 	RU	Солнечный свет
 	SV	Solsken
 
-JIVE_FADE_TO_BLACK
+FADETOBLACK
 	CS	Vyblednout do černé
 	DA	Går i sort
 	DE	Ausblenden
@@ -324,7 +324,7 @@ JIVE_FADE_TO_BLACK
 	RU	Угасание до черного
 	SV	Svarttoning
 
-JIVE_WEATHERED_RED
+WEATHEREDRED
 	CS	Vybledlá červená
 	DA	Slidt rød
 	DE	Verwittertes Rot
@@ -339,7 +339,7 @@ JIVE_WEATHERED_RED
 	RU	Старый красный
 	SV	Bleknat rött
 
-JIVE_PURPLENOTE
+PURPLENOTE
 	CS	Nachové noty
 	DA	Lilla noder
 	DE	Violette Noten
@@ -354,7 +354,7 @@ JIVE_PURPLENOTE
 	RU	Пурпурные ноты
 	SV	Lila noter
 
-JIVE_ORANGEMARBLE
+ORANGEMARBLE
 	CS	Oranžový mramor
 	DA	Orange marmor
 	DE	Orangefarbener Marmor
@@ -369,7 +369,7 @@ JIVE_ORANGEMARBLE
 	RU	Оранжевый мрамор
 	SV	Orange kula
 
-JIVE_NOTE
+NOTE
 	CS	Poznámky
 	DA	Noder
 	DE	Notes
@@ -384,7 +384,7 @@ JIVE_NOTE
 	RU	Примечания
 	SV	Anteckningar
 
-JIVE_FLOWERSGREEN
+FLOWERSGREEN
 	CS	Zelené květiny
 	DA	Grønne blomster
 	DE	Grüne Blumen
@@ -444,7 +444,7 @@ WAVE2
 	RU	Волны 2
 	SV	Vågform 2
 
-FAB4_ALLEGRO
+ALLEGRO
 	CS	Allegro
 	DA	Allegro
 	DE	Allegro
@@ -458,7 +458,7 @@ FAB4_ALLEGRO
 	RU	Аллегро
 	SV	Allegro
 
-FAB4_ENCORE
+ENCORE
 	CS	Přídavek
 	DA	Ekstranummer
 	DE	Encore
@@ -472,7 +472,7 @@ FAB4_ENCORE
 	RU	На бис
 	SV	Dakapo
 
-FAB4_HARMONY
+HARMONY
 	CS	Harmonie
 	DA	Harmoni
 	DE	Harmony
@@ -486,7 +486,7 @@ FAB4_HARMONY
 	RU	Harmony
 	SV	Harmony
 
-FAB4_NOCTURNE
+NOCTURNE
 	CS	Nokturno
 	DA	Nocturne
 	DE	Nocturne
@@ -500,7 +500,7 @@ FAB4_NOCTURNE
 	RU	Ноктюрн
 	SV	Nocturne
 
-FAB4_QUARTET
+QUARTET
 	CS	Kvartet
 	DA	Kvartet
 	DE	Quartet
@@ -514,7 +514,7 @@ FAB4_QUARTET
 	RU	Квартет
 	SV	Kvartett
 
-FAB4_SONATA
+SONATA
 	CS	Sonáta
 	DA	Sonate
 	DE	Sonata
@@ -528,7 +528,7 @@ FAB4_SONATA
 	RU	Соната
 	SV	Sonat
 
-FAB4_SYMPHONY
+SYMPHONY
 	CS	Symfonie
 	DA	Symfoni
 	DE	Symphony
@@ -542,7 +542,7 @@ FAB4_SYMPHONY
 	RU	Симфония
 	SV	Symfoni
 
-FAB4_VIBRATO
+VIBRATO
 	CS	Vibráto
 	DA	Vibrato
 	DE	Vibrato
@@ -555,37 +555,4 @@ FAB4_VIBRATO
 	PL	Vibrato
 	RU	Вибрато
 	SV	Vibrato
-
-JIVE_VIBRATO
-	EN	Vibrato
-
-BB_ALLEGRO
-	EN	Allegro
-
-BB_ENCORE
-	EN	Encore
-
-BB_ENCORE_RED
-	EN	Encore Red
-
-BB_HARMONY
-	EN	Harmony
-
-BB_NOCTURNE
-	EN	Nocturne
-
-BB_QUARTET
-	EN	Quartet
-
-BB_SONATA
-	EN	Sonata
-
-BB_SYMPHONY
-	EN	Symphony
-
-BB_VIBRATO
-	EN	Vibrato
-
-JIVE_NOCTURNE
-	EN	Nocturne
 

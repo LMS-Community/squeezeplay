@@ -585,18 +585,19 @@ function setup_text_list(self, item)
 end
 
 --[[
-Window:   "playlist"
+Window:   "icon_list"
 Menu:     "menu"
 Item:     "item", "item_checked", (styles: selected, pressed, locked)
 --]]
 function window_playlist(self, item)
 	local data = _itemData(item)
 
-	local window = Window("play_list", _itemName(item), "artists")
+	local window = Window("icon_list", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data) do
+		log:warn('here')
 		menu:addItem({
 			text = subdata[1],
 			icon = Icon('icon_no_artwork'),
@@ -625,9 +626,11 @@ function window_playlist(self, item)
 	})
 	menu:addItem({
 			text  = "Clear Playlist",
+			style = 'item_playlist_clear',
 	})
 	menu:addItem({
 			text  = "Save Playlist",
+			style = 'item_playlist_save',
 	})
 
 	window:addWidget(menu)
@@ -710,11 +713,12 @@ Item:     "item"
 function window_track_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("track_list", _itemName(item))
-	_windowActions(self, item, window)
-
-	window:setIconWidget("icon", Icon("icon"))
-
+	--local window = Window("track_list", _itemName(item))
+	local window = Window("track_list", "Two line titles\nin track_list")
+ 	_windowActions(self, item, window)
+ 
+	window:setIconWidget("icon", Icon("icon_no_artwork"))
+ 
 	local menu = SimpleMenu("menu")
 	for i, text in ipairs(data) do
 		log:warn(text)
@@ -1006,12 +1010,12 @@ testData = {
 		 "Add to Favorites",
 	},
 	playlist = {
-		{ "Something\nThe Somethings\nGreatest Hits" }, 
-		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
-		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
-		{ "Something\nThe Somethings\nGreatest Hits" }, 
-		{ "In Our Bedroom After The War\nStars\nIn Our Bedroom After The War" },
-		{ "3121\nPrince\nSome Very Long Album Title That Goes off Screen" },
+		{ "Something\nThe Somethings - Greatest Hits" }, 
+		{ "In Our Bedroom After The War\nStars - In Our Bedroom After The War" },
+		{ "3121\nPrince - Some Very Long Album Title That Goes off Screen" },
+		{ "Something\nThe Somethings - Greatest Hits" }, 
+		{ "In Our Bedroom After The War\nStars - In Our Bedroom After The War" },
+		{ "3121\nPrince - Some Very Long Album Title That Goes off Screen" },
 	},
 	toast_popup = {
 		"Your toast_popup is done",
