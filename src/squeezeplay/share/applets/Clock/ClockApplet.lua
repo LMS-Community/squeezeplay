@@ -1096,7 +1096,7 @@ function Digital:getDigitalClockSkin(skinName)
 					align = 'center',
 					w = 115,
 					h = WH_FILL,
-					font = _font(16),
+					font = _font(18),
 					fg = { 0xcc, 0xcc, 0xcc },
 					padding  = { 1, 0, 0, 6 },
 				},
@@ -1117,7 +1117,7 @@ function Digital:getDigitalClockSkin(skinName)
 					w = 2,
 				},
 				month = {
-					font = _font(16),
+					font = _font(18),
 					w = WH_FILL,
 					h = WH_FILL,
 					align = 'center',
@@ -1125,7 +1125,7 @@ function Digital:getDigitalClockSkin(skinName)
 					padding = { 0, 0, 0, 5 },
 				},
 				year = {
-					font = _boldfont(16),
+					font = _boldfont(18),
 					w = 50,
 					h = WH_FILL,
 					align = 'left',
