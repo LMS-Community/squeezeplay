@@ -165,20 +165,30 @@ local function _findApplets()
 	log:debug("_findApplets")
 
 	-- Find all applets/* directories on lua path
-	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
+	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do repeat
 	
 		dir = dir .. "applets"
 		log:debug("..in ", dir)
 		
 		local mode = lfs.attributes(dir, "mode")
-		if mode == "directory" then
-			for entry in lfs.dir(dir) do
-				if not entry:match("^%.") then
-					_saveApplet(entry, dir)
-				end
-			end
+		if mode ~= "directory" then
+			break
 		end
-	end
+
+		for entry in lfs.dir(dir) do repeat
+			local entrydir = dir .. "/" .. entry .. "/"
+			local entrymode = lfs.attributes(entrydir, "mode")
+
+			if entry:match("^%.") or entrymode ~= "directory" then
+				break
+			end
+
+			local metamode = lfs.attributes(entrydir .. entry .. "Meta.lua", "mode")
+			if metamode == "file" then
+				_saveApplet(entry, dir)
+			end
+		until true end
+	until true end
 end
 
 
