@@ -368,7 +368,7 @@ local function _stepSetMenuItems(step, data)
 end
 
 
-local function _pushToNewWindow(step)
+local function _stepLockHandler(step, loadedCallback)
 	if not step then
 		return
 	end
@@ -384,10 +384,19 @@ local function _pushToNewWindow(step)
 		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
 		end
-		_pushStep(step)
-		step.window:show()
+
+		loadedCallback()
       	end
 end
+
+
+local function _pushToNewWindow(step)
+	_stepLockHandler(step,  function()
+					_pushStep(step)
+					step.window:show()
+				end)
+end
+
 
 -- _newWindowSpec
 -- returns a Window spec based on the concatenation of base and item
@@ -948,6 +957,28 @@ local function _devnull(chunk, err)
 	log:debug(chunk)
 end
 
+
+--destination that does nothing, but handles step.cancelled and step.loaded
+local function _emptyDestination(step)
+	local step = {}
+
+	step.sink = function(chunk, err)
+		-- are we cancelled?
+		if step.cancelled then
+			log:debug("_devnull(): , action cancelled...")
+			return
+		end
+
+		if step.loaded then
+			step.loaded()
+			step.loaded = nil
+		end
+	end
+
+	return step, step.sink
+end
+
+
 -- _goNow
 -- go immediately to a particular destination
 local function _goNow(destination, transition)
@@ -982,7 +1013,7 @@ local function _browseSink(step, chunk, err)
 
 	if chunk then
 		local data
-		
+
 		-- move result key up to top-level
 		if chunk.result then
 			data = chunk.result
@@ -1656,14 +1687,19 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				if menuItem then
 					menuItem:playSound("WINDOWSHOW")
 				end
-			
+
+				local skipNewWindowPush = false
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
 				local step, sink
 				local from, qty
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
 				if nextWindow == 'nowPlaying' then
-					_goNowPlaying()
+					skipNewWindowPush = true
+
+					step, sink = _emptyDestination(step)
+					_stepLockHandler(step, _goNowPlaying)
+
 				elseif nextWindow == 'playlist' then
 					_goPlaylist()
 				elseif nextWindow == 'home' then
@@ -1705,7 +1741,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 
 				if jsonAction then
-					_pushToNewWindow(step)
+					if not skipNewWindowPush then
+						_pushToNewWindow(step)
+					end
 					_performJSONAction(jsonAction, from, qty, step, sink)
 				else
 					-- if there's not jsonAction, sink is a nextWindow function, so just call it
