@@ -927,7 +927,6 @@ _response = function(self, chunk)
 				-- an async notification from a normal request
 				if not event.id then
 					log:error("No id. event:")
-					debug.dump(event, 4)
 					return
 				end
 				subscription = subscription .. '|' .. event.id
