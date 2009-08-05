@@ -122,7 +122,7 @@ function skin(self, s, reload, useDefaultSize)
 
         s.scrollbar = {
                 w          = 20,
-		h          = c.FOUR_LINE_ITEM_HEIGHT * 4 - 8,
+		h          = c.LANDSCAPE_LINE_ITEM_HEIGHT * 4 - 8,
                 border     = { 0, 4, 0, 0},  -- bug in jive_menu, makes it so bottom and right values are ignored
                 horizontal = 0,
                 bgImg      = s.img.scrollBackground,
@@ -136,6 +136,9 @@ function skin(self, s, reload, useDefaultSize)
                 imgpath .. "Alerts/alert_progress_bar_body.png",
         })
 
+	s.track_list.menu.scrollbar = _uses(s.scrollbar, {
+		h = 41 * 4 - 8,
+	})
 	-- software update window
 	s.update_popup = _uses(s.popup)
 

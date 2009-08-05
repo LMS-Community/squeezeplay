@@ -152,6 +152,42 @@ function skin(self, s, reload, useDefaultSize)
 	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT
 	s.icon_list.menu.itemHeight = c.PORTRAIT_LINE_ITEM_HEIGHT
 
+	s.track_list.menu.scrollbar = _uses(s.scrollbar, {
+                h = 41 * 6 - 8,
+        })
+
+	-- track_list window needs to be mostly redefined for portrait
+	s.track_list.title.h = 50
+        s.track_list.title = _uses(s.title, {
+                h = 50,
+                order = { 'icon', 'text' },
+		padding = { 10,0,0,0 },
+                icon  = {
+                        w = 49,
+                        h = WH_FILL,
+                },
+                text = {
+                        align = "top-left",
+                        font = _font(18),
+                        lineHeight = 19,
+                        line = {
+                                        {
+                                                font = _boldfont(18),
+                                                height = 20,
+                                        },
+                                        {
+                                                font = _font(14),
+                                                height = 16,
+                                        }
+                        },
+                },
+        })
+        s.track_list.menu = _uses(s.menu, {
+                itemHeight = 41,
+                h = 6 * 41,
+                border = { 0, 50, 0, 0 },
+        })
+
 	-- software update window
 	s.update_popup = _uses(s.popup)
 

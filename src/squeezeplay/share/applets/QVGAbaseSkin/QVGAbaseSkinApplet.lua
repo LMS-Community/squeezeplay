@@ -918,7 +918,11 @@ function skin(self, s, reload, useDefaultSize)
         }
 
 	-- help window (likely the same as information)
-	s.help_info = _uses(s.window)
+	s.help_info = _uses(s.window, {
+		text = {
+			font = _font(c.TEXTAREA_FONT_SIZE),
+		},
+	})
 
 
 	--track_list window
@@ -926,13 +930,12 @@ function skin(self, s, reload, useDefaultSize)
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		h = c.LANDSCAPE_LINE_ITEM_HEIGHT - 1,
-		border = 4,
+		h = 52,
 		order = { 'icon', 'text' },
+		padding = { 10,0,0,0 },
 		icon  = {
-			w = c.THUMB_SIZE,
+			w = 51,
 			h = WH_FILL,
-			padding = { 9,0,0,0 },
 		},
 		text = {
 			padding = c.MENU_ALBUMITEM_TEXT_PADDING,
@@ -943,10 +946,20 @@ function skin(self, s, reload, useDefaultSize)
 					{
 						font = _boldfont(c.ALBUMMENU_TITLE_FONT_SIZE),
 						height = c.ALBUMMENU_TITLE_FONT_SIZE + 2,
-					}
+					},
+					{
+						font = _font(12),
+						height = 14,
+					},
 			},
 		},
 	})
+	s.track_list.menu = _uses(s.menu, {
+		itemHeight = 41,
+		h = 164,
+		border = { 0, 52, 0, 0 },
+	})
+
 
 	--playlist window
 	-- identical to icon_list but with some different formatting on the text
