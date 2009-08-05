@@ -429,7 +429,7 @@ function _updateTrack(self, trackinfo, pos, length)
 		
 		local artistalbum = ''
 		if artist ~= '' and album ~= '' then
-			artistalbum = artist .. ' - ' .. album
+			artistalbum = artist ..  ' • ' .. album
 		elseif artist ~= '' then
 			artistalbum = artist
 		elseif album ~= '' then
