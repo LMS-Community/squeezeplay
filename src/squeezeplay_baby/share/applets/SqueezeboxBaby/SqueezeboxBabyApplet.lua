@@ -376,12 +376,6 @@ end
 function setPowerState(self, state)
 	local settings = self:getSettings()
 
-	if self.powerState == state then
-		return
-	end
-
-	self.powerState = state
-
 	if state == "active" then
 		self.powerTimer:restart(settings.dimmedTimeout)
 
@@ -389,6 +383,12 @@ function setPowerState(self, state)
 		self.powerTimer:stop()
 
 	end
+
+	if self.powerState == state then
+		return
+	end
+
+	self.powerState = state
 
 	_setBrightness(self, self.lcdBrightness)
 end
