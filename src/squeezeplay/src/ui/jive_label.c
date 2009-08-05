@@ -8,13 +8,13 @@
 #include "jive.h"
 
 
-/* was 7,6 originally - new values might be problematic on baby boom or controller*/
-#define SCROLL_FPS	22
-#define SCROLL_OFFSET	3
+/* actual FPS will only run as a fraction of JIVE_FRAME_RATE */
+#define SCROLL_FPS	JIVE_FRAME_RATE / 2
+#define SCROLL_OFFSET	5
 
 #define SCROLL_PAD_RIGHT  40
-#define SCROLL_PAD_LEFT   -20
-#define SCROLL_PAD_START  -60
+#define SCROLL_PAD_LEFT   -200
+#define SCROLL_PAD_START  -100
 
 
 typedef struct label_line {
@@ -290,6 +290,9 @@ int jiveL_label_do_animate(lua_State *L) {
 		peer->scroll_offset = SCROLL_PAD_LEFT;
 	}
 
+	if (peer->scroll_offset < 0) {
+		return 0;
+	}
 	jive_getmethod(L, 1, "reDraw");
 	lua_pushvalue(L, 1);
 	lua_call(L, 1, 0);
@@ -374,6 +377,7 @@ int jiveL_label_draw(lua_State *L) {
 
 		jive_surface_get_size(line->text_fg, &w, &h);
 
+	
 		/* second text when scrolling */
 		o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
 		if (w < peer->label_w) {
