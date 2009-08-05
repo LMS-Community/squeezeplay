@@ -304,8 +304,8 @@ function setup_error(self, item)
 		})
 	end
 
-	window:addWidget(textarea)
 	window:addWidget(menu)
+	menu:setHeaderWidget(textarea)
 
 	self:tieWindow(window)
 	return window
