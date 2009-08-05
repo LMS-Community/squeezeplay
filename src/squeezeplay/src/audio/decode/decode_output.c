@@ -224,11 +224,16 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
  * a transition. Start at the requested transition interval and go
  * down till we find an interval that we have enough audio for.
  */
-static fft_fixed determine_transition_interval(int sample_rate, u32_t transition_period, size_t *nbytes) {
+static fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes) {
 	size_t bytes_used, sample_step_bytes;
 	fft_fixed interval, interval_step;
 
 	ASSERT_AUDIO_LOCKED();
+
+	if (sample_rate != decode_audio->track_sample_rate) {
+		LOG_DEBUG(log_audio_decode, "Can't CROSSFADE different sample rates %d != %d", sample_rate, decode_audio->track_sample_rate);
+		return 0;
+	}
 
 	bytes_used = fifo_bytes_used(&decode_audio->fifo);
 	*nbytes = SAMPLES_TO_BYTES(TRANSITION_MINIMUM_SECONDS * sample_rate);
