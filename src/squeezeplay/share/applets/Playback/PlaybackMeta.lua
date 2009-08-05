@@ -82,17 +82,23 @@ function configureApplet(meta)
 	-- Connect player
 	local server = nil
 	if settings.squeezeNetwork then
-		server = SlimServer(jnt, "mysqueezebox.com")
+		server = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
 		server:updateInit({ip=jnt:getSNHostname()}, 9000)
 
 	elseif settings.serverName then
-		server = SlimServer(jnt, settings.serverName)
+		if not settings.serverUuid then
+			settings.serverUuid = settings.serverName
+		end
+		server = SlimServer(jnt, settings.serverUuid, settings.serverName)
 		server:updateInit(settings.serverInit)
 	end
 
 	if settings.serverName then
 		-- create and track last SC
-		local sc = SlimServer(jnt, settings.serverName)
+		if not settings.serverUuid then
+			settings.serverUuid = settings.serverName
+		end
+		local sc = SlimServer(jnt, settings.serverUuid, settings.serverName)
 		meta.state.player:setLastSqueezeCenter(sc)
 	end
 	
@@ -150,6 +156,7 @@ function _updateSettings(meta, player, force)
 		-- remember server if it's not SN
 		if not settings.squeezeNetwork then
 			settings.serverName = server:getName()
+			settings.serverUuid = server:getId()
 			settings.serverInit = server:getInit()
 		end
 

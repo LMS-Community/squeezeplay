@@ -11,7 +11,7 @@ Represents and interfaces with a real SlimServer on the network.
 =head1 SYNOPSIS
 
  -- Create a SlimServer
- local myServer = SlimServer(jnt, '192.168.1.1', 'Raoul')
+ local myServer = SlimServer(jnt, '192.168.1.1', 'Raoul', 'Raoul')
 
  -- Allow some time here for newtork IO to occur
 
@@ -306,10 +306,10 @@ end
 
 
 -- can be called as a object or class method
-function setCredentials(self, cred, name)
-	if not name then
+function setCredentials(self, cred, id)
+	if not id then
 		-- object method
-		name = self:getName()
+		id = self:getId()
 
 		SocketHttp:setCredentials({
 			ipport = { self:getIpPort() },
@@ -322,7 +322,7 @@ function setCredentials(self, cred, name)
 		self:connect()
 	end
 
-	credentials[name] = cred
+	credentials[id] = cred
 end
 
 
@@ -336,18 +336,18 @@ of the server.
 
 =cut
 --]]
-function __init(self, jnt, name, version)
+function __init(self, jnt, id, name, version)
 	-- Only create one server object per server. This avoids duplicates
 	-- following a server disconnect.
 
-	if serverIds[name] then
-		return serverIds[name]
+	if serverIds[id] then
+		return serverIds[id]
 	end
 
-	log:debug("SlimServer:__init(", name, ")")
+	log:debug("SlimServer:__init(", name, ")", " ", id)
 
 	local obj = oo.rawnew(self, {
-		id = name,
+		id = id,
 		name = name,
 		jnt = jnt,
 
@@ -463,15 +463,15 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:updateAddress(ip, port)
+=head2 jive.slim.SlimServer:updateAddress(ip, port, name)
 
 Called to update (or initially set) the ip address and port for SqueezeCenter
 
 =cut
 --]]
-function updateAddress(self, ip, port)
-	if self.ip ~= ip or self.port ~= port then
-		log:debug(self, ": address set to ", ip , ":", port, " netstate=", self.netstate)
+function updateAddress(self, ip, port, name)
+	if self.ip ~= ip or self.port ~= port or self.name ~= name then
+		log:debug(self, ": address set to ", ip , ":", port, " netstate=", self.netstate, " name: ", name)
 
 		local oldstate = self.netstate
 
@@ -481,9 +481,12 @@ function updateAddress(self, ip, port)
 		-- open new comet connection
 		self.ip = ip
 		self.port = port
+		if name then
+			self.name = name
+		end
 
 		-- http authentication
-		local cred = credentials[self.name]
+		local cred = credentials[self.id]
 		if cred then
 			SocketHttp:setCredentials({
 				ipport = { ip, port },
@@ -1105,6 +1108,19 @@ Returns the server name
 --]]
 function getName(self)
 	return self.name
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getId()
+
+Returns the server id
+
+=cut
+--]]
+function getId(self)
+	return self.id
 end
 
 

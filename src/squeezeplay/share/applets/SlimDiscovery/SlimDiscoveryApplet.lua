@@ -69,6 +69,7 @@ local function _slimDiscoverySource()
 		'NAME', string.char(0x00),                                     -- request Name of server
 		'JSON', string.char(0x00),                                     -- request JSONRPC port 
 		'VERS', string.char(0x00),                                     -- request version 
+		'UUID', string.char(0x00),                                     -- request uuid
 		'JVID', string.char(0x06, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34), -- My ID - FIXME mac of no use!
 	}
 end
@@ -87,7 +88,7 @@ local function _slimDiscoverySink(self, chunk, err)
 		return
 	end
 
-	local name, ip, port, version = nil, chunk.ip, nil, nil
+	local name, ip, port, version, uuid = nil, chunk.ip, nil, nil, nil
 
 	local ptr = 2
 	while (ptr <= chunk.data:len() - 5) do
@@ -101,22 +102,26 @@ local function _slimDiscoverySink(self, chunk, err)
 			elseif t == 'IPAD' then ip = v
 			elseif t == 'JSON' then port = v
 			elseif t == 'VERS' then version = v
+			elseif t == 'UUID' then uuid = v
 			end
 		end
 	end
 
 	if name and ip and port then
 		-- get instance for SqueezeCenter
-		local server = SlimServer(jnt, name, version)
+		if not uuid then
+			uuid = name
+		end
+		local server = SlimServer(jnt, uuid, name, version)
 
 		-- update SqueezeCenter address
-		self:_serverUpdateAddress(server, ip, port)
+		self:_serverUpdateAddress(server, ip, port, name)
 	end
 end
 
 
-function _serverUpdateAddress(self, server, ip, port)
-	server:updateAddress(ip, port)
+function _serverUpdateAddress(self, server, ip, port, name)
+	server:updateAddress(ip, port, name)
 
 	if self.state == 'searching'
 		or self.state == 'probing' then
@@ -264,8 +269,8 @@ function _discover(self)
 
 	-- Special case Squeezenetwork
 	if System:getUUID() then
-		squeezenetwork = SlimServer(jnt, "mysqueezebox.com")
-		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000)
+		squeezenetwork = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
+		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000, "mysqueezebox.com")
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
@@ -503,14 +508,23 @@ function notify_playerCurrent(self, player)
 	end
 
 	local server = player and player:getSlimServer() or false
-	if server and 
+	local ipChanged
+	if server then
+		local serverIp = server:getInit() and server:getInit().ip or nil
+		local settingsIp = settings.serverInit and settings.serverInit.ip or nil
+		ipChanged = serverIp ~= settingsIp
+	end
+
+	if server and
 		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
+		  or ipChanged
 		  or settings.serverName ~= server:getName() ) then
 		settings.squeezeNetwork = server:isSqueezeNetwork()
 
 		-- remember server if it's not SN
 		if not settings.squeezeNetwork then
 			settings.serverName = server:getName()
+			settings.serverUuid = server:getId()
 			settings.serverInit = server:getInit()
 		end
 

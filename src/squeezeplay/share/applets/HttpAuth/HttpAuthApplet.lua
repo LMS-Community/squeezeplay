@@ -69,7 +69,7 @@ function _enterDone(self)
 
 	-- store username/password
 	local settings = self:getSettings()
-	settings[self.server:getName()] = {
+	settings[self.server:getId()] = {
 		realm = realm,
 		username = self.username,
 		password = self.password

@@ -71,13 +71,16 @@ function configureApplet(meta)
 
 	-- Current server
 	if settings.squeezeNetwork then
-		server = SlimServer(jnt, "mysqueezebox.com")
+		server = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
 		server:updateInit({ip=jnt:getSNHostname()}, 9000)
 		SlimServer:addLocallyRequestedServer(server)
 
 	elseif settings.serverName then
 --	elseif settings.serverName then
-		server = SlimServer(jnt, settings.serverName)
+		if not settings.serverUuid then
+			settings.serverUuid = settings.serverName
+		end
+		server = SlimServer(jnt, settings.serverUuid, settings.serverName)
 		server:updateInit(settings.serverInit)
 		SlimServer:addLocallyRequestedServer(server)
 	end
