@@ -289,7 +289,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		CHECK_PADDING  = { 0, 0, 0, 0 },
 
-		MENU_ALBUMITEM_PADDING = { 4, 2, 4, 2 },
+		MENU_ALBUMITEM_PADDING = { 10, 2, 4, 2 },
 		MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 },
 		MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 },
 
