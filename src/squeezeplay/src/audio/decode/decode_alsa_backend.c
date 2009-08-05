@@ -557,7 +557,8 @@ static int pcm_test(struct decode_alsa *state) {
 	}
 
 	/* Set hardware parameters */
-	snd_pcm_hw_params_alloca(&hw_params);
+	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
+	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
 
 	/* get maxmimum supported rate */
 	if ((err = snd_pcm_hw_params_any(pcm, hw_params)) < 0) {
