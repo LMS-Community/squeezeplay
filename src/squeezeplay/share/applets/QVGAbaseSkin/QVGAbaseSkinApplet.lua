@@ -908,6 +908,13 @@ function skin(self, s, reload, useDefaultSize)
 	-- information window
 	s.information = _uses(s.window)
 
+	s.information.text = {
+		font = _font(16),
+                fg = c.TEXT_COLOR,
+                sh = c.TEXT_SH_COLOR,
+                padding = { 10, 10, 10, 10},
+                lineHeight = 20,
+        }
 
 	-- help window (likely the same as information)
 	s.help_info = _uses(s.window)
