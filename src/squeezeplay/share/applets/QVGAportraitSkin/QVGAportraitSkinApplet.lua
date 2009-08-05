@@ -123,7 +123,7 @@ function skin(self, s, reload, useDefaultSize)
 
         s.scrollbar = {
                 w          = 20,
-		h          = c.FOUR_LINE_ITEM_HEIGHT * 6 - 18,
+		h          = c.PORTRAIT_LINE_ITEM_HEIGHT * 6 - 6,
                 border     = { 0, 4, 0, 0},  -- bug in jive_menu, makes it so bottom and right values are ignored
                 horizontal = 0,
                 bgImg      = s.img.scrollBackground,
@@ -149,6 +149,8 @@ function skin(self, s, reload, useDefaultSize)
         s.slider_popup.y = 88
         s.slider_popup.w = screenWidth - 12
 	
+	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT
+	s.icon_list.menu.itemHeight = c.PORTRAIT_LINE_ITEM_HEIGHT
 
 	-- software update window
 	s.update_popup = _uses(s.popup)

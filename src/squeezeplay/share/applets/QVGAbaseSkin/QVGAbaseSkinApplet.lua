@@ -331,7 +331,8 @@ function skin(self, s, reload, useDefaultSize)
 		ICONBAR_FONT = 12,
 
 		ITEM_ICON_ALIGN   = 'right',
-		FOUR_LINE_ITEM_HEIGHT = 45,
+		LANDSCAPE_LINE_ITEM_HEIGHT = 45,
+		PORTRAIT_LINE_ITEM_HEIGHT  = 43,
 	}
 
 	local skinSuffix = '.png'
@@ -421,7 +422,7 @@ function skin(self, s, reload, useDefaultSize)
 		position = LAYOUT_NORTH,
 		padding = 0,
 		border = { 0, 36, 0, 0 },
-		itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
+		itemHeight = c.LANDSCAPE_LINE_ITEM_HEIGHT,
 		font = _boldfont(120),
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
@@ -787,7 +788,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = _uses(s.menu, {
-			itemHeight = c.FOUR_LINE_ITEM_HEIGHT,
+			itemHeight = c.LANDSCAPE_LINE_ITEM_HEIGHT,
 			item = {
 				order = { "icon", "text", "arrow" },
 				padding = c.MENU_ALBUMITEM_PADDING,
@@ -925,7 +926,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.track_list = _uses(s.text_list)
 
 	s.track_list.title = _uses(s.title, {
-		h = c.FOUR_LINE_ITEM_HEIGHT - 1,
+		h = c.LANDSCAPE_LINE_ITEM_HEIGHT - 1,
 		border = 4,
 		order = { 'icon', 'text' },
 		icon  = {
