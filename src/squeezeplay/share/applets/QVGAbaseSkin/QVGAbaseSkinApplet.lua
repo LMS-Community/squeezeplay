@@ -833,7 +833,6 @@ function skin(self, s, reload, useDefaultSize)
 		arrow = {
 			img = _loadImage(self, "Icons/icon_nplay_off.png"),
 		},
-		text = { padding = 0, },
 	})
 
 
