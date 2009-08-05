@@ -591,6 +591,7 @@ end
 function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
 	if not hasNetworking then
 		successCallback()
+		return
 	end
 
 	Task("checkNetworkConnection", self,
