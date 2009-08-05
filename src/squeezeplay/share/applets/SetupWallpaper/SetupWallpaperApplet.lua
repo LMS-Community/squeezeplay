@@ -375,7 +375,6 @@ function showBackground(self, wallpaper, playerId)
 		wallpaper = self:getSettings()[playerId]
 		if not wallpaper then
 			wallpaper = self:getSettings()[skinName]
-			debug.dump(wallpaper)
 		end
 	end
 	if self.currentWallpaper == wallpaper then
