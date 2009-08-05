@@ -166,6 +166,9 @@ function init(self)
 
 	-- initial power settings
 	self:_initBrightnessTable()
+	if settings.brightness > #brightnessTable then
+		settings.brightness = #brightnessTable
+	end
 	self.lcdBrightness = brightnessTable[settings.brightness]
 	self:setPowerState("active")
 
