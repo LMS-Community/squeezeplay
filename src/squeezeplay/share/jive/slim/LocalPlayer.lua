@@ -98,7 +98,7 @@ function destroy(self, server)
 	end
 
 	if self.playback then
-		self.playback:free()
+		self.playback:stop()
 		self.playback = nil
 	end
 
@@ -153,6 +153,12 @@ function connectToServer(self, server)
 	
 		self.slimproto:connect(server)
 	end
+end
+
+
+function disconnectFromServer(self)
+	self.slimproto:disconnect()
+	self.playback:stop()
 end
 
 

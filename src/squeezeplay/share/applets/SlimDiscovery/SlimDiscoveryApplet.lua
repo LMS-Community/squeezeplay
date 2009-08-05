@@ -598,6 +598,9 @@ end
 
 function disconnectPlayer(self)
 	self:_setState("disconnected")
+
+	local player = Player:getCurrentPlayer()
+	player:disconnectFromServer()
 end
 
 

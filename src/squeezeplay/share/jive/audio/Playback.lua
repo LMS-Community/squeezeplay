@@ -104,7 +104,7 @@ function __init(self, jnt, slimproto)
 end
 
 
-function free(self)
+function stop(self)
 	decode:stop()
 	self.timer:stop()
 end

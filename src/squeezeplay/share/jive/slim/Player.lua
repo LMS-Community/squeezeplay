@@ -1552,6 +1552,11 @@ function _udapConnect(self, server)
 end
 
 
+function disconnectFromServer(self)
+	-- nothing to do for remote player
+end
+
+
 function getLastSeen(self)
 	return self.lastSeen
 end
