@@ -114,8 +114,8 @@ static void decode_resume_audio_handler(void) {
 	}
 
 	if (!fifo_empty(&decode_audio->fifo)) {
-		decode_audio->state = DECODE_STATE_RUNNING;
-		if (decode_audio) {
+		if ((decode_audio->state & DECODE_STATE_RUNNING) == 0) {
+			decode_audio->state = DECODE_STATE_RUNNING;
 			decode_audio->f->resume();
 		}
 	}
@@ -139,8 +139,8 @@ static void decode_pause_audio_handler(void) {
 	if (interval) {
 		decode_audio->add_silence_ms = interval;
 	} else {
-		decode_audio->state &= ~DECODE_STATE_RUNNING;
-		if (decode_audio) {
+		if ((decode_audio->state & DECODE_STATE_RUNNING) != 0) {
+			decode_audio->state &= ~DECODE_STATE_RUNNING;
 			decode_audio->f->pause();
 		}
 	}
