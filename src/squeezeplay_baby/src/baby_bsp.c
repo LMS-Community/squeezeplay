@@ -110,7 +110,7 @@ static int open_input_devices(void) {
 		}
 
 		if (ioctl(fd, EVIOCGNAME(sizeof(name)), name) < 0) {
-			perror("ioctrl");
+			perror("ioctl");
 			close(fd);
 			continue;
 		}
