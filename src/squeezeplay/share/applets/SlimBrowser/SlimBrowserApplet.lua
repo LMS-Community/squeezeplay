@@ -2502,8 +2502,20 @@ function _removeRequestAndUnlock(self, server)
 
 end
 
+
 function _problemConnectingPopup(self, server)
-	log:info("_problemConnectingPopup")
+	log:debug("_problemConnectingPopup")
+	local successCallback = function()
+					self:_problemConnectingPopupInternal(server)
+				end
+	local failureCallback = self:_networkFailureCallback(server)
+
+	appletManager:callService("warnOnAnyNetworkFailure", successCallback, failureCallback)
+end
+
+
+function _problemConnectingPopupInternal(self, server)
+	log:info("_problemConnectingPopupInternal")
 	-- attempt to reconnect, this may send WOL
 	server:wakeOnLan()
 	server:connect()
@@ -2543,7 +2555,31 @@ function _problemConnectingPopup(self, server)
 end
 
 
+function _networkFailureCallback(self, server)
+	return function(failureWindow)
+		self.serverErrorWindow = failureWindow
+		failureWindow:addListener(EVENT_WINDOW_POP,
+			function()
+				self.serverErrorWindow = false
+				self:_removeRequestAndUnlock(server)
+			end)
+	end
+end
+
+
 function _problemConnecting(self, server)
+	log:debug("_problemConnecting")
+	local successCallback = function()
+					self:_problemConnectingInternal(server)
+				end
+	local failureCallback = self:_networkFailureCallback(server)
+
+	appletManager:callService("warnOnAnyNetworkFailure", successCallback, failureCallback)
+end
+
+
+function _problemConnectingInternal(self, server)
+	log:info("_problemConnectingInternal")
 	-- open connection error window
 	local window = Window("text_list", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 

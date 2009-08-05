@@ -23,6 +23,35 @@ MENUS_INTERNET_RADIO
 MENUS_OTHER_LIBRARY
 	EN	Switch Library
 
+
+MENUS_ATTACH_CABLE_DETAILED
+	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
+
+MENUS_NO_WIRELESS_DETAILED
+	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+
+MENUS_CONNECTION_ERROR
+	EN	Connection Problem
+
+MENUS_CHOOSE_DIFFERENT_NETWORK
+	EN	Choose Different Network
+
+MENUS_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+
+
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren

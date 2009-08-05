@@ -31,10 +31,12 @@ local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
+local Task                   = require("jive.ui.Task")
 
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
 local Scanner                = require("applets.SlimBrowser.Scanner")
+local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
 local debug                  = require("jive.utils.debug")
 
@@ -585,6 +587,79 @@ local function _menuSink(self, cmd, server)
 end
 
 
+--service method
+function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
+	if not hasNetworking then
+		successCallback()
+	end
+
+	Task("checkNetworkConnection", self,
+		function()
+			log:debug("warnOnAnyNetworkFailure: checkNetworkConnection task")
+
+			local iface = Networking:activeInterface()
+
+			if not iface then
+				log:error("Post-setup, there should always be an active interface")
+			else
+				if iface:isWireless() then
+					-- wireless strength
+					local quality = iface:getLinkQuality()
+					if not quality then
+						return failureCallback(self:_networkFailureWindow(false))
+					end
+				else
+					-- wired
+					local status = iface:t_wpaStatus()
+					if not status.link then
+						return failureCallback(self:_networkFailureWindow(true))
+					end
+				end
+			end
+			successCallback()
+		end):addTask()
+
+end
+
+
+function _networkFailureWindow(self, isWired)
+	local window = Window("error", self:string("MENUS_CONNECTION_ERROR"))
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("MENUS_TRY_AGAIN"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								   window:hide()
+							   end
+					},
+					{
+						text = self:string("MENUS_CHOOSE_DIFFERENT_NETWORK"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								   appletManager:callService("settingsNetworking")
+							   end
+					},
+				})
+
+	local helpText
+	if isWired then
+		helpText = self:string("MENUS_ATTACH_CABLE_DETAILED")
+	else
+		helpText = self:string("MENUS_NO_WIRELESS_DETAILED")
+	end
+
+	menu:setHeaderWidget(Textarea("help_text", helpText))
+	window:addWidget(menu)
+
+	window:show()
+
+	return window
+end
+
+
 function _canSqueezeCenterServe(self, item)
 	local sc = _server:isSqueezeNetwork() and _player:getLastSqueezeCenter() or _server
 	--_player:getLastSqueezeCenter() will fail for remote player
@@ -710,6 +785,18 @@ function _anyKnownSqueezeCenters(self)
 end
 
 function _selectMusicSource(self, callback, specificServer, serverForRetry, confirmOnChange)
+	local successCallback = function()
+					self:_selectMusicSourceInternal(callback, specificServer, serverForRetry, confirmOnChange)
+				end
+	local failureCallback = function(failureWindow)
+					--todo auto hide failure window if reconnection successful
+				end
+	self:warnOnAnyNetworkFailure(successCallback, failureCallback)
+end
+
+
+function _selectMusicSourceInternal(self, callback, specificServer, serverForRetry, confirmOnChange)
+
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 --	if not currentPlayer or not currentPlayer.info.connected then
 	--todo: handle situation where player is down; above code also fails when server is down, not what we want
