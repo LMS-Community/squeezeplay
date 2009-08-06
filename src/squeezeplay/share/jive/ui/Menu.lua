@@ -426,6 +426,11 @@ local function _eventHandler(self, event)
 			else
 				--in body area
 				--return _showContextMenuAction(self, event)
+				if self.flick.flickInterruptedByFinger then
+					--flick was interrupted so don't select the item under cursor (drag still allowed)
+					return EVENT_CONSUME
+				end
+				
 				Framework:pushAction("add")
 				return EVENT_CONSUME
 			end
