@@ -156,7 +156,7 @@ static void prepare(lua_State *L) {
 		return;
 	}
 
-	tmp = alloca(strlen(ptr));
+	tmp = alloca(strlen(ptr) + 1);
 
 	do {
 		LabelLine *line;
