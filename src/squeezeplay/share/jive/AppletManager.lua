@@ -176,14 +176,14 @@ local function _findApplets()
 		end
 
 		for entry in lfs.dir(dir) do repeat
-			local entrydir = dir .. "/" .. entry .. "/"
+			local entrydir = dir .. "/" .. entry
 			local entrymode = lfs.attributes(entrydir, "mode")
 
 			if entry:match("^%.") or entrymode ~= "directory" then
 				break
 			end
 
-			local metamode = lfs.attributes(entrydir .. entry .. "Meta.lua", "mode")
+			local metamode = lfs.attributes(entrydir  .. "/" .. entry .. "Meta.lua", "mode")
 			if metamode == "file" then
 				_saveApplet(entry, dir)
 			end
