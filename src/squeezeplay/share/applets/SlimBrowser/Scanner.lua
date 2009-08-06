@@ -1,7 +1,7 @@
 
 -- Private class to handle player position scanner
 
-local tostring, tonumber = tostring, tonumber
+local ipairs, tostring, tonumber = ipairs, tostring, tonumber
 
 local oo                     = require("loop.base")
 local os                     = require("os")
@@ -144,7 +144,20 @@ local function _openPopup(self)
 
 	popup:showBriefly(POPUP_AUTOCLOSE_INTERVAL,
 		function()
-			self.popup = nil
+			--This happens on ANY window pop, not necessarily the popup window's pop
+			local isPopupOnStack = false
+			local stack = Framework.windowStack
+			for i in ipairs(stack) do
+				if stack[i] == popup then
+					isPopupOnStack = true
+					break
+				end
+			end
+
+			--don't clear it out if the pop was from another window
+			if not isPopupOnStack then
+				self.popup = nil
+			end
 		end,
 		Window.transitionPushPopupUp,
 		Window.transitionPushPopupDown
@@ -289,7 +302,9 @@ function event(self, event)
 			Framework:dispatchEvent(lower, event)
 		end
 
-		self.popup:showBriefly(0)
+		if self.popup then
+			self.popup:showBriefly(0)
+		end
 		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
