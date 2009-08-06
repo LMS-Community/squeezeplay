@@ -74,13 +74,14 @@ static struct decode_module *all_decoders[] = {
 	/* in order of perference */
 #ifdef _WIN32
 	&decode_wma_win,
+#else
+	&decode_alac,
 #endif
 #ifdef WITH_SPPRIVATE
 	&decode_wma,
 	&decode_aac,
 #endif
 	&decode_vorbis,
-	&decode_alac,
 	&decode_flac,
 	&decode_pcm,
 	&decode_mad,

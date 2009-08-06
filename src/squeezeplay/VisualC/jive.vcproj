@@ -42,7 +42,7 @@
 				AdditionalOptions="/D &quot;_CRT_SECURE_NO_DEPRECATE&quot;"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..\src;..\src\jiveui;&quot;..\..\SDL-1.2.13\include&quot;;&quot;..\..\SDL-1.2.13\VisualC\include&quot;;&quot;..\..\SDL_image-1.2.5&quot;;&quot;..\..\SDL_ttf-2.0.8&quot;;&quot;..\..\SDL_gfx-2.0.15&quot;;&quot;..\..\lua-5.1.1\src&quot;;&quot;..\..\tolua++-1.0.92\include&quot;;..\..\portaudio_v19_1360\include;&quot;..\..\flac-1.2.1\include&quot;;&quot;..\..\libmad-0.15.1b&quot;;..\..\"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;SQUEEZEPLAY"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -239,6 +239,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath="..\src\audio\decode\audio_helper.c"
+				>
+			</File>
 			<File
 				RelativePath="..\src\audio\decode\decode.c"
 				>
