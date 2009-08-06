@@ -345,7 +345,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Alerts/wifi_connecting_sm.png"),
 		frameRate = 8,
 		frameWidth = 26,
-		padding = { 4, 0, 0, 0 },
+		padding = { 0, 0, 0, 0 },
 		h = WH_FILL,
 	}
 
@@ -359,13 +359,13 @@ function skin(self, s, reload, useDefaultSize)
 	}
 	s.img.rightArrowSel = {
 		img = _loadImage(self, "Icons/selection_right_sel.png"),
-		padding = { 4, 0, 0, 0 },
+		padding = { 0, 0, 0, 0 },
 		h = WH_FILL,
 		align = "center",
 	}
 	s.img.rightArrow = {
 		img = _loadImage(self, "Icons/selection_right_off.png"),
-		padding = { 4, 0, 0, 0 },
+		padding = { 0, 0, 0, 0 },
 		h = WH_FILL,
 		align = "center",
 	}
