@@ -217,7 +217,7 @@ function getDefaultWallpaper(self)
 			wallpaper = "bb_encore.png"
 		elseif colorCode == "01" then
 			log:debug("case is red")
-			wallpaper = "bb_encore_red.png"
+			wallpaper = "bb_encorered.png"
 		else
 			log:warn("No case color found (assuming black) examining serial: ", self._serial )
 		end
