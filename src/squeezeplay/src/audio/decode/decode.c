@@ -267,6 +267,28 @@ static void decode_start_handler(void) {
 }
 
 
+static void decode_capture_handler(void) {
+	Uint32 loopback;
+
+	loopback = mqueue_read_u32(&decode_mqueue);
+	mqueue_read_complete(&decode_mqueue);
+
+	LOG_DEBUG(log_audio_decode, "decode_capture_handler");
+
+	decode_audio_lock();
+
+	if (loopback) {
+		decode_audio->state |= DECODE_STATE_LOOPBACK;
+	}
+	else {
+		decode_audio->state &= ~DECODE_STATE_LOOPBACK;
+	}
+
+	decode_audio_unlock();
+
+}
+
+
 static void decode_song_ended_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
@@ -633,6 +655,29 @@ static int decode_start(lua_State *L) {
 }
 
 
+static int decode_capture(lua_State *L) {
+	Uint32 loopback;
+
+	/* stack is:
+	 * 1: self
+	 * 2: loopback
+	 */
+
+	loopback = (Uint32) lua_toboolean(L, 2);
+	LOG_DEBUG(log_audio_decode, "decode_capture loopback=%d", loopback);
+
+	if (mqueue_write_request(&decode_mqueue, decode_capture_handler, sizeof(Uint32))) {
+		mqueue_write_u32(&decode_mqueue, loopback);
+		mqueue_write_complete(&decode_mqueue);
+	}
+	else {
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped start message");
+	}
+
+	return 0;
+}
+
+
 static int decode_song_ended(lua_State *L) {
 	/* stack is:
 	 * 1: self
@@ -919,6 +964,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "stop", decode_stop },
 	{ "flush", decode_flush },
 	{ "start", decode_start },
+	{ "capture", decode_capture },
 	{ "songEnded", decode_song_ended },
 	{ "status", decode_status },
 	{ "dequeuePacket", decode_dequeue_packet },

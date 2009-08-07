@@ -91,18 +91,20 @@ struct decode_audio *decode_audio;
 #define FLAG_STREAM_PLAYBACK 0x01
 #define FLAG_STREAM_EFFECTS  0x02
 #define FLAG_STREAM_NOISE    0x04
+#define FLAG_STREAM_LOOPBACK 0x08
 
 
 struct decode_alsa {
 	/* device configuration */
-	const char *device;
+	const char *playback_device;
+	const char *capture_device;
 	u32_t flags;
 	unsigned int buffer_time;
 	unsigned int period_count;
 
 	/* alsa pcm state */
 	snd_pcm_t *pcm;
-	snd_pcm_hw_params_t *hw_params;
+	snd_pcm_t *capture_pcm;
 	snd_pcm_sframes_t period_size;
 
 	/* alsa control state */
@@ -306,9 +308,12 @@ static void playback_callback(struct decode_alsa *state,
 	}
 
 	if (bytes_used < len) {
-		decode_audio->state |= DECODE_STATE_UNDERRUN;
 		memset(outputArray + bytes_used, 0, len - bytes_used);
-		LOG_ERROR("Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
+
+		if ((decode_audio->state & DECODE_STATE_UNDERRUN) == 0) {
+			decode_audio->state |= DECODE_STATE_UNDERRUN;
+			LOG_ERROR("Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
+		}
 	}
 	else {
 		decode_audio->state &= ~DECODE_STATE_UNDERRUN;
@@ -349,8 +354,8 @@ static void playback_callback(struct decode_alsa *state,
 		output_ptr = (sample_t *)(void *)outputArray;
 		decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 		while (samples_write--) {
-			*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++));
-			*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 8;
+			*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 8;
 		}
 
 		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
@@ -371,24 +376,50 @@ static void playback_callback(struct decode_alsa *state,
 }
 
 
-static int pcm_close(struct decode_alsa *state) {
-	int err;
+static void capture_loopback(struct decode_alsa *state,
+			     void *outputBuffer,
+			     unsigned long framesPerBuffer)
+{
+	snd_pcm_sframes_t frames;
+	s16_t *rptr;
+	s32_t *wptr;
 
-	if (state->pcm) {
-		if ((err = snd_pcm_drain(state->pcm)) < 0) {
-			LOG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
-		}
-
-		if ((err = snd_pcm_close(state->pcm)) < 0) {
-			LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
-		}
-
-		snd_pcm_hw_params_free(state->hw_params);
-
-		state->pcm = NULL;
+	frames = snd_pcm_readi(state->capture_pcm, outputBuffer, framesPerBuffer);
+	if (frames < 0) {
+		snd_pcm_recover(state->capture_pcm, frames, 1);
+		memset(outputBuffer, 0, SAMPLES_TO_BYTES(framesPerBuffer));
+		return;
 	}
 
-	if (state->hctl) {
+	rptr = outputBuffer; rptr += (frames * 2); rptr--;
+	wptr = outputBuffer; wptr += (frames * 2); wptr--;
+
+	// FIXME why <<8 this is meant to be S16_LE -> S32_LE
+	while(frames--) {
+		*(wptr--) = fixed_mul(decode_audio->lgain, *(rptr--) << 8);
+		*(wptr--) = fixed_mul(decode_audio->rgain, *(rptr--) << 8);
+	}
+}
+
+
+static int pcm_close(struct decode_alsa *state, snd_pcm_t **pcmp, int mode) {
+	int err;
+
+	if (!*pcmp) {
+		return 0;
+	}
+
+	if ((err = snd_pcm_drain(*pcmp)) < 0) {
+		LOG_ERROR("snd_pcm_drain error: %s", snd_strerror(err));
+	}
+
+	if ((err = snd_pcm_close(*pcmp)) < 0) {
+		LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+	}
+
+	*pcmp = NULL;
+
+	if (state->hctl && mode == SND_PCM_STREAM_PLAYBACK) {
 		snd_hctl_close(state->hctl);
 		state->hctl = NULL;
 		state->iec958_elem = NULL;
@@ -398,102 +429,100 @@ static int pcm_close(struct decode_alsa *state) {
 }
 
 
-static int pcm_open(struct decode_alsa *state) {
+static int _pcm_open(struct decode_alsa *state,
+		     snd_pcm_t **pcmp,
+		     int mode,
+		     const char *device,
+		     snd_pcm_access_t access,
+		     snd_pcm_format_t format,
+		     u32_t sample_rate)
+{
 	int err;
 	unsigned int val;
 	snd_pcm_uframes_t size;
 	snd_ctl_elem_id_t *id;
-	u32_t set_sample_rate;
-
-	decode_audio_lock();
-	set_sample_rate = decode_audio->set_sample_rate;
-	decode_audio->set_sample_rate = 0;
-	decode_audio_unlock();
+	snd_pcm_hw_params_t *hw_params;
 
 	/* Close existing pcm (if any) */
-	if (state->pcm) {
-		pcm_close(state);
+	if (*pcmp) {
+		pcm_close(state, pcmp, mode);
 	}
 
 	/* Open pcm */
-	if ((err = snd_pcm_open(&state->pcm, state->device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+	if ((err = snd_pcm_open(pcmp, device, mode, 0)) < 0) {
 		LOG_ERROR("Playback open error: %s", snd_strerror(err));
 		return err;
 	}
 
-	/* Set hardware parameters */
-	if ((err = snd_pcm_hw_params_malloc(&state->hw_params)) < 0) {
-		LOG_ERROR("hwparam malloc error: %s", snd_strerror(err));
-		return err;
-	}
+	snd_pcm_hw_params_alloca(&hw_params);
 
 	/* set hardware resampling */
-	if ((err = snd_pcm_hw_params_any(state->pcm, state->hw_params)) < 0) {
+	if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_set_rate_resample(state->pcm, state->hw_params, 1)) < 0) {
+	if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 1)) < 0) {
 		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set mmap interleaved access format */
-	if ((err = snd_pcm_hw_params_set_access(state->pcm, state->hw_params, SND_PCM_ACCESS_MMAP_INTERLEAVED)) < 0) {
+	if ((err = snd_pcm_hw_params_set_access(*pcmp, hw_params, access)) < 0) {
 		LOG_ERROR("Access type not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the sample format */
-	if ((err = snd_pcm_hw_params_set_format(state->pcm, state->hw_params, SND_PCM_FORMAT_S32_LE)) < 0) {
+	if ((err = snd_pcm_hw_params_set_format(*pcmp, hw_params, format)) < 0) {
 		LOG_ERROR("Sample format not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the channel count */
-	if ((err = snd_pcm_hw_params_set_channels(state->pcm, state->hw_params, 2)) < 0) {
+	if ((err = snd_pcm_hw_params_set_channels(*pcmp, hw_params, 2)) < 0) {
 		LOG_ERROR("Channel count not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set the stream rate */
-	val = set_sample_rate;
-	if ((err = snd_pcm_hw_params_set_rate_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+	val = sample_rate;
+	if ((err = snd_pcm_hw_params_set_rate_near(*pcmp, hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Rate not available: %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set buffer and period times */
 	val = state->period_count;
-	if ((err = snd_pcm_hw_params_set_periods_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+	if ((err = snd_pcm_hw_params_set_periods_near(*pcmp, hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
 
 	val = state->buffer_time / state->period_count;
-	if ((err = snd_pcm_hw_params_set_period_time_near(state->pcm, state->hw_params, &val, 0)) < 0) {
+	if ((err = snd_pcm_hw_params_set_period_time_near(*pcmp, hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
 
 	/* set hardware parameters */
-	if ((err = snd_pcm_hw_params(state->pcm, state->hw_params)) < 0) {
+	if ((err = snd_pcm_hw_params(*pcmp, hw_params)) < 0) {
 		LOG_ERROR("Unable to set hw params: %s", snd_strerror(err));
 		return err;
 	}
 
-	if ((err = snd_pcm_hw_params_get_period_size(state->hw_params, &size, 0)) < 0) {
+	if ((err = snd_pcm_hw_params_get_period_size(hw_params, &size, 0)) < 0) {
 		LOG_ERROR("Unable to get period size: %s", snd_strerror(err));
 		return err;
 	}
 	state->period_size = size;
 
 	/* iec958 control for playback device only */
-	if (!(state->flags & FLAG_STREAM_PLAYBACK)) {
+	if (!(state->flags & FLAG_STREAM_PLAYBACK) || mode != SND_PCM_STREAM_PLAYBACK) {
 		goto skip_iec958;	  
 	}
 
-	if ((err = snd_hctl_open(&state->hctl, state->device, 0)) < 0) {
+	if ((err = snd_hctl_open(&state->hctl, state->playback_device, 0)) < 0) {
 		LOG_ERROR("snd_hctl_open failed: %s", snd_strerror(err));
 		goto skip_iec958;
 	}
@@ -515,33 +544,58 @@ static int pcm_open(struct decode_alsa *state) {
 
  skip_iec958:
 	if (IS_LOG_PRIORITY(LOG_PRIORITY_DEBUG)) {
-		snd_pcm_dump(state->pcm, output);
+		snd_pcm_dump(*pcmp, output);
 	}
-
-	state->pcm_sample_rate = set_sample_rate;
 
 	return 0;
 }
 
 
-static int xrun_recovery(struct decode_alsa *state, int err) {
-	if (err == -EPIPE) {	/* under-run */
-		if ((err = snd_pcm_prepare(state->pcm) < 0)) {
-			LOG_ERROR("Can't recover from underrun, prepare failed: %s", snd_strerror(err));
+static int pcm_open(struct decode_alsa *state, int mode)
+{
+	int err;
+
+	if (mode == SND_PCM_STREAM_PLAYBACK) {
+		u32_t sample_rate;
+
+		decode_audio_lock();
+		sample_rate = decode_audio->set_sample_rate;
+		decode_audio_unlock();
+
+		if (sample_rate == 0) {
+			LOG_ERROR("invalid sample rate\n");
+			sample_rate = 44100;
 		}
-		return 0;
-	} else if (err == -ESTRPIPE) {
-		while ((err = snd_pcm_resume(state->pcm)) == -EAGAIN) {
-			sleep(1);	/* wait until the suspend flag is released */
-		}
+
+		err = _pcm_open(state,
+				&state->pcm,
+				mode,
+				state->playback_device,
+				SND_PCM_ACCESS_MMAP_INTERLEAVED,
+				SND_PCM_FORMAT_S24_LE,
+				sample_rate);
+
 		if (err < 0) {
-			if ((err = snd_pcm_prepare(state->pcm)) < 0) {
-				LOG_ERROR("Can't recover from suspend, prepare failed: %s", snd_strerror(err));
-			}
+			return err;
 		}
-		return 0;
+
+		state->pcm_sample_rate = sample_rate;
 	}
-	return err;
+	else {
+		err = _pcm_open(state,
+				&state->capture_pcm,
+				mode,
+				state->capture_device,
+				SND_PCM_ACCESS_RW_INTERLEAVED,
+				SND_PCM_FORMAT_S24_LE,
+				state->pcm_sample_rate);
+
+		if (err < 0) {
+			return err;
+		}
+	}
+
+	return 0;
 }
 
 
@@ -551,7 +605,7 @@ static int pcm_test(struct decode_alsa *state) {
 	int err;
 
 	/* Open pcm */
-	if ((err = snd_pcm_open(&pcm, state->device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+	if ((err = snd_pcm_open(&pcm, state->playback_device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
 		LOG_ERROR("Playback open error: %s", snd_strerror(err));
 		return err;
 	}
@@ -598,22 +652,36 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_sframes_t avail;
 	snd_pcm_status_t *status;
 	int err, count = 0, count_max = 441, first = 1;
-	u32_t delay, new_rate = 1;
+	u32_t delay, do_open = 1;
 
 	LOG_DEBUG("audio_thread_execute");
-	
-	status = malloc(snd_pcm_hw_params_sizeof());
 
-	pcm_test(state);
+	/* assume we'll be 44.1k to start with */
+	decode_audio->set_sample_rate = 44100;
+
+	status = malloc(snd_pcm_hw_params_sizeof());
 
 	while (1) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
 
-		if (new_rate && new_rate != state->pcm_sample_rate) {
-			if ((err = pcm_open(state)) < 0) {
-				LOG_ERROR("Open failed: %s", snd_strerror(err));
+		if (do_open) {
+			do_open = 0;
+
+			if ((err = pcm_open(state, SND_PCM_STREAM_PLAYBACK)) < 0) {
+				LOG_ERROR("Playback open failed: %s", snd_strerror(err));
 				goto thread_error;
 			}
+
+			if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
+				if ((err = pcm_open(state, SND_PCM_STREAM_CAPTURE)) < 0) {
+					LOG_ERROR("Capture open failed: %s", snd_strerror(err));
+					goto thread_error;
+				}
+			}
+			else {
+				pcm_close(state, &state->capture_pcm, SND_PCM_STREAM_CAPTURE);
+			}
+
 			first = 1;
 			count_max = state->pcm_sample_rate / 1000;
 		}
@@ -640,13 +708,13 @@ static void *audio_thread_execute(void *data) {
 			timersub(&now, &tstamp, &diff);
 			LOG_WARN("underrun!!! (at least %.3f ms long)", diff.tv_sec * 1000 + diff.tv_usec / 1000.0);
 
-			if ((err = xrun_recovery(state, -EPIPE)) < 0) {
+			if ((err = snd_pcm_recover(state->pcm, -EPIPE, 1)) < 0) {
 				LOG_ERROR("XRUN recovery failed: %s", snd_strerror(err));
 			}
 			first = 1;
 		}
 		else if (pcm_state == SND_PCM_STATE_SUSPENDED) {
-			if ((err = xrun_recovery(state, -ESTRPIPE)) < 0) {
+			if ((err = snd_pcm_recover(state->pcm, -ESTRPIPE, 1)) < 0) {
 				LOG_ERROR("SUSPEND recovery failed: %s", snd_strerror(err));
 			}
 		}
@@ -654,7 +722,7 @@ static void *audio_thread_execute(void *data) {
 		avail = snd_pcm_avail_update(state->pcm);
 		if (avail < 0) {
 			LOG_WARN("xrun (avail_update)");
-			if ((err = xrun_recovery(state, avail)) < 0) {
+			if ((err = snd_pcm_recover(state->pcm, avail, 1)) < 0) {
 				LOG_ERROR("Avail update failed: %s", snd_strerror(err));
 			}
 			first = 1;
@@ -674,14 +742,21 @@ static void *audio_thread_execute(void *data) {
 		if (avail < state->period_size) {
 			if (first) {
 				first = 0;
+
 				if ((err = snd_pcm_start(state->pcm)) < 0) {
-					LOG_ERROR("Audio start error: %s", snd_strerror(err));
+					LOG_ERROR("snd_pcm_start error: %s", snd_strerror(err));
+				}
+
+				if (state->capture_pcm) {
+					if ((err = snd_pcm_start(state->capture_pcm)) < 0) {
+						LOG_ERROR("snd_pcm_start capture error: %s", snd_strerror(err));
+					}
 				}
 			}
 			else {
 				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
 					LOG_WARN("xrun (snd_pcm_wait)");
-					if ((err = xrun_recovery(state, avail)) < 0) {
+					if ((err = snd_pcm_recover(state->pcm, avail, 1)) < 0) {
 						LOG_ERROR("PCM wait failed: %s", snd_strerror(err));
 					}
 					first = 1;
@@ -704,7 +779,7 @@ static void *audio_thread_execute(void *data) {
 
 			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
 				LOG_WARN("xrun (snd_pcm_mmap_begin)");
-				if ((err = xrun_recovery(state, err)) < 0) {
+				if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
 					LOG_ERROR("mmap begin failed: %s", snd_strerror(err));
 				}
 				first = 1;
@@ -721,7 +796,12 @@ static void *audio_thread_execute(void *data) {
 			decode_audio->delay = delay;
 
 			if (state->flags & FLAG_STREAM_PLAYBACK) {
-				playback_callback(state, buf, frames);
+				if (state->capture_pcm) {
+					capture_loopback(state, buf, frames);
+				}
+				else {
+					playback_callback(state, buf, frames);
+				}
 			}
 			else {
 				memset(buf, 0, SAMPLES_TO_BYTES(frames));
@@ -741,7 +821,17 @@ static void *audio_thread_execute(void *data) {
 			 * fifo is locked, so we don't need to lock it twice
 			 * per loop.
 			 */
-			new_rate = decode_audio->set_sample_rate;
+			do_open = decode_audio->set_sample_rate && (decode_audio->set_sample_rate != state->pcm_sample_rate);
+
+			/* start or stop loopback? */
+#if 1
+			if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
+				do_open |= (state->capture_pcm) ? 0 : 1;
+			}
+			else {
+				do_open |= (state->capture_pcm) ? 1 : 0;
+			}
+#endif
 
 			decode_audio_unlock();
 			TIMER_CHECK("EFFECTS");
@@ -749,7 +839,7 @@ static void *audio_thread_execute(void *data) {
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
 				LOG_WARN("xrun (snd_pcm_mmap_commit) err=%ld", commitres);
-				if ((err = xrun_recovery(state, commitres)) < 0) {
+				if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
 					LOG_ERROR("mmap commit failed: %s", snd_strerror(err));
 				}
 				first = 1;
@@ -852,7 +942,10 @@ int main(int argv, char **argc)
 			is_debug = 1;
 		}
 		else if (strcmp(argc[i], "-d") == 0) {
-			state.device = argc[++i];
+			state.playback_device = argc[++i];
+		}
+		else if (strcmp(argc[i], "-c") == 0) {
+			state.capture_device = argc[++i];
 		}
 		else if (strcmp(argc[i], "-b") == 0) {
 			state.buffer_time = strtoul(argc[++i], NULL, 0);
@@ -865,8 +958,8 @@ int main(int argv, char **argc)
 		}
 	}
 
-	if (!state.device || !state.buffer_time || !state.period_count || !state.flags) {
-		printf("Usage: %s [-v] -d <device> -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
+	if (!state.playback_device || !state.buffer_time || !state.period_count || !state.flags) {
+		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
 		exit(-1);
 	}
 
@@ -888,6 +981,11 @@ int main(int argv, char **argc)
 	if ((err = snd_output_stdio_attach(&output, stdout, 0)) < 0) {
 		LOG_ERROR("Output failed: %s", snd_strerror(err));
 		exit(-1);
+	}
+
+	/* test audio device */
+	if (pcm_test(&state) < 0) {
+		exit(0);
 	}
 
 	/* set real-time properties */

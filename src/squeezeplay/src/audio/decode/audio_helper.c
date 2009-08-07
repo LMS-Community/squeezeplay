@@ -105,7 +105,7 @@ void decode_mix_effects(void *outputBuffer,
 		effect_ptr = (effect_t *)(void *)(effect_fifo_buf + decode_audio->effect_fifo.rptr);
 
 		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
-			s = (*effect_ptr++) << 16;
+			s = (*effect_ptr++) << 8;
 			s = fixed_mul(decode_audio->effect_gain, s);
 
 			*output_ptr = sample_clip(*output_ptr, s);
