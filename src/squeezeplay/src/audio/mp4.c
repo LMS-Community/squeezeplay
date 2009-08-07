@@ -243,11 +243,14 @@ static void mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r)
 
 		track->sample_size = mp4_get_u32(mp4);
 		track->sample_count = mp4_get_u32(mp4);		
-
 		track->sample_idx = 0;
-		if (track->sample_size == 0) {
-			track->sample_sizes = malloc(sizeof(int) * track->sample_count);
+
+		if (track->sample_size > 0) {
+			/* fixed size, skip rest of box */
+			mp4->f = mp4_skip_box;
 		}
+
+		track->sample_sizes = malloc(sizeof(int) * track->sample_count);
 
 		mp4->box_size -= 12;
 	}
@@ -448,9 +451,10 @@ size_t mp4_open(struct decode_mp4 *mp4)
 {
 	while (mp4->f) {
 		ssize_t r;
+		bool_t streaming;
 
-		r = mp4_fill_buffer(mp4, NULL);
-		if (r < 0) {
+		r = mp4_fill_buffer(mp4, &streaming);
+		if (r < 0 || !streaming) {
 			return 0;
 		}
 
