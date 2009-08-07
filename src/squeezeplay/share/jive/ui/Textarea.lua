@@ -51,6 +51,7 @@ local oo	= require("loop.simple")
 local string	= require("string")
 local Widget	= require("jive.ui.Widget")
 local Scrollbar	= require("jive.ui.Scrollbar")
+local IRMenuAccel       = require("jive.ui.IRMenuAccel")
 local Flick	= require("jive.ui.Flick")
 local math      = require("math")
 
@@ -66,6 +67,13 @@ local EVENT_MOUSE_MOVE     = jive.ui.EVENT_MOUSE_MOVE
 local EVENT_MOUSE_DRAG     = jive.ui.EVENT_MOUSE_DRAG
 local EVENT_MOUSE_HOLD     = jive.ui.EVENT_MOUSE_HOLD
 local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
+
+local EVENT_IR_DOWN     = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT   = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_HOLD     = jive.ui.EVENT_IR_HOLD
+local EVENT_IR_PRESS    = jive.ui.EVENT_IR_PRESS
+local EVENT_IR_UP       = jive.ui.EVENT_IR_UP
+local EVENT_IR_ALL       = jive.ui.EVENT_IR_ALL
 
 local EVENT_CONSUME	= jive.ui.EVENT_CONSUME
 local EVENT_UNUSED	= jive.ui.EVENT_UNUSED
@@ -119,9 +127,12 @@ function __init(self, style, text)
 
 	obj:addActionListener("page_up", obj, _pageUpAction)
 	obj:addActionListener("page_down", obj, _pageDownAction)
-	--up/down coming in as scroll events
 
-	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_ALL,
+	obj.irAccel = IRMenuAccel()
+	obj.irAccel.onlyScrollByOne = true
+
+	--up/down coming in as scroll events
+	obj:addListener(EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_IR_DOWN | EVENT_IR_REPEAT,
 			 function (event)
 				return obj:_eventHandler(event)
 			 end)
@@ -223,6 +234,14 @@ function _eventHandler(self, event)
 
 		self:scrollBy(event:getScroll())
 		return EVENT_CONSUME
+	end
+
+	if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+		--todo add lock cancelling like in key press - let action hanlding take care of this
+		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
+			self:scrollBy(self.irAccel:event(event, self.topLine + 1, self.topLine + 1, 1, self.visibleLines))
+			return EVENT_CONSUME
+		end
 	end
 
 	if type == EVENT_MOUSE_PRESS or type == EVENT_MOUSE_HOLD or type == EVENT_MOUSE_MOVE then
