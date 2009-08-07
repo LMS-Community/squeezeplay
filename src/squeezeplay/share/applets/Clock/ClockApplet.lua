@@ -262,6 +262,10 @@ function Digital:__init(applet, ampm)
 		Icon('icon_digitalAlarmOn')
 	})
 
+	obj.todayGroup = Group('today', {
+		dayofweek  = Label('dayofweek', ''),
+	})
+
 	obj.dateGroup = Group('date', {
 		dayofweek  = Label('dayofweek'),
 		vdivider1  = Icon('icon_digitalClockVDivider'),
@@ -275,6 +279,9 @@ function Digital:__init(applet, ampm)
 	obj.divider = Group('horizDivider', {
 		horizDivider = Icon('icon_digitalClockHDivider'),
 	})
+	obj.divider2 = Group('horizDivider2', {
+		horizDivider = Icon('icon_digitalClockHDivider'),
+	})
 
 	obj.dropShadows = Group('dropShadow', {
 		s1   = Icon('icon_digitalClockDropShadow'),
@@ -285,10 +292,12 @@ function Digital:__init(applet, ampm)
 	})
 	obj.window:addWidget(obj.dropShadows)
 
+	obj.window:addWidget(obj.todayGroup)
 	obj.window:addWidget(obj.clockGroup)
 	--obj.window:addWidget(obj.alarm)
 	obj.window:addWidget(obj.ampm)
 	obj.window:addWidget(obj.divider)
+	obj.window:addWidget(obj.divider2)
 	obj.window:addWidget(obj.dateGroup)
 
 	obj.show_ampm = ampm
@@ -315,6 +324,8 @@ function Digital:Draw()
 	local token = "SCREENSAVER_CLOCK_DAY_" .. tostring(dayOfWeek)
 	local dayOfWeekString = self.applet:string(token)
 	local widget = self.dateGroup:getWidget('dayofweek')
+	widget:setValue(dayOfWeekString)
+	widget = self.todayGroup:getWidget('dayofweek')
 	widget:setValue(dayOfWeekString)
 
 	-- numerical day of month
@@ -806,7 +817,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			},
 		}
 
-	-- doto matrix for controller
+	-- dot matrix for controller
 	elseif skinName == 'QVGAportraitSkin' then
 
 	-- dot matrix for something else
@@ -917,6 +928,8 @@ function Digital:getDigitalClockSkin(skinName)
 				x = 20,
 				y = 20,
 			},
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			horizDivider = {
 				position = LAYOUT_NONE,
 				x = 0,
@@ -975,6 +988,8 @@ function Digital:getDigitalClockSkin(skinName)
 		s.ClockBlack = _uses(s.Clock, {
 			bgImg = blackMask,
 			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
@@ -983,12 +998,14 @@ function Digital:getDigitalClockSkin(skinName)
 		s.ClockTransparent = _uses(s.Clock, {
 			bgImg = false,
 			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
 			dropShadow = { hidden = 1 },
 		})
-	elseif skinName == 'QVGAlandscapeSkin' then
+	elseif skinName == 'QVGAlandscapeSkin'  then
 
 		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/bb_clock_digital.png")
 		local digitalClockDigit = {
@@ -1023,7 +1040,7 @@ function Digital:getDigitalClockSkin(skinName)
 		}
 
 		s.icon_digitalDots = {
-			img = Surface:loadImage('applets/QVGAbaseSkin/images/UNOFFICIAL/clock_dots_digital.png'),
+			img = _loadImage(self, 'Clocks/Digital/clock_dots_digital.png'),
 			align = 'center',
 			w = 16,
 			border = { 6, 20, 6, 0 },
@@ -1081,6 +1098,8 @@ function Digital:getDigitalClockSkin(skinName)
 				x = 20,
 				y = 20,
 			},
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			horizDivider = {
 				position = LAYOUT_NONE,
 				x = 0,
@@ -1139,6 +1158,8 @@ function Digital:getDigitalClockSkin(skinName)
 		s.ClockBlack = _uses(s.Clock, {
 			bgImg = blackMask,
 			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
@@ -1147,12 +1168,164 @@ function Digital:getDigitalClockSkin(skinName)
 		s.ClockTransparent = _uses(s.Clock, {
 			bgImg = false,
 			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			today = { hidden = 1 },
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
 			dropShadow = { hidden = 1 },
 		})
-end
+
+	elseif skinName == 'QVGAportraitSkin'  then
+		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/jive_clock_digital.png")
+		local digitalClockDigit = {
+			font = _font(100),
+			fg = { 0xcc, 0xcc, 0xcc },
+			w = WH_FILL,
+		}
+		local shadow = { }
+	
+		s.icon_digitalClockDropShadow = {
+			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
+				align = 'center',
+				padding = { 4, 0, 0, 0 },
+			}
+			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+				img = false
+		})
+
+		s.icon_digitalClockHDivider = {
+			w = WH_FILL,
+			img = _loadImage(self, "Clocks/Digital/divider_hort_digital.png"),
+		}
+
+		s.icon_digitalClockVDivider = {
+			w = 3,
+			img = _loadImage(self, "Clocks/Digital/divider_vert_digital.png"),
+			align = 'center',
+		}
+
+		s.icon_digitalDots = {
+			img = _loadImage(self, 'Clocks/Digital/clock_dots_digital.png'),
+			align = 'center',
+			w = 16,
+			padding = { 0, 12, 0, 0 },
+		}
+
+		s.icon_digitalClockBlank = {
+			img = false,
+		}
+
+		s.Clock = {
+			bgImg = digitalClockBackground,
+			today = {
+				position = LAYOUT_NORTH,
+				h = 83,
+				zOrder = 2,
+				order = { 'dayofweek' },
+				dayofweek = {
+					padding = { 0, 34, 0, 0 },
+					w = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					font = _font(20),
+				},
+			},
+			clock = {
+				position = LAYOUT_CENTER,
+				w = WH_FILL,
+				zOrder = 2,
+				border = { 12, 36, 12, 0 },
+				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+				h1 = _uses(digitalClockDigit, {
+					w = 34,
+					border = { 0, 0, 7, 0 },
+				}),
+				h2 = digitalClockDigit,
+				m1 = _uses(digitalClockDigit, {
+					border = { 1, 0, 0, 0 },
+				}),
+				m2 = _uses(digitalClockDigit, {
+					border = { 1, 0, 0, 0 },
+				}),
+			},
+
+			dropShadow = { hidden = 1 },
+
+			ampm = {
+				position = LAYOUT_NONE,
+				x = 205,
+				y = 205,
+				font = _font(14),
+				align = 'bottom',
+				fg = { 0xcc, 0xcc, 0xcc },
+			},
+			alarm = {
+				position = LAYOUT_NONE,
+				x = 12,
+				y = 148,
+			},
+			horizDivider = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 320 - 84,
+			},
+			horizDivider2 = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 84,
+			},
+			date = {
+				position = LAYOUT_SOUTH,
+				order = { 'month', 'vdivider1', 'dayofmonth' },
+				w = WH_FILL,
+				h = 83,
+				padding = { 0, 10, 0, 0 },
+				vdivider1 = {
+					align = 'center',
+					w = 2,
+					h = WH_FILL,
+				},
+				month = {
+					font = _font(20),
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 5 },
+				},
+				dayofmonth = {
+					font = _font(48),
+					w = 86,
+					h = WH_FILL,
+					align = 'center',
+					fg = { 0xcc, 0xcc, 0xcc },
+					padding = { 0, 0, 0, 4 },
+				},
+			},
+		}
+	
+		local blackMask = Tile:fillColor(0x000000ff)
+		s.ClockBlack = _uses(s.Clock, {
+			bgImg = blackMask,
+			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			date = {
+				order = { 'month', 'dayofmonth' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+		s.ClockTransparent = _uses(s.Clock, {
+			bgImg = false,
+			horizDivider = { hidden = 1 },
+			horizDivider2 = { hidden = 1 },
+			date = {
+				order = { 'month', 'dayofmonth' },
+			},
+			dropShadow = { hidden = 1 },
+		})
+	
+	end
 
 	return s
 end
