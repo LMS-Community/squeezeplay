@@ -454,7 +454,8 @@ static int _pcm_open(struct decode_alsa *state,
 		return err;
 	}
 
-	snd_pcm_hw_params_alloca(&hw_params);
+	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
+	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
 
 	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
