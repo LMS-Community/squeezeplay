@@ -70,7 +70,7 @@ AM_CONDITIONAL(ALSA_ENABLED, test "x$enable_alsa" = "xyes")
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h unistd.h netdb.h arpa/inet.h])
+AC_CHECK_HEADERS([dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h sys/utsname.h unistd.h netdb.h arpa/inet.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -80,7 +80,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS([malloc calloc fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog])
+AC_CHECK_FUNCS([malloc calloc fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog uname])
 
 # Test programs
 AC_ARG_ENABLE(tests,

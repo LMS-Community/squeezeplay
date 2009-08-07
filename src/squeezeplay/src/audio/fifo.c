@@ -65,6 +65,7 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 	/* linux multi-process locking */
 	pthread_mutexattr_t mutex_attr;
 	pthread_condattr_t cond_attr;
+	struct utsname utsname;
 	int err;
 
 	if ((err = pthread_mutexattr_init(&mutex_attr)) < 0) {
@@ -75,11 +76,15 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 			return err;
 		}
 #ifdef _POSIX_THREAD_PRIO_INHERIT
-	if (!RUNNING_ON_VALGRIND) {
-		if ((err = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT)) < 0) {
+		/* only on PREEMPT kernels */
+		if ((err = uname(&utsname)) < 0) {
 			return err;
 		}
-	}
+		if (!RUNNING_ON_VALGRIND && strstr(utsname.version, "PREEMPT") != NULL) {
+			if ((err = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT)) < 0) {
+				return err;
+			}
+		}
 #endif /* _POSIX_THREAD_PRIO_INHERIT */
 	}
 	if ((err = pthread_mutex_init(&fifo->mutex, &mutex_attr)) < 0) {
