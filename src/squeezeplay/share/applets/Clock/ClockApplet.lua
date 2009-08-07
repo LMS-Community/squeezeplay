@@ -133,32 +133,76 @@ function DotMatrix:__init(ampm, shortDateFormat)
 
 	obj = oo.rawnew(self, Clock(skin))
 
-	obj.clockGroup = Group('clock', {
-		h1   = Icon("icon_dotMatrixDigit0"),
-		h2   = Icon("icon_dotMatrixDigit0"),
-		dots = Icon("icon_dotMatrixDots"),
-		m1   = Icon("icon_dotMatrixDigit0"),
-		m2   = Icon("icon_dotMatrixDigit0"),
+	obj.h1   = Group('h1', {
+		digit = Icon('icon_dotMatrixDigit0'),
 	})
-
-	obj.dateGroup = Group('date', {
+	obj.h2   = Group('h2', {
+		digit = Icon('icon_dotMatrixDigit0'),
+	})
+	local clockDots = Group('dots', { 
+		dots = Icon('icon_dotMatrixDots'),
+	})
+	obj.m1   = Group('m1', {
+		digit = Icon('icon_dotMatrixDigit0'),
+	})
+	obj.m2   = Group('m2', {
+		digit = Icon('icon_dotMatrixDigit0')
+	})
+	obj.alarm = Group('alarm', {
 		alarm = Icon('icon_dotMatrixAlarmOff'),
-		M1    = Icon('icon_dotMatrixDate0'),
-		M2    = Icon('icon_dotMatrixDate0'),
-		dot1  = Icon('icon_dotMatrixDateDot'),
-		D1    = Icon('icon_dotMatrixDate0'),
-		D2    = Icon('icon_dotMatrixDate0'),
-		dot2  = Icon('icon_dotMatrixDateDot'),
-		Y1    = Icon('icon_dotMatrixDate0'),
-		Y2    = Icon('icon_dotMatrixDate0'),
-		Y3    = Icon('icon_dotMatrixDate0'),
-		Y4    = Icon('icon_dotMatrixDate0'),
---FIXME
---		power = Icon('icon_dotMatrixPowerOn'),
+	})
+	obj.M1    = Group('M1', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.M2    = Group('M2', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	local dot1  = Group('dot1', {
+		dot  = Icon('icon_dotMatrixDateDot'),
+	})
+	obj.D1    = Group('D1', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.D2    = Group('D2', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	local dot2  = Group('dot2', {
+		dot  = Icon('icon_dotMatrixDateDot'),
+	})
+	obj.Y1    = Group('Y1', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.Y2    = Group('Y2', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.Y3    = Group('Y3', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.Y4    = Group('Y4', {
+		digit    = Icon('icon_dotMatrixDate0'),
+	})
+	obj.power = Group('power', {
+		power = Icon('icon_dotMatrixPowerOn'),
 	})
 
-	obj.window:addWidget(obj.clockGroup)
-	obj.window:addWidget(obj.dateGroup)
+	obj.window:addWidget(obj.h1)
+	obj.window:addWidget(obj.h2)
+	obj.window:addWidget(clockDots)
+	obj.window:addWidget(obj.m1)
+	obj.window:addWidget(obj.m2)
+
+	obj.window:addWidget(obj.alarm)
+	obj.window:addWidget(obj.M1)
+	obj.window:addWidget(obj.M2)
+	obj.window:addWidget(dot1)
+	obj.window:addWidget(obj.D1)
+	obj.window:addWidget(obj.D2)
+	obj.window:addWidget(dot2)
+	obj.window:addWidget(obj.Y1)
+	obj.window:addWidget(obj.Y2)
+	obj.window:addWidget(obj.Y3)
+	obj.window:addWidget(obj.Y4)
+	obj.window:addWidget(obj.power)
 
 	obj.show_ampm = ampm
 
@@ -222,14 +266,14 @@ end
 
 function DotMatrix:DrawClock(digit, groupKey)
 	local style = 'icon_dotMatrixDigit' .. digit
-	local widget = self.clockGroup:getWidget(groupKey)
+	local widget = self[groupKey]:getWidget('digit')
 	widget:setStyle(style)
 end
 
 
 function DotMatrix:DrawDate(digit, groupKey)
 	local style = 'icon_dotMatrixDate' .. digit
-	local widget = self.dateGroup:getWidget(groupKey)
+	local widget = self[groupKey]:getWidget('digit')
 	widget:setStyle(style)
 end
 
@@ -262,12 +306,9 @@ function Digital:__init(applet, ampm)
 		Icon('icon_digitalAlarmOn')
 	})
 
-	obj.todayGroup = Group('today', {
-		dayofweek  = Label('dayofweek', ''),
-	})
-
+	obj.today = Label('today', '')
 	obj.dateGroup = Group('date', {
-		dayofweek  = Label('dayofweek'),
+		dayofweek  = Label('dayofweek', ''),
 		vdivider1  = Icon('icon_digitalClockVDivider'),
 		dayofmonth = Label('dayofmonth'),
 		vdivider2  = Icon('icon_digitalClockVDivider'),
@@ -292,7 +333,7 @@ function Digital:__init(applet, ampm)
 	})
 	obj.window:addWidget(obj.dropShadows)
 
-	obj.window:addWidget(obj.todayGroup)
+	obj.window:addWidget(obj.today)
 	obj.window:addWidget(obj.clockGroup)
 	--obj.window:addWidget(obj.alarm)
 	obj.window:addWidget(obj.ampm)
@@ -323,9 +364,8 @@ function Digital:Draw()
 	local dayOfWeek   = os.date("%w")
 	local token = "SCREENSAVER_CLOCK_DAY_" .. tostring(dayOfWeek)
 	local dayOfWeekString = self.applet:string(token)
+	self.today:setValue(dayOfWeekString)
 	local widget = self.dateGroup:getWidget('dayofweek')
-	widget:setValue(dayOfWeekString)
-	widget = self.todayGroup:getWidget('dayofweek')
 	widget:setValue(dayOfWeekString)
 
 	-- numerical day of month
@@ -433,37 +473,6 @@ function Digital:DrawTime()
 	end
 
 end
-
-
-function Digital:DrawDigit(digit, groupKey, hideZero)
-	local widget = self.clockGroup:getWidget(groupKey)
-	if digit == '0' and hideZero then
-		widget:setValue('')
-	else
-		widget:setValue(digit)
-	end
-end
-
-
-function Digital:DrawWeekdays(day)
-
-	local token = "SCREENSAVER_CLOCK_DAY_" .. tostring(day)
-	local dayOfWeekString = self.applet:string(token)
-
-	local widget = self.dateGroup:getWidget('dayofweek')
-	widget:setValue(dayOfWeekString)
-end
-
-
-function Digital:DrawMonth(month)
-
-	local token = "SCREENSAVER_CLOCK_MONTH_" .. tostring(month)
-	local monthString = self.applet:string(token)
-
-	local widget = self.dateGroup:getWidget('month')
-	widget:setValue(monthString)
-end
-
 
 -- TODO: Radial Clock
 Radial = oo.class({}, Clock)
@@ -786,43 +795,401 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		})
 	
 		s.icon_dotMatrixPowerOn = {
-			align = 'bottom-right',
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
-			w   = WH_FILL,
-			border = { 13, 0, 0, 0 },
 		}
 	
 		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
 			img = false,
 		})
 	
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			w = 61,
+			y = 35,
+		}
+		local _dateDigit = {
+			position = LAYOUT_NONE,
+			w = 27,
+			y = 191,
+		}
+
+		local x = {}
+		x.h1 = 72
+		x.h2 = x.h1 + 73
+		x.dots = x.h2 + 71
+		x.m1 = x.dots + 28
+		x.m2 = x.m1 + 73
+		x.alarm = 72
+		x.M1 = 72 + 36 + 14
+		x.M2 = x.M1 + 28
+		x.dot1 = x.M2 + 27 + 6
+		x.D1 = x.dot1 + 13
+		x.D2 = x.D1 + 28
+		x.dot2 = x.D2 + 27 + 6
+		x.Y1 = x.dot2 + 13
+		x.Y2 = x.Y1 + 28
+		x.Y3 = x.Y2 + 28
+		x.Y4 = x.Y3 + 28
 
 		s.Clock = {
 			w = 480,
 			h = 272,
 			bgImg = dotMatrixBackground,
-			clock = {
-				position = LAYOUT_WEST,
-				h = 134,
-				w = WH_FILL,
-				border = { 72, 38, 20, 0 },
-				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
+			power = {
+				position = LAYOUT_NONE,
+				w = 39,
+				x = 26,
+				y = 35,
 			},
-			date = {
-				position = LAYOUT_SOUTH,
-				w = WH_FILL,
-				align = 'bottom',
-				padding = { 72, 0, 0, 38 },
-				order = { 'alarm', 'M1', 'M2', 'dot1', 'D1', 'D2', 'dot2', 'Y1', 'Y2', 'Y3', 'Y4', 'power' },
+			h1 = _uses(_clockDigit, {
+				x = x.h1,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = x.h2,
+			}),
+			dots = {
+				position = LAYOUT_NONE,
+				x = x.dots,
+				w = 38,
+				y = 70,
 			},
+			m1 = _uses(_clockDigit, {
+				x = x.m1,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = x.m2,
+			}),
+
+			alarm = _uses(_dateDigit, {
+				w = 36,
+				x = x.alarm,
+			}),
+			M1 = _uses(_dateDigit, {
+				x = x.M1,
+			}),
+			M2 = _uses(_dateDigit, {
+				x = x.M2,
+			}),
+			dot1 = _uses(_dateDigit, {
+				x = x.dot1,
+				w = 13,
+				y = 221,
+			}),
+			D1 = _uses(_dateDigit, {
+				x = x.D1,
+			}),
+			D2 = _uses(_dateDigit, {
+				x = x.D2,
+			}),
+			dot2 = _uses(_dateDigit, {
+				x = x.dot2,
+				w = 13,
+				y = 221,
+			}),
+			Y1 = _uses(_dateDigit, {
+				x = x.Y1,
+			}),
+			Y2 = _uses(_dateDigit, {
+				x = x.Y2,
+			}),
+			Y3 = _uses(_dateDigit, {
+				x = x.Y3,
+			}),
+			Y4 = _uses(_dateDigit, {
+				x = x.Y4,
+			}),
+
 		}
 
-	-- dot matrix for controller
-	elseif skinName == 'QVGAportraitSkin' then
+	-- dot matrix for landscape QVGA
+	elseif skinName == 'QVGAlandscapeSkin' then
 
-	-- dot matrix for something else
-	elseif skinName == 'SomeOtherSkin' then
+		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/bb_wallpaper_clock_dotmatrix.png")
+
+		local _dotMatrixDigit = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_clock_" .. tostring(digit) .. ".png"
+			return {
+				w = 61,
+				h = 134,
+				img = _loadImage(self, fileName),
+				border = { 6, 0, 6, 0 },
+				align = 'bottom',
+			}
+		end
 	
+		local _dotMatrixDate = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_date_" .. tostring(digit) .. ".png"
+			return {
+				w = 27,
+				h = 43,
+				img = _loadImage(self, fileName),
+				align = 'bottom',
+				border = { 1, 0, 1, 0 },
+			}
+		end
+	
+		s.icon_dotMatrixDigit0 = _dotMatrixDigit(self, 0)
+		s.icon_dotMatrixDigit1 = _dotMatrixDigit(self, 1)
+		s.icon_dotMatrixDigit2 = _dotMatrixDigit(self, 2)
+		s.icon_dotMatrixDigit3 = _dotMatrixDigit(self, 3)
+		s.icon_dotMatrixDigit4 = _dotMatrixDigit(self, 4)
+		s.icon_dotMatrixDigit5 = _dotMatrixDigit(self, 5)
+		s.icon_dotMatrixDigit6 = _dotMatrixDigit(self, 6)
+		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
+		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
+		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+	
+		s.icon_dotMatrixDate0 = _dotMatrixDate(self, 0)
+		s.icon_dotMatrixDate1 = _dotMatrixDate(self, 1)
+		s.icon_dotMatrixDate2 = _dotMatrixDate(self, 2)
+		s.icon_dotMatrixDate3 = _dotMatrixDate(self, 3)
+		s.icon_dotMatrixDate4 = _dotMatrixDate(self, 4)
+		s.icon_dotMatrixDate5 = _dotMatrixDate(self, 5)
+		s.icon_dotMatrixDate6 = _dotMatrixDate(self, 6)
+		s.icon_dotMatrixDate7 = _dotMatrixDate(self, 7)
+		s.icon_dotMatrixDate8 = _dotMatrixDate(self, 8)
+		s.icon_dotMatrixDate9 = _dotMatrixDate(self, 9)
+	
+		s.icon_dotMatrixDateDot = {
+			align = 'bottom',
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_dot_sm.png")
+		}
+	
+		s.icon_dotMatrixDots = {
+			align = 'center',
+			border = { 4, 0, 3, 0 },
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_clock_dots.png"),
+		}
+	
+		s.icon_dotMatrixAlarmOn = {
+			align = 'bottom',
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
+			w   = 36,
+			border = { 0, 0, 13, 0 },
+		}
+	
+		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
+--			img = false,
+		})
+	
+		s.icon_dotMatrixPowerOn = {
+			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
+		}
+	
+		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
+			img = false,
+		})
+	
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			w = 61,
+			y = 20,
+		}
+		local _dateDigit = {
+			position = LAYOUT_NONE,
+			w = 27,
+			y = 182,
+		}
+
+		local x = {}
+		x.h1 = 0
+		x.h2 = x.h1 + 73
+		x.dots = x.h2 + 71
+		x.m1 = x.dots + 28
+		x.m2 = x.m1 + 73
+		x.alarm = 8
+		x.M1 = x.alarm + 38
+		x.M2 = x.M1 + 28
+		x.dot1 = x.M2 + 27 + 6
+		x.D1 = x.dot1 + 13
+		x.D2 = x.D1 + 28
+		x.dot2 = x.D2 + 27 + 6
+		x.Y1 = x.dot2 + 13
+		x.Y2 = x.Y1 + 28
+		x.Y3 = x.Y2 + 28
+		x.Y4 = x.Y3 + 28
+
+		s.Clock = {
+			w = 320,
+			h = 240,
+			bgImg = dotMatrixBackground,
+			power = { hidden = 1 },
+			h1 = _uses(_clockDigit, {
+				x = x.h1,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = x.h2,
+			}),
+			dots = {
+				position = LAYOUT_NONE,
+				x = x.dots,
+				w = 38,
+				y = 70,
+			},
+			m1 = _uses(_clockDigit, {
+				x = x.m1,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = x.m2,
+			}),
+
+			alarm = _uses(_dateDigit, {
+				w = 36,
+				x = x.alarm,
+			}),
+			M1 = _uses(_dateDigit, {
+				x = x.M1,
+			}),
+			M2 = _uses(_dateDigit, {
+				x = x.M2,
+			}),
+			dot1 = _uses(_dateDigit, {
+				x = x.dot1,
+				w = 13,
+				y = 213,
+			}),
+			D1 = _uses(_dateDigit, {
+				x = x.D1,
+			}),
+			D2 = _uses(_dateDigit, {
+				x = x.D2,
+			}),
+			dot2 = _uses(_dateDigit, {
+				x = x.dot2,
+				w = 13,
+				y = 213,
+			}),
+			Y1 = _uses(_dateDigit, {
+				x = x.Y1,
+			}),
+			Y2 = _uses(_dateDigit, {
+				x = x.Y2,
+			}),
+			Y3 = _uses(_dateDigit, {
+				x = x.Y3,
+			}),
+			Y4 = _uses(_dateDigit, {
+				x = x.Y4,
+			}),
+
+		}
+
+
+	-- dot matrix for Controller
+	elseif skinName == 'QVGAportraitSkin' then
+		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/jive_wallpaper_clock_dotmatrix.png")
+
+		local _dotMatrixDigit = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_clock_" .. tostring(digit) .. ".png"
+			return {
+				w = 61,
+				h = 134,
+				img = _loadImage(self, fileName),
+				border = { 6, 0, 6, 0 },
+				align = 'bottom',
+			}
+		end
+	
+		local _dotMatrixDate = function(self, digit)
+			local fileName = "Clocks/Dot_Matrix/dotmatrix_date_" .. tostring(digit) .. ".png"
+			return {
+				w = 27,
+				h = 43,
+				img = _loadImage(self, fileName),
+				align = 'bottom',
+				border = { 1, 0, 1, 0 },
+			}
+		end
+	
+		s.icon_dotMatrixDigit0 = _dotMatrixDigit(self, 0)
+		s.icon_dotMatrixDigit1 = _dotMatrixDigit(self, 1)
+		s.icon_dotMatrixDigit2 = _dotMatrixDigit(self, 2)
+		s.icon_dotMatrixDigit3 = _dotMatrixDigit(self, 3)
+		s.icon_dotMatrixDigit4 = _dotMatrixDigit(self, 4)
+		s.icon_dotMatrixDigit5 = _dotMatrixDigit(self, 5)
+		s.icon_dotMatrixDigit6 = _dotMatrixDigit(self, 6)
+		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
+		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
+		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+	
+		s.icon_dotMatrixDate0 = { img = false }
+		s.icon_dotMatrixDate1 = { img = false }
+		s.icon_dotMatrixDate2 = { img = false }
+		s.icon_dotMatrixDate3 = { img = false }
+		s.icon_dotMatrixDate4 = { img = false }
+		s.icon_dotMatrixDate5 = { img = false }
+		s.icon_dotMatrixDate6 = { img = false }
+		s.icon_dotMatrixDate7 = { img = false }
+		s.icon_dotMatrixDate8 = { img = false }
+		s.icon_dotMatrixDate9 = { img = false }
+	
+		s.icon_dotMatrixDateDot = {
+			img = false,
+		}
+	
+		s.icon_dotMatrixDots = {
+			img = false,
+		}
+	
+		s.icon_dotMatrixAlarmOn = {
+			img = false,
+		}
+		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn)
+	
+		s.icon_dotMatrixPowerOn = {
+			img = false,
+		}
+		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
+			img = false,
+		})
+	
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			w = 61,
+		}
+
+		local leftDigit = 53
+		local rightDigit = 126
+		local topDigit = 22
+		local bottomDigit = 160
+
+		s.Clock = {
+			w = 240,
+			h = 320,
+			bgImg = dotMatrixBackground,
+			h1 = _uses(_clockDigit, {
+				x = leftDigit,
+				y = topDigit,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = rightDigit,
+				y = topDigit,
+			}),
+			m1 = _uses(_clockDigit, {
+				x = leftDigit,
+				y = bottomDigit,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = rightDigit,
+				y = bottomDigit,
+			}),
+
+			power = { hidden = 1 },
+			dots = { hidden = 1 },
+			alarm = { hidden = 1 },
+			M1 = { hidden = 1 },
+			M2 = { hidden = 1 },
+			dot1 = { hidden = 1 },
+			D1 = { hidden = 1 },
+			D2 = { hidden = 1 },
+			dot2 = { hidden = 1 },
+			Y1 = { hidden = 1 },
+			Y2 = { hidden = 1 },
+			Y3 = { hidden = 1 },
+			Y4 = { hidden = 1 },
+		}
+
+
 	end
 
 	return s
@@ -1099,13 +1466,14 @@ function Digital:getDigitalClockSkin(skinName)
 				y = 20,
 			},
 			horizDivider2 = { hidden = 1 },
-			today = { hidden = 1 },
 			horizDivider = {
 				position = LAYOUT_NONE,
 				x = 0,
 				y = 180,
 			},
+			today = { hidden = '1' },
 			date = {
+--SKIN
 				position = LAYOUT_SOUTH,
 				order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
 				w = WH_FILL,
@@ -1222,14 +1590,10 @@ function Digital:getDigitalClockSkin(skinName)
 				position = LAYOUT_NORTH,
 				h = 83,
 				zOrder = 2,
-				order = { 'dayofweek' },
-				dayofweek = {
-					padding = { 0, 34, 0, 0 },
-					w = WH_FILL,
-					align = 'center',
-					fg = { 0xcc, 0xcc, 0xcc },
-					font = _font(20),
-				},
+				w = WH_FILL,
+				align = 'center',
+				fg = { 0xcc, 0xcc, 0xcc },
+				font = _font(20),
 			},
 			clock = {
 				position = LAYOUT_CENTER,
@@ -1281,6 +1645,7 @@ function Digital:getDigitalClockSkin(skinName)
 				w = WH_FILL,
 				h = 83,
 				padding = { 0, 10, 0, 0 },
+				dayofweek = { hidden = 1 },
 				vdivider1 = {
 					align = 'center',
 					w = 2,
