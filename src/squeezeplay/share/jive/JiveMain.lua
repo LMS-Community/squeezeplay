@@ -310,6 +310,10 @@ function JiveMain:__init()
 		10)		
 
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
+
+	--before NP exists (from SlimBrowseApplet), have go_home_or_now_playing go home
+	Framework:addActionListener("go_home_or_now_playing", self, _goHomeAction, 10)
+
 	Framework:addActionListener("add", self, _defaultContextMenuAction, 10)
 
 	--Consume up and down actions
