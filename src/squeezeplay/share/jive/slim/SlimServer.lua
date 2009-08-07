@@ -751,12 +751,16 @@ local function _loadArtworkImage(self, cacheKey, chunk, size)
 		return nil
 	end
 
+	-- parse size specification for width and height if in format <W>x<H>
+	local sizeW = string.match(size, "(%d+)x%d+") or size
+	local sizeH = string.match(size, "%d+x(%d+)") or size
+
 	-- Resize image
 	-- Note this allows for artwork to be resized to a larger
 	-- size than the original.  This is intentional so smaller cover
 	-- art will still fill the space properly on the Now Playing screen
-	if w ~= size and h ~= size then
-		image = image:rotozoom(0, size / w, 1)
+	if w ~= sizeW and h ~= sizeH then
+		image = image:rotozoom(0, sizeW / w, 1)
 		if logcache:isDebug() then
 			local wnew, hnew = image:getSize()
 			logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
@@ -979,9 +983,13 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 		end
 	end
 
-	-- request SqueezeCenter resizes the thumbnail, use 'o' for
+	-- parse size specification for width and height if in format <W>x<H>
+	local sizeW = string.match(size, "(%d+)x%d+") or size
+	local sizeH = string.match(size, "%d+x(%d+)") or size
+
+	-- request SqueezeCenter resizes the thumbnail, use 'm' for
 	-- original aspect ratio
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_o'
+	local resizeFrag = '_' .. sizeW .. 'x' .. sizeH .. '_m'
 
 	local url
 	if string.match(iconId, "^%d+$") then
@@ -993,7 +1001,7 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	else
 		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
 		if string.find(iconId, "^http") then
-			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. size .. '&h=' .. size .. '&f=' .. (imgFormat or '') .. '&u=' .. iconId
+			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. sizeW .. '&h=' .. sizeH .. '&f=' .. (imgFormat or '') .. '&u=' .. iconId
 		else
 			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
 

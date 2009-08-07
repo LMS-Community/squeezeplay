@@ -73,7 +73,7 @@ function param(self)
 	return {
 		THUMB_SIZE = 41,
 		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = 143,
+		nowPlayingBrowseArtworkSize = "300x143",
 		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,
 		nowPlayingTitleStatusLabel  = "artist",
