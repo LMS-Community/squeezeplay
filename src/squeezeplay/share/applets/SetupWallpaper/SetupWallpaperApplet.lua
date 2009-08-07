@@ -389,16 +389,16 @@ function showBackground(self, wallpaper, playerId)
 	self.currentWallpaper = wallpaper
 
 	local srf
-	if self.download[wallpaper] then
+	if wallpaper and self.download[wallpaper] then
 		-- image in download cache
 		if self.download[wallpaper] ~= "fetch" and self.download[url] ~= "fetchset" then
 			local data = self.download[wallpaper]
 			srf = Tile:loadImageData(data, #data)
 		end
-	elseif string.match(wallpaper, "http://(.*)") then
+	elseif wallpaper and string.match(wallpaper, "http://(.*)") then
 		-- saved remote image for this player
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
-	else
+	elseif wallpaper then
 		-- try firmware wallpaper
 		srf = Tile:loadImage(firmwarePrefix .. wallpaper)
 	end

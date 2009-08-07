@@ -472,6 +472,14 @@ ENCORE
 	RU	На бис
 	SV	Dakapo
 
+# Note: translation will come back from SLT for this token as BB_ENCORE_RED
+# those translations should be manually moved over at that time
+ENCORERED
+	EN	Encore Red
+
+BB_ENCORE_RED
+	EN	Encore Red
+
 HARMONY
 	CS	Harmonie
 	DA	Harmoni
