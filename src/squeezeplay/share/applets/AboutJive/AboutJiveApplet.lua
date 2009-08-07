@@ -104,6 +104,7 @@ function settingsShow(self)
 		"",
 		"",
 		tostring(self:string("ABOUT_COPYRIGHT")),
+		"",
 	}
 
 	window:addWidget(Textarea("text", table.concat(about, "\n")))
