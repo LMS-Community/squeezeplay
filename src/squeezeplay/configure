@@ -20764,7 +20764,8 @@ fi
 
 
 
-for ac_header in dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h unistd.h netdb.h arpa/inet.h
+
+for ac_header in dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h sys/utsname.h unistd.h netdb.h arpa/inet.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -21265,7 +21266,8 @@ _ACEOF
 
 
 
-for ac_func in malloc calloc fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog
+
+for ac_func in malloc calloc fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog uname
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 { echo "$as_me:$LINENO: checking for $ac_func" >&5
