@@ -959,9 +959,6 @@ function notify_playerCurrent(self, player)
 
 	self.playerOrServerChangeInProgress = false
 
-	-- unsubscribe from this player's menustatus for previous server
-	player:unsubscribe('/slim/menustatus/' .. player:getId())
-
 	log:info("player changed from:", _player, " to ", player, " for server: ", player:getSlimServer(), " from server: ", _server)
 
 	_player = player
