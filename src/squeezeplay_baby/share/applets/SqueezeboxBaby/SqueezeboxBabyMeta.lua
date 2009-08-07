@@ -67,6 +67,7 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
+        appletManager:addDefaultSetting("Playback", "alsaCaptureDevice", "dac")
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 20000)
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
 
