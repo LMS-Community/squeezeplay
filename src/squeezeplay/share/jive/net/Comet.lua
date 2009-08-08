@@ -728,8 +728,6 @@ end
 
 
 _connected = function(self)
-	_state(self, CONNECTED)
-
 	local data = { }
 
 	-- Add any un-acknowledged requests to the outgoing data
@@ -756,6 +754,8 @@ _connected = function(self)
 
 		self.rhttp:fetch(req)
 	end
+
+	_state(self, CONNECTED)
 end
 
 
