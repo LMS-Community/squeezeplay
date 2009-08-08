@@ -151,9 +151,11 @@ function _connectionType(self)
 
 	-- short cut if only one interface is available
 	if not self.wlanIface then
-		_networkScan(self, self.ethIface)
+		-- Only ethernet available
+		return _networkScan(self, self.ethIface)
 	elseif not self.ethIface then
-		_wirelessRegion(self, self.wlanIface)
+		-- Only wireless available
+		return _networkScan(self, self.wlanIface)
 	end
 
 	-- ask the user to choose

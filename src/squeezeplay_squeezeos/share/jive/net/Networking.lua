@@ -200,7 +200,7 @@ function interfaces(self, jnt)
 		local interface = string.match(line, "^%s*(%w+):")
 		log:debug("found: ", interface)
 
-		if interface ~= nil and interface ~= 'lo' then
+		if interface ~= nil and interface ~= 'lo' and not string.find( interface, "usb") then
 			table.insert(interfaces, interface)
 		end
 	end
