@@ -513,7 +513,7 @@ local function _menuSink(self, cmd, server)
 
 					local switchToScForScOnlyItem =
 						function()
-							self:_selectMusicSource(action, _player:getLastSqueezeCenter(),
+							self:_selectMusicSource(action, _player and  _player:getLastSqueezeCenter() or nil,
 							  nil, true)
 						end
 
@@ -828,11 +828,18 @@ function myMusicSelector(self)
 	end
 
 	if not _player then
+		--this can happen when SN was last server, but SN is down/can't be connected to
+		local connectServer = _server
+		if _server and _server:isSqueezeNetwork() then
+			--can't get "My Music" from SN, try to get lastSC from current player
+			local currentPlayer = appletManager:callService("getCurrentPlayer")
+			connectServer = currentPlayer and currentPlayer:getLastSqueezeCenter() or nil
+		end
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
 						jiveMain:openNodeById('_myMusic', true)
 					end,
-					_server)
+					connectServer)
 	elseif not _server then
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
