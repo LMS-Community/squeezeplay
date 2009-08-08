@@ -78,6 +78,51 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
 
+BSP_BRIGHTNESS_CTRL
+	CS	Ovládání jasu
+	DA	Lysstyrkeregulering
+	DE	Helligkeitsregelung
+	EN	Brightness Control
+	ES	Control de brillo
+	FI	Kirkkauden säätö
+	FR	Contrôle de luminosité
+	IT	Controllo della luminosità
+	NL	Helderheidscontrole
+	NO	Lysstyrke
+	PL	Regulacja jasności
+	RU	Управление яркостью
+	SV	Ljusstyrkekontroll
+
+BSP_BRIGHTNESS_AUTOMATIC
+	CS	Automatický jas
+	DA	Automatisk lysstyrke
+	DE	Automatische Helligkeit
+	EN	Automatic Brightness
+	ES	Brillo automático
+	FI	Automaattinen kirkkaus
+	FR	Luminosité automatique
+	IT	Luminosità automatica
+	NL	Automatische helderheid
+	NO	Automatisk lysstyrke
+	PL	Automatyczna regulacja jasności
+	RU	Автонастройка яркости
+	SV	Automatisk ljusstyrka
+
+BSP_BRIGHTNESS_MANUAL
+	CS	Manuální jas
+	DA	Manuel lysstyrke
+	DE	Manuelle Helligkeit
+	EN	Manual Brightness
+	ES	Brillo manual
+	FI	Manuaalinen kirkkaus
+	FR	Luminosité manuelle
+	IT	Luminosità manuale
+	NL	Handmatige helderheid
+	NO	Manuell lysstyrke
+	PL	Ręczna regulacja jasności
+	RU	Ручная настройка яркости
+	SV	Manuell ljusstyrka
+	
 GOODBYE
 	CS	Nashledanou
 	DA	Farvel

@@ -29,6 +29,8 @@ local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Slider                 = require("jive.ui.Slider")
 local Window                 = require("jive.ui.Window")
+local RadioGroup             = require("jive.ui.RadioGroup")
+local RadioButton            = require("jive.ui.RadioButton")
 
 local debug                  = require("jive.utils.debug")
 
@@ -88,6 +90,7 @@ local function _sysWrite(self, attr, val)
 	fh:flush(val)
 end
 
+local brightnessTimer = nil
 
 function init(self)
 	local uuid, mac, serial
@@ -150,6 +153,7 @@ function init(self)
 
 	-- sys interface
 	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
+	_sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "ambient")
 	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
 	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
 	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
@@ -172,6 +176,15 @@ function init(self)
 	self.lcdBrightness = brightnessTable[settings.brightness]
 	self:setPowerState("active")
 
+	self:initBrightness()
+	brightnessTimer = Timer( 2000,
+		function()
+			if settings.brightnessControl != "manual" then
+				self:doAutomaticBrightnessTimer()
+			end
+		end)
+	brightnessTimer:start()	
+	
 	-- status bar updates
 	self:update()
 	iconbar.iconWireless:addTimer(2000, function()  -- every two seconds
@@ -199,6 +212,94 @@ function init(self)
 	self:storeSettings()
 end
 
+local MAX_BRIGHTNESS_LEVEL = -1
+local STATIC_AMBIENT_MIN = -1
+
+-- Maximum number of brightness levels up/down per run of the timer
+local AMBIENT_RAMPSTEPS = -1
+
+local wasDimmed = false
+local brightCur = -1
+
+function initBrightness(self) 
+	-- Static Variables
+	MAX_BRIGHTNESS_LEVEL = #brightnessTable
+	STATIC_AMBIENT_MIN = 10000
+	AMBIENT_RAMPSTEPS = 4
+	
+	-- Init some values to a default value
+	brightCur = MAX_BRIGHTNESS_LEVEL
+end
+
+function doBrightnessRamping(self, target)
+	local diff = 0
+	diff = (target - brightCur)
+	
+	--log:info("Diff: " .. diff)
+
+	if math.abs(diff) > AMBIENT_RAMPSTEPS then
+		diff = AMBIENT_RAMPSTEPS
+			
+		-- is there an easier solution for this?
+		if brightCur > target then
+			diff = diff * -1.0
+		end
+	end
+		
+	brightCur = brightCur + diff	
+
+	if brightCur > MAX_BRIGHTNESS_LEVEL then
+		brightCur = MAX_BRIGHTNESS_LEVEL
+	elseif brightCur < 1 then
+		brightCur = 1	
+	end
+	
+end
+
+function doAutomaticBrightnessTimer(self)
+
+	-- As long as the power state is active don't do anything
+	if self.powerState ==  "active" then
+		if wasDimmed == true then
+			log:info("SWITCHED TO ACTIVE")
+			-- set brightness so that the active power state removes the 60% dimming
+			self:setBrightness( math.floor(brightCur) )
+			wasDimmed = false
+		end
+		return
+	else 
+		wasDimmed = true
+	end
+
+	local settings = self:getSettings()	
+	
+	-- Now continue with the real ambient code 
+	local ambient = _sysReadNumber(self, "ambient")
+	
+	--[[
+	log:info("Ambient:      " .. tostring(ambient))
+	log:info("MaxBright:    " .. tostring(MAX_BRIGHTNESS_LEVEL))
+	log:info("Brightness:   " .. tostring(settings.brightness))
+	]]--
+	
+	-- switch around ambient value
+	ambient = STATIC_AMBIENT_MIN - ambient
+	if ambient < 0 then
+		ambient = 0
+	end
+	--log:info("AmbientFixed: " .. tostring(ambient))
+	
+	
+	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
+	
+	self:doBrightnessRamping(brightTarget);
+	
+	-- Set Brightness
+	self:setBrightness( math.floor(brightCur) )
+	
+	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
+
+end
 
 --service method
 function performHalfDuplexBugTest(self)
@@ -423,7 +524,7 @@ function _setBrightness(self, level)
 	if self.powerState == "dimmed" then
 		level = math.floor(level * 0.6)
 	end
-
+	
 	_sysWrite(self, "brightness", level)
 end
 
@@ -456,7 +557,10 @@ function settingsBrightnessShow (self, menuItem)
 	local slider = Slider("slider", 1, #brightnessTable, level,
 		function(slider, value, done)
 			settings.brightness = value
-
+			
+			-- If the user modifies the slider - automatically switch to manaul brightness
+			settings.brightnessControl = "manual"
+			
 			local bright = brightnessTable[value]
 			if bright > 255 then
 				bright = 255
@@ -485,6 +589,43 @@ function settingsBrightnessShow (self, menuItem)
 
 	window:show()
 	return window
+end
+
+function settingsBrightnessControlShow(self, menuItem)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
+	local settings = self:getSettings()
+
+	local group = RadioGroup()
+	--log:info("Setting: " .. settings.brightnessControl)
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("BSP_BRIGHTNESS_AUTOMATIC"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuItem)
+						settings.brightnessControl = "automatic"
+					end,
+					settings.brightnessControl == "automatic")
+		},	
+		{
+			text = self:string("BSP_BRIGHTNESS_MANUAL"),
+			style = "item_choice",
+			check = RadioButton("radio", group, function(event, menuItem)
+						settings.brightnessControl = "manual"
+						self:setBrightness(settings.brightness)
+					end,
+					settings.brightnessControl == "manual")
+		}
+	})
+	
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self:storeSettings()
+		end
+	)
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+
 end
 
 
