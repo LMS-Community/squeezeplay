@@ -1057,6 +1057,12 @@ function updateIconbar(self)
 		-- set the shuffle (nil, 0=off, 1=by song, 2=by album)
 		iconbar:setShuffle(self.state["playlist shuffle"])
 
+		if self.state['sleep'] and tonumber(self.state['sleep']) > 0 then
+			iconbar:setSleep('ON')
+		else
+			iconbar:setSleep('OFF')
+		end
+
 		-- set the playlist mode (nil, 0=off, 1=playlist, 2=party)
 		if self.state['playlist mode'] and
 			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' or self.state['playlist mode'] == json.null )
@@ -1119,6 +1125,10 @@ function _process_status(self, event)
 
 	if self.state['playlist shuffle'] ~= oldState['playlist shuffle'] then
 		self.jnt:notify('playerShuffleModeChange', self, self.state['playlist shuffle'])
+	end
+
+	if self.state['sleep'] ~= oldState['sleep'] then
+		self.jnt:notify('playerSleepChange', self, self.state['sleep'])
 	end
 
 	if self.state['playlist repeat'] ~= oldState['playlist repeat'] then

@@ -100,6 +100,20 @@ end
 
 --[[
 
+=head2 Iconbar:setSleep(val)
+
+Sets the sleep icon on the iconbar. Values are OFF (Sleep Off), and ON (Sleep On)
+
+=cut
+--]]
+function setSleep(self, val)
+	log:debug("Iconbar:setSleep(", val, ")")
+	self.iconSleep:setStyle("button_sleep_" .. string.upper((val or "OFF")))
+end
+
+
+--[[
+
 =head2 Iconbar:setShuffle(val)
 
 Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle by track and 2 for shuffle by album.
@@ -191,17 +205,19 @@ function __init(self)
 
 	local obj = oo.rawnew(self, {
 		iconPlaymode = Icon("button_playmode_OFF"),
-		iconRepeat = Icon("button_repeat_OFF"),
-		iconShuffle = Icon("button_shuffle_OFF"),
-		iconBattery = Icon("button_battery_NONE"),
+		iconRepeat   = Icon("button_repeat_OFF"),
+		iconShuffle  = Icon("button_shuffle_OFF"),
+		iconBattery  = Icon("button_battery_NONE"),
 		iconWireless = Icon("button_wireless_NONE"),
-		button_time = Label("button_time", "XXXX"),
+		iconSleep    = Icon("button_sleep_OFF"),
+		button_time  = Label("button_time", "XXXX"),
 	})
 
 	obj.iconbarGroup = Group("iconbar_group", {
 					play = obj.iconPlaymode,
 					repeat_mode = obj.iconRepeat,  -- repeat is a Lua reserved word
 					shuffle = obj.iconShuffle,
+					sleep = obj.iconSleep,
 					battery = obj.iconBattery,
 					wireless = obj.iconWireless,
 				})
