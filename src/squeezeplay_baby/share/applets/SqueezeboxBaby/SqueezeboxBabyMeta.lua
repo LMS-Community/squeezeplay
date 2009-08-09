@@ -24,7 +24,7 @@ end
 function defaultSettings(meta)
 	return {
 		brightness = 40,		-- max
-		brightnessControl = "automatic", -- Automatic Brightness
+		brightnessControl = "manual", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
 		dimmedTimeout = 30000,		-- 30 seconds
 	}
@@ -36,7 +36,7 @@ function upgradeSettings(meta, settings)
 		settings.brightness = 40	-- max
 	end
 	if not settings.brightnessControl then
-		settings.brightnessControl = "automatic"
+		settings.brightnessControl = "manual"
 	end
 	if not settings.initTimeout then
 		settings.initTimeout = 60000	-- 60 seconds
@@ -71,6 +71,7 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
+	appletManager:addDefaultSetting("Playback", "alsaCaptureDevice", "dac")
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 20000)
 	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
 
