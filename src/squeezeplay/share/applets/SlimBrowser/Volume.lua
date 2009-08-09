@@ -1,7 +1,7 @@
 
 -- Private class to handle player volume
 
-local tostring, ipairs = tostring, ipairs
+local tostring, ipairs, tonumber = tostring, ipairs, tonumber
 
 local oo                     = require("loop.base")
 local os                     = require("os")
@@ -45,7 +45,7 @@ module(..., oo.class)
 
 
 local function _updateDisplay(self)
-	if self.volume <= 0 then
+	if tonumber(self.volume) <= 0 then
 		self.title:setValue(self.applet:string("SLIMBROWSER_MUTED"))
 		self.icon:setStyle('icon_popup_mute')
 		self.slider:setValue(0)
