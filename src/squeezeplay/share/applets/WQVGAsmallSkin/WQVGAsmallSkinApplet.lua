@@ -2103,12 +2103,10 @@ function skin(self, s)
 	s.hm_myMusicSearch = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_search" .. skinSuffix),
 	})
-	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicArtists)
-	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicAlbums)
-	s.hm_myMusicSearchSongs     = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_ml_songs" .. skinSuffix),
-	})
-	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicPlaylists)
+	s.hm_myMusicSearchArtists   = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchAlbums    = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchSongs     = _uses(s.hm_myMusicSearch)
+	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicSearch)
 	s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
 	s.hm_homeSearchRecent       = _uses(s.hm_myMusicSearch)
 
