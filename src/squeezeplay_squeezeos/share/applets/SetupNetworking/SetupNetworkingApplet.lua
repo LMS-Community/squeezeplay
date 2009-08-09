@@ -1129,6 +1129,11 @@ end
 
 function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 
+	-- Avoid race condition when switching from one network to another (seen on Jive)
+	-- Successful connection was reportet, but to the previous network not to the current
+	-- Now we wait until disconnection from the previous network has happened
+	self.disconnectedFromPreviousNetwork = false
+
 	self.connectTimeout = 0
 	self.dhcpTimeout = 0
 
@@ -1170,6 +1175,11 @@ function _selectNetworkTask(self, iface, ssid, createNetwork, useSupplicantWPS)
 
 	-- disconnect from existing network
 	iface:t_disconnectNetwork()
+
+	-- Avoid race condition when switching from one network to another (seen on Jive)
+	-- Successful connection was reportet, but to the previous network not to the current
+	-- Now we wait until disconnection from the previous network has happened
+	self.disconnectedFromPreviousNetwork = true
 
   if useSupplicantWPS then
 
@@ -1274,6 +1284,20 @@ function _connectTimer(self, iface, ssid, createNetwork)
 
 	Task("networkConnect", self, function()
 		log:debug("connectTimeout=", self.connectTimeout, " dhcpTimeout=", self.dhcpTimeout)
+
+		-- Avoid race condition when switching from one network to another (seen on Jive)
+		-- Successful connection was reportet, but to the previous network not to the current
+		-- Now we wait until disconnection from the previous network has happened
+		if not self.disconnectedFromPreviousNetwork then
+			-- Still connected to previous network
+			self.connectTimeout = self.connectTimeout + 1
+			if self.connectTimeout ~= CONNECT_TIMEOUT then
+				return
+			end
+
+			-- connection timed out
+			return _connectFailed(self, iface, ssid, "timeout")
+		end
 
 		local status = iface:t_wpaStatus()
 
