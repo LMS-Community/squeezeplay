@@ -969,7 +969,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		}
 	
 		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
---			img = false,
+			img = false,
 		})
 	
 		s.icon_dotMatrixPowerOn = {
