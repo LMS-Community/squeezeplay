@@ -241,7 +241,7 @@ function skin(self, s, reload, useDefaultSize)
 				w = WH_FILL,
 				align = "center",
 				padding = { 0, 68, 0, 0 },
-				img = Tile:loadImage( baseImgpath .. "IconsResized/icon_album_noart_" .. noArtSize .. ".png"),
+				img = false,
 			},
 		},
 	

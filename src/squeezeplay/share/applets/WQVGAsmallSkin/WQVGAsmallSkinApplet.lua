@@ -2299,7 +2299,7 @@ function skin(self, s)
 			artwork = {
 				align = "center",
 				padding = 0,
-				img = _loadImage(self, "IconsResized/icon_album_noart_" .. artworkSize .. ".png"),
+				img = false,
 			},
 		},
 	

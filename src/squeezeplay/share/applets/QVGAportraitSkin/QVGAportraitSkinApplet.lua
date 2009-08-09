@@ -334,7 +334,7 @@ function skin(self, s, reload, useDefaultSize)
 				w = WH_FILL,
 				align = "center",
 				padding = { 0, 79, 0, 0 },
-				img = Tile:loadImage( baseImgpath .. "IconsResized/icon_album_noart_" .. noArtSize .. ".png"),
+				img = false,
 			},
 		},
 	
@@ -361,13 +361,14 @@ function skin(self, s, reload, useDefaultSize)
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
 			position = LAYOUT_NORTH,
-			padding = { 0, 0, 0, 0 },
+			padding = { 10, 0, 0, 0 },
 			border = { 0, 63, 0, 0 },
 			align = 'center',
 			w = WH_FILL,
 			order = { 'elapsed' },
 			elapsed = {
-				align = 'center',
+				w = WH_FILL,
+				align = 'left',
 				font = _boldfont(12),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
