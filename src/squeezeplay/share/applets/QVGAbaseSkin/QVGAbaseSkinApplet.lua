@@ -780,6 +780,13 @@ function skin(self, s, reload, useDefaultSize)
 					},
 				}),
 			},
+			locked = {
+				item = _uses(s.locked.item, {
+					icon = {
+						img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix),
+					},
+				}),
+			},
 		},
 	})
 
