@@ -382,6 +382,26 @@ end
 
 --[[
 
+=head2 jive.ui.Framework:isWindowInStack(window)
+
+Returns true if I<window> is in the window stack
+
+=cut
+--]]
+function isWindowInStack(self, window)
+	local stack = self.windowStack
+
+	for i=1,#stack do
+		if stack[i] == window then
+			return true
+		end
+	end
+	return false
+end
+
+
+--[[
+
 =head2 jive.ui.Framework:getScreenSize()
 
 Returns I<w, h> the current screen size.

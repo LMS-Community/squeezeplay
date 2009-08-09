@@ -1001,8 +1001,9 @@ end
 function showNowPlaying(self, transition)
 
 	local windowStyle
-	if Framework:isCurrentWindow(self.window) then
-		log:debug('NP already on screen')
+	if Framework:isWindowInStack(self.window) then
+		log:error('NP already on stack')
+		self.window:moveToTop()
 
 		-- restart the screensaver timer if we hit this clause
 		appletManager:callService("restartScreenSaverTimer")
