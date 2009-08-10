@@ -42,6 +42,7 @@ local Textinput     = require("jive.ui.Textinput")
 local Keyboard      = require("jive.ui.Keyboard")
 local Popup         = require("jive.ui.Popup")
 local Icon          = require("jive.ui.Icon")
+local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
 local iconbar       = iconbar
@@ -148,16 +149,6 @@ function _showMusicSourceList(self)
 		self:_addServerItem(server, _)
 	end
 
-	local item = {
-		text = self:string("SLIMSERVER_ADD_SERVER"), 
-		sound = "WINDOWSHOW",
-		callback = function(event, menuItem)
-				   self:_addServer(menuItem)
-			   end,
-		weight = 2
-	}
-	menu:addItem(item)
-
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 			   function()
@@ -181,6 +172,20 @@ function free(self)
 	jnt:unsubscribe(self)
 
 	return true
+end
+
+
+function _createRemoteServer(self, address)
+	--look first for existing server with same address to avoid having two server instances for same server
+	local server = SlimServer:getServerByAddress(address)
+	if not server then
+		server = SlimServer(jnt, address, address)
+		server:updateInit({ip=address}, 9000)
+	else
+		log:info("Using existing server with same ip address: ", server)
+	end
+
+	return server
 end
 
 
@@ -219,6 +224,7 @@ function _addServerItem(self, server, address)
 		id = server:getIpPort()
 	else
 		id = address
+		server = self:_createRemoteServer(address)
 	end
 
 	log:debug("\tid for this server set to: ", id)
@@ -710,48 +716,147 @@ function _serverVersionError(self, server)
 end
 
 
-function _getOtherServer(self)
-	local list = appletManager:callService("getPollList")
-	for i,v in pairs(list) do
-		if i ~= "255.255.255.255" then
-			return i
-		end
-	end
-
-	return nil
-end
+function _addRemoteServer(self, address)
+	log:debug("SlimServerApplet:_addRemoteServerself: ", address)
 
 
--- remove broadcast address & add new address
-function _add(self, address)
-	log:debug("SlimServerApplet:_add: ", address)
+	local list = self:getSettings().poll
+	list[address] = address
 
-	-- only keep other server and the broadcast address
-	local oldAddress = self:_getOtherServer()
-	self:_delServerItem(nil, oldAddress)
-
-	local list = {
-		["255.255.255.255"] = "255.255.255.255",
-		[address] = address
-	}
+	--make sure broadcast is still in the list
+	list["255.255.255.255"] = "255.255.255.255",
 
 	appletManager:callService("setPollList", list)
 	self:getSettings().poll = list
+	self:storeSettings()
+end
+
+function _removeRemoteServer(self, address)
+	log:debug("SlimServerApplet:_removeRemoteServer: ", address)
+
+	local list = self:getSettings().poll
+
+	list[address] = nil
+
+	self:getSettings().poll = list
+	self:storeSettings()
 end
 
 
--- ip address input window
-function _addServer(self, menuItem)
-	local window = Window("text_list", menuItem.text)
+function remoteServersWindow(self)
+	local window = Window("text_list", self:string("REMOTE_LIBRARIES"))
 
-	local v = Textinput.ipAddressValue(self:_getOtherServer())
+	self._remoteServersWindow = window
+	self:_refreshRemoteServersWindow()
+
+
+	self:tieAndShowWindow(window)
+end
+
+function _refreshRemoteServersWindow(self)
+	local window = self._remoteServersWindow
+	if not window then
+		return
+	end
+
+	--replace current menu, if any
+	if self._remoteServersMenu then
+		window:removeWidget(self._remoteServersMenu)
+	end
+
+	local menu = SimpleMenu("menu")
+	self._remoteServersMenu = menu
+
+	menu:addItem(
+		{
+			text = self:string("ADD_NEW_LIBRARY"),
+			sound = "WINDOWSHOW",
+			callback = function()
+					   self:_inputRemoteServer()
+				   end
+		})
+
+	for i,address in pairs(self:getSettings().poll) do
+		if address ~= "255.255.255.255" then
+			menu:addItem(
+				{
+					text = address,
+					sound = "WINDOWSHOW",
+					callback = function()
+							   self:remoteServerDetailWindow(address)
+						   end
+				})
+		end
+	end
+
+	window:addWidget(menu)
+end
+
+function remoteServerDetailWindow(self, address)
+	local window = Window("text_list", self:string("REMOVE_LIBRARY"))
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("REMOVE_LIBRARY"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								   self:_removeRemoteServer(address)
+								   self:_refreshRemoteServersWindow()
+								   window:hide()
+							   end,
+					},
+				})
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function addRemoteServerSuccessWindow(self, address)
+	local window = Window("text_list", self:string("LIBRARY_ADDED"))
+
+	local menu = SimpleMenu("menu",
+				{
+					{
+						text = self:string("CONNECT_TO_THIS_LIBRARY"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								--look first for existing server with same address to avoid having two server instances for same server
+								local server = self:_createRemoteServer(address)
+
+								local callback = function()
+									jiveMain:goHome()
+									jiveMain:openNodeById('_myMusic', true)
+								end
+								self:selectMusicSource(callback, nil, nil, server, nil, false, false)
+							   end,
+					},
+				})
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+-- ip address input window
+function _inputRemoteServer(self)
+	local window = Window("text_list", self:string("ADD_NEW_LIBRARY"))
+
+	local v = Textinput.ipAddressValue(nil)
 	local input = Textinput("textinput", v,
 				function(_, value)
-					self:_add(value:getValue())
-					self:_addServerItem(nil, value:getValue())
+					local address = value:getValue()
+					self:_addRemoteServer(address)
+
+					self:_refreshRemoteServersWindow()
 
 					window:playSound("WINDOWSHOW")
+					self:addRemoteServerSuccessWindow(address)
 					window:hide(Window.transitionPushLeft)
+
 					return true
 				end
 	)
@@ -763,8 +868,6 @@ function _addServer(self, menuItem)
         window:addWidget(group)
 	window:addWidget(keyboard)
 	window:focusWidget(group)
-
-	window._isChooseMusicSourceWindow = true
 
 	self:tieAndShowWindow(window)
 	return window

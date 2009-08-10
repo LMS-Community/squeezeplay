@@ -99,6 +99,20 @@ function iterate(class)
 end
 
 
+--class method
+function getServerByAddress(self, address)
+	local serverByAddress
+
+	for id, server in self:iterate() do
+		if server.ip == address then
+			serverByAddress = server
+			break
+		end
+	end
+	return serverByAddress
+end
+
+
 -- class method to return current server
 function getCurrentServer(class)
 	return currentServer

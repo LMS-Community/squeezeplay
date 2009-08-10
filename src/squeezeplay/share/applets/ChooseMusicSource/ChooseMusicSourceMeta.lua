@@ -57,19 +57,17 @@ function configureApplet(meta)
 		appletManager:callService("setPollList", meta:getSettings().poll)
 	end
 
---Uncomment to test Music Source selection
---	-- add item, then immediately disable it. Music Source should only show up when playerCurrent notification comes through
---	jiveMain:addItem(
---		meta:menuItem(
---			'appletSlimservers',
---			'home',
---			"SLIMSERVER_SERVERS",
---			function(applet, ...)
---				applet:settingsShow(...)
---			end,
---			11
---		)
---	)
+	jiveMain:addItem(
+		meta:menuItem(
+			'appletRemoteSlimservers',
+			'networkSettings',
+			"REMOTE_LIBRARIES",
+			function(applet, ...)
+				applet:remoteServersWindow(...)
+			end,
+			11
+		)
+	)
 
 end
 
