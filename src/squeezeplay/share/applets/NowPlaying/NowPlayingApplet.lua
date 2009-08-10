@@ -435,12 +435,6 @@ function _updateTrack(self, trackinfo, pos, length)
 		elseif album ~= '' then
 			artistalbum = album
 		end
-		--[[ FIXME, reformat trackinfo to one line in certain cases
-		if customStyle == 'large' and windowStyle == 'ss' and 
-			(jiveMain:getSelectedSkin() == 'QVGAportraitSkin') then
-				trackinfo = string.gsub(trackinfo, "\n", " - ")
-		end
-		--]]
 
 		self.trackTitle:setValue(track)
 		self.albumTitle:setValue(album)
@@ -690,8 +684,6 @@ function _createUI(self)
 	end
 	local window = Window(self.windowStyle)
 
-       	local customStyle = self:getSettings()["screensaverArtworkSize"]
-
 	local playerStatus = self.player:getPlayerStatus()
 	if playerStatus then
 		if not playerStatus.duration then
@@ -937,65 +929,6 @@ function openScreensaver(self)
 	self:showNowPlaying()
 
 	return false
-end
-
-function displaySizeSetting(self, menuItem)
-
-	local window  = Window("text_list", menuItem.text, 'settingstitle')
-        local group   = RadioGroup()
-        local current = self:getSettings()["screensaverArtworkSize"]
-
-	window:addWidget(
-		SimpleMenu(
-			"menu",
-				{
-					{
-						text  = self:string("SCREENSAVER_ARTWORK_SMALL"),
-						sound = "WINDOWSHOW",
-						style = 'item_choice',
-						check = RadioButton(
-								"radio", 
-								group, 
-								function(event, menuItem)
-									self:setArtworkSize("browse")
-								end,
-								current == 'browse')
-					},
-					{
-						text  = self:string("SCREENSAVER_ARTWORK_MEDIUM"),
-						sound = "WINDOWSHOW",
-						style = 'item_choice',
-						check = RadioButton(
-								"radio", 
-								group, 
-								function(event, menuItem)
-									self:setArtworkSize("ss")
-								end,
-								current == 'ss')
-					},
-					{
-						text  = self:string("SCREENSAVER_ARTWORK_LARGE"),
-						sound = "WINDOWSHOW",
-						style = 'item_choice',
-						check = RadioButton(
-								"radio", 
-								group, 
-								function(event, menuItem)
-									self:setArtworkSize("large")
-								end,
-								current == 'large')
-					},
-				}
-		)
-	)
-
-        self:tieAndShowWindow(window)
-        return window
-end
-
-function setArtworkSize(self, size)
-	self:getSettings()['screensaverArtworkSize'] = size
-	self:storeSettings()
 end
 
 function showNowPlaying(self, transition)

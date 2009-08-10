@@ -33,8 +33,8 @@ function configureApplet(self)
 		self:string("SCREENSAVER_NOWPLAYING"), 
 		"NowPlaying", 
 		"openScreensaver", 
-		self:string("SCREENSAVER_ARTWORK_SIZE"), 
-		"displaySizeSetting", 
+		_,
+		_,
 		10
 	)
 
