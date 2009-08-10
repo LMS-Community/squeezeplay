@@ -17,6 +17,7 @@ local System                 = require("jive.System")
 local Networking             = require("jive.net.Networking")
 
 local Player                 = require("jive.slim.Player")
+local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
@@ -345,6 +346,7 @@ end
 
 
 function _softResetAction(self, event)
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 	jiveMain:goHome()
 end
 
