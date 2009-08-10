@@ -600,7 +600,9 @@ function disconnectPlayer(self)
 	self:_setState("disconnected")
 
 	local player = Player:getCurrentPlayer()
-	player:disconnectFromServer()
+	if player then
+		player:disconnectFromServer()
+	end
 end
 
 
