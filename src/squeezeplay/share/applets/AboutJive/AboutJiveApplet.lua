@@ -32,26 +32,9 @@ function settingsShow(self)
 
 	local version = JIVE_VERSION
 
-	local uptime = System:getUptime()
-
-	local ut = {}
-	if uptime.days > 0 then
-		ut[#ut + 1] = tostring(self:string("UPTIME_DAYS", uptime.days))
-	end
-	if uptime.hours > 0 then
-		ut[#ut + 1] = tostring(self:string("UPTIME_HOURS", uptime.hours))
-	end
-	ut[#ut + 1] = tostring(self:string("UPTIME_MINUTES", uptime.minutes))
-	ut = table.concat(ut, " ")
-
 	local about = {
 		tostring(self:string("ABOUT_VERSION")),
 		version,
-		"",
-		tostring(self:string("ABOUT_MAC_ADDRESS", System:getMacAddress()) or ""),
-		"",
-		tostring(self:string("UPTIME")),
-		ut,
 		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Sean Adams",
