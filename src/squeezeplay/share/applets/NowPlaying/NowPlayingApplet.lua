@@ -1002,7 +1002,7 @@ function showNowPlaying(self, transition)
 
 	local windowStyle
 	if Framework:isWindowInStack(self.window) then
-		log:error('NP already on stack')
+		log:debug('NP already on stack')
 		self.window:moveToTop()
 
 		-- restart the screensaver timer if we hit this clause
