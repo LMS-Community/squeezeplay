@@ -19,6 +19,8 @@ local Framework              = require("jive.ui.Framework")
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("audio.decode")
 
+local iconbar = iconbar
+
 
 module(..., oo.class)
 
@@ -299,6 +301,14 @@ function _timerCallback(self)
 		Framework:getTicks() > self.statusTimestamp + 1000
 	then
 		self:sendStatus(status, "STMt")
+
+		-- buffer fullness debugging
+		if log:isDebug() then
+			local dbuf = (status.decodeFull * 100) / status.decodeSize
+			local obuf = (status.outputFull * 100) / status.outputSize
+
+			iconbar:showDebug(string.format('%0.1f%%/%0.1f%%', dbuf, obuf), 10)
+		end
 	end
 
 	-- stream metadata or status codes

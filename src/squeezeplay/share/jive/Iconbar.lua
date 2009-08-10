@@ -184,6 +184,15 @@ function setServerError(self, val)
 end
 
 
+
+-- show debug in place of the time in the iconbar, for elapsed seconds
+function showDebug(self, value, elapsed)
+	self.button_time:setValue(value)
+
+	self.debugTimeout = Framework:getTicks() + ((elapsed or 10) * 1000)
+end
+
+
 --[[
 
 =head2 Iconbar:update()
@@ -195,21 +204,11 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	if hasDecode and bufferFullness then
-		local status = decode:status()
-
-		local dbuf = 0
-		local obuf = 0
-
-		if status then
-			dbuf = (status.decodeFull * 100) / status.decodeSize
-			obuf = (status.outputFull * 100) / status.outputSize
-		end
-
-		self.button_time:setValue(string.format('%0.1f%%/%0.1f%%', dbuf, obuf))
-	else
-		self.button_time:setValue(datetime:getCurrentTime())
+	if self.debugTimeout and Framework:getTicks() < self.debugTimeout then
+		return
 	end
+
+	self.button_time:setValue(datetime:getCurrentTime())
 end
 
 
