@@ -133,6 +133,8 @@ function DotMatrix:__init(ampm, shortDateFormat)
 
 	obj = oo.rawnew(self, Clock(skin))
 
+	obj.ampm = ampm
+
 	obj.h1   = Group('h1', {
 		digit = Icon('icon_dotMatrixDigit0'),
 	})
@@ -181,9 +183,6 @@ function DotMatrix:__init(ampm, shortDateFormat)
 	obj.Y4    = Group('Y4', {
 		digit    = Icon('icon_dotMatrixDate0'),
 	})
-	obj.power = Group('power', {
-		power = Icon('icon_dotMatrixPowerOn'),
-	})
 
 	obj.window:addWidget(obj.h1)
 	obj.window:addWidget(obj.h2)
@@ -202,7 +201,6 @@ function DotMatrix:__init(ampm, shortDateFormat)
 	obj.window:addWidget(obj.Y2)
 	obj.window:addWidget(obj.Y3)
 	obj.window:addWidget(obj.Y4)
-	obj.window:addWidget(obj.power)
 
 	obj.show_ampm = ampm
 
@@ -236,36 +234,57 @@ end
 
 function DotMatrix:Draw()
 
+
+	local theHour   = os.date(self.clock_format_hour)
+	local theMinute = os.date(self.clock_format_minute)
+	local theDate   = os.date(self.clock_format_date)
+
+--[[
+	FOR TESTING PURPOSES 
+
+	-- MIN test
+	local theHour   = '01'
+	local theMinute = '01'
+	local theDate   = '01012009'
+
+	-- MAX test
+	local theHour   = '12'
+	local theMinute = '59'
+	local theDate   = '12312009'
+--]]
+
 	-- draw hour digits
-	theTime = os.date(self.clock_format_hour)
-	self:DrawClock(string.sub(theTime, 1, 1), 'h1')
-	self:DrawClock(string.sub(theTime, 2, 2), 'h2')
+	self:DrawClock(string.sub(theHour, 1, 1), 'h1')
+	self:DrawClock(string.sub(theHour, 2, 2), 'h2')
 
 	-- draw minute digits
 	theTime = os.date(self.clock_format_minute)
-	self:DrawClock(string.sub(theTime, 1, 1), 'm1')
-	self:DrawClock(string.sub(theTime, 2, 2), 'm2')
+	self:DrawClock(string.sub(theMinute, 1, 1), 'm1')
+	self:DrawClock(string.sub(theMinute, 2, 2), 'm2')
 
 	-- draw month digits
 	theTime = os.date(self.clock_format_date)
-	self:DrawDate(string.sub(theTime, 1, 1), 'M1')
-	self:DrawDate(string.sub(theTime, 2, 2), 'M2')
+	self:DrawDate(string.sub(theDate, 1, 1), 'M1')
+	self:DrawDate(string.sub(theDate, 2, 2), 'M2')
 
 	-- draw day digits
-	self:DrawDate(string.sub(theTime, 3, 3), 'D1')
-	self:DrawDate(string.sub(theTime, 4, 4), 'D2')
+	self:DrawDate(string.sub(theDate, 3, 3), 'D1')
+	self:DrawDate(string.sub(theDate, 4, 4), 'D2')
 
 	-- draw year digits
-	self:DrawDate(string.sub(theTime, 5, 5), 'Y1')
-	self:DrawDate(string.sub(theTime, 6, 6), 'Y2')
-	self:DrawDate(string.sub(theTime, 7, 7), 'Y3')
-	self:DrawDate(string.sub(theTime, 8, 8), 'Y4')
-
+	self:DrawDate(string.sub(theDate, 5, 5), 'Y1')
+	self:DrawDate(string.sub(theDate, 6, 6), 'Y2')
+	self:DrawDate(string.sub(theDate, 7, 7), 'Y3')
+	self:DrawDate(string.sub(theDate, 8, 8), 'Y4')
+	--self:DrawMinTest()
 end
 
 
 function DotMatrix:DrawClock(digit, groupKey)
 	local style = 'icon_dotMatrixDigit' .. digit
+	if digit == '0' and groupKey == 'h1' and self.ampm then
+		style = 'icon_dotMatrixDigitNone'
+	end
 	local widget = self[groupKey]:getWidget('digit')
 	widget:setStyle(style)
 end
@@ -277,6 +296,26 @@ function DotMatrix:DrawDate(digit, groupKey)
 	widget:setStyle(style)
 end
 
+-- this method is around for testing the rendering of different elements
+-- it is not called in practice
+function DotMatrix:DrawMinTest()
+
+	local widget = self.h1:getWidget('h1')
+	self.h1:setStyle('icon_dotMatrixDigit0')
+	self.h2:setStyle('icon_dotMatrixDigit1')
+	self.m1:setStyle('icon_dotMatrixDigit0')
+	self.m2:setStyle('icon_dotMatrixDigit1')
+
+	self.M1:setStyle('icon_dotMatrixDate0')
+	self.M2:setStyle('icon_dotMatrixDate1')
+	self.D1:setStyle('icon_dotMatrixDate0')
+	self.D2:setStyle('icon_dotMatrixDate1')
+	self.Y1:setStyle('icon_dotMatrixDate2')
+	self.Y2:setStyle('icon_dotMatrixDate0')
+	self.Y3:setStyle('icon_dotMatrixDate0')
+	self.Y4:setStyle('icon_dotMatrixDate9')
+
+end
 
 Digital = oo.class({}, Clock)
 
@@ -689,7 +728,6 @@ function _openScreensaver(self, type, windowStyle, force)
 	self.buffer = 2 -- buffer to display
 
 	if type == "DotMatrix" then
-		-- This clock always uses 24 hours mode for now
 		self.clock[1] = DotMatrix(hours, shortDateFormat)
 		self.clock[2] = DotMatrix(hours, shortDateFormat)
 	elseif type == "Digital" then
@@ -760,6 +798,9 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
 		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
 		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+		s.icon_dotMatrixDigitNone = _uses(s.icon_dotMatrixDigit9, {
+			img = false,
+		})
 	
 		s.icon_dotMatrixDate0 = _dotMatrixDate(self, 0)
 		s.icon_dotMatrixDate1 = _dotMatrixDate(self, 1)
@@ -791,14 +832,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		}
 	
 		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
-			img = false,
-		})
-	
-		s.icon_dotMatrixPowerOn = {
-			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
-		}
-	
-		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
 			img = false,
 		})
 	
@@ -835,12 +868,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			w = 480,
 			h = 272,
 			bgImg = dotMatrixBackground,
-			power = {
-				position = LAYOUT_NONE,
-				w = 39,
-				x = 26,
-				y = 35,
-			},
 			h1 = _uses(_clockDigit, {
 				x = x.h1,
 			}),
@@ -938,6 +965,9 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
 		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
 		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+		s.icon_dotMatrixDigitNone = _uses(s.icon_dotMatrixDigit9, {
+			img = false,
+		})
 	
 		s.icon_dotMatrixDate0 = _dotMatrixDate(self, 0)
 		s.icon_dotMatrixDate1 = _dotMatrixDate(self, 1)
@@ -972,14 +1002,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			img = false,
 		})
 	
-		s.icon_dotMatrixPowerOn = {
-			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_power_on.png"),
-		}
-	
-		s.icon_dotMatrixPowerButtonOff = _uses(s.icon_dotMatrixPowerOn, {
-			img = false,
-		})
-	
 		local _clockDigit = {
 			position = LAYOUT_NONE,
 			w = 61,
@@ -988,32 +1010,31 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		local _dateDigit = {
 			position = LAYOUT_NONE,
 			w = 27,
-			y = 182,
+			y = 183,
 		}
 
 		local x = {}
-		x.h1 = 0
-		x.h2 = x.h1 + 73
-		x.dots = x.h2 + 71
+		x.h1 = -7
+		x.h2 = x.h1 + 72
+		x.dots = x.h2 + 74
 		x.m1 = x.dots + 28
-		x.m2 = x.m1 + 73
-		x.alarm = 8
-		x.M1 = x.alarm + 38
-		x.M2 = x.M1 + 28
-		x.dot1 = x.M2 + 27 + 6
-		x.D1 = x.dot1 + 13
-		x.D2 = x.D1 + 28
-		x.dot2 = x.D2 + 27 + 6
-		x.Y1 = x.dot2 + 13
-		x.Y2 = x.Y1 + 28
-		x.Y3 = x.Y2 + 28
-		x.Y4 = x.Y3 + 28
+		x.m2 = x.m1 + 72
+		x.alarm = 10 
+		x.M1 = x.alarm + 35
+		x.M2 = x.M1 + 30
+		x.dot1 = x.M2 + 27 + 5
+		x.D1 = x.dot1 + 10
+		x.D2 = x.D1 + 30
+		x.dot2 = x.D2 + 27 + 5
+		x.Y1 = x.dot2 + 10
+		x.Y2 = x.Y1 + 30
+		x.Y3 = x.Y2 + 30
+		x.Y4 = x.Y3 + 30
 
 		s.Clock = {
 			w = 320,
 			h = 240,
 			bgImg = dotMatrixBackground,
-			power = { hidden = 1 },
 			h1 = _uses(_clockDigit, {
 				x = x.h1,
 			}),
@@ -1024,7 +1045,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				position = LAYOUT_NONE,
 				x = x.dots,
 				w = 38,
-				y = 70,
+				y = 57,
 			},
 			m1 = _uses(_clockDigit, {
 				x = x.m1,
@@ -1036,6 +1057,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			alarm = _uses(_dateDigit, {
 				w = 36,
 				x = x.alarm,
+				y = 182,
 			}),
 			M1 = _uses(_dateDigit, {
 				x = x.M1,
@@ -1111,6 +1133,9 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		s.icon_dotMatrixDigit7 = _dotMatrixDigit(self, 7)
 		s.icon_dotMatrixDigit8 = _dotMatrixDigit(self, 8)
 		s.icon_dotMatrixDigit9 = _dotMatrixDigit(self, 9)
+		s.icon_dotMatrixDigitNone = _uses(s.icon_dotMatrixDigit9, {
+			img = false,
+		})
 	
 		s.icon_dotMatrixDate0 = { img = false }
 		s.icon_dotMatrixDate1 = { img = false }
@@ -1174,7 +1199,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				y = bottomDigit,
 			}),
 
-			power = { hidden = 1 },
 			dots = { hidden = 1 },
 			alarm = { hidden = 1 },
 			M1 = { hidden = 1 },
