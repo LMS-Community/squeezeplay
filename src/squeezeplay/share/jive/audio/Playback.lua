@@ -268,7 +268,7 @@ function _timerCallback(self)
 		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 then
 
-		log:debug("resumeDecoder")
+		log:debug("resume decoder")
 		decode:resumeDecoder()
 	end
 
@@ -281,7 +281,7 @@ function _timerCallback(self)
 --	if status.outputTime / 10 > self.threshold then
 
 		if self.autostart == '1' and not self.sentResume then
-			log:debug("resume bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
+			log:debug("resume audio bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
 			decode:resumeAudio()
 			self.sentResume = true
 			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
@@ -490,6 +490,7 @@ function _strm(self, data)
 		-- unpause
 		local interval_ms = data.replayGain
 
+		log:debug("resume unpause")
 		decode:resumeAudio(interval_ms)
 		self.slimproto:sendStatus('STMr')
 

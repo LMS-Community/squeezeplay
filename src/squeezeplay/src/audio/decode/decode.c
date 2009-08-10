@@ -88,11 +88,31 @@ static struct decode_module *all_decoders[] = {
 };
 
 
+static inline void debug_fullness(void)
+{
+	if (IS_LOG_PRIORITY(log_audio_decode, LOG_PRIORITY_DEBUG)) {
+		size_t size, usedbytes;
+		u32_t bytesL, bytesH;
+		float dfull, ofull;
+
+		decode_audio_lock();
+
+		streambuf_get_status(&size, &usedbytes, &bytesL, &bytesH);
+		dfull = (float)(usedbytes * 100) / (float)size;
+		ofull = (float)(fifo_bytes_used(&decode_audio->fifo) * 100) / (float)decode_audio->fifo.size;
+		
+		LOG_DEBUG(log_audio_decode, "fullness: %0.2f%% / %0.2f%%", dfull, ofull);
+		decode_audio_unlock();
+	}
+}
+
+
 static void decode_resume_decoder_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
 
 	current_decoder_state = DECODE_STATE_RUNNING;
 	LOG_DEBUG(log_audio_decode, "resume_decoder decode state: %x audio state %x", current_decoder_state, decode_audio->state);
+	debug_fullness();
 }
 
 
@@ -107,6 +127,7 @@ static void decode_resume_audio_handler(void) {
 	}
 	
 	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_interval=%d", start_interval);
+	debug_fullness();
 
 	decode_audio_lock();
 
@@ -357,7 +378,6 @@ static int decode_thread_execute(void *unused) {
 
 		timeout = SDL_GetTicks() + delay;
 		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
-			LOG_DEBUG(log_audio_decode, "handling message");
 			handler();
 		}
 

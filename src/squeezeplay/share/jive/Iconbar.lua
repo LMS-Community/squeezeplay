@@ -28,6 +28,8 @@ The Iconbar class implements the Jive iconbar at the bottom of the screen. It re
 local tostring  = tostring
 
 local os        = require("os")
+local math      = require("math")
+local string    = require("string")
 
 local oo        = require("loop.base")
 
@@ -36,13 +38,18 @@ local Icon      = require("jive.ui.Icon")
 local Label     = require("jive.ui.Label")
 local Group     = require("jive.ui.Group")
 
-local string    = require("string")
+local hasDecode, decode = pcall(require, "squeezeplay.decode")
+
 local datetime  = require("jive.utils.datetime")
 local log       = require("jive.utils.log").logger("squeezeplay.iconbar")
 
 
 -- our class
 module(..., oo.class)
+
+
+-- to debug buffer fullness
+local bufferFullness = false
 
 
 --[[
@@ -188,7 +195,21 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	self.button_time:setValue(datetime:getCurrentTime())
+	if hasDecode and bufferFullness then
+		local status = decode:status()
+
+		local dbuf = 0
+		local obuf = 0
+
+		if status then
+			dbuf = (status.decodeFull * 100) / status.decodeSize
+			obuf = (status.outputFull * 100) / status.outputSize
+		end
+
+		self.button_time:setValue(string.format('%0.1f%%/%0.1f%%', dbuf, obuf))
+	else
+		self.button_time:setValue(datetime:getCurrentTime())
+	end
 end
 
 
