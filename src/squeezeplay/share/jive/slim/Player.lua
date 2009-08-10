@@ -854,9 +854,18 @@ end
 
 -- call
 -- sends a command
-function call(self, cmd)
+function call(self, cmd, useBackgroundRequest)
 	log:debug("Player:call():")
 --	log:debug(cmd)
+
+	if useBackgroundRequest then
+		self.slimServer:request(
+			_getSink(self, cmd),
+			self.id,
+			cmd
+		)
+		return
+	end
 
 	local reqid = self.slimServer:userRequest(
 		_getSink(self, cmd),
@@ -870,9 +879,17 @@ end
 
 -- send
 -- sends a command but does not look for a response
-function send(self, cmd)
+function send(self, cmd, useBackgroundRequest)
 	log:debug("Player:send():")
 --	log:debug(cmd)
+	if useBackgroundRequest then
+		self.slimServer:request(
+			nil,
+			self.id,
+			cmd
+		)
+		return
+	end
 
 	self.slimServer:userRequest(
 		nil,
@@ -1392,9 +1409,9 @@ function setPower(self, on)
 	log:info("Player:setPower(", on, ")")
 
 	if not on then
-		self:call({'power', '0'})
+		self:call({'power', '0'}, true)
 	else
-		self:call({'power', '1'})
+		self:call({'power', '1'}, true)
 	end
 end
 
@@ -1495,7 +1512,7 @@ function connectToServer(self, server)
 		server:disconnect()
 
 		SlimServer:addLocallyRequestedServer(server)
-		self:send({'connect', ip})
+		self:send({'connect', ip}, true)
 		return true
 
 	else
