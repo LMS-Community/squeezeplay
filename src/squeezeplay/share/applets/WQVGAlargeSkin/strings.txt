@@ -3,4 +3,11 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WQVGA_LARGE_SKIN
+	CS	Skin velkého písma WQVGA
+	DE	WQVGA-Skin – Große Schrift
 	EN	WQVGA Large Print Skin
+	ES	Máscara con letra grande WQVGA
+	FR	Habillage à grands caractères WQVGA
+	PL	Karnacja WQVGA (duży format)
+	RU	Крупная обложка, WQVGA
+

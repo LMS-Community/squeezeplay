@@ -18,7 +18,13 @@ SETTINGS
 	SV	Inställningar
 
 INTERNET_RADIO
+	CS	Internetové rádio
+	DE	Internetradio
 	EN	Internet Radio
+	ES	Radio por Internet
+	FR	Radio Internet
+	PL	Radio internetowe
+	RU	Радиостанции Интернета
 
 MY_MUSIC
 	CS	Hudba
@@ -53,7 +59,7 @@ GLOBAL_HELP
 GLOBAL_SUPPORT
 	CS	Další nápověda
 	DA	Mere hjælp
-	DE	Weitere Informationen
+	DE	Weitere Hilfe
 	EN	More Help
 	ES	Más ayuda
 	FI	Lisäohjeita
@@ -62,7 +68,7 @@ GLOBAL_SUPPORT
 	NL	Meer Help
 	NO	Ytterligere hjelp
 	PL	Więcej pomocy
-	RU	Дополнительная помощь
+	RU	Дополнительная справка
 	SV	Ytterligare hjälp
 
 REMOTE_SETTINGS
@@ -129,10 +135,22 @@ ADVANCED_SETTINGS
 	SV	Avancerat
 
 AUDIO_SETTINGS
+	CS	Nastavení zvuku
+	DE	Audioeinstellungen
 	EN	Audio Settings
+	ES	Configuración de audio
+	FR	Paramètres audio
+	PL	Ustawienia audio
+	RU	Настройки аудиоканала
 
 BETA_FEATURES
+	CS	Beta vlastnosti
+	DE	Beta-Funktionen
 	EN	Beta Features
+	ES	Características beta
+	FR	Fonctions bêta
+	PL	Funkcje w wersji beta
+	RU	Функции бета-версии
 
 BRIGHTNESS_SETTINGS
 	CS	Jas
@@ -330,7 +348,13 @@ RETURN_TO_SETUP
 	SV	Återgå till installationen
 
 SHORTCUTS_RESET
+	CS	Opětovně nastavit na výchozí
+	DE	Zurücksetzen
 	EN	Reset to Defaults
+	ES	Restablecer a valores predeterminados
+	FR	Restauration des valeurs par défaut
+	PL	Resetuj do wartości domyślnych
+	RU	Восстановление стандартных настроек
 
 KEYBOARD_DONE
 	CS	hotovo

@@ -48,7 +48,13 @@ IMAGE_VIEWER_EMPTY_LIST
 	SV	Det finns inget att visa. Bildlistan är tom.
 
 IMAGE_VIEWER_LIST_NOT_READY
+	CS	Několik pokusů o čtení / vytvoření seznamu obrázků selhalo. Zkontrolujte prosím nastavení Prohlížeče obrázků.
+	DE	Mehrere Versuche, die Bilderliste zu öffnen / zu erstellen, sind fehlgeschlagen.  Überprüfen Sie die Image Viewer-Einstellungen.
 	EN	Several attempts at reading / creating the image list failed.  Please check the Image Viewer settings.
+	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes. Compruebe la configuración del visor de imágenes.
+	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué. Veuillez vérifier les réglages de l'afficheur d'images.
+	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.  Sprawdź ustawienia przeglądarki obrazów.
+	RU	Попытки чтения / создания списка изображений оказались неудачными. Проверьте настройки средства просмотра изображений.
 
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
@@ -613,8 +619,14 @@ IMAGE_VIEWER_CARD_ERROR
 	SV	Inga bilder hittades. Kontrollera att sökvägarna till bilderna är korrekta och att de har rätt format.
 
 IMAGE_VIEWER_CARD_NOT_DIRECTORY
+	CS	Zadaná cesta hledání není adresářem. Zadejte prosím platný název cesty adresáře.
+	DE	Beim angegebenen Suchpfad handelt es sich um kein Verzeichnis. Bitte geben Sie einen gültigen Verzeichnispfadnamen an.
 	EN	The defined search path is not a directory. Please provide a valid directory path name.
- 
+	ES	La ruta de búsqueda definida no es un directorio. Proporcione un nombre de ruta de directorio válido.
+	FR	Le chemin d'accès défini n'est pas un répertoire. Veuillez indiquer un nom de chemin de répertoire valide.
+	PL	Zdefiniowana ścieżka wyszukiwania nie jest katalogiem. Podaj prawidłową ścieżkę do katalogu.
+	RU	Указанный путь поиска не ведет к каталогу. Укажите действительный путь к каталогу.
+
 #
 # Strings for HTTP Source
 #
@@ -777,7 +789,13 @@ IMAGE_VIEWER_FLICKR_DISPLAY_RECENT
 	SV	Nyligen tillagda bilder
 
 IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED
+	CS	Označené obrázky
+	DE	Getaggte Bilder
 	EN	Tagged images
+	ES	Imágenes con etiquetas
+	FR	Images étiquetées
+	PL	Obrazy ze znacznikami
+	RU	Изображения с метками
 
 IMAGE_VIEWER_FLICKR_FLICKR_ID
 	CS	Uživatel Flickr
@@ -840,8 +858,20 @@ IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION
 	SV	Du har inte angett något Flickr-namn än. Ange ett giltigt Flickr-namn eller välj ett annat visningsalternativ.\n\nTryck på valfri tangent för att fortsätta.
 
 IMAGE_VIEWER_FLICKR_TAGS
+	CS	Klíčová slova označení
+	DE	Tag-Stickwörter
 	EN	Tag Keywords
+	ES	Palabras clave de etiquetas
+	FR	Mots clés d'étiquette
+	PL	Słowa kluczowe znacznika
+	RU	Ключевые слова меток
 
 IMAGE_VIEWER_FLICKR_QUERY_TAGS
+	CS	Zadejte prosím klíčové slovo / klíčová slova pro vyhledávání v informacích označení. Můžete zadávaná označení oddělovat čárkou.
+	DE	Geben Sie die Stichwörter ein, nach denen in den Tags gesucht werden soll. Tags können durch ein Komma getrennt werden.
 	EN	Please enter the keyword(s) to search for in the tag information. You can separated tags with a comma.
+	ES	Escriba las palabras clave que desea buscar en la información de etiquetas. Las etiquetas se separan con una coma.
+	FR	Veuillez saisir les mots clés à rechercher dans les informations d'étiquette. Vous pouvez séparer les étiquettes avec des virgules.
+	PL	W informacjach znacznika wprowadź słowa kluczowe do wyszukiwania. Znaczniki można rozdzielać przecinkami.
+	RU	Введите ключевые слова для поиска информации по меткам. Метки можно разделять запятой.
 

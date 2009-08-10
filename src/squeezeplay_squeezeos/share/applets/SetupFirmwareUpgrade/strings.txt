@@ -123,10 +123,22 @@ UPDATE_TRY_AGAIN
 	SV	Försök igen ...
 
 UPDATE_USB
+	CS	Rozhraní USB
+	DE	USB
 	EN	USB
+	ES	USB
+	FR	USB
+	PL	USB
+	RU	USB
 
 UPDATE_SD
+	CS	SD
+	DE	SD
 	EN	SD
+	ES	SD
+	FR	SD
+	PL	Karta SD
+	RU	SD
 
 UPDATE_DOWNLOAD
 	CS	Stahování
@@ -189,10 +201,22 @@ UPDATE_BEGIN_UPGRADE
 	SV	En ny uppdatering finns tillgänglig. Det kan ta några minuter innan den har laddats ner och installerats.
 
 UPDATE_BEGIN_REINSTALL
+	CS	Software pro tento Squeezebox je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DE	Die Software für diese Squeezebox ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
 	EN	The software for this Squeezebox is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este Squeezebox está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FR	Le logiciel de cette Squeezebox est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
 
 UPDATE_BEGIN_REINSTALL_JIVE
+	CS	Software pro tento ovladač je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DE	Die Software für diesen Controller ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
 	EN	The software for this controller is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este controlador está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FR	Le logiciel de ce contrôleur est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
 
 UPDATE_BEGIN_REMOVABLE_MEDIA
 	CS	Instalovat %s z výměnného média.

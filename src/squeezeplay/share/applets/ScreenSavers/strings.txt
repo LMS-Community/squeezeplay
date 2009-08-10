@@ -93,28 +93,76 @@ SCREENSAVER_SELECT_HELP
 	SV	Tryck på mittenknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
 
 SCREENSAVER_SELECT_PLAYING_HELP
+	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že tento Squeezebox přehrává.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is playing.
+	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté reproduciendo música.
+	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est en cours d'utilisation.
+	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany podczas działania odtwarzacza w usłudze Squeezebox.
+	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox воспроизводит музыку.
 
 SCREENSAVER_SELECT_STOPPED_HELP
+	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který bude zobrazen v případě, že tento Squeezebox nepřehrává.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn keine Wiedergabe über die Squeezebox erfolgt.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is not playing.
+	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox no esté reproduciendo música.
+	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox n'est pas en cours d'utilisation.
+	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox będzie nieaktywny.
+	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox не воспроизводит музыку.
 
 SCREENSAVER_SELECT_OFF_HELP
+	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že je tento Squeezebox vypnut.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is off.
+	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté apagado.
+	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est hors tension.
+	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany po wyłączeniu ekranu usługi Squeezebox.
+	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox выключен.
 
 SCREENSAVER_SELECT_PLAYING_HELP_FAB4
+	CS	Dotykem vyberte spořič obrazovky, který se zobrazí v případě, že tento Squeezebox přehrává.
+	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is playing.
+	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté reproduciendo música.
+	FR	Touchez pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est en cours d'utilisation.
+	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox będzie aktywny.
+	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox воспроизводит музыку.
 
 SCREENSAVER_SELECT_STOPPED_HELP_FAB4
+	CS	Dotykem vyberte spořič obrazovky, který bude zobrazen v případě, že tento Squeezebox nepřehrává.
+	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn keine Wiedergabe über Squeezebox erfolgt.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is not playing.
+	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox no esté reproduciendo música.
+	FR	Touchez pour sélectionner l'écran de veille à afficher lorsque cette Squeezebox n'est pas en cours d'utilisation.
+	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox nie będzie aktywny.
+	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox не воспроизводит музыку.
 
 SCREENSAVER_SELECT_OFF_HELP_FAB4
+	CS	Dotykem vyberte spořič obrazovky, který bude zobrazen v případě, že je tento Squeezebox vypnut.
+	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is off.
+	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté apagado.
+	FR	Touchez pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est hors tension.
+	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox nie będzie aktywny.
+	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox выключен.
 
 SCREENSAVER_PREVIEW_HELP
+	CS	Stiskněte pro náhled spořiče obrazovky.
+	DE	Drücken Sie 'Play', um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Press play to preview a screensaver.
+	ES	Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
+	FR	Appuyez sur Lecture pour afficher l'aperçu d'un écran de veille.
+	PL	Naciśnij przycisk odtwarzania, aby wyświetlić podgląd wygaszacza ekranu.
+	RU	Чтобы просмотреть заставку, нажмите кнопку воспроизведения.
 
 SCREENSAVER_PREVIEW_HELP_FAB4
+	CS	Stiskněte a podržte pro náhled spořiče obrazovky.
+	DE	Drücken und halten Sie die Taste, um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Touch and hold to preview a screensaver.
+	ES	Toque de forma prolongada para obtener una vista previa de un protector de pantalla.
+	FR	Appuyez sans relâcher pour afficher l'aperçu d'un écran de veille.
+	PL	Naciśnij i przytrzymaj, aby wyświetlić podgląd wygaszacza ekranu.
+	RU	Коснитесь и удерживайте, чтобы просмотреть заставку.
 
 DELAY_10_SEC
 	CS	10 vteřin

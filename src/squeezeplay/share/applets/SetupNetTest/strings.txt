@@ -27,7 +27,7 @@ SETUPNETTEST_NOSERVER
 	NL	Netwerktests worden niet ondersteund door de server waarmee dit muzieksysteem momenteel verbonden is. Zorg ervoor dat de plug-in Server- en netwerkstatus op je server is ingeschakeld.
 	NO	Nettverkstester støttes ikke av serveren som denne spilleren er koplet til for øyeblikket. Forsikre deg om at plugin-modulen Server- og nettverksstatus er aktivert på serveren.
 	PL	Testy sieci nie są obsługiwane przez serwer, z którym aktualnie jest połączony ten odtwarzacz. Upewnij się, czy na serwerze włączono wtyczki Serwer i Stan sieci.
-	RU	Сетевые тесты не поддерживаются сервером, к которому в данный момент подключен плеер. Убедитесь, что на сервере включен плагин состояния сервера и сети.
+	RU	Сетевые тесты не поддерживаются сервером, к которому в данный момент подключен плеер. Убедитесь, что на сервере включен подключаемый модуль состояния сервера и сети.
 	SV	Servern som spelaren är ansluten till har inte stöd för nätverkstester.  Kontrollera att plugin-programmet Server- och nätverksfunktionalitet har aktiverats på servern.
 
 SETUPNETTEST_TESTING

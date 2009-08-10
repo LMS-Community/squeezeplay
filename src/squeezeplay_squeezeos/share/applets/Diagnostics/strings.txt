@@ -165,7 +165,7 @@ FIRMWARE_VERSION
 	SV	Inbyggd programvaruversion:
 
 MAC_ADDRESS
-	CS	Adresa MAC:
+	CS	MAC adresa:
 	DA	MAC-adresse:
 	DE	MAC-Adresse:
 	EN	MAC Address:
@@ -493,3 +493,4 @@ DIAGNOSTICS_NETWORKING
 	PL	Sieć
 	RU	Работа в сети
 	SV	Nätverk
+

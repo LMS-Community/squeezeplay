@@ -59,18 +59,18 @@ NONE_FOUND
 	SV	Det gick inte att hitta några appletprogram
 
 HELP
-	CS	Vyberte aplety, které chcete nainstalovat, a poté zvolte Instalovat
+	CS	Nápověda
 	DA	Vælg det underprogram som skal installeres, og vælg derefter Installer
-	DE	Wählen Sie die zu installierenden Applets und anschließend 'Installieren'.
+	DE	Hilfe
 	EN	Choose applets to be installed and then select Install
-	ES	Elija los subprogramas que instalar y seleccione Instalar
+	ES	Ayuda
 	FI	Valitse asennettavat sovelmat ja sitten Asenna
-	FR	Sélectionnez les applets à installer, puis sélectionnez Installer.
+	FR	Aide
 	IT	Scegliere le applet da installare, quindi selezionare Installa
 	NL	Kies applets om te installeren, en selecteer dan 'Installeren'
 	NO	Velg tilleggsprogrammene som skal installeres, og velg så Installer
-	PL	Wybierz aplety do zainstalowania, a następnie wybierz opcję Instaluj
-	RU	Выберите Java-приложения для и нажмите кнопку "Установить"
+	PL	Pomoc
+	RU	Справка
 	SV	Välj de appletar du vill installera och välj sedan Installera
 
 DOWNLOADING

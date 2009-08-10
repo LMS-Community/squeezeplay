@@ -475,10 +475,22 @@ ENCORE
 # Note: translation will come back from SLT for this token as BB_ENCORE_RED
 # those translations should be manually moved over at that time
 ENCORERED
+	CS	Encore červená
+	DE	Encore Red
 	EN	Encore Red
+	ES	Más rojo
+	FR	Bis rouge
+	PL	Czerwony
+	RU	Encore (красный)
 
 BB_ENCORE_RED
+	CS	Encore červená
+	DE	Encore Red
 	EN	Encore Red
+	ES	Más rojo
+	FR	Bis rouge
+	PL	Czerwony
+	RU	Encore (красный)
 
 HARMONY
 	CS	Harmonie

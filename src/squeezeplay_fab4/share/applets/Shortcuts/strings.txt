@@ -244,10 +244,29 @@ SHORTCUTS_OUTPUT_POWER
 	SV	Av/på
 
 SHORTCUTS_OUTPUT_SETTINGS
+	CS	Nastavení
+	DE	Einstellungen
 	EN	Settings
+	ES	Configuración
+	FR	Paramètres
+	PL	Ustawienia
+	RU	Настройки
 
 SHORTCUTS_OUTPUT_MUTE
+	CS	Ztlumit
+	DE	Stumm
 	EN	Mute
+	ES	Silenciar
+	FR	Sourdine
+	PL	Wycisz
+	RU	Без звука
 
 SHORTCUTS_OUTPUT_PAUSE
+	CS	Pozastavit
+	DE	Pause
 	EN	Pause
+	ES	Pausa
+	FR	Pause
+	PL	Wstrzymaj
+	RU	Пауза
+

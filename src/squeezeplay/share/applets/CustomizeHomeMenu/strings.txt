@@ -3,7 +3,13 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 APP_GUIDE
+	CS	Aplikační galerie
+	DE	Anwendungsgalerie
 	EN	App Gallery
+	ES	Galería de aplicaciones
+	FR	Diaporama d'applications
+	PL	Galeria aplikacji
+	RU	Галерея приложений
 
 CUSTOMIZE_HOME
 	CS	Výchozí menu

@@ -18,7 +18,13 @@ SLIMSERVER_SERVERS
 	SV	Bibliotek
 
 CHOOOSE_DIFFERENT_NETWORK
+	CS	Zvolte jinou síť
+	DE	Anderes Netzwerk wählen
 	EN	Choose Different Network
+	ES	Elija otra red
+	FR	Sélectionner un réseau différent
+	PL	Wybierz inną sieć
+	RU	Выбрать другую сеть
 
 SWITCH_SERVER_TITLE
 	CS	Přepnout knihovnu
@@ -35,7 +41,13 @@ SWITCH_SERVER_TITLE
 	SV	Byt bibliotek
 
 SWITCH_SERVER_TEXT
+	CS	Provedli jste volbu, která povede k připojení k jiné knihovně, což zastaví přehrávání.
+	DE	Sie haben eine Option ausgewählt, durch die eine Verbindung zu einer anderen Musiksammlung hergestellt wird. Die Wiedergabe wird dadurch beendet.
 	EN	You have made a selection that will connect to a different library, which will stop playback.
+	ES	Ha realizado una selección que hará que el reproductor se conecte a otra biblioteca, lo cual detendrá la reproducción.
+	FR	Cette sélection entraîne la connexion à une autre collection. La lecture en cours s'arrêtera, etc.
+	PL	Dokonano wyboru, który spowoduje nawiązanie połączenia z inną biblioteką. Odtwarzanie zostanie zatrzymane.
+	RU	В результате выбранного действия плеер подключится к другой медиатеке. Воспроизведение будет остановлено.
 
 SWITCH_BUTTON
 	CS	Přepnout na knihovnu: %s
@@ -96,20 +108,49 @@ SLIMSERVER_ADD_SERVER
 	SV	Fjärrbibliotek
 
 REMOTE_LIBRARIES
+	CS	Vzdálené knihovny
+	DE	Remote-Musiksammlungen
 	EN	Remote Libraries
+	ES	Bibliotecas remotas
+	FR	Bibliothèques distantes
+	PL	Biblioteki zdalne
+	RU	Медиатеки удаленного доступа
 
 REMOVE_LIBRARY
+	CS	Odebrat knihovnu
+	DE	Musiksammlung entfernen
 	EN	Remove Library
+	ES	Quitar biblioteca
+	FR	Supprimer la bibliothèque
+	PL	Usuń bibliotekę
+	RU	Удалить медиатеку
 
 ADD_NEW_LIBRARY
+	CS	Přidat novou knihovnu
+	DE	Neue Musiksammlung hinzufügen
 	EN	Add New Library
+	ES	Agregar biblioteca nueva
+	FR	Ajouter une nouvelle bibliothèque
+	PL	Dodaj nową bibliotekę
+	RU	Добавить новую медиатеку
 
 LIBRARY_ADDED
+	CS	Knihovna přidána
+	DE	Musiksammlung hinzugefügt
 	EN	Library Added
+	ES	Biblioteca agregada
+	FR	Bibliothèque ajoutée
+	PL	Dodano bibliotekę
+	RU	Добавлена медиатека
 
 CONNECT_TO_THIS_LIBRARY
+	CS	Připojit k této knihovně
+	DE	Mit dieser Musiksammlung verbinden
 	EN	Connect to this library
-
+	ES	Establecer conexión con esta biblioteca
+	FR	Se connecter à cette bibliothèque
+	PL	Połącz z tą biblioteką
+	RU	Подключиться к этой медиатеке
 
 SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží Squeezebox Server
@@ -127,7 +168,7 @@ SLIMSERVER_HELP
 	SV	Ange IP-adressen till datorn där Squeezebox Server körs
 
 SLIMSERVER_CONNECTING_TO
-	CS	Připojuji se k
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to
@@ -142,7 +183,13 @@ SLIMSERVER_CONNECTING_TO
 	SV	Ansluter till
 
 SQUEEZEBOX_PROBLEM
+	CS	Problém s připojováním
+	DE	Verbindungsproblem
 	EN	Can't Connect to Library
+	ES	Problema de conexión
+	FR	Problème de connexion
+	PL	Problem podczas nawiązywania połączenia
+	RU	Ошибка при подключении
 
 SQUEEZEBOX_GO_BACK
 	CS	Jít zpět
@@ -175,13 +222,31 @@ SQUEEZEBOX_TRY_AGAIN
 	SV	Försök igen
 
 CHOOSE_OTHER_LIBRARY
+	CS	Přepnout knihovnu
+	DE	Bibliothek umschalten
 	EN	Switch Library
+	ES	Cambiar biblioteca
+	FR	Changer de collection
+	PL	Przełącz bibliotekę
+	RU	Сменить медиатеку
 
 SQUEEZEBOX_PROBLEM_HELP_GENERIC
+	CS	Nepovedlo se připojení k %s. Pokud tento problém nadále přetrvá, zkontrolujte prosím Squeezebox Server, abyste se ujistili, že řádně pracuje a že máte spolehlivé síťové připojení.
+	DE	Verbindung mit %s nicht möglich. Sollte das Problem weiterhin bestehen, prüfen Sie, ob der Squeezebox Server funktionstüchtig ist und Sie über eine zuverlässige Netzwerkverbindung verfügen.
 	EN	We couldn't connect to %s.  If this problem persists, please check Squeezebox Server to make sure it is running properly, and that you have a reliable network connection.
+	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que Squeezebox Server se está ejecutando correctamente y de que la conexión de red es fiable.
+	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le Squeezebox Server est correctement exécuté et que la connexion au réseau est fiable.
+	PL	Nie można nawiązać połączenia z %s. Jeśli problem będzie się powtarzał, sprawdź działanie programu Squeezebox Server i połączenia sieciowego.
+	RU	Не удалось подключиться к %s. Если эта неполадка будет повторяться, проверьте, правильно ли работает Squeezebox Server и установлено ли надежное сетевое подключение.
 
 SQUEEZEBOX_PROBLEM_HELP
+	CS	Nemohl jsem připojit váš Squeezebox k bezdrátové síti. Ujistěte se, že se nachází v rozsahu vaší bezdrátové sítě.
+	DE	Die Squeezebox konnte nicht mit dem kabellosen Netzwerk verbunden werden. Vergewissern Sie sich, dass sie sich in Reichweite befindet.
 	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Squeezebox Server is currently running.
+	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
+	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
+	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.
+	RU	Не удалось подключить Squeezebox к вашей беспроводной сети. Убедитесь, что он находится в диапазоне беспроводной сети.
 
 SQUEEZECENTER_VERSION
 	CS	Aktualizovat software
@@ -210,5 +275,4 @@ SQUEEZECENTER_VERSION_HELP
 	PL	%s wymaga aktualizacji do nowszej wersji programu Squeezebox Server.\n\nOdwiedź witrynę mysqueezebox.com/downloads, aby pobrać najnowszą wersję.
 	RU	%s необходимо обновить до более новой версии Squeezebox Server.\n\nПосетите mysqueezebox.com/downloads, чтобы загрузить последнюю версию.
 	SV	%s måste uppdateras till en senare version av Squeezebox Server.\n\nGå till mysqueezebox.com/downloads för att ladda ner den senaste versionen.
-
 

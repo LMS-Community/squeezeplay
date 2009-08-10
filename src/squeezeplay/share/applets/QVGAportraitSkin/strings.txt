@@ -3,4 +3,11 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 QVGAPORTRAIT_SKIN
+	CS	Vertikální skin QVGA
+	DE	QVGA-Hochformat-Skin
 	EN	QVGA Portrait Skin
+	ES	Máscara vertical QVGA
+	FR	Habillage portrait QVGA
+	PL	Karnacja pionowa QVGA
+	RU	Обложка: QVGA, книжная ориентация
+

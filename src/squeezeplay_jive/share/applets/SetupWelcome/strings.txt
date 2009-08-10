@@ -14,7 +14,7 @@ WELCOME
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
-	RU	Добро пожаловать
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
@@ -114,7 +114,7 @@ DONE
 	EN	That's it!
 	ES	¡Ya está!
 	FI	Siinä kaikki!
-	FR	Vous avez terminé!
+	FR	La procédure est terminée.
 	IT	Fatto!
 	NL	Dat is het!
 	NO	Ferdig!

@@ -3,4 +3,11 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 QVGALANDSCAPE_SKIN
+	CS	Horizontální skin QVGA
+	DE	QVGA-Quer-Skin
 	EN	QVGA Landscape Skin
+	ES	Máscara horizontal QVGA
+	FR	Habillage paysage QVGA
+	PL	Karnacja pozioma QVGA
+	RU	Обложка: QVGA, альбомная ориентация
+

@@ -103,7 +103,7 @@ SQUEEZEBOX_FINDING_SOURCES
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
-	CS	Připojuji se k
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to

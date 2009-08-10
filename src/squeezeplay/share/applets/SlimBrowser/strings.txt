@@ -228,16 +228,40 @@ SLIMBROWSER_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIMBROWSER_ADD_NEXT_1
+	CS	Přehrát další
+	DE	Als nächstes wiedergeben
 	EN	Play Next
+	ES	Reproducir a continuación
+	FR	Lire à la suite
+	PL	Odtwórz następny
+	RU	След. дорожка
 
 SLIMBROWSER_ADD_NEXT_2
+	CS	Přidat další
+	DE	Als nächstes hinzufügen
 	EN	Add Next
+	ES	Agregar a continuación
+	FR	Ajouter le suivant
+	PL	Dodaj następny element
+	RU	Добавить следующий
 
 SLIMBROWSER_PASSWORD_WRONG
+	CS	Neplatné uživatelské jméno/ heslo
+	DE	Benutzername/Kennwort ungültig
 	EN	Username/Password Invalid
+	ES	Nombre de usuario/contraseña no válidos
+	FR	Nom d'utilisateur/mot de passe non valide
+	PL	Nieprawidłowa nazwa użytkownika/hasło
+	RU	Недействительные имя пользователя или пароль
 
 SLIMBROWSER_PASSWORD_WRONG_BODY
+	CS	Zadané uživatelské jméno a heslo není platné.
+	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	The username or password you entered is not valid.
+	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
+	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
+	RU	Введены неверные пароль или имя пользователя.
 
 SLIMBROWSER_SCANNER
 	CS	Pozice skladby
@@ -255,7 +279,7 @@ SLIMBROWSER_SCANNER
 	SV	Spårets placering
 
 SLIMBROWSER_CONNECTING_TO
-	CS	Připojuji se k
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to

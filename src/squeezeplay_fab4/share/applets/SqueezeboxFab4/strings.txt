@@ -49,16 +49,40 @@ INVALID_MAC_CONTINUE
 	SV	Fortsätt
 
 SCREEN_INPUT_CONTROL_TITLE
+	CS	Řízení vstupu
+	DE	Eingabesteuerung
 	EN	Input Control
+	ES	Control de entrada
+	FR	Contrôle des entrées
+	PL	Sterowanie wejściem
+	RU	Управление вводом
 
 SCREEN_INPUT_CONTROL_BOTH
+	CS	Obojí (dotykové a dálkové)
+	DE	Drücken und Fernbedienung
 	EN	Both (Touch and Remote)
+	ES	Ambos (táctil y mando a distancia)
+	FR	Toucher et Télécommande
+	PL	Obydwa (urządzenie Touch i pilot zdalnego sterowania)
+	RU	Оба (сенсорное и пульт)
 
 SCREEN_INPUT_CONTROL_IR
+	CS	Dálkové ovládání
+	DE	Fernbedienung
 	EN	Remote
+	ES	Mando a distancia
+	FR	Télécommande
+	PL	Pilot zdalnego sterowania
+	RU	Пульт
 
 SCREEN_INPUT_CONTROL_TOUCH
+	CS	Dotyk
+	DE	Drücken
 	EN	Touch
+	ES	Táctil
+	FR	Toucher
+	PL	Urządzenie Touch
+	RU	Сенсорное
 
 BSP_BRIGHTNESS
 	CS	Jas

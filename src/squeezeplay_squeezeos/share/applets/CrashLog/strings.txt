@@ -3,7 +3,13 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 CRASH_TITLE
+	CS	Chyba systému
+	DE	Systemfehler
 	EN	System Error
+	ES	Error del sistema
+	FR	Erreur système
+	PL	Błąd systemu
+	RU	Системная ошибка
 
 CRASH_TEXT
 	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
@@ -21,13 +27,31 @@ CRASH_TEXT
 	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
 
 CRASH_TEXT_QUESTION
+	CS	Omlouváme se, vaše zařízení muselo být restartováno z důvodu systémové chyby. Souhlasíte s tím, abychom v souvislosti s tímto problémem získali diagnostické informace, které nám mohou pomoci při nápravě?
+	DE	Das Gerät musste aufgrund eines Systemfehlers neu gestartet werden. Dürfen Informationen zu diesem Fehler zwecks Fehlerbehebung gesammelt werden?
 	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
+	ES	El dispositivo ha tenido que reiniciarse debido a un error del sistema. ¿Nos permite recopilar información de diagnóstico sobre este problema para que podamos solucionarlo?
+	FR	Votre dispositif doit être redémarré suite à une erreur système. Pouvons-nous rassembler des informations de diagnostic qui nous permettront de résoudre ce problème?
+	PL	Niestety z powodu błędu systemu urządzenie musiało zostać ponownie uruchomione. Czy możemy pobrać informacje diagnostyczne, które pomogą nam w rozwiązaniu tego problemu?
+	RU	Из-за системной ошибки устройство пришлось перезапустить. Вы разрешаете нам получить диагностическую информацию, чтобы устранить эту ошибку?
 
 CRASH_YES_SEND
+	CS	Ano, odesílat vždy
+	DE	Immer senden
 	EN	Yes, always send
+	ES	Sí, enviar siempre
+	FR	Oui, toujours envoyer
+	PL	Tak, zawsze wysyłaj
+	RU	Да, всегда отправлять
 
 CRASH_NO_NEVER_SEND
+	CS	Ne, nikdy neodesílat
+	DE	Nie senden
 	EN	No, never send
+	ES	No, no enviar nunca
+	FR	Non, ne jamais envoyer
+	PL	Nie, nigdy nie wysyłaj
+	RU	Нет, никогда не отправлять
 
 CRASH_CONTINUE
 	CS	Pokračovat

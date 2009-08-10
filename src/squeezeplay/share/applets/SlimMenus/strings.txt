@@ -18,11 +18,22 @@ MENUS_MY_MUSIC
 	SV	Min musik
 
 MENUS_INTERNET_RADIO
+	CS	Internetové rádio
+	DE	Internetradio
 	EN	Internet Radio
+	ES	Radio por Internet
+	FR	Radio Internet
+	PL	Radio internetowe
+	RU	Радиостанции Интернета
 
 MENUS_OTHER_LIBRARY
+	CS	Přepnout knihovnu
+	DE	Bibliothek umschalten
 	EN	Switch Library
-
+	ES	Cambiar biblioteca
+	FR	Changer de collection
+	PL	Przełącz bibliotekę
+	RU	Сменить медиатеку
 
 MENUS_ATTACH_CABLE_DETAILED
 	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
@@ -98,9 +109,20 @@ SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
 	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
 
 INSTALL_SC_TEXT
+	CS	Pro aktivaci "Moje hudba" vyzkoušejte následující: \n\n- Stáhněte si software Squeezebox Server z adresy www.mysqueezebox.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.\n\n- Vložte SD kartu do slotu SD.\n\n- Připojte úložné zařízení k portu USB.
+	DE	Führen Sie zum Aktivieren von 'Eigene Musik' die folgenden Schritte aus:\n\n- Laden Sie sich unter www.mysqueezebox.com die Squeezebox Server-Software herunter. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.\n\n- Stecken Sie eine SD-Karte in das Fach ein.\n\n- Schließen Sie an der USB-Schnittstelle ein Speichergerät an.
 	EN	To enable "My Music" try the following:\n\n- Download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.\n\n- Insert a SD card into the SD slot.\n\n- Connect a storage device to the USB port.
+	ES	Para activar "Mi música", haga lo siguiente:\n\n- Descargue el software de Squeezebox Server desde www.mysqueezebox.com e instálelo y ejecútelo en un ordenador de la red.\n\n- Inserte una tarjeta SD en la ranura SD.\n\n- Conecte un dispositivo de almacenamiento al puerto USB.
+	FR	Pour activer «Ma musique», essayez de procéder comme suit:\n\n- Téléchargez le logiciel du Squeezebox Server à partir du site www.mysqueezebox.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.\n\n- Insérez une carte SD dans la fente correspondante.\n\n- Connectez un dispositif de stockage au port USB.
+	PL	Aby włączyć opcję „Moja muzyka”, spróbuj wykonać następujące czynności:\n\n- Pobierz oprogramowanie Squeezebox Server z witryny www.mysqueezebox.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.\n\n- Włóż kartę SD do gniazda kart SD.\n\n- Podłącz urządzenie pamięci masowej do portu USB.
+	RU	Чтобы активировать сервис "Моя музыка", попробуйте выполнить следующее:\n\n- загрузите программное обеспечение Squeezebox Server с сайта www.mysqueezebox.com; убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети;\n\n- вставьте SD-карту в SD-гнездо;\n\n- подключите накопитель к USB-порту.
 
 INSTALL_SC_TEXT_BABY
+	CS	Pro aktivaci "Moje hudba" si stáhněte software Squeezebox Server z adresy www.mysqueezebox.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.
+	DE	Laden Sie sich unter www.mysqueezebox.com die Squeezebox Server-Software herunter, um 'Eigene Musik' zu aktivieren. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.
 	EN	To enable "My Music", download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.
-
+	ES	Para activar "Mi música", descargue el software de Squeezebox Server desde www.mysqueezebox.com e instálelo y ejecútelo en un ordenador de la red.
+	FR	Pour activer «Ma musique», téléchargez le logiciel du Squeezebox Server à partir du site www.mysqueezebox.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.
+	PL	Aby włączyć opcję „Moja muzyka”, pobierz oprogramowanie Squeezebox Server z witryny www.mysqueezebox.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.
+	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение Squeezebox Server с сайта www.mysqueezebox.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 

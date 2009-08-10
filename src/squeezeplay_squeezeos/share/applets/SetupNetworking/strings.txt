@@ -529,7 +529,7 @@ NETWORK_WIRELESS_PASSWORD_HELP_BODY
 	SV	Om du ansluter via ett trådlöst nätverk och inte känner till lösenordet kan du prova med följande:\n\n1. Kontrollera om du har lösenordet nedskrivet.\n2. Fråga någon annan som använder nätverket om de känner till lösenordet.\n3. Hör med personen som konfigurerade hemmanätverket.\n\nOBS! Lösenord går ibland under beteckningen säkerhetsnyckel.\nOBS! Squeezebox har inte stöd för WEP-lösenord i ASCII-format. Du kan fortfarande ansluta Squeezebox till nätverket, men du måste först omvandla ASCII-lösenordet till hexadecimalt format. Det finns gott om omvandlingsprogram på nätet. Du kan även gå in på www.mysqueezebox.com/support för mer information.
 
 NETWORK_CONNECTING_TO_SSID
-	CS	Připojuji se k
+	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
 	EN	Connecting to
@@ -1063,10 +1063,22 @@ NETWORK_ETH_SPEED
 	SV	Hastighet
 
 NETWORK_HALF_SPEED_HUB
+	CS	Využíváte poloduplexní ethernetový hub, který není podporován tímto Squeezebox zařízením.\n\nPřipojte prosím plně duplexní ethernetové zařízení, nebo vyberte dostupnou bezdrátovou síť. Pro více informací se prosím obraťte na zákaznickou podporu.
+	DE	Sie verwenden ein Halbduplex-Ethernet-Hub, der nicht von der Squeezebox unterstützt wird.\n\nSchließen Sie ein Vollduplex-Ethernet-Gerät an oder verwenden Sie ein verfügbares kabelloses Netzwerk. Wenden Sie sich für weitere Informationen an den Kundendienst.
 	EN	You are using a half-duplex ethernet hub that is not supported by this Squeezebox.\n\nPlease attach a full-duplex ethernet device, or choose an available wireless network.  For more information, please contact customer support.
+	ES	Está utilizando un concentrador Ethernet con medio dúplex que no es compatible con este Squeezebox.\n\nUtilice un dispositivo Ethernet con dúplex completo o escoja una red inalámbrica disponible. Para obtener más información, póngase en contacto con el servicio de asistencia al cliente.
+	FR	Le hub Ethernet semi-duplex que vous utilisez n'est pas pris en charge par cette Squeezebox.\n\nVeuillez connecter un dispositif Ethernet duplex intégral ou sélectionner un réseau sans fil disponible. Pour plus d'informations, veuillez contacter le service d'assistance à la clientèle.
+	PL	Korzystasz z koncentratora Ethernet w trybie półdupleksu, który jest nieobsługiwany przez to urządzenie Squeezebox.\n\nPodłącz urządzenie Ethernet działające w trybie pełnego dupleksu lub wybierz dostępną sieć bezprzewodową.  Aby uzyskać więcej informacji, skontaktuj się z działem pomocy technicznej.
+	RU	Вы используете полудуплексный концентратор ethernet, который не поддерживается этим плеером Squeezebox.
 
 NETWORK_CONNECTION_PROBLEM
+	CS	Problém s připojením
+	DE	Verbindungsproblem
 	EN	Connection Problem
+	ES	Problema de conexión
+	FR	Problème de connexion
+	PL	Problem z połączeniem
+	RU	Ошибка подключения
 
 NETWORK_ETH_MBPS
 	CS	%s Mb/s
@@ -1399,13 +1411,31 @@ NETWORK_ATTACH_CABLE
 	SV	Ej ansluten
 
 NETWORK_ATTACH_CABLE_DETAILED
+	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
+	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
+	ES	No se puede detectar una conexión con cable. Compruebe el cable cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
+	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
+	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
+	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.
 
 NETWORK_NO_WIRELESS_DETAILED
+	CS	Nemohli jsme detekovat bezdrátové připojení. Zkontrolujte prosím, zda je vaše síť v provozu a k dispozici.
+	DE	Es konnte keine kabellose Verbindung erkannt werden. Vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
+	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.
+	PL	Nie można wykryć połączenia bezprzewodowego. Sprawdź, czy sieć działa i jest dostępna.
+	RU	Не удается обнаружить беспроводное подключение. Убедитесь, что сеть работает и доступна.
 
 NETWORK_ERROR
+	CS	Problém s připojením
+	DE	Verbindungsproblem
 	EN	Connection Problem
+	ES	Problema de conexión
+	FR	Problème de connexion
+	PL	Problem z połączeniem
+	RU	Ошибка подключения
 
 NETWORK_CANT_CONNECT
 	CS	Nemohu připojit

@@ -230,33 +230,33 @@ DIM_WHEN_CHARGING
 	SV	Dämpa skärmens ljusstyrka vid laddning
 
 BATTERY_LOW
-	CS	Dochází baterie
+	CS	Nízký stav baterie
 	DA	Batteriet er næsten fladt
 	DE	Batterie schwach
 	EN	Battery Low
-	ES	Pila baja
+	ES	Carga de pila baja
 	FI	Vähäinen akun lataus
-	FR	Batterie faible
+	FR	Niveau faible des piles
 	IT	Livello batteria insufficiente
 	NL	Batterij bijna leeg
 	NO	Lavt batterinivå
-	PL	Niski poziom baterii
-	RU	Батарея разряжена
+	PL	Niski poziom naładowania baterii
+	RU	Аккумулятор разряжен
 	SV	Låg batterinivå
 
 BATTERY_LOW_2
-	CS	Dobijte ji prosím
+	CS	Prosím o dobití
 	DA	Det skal lades op
 	DE	Bitte aufladen
 	EN	Please Charge Me
 	ES	Necesita carga
 	FI	Lataa minut
-	FR	Rechargez la télécommande
+	FR	Veuillez la recharger
 	IT	Caricare batteria
 	NL	Opladen alsjeblieft
 	NO	Lad meg opp
-	PL	Naładuj urządzenie
-	RU	Необходима зарядка
+	PL	Naładuj baterię
+	RU	Зарядите батарею
 	SV	Ladda batteriet
 
 POWER_DOWN
@@ -311,22 +311,22 @@ GOODBYE
 	EN	Goodbye
 	ES	Adiós
 	FI	Näkemiin
-	FR	A bientôt
+	FR	Au revoir
 	IT	A presto
 	NL	Tot ziens
 	NO	Farvel
 	PL	Do widzenia
-	RU	Прощайте
+	RU	До свидания
 	SV	Hej då!
 
 SLEEPING
-	CS	Usínám
+	CS	Spánek
 	DA	Slumrer
-	DE	Schlafmodus aktiv
+	DE	Standby
 	EN	Sleeping
-	ES	Suspensión
+	ES	En reposo
 	FI	Unitilassa
-	FR	Mise en veille
+	FR	En veille
 	IT	Sospensione
 	NL	Sluimermodus
 	NO	Hviler
@@ -350,18 +350,18 @@ POWER_DOWN_HELP
 	SV	Avbryt eller bekräfta att du vill stänga av fjärrkontrollen
 
 PLEASE_WAIT
-	CS	Čekejte prosím
+	CS	Počkejte prosím
 	DA	Vent lidt
 	DE	Bitte warten
 	EN	Please wait
-	ES	Espere un momento
+	ES	Espere
 	FI	Odota
 	FR	Veuillez patienter
 	IT	Attendere
 	NL	Een ogenblik geduld
 	NO	Vent litt
 	PL	Czekaj
-	RU	Подождите, пожалуйста
+	RU	Подождите
 	SV	Vänta
 
 INVALID_MAC_TITLE
