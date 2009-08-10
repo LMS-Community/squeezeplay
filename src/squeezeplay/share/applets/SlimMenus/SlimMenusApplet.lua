@@ -257,9 +257,9 @@ end
 
 
 --
---add node to home menu only if this is a menustatusresponse or it doesn't exist. Only menustatus responses may replace existing items.
-function  _addNode(self, node, isMenuStatusResponse)
-	if isMenuStatusResponse then
+--add node to home menu only if this is for the current server or it doesn't exist. Only current server responses may replace existing items.
+function  _addNode(self, node, isCurrentServer)
+	if isCurrentServer then
 		jiveMain:addNode(node)
 	else
 		if not jiveMain:exists(node.id) then
@@ -269,9 +269,9 @@ function  _addNode(self, node, isMenuStatusResponse)
 		end
 	end
 end
---add item to home menu only if this is a menustatusresponse or it doesn't exist. Only menustatus responses may replace existing items.
-function  _addItem(self, item, isMenuStatusResponse)
-	if isMenuStatusResponse or not _playerMenus[item.id] then
+--add item to home menu only if this is for the current server or it doesn't exist. Only current server responses may replace existing items.
+function  _addItem(self, item, isCurrentServer)
+	if isCurrentServer or not _playerMenus[item.id] then
 		 _playerMenus[item.id] = item
 		 jiveMain:addItem(item)
 	else
@@ -312,7 +312,7 @@ end
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
 -- this sink receives all the data from our Comet interface
-local function _menuSink(self, cmd, server)
+local function _menuSink(self, isCurrentServer, server)
 	return function(chunk, err)
 		local isMenuStatusResponse = not server
 
@@ -351,7 +351,7 @@ local function _menuSink(self, cmd, server)
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
-		log:info("_menuSink() ", server)
+		log:info("_menuSink() ", server, " menuDirective: ", menuDirective)
 
 		for k, v in pairs(menuItems) do
 
@@ -365,10 +365,6 @@ local function _menuSink(self, cmd, server)
 					window = v.window,
 					sound = "WINDOWSHOW",
 				}
---			if server and item.text then
---				--temp mark for debugging purposes
---				item.text = item.text .. "(SN!)"
---			end
 
 			local itemIcon
 			if v.window then
@@ -426,9 +422,9 @@ local function _menuSink(self, cmd, server)
 				--ignore, playerpower no longer shown to users since we use power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
-			elseif item.id == "settingsPlayerNameChange" and not isMenuStatusResponse then
+			elseif item.id == "settingsPlayerNameChange" and not isCurrentServer then
 				--ignore, only applicable to currently selected server
-			elseif item.id == "settingsSleep" and not isMenuStatusResponse then
+			elseif item.id == "settingsSleep" and not isCurrentServer then
 				--ignore, only applicable to currently selected server
 			elseif item.id == "settingsAudio"  then
 				--ignore, now shown locally
@@ -436,7 +432,7 @@ local function _menuSink(self, cmd, server)
 				--ignore, shown locally
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
-					self:_addNode(item, isMenuStatusResponse)
+					self:_addNode(item, isCurrentServer)
 				else
 					log:info("Eliminated myMusic node from server, since now handled locally")
 
@@ -445,7 +441,7 @@ local function _menuSink(self, cmd, server)
 				--todo: massage SN request to remove myMusicMusicFolder
 				jiveMain:removeItemById(item.id)
 
-			elseif isMenuStatusResponse and choiceAction then
+			elseif isCurrentServer and choiceAction then
 --				debug.dump(choiceAction, 4)
 
 				local selectedIndex = 1
@@ -469,7 +465,7 @@ local function _menuSink(self, cmd, server)
 				item.removeOnServerChange = true
 
 				--add the item to the menu
-				self:_addItem(item, isMenuStatusResponse)
+				self:_addItem(item, isCurrentServer)
 
 			else
 				local action = function ()
@@ -573,11 +569,12 @@ local function _menuSink(self, cmd, server)
 						end
 					end
 				end
-				self:_addItem(item, isMenuStatusResponse)
+				self:_addItem(item, isCurrentServer)
 			end
 		end
-		if _menuReceived and isMenuStatusResponse and menuDirective ~= 'remove' then
-			log:info("hiding any 'connecting to server' popup after 'add' menustatus response ")
+
+		if _menuReceived and isCurrentServer then
+			log:info("hiding any 'connecting to server' popup after menu response from current server, ", _server)
 
 			self.waitingForPlayerMenuStatus = false
 			jnt:notify("playerLoaded", _player)
@@ -978,14 +975,14 @@ function notify_playerCurrent(self, player)
 	local cmd = { 'menustatus' }
 	_player:subscribe(
 		'/slim/menustatus/' .. _playerId,
-		_menuSink(self, cmd),
+		_menuSink(self, true, nil),
 		_playerId,
 		cmd
 	)
 
-	-- XXXX why is this needed? Answer:menustatus won't send anything by default
-	_server:userRequest(nil, _playerId, { 'menu', 0, 100 })
-	
+	--Get initial menus from connected server.
+	_server:userRequest(_sinkSetServerMenuChunk(self, _server, true) , _playerId, { 'menu', 0, 100, "direct:1" })
+
 	-- add a fullscreen popup that waits for the _menuSink to load
 	_menuReceived = false
 
@@ -1059,7 +1056,7 @@ function _fetchServerMenu(self, server)
 
 end
 
-function _sinkSetServerMenuChunk(self, server)
+function _sinkSetServerMenuChunk(self, server, isConnectedServer)
 	return function(chunk, err)
 		local menuItems = chunk.data.item_loop
 		for _, item in pairs(menuItems) do
@@ -1069,21 +1066,21 @@ function _sinkSetServerMenuChunk(self, server)
 		end
 
 		self.serverHomeMenuItems[server] = menuItems
-		self:_mergeServerMenuToHomeMenu(server, menuItems)
+		self:_mergeServerMenuToHomeMenu(server, menuItems, isConnectedServer)
 	end
 end
 
 
 
 
-function _mergeServerMenuToHomeMenu(self, server, menuItems)
-	log:debug("MERGE menus")
+function _mergeServerMenuToHomeMenu(self, server, menuItems, isConnectedServer)
+	log:debug("MERGE menus:", server)
 	--create chunk wrapper
 	local chunk = {}
 	chunk.data = {}
 	chunk.data.item_loop = menuItems
 
-	_menuSink(self, nil, server)(chunk)
+	_menuSink(self, isConnectedServer, server)(chunk)
 
 end
 
