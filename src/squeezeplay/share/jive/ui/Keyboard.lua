@@ -469,8 +469,10 @@ function setKeyboard(self, kbType)
 		local localizedKeyboard = kbType .. '_' .. locale
 		if self.keyboards[localizedKeyboard] then
 			keyboard = self.keyboards[localizedKeyboard]
-		else
+		elseif self.keyboards[kbType] then
 			keyboard = self.keyboards[kbType]
+		else
+			keyboard = self.keyboards['qwerty']
 		end
 	end
 
