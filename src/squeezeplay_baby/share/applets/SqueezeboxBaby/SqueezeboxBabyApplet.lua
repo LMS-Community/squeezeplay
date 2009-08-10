@@ -1,5 +1,5 @@
 
-local unpack, tonumber, tostring = unpack, tonumber, tostring
+local pcall, unpack, tonumber, tostring = pcall, unpack, tonumber, tostring
 
 -- board specific driver
 local bsp                    = require("baby_bsp")
@@ -205,7 +205,12 @@ function init(self)
 		end
 	end)
 
-	self:_headphoneJack(bsp:getMixer("Headphone Switch"))
+	--Use a pcall here since this will fail before the audio device is open. Is a temporary workaround until we sort out the timing, etc...
+	local _initHeadPhoneJack = function ()
+		self:_headphoneJack(bsp:getMixer("Headphone Switch"))
+	end
+	pcall(_initHeadPhoneJack)
+
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
