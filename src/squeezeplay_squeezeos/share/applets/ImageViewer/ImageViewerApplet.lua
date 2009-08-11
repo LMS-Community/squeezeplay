@@ -51,12 +51,15 @@ local ImageSource		= require("applets.ImageViewer.ImageSource")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
 local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
 local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
+local ImageSourceServer	= require("applets.ImageViewer.ImageSourceServer")
 
 local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 
 local jnt = jnt
+
+local MIN_SCROLL_INTERVAL = 750
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -67,33 +70,37 @@ local transitionBottomUp
 local transitionLeftRight
 local transitionRightLeft
 
-function initImageSource(self)
+function initImageSource(self, imgSourceOverride)
 	log:info("init image viewer")
 
 	self.imgSource = nil
 	self.listCheckCount = 0
 	self.initialized = false
 
-	local src = self:getSettings()["source"]
-	
-	if src == "card" then
-		self.imgSource = ImageSourceCard(self)
-	elseif src == "http" then
-		self.imgSource = ImageSourceHttp(self)
-	elseif src == "flickr" then
-		self.imgSource = ImageSourceFlickr(self)
-	end	
+	if imgSourceOverride then
+		self.imgSource = imgSourceOverride
+	else
+		local src = self:getSettings()["source"]
+
+		if src == "card" then
+			self.imgSource = ImageSourceCard(self)
+		elseif src == "http" then
+			self.imgSource = ImageSourceHttp(self)
+		elseif src == "flickr" then
+			self.imgSource = ImageSourceFlickr(self)
+		end
+	end
 
 	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, 
 		Window.transitionFadeIn, Window.transitionPushLeft, Window.transitionPushRight }
 end
 
-function startSlideshow(self, menuItem)
+function startSlideshow(self, menuItem, isScreensaver, imgSourceOverride)
 	log:info("start image viewer")
 	-- initialize the chosen image source
-	self:initImageSource()
+	self:initImageSource(imgSourceOverride)
 	self.initialized = true
-
+	self.isScreensaver = isScreensaver
 	self:startSlideshowWhenReady()
 end
 
@@ -133,12 +140,15 @@ end
 function setupEventHandlers(self, window)
 
 	local nextSlideAction = function (self)
+		log:debug("request next slide")
 		self.imgSource:nextImage(self:getSettings()["ordering"])
 		self:displaySlide()
 		return EVENT_CONSUME
 	end
 
 	local previousSlideAction = function (self, window)
+		log:debug("request prev slide")
+		self.useFastTransition = true
 		self.imgSource:previousImage(self:getSettings()["ordering"])
 		self:displaySlide()
 		return EVENT_CONSUME
@@ -150,7 +160,7 @@ function setupEventHandlers(self, window)
 	window:addActionListener("play", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)
 
-	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS,
+	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
 		function(event)
 			local type = event:getType()
 			local keyPress
@@ -160,11 +170,64 @@ function setupEventHandlers(self, window)
 				self.imgSource:nextImage(self:getSettings()["ordering"])
 				self:displaySlide()
 				return EVENT_CONSUME
+			elseif type == EVENT_SCROLL then
+				local scroll = event:getScroll()
+
+				local dir
+				if scroll > 0 then
+					dir = 1
+				else
+					dir = -1
+				end
+				local now = Framework:getTicks()
+				if not self.lastScrollT or
+				  self.lastScrollT + MIN_SCROLL_INTERVAL < now or
+				  self.lastScrollDir ~= dir then
+				        --scrolling a lot or a little only moves by one, since image fetching is relatively slow
+					self.lastScrollT = now
+					self.lastScrollDir = dir
+					if scroll > 0 then
+						return nextSlideAction(self)
+					else
+						return previousSlideAction(self)
+					end
+				end
+				return EVENT_CONSUME
+
 			end
 
 			return EVENT_UNUSED
         end
 	)
+end
+
+
+--service method
+function registerRemoteScreensaver(self, serverData)
+	appletManager:callService("addScreenSaver",
+			serverData.text,
+			"ImageViewer",
+			"openRemoteScreensaver", _, _, 100,
+			"closeRemoteScreensaver",
+			serverData,
+			serverData.id
+		)
+end
+
+
+--service method
+function unregisterRemoteScreensaver(self, id)
+	appletManager:callService("removeScreenSaver", "ImageViewer", "openRemoteScreensaver", _, serverData.id)
+end
+
+
+function openRemoteScreensaver(self, force, serverData)
+	self:startSlideshow(_, true, ImageSourceServer(self, serverData))
+end
+
+function closeRemoteScreensaver(self, force, serverData)
+	self.window:hide()
+	self.window = nil
 end
 
 function free(self)
@@ -179,10 +242,23 @@ function displaySlide(self)
 		self.initialized = true
 	end
 
+
+	if self.nextSlideTimer and self.nextSlideTimer:isRunning() then
+		--restart next slide timer to give this image a chance, can happen when displaySlide was manually trigger
+		self.nextSlideTimer:restart()
+	end
+
+	-- stop timer
+	if self.checkFotoTimer then
+		self.checkFotoTimer:stop()
+	end
+
 	if not self.imgSource:imageReady() then
-		-- try again in 1000 ms
+		-- try again in a few moments
 		log:debug("image not ready, try again...")
-		self.checkFotoTimer = Timer(1000, 
+--		self.checkFotoTimer = Timer(1000, --hmm, this seems to enforce a second wait even if response is fast.... todo have image sink trigger this instead
+		--todo: also, might this run continuously on a failure even if the applet is complete.
+		self.checkFotoTimer = Timer(500, --hmm, this seems to enforce a second wait even if response is fast....
 			function()
 				self:displaySlide()
 			end, 
@@ -191,9 +267,11 @@ function displaySlide(self)
 		return
 	end
 
-	-- stop timer
-	if self.checkFotoTimer != nil then
-		self.checkFotoTimer:stop()
+	log:debug("image rendering")
+
+	--stop next slider Timer since a) we have a good image and, b) this call to displaySlide may have been manually triggered
+	if self.nextSlideTimer then
+		self.nextSlideTimer:stop()
 	end
 
 	-- get device orientation and features
@@ -215,42 +293,44 @@ function displaySlide(self)
 	local image = self.imgSource:getImage()
 	if image != nil then
 		local w, h = image:getSize()
-		local imageLandscape = ((w/h) > 1)
+		if self.imgSource:useAutoZoom() then
+			local imageLandscape = ((w/h) > 1)
 
-		-- determine whether to rotate
-		if (rotation == "yes") or (rotation == "auto" and deviceCanRotate) then
-			-- rotation allowed
-			if deviceLandscape != imageLandscape then
-				-- rotation needed, so let's do it
-				image = image:rotozoom(-90, 1, 1)
-				w, h = image:getSize()
+			-- determine whether to rotate
+			if (rotation == "yes") or (rotation == "auto" and deviceCanRotate) then
+				-- rotation allowed
+				if deviceLandscape != imageLandscape then
+					-- rotation needed, so let's do it
+					image = image:rotozoom(-90, 1, 1)
+					w, h = image:getSize()
+				end
 			end
+
+			-- determine scaling factor
+			local zoomX = screenWidth / w
+			local zoomY = screenHeight / h
+			local zoom = 1
+
+			--[[
+			log:info("pict " .. w .. "x" .. h)
+			log:info("screen " .. screenWidth .. "x" .. screenHeight)
+			log:info("zoomX " .. zoomX)
+			log:info("zoomY " .. zoomY)
+			log:info("deviceCanRotate " .. tostring(deviceCanRotate))
+			log:info("rotation " .. rotation)
+			log:info("fullscreen " .. tostring(fullScreen))
+			--]]
+
+			if fullScreen then
+				zoom = math.max(zoomX, zoomY)
+			else
+				zoom = math.min(zoomX, zoomY)
+			end
+
+			-- scale image
+			image = image:rotozoom(0, zoom, 1)
+			w, h = image:getSize()
 		end
-
-		-- determine scaling factor
-		local zoomX = screenWidth / w
-		local zoomY = screenHeight / h
-		local zoom = 1
-
-		--[[
-		log:info("pict " .. w .. "x" .. h)
-		log:info("screen " .. screenWidth .. "x" .. screenHeight)
-		log:info("zoomX " .. zoomX)
-		log:info("zoomY " .. zoomY)
-		log:info("deviceCanRotate " .. tostring(deviceCanRotate))
-		log:info("rotation " .. rotation)
-		log:info("fullscreen " .. tostring(fullScreen))
-		--]]
-
-		if fullScreen then
-			zoom = math.max(zoomX, zoomY)
-		else
-			zoom = math.min(zoomX, zoomY)
-		end
-
-		-- scale image
-		image = image:rotozoom(0, zoom, 1)
-		w, h = image:getSize()
 
 		-- place scaled image centered to empty picture
 		local totImg = Surface:newRGBA(screenWidth, screenHeight)
@@ -296,12 +376,28 @@ function displaySlide(self)
 		local window = Window('window')
 		window:addWidget(Icon("icon", image))
 
+		if self.isScreensaver then
+			window:addListener(EVENT_MOTION,
+				function()
+					window:hide(Window.transitionNone)
+					return EVENT_CONSUME
+				end)
+			local manager = appletManager:getAppletInstance("ScreenSavers")
+			manager:screensaverWindow(window)
+		end
+
 		self:setupEventHandlers(window)
 
 		-- replace the window if it's already there
 		if self.window then
 			self:tieWindow(window)
-			local transition = self:getTransition()
+			local transition
+			if self.useFastTransition then
+				transition = Window.transitionFadeIn
+				self.useFastTransition = false
+			else
+				transition = self:getTransition()
+			end
 			self.window = window
 			self.window:showInstead(transition)
 		-- otherwise it's new
@@ -312,6 +408,9 @@ function displaySlide(self)
 
 		-- no screensavers por favor
 		self.window:setAllowScreensaver(false)
+
+		--no iconbar
+		self.window:setShowFrameworkWidgets(false)
 
 		-- start timer for next photo in 'delay' seconds
 		local delay = self:getSettings()["delay"]

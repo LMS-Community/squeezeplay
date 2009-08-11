@@ -59,6 +59,7 @@ local _updatingPromptPopup = false
 local _lockedItem = false
 
 local _playerMenus = {}
+local _playerScreensaverRegistrations = {}
 
 
 -- legacy map of item styles to new item style names
@@ -280,6 +281,17 @@ function  _addItem(self, item, isCurrentServer)
 end
 
 
+--register remote ss only if it doesn't exist. Only current server responses may replace existing items.
+function  _registerRemoteScreensaver(self, serverData)
+	if  not _playerMenus[serverData.id] then
+		 _playerScreensaverRegistrations[serverData.id] = serverData
+		appletManager:callService("registerRemoteScreensaver", serverData)
+	else
+		log:debug("ss already registered: ", serverData.id)
+	end
+end
+
+
 --various compatiblilty hacks
 function _massageItem(item)
 	if idMismatchMap[item.id] then
@@ -364,6 +376,7 @@ local function _menuSink(self, isCurrentServer, server)
 					weight = v.weight,
 					window = v.window,
 					sound = "WINDOWSHOW",
+					screensavers = v.screensavers
 				}
 
 			local itemIcon
@@ -372,7 +385,14 @@ local function _menuSink(self, isCurrentServer, server)
 			else
 				itemIcon = v['icon-id'] or v['icon']
 			end
-			
+
+			if isCurrentServer and item.screensavers then
+				for _, serverData in ipairs(item.screensavers) do
+					serverData.id = table.concat(serverData.cmd, " ")
+					self:_registerRemoteScreensaver(serverData)
+				end
+			end
+
 			if itemIcon then
 				-- Fetch artwork if we're connected, or it's remote
 				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed
@@ -1103,6 +1123,10 @@ function free(self)
 	end
 	_playerMenus = {}
 
+	for id, v in pairs(_playerScreensaverRegistrations) do
+		appletManager:callService("unregisterRemoteScreensaver", id)
+	end
+	_playerScreensaverRegistrations = {}
 
 	-- make sure any home menu itema are unlocked
 	if _lockedItem then

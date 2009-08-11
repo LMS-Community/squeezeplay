@@ -36,7 +36,10 @@ end
 
 function registerApplet(meta)
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'home', "IMAGE_VIEWER", 
-			function(applet, ...) applet:startSlideshow(...) end, 100))
+			function(applet, ...) applet:startSlideshow(...) end, .01))
+
+	meta:registerService("registerRemoteScreensaver")
+	meta:registerService("unregisterRemoteScreensaver")
 end
 
 

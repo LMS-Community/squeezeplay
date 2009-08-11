@@ -110,6 +110,10 @@ function listReady(self)
 	return self.lstReady
 end
 
+function useAutoZoom(self)
+	return true
+end
+
 function nextImage(self, ordering)
 	assert(false, "please implement in derived class")
 end

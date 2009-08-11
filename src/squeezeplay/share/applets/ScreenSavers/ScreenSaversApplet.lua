@@ -170,7 +170,7 @@ function _activate(self, the_screensaver, force)
 	-- activate the screensaver. it should register any windows with
 	-- screensaverWindow, and open then itself
 	local instance = appletManager:loadApplet(screensaver.applet)
-	if instance[screensaver.method](instance, force) ~= false then
+	if instance[screensaver.method](instance, force, screensaver.methodParam) ~= false then
 		log:info("activating " .. screensaver.applet .. " screensaver")
 	end
 end
@@ -250,7 +250,7 @@ function _deactivate(self, window, the_screensaver)
 
 	if screensaver and screensaver.applet and screensaver.closeMethod then
 		local instance = appletManager:loadApplet(screensaver.applet)
-		instance[screensaver.closeMethod](instance)
+		instance[screensaver.closeMethod](instance, screensaver.methodParam)
 	end
 	window:hide(Window.transitionNone)
 	self.demoScreensaver = nil
@@ -428,6 +428,8 @@ end
 
 --service method
 function deactivateScreensaver(self)
+	log:error("here")
+
 	-- close all screensaver windows
 	for i,w in ipairs(self.active) do
 		_deactivate(self, w, self.demoScreensaver)
@@ -435,15 +437,37 @@ function deactivateScreensaver(self)
 end
 
 
-function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod )
-	local key = tostring(applet) .. ":" .. tostring(method)
+function getKey(self, appletName, method, additionalKey)
+	local key = tostring(appletName) .. ":" .. tostring(method)
+	if additionalKey then
+		key = key .. ":" .. tostring(additionalKey)
+	end
+	return key
+end
+
+
+function removeScreenSaver(self, appletName, method, settingsName, additionalKey)
+	local key = self:getKey(applet, method, additionalKey)
+
+	if settingsName then
+		self.screensaverSettings[settingsName] = nil
+	end
+	
+	self.screensavers[key] = nil
+end
+
+
+--service method
+function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod, methodParam, additionalKey)
+	local key = self:getKey(applet, method, additionalKey)
 	self.screensavers[key] = {
 		applet = applet,
 		method = method,
 		displayName = displayName,
 		settings = settings,
 		weight = weight,
-		closeMethod = closeMethod
+		closeMethod = closeMethod,
+		methodParam = methodParam,
 	}
 
 	if settingsName then

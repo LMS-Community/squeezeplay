@@ -46,6 +46,7 @@ end
 function registerApplet(meta)
 
 	meta:registerService("addScreenSaver")
+	meta:registerService("removeScreenSaver")
 	meta:registerService("restartScreenSaverTimer")
 	meta:registerService("isScreensaverActive")
 	meta:registerService("deactivateScreensaver")
