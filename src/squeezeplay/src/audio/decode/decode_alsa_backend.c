@@ -81,7 +81,7 @@ static __inline void log_printf(int level, const char *format, ...) {
 
 
 /* debug switches */
-#define TEST_LATENCY 1
+#define TEST_LATENCY 0
 
 
 u8_t *decode_fifo_buf;
@@ -126,31 +126,30 @@ static snd_output_t *output;
 static struct decode_alsa state;
 
 
-#ifndef timersub
-#define	timersub(a, b, result) \
+#define	timerspecsub(a, b, result) \
 do { \
 	(result)->tv_sec = (a)->tv_sec - (b)->tv_sec; \
-	(result)->tv_usec = (a)->tv_usec - (b)->tv_usec; \
-	if ((result)->tv_usec < 0) { \
+	(result)->tv_nsec = (a)->tv_nsec - (b)->tv_nsec; \
+	if ((result)->tv_nsec < 0) { \
 		--(result)->tv_sec; \
-		(result)->tv_usec += 1000000; \
+		(result)->tv_nsec += 1000000000; \
 	} \
 } while (0)
-#endif
 
 
 #if TEST_LATENCY
 #define TIMER_INIT(TOUT)			\
-		struct timeval _t1, _t2, _td;	\
+		struct timespec _t1, _t2, _td;	\
 		float _tf, _tout = TOUT;	\
-		gettimeofday(&_t1, 0);
+		clock_gettime(CLOCK_MONOTONIC, &_t1);
 
-#define TIMER_CHECK(NAME) {					\
-		gettimeofday(&_t2, 0);					\
-		timersub(&_t2, &_t1, &_td);				\
-		_tf = _td.tv_sec * 1000 + _td.tv_usec / 1000.0;		\
+#define TIMER_CHECK(NAME) {						\
+		clock_gettime(CLOCK_MONOTONIC, &_t2);			\
+		timerspecsub(&_t2, &_t1, &_td);				\
+		_tf = _td.tv_sec * 1000 + _td.tv_nsec / 1000000.0;	\
 		if (_tf > _tout) {					\
-			LOG_WARN(NAME " took too long %.3f ms", _tf); \
+			LOG_WARN(NAME " took too long %.3f ms limit %0.3f", _tf, _tout); \
+			LOG_WARN(NAME " %d.%d %d.%d\n", _t1.tv_sec, _t1.tv_nsec, _t2.tv_sec, _t2.tv_nsec); \
 		}							\
 		memcpy(&_t1, &_t2, sizeof(struct timeval));		\
 	}
@@ -790,51 +789,49 @@ static void *audio_thread_execute(void *data) {
 
 			buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
 
-
-			decode_audio_lock();
-			TIMER_CHECK("LOCK");
-
-			decode_audio->delay = delay;
-
 			if (state->flags & FLAG_STREAM_PLAYBACK) {
+				decode_audio_lock();
+				TIMER_CHECK("LOCK");
+
+				decode_audio->delay = delay;
+
 				if (state->capture_pcm) {
 					capture_loopback(state, buf, frames);
 				}
 				else {
 					playback_callback(state, buf, frames);
 				}
+
+				/* sample rate changed? we do this check while the
+				 * fifo is locked, so we don't need to lock it twice
+				 * per loop.
+				 */
+				do_open = decode_audio->set_sample_rate && (decode_audio->set_sample_rate != state->pcm_sample_rate);
+
+				/* start or stop loopback? */
+				if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
+					do_open |= (state->capture_pcm) ? 0 : 1;
+				}
+				else {
+					do_open |= (state->capture_pcm) ? 1 : 0;
+				}
+
+				decode_audio_unlock();
 			}
 			else {
 				memset(buf, 0, SAMPLES_TO_BYTES(frames));
 			}
 
+			TIMER_CHECK("PLAYBACK");
+
 			if (state->flags & FLAG_STREAM_NOISE) {
 				generate_noise(buf, frames);
 			}
-
-			TIMER_CHECK("PLAYBACK");
 
 			if (state->flags & FLAG_STREAM_EFFECTS) {
 				decode_mix_effects(buf, frames);
 			}
 
-			/* sample rate changed? we do this check while the
-			 * fifo is locked, so we don't need to lock it twice
-			 * per loop.
-			 */
-			do_open = decode_audio->set_sample_rate && (decode_audio->set_sample_rate != state->pcm_sample_rate);
-
-			/* start or stop loopback? */
-#if 1
-			if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
-				do_open |= (state->capture_pcm) ? 0 : 1;
-			}
-			else {
-				do_open |= (state->capture_pcm) ? 1 : 0;
-			}
-#endif
-
-			decode_audio_unlock();
 			TIMER_CHECK("EFFECTS");
 
 			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
@@ -846,6 +843,7 @@ static void *audio_thread_execute(void *data) {
 				first = 1;
 			}
 			size -= frames;
+
 			TIMER_CHECK("COMMIT");
 		}
 	}
@@ -858,7 +856,7 @@ static void *audio_thread_execute(void *data) {
 }
 
 
-static int decode_realtime_process()
+static int decode_realtime_process(struct decode_alsa *state)
 {
 	struct sched_param sched_param;
 	int err;
@@ -870,7 +868,7 @@ static int decode_realtime_process()
 	 * For the best performance on a tuned RT kernel, make non-audio
 	 * threads have a priority < 45.
 	 */
-	sched_param.sched_priority = 45;
+	sched_param.sched_priority = (state->flags & FLAG_STREAM_PLAYBACK) ? 45 : 35;
 
 	if ((err = sched_setscheduler(0, SCHED_FIFO, &sched_param)) == -1) {
 		if (errno == EPERM) {
@@ -990,7 +988,7 @@ int main(int argv, char **argc)
 	}
 
 	/* set real-time properties */
-	decode_realtime_process();
+	decode_realtime_process(&state);
 
 	/* start thread */
 	audio_thread_execute(&state);

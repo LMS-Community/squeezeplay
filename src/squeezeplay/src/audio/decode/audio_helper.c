@@ -79,11 +79,8 @@ void decode_mix_effects(void *outputBuffer,
 	size_t len, bytes_used;
 	sample_t *output_ptr;
 
-	ASSERT_AUDIO_LOCKED();
-
 	len = framesPerBuffer * sizeof(effect_t);
 
-	// XXXX don't lock channels?
 	fifo_lock(&decode_audio->effect_fifo);
 
 	bytes_used = fifo_bytes_used(&decode_audio->effect_fifo);

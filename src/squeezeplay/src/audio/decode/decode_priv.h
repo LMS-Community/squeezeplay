@@ -110,6 +110,8 @@ struct decode_audio_func {
 
 struct decode_audio {
 	struct decode_audio_func *f;
+
+	/* fifo locks: playback state, track state, sync state */
 	struct fifo fifo;
 
 	/* playback state */
@@ -125,14 +127,14 @@ struct decode_audio {
 	u32_t track_sample_rate;
 	u32_t elapsed_samples;
 	u32_t num_tracks_started;
-
+	
 	/* sync state */
 	size_t skip_ahead_bytes;
 	int add_silence_ms;
 
-	/* effects */
-	fft_fixed effect_gain;
+	/* effect_fifo locks: effect_gain */
 	struct fifo effect_fifo;
+	fft_fixed effect_gain;
 
 	/* device info */
 	u32_t max_rate;

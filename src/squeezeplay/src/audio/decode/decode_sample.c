@@ -130,23 +130,20 @@ static void decode_sample_fill_buffer_locked(void)
 
 void decode_sample_fill_buffer()
 {
-	decode_audio_lock();
+	fifo_lock(&decode_audio->effect_fifo);
 
 	if (!is_playing) {
 		/* no sound effects playing */
-		decode_audio_unlock();
+		fifo_unlock(&decode_audio->effect_fifo);
 		return;
 	}
 
 	/* fill buffer */
-	fifo_lock(&decode_audio->effect_fifo);
-
 	decode_audio->effect_gain = effect_gain;
 
 	decode_sample_fill_buffer_locked();
 	
 	fifo_unlock(&decode_audio->effect_fifo);
-	decode_audio_unlock();
 }
 
 
@@ -164,20 +161,18 @@ static int decode_sample_obj_play(lua_State *L) {
 		return 0;
 	}
 
-	decode_audio_lock();
+	fifo_lock(&decode_audio->effect_fifo);
 
 	ch = snd->mixer;	
 	if (sample[ch] != NULL) {
 		/* slot is not free */
-		decode_audio_unlock();
+		fifo_unlock(&decode_audio->effect_fifo);
 		return 0;
 	}
 
 	/* queue sound effect */
 	sample[ch] = snd;
 	sample[ch]->refcount++;
-
-	fifo_lock(&decode_audio->effect_fifo);
 
 	size = fifo_bytes_used(&decode_audio->effect_fifo);
 	if (size > 0) {
@@ -205,7 +200,6 @@ static int decode_sample_obj_play(lua_State *L) {
 	}
 
 	fifo_unlock(&decode_audio->effect_fifo);
-	decode_audio_unlock();
 
 	return 0;
 }
