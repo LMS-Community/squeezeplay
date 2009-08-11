@@ -34,16 +34,24 @@ oo.class(_M, Applet)
 
 
 function crashLog(self, file, prompt)
-	log:info("sending crash log: ", file)
+	local settings = self:getSettings()
 
-	if prompt then
+	log:info("sending crash log: ", file, " sendLog=", settings.sendLog)
+
+	if settings.sendLog == true then
+		self:crashLogSend(file)
+	elseif settings.sendLog == false then
+		self:crashLogDontSend(file)
+	else
 		self:crashLogPrompt(file)
 	end
-	self:crashLogSend(file)
+
 end
 
 
 function crashLogPrompt(self, file)
+	local settings = self:getSettings()
+
 	local window = Window("help_list", self:string("CRASH_TITLE"))
 
 	window:setAllowScreensaver(false)
@@ -51,14 +59,31 @@ function crashLogPrompt(self, file)
 	window:setAutoHide(false)
 	window:setButtonAction("rbutton", nil)
 
-	local text = Textarea("help_text", self:string("CRASH_TEXT"))
+	local text = Textarea("help_text", self:string("CRASH_TEXT_QUESTION"))
 	local menu = SimpleMenu("menu", {
 		{
-			text = self:string("CRASH_CONTINUE"),
+			text = self:string("CRASH_YES_SEND"),
 			sound = "WINDOWHIDE",
 			callback = function()
-					   window:hide(Window.transitionPushLeft)
-				   end
+				settings.sendLog = true
+				self:storeSettings()
+
+				self:crashLogSend(file)
+
+				window:hide(Window.transitionPushLeft)
+			end
+		},
+		{
+			text = self:string("CRASH_NO_NEVER_SEND"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				settings.sendLog = false
+				self:storeSettings()
+
+				self:crashLogDontSend(file)
+
+				window:hide(Window.transitionPushLeft)
+			end
 		},
 	})
 
@@ -117,6 +142,12 @@ function crashLogSend(self, file)
         local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
 
         http:fetch(post)
+end
+
+
+function crashLogDontSend(self, file)
+	log:info("crash log not sending: ", file)
+	os.remove(file)
 end
 
 

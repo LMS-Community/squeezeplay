@@ -23,6 +23,11 @@ function jiveVersion(meta)
 end
 
 
+function defaultSettings(meta)
+	return {}
+end
+
+
 function registerApplet(meta)
 	meta:registerService("crashLog")
 
