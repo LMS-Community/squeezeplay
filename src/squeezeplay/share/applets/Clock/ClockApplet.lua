@@ -296,27 +296,6 @@ function DotMatrix:DrawDate(digit, groupKey)
 	widget:setStyle(style)
 end
 
--- this method is around for testing the rendering of different elements
--- it is not called in practice
-function DotMatrix:DrawMinTest()
-
-	local widget = self.h1:getWidget('h1')
-	self.h1:setStyle('icon_dotMatrixDigit0')
-	self.h2:setStyle('icon_dotMatrixDigit1')
-	self.m1:setStyle('icon_dotMatrixDigit0')
-	self.m2:setStyle('icon_dotMatrixDigit1')
-
-	self.M1:setStyle('icon_dotMatrixDate0')
-	self.M2:setStyle('icon_dotMatrixDate1')
-	self.D1:setStyle('icon_dotMatrixDate0')
-	self.D2:setStyle('icon_dotMatrixDate1')
-	self.Y1:setStyle('icon_dotMatrixDate2')
-	self.Y2:setStyle('icon_dotMatrixDate0')
-	self.Y3:setStyle('icon_dotMatrixDate0')
-	self.Y4:setStyle('icon_dotMatrixDate9')
-
-end
-
 Digital = oo.class({}, Clock)
 
 function Digital:__init(applet, ampm)
@@ -332,14 +311,16 @@ function Digital:__init(applet, ampm)
 	-- store the applet's self so we can call self.applet:string() for localizations
 	obj.applet = applet
 
-	obj.clockGroup = Group('clock', {
-		h1   = Label('h1', '1'),
-		h2   = Label('h2', '2'),
-		dots = Icon("icon_digitalDots"),
-		m1   = Label('m1', '0'),
-		m2   = Label('m2', '0'),
-		ampm = Label('ampm', ''),
-	})
+	obj.h1   = Label('h1', '1')
+	obj.h2   = Label('h2', '2')
+	local dots = Group('dots', { 
+		dots = Icon("icon_digitalDots") 
+		}
+	)
+	obj.m1   = Label('m1', '0')
+	obj.m2   = Label('m2', '0')
+	obj.ampm = Label('ampm', '')
+
 
 	obj.alarm = Group('alarm', {
 		Icon('icon_digitalAlarmOn')
@@ -356,28 +337,44 @@ function Digital:__init(applet, ampm)
 
 	obj.ampm = Label('ampm')
 
-	obj.divider = Group('horizDivider', {
+	local hdivider = Group('horizDivider', {
 		horizDivider = Icon('icon_digitalClockHDivider'),
 	})
-	obj.divider2 = Group('horizDivider2', {
+	local hdivider2 = Group('horizDivider2', {
 		horizDivider = Icon('icon_digitalClockHDivider'),
 	})
 
-	obj.dropShadows = Group('dropShadow', {
-		s1   = Icon('icon_digitalClockDropShadow'),
-		s2   = Icon('icon_digitalClockDropShadow'),
-		dots = Icon('icon_digitalClockBlank'),
-		s3   = Icon('icon_digitalClockDropShadow'),
-		s4   = Icon('icon_digitalClockDropShadow'),
+	obj.h1Shadow   = Group('h1Shadow', { 
+		h1Shadow = Icon('icon_digitalClockDropShadow'), 
 	})
-	obj.window:addWidget(obj.dropShadows)
+	obj.h2Shadow   = Group('h2Shadow', {
+		h2Shadow = Icon('icon_digitalClockDropShadow'),
+	})
+	obj.m1Shadow   = Group('m1Shadow', {
+		m1Shadow = Icon('icon_digitalClockDropShadow'),
+	})
+	obj.m2Shadow   = Group('m2Shadow', {
+		m2Shadow = Icon('icon_digitalClockDropShadow'),
+	})
 
 	obj.window:addWidget(obj.today)
-	obj.window:addWidget(obj.clockGroup)
 	--obj.window:addWidget(obj.alarm)
+	-- clock widgets
+	obj.window:addWidget(obj.h1)
+	obj.window:addWidget(obj.h1Shadow)
+	obj.window:addWidget(obj.h2)
+	obj.window:addWidget(obj.h2Shadow)
+	obj.window:addWidget(dots)
+	obj.window:addWidget(obj.m1)
+	obj.window:addWidget(obj.m1Shadow)
+	obj.window:addWidget(obj.m2)
+	obj.window:addWidget(obj.m2Shadow)
 	obj.window:addWidget(obj.ampm)
-	obj.window:addWidget(obj.divider)
-	obj.window:addWidget(obj.divider2)
+
+	obj.window:addWidget(hdivider)
+	obj.window:addWidget(hdivider2)
+
+	-- date widgets
 	obj.window:addWidget(obj.dateGroup)
 
 	obj.show_ampm = ampm
@@ -424,8 +421,8 @@ function Digital:Draw()
 	
 	--FOR DEBUG
 	--[[
-	self:DrawMaxTest()
 	self:DrawMinTest()
+	self:DrawMaxTest()
 	--]]
 end
 	
@@ -433,17 +430,13 @@ end
 -- it is not called in practice
 function Digital:DrawMinTest()
 
-	local widget = self.clockGroup:getWidget('h1')
-	widget:setValue('')
-	widget = self.dropShadows:getWidget('s1')
+	self.h1:setValue('')
+	local widget = self.h1Shadow:getWidget('h1Shadow')
 	widget:setStyle('icon_digitalClockNoShadow')
-	widget = self.clockGroup:getWidget('h2')
-	widget:setValue('7')
-	widget = self.clockGroup:getWidget('m1')
-	widget:setValue('0')
-	widget = self.clockGroup:getWidget('m2')
-	widget:setValue('1')
-
+	self.h2:setValue('1')
+	self.m1:setValue('0')
+	self.m2:setValue('1')
+	
 	self.ampm:setValue('AM')
 
 	widget = self.dateGroup:getWidget('dayofweek')
@@ -451,23 +444,18 @@ function Digital:DrawMinTest()
 	widget = self.dateGroup:getWidget('dayofmonth')
 	widget:setValue('01')
 	widget = self.dateGroup:getWidget('month')
-	widget:setValue('May')
-	widget = self.dateGroup:getWidget('year')
-	widget:setValue('09')
+	widget:setValue('July')
+
 end
 
 -- this method is around for testing the rendering of different elements
 -- it is not called in practice
 function Digital:DrawMaxTest()
 
-	local widget = self.clockGroup:getWidget('h1')
-	widget:setValue('1')
-	widget = self.clockGroup:getWidget('h2')
-	widget:setValue('2')
-	widget = self.clockGroup:getWidget('m1')
-	widget:setValue('5')
-	widget = self.clockGroup:getWidget('m2')
-	widget:setValue('9')
+	self.h1:setValue('1')
+	self.h2:setValue('2')
+	self.m1:setValue('5')
+	self.m2:setValue('9')
 	
 	self.ampm:setValue('PM')
 
@@ -477,8 +465,6 @@ function Digital:DrawMaxTest()
 	widget:setValue('31')
 	widget = self.dateGroup:getWidget('month')
 	widget:setValue('September')
-	widget = self.dateGroup:getWidget('year')
-	widget:setValue('09')
 end
 
 
@@ -486,23 +472,19 @@ function Digital:DrawTime()
 	local theHour   = os.date(self.clock_format_hour)
 	local theMinute = os.date(self.clock_format_minute)
 
-	local widget = self.clockGroup:getWidget('h1')
 	if string.sub(theHour, 1, 1) == '0' then
-		widget:setValue('')
-		widget = self.dropShadows:getWidget('s1')
+		self.h1:setValue('')
+		widget = self.h1Shadow:getWidget('h1Shadow')
 		widget:setStyle('icon_digitalClockNoShadow')
 	else
-		widget:setValue(string.sub(theHour, 1, 1))
-		widget = self.dropShadows:getWidget('s1')
+		self.h1:setValue(string.sub(theHour, 1, 1))
+		widget = self.h1Shadow:getWidget('h1Shadow')
 		widget:setStyle('icon_digitalClockDropShadow')
 	end
-	widget = self.clockGroup:getWidget('h2')
-	widget:setValue(string.sub(theHour, 2, 2))
+	self.h2:setValue(string.sub(theHour, 2, 2))
 
-	widget = self.clockGroup:getWidget('m1')
-	widget:setValue(string.sub(theMinute, 1, 1))
-	widget = self.clockGroup:getWidget('m2')
-	widget:setValue(string.sub(theMinute, 2, 2))
+	self.m1:setValue(string.sub(theMinute, 1, 1))
+	self.m2:setValue(string.sub(theMinute, 2, 2))
 	
 	-- Draw AM PM
 	if self.useAmPm then
@@ -1241,15 +1223,38 @@ function Digital:getDigitalClockSkin(skinName)
 		local shadow = {
 			w = 76,
 		}
+
+		local x = {}
+                x.h1 = 48
+                x.h2 = x.h1 + 75
+                x.dots = x.h2 + 75
+                x.m1 = x.dots + 39
+                x.m2 = x.m1 + 86 
+                x.alarm = x.m2 + 63
+		x.ampm = x.alarm
+
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			font = _font(143),
+			align = 'center',
+			fg = { 0xcc, 0xcc, 0xcc },
+			y = 54,
+			zOrder = 10,
+		}
+		local _digitShadow = _uses(_clockDigit, {
+			y = 54 + 100,
+			zOrder = 1,
+		})
 	
 		s.icon_digitalClockDropShadow = {
 			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
-				align = 'center',
-				padding = { 4, 0, 0, 0 },
-				w = 76,
-			}
-			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
-				img = false
+			align = 'center',
+			padding = { 4, 0, 0, 0 },
+			w = 76,
+		}
+
+		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+			img = false
 		})
 
 		s.icon_digitalClockHDivider = {
@@ -1266,8 +1271,8 @@ function Digital:getDigitalClockSkin(skinName)
 		s.icon_digitalDots = {
 			img = _loadImage(self, "Clocks/Digital/clock_dots_digital.png"),
 			align = 'center',
-			w = 11,
-			border = { 14, 20, 12, 0 },
+			w = 40,
+			border = { 14, 0, 12, 0 },
 		}
 
 		s.icon_digitalClockBlank = {
@@ -1277,34 +1282,48 @@ function Digital:getDigitalClockSkin(skinName)
 
 		s.Clock = {
 			bgImg = digitalClockBackground,
-			clock = {
-				position = LAYOUT_NORTH,
-				w = WH_FILL,
-				zOrder = 2,
-				border = { 47, 54, 47, 0 },
-				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
-				h1 = digitalClockDigit,
-				h2 = digitalClockDigit,
-				m1 = _uses(digitalClockDigit, {
-					border = { 1, 0, 0, 0 },
-				}),
-				m2 = _uses(digitalClockDigit, {
-					border = { 10, 0, 0, 0 },
-				}),
+			h1 = _uses(_clockDigit, {
+				x = x.h1,
+			}),
+			h1Shadow = _uses(_digitShadow, {
+				x = x.h1,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = x.h2,
+			}),
+			h2Shadow = _uses(_digitShadow, {
+				x = x.h2,
+			}),
+			dots = _uses(_clockDigit, {
+				x = x.dots,
+				y = 93,
+				w = 40,
+			}),
+			m1 = _uses(_clockDigit, {
+				x = x.m1,
+			}),
+			m1Shadow = _uses(_digitShadow, {
+				x = x.m1,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = x.m2,
+			}),
+			m2Shadow = _uses(_digitShadow, {
+				x = x.m2,
+			}),
+
+			ampm = {
+				position = LAYOUT_NONE,
+				x = x.ampm,
+				y = 112,
+				font = _font(11),
+				align = 'bottom',
+				fg = { 0xcc, 0xcc, 0xcc },
 			},
-			dropShadow = {
-				position = LAYOUT_NORTH,
-				align = 'center',
-				w = WH_FILL,
-				h = 18,
-				zOrder = 1,
-				border = { 47, 154, 47, 0 },
-				order = { 's1', 's2', 'dots', 's3', 's4' },
-				s1   =  { w = 76 },
-				s2   =  { w = 76 },
-				dots =  { w = 40 },
-				s3   =  { w = 76 },
-				s4   =  { w = 76 },
+			alarm = {
+				position = LAYOUT_NONE,
+				x = x.alarm,
+				y = 65,
 			},
 			ampm = {
 				position = LAYOUT_NONE,
@@ -1313,11 +1332,6 @@ function Digital:getDigitalClockSkin(skinName)
 				font = _font(20),
 				align = 'bottom',
 				fg = { 0xcc, 0xcc, 0xcc },
-			},
-			alarm = {
-				position = LAYOUT_NONE,
-				x = 20,
-				y = 20,
 			},
 			horizDivider2 = { hidden = 1 },
 			today = { hidden = 1 },
@@ -1384,7 +1398,10 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 		s.ClockTransparent = _uses(s.Clock, {
 			bgImg = false,
@@ -1394,28 +1411,48 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 	elseif skinName == 'QVGAlandscapeSkin'  then
 
 		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/bb_clock_digital.png")
-		local digitalClockDigit = {
-			font = _font(100),
-			align = 'center',
-			fg = { 0xcc, 0xcc, 0xcc },
-			w = 62,
-		}
 		local shadow = {
 			w = 62,
 		}
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			font = _font(100),
+			align = 'right',
+			fg = { 0xcc, 0xcc, 0xcc },
+			w = 62,
+			y = 48,
+			zOrder = 10,
+		}
+		local _digitShadow = _uses(_clockDigit, {
+			y = 116,
+			zOrder = 1,
+		})
 	
+		local x = {}
+                x.h1 = 19
+                x.h2 = x.h1 + 50 
+                x.dots = x.h2 + 65
+                x.m1 = x.dots + 15
+                x.m2 = x.m1 + 64
+                x.alarm = x.m2 + 63
+		x.ampm = x.alarm
+
 		s.icon_digitalClockDropShadow = {
 			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
-				align = 'center',
-				padding = { 4, 0, 0, 0 },
-				w = 62,
-			}
-			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+			align = 'center',
+			padding = { 4, 0, 0, 0 },
+			w = 62,
+		}
+
+		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
 				img = false
 		})
 
@@ -1427,6 +1464,7 @@ function Digital:getDigitalClockSkin(skinName)
 		s.icon_digitalClockVDivider = {
 			w = 3,
 			img = _loadImage(self, "Clocks/Digital/divider_vert_digital.png"),
+			padding = { 0, 0, 0, 8 },
 			align = 'center',
 		}
 
@@ -1434,70 +1472,66 @@ function Digital:getDigitalClockSkin(skinName)
 			img = _loadImage(self, 'Clocks/Digital/clock_dots_digital.png'),
 			align = 'center',
 			w = 16,
-			border = { 6, 20, 6, 0 },
+			padding = { 0, 26, 0, 0 },
 		}
 
 		s.icon_digitalClockBlank = {
 			img = false,
 		}
 
+
 		s.Clock = {
 			bgImg = digitalClockBackground,
-			clock = {
-				position = LAYOUT_NORTH,
-				w = WH_FILL,
-				zOrder = 2,
-				border = { 20, 50, 20, 0 },
-				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
-				h1 = digitalClockDigit,
-				h2 = digitalClockDigit,
-				m1 = _uses(digitalClockDigit, {
-					border = { 1, 0, 0, 0 },
-				}),
-				m2 = _uses(digitalClockDigit, {
-					border = { 1, 0, 0, 0 },
-				}),
-			},
+			h1 = _uses(_clockDigit, {
+				x = x.h1,
+			}),
+			h1Shadow = _uses(_digitShadow, {
+				x = x.h1,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = x.h2,
+			}),
+			h2Shadow = _uses(_digitShadow, {
+				x = x.h2,
+			}),
+			dots = _uses(_clockDigit, {
+				x = x.dots,
+				w = 16,
+			}),
+			m1 = _uses(_clockDigit, {
+				x = x.m1,
+			}),
+			m1Shadow = _uses(_digitShadow, {
+				x = x.m1,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = x.m2,
+			}),
+			m2Shadow = _uses(_digitShadow, {
+				x = x.m2,
+			}),
 
-			dropShadow = { hidden = 1 },
-			--FIXME: PUNT THE DROP SHADOWS FOR NOW
-			--[[ 
-			dropShadow = {
-				position = LAYOUT_NORTH,
-				align = 'center',
-				w = WH_FILL,
-				h = 18,
-				zOrder = 1,
-				border = { 20, 110, 20, 0 },
-				order = { 's1', 's2', 'dots', 's3', 's4' },
-				s1   =  { w = 62 },
-				s2   =  { w = 62 },
-				s3   =  { w = 62 },
-				s4   =  { w = 62 },
-			},
-			--]]
 			ampm = {
 				position = LAYOUT_NONE,
-				x = 295,
-				y = 114,
+				x = x.ampm,
+				y = 112,
 				font = _font(11),
 				align = 'bottom',
 				fg = { 0xcc, 0xcc, 0xcc },
 			},
 			alarm = {
 				position = LAYOUT_NONE,
-				x = 20,
-				y = 20,
+				x = x.alarm,
+				y = 65,
 			},
 			horizDivider2 = { hidden = 1 },
 			horizDivider = {
 				position = LAYOUT_NONE,
 				x = 0,
-				y = 180,
+				y = 173,
 			},
 			today = { hidden = '1' },
 			date = {
---SKIN
 				position = LAYOUT_SOUTH,
 				order = { 'dayofweek', 'vdivider1', 'dayofmonth', 'vdivider2', 'month' },
 				w = WH_FILL,
@@ -1509,7 +1543,7 @@ function Digital:getDigitalClockSkin(skinName)
 					h = WH_FILL,
 					font = _font(18),
 					fg = { 0xcc, 0xcc, 0xcc },
-					padding  = { 1, 0, 0, 6 },
+					padding = { 0, 0, 0, 14 },
 				},
 				vdivider1 = {
 					align = 'center',
@@ -1521,7 +1555,7 @@ function Digital:getDigitalClockSkin(skinName)
 					h = WH_FILL,
 					align = 'center',
 					fg = { 0xcc, 0xcc, 0xcc },
-					padding = { 0, 0, 0, 4 },
+					padding = { 0, 0, 0, 12 },
 				},
 				vdivider2 = {
 					align = 'center',
@@ -1533,15 +1567,7 @@ function Digital:getDigitalClockSkin(skinName)
 					h = WH_FILL,
 					align = 'center',
 					fg = { 0xcc, 0xcc, 0xcc },
-					padding = { 0, 0, 0, 5 },
-				},
-				year = {
-					font = _boldfont(18),
-					w = 50,
-					h = WH_FILL,
-					align = 'left',
-					fg = { 0xcc, 0xcc, 0xcc },
-					padding = { 3, 0, 0, 5 },
+					padding = { 0, 0, 0, 14 },
 				},
 			},
 		}
@@ -1555,7 +1581,10 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 		s.ClockTransparent = _uses(s.Clock, {
 			bgImg = false,
@@ -1565,7 +1594,10 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'dayofweek', 'dayofmonth', 'month', 'year' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 
 	elseif skinName == 'QVGAportraitSkin'  then
@@ -1575,15 +1607,40 @@ function Digital:getDigitalClockSkin(skinName)
 			fg = { 0xcc, 0xcc, 0xcc },
 			w = WH_FILL,
 		}
-		local shadow = { }
+		local shadow = {
+			w = 62,
+		}
+		local _clockDigit = {
+			position = LAYOUT_NONE,
+			font = _font(100),
+			align = 'right',
+			fg = { 0xcc, 0xcc, 0xcc },
+			w = 62,
+			y = 121,
+			zOrder = 10,
+		}
+		local _digitShadow = _uses(_clockDigit, {
+			y = 188,
+			zOrder = 1,
+		})
 	
+		local x = {}
+                x.h1 = -7
+                x.h2 = x.h1 + 45
+                x.dots = x.h2 + 65
+                x.m1 = x.dots + 7
+                x.m2 = x.m1 + 62
+                x.alarm = x.m2 + 62
+		x.ampm = x.alarm
+
 		s.icon_digitalClockDropShadow = {
 			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
-				align = 'center',
-				padding = { 4, 0, 0, 0 },
-			}
-			s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
-				img = false
+			align = 'center',
+			padding = { 4, 0, 0, 0 },
+		}
+
+		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
+			img = false
 		})
 
 		s.icon_digitalClockHDivider = {
@@ -1601,7 +1658,7 @@ function Digital:getDigitalClockSkin(skinName)
 			img = _loadImage(self, 'Clocks/Digital/clock_dots_digital.png'),
 			align = 'center',
 			w = 16,
-			padding = { 0, 12, 0, 0 },
+			padding = { 0, 0, 0, 0 },
 		}
 
 		s.icon_digitalClockBlank = {
@@ -1610,6 +1667,36 @@ function Digital:getDigitalClockSkin(skinName)
 
 		s.Clock = {
 			bgImg = digitalClockBackground,
+			h1 = _uses(_clockDigit, {
+				x = x.h1,
+			}),
+			h1Shadow = _uses(_digitShadow, {
+				x = x.h1,
+			}),
+			h2 = _uses(_clockDigit, {
+				x = x.h2,
+			}),
+			h2Shadow = _uses(_digitShadow, {
+				x = x.h2,
+			}),
+			dots = _uses(_clockDigit, {
+				x = x.dots,
+				w = 7,
+				y = 148,
+			}),
+			m1 = _uses(_clockDigit, {
+				x = x.m1,
+			}),
+			m1Shadow = _uses(_digitShadow, {
+				x = x.m1,
+			}),
+			m2 = _uses(_clockDigit, {
+				x = x.m2,
+			}),
+			m2Shadow = _uses(_digitShadow, {
+				x = x.m2,
+			}),
+
 			today = {
 				position = LAYOUT_NORTH,
 				h = 83,
@@ -1619,31 +1706,11 @@ function Digital:getDigitalClockSkin(skinName)
 				fg = { 0xcc, 0xcc, 0xcc },
 				font = _font(20),
 			},
-			clock = {
-				position = LAYOUT_CENTER,
-				w = WH_FILL,
-				zOrder = 2,
-				border = { 12, 36, 12, 0 },
-				order = { 'h1', 'h2', 'dots', 'm1', 'm2' },
-				h1 = _uses(digitalClockDigit, {
-					w = 34,
-					border = { 0, 0, 7, 0 },
-				}),
-				h2 = digitalClockDigit,
-				m1 = _uses(digitalClockDigit, {
-					border = { 1, 0, 0, 0 },
-				}),
-				m2 = _uses(digitalClockDigit, {
-					border = { 1, 0, 0, 0 },
-				}),
-			},
-
-			dropShadow = { hidden = 1 },
 
 			ampm = {
 				position = LAYOUT_NONE,
-				x = 205,
-				y = 205,
+				x = 207,
+				y = 214,
 				font = _font(14),
 				align = 'bottom',
 				fg = { 0xcc, 0xcc, 0xcc },
@@ -1681,7 +1748,7 @@ function Digital:getDigitalClockSkin(skinName)
 					h = WH_FILL,
 					align = 'center',
 					fg = { 0xcc, 0xcc, 0xcc },
-					padding = { 0, 0, 0, 5 },
+					padding = { 2, 0, 0, 15 },
 				},
 				dayofmonth = {
 					font = _font(48),
@@ -1689,7 +1756,7 @@ function Digital:getDigitalClockSkin(skinName)
 					h = WH_FILL,
 					align = 'center',
 					fg = { 0xcc, 0xcc, 0xcc },
-					padding = { 0, 0, 0, 4 },
+					padding = { 0, 0, 0, 15 },
 				},
 			},
 		}
@@ -1702,7 +1769,10 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'month', 'dayofmonth' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 		s.ClockTransparent = _uses(s.Clock, {
 			bgImg = false,
@@ -1711,7 +1781,10 @@ function Digital:getDigitalClockSkin(skinName)
 			date = {
 				order = { 'month', 'dayofmonth' },
 			},
-			dropShadow = { hidden = 1 },
+			h1Shadow = { hidden = 1 },
+			h2Shadow = { hidden = 1 },
+			m1Shadow = { hidden = 1 },
+			m2Shadow = { hidden = 1 },
 		})
 	
 	end
