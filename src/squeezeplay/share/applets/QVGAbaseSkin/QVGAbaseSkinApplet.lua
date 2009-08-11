@@ -1614,12 +1614,12 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 
-	s.button_sleep_ON = _uses(s._button_shuffle, {
+	s.button_sleep_ON = _uses(s._iconbar_icon, {
 		w = WH_FILL,
 		align = 'right',
 		img = _loadImage(self, "Icons/icon_mode_sleep_on.png"),
 	})
-	s.button_sleep_OFF = _uses(s._button_sleep_ON, {
+	s.button_sleep_OFF = _uses(s.button_sleep_ON, {
 		img = false,
 	})
 
@@ -1673,7 +1673,7 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		order = {'play', 'repeat_mode', 'shuffle', 'button_time', 'sleep', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
+		order = {'play', 'repeat_mode', 'shuffle', 'sleep', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
 	}
 
 	s.demo_text = {
