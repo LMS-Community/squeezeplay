@@ -226,7 +226,9 @@ function openRemoteScreensaver(self, force, serverData)
 end
 
 function closeRemoteScreensaver(self, force, serverData)
-	self.window:hide()
+	if self.window then
+		self.window:hide()
+	end
 	self.window = nil
 end
 
