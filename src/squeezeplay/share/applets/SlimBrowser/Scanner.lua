@@ -101,6 +101,7 @@ local function _openPopup(self)
 	
 	local popup = Popup("scanner_popup")
 	popup:setAutoHide(false)
+	popup:setAlwaysOnTop(true)
 
 	local title = Label("heading", "")
 	popup:addWidget(title)

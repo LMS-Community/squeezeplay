@@ -72,6 +72,7 @@ local function _openPopup(self)
 
 	local popup = Popup("slider_popup")
 	popup:setAutoHide(false)
+	popup:setAlwaysOnTop(true)
 
 	local title = Label("heading", "")
 	popup:addWidget(title)
@@ -109,7 +110,7 @@ local function _openPopup(self)
 
 	popup:showBriefly(3000,
 		function()
-			--This happens on ANY window pop, not necessarily the popup window's pop
+			--This happens on ANY window pop, not necessarily the popup window's pop (todo: actually, I think this is not happening (i.e. POP is for this window only), Investigae)
 			local isPopupOnStack = false
 			local stack = Framework.windowStack
 			for i in ipairs(stack) do
