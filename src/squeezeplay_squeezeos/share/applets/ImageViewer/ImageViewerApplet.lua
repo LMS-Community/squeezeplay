@@ -217,7 +217,7 @@ end
 
 --service method
 function unregisterRemoteScreensaver(self, id)
-	appletManager:callService("removeScreenSaver", "ImageViewer", "openRemoteScreensaver", _, serverData.id)
+	appletManager:callService("removeScreenSaver", "ImageViewer", "openRemoteScreensaver", _, id)
 end
 
 
