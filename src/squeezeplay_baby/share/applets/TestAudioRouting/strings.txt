@@ -3,23 +3,86 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 TEST_AUDIO_ROUTING
+	CS	Audio Routing
+	DA	Lydsignalets rute
+	DE	Audiosignalverteilung
 	EN	Audio Routing
+	ES	Enrutamiento de audio
+	FR	Routage audio
+	NL	Audioroutering
+	NO	Lydstyring
+	PL	Przekazywanie dźwięku
+	RU	Маршрутизация аудио
 
 ENABLE_LINE_IN_PASSTHROUGH
+	CS	Passthrough vstupem
+	DA	Linjeindgang – signalgennemgang
+	DE	Line-In-Durchschleifsignal
 	EN	Line In Passthrough
+	ES	Paso a través de entrada de línea
+	FR	Liaison d'entrée
+	NL	Doorvoer lijningang
+	NO	Gjennomgang for lydinngang
+	PL	Przekazywanie przez wejście liniowe
+	RU	Воспроизведение через линейный вход
 
 LINE_IN_SENSE
+	CS	Detekován vstup
+	DA	Linjeindgang fundet
+	DE	Line-In-Signal erkannt
 	EN	Line In Detected
+	ES	Entrada de línea detectada
+	FR	Entrée détectée
+	NL	Lijningang gedetecteerd
+	NO	Fant lydinnsignal
+	PL	Wykryto wejście liniowe
+	RU	Обнаружен линейный вход
 
 HEADPHONE_SENSE
+	CS	Detekována sluchátka
+	DA	Hovedtelefoner fundet
+	DE	Kopfhörer erkannt
 	EN	Headphone Detected
+	ES	Auriculares detectados
+	FR	Casque détecté
+	NL	Hoofdtelefoon gedetecteerd
+	NO	Fant hodetelefoner
+	PL	Wykryto słuchawki
+	RU	Обнаружены наушники
 
 HEADPHONE_STATE_WITH_MIC
+	CS	Ano - s mikrofonem
+	DA	Ja, med mikrofon
+	DE	Headset erkannt
 	EN	Yes - with mic
+	ES	Sí, con micrófono
+	FR	Oui, avec micro
+	NL	Ja - met mic
+	NO	Ja, med mikrofon
+	PL	Tak – z mikrofonem
+	RU	Да - с микрофоном
 
 AUDIO_ROUTING_YES
+	CS	Ano
+	DA	Ja
+	DE	Ja
 	EN	Yes
+	ES	Sí
+	FR	Oui
+	NL	Ja
+	NO	Ja
+	PL	Tak
+	RU	Да
 
 AUDIO_ROUTING_NO
+	CS	Ne
+	DA	Nej
+	DE	Nein
 	EN	No
+	ES	No
+	FR	Non
+	NL	Nee
+	NO	Nei
+	PL	Nie
+	RU	Нет
 

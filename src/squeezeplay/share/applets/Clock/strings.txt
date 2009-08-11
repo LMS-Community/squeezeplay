@@ -13,6 +13,7 @@ SCREENSAVER_CLOCK_STYLE_RADIAL
 	FR	Horloge radiale
 	IT	Orologio radiale
 	NL	Analoge klok
+	NO	Klokke med visere
 	PL	Zegar promieniowy
 	RU	Радиальные часы
 	SV	Radiell klocka
@@ -42,6 +43,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITAL_BLACK
 	FR	Horloge numérique (noire)
 	IT	Orologio digitale (nero)
 	NL	Digitale klok (Zwart)
+	NO	Digital klokke (svart)
 	PL	Zegar cyfrowy (czarny)
 	RU	Цифровые часы (черн.)
 	SV	Digital klocka (svart)
@@ -56,6 +58,7 @@ SCREENSAVER_CLOCK_STYLE_DIGITAL_TRANSPARENT
 	FR	Horloge numérique (transparente)
 	IT	Orologio digitale (trasparente)
 	NL	Digitale klok (Transparant)
+	NO	Digital klokke (gjennomsiktig)
 	PL	Zegar cyfrowy (przezroczysty)
 	RU	Цифровые часы (прозрачн.)
 	SV	Digital klocka (genomskinlig)
@@ -70,6 +73,7 @@ SCREENSAVER_CLOCK_STYLE_DOTMATRIX
 	FR	Horloge avec matrice à points
 	IT	Orologio a matrice di punti
 	NL	Digitale clock
+	NO	Punktmatriseklokke
 	PL	Zegar diodowy
 	RU	Часы с точечной матрицей
 	SV	Punktmatrisklocka
@@ -84,6 +88,7 @@ SCREENSAVER_CLOCK_MONTH_01
 	FR	Janvier
 	IT	Gennaio
 	NL	januari
+	NO	januar
 	PL	Styczeń
 	RU	Январь
 	SV	januari
@@ -98,6 +103,7 @@ SCREENSAVER_CLOCK_MONTH_02
 	FR	Février
 	IT	Febbraio
 	NL	februari
+	NO	februar
 	PL	Luty
 	RU	Февраль
 	SV	februari
@@ -112,6 +118,7 @@ SCREENSAVER_CLOCK_MONTH_03
 	FR	Mars
 	IT	Marzo
 	NL	maart
+	NO	mars
 	PL	Marzec
 	RU	Март
 	SV	mars
@@ -126,6 +133,7 @@ SCREENSAVER_CLOCK_MONTH_04
 	FR	Avril
 	IT	Aprile
 	NL	april
+	NO	april
 	PL	Kwiecień
 	RU	Апрель
 	SV	april
@@ -140,6 +148,7 @@ SCREENSAVER_CLOCK_MONTH_05
 	FR	Mai
 	IT	Maggio
 	NL	mei
+	NO	mai
 	PL	Maj
 	RU	Май
 	SV	maj
@@ -154,6 +163,7 @@ SCREENSAVER_CLOCK_MONTH_06
 	FR	Juin
 	IT	Giugno
 	NL	juni
+	NO	juni
 	PL	Czerwiec
 	RU	Июнь
 	SV	juni
@@ -168,6 +178,7 @@ SCREENSAVER_CLOCK_MONTH_07
 	FR	Juillet
 	IT	Luglio
 	NL	juli
+	NO	juli
 	PL	Lipiec
 	RU	Июль
 	SV	juli
@@ -182,6 +193,7 @@ SCREENSAVER_CLOCK_MONTH_08
 	FR	Août
 	IT	Agosto
 	NL	augustus
+	NO	august
 	PL	Sierpień
 	RU	Август
 	SV	augusti
@@ -196,6 +208,7 @@ SCREENSAVER_CLOCK_MONTH_09
 	FR	Septembre
 	IT	Settembre
 	NL	september
+	NO	september
 	PL	Wrzesień
 	RU	Сентябрь
 	SV	september
@@ -210,6 +223,7 @@ SCREENSAVER_CLOCK_MONTH_10
 	FR	Octobre
 	IT	Ottobre
 	NL	oktober
+	NO	oktober
 	PL	Październik
 	RU	Октябрь
 	SV	oktober
@@ -224,6 +238,7 @@ SCREENSAVER_CLOCK_MONTH_11
 	FR	Novembre
 	IT	Novembre
 	NL	november
+	NO	november
 	PL	Listopad
 	RU	Ноябрь
 	SV	november
@@ -238,6 +253,7 @@ SCREENSAVER_CLOCK_MONTH_12
 	FR	Décembre
 	IT	Dicembre
 	NL	december
+	NO	desember
 	PL	Grudzień
 	RU	Декабрь
 	SV	december
@@ -357,6 +373,7 @@ SCREENSAVER_CLOCK_DAYSHORT_MONDAY
 	FR	L
 	IT	L
 	NL	M
+	NO	m
 	PL	P
 	RU	M
 	SV	M
@@ -371,6 +388,7 @@ SCREENSAVER_CLOCK_DAYSHORT_TUESDAY
 	FR	M
 	IT	M
 	NL	D
+	NO	t
 	PL	W
 	RU	Чт
 	SV	T
@@ -385,6 +403,7 @@ SCREENSAVER_CLOCK_DAYSHORT_WEDNESDAY
 	FR	M
 	IT	M
 	NL	W
+	NO	o
 	PL	Ś
 	RU	Ср
 	SV	V
@@ -399,6 +418,7 @@ SCREENSAVER_CLOCK_DAYSHORT_THURSDAY
 	FR	J
 	IT	G
 	NL	D
+	NO	t
 	PL	W
 	RU	Чт
 	SV	T
@@ -413,6 +433,7 @@ SCREENSAVER_CLOCK_DAYSHORT_FRIDAY
 	FR	V
 	IT	V
 	NL	V
+	NO	f
 	PL	P
 	RU	Пт
 	SV	F
@@ -427,6 +448,7 @@ SCREENSAVER_CLOCK_DAYSHORT_SATURDAY
 	FR	S
 	IT	S
 	NL	Z
+	NO	l
 	PL	S
 	RU	Сб
 	SV	S
@@ -441,6 +463,7 @@ SCREENSAVER_CLOCK_DAYSHORT_SUNDAY
 	FR	D
 	IT	D
 	NL	Z
+	NO	s
 	PL	N
 	RU	Сб
 	SV	S

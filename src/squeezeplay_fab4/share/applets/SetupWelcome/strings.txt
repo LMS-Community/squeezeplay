@@ -86,9 +86,9 @@ CONNECTING_TO_SN
 	FI	Muodostetaan yhteyttä kohteeseen
 	FR	Connexion à
 	IT	Connessione a
-	NL	Er wordt verbinding gemaakt met
+	NL	Verbinden met
 	NO	Kopler til
-	PL	Nawiązywanie połączenia z
+	PL	Trwa łączenie z
 	RU	Подключение к
 	SV	Ansluter till
 

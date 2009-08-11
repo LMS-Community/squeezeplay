@@ -87,7 +87,7 @@ SCREENSAVER_OFF
 	FR	En état éteint
 	IT	Se disattivato
 	NL	Wanneer uit
-	NO	Av
+	NO	Når av
 	PL	Po wyłączeniu
 	RU	При выкл.
 	SV	I avstängt läge

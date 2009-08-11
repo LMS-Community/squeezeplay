@@ -116,7 +116,7 @@ DONE
 	FI	Siinä kaikki!
 	FR	La procédure est terminée.
 	IT	Fatto!
-	NL	Dat is het!
+	NL	Klaar!
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!

@@ -87,80 +87,104 @@ SCREENSAVER_SELECT_HELP
 	FR	Appuyez sur le bouton central pour sélectionner un économiseur d'écran et sur PLAY pour afficher un aperçu.
 	IT	Premere il pulsante centrale per selezionare uno screen saver e il pulsante di riproduzione per vederne l'anteprima.
 	NL	Druk op de middelste knop om een schermbeveiliger te kiezen. Druk op PLAY om een voorbeeld te bekijken.
-	NO	Trykk på den midterste knappen for å velge en skjermsparer, og trykk så på Spill av for å forhåndsvise.
+	NO	Trykk på midtknappen for å velge en skjermsparer, og trykk så på Spill av for å forhåndsvise.
 	PL	Naciśnij środkowy przycisk, aby wybrać wygaszacz ekranu, naciśnij przycisk odtwarzania, aby wyświetlić podgląd.
 	RU	Нажмите центральную кнопку, чтобы выбрать экранную заставку и воспроизвести для просмотра.
 	SV	Tryck på mittenknappen om du vill välja en skärmsläckare eller på Spela upp om du vill förhandsgranska.
 
 SCREENSAVER_SELECT_PLAYING_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že tento Squeezebox přehrává.
+	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Squeezebox spiller.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is playing.
 	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté reproduciendo música.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est en cours d'utilisation.
+	NL	Druk op de middelste knop om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox speelt.
+	NO	Trykk på midtkappen for å velge en skjermsparer som skal vises når Squeezebox spiller av noe.
 	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany podczas działania odtwarzacza w usłudze Squeezebox.
 	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox воспроизводит музыку.
 
 SCREENSAVER_SELECT_STOPPED_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který bude zobrazen v případě, že tento Squeezebox nepřehrává.
+	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Squeezebox ikke spiller.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn keine Wiedergabe über die Squeezebox erfolgt.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is not playing.
 	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox no esté reproduciendo música.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox n'est pas en cours d'utilisation.
+	NL	Druk op de middelste knop om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox niet speelt.
+	NO	Trykk på midtknappen for å velge en skjermsparer som skal vises når Squeezebox ikke spiller av noe.
 	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox będzie nieaktywny.
 	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox не воспроизводит музыку.
 
 SCREENSAVER_SELECT_OFF_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že je tento Squeezebox vypnut.
+	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Squeezebox er slukket.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is off.
 	ES	Pulse el botón central para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté apagado.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est hors tension.
+	NL	Druk op de middelste knop om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox uitstaat.
+	NO	Trykk på midtknappen for å velge en skjermsparer som skal vises når Squeezebox er av.
 	PL	Naciśnij przycisk na środku, aby wybrać wygaszacz ekranu wyświetlany po wyłączeniu ekranu usługi Squeezebox.
 	RU	Нажмите центральную кнопку, чтобы выбрать заставку, отображаемую, когда Squeezebox выключен.
 
 SCREENSAVER_SELECT_PLAYING_HELP_FAB4
 	CS	Dotykem vyberte spořič obrazovky, který se zobrazí v případě, že tento Squeezebox přehrává.
+	DA	Tryk for at vælge den pauseskærm som skal vises når denne Squeezebox spiller.
 	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is playing.
 	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté reproduciendo música.
 	FR	Touchez pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est en cours d'utilisation.
+	NL	Aanraken om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox speelt.
+	NO	Berør for å velge en skjermsparer som skal vises når Squeezebox spiller av noe.
 	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox będzie aktywny.
 	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox воспроизводит музыку.
 
 SCREENSAVER_SELECT_STOPPED_HELP_FAB4
 	CS	Dotykem vyberte spořič obrazovky, který bude zobrazen v případě, že tento Squeezebox nepřehrává.
+	DA	Tryk for at vælge den pauseskærm som skal vises når denne Squeezebox ikke spiller.
 	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn keine Wiedergabe über Squeezebox erfolgt.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is not playing.
 	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox no esté reproduciendo música.
 	FR	Touchez pour sélectionner l'écran de veille à afficher lorsque cette Squeezebox n'est pas en cours d'utilisation.
+	NL	Aanraken om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox niet speelt.
+	NO	Berør for å velge en skjermsparer som skal vises når Squeezebox ikke spiller av noe.
 	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox nie będzie aktywny.
 	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox не воспроизводит музыку.
 
 SCREENSAVER_SELECT_OFF_HELP_FAB4
 	CS	Dotykem vyberte spořič obrazovky, který bude zobrazen v případě, že je tento Squeezebox vypnut.
+	DA	Tryk for at vælge den pauseskærm som skal vises når denne Squeezebox er slukket.
 	DE	Drücken Sie die Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll.
 	EN	Touch to select a screensaver to be shown when this Squeezebox is off.
 	ES	Toque para seleccionar el protector de pantalla que aparecerá cuando este Squeezebox esté apagado.
 	FR	Touchez pour sélectionner un écran de veille à afficher lorsque cette Squeezebox est hors tension.
+	NL	Aanraken om een schermbeveiliger te selecteren die weergegeven wordt wanneer deze Squeezebox uitstaat.
+	NO	Berør for å velge en skjermsparer som skal vises når Squeezebox er av.
 	PL	Wybierz wygaszacz ekranu wyświetlany, gdy odtwarzacz w usłudze Squeezebox nie będzie aktywny.
 	RU	Коснитесь здесь, чтобы выбрать заставку, отображаемую, когда Squeezebox выключен.
 
 SCREENSAVER_PREVIEW_HELP
 	CS	Stiskněte pro náhled spořiče obrazovky.
+	DA	Tryk på Afspil for at se hvordan pauseskærmen ser ud.
 	DE	Drücken Sie 'Play', um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Press play to preview a screensaver.
 	ES	Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FR	Appuyez sur Lecture pour afficher l'aperçu d'un écran de veille.
+	NL	Druk op de afspeelknop om een voorbeeld van een schermbeveiliger te bekijken.
+	NO	Trykk på avspillingsknappen for å forhåndsvise en skjermsparer.
 	PL	Naciśnij przycisk odtwarzania, aby wyświetlić podgląd wygaszacza ekranu.
 	RU	Чтобы просмотреть заставку, нажмите кнопку воспроизведения.
 
 SCREENSAVER_PREVIEW_HELP_FAB4
 	CS	Stiskněte a podržte pro náhled spořiče obrazovky.
+	DA	Tryk og hold for at se hvordan pauseskærmen ser ud.
 	DE	Drücken und halten Sie die Taste, um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Touch and hold to preview a screensaver.
 	ES	Toque de forma prolongada para obtener una vista previa de un protector de pantalla.
 	FR	Appuyez sans relâcher pour afficher l'aperçu d'un écran de veille.
+	NL	Aanraken en vasthouden om een voorbeeld van een schermbeveiliger te bekijken.
+	NO	Berør og hold inne for å forhåndsvise en skjermsparer.
 	PL	Naciśnij i przytrzymaj, aby wyświetlić podgląd wygaszacza ekranu.
 	RU	Коснитесь и удерживайте, чтобы просмотреть заставку.
 

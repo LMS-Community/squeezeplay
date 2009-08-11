@@ -19,10 +19,13 @@ SETTINGS
 
 INTERNET_RADIO
 	CS	Internetové rádio
+	DA	Internetradio
 	DE	Internetradio
 	EN	Internet Radio
 	ES	Radio por Internet
 	FR	Radio Internet
+	NL	Internetradio
+	NO	Internett-radio
 	PL	Radio internetowe
 	RU	Радиостанции Интернета
 
@@ -136,19 +139,25 @@ ADVANCED_SETTINGS
 
 AUDIO_SETTINGS
 	CS	Nastavení zvuku
+	DA	Lydindstillinger
 	DE	Audioeinstellungen
 	EN	Audio Settings
 	ES	Configuración de audio
 	FR	Paramètres audio
+	NL	Geluidsinstellingen
+	NO	Lydinnstillinger
 	PL	Ustawienia audio
 	RU	Настройки аудиоканала
 
 BETA_FEATURES
 	CS	Beta vlastnosti
+	DA	Beta-funktioner
 	DE	Beta-Funktionen
 	EN	Beta Features
 	ES	Características beta
 	FR	Fonctions bêta
+	NL	Bètafuncties
+	NO	Betafunksjoner
 	PL	Funkcje w wersji beta
 	RU	Функции бета-версии
 
@@ -349,10 +358,13 @@ RETURN_TO_SETUP
 
 SHORTCUTS_RESET
 	CS	Opětovně nastavit na výchozí
+	DA	Nulstil
 	DE	Zurücksetzen
 	EN	Reset to Defaults
 	ES	Restablecer a valores predeterminados
 	FR	Restauration des valeurs par défaut
+	NL	Standaardwaarden
+	NO	Tilbakestill til standardinnstillinger
 	PL	Resetuj do wartości domyślnych
 	RU	Восстановление стандартных настроек
 

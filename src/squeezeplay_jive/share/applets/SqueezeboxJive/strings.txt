@@ -231,29 +231,29 @@ DIM_WHEN_CHARGING
 
 BATTERY_LOW
 	CS	Nízký stav baterie
-	DA	Batteriet er næsten fladt
+	DA	Lavt batteriniveau
 	DE	Batterie schwach
 	EN	Battery Low
 	ES	Carga de pila baja
 	FI	Vähäinen akun lataus
 	FR	Niveau faible des piles
 	IT	Livello batteria insufficiente
-	NL	Batterij bijna leeg
-	NO	Lavt batterinivå
+	NL	Laag batterijvermogen
+	NO	Dårlig batteri
 	PL	Niski poziom naładowania baterii
 	RU	Аккумулятор разряжен
 	SV	Låg batterinivå
 
 BATTERY_LOW_2
 	CS	Prosím o dobití
-	DA	Det skal lades op
+	DA	Vær sød at skifte batterier
 	DE	Bitte aufladen
 	EN	Please Charge Me
 	ES	Necesita carga
 	FI	Lataa minut
 	FR	Veuillez la recharger
 	IT	Caricare batteria
-	NL	Opladen alsjeblieft
+	NL	Laad mij op
 	NO	Lad meg opp
 	PL	Naładuj baterię
 	RU	Зарядите батарею
@@ -328,7 +328,7 @@ SLEEPING
 	FI	Unitilassa
 	FR	En veille
 	IT	Sospensione
-	NL	Sluimermodus
+	NL	Inactief
 	NO	Hviler
 	PL	Uśpienie
 	RU	Спящий режим

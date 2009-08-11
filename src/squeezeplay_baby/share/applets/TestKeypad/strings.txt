@@ -4,47 +4,47 @@
 
 
 TEST_KEYPAD
-	CS	Kl‡vesnice
+	CS	Klávesnice
 	DA	Tastatur
 	DE	Tastenfeld
 	EN	Keypad
 	ES	Teclado
 	FI	NŠppŠimistš
-	FR	PavŽ numŽrique
+	FR	Pavé numérique
 	IT	Tastierino numerico
-	NL	Toetsenblok
+	NL	Numeriek toetsenblok
 	NO	Taster
 	PL	Klawiatura
-	RU	??????????
+	RU	Клавиатура
 	SV	Knappsats
 
 TEST_KEYPAD_HELP
-	CS	K ukon?en’ stiskn?te v?echny kl‡vesy a pooto?te kole?kem.
-	DA	Tryk pŒ alle knapperne og drej pŒ hjulet for at f¾rdigg¿re konfigurationen.
-	DE	Zum Abschluss alle Tasten und Rad betŠtigen.
+	CS	K ukončení stiskněte všechny klávesy a pootočte kolečkem.
+	DA	Tryk på alle knapperne og drej på hjulet for at færdiggøre konfigurationen.
+	DE	Zum Abschluss alle Tasten und Rad betätigen.
 	EN	Press all keys and scroll the wheel to complete.
-	ES	Pulse todos los botones y gire la rueda para completar la operaci—n.
+	ES	Pulse todos los botones y gire la rueda para completar la operación.
 	FI	Suorita loppuun painamalla kaikkia nŠppŠimiŠ ja vierittŠmŠllŠ kiekolla.
-	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
+	FR	Appuyez sur toutes les touches et faites défiler la molette pour terminer.
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
-	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
-	NO	Trykk ned alle tastene og rull med hjulet for Œ fullf¿re.
-	PL	Naci?nij wszystkie przyciski i obr—? pokr?t?o, aby zako?czy?.
-	RU	??? ?????????? ??????? ??? ?????? ? ???????? ?????????.
+	NL	Druk op alle toetsen en scroll met het wiel om te voltooien.
+	NO	Trykk ned alle tastene og rull med hjulet for å fullføre.
+	PL	Naciśnij wszystkie przyciski i obróć pokrętło, aby zakończyć.
+	RU	Для завершения нажмите все кнопки и колесико прокрутки.
 	SV	Slutfšr genom att trycka pŒ samtliga knappar och rulla pŒ hjulet.
 
 TEST_COMPLETE
-	DA	Test fuldf¿rt
+	CS	Test ukončen
+	DA	Testen er gennemført
 	DE	Test abgeschlossen
 	EN	Test Complete
 	ES	Prueba completada
-	FR	Test terminŽ
+	FR	Test terminé
 	IT	Test completato
 	NL	Test voltooid
-#
-# The two letter codes are defined by ISO 639-1
-# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
-
+	NO	Testing fullført
+	PL	Test został ukończony
+	RU	Тесты завершены
 
 TEST_KEYPAD
 	CS	Klávesnice

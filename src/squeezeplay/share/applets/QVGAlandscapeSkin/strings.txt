@@ -3,11 +3,15 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 QVGALANDSCAPE_SKIN
+# SLT: QVGA refers to the "quarter VGA" resolution of the display
 	CS	Horizontální skin QVGA
-	DE	QVGA-Quer-Skin
+	DA	QVGA-tema, liggende
+	DE	QVGA-Querformat-Skin
 	EN	QVGA Landscape Skin
 	ES	Máscara horizontal QVGA
 	FR	Habillage paysage QVGA
+	NL	QVGA Landscape-skin
+	NO	QVGA liggende skall
 	PL	Karnacja pozioma QVGA
 	RU	Обложка: QVGA, альбомная ориентация
 

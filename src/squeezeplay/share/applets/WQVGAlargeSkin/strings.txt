@@ -3,11 +3,15 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 WQVGA_LARGE_SKIN
+# SLT: WQVGA refers to the "wide quarter VGA" resolution of the display
 	CS	Skin velkého písma WQVGA
+	DA	WQVGA-tema med store bogstaver
 	DE	WQVGA-Skin – Große Schrift
 	EN	WQVGA Large Print Skin
 	ES	Máscara con letra grande WQVGA
 	FR	Habillage à grands caractères WQVGA
+	NL	WQVGA Large Print-skin
+	NO	WQVGA-skall med stor skrift
 	PL	Karnacja WQVGA (duży format)
 	RU	Крупная обложка, WQVGA
 

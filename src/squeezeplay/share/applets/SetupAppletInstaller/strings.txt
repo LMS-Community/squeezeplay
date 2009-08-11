@@ -60,15 +60,15 @@ NONE_FOUND
 
 HELP
 	CS	Nápověda
-	DA	Vælg det underprogram som skal installeres, og vælg derefter Installer
+	DA	Hjælp
 	DE	Hilfe
 	EN	Choose applets to be installed and then select Install
 	ES	Ayuda
 	FI	Valitse asennettavat sovelmat ja sitten Asenna
 	FR	Aide
 	IT	Scegliere le applet da installare, quindi selezionare Installa
-	NL	Kies applets om te installeren, en selecteer dan 'Installeren'
-	NO	Velg tilleggsprogrammene som skal installeres, og velg så Installer
+	NL	Help
+	NO	Hjelp
 	PL	Pomoc
 	RU	Справка
 	SV	Välj de appletar du vill installera och välj sedan Installera

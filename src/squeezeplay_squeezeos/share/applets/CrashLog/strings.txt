@@ -4,10 +4,13 @@
 
 CRASH_TITLE
 	CS	Chyba systému
+	DA	Systemfejl
 	DE	Systemfehler
 	EN	System Error
 	ES	Error del sistema
 	FR	Erreur système
+	NL	Systeemfout
+	NO	Systemfeil
 	PL	Błąd systemu
 	RU	Системная ошибка
 
@@ -28,28 +31,37 @@ CRASH_TEXT
 
 CRASH_TEXT_QUESTION
 	CS	Omlouváme se, vaše zařízení muselo být restartováno z důvodu systémové chyby. Souhlasíte s tím, abychom v souvislosti s tímto problémem získali diagnostické informace, které nám mohou pomoci při nápravě?
+	DA	Enheden genstartede på grund af en systemfejl. Må vi indsamle diagnosticeringsoplysninger om problemet, så vi kan forsøge at rette det?
 	DE	Das Gerät musste aufgrund eines Systemfehlers neu gestartet werden. Dürfen Informationen zu diesem Fehler zwecks Fehlerbehebung gesammelt werden?
 	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
 	ES	El dispositivo ha tenido que reiniciarse debido a un error del sistema. ¿Nos permite recopilar información de diagnóstico sobre este problema para que podamos solucionarlo?
 	FR	Votre dispositif doit être redémarré suite à une erreur système. Pouvons-nous rassembler des informations de diagnostic qui nous permettront de résoudre ce problème?
+	NL	Sorry, je apparaat moet opnieuw opstarten vanwege een systeemfout. Is het goed als wij diagnostische gegevens verzamelen zodat we het probleem mogelijk kunnen verhelpen?
+	NO	Beklager, enheten måtte starte på nytt på grunn av en systemfeil. Er det greit hvis vi henter inn diagnostiseringsinformasjon om dette problemet, så vi kan fikse det?
 	PL	Niestety z powodu błędu systemu urządzenie musiało zostać ponownie uruchomione. Czy możemy pobrać informacje diagnostyczne, które pomogą nam w rozwiązaniu tego problemu?
 	RU	Из-за системной ошибки устройство пришлось перезапустить. Вы разрешаете нам получить диагностическую информацию, чтобы устранить эту ошибку?
 
 CRASH_YES_SEND
 	CS	Ano, odesílat vždy
+	DA	Ja, send altid
 	DE	Immer senden
 	EN	Yes, always send
 	ES	Sí, enviar siempre
 	FR	Oui, toujours envoyer
+	NL	Ja, altijd verzenden
+	NO	Ja, send alltid
 	PL	Tak, zawsze wysyłaj
 	RU	Да, всегда отправлять
 
 CRASH_NO_NEVER_SEND
 	CS	Ne, nikdy neodesílat
+	DA	Nej, send aldrig
 	DE	Nie senden
 	EN	No, never send
 	ES	No, no enviar nunca
 	FR	Non, ne jamais envoyer
+	NL	Nee, nooit verzenden
+	NO	Nei, send aldri
 	PL	Nie, nigdy nie wysyłaj
 	RU	Нет, никогда не отправлять
 

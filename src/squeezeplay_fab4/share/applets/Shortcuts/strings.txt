@@ -245,28 +245,37 @@ SHORTCUTS_OUTPUT_POWER
 
 SHORTCUTS_OUTPUT_SETTINGS
 	CS	Nastavení
+	DA	Indstillinger
 	DE	Einstellungen
 	EN	Settings
 	ES	Configuración
 	FR	Paramètres
+	NL	Instellingen
+	NO	Innstillinger
 	PL	Ustawienia
 	RU	Настройки
 
 SHORTCUTS_OUTPUT_MUTE
 	CS	Ztlumit
+	DA	Lyd fra
 	DE	Stumm
 	EN	Mute
 	ES	Silenciar
 	FR	Sourdine
+	NL	Dempen
+	NO	Stille
 	PL	Wycisz
 	RU	Без звука
 
 SHORTCUTS_OUTPUT_PAUSE
 	CS	Pozastavit
+	DA	Pause
 	DE	Pause
 	EN	Pause
 	ES	Pausa
 	FR	Pause
+	NL	Pauzeren
+	NO	Pause
 	PL	Wstrzymaj
 	RU	Пауза
 

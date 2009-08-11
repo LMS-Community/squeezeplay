@@ -12,7 +12,7 @@ SN_SIGNUP
 	FR	Inscription à mysqueezebox.com
 	IT	Iscrizione a mysqueezebox.com
 	NL	Aanmelding bij mysqueezebox.com
-	NO	Squeezenetwork-registrering
+	NO	mysqueezebox.com-registrering
 	PL	Rejestracja w usłudze mysqueezebox.com
 	RU	Подписка mysqueezebox.com
 	SV	Registrering för mysqueezebox.com
@@ -27,7 +27,7 @@ SLIMBROWSER_PLAYLIST
 	FR	Liste de lecture en cours
 	IT	El. di riproduz. corrente
 	NL	Huidige playlist
-	NO	Spilleliste
+	NO	Gjeldende spilleliste
 	PL	Aktualna lista odtwarzania
 	RU	Текущий плей-лист
 	SV	Aktuell spellista
@@ -229,37 +229,49 @@ SLIMBROWSER_VOLUME_MUTED
 
 SLIMBROWSER_ADD_NEXT_1
 	CS	Přehrát další
+	DA	Spil næste
 	DE	Als nächstes wiedergeben
 	EN	Play Next
 	ES	Reproducir a continuación
 	FR	Lire à la suite
+	NL	Volgende afspelen
+	NO	Spill av neste
 	PL	Odtwórz następny
 	RU	След. дорожка
 
 SLIMBROWSER_ADD_NEXT_2
 	CS	Přidat další
+	DA	Tilføj næste
 	DE	Als nächstes hinzufügen
 	EN	Add Next
 	ES	Agregar a continuación
 	FR	Ajouter le suivant
+	NL	Volgende toevoegen
+	NO	Legg til neste
 	PL	Dodaj następny element
 	RU	Добавить следующий
 
 SLIMBROWSER_PASSWORD_WRONG
 	CS	Neplatné uživatelské jméno/ heslo
+	DA	Brugernavnet/adgangskoden er ugyldig
 	DE	Benutzername/Kennwort ungültig
 	EN	Username/Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
 	FR	Nom d'utilisateur/mot de passe non valide
+	NL	Gebruikersnaam/wachtwoord ongeldig
+	NO	Brukernavn/passord er ugyldig
 	PL	Nieprawidłowa nazwa użytkownika/hasło
 	RU	Недействительные имя пользователя или пароль
 
 SLIMBROWSER_PASSWORD_WRONG_BODY
 	CS	Zadané uživatelské jméno a heslo není platné.
+	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	The username or password you entered is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
+	NO	Brukernavnet eller passordet du oppga, er ugyldig.
 	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
 	RU	Введены неверные пароль или имя пользователя.
 
@@ -287,9 +299,9 @@ SLIMBROWSER_CONNECTING_TO
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
 	IT	Connessione a
-	NL	Er wordt verbinding gemaakt met
+	NL	Verbinden met
 	NO	Kopler til
-	PL	Łączenie z
+	PL	Trwa łączenie z
 	RU	Подключение к
 	SV	Ansluter till
 

@@ -4,10 +4,13 @@
 
 APP_GUIDE
 	CS	Aplikační galerie
+	DA	Programgalleri
 	DE	Anwendungsgalerie
 	EN	App Gallery
 	ES	Galería de aplicaciones
 	FR	Diaporama d'applications
+	NL	Toep.gallerie
+	NO	Tjenesteliste
 	PL	Galeria aplikacji
 	RU	Галерея приложений
 

@@ -49,10 +49,13 @@ IMAGE_VIEWER_EMPTY_LIST
 
 IMAGE_VIEWER_LIST_NOT_READY
 	CS	Několik pokusů o čtení / vytvoření seznamu obrázků selhalo. Zkontrolujte prosím nastavení Prohlížeče obrázků.
+	DA	Forsøgene på at læse/oprette billedlisten mislykkedes. Kontroller indstillingerne for billedfremviseren.
 	DE	Mehrere Versuche, die Bilderliste zu öffnen / zu erstellen, sind fehlgeschlagen.  Überprüfen Sie die Image Viewer-Einstellungen.
 	EN	Several attempts at reading / creating the image list failed.  Please check the Image Viewer settings.
 	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes. Compruebe la configuración del visor de imágenes.
 	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué. Veuillez vérifier les réglages de l'afficheur d'images.
+	NL	Lezen/aanmaken van de beeldenlijst is meermaals mislukt. Controleer de instellingen voor de beeldviewer.
+	NO	Flere forsøk på å lese/opprette bildelisten, mislyktes. Kontroller innstillingene for bildevisning.
 	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.  Sprawdź ustawienia przeglądarki obrazów.
 	RU	Попытки чтения / создания списка изображений оказались неудачными. Проверьте настройки средства просмотра изображений.
 
@@ -585,8 +588,16 @@ IMAGE_VIEWER_TEXTINFO_NO
 # Strings for Card Source
 #
 IMAGE_VIEWER_CARD_PATH
-	DE	Legt den Suchpfad für Bilder fest. '*' kann als Platzhalter verwendet werden
+	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
+	DA	Definerer søgestien til billeder. Du kan bruge * som pladsholder
+	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden
 	EN	Defines the search path for images. You can use a '*' as placeholder
+	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
+	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
+	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
+	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
+	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
+	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
 
 IMAGE_VIEWER_CARD_PATH_HELP
 	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
@@ -620,10 +631,13 @@ IMAGE_VIEWER_CARD_ERROR
 
 IMAGE_VIEWER_CARD_NOT_DIRECTORY
 	CS	Zadaná cesta hledání není adresářem. Zadejte prosím platný název cesty adresáře.
+	DA	Den angivne søgesti henviser ikke til en mappe. Angiv en sti til en mappe.
 	DE	Beim angegebenen Suchpfad handelt es sich um kein Verzeichnis. Bitte geben Sie einen gültigen Verzeichnispfadnamen an.
 	EN	The defined search path is not a directory. Please provide a valid directory path name.
 	ES	La ruta de búsqueda definida no es un directorio. Proporcione un nombre de ruta de directorio válido.
 	FR	Le chemin d'accès défini n'est pas un répertoire. Veuillez indiquer un nom de chemin de répertoire valide.
+	NL	Het opgegeven zoekpad is geen directory. Geef een geldige naam voor het directorypad op.
+	NO	Den angitte søkebanen er ikke en katalog. Oppgi en gyldig bane til en katalog.
 	PL	Zdefiniowana ścieżka wyszukiwania nie jest katalogiem. Podaj prawidłową ścieżkę do katalogu.
 	RU	Указанный путь поиска не ведет к каталогу. Укажите действительный путь к каталогу.
 
@@ -631,8 +645,16 @@ IMAGE_VIEWER_CARD_NOT_DIRECTORY
 # Strings for HTTP Source
 #
 IMAGE_VIEWER_HTTP_PATH
-	DE	Legt die URL fest, von welcher die Bilderliste geladen wird
+	CS	Definuje umístění seznamu obrázků
+	DA	Definerer hvor billedlisten er placeret
+	DE	Legt den Speicherort der Bildliste fest
 	EN	Defines the location of the image list
+	ES	Define la ubicación de la lista de imágenes
+	FR	Définit l'emplacement de la liste d'images
+	NL	Hiermee wordt de locatie van de afbeeldingenlijst gedefinieerd.
+	NO	Angir plasseringen av bildelisten
+	PL	Definiuje lokalizację listy obrazów
+	RU	Определяет расположение списка изображений
 
 IMAGE_VIEWER_HTTP_PATH_HELP
 	CS	Definuje umístění seznamu obrázků
@@ -790,10 +812,13 @@ IMAGE_VIEWER_FLICKR_DISPLAY_RECENT
 
 IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED
 	CS	Označené obrázky
+	DA	Mærkede billeder
 	DE	Getaggte Bilder
 	EN	Tagged images
 	ES	Imágenes con etiquetas
 	FR	Images étiquetées
+	NL	Getagde afbeeldingen
+	NO	Bilder med etiketter
 	PL	Obrazy ze znacznikami
 	RU	Изображения с метками
 
@@ -859,19 +884,25 @@ IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION
 
 IMAGE_VIEWER_FLICKR_TAGS
 	CS	Klíčová slova označení
+	DA	Nøgleord til mærker
 	DE	Tag-Stickwörter
 	EN	Tag Keywords
 	ES	Palabras clave de etiquetas
 	FR	Mots clés d'étiquette
+	NL	Tagtrefwoorden
+	NO	Etikett-nøkkelord
 	PL	Słowa kluczowe znacznika
 	RU	Ключевые слова меток
 
 IMAGE_VIEWER_FLICKR_QUERY_TAGS
 	CS	Zadejte prosím klíčové slovo / klíčová slova pro vyhledávání v informacích označení. Můžete zadávaná označení oddělovat čárkou.
+	DA	Angiv de nøgleord der skal søges efter i mærkerne. Mærkerne kan adskilles vha. et komma.
 	DE	Geben Sie die Stichwörter ein, nach denen in den Tags gesucht werden soll. Tags können durch ein Komma getrennt werden.
 	EN	Please enter the keyword(s) to search for in the tag information. You can separated tags with a comma.
 	ES	Escriba las palabras clave que desea buscar en la información de etiquetas. Las etiquetas se separan con una coma.
 	FR	Veuillez saisir les mots clés à rechercher dans les informations d'étiquette. Vous pouvez séparer les étiquettes avec des virgules.
+	NL	Voer het trefwoord/de trefwoorden in waarnaar gezocht moet worden in de taginformatie. Gebruik een komma op tags van elkaar te scheiden.
+	NO	Angi nøkkelord for å søke etter etikettinformasjon. Du kan atskille etiketter med komma.
 	PL	W informacjach znacznika wprowadź słowa kluczowe do wyszukiwania. Znaczniki można rozdzielać przecinkami.
 	RU	Введите ключевые слова для поиска информации по меткам. Метки можно разделять запятой.
 

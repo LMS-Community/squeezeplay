@@ -3,26 +3,80 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DEMO
+	CS	Demonstrace v obchodě
+	DA	Butiksdemo
+	DE	Verfügbare Demo
 	EN	In-store Demo
+	ES	Demostración en tienda
+	FR	Démo intégrée
+	NL	Winkeldemo
+	NO	Butikkdemonstrasjon
+	PL	Prezentacja sklepu
+	RU	Внутренняя демонстрация
 
 DEMO_START_DEMO
+	CS	Spustit demonstraci
+	DA	Start demo
+	DE	Demo starten
 	EN	Start Demo
+	ES	Iniciar demostración
+	FR	Lancer la démo
+	NL	Demo starten
+	NO	Start demoversjon
+	PL	Uruchom prezentację
+	RU	Запустить демонстрацию
 
 DEMO_START_DEMO_WARNING
+	CS	VAROVÁNÍ: po spuštění demonstrace její vypnutí vyžaduje obnovení do továrního nastavení. Podržte tlačítko + při spuštění.
+	DA	ADVARSEL: Når demoen er startet, må den ikke afbrydes, da afspilleren i så fald skal nulstilles bagefter. Hold + (knappen) nede mens afspilleren startes.
+	DE	Warnung: Nachdem Sie die Demo gestartet haben, müssen Sie die Standardeinstellungen wiederherstellen, um die Demo zu deaktivieren. Halten Sie beim Einschalten die Taste '+' gedrückt.
 	EN	WARNING: after starting the demo, disabling the demo requires a factory reset. Hold the + button down while powering up.
+	ES	ADVERTENCIA: una vez iniciada la demostración, ésta sólo se podrá desactivar con la configuración de fábrica. Mantenga pulsado el botón + al encender el dispositivo.
+	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
+	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
+	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
+	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
+	RU	Предупреждение. После запуска демонстрации для ее отключения потребуется возврат заводских настроек. Нажмите и удерживайте кнопку + при включении питания.
 
 DEMO_ERROR
+	CS	Chyba
+	DA	Fejl
+	DE	Fehler
 	EN	Error
+	ES	Error
+	FR	Erreur
+	NL	Fout
+	NO	Feil
+	PL	Błąd
+	RU	Ошибка
 
 DEMO_WRONG_CODE
+	CS	Chybný kód
+	DA	Forkert kode
+	DE	Falscher Code
 	EN	Wrong code
+	ES	Código incorrecto
+	FR	Code erroné
+	NL	Verkeerde code
+	NO	Feil kode
+	PL	Nieprawidłowy kod
+	RU	Неверный код
 
 DEMO_ENTER_CODE
+	CS	Demonstrace v obchodě: Zadejte kód
+	DA	Butiksdemo: Indtast kode
+	DE	Verfügbare Demo: Code eingeben
 	EN	In-store Demo: Enter Code
+	ES	Demostración en tienda: introduzca el código
+	FR	Démo intégrée: saisissez le code
+	NL	Winkeldemo: code invoeren
+	NO	Butikkdemonstrasjon: angi kode
+	PL	Prezentacja sklepu: wprowadź kod
+	RU	Внутренняя демонстрация: введите код
 
 DEMO_VOLUME
 	CS	Hlasitost (%s)
-	DA	Lydstyrke (%s)
+	DA	Volumen (%s)
 	DE	Lautstärke (%s)
 	EN	Volume (%s)
 	ES	Volumen (%s)
@@ -51,155 +105,152 @@ DEMO_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIDE_01
-	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
-	FR	Squeezebox™ Radio\nRadio Internet Wi-Fi
-	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
-	SV	Squeezebox™ Radio\nWi-Fi Internet Radio
-	DA	Squeezebox™ Radio\nWi-Fi Internetradio
-	ES	Squeezebox™ Radio\nRadio por internet vía WiFi
-	IT	Squeezebox™ Radio\nWi-Fi Internet Radio
+	CS	Squeezebox rádio\nWi-Fi Internetové rádio
+	DA	Squeezebox Radio\nTrådløs internetradio
 	DE	Squeezebox™ Radio\nWLAN-Internetradio
-	NL	Squeezebox™ Radio\nWi-Fi Internet Radio
-	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
-	PL	Squeezebox™ Radio\ Radio Internetowe
-	RU	Squeezebox™ Radio\Wi-Fi Интернет-радио
-	CS	Squeezebox™ Radio\nWi-Fi Internet Radio
+	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
+	ES	Squeezebox™ Radio\nRadio por Internet vía WiFi
+	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
+	FR	Squeezebox™ Radio
+	IT	Squeezebox™ Radio\nWi-Fi Internet Radio
+	NL	Squeezebox™-radio\nWifi-internetradio
+	NO	Squeezeboxâ„¢ Radio\nWi-Fi Internet Radio
+	PL	Radio Squeezeboxâ„¢\nRadio internetowe Wi-Fi
+	RU	Радио Squeezebox\nWi-Fi интернет-радио
+	SV	Squeezebox™ Radio\nWi-Fi Internet Radio
 
 SLIDE_02
-	EN	Discover a world of digital music.
-	FR	Découvrez un monde de musique digitale. 
-	FI	Koe digitaalisen musiikin maailma.
-	SV	Upptäck en värld av digital musik.
-	DA	Opdag en verden af digital music.
-	ES	Descubra el mundo de la música digital.
-	IT	Scopri un mondo di musica digitale.
-	DE	Entdecken Sie eine Welt voll digitaler Musik. 
-	NL	Ontdek digital music.
-	NO	Opplev en verden av digital musikk.
-	PL	Odkryj świat cyfrowej muzyki.
-	RU	Открой для себя мир цифровой музыки.
 	CS	Objevte svět digitální hudby.
+	DA	Gå på opdagelse i den digitale musikverden.
+	DE	Entdecken Sie die Welt der digitalen Musik.
+	EN	Discover a world of digital music.
+	ES	Descubra un mundo de música digital.
+	FI	Koe digitaalisen musiikin maailma.
+	FR	Découvrez un univers de musique numérique.
+	IT	Scopri un mondo di musica digitale.
+	NL	Ontdek een wereld van digitale muziek.
+	NO	Oppdag en verden av digital musikk.
+	PL	Odkryj świat muzyki cyfrowej.
+	RU	Откройте мир цифровой музыки.
+	SV	Upptäck en värld av digital musik.
 
 SLIDE_03
+	CS	Z tisíců bezplatných internetových radiostanic...
+	DA	Fra tusindvis af gratis radiostationer på internetet...
+	DE	Von Tausenden konstenlosen Internetradiosendern...
 	EN	From thousands of free Internet radio stations…
-	FR	De milliers de stations de radio Internet gratuites…
+	ES	Desde miles de emisoras de radio por Internet gratuitas...
 	FI	Tuhansien ilmaisten Internet radiokanavien joukosta…
-	SV	Från tusentals gratis webradiokanaler…
-	DA	Fra tusinder af gratis internet radiostationer…
-	ES	Desde miles de emisoras de radio gratuitas por internet…
+	FR	De milliers de radios Internet gratuites...
 	IT	Migliaia di stazioni radio…
-	DE	Von Tausenden kostenlosen Internetradiosendern… 
-	NL	Duizenden gratis Internet Radio stations…
-	NO	Fra tusenvis av gratis radiostasjoner på internet…
-	PL	Od tysiąca darmowych, Internetowych stacji radiowych…
-	RU	Тысячи бесплатных радио-станций в Интернет…
-	CS	Více jak tisícovka internetových radio stanic…
+	NL	Van duizenden gratis internetradiostations...
+	NO	Fra tusenvis av gratis Internett-radiostasjonerâ€¦
+	PL	Od tysięcy bezpłatnych internetowych stacji radiowychâ€¦
+	RU	От тысяч бесплатных интернет-радиостанций
+	SV	Från tusentals gratis webradiokanaler…
 
 SLIDE_04
-	EN	…to your own personal music collection…
-	FR	…à votre collection de musique personnelle…
+	CS	... vaší osobní hudební sbírce...
+	DA	... til din egen personlige musiksamling
+	DE	...zu Ihrer eigenen Musiksammlung...
+	EN	...to your own personal music collection...
+	ES	...hasta su colección de música personal...
 	FI	…omaan musiikkikokoelmaasi…
-	SV	…till din egen personliga musik…
-	DA	…til din egen personlige musiksamling…
-	ES	…hasta su propia colección personal de música…
+	FR	...à votre collection musicale personnelle...
 	IT	…La Tua Collezione di musica personale… 
-	DE	…über Ihre ganz persönliche Musiksammlung…
-	NL	…je eigen muziek verzameling…
-	NO	…til din egen personlige musikk kolleksjon…
-	PL	…do Twojej prywatnej kolekcji muzyki…
-	RU	…Тысячи бесплатных радио-станций в Интернет…
-	CS	…nebo vaše vlastní hudební kolekce digitální hudby…
+	NL	...naar je persoonlijke muziekcollectie...
+	NO	...til din personlige musikksamling ...
+	PL	...do swojej kolekcji muzyki...
+	RU	до вашей личной музыкальной коллекции
+	SV	…till din egen personliga musik…
 
 SLIDE_05
-	EN	…to the hottest online music services.
-	FR	…au meilleurs services de musique en ligne.  
+	CS	... nejzajímavějším hudebním službám online.
+	DA	... til de bedste musiktjenester på nettet.
+	DE	...zu den angesagtesten Online-Musikdiensten.
+	EN	...to the hottest online music services.
+	ES	...o los mejores servicios de música en línea.
 	FI	…suosituimpiin online musiikkipalveluihin…
-	SV	…till de hetaste online musiktjänsterna.
-	DA	…til de bedste online musiktjenester.
-	ES	…e incluso los servicios de música online más actuales.
+	FR	...aux meilleurs services de musique en ligne.
 	IT	…I servizi online piu in voga.
-	DE	…bis hin zu den heißesten Online-Musik-Diensten.
-	NL	…de beste online muziek services.
-	NO	…til de mest spennende online musikk tjenester.
-	PL	…do najlepszych Internetowych usług muzycznych.
-	RU	…с использованием передовых музыкальных онлайн-сервисов.
-	CS	…společně s nabídkou nejlepších hudebních serverů.
-                
+	NL	...naar de beste onlinemuziekservices.
+	NO	...til de beste musikktjenestene på nett.
+	PL	...do najnowszych usług muzycznych w trybie online.
+	RU	до самых горячих сетевых музыкальных служб.
+	SV	...till de hetaste online musiktjänsterna.
+
 SLIDE_06
+	CS	V podstatě neomezená hudební sbírka.
+	DA	En næsten uendelig musiksamling.
+	DE	Nahezu grenzenlose Musikauswahl.
 	EN	A virtually unlimited music collection.
-	FR	Une collection de musique virtuellement illimitée.
+	ES	Una colección de música prácticamente ilimitada.
 	FI	Käytännössä rajoittamaton musiikkikokoelma.
-	SV	En nästan obegränsad musiksamling.
-	DA	En nærmest ubegrænset musiksamling.
-	ES	Una colección de música virtualmente ilimitada.
+	FR	Une collection musicale presque illimitée.
 	IT	Una collezione di musica quasi illimitata.
-	DE	Eine nahezu unbegrenzte Musiksammlung.
-	NL	Muziek zonder grenzen.
-	NO	En nesten ubegrenset tillgang til musikk.
-	PL	Nieskończona kolekcja muzyki.
-	RU	Виртуальная, бесконечная музыкальная коллекция.
-	CS	Téměř neomezená nabídka kolekce digitální hudby.
+	NL	Een vrijwel grenzeloze muziekcollectie.
+	NO	En nesten ubegrenset musikksamling.
+	PL	Prawie nieograniczona kolekcja muzyki.
+	RU	Практически неограниченная музыкальная коллекция.
+	SV	En nästan obegränsad musiksamling.
 
 SLIDE_07
+	CS	Přehrát veškerou vaší hudbu. I tu ze zařízení iPod™.
+	DA	Du kan spille alle dine numre, selv dem på din iPod.
+	DE	Spielen Sie Ihre ganze Musik ab. Sogar die Musik von Ihrem iPod™.
 	EN	Play all your music. Even from your iPod™.
-	FR	Jouez toute votre musique. Même depuis votre iPod™.
-	FI	Soita kaikkea musiikkiasi. Jopa iPodiltasi.
-	SV	Spela all din musik. Även från din iPod™.
-	DA	Afspil alt dit music. Selv fra din iPod™.
 	ES	Toda su música a su alcance. Incluso la de su iPod™.
+	FI	Soita kaikkea musiikkiasi. Jopa iPodiltasi.
+	FR	Jouez toute votre musique. Même depuis votre iPod™.
 	IT	Ascolta tutta la tua musica. Persino dal tuo iPod™.
-	DE	Hören Sie all Ihre Musik. Auch die von Ihrem iPod™.
-	NL	Draai al je muziek, ook van je iPod™.
-	NO	Spill all din musikk. Også fra din iPod™.
-	PL	Odtwarzaj całą swoją muzykę. Nawet z Twojego iPoda™.
-	RU	Слушай любимую музыку. Даже с iPod™.
-	CS	Přehdávejte svou hudbu i z vašeho iPod přehrávače.
-
+	NL	Speel al je muziek af. Zelfs van je iPod™.
+	NO	Spill av all musikken du har, selv på iPod™.
+	PL	Posłuchaj swojej kolekcji muzyki. Także z odtwarzacza iPod™.
+	RU	Слушайте любую музыку. Даже c iPod.
+	SV	Spela all din musik. Även från din iPod™.
 
 SLIDE_08
+	CS	Internetové rádio. Poslouchejte v libovolné místnosti.
+	DA	Internetradio. Du kan lytte i ethvert værelse.
+	DE	Hören Sie Internetradio – in jedem Raum.
 	EN	Internet Radio. Listen in any room.
-	FR	Radio Internet. Écoutez ou vous voulez. 
+	ES	Radio por Internet. Escúchela desde cualquier parte de la casa.
 	FI	Internet radio. Kuuntele missä tahansa huoneessa.
-	SV	Internet Radio. Lyssna i vilket rum som helst.
-	DA	Lyt til internetradio i ethvert rum.
-	ES	Radio por internet. Escuche su música en cualquier rincón de la casa.
+	FR	Radio Internet. Ecoutez-la où que vous vous trouviez dans la maison.
 	IT	Radio Internet, ascolta ovunque in casa.
-	DE	Internetradio. Hören Sie es in jedem Raum.
-	NL	Internet Radio, overal.
-	NO	Internett Radio. Lytt i alle rom.
-	PL	Radio Internetowe w każdym pokoju.
-	RU	Интернет-радио. Слушай в любой комнате.
-	CS	Internetová rádia. Poslouchejte kdekoliv.
+	NL	Internetradio. Luister in elke kamer.
+	NO	Internettradio. Lytt i alle rom.
+	PL	Radio internetowe, którego możesz słuchać w dowolnym pomieszczeniu.
+	RU	Интернет-радио. Слушайте в любой комнате.
+	SV	Internet Radio. Lyssna i vilket rum som helst.
 
 SLIDE_09
+	CS	Malé balení. Výrazný zvuk.
+	DA	En lille pakke med en stor lyd.
+	DE	Kleines Format. Voller Sound.
 	EN	Small package. Big Sound.
-	FR	Design compact, son puissant.
+	ES	Gran sonido en un producto de tamaño reducido.
 	FI	Pieni koko. Iso soundi.
-	SV	Litet paket. Stort ljud.
-	DA	Lille pakke. Stor lyd.
-	ES	Un pequeño reproductor. Un gran sonido.
+	FR	Petit dispositif. Son colossal.
 	IT	Piccole dimensioni. Grande suono.
-	DE	Kleines Gehäuse. Großer Sound.  
-	NL	Compact en een fantastisch geluid.
-	NO	Liten i størrelse. Kraftig lyd.
-	PL	Kompaktowe rozmiary. Ponadprzeciętna jakość dźwięku.
-	RU	Небольшие габариты. Превосходный звук.
-	CS	Malé rozměry. Velkolepý zvuk.
+	NL	Klein pakketje. Groots geluid.
+	NO	Liten innpakning. Stor lyd.
+	PL	Niewielkie rozmiary, potężny dźwięk.
+	RU	Компактная форма. Объемный звук.
+	SV	Litet paket. Stort ljud.
 
 SLIDE_10
-	EN	\n
-	FR	\n
-	FI	\n
-	SV	\n
+	CS	\n
 	DA	\n
-	ES	\n
-	IT	\n
 	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
 	NL	\n
 	NO	\n
 	PL	\n
 	RU	\n
-	CS	\n
-
-
+	SV	\n
 

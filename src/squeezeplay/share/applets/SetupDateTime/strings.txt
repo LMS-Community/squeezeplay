@@ -71,6 +71,7 @@ DATETIME_SHORTDATEFORMAT
 	FR	Date au format court
 	IT	Formato data breve
 	NL	Korte datumnotatie
+	NO	Kort datoformat
 	PL	Format krótkiej daty
 	RU	Краткий формат даты
 	SV	Kort datumformat

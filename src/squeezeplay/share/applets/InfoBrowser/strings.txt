@@ -40,7 +40,7 @@ INFOBROWSER_NOINFO_SN
 	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte mysqueezebox.com et ajoutez des flux d'informations.
 	IT	Nessun feed di informazioni trovato. Accedere all'account mysqueezebox.com e aggiungere i feed di informazioni.
 	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op mysqueezebox.com en voeg informatiekanalen toe.
-	NO	Fant ingen informasjonsfeeder. Logg på SqueezeNetwork-kontoen og legg til informasjonsfeeder.
+	NO	Fant ingen informasjonsfeeder. Logg på mysqueezebox.com-kontoen og legg til informasjonsfeeder.
 	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto mysqueezebox.com i dodaj kanały informacji.
 	RU	Каналы информации не найдены. Войдите в учетную запись mysqueezebox.com и добавьте каналы информации.
 	SV	Inga informationsflöden hittades. Logga in på mysqueezebox.com-kontot och lägg till informationsflöden.
@@ -55,7 +55,7 @@ INFOBROWSER_NOINFO_SC
 	FR	Aucun flux d'informations n'a été trouvé. Utilisez l'interface Web Squeezebox Server pour ajouter des flux d'informations sous Extras/Navigateur info.
 	IT	Nessun feed di informazioni trovato. Utilizzare l'interfaccia Web di Squeezebox Server per aggiungere i feed di informazioni in Extra/Browser informazioni.
 	NL	Geen informatiekanalen gevonden. Gebruik de webinterface van Squeezebox Server om informatiekanalen onder 'Extra's/Infobrowser' toe te voegen.
-	NO	Fant ingen informasjonsfeeder. Bruk SqueezeCenter-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
+	NO	Fant ingen informasjonsfeeder. Bruk Squeezebox Server-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
 	PL	Nie znaleziono żadnych kanałów informacji. Użyj interfejsu internetowego programu Squeezebox Server, aby dodać kanały informacji na ekranie Dodatki/Przeglądarka informacji.
 	RU	Не найдены каналы информации. Используйте веб-интерфейс Squeezebox Server, чтобы добавить каналы информации в группе "Дополнения/Информационный браузер".
 	SV	Inga informationsflöden hittades. Använd Squeezebox Servers webbgränssnitt för att lägga till informationsflöden under Extrafunktioner/Infoläsaren.
