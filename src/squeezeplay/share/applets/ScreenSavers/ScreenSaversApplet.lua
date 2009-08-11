@@ -428,7 +428,6 @@ end
 
 --service method
 function deactivateScreensaver(self)
-	log:error("here")
 
 	-- close all screensaver windows
 	for i,w in ipairs(self.active) do
