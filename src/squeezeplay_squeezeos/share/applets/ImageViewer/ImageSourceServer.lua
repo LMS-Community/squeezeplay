@@ -100,6 +100,7 @@ function imgFilesSink(self)
 
 		elseif chunk then
 			if log:isDebug() then
+				log:debug("imgFilesSink:")
 				debug.dump(chunk, 5)
 			end
 			if chunk and chunk.data and chunk.data.data then
@@ -108,11 +109,6 @@ function imgFilesSink(self)
 				self.lstReady = true
 
 				log:debug("Image list response count: ", #self.imgFiles)
-				if log:isDebug() then
-					debug.dump(chunk.data, 4)
-
-				end
-
 			end
 		end
 	end
@@ -126,9 +122,11 @@ function nextImage(self)
 	end
 
 	self.currentImageIndex = self.currentImageIndex + 1
-	local imageData = self.imgFiles[self.currentImageIndex]
-
-	self:requestImage(imageData, true)
+	if self.currentImageIndex <= #self.imgFiles then
+		local imageData = self.imgFiles[self.currentImageIndex]
+		self:requestImage(imageData, true)
+	end
+	--else might exceed if connection is down, if so don't try to reload another pic, just keep retrying until success
 
 	if self.currentImageIndex == #self.imgFiles then
 		--queue up next list
