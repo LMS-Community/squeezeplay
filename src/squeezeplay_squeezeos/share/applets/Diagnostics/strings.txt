@@ -30,6 +30,7 @@ NOT_CONNECTED
 	SV	Ej ansluten
 
 PORT_FAIL
+# SLT: please keep these messages as short as possible
 	CS	Nemohu připojit
 	DA	Der kan ikke etableres forbindelse
 	DE	Verbindung kann nicht hergestellt werden
@@ -90,6 +91,7 @@ PING_OK
 	SV	OK
 
 PING_FAIL
+# SLT: please keep these messages as short as possible
 	CS	Nemohu zazvonit
 	DA	Ping-kommando mislykkedes
 	DE	Ping-Fehler
@@ -135,6 +137,7 @@ ETH_HALF_DUPLEX
 	SV	%s Mbps (HD)
 
 WLAN_SNR
+# SLT: please keep these messages as short as possible
 	CS	%s SNR
 	DA	%s signal/støjforhold:
 	DE	%s-SNR
@@ -270,6 +273,7 @@ SUBNET_MASK
 	SV	IP-delnät:
 
 GATEWAY
+# SLT: please keep these messages as short as possible, max. like EN
 	CS	IP brána:
 	DA	Gatewayens IP-adresse:
 	DE	IP-Gateway:
