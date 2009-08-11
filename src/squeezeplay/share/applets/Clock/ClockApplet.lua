@@ -913,7 +913,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 	-- dot matrix for landscape QVGA
 	elseif skinName == 'QVGAlandscapeSkin' then
 
-		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/bb_wallpaper_clock_dotmatrix.png")
+		local dotMatrixBackground = Tile:loadImage(self.imgpath .. "Clocks/Dot_Matrix/wallpaper_clock_dotmatrix.png")
 
 		local _dotMatrixDigit = function(self, digit)
 			local fileName = "Clocks/Dot_Matrix/dotmatrix_clock_" .. tostring(digit) .. ".png"
