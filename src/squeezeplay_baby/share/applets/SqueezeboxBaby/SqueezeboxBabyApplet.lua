@@ -401,6 +401,9 @@ function setDate(self, date)
 	-- set system date
 	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
 
+	-- set RTC to system time
+	os.execute("hwclock -w")
+
 	iconbar:update()
 end
 
