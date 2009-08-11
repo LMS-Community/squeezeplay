@@ -714,9 +714,8 @@ static int stream_writeL(lua_State *L) {
 	 */
 
 	stream = lua_touserdata(L, 1);
-	header = luaL_checkstring(L, 3);
+	header = lua_tolstring(L, 3, &len);
 
-	len = strlen(header);
 	while (len > 0) {
 		n = send(stream->fd, header, len, 0);
 
@@ -743,6 +742,61 @@ static int stream_writeL(lua_State *L) {
 
 	lua_pushboolean(L, TRUE);
 	return 1;
+}
+
+
+/* feed data from a lua string into the streambuf fifo */
+static int stream_feedfromL(lua_State *L) {
+	struct stream *stream;
+	u8_t *data;
+	size_t len, n;
+
+	/*
+	 * 1: Stream (self)
+	 * 2: string to enqueue to streambuf
+	 */
+
+	stream = lua_touserdata(L, 1);
+	data = (u8_t*)lua_tolstring(L, 2, &len);
+
+	n = streambuf_get_freebytes();
+
+	if (n > len) {
+		n = len;
+	}
+
+	streambuf_feed(data, n);
+
+	lua_pushinteger(L, n);
+	return 1;
+}
+
+
+/* read data from the stream socket into a lua string */
+static int stream_readtoL(lua_State *L) {
+	struct stream *stream;
+	char buf[4094];
+	int n;
+	/*
+	 * 1: Stream (self)
+	 */
+
+	stream = lua_touserdata(L, 1);
+
+	n = recv(stream->fd, buf, sizeof(buf), 0);	
+
+	if (n > 0) {
+		lua_pushlstring(L, buf, n);
+		return 1;
+	} else if (n == -1 && errno == EAGAIN) {
+		lua_pushnil(L);
+		return 1;
+	} else {
+		CLOSESOCKET(stream->fd);
+		lua_pushnil(L);
+		lua_pushstring(L, strerror(SOCKETERROR));
+		return 2;
+	}
 }
 
 
@@ -787,6 +841,8 @@ static const struct luaL_Reg stream_m[] = {
 	{ "getfd", stream_getfdL },
 	{ "read", stream_readL },
 	{ "write", stream_writeL },
+	{ "feedFromLua", stream_feedfromL },
+	{ "readToLua", stream_readtoL },
 	{ NULL, NULL }
 };
 
