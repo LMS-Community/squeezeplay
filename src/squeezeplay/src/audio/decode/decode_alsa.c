@@ -170,7 +170,7 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	while (1) {
 		fifo_wait_timeout(&decode_audio->fifo, 500);
 
-		if (!decode_audio->running) {
+		if (decode_audio->running) {
 			break;
 		}
 
