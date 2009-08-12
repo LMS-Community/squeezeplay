@@ -672,7 +672,7 @@ static void *audio_thread_execute(void *data) {
 				goto thread_error;
 			}
 
-			if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
+			if (state->capture_device && (decode_audio->state & DECODE_STATE_LOOPBACK)) {
 				if ((err = pcm_open(state, SND_PCM_STREAM_CAPTURE)) < 0) {
 					LOG_ERROR("Capture open failed: %s", snd_strerror(err));
 					goto thread_error;
@@ -989,6 +989,12 @@ int main(int argv, char **argc)
 
 	/* set real-time properties */
 	decode_realtime_process(&state);
+
+	/* wake parent */
+	decode_audio_lock();
+	decode_audio->running = true;
+	fifo_signal(&decode_audio->fifo);
+	decode_audio_unlock();
 
 	/* start thread */
 	audio_thread_execute(&state);

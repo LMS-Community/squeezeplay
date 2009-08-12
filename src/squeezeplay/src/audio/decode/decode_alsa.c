@@ -163,6 +163,27 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 		_exit(-1);
 	}
 
+	/* wait for backend process to start */
+	decode_audio_lock();
+	decode_audio->running = false;
+
+	while (1) {
+		fifo_wait_timeout(&decode_audio->fifo, 500);
+
+		if (!decode_audio->running) {
+			break;
+		}
+
+		if (waitpid(pid, NULL, WNOHANG) == pid) {
+			decode_audio_unlock();
+
+			LOG_ERROR(log_audio_output, "%s failed to start", cmd[0]);
+			return -1;
+		}
+
+	}
+	decode_audio_unlock();
+
 	return pid;
 }
 

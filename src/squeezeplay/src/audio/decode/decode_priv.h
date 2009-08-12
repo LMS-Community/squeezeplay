@@ -115,6 +115,7 @@ struct decode_audio {
 	struct fifo fifo;
 
 	/* playback state */
+	bool_t running;
 	u32_t state;
 	s32_t lgain, rgain;
 	u32_t set_sample_rate;
