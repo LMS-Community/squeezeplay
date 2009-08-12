@@ -208,7 +208,7 @@ function init(self)
 	end)
 
 	-- open audio device
-	local isHeadphone = bsp:getMixer("Headphone Switch")
+	local isHeadphone = (bsp:getMixer("Headphone Switch") > 0)
 	if isHeadphone then
 		-- set endpoint before the device is opened
 		bsp:setMixer("Endpoint", "Headphone")

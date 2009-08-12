@@ -69,6 +69,8 @@ local CHECK_BATTERY_LOW      = true
 function init(self)
 	local uuid, mac
 
+	local settings = self:getSettings()
+
 	-- read device uuid
 	local f = io.popen("/usr/sbin/fw_printenv")
 	if f then
