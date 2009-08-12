@@ -40,6 +40,7 @@ function registerApplet(meta)
 
 	meta:registerService("registerRemoteScreensaver")
 	meta:registerService("unregisterRemoteScreensaver")
+	meta:registerService("openRemoteScreensaver")
 end
 
 

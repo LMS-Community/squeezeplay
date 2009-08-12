@@ -389,6 +389,8 @@ local function _menuSink(self, isCurrentServer, server)
 			if isCurrentServer and item.screensavers then
 				for _, serverData in ipairs(item.screensavers) do
 					serverData.id = table.concat(serverData.cmd, " ")
+					serverData.playerId = _player:getId()
+					serverData.server = _server
 					self:_registerRemoteScreensaver(serverData)
 				end
 			end

@@ -628,7 +628,7 @@ end
 
 -- _performJSONAction
 -- performs the JSON action...
-local function _performJSONAction(jsonAction, from, qty, step, sink)
+local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
 
 	local cmdArray = jsonAction["cmd"]
@@ -695,6 +695,18 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 
 	if step then
 		step.jsonAction = request
+	end
+
+	if itemType == "slideshow" then
+		table.insert( request, 'slideshow:1')
+		
+		local serverData = {}
+		serverData.id = table.concat(request, " ")
+		serverData.playerId = playerid
+		serverData.cmd = request
+		serverData.server = _server
+		appletManager:callService("openRemoteScreensaver", true, serverData)
+		return
 	end
 
 	-- send the command
@@ -1594,6 +1606,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
 			or _safeDeref(chunk, 'base', 'actions', actionName, 'window', 'isContextMenu')
 
+		local itemType = _safeDeref(item, 'actions', actionName, 'params', 'type')
+
 		-- is there a nextWindow on the action
 		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow') 
 	
@@ -1717,6 +1731,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_refreshOrigin()
 				elseif nextWindow == 'refresh' then
 					_refreshMe()
+				elseif itemType == "slideshow" then
+					from, qty = 0, 200
+					
+					skipNewWindowPush = true
+
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' then
@@ -1744,7 +1763,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					if not skipNewWindowPush then
 						_pushToNewWindow(step)
 					end
-					_performJSONAction(jsonAction, from, qty, step, sink)
+					_performJSONAction(jsonAction, from, qty, step, sink, itemType)
 				else
 					-- if there's not jsonAction, sink is a nextWindow function, so just call it
 					sink()

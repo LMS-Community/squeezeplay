@@ -43,6 +43,7 @@ local Player             = require("jive.slim.Player")
 local Framework		= require("jive.ui.Framework")
 
 local jnt = jnt
+local json                   = json 
 
 local log 		= require("jive.utils.log").logger("applet.ImageViewer")
 local require = require
@@ -70,23 +71,16 @@ end
 
 
 function readImageList(self)
+	local cmd = self.serverData.cmd
+	local playerId = self.serverData.playerId
+	local server = self.serverData.server
+	log:debug("readImageList: server:", server, " id: ", self.serverData.id, " playerId: ", playerId)
 
-	local player = Player:getCurrentPlayer()
-	local server
-	if player then
-		server = player:getSlimServer()
-	end
-
-	if server then
-		local cmd = self.serverData.cmd
-		log:debug("readImageList: server:", server, " id: ", self.serverData.id)
-
-		server:request(
-			imgFilesSink(self),
-			player.id,
-			cmd
-		)
-	end
+	server:request(
+		imgFilesSink(self),
+		playerId,
+		cmd
+	)
 end
 
 function getImage(self)
@@ -104,7 +98,7 @@ function imgFilesSink(self)
 				debug.dump(chunk, 5)
 			end
 			if chunk and chunk.data and chunk.data.data then
-				self.imgFiles = chunk.data.data
+				self.imgFiles = _cleanseNilListData(chunk.data.data)
 				self.currentImageIndex = 0
 				self.lstReady = true
 
@@ -113,6 +107,18 @@ function imgFilesSink(self)
 		end
 	end
 
+end
+
+function _cleanseNilListData(inputList)
+	local outputList = {}
+
+	for _,data in ipairs(inputList) do
+		if data.image ~= json.null then
+			table.insert(outputList, data)
+		end
+	end
+
+	return outputList
 end
 
 function nextImage(self)
