@@ -199,6 +199,11 @@ function _updateScrollbar(self)
 end
 
 
+function setHideScrollbar(self, setting)
+	self.hideScrollbar = setting
+end
+
+
 function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 
 	if dragAmountY ~= 0 then

@@ -332,6 +332,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		ITEM_ICON_ALIGN   = 'right',
 		LANDSCAPE_LINE_ITEM_HEIGHT = 45,
+		TIME_LINE_ITEM_HEIGHT = 36,
 		PORTRAIT_LINE_ITEM_HEIGHT  = 43,
 	}
 
@@ -792,6 +793,38 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
+	-- time input window
+	s.input_time = _uses(s.window)
+	s.input_time.hour = _uses(s.menu, {
+		w = 75,
+		h = screenHeight - 60,
+		itemHeight = c.TIME_LINE_ITEM_HEIGHT,
+		position = LAYOUT_WEST,
+		padding = 0,
+		border = { 50, 36, 0, 24 },
+		item = {
+			order = { 'text' },
+			text = {
+				align = 'right',
+				padding = { 4, 0, 4, 0 },
+			},
+		},
+		selected = {
+			item = {
+				order = { 'text' },
+				text = {
+					align = 'right',
+					padding = { 4, 0, 4, 0 },
+				},
+			},
+		},
+	})
+	s.input_time.minute = _uses(s.input_time.hour, {
+		border = { 125, 36, 0, 24 },
+	})
+	s.input_time.ampm = _uses(s.input_time.hour, {
+		border = { 200, 36, 0, 24 },
+	})
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = _uses(s.menu, {

@@ -161,6 +161,57 @@ end
 -- REFERENCE WINDOW STYLES ARE BELOW
 
 
+--[[
+Window:   "input_time"
+Menu1:     "hour"
+Menu2:     "minute"
+Menu3:     "ampm"
+--]]
+
+function input_time(self, item)
+	local data = _itemData(item)
+
+	local window = Window("input_time", _itemName(item))
+	_windowActions(self, item, window)
+
+	local hours = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' }
+
+	local hourMenu = SimpleMenu("hour")
+	for i, hour in ipairs(hours) do
+		hourMenu:addItem({
+			text = hour,
+		})
+	end
+	local minuteMenu = SimpleMenu('minute')
+	local minute = 0
+	while minute < 60 do
+		minuteMenu:addItem({
+			text = tostring(minute),
+		})
+		minute = minute + 1
+	end
+	local ampmMenu = SimpleMenu('ampm')
+	local ampm = { 'am', 'pm' }
+	for i, t in ipairs(ampm) do
+		ampmMenu:addItem({
+			text = t,
+		})
+	end
+	
+	hourMenu:setHideScrollbar(true)
+	minuteMenu:setHideScrollbar(true)
+	ampmMenu:setHideScrollbar(true)
+
+	window:addWidget(minuteMenu)
+	window:addWidget(hourMenu)
+	window:addWidget(ampmMenu)
+	window:focusWidget(hourMenu)
+
+	self:tieWindow(window)
+	return window
+end
+
+
 
 --[[
 Window:   "help_list"
@@ -276,7 +327,8 @@ function setup_input(self, item)
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
 	window:addWidget(group)
-	window:addWidget(Keyboard("keyboard", data[1], textinput))
+	--window:addWidget(Keyboard("keyboard", data[1], textinput))
+	window:addWidget(Keyboard("keyboard", 'foo', textinput))
 	window:focusWidget(group)
 
 	return window
@@ -854,6 +906,7 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "input_time", "Time Input", input_time, },
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "context_menu", "Context Menu", window_context_menu, },
 	{ "text_list", "Text List", setup_text_list, },
@@ -888,6 +941,9 @@ windows = {
 
 
 testData = {
+	input_time = {
+		{ },
+	},
 	context_menu = {
 		{ "Play", "Add", "Create MusicIP Mix", "Add to Favorites", "Biography", "Album Review" },
 	},
