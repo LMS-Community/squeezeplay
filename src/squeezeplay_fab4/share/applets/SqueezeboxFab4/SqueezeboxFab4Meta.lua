@@ -1,4 +1,6 @@
 
+local pairs = pairs
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
@@ -23,7 +25,26 @@ end
 
 function defaultSettings(meta)
 	return { 
+		alsaPlaybackDevice = "default",
+		alsaPlaybackBufferTime = 30000,
+		alsaPlaybackPeriodCount = 2,
+		alsaEffectsDevice = "plughw:2,0",
+		alsaEffectsBufferTime = 30000,
+		alsaEffectsPeriodCount = 2,
 	}
+end
+
+
+function upgradeSettings(meta, settings)
+	-- fill in any blanks
+	local defaults = defaultSettings(meta)
+	for k, v in pairs(defaults) do
+		if not settings[k] then
+			settings[k] = v
+		end
+	end
+
+	return settings
 end
 
 
@@ -47,14 +68,6 @@ function registerApplet(meta)
 
 	-- audio playback defaults
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
-
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 30000)
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
-	appletManager:addDefaultSetting("Playback", "alsaEffectsDevice", "plughw:2,0")
-	appletManager:addDefaultSetting("Playback", "alsaEffectsBufferTime", 30000)
-	appletManager:addDefaultSetting("Playback", "alsaEffectsPeriodCount", 2)
-
 
 	jiveMain:setDefaultSkin("WQVGAsmallSkin")
 

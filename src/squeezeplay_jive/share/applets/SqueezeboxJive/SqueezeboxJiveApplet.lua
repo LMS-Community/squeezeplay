@@ -13,6 +13,7 @@ local Networking             = require("jive.net.Networking")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
+local Decode                 = require("squeezeplay.decode")
 local System                 = require("jive.System")
 
 local Sample                 = require("squeezeplay.sample")
@@ -234,6 +235,9 @@ function init(self)
 
 	-- set initial state
 	self:update()
+
+	-- open audio device
+	Decode:open(settings)
 
 	-- find out when we connect to player
 	jnt:subscribe(self)

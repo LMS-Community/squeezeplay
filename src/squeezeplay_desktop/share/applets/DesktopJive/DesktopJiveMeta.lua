@@ -5,6 +5,7 @@ local math          = require("math")
 local string        = require("string")
 local table         = require("jive.utils.table")
 
+local Decode        = require("squeezeplay.decode")
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Framework     = require("jive.ui.Framework")
@@ -96,7 +97,8 @@ function registerApplet(meta)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
-
+	-- open audio device
+	Decode:open(settings)
 end
 
 

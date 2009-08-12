@@ -157,7 +157,7 @@ static int decode_sample_obj_play(lua_State *L) {
 	 */
 
 	snd = *(struct jive_sample **)lua_touserdata(L, -1);
-	if (!snd->enabled) {
+	if (!snd->enabled || !decode_audio) {
 		return 0;
 	}
 

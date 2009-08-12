@@ -11,6 +11,7 @@ local string                 = require("string")
 local math                   = require("math")
 
 local Applet                 = require("jive.Applet")
+local Decode                 = require("squeezeplay.decode")
 local System                 = require("jive.System")
 
 local Networking             = require("jive.net.Networking")
@@ -116,6 +117,9 @@ function init(self)
 	end)
 	
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
+
+	-- open audio device
+	Decode:open(settings)
 
 	-- find out when we connect to player
 	jnt:subscribe(self)

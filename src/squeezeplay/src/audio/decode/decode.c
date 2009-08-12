@@ -922,6 +922,9 @@ static int decode_init_audio(lua_State *L) {
 		lua_call(L, 3, 0);
 	}
 
+	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
+	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
+
 	return 0;
 }
 
@@ -965,8 +968,6 @@ static int decode_audio_open(lua_State *L) {
 	decode_audio->f = f;
 
 	/* start decoder thread */
-	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
-	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
 	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
 
 	lua_pushboolean(L, 1);
