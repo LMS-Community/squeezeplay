@@ -205,7 +205,7 @@ WLAN_ENCRYPTION
 	ES	Cifrado inalámbrico:
 	FI	Langaton salaus:
 	FR	Chiffrement sans fil:
-	IT	Crittografia senza fili:
+	IT	Crittografia rete senza fili:
 	NL	Draadloze codering:
 	NO	Trådløs kryptering:
 	PL	Szyfrowanie w sieci bezprzewodowej:
@@ -220,7 +220,7 @@ WLAN_STRENGTH
 	ES	Señal inalámbrica:
 	FI	Langaton signaali:
 	FR	Signal sans fil:
-	IT	Segnale senza fili:
+	IT	Segnale rete senza fili:
 	NL	Draadloos signaal:
 	NO	Trådløst signal:
 	PL	Sygnał sieci bezprzewodowej:

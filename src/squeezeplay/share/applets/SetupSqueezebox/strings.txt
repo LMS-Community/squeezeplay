@@ -103,6 +103,7 @@ SQUEEZEBOX_FINDING_SOURCES
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
+# SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
@@ -110,7 +111,7 @@ SQUEEZEBOX_CONNECTING_TO
 	ES	Conectando a
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
-	IT	Connessione a
+	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z

@@ -10,6 +10,7 @@ QVGALANDSCAPE_SKIN
 	EN	QVGA Landscape Skin
 	ES	Máscara horizontal QVGA
 	FR	Habillage paysage QVGA
+	IT	Skin QVGA orizzontale
 	NL	QVGA Landscape-skin
 	NO	QVGA liggende skall
 	PL	Karnacja pozioma QVGA

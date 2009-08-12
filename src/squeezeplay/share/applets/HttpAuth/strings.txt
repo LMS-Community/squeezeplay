@@ -55,7 +55,7 @@ HTTP_AUTH_HELP
 	ES	Ayuda
 	FI	Ohje
 	FR	Aide
-	IT	Guida
+	IT	Guida in linea
 	NL	Help
 	NO	Hjelp
 	PL	Pomoc

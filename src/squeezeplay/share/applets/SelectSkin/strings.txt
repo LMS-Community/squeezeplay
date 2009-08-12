@@ -10,7 +10,7 @@ SELECT_SKIN
 	ES	Seleccionar máscara
 	FI	Valitse olemus
 	FR	Sélectionner un habillage
-	IT	Seleziona interfaccia
+	IT	Seleziona skin
 	NL	Skin selecteren
 	NO	Velg skall
 	PL	Wybierz karnację

@@ -24,6 +24,7 @@ CHOOOSE_DIFFERENT_NETWORK
 	EN	Choose Different Network
 	ES	Elija otra red
 	FR	Sélectionner un réseau différent
+	IT	Scegli una rete diversa
 	NL	Ander netwerk kiezen
 	NO	Velg et annet nettverk
 	PL	Wybierz inną sieć
@@ -51,6 +52,7 @@ SWITCH_SERVER_TEXT
 	EN	You have made a selection that will connect to a different library, which will stop playback.
 	ES	Ha realizado una selección que hará que el reproductor se conecte a otra biblioteca, lo cual detendrá la reproducción.
 	FR	Cette sélection entraîne la connexion à une autre collection. La lecture en cours s'arrêtera, etc.
+	IT	In seguito alla selezione effettuata verrà connessa una libreria differente e la riproduzione verrà interrotta.
 	NL	Je hebt een selectie gemaakt die een verbinding gaat maken met een andere collectie, waardoor het afspelen zal worden gestopt.
 	NO	Valget ditt fører til at spilleren kopler til et annet bibliotek, og avspillingen stanses.
 	PL	Dokonano wyboru, który spowoduje nawiązanie połączenia z inną biblioteką. Odtwarzanie zostanie zatrzymane.
@@ -123,6 +125,7 @@ REMOTE_LIBRARIES
 	EN	Remote Libraries
 	ES	Bibliotecas remotas
 	FR	Bibliothèques distantes
+	IT	Librerie remote
 	NL	Externe collecties
 	NO	Eksterne bibliotek
 	PL	Biblioteki zdalne
@@ -135,6 +138,7 @@ REMOVE_LIBRARY
 	EN	Remove Library
 	ES	Quitar biblioteca
 	FR	Supprimer la bibliothèque
+	IT	Rimuovi libreria
 	NL	Collectie verwijderen
 	NO	Fjern bibliotek
 	PL	Usuń bibliotekę
@@ -147,6 +151,7 @@ ADD_NEW_LIBRARY
 	EN	Add New Library
 	ES	Agregar biblioteca nueva
 	FR	Ajouter une nouvelle bibliothèque
+	IT	Aggiungi nuova libreria
 	NL	Nieuwe collectie toevoegen
 	NO	Legg til nytt bibliotek
 	PL	Dodaj nową bibliotekę
@@ -159,6 +164,7 @@ LIBRARY_ADDED
 	EN	Library Added
 	ES	Biblioteca agregada
 	FR	Bibliothèque ajoutée
+	IT	Libreria aggiunta
 	NL	Collectie toegevoegd
 	NO	Bibliotek lagt til
 	PL	Dodano bibliotekę
@@ -171,6 +177,7 @@ CONNECT_TO_THIS_LIBRARY
 	EN	Connect to this library
 	ES	Establecer conexión con esta biblioteca
 	FR	Se connecter à cette bibliothèque
+	IT	Connettiti a questa libreria
 	NL	Verbinding maken met deze collectie
 	NO	Kople til dette biblioteket
 	PL	Połącz z tą biblioteką
@@ -199,7 +206,7 @@ SLIMSERVER_CONNECTING_TO
 	ES	Conectando a
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
-	IT	Connessione a
+	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z %s
@@ -213,6 +220,7 @@ SQUEEZEBOX_PROBLEM
 	EN	Can't Connect to Library
 	ES	Problema de conexión
 	FR	Problème de connexion
+	IT	Problema di connessione
 	NL	Probleem bij verbinden
 	NO	Klarer ikke å kople til
 	PL	Problem podczas nawiązywania połączenia
@@ -255,6 +263,7 @@ CHOOSE_OTHER_LIBRARY
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FR	Changer de collection
+	IT	Cambia libreria
 	NL	Bibliotheek veranderen
 	NO	Bytt bibliotek
 	PL	Przełącz bibliotekę
@@ -267,6 +276,7 @@ SQUEEZEBOX_PROBLEM_HELP_GENERIC
 	EN	We couldn't connect to %s.  If this problem persists, please check Squeezebox Server to make sure it is running properly, and that you have a reliable network connection.
 	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que Squeezebox Server se está ejecutando correctamente y de que la conexión de red es fiable.
 	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le Squeezebox Server est correctement exécuté et que la connexion au réseau est fiable.
+	IT	Non è stato possibile connettersi a %s. Se il problema persiste, verificare che Squeezebox Server sia in esecuzione correttamente e che la connessione sia affidabile.
 	NL	Er kan geen verbinding worden gemaakt met %s. Blijft dit probleem zich voordoen, controleer dan of de Squeezebox Server goed functioneert en of je een betrouwbare netwerkverbinding hebt.
 	NO	Kan ikke kople til %s. Hvis dette problemet vedvarer, må du kontrollere at Squeezebox Server kjører som den skal, og at du har en stabil nettverkstilkopling.
 	PL	Nie można nawiązać połączenia z %s. Jeśli problem będzie się powtarzał, sprawdź działanie programu Squeezebox Server i połączenia sieciowego.
@@ -279,6 +289,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Squeezebox Server is currently running.
 	ES	No se pudo conectar Squeezebox a la red inalámbrica. Compruebe que se encuentre dentro del radio de la red inalámbrica.
 	FR	Impossible de connecter la Squeezebox à un réseau sans fil. Vérifiez qu'elle est à portée du réseau.
+	IT	Impossibile connettere Squeezebox alla rete senza fili. Verificare che si trovi entro la portata della rete senza fili.
 	NL	Je Squeezebox kan niet met je draadloze netwerk worden verbonden. Zorg dat het apparaat zich binnen het bereik van je draadloze netwerk bevindt.
 	NO	Kunne ikke kople Squeezebox til det trådløse nettverket. Forsikre deg om at den er innenfor rekkevidden til det trådløse nettverket ditt.
 	PL	Nie można podłączyć urządzenia Squeezebox do sieci bezprzewodowej. Upewnij się, czy znajduje się ono w zasięgu sieci bezprzewodowej.

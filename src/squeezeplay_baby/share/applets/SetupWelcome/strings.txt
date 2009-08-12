@@ -70,7 +70,7 @@ DONE_HELP
 	ES	Ya puede utilizar Squeezebox para acceder a toda su música!
 	FI	Nyt pääset käyttämään Squeezeboxilla kaikkia musiikkitiedostojasi!
 	FR	Vous pouvez maintenant utiliser votre Squeezebox pour accéder à toute votre musique!
-	IT	Ora è possibile utilizzare Squeezebox per accedere alla musica.
+	IT	Ora è possibile utilizzare Squeezebox per accedere alla musica!
 	NL	Met je Squeezebox kun je nu naar je al je muziek luisteren!
 	NO	Nå kan du få tilgang til all musikken din via Squeezebox!
 	PL	Teraz możesz używać urządzenia Squeezebox, aby uzyskać dostęp do całej swojej muzyki!
@@ -78,14 +78,15 @@ DONE_HELP
 	SV	Nu har du tillgång till all din musik via Squeezebox!
 
 CONNECTING_TO_SN
+# SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung zu
+	DE	Verbindung wird hergestellt zu
 	EN	Connecting to
 	ES	Conectando a
 	FI	Muodostetaan yhteyttä kohteeseen
 	FR	Connexion à
-	IT	Connessione a
+	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z

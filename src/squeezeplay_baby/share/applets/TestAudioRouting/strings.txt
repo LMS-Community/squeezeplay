@@ -9,6 +9,7 @@ TEST_AUDIO_ROUTING
 	EN	Audio Routing
 	ES	Enrutamiento de audio
 	FR	Routage audio
+	IT	Instradamento audio
 	NL	Audioroutering
 	NO	Lydstyring
 	PL	Przekazywanie dźwięku
@@ -21,6 +22,7 @@ ENABLE_LINE_IN_PASSTHROUGH
 	EN	Line In Passthrough
 	ES	Paso a través de entrada de línea
 	FR	Liaison d'entrée
+	IT	Passthrough ingresso
 	NL	Doorvoer lijningang
 	NO	Gjennomgang for lydinngang
 	PL	Przekazywanie przez wejście liniowe
@@ -33,6 +35,7 @@ LINE_IN_SENSE
 	EN	Line In Detected
 	ES	Entrada de línea detectada
 	FR	Entrée détectée
+	IT	Ingresso rilevato
 	NL	Lijningang gedetecteerd
 	NO	Fant lydinnsignal
 	PL	Wykryto wejście liniowe
@@ -45,6 +48,7 @@ HEADPHONE_SENSE
 	EN	Headphone Detected
 	ES	Auriculares detectados
 	FR	Casque détecté
+	IT	Cuffia rilevata
 	NL	Hoofdtelefoon gedetecteerd
 	NO	Fant hodetelefoner
 	PL	Wykryto słuchawki
@@ -57,6 +61,7 @@ HEADPHONE_STATE_WITH_MIC
 	EN	Yes - with mic
 	ES	Sí, con micrófono
 	FR	Oui, avec micro
+	IT	Sì - Con microfono
 	NL	Ja - met mic
 	NO	Ja, med mikrofon
 	PL	Tak – z mikrofonem
@@ -69,6 +74,7 @@ AUDIO_ROUTING_YES
 	EN	Yes
 	ES	Sí
 	FR	Oui
+	IT	Sì
 	NL	Ja
 	NO	Ja
 	PL	Tak
@@ -81,6 +87,7 @@ AUDIO_ROUTING_NO
 	EN	No
 	ES	No
 	FR	Non
+	IT	No
 	NL	Nee
 	NO	Nei
 	PL	Nie

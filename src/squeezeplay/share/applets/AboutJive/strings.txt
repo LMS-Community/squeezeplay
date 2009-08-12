@@ -11,7 +11,7 @@ ABOUT_JIVE
 	ES	Acerca de
 	FI	Tietoja
 	FR	A propos de
-	IT	Info
+	IT	Informazioni su
 	NL	Info
 	NO	Om
 	PL	Informacje

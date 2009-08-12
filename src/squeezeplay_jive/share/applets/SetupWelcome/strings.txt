@@ -120,7 +120,7 @@ DONE
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!
-	SV	Klart!
+	SV	Sedan är det bara att sätta igång!
 
 DONE_HELP
 	CS	Nyní můžete používat svůj ovladač Squeezebox pro přístup k veškeré hudbě. Pokračujte stiskem prostředního tlačítka.

@@ -70,7 +70,7 @@ SLIMBROWSER_SEARCH_HELP
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
 	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
 	FR	Utiliser la molette pour choisir une lettre, puis appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
-	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
+	IT	Utilizzare la rotellina per cambiare le lettere, quindi premere il pulsante centrale per selezionarle. Premere nuovamente il pulsante centrale per avviare la ricerca.
 	NL	Gebruik het scrollwiel om naar een andere letter te gaan. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
 	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
@@ -234,6 +234,7 @@ SLIMBROWSER_ADD_NEXT_1
 	EN	Play Next
 	ES	Reproducir a continuación
 	FR	Lire à la suite
+	IT	Brano successivo
 	NL	Volgende afspelen
 	NO	Spill av neste
 	PL	Odtwórz następny
@@ -246,6 +247,7 @@ SLIMBROWSER_ADD_NEXT_2
 	EN	Add Next
 	ES	Agregar a continuación
 	FR	Ajouter le suivant
+	IT	Aggiungi prossimo
 	NL	Volgende toevoegen
 	NO	Legg til neste
 	PL	Dodaj następny element
@@ -258,6 +260,7 @@ SLIMBROWSER_PASSWORD_WRONG
 	EN	Username/Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
 	FR	Nom d'utilisateur/mot de passe non valide
+	IT	Nome utente/password non validi
 	NL	Gebruikersnaam/wachtwoord ongeldig
 	NO	Brukernavn/passord er ugyldig
 	PL	Nieprawidłowa nazwa użytkownika/hasło
@@ -270,6 +273,7 @@ SLIMBROWSER_PASSWORD_WRONG_BODY
 	EN	The username or password you entered is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	IT	Il nome utente o la password immessi non sono validi.
 	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
 	NO	Brukernavnet eller passordet du oppga, er ugyldig.
 	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
@@ -298,7 +302,7 @@ SLIMBROWSER_CONNECTING_TO
 	ES	Conectando a
 	FI	Yhdistetään kohteeseen
 	FR	Connexion à
-	IT	Connessione a
+	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z

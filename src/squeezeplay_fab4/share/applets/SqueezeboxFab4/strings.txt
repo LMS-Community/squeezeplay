@@ -55,6 +55,7 @@ SCREEN_INPUT_CONTROL_TITLE
 	EN	Input Control
 	ES	Control de entrada
 	FR	Contrôle des entrées
+	IT	Controllo input
 	NL	Regeling van ingang
 	NO	Innsignalkontroll
 	PL	Sterowanie wejściem
@@ -67,6 +68,7 @@ SCREEN_INPUT_CONTROL_BOTH
 	EN	Both (Touch and Remote)
 	ES	Ambos (táctil y mando a distancia)
 	FR	Toucher et Télécommande
+	IT	Entrambi (tocco e telecomando)
 	NL	Beide (Aanraken en afstandsbediening)
 	NO	Begge (berøring og fjernkontroll)
 	PL	Obydwa (urządzenie Touch i pilot zdalnego sterowania)
@@ -79,6 +81,7 @@ SCREEN_INPUT_CONTROL_IR
 	EN	Remote
 	ES	Mando a distancia
 	FR	Télécommande
+	IT	Telecomando
 	NL	Afstandsbediening
 	NO	Fjernkontroll
 	PL	Pilot zdalnego sterowania
@@ -91,6 +94,7 @@ SCREEN_INPUT_CONTROL_TOUCH
 	EN	Touch
 	ES	Táctil
 	FR	Toucher
+	IT	Tocco
 	NL	Aanraken
 	NO	Berøring
 	PL	Urządzenie Touch

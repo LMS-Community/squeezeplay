@@ -24,6 +24,7 @@ INTERNET_RADIO
 	EN	Internet Radio
 	ES	Radio por Internet
 	FR	Radio Internet
+	IT	Radio Internet
 	NL	Internetradio
 	NO	Internett-radio
 	PL	Radio internetowe
@@ -52,7 +53,7 @@ GLOBAL_HELP
 	ES	Ayuda
 	FI	Ohje
 	FR	Aide
-	IT	Guida
+	IT	Guida in linea
 	NL	Help
 	NO	Hjelp
 	PL	Pomoc
@@ -144,6 +145,7 @@ AUDIO_SETTINGS
 	EN	Audio Settings
 	ES	Configuración de audio
 	FR	Paramètres audio
+	IT	Impostazioni audio
 	NL	Geluidsinstellingen
 	NO	Lydinnstillinger
 	PL	Ustawienia audio
@@ -156,6 +158,7 @@ BETA_FEATURES
 	EN	Beta Features
 	ES	Características beta
 	FR	Fonctions bêta
+	IT	Funzionalità Beta
 	NL	Bètafuncties
 	NO	Betafunksjoner
 	PL	Funkcje w wersji beta
@@ -214,7 +217,7 @@ DEBUG_LOG
 	ES	Registrando
 	FI	Kirjaus
 	FR	Journalisation
-	IT	Registrazione in corso
+	IT	Registrazione
 	NL	Loggen
 	NO	Loggføring
 	PL	Rejestrowanie
@@ -363,6 +366,7 @@ SHORTCUTS_RESET
 	EN	Reset to Defaults
 	ES	Restablecer a valores predeterminados
 	FR	Restauration des valeurs par défaut
+	IT	Impostazioni predefinite
 	NL	Standaardwaarden
 	NO	Tilbakestill til standardinnstillinger
 	PL	Resetuj do wartości domyślnych

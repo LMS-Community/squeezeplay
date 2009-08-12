@@ -9,6 +9,7 @@ CRASH_TITLE
 	EN	System Error
 	ES	Error del sistema
 	FR	Erreur système
+	IT	Errore di sistema
 	NL	Systeemfout
 	NO	Systemfeil
 	PL	Błąd systemu
@@ -36,6 +37,7 @@ CRASH_TEXT_QUESTION
 	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
 	ES	El dispositivo ha tenido que reiniciarse debido a un error del sistema. ¿Nos permite recopilar información de diagnóstico sobre este problema para que podamos solucionarlo?
 	FR	Votre dispositif doit être redémarré suite à une erreur système. Pouvons-nous rassembler des informations de diagnostic qui nous permettront de résoudre ce problème?
+	IT	Spiacenti, è stato necessario riavviare il dispositivo a causa di un errore di sistema. Si acconsente a raccogliere dati su questo problema a fini diagnostici per contribuire a risolverlo?
 	NL	Sorry, je apparaat moet opnieuw opstarten vanwege een systeemfout. Is het goed als wij diagnostische gegevens verzamelen zodat we het probleem mogelijk kunnen verhelpen?
 	NO	Beklager, enheten måtte starte på nytt på grunn av en systemfeil. Er det greit hvis vi henter inn diagnostiseringsinformasjon om dette problemet, så vi kan fikse det?
 	PL	Niestety z powodu błędu systemu urządzenie musiało zostać ponownie uruchomione. Czy możemy pobrać informacje diagnostyczne, które pomogą nam w rozwiązaniu tego problemu?
@@ -48,6 +50,7 @@ CRASH_YES_SEND
 	EN	Yes, always send
 	ES	Sí, enviar siempre
 	FR	Oui, toujours envoyer
+	IT	Sì, invia sempre
 	NL	Ja, altijd verzenden
 	NO	Ja, send alltid
 	PL	Tak, zawsze wysyłaj
@@ -60,6 +63,7 @@ CRASH_NO_NEVER_SEND
 	EN	No, never send
 	ES	No, no enviar nunca
 	FR	Non, ne jamais envoyer
+	IT	No, non inviare mai
 	NL	Nee, nooit verzenden
 	NO	Nei, send aldri
 	PL	Nie, nigdy nie wysyłaj

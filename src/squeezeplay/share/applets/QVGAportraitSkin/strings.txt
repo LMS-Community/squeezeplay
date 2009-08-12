@@ -10,6 +10,7 @@ QVGAPORTRAIT_SKIN
 	EN	QVGA Portrait Skin
 	ES	Máscara vertical QVGA
 	FR	Habillage portrait QVGA
+	IT	Skin QVGA verticale
 	NL	QVGA Portrait-skin
 	NO	QVGA stående skall
 	PL	Karnacja pionowa QVGA

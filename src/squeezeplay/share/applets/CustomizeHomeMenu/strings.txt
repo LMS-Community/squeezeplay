@@ -9,6 +9,7 @@ APP_GUIDE
 	EN	App Gallery
 	ES	Galería de aplicaciones
 	FR	Diaporama d'applications
+	IT	Galleria applicazioni
 	NL	Toep.gallerie
 	NO	Tjenesteliste
 	PL	Galeria aplikacji

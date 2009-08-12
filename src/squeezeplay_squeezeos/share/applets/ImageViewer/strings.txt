@@ -54,6 +54,7 @@ IMAGE_VIEWER_LIST_NOT_READY
 	EN	Several attempts at reading / creating the image list failed.  Please check the Image Viewer settings.
 	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes. Compruebe la configuración del visor de imágenes.
 	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué. Veuillez vérifier les réglages de l'afficheur d'images.
+	IT	Numerosi tentativi di leggere/creare l'immagine non sono riusciti. Verificare le impostazioni del visualizzatore immagini.
 	NL	Lezen/aanmaken van de beeldenlijst is meermaals mislukt. Controleer de instellingen voor de beeldviewer.
 	NO	Flere forsøk på å lese/opprette bildelisten, mislyktes. Kontroller innstillingene for bildevisning.
 	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.  Sprawdź ustawienia przeglądarki obrazów.
@@ -594,6 +595,7 @@ IMAGE_VIEWER_CARD_PATH
 	EN	Defines the search path for images. You can use a '*' as placeholder
 	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
 	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
+	IT	Specifica il percorso di ricerca delle immagini. È possibile utilizzare un asterisco (*) come segnaposto.
 	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
 	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
 	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
@@ -636,6 +638,7 @@ IMAGE_VIEWER_CARD_NOT_DIRECTORY
 	EN	The defined search path is not a directory. Please provide a valid directory path name.
 	ES	La ruta de búsqueda definida no es un directorio. Proporcione un nombre de ruta de directorio válido.
 	FR	Le chemin d'accès défini n'est pas un répertoire. Veuillez indiquer un nom de chemin de répertoire valide.
+	IT	Il percorso di ricerca indicato non è una directory. Fornire un percorso di directory valido.
 	NL	Het opgegeven zoekpad is geen directory. Geef een geldige naam voor het directorypad op.
 	NO	Den angitte søkebanen er ikke en katalog. Oppgi en gyldig bane til en katalog.
 	PL	Zdefiniowana ścieżka wyszukiwania nie jest katalogiem. Podaj prawidłową ścieżkę do katalogu.
@@ -651,6 +654,7 @@ IMAGE_VIEWER_HTTP_PATH
 	EN	Defines the location of the image list
 	ES	Define la ubicación de la lista de imágenes
 	FR	Définit l'emplacement de la liste d'images
+	IT	Specifica la posizione dell'elenco di immagini
 	NL	Hiermee wordt de locatie van de afbeeldingenlijst gedefinieerd.
 	NO	Angir plasseringen av bildelisten
 	PL	Definiuje lokalizację listy obrazów
@@ -817,6 +821,7 @@ IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED
 	EN	Tagged images
 	ES	Imágenes con etiquetas
 	FR	Images étiquetées
+	IT	Immagini con tag
 	NL	Getagde afbeeldingen
 	NO	Bilder med etiketter
 	PL	Obrazy ze znacznikami
@@ -889,6 +894,7 @@ IMAGE_VIEWER_FLICKR_TAGS
 	EN	Tag Keywords
 	ES	Palabras clave de etiquetas
 	FR	Mots clés d'étiquette
+	IT	Parole chiave tag
 	NL	Tagtrefwoorden
 	NO	Etikett-nøkkelord
 	PL	Słowa kluczowe znacznika
@@ -901,6 +907,7 @@ IMAGE_VIEWER_FLICKR_QUERY_TAGS
 	EN	Please enter the keyword(s) to search for in the tag information. You can separated tags with a comma.
 	ES	Escriba las palabras clave que desea buscar en la información de etiquetas. Las etiquetas se separan con una coma.
 	FR	Veuillez saisir les mots clés à rechercher dans les informations d'étiquette. Vous pouvez séparer les étiquettes avec des virgules.
+	IT	Immettere la/le parola/e chiave da cercare nelle informazioni dei tag. È possibile separare i tag con una virgola.
 	NL	Voer het trefwoord/de trefwoorden in waarnaar gezocht moet worden in de taginformatie. Gebruik een komma op tags van elkaar te scheiden.
 	NO	Angi nøkkelord for å søke etter etikettinformasjon. Du kan atskille etiketter med komma.
 	PL	W informacjach znacznika wprowadź słowa kluczowe do wyszukiwania. Znaczniki można rozdzielać przecinkami.

@@ -250,6 +250,7 @@ SHORTCUTS_OUTPUT_SETTINGS
 	EN	Settings
 	ES	Configuración
 	FR	Paramètres
+	IT	Impostazioni
 	NL	Instellingen
 	NO	Innstillinger
 	PL	Ustawienia
@@ -262,6 +263,7 @@ SHORTCUTS_OUTPUT_MUTE
 	EN	Mute
 	ES	Silenciar
 	FR	Sourdine
+	IT	Disattiva audio
 	NL	Dempen
 	NO	Stille
 	PL	Wycisz
@@ -274,6 +276,7 @@ SHORTCUTS_OUTPUT_PAUSE
 	EN	Pause
 	ES	Pausa
 	FR	Pause
+	IT	Pausa
 	NL	Pauzeren
 	NO	Pause
 	PL	Wstrzymaj

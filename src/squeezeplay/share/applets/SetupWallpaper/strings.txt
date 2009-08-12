@@ -481,6 +481,7 @@ ENCORERED
 	EN	Encore Red
 	ES	Más rojo
 	FR	Bis rouge
+	IT	Encore Red
 	NL	Encore Red
 	NO	Dakapo, rødt
 	PL	Czerwony
@@ -493,6 +494,7 @@ BB_ENCORE_RED
 	EN	Encore Red
 	ES	Más rojo
 	FR	Bis rouge
+	IT	Encore Red
 	NL	Encore Red
 	NO	Dakapo, rødt
 	PL	Czerwony

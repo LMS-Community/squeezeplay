@@ -78,6 +78,7 @@ DONE_HELP
 	SV	Nu har du tillgång till all din musik via Squeezebox!
 
 CONNECTING_TO_SN
+# SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung zu
@@ -85,7 +86,7 @@ CONNECTING_TO_SN
 	ES	Conectando a
 	FI	Muodostetaan yhteyttä kohteeseen
 	FR	Connexion à
-	IT	Connessione a
+	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z

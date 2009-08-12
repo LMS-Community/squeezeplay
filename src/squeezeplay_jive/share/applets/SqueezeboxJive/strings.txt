@@ -237,7 +237,7 @@ BATTERY_LOW
 	ES	Carga de pila baja
 	FI	Vähäinen akun lataus
 	FR	Niveau faible des piles
-	IT	Livello batteria insufficiente
+	IT	Batteria quasi scarica
 	NL	Laag batterijvermogen
 	NO	Dårlig batteri
 	PL	Niski poziom naładowania baterii
@@ -252,7 +252,7 @@ BATTERY_LOW_2
 	ES	Necesita carga
 	FI	Lataa minut
 	FR	Veuillez la recharger
-	IT	Caricare batteria
+	IT	Ricaricare la batteria
 	NL	Laad mij op
 	NO	Lad meg opp
 	PL	Naładuj baterię
@@ -267,7 +267,7 @@ POWER_DOWN
 	ES	Apagar
 	FI	Sammuta
 	FR	Désactiver
-	IT	Disattivazione
+	IT	Spegni
 	NL	Uitzetten
 	NO	Slå av
 	PL	Wyłącz
@@ -312,7 +312,7 @@ GOODBYE
 	ES	Adiós
 	FI	Näkemiin
 	FR	Au revoir
-	IT	A presto
+	IT	Arrivederci
 	NL	Tot ziens
 	NO	Farvel
 	PL	Do widzenia
@@ -327,7 +327,7 @@ SLEEPING
 	ES	En reposo
 	FI	Unitilassa
 	FR	En veille
-	IT	Sospensione
+	IT	In attesa
 	NL	Inactief
 	NO	Hviler
 	PL	Uśpienie
@@ -432,7 +432,7 @@ WLAN_POWER_SAVE
 	ES	Ahorro de energía inalámbrica
 	FI	Langattoman verkon virransäästötila
 	FR	Mode veille sans fil
-	IT	Risparmio energia senza fili
+	IT	Risparmio energia rete senza fili
 	NL	Draadloze energiebesparing
 	NO	Trådløs strømsparing
 	PL	Oszczędzanie energii w trybie bezprzewodowym

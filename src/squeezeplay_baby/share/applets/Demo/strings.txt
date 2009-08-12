@@ -9,6 +9,7 @@ DEMO
 	EN	In-store Demo
 	ES	Demostración en tienda
 	FR	Démo intégrée
+	IT	Demo
 	NL	Winkeldemo
 	NO	Butikkdemonstrasjon
 	PL	Prezentacja sklepu
@@ -21,6 +22,7 @@ DEMO_START_DEMO
 	EN	Start Demo
 	ES	Iniciar demostración
 	FR	Lancer la démo
+	IT	Avvia demo
 	NL	Demo starten
 	NO	Start demoversjon
 	PL	Uruchom prezentację
@@ -33,6 +35,7 @@ DEMO_START_DEMO_WARNING
 	EN	WARNING: after starting the demo, disabling the demo requires a factory reset. Hold the + button down while powering up.
 	ES	ADVERTENCIA: una vez iniciada la demostración, ésta sólo se podrá desactivar con la configuración de fábrica. Mantenga pulsado el botón + al encender el dispositivo.
 	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
+	IT	ATTENZIONE: dopo avere avviato il demo, per disattivarlo è necessario effettuare una reimpostazione di fabbrica. Tenere premuto il pulsante + durante l'accensione.
 	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
 	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
 	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
@@ -45,6 +48,7 @@ DEMO_ERROR
 	EN	Error
 	ES	Error
 	FR	Erreur
+	IT	Errore
 	NL	Fout
 	NO	Feil
 	PL	Błąd
@@ -57,6 +61,7 @@ DEMO_WRONG_CODE
 	EN	Wrong code
 	ES	Código incorrecto
 	FR	Code erroné
+	IT	Codice errato
 	NL	Verkeerde code
 	NO	Feil kode
 	PL	Nieprawidłowy kod
@@ -69,6 +74,7 @@ DEMO_ENTER_CODE
 	EN	In-store Demo: Enter Code
 	ES	Demostración en tienda: introduzca el código
 	FR	Démo intégrée: saisissez le code
+	IT	Demo: immettere il codice
 	NL	Winkeldemo: code invoeren
 	NO	Butikkdemonstrasjon: angi kode
 	PL	Prezentacja sklepu: wprowadź kod
@@ -112,10 +118,10 @@ SLIDE_01
 	ES	Squeezebox™ Radio\nRadio por Internet vía WiFi
 	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
 	FR	Squeezebox™ Radio
-	IT	Squeezebox™ Radio\nWi-Fi Internet Radio
+	IT	Squeezebox™ Radio\nRadio Internet Wi-Fi
 	NL	Squeezebox™-radio\nWifi-internetradio
-	NO	Squeezeboxâ„¢ Radio\nWi-Fi Internet Radio
-	PL	Radio Squeezeboxâ„¢\nRadio internetowe Wi-Fi
+	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
+	PL	Radio Squeezebox™\nRadio internetowe Wi-Fi
 	RU	Радио Squeezebox\nWi-Fi интернет-радио
 	SV	Squeezebox™ Radio\nWi-Fi Internet Radio
 
@@ -142,10 +148,10 @@ SLIDE_03
 	ES	Desde miles de emisoras de radio por Internet gratuitas...
 	FI	Tuhansien ilmaisten Internet radiokanavien joukosta…
 	FR	De milliers de radios Internet gratuites...
-	IT	Migliaia di stazioni radio…
+	IT	Da migliaia di stazioni radio Internet gratuite...
 	NL	Van duizenden gratis internetradiostations...
-	NO	Fra tusenvis av gratis Internett-radiostasjonerâ€¦
-	PL	Od tysięcy bezpłatnych internetowych stacji radiowychâ€¦
+	NO	Fra tusenvis av gratis Internett-radiostasjoner...
+	PL	Od tysięcy bezpłatnych internetowych stacji radiowych...
 	RU	От тысяч бесплатных интернет-радиостанций
 	SV	Från tusentals gratis webradiokanaler…
 
@@ -155,14 +161,14 @@ SLIDE_04
 	DE	...zu Ihrer eigenen Musiksammlung...
 	EN	...to your own personal music collection...
 	ES	...hasta su colección de música personal...
-	FI	…omaan musiikkikokoelmaasi…
+	FI	...omaan musiikkikokoelmaasi...
 	FR	...à votre collection musicale personnelle...
-	IT	…La Tua Collezione di musica personale… 
+	IT	...alla propria raccolta di musica personale...
 	NL	...naar je persoonlijke muziekcollectie...
 	NO	...til din personlige musikksamling ...
 	PL	...do swojej kolekcji muzyki...
 	RU	до вашей личной музыкальной коллекции
-	SV	…till din egen personliga musik…
+	SV	...till din egen personliga musik...
 
 SLIDE_05
 	CS	... nejzajímavějším hudebním službám online.
@@ -170,9 +176,9 @@ SLIDE_05
 	DE	...zu den angesagtesten Online-Musikdiensten.
 	EN	...to the hottest online music services.
 	ES	...o los mejores servicios de música en línea.
-	FI	…suosituimpiin online musiikkipalveluihin…
+	FI	...suosituimpiin online musiikkipalveluihin.
 	FR	...aux meilleurs services de musique en ligne.
-	IT	…I servizi online piu in voga.
+	IT	...i servizi di musica online più richiesti.
 	NL	...naar de beste onlinemuziekservices.
 	NO	...til de beste musikktjenestene på nett.
 	PL	...do najnowszych usług muzycznych w trybie online.
@@ -187,7 +193,7 @@ SLIDE_06
 	ES	Una colección de música prácticamente ilimitada.
 	FI	Käytännössä rajoittamaton musiikkikokoelma.
 	FR	Une collection musicale presque illimitée.
-	IT	Una collezione di musica quasi illimitata.
+	IT	Una raccolta di musica praticamente illimitata.
 	NL	Een vrijwel grenzeloze muziekcollectie.
 	NO	En nesten ubegrenset musikksamling.
 	PL	Prawie nieograniczona kolekcja muzyki.
@@ -202,7 +208,7 @@ SLIDE_07
 	ES	Toda su música a su alcance. Incluso la de su iPod™.
 	FI	Soita kaikkea musiikkiasi. Jopa iPodiltasi.
 	FR	Jouez toute votre musique. Même depuis votre iPod™.
-	IT	Ascolta tutta la tua musica. Persino dal tuo iPod™.
+	IT	Riproduci tutta la musica, anche dell'iPod™.
 	NL	Speel al je muziek af. Zelfs van je iPod™.
 	NO	Spill av all musikken du har, selv på iPod™.
 	PL	Posłuchaj swojej kolekcji muzyki. Także z odtwarzacza iPod™.
@@ -217,7 +223,7 @@ SLIDE_08
 	ES	Radio por Internet. Escúchela desde cualquier parte de la casa.
 	FI	Internet radio. Kuuntele missä tahansa huoneessa.
 	FR	Radio Internet. Ecoutez-la où que vous vous trouviez dans la maison.
-	IT	Radio Internet, ascolta ovunque in casa.
+	IT	Radio Internet. Ascolta in ogni stanza.
 	NL	Internetradio. Luister in elke kamer.
 	NO	Internettradio. Lytt i alle rom.
 	PL	Radio internetowe, którego możesz słuchać w dowolnym pomieszczeniu.
@@ -232,7 +238,7 @@ SLIDE_09
 	ES	Gran sonido en un producto de tamaño reducido.
 	FI	Pieni koko. Iso soundi.
 	FR	Petit dispositif. Son colossal.
-	IT	Piccole dimensioni. Grande suono.
+	IT	Piccole dimensioni, grande suono.
 	NL	Klein pakketje. Groots geluid.
 	NO	Liten innpakning. Stor lyd.
 	PL	Niewielkie rozmiary, potężny dźwięk.

@@ -10,6 +10,7 @@ WQVGA_LARGE_SKIN
 	EN	WQVGA Large Print Skin
 	ES	Máscara con letra grande WQVGA
 	FR	Habillage à grands caractères WQVGA
+	IT	Skin WQVGA a caratteri grandi
 	NL	WQVGA Large Print-skin
 	NO	WQVGA-skall med stor skrift
 	PL	Karnacja WQVGA (duży format)
