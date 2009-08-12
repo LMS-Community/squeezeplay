@@ -12,6 +12,7 @@ local table                  = require("jive.utils.table")
 local math                   = require("math")
 
 local Applet                 = require("jive.Applet")
+local Decode                 = require("squeezeplay.decode")
 local System                 = require("jive.System")
 
 local Networking             = require("jive.net.Networking")
@@ -206,11 +207,19 @@ function init(self)
 		end
 	end)
 
-	--Use a pcall here since this will fail before the audio device is open. Is a temporary workaround until we sort out the timing, etc...
-	local _initHeadPhoneJack = function ()
-		self:_headphoneJack(bsp:getMixer("Headphone Switch"))
+	-- open audio device
+	local isHeadphone = bsp:getMixer("Headphone Switch")
+	if isHeadphone then
+		-- set endpoint before the device is opened
+		bsp:setMixer("Endpoint", "Headphone")
 	end
-	pcall(_initHeadPhoneJack)
+
+	Decode:open(settings)
+
+	if isHeadphone then
+		-- disable crossover after the device is opened
+		bsp:setMixer("Crossover", false)
+	end
 
 	-- find out when we connect to player
 	jnt:subscribe(self)

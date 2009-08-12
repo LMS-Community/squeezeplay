@@ -1,4 +1,6 @@
 
+local pairs = pairs
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
@@ -27,22 +29,28 @@ function defaultSettings(meta)
 		brightnessControl = "manual", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
 		dimmedTimeout = 30000,		-- 30 seconds
+
+		-- audio settings
+		alsaPlaybackDevice = "default",
+		alsaCaptureDevice = "dac",
+		alsaPlaybackBufferTime = 20000,
+		alsaPlaybackPeriodCount = 2,
 	}
 end
 
 
 function upgradeSettings(meta, settings)
+	-- fix broken settings
 	if not settings.brightness or settings.brightness > 40 then
 		settings.brightness = 40	-- max
 	end
-	if not settings.brightnessControl then
-		settings.brightnessControl = "manual"
-	end
-	if not settings.initTimeout then
-		settings.initTimeout = 60000	-- 60 seconds
-	end
-	if not settings.dimmedTimeout then
-		settings.dimmedTimeout = 30000	-- 30 seconds
+
+	-- fill in any blanks
+	local defaults = defaultSettings(meta)
+	for k, v in pairs(defaults) do
+		if not settings[k] then
+			settings[k] = v
+		end
 	end
 
 	return settings
@@ -69,11 +77,6 @@ function registerApplet(meta)
 
 	-- audio playback defaults
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
-
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackDevice", "default")
-	appletManager:addDefaultSetting("Playback", "alsaCaptureDevice", "dac")
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackBufferTime", 20000)
-	appletManager:addDefaultSetting("Playback", "alsaPlaybackPeriodCount", 2)
 
 	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 
