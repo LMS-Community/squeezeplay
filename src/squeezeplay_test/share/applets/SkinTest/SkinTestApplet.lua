@@ -37,6 +37,7 @@ local Slider              = require("jive.ui.Slider")
 local Surface             = require("jive.ui.Surface")
 local Textarea            = require("jive.ui.Textarea")
 local Textinput           = require("jive.ui.Textinput")
+local Timeinput           = require("jive.ui.Timeinput")
 local Window              = require("jive.ui.Window")
 local jiveMain            = jiveMain
 
@@ -174,83 +175,10 @@ function input_time(self, item)
 	self.window = Window("input_time", _itemName(item))
 	_windowActions(self, item, self.window)
 
-	local hours = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' }
-
-	self.hourMenu = SimpleMenu("hour")
-	for i, hour in ipairs(hours) do
-		self.hourMenu:addItem({
-			text = hour,
-		})
+	local submitCallback = function( hour, minute, ampm)
+		log:warn(hour, ':', minute, ' ', ampm)
 	end
-	self.minuteMenu = SimpleMenu('minuteUnselected')
-	local minute = 0
-	while minute < 60 do
-		local textString = tostring(minute)
-		if minute < 10 then
-			textString = '0' .. tostring(minute)
-		end
-		self.minuteMenu:addItem({
-			text = textString,
-		})
-		minute = minute + 1
-	end
-	self.ampmMenu = SimpleMenu('ampmUnselected')
-	local ampm = { 'am', 'pm' }
-	for i, t in ipairs(ampm) do
-		self.ampmMenu:addItem({
-			text = t,
-		})
-	end
-	
-	self.hourMenu:setHideScrollbar(true)
-	self.minuteMenu:setHideScrollbar(true)
-	self.ampmMenu:setHideScrollbar(true)
-
-	self.hourMenu:addActionListener('back', self, function() self.window:hide() end)
-	self.hourMenu:addActionListener('go', self, 
-		function() 
-			self.hourMenu:setStyle('hourUnselected')
-			self.minuteMenu:setStyle('minute')
-			self.hourMenu:_scrollList()
-			self.hourMenu:reLayout()
-			self.window:focusWidget(self.minuteMenu) 
-		end
-	)
-
-	self.minuteMenu:addActionListener('go', self, 
-		function() 
-			self.ampmMenu:setStyle('ampm')
-			self.minuteMenu:setStyle('minuteUnselected')
-			self.ampmMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
-			self.window:focusWidget(self.ampmMenu) 
-		end)
-	self.minuteMenu:addActionListener('back', self, 
-		function() 
-			self.hourMenu:setStyle('hour')
-			self.minuteMenu:setStyle('minuteUnselected')
-			self.hourMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
-			self.window:focusWidget(self.hourMenu) 
-		end)
-
-	self.ampmMenu:addActionListener('go', self, 
-		function() 
-			self.window:hide() 
-		end)
-	self.ampmMenu:addActionListener('back', self, 
-		function() 
-			self.ampmMenu:setStyle('ampmUnselected')
-			self.minuteMenu:setStyle('minute')
-			self.window:focusWidget(self.minuteMenu) 
-			self.ampmMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
-		end)
-
-	self.window:addWidget(self.minuteMenu)
-	self.window:addWidget(self.hourMenu)
-	self.window:addWidget(self.ampmMenu)
-	self.window:focusWidget(self.hourMenu)
+	local timeInput = Timeinput(self.window, submitCallback)
 
 	self:tieWindow(self.window)
 	return self.window
