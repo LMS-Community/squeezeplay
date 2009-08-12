@@ -9,12 +9,14 @@ WQVGA_SMALL_SKIN
 	DE	WQVGA-Skin – Kleine Schrift
 	EN	WQVGA Small Print Skin
 	ES	Máscara con letra pequeña WQVGA
+	FI	Pieni WQVGA-tulostuspinta
 	FR	Habillage à petits caractères WQVGA
 	IT	Skin WQVGA a caratteri piccoli
 	NL	WQVGA Small Print-skin
 	NO	WQVGA-skall med liten skrift
 	PL	Karnacja WQVGA (mały format)
 	RU	Мелкая обложка, WQVGA
+	SV	WQVGA-skal med liten text
 
 ENTER_SMALL
 	CS	hotovo

@@ -8,12 +8,14 @@ CRASH_TITLE
 	DE	Systemfehler
 	EN	System Error
 	ES	Error del sistema
+	FI	Järjestelmävirhe
 	FR	Erreur système
 	IT	Errore di sistema
 	NL	Systeemfout
 	NO	Systemfeil
 	PL	Błąd systemu
 	RU	Системная ошибка
+	SV	Systemfel
 
 CRASH_TEXT
 	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
@@ -36,12 +38,14 @@ CRASH_TEXT_QUESTION
 	DE	Das Gerät musste aufgrund eines Systemfehlers neu gestartet werden. Dürfen Informationen zu diesem Fehler zwecks Fehlerbehebung gesammelt werden?
 	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
 	ES	El dispositivo ha tenido que reiniciarse debido a un error del sistema. ¿Nos permite recopilar información de diagnóstico sobre este problema para que podamos solucionarlo?
+	FI	Laite on käynnistettävä uudelleen järjestelmävirheen vuoksi. Sallitko ongelmaa koskevien diagnostiikkatietojen keräämisen, jotta voimme ratkaista ongelman?
 	FR	Votre dispositif doit être redémarré suite à une erreur système. Pouvons-nous rassembler des informations de diagnostic qui nous permettront de résoudre ce problème?
 	IT	Spiacenti, è stato necessario riavviare il dispositivo a causa di un errore di sistema. Si acconsente a raccogliere dati su questo problema a fini diagnostici per contribuire a risolverlo?
 	NL	Sorry, je apparaat moet opnieuw opstarten vanwege een systeemfout. Is het goed als wij diagnostische gegevens verzamelen zodat we het probleem mogelijk kunnen verhelpen?
 	NO	Beklager, enheten måtte starte på nytt på grunn av en systemfeil. Er det greit hvis vi henter inn diagnostiseringsinformasjon om dette problemet, så vi kan fikse det?
 	PL	Niestety z powodu błędu systemu urządzenie musiało zostać ponownie uruchomione. Czy możemy pobrać informacje diagnostyczne, które pomogą nam w rozwiązaniu tego problemu?
 	RU	Из-за системной ошибки устройство пришлось перезапустить. Вы разрешаете нам получить диагностическую информацию, чтобы устранить эту ошибку?
+	SV	Enheten fick tyvärr startas om på grund av ett systemfel. Går det bra om vi samlar in diagnostisk information om det här problemet som kan hjälpa oss att åtgärda det?
 
 CRASH_YES_SEND
 	CS	Ano, odesílat vždy
@@ -49,12 +53,14 @@ CRASH_YES_SEND
 	DE	Immer senden
 	EN	Yes, always send
 	ES	Sí, enviar siempre
+	FI	Kyllä, lähetä aina
 	FR	Oui, toujours envoyer
 	IT	Sì, invia sempre
 	NL	Ja, altijd verzenden
 	NO	Ja, send alltid
 	PL	Tak, zawsze wysyłaj
 	RU	Да, всегда отправлять
+	SV	Ja, skicka alltid
 
 CRASH_NO_NEVER_SEND
 	CS	Ne, nikdy neodesílat
@@ -62,12 +68,14 @@ CRASH_NO_NEVER_SEND
 	DE	Nie senden
 	EN	No, never send
 	ES	No, no enviar nunca
+	FI	Ei, älä lähetä koskaan diagnostiikkatietoja
 	FR	Non, ne jamais envoyer
 	IT	No, non inviare mai
 	NL	Nee, nooit verzenden
 	NO	Nei, send aldri
 	PL	Nie, nigdy nie wysyłaj
 	RU	Нет, никогда не отправлять
+	SV	Nej, skicka aldrig
 
 CRASH_CONTINUE
 	CS	Pokračovat

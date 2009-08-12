@@ -109,14 +109,14 @@ SQUEEZEBOX_CONNECTING_TO
 	DE	Verbindung mit
 	EN	Connecting to
 	ES	Conectando a
-	FI	Yhdistetään kohteeseen
+	FI	Yhdistää kohteeseen
 	FR	Connexion à
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 
 SQUEEZEBOX_SETUP_COMPLETE
 	CS	Váš squeezebox je nyní nastaven.

@@ -480,12 +480,14 @@ ENCORERED
 	DE	Encore Red
 	EN	Encore Red
 	ES	Más rojo
+	FI	Encore-punainen
 	FR	Bis rouge
 	IT	Encore Red
 	NL	Encore Red
 	NO	Dakapo, rødt
 	PL	Czerwony
 	RU	Encore (красный)
+	SV	Dakaporöd
 
 BB_ENCORE_RED
 	CS	Encore červená
@@ -493,12 +495,14 @@ BB_ENCORE_RED
 	DE	Encore Red
 	EN	Encore Red
 	ES	Más rojo
+	FI	Encore-punainen
 	FR	Bis rouge
 	IT	Encore Red
 	NL	Encore Red
 	NO	Dakapo, rødt
 	PL	Czerwony
 	RU	Encore (красный)
+	SV	Dakaporöd
 
 HARMONY
 	CS	Harmonie

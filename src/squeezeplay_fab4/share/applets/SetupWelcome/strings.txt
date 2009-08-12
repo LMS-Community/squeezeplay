@@ -84,14 +84,14 @@ CONNECTING_TO_SN
 	DE	Verbindung zu
 	EN	Connecting to
 	ES	Conectando a
-	FI	Muodostetaan yhteyttä kohteeseen
+	FI	Yhdistää kohteeseen
 	FR	Connexion à
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 
 MYSQUEEZEBOX_DOT_COM
 	CS	mysqueezebox.com

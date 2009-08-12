@@ -23,12 +23,14 @@ INTERNET_RADIO
 	DE	Internetradio
 	EN	Internet Radio
 	ES	Radio por Internet
+	FI	Nettiradio
 	FR	Radio Internet
 	IT	Radio Internet
 	NL	Internetradio
 	NO	Internett-radio
 	PL	Radio internetowe
 	RU	Радиостанции Интернета
+	SV	Webbradio
 
 MY_MUSIC
 	CS	Hudba
@@ -144,12 +146,14 @@ AUDIO_SETTINGS
 	DE	Audioeinstellungen
 	EN	Audio Settings
 	ES	Configuración de audio
+	FI	Ääniasetukset
 	FR	Paramètres audio
 	IT	Impostazioni audio
 	NL	Geluidsinstellingen
 	NO	Lydinnstillinger
 	PL	Ustawienia audio
 	RU	Настройки аудиоканала
+	SV	Ljudinställningar
 
 BETA_FEATURES
 	CS	Beta vlastnosti
@@ -157,12 +161,14 @@ BETA_FEATURES
 	DE	Beta-Funktionen
 	EN	Beta Features
 	ES	Características beta
+	FI	Beeta-ominaisuudet
 	FR	Fonctions bêta
 	IT	Funzionalità Beta
 	NL	Bètafuncties
 	NO	Betafunksjoner
 	PL	Funkcje w wersji beta
 	RU	Функции бета-версии
+	SV	Beta-funktioner
 
 BRIGHTNESS_SETTINGS
 	CS	Jas
@@ -365,12 +371,14 @@ SHORTCUTS_RESET
 	DE	Zurücksetzen
 	EN	Reset to Defaults
 	ES	Restablecer a valores predeterminados
+	FI	Palauta oletuksiin
 	FR	Restauration des valeurs par défaut
 	IT	Impostazioni predefinite
 	NL	Standaardwaarden
 	NO	Tilbakestill til standardinnstillinger
 	PL	Resetuj do wartości domyślnych
 	RU	Восстановление стандартных настроек
+	SV	Återställ standardinställningarna
 
 KEYBOARD_DONE
 	CS	hotovo

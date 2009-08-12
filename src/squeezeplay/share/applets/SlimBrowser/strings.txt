@@ -233,12 +233,14 @@ SLIMBROWSER_ADD_NEXT_1
 	DE	Als nächstes wiedergeben
 	EN	Play Next
 	ES	Reproducir a continuación
+	FI	Soita seuraava
 	FR	Lire à la suite
 	IT	Brano successivo
 	NL	Volgende afspelen
 	NO	Spill av neste
 	PL	Odtwórz następny
 	RU	След. дорожка
+	SV	Spela härnäst
 
 SLIMBROWSER_ADD_NEXT_2
 	CS	Přidat další
@@ -246,12 +248,14 @@ SLIMBROWSER_ADD_NEXT_2
 	DE	Als nächstes hinzufügen
 	EN	Add Next
 	ES	Agregar a continuación
+	FI	Lisää seuraava
 	FR	Ajouter le suivant
 	IT	Aggiungi prossimo
 	NL	Volgende toevoegen
 	NO	Legg til neste
 	PL	Dodaj następny element
 	RU	Добавить следующий
+	SV	Lägg till text
 
 SLIMBROWSER_PASSWORD_WRONG
 	CS	Neplatné uživatelské jméno/ heslo
@@ -259,12 +263,14 @@ SLIMBROWSER_PASSWORD_WRONG
 	DE	Benutzername/Kennwort ungültig
 	EN	Username/Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
+	FI	Käyttäjätunnus/salasana ei kelpaa
 	FR	Nom d'utilisateur/mot de passe non valide
 	IT	Nome utente/password non validi
 	NL	Gebruikersnaam/wachtwoord ongeldig
 	NO	Brukernavn/passord er ugyldig
 	PL	Nieprawidłowa nazwa użytkownika/hasło
 	RU	Недействительные имя пользователя или пароль
+	SV	Användarnamn/lösenord är felaktigt
 
 SLIMBROWSER_PASSWORD_WRONG_BODY
 	CS	Zadané uživatelské jméno a heslo není platné.
@@ -272,12 +278,14 @@ SLIMBROWSER_PASSWORD_WRONG_BODY
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	The username or password you entered is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
+	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
 	IT	Il nome utente o la password immessi non sono validi.
 	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
 	NO	Brukernavnet eller passordet du oppga, er ugyldig.
 	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
 	RU	Введены неверные пароль или имя пользователя.
+	SV	Det användarnamn eller lösenord du angav är inte giltigt.
 
 SLIMBROWSER_SCANNER
 	CS	Pozice skladby
@@ -300,12 +308,12 @@ SLIMBROWSER_CONNECTING_TO
 	DE	Verbindung mit
 	EN	Connecting to
 	ES	Conectando a
-	FI	Yhdistetään kohteeseen
+	FI	Yhdistää kohteeseen
 	FR	Connexion à
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 

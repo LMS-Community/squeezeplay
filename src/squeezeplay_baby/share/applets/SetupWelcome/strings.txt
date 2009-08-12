@@ -23,7 +23,7 @@ WELCOME_WALKTHROUGH
 	DE	Willkommen! Jetzt stellen wir die Verbindung zum Netzwerk her.
 	EN	Welcome to Squeezebox Radio. Let's start by getting you connected to your network.
 	ES	Bienvenido a Squeezebox Radio. Para empezar, nos conectaremos a la red.
-	FI	Tervetuloa Squeezebox Radioiin. Aloitetaan muodostamalla yhteys verkkoosi.
+	FI	Tervetuloa Squeezebox Radioon. Aloitetaan muodostamalla yhteys verkkoosi.
 	FR	Bienvenue dans Squeezebox Radio. Commençons par vous connecter à votre réseau.
 	IT	Benvenuti in Squeezebox Radio. Iniziamo con il collegamento alla rete.
 	NL	Welkom bij Squeezebox Radio. Ga aan de slag door een verbinding te maken met je netwerk.
@@ -84,14 +84,14 @@ CONNECTING_TO_SN
 	DE	Verbindung wird hergestellt zu
 	EN	Connecting to
 	ES	Conectando a
-	FI	Muodostetaan yhteyttä kohteeseen
+	FI	Yhdistää kohteeseen
 	FR	Connexion à
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 
 MYSQUEEZEBOX_DOT_COM
 	CS	mysqueezebox.com

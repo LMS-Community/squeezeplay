@@ -249,12 +249,14 @@ SHORTCUTS_OUTPUT_SETTINGS
 	DE	Einstellungen
 	EN	Settings
 	ES	Configuración
+	FI	Asetukset
 	FR	Paramètres
 	IT	Impostazioni
 	NL	Instellingen
 	NO	Innstillinger
 	PL	Ustawienia
 	RU	Настройки
+	SV	Inställningar
 
 SHORTCUTS_OUTPUT_MUTE
 	CS	Ztlumit
@@ -262,12 +264,14 @@ SHORTCUTS_OUTPUT_MUTE
 	DE	Stumm
 	EN	Mute
 	ES	Silenciar
+	FI	Mykistys
 	FR	Sourdine
 	IT	Disattiva audio
 	NL	Dempen
 	NO	Stille
 	PL	Wycisz
 	RU	Без звука
+	SV	Ljud av (mute)
 
 SHORTCUTS_OUTPUT_PAUSE
 	CS	Pozastavit
@@ -275,10 +279,12 @@ SHORTCUTS_OUTPUT_PAUSE
 	DE	Pause
 	EN	Pause
 	ES	Pausa
+	FI	Tauko
 	FR	Pause
 	IT	Pausa
 	NL	Pauzeren
 	NO	Pause
 	PL	Wstrzymaj
 	RU	Пауза
+	SV	Paus
 

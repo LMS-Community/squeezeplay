@@ -53,12 +53,14 @@ IMAGE_VIEWER_LIST_NOT_READY
 	DE	Mehrere Versuche, die Bilderliste zu öffnen / zu erstellen, sind fehlgeschlagen.  Überprüfen Sie die Image Viewer-Einstellungen.
 	EN	Several attempts at reading / creating the image list failed.  Please check the Image Viewer settings.
 	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes. Compruebe la configuración del visor de imágenes.
+	FI	Yritykset lukea tai luoda kuvaluettelo epäonnistuivat. Tarkista Image Viewer -toiminnon asetukset.
 	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué. Veuillez vérifier les réglages de l'afficheur d'images.
 	IT	Numerosi tentativi di leggere/creare l'immagine non sono riusciti. Verificare le impostazioni del visualizzatore immagini.
 	NL	Lezen/aanmaken van de beeldenlijst is meermaals mislukt. Controleer de instellingen voor de beeldviewer.
 	NO	Flere forsøk på å lese/opprette bildelisten, mislyktes. Kontroller innstillingene for bildevisning.
 	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.  Sprawdź ustawienia przeglądarki obrazów.
 	RU	Попытки чтения / создания списка изображений оказались неудачными. Проверьте настройки средства просмотра изображений.
+	SV	Flera försök att läsa/skapa bildlistan misslyckades. Kontrollera inställningarna för Bildvisaren.
 
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
@@ -594,12 +596,14 @@ IMAGE_VIEWER_CARD_PATH
 	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden
 	EN	Defines the search path for images. You can use a '*' as placeholder
 	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
+	FI	Määrittää kuvien hakupolun. Voit käyttää merkkiä * paikkamerkkinä
 	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
 	IT	Specifica il percorso di ricerca delle immagini. È possibile utilizzare un asterisco (*) come segnaposto.
 	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
 	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
 	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
 	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
+	SV	Anger sökvägen för bilder. Du kan använda en * (asterisk) som platshållare
 
 IMAGE_VIEWER_CARD_PATH_HELP
 	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
@@ -637,12 +641,14 @@ IMAGE_VIEWER_CARD_NOT_DIRECTORY
 	DE	Beim angegebenen Suchpfad handelt es sich um kein Verzeichnis. Bitte geben Sie einen gültigen Verzeichnispfadnamen an.
 	EN	The defined search path is not a directory. Please provide a valid directory path name.
 	ES	La ruta de búsqueda definida no es un directorio. Proporcione un nombre de ruta de directorio válido.
+	FI	Määritetty hakupolku ei ole hakemisto. Anna kelvollinen hakemistopolun nimi.
 	FR	Le chemin d'accès défini n'est pas un répertoire. Veuillez indiquer un nom de chemin de répertoire valide.
 	IT	Il percorso di ricerca indicato non è una directory. Fornire un percorso di directory valido.
 	NL	Het opgegeven zoekpad is geen directory. Geef een geldige naam voor het directorypad op.
 	NO	Den angitte søkebanen er ikke en katalog. Oppgi en gyldig bane til en katalog.
 	PL	Zdefiniowana ścieżka wyszukiwania nie jest katalogiem. Podaj prawidłową ścieżkę do katalogu.
 	RU	Указанный путь поиска не ведет к каталогу. Укажите действительный путь к каталогу.
+	SV	Den definierade sökvägen är ingen katalog. Ange en giltig sökväg till katalogen.
 
 #
 # Strings for HTTP Source
@@ -653,12 +659,14 @@ IMAGE_VIEWER_HTTP_PATH
 	DE	Legt den Speicherort der Bildliste fest
 	EN	Defines the location of the image list
 	ES	Define la ubicación de la lista de imágenes
+	FI	Määrittää kuvaluettelon sijainnin
 	FR	Définit l'emplacement de la liste d'images
 	IT	Specifica la posizione dell'elenco di immagini
 	NL	Hiermee wordt de locatie van de afbeeldingenlijst gedefinieerd.
 	NO	Angir plasseringen av bildelisten
 	PL	Definiuje lokalizację listy obrazów
 	RU	Определяет расположение списка изображений
+	SV	Definierar platsen för bildlistan
 
 IMAGE_VIEWER_HTTP_PATH_HELP
 	CS	Definuje umístění seznamu obrázků
@@ -820,12 +828,14 @@ IMAGE_VIEWER_FLICKR_DISPLAY_TAGGED
 	DE	Getaggte Bilder
 	EN	Tagged images
 	ES	Imágenes con etiquetas
+	FI	Merkityt kuvat
 	FR	Images étiquetées
 	IT	Immagini con tag
 	NL	Getagde afbeeldingen
 	NO	Bilder med etiketter
 	PL	Obrazy ze znacznikami
 	RU	Изображения с метками
+	SV	Taggade bilder
 
 IMAGE_VIEWER_FLICKR_FLICKR_ID
 	CS	Uživatel Flickr
@@ -893,12 +903,14 @@ IMAGE_VIEWER_FLICKR_TAGS
 	DE	Tag-Stickwörter
 	EN	Tag Keywords
 	ES	Palabras clave de etiquetas
+	FI	Merkitse avainsanat
 	FR	Mots clés d'étiquette
 	IT	Parole chiave tag
 	NL	Tagtrefwoorden
 	NO	Etikett-nøkkelord
 	PL	Słowa kluczowe znacznika
 	RU	Ключевые слова меток
+	SV	Tagga sökord
 
 IMAGE_VIEWER_FLICKR_QUERY_TAGS
 	CS	Zadejte prosím klíčové slovo / klíčová slova pro vyhledávání v informacích označení. Můžete zadávaná označení oddělovat čárkou.
@@ -906,10 +918,12 @@ IMAGE_VIEWER_FLICKR_QUERY_TAGS
 	DE	Geben Sie die Stichwörter ein, nach denen in den Tags gesucht werden soll. Tags können durch ein Komma getrennt werden.
 	EN	Please enter the keyword(s) to search for in the tag information. You can separated tags with a comma.
 	ES	Escriba las palabras clave que desea buscar en la información de etiquetas. Las etiquetas se separan con una coma.
+	FI	Anna avainsanat, jotka haetaan tunnustiedoista. Voit erottaa merkinnät pilkulla.
 	FR	Veuillez saisir les mots clés à rechercher dans les informations d'étiquette. Vous pouvez séparer les étiquettes avec des virgules.
 	IT	Immettere la/le parola/e chiave da cercare nelle informazioni dei tag. È possibile separare i tag con una virgola.
 	NL	Voer het trefwoord/de trefwoorden in waarnaar gezocht moet worden in de taginformatie. Gebruik een komma op tags van elkaar te scheiden.
 	NO	Angi nøkkelord for å søke etter etikettinformasjon. Du kan atskille etiketter med komma.
 	PL	W informacjach znacznika wprowadź słowa kluczowe do wyszukiwania. Znaczniki można rozdzielać przecinkami.
 	RU	Введите ключевые слова для поиска информации по меткам. Метки можно разделять запятой.
+	SV	Ange ett eller flera sökord att söka efter i tagginformationen. Du kan avgränsa taggar med ett komma.
 
