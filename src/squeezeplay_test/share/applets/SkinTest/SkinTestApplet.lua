@@ -171,44 +171,89 @@ Menu3:     "ampm"
 function input_time(self, item)
 	local data = _itemData(item)
 
-	local window = Window("input_time", _itemName(item))
-	_windowActions(self, item, window)
+	self.window = Window("input_time", _itemName(item))
+	_windowActions(self, item, self.window)
 
 	local hours = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' }
 
-	local hourMenu = SimpleMenu("hour")
+	self.hourMenu = SimpleMenu("hour")
 	for i, hour in ipairs(hours) do
-		hourMenu:addItem({
+		self.hourMenu:addItem({
 			text = hour,
 		})
 	end
-	local minuteMenu = SimpleMenu('minute')
+	self.minuteMenu = SimpleMenu('minuteUnselected')
 	local minute = 0
 	while minute < 60 do
-		minuteMenu:addItem({
-			text = tostring(minute),
+		local textString = tostring(minute)
+		if minute < 10 then
+			textString = '0' .. tostring(minute)
+		end
+		self.minuteMenu:addItem({
+			text = textString,
 		})
 		minute = minute + 1
 	end
-	local ampmMenu = SimpleMenu('ampm')
+	self.ampmMenu = SimpleMenu('ampmUnselected')
 	local ampm = { 'am', 'pm' }
 	for i, t in ipairs(ampm) do
-		ampmMenu:addItem({
+		self.ampmMenu:addItem({
 			text = t,
 		})
 	end
 	
-	hourMenu:setHideScrollbar(true)
-	minuteMenu:setHideScrollbar(true)
-	ampmMenu:setHideScrollbar(true)
+	self.hourMenu:setHideScrollbar(true)
+	self.minuteMenu:setHideScrollbar(true)
+	self.ampmMenu:setHideScrollbar(true)
 
-	window:addWidget(minuteMenu)
-	window:addWidget(hourMenu)
-	window:addWidget(ampmMenu)
-	window:focusWidget(hourMenu)
+	self.hourMenu:addActionListener('back', self, function() self.window:hide() end)
+	self.hourMenu:addActionListener('go', self, 
+		function() 
+			self.hourMenu:setStyle('hourUnselected')
+			self.minuteMenu:setStyle('minute')
+			self.hourMenu:_scrollList()
+			self.hourMenu:reLayout()
+			self.window:focusWidget(self.minuteMenu) 
+		end
+	)
 
-	self:tieWindow(window)
-	return window
+	self.minuteMenu:addActionListener('go', self, 
+		function() 
+			self.ampmMenu:setStyle('ampm')
+			self.minuteMenu:setStyle('minuteUnselected')
+			self.ampmMenu:_updateWidgets()
+			self.minuteMenu:_updateWidgets()
+			self.window:focusWidget(self.ampmMenu) 
+		end)
+	self.minuteMenu:addActionListener('back', self, 
+		function() 
+			self.hourMenu:setStyle('hour')
+			self.minuteMenu:setStyle('minuteUnselected')
+			self.hourMenu:_updateWidgets()
+			self.minuteMenu:_updateWidgets()
+			self.window:focusWidget(self.hourMenu) 
+		end)
+
+	self.ampmMenu:addActionListener('go', self, 
+		function() 
+			self.window:hide() 
+		end)
+	self.ampmMenu:addActionListener('back', self, 
+		function() 
+			self.ampmMenu:setStyle('ampmUnselected')
+			self.minuteMenu:setStyle('minute')
+			self.window:focusWidget(self.minuteMenu) 
+			self.ampmMenu:_updateWidgets()
+			self.minuteMenu:_updateWidgets()
+		end)
+
+	self.window:addWidget(self.minuteMenu)
+	self.window:addWidget(self.hourMenu)
+	self.window:addWidget(self.ampmMenu)
+	self.window:focusWidget(self.hourMenu)
+
+	self:tieWindow(self.window)
+	return self.window
 end
 
 
