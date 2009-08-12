@@ -36,6 +36,7 @@ local Textarea         = require("jive.ui.Textarea")
 local string           = require("string")
 local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")
+local Player           = require("jive.slim.Player")
 
 local appletManager    = appletManager
 
@@ -220,11 +221,11 @@ end
 function _getDefaultScreensaver(self)
 	local ss
 
-	if not self:isSoftPowerOn() then
+	local player = appletManager:callService("getCurrentPlayer")
+	if not self:isSoftPowerOn() and player:isLocal() then
 		ss = self:_getOffScreensaver()
 		log:debug("whenOff")
 	else
-		local player = appletManager:callService("getCurrentPlayer")
 		if player and player:getPlayMode() == "play" then
 			ss = self:getSettings()["whenPlaying"]
 			log:debug("whenPlaying")
@@ -612,14 +613,6 @@ function openSettings(self, menuItem)
 					   end
 			},
 			{
-				text = self:string("SCREENSAVER_OFF"),
-				weight = 2,
-				sound = "WINDOWSHOW",
-				callback = function(event, menu_item)
-						   self:screensaverSetting(menu_item, "whenOff")
-					   end
-			},
-			{
 				text = self:string("SCREENSAVER_DELAY"),
 				weight = 5,
 				sound = "WINDOWSHOW",
@@ -629,6 +622,20 @@ function openSettings(self, menuItem)
 			},
 		})
 
+	-- only present a WHEN OFF option when there is a local player present
+	if Player:getLocalPlayer() then
+		menu:addItem(
+			{
+				text = self:string("SCREENSAVER_OFF"),
+				weight = 2,
+				sound = "WINDOWSHOW",
+				callback = function(event, menu_item)
+						   self:screensaverSetting(menu_item, "whenOff")
+					   end
+			}
+		)
+	end
+	
 	menu:setComparator(menu.itemComparatorWeightAlpha)
 	for setting_name, screensaver in pairs(self.screensaverSettings) do
 		menu:addItem({
