@@ -70,6 +70,7 @@ int jiveL_menu_layout(lua_State *L) {
 	Uint16 hwx, hwy, hww, hwh, hwtmp;
 	JiveInset hwborder;
 	int numWidgets, listSize;
+	bool hide_scrollbar;
 
 	peer = jive_getpeer(L, 1, &menuPeerMeta);
 
@@ -91,7 +92,11 @@ int jiveL_menu_layout(lua_State *L) {
 	listSize = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
-	peer->has_scrollbar = (listSize > numWidgets);
+	lua_getfield(L, 1, "hideScrollbar");
+	hide_scrollbar = lua_toboolean(L, -1);
+	lua_pop(L, 1);
+
+	peer->has_scrollbar = ( (!hide_scrollbar) && (listSize > numWidgets));
 
 	/* measure scrollbar */
 	sw = 0;
