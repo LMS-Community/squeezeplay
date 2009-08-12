@@ -9,8 +9,6 @@ local System        = require("jive.System")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
 
-local Decode        = require("squeezeplay.decode")
-
 local debug         = require("jive.utils.debug")
 
 local appletManager = appletManager
@@ -35,15 +33,6 @@ function defaultSettings(self)
 		-- 2 == user off
 		-- 3 == user on
 		enableAudio = 0,
-
-		-- alsa settings
-		alsaPlaybackDevice = "default",
-		alsaPlaybackBufferTime = 60000,
-		alsaPlaybackPeriodCount = 3,
-
-		alsaEffectsDevice = nil,
-		alsaEffectsBufferTime = nil,
-		alsaEffectsPeriodCount = nil,
 	}
 end
 
@@ -53,11 +42,6 @@ function registerApplet(meta)
 
 	-- this allows us to share state with the applet
 	meta.state = {}
-
-	if not Decode:open(settings) then
-		-- no audio device
-		return
-	end
 
 	jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettingsBetaFeatures', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end))
 end
