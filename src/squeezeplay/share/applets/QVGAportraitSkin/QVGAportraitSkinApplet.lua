@@ -274,8 +274,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_shuffle_1.border               = s._button_shuffle.border
 	s.button_shuffle_2.border               = s._button_shuffle.border
 
-	s._button_sleep_ON.border               = { 6, 0, 3, 0 }
-	s._button_sleep_OFF.border               = s._button_sleep_ON.border
+	s.button_sleep_ON.border		= { 6, 0, 3, 0 }
+	s.button_sleep_OFF.border		= s.button_sleep_ON.border
 
 	s._button_battery.border                = _iconbarBorder
 	s.button_battery_AC.border              = s._button_battery.border
