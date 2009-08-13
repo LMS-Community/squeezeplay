@@ -82,7 +82,7 @@ function registerApplet(meta)
 	appletManager:loadApplet("SqueezeboxJive")
 
 	-- audio playback defaults
-	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
+	appletManager:addDefaultSetting("Playback", "enableAudio", 0)
 
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
