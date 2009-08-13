@@ -130,6 +130,7 @@ end
 
 function _setMainTitle(self)
 	self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
+
 end
 
 
@@ -269,20 +270,8 @@ end
 
 function _titleText(self, title)
 	self.mainTitle = tostring(title)
-
-	local usexofy = true
-	if not self.player:isPowerOn() then
-		usexofy = false
-	end
-
-	if self.xofy and usexofy then
-		local returnVal = self.mainTitle .. " " .. self.xofy
-		return returnVal
-	else
-		return self.mainTitle
-	end
+	return self.mainTitle
 end
-
 
 function _isThisPlayer(self, player)
 
@@ -323,8 +312,10 @@ function _updateAll(self)
 			self:_updateTrack(trackInfo)
 			self:_updateProgress(playerStatus)
 			self:_updateButtons(playerStatus)
-			self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
+			self:_updatePlaylist()
 		
+			self.window:focusWidget(self.nptitleGroup)
+
 			-- preload artwork for next track
 			if playerStatus.item_loop[2] then
 				_getIcon(self, playerStatus.item_loop[2], Icon("artwork"), playerStatus.remote)
@@ -333,8 +324,8 @@ function _updateAll(self)
 	else
 		if self.window then
 			_getIcon(self, nil, self.artwork, nil)
-			self:_updateTrack("\n\n\n")
-			self:_updatePlaylist(false, 0, 0)
+			self:_updateTrack("\n\n")
+			self:_updatePlaylist()
 		end
 	end
 	self:_updateVolume()
@@ -412,6 +403,17 @@ function _remapButton(self, key, newStyle, newCallback)
 end
 
 
+function _updatePlaylist(self)
+
+	local x = self.player:getPlaylistCurrentIndex()
+	local y = self.player:getPlaylistSize()
+	local xofy = ''
+	if x and y and tonumber(x) > 0 and tonumber(y) >= tonumber(x) then
+		xofy = self:string("SCREENSAVER_NOWPLAYING_OF", x, y)
+	end
+	self.XofY:setValue(xofy)
+end
+
 function _updateTrack(self, trackinfo, pos, length)
 	if self.trackTitle then
 		local trackTable
@@ -464,9 +466,6 @@ function _updateProgress(self, data)
 		self.window:removeWidget(self.progressNBGroup)
 		self.window:addWidget(self.progressBarGroup)
 
-		--temp hack until we resolve focus/missing widgets on skin switch issues
-		self.window:focusWidget(self.trackTitle)
-
 		self.progressGroup = self.progressBarGroup
 		showProgressBar = true
 	end
@@ -514,15 +513,6 @@ function _updateVolume(self)
 		self.volumeOld = volume
 		self.volSlider:setValue(volume)
 	end
-end
-
-
-function _updatePlaylist(self, enabled, nr, count)
-	if enabled == true and count and tonumber(count) > 1 then
-		nr = nr + 1
-		self.xofy = self:string("SCREENSAVER_NOWPLAYING_OF", nr, count)
-	end
-	self:_setMainTitle()
 end
 
 
@@ -720,6 +710,11 @@ function _createUI(self)
 	
 
 		self.trackTitle  = Label('nptrack', "")
+		self.XofY        = Label('xofy', "")
+		self.nptrackGroup = Group('nptitle', {
+			nptrack = self.trackTitle,
+			xofy    = self.XofY,
+		})
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
 		self.artistalbumTitle = Label('npartistalbum', "")
@@ -880,7 +875,7 @@ function _createUI(self)
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
 	window:addWidget(self.titleGroup)
-	window:addWidget(self.trackTitle)
+	window:addWidget(self.nptrackGroup)
 	window:addWidget(self.albumTitle)
 	window:addWidget(self.artistTitle)
 	window:addWidget(self.artistalbumTitle)
@@ -888,8 +883,7 @@ function _createUI(self)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 
-	window:focusWidget(self.trackTitle)
-
+	window:focusWidget(self.nptrackGroup)
 	-- register window as a screensaver, unless we are explicitly not in that mode
 	if self.isScreensaver then
 		local manager = appletManager:getAppletInstance("ScreenSavers")
@@ -1008,7 +1002,7 @@ function showNowPlaying(self, transition)
 		self:_updateMode(playerStatus.mode)
 		self:_updateTrack(trackInfo)
 		self:_updateProgress(playerStatus)
-		self:_updatePlaylist(true, playerStatus.playlist_cur_index, playerStatus.playlist_tracks)
+		self:_updatePlaylist()
 
 		-- preload artwork for next track
 		if playerStatus.item_loop[2] then
@@ -1021,7 +1015,7 @@ function showNowPlaying(self, transition)
 		_getIcon(self, nil, playerStatus.artwork, nil) 
 		self:_updateTrack("\n\n\n")
 		self:_updateMode(playerStatus.mode)
-		self:_updatePlaylist(false, 0, 0)	
+		self:_updatePlaylist()
 	end
 
 	self:_updateVolume()

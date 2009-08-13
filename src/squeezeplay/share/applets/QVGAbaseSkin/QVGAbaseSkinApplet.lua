@@ -827,30 +827,49 @@ function skin(self, s, reload, useDefaultSize)
 		border = { 200, 36, 0, 24 },
 	})
 	s.input_time.hourUnselected = _uses(s.input_time.hour, {
+		item = {
+			text = {
+				fg = { 0xbc, 0xbc, 0xbc },
+				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+			},
+		},
 		selected = {
 			item = {
 				text = {
 					fg = { 0xbc, 0xbc, 0xbc },
-					font = _boldfont(30),
+					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
 				},
 			},
 		},
 	})
 	s.input_time.minuteUnselected = _uses(s.input_time.minute, {
+		item = {
+			text = {
+				fg = { 0xbc, 0xbc, 0xbc },
+				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+			},
+		},
 		selected = {
 			item = {
 				text = {
 					fg = { 0xbc, 0xbc, 0xbc },
+					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
 				},
 			},
 		},
 	})
 	s.input_time.ampmUnselected = _uses(s.input_time.ampm, {
+		item = {
+			text = {
+				fg = { 0xbc, 0xbc, 0xbc },
+				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+			},
+		},
 		selected = {
 			item = {
 				text = {
 					fg = { 0xbc, 0xbc, 0xbc },
-					font = _boldfont(30),
+					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
 				},
 			},
 		},

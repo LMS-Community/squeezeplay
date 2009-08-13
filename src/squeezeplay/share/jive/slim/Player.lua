@@ -698,6 +698,19 @@ end
 
 --[[
 
+=head2 jive.slim.Player:getPlaylistCurrentIndex()
+
+returns the playlist index of the currently selected track
+
+=cut
+--]]
+function getPlaylistCurrentIndex(self)
+	return self.playlistCurrentIndex
+end
+
+
+--[[
+
 =head2 jive.slim.Player:getPlayerMode()
 
 returns the playerMode for a given player object
@@ -1115,6 +1128,8 @@ function _process_status(self, event)
 	self.trackTime = tonumber(event.data.time)
 	self.trackDuration = tonumber(event.data.duration)
 	self.playlistSize = tonumber(event.data.playlist_tracks)
+	-- add 1 to playlist_cur_index to get 1-based place in playlist
+	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse

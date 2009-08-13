@@ -209,15 +209,28 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 		-- Song metadata
-		nptrack =  {
-			border     = _tracklayout.border,
+		nptitle = {
+			order = { 'nptrack', 'xofy' },
 			position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { 10, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
-			font       = _boldfont(NP_TRACK_FONT_SIZE), 
+			border     = _tracklayout.border,
+			nptrack =  {
+				w          = WH_FILL,
+				align      = _tracklayout.align,
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				padding    = { 10, 10, 4, 0 },
+				font       = _boldfont(NP_TRACK_FONT_SIZE), 
+			},
+			xofy = {
+				border     = _tracklayout.border,
+				position   = _tracklayout.position,
+				w          = 75,
+				align      = 'right',
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				padding    = { 4, 12, 4, 0 },
+				font       = _font(14), 
+			},
 		},
 		npartistalbum  = {
 			border     = _tracklayout.border,

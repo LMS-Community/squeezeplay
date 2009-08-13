@@ -2261,15 +2261,18 @@ function skin(self, s)
 		}),
 	
 		-- Song metadata
-		nptrack =  {
-			border     = _tracklayout.border,
+		nptitle = {
+			order = { 'nptrack' },
 			position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
-			font       = _boldfont(NP_TRACK_FONT_SIZE), 
+			border     = _tracklayout.border,
+			nptrack =  {
+				w          = _tracklayout.w,
+				align      = _tracklayout.align,
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
+				font       = _boldfont(NP_TRACK_FONT_SIZE), 
+			},
 		},
 		npartist  = {
 			border     = _tracklayout.border,

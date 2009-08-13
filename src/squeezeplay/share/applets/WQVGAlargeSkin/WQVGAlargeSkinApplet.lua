@@ -1613,15 +1613,18 @@ function skin(self, s)
 				hidden = 1,
 			},
 		}),
-		nptrack = {
-                	border     = _tracklayout.border,
+		nptitle = {
+			order = { 'nptrack' },
+       	         	border     = _tracklayout.border,
 	                position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
-			font       = _boldfont(NP_TRACK_FONT_SIZE),
+			nptrack = {
+				w          = _tracklayout.w,
+				align      = _tracklayout.align,
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
+				font       = _boldfont(NP_TRACK_FONT_SIZE),
+			},
 		},
 		npartist = {
                 	border     = _tracklayout.border,
