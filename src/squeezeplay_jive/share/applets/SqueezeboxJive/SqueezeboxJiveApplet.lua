@@ -223,6 +223,8 @@ function init(self)
 	self.lcdLevel = jiveBSP.ioctl(12) / 2048
 	self.keyLevel = jiveBSP.ioctl(14) / 512
 
+	self.brightPrev = self.lcdLevel
+
 	-- ac or battery
 	self.acpower = (jiveBSP.ioctl(23) == 0)
 	if self.acpower then
@@ -468,7 +470,6 @@ function getBrightness(self)
 end
 
 function setBrightness(self, level)
-	log:error("TODO: test 'on'/'off' brightness setting when controller build works here")
 
 	local settings = self:getSettings()
 
