@@ -51,7 +51,8 @@ function popupMessage(self, title, msg)
 	local text = Textarea("text", msg)
 
 	popup:addWidget(text)
-	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS, 
+	self.applet:applyScreensaverWindow(popup)
+	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
 			  function()
 				popup:playSound("WINDOWHIDE")
 				popup:hide()

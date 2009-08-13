@@ -759,6 +759,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
 		fg = c.TEXT_COLOR_TEAL,
 	})
+
+	s.black_popup = _uses(s.waiting_popup)
+	s.black_popup.title = _uses(s.title, {
+		bgImg = false,
+		order = { },
+	})
+
 	-- input window (including keyboard)
 	-- XXX: needs layout
 	s.input = _uses(s.window)
@@ -1308,6 +1315,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.icon_connected = _uses(s.icon_connecting, {
 		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
+	})
+
+	s.icon_photo_loading = _uses(s._icon, {
+		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+		padding = { 5, 55, 0, 5 }
 	})
 
 	s.icon_software_update = _uses(s._icon, {

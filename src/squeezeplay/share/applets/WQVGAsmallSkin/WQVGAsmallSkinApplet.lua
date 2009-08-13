@@ -1220,6 +1220,12 @@ function skin(self, s)
 		fg = TEXT_COLOR_TEAL,
 	})
 
+	s.black_popup = _uses(s.waiting_popup)
+	s.black_popup.title = _uses(s.title, {
+		bgImg = false,
+		order = { },
+	})
+
 	-- input window (including keyboard)
 	s.input = _uses(s.window)
 	s.input.title = _uses(s.title, {
@@ -1922,6 +1928,10 @@ function skin(self, s)
 
 	s.icon_connected = _uses(_icon, {
 		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
+	})
+
+	s.icon_photo_loading = _uses(_icon, {
+		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
 	})
 
 	s.icon_software_update = _uses(_icon, {

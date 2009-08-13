@@ -97,18 +97,54 @@ end
 
 function startSlideshow(self, menuItem, isScreensaver, imgSourceOverride)
 	log:info("start image viewer")
+
 	-- initialize the chosen image source
 	self:initImageSource(imgSourceOverride)
 	self.initialized = true
 	self.isScreensaver = isScreensaver
+	self:showInitWindow()
 	self:startSlideshowWhenReady()
 end
 
+
+function showInitWindow(self)
+	local popup = Window("black_popup", "")
+
+	popup:setAutoHide(true)
+	popup:setShowFrameworkWidgets(false)
+
+	local label = Label("text", "")
+	local sublabel = Label("subtext", "")
+	local icon = Icon("icon_photo_loading")
+
+	popup:addWidget(label)
+	popup:addWidget(icon)
+	popup:addWidget(sublabel)
+	popup:focusWidget(sublabel)
+
+	self:applyScreensaverWindow(popup)
+	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
+			  function()
+				popup:playSound("WINDOWHIDE")
+				popup:hide()
+			  end)
+
+	self:tieAndShowWindow(popup, Window.transitionFadeIn)
+
+end
+
 function startSlideshowWhenReady(self)
+	-- stop timer
+	if self.nextSlideTimer != nil then
+		self.nextSlideTimer:stop()
+	end
+
 	if not self.imgSource:listReady() then
 		self.listCheckCount = self.listCheckCount + 1
 
-		if self.listCheckCount == 10 then
+		log:debug("self.listCheckCount: ", self.listCheckCount)
+
+		if self.listCheckCount == 50 then
 			if self.nextSlideTimer != nil then
 				self.nextSlideTimer:stop()
 			end
@@ -116,21 +152,19 @@ function startSlideshowWhenReady(self)
 			return
 		end
 
-		-- try again in 500 ms
+		-- try again in a few moments
 		log:debug("image list not ready yet...")
-		self.nextSlideTimer = Timer(500, 
-			function()
-				self:startSlideshowWhenReady()
-			end, 
-			true)
-		self.nextSlideTimer:start()		
+		if not self.nextSlideTimer then
+			self.nextSlideTimer = Timer(200,
+				function()
+					self:startSlideshowWhenReady()
+				end,
+				true)
+		end
+		self.nextSlideTimer:restart()		
 		return
 	end
 
-	-- stop timer
-	if self.nextSlideTimer != nil then
-		self.nextSlideTimer:stop()
-	end
 
 	-- image list is ready
 	self.imgSource:nextImage(self:getSettings()["ordering"])
@@ -234,7 +268,9 @@ end
 
 function free(self)
 	log:info("destructor of image viewer")
-	self.window:setAllowScreensaver(true)
+	if self.window then
+		self.window:setAllowScreensaver(true)
+	end
 
 	--stop timers
 	if self.nextSlideTimer then
@@ -247,16 +283,22 @@ function free(self)
 	return true
 end
 
+
+function applyScreensaverWindow(self, window)
+		window:addListener(EVENT_MOTION,
+			function()
+				window:hide(Window.transitionNone)
+				return EVENT_CONSUME
+			end)
+		local manager = appletManager:getAppletInstance("ScreenSavers")
+		manager:screensaverWindow(window)
+end
+
+
 function displaySlide(self)
 	if not self.initialized then
 		self:initImageSource()
 		self.initialized = true
-	end
-
-
-	if self.nextSlideTimer and self.nextSlideTimer:isRunning() then
-		--restart next slide timer to give this image a chance, can happen when displaySlide was manually trigger
-		self.nextSlideTimer:restart()
 	end
 
 	-- stop timer
@@ -264,17 +306,24 @@ function displaySlide(self)
 		self.checkFotoTimer:stop()
 	end
 
+	if self.nextSlideTimer and self.nextSlideTimer:isRunning() then
+		--restart next slide timer to give this image a chance, can happen when displaySlide was manually trigger
+		self.nextSlideTimer:restart()
+	end
+
 	if not self.imgSource:imageReady() then
 		-- try again in a few moments
 		log:debug("image not ready, try again...")
 --		self.checkFotoTimer = Timer(1000, --hmm, this seems to enforce a second wait even if response is fast.... todo have image sink trigger this instead
 		--todo: also, might this run continuously on a failure even if the applet is complete.
-		self.checkFotoTimer = Timer(500, --hmm, this seems to enforce a second wait even if response is fast....
-			function()
-				self:displaySlide()
-			end, 
-			true)
-		self.checkFotoTimer:start()		
+		if not self.checkFotoTimer then
+			self.checkFotoTimer = Timer(200, --hmm, this seems to enforce a second wait even if response is fast....
+				function()
+					self:displaySlide()
+				end,
+				true)
+		end
+		self.checkFotoTimer:restart()
 		return
 	end
 
@@ -388,13 +437,7 @@ function displaySlide(self)
 		window:addWidget(Icon("icon", image))
 
 		if self.isScreensaver then
-			window:addListener(EVENT_MOTION,
-				function()
-					window:hide(Window.transitionNone)
-					return EVENT_CONSUME
-				end)
-			local manager = appletManager:getAppletInstance("ScreenSavers")
-			manager:screensaverWindow(window)
+			self:applyScreensaverWindow(window)
 		end
 
 		self:setupEventHandlers(window)
@@ -414,7 +457,7 @@ function displaySlide(self)
 		-- otherwise it's new
 		else
 			self.window = window
-			self:tieAndShowWindow(window)
+			self:tieAndShowWindow(window, window.transitionFadeIn) -- fade in for smooth consistent start 
 		end
 
 		-- no screensavers por favor
