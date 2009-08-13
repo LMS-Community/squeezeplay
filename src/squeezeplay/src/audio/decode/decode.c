@@ -328,7 +328,7 @@ static bool_t decode_timer_interval(u32_t *delay) {
 	size_t free_bytes, used_bytes, max_samples;
 	u32_t state, sample_rate;
 
-	if (!decoder || !(current_decoder_state & DECODE_STATE_RUNNING)) {
+	if (!decoder || (current_decoder_state & ((DECODE_STATE_RUNNING|DECODE_STATE_ERROR) != DECODE_STATE_RUNNING))) {
 		*delay = DECODE_MAX_INTERVAL;
 		return false;
 	}
