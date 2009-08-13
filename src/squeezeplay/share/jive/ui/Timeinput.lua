@@ -92,7 +92,7 @@ function addTimeInputWidgets(self)
 	self.minuteMenu:setSelectedIndex(3)
 
 	self.ampmMenu = SimpleMenu('ampmUnselected')
-	local ampm = { '', '', 'am', 'pm', '', '' }
+	local ampm = { '', '', 'pm', 'am', '', '' }
 	for i, t in ipairs(ampm) do
 		self.ampmMenu:addItem({
 			text = t,
