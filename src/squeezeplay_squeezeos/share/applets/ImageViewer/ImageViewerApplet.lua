@@ -235,6 +235,15 @@ end
 function free(self)
 	log:info("destructor of image viewer")
 	self.window:setAllowScreensaver(true)
+
+	--stop timers
+	if self.nextSlideTimer then
+		self.nextSlideTimer:stop()
+	end
+	if self.checkFotoTimer then
+		self.checkFotoTimer:stop()
+	end
+
 	return true
 end
 
