@@ -874,6 +874,11 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable, contextM
 	obj.accel = false       -- true if the window is accelerated
 	obj.dir = 0             -- last direction of scrolling
 
+
+	obj.wraparoundGap = 0
+	obj.itemsBeforeScroll = 1
+	obj.noBarrier = false
+
 	obj.usePressedStyle = true
 
 	obj.dragOrigin = {}
@@ -1251,6 +1256,9 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	selected = selected  + scroll
 
+	if self.noBarrier then
+		isNewOperation = true
+	end
 	--for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
 	if isNewOperation == false then
 		if selected > self.listSize then
@@ -1259,10 +1267,10 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 			selected = _coerce(1, self.listSize)
 		end	
 	elseif isNewOperation == true then
-		if selected > self.listSize then
-			selected = _coerce(1, self.listSize)
-		elseif selected < 1 then
-			selected = self.listSize
+		if selected > self.listSize - self.wraparoundGap then
+			selected = _coerce(1 + self.wraparoundGap, self.listSize)
+		elseif selected < 1 + self.wraparoundGap then
+			selected = self.listSize - self.wraparoundGap
 		end	
 		   
 	else -- isNewOperation nil, so use breakthrough barrier
@@ -1326,9 +1334,9 @@ function _scrollList(self)
 		topItem = 1
 		
 	-- otherwise, try to leave one item above the selected one (we've scrolled out of the view)
-	elseif selected <= topItem then
+	elseif selected <= topItem  + ( self.itemsBeforeScroll - 1 ) then
 		-- if we land here, selected > 1 so topItem cannot become < 1
-		topItem = selected - 1
+		topItem = selected - self.itemsBeforeScroll
 
 	-- show the last item if it is selected
 	elseif selected == self.listSize then
@@ -1339,8 +1347,8 @@ function _scrollList(self)
 		end
 	
 	-- otherwise, try to leave one item below the selected one (we've scrolled out of the view)
-	elseif selected >= topItem + self.numWidgets - 1 then
-		topItem = selected - self.numWidgets + 2
+	elseif selected >= topItem + self.numWidgets - self.itemsBeforeScroll then
+		topItem = selected - self.numWidgets + self.itemsBeforeScroll + 1
 	end
 
 	self.topItem = topItem

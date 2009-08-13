@@ -52,15 +52,24 @@ end
 
 function addTimeInputWidgets(self)
 
-	local hours = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' }
-
+	local hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
 	self.hourMenu = SimpleMenu("hour")
 	for i, hour in ipairs(hours) do
 		self.hourMenu:addItem({
 			text = hour,
 		})
 	end
+	self.hourMenu.wraparoundGap = 2
+	self.hourMenu.itemsBeforeScroll = 2
+	self.hourMenu.noBarrier = true
+	self.hourMenu:setSelectedIndex(3)
+
 	self.minuteMenu = SimpleMenu('minuteUnselected')
+	for i, textString in ipairs({'58', '59', }) do
+		self.minuteMenu:addItem({
+			text = textString,
+		})
+	end
 	local minute = 0
 	while minute < 60 do
 		local textString = tostring(minute)
@@ -72,6 +81,16 @@ function addTimeInputWidgets(self)
 		})
 		minute = minute + 1
 	end
+	for i, textString in ipairs({'00', '01', }) do
+		self.minuteMenu:addItem({
+			text = textString,
+		})
+	end
+	self.minuteMenu.wraparoundGap = 2
+	self.minuteMenu.itemsBeforeScroll = 2
+	self.minuteMenu.noBarrier = true
+	self.minuteMenu:setSelectedIndex(3)
+
 	self.ampmMenu = SimpleMenu('ampmUnselected')
 	local ampm = { 'am', 'pm' }
 	for i, t in ipairs(ampm) do
@@ -89,9 +108,9 @@ function addTimeInputWidgets(self)
 		function() 
 			self.hourMenu:setStyle('hourUnselected')
 			self.minuteMenu:setStyle('minute')
-			self.hourMenu:_scrollList()
-			self.hourMenu:reLayout()
-			self.window:focusWidget(self.minuteMenu) 
+			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+			Framework:styleChanged()
+			self.window:focusWidget(self.minuteMenu)
 		end
 	)
 
@@ -99,17 +118,17 @@ function addTimeInputWidgets(self)
 		function() 
 			self.ampmMenu:setStyle('ampm')
 			self.minuteMenu:setStyle('minuteUnselected')
-			self.ampmMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
-			self.window:focusWidget(self.ampmMenu) 
+			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+			Framework:styleChanged()
+			self.window:focusWidget(self.ampmMenu)
 		end)
 	self.minuteMenu:addActionListener('back', self, 
 		function() 
 			self.hourMenu:setStyle('hour')
 			self.minuteMenu:setStyle('minuteUnselected')
-			self.hourMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
-			self.window:focusWidget(self.hourMenu) 
+			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+			Framework:styleChanged()
+			self.window:focusWidget(self.hourMenu)
 		end)
 
 	self.ampmMenu:addActionListener('go', self, 
@@ -124,9 +143,9 @@ function addTimeInputWidgets(self)
 		function() 
 			self.ampmMenu:setStyle('ampmUnselected')
 			self.minuteMenu:setStyle('minute')
-			self.window:focusWidget(self.minuteMenu) 
-			self.ampmMenu:_updateWidgets()
-			self.minuteMenu:_updateWidgets()
+			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+			Framework:styleChanged()
+			self.window:focusWidget(self.minuteMenu)
 		end)
 
 	self.window:addWidget(self.minuteMenu)
