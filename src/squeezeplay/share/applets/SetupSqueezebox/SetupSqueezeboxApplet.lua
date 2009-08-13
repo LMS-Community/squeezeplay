@@ -888,6 +888,9 @@ function t_connectJiveAdhoc(self)
 	-- configure ad-hoc network
 	local id = self.wireless:t_addNetwork(ssid, option)
 
+	-- select new network
+	self.wireless:t_selectNetwork(ssid)
+
 	self.adhoc_ssid = ssid
 	_setAction(self, t_waitJiveAdhoc)
 end
