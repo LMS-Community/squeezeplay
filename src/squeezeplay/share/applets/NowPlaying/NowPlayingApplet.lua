@@ -409,7 +409,7 @@ function _updatePlaylist(self)
 	local y = self.player:getPlaylistSize()
 	local xofy = ''
 	if x and y and tonumber(x) > 0 and tonumber(y) >= tonumber(x) then
-		xofy = self:string("SCREENSAVER_NOWPLAYING_OF", x, y)
+		xofy = tostring(x) .. '/' .. tostring(y)
 	end
 	self.XofY:setValue(xofy)
 	self.XofY:animate(true)
