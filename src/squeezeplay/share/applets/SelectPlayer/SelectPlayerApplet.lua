@@ -230,7 +230,6 @@ function _addPlayerItem(self, player)
 		id = mac,
 		style = 'item',
 		iconStyle = "player_" .. playerModel,
-		--text = "\n" .. playerName,
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -240,6 +239,7 @@ function _addPlayerItem(self, player)
 		end,
 		focusGained = function(event)
 			self:_showWallpaper(mac)
+			return EVENT_UNUSED
 		end,
 		weight = playerWeight
 	}
