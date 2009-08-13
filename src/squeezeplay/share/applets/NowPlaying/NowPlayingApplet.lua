@@ -412,6 +412,7 @@ function _updatePlaylist(self)
 		xofy = self:string("SCREENSAVER_NOWPLAYING_OF", x, y)
 	end
 	self.XofY:setValue(xofy)
+	self.XofY:animate(true)
 end
 
 function _updateTrack(self, trackinfo, pos, length)
@@ -442,6 +443,9 @@ function _updateTrack(self, trackinfo, pos, length)
 		self.albumTitle:setValue(album)
 		self.artistTitle:setValue(artist)
 		self.artistalbumTitle:setValue(artistalbum)
+		self.trackTitle:animate(true)
+		self.artistalbumTitle:animate(true)
+
 	end
 end
 
@@ -718,6 +722,10 @@ function _createUI(self)
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
 		self.artistalbumTitle = Label('npartistalbum', "")
+
+		self.trackTitle:animate(true)
+		self.XofY:animate(true)
+		self.artistalbumTitle:animate(true)
 
 	if not self.gotoTimer then
 		self.gotoTimer = Timer(400,
