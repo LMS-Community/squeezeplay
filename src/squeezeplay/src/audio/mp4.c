@@ -69,6 +69,10 @@ static ssize_t mp4_fill_buffer(struct decode_mp4 *mp4, bool_t *streaming)
 
 		r = (mp4->end - mp4->ptr);
 	}
+	else {
+		/* update streaming */
+		streambuf_read(NULL, 0, 0, streaming);
+	}
 
 	return r;
 }
@@ -454,7 +458,7 @@ size_t mp4_open(struct decode_mp4 *mp4)
 		bool_t streaming;
 
 		r = mp4_fill_buffer(mp4, &streaming);
-		if (r < 0 || !streaming) {
+		if (r < 0) {
 			return 0;
 		}
 
