@@ -249,7 +249,8 @@ end
 
 
 function _softResetAction(self, event)
-	jiveMain:disconnectPlayer()
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
+	jiveMain:goHome()
 end
 
 
