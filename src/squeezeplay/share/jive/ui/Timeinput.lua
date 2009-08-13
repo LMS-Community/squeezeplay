@@ -92,13 +92,17 @@ function addTimeInputWidgets(self)
 	self.minuteMenu:setSelectedIndex(3)
 
 	self.ampmMenu = SimpleMenu('ampmUnselected')
-	local ampm = { 'am', 'pm' }
+	local ampm = { '', '', 'am', 'pm', '', '' }
 	for i, t in ipairs(ampm) do
 		self.ampmMenu:addItem({
 			text = t,
 		})
 	end
-	
+	self.ampmMenu.wraparoundGap = 2
+	self.ampmMenu.itemsBeforeScroll = 2
+	self.ampmMenu.noBarrier = true
+	self.ampmMenu:setSelectedIndex(3)
+
 	self.hourMenu:setHideScrollbar(true)
 	self.minuteMenu:setHideScrollbar(true)
 	self.ampmMenu:setHideScrollbar(true)
