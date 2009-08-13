@@ -891,9 +891,12 @@ function t_addNetwork(self, ssid, option)
 	request = 'SELECT_NETWORK ' .. id
 	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
-	-- Allow association
-	request = 'REASSOCIATE'
-	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	-- Reassociate seems to break ad hoc
+	if not (string.find(flags, "IBSS") or option.ibss) then
+		-- Allow association
+		request = 'REASSOCIATE'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+	end
 
 	-- Save config, it will be removed later if it fails
 	request = 'SAVE_CONFIG'
