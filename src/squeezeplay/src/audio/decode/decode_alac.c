@@ -40,7 +40,6 @@ struct decode_alac {
 
 static bool_t decode_alac_callback(void *data) {
 	struct decode_alac *self = (struct decode_alac *) data;
-	struct decode_mp4 *mp4 = &self->mp4;
 	bool_t streaming;
 	AVPacket avpkt;
 	int outputsize, num;
@@ -48,6 +47,8 @@ static bool_t decode_alac_callback(void *data) {
 	sample_t *wptr, s;
 	size_t len;
 	int i, frames;
+	size_t conf_size;
+	u8_t *conf;
 
 	if (current_decoder_state & DECODE_STATE_ERROR) {
 		return FALSE;
@@ -60,8 +61,9 @@ static bool_t decode_alac_callback(void *data) {
 			current_decoder_state |= DECODE_STATE_UNDERRUN;
 			return FALSE;
 		}
-		
-		if (!mp4->track || !mp4->track[0].conf) {
+
+		mp4_track_conf(&self->mp4, 0, &conf, &conf_size);
+		if (!conf) {
 			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
@@ -70,13 +72,13 @@ static bool_t decode_alac_callback(void *data) {
 		self->sample_rate = 44100; // XXXX
 
 		self->alacdec.channels = self->num_channels;
-		self->alacdec.extradata = mp4->track[0].conf + 28;
-		self->alacdec.extradata_size = mp4->track[0].conf_size - 28;
+		self->alacdec.extradata = conf + 28;
+		self->alacdec.extradata_size = conf_size - 28;
 
 		alac_decode_init(&self->alacdec);
 	}
 
-	avpkt.data = (void *)mp4_read(&self->mp4, &len, &streaming);
+	avpkt.data = (void *)mp4_read(&self->mp4, 0, &len, &streaming);
 	avpkt.size = len;
 	if (avpkt.size == 0) {
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
