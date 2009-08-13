@@ -39,11 +39,6 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 	Uint32 ticks;
 	int err;
 
-	ticks = SDL_GetTicks();
-	if (timeout && timeout <= ticks) {
-		return NULL;
-	}
-
 	if (fifo_lock(&mqueue->fifo) == -1) {
 		LOG_ERROR(log_audio_decode, "Failed to lock mutex %s", SDL_GetError());
 		return NULL;
@@ -58,7 +53,8 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 		return func;
 	}
 
-	if (timeout == 0) {
+	ticks = SDL_GetTicks();
+	if (timeout <= ticks) {
 		fifo_unlock(&mqueue->fifo);
 		return NULL;
 	}

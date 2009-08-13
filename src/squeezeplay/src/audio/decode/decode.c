@@ -343,7 +343,8 @@ static bool_t decode_timer_interval(u32_t *delay) {
 	decode_audio_unlock();
 
 	if (SAMPLES_TO_BYTES(max_samples) < free_bytes) {
-		*delay = 1;
+		*delay = 0;
+
 		return true;
 	}
 	else {
