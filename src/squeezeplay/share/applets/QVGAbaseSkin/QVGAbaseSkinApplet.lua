@@ -801,6 +801,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
+	local _timeColumnWidth = 75
+	local _timeFirstColumn = screenWidth/2 - (_timeColumnWidth/2)*3
 	-- time input window
 	s.input_time = _uses(s.window)
 	s.input_time.hour = _uses(s.menu, {
@@ -809,7 +811,7 @@ function skin(self, s, reload, useDefaultSize)
 		itemHeight = c.TIME_LINE_ITEM_HEIGHT,
 		position = LAYOUT_WEST,
 		padding = 0,
-		border = { 50, 36, 0, 24 },
+		border = { _timeFirstColumn, 36, 0, 24 },
 		item = {
 			order = { 'text' },
 			text = {
@@ -829,10 +831,10 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.input_time.minute = _uses(s.input_time.hour, {
-		border = { 125, 36, 0, 24 },
+		border = { _timeFirstColumn + _timeColumnWidth, 36, 0, 24 },
 	})
 	s.input_time.ampm = _uses(s.input_time.hour, {
-		border = { 200, 36, 0, 24 },
+		border = { _timeFirstColumn + (_timeColumnWidth*2), 36, 0, 24 },
 	})
 	s.input_time.hourUnselected = _uses(s.input_time.hour, {
 		item = {

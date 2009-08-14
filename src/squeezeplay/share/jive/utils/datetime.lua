@@ -341,6 +341,74 @@ function secondsFromMidnight(self, hhmm)
 	return secondsFromMidnight
 end
 
+
+--[[
+=head2 timeTableFromSFM()
+
+Takes seconds from midnight and returns table of { hour, minute, ampm } ( ampm nil when format is 24 )
+
+=cut
+--]]
+function timeTableFromSFM(self, secondsFromMidnight, format)
+
+	if not format then
+		format = '24'
+	end
+
+	local sfm = tonumber(secondsFromMidnight)
+	-- 24h format
+	if format == '24' then
+		if (sfm >= 86400 or sfm < 0) then
+			return { 
+				hour   = 0, 
+				minute = 0, 
+				ampm   = nil,
+			}
+		end
+
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+	
+		return { 
+			hour   = hours, 
+			minute = minutes, 
+			ampm   = nil 
+		}
+	-- 12h format
+	else
+		local ampm
+		if (sfm >= 86400 or sfm < 0) then
+			return { 
+				hour   = 12, 
+				minute = 0, 
+				ampm   = 'pm',
+			}
+		end
+
+		if (sfm < 43200) then
+			ampm = 'am'
+		else
+			ampm = 'pm'
+		end
+
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+
+		if hours < 1 then
+			hours = 12
+		elseif hours > 12 then
+			hours = hours - 12
+		end
+	
+		return { 
+			hour   = hours, 
+			minute = minutes, 
+			ampm   = ampm,
+		}
+	end
+end
+
+
 --[[
 =head2 timeFromSFM()
 

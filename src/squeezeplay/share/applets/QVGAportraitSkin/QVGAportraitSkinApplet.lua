@@ -188,6 +188,10 @@ function skin(self, s, reload, useDefaultSize)
                 border = { 0, 50, 0, 0 },
         })
 
+	s.input_time.hour.itemHeight = 50
+	s.input_time.minute.itemHeight = 50
+	s.input_time.ampm.itemHeight = 50
+
 	-- software update window
 	s.update_popup = _uses(s.popup)
 

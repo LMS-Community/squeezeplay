@@ -41,6 +41,7 @@ local Choice                 = require("jive.ui.Choice")
 local Slider                 = require("jive.ui.Slider")
 local Timer                  = require("jive.ui.Timer")
 local Textinput              = require("jive.ui.Textinput")
+local Timeinput              = require("jive.ui.Timeinput")
 local Keyboard               = require("jive.ui.Keyboard")
 local Textarea               = require("jive.ui.Textarea")
 local RadioGroup             = require("jive.ui.RadioGroup")
@@ -663,13 +664,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
 			elseif v == '__TAGGEDINPUT__' then
-				if k == 'time' then
-					local _secondsFromMidnight = DateTime:secondsFromMidnight(_lastInput)
-					log:debug("SECONDS FROM MIDNIGHT", _secondsFromMidnight)
-					table.insert( newparams, k .. ":" .. _secondsFromMidnight )
-				else 
-					table.insert( newparams, k .. ":" .. _lastInput )
-				end
+				table.insert( newparams, k .. ":" .. _lastInput )
 			else
 				if v ~= json.null then
 					table.insert( newparams, k .. ":" .. v )
@@ -928,7 +923,7 @@ end
 -- _hideMeAndMyDad
 -- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
 local function _hideMeAndMyDad()
-	log:error("_hideMeAndMyDad")
+	log:debug("_hideMeAndMyDad")
 
 	_hideMe(true)
 	_hideMe()
@@ -2022,8 +2017,7 @@ end
 
 
 -- _browseInput: method to render a textinput/keyboard for SlimBrowse input
--- self in this function is the input/keyboard window
-local function _browseInput(self, item, db, inputSpec, last)
+local function _browseInput(window, item, db, inputSpec, last)
 
 	local titleWidgetComplete = false
 	if not inputSpec then
@@ -2031,9 +2025,9 @@ local function _browseInput(self, item, db, inputSpec, last)
 		return
 	end
 	-- never allow screensavers in an input window
-	self:setAllowScreensaver(false)
+	window:setAllowScreensaver(false)
 	if inputSpec.title then
-		self:setTitle(inputSpec.title)
+		window:setTitle(inputSpec.title)
 	end
 
 	local nowPlayingButton
@@ -2043,7 +2037,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		nowPlayingButton = _nowPlayingButton()
 	end
 
-	local titleText = self:getTitle()
+	local titleText = window:getTitle()
 	if inputSpec.title then
 		titleText = inputSpec.title
 	end
@@ -2057,7 +2051,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 		lbutton = _backButton(),
 		rbutton = nowPlayingButton,
 	})	
-	self:setTitleWidget(newTitleWidget)
+	window:setTitleWidget(newTitleWidget)
 	
 	
 	-- make sure it's a number for the comparison below
@@ -2074,21 +2068,49 @@ local function _browseInput(self, item, db, inputSpec, last)
 	end
 	local v = ""
 	local initialText = inputSpec.initialText
-                local inputStyle  = inputSpec._inputStyle
+	local inputStyle  = inputSpec._inputStyle
 
 	if initialText then
 		v = tostring(initialText)
 	end
 
 	local inputValue
+	-- time input now handled without a textinput widget
 	if inputStyle == 'time' then
-		if not initialText then
-			initialText = '0'
-		end
 		local timeFormat = _getTimeFormat()
-		local _v = DateTime:timeFromSFM(v, timeFormat)
-		v = Textinput.timeValue(_v, timeFormat)
-		inputValue = v
+		local initTime   = DateTime:timeTableFromSFM(v, timeFormat)
+
+		local submitCallback = function( hour, minute, ampm)
+
+
+			log:debug('Time entered as: ', hour, ':', minute, ' ', ampm)
+			local totalSecs = ( hour * 3600 ) + ( minute * 60 )
+			if ampm == 'pm' then
+				totalSecs = totalSecs + 43200
+			end
+			-- input is done
+			item['_inputDone'] = true
+			-- set _lastInput to the total seconds from midnight
+			_lastInput = tostring(totalSecs)
+			-- do the action
+			_actionHandler(nil, nil, db, nil, nil, 'go', item)
+			-- close the window if this is a "do" action
+			local doAction = _safeDeref(item, 'actions', 'do')
+			local nextWindow = _safeDeref(item, 'nextWindow')
+
+			--Close the window, unless the 'do' item also has a nextWindow param, which trumps
+			if doAction and not nextWindow then
+				-- close the window
+				window:playSound("WINDOWHIDE")
+				window:hide()
+			else
+				window:playSound("WINDOWSHOW")
+			end
+		end
+		local timeInput = Timeinput(window, submitCallback, initTime)
+
+		return true
+
 	elseif inputStyle == 'ip' then
 		if not initialText then
 			initialText = ''
@@ -2114,7 +2136,7 @@ local function _browseInput(self, item, db, inputSpec, last)
 			local displayPopup = _safeDeref(inputSpec, 'processingPopup')
 			local displayPopupText = _safeDeref(inputSpec, 'processingPopup', 'text')
 			if displayPopup then
-				_inputInProgress(self, displayPopupText)
+				_inputInProgress(window, displayPopupText)
 			end
 			-- now we should perform the action !
 			_actionHandler(nil, nil, db, nil, nil, 'go', item)
@@ -2125,10 +2147,10 @@ local function _browseInput(self, item, db, inputSpec, last)
 			--Close the window, unless the 'do' item also has a nextWindow param, which trumps
 			if doAction and not nextWindow then
 				-- close the window
-				self:playSound("WINDOWHIDE")
-				self:hide()
+				window:playSound("WINDOWHIDE")
+				window:hide()
 			else
-				self:playSound("WINDOWSHOW")
+				window:playSound("WINDOWSHOW")
 			end
 			return true
 		end,
@@ -2157,19 +2179,19 @@ local function _browseInput(self, item, db, inputSpec, last)
 
 	if helpText then
 		local help = Textarea(helpStyle, helpText)
-		self:addWidget(help)
+		window:addWidget(help)
 	end
 
 	if softButtons[1] then
-		self:addWidget(Label("softButton1", softButtons[1]))
+		window:addWidget(Label("softButton1", softButtons[1]))
 	end
 	if softButtons[2] then
-		self:addWidget(Label("softButton2", softButtons[2]))
+		window:addWidget(Label("softButton2", softButtons[2]))
 	end
 	--]]
 	
 	if inputSpec.help and inputSpec.help.text then
-		_addHelpButton(self, inputSpec.help.text, inputSpec.setupWindow)
+		_addHelpButton(window, inputSpec.help.text, inputSpec.setupWindow)
 	end
 
 	local kbType = inputSpec._kbType or 'qwerty'
@@ -2180,9 +2202,9 @@ local function _browseInput(self, item, db, inputSpec, last)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
-	self:addWidget(group)
-	self:addWidget(keyboard)
-	self:focusWidget(group)
+	window:addWidget(group)
+	window:addWidget(keyboard)
+	window:focusWidget(group)
 
 	return titleWidgetComplete
 end
@@ -2214,7 +2236,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
-		window:setStyle('input')
+		if item['input'] and item['input']['_inputStyle'] == 'time' then
+			window:setStyle('input_time')
+		else
+			window:setStyle('input')
+		end
 		inputSpec = item.input
 
 		-- multiple input

@@ -14,7 +14,7 @@ Base class for Timeinpupt helper methods
 
 
 -- stuff we use
-local _assert, assert, ipairs, require, tostring, type = _assert, assert, ipairs, require, tostring, type
+local _assert, assert, ipairs, require, tostring, type, tonumber = _assert, assert, ipairs, require, tostring, type, tonumber
 
 local oo            = require("loop.base")
 local string        = require("jive.utils.string")
@@ -39,20 +39,58 @@ module(..., oo.class)
 local Framework		= require("jive.ui.Framework")
 
 
-function __init(self, window, submitCallback)
+function __init(self, window, submitCallback, initTime)
 	local obj = oo.rawnew(self, {})
 
 	obj.window = window
 	obj.submitCallback = submitCallback
+
+	if initTime and type(initTime) == 'table' then
+		obj.initHour   = initTime.hour and tonumber(initTime.hour)
+		obj.initMinute = initTime.minute and tonumber(initTime.minute)
+		obj.initampm   = initTime.ampm
+	end
 
 	addTimeInputWidgets(obj)
 
 	return obj
 end
 
+function _minuteString(minute)
+	local returnVal
+	if minute < 10 then
+		returnVal = '0' .. tostring(minute)
+	else
+		returnVal = tostring(minute)
+	end
+	return returnVal
+end
 function addTimeInputWidgets(self)
 
 	local hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
+	local minutes = { '58', '59', '00' }
+
+	-- deal with inital hour setting
+	if self.initHour then
+		if self.initHour == 1 then
+			hours = { '11', '12', '1' }
+		elseif self.initHour == 2 then
+			hours = { '12', '1', '2' }
+		else
+			hours = { self.initHour - 2, self.initHour - 1, self.initHour }
+		end
+		local nextItem = self.initHour + 1
+		local inc = 1
+		while inc < 14 do
+			if nextItem > 12 then
+				nextItem = 1
+			end
+			table.insert(hours, tostring(nextItem))
+			nextItem = nextItem + 1
+			inc = inc + 1
+		end
+	end
+
 	self.hourMenu = SimpleMenu("hour")
 	for i, hour in ipairs(hours) do
 		self.hourMenu:addItem({
@@ -62,30 +100,46 @@ function addTimeInputWidgets(self)
 	self.hourMenu.wraparoundGap = 2
 	self.hourMenu.itemsBeforeScroll = 2
 	self.hourMenu.noBarrier = true
+	local initHour = 3
+	if self.initHour then
+		initHour = initHour + self.initHour
+	end
 	self.hourMenu:setSelectedIndex(3)
 
 	self.minuteMenu = SimpleMenu('minuteUnselected')
-	for i, textString in ipairs({'58', '59', }) do
+	-- deal with inital minute setting
+	if self.initMinute then
+		if self.initMinute == 0 then
+			minutes = { '58', '59', '00' }
+		elseif self.initMinute == 1 then
+			minutes = { '59', '00', '01' }
+		else
+			minutes = { 
+				_minuteString(self.initMinute - 2), 
+				_minuteString(self.initMinute - 1), 
+				_minuteString(self.initMinute) 
+			}
+		end
+		local nextItem = self.initMinute + 1
+		local inc = 1
+		while inc < 62 do
+			if nextItem > 59 then
+				nextItem = 0
+			end
+			local nextItemString = _minuteString(nextItem)
+			table.insert(minutes, nextItemString)
+			nextItem = nextItem + 1
+			inc = inc + 1
+		end
+	end
+
+	for i, minute in ipairs(minutes) do
 		self.minuteMenu:addItem({
-			text = textString,
+			text = minute,
 		})
 	end
 	local minute = 0
-	while minute < 60 do
-		local textString = tostring(minute)
-		if minute < 10 then
-			textString = '0' .. tostring(minute)
-		end
-		self.minuteMenu:addItem({
-			text = textString,
-		})
-		minute = minute + 1
-	end
-	for i, textString in ipairs({'00', '01', }) do
-		self.minuteMenu:addItem({
-			text = textString,
-		})
-	end
+
 	self.minuteMenu.wraparoundGap = 2
 	self.minuteMenu.itemsBeforeScroll = 2
 	self.minuteMenu.noBarrier = true
@@ -93,6 +147,10 @@ function addTimeInputWidgets(self)
 
 	self.ampmMenu = SimpleMenu('ampmUnselected')
 	local ampm = { '', '', 'pm', 'am', '', '' }
+	if self.initampm == 'am' then
+		ampm = { '', '', 'am', 'pm', '', '' }
+	end
+
 	for i, t in ipairs(ampm) do
 		self.ampmMenu:addItem({
 			text = t,
