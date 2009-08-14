@@ -60,7 +60,7 @@ typedef unsigned int bool;
 
 /* time */
 #if HAVE_CLOCK_GETTIME
-static inline u32_t jive_jiffies(void)
+static inline Uint32 jive_jiffies(void)
 {
 	struct timespec now;
 
