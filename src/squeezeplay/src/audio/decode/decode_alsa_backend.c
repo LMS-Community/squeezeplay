@@ -265,7 +265,7 @@ static void playback_callback(struct decode_alsa *state,
 		return;
 	}
 
-	add_silence_ms = add_silence_ms;
+	add_silence_ms = decode_audio->add_silence_ms;
 	if (add_silence_ms) {
 		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * state->pcm_sample_rate) / 1000));
 		if (add_bytes > len) {
@@ -278,6 +278,7 @@ static void playback_callback(struct decode_alsa *state,
 		if (add_silence_ms < 2) {
 			add_silence_ms = 0;
 		}
+
 		decode_audio->add_silence_ms = add_silence_ms;
 
 		if (!len) {
