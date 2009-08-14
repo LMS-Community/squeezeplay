@@ -372,7 +372,10 @@ function show(self, transition)
 			while window do
 				window:dispatchNewEvent(EVENT_HIDE)
 				window:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
-
+				if not window:canActivateScreensaver() then
+					-- #13412
+					appletManager:callService("restartScreenSaverTimer")
+				end
 				window = window.transparent and window:getLowerWindow() or nil
 			end
 		end
@@ -575,6 +578,10 @@ function hide(self, transition)
 		self:dispatchNewEvent(EVENT_HIDE)
 
 		-- this window is inactive
+		if not self:canActivateScreensaver() then
+			-- #13412
+			appletManager:callService("restartScreenSaverTimer")
+		end
 		self:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
 	end
 
