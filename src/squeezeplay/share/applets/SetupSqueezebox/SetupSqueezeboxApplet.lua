@@ -25,6 +25,7 @@ local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
 local Player                 = require("jive.slim.Player")
+local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Udap                   = require("jive.net.Udap")
 local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
@@ -296,6 +297,8 @@ I<setupNext> if given, is a function to call once setup is complete
 
 --]]
 function startSqueezeboxSetup(self, mac, adhoc, setupNext)
+	log:info("startSqueezeboxSetup()")
+
 	mac = string.gsub(mac, ":", "")
 
 	if setupNext then
@@ -842,7 +845,7 @@ function t_disconnectSlimserver(self)
 	assert(self.networkId, "jive not connected to network")
 
 	-- disconnect from Player/SqueezeCenter
-	appletManager:callService("disconnectPlayer")
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 
 	_setAction(self, t_waitDisconnectSlimserver)
 end
@@ -855,8 +858,12 @@ function t_waitDisconnectSlimserver(self)
 	local connected = false
 
 	for i,server in appletManager:callService("iterateSqueezeCenters") do
-		connected = connected or server:isConnected()
-		log:info("server=", server:getName(), " connected=", connected)
+		if server:isSqueezeNetwork() then
+			log:info("excluding SN")
+		else
+			connected = connected or server:isConnected()
+			log:info("server=", server:getName(), " connected=", connected)
+		end
 	end		
 
 	if not connected then
@@ -892,6 +899,7 @@ function t_connectJiveAdhoc(self)
 	self.wireless:t_selectNetwork(ssid)
 
 	self.adhoc_ssid = ssid
+
 	_setAction(self, t_waitJiveAdhoc)
 end
 
@@ -1279,6 +1287,7 @@ end
 
 -- called after pin registration for SN
 function _registerPlayer(self, slimserver)
+	log:info("_registerPlayer()")
 	if self.uuid then
 		-- XXX don't wait for a reply, Ray should always be
 		-- registered. This will work better after refactoring
@@ -1315,6 +1324,7 @@ end
 
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)
+	log:info("notify_playerNew()")
 	local playerId = string.gsub(player:getId(), ":", "")
 
 	if playerId == self.mac then
