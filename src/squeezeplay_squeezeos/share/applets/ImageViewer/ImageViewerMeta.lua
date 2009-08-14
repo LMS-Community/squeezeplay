@@ -18,6 +18,7 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 
 local oo            = require("loop.simple")
 
+local System           = require("jive.System")
 local AppletMeta    = require("jive.AppletMeta")
 local lfs           = require("lfs")
 
@@ -35,9 +36,11 @@ end
 
 
 function registerApplet(meta)
+	if System:getMachine() ~= "baby" then
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'home', "IMAGE_VIEWER", 
 			function(applet, ...) applet:startSlideshow(...) end, 100))
-
+	end
+	
 	meta:registerService("registerRemoteScreensaver")
 	meta:registerService("unregisterRemoteScreensaver")
 	meta:registerService("openRemoteScreensaver")

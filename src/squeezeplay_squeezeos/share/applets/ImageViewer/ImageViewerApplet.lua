@@ -291,7 +291,7 @@ function applyScreensaverWindow(self, window)
 				return EVENT_CONSUME
 			end)
 		local manager = appletManager:getAppletInstance("ScreenSavers")
-		manager:screensaverWindow(window)
+		manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", })
 end
 
 

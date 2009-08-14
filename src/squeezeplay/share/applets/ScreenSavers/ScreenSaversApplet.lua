@@ -47,6 +47,15 @@ local jiveMain = jiveMain
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+local _globalSsAllowedActions = {
+			["pause"] = 1,
+			["volume_up"] = 1,
+			["volume_down"] = 1,
+			["jump_rew"] = 1,
+			["scanner_rew"] = 1,
+			["jump_fwd"] = 1,
+			["scanner_fwd"] = 1,
+		}
 
 function init(self, ...)
 	self.screensavers = {}
@@ -92,6 +101,26 @@ function init(self, ...)
 				return 	EVENT_UNUSED
 			end
 
+			if event:getType() == ACTION then
+				local action = event:getAction()
+
+				if _globalSsAllowedActions[action] then
+					log:debug("Global action allowed to pass through: ", action)
+					return EVENT_UNUSED
+				end
+					
+				if self.ssAllowedActions and table.contains(self.ssAllowedActions, action) then
+					log:debug("'Per window' action allowed to pass through: ", action)
+					return EVENT_UNUSED
+				end
+			end
+			if event:getType() == EVENT_SCROLL then
+				if self.scrollAllowed then
+					log:debug("'Per window' scroll event allowed to pass through")
+					return EVENT_UNUSED
+
+				end
+			end
 			log:debug("Closing screensaver event=", event:tostring())
 
 			self:deactivateScreensaver()
@@ -112,7 +141,33 @@ function init(self, ...)
 			end
 			return EVENT_UNUSED
 		end,
-		100 -- process after all other event handlers
+		-100 -- process before other event handlers
+	)
+
+	--last resort listener to close SS on any unused action/scroll (for instance when user hits pause when no server connected)
+	Framework:addListener(ACTION | EVENT_SCROLL,
+		function(event)
+
+			-- screensaver is not active
+			if #self.active == 0 then
+				return EVENT_UNUSED
+			end
+
+			log:debug("Closing screensaver(2) event=", event:tostring())
+
+			self:deactivateScreensaver()
+
+			if event:getType() == ACTION then
+				-- make sure when exiting a screensaver with home we
+				-- really go home.
+				if event:getAction() == "home" then
+					appletManager:callService("goHome")
+					return EVENT_CONSUME
+				end
+			end
+			return EVENT_CONSUME
+		end,
+		100 -- process after other event handlers
 	)
 
 	jnt:subscribe(self)
@@ -238,9 +293,23 @@ function _getDefaultScreensaver(self)
 	return ss
 end
 
+
+function _setSSAllowedActions(self, scrollAllowed, ssAllowedActions)
+	self.scrollAllowed = scrollAllowed
+	self.ssAllowedActions = ssAllowedActions
+end
+
+
+function _clearSSAllowedActions(self)
+	self:_setSSAllowedActions(nil, nil)
+end
+
+
 -- screensavers can have methods that are executed on close
 function _deactivate(self, window, the_screensaver)
 	log:debug("Screensaver deactivate")
+
+	self:_clearSSAllowedActions()
 
 	self:_closeAnyPowerOnWindow()
 
@@ -366,9 +435,15 @@ Register the I<window> as a screensaver window. This is used to maintain the
 the screensaver activity, and adds some default listeners for screensaver
 behaviour.
 
+If the screensaver window wants to respond to scrolling or actions (with the screensaver exiting), use
+the boolean I<scrollAllowed> and string table I<ssAllowedActions>
+
 =cut
 --]]
-function screensaverWindow(self, window)
+function screensaverWindow(self, window, scrollAllowed, ssAllowedActions)
+
+	self:_setSSAllowedActions(scrollAllowed, ssAllowedActions)
+	
 	-- the screensaver is active when this window is pushed to the window stack
 	window:addListener(EVENT_WINDOW_PUSH,
 			   function(event)
