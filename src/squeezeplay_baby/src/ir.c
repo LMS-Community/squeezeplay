@@ -66,11 +66,11 @@ static Uint32 queue_ir_event(Uint32 ticks, Uint32 code, JiveEventType type) {
 static int ir_handle_up() {
 	if (ir_state != IR_STATE_HOLD_SENT) {
 		//odd to use sdl_getTicks here, since other ir events sent input_event time - code using PRESS and UP shouldn't care yet about the time....
-		queue_ir_event(SDL_GetTicks(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_PRESS);
+		queue_ir_event(jive_jiffies(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_PRESS);
 	}
 
 	ir_state = IR_STATE_NONE;
-	queue_ir_event(SDL_GetTicks(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_UP);
+	queue_ir_event(jive_jiffies(), ir_last_code, (JiveEventType) JIVE_EVENT_IR_UP);
 	
 	ir_down_millis = 0;
 	ir_last_input_millis = 0;

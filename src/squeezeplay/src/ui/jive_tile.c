@@ -379,7 +379,7 @@ static void _blit_tile(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, U
 
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
@@ -396,7 +396,7 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 	_blit_tile(tile, dst, dx, dy, dw, dh);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_tile_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -404,7 +404,7 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 
 void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
@@ -419,7 +419,7 @@ void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16
 	_blit_tile(tile, dst, dx - (dw/2), dy -  (dh/2), dw, dh);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_tile_blit_centered took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }

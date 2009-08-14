@@ -58,5 +58,18 @@ typedef unsigned int bool;
 #define true 1
 #define false !true
 
+/* time */
+#if HAVE_CLOCK_GETTIME
+static inline u32_t jive_jiffies(void)
+{
+	struct timespec now;
+
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	return (now.tv_sec*1000)+(now.tv_nsec/1000000);
+}
+#else
+#define jive_jiffies() SDL_GetTicks()
+#endif
+
 
 #endif // SQUEEZEPLAY_JIVE_COMMON_H

@@ -53,7 +53,7 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 		return func;
 	}
 
-	ticks = SDL_GetTicks();
+	ticks = jive_jiffies();
 	if (timeout <= ticks) {
 		fifo_unlock(&mqueue->fifo);
 		return NULL;

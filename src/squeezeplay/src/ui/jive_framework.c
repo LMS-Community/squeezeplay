@@ -284,7 +284,7 @@ void jive_send_key_event(JiveEventType keyType, JiveKey keyCode) {
 	memset(&keyEvent, 0, sizeof(JiveEvent));
 	
 	keyEvent.type = keyType;
-	keyEvent.ticks = SDL_GetTicks();
+	keyEvent.ticks = jive_jiffies();
 	keyEvent.u.key.code = keyCode;
 	jive_queue_event(&keyEvent);
 }
@@ -294,7 +294,7 @@ void jive_send_gesture_event(JiveGesture code) {
 	memset(&event, 0, sizeof(JiveEvent));
 
 	event.type = JIVE_EVENT_GESTURE;
-	event.ticks = SDL_GetTicks();
+	event.ticks = jive_jiffies();
 	event.u.gesture.code = code;
 	jive_queue_event(&event);
 }
@@ -304,7 +304,7 @@ void jive_send_char_press_event(Uint16 unicode) {
 	memset(&event, 0, sizeof(JiveEvent));
 
 	event.type = JIVE_EVENT_CHAR_PRESS;
-	event.ticks = SDL_GetTicks();
+	event.ticks = jive_jiffies();
 	event.u.text.unicode = unicode;
 	jive_queue_event(&event);
 }
@@ -439,7 +439,7 @@ static int _draw_screen(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 	if (perfwarn.screen) {
-		t0 = SDL_GetTicks();
+		t0 = jive_jiffies();
 		c0 = clock();
 	}
 
@@ -456,7 +456,7 @@ static int _draw_screen(lua_State *L) {
 		/* check in case the origin changes during layout */
 	} while (jive_origin != next_jive_origin);
 
-	if (perfwarn.screen) t1 = SDL_GetTicks();
+	if (perfwarn.screen) t1 = jive_jiffies();
  
 	/* Widget animations */
 	lua_getfield(L, 1, "animations");
@@ -493,7 +493,7 @@ static int _draw_screen(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	if (perfwarn.screen) t2 = SDL_GetTicks();
+	if (perfwarn.screen) t2 = jive_jiffies();
 
 	/* Window transitions */
 	lua_getfield(L, 1, "transition");
@@ -503,7 +503,7 @@ static int _draw_screen(lua_State *L) {
 		jive_tile_set_alpha(jive_background, 0); // no alpha channel
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t3 = jive_jiffies();
 		
 		/* Animate screen transition */
 		lua_pushvalue(L, -1);
@@ -526,7 +526,7 @@ static int _draw_screen(lua_State *L) {
 		/* Draw background */
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t3 = jive_jiffies();
 
 		/* Draw screen */
 		if (jive_getmethod(L, -2, "draw")) {
@@ -541,7 +541,7 @@ static int _draw_screen(lua_State *L) {
 	}
 
 	if (perfwarn.screen) {
-		t4 = SDL_GetTicks();
+		t4 = jive_jiffies();
 		c1 = clock();
 		if (t4-t0 > perfwarn.screen) {
 			if (!t3) {
@@ -711,7 +711,7 @@ int jiveL_dispatch_event(lua_State *L) {
 	 */
 
 	if (perfwarn.event) {
-		t0 = SDL_GetTicks();
+		t0 = jive_jiffies();
 		c0 = clock();
 	}
 
@@ -776,7 +776,7 @@ int jiveL_dispatch_event(lua_State *L) {
 	}
 
 	if (perfwarn.event) {
-		t1 = SDL_GetTicks();
+		t1 = jive_jiffies();
 		c1 = clock();
 		if (t1-t0 > perfwarn.event) {
 			printf("process_event > %dms: %4dms (%dms) ", perfwarn.event, t1-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC));
@@ -935,7 +935,7 @@ int jiveL_event(lua_State *L) {
 
 
 int jiveL_get_ticks(lua_State *L) {
-	lua_pushinteger(L, SDL_GetTicks());
+	lua_pushinteger(L, jive_jiffies());
 	return 1;
 }
 
@@ -968,7 +968,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	Uint32 now;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-	jevent.ticks = now = SDL_GetTicks();
+	jevent.ticks = now = jive_jiffies();
 
 	switch (event->type) {
 	case SDL_QUIT:
@@ -1026,7 +1026,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				memset(&up, 0, sizeof(JiveEvent));
 				up.type = JIVE_EVENT_MOUSE_PRESS;
-				up.ticks = SDL_GetTicks();
+				up.ticks = jive_jiffies();
 				up.u.mouse.x = event->button.x;
 				up.u.mouse.y = event->button.y;
 				do_dispatch_event(L, &up);
@@ -1104,7 +1104,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				memset(&irup, 0, sizeof(JiveEvent));
 				irup.type = JIVE_EVENT_IR_UP;
-				irup.ticks = SDL_GetTicks();
+				irup.ticks = jive_jiffies();
 				irup.u.ir.code = ir->code;
 				jive_queue_event(&irup);
 			}
@@ -1136,7 +1136,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		else if (entry->keysym == SDLK_PAGEUP || entry->keysym == SDLK_PAGEDOWN) {
 			if (event->type == SDL_KEYDOWN) {
 				jevent.type = JIVE_EVENT_KEY_PRESS;
-				jevent.ticks = SDL_GetTicks();
+				jevent.ticks = jive_jiffies();
 				jevent.u.key.code = entry->keycode;
 			}
 		}
@@ -1190,7 +1190,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				memset(&keyup, 0, sizeof(JiveEvent));
 				keyup.type = JIVE_EVENT_KEY_UP;
-				keyup.ticks = SDL_GetTicks();
+				keyup.ticks = jive_jiffies();
 				keyup.u.key.code = entry->keycode;
 				jive_queue_event(&keyup);
 
@@ -1270,7 +1270,7 @@ static void process_timers(lua_State *L) {
 	Uint32 now;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-	jevent.ticks = now = SDL_GetTicks();
+	jevent.ticks = now = jive_jiffies();
 
 	if (pointer_timeout && pointer_timeout < now) {
 		SDL_ShowCursor(SDL_DISABLE);

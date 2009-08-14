@@ -42,7 +42,7 @@ int jiveL_event_new(lua_State *L) {
 
 	/* send attributes */
 	event->type = lua_tointeger(L, 2);
-	event->ticks = SDL_GetTicks();
+	event->ticks = jive_jiffies();
 	if (!lua_isnil(L, 3)) {
 		switch (event->type) {
 		case JIVE_EVENT_SCROLL:

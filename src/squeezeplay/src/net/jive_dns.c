@@ -204,7 +204,7 @@ static int dns_resolver_thread(void *p) {
 			#endif
 		}
 		else if (failed_error && !stat_resolv_conf()) {
-			Uint32 now = SDL_GetTicks();
+			Uint32 now = jive_jiffies();
 			
 			if (now - failed_timeout < RESOLV_TIMEOUT) {
 				write_str(fd, failed_error);
@@ -232,12 +232,12 @@ static int dns_resolver_thread(void *p) {
 				break;
 			case NO_RECOVERY:
 				failed_error = "No recovery";
-				failed_timeout = SDL_GetTicks();
+				failed_timeout = jive_jiffies();
 				write_str(fd, failed_error);
 				break;
 			case TRY_AGAIN:
 				failed_error = "Try again"; 
-				failed_timeout = SDL_GetTicks();
+				failed_timeout = jive_jiffies();
 				write_str(fd, failed_error);
 				break;
 			}

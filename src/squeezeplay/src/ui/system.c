@@ -66,7 +66,7 @@ static int system_get_uptime(lua_State *L) {
 	int updays, upminutes, uphours;
 
 	// FIXME wraps around after 49.7 days
-	uptime = SDL_GetTicks() / 1000;
+	uptime = jive_jiffies() / 1000;
 
 	updays = (int) uptime / (60*60*24);
         upminutes = (int) uptime / 60;

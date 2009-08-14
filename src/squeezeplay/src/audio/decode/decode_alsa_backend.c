@@ -656,7 +656,7 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_status_t *status;
 	int err, count = 0, count_max = 441, first = 1;
 	u32_t delay, do_open = 1;
-	struct timespec delay_ts;
+	int delay_ts;
 
 	LOG_DEBUG("audio_thread_execute");
 
@@ -740,7 +740,7 @@ static void *audio_thread_execute(void *data) {
 
 		/* playback delay */
 		delay = snd_pcm_status_get_delay(status);
-		clock_gettime(CLOCK_MONOTONIC, &delay_ts)
+		delay_ts = jive_jiffies();
 
 		TIMER_CHECK("STATE");
 
@@ -806,7 +806,7 @@ static void *audio_thread_execute(void *data) {
 
 					/* sync acurate playpoint */
 					decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples - delay;
-					decode_audio->sync_elapsed_timestamp = (delay_ts.tv_sec*1000)+(delay_ts.tv_nsec/1000000);
+					decode_audio->sync_elapsed_timestamp = delay_ts;
 				}
 
 				/* sample rate changed? we do this check while the

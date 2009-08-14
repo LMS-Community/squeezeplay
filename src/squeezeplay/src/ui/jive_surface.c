@@ -438,7 +438,7 @@ void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, 
 
 void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
@@ -448,7 +448,7 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -457,7 +457,7 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
 			  JiveSurface* dst, Uint16 dx, Uint16 dy) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect sr, dr;
@@ -467,7 +467,7 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 	SDL_BlitSurface(src->sdl, &sr, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -475,7 +475,7 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 
 void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint8 alpha) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
@@ -486,7 +486,7 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }

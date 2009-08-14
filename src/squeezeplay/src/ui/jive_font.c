@@ -234,7 +234,7 @@ static int width_ttf_font(JiveFont *font, const char *str) {
 
 static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 	SDL_Color clr;
 	SDL_Surface *srf;
@@ -257,7 +257,7 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tdraw_ttf_font took=%d %s\n", t1-t0, str);
 #endif //JIVE_PROFILE_BLIT
 

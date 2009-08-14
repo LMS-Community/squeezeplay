@@ -119,7 +119,7 @@ static void decode_resume_decoder_handler(void) {
 static void decode_resume_audio_handler(void) {
 	int start_interval;
 
-	start_interval = mqueue_read_u32(&decode_mqueue) - SDL_GetTicks();
+	start_interval = mqueue_read_u32(&decode_mqueue) - jive_jiffies();
 	mqueue_read_complete(&decode_mqueue);
 	
 	if (start_interval < 0) {
@@ -376,7 +376,7 @@ static int decode_thread_execute(void *unused) {
 
 		can_decode = decode_timer_interval(&delay);
 
-		timeout = SDL_GetTicks() + delay;
+		timeout = jive_jiffies() + delay;
 		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
 			// for debugging race conditions
 			//sleep(2);
@@ -757,14 +757,14 @@ static int decode_status(lua_State *L) {
 		else {
 			/* no sync adjustment */
 			elapsed = decode_audio->elapsed_samples;
-			elapsed_jiffies = SDL_GetTicks();
+			elapsed_jiffies = jive_jiffies();
 		}
 
 		elapsed = (elapsed * 1000) / decode_audio->track_sample_rate;
 	}
 	else {
 		elapsed = 0;
-		elapsed_jiffies = SDL_GetTicks();
+		elapsed_jiffies = jive_jiffies();
 	}
 	lua_pushinteger(L, (u32_t)elapsed);
 	lua_setfield(L, -2, "elapsed");

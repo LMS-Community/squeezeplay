@@ -9,6 +9,9 @@
 /* Define to 1 if you have the `calloc' function. */
 #undef HAVE_CALLOC
 
+/* Define to 1 if you have the `clock_gettime' function. */
+#undef HAVE_CLOCK_GETTIME
+
 /* Define to 1 if you have the <dirent.h> header file. */
 #undef HAVE_DIRENT_H
 

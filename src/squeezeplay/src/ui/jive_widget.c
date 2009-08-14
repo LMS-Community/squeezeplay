@@ -398,7 +398,7 @@ int jiveL_widget_check_layout(lua_State *L) {
 	if (!peer || peer->layout_origin != jive_origin) {
 		/* layout dirty, update */
 		if (perfwarn.layout) {
-			t0 = SDL_GetTicks();
+			t0 = jive_jiffies();
 			c0 = clock();
 		}
 
@@ -418,7 +418,7 @@ int jiveL_widget_check_layout(lua_State *L) {
 			peer->skin_origin = jive_origin;
 		}
 
-		if (perfwarn.layout) t1 = SDL_GetTicks();
+		if (perfwarn.layout) t1 = jive_jiffies();
 
 		peer->layout_origin = jive_origin;
 
@@ -429,7 +429,7 @@ int jiveL_widget_check_layout(lua_State *L) {
 		}
 
 		if (perfwarn.layout) {
-			t2 = SDL_GetTicks();
+			t2 = jive_jiffies();
 			c1 = clock();
 			if (t2 - t0 > perfwarn.layout) {
 				lua_getglobal(L, "tostring");

@@ -116,6 +116,19 @@ extern int squeezeplay_find_file(const char *path, char *fullpath);
 int watchdog_get();
 int watchdog_keepalive(int watchdog_id, int count);
 
+/* time */
+#if HAVE_CLOCK_GETTIME
+static inline u32_t jive_jiffies(void)
+{
+	struct timespec now;
+
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	return (now.tv_sec*1000)+(now.tv_nsec/1000000);
+}
+#else
+#define jive_jiffies() SDL_GetTicks()
+#endif
+
 
 #if WITH_DMALLOC
 #include <dmalloc.h>
