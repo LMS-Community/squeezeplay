@@ -519,7 +519,7 @@ local function _menuSink(self, isCurrentServer, server)
 
 					local switchToSc =
 						function()
-							self:_selectMusicSource(action, _player:getLastSqueezeCenter(),
+							self:_selectMusicSource(action, _player and _player:getLastSqueezeCenter() or nil,
 							  self:_getSqueezeNetwork(), true)
 						end
 
