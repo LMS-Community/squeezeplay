@@ -17,6 +17,7 @@ typedef struct textinput_widget {
 	JiveFont *wheel_font;
 	Uint16 char_height;
 	Uint16 wheel_char_height;
+	Uint16 wheel_char_offset_y;
 	bool is_sh;
 	Uint32 fg;
 	Uint32 sh;
@@ -106,6 +107,7 @@ int jiveL_textinput_skin(lua_State *L) {
 	peer->char_height = jive_style_int(L, 1, "charHeight", jive_font_height(peer->font));
 	peer->wheel_char_height = jive_style_int(L, 1, "wheelCharHeight", jive_font_height(peer->font));
 	peer->char_offset_y = jive_style_int(L, 1, "charOffsetY", 0);
+	peer->wheel_char_offset_y = jive_style_int(L, 1, "wheelCharOffsetY", 0);
 
 	return 0;
 }
@@ -384,7 +386,7 @@ int jiveL_textinput_draw(lua_State *L) {
 			offset_x = (cursor_w - jive_font_nwidth(peer->wheel_font, ptr, 1)) / 2;
 			
 			tsrf = jive_font_ndraw_text(peer->wheel_font, peer->wh, ptr, 1);
-			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_cy - (cursor_h / 2) + (-i * peer->wheel_char_height) + jive_font_miny_char(peer->wheel_font, ptr[0]));
+			jive_surface_blit(tsrf, srf, cursor_x + offset_x, text_cy - (cursor_h / 2) + (-i * peer->wheel_char_height) + jive_font_miny_char(peer->wheel_font, ptr[0]) - peer->wheel_char_offset_y);
 			jive_surface_free(tsrf);
 
 			ptr--; // FIXME utf8
