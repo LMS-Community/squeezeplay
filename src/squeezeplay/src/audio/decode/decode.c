@@ -380,6 +380,9 @@ static int decode_thread_execute(void *unused) {
 
 		timeout = SDL_GetTicks() + delay;
 		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
+			// for debugging race conditions
+			//sleep(2);
+
 			handler();
 		}
 

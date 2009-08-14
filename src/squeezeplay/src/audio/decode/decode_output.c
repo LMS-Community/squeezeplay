@@ -16,9 +16,6 @@
 #include <winsock2.h>
 #endif
 
-/* Has the audio output been initialized? */
-static bool_t output_started = FALSE;
-
 /* Track transition information */
 static u32_t decode_transition_type = 0;
 static u32_t decode_transition_period = 0;
@@ -128,15 +125,6 @@ void decode_output_begin(void) {
 	if (decode_audio) {
 		decode_audio->f->start();
 	}
-
-	if (output_started) {
-		return;
-	}
-
-	output_started = TRUE;
-
-	decode_audio->fifo.rptr = 0;
-	decode_audio->fifo.wptr = 0;
 }
 
 
@@ -145,7 +133,8 @@ void decode_output_end(void) {
 
 	ASSERT_AUDIO_LOCKED();
 
-	output_started = FALSE;
+	decode_audio->fifo.rptr = 0;
+	decode_audio->fifo.wptr = 0;
 
 	if (decode_audio) {
 		decode_audio->f->stop();

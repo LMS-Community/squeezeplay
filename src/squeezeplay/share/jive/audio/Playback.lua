@@ -234,7 +234,7 @@ function _timerCallback(self)
 			self.sentDecoderUnderrunEvent then
 
 			log:debug("status AUDIO UNDERRUN")
-			decode:stop() -- XXX need to let last buffer play out before stop
+			decode:stop()
 			self:sendStatus(status, "STMu")
 
 			self.sentAudioUnderrunEvent = true
@@ -265,7 +265,6 @@ function _timerCallback(self)
 	end
 
 	-- Start the decoder when some encoded data is buffered
-	-- FIXME the threshold could be decoder specific?
 	if status.decodeFull > 2048 and
 		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 then
@@ -274,13 +273,20 @@ function _timerCallback(self)
 		decode:resumeDecoder()
 	end
 
-	-- Start the audio when enough encoded data is been received
-	if status.bytesReceivedL > self.threshold and
+	-- Start the audio if:
+	-- 1) this is the first track since the last strm-q
+	-- 2) we have actually finished processing that strm-q
+	-- 3) we have enough encoded data buffered
+	-- 4) we have a bit of output ready
+
+	if status.tracksStarted == 0 and
+		status.audioState & DECODE_RUNNING == 0 and
+		status.bytesReceivedL > self.threshold and
 		status.outputTime > 50 then
 
 --	FIXME in a future release we may change the the threshold to use
 --	the amount of audio buffered, see Bug 6442
---	if status.outputTime / 10 > self.threshold then
+--		status.outputTime / 10 > self.threshold
 
 		if self.autostart == '1' and not self.sentResume then
 			log:debug("resume audio bytesReceivedL=", status.bytesReceivedL, " outputTime=", status.outputTime, " threshold=", self.threshold)
