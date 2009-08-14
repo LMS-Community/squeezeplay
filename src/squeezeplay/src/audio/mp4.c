@@ -697,7 +697,7 @@ u8_t *mp4_read(struct decode_mp4 *mp4, int track_idx, size_t *rlen, bool_t *stre
 
 void mp4_track_conf(struct decode_mp4 *mp4, int track, u8_t **conf, size_t *size)
 {
-	if (mp4->track_count < track) {
+	if (track >= mp4->track_count) {
 		*conf = NULL;
 		*size = 0;
 		return;
