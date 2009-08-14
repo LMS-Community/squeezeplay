@@ -210,8 +210,6 @@ static void decode_stop_handler(void) {
 	decode_first_buffer = FALSE;
 	decode_output_end();
 
-	streambuf_flush();
-
 	decode_audio_unlock();
 }
 

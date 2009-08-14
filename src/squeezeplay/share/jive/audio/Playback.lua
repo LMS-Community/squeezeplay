@@ -264,10 +264,16 @@ function _timerCallback(self)
 		self.tracksStarted = status.tracksStarted
 	end
 
-	-- Start the decoder when some encoded data is buffered
+
+	-- Start the decoder if:
+	-- 1) some encoded data is buffered
+	-- 2) if we are auto-starting
+	-- 3) decode is not already running
+	-- 4) if this is the first track, we are not still decoding the previous track
 	if status.decodeFull > 2048 and
 		(self.autostart == '0' or self.autostart == '1') and
-		status.decodeState & DECODE_RUNNING == 0 then
+		status.decodeState & DECODE_RUNNING == 0 and
+		self.tracksStarted == status.tracksStarted then
 
 		log:debug("resume decoder")
 		decode:resumeDecoder()
