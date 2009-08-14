@@ -17,6 +17,7 @@ local Player                 = require("jive.slim.Player")
 local Slider                 = require("jive.ui.Slider")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local IRMenuAccel            = require("jive.ui.IRMenuAccel")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applet.SlimBrowser")
@@ -26,6 +27,9 @@ local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
 local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
 local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_ALL           = jive.ui.EVENT_IR_ALL
 local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
 local ACTION                 = jive.ui.ACTION
 
@@ -92,7 +96,7 @@ local function _openPopup(self)
 	}))
 
 	popup:focusWidget(nil)
-	popup:addListener(ACTION | EVENT_KEY_ALL,
+	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_IR_DOWN | EVENT_IR_REPEAT,
 			  function(event)
 				  return self:event(event)
 			  end)
@@ -249,7 +253,10 @@ function __init(self, applet)
 	obj.timer = Timer(100, function()
 				       _updateVolume(obj)
 			       end)
-
+        obj.irAccel = IRMenuAccel("volup", "voldown")
+        --kick in accel sooner than default
+	obj.irAccel:setCyclesBeforeAccelerationStarts(2)
+	
 	return obj
 end
 
@@ -279,6 +286,23 @@ function event(self, event)
 			self.delta = 0
 		end
 		_updateVolume(self)
+
+	elseif (type & EVENT_IR_ALL) > 0 then
+		if event:isIRCode("volup") or event:isIRCode("voldown") then
+			--IR vol up/down
+			if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+				local value = self.irAccel:event(event, 1, 1, 1, 100)
+				if value ~= 0 then
+					self.delta = value
+					_updateVolume(self, nil, nil, true)
+					self.delta = 0
+				end
+			end
+			--ignore other volume ir events
+			return EVENT_CONSUME
+		end
+		--all non-volume IR, pass through.
+		return EVENT_UNUSED
 
 	elseif type == ACTION then
 		local action = event:getAction()

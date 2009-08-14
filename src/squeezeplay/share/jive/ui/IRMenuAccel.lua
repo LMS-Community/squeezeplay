@@ -52,6 +52,8 @@ function __init(self, positiveButtonName, negativeButtonName)
 	obj.itemChangeCycles = 0
 	obj.lastDownT = nil
 	obj.onlyScrollByOne = false
+	obj.cyclesBeforeAccelerationStarts = CYCLES_BEFORE_ACCELERATION_STARTS
+
 	return obj
 end
 
@@ -91,7 +93,7 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		if self.lastDownT and (now - self.lastDownT < DOUBLE_CLICK_HOLD_TIME) then
 			--make the acceleration kick in faster on a quick second down
 			self.lastDownT = nil
-			self.itemChangeCycles = CYCLES_BEFORE_ACCELERATION_STARTS - 1
+			self.itemChangeCycles = self.cyclesBeforeAccelerationStarts - 1
 			self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
 		else
 			self.lastDownT = now
@@ -125,7 +127,7 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		   
 		 -- todo: the acceleration algorithm could be listSize based (i.e. scroll faster soon on a longer list)
 
-		if self.itemChangeCycles == CYCLES_BEFORE_ACCELERATION_STARTS then
+		if self.itemChangeCycles == self.cyclesBeforeAccelerationStarts then
 			self.itemChangePeriod = self.itemChangePeriod / 2 
 		elseif self.itemChangeCycles > 80 then
 			scrollBy = 64
@@ -160,6 +162,9 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 	return 0
 end
 
+function setCyclesBeforeAccelerationStarts(self, cyclesBeforeAccelerationStarts)
+	self.cyclesBeforeAccelerationStarts = cyclesBeforeAccelerationStarts
+end
 
 --[[
 

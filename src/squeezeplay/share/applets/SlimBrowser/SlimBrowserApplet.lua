@@ -2311,10 +2311,17 @@ local function _installPlayerKeyHandler(self)
 		return
 	end
 
-	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_ALL,
 		function(event)
 			local type = event:getType()
-			
+
+			if (type & EVENT_IR_ALL ) > 0 then
+				if event:isIRCode("volup") or event:isIRCode("voldown") then
+					return self.volume:event(event)
+				end
+				return EVENT_UNUSED
+			end
+
 			local actionName = _keycodeActionName[event:getKeycode()]
 			if not actionName then
 				return EVENT_UNUSED
