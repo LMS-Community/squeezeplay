@@ -847,7 +847,11 @@ function t_disconnectSlimserver(self)
 	-- disconnect from Player/SqueezeCenter
 	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 
-	_setAction(self, t_waitDisconnectSlimserver)
+--	_setAction(self, t_waitDisconnectSlimserver)
+	-- FIXME: Waiting (i.e. next step) never succeeds if a local SC is present
+	--  as some other functionality (SlimMenus?) reconnects immediately
+	-- Skipping the wait step for now
+	_setAction(self, t_connectJiveAdhoc)
 end
 
 
