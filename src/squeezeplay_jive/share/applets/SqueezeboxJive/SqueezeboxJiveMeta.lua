@@ -81,8 +81,9 @@ function registerApplet(meta)
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
 
+	-- FIXME: Temporarily enable local player to get people through setup
 	-- audio playback defaults
-	appletManager:addDefaultSetting("Playback", "enableAudio", 0)
+	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))

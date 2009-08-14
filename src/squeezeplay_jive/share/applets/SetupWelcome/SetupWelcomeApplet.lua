@@ -187,6 +187,19 @@ end
 function step6(self)
 	log:info("step6")
 
+	-- FIXME: Temporarily enable local player to get people through setup
+
+	-- automatically setup local player as selected player
+	for mac, player in appletManager:callService("iteratePlayers") do
+		if player:isLocal() then
+			appletManager:callService("setCurrentPlayer", player)
+			return self:step7()
+		end
+	end
+
+	-- this should never be called
+	log:error("no local player found?")
+
 	-- find player
 	return appletManager:callService("setupShowSelectPlayer",
 		function()
