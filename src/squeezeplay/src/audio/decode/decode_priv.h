@@ -119,7 +119,9 @@ struct decode_audio {
 	u32_t state;
 	s32_t lgain, rgain;
 	u32_t set_sample_rate;
-	u32_t delay;
+
+	u32_t sync_elapsed_samples;
+	u32_t sync_elapsed_timestamp;
 
 	/* track state */
 	bool_t check_start_point;

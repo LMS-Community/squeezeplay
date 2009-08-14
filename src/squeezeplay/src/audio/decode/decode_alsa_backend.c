@@ -656,6 +656,7 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_status_t *status;
 	int err, count = 0, count_max = 441, first = 1;
 	u32_t delay, do_open = 1;
+	struct timespec delay_ts;
 
 	LOG_DEBUG("audio_thread_execute");
 
@@ -739,6 +740,7 @@ static void *audio_thread_execute(void *data) {
 
 		/* playback delay */
 		delay = snd_pcm_status_get_delay(status);
+		clock_gettime(CLOCK_MONOTONIC, &delay_ts)
 
 		TIMER_CHECK("STATE");
 
@@ -796,13 +798,15 @@ static void *audio_thread_execute(void *data) {
 				decode_audio_lock();
 				TIMER_CHECK("LOCK");
 
-				decode_audio->delay = delay;
-
 				if (state->capture_pcm) {
 					capture_loopback(state, buf, frames);
 				}
 				else {
 					playback_callback(state, buf, frames);
+
+					/* sync acurate playpoint */
+					decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples - delay;
+					decode_audio->sync_elapsed_timestamp = (delay_ts.tv_sec*1000)+(delay_ts.tv_nsec/1000000);
 				}
 
 				/* sample rate changed? we do this check while the

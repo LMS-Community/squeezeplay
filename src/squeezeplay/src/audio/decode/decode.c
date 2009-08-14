@@ -721,8 +721,8 @@ static int decode_song_ended(lua_State *L) {
 
 static int decode_status(lua_State *L) {
 	size_t size, usedbytes;
-	u32_t bytesL, bytesH;
-	u64_t elapsed, delay, output;
+	u32_t bytesL, bytesH, elapsed_jiffies;
+	u64_t elapsed, output;
 
 	if (!decode_audio) {
 		return 0;
@@ -749,22 +749,27 @@ static int decode_status(lua_State *L) {
 	lua_setfield(L, -2, "outputTime");
 
 	if (decode_audio->track_sample_rate) {
-		elapsed = decode_audio->elapsed_samples;
-		// XXXX need to discuss delay with alan 
-		delay = decode_audio->delay;
-		if (elapsed > delay) {
-			elapsed -= delay;
+		if (decode_audio->sync_elapsed_timestamp) {
+			/* elapsed is sync adjusted */
+			elapsed = decode_audio->sync_elapsed_samples;
+			elapsed_jiffies = decode_audio->sync_elapsed_timestamp;
 		}
+		else {
+			/* no sync adjustment */
+			elapsed = decode_audio->elapsed_samples;
+			elapsed_jiffies = SDL_GetTicks();
+		}
+
 		elapsed = (elapsed * 1000) / decode_audio->track_sample_rate;
 	}
 	else {
 		elapsed = 0;
+		elapsed_jiffies = SDL_GetTicks();
 	}
 	lua_pushinteger(L, (u32_t)elapsed);
 	lua_setfield(L, -2, "elapsed");
 	
-	/* get jiffies here so they correlate with "elapsed" as closely as possible */
-	lua_pushinteger(L, (u32_t)SDL_GetTicks());
+	lua_pushinteger(L, elapsed_jiffies);
 	lua_setfield(L, -2, "elapsed_jiffies");
 	
 	lua_pushinteger(L, decode_audio->num_tracks_started);
