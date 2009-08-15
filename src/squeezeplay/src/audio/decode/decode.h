@@ -11,6 +11,7 @@
 #define DECODE_STATE_ERROR		(1 << 2)
 #define DECODE_STATE_NOT_SUPPORTED	(1 << 3)
 #define DECODE_STATE_LOOPBACK 		(1 << 4)
+#define DECODE_STATE_STOPPING 		(1 << 5)
 
 /* Transitions */
 #define TRANSITION_NONE               0x0

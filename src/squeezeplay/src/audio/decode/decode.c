@@ -605,10 +605,14 @@ static int decode_stop(lua_State *L) {
 	LOG_DEBUG(log_audio_decode, "decode_stop");
 
 	if (mqueue_write_request(&decode_mqueue, decode_stop_handler, 0)) {
+		decode_audio_lock();
+		decode_audio->state |= DECODE_STATE_STOPPING;
+		decode_audio_unlock();
+
 		mqueue_write_complete(&decode_mqueue);
 	}
 	else {
-		LOG_DEBUG(log_audio_decode, "Full message queue, dropped start message");
+		LOG_DEBUG(log_audio_decode, "Full message queue, dropped stop message");
 	}
 
 	return 0;

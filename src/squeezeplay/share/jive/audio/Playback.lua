@@ -30,6 +30,7 @@ local DECODE_RUNNING        = (1 << 0)
 local DECODE_UNDERRUN       = (1 << 1)
 local DECODE_ERROR          = (1 << 2)
 local DECODE_NOT_SUPPORTED  = (1 << 3)
+local DECODE_STOPPING       = (1 << 5)
 
 -- disconnect codes
 local TCP_CLOSE_FIN           = 0
@@ -256,6 +257,7 @@ function _timerCallback(self)
 
 	-- Cannot test of stream is not nil because stream may be complete (and closed) before track start
 	if status.decodeState & DECODE_RUNNING ~= 0
+		and status.audioState & DECODE_STOPPING == 0
 		and (self.tracksStarted < status.tracksStarted) then
 
 		log:debug("status TRACK STARTED")
@@ -269,11 +271,11 @@ function _timerCallback(self)
 	-- 1) some encoded data is buffered
 	-- 2) if we are auto-starting
 	-- 3) decode is not already running
-	-- 4) if this is the first track, we are not still decoding the previous track
+	-- 4) we have finished processing any strm-q command
 	if status.decodeFull > 2048 and
 		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 and
-		self.tracksStarted == status.tracksStarted then
+		status.audioState & DECODE_STOPPING == 0 then
 
 		log:debug("resume decoder")
 		decode:resumeDecoder()
@@ -286,7 +288,7 @@ function _timerCallback(self)
 	-- 4) we have a bit of output ready
 
 	if status.tracksStarted == 0 and
-		status.audioState & DECODE_RUNNING == 0 and
+		status.audioState & DECODE_STOPPING == 0 and
 		status.bytesReceivedL > self.threshold and
 		status.outputTime > 50 then
 
