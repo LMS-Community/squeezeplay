@@ -143,6 +143,7 @@ void decode_output_end(void) {
 	crossfade_started = FALSE;
 	transition_gain_step = 0;
 	decode_audio->elapsed_samples = 0;
+	decode_audio->sync_elapsed_timestamp = 0;
 }
 
 

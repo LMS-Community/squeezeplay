@@ -804,8 +804,14 @@ static void *audio_thread_execute(void *data) {
 				else {
 					playback_callback(state, buf, frames);
 
-					/* sync acurate playpoint */
-					decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples - delay;
+					/* sync accurate playpoint */
+					decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
+
+					/* FIXME - shouldn't we evaluate delay and delay_ts here, rather than earlier, before the loop? */
+
+					if (decode_audio->sync_elapsed_samples > delay) {
+						decode_audio->sync_elapsed_samples -= delay;
+					}
 					decode_audio->sync_elapsed_timestamp = delay_ts;
 				}
 
