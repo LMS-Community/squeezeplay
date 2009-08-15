@@ -752,23 +752,30 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, (u32_t)output);
 	lua_setfield(L, -2, "outputTime");
 
+	elapsed_jiffies = jive_jiffies();
+
 	if (decode_audio->track_sample_rate) {
 		if (decode_audio->sync_elapsed_timestamp) {
 			/* elapsed is sync adjusted */
 			elapsed = decode_audio->sync_elapsed_samples;
-			elapsed_jiffies = decode_audio->sync_elapsed_timestamp;
+
 		}
 		else {
 			/* no sync adjustment */
 			elapsed = decode_audio->elapsed_samples;
-			elapsed_jiffies = jive_jiffies();
 		}
 
 		elapsed = (elapsed * 1000) / decode_audio->track_sample_rate;
+
+		if ((decode_audio->state & DECODE_STATE_RUNNING) &&
+			decode_audio->sync_elapsed_timestamp &&
+			elapsed_jiffies > decode_audio->sync_elapsed_timestamp)
+		{
+			elapsed += (elapsed_jiffies - decode_audio->sync_elapsed_timestamp);
+		}
 	}
 	else {
 		elapsed = 0;
-		elapsed_jiffies = jive_jiffies();
 	}
 	lua_pushinteger(L, (u32_t)elapsed);
 	lua_setfield(L, -2, "elapsed");
