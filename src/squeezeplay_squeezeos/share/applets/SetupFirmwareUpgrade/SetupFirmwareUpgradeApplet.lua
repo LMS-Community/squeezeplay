@@ -455,6 +455,7 @@ function _upgrade(self, url)
 	self.popup:addWidget(self.text)
 	self.popup:addWidget(self.counter)
 	self.popup:addWidget(self.progress)
+	self.popup:focusWidget(self.text)
 
 	-- make sure this popup remains on screen
 	self.popup:setAllowScreensaver(false)
