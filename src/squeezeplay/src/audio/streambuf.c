@@ -756,10 +756,15 @@ static int stream_feedfromL(lua_State *L) {
 	 * 2: string to enqueue to streambuf
 	 */
 
+	n = streambuf_get_freebytes();
+
+	if (n == 0) {
+		lua_pushinteger(L, 0);
+		return 1;
+	}
+
 	stream = lua_touserdata(L, 1);
 	data = (u8_t*)lua_tolstring(L, 2, &len);
-
-	n = streambuf_get_freebytes();
 
 	if (n > len) {
 		n = len;
