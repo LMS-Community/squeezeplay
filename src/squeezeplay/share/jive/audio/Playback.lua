@@ -163,6 +163,7 @@ function _timerCallback(self)
 		return
 	end
 
+--[[
 	-- cpu power saving
 	local outputFullness = status.outputFull / status.outputSize * 100
 	if status.decodeSize > 0 then
@@ -181,6 +182,16 @@ function _timerCallback(self)
 	elseif not self.stream or decodeFullness > 99 then
 		self.jnt:networkInactive(self)
 	end
+--]]
+
+	if status.decodeState & DECODE_RUNNING ~= 0
+		self.jnt:cpuActive(self)
+		self.jnt:networkActive(self)
+	else
+		self.jnt:cpuInactive(self)
+		self.jnt:networkInactive(self)
+	end
+
 
 	-- enable stream reads when decode buffer is not full
 	if status.decodeFull < status.decodeSize and self.stream then
