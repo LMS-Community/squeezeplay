@@ -209,10 +209,15 @@ local function _decideFirstChunk(step, jsonAction)
 		return 0, qty
 	end
 
+	local isContextMenu = false
+	if step and step.window and step.window:isContextMenu() then
+		isContextMenu = true
+	end
+
 	local commandString = _stringifyJsonRequest(jsonAction)
 	local lastBrowse    = _player:getLastBrowse(commandString)
 
-	if not lastBrowse then
+	if not lastBrowse or isContextMenu then
 		_player.menuAnchor = nil
 	end
 
@@ -221,7 +226,7 @@ local function _decideFirstChunk(step, jsonAction)
 	log:debug('Saving this json command to browse history table:')
 	log:debug(commandString)
 
-	if lastBrowse then
+	if lastBrowse and not isContextMenu then
 		from = _getNewStartValue(lastBrowse.index)
 		_player.menuAnchor = lastBrowse.index 
 	else
@@ -1603,14 +1608,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 
 		local itemType = _safeDeref(item, 'actions', actionName, 'params', 'type')
 
-		-- is there a nextWindow on the action
-		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow') 
-	
-		-- actions take precedence over items/base, item takes precendence over base
-		nextWindow = aNextWindow or iNextWindow or bNextWindow
-
 		choiceAction = _safeDeref(item, 'actions', 'do', 'choices')
-		
+
 		-- now check for a run-of-the mill action
 		if not (iAction or bAction or onAction or offAction or choiceAction) then
 			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
@@ -1620,7 +1619,13 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- okay to call on or off this, as they are just special cases of 'do'
 			actionName = 'do'
 		end
-		
+
+		-- is there a nextWindow on the action
+		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow')
+
+		-- actions take precedence over items/base, item takes precendence over base
+		nextWindow = aNextWindow or iNextWindow or bNextWindow
+
 		-- XXX: After an input box is used, chunk is nil, so base can't be used
 	
 		if iAction or bAction or choiceAction or nextWindow then
@@ -1721,7 +1726,12 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif nextWindow == 'parent' then
 					_hideMe()
 				elseif nextWindow == 'grandparent' then
-					_hideMeAndMyDad()
+					local currentStep = _getCurrentStep()
+					if currentStep and currentStep.window and currentStep.window:isContextMenu() then
+						Window:hideContextMenus()
+					else
+						_hideMeAndMyDad()
+					end
 				elseif nextWindow == 'refreshOrigin' then
 					_refreshOrigin()
 				elseif nextWindow == 'refresh' then
