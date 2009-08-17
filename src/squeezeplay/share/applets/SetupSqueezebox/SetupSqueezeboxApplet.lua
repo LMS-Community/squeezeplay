@@ -111,7 +111,9 @@ end
 
 
 -- setup squeezebox
-function setupSqueezeboxSettingsShow(self, keepOldEntries)
+function setupSqueezeboxSettingsShow(self, setupNext)
+	self.setupNext = setupNext
+
 	local window = Window("text_list", self:string("SQUEEZEBOX_SETUP"), setupsqueezeboxTitleStyle)
 
 	-- window to return to on completion of network settings
@@ -128,7 +130,7 @@ function setupSqueezeboxSettingsShow(self, keepOldEntries)
 	-- during initial setup. if this becomes a problem a "finding
 	-- squeezeboxen" screen will need to be added.
 	if self.wireless then
-		self:_scanComplete(self.wireless:scanResults(), keepOldEntries)
+		self:_scanComplete(self.wireless:scanResults(), true)
 	end
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
@@ -157,10 +159,9 @@ end
 
 -- bridge jive via a squeezebox
 function setupAdhocShow(self, setupNext)
-	self.setupNext = setupNext
 	self.bridged = true
 
-	local window = setupSqueezeboxSettingsShow(self, true)
+	local window = setupSqueezeboxSettingsShow(self, setupNext)
 	window:setAllowScreensaver(false)
 
 	return window
@@ -169,9 +170,7 @@ end
 
 -- setup squeezebox
 function setupSqueezeboxShow(self, setupNext)
-	self.setupNext = setupNext
-
-	local window = setupSqueezeboxSettingsShow(self, true)
+	local window = setupSqueezeboxSettingsShow(self, setupNext)
 	window:setAllowScreensaver(false)
 
 	self.scanMenu:addItem({
@@ -336,7 +335,7 @@ function startSqueezeboxSetup(self, mac, adhoc, setupNext)
 		self.interface = ''
 		self.ipAddress = ''
 
-		_setAction(self, t_waitSqueezeboxNetwork, "find_slimserver")
+		_setAction(self, "t_waitSqueezeboxNetwork", "find_slimserver")
 		_setupSqueezebox(self)
 	end
 end
@@ -504,7 +503,7 @@ function _setupConfig(self)
 	end
 
 	-- begin setup
-	_setAction(self, t_setupBegin, "connect_network")
+	_setAction(self, "t_setupBegin", "connect_network")
 	self.actionTask:addTask()
 
 	-- start spinny
@@ -524,7 +523,7 @@ function t_setupBegin(self)
 		t_bridgedConfig(self)
 	end
 
-	_setAction(self, t_disconnectSlimserver)
+	_setAction(self, "t_disconnectSlimserver")
 end
 
 
@@ -838,7 +837,7 @@ end
 
 -- disconnect from all slimservers
 function t_disconnectSlimserver(self)
-	log:info("t_disconnectSlimserver")
+	log:debug("t_disconnectSlimserver")
 
 	-- we must have a network connection now, either to an
 	-- access point or bridged.
@@ -847,17 +846,17 @@ function t_disconnectSlimserver(self)
 	-- disconnect from Player/SqueezeCenter
 	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 
---	_setAction(self, t_waitDisconnectSlimserver)
+--	_setAction(self, "t_waitDisconnectSlimserver")
 	-- FIXME: Waiting (i.e. next step) never succeeds if a local SC is present
 	--  as some other functionality (SlimMenus?) reconnects immediately
 	-- Skipping the wait step for now
-	_setAction(self, t_connectJiveAdhoc)
+	_setAction(self, "t_connectJiveAdhoc")
 end
 
 
 -- wait until we have disconnected from all slimservers
 function t_waitDisconnectSlimserver(self)
-	log:info("t_waitDisconnectSlimserver")
+	log:debug("t_waitDisconnectSlimserver")
 
 	local connected = false
 
@@ -871,7 +870,7 @@ function t_waitDisconnectSlimserver(self)
 	end		
 
 	if not connected then
-		_setAction(self, t_connectJiveAdhoc)
+		_setAction(self, "t_connectJiveAdhoc")
 	end
 end
 
@@ -879,7 +878,7 @@ end
 -- connects jive to the squeezebox adhoc network. we also capture the existing
 -- network id for later.
 function t_connectJiveAdhoc(self)
-	log:info("connectSqueezebox")
+	log:debug("connectSqueezebox")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
@@ -904,13 +903,13 @@ function t_connectJiveAdhoc(self)
 
 	self.adhoc_ssid = ssid
 
-	_setAction(self, t_waitJiveAdhoc)
+	_setAction(self, "t_waitJiveAdhoc")
 end
 
 
 -- polls jive network status, waiting until we have connected to the ad-hoc network.
 function t_waitJiveAdhoc(self)
-	log:info("waitSqueezebox")
+	log:debug("waitSqueezebox")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_CONNECTION"
 
@@ -921,7 +920,7 @@ function t_waitJiveAdhoc(self)
 	end
 
 	-- we're connected
-	_setAction(self, t_udapDiscover)
+	_setAction(self, "t_udapDiscover")
 end
 
 
@@ -935,7 +934,7 @@ end
 
 -- discover the Squeezebox over udap. this makes sure that the Squeezebox exists.
 function t_udapDiscover(self)
-	log:info("udapDiscover")
+	log:debug("udapDiscover")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -950,7 +949,7 @@ end
 -- network settings, and the dhcp or static ip settings. we don't configure the
 -- slimserver yet.
 function t_udapSetData(self)
-	log:info("udapSetData")
+	log:debug("udapSetData")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -972,7 +971,7 @@ end
 
 -- reset Squeezebox over udap
 function t_udapReset(self)
-	log:info("udapReset")
+	log:debug("udapReset")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -986,14 +985,14 @@ function t_udapReset(self)
 	-- by now we are probably about to fail anyway
 	if self._timeout >= 10 then
 		log:warn("missing reset response, assuming squeezebox has rebooted")
-		_setAction(self, t_connectJiveNetwork)
+		_setAction(self, "t_connectJiveNetwork")
 	end
 end
 
 
 -- Get Squeezebox UUID
 function t_udapGetUUID(self)
-	log:info("udapGetUUID")
+	log:debug("udapGetUUID")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -1005,7 +1004,7 @@ end
 
 -- Get Squeezebox IP address
 function t_udapGetIPAddr(self)
-	log:info("udapGetIPAddr")
+	log:debug("udapGetIPAddr")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -1023,7 +1022,7 @@ function t_udapSink(self, chunk, err)
 	end
 
 	local pkt = Udap.parseUdap(chunk.data)
-	log:info("seqno=", self.seqno, " pkt=", Udap.tostringUdap(pkt))
+	log:debug("seqno=", self.seqno, " pkt=", Udap.tostringUdap(pkt))
 
 	if self.seqno ~= pkt.seqno then
 		log:info("discarding old packet")
@@ -1032,20 +1031,20 @@ function t_udapSink(self, chunk, err)
 
 	if pkt.uapMethod == "discover" then
 		if self._action == t_udapDiscover then
-			_setAction(self, t_udapSetData)
+			_setAction(self, "t_udapSetData")
 		end
 
 	elseif pkt.uapMethod == "set_data" then
 		if self._action == t_udapSetData then
-			_setAction(self, t_udapReset)
+			_setAction(self, "t_udapReset")
 		elseif self._action == t_udapSetSlimserver then
-			_setAction(self, t_waitSlimserver)
+			_setAction(self, "t_waitSlimserver")
 		end
 
 	elseif pkt.uapMethod == "reset"
 		and self._action == t_udapReset then
 
-		_setAction(self, t_connectJiveNetwork)
+		_setAction(self, "t_connectJiveNetwork")
 
 	elseif pkt.uapMethod == "adv_discover" then
 		if self._action == t_waitSqueezeboxNetwork then
@@ -1057,7 +1056,7 @@ function t_udapSink(self, chunk, err)
 				self.errorMsg = "SQUEEZEBOX_PROBLEM_DHCP_ERROR"
 
 			elseif pkt.ucp.device_status == "wait_slimserver" then
-				_setAction(self, t_udapGetUUID)
+				_setAction(self, "t_udapGetUUID")
 
 			elseif pkt.ucp.device_status == "connected" then
 				-- we should not get this far yet
@@ -1074,7 +1073,7 @@ function t_udapSink(self, chunk, err)
 		log:info("squeezebox uuid=", pkt.uuid)
 
 		self.uuid = pkt.uuid
-		_setAction(self, t_udapGetIPAddr)
+		_setAction(self, "t_udapGetIPAddr")
 
 	-- Get Squeezebox IP address to be shown to user
 	elseif pkt.uapMethod == "get_ip"
@@ -1114,13 +1113,13 @@ function t_connectJiveNetwork(self)
 	end
 
 	self.wireless:t_selectNetwork(self.networkSSID)
-	_setAction(self, t_waitJiveNetwork)
+	_setAction(self, "t_waitJiveNetwork")
 end
 
 
 -- polls jives network status, waiting until we have connected to the network again.
 function t_waitJiveNetwork(self)
-	log:info("waitJiveNetwork")
+	log:debug("waitJiveNetwork")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_NETWORK"
 
@@ -1134,7 +1133,7 @@ function t_waitJiveNetwork(self)
 		-- reconnect to Player/SqueezeCenter
 		appletManager:callService("connectPlayer")
 
-		_setAction(self, t_waitSqueezeboxNetwork)
+		_setAction(self, "t_waitSqueezeboxNetwork")
 	end
 end
 
@@ -1143,7 +1142,7 @@ end
 -- replies with a status string so we know when the Squeezebox is ready to connect
 -- to slimserver.
 function t_waitSqueezeboxNetwork(self)
-	log:info("waitSqueezeboxNetwork")
+	log:debug("waitSqueezeboxNetwork")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_CONNECTION_ERROR"
 
@@ -1284,7 +1283,7 @@ function _setSlimserver(self, slimserver)
 	end
 
 	-- we are not SqueezeNetwork, so continue
-	_setAction(self, t_udapSetSlimserver, "connect_slimserver")
+	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
 	_setupSqueezebox(self)
 end
 
@@ -1300,7 +1299,7 @@ function _registerPlayer(self, slimserver)
 		slimserver:request(nil, nil, cmd)
 	end
 
-	_setAction(self, t_udapSetSlimserver, "connect_slimserver")
+	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
 	_setupSqueezebox(self)
 end
 
@@ -1309,7 +1308,7 @@ end
 -- repeats until notify_playerNew or notify_playerConnected indicate that
 -- the player is successfully connected to slimserver.
 function t_udapSetSlimserver(self)
-	log:info("t_connectSqueezeboxSlimserver")
+	log:debug("t_connectSqueezeboxSlimserver")
 
 	self.errorMsg = "SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX"
 
@@ -1343,7 +1342,7 @@ function notify_playerNew(self, player)
 		if player:isNeedsUpgrade() then
 			-- make sure we are in the waiting for slimserver state, this is
 			-- needed in case the set slimserver udap packets got lost
-			_setAction(self, t_waitSlimserver)
+			_setAction(self, "t_waitSlimserver")
 			self._totalTimeout = SETUP_EXTENDED_TIMEOUT
 
 			_updatingPlayer(self)
@@ -1400,9 +1399,9 @@ end
 
 
 function _setAction(self, action, label)
-	log:info("SET ACTION: ", action)
+	log:info("next action: ", action)
 
-	self._action = action
+	self._action = self[action]
 	self._timeout = 1
 	self._totalTimeout = SETUP_TIMEOUT
 
@@ -1424,7 +1423,7 @@ function t_nextAction(self)
 	while true do
 		local action = self._action
 
-		log:info("t_nextAction timeout=", self._timeout, " total=", self._totalTimeout)
+		log:debug("t_nextAction timeout=", self._timeout, " total=", self._totalTimeout)
 
 		-- action timeout?
 		self._timeout = self._timeout + 1

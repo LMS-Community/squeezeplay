@@ -207,7 +207,7 @@ function t_getWritePump(self, t_source)
 		local err = socket.skip(1, ltn12.pump.step(t_source, sink))
 		
 		if err then
-			log:error("SocketUdp:writePump:", err)
+			log:warn("SocketUdp:writePump:", err)
 		end
 	end
 end

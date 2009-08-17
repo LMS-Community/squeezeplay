@@ -143,7 +143,7 @@ local function _timeout(now, sockList)
 		-- we want the second case, the sock is a userdata (implemented by LuaSocket)
 		-- we also want the timeout to exist and have expired
 		if type(v) == "userdata" and t.timeout > 0 and now - t.lastSeen > t.timeout then
-			log:error("network thread timeout for ", t.task)
+			log:warn("network thread timeout for ", t.task)
 			t.task:addTask("inactivity timeout")
 		end
 	end

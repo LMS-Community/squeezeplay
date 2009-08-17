@@ -357,7 +357,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 			text = self:string("SQUEEZEBOX_SETUP"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				appletManager:callService("setupSqueezeboxSettingsShow")
+				appletManager:callService("setupSqueezeboxSettingsShow", self.setupNext)
 			end,
 			iconStyle = 'receiver',
 			style = 'item',
@@ -441,7 +441,7 @@ function selectPlayer(self, player)
 		appletManager:callService("startSqueezeboxSetup", 
 			player:getId(),
 			player:getSSID(),
-			function()
+			self.setupNext or function()
 				jiveMain:closeToHome()
 			end
 		)
