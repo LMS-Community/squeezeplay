@@ -18,6 +18,7 @@ extern int luaopen_spprivate(lua_State *L);
 #endif
 
 #define DECODE_MAX_INTERVAL 500
+#define DECODE_WAIT_INTERVAL 100
 
 #define DECODE_MQUEUE_SIZE 512
 
@@ -332,6 +333,14 @@ static bool_t decode_timer_interval(u32_t *delay) {
 		return false;
 	}
 
+	/* Small delay if the stream empty? */
+	if (!streambuf_get_usedbytes()) {
+		*delay = DECODE_WAIT_INTERVAL;
+		
+		return false;
+	}
+
+	/* Variable delay based on output buffer fullness */
 	max_samples = decoder->samples(decoder_data);
 
 	decode_audio_lock();
