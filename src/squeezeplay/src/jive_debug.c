@@ -72,7 +72,7 @@ static void perf_hook(lua_State *L, lua_Debug *ar)
 			
 			lua_pop(L, 2);
 
-			if (duration > hd->kill_threshold) {
+			if (hd->kill_threshold && (duration > hd->kill_threshold)) {
 				exit(-1);
 			}
 		}
