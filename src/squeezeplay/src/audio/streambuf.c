@@ -828,6 +828,7 @@ static int stream_icy_metaintervalL(lua_State *L) {
 
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
+	{ "flush", stream_flushL },
 	{ "loadLoop", stream_load_loopL },
 	{ "markLoop", stream_mark_loopL },
 	{ "icyMetaInterval", stream_icy_metaintervalL },
@@ -837,7 +838,6 @@ static const struct luaL_Reg stream_f[] = {
 static const struct luaL_Reg stream_m[] = {
 	{ "__gc", stream_disconnectL },
 	{ "disconnect", stream_disconnectL },
-	{ "flush", stream_flushL },
 	{ "getfd", stream_getfdL },
 	{ "read", stream_readL },
 	{ "write", stream_writeL },

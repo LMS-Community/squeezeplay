@@ -375,6 +375,11 @@ end
 
 function _streamDisconnect(self, reason, flush)
 	if not self.stream then
+		if flush then
+			log:debug("flush streambuf")
+			Stream:flush()
+			self.slimproto:sendStatus('STMf')
+		end
 		return
 	end
 
@@ -384,13 +389,11 @@ function _streamDisconnect(self, reason, flush)
 	self.jnt:t_removeRead(self.stream)
 
 	self.stream:disconnect()
-	if flush then
-		self.stream:flush()
-	end
 	self.stream = nil
 
 	-- Notify SqueezeCenter the stream is closed
 	if (flush) then
+		Stream:flush()
 		self.slimproto:sendStatus('STMf')
 	else
 		self.slimproto:send({
@@ -502,9 +505,7 @@ function _strm(self, data)
 	elseif data.command == 'f' then
 		-- flush
 		decode:flush()
-		if self.stream then
-			self.stream:flush()
-		end
+		self:_streamDisconnect(nil, true)
 
 	elseif data.command == 'p' then
 		-- pause
