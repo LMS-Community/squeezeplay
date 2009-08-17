@@ -184,7 +184,7 @@ function _timerCallback(self)
 	end
 --]]
 
-	if status.decodeState & DECODE_RUNNING ~= 0
+	if status.decodeState & DECODE_RUNNING ~= 0 then
 		self.jnt:cpuActive(self)
 		self.jnt:networkActive(self)
 	else
