@@ -1584,11 +1584,11 @@ function skin(self, s)
 		h = 178,
 		x = 145,
 		y = 72,
+		position = LAYOUT_NONE,
 		group = {
-			position = LAYOUT_CENTER,
 			order = { 'icon' },
-			border = 22,
-			padding = { 0, 22, 0, 22 },
+			border = { 22, 22, 0, 0 },
+			padding = 0,
 			icon = {
 				w = WH_FILL,
 				h = WH_FILL,
@@ -1906,8 +1906,8 @@ function skin(self, s)
 	}
 
 	local _popupicon = {
-		w = WH_FILL,
-		h = 80,
+		w = 146,
+		h = 134,
 		align = 'center',
 		position = LAYOUT_CENTER,
 	}
@@ -1986,6 +1986,27 @@ function skin(self, s)
                 img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
         })
 
+	s.icon_popup_sleep_15 = _uses(s._popupIcon, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
+		h = 134,
+		w = 146,
+	})
+	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
+	})
+	s.icon_popup_sleep_45 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_45.png"),
+	})
+	s.icon_popup_sleep_60 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_60.png"),
+	})
+	s.icon_popup_sleep_90 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_90.png"),
+	})
+	s.icon_popup_sleep_cancel = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
+		padding = { 0, 10, 0, 0 },
+	})
 
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)

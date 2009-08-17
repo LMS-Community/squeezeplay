@@ -1191,9 +1191,7 @@ function _process_displaystatus(self, event)
 	if data.display then
 		local display = data.display
 		local type    = display["type"] or 'text'
-
-		-- FIXME: the display.special part of this clause can be removed when 7.4 is released
-		local special = display and (display.special or (type == 'icon' and display.style))
+		local special = display and (type == 'icon' and display.style)
 
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])

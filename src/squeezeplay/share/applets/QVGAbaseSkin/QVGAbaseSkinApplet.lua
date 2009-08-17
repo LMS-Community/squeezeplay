@@ -1144,8 +1144,7 @@ function skin(self, s, reload, useDefaultSize)
 			icon = {
 				align = 'top-left',
 				border = { 12, 12, 0, 0 },
-				-- FIXME: need this asset
-				img = _loadImage(self, "MISSING_PLACEHOLDER_ARTWORK"),
+				img = false,
 				h = WH_FILL,
 				w = c.THUMB_SIZE,
 			}
@@ -1158,6 +1157,26 @@ function skin(self, s, reload, useDefaultSize)
 			order = { 'text' },
                 }
         })
+
+	-- toast popup with icon only
+	s.toast_popup_icon = _uses(s.toast_popup, {
+		w = 132,
+		h = 132,
+		x = 94,
+		y = 54,
+		position = LAYOUT_NONE,
+		group = {
+			order = { 'icon' },
+			border = { 26, 26, 0, 0 },
+			padding = 0,
+			icon = {
+				w = WH_FILL,
+				h = WH_FILL,
+				align = 'center',
+			},
+		}
+	})
+	local popupMask = Tile:fillColor(0x00000085)
 
 	-- context menu window
 	s.context_menu = {
@@ -1361,7 +1380,58 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_popup_mute = _uses(s._popupIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
 	})
+	s.icon_popup_sleep_15 = _uses(s._popupIcon, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
+		h = 80,
+		w = 80,
+	})
+	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
+	})
+	s.icon_popup_sleep_45 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_45.png"),
+	})
+	s.icon_popup_sleep_60 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_60.png"),
+	})
+	s.icon_popup_sleep_90 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_90.png"),
+	})
+	s.icon_popup_sleep_cancel = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
+	})
 
+	s.icon_popup_shuffle0 = _uses(_popupicon, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
+		h = WH_FILL,
+	})
+	s.icon_popup_shuffle1 = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle.png"),
+	})
+	s.icon_popup_shuffle2 = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_shuffle_album.png"),
+	})
+
+	s.icon_popup_repeat0 = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_repeat_off.png"),
+	})
+	s.icon_popup_repeat1 = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_repeat_song.png"),
+	})
+	s.icon_popup_repeat2 = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
+	})
+
+	s.icon_popup_pause = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
+	s.icon_popup_play = _uses(s.icon_popup_shuffle0, {
+		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
+	})
+	s.icon_popup_stop = _uses(s.icon_popup_shuffle0, {
+		--FIXME, need a stop icon for this
+		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+	})
 
 	s.presetPointer3 = {
 		w = WH_FILL,
