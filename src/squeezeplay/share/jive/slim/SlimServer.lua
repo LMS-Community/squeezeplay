@@ -568,6 +568,9 @@ function free(self)
 	end
 	self.players = {}
 
+	self.upgradeUrl = false
+	self.upgradeForce = false
+
 	-- server is no longer active
 	serverList[self.id] = nil
 
