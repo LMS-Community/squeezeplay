@@ -15,6 +15,7 @@ local SlimServer        = require("jive.slim.SlimServer")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jive          = jive
 local jnt           = jnt
 
 
@@ -35,6 +36,10 @@ end
 
 
 function registerApplet(meta)
+	-- profile functions, 1 second warn, 10 second die
+	jive.perfhook(1000, 10000)
+
+
 	--disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
 	jnt:setArpEnabled(false)
 

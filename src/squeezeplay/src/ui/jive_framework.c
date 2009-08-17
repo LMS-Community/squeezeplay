@@ -265,7 +265,7 @@ static int jiveL_initSDL(lua_State *L) {
 	lua_pop(L, 2);
 
 	ui_watchdog = watchdog_get();
-	watchdog_keepalive(ui_watchdog, 2); /* 20 seconds to start */
+	watchdog_keepalive(ui_watchdog, 4); /* 40 seconds to start */
 
 	return 0;
 }
@@ -593,7 +593,8 @@ int jiveL_update_screen(lua_State *L) {
 	 */
 
 	/* ping watchdog */
-	watchdog_keepalive(ui_watchdog, 1);
+	// FIXME 30 seconds
+	watchdog_keepalive(ui_watchdog, 3);
 
 	if (!update_screen) {
 		return 0;

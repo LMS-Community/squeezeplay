@@ -372,7 +372,8 @@ static int decode_thread_execute(void *unused) {
 		u32_t timeout, delay; // XXXX timer wrap around
 		bool_t can_decode;
 
-		watchdog_keepalive(decode_watchdog, 1);
+		/* XXXX 30 seconds for testing */
+		watchdog_keepalive(decode_watchdog, 3);
 
 		can_decode = decode_timer_interval(&delay);
 

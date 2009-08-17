@@ -11,17 +11,21 @@
 
 #define CLOCKS_PER_MSEC (CLOCKS_PER_SEC / 1000)
 
+static struct log_category *log_debug_hooks;
 
 struct perf_hook_data {
 	Uint32 hook_stack;
 	clock_t hook_threshold;
+	clock_t kill_threshold;
 	clock_t hook_ticks[100];
 };
 
-static void perf_hook(lua_State *L, lua_Debug *ar) {
+static void perf_hook(lua_State *L, lua_Debug *ar)
+{
 	struct perf_hook_data *hd;
+	clock_t ticks, duration;
 
-	clock_t ticks = clock();
+	ticks = clock();
 
 	lua_pushlightuserdata(L, (char *)((unsigned long)L) + 1);
 	lua_gettable(L, LUA_REGISTRYINDEX);
@@ -39,8 +43,10 @@ static void perf_hook(lua_State *L, lua_Debug *ar) {
 	}
 	else {
 		hd->hook_stack--;
+		duration = ticks - hd->hook_ticks[hd->hook_stack];
+
 		if (hd->hook_stack < sizeof(hd->hook_ticks)
-		    && ticks - hd->hook_ticks[hd->hook_stack] > hd->hook_threshold) {
+		    && duration > hd->hook_threshold) {
 
 			lua_getfield(L, LUA_GLOBALSINDEX, "debug");
 			if (!lua_istable(L, -1)) {
@@ -54,7 +60,7 @@ static void perf_hook(lua_State *L, lua_Debug *ar) {
 			}
 
 			/* message */
-			lua_pushstring(L, "Warning function took ");
+			lua_pushstring(L, "Func took ");
 			lua_pushinteger(L, (ticks - hd->hook_ticks[hd->hook_stack]) * 1000 / CLOCKS_PER_SEC);
 			lua_pushstring(L, "ms");
 			lua_concat(L, 3);
@@ -62,9 +68,13 @@ static void perf_hook(lua_State *L, lua_Debug *ar) {
 			lua_pushinteger(L, 1);
 			lua_call(L, 2, 1);  /* call debug.traceback */
 
-			printf("%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_debug_hooks, "%s\n", lua_tostring(L, -1));
 			
 			lua_pop(L, 2);
+
+			if (duration > hd->kill_threshold) {
+				exit(-1);
+			}
 		}
 	}
 }
@@ -72,7 +82,9 @@ static void perf_hook(lua_State *L, lua_Debug *ar) {
 
 /*
  * Install a debug hook to report functions that take too long to
- * execute. Takes one argument that is the time threshold in ms.
+ * execute. Takes two arguments, the first is the time threshold
+ * in ms. If the second optional time threashold is exceeded the
+ * process is exited (to trigger the system crash actions).
  */
 static int jiveL_perfhook(lua_State *L) {
 	struct perf_hook_data *hd;
@@ -89,6 +101,7 @@ static int jiveL_perfhook(lua_State *L) {
 
 	memset(hd, 0, sizeof(hd));
 	hd->hook_threshold = lua_tointeger(L, 1) * CLOCKS_PER_MSEC;
+	hd->kill_threshold = luaL_optinteger(L, 2, 0) * CLOCKS_PER_MSEC;
 
 	return 0;
 }
@@ -381,6 +394,8 @@ static const struct luaL_Reg debug_funcs[] = {
 
 
 int luaopen_jive_debug(lua_State *L) {
+	log_debug_hooks = log_category_get("lua.hooks");
+
 	/* heap history */
 	lua_newtable(L);
 	lua_setfield(L, LUA_REGISTRYINDEX, "heap_debug");
