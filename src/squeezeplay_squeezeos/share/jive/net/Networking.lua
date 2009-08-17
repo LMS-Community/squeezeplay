@@ -428,9 +428,9 @@ function getRegion(self)
 	local code = tonumber(string.match(line, "getregioncode:(%d+)"))
 
 	for name,mapping in pairs(REGION_CODE_MAPPING) do
-		log:info("code=", code, " mapping[1]=", mapping[1])
+		log:debug("code=", code, " mapping[1]=", mapping[1])
 		if mapping[1] == code then
-			log:info("returning=", name)
+			log:debug("returning=", name)
 			return name
 		end
 	end
@@ -622,11 +622,15 @@ function _wirelessScanTask(self, callback)
 	end
 
 	-- timeout networks
+	local count = 0
 	for ssid, entry in pairs(self._scanResults) do
+		count = count + 1
 		if now - entry.lastScan > SSID_TIMEOUT then
 			self._scanResults[ssid] = nil
 		end
 	end
+
+	log:info("scan found ", count, " wireless networks")
 
 	-- Bug #5227 if we are associated use the same quality indicator
 	-- as the icon bar
@@ -1534,7 +1538,7 @@ function request(self, ...)
 	end
 
 
-	log:info("REQUEST: ", ...)
+	log:debug("REQUEST: ", ...)
 
 	-- open the socket if it is closed
 	if not self.t_sock and not self:open() then
@@ -1564,7 +1568,7 @@ function request(self, ...)
 		return "", err
 	end
 
-	log:info("REPLY:", reply, " for ", ...)
+	log:debug("REPLY:", reply, " for ", ...)
 	return reply
 end
 
