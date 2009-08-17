@@ -1986,11 +1986,11 @@ function skin(self, s)
                 img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
         })
 
-	s.icon_popup_sleep_15 = _uses(s._popupIcon, {
+	s.icon_popup_sleep_15 = {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
 		h = 134,
 		w = 146,
-	})
+	}
 	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
 	})

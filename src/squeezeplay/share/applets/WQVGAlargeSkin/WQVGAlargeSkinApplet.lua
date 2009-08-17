@@ -1128,13 +1128,15 @@ function skin(self, s)
 
 	-- toast popup with icon only
 	s.toast_popup_icon = _uses(s.toast_popup, {
-		w = 146,
-		h = 134,
-		x = screenWidth/2 - 146/2,
-		y = screenHeight/2 - 134/2,
+                w = 190,
+                h = 178,
+                x = 145,
+                y = 72,
+                position = LAYOUT_NONE,
 		group = {
 			padding = 0,
 			order = { 'icon' },
+			border = { 22, 22, 0, 0 },
 			icon = {
 				w = WH_FILL,
 				h = WH_FILL,
@@ -1489,6 +1491,27 @@ function skin(self, s)
                 img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
         })
 
+	s.icon_popup_sleep_15 = {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
+		h = 134,
+		w = 146,
+	}
+	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
+	})
+	s.icon_popup_sleep_45 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_45.png"),
+	})
+	s.icon_popup_sleep_60 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_60.png"),
+	})
+	s.icon_popup_sleep_90 = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_90.png"),
+	})
+	s.icon_popup_sleep_cancel = _uses(s.icon_popup_sleep_15, {
+		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
+		padding = { 0, 10, 0, 0 },
+	})
 	s.icon_power = _uses(_icon, {
 -- FIXME no asset for this (needed?)
 --		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
