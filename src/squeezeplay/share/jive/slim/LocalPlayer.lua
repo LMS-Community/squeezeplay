@@ -37,7 +37,7 @@ function setDeviceType(self, model, name)
 end
 
 
---class method - disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player
+--class method - disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player (if there is a local player), otherwise set current player to nil
 function disconnectServerAndPreserveLocalPlayer(self)
 	--disconnect from player and server
 	self:setCurrentPlayer(nil)
@@ -45,7 +45,7 @@ function disconnectServerAndPreserveLocalPlayer(self)
 	--Free server from local player, and re-set current player to LocalPlayer
 	local localPlayer = Player:getLocalPlayer()
 	if localPlayer then
-		localPlayer.slimproto:disconnect()
+		localPlayer:disconnectFromServer()
 		localPlayer:free(localPlayer:getSlimServer())
 		Player:setCurrentPlayer(localPlayer)
 	end
