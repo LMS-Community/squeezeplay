@@ -1215,6 +1215,11 @@ function _process_displaystatus(self, event)
 			if usingTouch then
 				showMe = false
 			end
+		elseif type == 'popupalbum' then
+			s = self.currentSong
+			s.text:setValue(textValue)
+			s.artIcon:setStyle("icon")
+			self.slimServer:fetchArtwork(display["icon-id"] or display["icon"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
 		elseif type == 'song' then
 			self.jnt:notify('playerTitleStatus', self, textValue, duration)
 			showMe = false
