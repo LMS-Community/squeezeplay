@@ -1401,7 +1401,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
 	})
 
-	s.icon_popup_shuffle0 = _uses(_popupicon, {
+	s.icon_popup_shuffle0 = _uses(s._popupIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
 		h = WH_FILL,
 	})
