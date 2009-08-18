@@ -307,7 +307,7 @@ end
 function _networkScan(self, iface)
 	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
         popup:addWidget(Icon("icon_connecting"))
         popup:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
@@ -593,6 +593,26 @@ function _enterSSID(self, iface)
 end
 
 
+-- This fuction is called with nocheck set to nil, "config" or "wps"
+--
+-- nocheck = nil:      User has selected an SSID from the list
+-- nocheck = "config": Connection failed, user selected "Try again"
+-- nocheck = "wps":    WPS capable AP, but user has chosen to enter passphrase manually
+--
+-- Possible reasons for a failed connection:
+-- a) Connection failed (AP too far away, incorrect passhrase or key)
+-- b) DHCP failed
+--
+-- Reason a) could also mean passphrase has been changed on the AP, i.e. we still
+--  have a network configuration stored for that SSID from an earlier successful
+--  connection, but now fail due to the changed passphrase.
+-- If such an SSID is chosen from the list (and we enter with nocheck = nil) the
+--  connection attempt will fail, but if "Try again" is then chosen (nocheck = "config")
+--  which bypasses the automatic connection attempt for this already configured SSID
+--  and the user can modify the passphrase.
+-- We also need to bypass the automatic connection attempt for already configured
+--  SSIDs for WPS APs which are using manual passphrases. (nocheck = "wps")
+
 -- wireless network choosen, we need the password
 function _enterPassword(self, iface, ssid, nocheck)
 	assert(iface and ssid, debug.traceback())
@@ -603,7 +623,7 @@ function _enterPassword(self, iface, ssid, nocheck)
 	end
 
 	-- is the ssid already configured
-	if nocheck ~= "config" and self.scanResults[ssid].id ~= nil then
+	if nocheck ~= "config" and nocheck ~= "wps" and self.scanResults[ssid].id ~= nil then
 		return _connect(self, iface, ssid, false, false)
 	end
 
@@ -1139,7 +1159,7 @@ function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 			_connectTimer(self, iface, ssid, createNetwork)
 		end)
 	popup:addWidget(icon)
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	-- XXXX popup text, including dhcp detection text
 
@@ -1357,7 +1377,7 @@ function _connectSuccess(self, iface, ssid)
 	-- popup confirmation
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	local name = self.scanResults[ssid].item.text
 	local text = Label("text", self:string("NETWORK_CONNECTED_TO"))
@@ -1393,9 +1413,9 @@ function _connectFailed(self, iface, ssid, reason)
 	-- Message based on failure type
 	local password = ""
 	if self.encryption then
-		if string.match(self.encryption, "^wep.*") then
+		if self.key and string.match(self.encryption, "^wep.*") then
 			password = self.key
-		elseif string.match(self.encryption, "^wpa*") then
+		elseif self.psk and string.match(self.encryption, "^wpa*") then
 			password = self.psk
 		end
 	end
@@ -1805,7 +1825,7 @@ function _setStaticIP(self, iface, ssid)
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connecting"))
-	popup:ignoreAllInputExcept({"back"})
+	popup:ignoreAllInputExcept()
 
 	local name = self.scanResults[ssid].item.text
 	popup:addWidget(Label("text", self:string("NETWORK_CONNECTING_TO_SSID")))
