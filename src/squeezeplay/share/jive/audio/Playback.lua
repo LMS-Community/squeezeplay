@@ -240,7 +240,8 @@ function _timerCallback(self)
 		-- 2) the decoder has underrun
 
 		-- output underruns are used by the server to detect
-		-- when XXXX
+		-- when streaming (and decoding) is not able to keep up with playback,
+		-- usualy for radio streams
 
 		if not self.sentAudioUnderrunEvent and
 			self.sentDecoderUnderrunEvent then
@@ -295,12 +296,12 @@ function _timerCallback(self)
 	-- Start the audio if:
 	-- 1) this is the first track since the last strm-q
 	-- 2) we have actually finished processing that strm-q
-	-- 3) we have enough encoded data buffered
+	-- 3) we have enough encoded data buffered or the stream is complete
 	-- 4) we have a bit of output ready
 
 	if status.tracksStarted == 0 and
 		status.audioState & DECODE_STOPPING == 0 and
-		status.bytesReceivedL > self.threshold and
+		(status.bytesReceivedL > self.threshold or not self.stream) and
 		status.outputTime > 50 then
 
 --	FIXME in a future release we may change the the threshold to use
