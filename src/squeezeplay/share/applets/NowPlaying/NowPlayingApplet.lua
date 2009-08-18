@@ -606,11 +606,11 @@ function _installListeners(self, window)
 		end
 	)
 
-	local playlistSize = self.player and self.player:getPlaylistSize()
-
 	local showPlaylistAction = function (self)
 		window:playSound("WINDOWSHOW")
 	
+		local playlistSize = self.player and self.player:getPlaylistSize()
+
 		if playlistSize == 1 then
 			-- use special showTrackOne method from SlimBrowser
 			appletManager:callService("showTrackOne")
