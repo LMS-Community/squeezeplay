@@ -880,13 +880,12 @@ function t_addNetwork(self, ssid, option)
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
-	-- If we have not scanned the ssid then enable scanning with ssid 
-	-- specific probe requests. This allows us to find APs with hidden
-	-- SSIDS
-	if not self._scanResults[ssid] then
-		request = 'SET_NETWORK ' .. id .. ' scan_ssid 1'
-		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-	end
+	-- Enable scanning with ssid specific probe requests at all times.
+	-- (Previously we only did it for hidden SSIDs, i.e. when not listed in self._scanResults[ssid])
+	-- This allows us to find APs with hidden SSIDs _and_ APs where the SSID
+	--  is hidden later on. And it also works for non hidden SSIDs.
+	request = 'SET_NETWORK ' .. id .. ' scan_ssid 1'
+	assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 
 	-- Disconnect from existing network
 	self:_ifDown()
