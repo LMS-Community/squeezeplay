@@ -519,8 +519,8 @@ end
 -- it is not called in practice
 function Digital:DrawMaxTest()
 
-	self.h1:setValue('1')
-	self.h2:setValue('2')
+	self.h1:setValue('2')
+	self.h2:setValue('4')
 	self.m1:setValue('5')
 	self.m2:setValue('9')
 	
@@ -1677,7 +1677,7 @@ function Digital:getDigitalClockSkin(skinName)
 	elseif skinName == 'QVGAportraitSkin'  then
 		local digitalClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Digital/jive_clock_digital.png")
 		local digitalClockDigit = {
-			font = _font(100),
+			font = _font(90),
 			fg = { 0xcc, 0xcc, 0xcc },
 			w = WH_FILL,
 		}
@@ -1686,26 +1686,26 @@ function Digital:getDigitalClockSkin(skinName)
 		}
 		local _clockDigit = {
 			position = LAYOUT_NONE,
-			font = _font(100),
+			font = _font(90),
 			align = 'right',
 			fg = { 0xcc, 0xcc, 0xcc },
 			w = 62,
-			y = 121,
+			y = 123,
 			zOrder = 10,
 		}
 		local _digitShadow = _uses(_clockDigit, {
-			y = 188,
+			y = 185,
+			padding = { 4, 0, 0, 0 },
 			zOrder = 1,
 		})
 	
 		local x = {}
-                x.h1 = -7
-                x.h2 = x.h1 + 45
-                x.dots = x.h2 + 65
-                x.m1 = x.dots + 7
-                x.m2 = x.m1 + 62
-                x.alarm = x.m2 + 62
-		x.ampm = x.alarm
+                x.h1 = 0
+                x.h2 = x.h1 + 49
+                x.dots = x.h2 + 62
+                x.m1 = x.dots + 4
+                x.m2 = x.m1 + 49
+                x.alarm = x.h1
 
 		s.icon_digitalClockDropShadow = {
 			img = _loadImage(self, "Clocks/Digital/drop_shadow_digital.png"),
@@ -1731,7 +1731,7 @@ function Digital:getDigitalClockSkin(skinName)
 		s.icon_digitalDots = {
 			img = _loadImage(self, 'Clocks/Digital/clock_dots_digital.png'),
 			align = 'center',
-			w = 16,
+			w = 18,
 			padding = { 0, 0, 0, 0 },
 		}
 
@@ -1755,8 +1755,8 @@ function Digital:getDigitalClockSkin(skinName)
 			}),
 			dots = _uses(_clockDigit, {
 				x = x.dots,
-				w = 7,
-				y = 148,
+				w = 18,
+				y = 143,
 			}),
 			m1 = _uses(_clockDigit, {
 				x = x.m1,
@@ -1783,8 +1783,8 @@ function Digital:getDigitalClockSkin(skinName)
 
 			ampm = {
 				position = LAYOUT_NONE,
-				x = 207,
-				y = 214,
+				x = 203,
+				y = 208,
 				font = _font(14),
 				align = 'bottom',
 				fg = { 0xcc, 0xcc, 0xcc },
