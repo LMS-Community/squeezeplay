@@ -53,6 +53,14 @@ static int callback(const void *inputBuffer,
 
 	decode_audio_lock();
 
+	bytes_used = fifo_bytes_used(&decode_audio->fifo);
+
+	/* Should we start the audio now based on having enough decoded data? */
+	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >=  len)	{
+		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
+		decode_audio->state |= DECODE_STATE_RUNNING;
+	}
+
 	/* audio running? */
 	if (!(decode_audio->state & DECODE_STATE_RUNNING)) {
 		memset(outputArray, 0, len);
@@ -75,8 +83,6 @@ static int callback(const void *inputBuffer,
 			goto mixin_effects;
 		}
 	}
-
-	bytes_used = fifo_bytes_used(&decode_audio->fifo);	
 
 	/* only skip if it will not cause an underrun */
 	if (bytes_used >= len && decode_audio->skip_ahead_bytes > 0) {

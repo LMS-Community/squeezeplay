@@ -525,10 +525,11 @@ function _strm(self, data)
 
 	elseif data.command == 'u' then
 		-- unpause
-		local interval_ms = data.replayGain
+		local jiffies = data.replayGain
 
 		log:debug("resume unpause")
-		decode:resumeAudio(interval_ms)
+		decode:resumeAudio(jiffies)
+		self.sentDecoderFullEvent = true -- fake, as the strm-u means that the server is no longer waiting for STMl
 		self.slimproto:sendStatus('STMr')
 
 	elseif data.command == 't' then

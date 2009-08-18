@@ -257,6 +257,13 @@ static void playback_callback(struct decode_alsa *state,
 	ASSERT_AUDIO_LOCKED();
 
 	len = SAMPLES_TO_BYTES(framesPerBuffer);
+	bytes_used = fifo_bytes_used(&decode_audio->fifo);
+
+	/* Should we start the audio now based on having enough decoded data? */
+	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >=  len)	{
+		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
+		decode_audio->state |= DECODE_STATE_RUNNING;
+	}
 
 	/* audio running? */
 	if (!(decode_audio->state & DECODE_STATE_RUNNING)) {
@@ -286,8 +293,6 @@ static void playback_callback(struct decode_alsa *state,
 		}
 	}
 
-	bytes_used = fifo_bytes_used(&decode_audio->fifo);
-	
 	/* only skip if it will not cause an underrun */
 	if (bytes_used >= len && decode_audio->skip_ahead_bytes > 0) {
 		skip_bytes = bytes_used - len;
