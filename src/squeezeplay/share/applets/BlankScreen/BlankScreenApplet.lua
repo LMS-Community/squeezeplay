@@ -46,6 +46,8 @@ function init(self)
 	self.bgicon = Icon("icon", self.bg)
 	self.window:addWidget(self.bgicon)
 
+	self.window:setShowFrameworkWidgets(false)
+
 	self.window:addListener(EVENT_WINDOW_ACTIVE | EVENT_HIDE,
 		function(event)
 			local type = event:getType()
