@@ -26,13 +26,20 @@ end
 
 function configureApplet(self)
 
-	--[[ FIXME: Bug 12325
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
+		"Clock", 
+		"openAnalogClock", _, _, 23
+	)
+
+	--[[
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_RADIAL"), 
 		"Clock", 
-		"openAnalogClock", _, _, 28
+		"openRadialClock", _, _, 28
 	)
 	--]]
+
 
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL"), 

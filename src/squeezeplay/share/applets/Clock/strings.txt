@@ -3,6 +3,21 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 
+SCREENSAVER_CLOCK_STYLE_ANALOG
+	CS	Analogové hodiny
+	DA	Analogt ur
+	DE	Analoguhr
+	EN	Analog Clock
+	ES	Reloj analógico
+	FI	Analoginen kello
+	FR	Analogique
+	IT	Orologio analogico
+	NL	Analoge klok
+	NO	Analog klokke
+	PL	Zegar analogowy
+	RU	Аналоговые часы
+	SV	Analog klocka
+
 SCREENSAVER_CLOCK_STYLE_RADIAL
 	CS	Paprskové hodiny
 	DA	Radialur

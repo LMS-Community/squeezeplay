@@ -296,6 +296,73 @@ function DotMatrix:DrawDate(digit, groupKey)
 	widget:setStyle(style)
 end
 
+Analog = oo.class({}, Clock)
+
+function Analog:__init(applet)
+	log:info("Init Analog Clock")
+
+	local skinName   = jiveMain:getSelectedSkin()
+	local skin       = Analog:getAnalogClockSkin(skinName)
+
+	obj = oo.rawnew(self, Clock(skin))
+
+	obj.skinParams = Analog:getSkinParams(skinName)
+	obj.clockface = Surface:loadImage(obj.skinParams.clockface)
+	obj.pointer_hour = Surface:loadImage(obj.skinParams.hourHand)
+	obj.pointer_minute = Surface:loadImage(obj.skinParams.minuteHand)
+
+	-- bring in applet's self so strings are available
+	obj.applet    = applet
+
+	obj:_createSurface()
+
+	obj.clock_format = "%H:%M"
+	return obj
+end
+
+function Analog:_createSurface()
+        self.bg  = Surface:newRGBA(self.screen_width, self.screen_height)
+        self.bgicon = Icon("background", self.bg)
+        self.window:addWidget(self.bgicon)
+end
+
+function Analog:Draw()
+	-- Draw Background
+	self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, 0x000000FF)
+
+	local x, y
+
+	-- Clock Face
+	local facew, faceh = self.clockface:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	self.clockface:blit(self.bg, x, y)
+
+	-- Setup Time Objects
+	local m = os.date("%M")
+	local h = os.date("%I")
+
+	-- Hour Pointer
+	local angle = (360 / 12) * (h + (m/60))
+
+	local tmp = self.pointer_hour:rotozoom(-angle, 1, 5)
+	local facew, faceh = tmp:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	tmp:blit(self.bg, x, y)
+
+	-- Minute Pointer
+	local angle = (360 / 60) * m 
+
+	local tmp = self.pointer_minute:rotozoom(-angle, 1, 5)
+	local facew, faceh = tmp:getSize()
+	x = math.floor((self.screen_width/2) - (facew/2))
+	y = math.floor((self.screen_height/2) - (faceh/2))
+	tmp:blit(self.bg, x, y)
+	self.bgicon:reDraw()
+end
+
+
 Digital = oo.class({}, Clock)
 
 function Digital:__init(applet, ampm)
@@ -665,6 +732,10 @@ function openDetailedClockTransparent(self, force)
 end
 
 function openAnalogClock(self, force)
+	return self:_openScreensaver("Analog", _, force)
+end
+
+function openRadialClock(self, force)
 	return self:_openScreensaver("Radial", _, force)
 end
 
@@ -719,6 +790,9 @@ function _openScreensaver(self, type, windowStyle, force)
 	elseif type == "Radial" then
 		self.clock[1] = Radial(self, weekstart)
 		self.clock[2] = Radial(self, weekstart)
+	elseif type == "Analog" then
+		self.clock[1] = Analog(self)
+		self.clock[2] = Analog(self)
 	else
 		log:error("Unknown clock type")
 		return
@@ -1792,6 +1866,18 @@ function Digital:getDigitalClockSkin(skinName)
 	return s
 end
 
+-- ANALOG CLOCK
+function Analog:getAnalogClockSkin(skinName)
+	if skinName == 'WQVGAlargeSkin' then
+		skinName = 'WQVGAsmallSkin'
+	end
+	self.skinName = skinName
+	self.imgpath = _imgpath(self)
+
+	return {}
+end
+
+
 -- RADIAL CLOCK
 function Radial:getRadialClockSkin(skinName)
 	if skinName == 'WQVGAlargeSkin' then
@@ -1897,6 +1983,28 @@ function Radial:getSkinParams(skin)
 		hourTickPath     = 'applets/' .. skin .. '/images/Clocks/Radial/radial_ticks_hr_on.png',
 		minuteTickPath   = 'applets/' .. skin .. '/images/Clocks/Radial/radial_ticks_min_on.png',
 	}
+end
+
+function Analog:getSkinParams(skin)
+	if skin == 'WQVGAsmallSkin' or skin == 'WQVGAlargeSkin' then
+	        return {
+			minuteHand = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_min_hand.png',
+			hourHand   = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			clockface  = 'applets/WQVGAsmallSkin/images/Clocks/Analog/wallpaper_clock_analog.png',
+		}
+	elseif skin == 'QVGAlandscapeSkin' then
+	        return {
+			minuteHand = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_min_hand.png',
+			hourHand   = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			clockface  = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/bb_wallpaper_clock_analog.png',
+		}
+	elseif skin == 'QVGAportraitSkin' then
+	        return {
+			minuteHand = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_min_hand.png',
+			hourHand   = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			clockface  = 'applets/QVGAportraitSkin/images/Clocks/Analog/jive_wallpaper_clock_analog.png',
+		}
+	end
 end
 
 
