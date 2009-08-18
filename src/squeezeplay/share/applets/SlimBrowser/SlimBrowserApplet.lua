@@ -385,10 +385,19 @@ local function _stepLockHandler(step, loadedCallback)
 			function()
 				step.cancelled = true
 			end)
+		if currentStep.simpleMenu then
+			currentStep.simpleMenu:lock(
+				function()
+					step.cancelled = true
+				end)
+		end
 	end
 	step.loaded = function()
 		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
+		end
+		if currentStep.simpleMenu then
+			currentStep.simpleMenu:unlock()
 		end
 
 		loadedCallback()
@@ -1187,6 +1196,7 @@ local function _browseSink(step, chunk, err)
 								-- Make a SimpleMenu to support headerWidget, in place of the step menu, but keep the step menu around, which has the item listener logic
 								local menu = SimpleMenu("menu")
 
+								step.simpleMenu = menu
 								for i, item in ipairs(item_loop) do
 									if item.text then
 										menu:addItem( {
