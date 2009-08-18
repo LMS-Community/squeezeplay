@@ -510,6 +510,11 @@ local function _menuSink(self, isCurrentServer, server)
 							end
 						end
 
+				if _safeDeref(v, 'actions', 'play') then
+					--used with, for instance, RandomPlay
+					item.isPlayableItem = true
+				end
+
 				item.callback = function()
 					local switchToSn =
 						function()

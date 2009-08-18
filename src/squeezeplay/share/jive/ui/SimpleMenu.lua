@@ -61,6 +61,7 @@ local Widget          = require("jive.ui.Widget")
 local table           = require("jive.utils.table")
 local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
+local ACTION    = jive.ui.ACTION
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
@@ -164,7 +165,8 @@ local function _itemListener(menu, list, menuItem, index, event)
 		return EVENT_UNUSED
 	end
 
-	if event:getType() == EVENT_ACTION and item.callback then
+	if (event:getType() == EVENT_ACTION and item.callback) or
+		(item.isPlayableItem and event:getType() == ACTION and event:getAction() == "play")  then
 		if item.sound then
 			menuItem:playSound(item.sound)
 		end

@@ -388,7 +388,7 @@ local function _eventHandler(self, event)
 				end
 				return EVENT_CONSUME
 
-			elseif action == "go" or action == "play" then
+			elseif action == "go" then
 
 				local r = self:dispatchNewEvent(EVENT_ACTION)
 
