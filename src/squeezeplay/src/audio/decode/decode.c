@@ -136,7 +136,7 @@ static void decode_resume_audio_handler(void) {
 		decode_audio->add_silence_ms = start_interval;
 	}
 
-	if ((decode_audio->state & (DECODE_STATE_RUNNING | DECODE_STATE_AUTOSTART) == 0)) {
+	if (((decode_audio->state & (DECODE_STATE_RUNNING | DECODE_STATE_AUTOSTART)) == 0)) {
 		decode_audio->state = DECODE_STATE_AUTOSTART;
 		decode_audio->f->resume();
 	}
