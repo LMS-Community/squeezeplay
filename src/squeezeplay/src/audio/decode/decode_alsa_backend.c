@@ -260,7 +260,7 @@ static void playback_callback(struct decode_alsa *state,
 	bytes_used = fifo_bytes_used(&decode_audio->fifo);
 
 	/* Should we start the audio now based on having enough decoded data? */
-	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >=  len)	{
+	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >  (len * state->period_count))	{
 		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
 		decode_audio->state |= DECODE_STATE_RUNNING;
 	}
