@@ -2959,9 +2959,8 @@ function showTrackOne()
 	local baseData = playerStatus and playerStatus.base
 	local bWindow = _safeDeref(baseData, 'window')
 
-	local bAction = _safeDeref(baseData, 'actions', 'go')
-	local iAction = _safeDeref(item, 'actions', 'go')
-
+	local bAction = _safeDeref(baseData, 'actions', 'more')
+	local iAction = _safeDeref(item, 'actions', 'more')
 	local jsonAction
 
 	-- if the action is defined in the item, then do that
@@ -2985,7 +2984,7 @@ function showTrackOne()
 
 	-- determine style
 	local newWindowSpec = {
-		["windowStyle"]      = "trackinfo",
+		['isContextMenu']    = true,
 		["menuStyle"]        = "menu",
 		["labelItemStyle"]   = "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
