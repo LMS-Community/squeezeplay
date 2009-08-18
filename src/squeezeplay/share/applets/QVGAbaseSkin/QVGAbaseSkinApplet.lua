@@ -1401,10 +1401,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
 	})
 
-	s.icon_popup_shuffle0 = _uses(s._popupIcon, {
+	s.icon_popup_shuffle0 = {
 		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
 		h = WH_FILL,
-	})
+	}
 	s.icon_popup_shuffle1 = _uses(s.icon_popup_shuffle0, {
 		img = _loadImage(self, "Icons/icon_popup_box_shuffle.png"),
 	})
@@ -1422,16 +1422,16 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
 	})
 
-	s.icon_popup_pause = _uses(s.icon_popup_shuffle0, {
+	s.icon_popup_pause = {
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
-	})
-	s.icon_popup_play = _uses(s.icon_popup_shuffle0, {
+	}
+	s.icon_popup_play = _uses{
 		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
-	})
-	s.icon_popup_stop = _uses(s.icon_popup_shuffle0, {
+	}
+	s.icon_popup_stop = {
 		--FIXME, need a stop icon for this
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
-	})
+	}
 
 	s.presetPointer3 = {
 		w = WH_FILL,
