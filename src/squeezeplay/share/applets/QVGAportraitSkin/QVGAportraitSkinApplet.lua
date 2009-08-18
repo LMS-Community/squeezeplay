@@ -75,7 +75,7 @@ function param(self)
 	return {
 		THUMB_SIZE = 41,
 		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = 240,
+		nowPlayingBrowseArtworkSize = "240x240",
 		nowPlayingSSArtworkSize     = 240,
 		nowPlayingLargeArtworkSize  = 240,
 		nowPlayingTitleStatusLabel  = "artist",

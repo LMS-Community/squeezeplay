@@ -9,7 +9,7 @@ charActionMappings.press = {
 --BEGIN temp shortcuts to test action framework
 	["["]  = "go_now_playing",
 	["]"]  = "go_playlist",
-	["{"]  = "go_current_track_details",
+	["{"]  = "go_current_track_info",
 	["`"]  = "go_playlists",
 	[";"]  = "go_music_library",
 	[":"]  = "go_favorites",

@@ -1380,11 +1380,9 @@ function _goPlayPresetAction(self, event)
 end
 
 
-function _goCurrentTrackDetailsAction()
-	--todo -get menu object, iterate through to current, select it - doh, harder than I thought for something that's not yet a requirement
---	showPlaylist()
---	Framework:pushAction( "go")
-	return EVENT_CONSUME
+function _goCurrentTrackInfoAction()
+	showCurrentTrack()
+	return EVENT_CONSUME	
 end
 
 -- _globalActions
@@ -1401,7 +1399,7 @@ local _globalActionsNEW = {
 	["go_music_library"] = _goMusicLibraryAction,
 	["go_rhapsody"] = _goRhapsodyAction,
 	["go_alarms"] = _goAlarmsAction,
-	["go_current_track_details"] = _goCurrentTrackDetailsAction,
+	["go_current_track_info"] = _goCurrentTrackInfoAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
 	["mute"] = _goMuteToggleAction,
@@ -2917,7 +2915,7 @@ function showPlaylist()
 			_statusStep.window:setTitle(_string(modeTokens['off']))
 		end
 
-		if playlistSize == 0 then
+		if playlistSize == 0 or not playlistSize then
 			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
 			customWindow:show()
 			return EVENT_CONSUME
@@ -2952,8 +2950,23 @@ end
 -- this method is used solely by NowPlaying Applet for
 -- skipping the playlist screen when the playlist size == 1
 function showTrackOne()
+	showTrack(1)
+end
+
+
+function showCurrentTrack()
+	local currentIndex = _player:getPlaylistCurrentIndex()
+	showTrack(currentIndex)
+end
+
+
+function showTrack(index)
+	-- TODO: handle situation where playlist size is 0
 	local playerStatus = _player:getPlayerStatus()
-	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[1]
+	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[index]
+	if not item then
+		return
+	end
 	local iWindow = _safeDeref(item, 'window')
 
 	local baseData = playerStatus and playerStatus.base

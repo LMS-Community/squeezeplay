@@ -811,6 +811,11 @@ function _createUI(self)
 			end)
 	self.volSlider.jumpOnDown = false
 	self.volSlider.dragThreshold = 5
+	window:addActionListener('add', self, function()
+		Framework:pushAction('go_current_track_info')
+		return EVENT_CONSUME
+	end)
+
 	window:addActionListener("page_down", self,
 				function()
 					local e = Event:new(EVENT_SCROLL, 1)
@@ -967,7 +972,8 @@ function showNowPlaying(self, transition)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
 	if not self.player or not playerStatus 
-			or not playerStatus.playlist_tracks then
+ 		or not playerStatus.playlist_tracks  
+			or playerStatus.playlist_tracks == 0 then
 		local browser = appletManager:getAppletInstance("SlimBrowser")
 		browser:showPlaylist()
 		return
