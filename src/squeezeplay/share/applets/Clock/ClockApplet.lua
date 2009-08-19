@@ -307,36 +307,30 @@ function Analog:__init(applet)
 	obj = oo.rawnew(self, Clock(skin))
 
 	obj.skinParams = Analog:getSkinParams(skinName)
-	obj.clockface = Surface:loadImage(obj.skinParams.clockface)
 	obj.pointer_hour = Surface:loadImage(obj.skinParams.hourHand)
 	obj.pointer_minute = Surface:loadImage(obj.skinParams.minuteHand)
 
 	-- bring in applet's self so strings are available
 	obj.applet    = applet
 
-	obj:_createSurface()
+	obj.canvas   = Canvas('debug_canvas', function(screen)
+		obj:_reDraw(screen)
+	end)
+	obj.window:addWidget(obj.canvas)
 
 	obj.clock_format = "%H:%M"
 	return obj
 end
 
-function Analog:_createSurface()
-        self.bg  = Surface:newRGBA(self.screen_width, self.screen_height)
-        self.bgicon = Icon("background", self.bg)
-        self.window:addWidget(self.bgicon)
+function Analog:Draw()
+	self.canvas:reDraw()
 end
 
-function Analog:Draw()
+function Analog:_reDraw(screen)
 	-- Draw Background
-	self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, 0x000000FF)
+	--self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, 0x000000FF)
 
 	local x, y
-
-	-- Clock Face
-	local facew, faceh = self.clockface:getSize()
-	x = math.floor((self.screen_width/2) - (facew/2))
-	y = math.floor((self.screen_height/2) - (faceh/2))
-	self.clockface:blit(self.bg, x, y)
 
 	-- Setup Time Objects
 	local m = os.date("%M")
@@ -349,7 +343,7 @@ function Analog:Draw()
 	local facew, faceh = tmp:getSize()
 	x = math.floor((self.screen_width/2) - (facew/2))
 	y = math.floor((self.screen_height/2) - (faceh/2))
-	tmp:blit(self.bg, x, y)
+	tmp:blit(screen, x, y)
 
 	-- Minute Pointer
 	local angle = (360 / 60) * m 
@@ -358,8 +352,7 @@ function Analog:Draw()
 	local facew, faceh = tmp:getSize()
 	x = math.floor((self.screen_width/2) - (facew/2))
 	y = math.floor((self.screen_height/2) - (faceh/2))
-	tmp:blit(self.bg, x, y)
-	self.bgicon:reDraw()
+	tmp:blit(screen, x, y)
 end
 
 
@@ -1874,7 +1867,27 @@ function Analog:getAnalogClockSkin(skinName)
 	self.skinName = skinName
 	self.imgpath = _imgpath(self)
 
-	return {}
+	local s = {}
+
+	if skinName == 'QVGAlandscapeSkin' then
+		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/bb_wallpaper_clock_analog.png")
+		s.Clock = {
+			bgImg = analogClockBackground,
+		}
+	elseif skinName == 'WQVGAsmallSkin' then
+		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
+		s.Clock = {
+			bgImg = analogClockBackground,
+		}
+	elseif skinName == 'QVGAportraitSkin' then
+		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/jive_wallpaper_clock_analog.png")
+		s.Clock = {
+			bgImg = analogClockBackground,
+		}
+	end
+
+	return s
+
 end
 
 
@@ -1990,19 +2003,16 @@ function Analog:getSkinParams(skin)
 	        return {
 			minuteHand = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
-			clockface  = 'applets/WQVGAsmallSkin/images/Clocks/Analog/wallpaper_clock_analog.png',
 		}
 	elseif skin == 'QVGAlandscapeSkin' then
 	        return {
 			minuteHand = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
-			clockface  = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/bb_wallpaper_clock_analog.png',
 		}
 	elseif skin == 'QVGAportraitSkin' then
 	        return {
 			minuteHand = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
-			clockface  = 'applets/QVGAportraitSkin/images/Clocks/Analog/jive_wallpaper_clock_analog.png',
 		}
 	end
 end
