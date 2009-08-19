@@ -1257,6 +1257,19 @@ function togglePause(self)
 end	
 
 
+function unpause(self)
+	if not self.state then return end
+
+	if paused == 'stop' or paused == 'pause' then
+		-- reset the elapsed time epoch
+		self.trackSeen = Framework:getTicks() / 1000
+		self:call({'pause', '0'})
+	end
+
+	self:updateIconbar()
+end
+
+
 -- isPaused
 --
 function isPaused(self)
