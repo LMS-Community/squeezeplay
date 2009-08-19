@@ -431,9 +431,11 @@ local function _newWindowSpec(db, item, isContextMenu)
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
 	local windowStyle = (iWindow and iWindow['windowStyle']) or menu2window[menuStyle] or 'text_list'
+	local windowId = (bWindow and bWindow.windowId) or (iWindow and iWindow.windowId) or nil
 
 	return {
 		["isContextMenu"]    = isContextMenu,
+		['windowId']         = windowId,
 		["windowStyle"]      = windowStyle,
 		["labelTitleStyle"]  = 'title',
 		["menuStyle"]        = "menu",
@@ -931,6 +933,27 @@ local function _hideMe(noRefresh)
 			end, true)
 		timer:start()
 	end
+end
+
+-- _hideToX
+-- hides all windows back to window named X, or top of stack, whichever comes first
+local function _hideToX(windowId)
+	log:debug("_hideToX, x=", windowId)
+
+	while _getCurrentStep() and _getCurrentStep().window and _getCurrentStep().window:getWindowId() ~= windowId do
+		log:info('hiding ', _getCurrentStep().window:getWindowId())
+		_getCurrentStep().window:hide()
+	end
+
+	if _getCurrentStep() and _getCurrentStep().window and _getCurrentStep().window:getWindowId() == windowId then
+		log:info('refreshing window: ', windowId)
+		local timer = Timer(1000,
+			function()
+				_refreshJSONAction(_getCurrentStep())
+			end, true)
+		timer:start()
+	end
+
 end
 
 
@@ -1745,6 +1768,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_refreshOrigin()
 				elseif nextWindow == 'refresh' then
 					_refreshMe()
+				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
+				elseif nextWindow then
+					_hideToX(nextWindow)
 				elseif itemType == "slideshow" then
 					from, qty = 0, 200
 					
@@ -2245,9 +2271,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 	local window
 	if windowSpec.isContextMenu then
-		window = ContextMenuWindow("More") -- todo localize or decide what title text should be
+		window = ContextMenuWindow("More", windowSpec.windowId) -- todo localize or decide what title text should be
 	else
-		window = Window(windowSpec.windowStyle or 'text_list')
+		window = Window(windowSpec.windowStyle or 'text_list', _, _, windowSpec.windowId)
 	end
 
 	local titleWidgetComplete = false

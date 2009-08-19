@@ -21,8 +21,8 @@ module(...)
 oo.class(_M, Window)
 
 
-function __init(self, title)
-	local obj = oo.rawnew(self, Window("context_menu" , title))
+function __init(self, title, windowId)
+	local obj = oo.rawnew(self, Window("context_menu" , title, _, windowId))
 
 	obj._DEFAULT_SHOW_TRANSITION = Window.transitionFadeInFast
 	obj._DEFAULT_HIDE_TRANSITION = Window.transitionNone

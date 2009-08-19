@@ -131,13 +131,13 @@ end
 
 --[[
 
-=head2 jive.ui.Window(style, title, titleStyle)
+=head2 jive.ui.Window(style, title, titleStyle, windowId)
 
-Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>, and an optional titleStyle I<titleStyle>
+Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>, an optional titleStyle I<titleStyle>, and an optional windowId string I<windowId>
 
 =cut
 --]]
-function __init(self, style, title, titleStyle)
+function __init(self, style, title, titleStyle, windowId)
 	_assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
 
 	local obj = oo.rawnew(self, Widget(style))
@@ -147,6 +147,8 @@ function __init(self, style, title, titleStyle)
 	obj.autoHide = false
 	obj.showFrameworkWidgets = true
 	obj.transparent = false
+
+	obj.windowId = windowId
 
 	obj.widgets = {} -- child widgets
 	obj.zWidgets = {} -- child widgets and framework widgets in z order
@@ -686,6 +688,20 @@ function hideAll(self)
 
 	-- FIXME window events
 end
+
+
+--[[
+
+=head2 jive.ui.Window:getWindowId()
+
+Returns the windowId of a window
+
+=cut
+--]]
+function getWindowId(self)
+	return self.windowId
+end
+
 
 --[[
 
