@@ -191,10 +191,6 @@ function settingsShow(self)
 	end
 
 
-	if screen == '240x320' then
-		self.menu:addItem(self:_licenseMenuItem())
-	end
-
 	-- get list of downloadable wallpapers from the server
 	if self.server then
 
@@ -303,29 +299,6 @@ function _serverSink(self, data)
 			end
 		end
 	end
-end
-
-
-function _licenseMenuItem(self)
-	return {
-		weight = 99,
-		text = self:string("CREDITS"),
-		sound = "WINDOWSHOW",
-		callback = function()
-			local window = Window("text_list", self:string("CREDITS"))
-			
-			local text =
-				tostring(self:string("CREATIVE_COMMONS")) ..
-				"\n\n" ..
-				tostring(self:string("CREDITS_BY")) ..
-				"\n " ..
-				table.concat(authors, "\n ")
-
-			window:addWidget(Textarea("text", text))
-			self:tieAndShowWindow(window)
-		end,
-		focusGained = function(event) self:showBackground(nil, self.currentPlayerId) end
-	}
 end
 
 
