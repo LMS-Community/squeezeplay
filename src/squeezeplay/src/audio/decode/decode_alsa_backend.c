@@ -804,7 +804,7 @@ static void *audio_thread_execute(void *data) {
 				else {
 
 					/* sync accurate playpoint */
-					if (size == state->period_size) {
+					if (size == ( snd_pcm_uframes_t) state->period_size) {
 						/* only first time around loop, before calling playback_callback(),
 						 * because the this should be just after the ALSA DMA interrupt has fired
 						 * which with have actualised the delay validity */
