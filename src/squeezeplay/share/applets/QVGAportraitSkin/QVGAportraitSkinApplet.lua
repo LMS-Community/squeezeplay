@@ -229,6 +229,9 @@ function skin(self, s, reload, useDefaultSize)
                 img = s.img.progressBar,
         }
 
+	-- toast popup with icon only
+	s.toast_popup_icon.x = 54
+	s.toast_popup_icon.y = 95
 
 	local NP_ARTISTALBUM_FONT_SIZE = 15
 	local NP_TRACK_FONT_SIZE = 21
