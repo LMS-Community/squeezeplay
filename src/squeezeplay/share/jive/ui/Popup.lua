@@ -65,6 +65,7 @@ function __init(self, style, title)
 	obj:setAutoHide(true)
 	obj:setShowFrameworkWidgets(false)
 	obj:setTransparent(true)
+	obj:setTransient(true)
 
 	-- by default close popup on keypress
 	obj:hideOnAllButtonInput()

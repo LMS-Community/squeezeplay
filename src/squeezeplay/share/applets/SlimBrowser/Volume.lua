@@ -325,15 +325,22 @@ function event(self, event)
 			return EVENT_CONSUME
 		end
 
+		if action == "back" then
+			self.popup:showBriefly(0)
+			return EVENT_CONSUME
+		end
+		
 		-- any other actions forward to the lower window
 		local lower = self.popup:getLowerWindow()
-		if lower then
-			Framework:dispatchEvent(lower, event)
-		end
 
 		if self.popup then
 			self.popup:showBriefly(0)
 		end
+
+		if lower then
+			Framework:dispatchEvent(lower, event)
+		end
+
 		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
@@ -362,15 +369,9 @@ function event(self, event)
 			return EVENT_CONSUME
 		end
 
-		-- any other keys forward to the lower window
+		-- any other keys allow to come back as an action
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == 0 then
-			local lower = self.popup:getLowerWindow()
-			if lower then
-				Framework:dispatchEvent(lower, event)
-			end
-
-			self.popup:showBriefly(0)
-			return EVENT_CONSUME
+			return EVENT_UNUSED
 		end
 
 		--handle keyboard volume change
@@ -392,9 +393,7 @@ function event(self, event)
 
 		-- we're only interested in volume keys
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == 0 then
-			-- anything but volume keys should hide the popup
-			self.popup:showBriefly(0)
-			-- and then not consume the action so it still happens
+			-- anything but volume keys should com back as an action
 			return EVENT_UNUSED
 		end
 

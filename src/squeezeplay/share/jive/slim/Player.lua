@@ -39,7 +39,7 @@ local _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs,
 
 local os             = require("os")
 local math           = require("math")
-local table          = require("table")
+local table          = require("jive.utils.table")
 
 local oo             = require("loop.base")
 
@@ -912,10 +912,15 @@ function send(self, cmd, useBackgroundRequest)
 end
 
 
-local function hideAction(self)
+function hideWindows(self)
 	self.currentSong.window:hide()
 	self.popupInfo.window:hide()
 	self.popupIcon.window:hide()
+end
+
+
+function hideAction(self)
+	self:hideWindows()
 	return EVENT_CONSUME
 end
 
@@ -994,15 +999,17 @@ function onStage(self)
 	local popups = { self.currentSong.window, self.popupInfo.window, self.popupIcon.window }
 
 	for i, popup in ipairs(popups) do
-		--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
+		--all input cancels the popups, and for all but 'back', 'go' and mouse clicks, input is forwarded to main window
 		popup:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 			function(event)
 
-				if (event:getType() & EVENT_MOUSE_ALL) > 0 then
-					return hideAction(self) 
-				end
-	
 				local prev = popup:getLowerWindow()
+				--might be more than one of our windows here, look for first non player popup window
+				while prev and table.contains(popups, prev) do
+				        prev = prev:getLowerWindow()
+			        end
+				self:hideWindows()
+
 				if prev then
 					Framework:dispatchEvent(prev, event)
 				end
@@ -1010,6 +1017,7 @@ function onStage(self)
 			end)
 
 		popup:addActionListener("back", self, hideAction)
+		popup:addActionListener("go", self, hideAction)
 		popup.brieflyHandler = 1
 	end
 

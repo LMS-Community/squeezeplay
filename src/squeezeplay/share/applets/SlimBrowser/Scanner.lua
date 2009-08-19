@@ -299,35 +299,17 @@ function event(self, event)
 
 		-- any other actions forward to the lower window
 		local lower = self.popup:getLowerWindow()
+		if self.popup then
+			self.popup:showBriefly(0)
+		end
 		if lower then
 			Framework:dispatchEvent(lower, event)
 		end
 
-		if self.popup then
-			self.popup:showBriefly(0)
-		end
 		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
-		if Framework:isAnActionTriggeringKeyEvent(event, EVENT_KEY_ALL) then
-			--will come back as an ACTION, let's respond to it then to give other action listeners a chance
-			return 	EVENT_UNUSED
-		end
-
-		local keycode = event:getKeycode()
-
-		-- any other keys forward to the lower window
-		if keycode & (KEY_FWD|KEY_REW) == 0 then
-			local lower = self.popup:getLowerWindow()
-			if lower then
-				Framework:dispatchEvent(lower, event)
-			end
-
-			self.popup:showBriefly(0)
-			return EVENT_CONSUME
-		end
-
-		return EVENT_CONSUME
+		return EVENT_UNUSED
 	else
 		local keycode = event:getKeycode()
 

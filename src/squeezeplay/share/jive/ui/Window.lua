@@ -147,6 +147,7 @@ function __init(self, style, title, titleStyle, windowId)
 	obj.autoHide = false
 	obj.showFrameworkWidgets = true
 	obj.transparent = false
+	obj.transient = false
 
 	obj.windowId = windowId
 
@@ -339,11 +340,11 @@ function show(self, transition)
 		return
 	end
 
--- not using auto-cleanup yet, might be tricky syncing with SlimBrowse steps
---	if not self.alwaysOnTop and not self.contextMenu then
---		self:hideContextMenus()
---	end
---
+
+	if not self.contextMenu and not self.transient then
+		self:hideContextMenus()
+	end
+
 	-- remove the window if it is already in the stack
 	local onstack = table.delete(stack, self)
 
@@ -482,6 +483,7 @@ function showBriefly(self, msecs, callback,
 		     pushTransition,
 		     popTransition)
 
+	self:setTransient(true)
 	if not self.visible and self.brieflyTimer ~= nil then
 		--other source may have hidden then window, but not cleaned up the timer.
 		 -- Without this visible check, the "briefly" window would not appear until the old timer timeout
@@ -527,9 +529,26 @@ function showBriefly(self, msecs, callback,
 	self:show(pushTransition)
 end
 
+
+function getTopNonTransientWindow(self)
+	local stack = Framework.windowStack
+
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.transient do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
+
+	return topwindow
+end
+
+
 function hideContextMenus(self)
-	while Framework.windowStack[1] and Framework.windowStack[1]:isContextMenu() do
-		Framework.windowStack[1]:hide()
+	local top = getTopNonTransientWindow(self)
+	while top and top:isContextMenu() do
+		top:hide()
+		top = getTopNonTransientWindow(self)
 	end
 end
 
@@ -1082,6 +1101,18 @@ function setAlwaysOnTop(self, alwaysOnTop)
 
 	self.alwaysOnTop = alwaysOnTop
 	-- FIXME modify window position if already shown?
+end
+
+--Used, for example, by context menu handling so that a context menu doesn't exit when Popups and showBrieflies occur
+function getTransient(self)
+	return self.transient
+end
+
+
+function setTransient(self, transient)
+	_assert(type(transient) == "boolean")
+
+	self.transient = transient
 end
 
 

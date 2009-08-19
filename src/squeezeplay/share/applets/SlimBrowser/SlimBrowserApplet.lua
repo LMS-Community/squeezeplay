@@ -330,10 +330,6 @@ end
 
 
 local function _pushStep(step)
-	if step.window and not step.window:isContextMenu() then
-		Window:hideContextMenus()
-	end
-
 	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
 
 	table.insert(_stepStack, step)
