@@ -121,6 +121,15 @@ function init(self, ...)
 
 				end
 			end
+			if event:getType() == EVENT_MOUSE_PRESS or
+			   event:getType() == EVENT_MOUSE_HOLD or
+			   event:getType() == EVENT_MOUSE_DRAG then
+				if self.mouseAllowed then
+					log:debug("'Per window' mouse event allowed to pass through")
+					return EVENT_UNUSED
+
+				end
+			end
 			log:debug("Closing screensaver event=", event:tostring())
 
 			self:deactivateScreensaver()
@@ -144,8 +153,8 @@ function init(self, ...)
 		-100 -- process before other event handlers
 	)
 
-	--last resort listener to close SS on any unused action/scroll (for instance when user hits pause when no server connected)
-	Framework:addListener(ACTION | EVENT_SCROLL,
+	--last resort listener to close SS on any unused action/scroll/mousing (for instance when user hits pause when no server connected)
+	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
 
 			-- screensaver is not active
@@ -294,14 +303,15 @@ function _getDefaultScreensaver(self)
 end
 
 
-function _setSSAllowedActions(self, scrollAllowed, ssAllowedActions)
+function _setSSAllowedActions(self, scrollAllowed, ssAllowedActions, mouseAllowed)
 	self.scrollAllowed = scrollAllowed
 	self.ssAllowedActions = ssAllowedActions
+	self.mouseAllowed = mouseAllowed
 end
 
 
 function _clearSSAllowedActions(self)
-	self:_setSSAllowedActions(nil, nil)
+	self:_setSSAllowedActions(nil, nil, nil)
 end
 
 
@@ -435,14 +445,14 @@ Register the I<window> as a screensaver window. This is used to maintain the
 the screensaver activity, and adds some default listeners for screensaver
 behaviour.
 
-If the screensaver window wants to respond to scrolling or actions (with the screensaver exiting), use
-the boolean I<scrollAllowed> and string table I<ssAllowedActions>
+If the screensaver window wants to respond to mouse activity or scrolling or actions (without the screensaver exiting), use
+the boolean I<scrollAllowed> and boolean I<mouseAllowed> and string table I<ssAllowedActions>
 
 =cut
 --]]
-function screensaverWindow(self, window, scrollAllowed, ssAllowedActions)
+function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
 
-	self:_setSSAllowedActions(scrollAllowed, ssAllowedActions)
+	self:_setSSAllowedActions(scrollAllowed, ssAllowedActions, mouseAllowed)
 	
 	-- the screensaver is active when this window is pushed to the window stack
 	window:addListener(EVENT_WINDOW_PUSH,
