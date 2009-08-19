@@ -98,6 +98,7 @@ function __init(self, jnt, slimproto)
 	self.statusTimestamp = 0
 
 	self.sentResume = false
+	self.sentResumeDecoder = false
 	self.sentDecoderFullEvent = false
 	self.sentDecoderUnderrunEvent = false
 	self.sentOutputUnderrunEvent = false
@@ -134,6 +135,7 @@ function playFileInLoop(self, file)
 		     )
 
 	decode:resumeDecoder()
+	self.sentResumeDecoder = true
 
 	self.autostart = '1'
 	self.threshold = 0
@@ -286,11 +288,12 @@ function _timerCallback(self)
 	-- 4) we have finished processing any strm-q command
 	if status.decodeFull > 2048 and
 		(self.autostart == '0' or self.autostart == '1') and
-		status.decodeState & DECODE_RUNNING == 0 and
+		status.decodeState & DECODE_RUNNING == 0 and not self.sentResumeDecoder and
 		status.audioState & DECODE_STOPPING == 0 then
 
 		log:debug("resume decoder")
 		decode:resumeDecoder()
+		self.sentResumeDecoder = true
 	end
 
 	-- Start the audio if:
@@ -486,6 +489,7 @@ function _strm(self, data)
 		self.threshold = data.threshold * 1024
 
 		self.sentResume = false
+		self.sentResumeDecoder = false
 		self.sentDecoderFullEvent = false
 		self.sentDecoderUnderrunEvent = false
 		self.sentOutputUnderrunEvent = false
@@ -529,6 +533,7 @@ function _strm(self, data)
 
 		log:debug("resume unpause")
 		decode:resumeAudio(jiffies)
+		self.sentResume = true
 		self.sentDecoderFullEvent = true -- fake, as the strm-u means that the server is no longer waiting for STMl
 		self.slimproto:sendStatus('STMr')
 
