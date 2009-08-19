@@ -10,6 +10,7 @@ local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
 local Networking             = require("jive.net.Networking")
+local Player                 = require("jive.slim.Player")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
@@ -326,6 +327,8 @@ end
 
 
 function _updateTask(self)
+	local player = Player:getLocalPlayer()
+
 	-- ac power / battery
 	if self.acpower then
 		if self.batteryPopup then
@@ -358,6 +361,9 @@ function _updateTask(self)
 	-- wireless strength
 	local quality = self.wireless:getLinkQuality()
 	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+	if player then
+		player:setSignalStrength(strength)
+	end
 end
 
 

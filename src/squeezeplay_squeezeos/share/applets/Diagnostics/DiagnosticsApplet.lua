@@ -39,6 +39,7 @@ local tests = {
       "WLAN_SSID",
       "WLAN_ENCRYPTION",
       "WLAN_STRENGTH",
+      -- (for testing): "WLAN_SNR",
       "ETH_CONNECTION",
       "IP_ADDRESS",
       "SUBNET_MASK",
@@ -152,9 +153,14 @@ end
 
 
 function wlanStatus(self, iface)
+	if not iface then
+		return
+	end
+
 	Task("Netstatus", self, function()
 		local status = iface:t_wpaStatus()
-		local snr = iface:getSNR()
+		local snr, minsnr, maxsnr = iface:getSNR()
+		local signalStrength = iface:getSignalStrength()
 
 		if status.ssid then
 			local encryption = status.key_mgmt
@@ -165,7 +171,8 @@ function wlanStatus(self, iface)
 
 			self:setValue("WLAN_SSID", status.ssid)
 			self:setValue("WLAN_ENCRYPTION", encryption)
-			self:setValue("WLAN_STRENGTH", self:string("WLAN_SNR", snr))
+			self:setValue("WLAN_STRENGTH", signalStrength .. "%")
+			-- (for testing): self:setValue("WLAN_SNR", minsnr .. "/" .. snr .. "/" .. maxsnr)
 
 			if status.ip_address then
 				self:setValue("IP_ADDRESS", tostring(status.ip_address))
@@ -183,6 +190,10 @@ end
 
 
 function ethStatus(self, iface)
+	if not iface then
+		return
+	end
+
 	Task("Netstatus", self, function()
 		local status = iface:t_wpaStatus()
 

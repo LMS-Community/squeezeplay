@@ -431,11 +431,11 @@ local function _updateWireless(self)
 	else	
 		if iface:isWireless() then
 			-- wireless strength
-			local quality, snr = iface:getLinkQuality()
+			local quality, strength = iface:getLinkQuality()
 			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
 
 			if player then
-				player:setSignalStrength(snr)
+				player:setSignalStrength(strength)
 			end
 		else
 			-- wired

@@ -136,22 +136,6 @@ ETH_HALF_DUPLEX
 	RU	%s Мбит/с HD
 	SV	%s Mbps (HD)
 
-WLAN_SNR
-# SLT: please keep these messages as short as possible
-	CS	%s SNR
-	DA	%s signal/støjforhold:
-	DE	%s-SNR
-	EN	%s SNR
-	ES	%s SNR
-	FI	%s SNR
-	FR	SNR %s
-	IT	%s SNR
-	NL	%s SNR
-	NO	%s signal-til-støy-forhold
-	PL	SNR %s
-	RU	%s SNR
-	SV	Brusvärde %s
-
 FIRMWARE_VERSION
 	CS	Verze:
 	DA	Firmwareversion:

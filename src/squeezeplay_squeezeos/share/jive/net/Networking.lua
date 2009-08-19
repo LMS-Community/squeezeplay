@@ -93,15 +93,6 @@ local WIRELESS_LEVEL = {
 	190,
 }
 
--- iwpriv snr -> quality
--- FIXME tune with production boards
-local WIRELESS_SNR = {
-	0,
-	10,
-	18,
-	25,
-}
-
 -- FIXME: reduce to two regions, and make sure XX is the correct code for all other regions
 local REGION_CODE_MAPPING = {
 	-- name, marvell code, atheros code
@@ -1313,30 +1304,15 @@ end
 returns "quality" and snr of wireless interface
 used for dividing SNR values into categorical levels of signal quality
 
-	quality of 1 indicates SNR of 0
-	quality of 2 indicates SNR <= 10
-	quality of 3 indicates SNR <= 18
-	quality of 4 indicates SNR <= 25
+(deprecated, use getSignalStrength instead)
 
 =cut
 --]]
 
 function getLinkQuality(self)
-	local snr = self:getSNR()
+	local strength = getSignalStrength(self)
 
-	if snr == nil or snr == 0 then
-		return nil, snr
-	end
-
-	local quality = 1
-	for i, l in ipairs(WIRELESS_SNR) do
-		if snr <= l then
-			break
-		end
-		quality = i
-	end
-
-	return quality, snr
+	return math.ceil(strength / 25), strength
 end
 
 
@@ -1374,7 +1350,31 @@ function getSNR(self)
 	-- t[2] : Beacon average
 	-- t[3] : 0
 	-- t[4] : 0
-	return t[2]
+
+	if self.minSNR == nil then
+		self.minSNR = t[2]
+		self.maxSNR = t[2]
+	else
+		self.minSNR = math.min(self.minSNR, t[2])
+		self.maxSNR = math.max(self.maxSNR, t[2])
+	end
+
+	return t[2], self.minSNR, self.maxSNR
+end
+
+
+-- returns wireless signal strength as a percentage
+function getSignalStrength(self)
+	local snr = getSNR(self)
+
+	-- with informal testing I see a SNR range of: 
+	-- jive: 5 - 71
+	-- baby: 5 - 72
+
+	-- an SNR of 20dB should be adequate, this is
+	-- tuned so 40 SNR = 100%
+
+	return math.ceil((math.min(snr, 40) / 40) * 100), snr
 end
 
 
