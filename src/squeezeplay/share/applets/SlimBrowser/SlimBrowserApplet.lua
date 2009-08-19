@@ -396,7 +396,7 @@ local function _stepLockHandler(step, loadedCallback)
 		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
 		end
-		if currentStep.simpleMenu then
+		if currentStep and currentStep.simpleMenu then
 			currentStep.simpleMenu:unlock()
 		end
 
