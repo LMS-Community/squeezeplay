@@ -661,7 +661,6 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_status_t *status;
 	int err, count = 0, count_max = 441, first = 1;
 	u32_t delay, do_open = 1;
-	int delay_ts;
 
 	LOG_DEBUG("audio_thread_execute");
 
@@ -743,10 +742,6 @@ static void *audio_thread_execute(void *data) {
 			LOG_ERROR("snd_pcm_status err=%d", err);
 		}
 
-		/* playback delay */
-		delay = snd_pcm_status_get_delay(status);
-		delay_ts = jive_jiffies();
-
 		TIMER_CHECK("STATE");
 
 		if (avail < state->period_size) {
@@ -807,17 +802,23 @@ static void *audio_thread_execute(void *data) {
 					capture_loopback(state, buf, frames);
 				}
 				else {
-					playback_callback(state, buf, frames);
 
 					/* sync accurate playpoint */
-					decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
+					if (size == state->period_size) {
+						/* only first time around loop, before calling playback_callback(),
+						 * because the this should be just after the ALSA DMA interrupt has fired
+						 * which with have actualised the delay validity */
 
-					/* FIXME - shouldn't we evaluate delay and delay_ts here, rather than earlier, before the loop? */
+						decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
+						delay = snd_pcm_status_get_delay(status);
 
-					if (decode_audio->sync_elapsed_samples > delay) {
-						decode_audio->sync_elapsed_samples -= delay;
+						if (decode_audio->sync_elapsed_samples > delay) {
+							decode_audio->sync_elapsed_samples -= delay;
+						}
+						decode_audio->sync_elapsed_timestamp = jive_jiffies();
 					}
-					decode_audio->sync_elapsed_timestamp = delay_ts;
+
+					playback_callback(state, buf, frames);
 				}
 
 				/* sample rate changed? we do this check while the
