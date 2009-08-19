@@ -9,6 +9,7 @@ local lfs              = require("lfs")
 local ltn12            = require("ltn12")
 local os               = require("os")
 local string           = require("string")
+local table            = require("jive.utils.table")
 
 local Applet           = require("jive.Applet")
 local System           = require("jive.System")
@@ -32,18 +33,22 @@ local JIVE_VERSION  = jive.JIVE_VERSION
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+local logs = {}
 
 function crashLog(self, file, prompt)
 	local settings = self:getSettings()
 
 	log:info("sending crash log: ", file, " sendLog=", settings.sendLog)
 
-	if settings.sendLog == true then
-		self:crashLogSend(file)
-	elseif settings.sendLog == false then
-		self:crashLogDontSend(file)
-	else
+	table.insert(logs, file)
+
+	if self.prompt then
+		-- prompt already open
+	elseif settings.sendLog == nil then
+		-- prompt if we should send logs
 		self:crashLogPrompt(file)
+	else
+		processLogs(self)
 	end
 
 end
@@ -51,6 +56,8 @@ end
 
 function crashLogPrompt(self, file)
 	local settings = self:getSettings()
+
+	self.prompt = true
 
 	local window = Window("help_list", self:string("CRASH_TITLE"))
 
@@ -68,9 +75,10 @@ function crashLogPrompt(self, file)
 				settings.sendLog = true
 				self:storeSettings()
 
-				self:crashLogSend(file)
-
 				window:hide(Window.transitionPushLeft)
+
+				self.prompt = false
+				self:processLogs()
 			end
 		},
 		{
@@ -80,9 +88,10 @@ function crashLogPrompt(self, file)
 				settings.sendLog = false
 				self:storeSettings()
 
-				self:crashLogDontSend(file)
-
 				window:hide(Window.transitionPushLeft)
+
+				self.prompt = false
+				self:processLogs()
 			end
 		},
 	})
@@ -90,6 +99,19 @@ function crashLogPrompt(self, file)
 	menu:setHeaderWidget(text)
 	window:addWidget(menu)
 	window:show(Window.transitionNone)
+end
+
+
+function processLogs(self)
+	local settings = self:getSettings()
+
+	for i,file in ipairs(logs) do
+		if settings.sendLog == true then
+			self:crashLogSend(file)
+		else
+			self:crashLogDontSend(file)
+		end
+	end
 end
 
 
