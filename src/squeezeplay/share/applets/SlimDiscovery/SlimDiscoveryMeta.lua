@@ -49,6 +49,7 @@ function registerApplet(meta)
 	meta:registerService("setCurrentPlayer")
 
 	meta:registerService("discoverPlayers")
+	meta:registerService("discoverServers")
 
 	meta:registerService("connectPlayer")
 	meta:registerService("disconnectPlayer")

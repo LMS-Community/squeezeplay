@@ -127,8 +127,8 @@ function _showMusicSourceList(self)
 
 
 	-- Discover players in this window
-	appletManager:callService("discoverPlayers")
-	window:addTimer(1000, function() appletManager:callService("discoverPlayers") end)
+	appletManager:callService("discoverServers")
+	window:addTimer(1000, function() appletManager:callService("discoverServers") end)
 
 
 	-- squeezecenter on the poll list
@@ -541,7 +541,7 @@ function _showConnectToServer(self, player, server)
 		window:addTimer(1000,
 				function()
 					-- scan all servers waiting for the player
-					appletManager:callService("discoverPlayers")
+					appletManager:callService("discoverServers")
 
 					-- we detect when the connect to the new server
 					-- with notify_playerNew

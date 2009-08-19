@@ -12,10 +12,13 @@ connected: we are connected to a player, only a connection to our
  SC (or SN) is maintained. udp scanning is still performed in the
  background to update the SqueezeCenter list.
 
-probing: we are connected to a player, but we must probe all SC/SN
+probing_player: we are connected to a player, but we must probe all SC/SN
  update our internal state. this is used for example in the choose
  player screen.
 
+probing_server: we are connected to a player, but we must probe all SC/SN
+ update our internal state. this is used for example in the choose
+ server screen. we do not need to find players via udap or wireless scanning.
 
 --]]
 
@@ -124,7 +127,8 @@ function _serverUpdateAddress(self, server, ip, port, name)
 	server:updateAddress(ip, port, name)
 
 	if self.state == 'searching'
-		or self.state == 'probing' then
+		or self.state == 'probing_player'
+		or self.state == 'probing_server' then
 
 		-- connect to server when searching or probing
 		server:connect()
@@ -253,17 +257,18 @@ function _discover(self)
 		self.socket:send(_slimDiscoverySource, address, PORT)
 	end
 
-	-- UDAP discovery
-	local packet = Udap.createAdvancedDiscover(nil, 1)
-	log:debug("sending udap discovery to 255.255.255.255")
-	self.udap:send(function() return packet end, "255.255.255.255")
+	-- Discover players via udap or wireless scanning
+	if self.state == 'probing_player' then
+		-- UDAP discovery
+		local packet = Udap.createAdvancedDiscover(nil, 1)
+		log:debug("sending udap discovery to 255.255.255.255")
+		self.udap:send(function() return packet end, "255.255.255.255")
 
-	-- Wireless discovery, only in probing state
-	if self.state == 'probing' and self.wireless then
-		self.wireless:scan(
-			function(scanTable)
+		if self.wireless then
+			self.wireless:scan(function(scanTable)
 				_scanComplete(self, scanTable)
 			end)
+		end
 	end
 
 
@@ -280,7 +285,7 @@ function _discover(self)
 	_playerCleanup(self)
 
 
-	if self.state == 'probing' and
+	if self.state == 'probing_player' or self.state == 'probing_server' and
 		Framework:getTicks() > self.probeUntil then
 
 		local currentPlayer = Player:getCurrentPlayer()
@@ -328,7 +333,7 @@ function _setState(self, state)
 	elseif state == 'connected' then
 		self:_idleDisconnect()
 
-	elseif state == 'probing' then
+	elseif state == 'probing_player' or state == 'probing_server' then
 		self.probeUntil = Framework:getTicks() + 60000
 		self.timer:restart(0)
 		self:_connect()
@@ -581,7 +586,12 @@ end
 
 
 function discoverPlayers(self)
-	self:_setState("probing")
+	self:_setState("probing_player")
+end
+
+
+function discoverServers(self)
+	self:_setState("probing_server")
 end
 
 
