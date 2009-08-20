@@ -68,6 +68,21 @@ ALLEGRO
 	RU	Аллегро
 	SV	Allegro
 
+BLACK
+	CS	Černá
+	DA	Sort
+	DE	Schwarz
+	EN	Black
+	ES	Negro
+	FI	Musta
+	FR	Noir
+	IT	Nero
+	NL	Zwart
+	NO	Svart
+	PL	Czarny
+	RU	Черный
+	SV	Svart
+
 ENCORE
 	CS	Přídavek
 	DA	Ekstranummer

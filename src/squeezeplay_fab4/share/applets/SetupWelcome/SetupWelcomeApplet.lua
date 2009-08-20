@@ -490,6 +490,9 @@ function _setupDone(self, setupDone, registerDone)
 
 end
 
+function _jumpToDemo(self)
+        appletManager:callService("jumpToInStoreDemo")
+end
 
 function setupWelcomeShow(self, setupNext)
 	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
@@ -500,6 +503,19 @@ function setupWelcomeShow(self, setupNext)
 	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")
+
+	window:addTimer(20000, function()
+		window:addListener(EVENT_GESTURE,
+			function(evt)
+				if evt:getType() == GESTURE_L_R then
+					_jumpToDemo(self)
+				end
+				return EVENT_CONSUME
+                	end
+        	)
+		end
+	)
+
 
 	continueButton:addItem({
 		text = (self:string("CONTINUE")),
