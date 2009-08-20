@@ -25,7 +25,7 @@ end
 
 function defaultSettings(meta)
 	return {
-		brightness = 40,		-- max
+		brightness = 61,		-- max
 		brightnessControl = "manual", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
 		dimmedTimeout = 30000,		-- 30 seconds
@@ -41,8 +41,8 @@ end
 
 function upgradeSettings(meta, settings)
 	-- fix broken settings
-	if not settings.brightness or settings.brightness > 40 then
-		settings.brightness = 40	-- max
+	if not settings.brightness or settings.brightness > 61 then
+		settings.brightness = 61	-- max
 	end
 
 	-- fill in any blanks

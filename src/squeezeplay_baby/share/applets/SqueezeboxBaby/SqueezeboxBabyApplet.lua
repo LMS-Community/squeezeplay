@@ -155,6 +155,7 @@ function init(self)
 
 	-- sys interface
 	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
+	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "bl_power", "rw")
 	_sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "ambient")
 	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
 	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
@@ -175,7 +176,7 @@ function init(self)
 	if settings.brightness > #brightnessTable then
 		settings.brightness = #brightnessTable
 	end
-	self.lcdBrightness = brightnessTable[settings.brightness]
+	self.lcdBrightness = settings.brightness
 	self:setPowerState("active")
 
 	self:initBrightness()
@@ -249,7 +250,7 @@ end
 function doBrightnessRamping(self, target)
 	local diff = 0
 	diff = (target - brightCur)
-	
+	log:warn("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")	
 	--log:info("Diff: " .. diff)
 
 	if math.abs(diff) > AMBIENT_RAMPSTEPS then
@@ -278,7 +279,7 @@ function doAutomaticBrightnessTimer(self)
 		if wasDimmed == true then
 			log:info("SWITCHED TO ACTIVE")
 			-- set brightness so that the active power state removes the 60% dimming
-			self:setBrightness( math.floor(brightCur) )
+			self:setBrightness( brightCur )
 			wasDimmed = false
 		end
 		return
@@ -310,7 +311,7 @@ function doAutomaticBrightnessTimer(self)
 	self:doBrightnessRamping(brightTarget);
 	
 	-- Set Brightness
-	self:setBrightness( math.floor(brightCur) )
+	self:setBrightness( brightCur )
 	
 	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
 
@@ -526,30 +527,44 @@ function _initBrightnessTable( self)
 	local brightness_step_percent = 10
 	local k = 1
 
-	brightnessTable[k] = 1
+	brightnessTable[k] = {1, 1}
 	for step = 1, pwm_steps, 1 do
-		if 100 * ( step - brightnessTable[k]) / brightnessTable[k] >= brightness_step_percent then
+		if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
 			k = k + 1
-			brightnessTable[k] = step
+			brightnessTable[k] = {1, step}
 		end
+	end
+	k = k + 1
+	brightnessTable[k] = {0, 33}
+	for step = 33, pwm_steps, 1 do
+		if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+			k = k + 1
+			brightnessTable[k] = {0, step}
+		end
+	end
+	for k = 1, #brightnessTable, 1 do
+		a = brightnessTable[k][1]
+		a = brightnessTable[k][2]
 	end
 end
 
 
 function _setBrightness(self, level)
 	self.lcdBrightness = level
-
 	-- 60% brightness in dimmed power mode
 	if self.powerState == "dimmed" then
-		level = math.floor(level * 0.6)
+		level = level - 10
 	end
-	
-	_sysWrite(self, "brightness", level)
+	brightness = brightnessTable[level][2]
+	bl_power   = brightnessTable[level][1]
+		
+	_sysWrite(self, "brightness", brightness)
+	_sysWrite(self, "bl_power",   bl_power)
 end
 
 
 function getBrightness (self)
-	return _sysReadNumber(self, "brightness")
+	return self.lcdBrightness
 end
 
 
@@ -580,10 +595,7 @@ function settingsBrightnessShow (self, menuItem)
 			-- If the user modifies the slider - automatically switch to manaul brightness
 			settings.brightnessControl = "manual"
 			
-			local bright = brightnessTable[value]
-			if bright > 255 then
-				bright = 255
-			end
+			local bright = value
 
 			self:setBrightness(bright)
 
