@@ -258,6 +258,21 @@ end
 
 function _delete(self, alwaysBackspace)
 	local cursor = self.cursor
+	if self.value.delete and self.value.useValueDelete and self.value:useValueDelete() then
+		local cursorShift = self.value:delete(cursor)
+		if not cursorShift then
+			return false
+		end
+
+		local dir = cursorShift < 0 and -1 or 1
+		for i = 1,math.abs(cursorShift) do
+			_moveCursor(self, dir)
+		end
+
+		self:reDraw()
+		return true
+	end
+
 	local str = tostring(self.value)
 
 	if not alwaysBackspace and cursor <= #str then
@@ -688,7 +703,7 @@ function _eventHandler(self, event)
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
-			return _cursorLeftAction(self) 
+			return _cursorLeftAction(self)
 		elseif keycode == KEY_FWD then
 			return _cursorRightAction(self)
 		elseif keycode == KEY_BACK then
@@ -1199,6 +1214,35 @@ function ipAddressValue(default)
 					 obj.v[2] == 0 and
 					 obj.v[3] == 0 and
 					 obj.v[4] == 0)
+			end,
+
+			useValueDelete = function(obj)
+				--bypass custom delete for touch
+				return (Framework:isMostRecentInput("ir")
+					or Framework:isMostRecentInput("key")
+					or Framework:isMostRecentInput("scroll"))
+			end,
+
+			delete = function(obj, cursor)
+				local str = tostring(obj)
+				if cursor <= #str then
+					-- Switch to 0 at cursor
+					local s1 = string.sub(str, 1, cursor - 1)
+					local s2 = "0"
+					local s3 = string.sub(str, cursor + 1)
+
+					local new = s1 .. s2 .. s3
+
+					obj:setValue(new)
+					return -1
+
+				elseif cursor > 1 then
+					-- just move back one
+					return -1
+
+				else
+					return false
+				end
 			end
 		}
 	})
