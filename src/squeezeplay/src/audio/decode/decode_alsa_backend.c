@@ -105,6 +105,7 @@ struct decode_alsa {
 	/* alsa pcm state */
 	snd_pcm_t *pcm;
 	snd_pcm_t *capture_pcm;
+	snd_pcm_format_t format;
 	snd_pcm_sframes_t period_size;
 
 	/* alsa control state */
@@ -114,9 +115,17 @@ struct decode_alsa {
 	/* playback state */
 	u32_t pcm_sample_rate;
 
+	/* capture buffer */
+	void *cbuf;
+	ssize_t cbuf_size;
+
 	/* parent */
 	pid_t parent_pid;
 };
+
+#define PCM_FRAMES_TO_BYTES(frames) (snd_pcm_frames_to_bytes(state->pcm, (frames)))
+#define PCM_BYTES_TO_FRAMES(frames) (snd_pcm_bytes_to_frames(state->pcm, (frames)))
+#define PCM_SAMPLE_WIDTH() (snd_pcm_format_width(state->format))
 
 
 /* alsa debugging */
@@ -255,8 +264,9 @@ static void playback_callback(struct decode_alsa *state,
 	// XXXX full port from ip3k
 
 	ASSERT_AUDIO_LOCKED();
+	assert(PCM_SAMPLE_WIDTH() == 24);
 
-	len = SAMPLES_TO_BYTES(framesPerBuffer);
+	len = PCM_FRAMES_TO_BYTES(framesPerBuffer);
 	bytes_used = fifo_bytes_used(&decode_audio->fifo);
 
 	/* Should we start the audio now based on having enough decoded data? */
@@ -274,14 +284,14 @@ static void playback_callback(struct decode_alsa *state,
 
 	add_silence_ms = decode_audio->add_silence_ms;
 	if (add_silence_ms) {
-		add_bytes = SAMPLES_TO_BYTES((u32_t)((add_silence_ms * state->pcm_sample_rate) / 1000));
+		add_bytes = PCM_FRAMES_TO_BYTES((u32_t)((add_silence_ms * state->pcm_sample_rate) / 1000));
 		if (add_bytes > len) {
 			add_bytes = len;
 		}
 		memset(outputArray, 0, add_bytes);
 		outputArray += add_bytes;
 		len -= add_bytes;
-		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / state->pcm_sample_rate;
+		add_silence_ms -= (PCM_BYTES_TO_FRAMES(add_bytes) * 1000) / state->pcm_sample_rate;
 		if (add_silence_ms < 2) {
 			add_silence_ms = 0;
 		}
@@ -337,12 +347,12 @@ static void playback_callback(struct decode_alsa *state,
 			fifo_rptr_incby(&decode_audio->fifo, wrap);
 			skip_bytes -= wrap;
 			decode_audio->skip_ahead_bytes -= wrap;
-			decode_audio->elapsed_samples += BYTES_TO_SAMPLES(wrap);
+			decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(wrap);
 		}
 
 		fifo_rptr_incby(&decode_audio->fifo, skip_bytes);
 		decode_audio->skip_ahead_bytes -= skip_bytes;
-		decode_audio->elapsed_samples += BYTES_TO_SAMPLES(skip_bytes);
+		decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(skip_bytes);
 	}
 
 	while (bytes_used) {
@@ -356,7 +366,7 @@ static void playback_callback(struct decode_alsa *state,
 			bytes_write = wrap;
 		}
 
-		samples_write = BYTES_TO_SAMPLES(bytes_write);
+		samples_write = PCM_BYTES_TO_FRAMES(bytes_write);
 
 		output_ptr = (sample_t *)(void *)outputArray;
 		decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
@@ -366,7 +376,7 @@ static void playback_callback(struct decode_alsa *state,
 		}
 
 		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
-		decode_audio->elapsed_samples += BYTES_TO_SAMPLES(bytes_write);
+		decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(bytes_write);
 
 		outputArray += bytes_write;
 		bytes_used -= bytes_write;
@@ -383,29 +393,34 @@ static void playback_callback(struct decode_alsa *state,
 }
 
 
-static void capture_loopback(struct decode_alsa *state,
-			     void *outputBuffer,
-			     unsigned long framesPerBuffer)
+static void capture_read(struct decode_alsa *state,
+			 snd_pcm_uframes_t framesPerBuffer)
 {
 	snd_pcm_sframes_t frames;
-	s16_t *rptr;
-	s32_t *wptr;
+	s16_t *ptr;
 
-	frames = snd_pcm_readi(state->capture_pcm, outputBuffer, framesPerBuffer);
+	assert(PCM_SAMPLE_WIDTH() == 16);
+
+	if (state->cbuf_size < PCM_FRAMES_TO_BYTES(framesPerBuffer)) {
+		if (state->cbuf) {
+			free(state->cbuf);
+		}
+		state->cbuf = malloc(PCM_FRAMES_TO_BYTES(framesPerBuffer));
+	}
+
+	frames = snd_pcm_readi(state->capture_pcm, state->cbuf, framesPerBuffer);
 	if (frames < 0) {
 		LOG_WARN("overrun? %s", snd_strerror(frames));
 		snd_pcm_recover(state->capture_pcm, frames, 1);
-		memset(outputBuffer, 0, SAMPLES_TO_BYTES(framesPerBuffer));
+		memset(state->cbuf, 0, PCM_FRAMES_TO_BYTES(framesPerBuffer));
 		return;
 	}
 
-	/* convert from S16_LE -> S24_LE and apply gain */
-	rptr = outputBuffer; rptr += (frames * 2) - 1;
-	wptr = outputBuffer; wptr += (frames * 2) - 1;
-
+	/* apply gain */
+	ptr = state->cbuf;
 	while(frames--) {
-		*(wptr--) = fixed_mul(decode_audio->lgain, *(rptr--));
-		*(wptr--) = fixed_mul(decode_audio->rgain, *(rptr--));
+		*ptr = fixed_mul(decode_audio->lgain, *ptr); ptr++;
+		*ptr = fixed_mul(decode_audio->rgain, *ptr); ptr++;
 	}
 }
 
@@ -442,7 +457,6 @@ static int _pcm_open(struct decode_alsa *state,
 		     int mode,
 		     const char *device,
 		     snd_pcm_access_t access,
-		     snd_pcm_format_t format,
 		     u32_t sample_rate)
 {
 	int err;
@@ -483,7 +497,7 @@ static int _pcm_open(struct decode_alsa *state,
 	}
 
 	/* set the sample format */
-	if ((err = snd_pcm_hw_params_set_format(*pcmp, hw_params, format)) < 0) {
+	if ((err = snd_pcm_hw_params_set_format(*pcmp, hw_params, state->format)) < 0) {
 		LOG_ERROR("Sample format not available: %s", snd_strerror(err));
 		return err;
 	}
@@ -560,9 +574,17 @@ static int _pcm_open(struct decode_alsa *state,
 }
 
 
-static int pcm_open(struct decode_alsa *state, int mode)
+static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 {
 	int err;
+
+	/* S24_LE for standard playback, S16_LE for loopback */
+	if (loopback) {
+		state->format = SND_PCM_FORMAT_S16_LE;
+	}
+	else {
+		state->format = SND_PCM_FORMAT_S24_LE;
+	}
 
 	if (mode == SND_PCM_STREAM_PLAYBACK) {
 		u32_t sample_rate;
@@ -581,7 +603,6 @@ static int pcm_open(struct decode_alsa *state, int mode)
 				mode,
 				state->playback_device,
 				SND_PCM_ACCESS_MMAP_INTERLEAVED,
-				SND_PCM_FORMAT_S24_LE,
 				sample_rate);
 
 		if (err < 0) {
@@ -596,7 +617,6 @@ static int pcm_open(struct decode_alsa *state, int mode)
 				mode,
 				state->capture_device,
 				SND_PCM_ACCESS_RW_INTERLEAVED,
-				SND_PCM_FORMAT_S16_LE,
 				state->pcm_sample_rate);
 
 		if (err < 0) {
@@ -674,15 +694,17 @@ static void *audio_thread_execute(void *data) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
 
 		if (do_open) {
+			bool_t loopback = ((decode_audio->state & DECODE_STATE_LOOPBACK) != 0);
+
 			do_open = 0;
 
-			if ((err = pcm_open(state, SND_PCM_STREAM_PLAYBACK)) < 0) {
+			if ((err = pcm_open(state, loopback, SND_PCM_STREAM_PLAYBACK)) < 0) {
 				LOG_ERROR("Playback open failed: %s", snd_strerror(err));
 				goto thread_error;
 			}
 
-			if (state->capture_device && (decode_audio->state & DECODE_STATE_LOOPBACK)) {
-				if ((err = pcm_open(state, SND_PCM_STREAM_CAPTURE)) < 0) {
+			if (state->capture_device && loopback) {
+				if ((err = pcm_open(state, loopback, SND_PCM_STREAM_CAPTURE)) < 0) {
 					LOG_ERROR("Capture open failed: %s", snd_strerror(err));
 					goto thread_error;
 				}
@@ -783,6 +805,10 @@ static void *audio_thread_execute(void *data) {
 
 			frames = size;
 
+			if (state->capture_pcm) {
+				capture_read(state, frames);
+			}
+
 			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
 				LOG_WARN("xrun (snd_pcm_mmap_begin)");
 				if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
@@ -800,7 +826,7 @@ static void *audio_thread_execute(void *data) {
 				TIMER_CHECK("LOCK");
 
 				if (state->capture_pcm) {
-					capture_loopback(state, buf, frames);
+					memcpy(buf, state->cbuf, PCM_FRAMES_TO_BYTES(frames));
 				}
 				else {
 
@@ -839,7 +865,7 @@ static void *audio_thread_execute(void *data) {
 				decode_audio_unlock();
 			}
 			else {
-				memset(buf, 0, SAMPLES_TO_BYTES(frames));
+				memset(buf, 0, PCM_FRAMES_TO_BYTES(frames));
 			}
 
 			TIMER_CHECK("PLAYBACK");
@@ -849,7 +875,7 @@ static void *audio_thread_execute(void *data) {
 			}
 
 			if (state->flags & FLAG_STREAM_EFFECTS) {
-				decode_mix_effects(buf, frames);
+				decode_mix_effects(buf, frames, PCM_SAMPLE_WIDTH());
 			}
 
 			TIMER_CHECK("EFFECTS");

@@ -165,7 +165,7 @@ static int callback(const void *inputBuffer,
 
  mixin_effects:
 	/* mix in sound effects */
-	decode_mix_effects(outputBuffer, framesPerBuffer);
+	decode_mix_effects(outputBuffer, framesPerBuffer, 24);
 
 	decode_audio_unlock();
 

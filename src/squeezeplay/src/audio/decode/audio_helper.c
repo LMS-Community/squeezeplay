@@ -70,14 +70,28 @@ bool_t decode_check_start_point(void) {
 }
 
 
+static inline s16_t s16_clip(s16_t a, s16_t b) {
+	s32_t s = a + b;
+
+	if (s < -0x8000) {
+		return -0x8000;
+	} else if (s > 0x7fff) {
+		return 0x7fff;
+	}
+	else {
+		return s;
+	}
+}
+
+
 /*
  * This function is called by to copy effects to the audio buffer.
  */
 void decode_mix_effects(void *outputBuffer,
-			size_t framesPerBuffer)
+			size_t framesPerBuffer,
+			int sample_width)
 {
 	size_t len, bytes_used;
-	sample_t *output_ptr;
 
 	len = framesPerBuffer * sizeof(effect_t);
 
@@ -88,11 +102,10 @@ void decode_mix_effects(void *outputBuffer,
 		bytes_used = len;
 	}
 
-	output_ptr = (sample_t *)(void *)outputBuffer;
 	while (bytes_used > 0) {
 		effect_t *effect_ptr;
-		sample_t s;
 		size_t i, bytes_write;
+		s32_t s;
 
 		bytes_write = fifo_bytes_until_rptr_wrap(&decode_audio->effect_fifo);
 		if (bytes_write > bytes_used) {
@@ -101,15 +114,37 @@ void decode_mix_effects(void *outputBuffer,
 
 		effect_ptr = (effect_t *)(void *)(effect_fifo_buf + decode_audio->effect_fifo.rptr);
 
-		for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
-			s = (*effect_ptr++) << 8;
-			s = fixed_mul(decode_audio->effect_gain, s);
+		if (sample_width == 24) {
+			s32_t *output_ptr  = (sample_t *)outputBuffer;
 
-			*output_ptr = sample_clip(*output_ptr, s);
-			output_ptr++;
+			for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
+				s = (*effect_ptr++) << 8;
+				s = fixed_mul(decode_audio->effect_gain, s);
+				
+				*output_ptr = sample_clip(*output_ptr, s);
+				output_ptr++;
 
-			*output_ptr = sample_clip(*output_ptr, s);
-			output_ptr++;
+				*output_ptr = sample_clip(*output_ptr, s);
+				output_ptr++;
+			}
+
+			outputBuffer = output_ptr;
+		}
+		else if (sample_width == 16) {
+			s16_t *output_ptr  = (s16_t *)outputBuffer;
+
+			for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
+				s = (*effect_ptr++) << 8;
+				s = fixed_mul(decode_audio->effect_gain, s);
+				
+				*output_ptr = s16_clip(*output_ptr, s >> 8);
+				output_ptr++;
+
+				*output_ptr = s16_clip(*output_ptr, s >> 8);
+				output_ptr++;
+			}
+
+			outputBuffer = output_ptr;
 		}
 
 		fifo_rptr_incby(&decode_audio->effect_fifo, bytes_write);
