@@ -265,7 +265,7 @@ function skin(self, s, reload, useDefaultSize)
 		npprogress = {
 			position = LAYOUT_NORTH,
 			padding = { 0, 0, 0, 0 },
-			border = { 0, 60, 0, 0 },
+			border = { 0, 59, 0, 0 },
 			w = WH_FILL,
 			order = { "slider" },
 		},
