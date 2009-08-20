@@ -162,6 +162,8 @@ function setWirelessSignal(self, val)
 
 	if val == "ERROR" then
 		self.iconWireless:setStyle("button_wireless_" .. val)
+	elseif val == 0 then
+		self.iconWireless:setStyle("button_wireless_ERROR")
 	elseif self.serverError == "ERROR" then
 		self.iconWireless:setStyle("button_wireless_SERVERERROR")
 	else
