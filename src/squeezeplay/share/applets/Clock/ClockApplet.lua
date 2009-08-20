@@ -796,6 +796,8 @@ function _openScreensaver(self, type, windowStyle, force)
 
 	self.clock[1]:Draw()
 	self.clock[1].window:show(Window.transitionFadeIn)
+
+	return true
 end
 
 

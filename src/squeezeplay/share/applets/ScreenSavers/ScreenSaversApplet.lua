@@ -109,7 +109,7 @@ function init(self, ...)
 					return EVENT_UNUSED
 				end
 					
-				if self.ssAllowedActions and table.contains(self.ssAllowedActions, action) then
+				if self.ssAllowedActions and (table.contains(self.ssAllowedActions, action) or #self.ssAllowedActions == 0) then
 					log:debug("'Per window' action allowed to pass through: ", action)
 					return EVENT_UNUSED
 				end
@@ -286,16 +286,16 @@ function _getDefaultScreensaver(self)
 	local ss
 
 	local player = appletManager:callService("getCurrentPlayer")
-	if not self:isSoftPowerOn() and player:isLocal() then
+	if not self:isSoftPowerOn() and System:getMachine() ~= "jive" then
 		ss = self:_getOffScreensaver()
-		log:debug("whenOff")
+		log:debug("whenOff: ", ss)
 	else
 		if player and player:getPlayMode() == "play" then
 			ss = self:getSettings()["whenPlaying"]
-			log:debug("whenPlaying")
+			log:debug("whenPlaying: ", ss)
 		else
 			ss = self:getSettings()["whenStopped"]
-			log:debug("whenStopped")
+			log:debug("whenStopped: ", ss)
 		end
 	end
 
@@ -390,10 +390,8 @@ function _powerActionHandler(self, actionEvent)
 		return
 	end
 
-	--action not used, so bring up "power on" window if isn't already to let user know device is in off state-- not for baby though for bug 12541  
-	if System:getMachine() ~= "baby" then
-		self:_showPowerOnWindow()
-	end
+	--else show power on window (if the specific SS allows it)
+	self:_showPowerOnWindow()
 end
 
 
@@ -412,6 +410,10 @@ function _showPowerOnWindow(self)
 		end
 
 		local instance = appletManager:loadApplet(screensaver.applet)
+		if not instance.usePowerOnWindow or not instance:usePowerOnWindow() then
+			log:debug("ss: don't use power on window")
+			return
+		end
 		if instance.onOverlayWindowShown then
 			instance:onOverlayWindowShown()
 		end
@@ -448,6 +450,8 @@ behaviour.
 If the screensaver window wants to respond to mouse activity or scrolling or actions (without the screensaver exiting), use
 the boolean I<scrollAllowed> and boolean I<mouseAllowed> and string table I<ssAllowedActions>
 
+If I<ssAllowedActions> is nil, no actions will be passed on. If an empty table is sent, all actions will be passed on.
+
 =cut
 --]]
 function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
@@ -478,6 +482,8 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 			   end)
 
 	if not self:isSoftPowerOn() then
+		--allow input to pass through, so that the following listeners will be honored
+	        self:_setSSAllowedActions(true, {}, true)
 
 		window:ignoreAllInputExcept(    { "power", "power_on", "power_off" },
 		                                function(actionEvent)

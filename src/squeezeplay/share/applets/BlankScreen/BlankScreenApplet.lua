@@ -27,6 +27,7 @@ local Timer            = require("jive.ui.Timer")
 local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local debug            = require("jive.utils.debug")
+local System           = require("jive.System")
 
 local jnt              = jnt
 local appletManager    = appletManager
@@ -94,6 +95,16 @@ end
 
 function onOverlayWindowHidden(self)
 	self:_setBrightness("off")
+end
+
+
+function usePowerOnWindow(self)
+	-- not for baby -- bug 12541
+	if System:getMachine() == "baby" then
+		return false
+	end
+
+	return true
 end
 
 
