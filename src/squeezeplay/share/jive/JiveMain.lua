@@ -190,6 +190,18 @@ function _goHomeAction(self)
 end
 
 
+function _goFactoryTestModeAction(self)
+	local key = "factoryTest"
+
+	if jiveMain:getMenuTable()[key] then
+		Framework:playSound("JUMP")
+		jiveMain:getMenuTable()[key].callback()
+	end
+
+	return EVENT_CONSUME
+end
+
+
 function JiveMain:getSoftPowerState()
 	return _softPowerState
 end
@@ -311,6 +323,8 @@ function JiveMain:__init()
 
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
 	Framework:addActionListener("context_menu", self, _defaultContextMenuAction, 10)
+
+	Framework:addActionListener("go_factory_test_mode", self, _goFactoryTestModeAction, 9999)
 
 	--Consume up and down actions
 	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)

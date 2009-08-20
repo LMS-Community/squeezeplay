@@ -167,6 +167,9 @@ irActionMappings.press = {
 	["7"]  = "play_preset_7",
 	["8"]  = "play_preset_8",
 	["9"]  = "play_preset_9",
+
+	["factory_test_mode"] = "go_factory_test_mode",
+	["test_audio_routing"] = "go_test_audio_routing",
 }
 
 irActionMappings.hold = {
