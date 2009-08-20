@@ -406,11 +406,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.npprogressB = {
 		w = WH_FILL,
 		align = 'center',
-		padding = { 0, 8, 0, 0 },
 		border = { 10, 0, 10, 0 },
                 horizontal = 1,
                 bgImg = s.img.songProgressBackground,
                 img = s.img.songProgressBar,
+		h = 14,
 	}
 
 	s.npvolumeB = { hidden = 1 }
