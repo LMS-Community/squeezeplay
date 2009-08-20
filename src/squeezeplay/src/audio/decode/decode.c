@@ -949,6 +949,22 @@ static int decode_init_audio(lua_State *L) {
 		lua_call(L, 3, 0);
 	}
 
+	/* tell SC that our play-points are accurate, unless configuration says otherwise */
+	{
+		unsigned int accuratePlayPoints;
+
+		lua_getfield(L, 2, "accuratePlayPoints");
+		accuratePlayPoints = luaL_optinteger(L, -1, 1);
+		lua_pop(L, 1);
+
+		if (accuratePlayPoints) {
+			lua_getfield(L, 2, "capability");
+			lua_pushvalue(L, 2);
+			lua_pushstring(L, "AccuratePlayPoints");
+			lua_call(L, 2, 0);
+		}
+	}
+
 	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
 	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
 
