@@ -393,18 +393,19 @@ static void capture_loopback(struct decode_alsa *state,
 
 	frames = snd_pcm_readi(state->capture_pcm, outputBuffer, framesPerBuffer);
 	if (frames < 0) {
+		LOG_WARN("overrun? %s", snd_strerror(frames));
 		snd_pcm_recover(state->capture_pcm, frames, 1);
 		memset(outputBuffer, 0, SAMPLES_TO_BYTES(framesPerBuffer));
 		return;
 	}
 
-	rptr = outputBuffer; rptr += (frames * 2); rptr--;
-	wptr = outputBuffer; wptr += (frames * 2); wptr--;
+	/* convert from S16_LE -> S24_LE and apply gain */
+	rptr = outputBuffer; rptr += (frames * 2) - 1;
+	wptr = outputBuffer; wptr += (frames * 2) - 1;
 
-	// FIXME why <<8 this is meant to be S16_LE -> S32_LE
 	while(frames--) {
-		*(wptr--) = fixed_mul(decode_audio->lgain, *(rptr--) << 8);
-		*(wptr--) = fixed_mul(decode_audio->rgain, *(rptr--) << 8);
+		*(wptr--) = fixed_mul(decode_audio->lgain, *(rptr--));
+		*(wptr--) = fixed_mul(decode_audio->rgain, *(rptr--));
 	}
 }
 
@@ -595,7 +596,7 @@ static int pcm_open(struct decode_alsa *state, int mode)
 				mode,
 				state->capture_device,
 				SND_PCM_ACCESS_RW_INTERLEAVED,
-				SND_PCM_FORMAT_S24_LE,
+				SND_PCM_FORMAT_S16_LE,
 				state->pcm_sample_rate);
 
 		if (err < 0) {
