@@ -2538,7 +2538,7 @@ function browserActionRequest(self, server, v, loadedCallback)
 	end
 
 	-- we need a new window for go actions, or do actions that involve input
-	if goAction or (doAction and v.input) then
+	if goAction or (doAction and v.input) or v.id == "playerpower" then --slightly hackish, not sure how to handle playerpower case generically
 		log:debug(v.nextWindow)
 		if v.nextWindow then
 			if loadedCallback then
@@ -2552,27 +2552,36 @@ function browserActionRequest(self, server, v, loadedCallback)
 				sink = function () _goNowPlaying() end
 			end
 		else
-			step, sink =_newDestination(nil,
-				v,
-				_newWindowSpec(nil, v),
-				_browseSink,
-				jsonAction
-			)
-
-			if v.input then
-				step.window:show()
-				_pushStep(step)
-			else
-				from, qty = _decideFirstChunk(step, jsonAction)
-
+			if doAction and v.id == "playerpower" then --slightly hackish, not sure how to handle playerpower case generically
+				step, sink = _emptyDestination(step)
 				step.loaded = function()
-					--if _player.menuAnchor then defer callback until menuAnchor chunk received.
-					if not _player.menuAnchor and loadedCallback then
+					if  loadedCallback then
 						loadedCallback(step)
-						_pushStep(step)
-						step.window:show()
-					else
-						_player.loadedCallback = loadedCallback
+					end
+				end
+			else
+				step, sink =_newDestination(nil,
+					v,
+					_newWindowSpec(nil, v),
+					_browseSink,
+					jsonAction
+				)
+
+				if v.input then
+					step.window:show()
+					_pushStep(step)
+				else
+					from, qty = _decideFirstChunk(step, jsonAction)
+
+					step.loaded = function()
+						--if _player.menuAnchor then defer callback until menuAnchor chunk received.
+						if not _player.menuAnchor and loadedCallback then
+							loadedCallback(step)
+							_pushStep(step)
+							step.window:show()
+						else
+							_player.loadedCallback = loadedCallback
+						end
 					end
 				end
 			end

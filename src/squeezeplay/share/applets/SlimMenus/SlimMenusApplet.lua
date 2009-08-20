@@ -32,6 +32,7 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
 local Task                   = require("jive.ui.Task")
+local System                 = require("jive.System")
 
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
@@ -440,8 +441,8 @@ local function _menuSink(self, isCurrentServer, server)
 
 			if not item.id then
 				log:info("no id for menu item: ", item.text)
-			elseif item.id == "playerpower" then
-				--ignore, playerpower no longer shown to users since we use power button
+			elseif item.id == "playerpower" and System:getMachine() ~= "jive" then
+				--ignore, playerpower no longer shown to users since we use power button, unless this is a device without a power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now
 			elseif item.id == "settingsPlayerNameChange" and not isCurrentServer then

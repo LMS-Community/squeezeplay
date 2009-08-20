@@ -485,7 +485,8 @@ function notify_networkConnected(self)
 end
 
 function notify_playerPower(self,  player, power)
-	if Player:getCurrentPlayer() == player then
+	if Player:getCurrentPlayer() == player and System:getMachine() ~= "jive" then
+		--only work for devices that have a dedicated power button
 		log:info("notify_playerPower: ", power)
 		if power then
 			jiveMain:setSoftPowerState("on", true)
