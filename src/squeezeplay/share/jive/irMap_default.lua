@@ -47,6 +47,6 @@ irMap["map"] = {
 	[0x76895CA3] = "menu_search_album",
 	[0x768952AD] = "menu_search_song",
 	[0x768930CF] = "factory_test_mode",
-	[0x768950AF] = "reserved",
+	[0x768950AF] = "test_audio_routing",
 
 }
