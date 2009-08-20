@@ -1031,9 +1031,6 @@ int luaopen_decode(lua_State *L) {
 	log_audio_codec = LOG_CATEGORY_GET("audio.codec");
 	log_audio_output = LOG_CATEGORY_GET("audio.output");
 
-	/* register sample playback */
-	decode_sample_init(L);
-
 	/* register lua functions */
 	luaL_register(L, "squeezeplay.decode", decode_f);
 
