@@ -35,6 +35,9 @@ local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
 
+local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
+
 local jnt                    = jnt
 local iconbar                = iconbar
 local jiveMain               = jiveMain
@@ -436,13 +439,28 @@ function settingsBrightnessShow (self, menuItem)
 						settings.ambient = 0
 					end
 
+					-- done is true for 'go' and 'play' but we do not want to leave
 					if done then
-						window:playSound("WINDOWSHOW")
-						window:hide(Window.transitionPushLeft)
+						window:playSound("BUMP")
+						window:bumpRight()
 					end
 				end)
 	slider.jumpOnDown = false
 	slider.dragThreshold = 5
+
+	-- Allow IR to move brightness slider up and down
+	slider:addListener(EVENT_IR_DOWN | EVENT_IR_REPEAT,
+		function(event)
+			if event:isIRCode("arrow_down") then
+				local e = Event:new(EVENT_SCROLL, -1)
+				Framework:dispatchEvent(slider, e)
+				return EVENT_CONSUME
+			elseif event:isIRCode("arrow_up") then
+				local e = Event:new(EVENT_SCROLL, 1)
+				Framework:dispatchEvent(slider, e)
+				return EVENT_CONSUME
+			end
+		end)
 
 --	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group('brightness_group', {
