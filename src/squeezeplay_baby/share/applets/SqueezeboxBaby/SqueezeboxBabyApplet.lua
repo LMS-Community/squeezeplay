@@ -42,7 +42,7 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	local uuid, mac, serial
+	local uuid, mac, serial, revision
 	
 	-- read device uuid
 	local f = io.open("/proc/cpuinfo")
@@ -57,6 +57,10 @@ function init(self)
 				serial = string.match(line, "Serial%s+:%s+([%x-]+)")
 				self._serial = string.gsub(serial, "[^%x]", "")
 			end
+
+			if string.match(line, "Revision") then
+				revision = string.match(line, "Revision%s+:%s+(%d+)")
+			end
 		end
 		f:close()
 	end
@@ -68,6 +72,7 @@ function init(self)
 	System:init({
 		uuid = uuid,
 		machine = "baby",
+		revision = revision,
 	})
 
 	mac = System:getMacAddress()
