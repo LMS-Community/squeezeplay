@@ -3003,51 +3003,28 @@ end
 
 
 function showTrack(index)
-	-- TODO: handle situation where playlist size is 0
-	local playerStatus = _player:getPlayerStatus()
-	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[index]
-	if not item then
-		return
-	end
-	local iWindow = _safeDeref(item, 'window')
-
-	local baseData = playerStatus and playerStatus.base
-	local bWindow = _safeDeref(baseData, 'window')
-
-	local bAction = _safeDeref(baseData, 'actions', 'more')
-	local iAction = _safeDeref(item, 'actions', 'more')
-	local jsonAction
-
-	-- if the action is defined in the item, then do that
-	if iAction then
-		jsonAction = iAction
-	-- bAction contains (possibly) the start of the songinfo command for track 1
-	else
-		jsonAction = bAction
-		local params = jsonAction["params"]
-                if not params then
-			params = {}
-		end
-		-- but also get params in the item
-		if item["params"] then
-			for k,v in pairs(item['params']) do
-				params[k] = v
-			end
-		end
-		jsonAction["params"] = params
-	end
-
+	local serverIndex = index - 1
+	local jsonAction = {
+		cmd = { 'contextmenu' },
+		itemsParams = 'params',
+		window = {
+			isContextMenu = 1,
+		},
+		player = 0,
+		params = {
+			playlist_index = serverIndex,
+			menu = 'track',
+			context = 'playlist',
+		},
+	}
 	-- determine style
 	local newWindowSpec = {
 		['isContextMenu']    = true,
 		["menuStyle"]        = "menu",
 		["labelItemStyle"]   = "item",
-		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
-		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
-		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
 	}		
 
-	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
+	local step, sink = _newDestination(nil, nil, newWindowSpec, _browseSink)
 	step.window:addActionListener("back", step, _goNowPlayingAction)
 	step.window:show()
 	step._isNpChildWindow = true
