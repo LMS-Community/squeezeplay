@@ -211,24 +211,18 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.songProgressBackground =
 		Tile:loadHTiles({
-					--[[
 					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_l.png",
 					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd.png",
 					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_r.png",
-					--]]
-					imgpath .. "UNOFFICIAL/tb_progress_bkgrd_l.png",
-					imgpath .. "UNOFFICIAL/tb_progress_bkgrd.png",
-					imgpath .. "UNOFFICIAL/tb_progress_bkgrd_r.png",
 			       })
 
-	-- FIXME, this does not render correctly
 	s.img.songProgressBar =
 		Tile:loadHTiles({
-					--imgpath .. "Song_Progress_Bar/tb_progress_fill_l.png",
-					--imgpath .. "Song_Progress_Bar/tb_progress_fill.png",
-					imgpath .. "UNOFFICIAL/tb_progress_fill_l.png",
-					imgpath .. "UNOFFICIAL/tb_progress_fill.png",
-					imgpath .. "Song_Progress_Bar/tb_progressbar_slider.png",
+					imgpath .. "Song_Progress_Bar/tb_progress_fill_l.png",
+					imgpath .. "Song_Progress_Bar/tb_progress_fill.png",
+					--imgpath .. "Song_Progress_Bar/tb_progressbar_slider.png",
+					--- workaround slider end with small tail
+					imgpath .. "UNOFFICIAL/tb_progressbar_slider.png",
 			       })
 
 

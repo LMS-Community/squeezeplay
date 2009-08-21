@@ -285,8 +285,8 @@ function skin(self, s, reload, useDefaultSize)
                 horizontal = 1,
                 bgImg = s.img.songProgressBackground,
                 img = s.img.songProgressBar,
-		h = 14,
-		padding = { 0, 0, 0, 14 },
+		h = 15,
+		padding = { 0, 0, 0, 15 },
 	}
 
 	s.npvolumeB = { hidden = 1 }
