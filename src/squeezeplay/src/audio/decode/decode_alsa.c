@@ -213,7 +213,7 @@ static int decode_alsa_init(lua_State *L) {
 	}
 
 	buf = shmat(shmid, 0, 0);
-	if ((int)buf == -1) {
+	if (buf == (void *)-1) {
 		// XXXX errors
 		LOG_ERROR(log_audio_codec, "shmgat error %s", strerror(errno));
 		return 0;
