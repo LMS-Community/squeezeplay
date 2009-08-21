@@ -42,6 +42,7 @@ static int callback(const void *inputBuffer,
 	int add_silence_ms;
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
+	u32_t delay;
 
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
 		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
@@ -68,6 +69,15 @@ static int callback(const void *inputBuffer,
 		/* mix in sound effects */
 		goto mixin_effects;
 	}
+
+	/* sync accurate playpoint */
+	decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
+	delay = (timeInfo->outputBufferDacTime - Pa_GetStreamTime(stream)) * decode_audio->track_sample_rate;
+
+	if (decode_audio->sync_elapsed_samples > delay) {
+		decode_audio->sync_elapsed_samples -= delay;
+	}
+	decode_audio->sync_elapsed_timestamp = jive_jiffies();
 
 	add_silence_ms = decode_audio->add_silence_ms;
 	if (add_silence_ms) {
