@@ -96,9 +96,9 @@ static void decode_alsa_stop(void) {
 }
 
 
-static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, u32_t flags)
+static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, unsigned int sample_size, u32_t flags)
 {
-	char *path, b[10], p[10], f[10];
+	char *path, b[10], p[10], f[10], s[10];
 	char *cmd[20];
 	pid_t pid;
 	int i, idx = 0, ret;
@@ -128,6 +128,10 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	snprintf(p, sizeof(p), "%d", period_count);
 	cmd[idx++] = "-p";
 	cmd[idx++] = p;
+
+	snprintf(s, sizeof(s), "%d", sample_size);
+	cmd[idx++] = "-s";
+	cmd[idx++] = s;
 
 	snprintf(f, sizeof(f), "%d", flags);
 
@@ -194,6 +198,7 @@ static int decode_alsa_init(lua_State *L) {
 	const char *effects_device;
 	unsigned int buffer_time;
 	unsigned int period_count;
+	unsigned int sample_size;
 	int shmid;
 	void *buf;
 
@@ -232,6 +237,9 @@ static int decode_alsa_init(lua_State *L) {
 	lua_getfield(L, 2, "alsaEffectsDevice");
 	effects_device = luaL_optstring(L, -1, NULL);
 
+	lua_getfield(L, 2, "alsaSampleSize");
+	sample_size = luaL_optinteger(L, -1, 16);
+
 
 #if 0
 	/* test if device is available */
@@ -256,7 +264,7 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, FLAG_STREAM_EFFECTS);
+		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, 16, FLAG_STREAM_EFFECTS);
 	}
 
 
@@ -269,7 +277,7 @@ static int decode_alsa_init(lua_State *L) {
 	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 	lua_pop(L, 2);
 
-	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count,
+	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, sample_size,
 					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS /*| FLAG_STREAM_NOISE*/);
 
 	lua_pop(L, 2);

@@ -101,6 +101,7 @@ struct decode_alsa {
 	u32_t flags;
 	unsigned int buffer_time;
 	unsigned int period_count;
+	snd_pcm_format_t output_format;
 
 	/* alsa pcm state */
 	snd_pcm_t *pcm;
@@ -254,132 +255,149 @@ static void decode_alsa_copyright(struct decode_alsa *state,
  * Called with fifo-lock held.
  */
 static void playback_callback(struct decode_alsa *state,
-			      void *outputBuffer,
-			      unsigned long framesPerBuffer) {
-	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
+			      void *output_buf,
+			      size_t output_frames) {
+	//size_t bytes_used, outputLen;
+	//size_t skip_bytes = 0, add_bytes = 0;
+	size_t decode_frames, skip_frames;
 	int add_silence_ms;
 	bool_t reached_start_point;
-	Uint8 *outputArray = (u8_t *)outputBuffer;
-
-	// XXXX full port from ip3k
+	Uint8 *output_buffer = (u8_t *)output_buf;
 
 	ASSERT_AUDIO_LOCKED();
-	assert(PCM_SAMPLE_WIDTH() == 24);
 
-	len = PCM_FRAMES_TO_BYTES(framesPerBuffer);
-	bytes_used = fifo_bytes_used(&decode_audio->fifo);
+	//outputLen = PCM_FRAMES_TO_BYTES(output_frames);
+	//bytes_used = fifo_bytes_used(&decode_audio->fifo); // XXXX
+	decode_frames = BYTES_TO_SAMPLES(fifo_bytes_used(&decode_audio->fifo));
 
 	/* Should we start the audio now based on having enough decoded data? */
-	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >  (len * state->period_count))	{
+	if (decode_audio->state & DECODE_STATE_AUTOSTART && decode_frames > (output_frames * state->period_count)) {
 		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
 		decode_audio->state |= DECODE_STATE_RUNNING;
 	}
 
 	/* audio running? */
 	if (!(decode_audio->state & DECODE_STATE_RUNNING)) {
-		memset(outputArray, 0, len);
+		memset(output_buffer, 0, PCM_FRAMES_TO_BYTES(output_frames));
 
 		return;
 	}
 
 	add_silence_ms = decode_audio->add_silence_ms;
 	if (add_silence_ms) {
-		add_bytes = PCM_FRAMES_TO_BYTES((u32_t)((add_silence_ms * state->pcm_sample_rate) / 1000));
-		if (add_bytes > len) {
-			add_bytes = len;
+		unsigned int add_frames;
+
+		add_frames = (add_silence_ms * state->pcm_sample_rate) / 1000;
+		if (add_frames > output_frames) {
+			add_frames = output_frames;
 		}
-		memset(outputArray, 0, add_bytes);
-		outputArray += add_bytes;
-		len -= add_bytes;
-		add_silence_ms -= (PCM_BYTES_TO_FRAMES(add_bytes) * 1000) / state->pcm_sample_rate;
+		memset(output_buffer, 0, PCM_FRAMES_TO_BYTES(add_frames));
+		output_buffer += PCM_FRAMES_TO_BYTES(add_frames);
+		output_frames -= add_frames;
+		add_silence_ms -= (add_frames * 1000) / state->pcm_sample_rate;
 		if (add_silence_ms < 2) {
 			add_silence_ms = 0;
 		}
 
 		decode_audio->add_silence_ms = add_silence_ms;
 
-		if (!len) {
+		if (!output_frames) {
 			return;
 		}
 	}
 
 	/* only skip if it will not cause an underrun */
-	if (bytes_used >= len && decode_audio->skip_ahead_bytes > 0) {
-		skip_bytes = bytes_used - len;
-		if (skip_bytes > decode_audio->skip_ahead_bytes) {
-			skip_bytes = decode_audio->skip_ahead_bytes;
+	if (decode_frames >= output_frames && decode_audio->skip_ahead_bytes > 0) {
+		skip_frames = decode_frames - output_frames;
+		if (skip_frames > BYTES_TO_SAMPLES(decode_audio->skip_ahead_bytes)) {
+			skip_frames = BYTES_TO_SAMPLES(decode_audio->skip_ahead_bytes);
 		}
 	}
 
-	if (bytes_used > len) {
-		bytes_used = len;
+	if (decode_frames > output_frames) {
+		decode_frames = output_frames;
 	}
 
 	/* audio underrun? */
-	if (bytes_used == 0) {
+	if (decode_frames == 0) {
 		decode_audio->state |= DECODE_STATE_UNDERRUN;
-		memset(outputArray, 0, len);
+		memset(output_buffer, 0, PCM_FRAMES_TO_BYTES(output_frames));
 		LOG_ERROR("Audio underrun: used 0 bytes");
 
 		return;
 	}
 
-	if (bytes_used < len) {
-		memset(outputArray + bytes_used, 0, len - bytes_used);
+	if (decode_frames < output_frames) {
+		memset(output_buffer + SAMPLES_TO_BYTES(decode_frames), 0, PCM_FRAMES_TO_BYTES(output_frames) - SAMPLES_TO_BYTES(decode_frames));
 
 		if ((decode_audio->state & DECODE_STATE_UNDERRUN) == 0) {
 			decode_audio->state |= DECODE_STATE_UNDERRUN;
-			LOG_ERROR("Audio underrun: used %d bytes , requested %d bytes", (int)bytes_used, (int)len);
+			LOG_ERROR("Audio underrun: used %d frames , requested %d frames", (int)decode_frames, (int)output_frames);
 		}
 	}
 	else {
 		decode_audio->state &= ~DECODE_STATE_UNDERRUN;
 	}
 	
-	if (skip_bytes) {
-		size_t wrap;
+	if (skip_frames) {
+		size_t wrap_frames;
 
-		LOG_DEBUG("Skipping %d bytes", (int)skip_bytes);
+		LOG_DEBUG("Skipping %d frames", (int)skip_frames);
 		
-		wrap = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
+		wrap_frames = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_audio->fifo));
 
-		if (wrap < skip_bytes) {
-			fifo_rptr_incby(&decode_audio->fifo, wrap);
-			skip_bytes -= wrap;
-			decode_audio->skip_ahead_bytes -= wrap;
-			decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(wrap);
+		if (wrap_frames < skip_frames) {
+			fifo_rptr_incby(&decode_audio->fifo, SAMPLES_TO_BYTES(wrap_frames));
+			decode_audio->skip_ahead_bytes -= SAMPLES_TO_BYTES(wrap_frames);
+			decode_audio->elapsed_samples += wrap_frames;
+			skip_frames -= wrap_frames;
 		}
 
-		fifo_rptr_incby(&decode_audio->fifo, skip_bytes);
-		decode_audio->skip_ahead_bytes -= skip_bytes;
-		decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(skip_bytes);
+		fifo_rptr_incby(&decode_audio->fifo, SAMPLES_TO_BYTES(skip_frames));
+		decode_audio->skip_ahead_bytes -= SAMPLES_TO_BYTES(skip_frames);
+		decode_audio->elapsed_samples += skip_frames;
 	}
 
-	while (bytes_used) {
-		size_t wrap, bytes_write, samples_write;
-		sample_t *output_ptr, *decode_ptr;
+	while (decode_frames) {
+		size_t wrap_frames, frames_write, frames_cnt;
 
-		wrap = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
+		wrap_frames = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_audio->fifo));
 
-		bytes_write = bytes_used;
-		if (wrap < bytes_write) {
-			bytes_write = wrap;
+		frames_write = decode_frames;
+		if (wrap_frames < frames_write) {
+			frames_write = wrap_frames;
 		}
 
-		samples_write = PCM_BYTES_TO_FRAMES(bytes_write);
+		frames_cnt = frames_write;
 
-		output_ptr = (sample_t *)(void *)outputArray;
-		decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-		while (samples_write--) {
-			*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 8;
-			*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 8;
+		if (PCM_SAMPLE_WIDTH() == 24) {
+			sample_t *decode_ptr;
+			Sint32 *output_ptr;
+
+			output_ptr = (Sint32 *)(void *)output_buffer;
+			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+			while (frames_cnt--) {
+				*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 8;
+				*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 8;
+			}
+		}
+		else {
+			sample_t *decode_ptr;
+			Sint16 *output_ptr;
+
+			output_ptr = (Sint16 *)(void *)output_buffer;
+			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+			while (frames_cnt--) {
+				*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 16;
+				*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 16;
+			}
 		}
 
-		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
-		decode_audio->elapsed_samples += PCM_BYTES_TO_FRAMES(bytes_write);
+		fifo_rptr_incby(&decode_audio->fifo, SAMPLES_TO_BYTES(frames_write));
+		decode_audio->elapsed_samples += frames_write;
 
-		outputArray += bytes_write;
-		bytes_used -= bytes_write;
+		output_buffer += PCM_BYTES_TO_FRAMES(frames_write);
+		decode_frames -= frames_write;
 	}
 
 	reached_start_point = decode_check_start_point();
@@ -394,25 +412,25 @@ static void playback_callback(struct decode_alsa *state,
 
 
 static void capture_read(struct decode_alsa *state,
-			 snd_pcm_uframes_t framesPerBuffer)
+			 snd_pcm_uframes_t output_frames)
 {
 	snd_pcm_sframes_t frames;
 	s16_t *ptr;
 
 	assert(PCM_SAMPLE_WIDTH() == 16);
 
-	if (state->cbuf_size < PCM_FRAMES_TO_BYTES(framesPerBuffer)) {
+	if (state->cbuf_size < PCM_FRAMES_TO_BYTES(output_frames)) {
 		if (state->cbuf) {
 			free(state->cbuf);
 		}
-		state->cbuf = malloc(PCM_FRAMES_TO_BYTES(framesPerBuffer));
+		state->cbuf = malloc(PCM_FRAMES_TO_BYTES(output_frames));
 	}
 
-	frames = snd_pcm_readi(state->capture_pcm, state->cbuf, framesPerBuffer);
+	frames = snd_pcm_readi(state->capture_pcm, state->cbuf, output_frames);
 	if (frames < 0) {
 		LOG_WARN("overrun? %s", snd_strerror(frames));
 		snd_pcm_recover(state->capture_pcm, frames, 1);
-		memset(state->cbuf, 0, PCM_FRAMES_TO_BYTES(framesPerBuffer));
+		memset(state->cbuf, 0, PCM_FRAMES_TO_BYTES(output_frames));
 		return;
 	}
 
@@ -577,14 +595,6 @@ static int _pcm_open(struct decode_alsa *state,
 static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 {
 	int err;
-
-	/* S24_LE for standard playback, S16_LE for loopback */
-	if (loopback) {
-		state->format = SND_PCM_FORMAT_S16_LE;
-	}
-	else {
-		state->format = SND_PCM_FORMAT_S24_LE;
-	}
 
 	if (mode == SND_PCM_STREAM_PLAYBACK) {
 		u32_t sample_rate;
@@ -998,14 +1008,26 @@ int main(int argv, char **argc)
 		else if (strcmp(argc[i], "-p") == 0) {
 			state.period_count = strtoul(argc[++i], NULL, 0);
 		}
+		else if (strcmp(argc[i], "-s") == 0) {
+			if (strcmp(argc[++i], "24") == 0) {
+				state.format = SND_PCM_FORMAT_S24_LE;
+			}
+			else {
+				state.format = SND_PCM_FORMAT_S16_LE;
+			}
+		}
 		else if (strcmp(argc[i], "-f") == 0) {
 			state.flags = strtoul(argc[++i], NULL, 0);
 		}
 	}
 
 	if (!state.playback_device || !state.buffer_time || !state.period_count || !state.flags) {
-		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
+		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -s <sample_size:24|16> -f <flags>\n", argc[0]);
 		exit(-1);
+	}
+
+	if (!state.format) {
+		state.format = SND_PCM_FORMAT_S16_LE;
 	}
 
 #ifdef HAVE_SYSLOG
