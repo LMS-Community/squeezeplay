@@ -211,9 +211,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.songProgressBackground =
 		Tile:loadHTiles({
-					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_l.png",
-					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd.png",
-					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_r.png",
+					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_float_l.png",
+					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_float.png",
+					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_float_r.png",
 			       })
 
 	s.img.songProgressBar =
