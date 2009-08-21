@@ -330,6 +330,11 @@ end
 
 
 local function _pushStep(step)
+	--CM windows auto-hide, but step stack / window stack gets out of order unless we close any CM prior to pushing the next window
+	if step.window and not step.window:isContextMenu() then
+		Window:hideContextMenus()
+	end
+	
 	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
 
 	table.insert(_stepStack, step)
