@@ -24,6 +24,7 @@ local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
+local Event                  = require("jive.ui.Event")
 local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
 local Task                   = require("jive.ui.Task")
@@ -37,6 +38,8 @@ local RadioButton            = require("jive.ui.RadioButton")
 
 local debug                  = require("jive.utils.debug")
 
+local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
 
 local jnt                    = jnt
 local iconbar                = iconbar
@@ -652,11 +655,26 @@ function settingsBrightnessShow (self, menuItem)
 
 			self:setBrightness(bright)
 
+			-- done is true for 'go' and 'play' but we do not want to leave
 			if done then
-				window:playSound("WINDOWSHOW")
-				window:hide(Window.transitionPushLeft)
+				window:playSound("BUMP")
+				window:bumpRight()
 			end
 	end)
+
+	-- Allow IR to move brightness slider up and down
+	slider:addListener(EVENT_IR_DOWN | EVENT_IR_REPEAT,
+		function(event)
+			if event:isIRCode("arrow_down") then
+				local e = Event:new(EVENT_SCROLL, -1)
+				Framework:dispatchEvent(slider, e)
+				return EVENT_CONSUME
+			elseif event:isIRCode("arrow_up") then
+				local e = Event:new(EVENT_SCROLL, 1)
+				Framework:dispatchEvent(slider, e)
+				return EVENT_CONSUME
+			end
+		end)
 
 	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
