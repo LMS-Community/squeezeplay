@@ -335,7 +335,7 @@ end
 
 --service method
 function performHalfDuplexBugTest(self)
-	return true
+	return self._revision < 5
 end
 
 
