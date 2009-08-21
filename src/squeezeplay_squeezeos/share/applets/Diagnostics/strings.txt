@@ -479,3 +479,5 @@ SOFTWARE_UPDATE
 	RU	Обновление ПО
 	SV	Programvaruuppdatering
 
+HARDWARE_VERSION
+	EN	Hardware version

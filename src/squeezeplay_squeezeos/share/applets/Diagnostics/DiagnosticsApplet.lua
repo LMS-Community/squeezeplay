@@ -35,6 +35,7 @@ oo.class(_M, Applet)
 
 local tests = {
       "FIRMWARE_VERSION",
+      "HARDWARE_VERSION",
       "MAC_ADDRESS",
       "WLAN_SSID",
       "WLAN_ENCRYPTION",
@@ -207,8 +208,11 @@ end
 
 
 function dovalues(self, menu)
+	local machine, revision = System:getMachine();
+
 	-- fixed values
 	self:setValue("FIRMWARE_VERSION", JIVE_VERSION)
+	self:setValue("HARDWARE_VERSION", revision)
 	self:setValue("MAC_ADDRESS", System:getMacAddress())
 
 	-- networks
