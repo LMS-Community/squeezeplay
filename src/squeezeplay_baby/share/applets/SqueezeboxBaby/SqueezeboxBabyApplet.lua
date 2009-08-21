@@ -42,7 +42,7 @@ oo.class(_M, Applet)
 
 
 function init(self)
-	local uuid, mac, serial, revision
+	local uuid, mac, serial
 	
 	-- read device uuid
 	local f = io.open("/proc/cpuinfo")
@@ -59,7 +59,7 @@ function init(self)
 			end
 
 			if string.match(line, "Revision") then
-				revision = string.match(line, "Revision%s+:%s+(%d+)")
+				self._revision = string.match(line, "Revision%s+:%s+(%d+)")
 			end
 		end
 		f:close()
@@ -72,7 +72,7 @@ function init(self)
 	System:init({
 		uuid = uuid,
 		machine = "baby",
-		revision = revision,
+		revision = self._revision,
 	})
 
 	mac = System:getMacAddress()
@@ -135,7 +135,7 @@ end
 
 --service method
 function performHalfDuplexBugTest(self)
-	return true
+	return self._revision < 5
 end
 
 
