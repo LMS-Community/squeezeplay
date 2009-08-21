@@ -57,6 +57,10 @@ function init(self)
 				uuid = string.match(line, "UUID%s+:%s+([%x-]+)")
 				uuid = string.gsub(uuid, "[^%x]", "")
 			end
+
+			if string.match(line, "Revision") then
+				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+			end
 		end
 		f:close()
 	end
@@ -64,6 +68,7 @@ function init(self)
 	System:init({
 		uuid = uuid,
 		machine = "fab4",
+		revision = self._revision,
 	})
 
 	mac = System:getMacAddress()

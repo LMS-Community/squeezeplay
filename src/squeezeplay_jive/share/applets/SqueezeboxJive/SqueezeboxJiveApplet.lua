@@ -81,9 +81,20 @@ function init(self)
 		uuid = string.match(printenv, "serial#=(%x+)")
 	end
 
+	local f = io.open("/proc/cpuinfo")
+	if f then
+		for line in f:lines() do
+			if string.match(line, "Revision") then
+				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+			end
+		end
+		f:close()
+	end
+
 	System:init({
 		uuid = uuid,
 		machine = "jive",
+		revision = 0,
 	})
 
 	mac = System:getMacAddress()
