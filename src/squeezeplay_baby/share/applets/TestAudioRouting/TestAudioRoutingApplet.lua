@@ -38,20 +38,6 @@ function audioRoutingMenu(self)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({
-				text = "** TEST LOOPBACK",
-				style = 'item_choice',
-				check = Checkbox(
-					"checkbox",
-					function(object, isSelected)
-						log:info("checkbox updated: ", isSelected)
-						decode:capture(isSelected)
-					end,
-					false
-				)
-			})
-
-
-	menu:addItem({
 				text = self:string("ENABLE_LINE_IN_PASSTHROUGH"), 
 				style = 'item_choice',
 				check = Checkbox(

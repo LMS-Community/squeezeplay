@@ -20,6 +20,7 @@ local Networking             = require("jive.net.Networking")
 local Player                 = require("jive.slim.Player")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
+local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
@@ -210,6 +211,10 @@ function init(self)
 		if sw == 1 then
 			-- headphone
 			self:_headphoneJack(val)
+
+		elseif sw == 2 then
+			-- headphone
+			self:_lineinJack(val == 1)
 		end
 	end)
 
@@ -231,6 +236,12 @@ function init(self)
 	jnt:subscribe(self)
 
 	self:storeSettings()
+
+
+	-- XXXX for testing only
+	if bsp:getMixer("Line In Switch") then
+		self:_lineinJack(true)
+	end
 end
 
 local MAX_BRIGHTNESS_LEVEL = -1
@@ -356,6 +367,26 @@ function _headphoneJack(self, val)
 	else
 		bsp:setMixer("Endpoint", "Headphone")
 		bsp:setMixer("Crossover", false)
+	end
+end
+
+
+function _lineinJack(self, val)
+	if val then
+		jiveMain:addItem({
+			id = "linein",
+			node = "home",
+			text = "Line-In",
+			style = 'item_choice',
+			check = Checkbox("checkbox", function(_, checked)
+				-- XXXX stop track playback
+				Decode:capture(checked)
+			end),
+			weight = 50,
+		})
+	else
+		jiveMain:removeItemById("linein")
+		Decode:capture(false)
 	end
 end
 
