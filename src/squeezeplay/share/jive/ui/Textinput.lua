@@ -703,7 +703,7 @@ function _eventHandler(self, event)
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
-			return _cursorLeftAction(self) 
+			return _cursorLeftAction(self)
 		elseif keycode == KEY_FWD then
 			return _cursorRightAction(self)
 		elseif keycode == KEY_BACK then
