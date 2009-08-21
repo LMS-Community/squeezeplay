@@ -223,7 +223,7 @@ function dovalues(self, menu)
 
 	-- fixed values
 	self:setValue("FIRMWARE_VERSION", JIVE_VERSION)
-	self:setValue("HARDWARE_VERSION", revision)
+	self:setValue("HARDWARE_VERSION", tostring(revision))
 	self:setValue("MAC_ADDRESS", System:getMacAddress())
 
 	-- networks

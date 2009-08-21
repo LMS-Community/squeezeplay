@@ -1,6 +1,6 @@
 
 -- stuff we use
-local ipairs, pcall, tostring = ipairs, pcall, tostring
+local ipairs, pcall, tonumber, tostring = ipairs, pcall, tonumber, tostring
 
 local oo                     = require("loop.simple")
 local string                 = require("string")
