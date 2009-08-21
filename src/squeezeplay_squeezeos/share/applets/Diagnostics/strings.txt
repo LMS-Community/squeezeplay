@@ -482,3 +482,5 @@ DIAGNOSTICS_NETWORKING
 	RU	Работа в сети
 	SV	Nätverk
 
+HARDWARE_VERSION
+	EN	Hardware version

@@ -13,6 +13,7 @@ static char *mac_address;
 static char *uuid;
 static char *arch;
 static char *machine;
+static int hardware_rev;
 static char *homedir;
 static char *resource_path = NULL;
 
@@ -53,11 +54,13 @@ static int system_get_arch(lua_State *L) {
 static int system_get_machine(lua_State *L) {
 	if (machine) {
 		lua_pushstring(L, machine);
+		lua_pushinteger(L, hardware_rev);
+		return 2;
 	}
 	else {
 		lua_pushnil(L);
+		return 1;
 	}
-	return 1;
 }
 
 
@@ -131,6 +134,12 @@ static int system_init(lua_State *L) {
 			free(machine);
 		}
 		machine = strdup(lua_tostring(L, -1));
+	}
+	lua_pop(L, 1);
+
+	lua_getfield(L, 2, "revision");
+	if (!lua_isnil(L, -1)) {
+		hardware_rev = lua_tointeger(L, -1);
 	}
 	lua_pop(L, 1);
 

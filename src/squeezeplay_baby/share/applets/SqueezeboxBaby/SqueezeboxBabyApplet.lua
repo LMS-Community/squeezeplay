@@ -115,7 +115,6 @@ function init(self)
 			if string.match(line, "Revision") then
 				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
 			end
-
 		end
 		f:close()
 	end
@@ -127,6 +126,7 @@ function init(self)
 	System:init({
 		uuid = uuid,
 		machine = "baby",
+		revision = self._revision,
 	})
 
 	mac = System:getMacAddress()
