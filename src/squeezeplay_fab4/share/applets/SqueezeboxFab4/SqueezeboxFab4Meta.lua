@@ -32,6 +32,7 @@ function defaultSettings(meta)
 		alsaEffectsDevice = "plughw:2,0",
 		alsaEffectsBufferTime = 20000,
 		alsaEffectsPeriodCount = 2,
+		alsaSampleSize = 24,
 	}
 end
 

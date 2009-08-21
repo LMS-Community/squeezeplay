@@ -35,6 +35,7 @@ function defaultSettings(meta)
 		alsaPlaybackDevice = "default",
 		alsaPlaybackBufferTime = 30000,
 		alsaPlaybackPeriodCount = 2,
+		alsaSampleSize = 16,
 	}
 end
 
