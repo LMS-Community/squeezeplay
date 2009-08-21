@@ -110,6 +110,11 @@ function init(self)
 				serial = string.match(line, "Serial%s+:%s+([%x-]+)")
 				self._serial = string.gsub(serial, "[^%x]", "")
 			end
+
+			if string.match(line, "Revision") then
+				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
+			end
+
 		end
 		f:close()
 	end
@@ -527,25 +532,42 @@ function _initBrightnessTable( self)
 	local brightness_step_percent = 10
 	local k = 1
 
-	brightnessTable[k] = {1, 1}
-	for step = 1, pwm_steps, 1 do
-		if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
-			k = k + 1
-			brightnessTable[k] = {1, step}
+	if self._revision >= 3 then
+		-- Brightness table for PB3 and newer
+		-- First parameter can be 1 to achieve very low brightness
+		brightnessTable[k] = {1, 1}
+		for step = 1, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {1, step}
+			end
+		end
+		k = k + 1
+		brightnessTable[k] = {0, 33}
+		for step = 33, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {0, step}
+			end
+		end
+	else
+		-- Brightness table for PB1 and PB2
+		-- First parameter need to be 0 at all times, else brightness is really dark
+		brightnessTable[k] = {0, 1}
+		for step = 1, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {0, step}
+			end
 		end
 	end
-	k = k + 1
-	brightnessTable[k] = {0, 33}
-	for step = 33, pwm_steps, 1 do
-		if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
-			k = k + 1
-			brightnessTable[k] = {0, step}
-		end
-	end
-	for k = 1, #brightnessTable, 1 do
-		a = brightnessTable[k][1]
-		a = brightnessTable[k][2]
-	end
+
+-- This is debugging stuff, Caleb, isn't it?
+--	local a
+--	for k = 1, #brightnessTable, 1 do
+--		a = brightnessTable[k][1]
+--		a = brightnessTable[k][2]
+--	end
 end
 
 
