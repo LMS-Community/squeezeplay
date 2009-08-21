@@ -103,7 +103,7 @@ end
 local function unpackNumber(str, pos, len)
 	local v = 0
 	for i = pos, pos + len - 1 do
-		v = (v << 8) | (string.byte(str, i, i + 1) or 0)
+		v = (v << 8) + (string.byte(str, i) or 0)
 	end
 	return v
 end
