@@ -956,6 +956,10 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 
 	self.processWPSTimeout = 0
 
+	-- Get rid of wpa_cli while doing WPS
+	-- It gets restarted when the new network is selected
+	iface:stopWpaCli()
+
 	if iface:isMarvell() then
 		-- Stop wpa_supplicant - cannot run while wpsapp is running
 		iface:stopWPASupplicant()
@@ -993,6 +997,7 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 			iface:stopWPSApp()
 			iface:startWPASupplicant()
 		end
+		iface:restartWpaCli()
 		popup:hide()
 	end
 
@@ -1086,6 +1091,8 @@ function processWPSFailed(self, iface, ssid, wpsmethod, wpspin)
 
 		iface:startWPASupplicant()
 	end
+
+	iface:restartWpaCli()
 
 	-- popup failure
 	local window = Window("error", self:string("NETWORK_WPS_PROBLEM"), 'setuptitle')

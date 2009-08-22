@@ -1043,6 +1043,10 @@ function _ifUp(self, ssid)
 	if self.wireless then
 		-- FIXME this should be handled by the ifup scripts
 
+		-- We need to kick wpa_cli in order to work properly
+		-- Also during WPS wpa_cli was stopped
+		self:restartWpaCli()
+
 		local networkResults = self:request("LIST_NETWORKS")
 
 		local id = false
@@ -1695,7 +1699,7 @@ end
 
 --[[
 
-=head2 jive.net.Networking:startWPASupplicant()
+=head2 jive.net.Networking:stopWPASupplicant()
 
 Stops wpa supplicant
 
@@ -1707,6 +1711,34 @@ function stopWPASupplicant(self)
 	wpaSupplicantRunning = false
 	os.execute("killall wpa_supplicant 2>1 > /dev/null &")
 	self:close()
+end
+
+--[[
+
+=head2 jive.net.Networking:restartWpaCli()
+
+Restarts wpa cli
+
+=cut
+--]]
+
+function restartWpaCli(self)
+	log:info("restartWpaCli")
+	os.execute("killall wpa_cli; /usr/sbin/wpa_cli -B -a/etc/network/wpa_action 2>1 > /dev/null &")
+end
+
+--[[
+
+=head2 jive.net.Networking:stopWpaCli()
+
+Stops wpa cli
+
+=cut
+--]]
+
+function stopWpaCli(self)
+	log:info("stopWpaCli")
+	os.execute("killall wpa_cli 2>1 > /dev/null &")
 end
 
 --[[
