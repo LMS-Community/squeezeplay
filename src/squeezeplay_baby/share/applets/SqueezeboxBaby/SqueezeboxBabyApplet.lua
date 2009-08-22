@@ -248,6 +248,8 @@ function init(self)
 end
 
 local MAX_BRIGHTNESS_LEVEL = -1
+-- Minium Brightness is 11 because "dimmed" powerstate subtracts 10 form the value passed to setBrightness
+local MIN_BRIGHTNESS_LEVEL = 11
 local STATIC_AMBIENT_MIN = -1
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -288,8 +290,8 @@ function doBrightnessRamping(self, target)
 	
 	if brightCur > MAX_BRIGHTNESS_LEVEL then
 		brightCur = MAX_BRIGHTNESS_LEVEL
-	elseif brightCur < 1 then
-		brightCur = 1	
+	elseif brightCur < MIN_BRIGHTNESS_LEVEL then
+		brightCur = MIN_BRIGHTNESS_LEVEL	
 	end
 	
 end
@@ -299,7 +301,7 @@ function doAutomaticBrightnessTimer(self)
 	-- As long as the power state is active don't do anything
 	if self.powerState ==  "active" then
 		if wasDimmed == true then
-			log:info("SWITCHED TO ACTIVE")
+			log:info("SWITCHED TO ACTIVE: " .. self.powerState)
 			-- set brightness so that the active power state removes the 60% dimming
 			self:setBrightness( brightCur )
 			wasDimmed = false
@@ -614,6 +616,7 @@ function _setBrightness(self, level)
 	if self.powerState == "dimmed" then
 		level = level - 10
 	end
+
 	brightness = brightnessTable[level][2]
 	bl_power   = brightnessTable[level][1]
 		
