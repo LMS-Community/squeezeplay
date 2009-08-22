@@ -283,6 +283,9 @@ function doBrightnessRamping(self, target)
 		
 	brightCur = brightCur + diff	
 
+	-- make sure brighCur is a integer 
+	brightCur = math.floor(brightCur)
+	
 	if brightCur > MAX_BRIGHTNESS_LEVEL then
 		brightCur = MAX_BRIGHTNESS_LEVEL
 	elseif brightCur < 1 then
