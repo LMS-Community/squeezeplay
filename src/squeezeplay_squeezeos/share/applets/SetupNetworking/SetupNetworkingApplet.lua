@@ -55,7 +55,7 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 
 -- configuration
-local CONNECT_TIMEOUT = 30
+local CONNECT_TIMEOUT = 30		-- Used twice: connecting and DHCP
 local WPS_WALK_TIMEOUT = 120		-- WPS walk timeout
 
 
@@ -1318,7 +1318,7 @@ function _connectTimer(self, iface, ssid, createNetwork)
 		if not self.disconnectedFromPreviousNetwork then
 			-- Still connected to previous network
 			self.connectTimeout = self.connectTimeout + 1
-			if self.connectTimeout ~= CONNECT_TIMEOUT then
+			if self.connectTimeout <= CONNECT_TIMEOUT then
 				return
 			end
 
@@ -1335,42 +1335,47 @@ function _connectTimer(self, iface, ssid, createNetwork)
 			completed = true
 		end
 
-		if not (completed and status.ip_address) then
-			-- not connected yet
-
-			self.connectTimeout = self.connectTimeout + 1
-			if self.connectTimeout ~= CONNECT_TIMEOUT then
-				return
-			end
-
-			-- Check if ethernet cable has been removed / fallen out in the mean time
-			if not (iface:isWireless() or status.link) then
-				return _attachEthernet(self, iface, ssid, createNetwork)
-			end
-
-			-- connection timed out
-			_connectFailed(self, iface, ssid, "timeout")
-			return
-		end
-			    
-		if string.match(status.ip_address, "^169.254.") then
-			-- auto ip
-			self.dhcpTimeout = self.dhcpTimeout + 1
-			if self.dhcpTimeout ~= CONNECT_TIMEOUT then
-				return
-			end
-
-			-- Check if ethernet cable has been removed / fallen out in the mean time
-			if not (iface:isWireless() or status.link) then
-				return _attachEthernet(self, iface, ssid, createNetwork)
-			end
-
-			-- dhcp timed out
-			_failedDHCP(self, iface, ssid)
-		else
+		-- Wireless: connected to network and we've got a non self assigned ip address -> we're done
+		-- Wired: connected (i.e. link) and we've got a non self assigned ip address -> we're done
+		if completed and status.ip_address and not string.match(status.ip_address, "^169.254.") then
 			-- dhcp completed
 			_connectSuccess(self, iface, ssid)
+			return
 		end
+
+		-- Not yet there
+
+		if not completed then
+			-- Not yet connected -> countdown connection timeout
+			self.connectTimeout = self.connectTimeout + 1
+			if self.connectTimeout <= CONNECT_TIMEOUT then
+				return
+			end
+		else
+			-- Connected, but no DHCP yet -> countdown dhcp timeout
+			self.dhcpTimeout = self.dhcpTimeout + 1
+			if self.dhcpTimeout <= CONNECT_TIMEOUT then
+				return
+			end
+		end
+
+		-- Either timeout has expired
+
+		-- Wired: check if ethernet cable has been removed / fallen out in the mean time
+		if not (iface:isWireless() or status.link) then
+			return _attachEthernet(self, iface, ssid, createNetwork)
+		end
+
+		-- Wireless: we've been connected to the network, but didn't get an ip address -> allow for static
+		if completed then
+			-- dhcp timed out
+			_failedDHCP(self, iface, ssid)
+			return
+		end
+
+		-- Wireless: not even connected to the network -> connection timed out
+		_connectFailed(self, iface, ssid, "timeout")
+
 	end):addTask()
 end
 
@@ -1733,7 +1738,7 @@ function _enterIP(self, iface, ssid)
 				   end)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-	local keyboard = Keyboard("keyboard", "numeric", textinput)
+	local keyboard = Keyboard("keyboard", "ip", textinput)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
@@ -1766,7 +1771,7 @@ function _enterSubnet(self, iface, ssid)
 				   end)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-	local keyboard = Keyboard("keyboard", "numeric", textinput)
+	local keyboard = Keyboard("keyboard", "ip", textinput)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
@@ -1803,7 +1808,7 @@ function _enterGateway(self, iface, ssid)
 				   end)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-	local keyboard = Keyboard("keyboard", "numeric", textinput)
+	local keyboard = Keyboard("keyboard", "ip", textinput)
 
         window:addWidget(group)
 	window:addWidget(keyboard)
@@ -1839,7 +1844,7 @@ function _enterDNS(self, iface, ssid)
 				   end)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
-	local keyboard = Keyboard("keyboard", "numeric", textinput)
+	local keyboard = Keyboard("keyboard", "ip", textinput)
 
 	window:addWidget(group)
 	window:addWidget(keyboard)
