@@ -53,7 +53,7 @@ icon_staffpicks.png
 icon_nature_sounds.png
 icon_alarm.png
 icon_RSS.png
-icon_power_off2.png
+icon_power_off.png
 icon_blank.png
 icon_nowplaying.png
 icon_ml_other_library.png
