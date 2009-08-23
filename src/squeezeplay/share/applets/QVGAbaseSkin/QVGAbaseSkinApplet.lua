@@ -535,12 +535,12 @@ function skin(self, s, reload, useDefaultSize)
 		radio = {
         		img_on = _loadImage(self, "Icons/radiobutton_on_sel.png"),
 			img_off = _loadImage(self, "Icons/radiobutton_off_sel.png"),
-			padding = { 0, 5, 0, 5 },
+			padding = { 0, 4, 0, 4 },
 		},
 		checkbox = {
         		img_on = _loadImage(self, "Icons/checkbox_on_sel.png"),
 			img_off = _loadImage(self, "Icons/checkbox_off_sel.png"),
-			padding = { 0, 5, 0, 5 },
+			padding = { 0, 4, 0, 4 },
 		},
 	})
 
