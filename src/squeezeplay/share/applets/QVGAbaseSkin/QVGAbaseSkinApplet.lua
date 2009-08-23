@@ -235,8 +235,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.sliderBar =
 		Tile:loadHTiles({
-					nil, nil,
-					imgpath .. "Song_Progress_Bar/progressbar_slider.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill_l.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill.png",
+					imgpath .. "Song_Progress_Bar/rem_sliderbar_fill_r.png",
+					-- FIXME: can't do the end asset right now
+					--imgpath .. "Song_Progress_Bar/progressbar_slider.png",
 			       })
 
 	s.img.volumeBar =
@@ -641,12 +644,14 @@ function skin(self, s, reload, useDefaultSize)
 		align = "left",
 	}
 
+	-- FIXME: using volume slider assets as an acceptable workaround
+	-- slider asset rendering is not working when there are four assets (l, middle, r, and end "button")
 	s.slider = {
 		border = 5,
 		w = WH_FILL,
 		horizontal = 1,
-		bgImg = s.img.sliderBackground,
-		img = s.img.sliderBar,
+		bgImg = s.img.volumeBackground,
+		img = s.img.volumeBar,
 	}
 
 	s.slider_group = {
@@ -1319,10 +1324,7 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.volumeBackground,
 	})
 
-	s.scanner_slider = _uses(s.slider, {
-		img = s.img.sliderBar,
-		bgImg = s.img.sliderBackground,
-	})
+	s.scanner_slider = s.volume_slider
 
 
 --------- BUTTONS ---------
