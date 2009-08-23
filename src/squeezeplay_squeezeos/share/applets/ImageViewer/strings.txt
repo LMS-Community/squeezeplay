@@ -927,3 +927,5 @@ IMAGE_VIEWER_FLICKR_QUERY_TAGS
 	RU	Введите ключевые слова для поиска информации по меткам. Метки можно разделять запятой.
 	SV	Ange ett eller flera sökord att söka efter i tagginformationen. Du kan avgränsa taggar med ett komma.
 
+IMAGE_VIEWER_START_SLIDESHOW
+	EN	Start Slideshow

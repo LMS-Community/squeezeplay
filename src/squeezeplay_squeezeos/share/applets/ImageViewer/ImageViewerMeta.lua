@@ -38,7 +38,7 @@ end
 function registerApplet(meta)
 	if System:getMachine() ~= "baby" then
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'settings', "IMAGE_VIEWER", 
-			function(applet, ...) applet:startSlideshow(...) end, 58))
+			function(applet, ...) applet:openImageViewer(...) end, 58))
 	end
 	
 	meta:registerService("registerRemoteScreensaver")

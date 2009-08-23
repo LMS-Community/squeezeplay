@@ -95,6 +95,37 @@ function initImageSource(self, imgSourceOverride)
 		Window.transitionFadeIn, Window.transitionPushLeft, Window.transitionPushRight }
 end
 
+
+function openImageViewer(self)
+	-- two item menu that shows start slideshow and settings
+	local window = Window("text_list", self:string('IMAGE_VIEWER'))
+	window:addWidget(
+		SimpleMenu("menu",
+		{
+			{
+				text = self:string("IMAGE_VIEWER_START_SLIDESHOW"), 
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:startSlideshow(menuItem, false)
+					return EVENT_CONSUME
+				end
+			},
+			{
+				text = self:string("IMAGE_VIEWER_SETTINGS"), 
+				sound = "WINDOWSHOW",
+				callback = function()
+					self:openSettings()
+					return EVENT_CONSUME
+				end
+			},
+		}
+		)
+	)
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 function startSlideshow(self, menuItem, isScreensaver, imgSourceOverride)
 	log:info("start image viewer")
 
