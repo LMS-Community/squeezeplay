@@ -1122,6 +1122,17 @@ function ipAddressValue(default)
 				local i = 1
 				for ddd in string.gmatch(str, "(%d+)") do
 					v[i] = tonumber(ddd)
+
+					-- Bug: 10352
+					-- Allow changing first digit from 1 to 2 and
+					--  then correct to 255 if needed
+					-- This allows user to enter / correct from left
+					--  to right even for non zero values, i.e.
+					--  old: 192 -> new: 292 -> auto corrected: 255
+					if v[i] > 255 and v[i] < 300 then
+						v[i] = 255
+					end
+
 					if v[i] > 255 then
 						return false
 					end
@@ -1174,11 +1185,13 @@ function ipAddressValue(default)
 				local c = math.floor(v % 10)
 
 				if n == 1 then
-					if b > 6 or (b == 5 and c > 5) then
-						return "01"
-					else
-						return "012"
-					end
+					-- Bug: 10352
+					-- Allow changing first digit from 1 to 2 and
+					--  then correct to 255 if needed
+					-- This allows user to enter / correct from left
+					--  to right even for non zero values, i.e.
+					--  old: 192 -> new: 292 -> auto corrected: 255
+					return "012"
 				elseif n == 2 then
 					if a >= 2 and c > 5 then
 						return "01234"
