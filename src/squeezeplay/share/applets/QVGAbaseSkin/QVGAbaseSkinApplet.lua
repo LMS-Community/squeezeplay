@@ -291,7 +291,7 @@ function skin(self, s, reload, useDefaultSize)
 		CHECK_PADDING  = { 0, 0, 0, 0 },
 
 		MENU_ALBUMITEM_PADDING = { 10, 2, 4, 2 },
-		MENU_ALBUMITEM_TEXT_PADDING = { 10, 8, 8, 9 },
+		MENU_ALBUMITEM_TEXT_PADDING = { 10, 6, 8, 9 },
 		MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 },
 
 		--HELP_TEXT_PADDING = { 10, 10, 5, 8 },
@@ -901,13 +901,17 @@ function skin(self, s, reload, useDefaultSize)
 					h = WH_FILL,
 					padding = c.MENU_ALBUMITEM_TEXT_PADDING,
 					font = _font(c.ALBUMMENU_SMALL_FONT_SIZE),
-					line = {
-						{
-							font = _boldfont(c.ALBUMMENU_FONT_SIZE),
-							height = c.ALBUMMENU_FONT_SIZE + 2,
-						}
+		 			line = {
+					{
+						font = _boldfont(18),
+						height = 18,
 					},
-					fg = c.TEXT_COLOR,
+					{
+						font = _font(14),
+						height = 14,
+					},
+			},
+ 			fg = c.TEXT_COLOR,
 					sh = c.TEXT_SH_COLOR,
 				},
 				icon = {
@@ -940,13 +944,25 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 
+--HERE
 	s.icon_list.menu.selected = {}
 	s.icon_list.menu.selected.item = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'arrow' },
-		text = {
-			fg = c.SELECT_COLOR,
-			sh = c.SELECT_SH_COLOR,
-		},
+         	text = {
+                        font = _boldfont(c.TEXTMENU_SELECTED_FONT_SIZE),
+                        fg = c.SELECT_COLOR,
+                        sh = c.SELECT_SH_COLOR,
+ 			line = {
+					{
+						font = _boldfont(21),
+						height = 21,
+					},
+					{
+						font = _font(14),
+						height = 14,
+					},
+			},
+               },
 		bgImg = s.img.oneLineItemSelectionBox,
 		arrow = s.img.rightArrowSel,
 	})
