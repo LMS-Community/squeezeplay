@@ -122,7 +122,7 @@ function skin(self, s, reload, useDefaultSize)
                                })
 
         s.scrollbar = {
-                w          = 20,
+                w          = 16,
 		h          = c.PORTRAIT_LINE_ITEM_HEIGHT * 6 - 6,
                 border     = { 0, 4, 0, 0},  -- bug in jive_menu, makes it so bottom and right values are ignored
                 horizontal = 0,
