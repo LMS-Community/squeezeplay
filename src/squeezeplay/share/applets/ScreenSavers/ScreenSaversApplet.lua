@@ -489,7 +489,7 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 		                                function(actionEvent)
 		                                        self:_powerActionHandler(actionEvent)
 		                                end)
-		window:addListener(     EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD,
+		window:addListener(     EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		                        function (event)
 			                        self:_showPowerOnWindow()
 			                        return EVENT_CONSUME

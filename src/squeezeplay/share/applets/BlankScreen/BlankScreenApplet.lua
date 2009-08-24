@@ -28,6 +28,7 @@ local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local debug            = require("jive.utils.debug")
 local System           = require("jive.System")
+local Applet        = require("jive.Applet")
 
 local jnt              = jnt
 local appletManager    = appletManager
@@ -35,8 +36,12 @@ local appletManager    = appletManager
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-function init(self)
 
+function closeScreensaver(self)
+	-- nothing to do here, brightness is refreshed via window event handler in init()
+end
+
+function openScreensaver(self, menuItem)
 	self.sw, self.sh = Framework:getScreenSize()
 
 	-- create window and icon
@@ -72,13 +77,6 @@ function init(self)
 	local manager = appletManager:getAppletInstance("ScreenSavers")
 	manager:screensaverWindow(self.window)
 
-end
-
-function closeScreensaver(self)
-	-- nothing to do here, brightness is refreshed via window event handler in init()
-end
-
-function openScreensaver(self, menuItem)
 	self.window:show(Window.transitionFadeIn)
 end
 
