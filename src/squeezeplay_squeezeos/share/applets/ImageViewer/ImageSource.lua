@@ -42,7 +42,7 @@ function __init(self, applet)
 	obj.imgReady = false
 	obj.lstReady = false
 	obj.applet = applet
-	obj.currentImage = 1
+	obj.currentImage = 0
 	return obj
 end
 
