@@ -302,3 +302,6 @@ UPDATE_CANCEL
 	RU	Отмена
 	SV	Avbryt
 
+UPDATE_7.4_UPGRADE_MESSAGE_JIVE
+	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.
+
