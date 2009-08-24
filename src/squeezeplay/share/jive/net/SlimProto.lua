@@ -452,6 +452,13 @@ function connectTask(self, serverip)
 
 		-- decode opcode
 		local opcode = string.sub(data, 1, 4)
+
+		-- discard network test packets without processing
+		-- we need to minimse processing as they can arrive at a high rate
+		if opcode == 'test' then
+			return
+		end
+
 		log:debug("read opcode=", opcode, " #", #data)
 
 		--_hexDump(opcode, data)

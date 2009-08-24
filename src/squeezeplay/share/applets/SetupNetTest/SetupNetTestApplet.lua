@@ -55,19 +55,22 @@ function open(self, menuItem)
 		self.server = self.player:getSlimServer()
 	end
 
+	local sw, sh = Framework:getScreenSize()
+	local edge = (sw - 200) / 2
+
 	self.window = Window("nettest", self:string('SETUPNETTEST_TESTING'))
 	self.window:setSkin({
 		nettest = {
 			icon = {
-				padding = { 20, 3, 20, 1 }
+				padding = { edge, 3, edge, 1 }
 			},
 			graphtitle = {
-				padding = { 20, 7, 0, 0 },
+				padding = { edge, 7, 0, 0 },
 				fg = { 0xE7, 0xE7, 0xE7 }
 			},
 			graphaxis = {
-				  padding = { 20, 1, 0, 0 },
-				  fg = { 0xE7, 0xE7, 0xE7 }
+				padding = { edge, 1, 0, 0 },
+				fg = { 0xE7, 0xE7, 0xE7 }
 			}
 		}
 	})
@@ -90,16 +93,12 @@ function showMainWindow(self)
 	self.graph1:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon1 = Icon("icon", self.graph1)
 	self.window:addWidget(icon1)
-	icon1:setPosition(20, 20)
-
 	self.window:addWidget(Label("graphtitle", self:string('SETUPNETTEST_HISTORY')))
 
 	self.graph2 = Surface:newRGBA(200, graphHeight)
 	self.graph2:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon2 = Icon("icon", self.graph2)
 	self.window:addWidget(icon2)
-	icon2:setPosition(20, 180)
-
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
 	self.window:addWidget(Textarea("help_text", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
@@ -275,5 +274,7 @@ end
 function free(self)
 	self.timer:stop()
 	self:stopTest()
+
+	return true
 end
 
