@@ -72,7 +72,7 @@ function menu(self, menuItem)
 	table.insert(homeMenuItems,
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
-			weights = { 1001 },
+			weights = { 2000 },
 			callback = function()
 				self:restoreDefaultsMenu()
 			end
@@ -165,7 +165,9 @@ function menu(self, menuItem)
 				),
 			}
 		end
-		table.insert(homeMenuItems, menuItem)
+		if not item.synthetic then
+			table.insert(homeMenuItems, menuItem)
+		end
 		end
 	end
 

@@ -52,7 +52,7 @@ function configureApplet(self)
 
 			return (EVENT_CONSUME | EVENT_QUIT)
 		end,
-		weight = 1000,
+		weight = 1010,
 	})
 end
 
