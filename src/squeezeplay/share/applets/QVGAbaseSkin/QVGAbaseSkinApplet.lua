@@ -294,7 +294,7 @@ function skin(self, s, reload, useDefaultSize)
 		CHECK_PADDING  = { 0, 0, 0, 0 },
 
 		MENU_ALBUMITEM_PADDING = { 10, 2, 4, 2 },
-		MENU_ALBUMITEM_TEXT_PADDING = { 10, 6, 8, 9 },
+		MENU_ALBUMITEM_TEXT_PADDING = { 8, 4, 0, 4 },
 		MENU_PLAYLISTITEM_TEXT_PADDING = { 6, 6, 8, 10 },
 
 		--HELP_TEXT_PADDING = { 10, 10, 5, 8 },
@@ -498,6 +498,28 @@ function skin(self, s, reload, useDefaultSize)
 			h = WH_FILL,
 		},
 	})
+	s.item_info = _uses(s.item, {
+		order = { 'text' },
+		padding = c.MENU_ALBUMITEM_PADDING,
+		text = {
+			align = "top-left",
+			w = WH_FILL,
+			h = WH_FILL,
+			padding = { 0, 4, 0, 4 },
+			font = _font(14),
+ 			line = {
+				{
+					font = _font(14),
+					height = 16,
+				},
+				{
+					font = _boldfont(18),
+					height = 18,
+				},
+			},
+ 		},
+	})
+
 	s.item_checked = _uses(s.item, {
 		order = { 'icon', "text", "check", "arrow" },
 		check = s.img.checkMark,
@@ -522,6 +544,23 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.oneLineItemSelectionBox,
 		arrow = s.img.rightArrowSel,
 	})
+	s.selected.item_info = _uses(s.item_info, {
+		bgImg = s.img.oneLineItemSelectionBox,
+		text = {
+ 			line = {
+				{
+					font = _font(14),
+					height = 14,
+				},
+				{
+					font = _boldfont(21),
+					height = 21,
+				},
+			},
+		},
+ 	
+	})
+
 	--FIXME: doesn't seem to take effect...
 	s.selected.choice = _uses(s.choice, {
 		fg = c.SELECT_COLOR,
@@ -909,11 +948,11 @@ function skin(self, s, reload, useDefaultSize)
 		 			line = {
 					{
 						font = _boldfont(18),
-						height = 18,
+						height = 20,
 					},
 					{
 						font = _font(14),
-						height = 14,
+						height = 18,
 					},
 			},
  			fg = c.TEXT_COLOR,

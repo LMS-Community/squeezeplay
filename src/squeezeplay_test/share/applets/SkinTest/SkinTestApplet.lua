@@ -673,17 +673,19 @@ Item:     "item", "item_checked", (styles: selected, pressed, locked)
 function window_icon_list(self, item)
 	local data = _itemData(item)
 
-	local window = Window("icon_list", _itemName(item), "artists")
+	local window = Window("text_list", _itemName(item), "artists")
 	_windowActions(self, item, window)
 
 	local menu = SimpleMenu("menu")
 	menu:addItem({
-		text = "this is an item without an icon\njust don't add an icon in the menu item and there won't be one"
+		text = "this is an item without an icon\njust don't add an icon in the menu item and there won't be one",
+		style = 'item_info',
 	})
 	for i,subdata in ipairs(data) do
 		menu:addItem({
 			text = subdata[1],
-			icon = Icon('icon_no_artwork'),
+			style = 'item_info',
+			--icon = Icon('icon_no_artwork'),
 			callback = function(event, item)
 				if selected == item then
 					menu:lock()

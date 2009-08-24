@@ -432,6 +432,19 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:setText(item)
+
+Replaces the text for I<item> with I<text>
+
+=cut
+--]]
+function setText(self, item, text)
+	item.text = text
+	self:updatedItem(item)
+end
+
+--[[
+
 =head2 jive.ui.Menu:setItems(items)
 
 Efficiently replaces the current menu items, with I<items>.

@@ -59,20 +59,20 @@ local tests = {
 
 
 function setValue(self, key, value)
-	if value then
-		self.labels[key]:setValue(self:string(value))
-	else
-		self.labels[key]:setValue("")
+	if not value then
+		value = ''
 	end
+	self.diagMenu:setText(self.labels[key], self:string(key, value))
 end
-
 
 function serverPort(self, server, port, key)
 	if not server then
-		self:setValue(key, "NOT_CONNECTED")
+		self:setValue(key, self.notConnected)
 		return
 	end
 
+	local portOk = tostring(self:string('PORT_OK'))
+	local portFail = tostring(self:string('PORT_FAIL'))
 	Task("ports", self, function()
 		local serverip = server:getIpPort()
 
@@ -84,7 +84,7 @@ function serverPort(self, server, port, key)
 		end
 
 		if ip == nil then
-			self:setValue(key, "PORT_FAIL")
+			self:setValue(key, portFail)
 			return
 		end
 
@@ -95,9 +95,9 @@ function serverPort(self, server, port, key)
 			local res, err = tcp.t_sock:send(" ")
 
 			if err then
-				self:setValue(key, "PORT_FAIL")
+				self:setValue(key, portFail)
 			else
-				self:setValue(key, "PORT_OK")
+				self:setValue(key, portOk)
 			end
 
 			tcp:close()
@@ -109,9 +109,13 @@ end
 function serverPing(self, server, dnsKey, pingKey)
 	local serverip = server and server:getIpPort()
 
+	local dnsFail            = tostring(self:string('DNS_FAIL'))
+	local pingFailString     = tostring(self:string('PING_FAIL'))
+	local pingOkString       = tostring(self:string('PING_OK'))
+
 	if not serverip then
-		self:setValue(dnsKey, "NOT_CONNECTED")
-		self:setValue(pingKey, "NOT_CONNECTED")
+		self:setValue(dnsKey, self.notConnected)
+		self:setValue(pingKey, self.notConnected)
 		return
 	end
 
@@ -126,8 +130,8 @@ function serverPing(self, server, dnsKey, pingKey)
 		end
 
 		if not ipaddr then
-			self:setValue(dnsKey, "DNS_FAIL")
-			self:setValue(pingKey, "PING_FAIL")
+			self:setValue(dnsKey, dnsFail)
+			self:setValue(pingKey, pingFailString)
 			return
 		end
 
@@ -143,9 +147,9 @@ function serverPing(self, server, dnsKey, pingKey)
 				end
 			else
 				if pingOK then
-					self:setValue(pingKey, "PING_OK")
+					self:setValue(pingKey, pingOkString)
 				else
-					self:setValue(pingKey, "PING_FAIL")
+					self:setValue(pingKey, pingFailString)
 				end
 			end
 		end)
@@ -182,7 +186,7 @@ function wlanStatus(self, iface)
 				self:setValue("DNS_SERVER", tostring(status.ip_dns))
 			end
 		else
-			self:setValue("WLAN_SSID", "NOT_CONNECTED")
+			self:setValue('WLAN_SSID', self.notConnected)
 			self:setValue("WLAN_ENCRYPTION", nil)
 			self:setValue("WLAN_STRENGTH", nil)
 		end
@@ -200,9 +204,9 @@ function ethStatus(self, iface)
 
 		if status.link then
 			if status.fullduplex then
-				self:setValue("ETH_CONNECTION", self:string("ETH_FULL_DUPLEX", status.speed))
+				self:setValue("ETH_CONNECTION", tostring(self:string("ETH_FULL_DUPLEX", status.speed)))
 			else
-				self:setValue("ETH_CONNECTION", self:string("ETH_HALF_DUPLEX", status.speed))
+				self:setValue("ETH_CONNECTION", tostring(self:string("ETH_HALF_DUPLEX", status.speed)))
 			end
 
 			if status.ip_address then
@@ -212,7 +216,7 @@ function ethStatus(self, iface)
 				self:setValue("DNS_SERVER", tostring(status.ip_dns))
 			end
 		else
-			self:setValue("ETH_CONNECTION", "NOT_CONNECTED")
+			self:setValue("ETH_CONNECTION", self.notConnected)
 		end
 	end):addTask()
 end
@@ -223,7 +227,9 @@ function dovalues(self, menu)
 
 	-- fixed values
 	self:setValue("FIRMWARE_VERSION", JIVE_VERSION)
-	self:setValue("HARDWARE_VERSION", tostring(revision))
+	if revision then
+		self:setValue("HARDWARE_VERSION", tostring(revision))
+	end
 	self:setValue("MAC_ADDRESS", System:getMacAddress())
 
 	-- networks
@@ -231,7 +237,9 @@ function dovalues(self, menu)
 	local ethIface = Networking:wiredInterface(jnt)
 
 	self:wlanStatus(wlanIface)
-	self:ethStatus(ethIface)
+	if System:getMachine() ~= 'jive' then
+		self:ethStatus(ethIface)
+	end
 
 
 	-- servers
@@ -251,11 +259,11 @@ function dovalues(self, menu)
 
 	if not sc or sc:isSqueezeNetwork() then
 		-- connected to SN
-		self:setValue("SC_NAME", "NOT_CONNECTED")
-		self:setValue("SC_ADDRESS", "NOT_CONNECTED")
-		self:setValue("SC_PING", "NOT_CONNECTED")
-		self:setValue("SC_PORT_3483", "NOT_CONNECTED")
-		self:setValue("SC_PORT_9000", "NOT_CONNECTED")
+		self:setValue("SC_NAME", self.notConnected)
+		self:setValue("SC_ADDRESS", self.notConnected)
+		self:setValue("SC_PING", self.notConnected)
+		self:setValue("SC_PORT_3483", self.notConnected)
+		self:setValue("SC_PORT_9000", self.notConnected)
 	else
 		self:setValue("SC_NAME", sc:getName())
 		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
@@ -275,13 +283,13 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	self.labels = {}
 
 	for i,name in ipairs(tests) do
-		self.labels[name] = Label("choice", "")
-
-		menu:addItem({
-			text = self:string(name),
-			check = self.labels[name],
-			style = 'item_choice',
-		})
+		if name ~= 'ETH_CONNECTION' or System:getMachine() ~= 'jive' then
+			self.labels[name] = {
+				text = self:string(name, ''),
+				style = 'item_info',
+			}
+			menu:addItem(self.labels[name])
+		end
 	end
 
 	if System:isHardware() then
@@ -304,11 +312,14 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 			})
 		end
 	end
+
+	self.notConnected = tostring(self:string('NOT_CONNECTED'))
+
+	self.diagMenu = menu
 	dovalues(self, menu)
 	menu:addTimer(5000, function()
 		dovalues(self, menu)
 	end)
-
 
 	window:addWidget(menu)
 

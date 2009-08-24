@@ -137,290 +137,290 @@ ETH_HALF_DUPLEX
 	SV	%s Mbps (HD)
 
 FIRMWARE_VERSION
-	CS	Verze:
-	DA	Firmwareversion:
-	DE	Firmware-Version:
-	EN	Firmware Version:
-	ES	Versión de firmware:
-	FI	Laitteisto-ohjelmiston versio:
-	FR	Version du micrologiciel:
-	IT	Versione firmware:
-	NL	Firmwareversie:
-	NO	Fastvareversjon:
-	PL	Wersja oprogramowania układowego:
-	RU	Версия микропрограммы:
-	SV	Inbyggd programvaruversion:
+	CS	Verze\n%s
+	DA	Firmwareversion\n%s
+	DE	Firmware-Version\n%s
+	EN	Firmware Version\n%s
+	ES	Versión de firmware\n%s
+	FI	Laitteisto-ohjelmiston versio\n%s
+	FR	Version du micrologiciel\n%s
+	IT	Versione firmware\n%s
+	NL	Firmwareversie\n%s
+	NO	Fastvareversjon\n%s
+	PL	Wersja oprogramowania układowego\n%s
+	RU	Версия микропрограммы\n%s
+	SV	Inbyggd programvaruversion\n%s
 
 MAC_ADDRESS
-	CS	MAC adresa:
-	DA	MAC-adresse:
-	DE	MAC-Adresse:
-	EN	MAC Address:
-	ES	Dirección MAC:
-	FI	MAC-osoite:
-	FR	Adresse MAC:
-	IT	Indirizzo MAC:
-	NL	MAC-adres:
-	NO	MAC-adresse:
-	PL	Adres MAC:
-	RU	MAC-адрес:
-	SV	MAC-adress:
+	CS	MAC adresa\n%s
+	DA	MAC-adresse\n%s
+	DE	MAC-Adresse\n%s
+	EN	MAC Address\n%s
+	ES	Dirección MAC\n%s
+	FI	MAC-osoite\n%s
+	FR	Adresse MAC\n%s
+	IT	Indirizzo MAC\n%s
+	NL	MAC-adres\n%s
+	NO	MAC-adresse\n%s
+	PL	Adres MAC\n%s
+	RU	MAC-адрес\n%s
+	SV	MAC-adress\n%s
 
 WLAN_SSID
-	CS	Bezdrátová síť:
-	DA	Trådløst netværk:
-	DE	Kabelloses Netzwerk:
-	EN	Wireless network:
-	ES	Red inalámbrica:
-	FI	Langaton verkko:
-	FR	Réseau sans fil:
-	IT	Rete senza fili:
-	NL	Draadloos netwerk:
-	NO	Trådløst nettverk:
-	PL	Sieć bezprzewodowa:
-	RU	Беспроводная сеть:
-	SV	Trådlöst nätverk:
+	CS	Bezdrátová síť\n%s
+	DA	Trådløst netværk\n%s
+	DE	Kabelloses Netzwerk\n%s
+	EN	Wireless network\n%s
+	ES	Red inalámbrica\n%s
+	FI	Langaton verkko\n%s
+	FR	Réseau sans fil\n%s
+	IT	Rete senza fili\n%s
+	NL	Draadloos netwerk\n%s
+	NO	Trådløst nettverk\n%s
+	PL	Sieć bezprzewodowa\n%s
+	RU	Беспроводная сеть\n%s
+	SV	Trådlöst nätverk\n%s
 
 WLAN_ENCRYPTION
-	CS	Bezdrátové šifrování:
-	DA	Kryptering for trådløst netværk:
-	DE	Kabellos-Verschlüsselung:
-	EN	Wireless encryption:
-	ES	Cifrado inalámbrico:
-	FI	Langaton salaus:
-	FR	Chiffrement sans fil:
-	IT	Crittografia rete senza fili:
-	NL	Draadloze codering:
-	NO	Trådløs kryptering:
-	PL	Szyfrowanie w sieci bezprzewodowej:
-	RU	Беспроводное шифрование:
-	SV	Trådlös kryptering:
+	CS	Bezdrátové šifrování\n%s
+	DA	Kryptering for trådløst netværk\n%s
+	DE	Kabellos-Verschlüsselung\n%s
+	EN	Wireless encryption\n%s
+	ES	Cifrado inalámbrico\n%s
+	FI	Langaton salaus\n%s
+	FR	Chiffrement sans fil\n%s
+	IT	Crittografia rete senza fili\n%s
+	NL	Draadloze codering\n%s
+	NO	Trådløs kryptering\n%s
+	PL	Szyfrowanie w sieci bezprzewodowej\n%s
+	RU	Беспроводное шифрование\n%s
+	SV	Trådlös kryptering\n%s
 
 WLAN_STRENGTH
-	CS	Bezdrátový signál:
-	DA	Trådløst signal:
-	DE	Kabellos-Signal:
-	EN	Wireless signal:
-	ES	Señal inalámbrica:
-	FI	Langaton signaali:
-	FR	Signal sans fil:
-	IT	Segnale rete senza fili:
-	NL	Draadloos signaal:
-	NO	Trådløst signal:
-	PL	Sygnał sieci bezprzewodowej:
-	RU	Беспроводной сигнал:
-	SV	Trådlös signal:
+	CS	Bezdrátový signál\n%s
+	DA	Trådløst signal\n%s
+	DE	Kabellos-Signal\n%s
+	EN	Wireless signal\n%s
+	ES	Señal inalámbrica\n%s
+	FI	Langaton signaali\n%s
+	FR	Signal sans fil\n%s
+	IT	Segnale rete senza fili\n%s
+	NL	Draadloos signaal\n%s
+	NO	Trådløst signal\n%s
+	PL	Sygnał sieci bezprzewodowej\n%s
+	RU	Беспроводной сигнал\n%s
+	SV	Trådlös signal\n%s
 
 ETH_CONNECTION
-	CS	Ethernet:
-	DA	Ethernet:
-	DE	Ethernet:
-	EN	Ethernet:
-	ES	Ethernet:
-	FI	Ethernet:
-	FR	Ethernet:
-	IT	Ethernet:
-	NL	Ethernet:
-	NO	Ethernet:
-	PL	Ethernet:
-	RU	Ethernet:
-	SV	Ethernet:
+	CS	Ethernet\n%s
+	DA	Ethernet\n%s
+	DE	Ethernet\n%s
+	EN	Ethernet\n%s
+	ES	Ethernet\n%s
+	FI	Ethernet\n%s
+	FR	Ethernet\n%s
+	IT	Ethernet\n%s
+	NL	Ethernet\n%s
+	NO	Ethernet\n%s
+	PL	Ethernet\n%s
+	RU	Ethernet\n%s
+	SV	Ethernet\n%s
 
 IP_ADDRESS
-	CS	IP Adresa:
-	DA	IP-adresse:
-	DE	IP-Adresse:
-	EN	IP Address:
-	ES	Dirección IP:
-	FI	IP-osoite:
-	FR	Adresse IP:
-	IT	Indirizzo IP:
-	NL	IP-adres:
-	NO	Ip-adresse:
-	PL	Adres IP:
-	RU	IP-адрес:
-	SV	IP-adress:
+	CS	IP Adresa\n%s
+	DA	IP-adresse\n%s
+	DE	IP-Adresse\n%s
+	EN	IP Address\n%s
+	ES	Dirección IP\n%s
+	FI	IP-osoite\n%s
+	FR	Adresse IP\n%s
+	IT	Indirizzo IP\n%s
+	NL	IP-adres\n%s
+	NO	Ip-adresse\n%s
+	PL	Adres IP\n%s
+	RU	IP-адрес\n%s
+	SV	IP-adress\n%s
 
 SUBNET_MASK
-	CS	IP podsítě:
-	DA	IP-undernet:
-	DE	IP-Subnetzmaske:
-	EN	IP Subnet:
-	ES	Subred IP:
-	FI	IP-aliverkko:
-	FR	Sous-réseau IP:
-	IT	Subnet IP:
-	NL	IP-subnet:
-	NO	Ip-delnett:
-	PL	Podsieć IP:
-	RU	Подсеть IP:
-	SV	IP-delnät:
+	CS	IP podsítě\n%s
+	DA	IP-undernet\n%s
+	DE	IP-Subnetzmaske\n%s
+	EN	IP Subnet\n%s
+	ES	Subred IP\n%s
+	FI	IP-aliverkko\n%s
+	FR	Sous-réseau IP\n%s
+	IT	Subnet IP\n%s
+	NL	IP-subnet\n%s
+	NO	Ip-delnett\n%s
+	PL	Podsieć IP\n%s
+	RU	Подсеть IP\n%s
+	SV	IP-delnät\n%s
 
 GATEWAY
 # SLT: please keep these messages as short as possible, max. like EN
-	CS	IP brána:
-	DA	Gatewayens IP-adresse:
-	DE	IP-Gateway:
-	EN	IP Gateway:
-	ES	Puerta de enlace IP:
-	FI	IP-yhdyskäytävä:
-	FR	Passerelle IP:
-	IT	Gateway IP:
-	NL	Gateway van IP:
-	NO	Ip for gateway:
-	PL	Brama IP:
-	RU	Шлюз IP:
-	SV	Gateway-adress:
+	CS	IP brána\n%s
+	DA	Gatewayens IP-adresse\n%s
+	DE	IP-Gateway\n%s
+	EN	IP Gateway\n%s
+	ES	Puerta de enlace IP\n%s
+	FI	IP-yhdyskäytävä\n%s
+	FR	Passerelle IP\n%s
+	IT	Gateway IP\n%s
+	NL	Gateway van IP\n%s
+	NO	Ip for gateway\n%s
+	PL	Brama IP\n%s
+	RU	Шлюз IP\n%s
+	SV	Gateway-adress\n%s
 
 DNS_SERVER
-	CS	DNS Server:
-	DA	DNS-server:
-	DE	DNS-Server:
-	EN	DNS Server:
-	ES	Servidor DNS:
-	FI	DNS-palvelin:
-	FR	Serveur DNS:
-	IT	Server DNS:
-	NL	DNS-server:
-	NO	DNS-server:
-	PL	Serwer DNS:
-	RU	DNS-сервер:
-	SV	DNS-server:
+	CS	DNS Server\n%s
+	DA	DNS-server\n%s
+	DE	DNS-Server\n%s
+	EN	DNS Server\n%s
+	ES	Servidor DNS\n%s
+	FI	DNS-palvelin\n%s
+	FR	Serveur DNS\n%s
+	IT	Server DNS\n%s
+	NL	DNS-server\n%s
+	NO	DNS-server\n%s
+	PL	Serwer DNS\n%s
+	RU	DNS-сервер\n%s
+	SV	DNS-server\n%s
 
 SN_ADDRESS
-	CS	mysqueezebox.com:
-	DA	mysqueezebox.com:
-	DE	mysqueezebox.com:
-	EN	mysqueezebox.com:
-	ES	mysqueezebox.com:
-	FI	mysqueezebox.com:
-	FR	mysqueezebox.com:
-	IT	mysqueezebox.com:
-	NL	mysqueezebox.com:
-	NO	mysqueezebox.com:
-	PL	mysqueezebox.com:
-	RU	mysqueezebox.com:
-	SV	mysqueezebox.com:
+	CS	mysqueezebox.com\n%s
+	DA	mysqueezebox.com\n%s
+	DE	mysqueezebox.com\n%s
+	EN	mysqueezebox.com\n%s
+	ES	mysqueezebox.com\n%s
+	FI	mysqueezebox.com\n%s
+	FR	mysqueezebox.com\n%s
+	IT	mysqueezebox.com\n%s
+	NL	mysqueezebox.com\n%s
+	NO	mysqueezebox.com\n%s
+	PL	mysqueezebox.com\n%s
+	RU	mysqueezebox.com\n%s
+	SV	mysqueezebox.com\n%s
 
 SN_PING
-	CS	  Zvonění:
-	DA	  Ping:
-	DE	  Ping:
-	EN	  Ping:
-	ES	  Ping:
-	FI	  Ping:
-	FR	  Ping:
-	IT	  Ping:
-	NL	  Ping:
-	NO	  Ping:
-	PL	  Ping:
-	RU	  Ping:
-	SV	  Ping:
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
 
 SN_PORT_3483
-	CS	  TCP port 3483:
-	DA	  TCP port 3483:
-	DE	  TCP-Anschluss 3483:
-	EN	  TCP port 3483:
-	ES	  Puerto TCP 3483:
-	FI	  TCP-portti 3483:
-	FR	  Port TCP 3483:
-	IT	  Porta TCP 3483:
-	NL	  TCP-poort 3483:
-	NO	  TCP-port 3483:
-	PL	  Port TCP 3483:
-	RU	  TCP-порт 3483:
-	SV	  TCP-port 3483:
+	CS	TCP port 3483\n%s
+	DA	TCP port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
 
 SN_PORT_9000
-	CS	  TCP port 9000:
-	DA	  TCP port 9000:
-	DE	  TCP-Anschluss 9000:
-	EN	  TCP port 9000:
-	ES	  Puerto TCP 9000:
-	FI	  TCP-portti 9000:
-	FR	  Port  TCP 9000:
-	IT	  Porta TCP 9000:
-	NL	  TCP-poort 9000:
-	NO	  TCP-port 9000:
-	PL	  Port TCP 9000:
-	RU	  TCP-порт 9000:
-	SV	  TCP-port 9000:
+	CS	TCP port 9000\n%s
+	DA	TCP port 9000\n%s
+	DE	TCP-Anschluss 9000\n%s
+	EN	TCP port 9000\n%s
+	ES	Puerto TCP 9000\n%s
+	FI	TCP-portti 9000\n%s
+	FR	Port  TCP 9000\n%s
+	IT	Porta TCP 9000\n%s
+	NL	TCP-poort 9000\n%s
+	NO	TCP-port 9000\n%s
+	PL	Port TCP 9000\n%s
+	RU	TCP-порт 9000\n%s
+	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	CS	Squeezebox Server:
-	DA	Squeezebox Server:
-	DE	Squeezebox Server:
-	EN	Squeezebox Server:
-	ES	Squeezebox Server:
-	FI	Squeezebox Server:
-	FR	Squeezebox Server:
-	IT	Squeezebox Server:
-	NL	Squeezebox Server:
-	NO	Squeezebox Server:
-	PL	Squeezebox Server:
-	RU	Squeezebox Server:
-	SV	Squeezebox Server:
+	CS	Squeezebox Server\n%s
+	DA	Squeezebox Server\n%s
+	DE	Squeezebox Server\n%s
+	EN	Squeezebox Server\n%s
+	ES	Squeezebox Server\n%s
+	FI	Squeezebox Server\n%s
+	FR	Squeezebox Server\n%s
+	IT	Squeezebox Server\n%s
+	NL	Squeezebox Server\n%s
+	NO	Squeezebox Server\n%s
+	PL	Squeezebox Server\n%s
+	RU	Squeezebox Server\n%s
+	SV	Squeezebox Server\n%s
 
 SC_NAME
-	CS	  Název knihovny:
-	DA	  Bibliotekets navn:
-	DE	  Name der Musiksammlung:
-	EN	  Library name:
-	ES	  Nombre de biblioteca:
-	FI	  Kirjaston nimi:
-	FR	  Nom de la collection:
-	IT	  Nome libreria:
-	NL	  Naam van collectie:
-	NO	  Navn på bibliotek:
-	PL	  Nazwa biblioteki:
-	RU	  Имя медиатеки:
-	SV	  Bibliotekets namn:
+	CS	Název knihovny\n%s
+	DA	Bibliotekets navn\n%s
+	DE	Name der Musiksammlung\n%s
+	EN	Library name\n%s
+	ES	Nombre de biblioteca\n%s
+	FI	Kirjaston nimi\n%s
+	FR	Nom de la collection\n%s
+	IT	Nome libreria\n%s
+	NL	Naam van collectie\n%s
+	NO	Navn på bibliotek\n%s
+	PL	Nazwa biblioteki\n%s
+	RU	Имя медиатеки\n%s
+	SV	Bibliotekets namn\n%s
 
 SC_PING
-	CS	  Zvonění:
-	DA	  Ping:
-	DE	  Ping:
-	EN	  Ping:
-	ES	  Ping:
-	FI	  Ping:
-	FR	  Ping:
-	IT	  Ping:
-	NL	  Ping:
-	NO	  Ping:
-	PL	  Ping:
-	RU	  Ping:
-	SV	  Ping:
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
 
 SC_PORT_3483
-	CS	  TCP port 3483:
-	DA	  TCP port 3483:
-	DE	  TCP-Anschluss 3483:
-	EN	  TCP port 3483:
-	ES	  Puerto TCP 3483:
-	FI	  TCP-portti 3483:
-	FR	  Port TCP 3483:
-	IT	  Porta TCP 3483:
-	NL	  TCP-poort 3483:
-	NO	  TCP-port 3483:
-	PL	  Port TCP 3483:
-	RU	  TCP-порт 3483:
-	SV	  TCP-port 3483:
+	CS	TCP port 3483\n%s
+	DA	TCP port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
 
 SC_PORT_9000
-	CS	  TCP port 9000:
-	DA	  TCP port 9000:
-	DE	  TCP-Anschluss 9000:
-	EN	  TCP port 9000:
-	ES	  Puerto TCP 9000:
-	FI	  TCP-portti 9000:
-	FR	  Port  TCP 9000:
-	IT	  Porta TCP 9000:
-	NL	  TCP-poort 9000:
-	NO	  TCP-port 9000:
-	PL	  Port TCP 9000:
-	RU	  TCP-порт 9000:
-	SV	  TCP-port 9000:
+	CS	TCP port 9000\n%s
+	DA	TCP port 9000\n%s
+	DE	TCP-Anschluss 9000\n%s
+	EN	TCP port 9000\n%s
+	ES	Puerto TCP 9000\n%s
+	FI	TCP-portti 9000\n%s
+	FR	Port  TCP 9000\n%s
+	IT	Porta TCP 9000\n%s
+	NL	TCP-poort 9000\n%s
+	NO	TCP-port 9000\n%s
+	PL	Port TCP 9000\n%s
+	RU	TCP-порт 9000\n%s
+	SV	TCP-port 9000\n%s
 
 SUPPORT
 	CS	Další nápověda
@@ -483,4 +483,4 @@ DIAGNOSTICS_NETWORKING
 	SV	Nätverk
 
 HARDWARE_VERSION
-	EN	Hardware version
+	EN	Hardware version\n%s
