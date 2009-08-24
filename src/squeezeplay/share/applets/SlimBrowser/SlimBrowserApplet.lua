@@ -969,7 +969,7 @@ end
 
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
-local function _goNowPlaying(transition)
+local function _goNowPlaying(transition, silent)
 	Window:hideContextMenus()
 	
 	--first hide any "NP related" windows (playlist, track info) that are on top
@@ -983,14 +983,18 @@ local function _goNowPlaying(transition)
 	if not transition then
 		transition = Window.transitionPushLeft
 	end
-	Framework:playSound("WINDOWSHOW")
+	if not silent then
+		Framework:playSound("WINDOWSHOW")
+	end
 	appletManager:callService('goNowPlaying', transition)
 end
 
 -- _goPlaylist
 -- pushes next window to the Playlist window
-local function _goPlaylist()
-	Framework:playSound("WINDOWSHOW")
+local function _goPlaylist(silent)
+	if not silent then
+		Framework:playSound("WINDOWSHOW")
+	end
 	showPlaylist()
 end
 
@@ -1731,7 +1735,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- now we may have found a command
 			if jsonAction or nextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
-				if menuItem then
+				if menuItem and not (nextWindow and nextWindow == "home") then
 					menuItem:playSound("WINDOWSHOW")
 				end
 
@@ -1745,10 +1749,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					skipNewWindowPush = true
 
 					step, sink = _emptyDestination(step)
-					_stepLockHandler(step, _goNowPlaying)
+					_stepLockHandler(step, function () _goNowPlaying(nil, true) end)
 
 				elseif nextWindow == 'playlist' then
-					_goPlaylist()
+					_goPlaylist(true)
 				elseif nextWindow == 'home' then
 					-- bit of a hack to notify serverLinked after factory reset SN menu
 					if item['serverLinked'] then
@@ -1807,7 +1811,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_performJSONAction(jsonAction, from, qty, step, sink, itemType)
 				else
 					-- if there's not jsonAction, sink is a nextWindow function, so just call it
-					sink()
+					if sink or not nextWindow then -- still try if "not nextWindow" so error occurs, since sink should exist in those cases
+						sink()
+					end
 				end
 			
 				return EVENT_CONSUME
