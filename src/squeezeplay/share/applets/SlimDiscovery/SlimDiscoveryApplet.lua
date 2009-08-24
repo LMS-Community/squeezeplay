@@ -258,12 +258,12 @@ function _discover(self)
 	end
 
 	-- Discover players via udap or wireless scanning
-	if self.state == 'probing_player' then
-		-- UDAP discovery
-		local packet = Udap.createAdvancedDiscover(nil, 1)
-		log:debug("sending udap discovery to 255.255.255.255")
-		self.udap:send(function() return packet end, "255.255.255.255")
+	-- UDAP discovery
+	local packet = Udap.createAdvancedDiscover(nil, 1)
+	log:debug("sending udap discovery to 255.255.255.255")
+	self.udap:send(function() return packet end, "255.255.255.255")
 
+	if self.state == 'probing_player' then
 		if self.wireless then
 			self.wireless:scan(function(scanTable)
 				_scanComplete(self, scanTable)
