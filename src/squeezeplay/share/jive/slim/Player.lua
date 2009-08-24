@@ -1585,7 +1585,10 @@ function _udapConnect(self, server)
 			-- data.server_address = Udap.packNumber(2, 4)
 		else
 			-- for locally edited values (SN developers)
+			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
 			local ip = socket.dns.toip(sn_hostname)
+			log:info("Found ip address: ", ip)
+
 			data.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
