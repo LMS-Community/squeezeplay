@@ -519,8 +519,13 @@ local function _menuSink(self, isCurrentServer, server)
 				item.callback = function()
 					local switchToSn =
 						function()
-							self:_selectMusicSource(action, self:_getSqueezeNetwork(),
-							  _player and _player:getLastSqueezeCenter() or nil, true)
+							local lastSc
+							if _server and not _server:isSqueezeNetwork() then
+								lastSc = _server
+							elseif _player then
+								lastSc = _player:getLastSqueezeCenter()
+							end
+							self:_selectMusicSource(action, self:_getSqueezeNetwork(), lastSc, true)
 						end
 
 					local switchToSc =
