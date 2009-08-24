@@ -92,3 +92,63 @@ HTTP_AUTH_PASSWORD_HELP
 	RU	Введите пароль, настроенный для парольной защиты в вашем Squeezebox Server
 	SV	Ange lösenordet du konfigurerat för lösenordsskydd i Squeezebox Server
 
+HTTP_AUTH_CONNECTING_TO
+	CS	Připojování k
+	DA	Etablerer forbindelse til
+	DE	Verbindung mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistää kohteeseen
+	FR	Connexion à
+	IT	Collegamento a
+	NL	Verbinden met
+	NO	Kopler til
+	PL	Trwa łączenie z %s
+	RU	Подключение к %s
+	SV	Ansluts till
+
+HTTP_AUTH_PASSWORD_WRONG
+	CS	Neplatné uživatelské jméno/ heslo
+	DA	Brugernavnet/adgangskoden er ugyldig
+	DE	Benutzername/Kennwort ungültig
+	EN	Username/Password Invalid
+	ES	Nombre de usuario/contraseña no válidos
+	FI	Käyttäjätunnus/salasana ei kelpaa
+	FR	Nom d'utilisateur/mot de passe non valide
+	IT	Nome utente/password non validi
+	NL	Gebruikersnaam/wachtwoord ongeldig
+	NO	Brukernavn/passord er ugyldig
+	PL	Nieprawidłowa nazwa użytkownika/hasło
+	RU	Недействительные имя пользователя или пароль
+	SV	Användarnamn/lösenord är felaktigt
+
+HTTP_AUTH_PASSWORD_WRONG_BODY
+	CS	Zadané uživatelské jméno a heslo není platné.
+	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
+	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
+	EN	The username or password you entered is not valid.
+	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
+	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
+	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	IT	Il nome utente o la password immessi non sono validi.
+	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
+	NO	Brukernavnet eller passordet du oppga, er ugyldig.
+	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
+	RU	Введены неверные пароль или имя пользователя.
+	SV	Det användarnamn eller lösenord du angav är inte giltigt.
+
+HTTP_AUTH_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+

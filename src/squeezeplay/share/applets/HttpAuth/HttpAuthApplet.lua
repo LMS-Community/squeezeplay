@@ -38,15 +38,20 @@ local Textarea        = require("jive.ui.Textarea")
 local Textinput       = require("jive.ui.Textinput")
 local Keyboard        = require("jive.ui.Keyboard")
 local Button          = require("jive.ui.Button")
+local Popup           = require("jive.ui.Popup")
+
+local jnt           = jnt
+local appletManager = appletManager
 
 local SocketHttp      = require("jive.net.SocketHttp")
 
+local CONNECT_TIMEOUT = 20
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function squeezeCenterPassword(self, server, setupNext, titleStyle)
+function squeezeCenterPassword(self, server, setupNext, titleStyle, showConnecting)
 	self.server = server
 	if setupNext then
 		self.setupNext = setupNext
@@ -54,6 +59,9 @@ function squeezeCenterPassword(self, server, setupNext, titleStyle)
 	if titleStyle then
 		self.titleStyle = titleStyle
 	end
+	self.showConnecting = showConnecting
+
+	self.inputWindows = {}
 
 	self.topWindow = self:_enterTextWindow("username", "HTTP_AUTH_USERNAME", "HTTP_AUTH_USERNAME_HELP", _enterPassword)
 end
@@ -86,12 +94,119 @@ function _enterDone(self)
 	self.username = nil
 	self.password = nil
 
-	self.topWindow:hideToTop(Window.transitionPushLeft)
+	if self.showConnecting then
+		jnt:subscribe(self)
+		self:_showConnectToServer(self.server)
 
-	-- FIXME delay here to check if the username/password are correct
+		self:_hideInputWindows()
+
+		return
+	else
+		self.topWindow:hideToTop(Window.transitionPushLeft)
+	end
+	
 	if self.setupNext then
 		return self.setupNext()
 	end
+end
+
+
+function _hideInputWindows(self)
+	for key, window in pairs(self.inputWindows) do
+		window:hide(Window.transitionNone)
+	end
+end
+
+
+function _showConnectToServer(self,  server)
+	self.connectingPopup = Popup("waiting_popup")
+	local window = self.connectingPopup
+	window:addWidget(Icon("icon_connecting"))
+--	window:setAutoHide(false)
+
+	local statusLabel = Label("text", self:string("HTTP_AUTH_CONNECTING_TO"))
+	local statusSubLabel = Label("subtext", server:getName())
+	window:addWidget(statusLabel)
+	window:addWidget(statusSubLabel)
+
+	local timeout = 1
+
+	local cancelAction = function()
+		--sometimes timeout not back to 1 next time around, so reset it
+		timeout = 1
+		self.showConnecting = nil
+		window:hide()
+	end
+
+	-- disable input
+	window:ignoreAllInputExcept({"back", "go_home"})
+	window:addActionListener("back", self, cancelAction)
+	window:addActionListener("go_home", self, cancelAction)
+	window:addTimer(1000,
+			function()
+
+				-- we detect when the connect to the new server
+				-- with notify_serverConnected
+
+				timeout = timeout + 1
+				if timeout > CONNECT_TIMEOUT then
+					log:warn("Timeout passed, current count: ", timeout)
+					cancelAction()
+				end
+			end)
+
+	self:tieAndShowWindow(window)
+end
+
+function notify_serverAuthFailed(self, server, failureCount)
+	if self.showConnecting and self.server == server and failureCount == 1 then
+		log:debug("self.waitForConnect:", self.waitForConnect, " ", server)
+		self:_httpAuthErrorWindow(server)
+	end
+end
+
+function notify_serverConnected(self, server)
+	if not self.showConnecting or self.server ~= server then
+		return
+	end
+	log:info("notify_serverConnected")
+	self.connectingPopup:hide()
+	if self.setupNext then
+		return self.setupNext()
+	end
+end
+
+
+function _httpAuthErrorWindow(self, server)
+	local window = Window("help_list", self:string("HTTP_AUTH_PASSWORD_WRONG"), "setuptitle")
+
+	local textarea = Textarea("help_text", self:string("HTTP_AUTH_PASSWORD_WRONG_BODY"))
+
+	local menu = SimpleMenu("menu")
+
+	window:setAutoHide(true)
+
+	menu:addItem({
+		text = self:string("HTTP_AUTH_TRY_AGAIN"),
+		sound = "WINDOWHIDE",
+		callback = function()
+				appletManager:callService("squeezeCenterPassword", server, nil, nil, true)
+			   end,
+	})
+	local cancelAction = function()
+		window:playSound("WINDOWHIDE")
+		window:hide()
+
+		return EVENT_CONSUME
+	end
+
+	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self, cancelAction)
+
+	menu:setHeaderWidget(textarea)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
 end
 
 function _helpWindow(self, title, token)
@@ -136,10 +251,18 @@ function _enterTextWindow(self, key, title, help, next)
 	window:addWidget(keyboard)
 	window:focusWidget(group)
 
+	self.inputWindows[key] = window
+
 	self:tieAndShowWindow(window)
 	return window
 end
 
+function free(self)
+	log:debug("Unsubscribing jnt")
+	jnt:unsubscribe(self)
+
+	return true
+end
 
 --[[
 

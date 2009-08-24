@@ -62,6 +62,37 @@ SWITCH_SERVER_TEXT
 	RU	В результате выбранного действия плеер подключится к другой медиатеке. Воспроизведение будет остановлено.
 	SV	Ditt val innebär att spelaren ansluter till ett annat bibliotek och att uppspelningen stoppas.
 
+
+SWITCH_PASSWORD_WRONG
+	CS	Neplatné uživatelské jméno/ heslo
+	DA	Brugernavnet/adgangskoden er ugyldig
+	DE	Benutzername/Kennwort ungültig
+	EN	Username/Password Invalid
+	ES	Nombre de usuario/contraseña no válidos
+	FI	Käyttäjätunnus/salasana ei kelpaa
+	FR	Nom d'utilisateur/mot de passe non valide
+	IT	Nome utente/password non validi
+	NL	Gebruikersnaam/wachtwoord ongeldig
+	NO	Brukernavn/passord er ugyldig
+	PL	Nieprawidłowa nazwa użytkownika/hasło
+	RU	Недействительные имя пользователя или пароль
+	SV	Användarnamn/lösenord är felaktigt
+
+SWITCH_PASSWORD_WRONG_BODY
+	CS	Zadané uživatelské jméno a heslo není platné.
+	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
+	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
+	EN	The username or password you entered is not valid.
+	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
+	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
+	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	IT	Il nome utente o la password immessi non sono validi.
+	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
+	NO	Brukernavnet eller passordet du oppga, er ugyldig.
+	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
+	RU	Введены неверные пароль или имя пользователя.
+	SV	Det användarnamn eller lösenord du angav är inte giltigt.
+
 SWITCH_BUTTON
 	CS	Přepnout na knihovnu: %s
 	DA	Skift til biblioteket: %s

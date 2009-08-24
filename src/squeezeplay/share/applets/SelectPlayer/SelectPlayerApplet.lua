@@ -306,7 +306,7 @@ function _updateServerItem(self, server)
 		text = server:getName(),
 		sound = "WINDOWSHOW",
 		callback = function()
-			appletManager:callService("squeezeCenterPassword", server)
+			appletManager:callService("squeezeCenterPassword", server, nil, nil, true)
 		end,
 		weight = SERVER_WEIGHT,
 	}

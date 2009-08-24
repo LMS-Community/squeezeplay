@@ -325,6 +325,8 @@ function setCredentials(self, cred, id)
 		-- object method
 		id = self:getId()
 
+		self.authFailureCount = 0
+
 		SocketHttp:setCredentials({
 			ipport = { self:getIpPort() },
 			realm = cred.realm,
@@ -333,7 +335,7 @@ function setCredentials(self, cred, id)
 		})
 
 		-- force re-connection
-		self:connect()
+		self:reconnect()
 	end
 
 	credentials[id] = cred
@@ -502,6 +504,7 @@ function updateAddress(self, ip, port, name)
 		-- http authentication
 		local cred = credentials[self.id]
 		if cred then
+			self.authFailureCount = 0
 			SocketHttp:setCredentials({
 				ipport = { ip, port },
 				realm = cred.realm,
@@ -607,7 +610,9 @@ function connect(self)
 	log:debug(self, ":connect")
 
 	assert(self.comet)
-	
+
+	self.authFailureCount = 0
+
 	if not self:isSqueezeNetwork() then
 		assert(self.artworkPool)
 	end
@@ -670,6 +675,8 @@ function notify_cometConnected(self, comet)
 	self.netstate = 'connected'
 	self.jnt:notify('serverConnected', self)
 
+	self.authFailureCount = 0
+
 	-- auto discovery SqueezeCenter's mac address
  	self.jnt:arp(self.ip, function(chunk, err)
 		if err then
@@ -707,9 +714,22 @@ end
 -- comet http error
 function notify_cometHttpError(self, comet, cometRequest)
 	if cometRequest:t_getResponseStatus() == 401 then
+
 		local authenticate = cometRequest:t_getResponseHeader("WWW-Authenticate")
 
 		self.realm = string.match(authenticate, 'Basic realm="(.*)"')
+		if not self:isConnected() then
+			if not self.authFailureCount then
+				self.authFailureCount = 0
+			end
+			if self.authFailureCount > 0 then
+				--don't count first auth error as a failure, to allow challenge to complete
+				log:info("failed auth. Count: ", self.authFailureCount, " server: ", self, " state: ", self.netstate)
+				self.jnt:notify('serverAuthFailed', self, self.authFailureCount)
+
+			end
+			self.authFailureCount = self.authFailureCount + 1
+		end
 	end
 end
 

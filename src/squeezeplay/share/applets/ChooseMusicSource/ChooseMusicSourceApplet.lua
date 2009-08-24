@@ -288,6 +288,13 @@ function _delServerItem(self, server, address)
 	end
 end
 
+function notify_serverAuthFailed(self, server, failureCount)
+	log:debug("self.waitForConnect:", self.waitForConnect, " ", server)
+
+	if self.waitForConnect and self.waitForConnect.server and self.waitForConnect.server == server and failureCount == 1 then
+		self:_httpAuthErrorWindow(server)
+	end
+end
 
 function notify_serverNew(self, server)
 	self:_addServerItem(server)
@@ -409,6 +416,45 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 	end
 
 end
+
+function _httpAuthErrorWindow(self, server)
+	local window = Window("help_list", self:string("SWITCH_PASSWORD_WRONG"), "setuptitle")
+
+	local textarea = Textarea("help_text", self:string("SWITCH_PASSWORD_WRONG_BODY"))
+
+	local menu = SimpleMenu("menu")
+
+	window:setAutoHide(true)
+
+	menu:addItem({
+		text = self:string("SQUEEZEBOX_TRY_AGAIN"),
+		sound = "WINDOWHIDE",
+		callback = function()
+				appletManager:callService("squeezeCenterPassword", server,
+					function()
+						self:selectServer(server, true)
+					end, self.titleStyle)
+			   end,
+	})
+	local cancelAction = function()
+		window:playSound("WINDOWHIDE")
+		self:_cancelSelectServer()
+
+		return EVENT_CONSUME
+	end
+
+	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self, cancelAction)
+
+	menu:setHeaderWidget(textarea)
+	window:addWidget(menu)
+
+	window._isChooseMusicSourceWindow = true
+
+	self:tieAndShowWindow(window)
+end
+
+
 
 --todo: this should hide if connection returns
 function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
