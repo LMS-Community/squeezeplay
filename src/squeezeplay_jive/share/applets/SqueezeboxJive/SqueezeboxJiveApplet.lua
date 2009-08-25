@@ -192,7 +192,7 @@ function init(self)
 
 			-- press-hold home is for power down
 			if keycode == KEY_HOME then
-				settingsPowerOff(self)
+				appletManager:callService("poweroff")
 				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
@@ -833,7 +833,7 @@ function batteryLowShow(self)
 
 	popup:addTimer(30000,
 		       function()
-			       self:_powerOff()
+			       appletManager:callService("poweroff")
 		       end,
 		       true)
 
@@ -845,7 +845,7 @@ function batteryLowShow(self)
 
 						-- allow power off
 						if event:getType() == EVENT_KEY_HOLD and event:getKeycode() == KEY_HOME then
-							self:settingsPowerOff()
+							appletManager:callService("poweroff")
 						end
 						return EVENT_CONSUME
 					end,
@@ -888,7 +888,9 @@ function settingsPowerDown(self, menuItem)
 		{ 
 			text = self:string("POWER_DOWN"),
 			sound = "SELECT",
-			callback = function() settingsPowerOff(self) end
+			callback = function()
+				appletManager:callService("poweroff")
+			end
 		},	
 		{ 
 			text = self:string("POWER_DOWN_SLEEP"),
@@ -929,38 +931,6 @@ function settingsSleep(self)
 end
 
 
-function settingsPowerOff(self)
-	-- disconnect from SqueezeCenter
-	appletManager:callService("disconnectPlayer")
-
-	local popup = Popup("waiting_popup")
-
-	popup:addWidget(Icon("icon_power"))
-	popup:addWidget(Label("text", self:string("GOODBYE")))
-
-	-- make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-
-	-- we're shutting down, so prohibit any key presses or holds
-	Framework:addListener(EVENT_ALL_INPUT,
-			      function () 
-				      return EVENT_CONSUME
-			      end,
-			      true)
-
-	popup:addTimer(4000, 
-		function()
-			self:_powerOff()
-		end,
-		true
-	)
-
-	popup:show()
-
-	popup:playSound("SHUTDOWN")
-end
 
 
 function settingsTestSuspend(self, menuItem)
@@ -1268,25 +1238,6 @@ function _goToSleep(self)
 	self.popup:hide()
 	self:setPowerState('suspend')
 
-end
-
-function _powerOff(self)
-	log:info("Poweroff begin")
-
-	self:_setBrightness(true, 0, 0)
-
-	-- power off when lcd is off, or after 1 seconds
-	local tries = 10
-	self.powerOffTimer = Timer(100,
-				   function()
-					   if self.lcdLevel == 0 or tries  == 0 then
-						   log:info("Poweroff on")
-						   os.execute("/sbin/poweroff")
-					   else
-						   tries = tries - 1
-					   end
-				   end)
-	self.powerOffTimer:start()
 end
 
 

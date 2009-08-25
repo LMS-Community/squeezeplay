@@ -161,7 +161,7 @@ end
 
 
 -- power off
-function poweroff(self, timeout)
+function poweroff(self)
 	log:info("Shuting down ...")
 
 	-- disconnect from SqueezeCenter
@@ -184,7 +184,7 @@ function poweroff(self, timeout)
 
 	_cleanReboot(self)
 
-	local timer = Timer(timeout or 5000, function()
+	local timer = Timer(4000, function()
 		-- force poweroff (don't go through init)
 		os.execute("/bin/busybox poweroff -f")
 	end)

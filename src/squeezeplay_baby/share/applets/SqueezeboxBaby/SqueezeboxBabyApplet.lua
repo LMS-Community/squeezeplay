@@ -121,7 +121,7 @@ function init(self)
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
         Framework:addActionListener("shutdown", self, function()
-		appletManager:callService("poweroff", 4000)
+		appletManager:callService("poweroff")
 	end)
 
 	Framework:addListener(EVENT_SWITCH, function(event)
