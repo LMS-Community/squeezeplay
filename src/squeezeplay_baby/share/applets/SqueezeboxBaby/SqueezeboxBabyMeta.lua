@@ -10,6 +10,7 @@ local SlimServer    = require("jive.slim.SlimServer")
 local Sample        = require("squeezeplay.sample")
 
 local appletManager = appletManager
+local jive          = jive
 local jiveMain      = jiveMain
 local jnt           = jnt
 
@@ -59,6 +60,9 @@ end
 
 
 function registerApplet(meta)
+        -- profile functions, 1 second warn, 10 second die
+        jive.perfhook(1000, 10000)
+
 	-- Set player device type
 	LocalPlayer:setDeviceType("baby", "Squeezebox Radio")
 
