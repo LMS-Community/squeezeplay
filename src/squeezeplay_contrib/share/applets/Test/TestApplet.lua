@@ -66,6 +66,11 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "SN registration",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+				end },
 			{ text = "Context Menu Nav",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -279,6 +284,11 @@ function cmTopWindow(self, title)
 				callback = function(event, menuItem)
 					self:cmWindow(#Framework.windowStack)
 				end })
+	menu:addItem({ text = "SN registration",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+				end })
 	menu:addItem({ text = "leave context ",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -352,8 +362,6 @@ function cmRegularFinishWindow(self, title)
 	local menu = SimpleMenu("menu")
 	title = title or "top"
 	menu:addItem({ text = "Textarea " .. title})
-	--todo possibly have the cleanup automatic inside Window
-	Window:hideContextMenus()
 	self:tieAndShowWindow(window)
 end
 
