@@ -95,6 +95,8 @@ static void decode_sample_fill_buffer_locked(void)
 {
 	size_t i, n, size;
 
+	decode_audio->effect_gain = effect_gain;
+
 	size = fifo_bytes_free(&decode_audio->effect_fifo);
 	size = (size / sizeof(effect_t)) * sizeof(effect_t);
 
@@ -139,8 +141,6 @@ void decode_sample_fill_buffer()
 	}
 
 	/* fill buffer */
-	decode_audio->effect_gain = effect_gain;
-
 	decode_sample_fill_buffer_locked();
 	
 	fifo_unlock(&decode_audio->effect_fifo);
