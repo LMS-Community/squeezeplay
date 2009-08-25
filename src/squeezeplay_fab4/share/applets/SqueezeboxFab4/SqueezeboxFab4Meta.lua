@@ -9,8 +9,6 @@ local SlimServer    = require("jive.slim.SlimServer")
 
 local Sample        = require("squeezeplay.sample")
 
-local SqueezeboxMeta = require("applets.Squeezebox.SqueezeboxMeta")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jive          = jive
@@ -18,7 +16,7 @@ local jnt           = jnt
 
 
 module(...)
-oo.class(_M, SqueezeboxMeta)
+oo.class(_M, AppletMeta)
 
 
 function jiveVersion(meta)
@@ -91,6 +89,8 @@ function registerApplet(meta)
 	-- services
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")
+	meta:registerService("poweroff")
+	meta:registerService("reboot")
 end
 
 
