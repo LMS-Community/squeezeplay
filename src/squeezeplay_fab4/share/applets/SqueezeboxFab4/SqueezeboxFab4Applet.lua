@@ -35,6 +35,8 @@ local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
 
+local SqueezeboxApplet       = require("applets.Squeezebox.SqueezeboxApplet")
+
 local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
 
@@ -44,64 +46,23 @@ local jiveMain               = jiveMain
 local settings	             = nil
 
 module(..., Framework.constants)
-oo.class(_M, Applet)
+oo.class(_M, SqueezeboxApplet)
 
 
 function init(self)
-	local uuid, mac
-
 	settings = self:getSettings()
 
-	-- read device uuid
-	local f = io.open("/proc/cpuinfo")
-	if f then
-		for line in f:lines() do
-			if string.match(line, "UUID") then
-				uuid = string.match(line, "UUID%s+:%s+([%x-]+)")
-				uuid = string.gsub(uuid, "[^%x]", "")
-			end
-
-			if string.match(line, "Revision") then
-				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
-			end
-		end
-		f:close()
-	end
+	-- read uuid, serial and revision
+	parseCpuInfo(self)
 
 	System:init({
-		uuid = uuid,
 		machine = "fab4",
+		uuid = self._uuid,
 		revision = self._revision,
 	})
 
-	mac = System:getMacAddress()
-	uuid = System:getUUID()
-
-	if not uuid or string.match(mac, "^00:40:20")
-		or uuid == "00000000-0000-0000-0000-000000000000"
-		or mac == "00:04:20:ff:ff:01" then
-		local window = Window("help_list", self:string("INVALID_MAC_TITLE"))
-
-		window:setAllowScreensaver(false)
-		window:setAlwaysOnTop(true)
-		window:setAutoHide(false)
-
-		local text = Textarea("help_text", self:string("INVALID_MAC_TEXT"))
-		local menu = SimpleMenu("menu", {
-			{
-				text = self:string("INVALID_MAC_CONTINUE"),
-				sound = "WINDOWHIDE",
-				callback = function()
-						   window:hide()
-					   end
-			},
-		})
-
-		menu:setHeaderWidget(text)
-		window:addWidget(menu)
-		window:show()
-	end
-
+	-- warn if uuid or mac are invalid
+	verifyMacUUID(self)
 
 	settings.brightness = settings.brightness or 100
 	settings.ambient = settings.ambient or 0
@@ -132,7 +93,7 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	self:storeSettings()
+	playSplashSound(self)
 end
 
 -----------------------------

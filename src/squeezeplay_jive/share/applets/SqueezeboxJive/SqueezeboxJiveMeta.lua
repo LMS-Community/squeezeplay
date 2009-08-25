@@ -7,13 +7,15 @@ local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
 
+local SqueezeboxMeta = require("applets.Squeezebox.SqueezeboxMeta")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
 
 
 module(...)
-oo.class(_M, AppletMeta)
+oo.class(_M, SqueezeboxMeta)
 
 
 function jiveVersion(meta)
@@ -59,6 +61,8 @@ end
 
 
 function registerApplet(meta)
+	SqueezeboxMeta.registerApplet(meta)
+
 	-- Fixup settings after upgrade
 	local settings = meta:getSettings()
 	if not settings.suspendWhenPlayingTimeout then

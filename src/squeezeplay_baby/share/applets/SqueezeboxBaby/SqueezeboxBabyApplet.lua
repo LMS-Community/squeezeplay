@@ -38,6 +38,8 @@ local RadioButton            = require("jive.ui.RadioButton")
 
 local debug                  = require("jive.utils.debug")
 
+local SqueezeboxApplet       = require("applets.Squeezebox.SqueezeboxApplet")
+
 local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
 
@@ -48,127 +50,39 @@ local appletManager          = appletManager
 
 local brightnessTable        = {}
 
+
 module(..., Framework.constants)
-oo.class(_M, Applet)
+oo.class(_M, SqueezeboxApplet)
 
-
-local function _sysOpen(self, path, attr, mode)
-	if not mode or string.match(mode, "r") then
-		local fh = io.open(path .. attr, "r")
-		if not fh then
-			log:warn("Can't open (read) ", path, attr)
-			return
-		end
-
-		self["sysr_" .. attr] = fh
-	end
-
-	if mode and string.match(mode, "w") then
-		local fh = io.open(path .. attr, "w")
-		if not fh then
-			log:warn("Can't open (read) ", path, attr)
-			return
-		end
-
-		self["sysw_" .. attr] = fh
-	end
-end
-
-
-local function _sysReadNumber(self, attr)
-	local fh = self["sysr_" .. attr]
-	if not fh then
-		return -1
-	end
-
-	fh:seek("set")
-	return tonumber(fh:read("*a"))
-end
-
-
-local function _sysWrite(self, attr, val)
-	local fh = self["sysw_" .. attr]
-	if not fh then
-		return -1
-	end
-
-	fh:write(val)
-	fh:flush(val)
-end
 
 local brightnessTimer = nil
 
 function init(self)
-	local uuid, mac, serial
-	
-	-- read device uuid
-	local f = io.open("/proc/cpuinfo")
-	if f then
-		for line in f:lines() do
-			if string.match(line, "UUID") then
-				uuid = string.match(line, "UUID%s+:%s+([%x-]+)")
-				uuid = string.gsub(uuid, "[^%x]", "")
-			end
+	local settings = self:getSettings()
 
-			if string.match(line, "Serial") then
-				serial = string.match(line, "Serial%s+:%s+([%x-]+)")
-				self._serial = string.gsub(serial, "[^%x]", "")
-			end
+	-- read uuid, serial and revision
+	parseCpuInfo(self)
 
-			if string.match(line, "Revision") then
-				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
-			end
-		end
-		f:close()
-	end
+	System:init({
+		machine = "baby",
+		uuid = self._uuid,
+		revision = self._revision,
+	})
+
+	-- warn if uuid or mac are invalid
+	verifyMacUUID(self)
 
 	if not self._serial then
 		log:warn("Serial not found")
 	end
 
-	System:init({
-		uuid = uuid,
-		machine = "baby",
-		revision = self._revision,
-	})
-
-	mac = System:getMacAddress()
-	uuid = System:getUUID()
-
-	if not uuid or string.match(mac, "^00:40:20") 
-		or uuid == "00000000-0000-0000-0000-000000000000"
-		or mac == "00:04:20:ff:ff:01" then
-		local window = Window("help_list", self:string("INVALID_MAC_TITLE"))
-
-		window:setAllowScreensaver(false)
-		window:setAlwaysOnTop(true)
-		window:setAutoHide(false)
-
-		local text = Textarea("help_text", self:string("INVALID_MAC_TEXT"))
-		local menu = SimpleMenu("menu", {
-			{
-				text = self:string("INVALID_MAC_CONTINUE"),
-				sound = "WINDOWHIDE",
-				callback = function()
-						   window:hide()
-					   end
-			},
-		})
-
-		window:addWidget(text)
-		window:addWidget(menu)
-		window:show()
-	end
-
-	local settings = self:getSettings()
-
 	-- sys interface
-	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
-	_sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "bl_power", "rw")
-	_sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "ambient")
-	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
-	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
-	_sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
+	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
+	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "bl_power", "rw")
+	sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "ambient")
+	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
+	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
+	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
 
 	-- register wakeup/sleep functions
 	Framework:registerWakeup(function() wakeup(self) end)
@@ -184,6 +98,7 @@ function init(self)
 	self:_initBrightnessTable()
 	if settings.brightness > #brightnessTable then
 		settings.brightness = #brightnessTable
+		self:storeSettings()
 	end
 	self.lcdBrightness = settings.brightness
 	self:setPowerState("active")
@@ -205,8 +120,9 @@ function init(self)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
-        Framework:addActionListener("shutdown", self, _shutdown)
-
+        Framework:addActionListener("shutdown", self, function()
+		appletManager:callService("poweroff", 4000)
+	end)
 
 	Framework:addListener(EVENT_SWITCH, function(event)
 		local sw,val = event:getSwitch()
@@ -238,13 +154,12 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	self:storeSettings()
-
-
 	-- XXXX for testing only
 	if bsp:getMixer("Line In Switch") then
 		self:_lineinJack(true)
 	end
+
+	playSplashSound(self)
 end
 
 local MAX_BRIGHTNESS_LEVEL = -1
@@ -314,7 +229,7 @@ function doAutomaticBrightnessTimer(self)
 	local settings = self:getSettings()	
 	
 	-- Now continue with the real ambient code 
-	local ambient = _sysReadNumber(self, "ambient")
+	local ambient = sysReadNumber(self, "ambient")
 	
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -496,9 +411,9 @@ end
 
 
 local function _updatePower(self)
-	local wallVoltage = _sysReadNumber(self, "wall_voltage")
-	local batteryCharge = _sysReadNumber(self, "battery_charge")
-	local batteryCapacity = _sysReadNumber(self, "battery_capacity")
+	local wallVoltage = sysReadNumber(self, "wall_voltage")
+	local batteryCharge = sysReadNumber(self, "battery_charge")
+	local batteryCapacity = sysReadNumber(self, "battery_capacity")
 
 	log:debug("wallVoltage=", wallVoltage,
 		" batteryCharge=", batteryCharge,
@@ -620,8 +535,8 @@ function _setBrightness(self, level)
 	brightness = brightnessTable[level][2]
 	bl_power   = brightnessTable[level][1]
 		
-	_sysWrite(self, "brightness", brightness)
-	_sysWrite(self, "bl_power",   bl_power)
+	sysWrite(self, "brightness", brightness)
+	sysWrite(self, "bl_power",   bl_power)
 end
 
 
@@ -734,34 +649,6 @@ function settingsBrightnessControlShow(self, menuItem)
 	window:addWidget(menu)
 	self:tieAndShowWindow(window)
 
-end
-
-
-function _shutdown(self)
-	log:info("Shuting down ...")
-
-	-- disconnect from SqueezeCenter
-	appletManager:callService("disconnectPlayer")
-
-	local popup = Popup("waiting_popup")
-
-	popup:addWidget(Icon("icon_restart"))
-	popup:addWidget(Label("text", self:string("GOODBYE")))
-
-	-- make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-	popup:ignoreAllInputExcept({})
-
-	popup:show()
-
-	popup:playSound("SHUTDOWN")	
-
-	local timer = Timer(3500, function()
-		os.execute("/sbin/poweroff")
-	end)
-	timer:start()
 end
 
 

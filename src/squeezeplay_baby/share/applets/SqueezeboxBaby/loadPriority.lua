@@ -1,2 +1,1 @@
-loadPriority=1
-
+loadPriority=5

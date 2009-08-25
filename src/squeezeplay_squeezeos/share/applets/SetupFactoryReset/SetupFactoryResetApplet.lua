@@ -74,7 +74,7 @@ function _factoryReset(self)
 
 				     -- touch .factoryreset and reboot
 				     System:atomicWrite("/.factoryreset", "")
-				     os.execute("/bin/busybox reboot -f")
+				     appletManager:callService("reboot")
 			      end)
 
 	self:tieAndShowWindow(popup)

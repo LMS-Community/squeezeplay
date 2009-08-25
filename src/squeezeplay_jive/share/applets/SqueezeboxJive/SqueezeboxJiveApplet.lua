@@ -40,6 +40,8 @@ local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
 
+local SqueezeboxApplet       = require("applets.Squeezebox.SqueezeboxApplet")
+
 local jiveMain               = jiveMain
 local jnt                    = jnt
 local iconbar                = iconbar
@@ -60,7 +62,7 @@ local SW_PHONE_DETECT        = 1
 
 local squeezeboxjiveTitleStyle = 'settingstitle'
 module(..., Framework.constants)
-oo.class(_M, Applet)
+oo.class(_M, SqueezeboxApplet)
 
 
 -- disable battery low test, useful for debugging
@@ -68,9 +70,10 @@ local CHECK_BATTERY_LOW      = true
 
 
 function init(self)
-	local uuid, mac
-
 	local settings = self:getSettings()
+
+	-- read uuid, serial and revision
+	parseCpuInfo(self)
 
 	-- read device uuid
 	local f = io.popen("/usr/sbin/fw_printenv")
@@ -78,51 +81,17 @@ function init(self)
 		local printenv = f:read("*all")
 		f:close()
 
-		uuid = string.match(printenv, "serial#=(%x+)")
-	end
-
-	local f = io.open("/proc/cpuinfo")
-	if f then
-		for line in f:lines() do
-			if string.match(line, "Revision") then
-				self._revision = tonumber(string.match(line, ".+:%s+([^%s]+)"))
-			end
-		end
-		f:close()
+		self._uuid = string.match(printenv, "serial#=(%x+)")
 	end
 
 	System:init({
-		uuid = uuid,
 		machine = "jive",
-		revision = 0,
+		uuid = self._uuid,
+		revision = self._revision,
 	})
 
-	mac = System:getMacAddress()
-	uuid = System:getUUID()
-
-	if not uuid or string.match(mac, "^00:40:20") then
-		local window = Window("text_list", self:string("INVALID_MAC_TITLE"))
-
-		window:setAllowScreensaver(false)
-		window:setAlwaysOnTop(true)
-		window:setAutoHide(false)
-
-		local text = Textarea("help_text", self:string("INVALID_MAC_TEXT"))
-		local menu = SimpleMenu("menu", {
-			{
-				text = self:string("INVALID_MAC_CONTINUE"),
-				sound = "WINDOWHIDE",
-				callback = function()
-						   window:hide()
-					   end
-			},
-		})
-
-		menu:setHeaderWidget(text)
-		window:addWidget(menu)
-		window:show()
-	end
-
+	-- warn if uuid or mac are invalid
+	verifyMacUUID(self)
 
 	-- sync clock to hw clock every 10 minutes
 	clockSyncTimer = Timer(600000, -- 10 minutes
@@ -258,7 +227,7 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	return self
+	playSplashSound(self)
 end
 
 

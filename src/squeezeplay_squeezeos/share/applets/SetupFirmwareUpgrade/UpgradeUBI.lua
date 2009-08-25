@@ -23,6 +23,7 @@ local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("applet.SetupFirmware")
 
 local jnt = jnt
+local appletManager = appletManager
 
 module(..., oo.class)
 
@@ -147,7 +148,7 @@ function _upgrade(self)
 		Task:yield(true)
 	end
 
-	os.execute("/bin/busybox reboot -f")
+	appletManager:callService("reboot")
 
 	return true
 end

@@ -265,7 +265,7 @@ function _finished(self, label)
 			Task:yield(true)
 		end
 		log:warn("RESTARTING JIVE...")
-		os.execute("/bin/busybox reboot -f")
+	     	appletManager:callService("reboot")
 	else
 		self.animatewindow:hide()
 		self.window:removeWidget(self.menu)

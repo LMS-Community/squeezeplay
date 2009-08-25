@@ -44,7 +44,6 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
-
 	-- set volume
 	local settings = meta:getSettings()
 	Sample:setEffectVolume(settings["_VOLUME"])
@@ -54,14 +53,10 @@ function registerApplet(meta)
 
 	-- add a menu to load us
 	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'settingsAudio', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+end
 
-	-- The startup sound needs to be played with the minimum
-	-- delay, load and play it first
-	appletManager:callService("loadSounds", "STARTUP")
-	Framework:playSound("STARTUP")
-
-	-- Load all other sounds
-	appletManager:callService("loadSounds", nil) -- nil is default from settingsend
+function configureApplet(meta)
+	appletManager:callService("loadSounds")
 end
 
 
