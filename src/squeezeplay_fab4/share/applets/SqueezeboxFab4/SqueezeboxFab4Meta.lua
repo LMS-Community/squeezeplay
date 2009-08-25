@@ -58,8 +58,6 @@ function registerApplet(meta)
 	-- profile functions, 1 second warn, 10 second die
 	jive.perfhook(1000, 10000)
 
-	SqueezeboxMeta.registerApplet(meta)
-
 	-- Set player device type
 	LocalPlayer:setDeviceType("fab4", "Squeezebox Touch")
 

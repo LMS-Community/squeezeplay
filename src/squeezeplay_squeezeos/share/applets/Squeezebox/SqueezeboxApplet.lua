@@ -1,28 +1,16 @@
 
 local pcall, unpack, tonumber, tostring = pcall, unpack, tonumber, tostring
 
--- board specific driver
-local bsp                    = require("baby_bsp")
-
 local oo                     = require("loop.simple")
 local os                     = require("os")
 local io                     = require("io")
 local string                 = require("jive.utils.string")
 local table                  = require("jive.utils.table")
-local math                   = require("math")
 
 local Applet                 = require("jive.Applet")
-local Decode                 = require("squeezeplay.decode")
 local System                 = require("jive.System")
 
-local Networking             = require("jive.net.Networking")
-
-local Player                 = require("jive.slim.Player")
-local LocalPlayer            = require("jive.slim.LocalPlayer")
-
-local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
-local Group                  = require("jive.ui.Group")
 local Icon                   = require("jive.ui.Icon")
 local Event                  = require("jive.ui.Event")
 local Label                  = require("jive.ui.Label")
@@ -31,23 +19,15 @@ local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
-local Slider                 = require("jive.ui.Slider")
 local Window                 = require("jive.ui.Window")
-local RadioGroup             = require("jive.ui.RadioGroup")
-local RadioButton            = require("jive.ui.RadioButton")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applet.SqueezeboxSqueezeOS")
 
-local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
-local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
-
 local jnt                    = jnt
-local iconbar                = iconbar
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 
-local brightnessTable        = {}
 
 module(..., Framework.constants)
 oo.class(_M, Applet)

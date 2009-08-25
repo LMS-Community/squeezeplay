@@ -59,8 +59,6 @@ end
 
 
 function registerApplet(meta)
-	SqueezeboxMeta.registerApplet(meta)
-
 	-- Fixup settings after upgrade
 	local settings = meta:getSettings()
 	if not settings.suspendWhenPlayingTimeout then
