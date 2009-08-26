@@ -5,6 +5,7 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local System        = require("jive.System")
+local Timer                  = require("jive.ui.Timer")
 
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -63,6 +64,19 @@ function configureApplet(meta)
 
 	meta.state.player = LocalPlayer(jnt, playerid, uuid)
 
+	if not settings.volume then
+		settings.volume = 40
+	end
+	meta.state.player:volumeLocal(settings.volume)
+
+	if not settings.powerState then
+		settings.powerState = "on"
+	end
+	--must defer this since skin isn't loaded yet
+	jiveMain:registerPostOnScreenInit(      function()
+							jiveMain:setSoftPowerState(settings.powerState)
+						end)
+	
 	-- Connect player
 	local server = nil
 	if settings.squeezeNetwork then
@@ -98,8 +112,37 @@ function configureApplet(meta)
 		meta.state.player:updateInit(server, settings.playerInit)
 	end
 
+	local playerSettingsTimer = Timer(10000,
+				function ()
+					_updateLocallyMaintainedParams(meta)
+				end)
+	playerSettingsTimer:start()
+
 	-- Subscribe to changes in player status
 	jnt:subscribe(meta)
+end
+
+function _updateLocallyMaintainedParams(meta)
+	local saveSettings = false
+	local settings = meta:getSettings()
+
+	if meta.state.player then
+		if meta.state.player:getVolume() ~= settings.volume then
+			saveSettings = true
+			settings.volume = meta.state.player:getVolume()
+		end
+
+		if jiveMain:getSoftPowerState() ~= settings.powerState then
+			saveSettings = true
+			settings.powerState = jiveMain:getSoftPowerState()
+		end
+
+		--todo pause, mute, etc..
+	end
+
+	if saveSettings then
+		meta:storeSettings()
+	end
 end
 
 

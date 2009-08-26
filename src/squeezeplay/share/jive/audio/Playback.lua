@@ -1,5 +1,5 @@
 
-local assert, tostring, type = assert, tostring, type
+local assert, tostring, type, ipairs = assert, tostring, type, ipairs
 
 
 local oo                     = require("loop.base")
@@ -49,6 +49,8 @@ function __init(self, jnt, slimproto)
 	assert(slimproto)
 
 	local obj = oo.rawnew(self, {})
+
+	obj.sequenceNumber = 1
 
 	obj.jnt = jnt
 	obj.slimproto = slimproto
@@ -575,8 +577,100 @@ function _aude(self, data)
 end
 
 
-function _audg(self, data)
-	 decode:audioGain(data.gainL, data.gainR)
+
+function incrementSequenceNumber(self)
+	self.sequenceNumber = self.sequenceNumber + 1
+	return self:getCurrentSequenceNumber()
+end
+
+function getCurrentSequenceNumber(self)
+	return self.sequenceNumber
+end
+
+function isSequenceNumberInSync(self, serverSequenceNumber)
+	if serverSequenceNumber ~= self.sequenceNumber then
+		log:debug("server sequence # out of sync. server: ", serverSequenceNumber, " local: ", self.sequenceNumber)
+		return false
+	end
+	return true
+end
+
+-- volumeMap has the correct gain settings for volume settings 1-100. Based on Boom volume curve
+--todo when this becomes SP device specific move to service method and make it per-device 
+local _defaultVolumeToGain = {
+16, 18, 22, 26, 31, 36, 43, 51, 61, 72, 85, 101, 120, 142, 168, 200, 237, 281, 333, 395, 468, 555, 658, 781, 926, 980, 1037, 1098, 1162, 1230, 1302, 1378, 1458, 1543, 1634, 1729, 1830, 1937, 2050, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3328, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 6144, 6400, 6656, 7168, 7680, 7936, 8448, 8960, 9472, 9984, 10752, 11264, 12032, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19968, 20992, 22272, 23552, 24832, 26368, 27904, 29696, 31232, 33024, 35072, 37120, 39424, 41728, 44032, 46592, 49408, 52224, 55296, 58624, 61952, 65536,
+}
+
+local _serverVolumeToGain = _defaultVolumeToGain -- same since Squeezeplay.pm uses Boom curve
+
+--sb2 curve
+--local _serverVolumeToGain = {
+--232, 246, 260, 276, 292, 309, 327, 346, 366, 388, 411, 435, 460, 487, 516, 546, 578, 612, 648, 686, 726, 769, 814, 862, 912, 966, 1022, 1082, 1146, 1213, 1284, 1359, 1439, 1523, 1613, 1707, 1807, 1913, 2026, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3072, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 5888, 6400, 6656, 7168, 7424, 7936, 8448, 8960, 9472, 9984, 10496, 11264, 11776, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19712, 20992, 22272, 23552, 24832, 26368, 27904, 29440, 31232, 33024, 35072, 37120, 39168, 41472, 44032, 46592, 49408, 52224, 55296, 58368, 61952, 65536,
+--}
+
+
+function setVolume(self, volume)
+	self.volume = volume
+	self:_setGain(self:_getGainFromVolume(volume))
+end
+
+
+function getVolume(self)
+	return self.volume
+end
+
+
+function _getGainFromVolume(self, volume)
+	return _defaultVolumeToGain[volume]
+end
+
+
+function _setGain(self, gain)
+	log:debug("_setGain: ", gain)
+
+	local data = { gainL = gain, gainR = gain}
+
+	self:_audg(data, true)
+end
+
+
+function _audg(self, data, isLocal)
+	if not isLocal then
+		local gain, volume = self:translateServerGain(data.gainL)
+
+		local serverSequenceNumber = data.sequenceNumber
+		if serverSequenceNumber and not self:isSequenceNumberInSync(serverSequenceNumber) then
+			--ignore since not in sync
+			return
+		end
+
+	----NOTE: not using server value for self.volume, because fades come in through the audg mechanism. Instead, wait for the player status before
+	---- setting the locally held self.volume. This could cause a case where remote ui changes volume and the local volume isn't seen as right until playerstatus completes 
+--		--for now only using the translated volume value, not converting gain to a local value
+--		if self.volume ~= volume then
+--			log:warn("new volume set from server: ", volume)
+--			self.volume = volume
+--		end
+	end
+
+	log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)
+
+	decode:audioGain(data.gainL, data.gainR)
+end
+
+
+function translateServerGain(self, serverGain)
+
+	for volume = 0, (#_serverVolumeToGain - 1) do
+		--find value close to the matching value (use lower value if in between
+		local gain = volume == 0 and 0 or _serverVolumeToGain[volume]
+		local nextGain = _serverVolumeToGain[volume + 1]
+		if serverGain >= gain and  serverGain < nextGain then
+			return self:_getGainFromVolume(volume), volume
+		end
+	end
+	--use final value
+	return self:_getGainFromVolume(#_serverVolumeToGain), #_serverVolumeToGain
 end
 
 

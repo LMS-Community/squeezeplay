@@ -58,6 +58,7 @@ local Framework     = require("jive.ui.Framework")
 local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 local Event         = require("jive.ui.Event")
+local table         = require("jive.utils.table")
 
 local Canvas        = require("jive.ui.Canvas")
 
@@ -395,11 +396,13 @@ function JiveMain:__init()
 	Framework:setUpdateScreen(false)
 	local splashHandler = Framework:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
 							    function()
+							        JiveMain:performPostOnScreenInit()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED
 							    end)
 	local splashTimer = Timer(2000 - (os.time() - initTime),
 		function()
+			JiveMain:performPostOnScreenInit()
 			Framework:setUpdateScreen(true)
 			Framework:removeListener(splashHandler)
 		end,
@@ -434,6 +437,27 @@ function JiveMain:__init()
 --	profiler.stop()
 end
 
+
+function JiveMain:registerPostOnScreenInit(callback)
+	if not JiveMain.postOnScreenInits then
+		JiveMain.postOnScreenInits = {}
+	end
+	table.insert(JiveMain.postOnScreenInits, callback)
+
+end
+
+-- perform activities that need to run once the skin is loaded and the screen is visible
+function JiveMain:performPostOnScreenInit()
+	if not JiveMain.postOnScreenInits then
+		return
+	end
+
+	for i, callback in ipairs(JiveMain.postOnScreenInits) do
+		log:info("Calling postOnScreenInits callback")
+		callback()
+	end
+	JiveMain.postOnScreenInits = {}
+end
 
 function JiveMain:jiveMainNodes(globalStrings)
 

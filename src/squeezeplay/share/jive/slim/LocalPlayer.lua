@@ -14,6 +14,7 @@ local Player         = require("jive.slim.Player")
 local SlimProto      = require("jive.net.SlimProto")
 local Playback       = require("jive.audio.Playback")
 
+local jiveMain       = jiveMain
 local debug          = require("jive.utils.debug")
 local log            = require("jive.utils.log").logger("squeezebox.player")
 
@@ -120,6 +121,33 @@ function updateInit(self, server, init)
 end
 
 
+function incrementSequenceNumber(self)
+	return self.playback:incrementSequenceNumber()
+end
+
+function getCurrentSequenceNumber(self)
+	return self.playback:getCurrentSequenceNumber()
+end
+
+function isSequenceNumberInSync(self, serverSequenceNumber)
+	return self.playback:isSequenceNumberInSync(serverSequenceNumber)
+end
+
+
+--resend local values to server
+function refreshLocallyMaintainedParameters(self)
+	log:warn("refreshLocallyMaintainedParameters()")
+
+	--refresh volume
+	self:volume(self:getVolume(), true, true)
+
+	--refresh power state
+	self:setPower(jiveMain:getSoftPowerState() == "on")
+
+	--todo: pause, mute
+
+end
+
 function isLocal(self)
 	return true
 end
@@ -175,6 +203,24 @@ end
 
 function setSignalStrength(self, signalStrength)
 	self.playback:setSignalStrength(signalStrength)
+end
+
+
+function getVolume(self)
+	return self.playback:getVolume()
+end
+
+
+-- volume
+-- send new volume value to SS, returns a negative value if the player is muted
+function volume(self, vol, send, useBackgroundRequest)
+	self:volumeLocal(vol)
+	return Player.volume(self, vol, send, self:incrementSequenceNumber(), useBackgroundRequest)
+end
+
+
+function volumeLocal(self, vol)
+	self.playback:setVolume(vol)
 end
 
 

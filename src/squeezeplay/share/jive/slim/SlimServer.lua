@@ -256,7 +256,17 @@ function _serverstatusSink(self, event, err)
 			end
 
 			-- update player state
-			self.players[playerId]:updatePlayerInfo(self, player_info)
+
+			local useSequenceNumber = false
+			local isSequenceNumberInSync = true
+			if self.players[playerId]:isLocal() and player_info.seq_no then
+				useSequenceNumber = true
+				if not self.players[playerId]:isSequenceNumberInSync(tonumber(player_info.seq_no)) then
+					isSequenceNumberInSync = false
+				end
+			end
+
+			self.players[playerId]:updatePlayerInfo(self, player_info, useSequenceNumber, isSequenceNumberInSync)
 		end
 	else
 		log:debug(self, ": has no players!")

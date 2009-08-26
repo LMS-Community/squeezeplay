@@ -49,18 +49,31 @@ module(..., oo.class)
 
 
 local function _updateDisplay(self)
-	if tonumber(self.volume) <= 0 then
+	if tonumber(self:_getVolume()) <= 0 then
 		self.title:setValue(self.applet:string("SLIMBROWSER_MUTED"))
 		self.icon:setStyle('icon_popup_mute')
 		self.slider:setValue(0)
 
 	else
-		self.title:setValue(tostring(self.volume) )
+		self.title:setValue(tostring(self:_getVolume()) )
 		self.icon:setStyle('icon_popup_volume')
-		self.slider:setValue(self.volume)
+		self.slider:setValue(self:_getVolume())
 	end
 end
 
+function _getVolume(self)
+	if not self.player then
+		return nil
+	end
+
+	if self.player:isLocal() then
+		--use local player volume
+		return self.player:getVolume()
+	else
+		--use self.volume which is updated with server
+		return self.volume
+	end
+end
 
 local function _openPopup(self)
 	if self.popup or not self.player then

@@ -354,13 +354,13 @@ end
 
 --[[
 
-=head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo)
+=head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 Updates the player with fresh data from SS.
 
 =cut
 --]]
-function updatePlayerInfo(self, slimServer, playerInfo)
+function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 	-- ignore updates from a different server if the player
 	-- is not connected to it
@@ -429,8 +429,12 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player power status has changed
-	if oldInfo.power ~= self.info.power then
+
+	if (not useSequenceNumber or isSequenceNumberInSync) and oldInfo.power ~= self.info.power then
 		self.jnt:notify('playerPower', self, self.info.power)
+	elseif useSequenceNumber and not isSequenceNumberInSync then
+		log:debug("power value ignored(out of sync), revert to old: ", oldInfo.power)
+		self.info.power = oldInfo.power
 	end
 
 	log:debug('oldInfo.connected says: ', oldInfo.connected, ' self.info.connected says: ', self.info.connected)
@@ -1150,8 +1154,18 @@ function _process_status(self, event)
 	playerInfo.player_needs_upgrade = event.data.player_needs_upgrade
 	playerInfo.player_is_upgrading = event.data.player_is_upgrading
 	playerInfo.pin = self.info.pin
+	playerInfo.seq_no = event.data.seq_no
 
-	self:updatePlayerInfo(self.slimServer, playerInfo)
+	local useSequenceNumber = false
+	local isSequenceNumberInSync = true
+
+	if self:isLocal() and playerInfo.seq_no then
+		useSequenceNumber = true
+		if not self:isSequenceNumberInSync(tonumber(playerInfo.seq_no)) then
+			isSequenceNumberInSync = false
+		end
+	end
+	self:updatePlayerInfo(self.slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 	-- update track list
 	local nowPlaying = _whatsPlaying(event.data)
@@ -1184,6 +1198,24 @@ function _process_status(self, event)
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
+	--might use server volume
+	if useSequenceNumber then
+		if isSequenceNumberInSync then
+			local serverVolume = self.state["mixer volume"] and tonumber(self.state["mixer volume"]) or nil
+			if serverVolume ~= self:getVolume() then
+				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
+				self:volumeLocal(self.state["mixer volume"], nil, true)
+			end
+		else
+			log:debug("volume value ignored(out of sync), revert to old: ", oldState["mixer volume"])
+			oldState["mixer volume"] = self.state["mixer volume"]
+		end
+
+		--finally if we were out of sync at the receipt of playerstatus, refresh so server is in sync with all value
+		if not isSequenceNumberInSync then
+			self:refreshLocallyMaintainedParameters()
+		end
+	end
 	-- update iconbar
 	self:updateIconbar()
 end
@@ -1456,11 +1488,11 @@ end
 
 -- volume
 -- send new volume value to SS, returns a negitive value if the player is muted
-function volume(self, vol, send)
+function volume(self, vol, send, sequenceNumber, useBackgroundRequest)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
 		log:debug("Sending player:volume(", vol, ")")
-		self:send({'mixer', 'volume', vol })
+		self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber}, useBackgroundRequest)
 		self.mixerTo = now + MIN_KEY_INT
 		self.state["mixer volume"] = vol
 		return vol
