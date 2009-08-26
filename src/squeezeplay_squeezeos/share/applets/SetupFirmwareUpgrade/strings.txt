@@ -303,5 +303,6 @@ UPDATE_CANCEL
 	SV	Avbryt
 
 UPDATE_7.4_UPGRADE_MESSAGE_JIVE
-	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.mysqueezebox.com for more information.
+# SLT: this needs to remain squeezenetwork.com. It'll present the user information about the change to mysqueezebox.com
+	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.
 
