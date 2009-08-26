@@ -111,6 +111,25 @@ function _helpAction(self, window, titleText, bodyText, menu)
 end
 
 
+-- Setup: Needed to find not yet setup Receiver
+function setupScan(self, setupNext)
+	local window = Popup("popupIcon")
+	window:setAllowScreensaver(false)
+
+	window:addWidget(Icon("iconConnecting"))
+	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
+
+	-- wait for network scan (in task)
+	self.wlanIface:scan(setupNext)
+
+	-- or timeout after 10 seconds if no networks are found
+	window:addTimer(10000, function() setupNext() end)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 -- start network setup flow
 function setupNetworking(self, setupNext, transition)
 	self.mode = "setup"

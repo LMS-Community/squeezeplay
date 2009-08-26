@@ -23,6 +23,7 @@ function defaultSettings(meta)
 end
 
 function registerApplet(meta)
+	meta:registerService("setupScan")
 	meta:registerService("setupNetworking")
 	meta:registerService("settingsNetworking")
 
