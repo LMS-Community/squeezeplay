@@ -2131,13 +2131,14 @@ local function _browseInput(window, item, db, inputSpec, last)
 	if inputStyle == 'time' then
 		local timeFormat = _getTimeFormat()
 		local initTime   = DateTime:timeTableFromSFM(v, timeFormat)
-
 		local submitCallback = function( hour, minute, ampm)
 
 
 			log:debug('Time entered as: ', hour, ':', minute, ' ', ampm)
 			local totalSecs = ( hour * 3600 ) + ( minute * 60 )
-			if ampm == 'pm' then
+			if ampm == 'am' and hour == 12 then
+				totalSecs = minute * 60
+			elseif ampm == 'pm' then
 				totalSecs = totalSecs + 43200
 			end
 			-- input is done
