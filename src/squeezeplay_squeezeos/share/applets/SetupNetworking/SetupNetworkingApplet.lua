@@ -113,10 +113,10 @@ end
 
 -- Setup: Needed to find not yet setup Receiver
 function setupScan(self, setupNext)
-	local window = Popup("popupIcon")
+	local window = Popup("popup_waiting")
 	window:setAllowScreensaver(false)
 
-	window:addWidget(Icon("iconConnecting"))
+	window:addWidget(Icon("icon_connecting"))
 	window:addWidget(Label("text", self:string("NETWORK_FINDING_NETWORKS")))
 
 	-- wait for network scan (in task)
