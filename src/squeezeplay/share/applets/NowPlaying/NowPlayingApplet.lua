@@ -914,17 +914,49 @@ end
 -- while allowing the method to be called via the service API
 function goNowPlaying(self, transition)
 
+	self.transition = transition
 	if not self.player then
 		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
 	if self.player then
 		self.isScreensaver = false
-		self:showNowPlaying(transition)
+
+		if self:_playlistHasTracks() then
+			self:showNowPlaying(transition)
+		else
+			_delayNowPlaying(self)
+			return
+		end
+	else
+		return false
+	end
+end
+
+function _delayNowPlaying(self)
+	local timer = Timer(1000,
+		function()
+			if _playlistHasTracks(self) then
+				self:showNowPlaying(transition)
+			else
+				local browser = appletManager:getAppletInstance("SlimBrowser")
+				browser:showPlaylist()
+			end
+		end
+	, true)
+	timer:start()
+end
+
+function _playlistHasTracks(self)
+	if not self.player then
+		return false
+	end
+	
+	local playerStatus = self.player:getPlayerStatus()
+	if playerStatus and playerStatus.playlist_tracks and playerStatus.playlist_tracks > 0 then
 		return true
 	else
 		return false
-
 	end
 end
 
@@ -971,11 +1003,8 @@ function showNowPlaying(self, transition)
 	log:debug("player=", self.player, " status=", playerStatus)
 
 	-- playlist_tracks needs to be > 0 or else defer back to SlimBrowser
-	if not self.player or not playerStatus 
- 		or not playerStatus.playlist_tracks  
-			or playerStatus.playlist_tracks == 0 then
-		local browser = appletManager:getAppletInstance("SlimBrowser")
-		browser:showPlaylist()
+	if not self:_playlistHasTracks() then
+		_delayNowPlaying(self)
 		return
 	end
 
