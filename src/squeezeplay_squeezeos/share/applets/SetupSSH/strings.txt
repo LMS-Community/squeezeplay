@@ -33,6 +33,7 @@ SSH_ENABLE
 	SV	Aktivera SSH
 
 SSH_HOWTO
+# SLT: don't translate "root" it's a username which needs to be used litterally
 	CS	Kořenové heslo pro toto zařízení je %s a můžete se k němu připojit na adrese %s
 	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
 	DE	Stammkennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen
