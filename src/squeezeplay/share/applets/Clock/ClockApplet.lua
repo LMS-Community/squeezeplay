@@ -28,6 +28,7 @@ local datetime         = require("jive.utils.datetime")
 
 local appletManager	= appletManager
 local jiveMain          = jiveMain
+local jnt               = jnt
 
 local LAYER_FRAME            = jive.ui.LAYER_FRAME
 local LAYER_CONTENT_ON_STAGE = jive.ui.LAYER_CONTENT_ON_STAGE
@@ -91,8 +92,23 @@ function displayName(self)
 	return "Clock (NEW)"
 end
 
-
 Clock  = oo.class()
+
+-- gotcha alert: remember that the : after Clock means self is the first arg
+function Clock:notify_playerCurrent(player)
+	if not player then
+		return
+	end
+	self.player = player
+end
+
+function Clock:notify_playerAlarmSet(player, alarmSet)
+	if player ~= self.player then
+		return
+	end
+	self.alarmSet = alarmSet
+	self:Draw()
+end
 
 function Clock:__init(skin, windowStyle)
 	log:debug("Init Clock")
@@ -100,6 +116,15 @@ function Clock:__init(skin, windowStyle)
 	local obj = oo.rawnew(self)
 
 	obj.screen_width, obj.screen_height = Framework:getScreenSize()
+
+	-- the player object needs adding here for the alarm icon support
+	obj.player = appletManager:callService('getCurrentPlayer')
+	if obj.player then
+		jnt:subscribe(obj)
+		obj.alarmSet = obj.player:getAlarmSet()
+	else
+		obj.alarmSet = 0
+	end
 
 	-- create window and icon
 	if not windowStyle then
@@ -150,8 +175,12 @@ function DotMatrix:__init(ampm, shortDateFormat)
 	obj.m2   = Group('m2', {
 		digit = Icon('icon_dotMatrixDigit0')
 	})
+	local alarmStyle = 'icon_alarm_off'
+	if obj.alarmSet then
+		alarmStyle = 'icon_alarm_on'
+	end
 	obj.alarm = Group('alarm', {
-		alarm = Icon('icon_dotMatrixAlarmOff'),
+		alarm = Icon(alarmStyle)
 	})
 	obj.M1    = Group('M1', {
 		digit    = Icon('icon_dotMatrixDate0'),
@@ -277,6 +306,13 @@ function DotMatrix:Draw()
 	self:DrawDate(string.sub(theDate, 7, 7), 'Y3')
 	self:DrawDate(string.sub(theDate, 8, 8), 'Y4')
 	--self:DrawMinTest()
+
+	local alarmIcon = self.alarm:getWidget('alarm')
+	if self.alarmSet == 1 then
+		alarmIcon:setStyle('icon_alarm_on')
+	else
+		alarmIcon:setStyle('icon_alarm_off')
+	end
 end
 
 
@@ -309,6 +345,7 @@ function Analog:__init(applet)
 	obj.skinParams = Analog:getSkinParams(skinName)
 	obj.pointer_hour = Surface:loadImage(obj.skinParams.hourHand)
 	obj.pointer_minute = Surface:loadImage(obj.skinParams.minuteHand)
+	obj.alarmIcon = Surface:loadImage(obj.skinParams.alarmIcon)
 
 	-- bring in applet's self so strings are available
 	obj.applet    = applet
@@ -322,13 +359,14 @@ function Analog:__init(applet)
 	return obj
 end
 
+
 function Analog:Draw()
 	self.canvas:reDraw()
+
 end
 
+
 function Analog:_reDraw(screen)
-	-- Draw Background
-	--self.bg:filledRectangle(0, 0, self.screen_width, self.screen_height, 0x000000FF)
 
 	local x, y
 
@@ -353,8 +391,12 @@ function Analog:_reDraw(screen)
 	x = math.floor((self.screen_width/2) - (facew/2))
 	y = math.floor((self.screen_height/2) - (faceh/2))
 	tmp:blit(screen, x, y)
-end
 
+	if self.alarmSet == 1 then
+		local tmp = self.alarmIcon
+		tmp:blit(screen, self.skinParams.alarmX, self.skinParams.alarmY)
+	end
+end
 
 Digital = oo.class({}, Clock)
 
@@ -381,9 +423,12 @@ function Digital:__init(applet, ampm)
 	obj.m2   = Label('m2', '0')
 	obj.ampm = Label('ampm', '')
 
-
+	local alarmStyle = 'icon_alarm_on'
+	if obj.alarmSet then
+		alarmStyle = 'icon_alarm_off'
+	end
 	obj.alarm = Group('alarm', {
-		Icon('icon_digitalAlarmOn')
+		alarm =	Icon(alarmStyle),
 	})
 
 	obj.today = Label('today', '')
@@ -418,7 +463,7 @@ function Digital:__init(applet, ampm)
 	})
 
 	obj.window:addWidget(obj.today)
-	--obj.window:addWidget(obj.alarm)
+	obj.window:addWidget(obj.alarm)
 	-- clock widgets
 	obj.window:addWidget(obj.h1)
 	obj.window:addWidget(obj.h1Shadow)
@@ -475,6 +520,13 @@ function Digital:Draw()
 	local monthString = self.applet:string(token)
 	widget = self.dateGroup:getWidget('month')
 	widget:setValue(monthString)
+
+	local alarmIcon = self.alarm:getWidget('alarm')
+	if self.alarmSet == 1 then
+		alarmIcon:setStyle('icon_alarm_on')
+	else
+		alarmIcon:setStyle('icon_alarm_off')
+	end
 
 	-- what time is it? it's time to get ill!
 	self:DrawTime()
@@ -875,14 +927,14 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_clock_dots.png"),
 		}
 	
-		s.icon_dotMatrixAlarmOn = {
+		s.icon_alarm_on = {
 			align = 'bottom',
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
 			w   = 36,
 			border = { 0, 0, 13, 0 },
 		}
 	
-		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
+		s.icon_alarm_off = _uses(s.icon_alarm_on, {
 			img = false,
 		})
 	
@@ -1042,14 +1094,14 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_clock_dots.png"),
 		}
 	
-		s.icon_dotMatrixAlarmOn = {
+		s.icon_alarm_on = {
 			align = 'bottom',
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
 			w   = 36,
 			border = { 0, 0, 13, 0 },
 		}
 	
-		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn, {
+		s.icon_alarm_off = _uses(s.icon_alarm_on, {
 			img = false,
 		})
 	
@@ -1070,7 +1122,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		x.dots = x.h2 + 74
 		x.m1 = x.dots + 28
 		x.m2 = x.m1 + 72
-		x.alarm = 10 
+		x.alarm = 10
 		x.M1 = x.alarm + 35
 		x.M2 = x.M1 + 30
 		x.dot1 = x.M2 + 27 + 5
@@ -1104,11 +1156,9 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			m2 = _uses(_clockDigit, {
 				x = x.m2,
 			}),
-
 			alarm = _uses(_dateDigit, {
 				w = 36,
 				x = x.alarm,
-				y = 182,
 			}),
 			M1 = _uses(_dateDigit, {
 				x = x.M1,
@@ -1207,10 +1257,12 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			img = false,
 		}
 	
-		s.icon_dotMatrixAlarmOn = {
-			img = false,
+		s.icon_alarm_on = {
+			img = _loadImage(self, "Clocks/DotMatrix/dot_matrix_alarm_on.png"),
 		}
-		s.icon_dotMatrixAlarmOff = _uses(s.icon_dotMatrixAlarmOn)
+		s.icon_alarm_off = _uses(s.icon_alarm_on, {
+			img = false,
+		})
 	
 		s.icon_dotMatrixPowerOn = {
 			img = false,
@@ -1325,6 +1377,13 @@ function Digital:getDigitalClockSkin(skinName)
 		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
 			img = false
 		})
+
+		s.icon_alarm_on = {
+			img = _loadImage(self, "Clocks/Digital/icon_alarm_digital.png"),
+		}
+		s.icon_alarm_off = {
+			img = false
+		}
 
 		s.icon_digitalClockHDivider = {
 			w = WH_FILL,
@@ -1511,7 +1570,7 @@ function Digital:getDigitalClockSkin(skinName)
                 x.dots = x.h2 + 65
                 x.m1 = x.dots + 15
                 x.m2 = x.m1 + 64
-                x.alarm = x.m2 + 63
+                x.alarm = x.m2 + 61
 		x.ampm = x.alarm
 
 		s.icon_digitalClockDropShadow = {
@@ -1521,6 +1580,12 @@ function Digital:getDigitalClockSkin(skinName)
 			w = 62,
 		}
 
+		s.icon_alarm_on = {
+			img = _loadImage(self, "Clocks/Digital/icon_alarm_digital.png")
+		}
+		s.icon_alarm_off = _uses(s.icon_alarm_on, {
+			img = false
+		})
 		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
 				img = false
 		})
@@ -1591,7 +1656,7 @@ function Digital:getDigitalClockSkin(skinName)
 			alarm = {
 				position = LAYOUT_NONE,
 				x = x.alarm,
-				y = 65,
+				y = 50,
 			},
 			horizDivider2 = { hidden = 1 },
 			horizDivider = {
@@ -1708,6 +1773,12 @@ function Digital:getDigitalClockSkin(skinName)
 			padding = { 4, 0, 0, 0 },
 		}
 
+		s.icon_alarm_on = {
+			img = _loadImage(self, "Clocks/Digital/icon_alarm_digital.png")
+		}
+		s.icon_alarm_off = _uses(s.icon_alarm_on, {
+			img = false
+		})
 		s.icon_digitalClockNoShadow = _uses(s.icon_digitalClockDropShadow, {
 			img = false
 		})
@@ -1787,7 +1858,7 @@ function Digital:getDigitalClockSkin(skinName)
 			alarm = {
 				position = LAYOUT_NONE,
 				x = 12,
-				y = 148,
+				y = 209,
 			},
 			horizDivider = {
 				position = LAYOUT_NONE,
@@ -1871,8 +1942,14 @@ function Analog:getAnalogClockSkin(skinName)
 
 	local s = {}
 
+	local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/bb_wallpaper_clock_analog.png")
+	
 	if skinName == 'QVGAlandscapeSkin' then
-		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/bb_wallpaper_clock_analog.png")
+		s.Clock = {
+			bgImg = analogClockBackground,
+		}
+	elseif skinName == 'WQVGAsmallSkin' then
+		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
 		s.Clock = {
 			bgImg = analogClockBackground,
 		}
@@ -2005,16 +2082,25 @@ function Analog:getSkinParams(skin)
 	        return {
 			minuteHand = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/WQVGAsmallSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			alarmIcon  = 'applets/WQVGAsmallSkin/images/Clocks/Analog/icon_alarm_analog.png',
+			alarmX     = 435,
+			alarmY     = 18,
 		}
 	elseif skin == 'QVGAlandscapeSkin' then
 	        return {
 			minuteHand = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			alarmIcon  = 'applets/QVGAlandscapeSkin/images/Clocks/Analog/icon_alarm_analog.png',
+			alarmX     = 280,
+			alarmY     = 15,
 		}
 	elseif skin == 'QVGAportraitSkin' then
 	        return {
 			minuteHand = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_min_hand.png',
 			hourHand   = 'applets/QVGAportraitSkin/images/Clocks/Analog/clock_analog_hr_hand.png',
+			alarmIcon  = 'applets/QVGAportraitSkin/images/Clocks/Analog/icon_alarm_analog.png',
+			alarmX     = 200,
+			alarmY     = 15,
 		}
 	end
 end

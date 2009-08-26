@@ -1173,28 +1173,40 @@ function _process_status(self, event)
 	if self.state.mode ~= oldState.mode then
 		-- self.mode is set immedidately by togglePause and stop methods to give immediate user feedback in e.g. iconbar
 		-- getPlayerMode method uses self.mode not self.state.mode, so we need to set self.mode again here to be certain it's correct                                          
+		log:debug('notify_playerModeChange')
 		self.mode = self.state.mode
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
+	if self.state['alarm_set'] ~= oldState['alarm_set'] then
+		log:debug('notify_playerAlarmSet')
+		self.alarmSet = self.state['alarm_set']
+		self.jnt:notify('playerAlarmSet', self, self.state['alarm_set'])
+	end
+
 	if self.state['playlist shuffle'] ~= oldState['playlist shuffle'] then
+		log:debug('notify_playerShuffleModeChange')
 		self.jnt:notify('playerShuffleModeChange', self, self.state['playlist shuffle'])
 	end
 
 	if self.state['sleep'] ~= oldState['sleep'] then
+		log:debug('notify_playerSleepChange')
 		self.jnt:notify('playerSleepChange', self, self.state['sleep'])
 	end
 
 	if self.state['playlist repeat'] ~= oldState['playlist repeat'] then
+		log:debug('notify_playerRepeatModeChange')
 		self.jnt:notify('playerRepeatModeChange', self, self.state['playlist repeat'])
 	end
 
 	if self.nowPlaying ~= nowPlaying then
+		log:debug('notify_playerTrackChange')
 		self.nowPlaying = nowPlaying
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 
 	if self.state.playlist_timestamp ~= oldState.playlist_timestamp then
+		log:debug('notify_playerPlaylistChange')
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
@@ -1318,6 +1330,10 @@ function isPaused(self)
 	end
 end
 
+
+function getAlarmSet(self)
+	return self.alarmSet
+end
 
 -- getPlayMode returns nil|stop|play|pause
 --
