@@ -61,7 +61,7 @@ function defaultSettings(self)
 	defaultSetting["source"] = "card"
 	defaultSetting["rotation" ] = "auto"
 	defaultSetting["fullscreen"] = false
-	defaultSetting["transition"] = "random"
+	defaultSetting["transition"] = "fade"
 	defaultSetting["ordering"] = "random"
 	defaultSetting["textinfo"] = true
 

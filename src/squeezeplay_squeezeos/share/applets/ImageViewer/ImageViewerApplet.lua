@@ -145,7 +145,7 @@ function showInitWindow(self)
 	popup:setShowFrameworkWidgets(false)
 
 	local label = Label("text", "")
-	local sublabel = Label("subtext", "")
+	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
 	local icon = Icon("icon_photo_loading")
 
 	popup:addWidget(label)
@@ -219,7 +219,8 @@ function setupEventHandlers(self, window)
 		return EVENT_CONSUME
 	end
 
-	window:addActionListener("add", self, openSettings)
+	--todo add takes user to meta data page
+--	window:addActionListener("add", self, openSettings)
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("play", self, nextSlideAction)
