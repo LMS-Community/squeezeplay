@@ -253,7 +253,7 @@ function skin(self, s, reload, useDefaultSize)
 			artwork = {
 				w = WH_FILL,
 				align = "center",
-				padding = { 0, 68, 0, 0 },
+				padding = { 0, 66, 0, 0 },
 				img = false,
 			},
 		},
