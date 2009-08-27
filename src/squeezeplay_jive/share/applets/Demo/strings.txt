@@ -138,22 +138,22 @@ SLIDE_05
 	EN	…to the hottest online music services.
 
 SLIDE_06
-	EN	Easy access to endless music all in the palm of your hand.
+	EN	Endless music in the palm of your hand.
 
 SLIDE_07
 	EN	View album art and even your own photos on the 2.4-inch color display
 
 SLIDE_08
-	EN	Incredible sound quality. Rich, full digital music through your stereo system.
+	EN	Rich, full digital music through your stereo system.
 
 SLIDE_09
-	EN	Hassle-free setup. Seamlessly integrates with your existing home network.
+	EN	Simple setup. Integrates easily with your existing home network.
 
 SLIDE_10
-	EN	Add more Squeezebox Receivers or other Squeezebox players to create a multi-room system.
+	EN	Add Squeezebox players or Receivers to create a multi-room system.
 
 SLIDE_11
-	EN	The Squeezebox wireless Controller gives you the freedom to control the entire Squeezebox family of products.
+	EN	The wireless Controller works with the entire Squeezebox family.
 
 SLIDE_12
 	EN	Spin. Click. Groove.
