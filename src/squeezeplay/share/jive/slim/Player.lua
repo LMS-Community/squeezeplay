@@ -936,7 +936,6 @@ function onStage(self)
 
 	self.isOnStage = true
 	
-log:warn(self:getName())
 	-- Batch these queries together
 	self.slimServer.comet:startBatch()
 	
