@@ -936,6 +936,7 @@ function onStage(self)
 
 	self.isOnStage = true
 	
+log:warn(self:getName())
 	-- Batch these queries together
 	self.slimServer.comet:startBatch()
 	
@@ -1248,8 +1249,8 @@ function _process_displaystatus(self, event)
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])
 
-		local transitionOn = Window.transitionPushPopupUp
-		local transitionOff = Window.transitionPushPopupDown
+		local transitionOn = Window.transitionFadeIn
+		local transitionOff = Window.transitionFadeOut
 		local duration = display['duration'] or 3000
 
 		local usingTouch = Framework:isMostRecentInput('mouse')
