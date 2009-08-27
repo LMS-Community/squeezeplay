@@ -455,7 +455,7 @@ function notify_serverLinked(self, server)
 		return
 	end
 
-	log:info("server linked: ", server, " pin=", server:getPin())
+	log:error("server linked: ", server, " pin=", server:getPin())
 
 	if server:getPin() == false then
 		-- for testing connect the player tosqueezenetwork

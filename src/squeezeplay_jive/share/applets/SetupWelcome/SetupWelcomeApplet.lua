@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.SetupWelcome.SetupWelcome 
+applets.SetupWelcome.SetupWelcome
 
 =head1 DESCRIPTION
 
@@ -10,7 +10,7 @@ Setup Applet for (Controller) Squeezebox
 
 =head1 FUNCTIONS
 
-Applet related methods are described in L<jive.Applet>. 
+Applet related methods are described in L<jive.Applet>.
 
 =cut
 --]]
@@ -85,7 +85,8 @@ function _disableNormalEscapeMechanisms(self)
 		self.disableHomeActionDuringSetup = Framework:addActionListener("go_home", self, _consumeAction)
 		self.disableHomeOrNowPlayingActionDuringSetup = Framework:addActionListener("go_home_or_now_playing", self, _consumeAction)
 		self.disableHomeKeyDuringSetup =
-			Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+--			Framework:addListener(EVENT_KEY_PRESS | EVENT_KEY_HOLD, -- don't suppress hold for jive, since it is the power button
+			Framework:addListener(EVENT_KEY_PRESS,
 			function(event)
 				local keycode = event:getKeycode()
 				if keycode == KEY_HOME then
@@ -176,41 +177,18 @@ function step3(self, transition)
 	log:info("step3")
 
 	-- network connection type
-	appletManager:callService("setupNetworking", 
+	appletManager:callService("setupNetworking",
 		function()
-			self:step6(iface)
+			self:step7(iface)
 		end,
 	transition)
 end
 
 
-function step6(self)
-	log:info("step6")
-
-	-- FIXME: Temporarily enable local player to get people through setup
-
-	-- automatically setup local player as selected player
-	for mac, player in appletManager:callService("iteratePlayers") do
-		if player:isLocal() then
-			appletManager:callService("setCurrentPlayer", player)
-			return self:step7()
-		end
-	end
-
-	-- this should never be called
-	log:error("no local player found?")
-
-	-- find player
-	return appletManager:callService("setupShowSelectPlayer",
-		function()
-			self:step7()
-		end, 'setuptitle')
-end
-
 
 -- we are connected when we have a pin and upgrade url
 function _squeezenetworkConnected(self, squeezenetwork)
-	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected() 
+	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected()
 end
 
 function _anySqueezeCenterWithUpgradeFound(self)
@@ -244,7 +222,7 @@ function step7(self)
 
 	if not squeezenetwork then
 		log:error("no SqueezeNetwork instance")
-		self:_setupComplete(true)
+		step8point5(self, squeezenetwork)
 		return
 	end
 
@@ -252,11 +230,7 @@ function step7(self)
 	if settings.registerDone then
 		log:error("SqueezeNetwork registration complete")
 
-		local player = appletManager:callService("getCurrentPlayer")
-		log:info("connecting ", player, " to ", squeezenetwork)
-		player:connectToServer(squeezenetwork)
-
-		self:_setupComplete(true)
+		step8point5(self, squeezenetwork)
 		return
 	end
 
@@ -348,7 +322,7 @@ function _squeezenetworkFailed(self, squeezenetwork)
 		if _squeezenetworkConnected(self, squeezenetwork) then
 			log:info("SN now seen")
 			return
-		end		
+		end
 
 		if squeezenetwork:isConnected() then
 			-- we're connected, but don't have a PIN or Upgrade state
@@ -367,6 +341,8 @@ end
 
 
 function _squeezenetworkError(self, squeezenetwork, message)
+	log:info("_squeezenetworkError")
+
 	local window = Window("help_list", self:string("CANT_CONNECT"))
 	window:setAllowScreensaver(false)
 
@@ -430,13 +406,36 @@ function step8(self, squeezenetwork)
 	if force then
       		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
-	elseif pin then
-		self:_registerRequest(squeezenetwork)
 	else
-		self:_resetRequest(squeezenetwork)
+		self:_registerRequest(squeezenetwork)
 	end
 end
 
+
+function step8point5(self, squeezenetwork)
+	log:info("step8point5")
+
+	-- find player
+	return appletManager:callService("setupShowSelectPlayer",
+		function()
+			self:step9(squeezenetwork)
+		end, 'setuptitle')
+end
+
+
+
+function step9(self, squeezenetwork)
+	log:info("step9")
+
+	_setupComplete(self, false)
+	_setupDone(self, true, true)
+
+	self.locked = true -- free applet
+	jnt:unsubscribe(self)
+
+	jiveMain:goHome()
+
+end
 
 function _resetRequest(self, squeezenetwork)
 	if self.resetRequest then
@@ -477,24 +476,8 @@ function notify_serverLinked(self, server)
 	log:info("server linked: ", server, " pin=", server:getPin())
 
 	if server:getPin() == false then
-		-- for testing connect the player tosqueezenetwork
-		local player = appletManager:callService("getCurrentPlayer")
-
-		local squeezenetwork = false
-		for name, server in slimServer:iterate() do
-			if server:isSqueezeNetwork() then
-				squeezenetwork = server
-			end
-		end
-
-		log:info("connecting ", player, " to ", squeezenetwork)
-		player:connectToServer(squeezenetwork)
-
-		_setupComplete(self, false)
-		_setupDone(self, true, true)
-
-		self.locked = true -- free applet
-		jnt:unsubscribe(self)
+		step8point5(self, server)
+		return
 	end
 end
 

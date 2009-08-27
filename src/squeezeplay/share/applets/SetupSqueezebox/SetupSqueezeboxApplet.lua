@@ -1155,6 +1155,19 @@ end
 
 -- menu allowing the user to choose the slimserver they want to connect to
 function _chooseSlimserver(self)
+
+	if self.setupNext then
+		--use SN
+		for i,server in appletManager:callService("iterateSqueezeCenters") do
+			if server:isSqueezeNetwork() then
+				_setSlimserver(self, server)
+				return
+			end
+		end
+		--todo" if no SN, then how to complete setup?
+		log:error("SN not found during setup server auto-selection")
+	end
+
 	local window = Window("text_list", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
 	window:setAllowScreensaver(false)
 
@@ -1250,7 +1263,9 @@ function _setSlimserver(self, slimserver)
 			-- self.data2.server_address = Udap.packNumber(2, 4)
 		else
 			-- for locally edited values (SN developers)
+			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
 			local ip = socket.dns.toip(sn_hostname)
+			log:info("Found ip address: ", ip)
 			self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
@@ -1340,6 +1355,8 @@ function notify_playerNew(self, player)
 
 		-- increase timeout if the player is upgrading
 		if player:isNeedsUpgrade() then
+			log:info("Upgrading....")
+
 			-- make sure we are in the waiting for slimserver state, this is
 			-- needed in case the set slimserver udap packets got lost
 			_setAction(self, "t_waitSlimserver")
@@ -1348,6 +1365,7 @@ function notify_playerNew(self, player)
 			_updatingPlayer(self)
 			return
 		else
+			log:info("to _hidePlayerUpdating....")
 			_hidePlayerUpdating()
 		end
 

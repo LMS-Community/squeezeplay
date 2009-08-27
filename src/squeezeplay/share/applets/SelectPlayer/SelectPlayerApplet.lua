@@ -233,7 +233,9 @@ function _addPlayerItem(self, player)
 		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
+			log:info("select player item: ", player)
 			if self:selectPlayer(player) then
+				log:info("going to setupnext: : ", self.setupNext)
 				self.setupNext()
 			end
 		end,
@@ -426,7 +428,8 @@ function selectPlayer(self, player)
 	-- if connecting to SqueezeNetwork, first check we are linked
 	if player:getPin() then
 		-- as we are not linked this is a dummy player, after we need linked we
-		-- need to return to the choose player screen 
+		-- need to return to the choose player screen
+		log:info("calling enterPin")
 		appletManager:callService("enterPin", nil, player)
 
 		return false
@@ -438,7 +441,8 @@ function selectPlayer(self, player)
 
 	-- network configuration needed?
 	if player:needsNetworkConfig() then
-		appletManager:callService("startSqueezeboxSetup", 
+		log:info("needsNetworkConfig")
+		appletManager:callService("startSqueezeboxSetup",
 			player:getId(),
 			player:getSSID(),
 			self.setupNext or function()
@@ -449,7 +453,8 @@ function selectPlayer(self, player)
 	end
 
 	-- udap setup needed?
-	if player:needsMusicSource() then
+	if player:needsMusicSource() and not self.setupNext then
+		log:info("selectMusicSource")
 		--todo review this with new SlimMenus changes
 		appletManager:callService("selectMusicSource")
 		return false

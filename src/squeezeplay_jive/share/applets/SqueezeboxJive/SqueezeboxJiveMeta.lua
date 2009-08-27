@@ -74,7 +74,7 @@ function registerApplet(meta)
 
 	-- Bug 9900
 	-- Use SN test during development
-	jnt:setSNHostname("fab4.squeezenetwork.com")
+	jnt:setSNHostname("jive.squeezenetwork.com")
 
 	-- Set the minimum support server version
 	SlimServer:setMinimumVersion("7.0")
@@ -82,9 +82,8 @@ function registerApplet(meta)
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
 
-	-- FIXME: Temporarily enable local player to get people through setup
 	-- audio playback defaults
-	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
+	appletManager:addDefaultSetting("Playback", "enableAudio", 2)
 
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
