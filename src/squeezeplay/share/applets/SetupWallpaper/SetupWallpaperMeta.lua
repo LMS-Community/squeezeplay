@@ -38,7 +38,7 @@ function defaultSettings(meta)
 		WQVGAsmallSkin = "fab4_encore.png",
 		WQVGAlargeSkin = "fab4_encore.png",
 		FullscreenSkin = "jive_midnight.png",
-		QVGAportraitSkin  = "jive_sunrise.png",
+		QVGAportraitSkin  = "jive_encore.png",
 		QVGAlandscapeSkin = _getQVGAlandscapeSkinWallpaper(meta),
 	}
 end
