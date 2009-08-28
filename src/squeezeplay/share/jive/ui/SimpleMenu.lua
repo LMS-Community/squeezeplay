@@ -677,7 +677,7 @@ end
 
 --override
 function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
-	Menu.scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
+	Menu.scrollBy(self, scroll, allowMultiple, false, forceAccel)
 
 	if self.headerWidget and self.headerWidget.handleMenuHeaderWidgetScrollBy then
 		self.headerWidget:handleMenuHeaderWidgetScrollBy(scroll, self)
@@ -714,12 +714,16 @@ function _layout(self)
 			end
 		end
 
-	   if (not self.selected) and self.numWidgets > self.virtualItemCount and self:numItems() <= self.numWidgets then
-		   --shift to the first onscreen menu item if no selected item (and all real items onscreen, avoids issue off selecting last items on screen which would shift page downif there is a scrollbar)
-		   self.selected = self.virtualItemCount + 1
-		   self:_scrollList()
-		   self:reLayout()
-	   end
+		local realItemCount = self:numItems() - self.virtualItemCount
+		if (not self.selected)
+		  and self.numWidgets > self.virtualItemCount
+		  and not (realItemCount > 1 and self.virtualItemCount == self.numWidgets - 1) then
+		  -- and self:numItems() <= self.numWidgets then
+			--shift to the first onscreen menu item if no selected item and shifting would not cause a menu scroll
+			self.selected = self.virtualItemCount + 1
+			self:_scrollList()
+			self:reLayout()
+		end
 
 	end
 

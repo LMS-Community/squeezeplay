@@ -215,7 +215,7 @@ function setup_help_list(self, item)
 			iconStyle = iconStyle,
 		})
 	end
-	jiveMain:addHelpMenuItem(menu, self, dummy_help)
+--	jiveMain:addHelpMenuItem(menu, self, dummy_help)
 
 	window:addWidget(menu)
 	menu:setHeaderWidget(textarea)
@@ -885,9 +885,16 @@ windows = {
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "context_menu", "Context Menu", window_context_menu, },
 	{ "text_list", "Text List", setup_text_list, },
-	{ "help_list_one", "Welcome to Setup", setup_help_list, },
-	{ "help_list_two", "Choose Region", setup_help_list, },
-	{ "help_list_many", "Choose Region", setup_help_list, },
+	{ "help_list_one_oneline", "Setup1", setup_help_list, },
+	{ "help_list_one_twoline", "Setup2", setup_help_list, },
+	{ "help_list_one_threeline", "Setup3", setup_help_list, },
+	{ "help_list_one_manyline", "Setupmany", setup_help_list, },
+	{ "help_list_two", "Region1", setup_help_list, },
+	{ "help_list_two_twoline", "Region2", setup_help_list, },
+	{ "help_list_two_threeline", "Region3", setup_help_list, },
+	{ "help_list_two_fourline", "Region4", setup_help_list, },
+	{ "help_list_two_manyline", "Regionmany", setup_help_list, },
+	{ "help_list_many", "Region (many items)", setup_help_list, },
 
 	{ "input_ip", "IP Entry", setup_input },
 	{ "input_qwerty", "QWERTY Entry", setup_input },
@@ -925,9 +932,24 @@ testData = {
 	text_list = {
 		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
 	},
-	help_list_one = {
+	help_list_one_oneline = {
+		"Is text allowed?",
+		{ { "Continue" },
+		},
+	},
+	help_list_one_twoline = {
+		"Is text allowed in thi allowed in thi allowed in thi in thi allowed in this window?",
+		{ { "Continue" },
+		},
+	},
+	help_list_one_threeline = {
+		"Is text allowed in thi allow in thi allow in thi allowes sdfdsf sdf df sdf sdf sdf sdf sdf sdf sdf sdf dsfd in thi allowed in thi in thi allowed in this window?",
+		{ { "Continue" },
+		},
+	},
+	help_list_one_manyline = {
 --		"Let's begin by getting\nyou connected to your network.",
-	"111111111111111111111 111111111111 1 1  1 1 1 1 1 1 1  1 1 1\nFor more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe \"Diagnostics\" screen, which can be found below.\nsgfsgfgsdfg",
+	"111111111111111111111 111111111111 1 1  1 1 1 1 1 1 1  1 1 1\nFor more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be askedustomer support, you may be askedustomer sup support, you may be askedustomer sup support, you may be askedustomer sup support, you may be askedustomer sup support, you may be askedustomer sup support, you may be askedustomer sup support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be askedustomer support, you may be asked for information from\nthe \"Diagnostics\" screen, which can be found below.\nsgfsgfgsdfg",
 --	"Pokud budete potřebovat další nápovědu k vašemu Squeezebox, navštivte laskavě mysqueezebox.com/support, kde naleznete odpovědi na mnoho otázek, a kontaktujte náš asistenční tým.\nPokud budete kontaktovat náš asistenční tým, můžete být požádáni o technické údaje vašeho Squeezebox poskytnuté Diagnostikou systému, dostupnou níže.",
 --	"Hvis du har brug for yderligere hjælp til din Squeezebox, kan du kigge på mysqueezebox.com/support hvor der er svar på mange spørgsmål og mulighed for at kontakte supportafdelingen.\nHvis du kontakter supportafdelingen, bliver du sandsynligvis bedt om at oplyse tekniske detaljer om din Squeezebox. Dem kan du finde vha. det nye værktøj Systemdiagnosticering som der er et link til nedenfor.",
 --	"Wenn Sie weitere Informationen zur Squeezebox benötigen, rufen Sie mysqueezebox.com/support auf. Dort erhalten Sie Antworten auf viele Fragen und die Möglichkeit, sich an unseren Kundendienst zu wenden.\nBei Kontaktaufnahme mit dem Kundendienst werden Sie eventuell um technische Angaben zur Squeezebox gebeten. Diese finden Sie mit einer Systemdiagnose (siehe unten).",
@@ -946,6 +968,30 @@ testData = {
 	},
 	help_list_two = {
 		"Is text allowed in this window?",
+		{ { "North America", "region_US" },
+		  { "All Other Regions" , "region_XX" },
+		},
+	},
+	help_list_two_twoline = {
+		"Is text allowed in thi allowed in thi allowed in thi in thi allowed in this window?",
+		{ { "North America", "region_US" },
+		  { "All Other Regions" , "region_XX" },
+		},
+	},
+	help_list_two_threeline = {
+		"Is text allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in this window?",
+		{ { "North America", "region_US" },
+		  { "All Other Regions" , "region_XX" },
+		},
+	},
+	help_list_two_fourline = {
+		"Is text alsdfsdf sdf dsf sdfsdf dassdf sdf sdf sd fsdf sdf dsf sdf sdf sdf sdf sdfasfsdfsdf f dsf sdf sdf lowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in this window?",
+		{ { "North America", "region_US" },
+		  { "All Other Regions" , "region_XX" },
+		},
+	},
+	help_list_two_manyline = {
+		"Is text asdf sd fdg sdg s dfg sdf gsd g sdf gs dfg sdf gs dfg sdf gs dfg sdf gsd fg sdf gsd fg dfsd f sdf sd fs df sdf sd f sdf sd fsd f sdf sd fs df sdflsdfsdf sdf dsf sdfsdf dassdf sdf sdf sd fsdf sdf dsf sdf sdf sdf sdf sdfasfsdfsdf f dsf sdf sdf lowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in thi allowed in this window?",
 		{ { "North America", "region_US" },
 		  { "All Other Regions" , "region_XX" },
 		},

@@ -394,27 +394,58 @@ function handleMenuHeaderWidgetScrollBy(self, scroll, menu)
 	local endItem = menu:getItem(endItemIndex)
 
 	if menu:getItem(selectedBefore).isHeaderItem then
-		if scroll > 0 and menu.currentShiftDirection <= 0 then
-			--changing shift direction, move cursor so scroll wil occur
-			menu.currentShiftDirection = 1
-			local selectedAfter = menu.topItem + menu.numWidgets - 1
+		if scroll > 0 then
+			if menu.currentShiftDirection <= 0 then
+				--changing shift direction, move cursor so scroll wil occur
+				menu.currentShiftDirection = 1
+				local selectedAfter = menu.topItem + menu.numWidgets - 1
 
-			if selectedAfter > menu.virtualItemCount then
-				--shift to the first real menu item if it is onscreen 
-				selectedAfter = menu.virtualItemCount
+				if selectedAfter > menu.virtualItemCount then
+					--shift to the first real menu item if it is onscreen
+					selectedAfter = menu.virtualItemCount
+				end
+
+				menu.selected = selectedAfter
+				menu:_scrollList()
+				menu:reLayout()
 			end
 
-			menu.selected = selectedAfter + 1
-			menu:_scrollList()
-			menu:reLayout()
+			--first item might be on screen jump to it
+			--continuing down
+			selectedAfter = menu.topItem + menu.numWidgets - 1
+			if selectedAfter == menu.virtualItemCount + 1 then
+				--shift to the first real menu item when it becomes onscreen
+				selectedAfter = menu.virtualItemCount
 
-		elseif scroll < 0 and menu.currentShiftDirection >= 0 then
-			--changing shift direction, move cursor so scroll wil occur
-			menu.currentShiftDirection = -1
+				menu.selected = selectedAfter + 1
+				menu:_scrollList()
+				menu:reLayout()
+			end
 
-			menu.selected = menu.topItem
-			menu:_scrollList()
-			menu:reLayout()
+		elseif scroll < 0 then
+			if menu.currentShiftDirection >= 0 then
+				--changing shift direction, move cursor so scroll wil occur
+				menu.currentShiftDirection = -1
+
+				menu.selected = menu.topItem
+				menu:_scrollList()
+				menu:reLayout()
+			end
+
+			if (menu.virtualItemCount < menu.numWidgets - 1 or menu:numItems() <= menu.numWidgets)
+				and menu.topItem == 1 then
+
+				--textarea not scrollable, so don't enter it
+				menu.selected = menu.topItem + menu.virtualItemCount
+				menu:_scrollList()
+				menu:reLayout()
+			elseif  menu.topItem == 1 and menu:numItems() > menu.numWidgets and menu.virtualItemCount < menu.numWidgets - 1  then
+				--textarea brought back on, and is not longer than a screen
+				--so highlight first real item
+				menu.selected = menu.topItem + menu.virtualItemCount
+				menu:_scrollList()
+				menu:reLayout()
+			end
 		end
 	end
 
