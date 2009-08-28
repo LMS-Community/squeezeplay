@@ -137,3 +137,33 @@ GOODBYE
 	PL	Do widzenia
 	RU	Прощайте
 	SV	Hej då!
+
+BATTERY_LOW
+	CS	Nízký stav baterie
+	DA	Lavt batteriniveau
+	DE	Batterie schwach
+	EN	Battery Low
+	ES	Carga de pila baja
+	FI	Heikko paristojännite
+	FR	Niveau faible des piles
+	IT	Batteria quasi scarica
+	NL	Laag batterijvermogen
+	NO	Dårlig batteri
+	PL	Niski poziom naładowania baterii
+	RU	Аккумулятор разряжен
+	SV	Låg batterinivå
+
+BATTERY_LOW_2
+	CS	Prosím o dobití
+	DA	Vær sød at skifte batterier
+	DE	Bitte aufladen
+	EN	Please Charge Me
+	ES	Necesita carga
+	FI	Lataa minut
+	FR	Veuillez la recharger
+	IT	Ricaricare la batteria
+	NL	Laad mij op
+	NO	Lad meg opp
+	PL	Naładuj baterię
+	RU	Зарядите батарею
+	SV	Ladda mig

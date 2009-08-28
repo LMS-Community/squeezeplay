@@ -60,6 +60,8 @@ local brightnessTimer = nil
 function init(self)
 	local settings = self:getSettings()
 
+	self.isLowBattery = false
+
 	-- read uuid, serial and revision
 	parseCpuInfo(self)
 
@@ -412,6 +414,7 @@ end
 
 
 local function _updatePower(self)
+	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
 
 	if chargerState == 1 then
@@ -433,7 +436,12 @@ local function _updatePower(self)
 
 		iconbar:setBattery(math.min(math.floor(batteryRemain / 25) + 1, 4))
 
-	elseif chargerState & 4 then
+	elseif chargerState == 4 then
+		log:debug("low battery")
+		isLowBattery = true
+		iconbar:setBattery(0)
+
+	elseif chargerState & 8 then
 		log:debug("on ac, charging")
 		iconbar:setBattery("CHARGING")
 
@@ -441,6 +449,59 @@ local function _updatePower(self)
 		log:warn("invalid chargerState")
 		iconbar:setBattery(nil)
 	end
+
+	self:lowBattery(isLowBattery)
+end
+
+
+
+-- XXXX move to SqueezeboxApplet
+function lowBattery(self, isLowBattery)
+	if self.isLowBattery == isLowBattery then
+		return
+	end
+	self.isLowBattery = isLowBattery
+
+	if not isLowBattery then
+		Framework:removeListener(self.lowBatteryListener)
+		self.lowBatteryWindow:hide()
+		return
+	end
+
+	local popup = Popup("waiting_popup")
+
+	popup:addWidget(Icon("icon_battery_low"))
+	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
+	popup:addWidget(Label("subtext", self:string("BATTERY_LOW_2")))
+
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:ignoreAllInputExcept({})
+
+	popup:show()
+
+	popup:addTimer(20000, function()
+		appletManager:callService("poweroff")
+	end, true)
+
+--[[
+	-- XXXX copied from jive, need to things about these parts
+
+	-- consume all key and scroll events
+	self.lowBatteryListener = Framework:addListener(EVENT_ALL_INPUT,
+		function(event)
+			Framework.wakeup()
+			return EVENT_CONSUME
+		end,
+	true)
+
+	-- make sure the display is on
+	self:setBrightness()
+--]]
+
+	self.lowBatteryWindow = popup
 end
 
 
