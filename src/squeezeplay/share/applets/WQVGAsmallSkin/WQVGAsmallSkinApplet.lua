@@ -267,6 +267,18 @@ function skin(self, s)
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press.png",
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press_r.png",
 	})
+
+	local contextMenuPressedBox    = _loadTile(self, {
+		imgpath .. "Popup_Menu/button_cm_menu_press.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_tl.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_t.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_tr.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_r.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_br.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_b.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_bl.png",
+		imgpath .. "Popup_Menu/button_cm_menu_press_l.png",
+	})
 	
 	local keyTopLeft = _loadTile(self, {
 		imgpath .. "Text_Entry/Keyboard_Touch/keyboard_bkgrd.png",
@@ -1598,7 +1610,6 @@ function skin(self, s)
 	})
 	local popupMask = Tile:fillColor(0x00000085)
 
-	-- toast_popup popup with art and text
 	s.context_menu = {
 		x = 8,
 		y = 16,
@@ -1671,8 +1682,8 @@ function skin(self, s)
 			},
 			selected = {
 				item = {
-					bgImg = fiveItemSelectionBox,
 					order = { "icon", "text", "arrow" },
+					bgImg = fiveItemBox,
 					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
 					text = {
 						w = WH_FILL,
@@ -1703,6 +1714,11 @@ function skin(self, s)
 		},
 	}
 	
+	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
+		item = {
+			bgImg = contextMenuPressedBox,
+		},
+	})
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
 	})

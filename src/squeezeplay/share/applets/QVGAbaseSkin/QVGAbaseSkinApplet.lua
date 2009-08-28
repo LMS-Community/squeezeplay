@@ -209,6 +209,20 @@ function skin(self, s, reload, useDefaultSize)
 				       imgpath .. "Menu_Lists/menu_sel_box_r.png",
 			       })
 
+	s.img.contextMenuSelectionBox =
+		Tile:loadTiles({
+		imgpath .. "Popup_Menu/button_cm.png",
+		imgpath .. "Popup_Menu/button_cm_tl.png",
+		imgpath .. "Popup_Menu/button_cm_t.png",
+		imgpath .. "Popup_Menu/button_cm_tr.png",
+		imgpath .. "Popup_Menu/button_cm_r.png",
+		imgpath .. "Popup_Menu/button_cm_br.png",
+		imgpath .. "Popup_Menu/button_cm_b.png",
+		imgpath .. "Popup_Menu/button_cm_bl.png",
+		imgpath .. "Popup_Menu/button_cm_l.png",
+		})
+	
+
 	s.img.songProgressBackground =
 		Tile:loadHTiles({
 					imgpath .. "Song_Progress_Bar/tb_progress_bkgrd_float_l.png",
@@ -1266,7 +1280,7 @@ function skin(self, s, reload, useDefaultSize)
 
 
 		menu = {
-			h = screenHeight - 33,
+			h = c.CM_MENU_HEIGHT * 5,
 			w = screenWidth - 33,
 			x = 7,
 			y = 7,
@@ -1292,7 +1306,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 			selected = {
 				item = {
-					bgImg = s.img.oneLineItemSelectionBox,
+					bgImg = s.img.contextMenuSelectionBox,
 					order = { "text", "arrow" },
 					text = {
 						w = WH_FILL,
