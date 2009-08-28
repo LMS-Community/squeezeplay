@@ -130,13 +130,13 @@ SLIDE_02
 	EN	Discover a world of digital music.
 
 SLIDE_03
-	EN	From thousands of free Internet radio stations…
+	EN	From thousands of free Internet radio stations...
 	
 SLIDE_04
-	EN	…to your own personal music collection…
+	EN	...to your own personal music collection...
 
 SLIDE_05
-	EN	…to the hottest online music services.
+	EN	...to the hottest online music services.
 
 SLIDE_06
 	EN	Easy access to endless music choices via intuitive touch screen. 
