@@ -418,35 +418,8 @@ function step8point5(self, squeezenetwork)
 	-- find player
 	return appletManager:callService("setupShowSelectPlayer",
 		function()
-			self:step9(squeezenetwork)
+			self:step9()
 		end, 'setuptitle')
-end
-
-
-
-function step9(self, squeezenetwork)
-	log:info("step9")
-
-	_setupComplete(self, false)
-	_setupDone(self, true, true)
-
-	self.locked = true -- free applet
-	jnt:unsubscribe(self)
-
-	jiveMain:goHome()
-
-end
-
-function _resetRequest(self, squeezenetwork)
-	if self.resetRequest then
-		return
-	end
-	self.resetRequest = true
-
-	log:info("player reset on SN")
-	squeezenetwork:userRequest(function()
-		self:_registerRequest(squeezenetwork)
-	end, nil, { "playerReset" })
 end
 
 
@@ -461,6 +434,20 @@ function _registerRequest(self, squeezenetwork)
 
 	self.locked = true -- don't free applet
 	jnt:subscribe(self)
+end
+
+
+function step9(self, squeezenetwork)
+	log:info("step9")
+
+	_setupComplete(self, false)
+	_setupDone(self, true, true)
+
+	self.locked = true -- free applet
+	jnt:unsubscribe(self)
+
+	jiveMain:goHome()
+
 end
 
 

@@ -445,6 +445,20 @@ function _registerRequest(self, squeezenetwork)
 end
 
 
+function step9(self)
+	log:info("step9")
+
+	_setupComplete(self, false)
+	_setupDone(self, true, true)
+
+	self.locked = true -- free applet
+	jnt:unsubscribe(self)
+
+	jiveMain:goHome()
+
+end
+
+
 function notify_serverLinked(self, server)
 	if not server:isSqueezeNetwork() then
 		return
@@ -470,11 +484,7 @@ function notify_serverLinked(self, server)
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		_setupComplete(self, false)
-		_setupDone(self, true, true)
-
-		self.locked = true -- free applet
-		jnt:unsubscribe(self)
+		self:step9()
 	end
 end
 
