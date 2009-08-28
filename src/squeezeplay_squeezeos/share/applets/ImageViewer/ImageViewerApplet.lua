@@ -58,6 +58,7 @@ local LAYER_FRAME      = jive.ui.LAYER_FRAME
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 
 local jnt = jnt
+local jiveMain = jiveMain
 
 local MIN_SCROLL_INTERVAL = 750
 
@@ -148,6 +149,8 @@ function showInitWindow(self)
 	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
 	local icon = Icon("icon_photo_loading")
 
+	self.imgSource:updateLoadingIcon(icon)
+	
 	popup:addWidget(label)
 	popup:addWidget(icon)
 	popup:addWidget(sublabel)

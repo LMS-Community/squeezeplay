@@ -43,7 +43,8 @@ local Player             = require("jive.slim.Player")
 local Framework		= require("jive.ui.Framework")
 
 local jnt = jnt
-local json                   = json 
+local jiveMain = jiveMain
+local json                   = json
 
 local log 		= require("jive.utils.log").logger("applet.ImageViewer")
 local require = require
@@ -218,6 +219,11 @@ function settings(self, window)
     return window
 end
 
+function updateLoadingIcon(self, icon)
+	if self.serverData.appParameters and self.serverData.appParameters.iconId then
+		self.serverData.server:fetchArtwork(self.serverData.appParameters.iconId, icon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
+	end
+end
 
 function useAutoZoom(self)
 	return false

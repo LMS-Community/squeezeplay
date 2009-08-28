@@ -45,6 +45,7 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
+local json                   = json
 
 
 module(..., Framework.constants)
@@ -321,6 +322,16 @@ function _massageItem(item)
 end
 
 
+
+function _getAppType(request)
+	if not request or #request == 0 then
+		return nil
+	end
+	local appType = request[1]
+
+	return appType
+end
+
 -- _menuSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -387,15 +398,6 @@ local function _menuSink(self, isCurrentServer, server)
 				itemIcon = v['icon-id'] or v['icon']
 			end
 
-			if isCurrentServer and item.screensavers then
-				for _, serverData in ipairs(item.screensavers) do
-					serverData.id = table.concat(serverData.cmd, " ")
-					serverData.playerId = _player:getId()
-					serverData.server = _server
-					self:_registerRemoteScreensaver(serverData)
-				end
-			end
-
 			if itemIcon then
 				-- Fetch artwork if we're connected, or it's remote
 				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed
@@ -423,11 +425,27 @@ local function _menuSink(self, isCurrentServer, server)
 
 					_style(...)
 				end
+
+				local appType = _getAppType(_safeDeref(v, 'actions', 'go', 'cmd'))
+				if appType then
+					iconServer:setAppParameter(appType, "iconId", itemIcon)
+				end
 			else
 				-- make a style
 				if item.id then
 					local iconStyle = 'hm_' .. item.id
 					item.iconStyle = iconStyle
+				end
+			end
+
+			if isCurrentServer and item.screensavers then
+				for _, serverData in ipairs(item.screensavers) do
+					serverData.id = table.concat(serverData.cmd, " ")
+					serverData.playerId = _player:getId()
+					serverData.server = _server
+					serverData.appParameters = _server:getAppParameters(_getAppType(_safeDeref(v, 'actions', 'go', 'cmd')))
+
+					self:_registerRemoteScreensaver(serverData)
 				end
 			end
 

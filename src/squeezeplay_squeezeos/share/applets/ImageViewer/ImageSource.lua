@@ -115,6 +115,10 @@ function useAutoZoom(self)
 	return true
 end
 
+--optionally, image sources can modify the icon that appears on the loading page, to, for instance, show a Flickr icon instead
+function updateLoadingIcon(self, icon)
+end
+
 function nextImage(self, ordering)
 	assert(false, "please implement in derived class")
 end

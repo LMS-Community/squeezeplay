@@ -717,6 +717,8 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 		serverData.playerId = playerid
 		serverData.cmd = request
 		serverData.server = _server
+		serverData.appParameters = _server:getAppParameters(_getAppType(request))
+
 		appletManager:callService("openRemoteScreensaver", true, serverData)
 		return
 	end
@@ -724,6 +726,17 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	-- send the command
 	_server:userRequest(sink, playerid, request)
 end
+
+
+function _getAppType(request)
+	if not request or #request == 0 then
+		return nil
+	end
+	local appType = request[1]
+
+	return appType
+end
+
 
 -- for a given step, rerun the json request that created that slimbrowser menu
 local function _refreshJSONAction(step)

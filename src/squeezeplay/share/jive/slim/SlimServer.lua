@@ -584,6 +584,8 @@ function free(self)
 	self.upgradeUrl = false
 	self.upgradeForce = false
 
+	self.appParameters = {}
+
 	-- server is no longer active
 	serverList[self.id] = nil
 
@@ -1079,6 +1081,32 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	self.artworkFetchTask:addTask()
 end
 
+function getAppParameters(self, appType)
+	if not self.appParameters then
+		return nil
+	end
+
+	if not self.appParameters[appType] then
+		return nil
+	end
+
+	return self.appParameters[appType]
+end
+
+--set a app specific parameter, such as the iconId for facebook
+function setAppParameter(self, appType, parameter, value)
+	log:debug("Setting ", appType, " parameter ", parameter , " to: ", value)
+	
+	if not self.appParameters then
+		self.appParameters = {}
+	end
+
+	if not self.appParameters[appType] then
+		self.appParameters[appType] = {}
+	end
+
+	self.appParameters[appType][parameter] = value
+end
 
 --[[
 
