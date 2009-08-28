@@ -1486,6 +1486,12 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_popup_play = _uses{
 		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
 	}
+	s.icon_popup_fwd = _uses{
+		img = _loadImage(self, "Icons/icon_popup_box_fwd.png"),
+	}
+	s.icon_popup_rew = _uses{
+		img = _loadImage(self, "Icons/icon_popup_box_rew.png"),
+	}
 	s.icon_popup_stop = {
 		--FIXME, need a stop icon for this
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
