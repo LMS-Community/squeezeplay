@@ -80,9 +80,10 @@ function init(self)
 	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
 	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "bl_power", "rw")
 	sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "ambient")
-	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "wall_voltage")
+	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "power_mode")
 	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
 	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
+	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "charger_state")
 
 	-- register wakeup/sleep functions
 	Framework:registerWakeup(function() wakeup(self) end)
@@ -411,34 +412,30 @@ end
 
 
 local function _updatePower(self)
-	local wallVoltage = sysReadNumber(self, "wall_voltage")
-	local batteryCharge = sysReadNumber(self, "battery_charge")
-	local batteryCapacity = sysReadNumber(self, "battery_capacity")
+	local chargerState = sysReadNumber(self, "charger_state")
 
-	log:debug("wallVoltage=", wallVoltage,
-		" batteryCharge=", batteryCharge,
-		" batteryCapacity=", batteryCapacity)
-
-	if batteryCharge == 0 then
-		-- no battery
+	if chargerState == 1 then
+		-- no battery is installed, we must be on ac!
 		log:debug("no battery")
 		iconbar:setBattery(nil)
 
-	elseif wallVoltage > 16000 then    -- FIXME 16000 is just a guess
-		if batteryCharge == batteryCapacity then
-			log:debug("on ac, fully charged")
-			iconbar:setBattery("AC")
+	elseif chargerState == 2 then
+		log:debug("on ac, fully charged")
+		iconbar:setBattery("AC")
 
-		else
-			log:debug("on ac, charging")
-			iconbar:setBattery("CHARGING")
+	elseif chargerState == 3 then
+		-- running on battery
+		local batteryCharge = sysReadNumber(self, "battery_charge")
+		local batteryCapacity = sysReadNumber(self, "battery_capacity")
 
-		end
-	else
 		local batteryRemain = (batteryCharge / batteryCapacity) * 100
 		log:debug("on battery power ", batteryRemain, "%")
 
-		iconbar:setBattery(math.max(math.floor(batteryRemain / 25) + 1, 4))
+		iconbar:setBattery(math.min(math.floor(batteryRemain / 25) + 1, 4))
+
+	else
+		log:debug("on ac, charging")
+		iconbar:setBattery("CHARGING")
 	end
 end
 
