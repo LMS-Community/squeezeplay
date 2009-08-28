@@ -677,7 +677,10 @@ end
 
 --override
 function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
-	Menu.scrollBy(self, scroll, allowMultiple, false, forceAccel)
+	if self.headerWidget then
+	        isNewOperation = false
+	end
+	Menu.scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	if self.headerWidget and self.headerWidget.handleMenuHeaderWidgetScrollBy then
 		self.headerWidget:handleMenuHeaderWidgetScrollBy(scroll, self)
