@@ -1327,6 +1327,24 @@ function unpause(self)
 	self:updateIconbar()
 end
 
+-- some sleep methods (heh) not yet implemented for snooze support
+function snooze(self)
+	if not self.state then return end
+
+	if self.alarm_state == 'active' then
+		self.call({'snooze', '0'})
+	end
+	self:updateIconbar()
+end
+
+function stopAlarm(self)
+	if not self.state then return end
+
+	if self.alarm_state == 'active' then
+		self.call({'snooze', 'cancel'})
+	end
+	self:updateIconbar()
+end
 
 -- isPaused
 --
