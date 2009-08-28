@@ -433,9 +433,13 @@ local function _updatePower(self)
 
 		iconbar:setBattery(math.min(math.floor(batteryRemain / 25) + 1, 4))
 
-	else
+	elseif chargerState & 4 then
 		log:debug("on ac, charging")
 		iconbar:setBattery("CHARGING")
+
+	else
+		log:warn("invalid chargerState")
+		iconbar:setBattery(nil)
 	end
 end
 
