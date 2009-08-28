@@ -102,11 +102,12 @@ function Clock:notify_playerCurrent(player)
 	self.player = player
 end
 
-function Clock:notify_playerAlarmSet(player, alarmSet)
+function Clock:notify_playerAlarmState(player, alarmSet)
 	if player ~= self.player then
 		return
 	end
 	self.alarmSet = alarmSet
+
 	self:Draw()
 end
 
@@ -121,9 +122,9 @@ function Clock:__init(skin, windowStyle)
 	obj.player = appletManager:callService('getCurrentPlayer')
 	if obj.player then
 		jnt:subscribe(obj)
-		obj.alarmSet = obj.player:getAlarmSet()
+		obj.alarmSet = obj.player:getAlarmState()
 	else
-		obj.alarmSet = 0
+		obj.alarmSet = nil
 	end
 
 	-- create window and icon
@@ -308,7 +309,7 @@ function DotMatrix:Draw()
 	--self:DrawMinTest()
 
 	local alarmIcon = self.alarm:getWidget('alarm')
-	if self.alarmSet == 1 then
+	if self.alarmSet then
 		alarmIcon:setStyle('icon_alarm_on')
 	else
 		alarmIcon:setStyle('icon_alarm_off')
@@ -392,7 +393,7 @@ function Analog:_reDraw(screen)
 	y = math.floor((self.screen_height/2) - (faceh/2))
 	tmp:blit(screen, x, y)
 
-	if self.alarmSet == 1 then
+	if self.alarmSet then
 		local tmp = self.alarmIcon
 		tmp:blit(screen, self.skinParams.alarmX, self.skinParams.alarmY)
 	end
@@ -423,9 +424,9 @@ function Digital:__init(applet, ampm)
 	obj.m2   = Label('m2', '0')
 	obj.ampm = Label('ampm', '')
 
-	local alarmStyle = 'icon_alarm_on'
+	local alarmStyle = 'icon_alarm_off'
 	if obj.alarmSet then
-		alarmStyle = 'icon_alarm_off'
+		alarmStyle = 'icon_alarm_on'
 	end
 	obj.alarm = Group('alarm', {
 		alarm =	Icon(alarmStyle),
@@ -522,7 +523,7 @@ function Digital:Draw()
 	widget:setValue(monthString)
 
 	local alarmIcon = self.alarm:getWidget('alarm')
-	if self.alarmSet == 1 then
+	if self.alarmSet then
 		alarmIcon:setStyle('icon_alarm_on')
 	else
 		alarmIcon:setStyle('icon_alarm_off')

@@ -1178,10 +1178,16 @@ function _process_status(self, event)
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
-	if self.state['alarm_set'] ~= oldState['alarm_set'] then
-		log:debug('notify_playerAlarmSet')
-		self.alarmSet = self.state['alarm_set']
-		self.jnt:notify('playerAlarmSet', self, self.state['alarm_set'])
+	if self.state['alarm_state'] ~= oldState['alarm_state'] then
+		log:debug('notify_playerAlarmState')
+		-- none from server for alarm_state changes this to nil
+		if self.state['alarm_state'] == 'none' then
+			self.alarmState = nil
+			self.jnt:notify('playerAlarmState', self, nil)
+		else
+			self.alarmState = self.state['alarm_state']
+			self.jnt:notify('playerAlarmState', self, self.state['alarm_set'])
+		end
 	end
 
 	if self.state['playlist shuffle'] ~= oldState['playlist shuffle'] then
@@ -1331,8 +1337,8 @@ function isPaused(self)
 end
 
 
-function getAlarmSet(self)
-	return self.alarmSet
+function getAlarmState(self)
+	return self.alarmState
 end
 
 -- getPlayMode returns nil|stop|play|pause
