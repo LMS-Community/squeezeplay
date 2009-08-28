@@ -201,7 +201,20 @@ function skin(self, s, reload, useDefaultSize)
 					imgpath .. "Titlebar/titlebar_shadow.png",
 			       })
 
+	s.img.pencilLineMenuDivider =
+		Tile:loadTiles({
+			nil,
+			nil,
+			nil,
+			nil,
+			nil,
+			imgpath .. "Menu_Lists/menu_divider_r.png",
+			imgpath .. "Menu_Lists/menu_divider.png",
+			imgpath .. "Menu_Lists/menu_divider_l.png",
+			nil,
+		})
 
+	s.img.timeInputSelectionBox = Tile:loadImage(imgpath .. "Menu_Lists/menu_box_36.png")
 	s.img.oneLineItemSelectionBox =
 		Tile:loadHTiles({
 					nil,
@@ -330,6 +343,7 @@ function skin(self, s, reload, useDefaultSize)
 		SELECT_COLOR = { 0xE7, 0xE7, 0xE7 },
 		SELECT_SH_COLOR = { },
 
+		TITLE_HEIGHT = 36,
         	TITLE_FONT_SIZE = 18,
         	ALBUMMENU_TITLE_FONT_SIZE = 14,
         	ALBUMMENU_FONT_SIZE = 14,
@@ -420,7 +434,7 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.title = {
-		h = 36,
+		h = c.TITLE_HEIGHT,
 		border = 0,
 		position = LAYOUT_NORTH,
 		bgImg = s.img.titleBox,
@@ -456,6 +470,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.item = {
 		order = { "icon", "text", "arrow" },
 		padding = { 10, 6, 5, 6 },
+		bgImg = s.img.pencilLineMenuDivider,
 		text = {
 			padding = { 0, 0, 0, 0 },
 			align = "left",
@@ -860,29 +875,47 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
-	local _timeColumnWidth = 75
-	local _timeFirstColumn = screenWidth/2 - (_timeColumnWidth/2)*3
+	local _timeFirstColumnX = 60
+
+	s.time_input_background = {
+		w = WH_FILL,
+		h = 60,
+		position = LAYOUT_NONE,
+		img = _loadImage(self, "Multi_Character_Entry/land_multi_char_bkgrd_3c.png"),
+		x = 0,
+		y = c.TITLE_HEIGHT,
+	}
+
 	-- time input window
-	s.input_time = _uses(s.window)
+	s.input_time = _uses(s.window, {
+		bgImg = _timeInputBackground,
+	})
 	s.input_time.hour = _uses(s.menu, {
-		w = 75,
+		w = 60,
 		h = screenHeight - 60,
 		itemHeight = c.TIME_LINE_ITEM_HEIGHT,
 		position = LAYOUT_WEST,
 		padding = 0,
-		border = { _timeFirstColumn, 36, 0, 24 },
+		border = { _timeFirstColumnX, 36, 0, 24 },
 		item = {
+			bgImg = false,
 			order = { 'text' },
 			text = {
 				align = 'right',
+				font = _boldfont(21),
 				padding = { 4, 0, 4, 0 },
-				fg = { 0xbc, 0xbc, 0xbc },
+				fg = { 0xb3, 0xb3, 0xb3 },
+				sh = { },
 			},
 		},
 		selected = {
 			item = {
 				order = { 'text' },
+				bgImg = s.img.timeInputSelectionBox,
 				text = {
+					font = _boldfont(24),
+					fg = { 0xe6, 0xe6, 0xe6 },
+				sh = { },
 					align = 'right',
 					padding = { 4, 0, 4, 0 },
 				},
@@ -890,23 +923,24 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.input_time.minute = _uses(s.input_time.hour, {
-		border = { _timeFirstColumn + _timeColumnWidth, 36, 0, 24 },
+		border = { _timeFirstColumnX + 64, 36, 0, 24 },
 	})
 	s.input_time.ampm = _uses(s.input_time.hour, {
-		border = { _timeFirstColumn + (_timeColumnWidth*2), 36, 0, 24 },
+		border = { _timeFirstColumnX + 64 + 64, 36, 0, 24 },
 	})
 	s.input_time.hourUnselected = _uses(s.input_time.hour, {
 		item = {
 			text = {
-				fg = { 0xbc, 0xbc, 0xbc },
-				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(21),
 			},
 		},
 		selected = {
 			item = {
+				bgImg = false,
 				text = {
-					fg = { 0xbc, 0xbc, 0xbc },
-					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(21),
 				},
 			},
 		},
@@ -914,15 +948,16 @@ function skin(self, s, reload, useDefaultSize)
 	s.input_time.minuteUnselected = _uses(s.input_time.minute, {
 		item = {
 			text = {
-				fg = { 0xbc, 0xbc, 0xbc },
-				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(21),
 			},
 		},
 		selected = {
 			item = {
+				bgImg = false,
 				text = {
-					fg = { 0xbc, 0xbc, 0xbc },
-					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(21),
 				},
 			},
 		},
@@ -930,15 +965,16 @@ function skin(self, s, reload, useDefaultSize)
 	s.input_time.ampmUnselected = _uses(s.input_time.ampm, {
 		item = {
 			text = {
-				fg = { 0xbc, 0xbc, 0xbc },
-				font = _font(c.TEXTMENU_FONT_SIZE - 4),
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(20),
 			},
 		},
 		selected = {
 			item = {
+				bgImg = false,
 				text = {
-					fg = { 0xbc, 0xbc, 0xbc },
-					font = _boldfont(c.TEXTMENU_FONT_SIZE - 4),
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(20),
 				},
 			},
 		},

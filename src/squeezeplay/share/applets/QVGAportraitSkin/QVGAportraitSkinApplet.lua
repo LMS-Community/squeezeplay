@@ -188,10 +188,106 @@ function skin(self, s, reload, useDefaultSize)
                 border = { 0, 50, 0, 0 },
         })
 
-	s.input_time.hour.itemHeight = 50
-	s.input_time.minute.itemHeight = 50
-	s.input_time.ampm.itemHeight = 50
+	s.time_input_background = {
+		w = WH_FILL,
+		h = 60,
+		position = LAYOUT_NONE,
+		img = Tile:loadImage(baseImgpath .. "Multi_Character_Entry/port_multi_char_bkgrd_3c.png"),
+		x = 0,
+		y = c.TITLE_HEIGHT,
+	}
 
+	-- time input window
+	s.input_time = _uses(s.window, {
+		bgImg = _timeInputBackground,
+	})
+	s.input_time.hour = _uses(s.menu, {
+		w = 60,
+		h = screenHeight - 60,
+		itemHeight = 50,
+		position = LAYOUT_WEST,
+		padding = 0,
+		border = { 20, 36, 0, 24 },
+		item = {
+			bgImg = false,
+			order = { 'text' },
+			text = {
+				align = 'right',
+				font = _boldfont(21),
+				padding = { 4, 0, 4, 0 },
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
+		},
+		selected = {
+			item = {
+				order = { 'text' },
+				bgImg = Tile:loadImage(baseImgpath .. "Menu_Lists/menu_box_50.png"),
+				text = {
+					font = _boldfont(24),
+					fg = { 0xe6, 0xe6, 0xe6 },
+					align = 'right',
+					padding = { 4, 0, 4, 0 },
+				},
+			},
+		},
+	})
+	s.input_time.minute = _uses(s.input_time.hour, {
+		border = { 20 + 64, 36, 0, 24 },
+	})
+	s.input_time.ampm = _uses(s.input_time.hour, {
+		border = { 20 + 64 + 64, 36, 0, 24 },
+	})
+	s.input_time.hourUnselected = _uses(s.input_time.hour, {
+		item = {
+			text = {
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(21),
+			},
+		},
+		selected = {
+			item = {
+				bgImg = false,
+				text = {
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(21),
+				},
+			},
+		},
+	})
+	s.input_time.minuteUnselected = _uses(s.input_time.minute, {
+		item = {
+			text = {
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(21),
+			},
+		},
+		selected = {
+			item = {
+				bgImg = false,
+				text = {
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(21),
+				},
+			},
+		},
+	})
+	s.input_time.ampmUnselected = _uses(s.input_time.ampm, {
+		item = {
+			text = {
+				fg = { 0x66, 0x66, 0x66 },
+				font = _boldfont(20),
+			},
+		},
+		selected = {
+			item = {
+				bgImg = false,
+				text = {
+					fg = { 0x66, 0x66, 0x66 },
+					font = _boldfont(20),
+				},
+			},
+		},
+	})
 	-- software update window
 	s.update_popup = _uses(s.popup)
 

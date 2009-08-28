@@ -381,12 +381,12 @@ function timeTableFromSFM(self, secondsFromMidnight, format)
 			return { 
 				hour   = 12, 
 				minute = 0, 
-				ampm   = 'pm',
+				ampm   = 'PM',
 			}
 		end
 
 		if (sfm < 43200) then
-			ampm = 'am'
+			ampm = 'AM'
 		else
 			ampm = 'pm'
 		end

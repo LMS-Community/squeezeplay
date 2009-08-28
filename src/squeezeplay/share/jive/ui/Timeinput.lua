@@ -21,6 +21,7 @@ local string        = require("jive.utils.string")
 local table         = require("jive.utils.table")
 local Event         = require("jive.ui.Event")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
+local Icon          = require("jive.ui.Icon")
 local Window        = require("jive.ui.Window")
 
 local debug         = require("jive.utils.debug")
@@ -66,6 +67,8 @@ function _minuteString(minute)
 	return returnVal
 end
 function addTimeInputWidgets(self)
+
+	self.background = Icon('time_input_background')
 
 	local hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
 	local minutes = { '58', '59', '00' }
@@ -146,9 +149,9 @@ function addTimeInputWidgets(self)
 	self.minuteMenu:setSelectedIndex(3)
 
 	self.ampmMenu = SimpleMenu('ampmUnselected')
-	local ampm = { '', '', 'pm', 'am', '', '' }
-	if self.initampm == 'am' then
-		ampm = { '', '', 'am', 'pm', '', '' }
+	local ampm = { '', '', 'PM', 'AM', '', '' }
+	if self.initampm == 'AM' then
+		ampm = { '', '', 'AM', 'PM', '', '' }
 	end
 
 	for i, t in ipairs(ampm) do
@@ -210,6 +213,7 @@ function addTimeInputWidgets(self)
 			self.window:focusWidget(self.minuteMenu)
 		end)
 
+	self.window:addWidget(self.background)
 	self.window:addWidget(self.minuteMenu)
 	self.window:addWidget(self.hourMenu)
 	self.window:addWidget(self.ampmMenu)

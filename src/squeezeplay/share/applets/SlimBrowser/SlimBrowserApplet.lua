@@ -2154,9 +2154,9 @@ local function _browseInput(window, item, db, inputSpec, last)
 
 			log:debug('Time entered as: ', hour, ':', minute, ' ', ampm)
 			local totalSecs = ( hour * 3600 ) + ( minute * 60 )
-			if ampm == 'am' and hour == 12 then
+			if ampm == 'AM' and hour == 12 then
 				totalSecs = minute * 60
-			elseif ampm == 'pm' then
+			elseif ampm == 'PM' then
 				totalSecs = totalSecs + 43200
 			end
 			-- input is done
