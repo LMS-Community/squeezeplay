@@ -1508,7 +1508,11 @@ function volume(self, vol, send, sequenceNumber, useBackgroundRequest)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
 		log:debug("Sending player:volume(", vol, ")")
-		self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber}, useBackgroundRequest)
+		if sequenceNumber then
+			self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber}, useBackgroundRequest)
+		else
+			self:send({'mixer', 'volume', vol}, useBackgroundRequest)
+		end
 		self.mixerTo = now + MIN_KEY_INT
 		self.state["mixer volume"] = vol
 		return vol
