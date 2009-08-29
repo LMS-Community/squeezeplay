@@ -113,7 +113,7 @@ end
 
 -- Setup: Needed to find not yet setup Receiver
 function setupScan(self, setupNext)
-	local window = Popup("popup_waiting")
+	local window = Popup("waiting_popup")
 	window:setAllowScreensaver(false)
 
 	window:addWidget(Icon("icon_connecting"))
