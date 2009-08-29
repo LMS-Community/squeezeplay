@@ -109,7 +109,7 @@ local function _openPopup(self)
 	}))
 
 	popup:focusWidget(nil)
-	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_IR_DOWN | EVENT_IR_REPEAT,
+	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_IR_DOWN | EVENT_IR_REPEAT | EVENT_SCROLL,
 			  function(event)
 				  return self:event(event)
 			  end)
