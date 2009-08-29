@@ -181,6 +181,17 @@ function _addPlayerItem(self, player)
 	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
+	-- 08/29/09 - fm
+	-- Only allow Controller to setup not yet setup players (i.e. Receiver)
+	-- If other squeezeplay based devices need to be able to setup players
+	--  additional work is needed as soon as this devices not only have
+	--  a wireless interface but ethernet also. If such a device is using
+	--  ethernet itself it can only setup a player to also using ethernet
+	--  since wireless parameters are not available.
+	if System:getMachine() ~= "jive" and player.config == "needsNetwork" then
+		return
+	end
+
 	-- create a lookup table of valid models, 
 	-- so Choose Player does not attempt to render a style that doesn't exist
 	local validModel = {
@@ -353,8 +364,16 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 		_updateServerItem(self, server)
 	end
 
+	-- 08/29/09 - fm
+	-- Only allow Controller to setup not yet setup players (i.e. Receiver)
+	-- If other squeezeplay based devices need to be able to setup players
+	--  additional work is needed as soon as this devices not only have
+	--  a wireless interface but ethernet also. If such a device is using
+	--  ethernet itself it can only setup a player to also using ethernet
+	--  since wireless parameters are not available.
+
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	if setupNext then
+	if setupNext and System:getMachine() == "jive" then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
 			sound = "WINDOWSHOW",
