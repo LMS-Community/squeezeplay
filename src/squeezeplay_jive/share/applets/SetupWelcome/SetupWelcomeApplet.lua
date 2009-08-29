@@ -205,8 +205,14 @@ function _anySqueezeCenterWithUpgradeFound(self)
 end
 
 function step7(self)
+	log:info("step7")
+
 	-- Once here, network setup is complete
 	self:_setupDone(true, false)
+
+	-- Bug 12786: Selecting a Network, then backing out
+	--  and re-selecting will cause network errors
+	self.registerRequest = false
 
 	--might be coming into this from a restart, so re-disable
 	self:_disableNormalEscapeMechanisms()
