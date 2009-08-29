@@ -1063,7 +1063,9 @@ function t_udapSink(self, chunk, err)
 				error("squeezebox connected to slimserver")
 			end
 		else
-			t_scanDiscover(self, pkt)
+			-- FIXME: Still needed? Calling t_scanDiscover() here causes
+			--  an error in SimpleMenu where weight is nil
+			--t_scanDiscover(self, pkt)
 		end
 
 	-- Get Squeezebox UUID
