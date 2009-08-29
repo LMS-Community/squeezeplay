@@ -207,7 +207,7 @@ function skin(self, s, reload, useDefaultSize)
 		itemHeight = 50,
 		position = LAYOUT_WEST,
 		padding = 0,
-		border = { 20, 36, 0, 24 },
+		border = { 25, 36, 0, 24 },
 		item = {
 			bgImg = false,
 			order = { 'text' },
@@ -232,10 +232,10 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.input_time.minute = _uses(s.input_time.hour, {
-		border = { 20 + 64, 36, 0, 24 },
+		border = { 25 + 65, 36, 0, 24 },
 	})
 	s.input_time.ampm = _uses(s.input_time.hour, {
-		border = { 20 + 64 + 64, 36, 0, 24 },
+		border = { 25 + 65 + 65, 36, 0, 24 },
 	})
 	s.input_time.hourUnselected = _uses(s.input_time.hour, {
 		item = {

@@ -875,7 +875,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
-	local _timeFirstColumnX = 60
+	local _timeFirstColumnX = 65
 
 	s.time_input_background = {
 		w = WH_FILL,
@@ -923,10 +923,10 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 	s.input_time.minute = _uses(s.input_time.hour, {
-		border = { _timeFirstColumnX + 64, 36, 0, 24 },
+		border = { _timeFirstColumnX + 65, 36, 0, 24 },
 	})
 	s.input_time.ampm = _uses(s.input_time.hour, {
-		border = { _timeFirstColumnX + 64 + 64, 36, 0, 24 },
+		border = { _timeFirstColumnX + 65 + 65, 36, 0, 24 },
 	})
 	s.input_time.hourUnselected = _uses(s.input_time.hour, {
 		item = {

@@ -724,7 +724,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	--debug.dump(request)
+	debug.dump(request)
 
 	-- send the command
 	_server:userRequest(sink, playerid, request)
