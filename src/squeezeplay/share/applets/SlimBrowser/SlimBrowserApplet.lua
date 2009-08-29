@@ -2087,7 +2087,7 @@ end
 
 
 -- _browseInput: method to render a textinput/keyboard for SlimBrowse input
-local function _browseInput(window, item, db, inputSpec, last)
+local function _browseInput(window, item, db, inputSpec, last, timeFormat)
 
 	local titleWidgetComplete = false
 	if not inputSpec then
@@ -2147,7 +2147,6 @@ local function _browseInput(window, item, db, inputSpec, last)
 	local inputValue
 	-- time input now handled without a textinput widget
 	if inputStyle == 'time' then
-		local timeFormat = _getTimeFormat()
 		local initTime   = DateTime:timeTableFromSFM(v, timeFormat)
 		local submitCallback = function( hour, minute, ampm)
 
@@ -2303,12 +2302,18 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	end
 
 	local titleWidgetComplete = false
+	local timeFormat = nil
 	local menu
 	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
 		if item['input'] and item['input']['_inputStyle'] == 'time' then
-			window:setStyle('input_time')
+			timeFormat = _getTimeFormat()
+			if timeFormat == '12' then
+				window:setStyle('input_time_12h')
+			else
+				window:setStyle('input_time_24h')
+			end
 		else
 			window:setStyle('input')
 		end
@@ -2321,11 +2326,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 				if i == #inputSpec then
 					last = true
 				end
-				titleWidgetComplete = _browseInput(window, item, db, v, last)
+				titleWidgetComplete = _browseInput(window, item, db, v, last, timeFormat)
 			end
 		-- single input
 		else
-			titleWidgetComplete = _browseInput(window, item, db, inputSpec, true)
+			titleWidgetComplete = _browseInput(window, item, db, inputSpec, true, timeFormat)
 		end
 
 	-- special case for sending over textArea

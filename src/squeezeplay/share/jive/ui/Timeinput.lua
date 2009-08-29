@@ -68,32 +68,80 @@ function _minuteString(minute)
 end
 function addTimeInputWidgets(self)
 
-	self.background = Icon('time_input_background')
 
-	local hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
-	local minutes = { '58', '59', '00' }
+	local hours = {}
+	local ampm = {}
 
-	-- deal with inital hour setting
-	if self.initHour then
-		if self.initHour == 1 then
-			hours = { '11', '12', '1' }
-		elseif self.initHour == 2 then
-			hours = { '12', '1', '2' }
-		else
-			hours = { self.initHour - 2, self.initHour - 1, self.initHour }
-		end
-		local nextItem = self.initHour + 1
-		local inc = 1
-		while inc < 14 do
-			if nextItem > 12 then
-				nextItem = 1
+	if self.initampm then
+		self.background = Icon('time_input_background_12h')
+
+		-- 12h hour menu
+		hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
+		-- deal with inital hour setting
+		if self.initHour then
+			if self.initHour == 1 then
+				hours = { '11', '12', '1' }
+			elseif self.initHour == 2 then
+				hours = { '12', '1', '2' }
+			else
+				hours = { self.initHour - 2, self.initHour - 1, self.initHour }
 			end
-			table.insert(hours, tostring(nextItem))
-			nextItem = nextItem + 1
-			inc = inc + 1
+			local nextItem = self.initHour + 1
+			local inc = 1
+			while inc < 14 do
+				if nextItem > 12 then
+					nextItem = 1
+				end
+				table.insert(hours, tostring(nextItem))
+				nextItem = nextItem + 1
+				inc = inc + 1
+			end
+		end
+		self.ampmMenu = SimpleMenu('ampmUnselected')
+		ampm = { '', '', 'PM', 'AM', '', '' }
+		if self.initampm == 'AM' then
+			ampm = { '', '', 'AM', 'PM', '', '' }
+		end
+
+		for i, t in ipairs(ampm) do
+			self.ampmMenu:addItem({
+				text = t,
+			})
+		end
+		self.ampmMenu.wraparoundGap = 2
+		self.ampmMenu.itemsBeforeScroll = 2
+		self.ampmMenu.noBarrier = true
+		self.ampmMenu:setSelectedIndex(3)
+		self.ampmMenu:setHideScrollbar(true)
+
+	else
+		self.background = Icon('time_input_background_24h')
+
+		-- 24h hour menu
+		hours = { '22', '23', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '0', '1' }
+		-- deal with inital hour setting
+		if self.initHour then
+			if self.initHour == 0 then
+				hours = { '22', '23', '0' }
+			elseif self.initHour == 1 then
+				hours = { '23', '0', '1' }
+			else
+				hours = { self.initHour - 2, self.initHour - 1, self.initHour }
+			end
+			local nextItem = self.initHour + 1
+			local inc = 0
+			while inc < 24 do
+				if nextItem > 23 then
+					nextItem = 0
+				end
+				table.insert(hours, tostring(nextItem))
+				nextItem = nextItem + 1
+				inc = inc + 1
+			end
 		end
 	end
 
+	-- construction of hour menu from here on is not specific to 12h/24h
 	self.hourMenu = SimpleMenu("hour")
 	for i, hour in ipairs(hours) do
 		self.hourMenu:addItem({
@@ -109,6 +157,8 @@ function addTimeInputWidgets(self)
 	end
 	self.hourMenu:setSelectedIndex(3)
 
+	-- minute menu the same between 12h and 24h
+	local minutes = { '58', '59', '00' }
 	self.minuteMenu = SimpleMenu('minuteUnselected')
 	-- deal with inital minute setting
 	if self.initMinute then
@@ -148,25 +198,8 @@ function addTimeInputWidgets(self)
 	self.minuteMenu.noBarrier = true
 	self.minuteMenu:setSelectedIndex(3)
 
-	self.ampmMenu = SimpleMenu('ampmUnselected')
-	local ampm = { '', '', 'PM', 'AM', '', '' }
-	if self.initampm == 'AM' then
-		ampm = { '', '', 'AM', 'PM', '', '' }
-	end
-
-	for i, t in ipairs(ampm) do
-		self.ampmMenu:addItem({
-			text = t,
-		})
-	end
-	self.ampmMenu.wraparoundGap = 2
-	self.ampmMenu.itemsBeforeScroll = 2
-	self.ampmMenu.noBarrier = true
-	self.ampmMenu:setSelectedIndex(3)
-
 	self.hourMenu:setHideScrollbar(true)
 	self.minuteMenu:setHideScrollbar(true)
-	self.ampmMenu:setHideScrollbar(true)
 
 	self.hourMenu:addActionListener('back', self, function() self.window:hide() end)
 	self.hourMenu:addActionListener('go', self, 
@@ -181,11 +214,18 @@ function addTimeInputWidgets(self)
 
 	self.minuteMenu:addActionListener('go', self, 
 		function() 
-			self.ampmMenu:setStyle('ampm')
-			self.minuteMenu:setStyle('minuteUnselected')
-			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
-			Framework:styleChanged()
-			self.window:focusWidget(self.ampmMenu)
+			if self.ampmMenu then
+				self.ampmMenu:setStyle('ampm')
+				self.minuteMenu:setStyle('minuteUnselected')
+				--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+				Framework:styleChanged()
+				self.window:focusWidget(self.ampmMenu)
+			else
+				local hour   = self.hourMenu:getItem(self.hourMenu:getSelectedIndex()).text
+				local minute = self.minuteMenu:getItem(self.minuteMenu:getSelectedIndex()).text
+				self.window:hide() 
+				self.submitCallback( hour, minute, nil )
+			end
 		end)
 	self.minuteMenu:addActionListener('back', self, 
 		function() 
@@ -196,27 +236,31 @@ function addTimeInputWidgets(self)
 			self.window:focusWidget(self.hourMenu)
 		end)
 
-	self.ampmMenu:addActionListener('go', self, 
-		function() 
-			local hour   = self.hourMenu:getItem(self.hourMenu:getSelectedIndex()).text
-			local minute = self.minuteMenu:getItem(self.minuteMenu:getSelectedIndex()).text
-			local ampm   = self.ampmMenu:getItem(self.ampmMenu:getSelectedIndex()).text
-			self.window:hide() 
-			self.submitCallback( hour, minute, ampm )
-		end)
-	self.ampmMenu:addActionListener('back', self, 
-		function() 
-			self.ampmMenu:setStyle('ampmUnselected')
-			self.minuteMenu:setStyle('minute')
-			--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
-			Framework:styleChanged()
-			self.window:focusWidget(self.minuteMenu)
-		end)
+	if self.ampmMenu then
+		self.ampmMenu:addActionListener('go', self, 
+			function() 
+				local hour   = self.hourMenu:getItem(self.hourMenu:getSelectedIndex()).text
+				local minute = self.minuteMenu:getItem(self.minuteMenu:getSelectedIndex()).text
+				local ampm   = self.ampmMenu:getItem(self.ampmMenu:getSelectedIndex()).text
+				self.window:hide() 
+				self.submitCallback( hour, minute, ampm )
+			end)
+		self.ampmMenu:addActionListener('back', self, 
+			function() 
+				self.ampmMenu:setStyle('ampmUnselected')
+				self.minuteMenu:setStyle('minute')
+				--next is evil, but not sure how to get style change for a menu the right way, trying various options. Richard?
+				Framework:styleChanged()
+				self.window:focusWidget(self.minuteMenu)
+			end)
+	end
 
 	self.window:addWidget(self.background)
 	self.window:addWidget(self.minuteMenu)
 	self.window:addWidget(self.hourMenu)
-	self.window:addWidget(self.ampmMenu)
+	if self.ampmMenu then
+		self.window:addWidget(self.ampmMenu)
+	end
 	self.window:focusWidget(self.hourMenu)
 
 end

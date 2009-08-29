@@ -188,7 +188,7 @@ function skin(self, s, reload, useDefaultSize)
                 border = { 0, 50, 0, 0 },
         })
 
-	s.time_input_background = {
+	s.time_input_background_12h = {
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
@@ -196,12 +196,21 @@ function skin(self, s, reload, useDefaultSize)
 		x = 0,
 		y = c.TITLE_HEIGHT,
 	}
+	s.time_input_background_24h = {
+		w = WH_FILL,
+		h = 60,
+		position = LAYOUT_NONE,
+		img = Tile:loadImage(baseImgpath .. "Multi_Character_Entry/port_multi_char_bkgrd_2c.png"),
+		x = 0,
+		y = c.TITLE_HEIGHT,
+	}
+
 
 	-- time input window
-	s.input_time = _uses(s.window, {
+	s.input_time_12h = _uses(s.window, {
 		bgImg = _timeInputBackground,
 	})
-	s.input_time.hour = _uses(s.menu, {
+	s.input_time_12h.hour = _uses(s.menu, {
 		w = 60,
 		h = screenHeight - 60,
 		itemHeight = 50,
@@ -231,13 +240,13 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.minute = _uses(s.input_time.hour, {
+	s.input_time_12h.minute = _uses(s.input_time_12h.hour, {
 		border = { 25 + 65, 36, 0, 24 },
 	})
-	s.input_time.ampm = _uses(s.input_time.hour, {
+	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
 		border = { 25 + 65 + 65, 36, 0, 24 },
 	})
-	s.input_time.hourUnselected = _uses(s.input_time.hour, {
+	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -254,7 +263,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.minuteUnselected = _uses(s.input_time.minute, {
+	s.input_time_12h.minuteUnselected = _uses(s.input_time_12h.minute, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -271,7 +280,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.ampmUnselected = _uses(s.input_time.ampm, {
+	s.input_time_12h.ampmUnselected = _uses(s.input_time_12h.ampm, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -288,6 +297,22 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
+
+	s.input_time_24h = _uses(s.input_time_12h, {
+		hour = {
+			border = { 58, 36, 0, 24 },
+		},
+		minute = {
+			border = { 58 + 65, 36 ,0, 24 },
+		},
+		hourUnselected = {
+			border = { 58, 36, 0, 24 },
+		},
+		minuteUnselected = {
+			border = { 58 + 65, 36 ,0, 24 },
+		},
+	})
+
 	-- software update window
 	s.update_popup = _uses(s.popup)
 

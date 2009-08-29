@@ -875,9 +875,10 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
-	local _timeFirstColumnX = 65
+	local _timeFirstColumnX12h = 65
+	local _timeFirstColumnX24h = 98
 
-	s.time_input_background = {
+	s.time_input_background_12h = {
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
@@ -886,17 +887,24 @@ function skin(self, s, reload, useDefaultSize)
 		y = c.TITLE_HEIGHT,
 	}
 
+	s.time_input_background_24h = {
+		w = WH_FILL,
+		h = 60,
+		position = LAYOUT_NONE,
+		img = _loadImage(self, "Multi_Character_Entry/land_multi_char_bkgrd_2c.png"),
+		x = 0,
+		y = c.TITLE_HEIGHT,
+	}
+
 	-- time input window
-	s.input_time = _uses(s.window, {
-		bgImg = _timeInputBackground,
-	})
-	s.input_time.hour = _uses(s.menu, {
+	s.input_time_12h = _uses(s.window)
+	s.input_time_12h.hour = _uses(s.menu, {
 		w = 60,
 		h = screenHeight - 60,
 		itemHeight = c.TIME_LINE_ITEM_HEIGHT,
 		position = LAYOUT_WEST,
 		padding = 0,
-		border = { _timeFirstColumnX, 36, 0, 24 },
+		border = { _timeFirstColumnX12h, 36, 0, 24 },
 		item = {
 			bgImg = false,
 			order = { 'text' },
@@ -922,13 +930,13 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.minute = _uses(s.input_time.hour, {
-		border = { _timeFirstColumnX + 65, 36, 0, 24 },
+	s.input_time_12h.minute = _uses(s.input_time_12h.hour, {
+		border = { _timeFirstColumnX12h + 65, 36, 0, 24 },
 	})
-	s.input_time.ampm = _uses(s.input_time.hour, {
-		border = { _timeFirstColumnX + 65 + 65, 36, 0, 24 },
+	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
+		border = { _timeFirstColumnX12h + 65 + 65, 36, 0, 24 },
 	})
-	s.input_time.hourUnselected = _uses(s.input_time.hour, {
+	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -945,7 +953,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.minuteUnselected = _uses(s.input_time.minute, {
+	s.input_time_12h.minuteUnselected = _uses(s.input_time_12h.minute, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -962,7 +970,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 	})
-	s.input_time.ampmUnselected = _uses(s.input_time.ampm, {
+	s.input_time_12h.ampmUnselected = _uses(s.input_time_12h.ampm, {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
@@ -980,6 +988,20 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 
+	s.input_time_24h = _uses(s.input_time_12h, {
+		hour = {
+			border = { _timeFirstColumnX24h, 36, 0, 24 },
+		},
+		minute = {
+			border = { _timeFirstColumnX24h + 65, 36, 0, 24 },
+		},
+		hourUnselected = {
+			border = { _timeFirstColumnX24h, 36, 0, 24 },
+		},
+		minuteUnselected = {
+			border = { _timeFirstColumnX24h + 65, 36, 0, 24 },
+		},
+	})
 
 
 	-- icon_list window
