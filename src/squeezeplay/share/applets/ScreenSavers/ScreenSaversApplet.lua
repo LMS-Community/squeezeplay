@@ -410,7 +410,7 @@ function _showPowerOnWindow(self)
 		end
 
 		local instance = appletManager:loadApplet(screensaver.applet)
-		if instance.usePowerOnWindow and instance:usePowerOnWindow() then
+		if instance.usePowerOnWindow and not instance:usePowerOnWindow() then
 			log:debug("ss: don't use power on window")
 			return
 		end
