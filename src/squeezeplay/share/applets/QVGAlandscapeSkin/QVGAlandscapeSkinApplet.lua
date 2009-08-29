@@ -192,7 +192,6 @@ function skin(self, s, reload, useDefaultSize)
 	local NP_TRACKINFO_RIGHT_PADDING = 40
 
 	local _tracklayout = {
-		border = { 4, 0, 4, 0 },
 		position = LAYOUT_NORTH,
 		w = WH_FILL,
 		align = "left",
@@ -203,7 +202,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying = _uses(s.window, {
 		title = {
 			h = 60,
-			padding = { 24, 0, 24, 0 },
 			text = {
 				hidden = 1,
 			},
@@ -212,28 +210,25 @@ function skin(self, s, reload, useDefaultSize)
 		nptitle = {
 			order = { 'nptrack', 'xofy' },
 			position   = _tracklayout.position,
-			border     = _tracklayout.border,
 			nptrack =  {
+				padding    = { 10, 10, 4, 0 },
 				w          = WH_FILL,
 				align      = _tracklayout.align,
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { 10, 10, 4, 0 },
 				font       = _boldfont(NP_TRACK_FONT_SIZE), 
 			},
 			xofy = {
-				border     = _tracklayout.border,
+				padding    = { 4, 12, 10, 0 },
 				position   = _tracklayout.position,
 				w          = 75,
 				align      = 'right',
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { 4, 12, 4, 0 },
 				font       = _font(14), 
 			},
 		},
 		npartistalbum  = {
-			border     = _tracklayout.border,
 			position   = _tracklayout.position,
 			w          = _tracklayout.w,
 			align      = _tracklayout.align,
