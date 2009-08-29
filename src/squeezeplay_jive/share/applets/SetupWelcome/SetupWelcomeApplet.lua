@@ -168,22 +168,104 @@ function step2(self)
 	-- welcome!
 	self:setupWelcomeShow(
 		function()
-			self:step3()
+			self:step4()
 		end)
 end
 
 
-function step3(self, transition)
-	log:info("step3")
+-- Scan for not yet setup squeezebox
+function step4(self, transition)
+	log:info("step4")
 
-	-- network connection type
-	appletManager:callService("setupNetworking",
-		function()
-			self:step7(iface)
-		end,
-	transition)
+	-- Finding networks including not yet setup squeezebox
+	self.scanWindow = appletManager:callService("setupScan",
+				function()
+					self:step5()
+					-- FIXME is this required:
+					if self.scanWindow then
+						self.scanWindow:hide()
+						self.scanWindow = nil
+					end
+				end,
+				transition)
+
+	return self.scanWindow
 end
 
+
+-- Scan for not yet setup squeezebox
+function step5(self)
+	log:info("step5")
+
+	-- Get scan results
+	local wlanIface = Networking:wirelessInterface(jnt)
+	local scanResults = wlanIface:scanResults()
+
+	for ssid,_ in pairs(scanResults) do
+		log:warn("checking ssid ", ssid)
+
+		-- '+' in SSID means squeezebox has ethernet connected
+		if string.match(ssid, "logitech%+squeezebox%+%x+") then
+			return self:setupConnectionShow(
+					function()
+						self:step51()
+					end,
+					function()
+						self:step52()
+					end)
+		end
+	end
+
+	return self:step52()
+end
+
+-- Setup bridged mode
+function step51(self)
+	log:info("step51")
+
+	-- Connect using squeezebox in adhoc mode
+	return appletManager:callService("setupAdhocShow",
+				function()
+					self:step7()
+				end)
+end
+
+-- Setup Controller to AP
+function step52(self)
+	log:info("step52")
+
+	-- Connect using regular network, i.e. connect to AP
+	return appletManager:callService("setupNetworking",
+			function()
+				self:step7()
+			end)
+end
+
+
+-- Offer selection between standard wireless/wired or bridged setup
+function setupConnectionShow(self, setupSqueezebox, setupNetwork)
+	local window = Window("window", self:string("WIRELESS_CONNECTION"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+			     text = self:string("CONNECT_USING_SQUEEZEBOX"),
+			     sound = "WINDOWSHOW",
+			     callback = setupSqueezebox,
+		     })
+	menu:addItem({
+			     text = self:string("CONNECT_USING_NETWORK"),
+			     sound = "WINDOWSHOW",
+			     callback = setupNetwork,
+		     })
+	
+	window:addWidget(Textarea("help", self:string("CONNECT_HELP")))
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 
 -- we are connected when we have a pin and upgrade url
@@ -370,7 +452,7 @@ function _squeezenetworkError(self, squeezenetwork, message)
 	-- note add listener to menu, as it has the focus
 	menu:addActionListener("back", self, function()
 		Framework:playSound("WINDOWHIDE")
-		self:step3(Window.transitionPushRight)
+		self:step4(Window.transitionPushRight)
 	end)
 
 	-- help shows diagnostics
