@@ -1451,6 +1451,9 @@ function skin(self, s)
 	s.icon_popup_pause = _uses(_popupicon, {
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	})
+	s.icon_popup_lineIn = _uses(_popupicon, {
+		img = _loadImage(self, "IconsResized/icon_linein_134.png"),
+	})
 
 	s.icon_popup_play = _uses(_popupicon, {
 		img = _loadImage(self, "Icons/icon_popup_box_play.png"),

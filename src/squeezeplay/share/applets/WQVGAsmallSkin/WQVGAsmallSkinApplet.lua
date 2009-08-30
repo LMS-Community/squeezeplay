@@ -1977,6 +1977,9 @@ function skin(self, s)
 		--FIXME, need a stop icon for this
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	})
+	s.icon_popup_lineIn = _uses(_popupicon, {
+		img = _loadImage(self, "IconsResized/icon_linein_134.png"),
+	})
 
 	s.icon_popup_volume = _uses(_popupicon, {
 		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),

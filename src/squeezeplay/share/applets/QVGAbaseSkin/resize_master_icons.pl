@@ -60,13 +60,16 @@ sub convert_files {
 				$size = $special->{$f};
 			}
 			resize_me($file, $filename, $size);
-	}
+		}
 	}
 	# special case, no album artwork for now playing screen. we still want the thumb size one for lists,
 	# but also a larger one as a default artwork for NP screen
 	my $source = $assetDir . "/" . "icon_album_noart.png";
 	my $dest   = $resizedIconDir . "/" . "icon_album_noart_143.png";
 	resize_me($source, $dest, 143);
+	my $source = $assetDir . "/" . "icon_linein.png";
+	my $dest   = $resizedIconDir . "/" . "icon_linein_80.png";
+	resize_me($source, $dest, 80);
 	
 }
 
