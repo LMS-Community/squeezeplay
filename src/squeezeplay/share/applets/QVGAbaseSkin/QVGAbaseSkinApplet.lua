@@ -1569,7 +1569,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
 	}
 	s.icon_popup_lineIn = {
-		img = _loadImage(self, "IconsResized/icon_linein.png"),
+		img = _loadImage(self, "IconsResized/icon_linein_80.png"),
 	}
 
 	s.presetPointer3 = {
