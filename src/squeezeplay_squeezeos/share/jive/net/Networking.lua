@@ -1209,7 +1209,7 @@ function _editAutoInterfaces(self, ssid)
 			if string.matchLiteral(line, autoInterface) then
 				outStr = outStr .. line .. "\n"
 				autoSet = true
-			elseif string.match(line, "lo") then
+			elseif string.match(line, "^auto%slo") then
 				outStr = outStr .. line .. "\n"
 			else
 				log:debug('disabling interface: ', line)
