@@ -302,14 +302,22 @@ function _lineinJack(self, val)
 		jiveMain:addItem({
 			id = "linein",
 			node = "home",
-			text = "Line-In",
+			text = self:string("LINE_IN"),
 			style = 'item_choice',
+			iconStyle = 'hm_linein',
 			check = Checkbox("checkbox", function(_, checked)
 				-- XXXX stop track playback
 				Decode:capture(checked)
 			end),
 			weight = 50,
 		})
+		local popup = Popup("toast_popup_icon")
+		local icon  = Icon("icon_popup_lineIn")
+		local group = Group("group", {
+                        icon = icon
+		})
+		popup:addWidget(group)
+		popup:showBriefly(3000, nil, Window.transitionFadeIn, Window.transitionFadeOut )
 	else
 		jiveMain:removeItemById("linein")
 		Decode:capture(false)
