@@ -616,7 +616,11 @@ function screensaverSetting(self, menuItem, mode)
 	end
 
 	local window = Window("text_list", menuItem.text, 'settingstitle')
---	window:addWidget(Textarea("help_text", self:string("SCREENSAVER_SELECT_HELP")))
+
+	-- Bug: 1173, don't show this header widget yet on fab4
+	if System:getMachine() ~= 'fab4' then
+		menu:setHeaderWidget(Textarea("text", self:string("SCREENSAVER_SELECT_HELP")))
+	end
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
