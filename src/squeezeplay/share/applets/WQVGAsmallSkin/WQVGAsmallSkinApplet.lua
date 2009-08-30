@@ -2470,6 +2470,22 @@ function skin(self, s)
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
+			elapsedSmall = {
+				w = 90,
+				align = 'right',
+				padding = { 8, 0, 8, 10 },
+				font = _boldfont(9),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+			remainSmall = {
+				w = 90,
+				align = 'left',
+				padding = { 8, 0, 8, 10 },
+				font = _boldfont(9),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)

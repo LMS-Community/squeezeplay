@@ -211,7 +211,7 @@ function skin(self, s, reload, useDefaultSize)
 			order = { 'nptrack', 'xofy' },
 			position   = _tracklayout.position,
 			nptrack =  {
-				padding    = { 10, 10, 4, 0 },
+				padding    = { 10, 10, 2, 0 },
 				w          = WH_FILL,
 				align      = _tracklayout.align,
 				lineHeight = _tracklayout.lineHeight,
@@ -219,13 +219,20 @@ function skin(self, s, reload, useDefaultSize)
 				font       = _boldfont(NP_TRACK_FONT_SIZE), 
 			},
 			xofy = {
-				padding    = { 4, 12, 10, 0 },
+				padding    = { 0, 10, 10, 0 },
 				position   = _tracklayout.position,
-				w          = 75,
+				w          = 50,
 				align      = 'right',
-				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
 				font       = _font(14), 
+			},
+			xofySmall = {
+				padding    = { 0, 10, 10, 0 },
+				position   = _tracklayout.position,
+				w          = 50,
+				align      = 'right',
+				fg         = _tracklayout.fg,
+				font       = _font(10), 
 			},
 		},
 		npartistalbum  = {

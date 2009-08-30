@@ -1756,6 +1756,22 @@ function skin(self, s)
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
+			elapsedSmall  = {
+				w = 75,
+				align = 'right',
+				padding = { 8, 0, 8, 15 },
+				font = _boldfont(12),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
+			remainSmall = {
+				w = 75,
+				align = 'left',
+				padding = { 8, 0, 8, 15 },
+				font = _boldfont(12),
+				fg = { 0xe7,0xe7, 0xe7 },
+				sh = { 0x37, 0x37, 0x37 },
+			},
 			text = {
 				w       = 75,
 				align   = 'right',

@@ -411,6 +411,16 @@ function _updatePlaylist(self)
 	if x and y and tonumber(x) > 0 and tonumber(y) >= tonumber(x) then
 		xofy = tostring(x) .. '/' .. tostring(y)
 	end
+
+	local xofyLen = string.len(xofy)
+	local xofyStyle = self.XofY:getStyle()
+
+	-- if xofy exceeds 5 total chars change style to xofySmall to fit
+	if xofyLen > 5 and xofyStyle ~= 'xofySmall' then
+		self.XofY:setStyle('xofySmall')
+	elseif xofyLen <= 5 and xofyStyle ~= 'xofy' then
+		self.XofY:setStyle('xofy')
+	end
 	self.XofY:setValue(xofy)
 	self.XofY:animate(true)
 end
@@ -497,8 +507,27 @@ function _updatePosition(self)
 	end
 
 	if self.progressGroup then
+		local elapsedWidget = self.progressGroup:getWidget('elapsed')
+		local elapsedLen    = string.len(strElapsed)
+		local elapsedStyle  = elapsedWidget:getStyle()
+		if elapsedLen > 5 and elapsedStyle ~= 'elapsedSmall' then
+			elapsedWidget:setStyle('elapsedSmall')
+		elseif elapsedLen <= 5 and elapsedStyle ~= 'elapsed' then
+			elapsedWidget:setStyle('elapsed')
+		end
+
 		self.progressGroup:setWidgetValue("elapsed", strElapsed)
+
 		if showProgressBar then
+			local remainWidget = self.progressGroup:getWidget('remain')
+			local remainLen    = string.len(strRemain)
+			local remainStyle  = remainWidget:getStyle()
+			if remainLen > 5 and remainStyle ~= 'remainSmall' then
+				remainWidget:setStyle('remainSmall')
+			elseif remainLen <= 5 and remainStyle ~= 'remain' then
+				remainWidget:setStyle('remain')
+			end
+
 			self.progressGroup:setWidgetValue("remain", strRemain)
 			self.progressSlider:setValue(elapsed)
 		end
@@ -722,10 +751,6 @@ function _createUI(self)
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
 		self.artistalbumTitle = Label('npartistalbum', "")
-
-		self.trackTitle:animate(true)
-		self.XofY:animate(true)
-		self.artistalbumTitle:animate(true)
 
 	if not self.gotoTimer then
 		self.gotoTimer = Timer(400,

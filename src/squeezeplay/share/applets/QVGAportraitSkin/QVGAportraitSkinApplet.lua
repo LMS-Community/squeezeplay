@@ -445,16 +445,22 @@ function skin(self, s, reload, useDefaultSize)
 				align      = _tracklayout.align,
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { 10, 10, 4, 0 },
+				padding    = { 10, 10, 2, 0 },
 				font       = _boldfont(NP_TRACK_FONT_SIZE), 
 			},
 			xofy =  {
-				w          = 75,
+				w          = 48,
 				align      = 'right',
-				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { 4, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
+				padding    = { 0, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
 				font       = _font(14), 
+			},
+			xofySmall =  {
+				w          = 48,
+				align      = 'right',
+				fg         = _tracklayout.fg,
+				padding    = { 0, 10, NP_TRACKINFO_RIGHT_PADDING, 0 },
+				font       = _font(10), 
 			},
 		},
 		npartistalbum  = {
@@ -500,6 +506,14 @@ function skin(self, s, reload, useDefaultSize)
 			},
 			remain = {
 				font = _boldfont(12),
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
+			elapsedSmall = {
+				font = _boldfont(9),
+				fg = { 0xb3, 0xb3, 0xb3 },
+			},
+			remainSmall = {
+				font = _boldfont(9),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
 		},
