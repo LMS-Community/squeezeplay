@@ -1258,7 +1258,7 @@ function _process_displaystatus(self, event)
 		local transitionOff = Window.transitionFadeOut
 		local duration = display['duration'] or 3000
 
-		local usingTouch = Framework:isMostRecentInput('mouse')
+		local usingIR = Framework:isMostRecentInput('ir')
 
 		-- this showBriefly should be displayed unless there's a good reason not to
 		local showMe = true
@@ -1269,8 +1269,8 @@ function _process_displaystatus(self, event)
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
 			duration = display['duration'] or 1500
-			-- if using a touch interface, icon-based showBriefly's should be suppressed 
-			if usingTouch then
+			-- icon-based showBrieflies only appear for IR
+			if not usingIR then
 				showMe = false
 			end
 		elseif type == 'popupalbum' then
