@@ -136,7 +136,7 @@ end
 
 --resend local values to server
 function refreshLocallyMaintainedParameters(self)
-	log:warn("refreshLocallyMaintainedParameters()")
+	log:info("refreshLocallyMaintainedParameters()")
 
 	--refresh volume
 	self:volume(self:getVolume(), true, true)
