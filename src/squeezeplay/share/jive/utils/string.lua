@@ -24,7 +24,7 @@ Builds on Lua's built-in string.* class
 --]]
 
 
-local setmetatable = setmetatable
+local tonumber, setmetatable = tonumber, setmetatable
 local table  = require('jive.utils.table')
 local ltable = require("string")
 
@@ -126,6 +126,47 @@ function matchLiteral(s, pattern, init)
 	local escapedPattern = ltable.gsub(pattern, "[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 	return ltable.match(s, escapedPattern, init)
  
+end
+
+--[[
+
+=head2 urlDecode(s)
+
+Decodes a URL-encoded string
+
+=cut
+==]]
+
+function urlDecode (str)
+	str = ltable.gsub(str, "+", " ")
+	str = ltable.gsub(str, "%%(%x%x)", 
+		function(h) 
+			return ltable.char(tonumber(h,16)) 
+		end
+	)
+	str = ltable.gsub (str, "\r\n", "\n")
+	return str
+end
+
+
+--[[
+
+=head2 urlEncode(s)
+
+Takes a string as an arg and returns an encoded URL-encoded string
+
+=cut
+==]]
+
+function urlEncode (str)
+	str = ltable.gsub(str, "\n", "\r\n")
+	str = ltable.gsub(str, "([^0-9a-zA-Z ])",
+		function(c) 
+			return ltable.format("%%%02X", ltable.byte(c)) 
+		end
+	)
+	str = ltable.gsub(str, " ", "+")
+	return str
 end
 
 --[[
