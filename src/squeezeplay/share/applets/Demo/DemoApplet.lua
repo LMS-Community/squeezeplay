@@ -364,6 +364,7 @@ function _showNextSlide(self)
 	image:blit(totImg, 0, 0)
 
 	local window = Window('window')
+	window:setShowFrameworkWidgets(false)
 	window:addWidget(Icon("background", totImg))
 
 	-- draw text
