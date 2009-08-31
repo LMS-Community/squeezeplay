@@ -363,12 +363,13 @@ local function _menuSink(self, isCurrentServer, server)
 				return
 			end
 
-			if _server and self.waitingForPlayerMenuStatus and menuDirective == "add" then
-				self.serverHomeMenuItems[_server] = menuItems
+			if _server and menuDirective == "add" then
+				self:_addServerHomeMenuItems(_server, menuItems)
 			end
 		else
 			--this is a response from a "menu" command for a non-connected player
 			menuItems = chunk.data.item_loop
+			self:_addServerHomeMenuItems(server, menuItems)
 
 		end
 
@@ -725,15 +726,12 @@ function _canServerServe(self, server, item)
 	local menuItems = self.serverHomeMenuItems[server]
 	if not menuItems then
 		log:error("server can not serve, menus not here (yet). item: ", item.id, " server: ", server)
-
 	        return false
 	end
 
-	for key, value in pairs(menuItems) do
-		if value.id == item.id then
-			log:debug("Server can serve item: ", item.id, " server: ", server)
-			return true
-		end
+	if menuItems[item.id] then
+		log:debug("Server can serve item: ", item.id, " server: ", server)
+		return true
 	end
 
 	log:debug("Server can not serve item: ", item.id, " server: ", server)
@@ -750,6 +748,25 @@ function _getSqueezeNetwork(self)
 
 	return nil
 end
+
+
+function _addServerHomeMenuItems(self, server, menuItems)
+	if not self.serverHomeMenuItems[server] then
+		self.serverHomeMenuItems[server] = {}
+	end
+
+	for i, v in ipairs(menuItems) do
+		log:debug("adding cached item: ", v.id, " for server:", server)
+
+		if v.id then
+			self.serverHomeMenuItems[server][v.id] = v
+		else
+			log:info("No id for:", v.text)
+			debug.dump(v)
+		end
+	end
+end
+
 
 function _updateMyMusicTitle(self, serverName)
 	local myMusicNode = jiveMain:getMenuTable()["_myMusic"]
@@ -1117,7 +1134,6 @@ function _sinkSetServerMenuChunk(self, server, isConnectedServer)
 			_massageItem(item)
 		end
 
-		self.serverHomeMenuItems[server] = menuItems
 		self:_mergeServerMenuToHomeMenu(server, menuItems, isConnectedServer)
 	end
 end
