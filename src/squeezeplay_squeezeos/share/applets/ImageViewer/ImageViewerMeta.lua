@@ -36,9 +36,13 @@ end
 
 
 function registerApplet(meta)
-	if System:getMachine() ~= "baby" then
+	if System:getMachine() ~= "baby" and System:getMachine() ~= "jive" then
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'settings', "IMAGE_VIEWER", 
 			function(applet, ...) applet:openImageViewer(...) end, 58))
+	else
+		jiveMain:addItem(meta:menuItem('appletImageViewer', 'screenSettings', "IMAGE_VIEWER_SETTINGS",
+			function(applet, ...) applet:openMinimalSettings(...) end, 105))
+
 	end
 	
 	meta:registerService("registerRemoteScreensaver")
@@ -48,7 +52,7 @@ end
 
 
 function configureApplet(self)
-	if System:getMachine() ~= "baby" then
+	if System:getMachine() ~= "baby" and System:getMachine() ~= "jive" then
 		appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
 			"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
 	end
