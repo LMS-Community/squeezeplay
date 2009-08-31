@@ -65,6 +65,8 @@ function settingsShow(self)
 end
 
 -- service to select server for a player. Note a current player must exist before calling this method
+-- if specificServer is set to false, then offer a list even if only one server exists. If specificServer, if only on server exists,
+--  it will automatically be selected.
 function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected, confirmOnChange)
 
 	if includedServers then
@@ -96,12 +98,16 @@ function selectMusicSource(self, playerConnectedCallback, titleStyle, includedSe
 		return
 	end
 
+	local offerListIfOnlyOneServerExists
+	if specificServer == false then
+		offerListIfOnlyOneServerExists = true
+	end
 
-	self:_showMusicSourceList()
+	self:_showMusicSourceList(offerListIfOnlyOneServerExists)
 end
 
 
-function _showMusicSourceList(self)
+function _showMusicSourceList(self, offerListIfOnlyOneServerExists)
 
 	local window = Window("text_list", self:string("SLIMSERVER_SERVERS"), self.titleStyle)
 	local menu = SimpleMenu("menu", items)
@@ -157,6 +163,24 @@ function _showMusicSourceList(self)
 	)
 
 	window._isChooseMusicSourceWindow = true
+
+	--if list contains only one item, select it directly
+	local singleServer
+	for address,item in pairs(self.serverList) do
+		if singleServer then
+			--more than one found, so not single server situation
+			singleServer = nil
+			break
+		end
+		singleServer = item.server
+	end
+
+	if not offerListIfOnlyOneServerExists and singleServer then
+		log:info("Only one server found, select it directly: ", singleServer)
+
+		self:selectServer(singleServer)
+		return
+	end
 
 	self:tieAndShowWindow(window)
 
@@ -251,6 +275,7 @@ function _addServerItem(self, server, address)
 
 		-- new entry
 		local item = {
+			server = server,
 			text = server:getName(),
 			sound = "WINDOWSHOW",
 			callback = function()

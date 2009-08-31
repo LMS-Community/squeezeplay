@@ -948,7 +948,7 @@ function otherLibrarySelector(self)
 	self:_selectMusicSource(function()
 					jiveMain:goHome()
 					jiveMain:openNodeById('_myMusic', true)
-				end)
+				end, false)
 end
 
 
