@@ -1622,6 +1622,7 @@ function connectToServer(self, server)
 	server:wakeOnLan()
 
 	if self.config == "needsServer" then
+		SlimServer:addLocallyRequestedServer(server)
 		_udapConnect(self, server)
 		return
 
