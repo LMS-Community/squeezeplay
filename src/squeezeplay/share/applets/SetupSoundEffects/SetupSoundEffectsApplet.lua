@@ -228,7 +228,6 @@ function _setVolume(self, value)
 
 	Sample:setEffectVolume(value * VOLUME_STEP)
 
-	self.slider:setValue(value)
 	self.slider:playSound("CLICK")
 
 	settings["_VOLUME"] = value * VOLUME_STEP
@@ -238,9 +237,9 @@ end
 function volumeShow(self)
 	local window = Window("text_list", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
-	self.slider = Slider("volume_slider", 0, VOLUME_STEPS, Sample:getEffectVolume() / VOLUME_STEP,
+	self.slider = Slider("volume_slider", 1, VOLUME_STEPS + 1, Sample:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)
-				     self:_setVolume(value)
+				     self:_setVolume(value - 1)
 			     end)
 
 	self.slider:addListener(EVENT_KEY_PRESS,
