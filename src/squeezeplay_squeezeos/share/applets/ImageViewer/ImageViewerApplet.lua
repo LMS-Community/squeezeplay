@@ -595,6 +595,44 @@ function openSettings(self)
 	return window
 end
 
+
+function openMinimalSettings(self)
+	log:info("image viewer settings 2")
+	self:initImageSource()
+
+	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
+	window:addWidget(SimpleMenu("menu",
+		{
+			{
+				text = self:string("IMAGE_VIEWER_DELAY"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:defineDelay(menuItem)
+					return EVENT_CONSUME
+			end
+			},
+			{
+				text = self:string("IMAGE_VIEWER_TRANSITION"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:defineTransition(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+			{
+				text = self:string("IMAGE_VIEWER_TEXTINFO"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:defineTextInfo(menuItem)
+					return EVENT_CONSUME
+				end
+			},
+		}))
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
 function sourceSpecificSettings(self, menuItem)
 	local window = Window("window", menuItem.text)
 
