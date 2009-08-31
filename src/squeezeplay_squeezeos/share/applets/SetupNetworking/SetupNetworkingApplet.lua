@@ -18,6 +18,7 @@ local table                  = require("jive.utils.table")
 local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Event                  = require("jive.ui.Event")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
@@ -664,7 +665,8 @@ function _enterPassword(self, iface, ssid, nocheck)
 		self.encryption = "none"
 		return _connect(self, iface, ssid, true, false)
 
-	elseif nocheck ~= "wps" and string.find(flags, "WPS") then
+	-- FIXME: 08/31/09 Re-enable WPS for Controller at a later stage (after more testing is done)
+	elseif nocheck ~= "wps" and string.find(flags, "WPS") and System:getMachine() ~= "jive" then
 		self.encryption = "wpa2"
 		return _chooseWPS(self, iface, ssid)
 
