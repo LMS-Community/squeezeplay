@@ -47,6 +47,7 @@ function registerApplet(self)
 	self:registerService('browserJsonRequest')
 	self:registerService('browserActionRequest')
 	self:registerService('browserCancel')
+	self:registerService('getAudioVolumeManager')
 
 	appletManager:loadApplet("SlimBrowser")
 

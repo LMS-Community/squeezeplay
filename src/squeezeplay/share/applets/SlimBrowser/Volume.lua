@@ -75,6 +75,13 @@ function _getVolume(self)
 	end
 end
 
+
+-- if offline, don't try to send command to the server.
+function setOffline(self, offline)
+	self.offline = offline
+end
+
+
 local function _openPopup(self)
 	if self.popup or not self.player then
 		return
@@ -204,6 +211,19 @@ function _updateVolume(self, mute, directSet, noAccel)
 	end
 
 	new = self:_coerceVolume(new)
+
+	if self.offline then
+		log:debug("Setting offline volume: ", new)
+
+		if self.player and self.player:isLocal() then
+			self.player:volumeLocal(new, true)
+			self.volume = new
+			_updateDisplay(self)
+		else
+			log:warn("offline mode not allowed when player is not local: ", player)
+		end
+		return
+	end
 
 	local remoteVolume = self.player:volume(new)
 

@@ -9,6 +9,26 @@ local Timer                  = require("jive.ui.Timer")
 
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local SlimServer    = require("jive.slim.SlimServer")
+local Framework              = require("jive.ui.Framework")
+
+local EVENT_KEY_ALL          = jive.ui.EVENT_KEY_ALL
+local EVENT_KEY_DOWN         = jive.ui.EVENT_KEY_DOWN
+local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
+local EVENT_KEY_UP           = jive.ui.EVENT_KEY_UP
+local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
+local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_ALL           = jive.ui.EVENT_IR_ALL
+local EVENT_SCROLL           = jive.ui.EVENT_SCROLL
+local ACTION                 = jive.ui.ACTION
+
+local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
+local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
+
+local KEY_GO                 = jive.ui.KEY_GO
+local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
+local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+
 
 local debug         = require("jive.utils.debug")
 
@@ -120,6 +140,46 @@ function configureApplet(meta)
 
 	-- Subscribe to changes in player status
 	jnt:subscribe(meta)
+
+	--add listeners for local control. SlimBrowser's handlers for this will win when a player is connected
+	local volumeActionHandler = function(self, event)
+		local currentPlayer = LocalPlayer:getCurrentPlayer()
+		if not currentPlayer or currentPlayer ~= meta.state.player then --todo or if not line-in is selected
+			--only adjust local volume when the current player is the local player.
+			return
+		end
+
+		log:debug("Using local volume control Handler")
+
+		local volume = appletManager:callService('getAudioVolumeManager')
+		volume:setPlayer(meta.state.player)
+		volume:setOffline(true)
+		
+		return volume:event(event, true)
+	end
+
+	Framework:addActionListener("volume_up", self, volumeActionHandler, 2)
+	Framework:addActionListener("volume_down", self, volumeActionHandler, 2)
+
+	Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_ALL,
+		function(event)
+			local type = event:getType()
+
+			if (type & EVENT_IR_ALL ) > 0 then
+				if event:isIRCode("volup") or event:isIRCode("voldown") then
+					return volumeActionHandler(self, event)
+				end
+				return EVENT_UNUSED
+			end
+
+			if event:getKeycode() == KEY_VOLUME_UP or event:getKeycode() == KEY_VOLUME_DOWN then
+					return volumeActionHandler(self, event)
+			end
+
+			return EVENT_UNUSED
+		end,
+		2
+	)
 end
 
 function _updateLocallyMaintainedParams(meta)

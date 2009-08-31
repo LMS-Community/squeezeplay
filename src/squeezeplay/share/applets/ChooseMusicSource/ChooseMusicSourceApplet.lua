@@ -580,9 +580,10 @@ function _showConnectToServer(self, player, server)
 		end
 
 		-- disable input
-		window:ignoreAllInputExcept({"back", "go_home"})
+		window:ignoreAllInputExcept({"back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
 		window:addActionListener("back", self, cancelAction)
 		window:addActionListener("go_home", self, cancelAction)
+		window:addActionListener("go_home_or_now_playing", self, cancelAction)
 
 		window:addTimer(1000,
 				function()

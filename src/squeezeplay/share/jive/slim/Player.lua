@@ -1222,7 +1222,7 @@ function _process_status(self, event)
 			local serverVolume = self.state["mixer volume"] and tonumber(self.state["mixer volume"]) or nil
 			if serverVolume ~= self:getVolume() then
 				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
-				self:volumeLocal(self.state["mixer volume"], nil, true)
+				self:volumeLocal(self.state["mixer volume"])
 			end
 		else
 			log:debug("volume value ignored(out of sync), revert to old: ", oldState["mixer volume"])
@@ -1308,11 +1308,16 @@ function togglePause(self)
 		self:call({'pause', '0'})
 		self.mode = 'play'
 	elseif paused == 'play' then
-		self:call({'pause', '1'})
-		self.mode = 'pause'
+		self:_pauseOn()
 	end
 	self:updateIconbar()
 end	
+
+
+function _pauseOn(self)
+	self:call({'pause', '1'})
+	self.mode = 'pause'
+end
 
 
 function unpause(self)
@@ -1528,14 +1533,14 @@ end
 
 -- volume
 -- send new volume value to SS, returns a negitive value if the player is muted
-function volume(self, vol, send, sequenceNumber, useBackgroundRequest)
+function volume(self, vol, send, sequenceNumber)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
 		log:debug("Sending player:volume(", vol, ")")
 		if sequenceNumber then
-			self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber}, useBackgroundRequest)
+			self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber})
 		else
-			self:send({'mixer', 'volume', vol}, useBackgroundRequest)
+			self:send({'mixer', 'volume', vol})
 		end
 		self.mixerTo = now + MIN_KEY_INT
 		self.state["mixer volume"] = vol

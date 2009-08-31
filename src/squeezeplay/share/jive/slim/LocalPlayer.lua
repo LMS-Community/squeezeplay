@@ -213,14 +213,25 @@ end
 
 -- volume
 -- send new volume value to SS, returns a negative value if the player is muted
-function volume(self, vol, send, useBackgroundRequest)
+function volume(self, vol, send)
 	self:volumeLocal(vol)
-	return Player.volume(self, vol, send, self:incrementSequenceNumber(), useBackgroundRequest)
+	return Player.volume(self, vol, send, self:incrementSequenceNumber())
 end
 
 
-function volumeLocal(self, vol)
+function volumeLocal(self, vol, updateSequenceNumber)
+	--sometime we want to update the sequence number directly, like when there is no server connection and volume is changed
+	if updateSequenceNumber then
+		self:incrementSequenceNumber()
+	end
 	self.playback:setVolume(vol)
+end
+
+
+
+function _pauseOn(self)
+	--todo: how to do local pause - maybe do locally as a back on server failure or timeout
+	Player._pauseOn(self)
 end
 
 

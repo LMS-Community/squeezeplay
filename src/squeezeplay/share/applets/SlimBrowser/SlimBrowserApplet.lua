@@ -2701,7 +2701,7 @@ function _problemConnectingPopupInternal(self, server)
 	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO")))
 	popup:addWidget(Label("subtext", server:getName()))
 
-	popup:ignoreAllInputExcept({"back", "go_home"})
+	popup:ignoreAllInputExcept({"back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
 	local cancelAction =    function ()
 					log:info("Cancel reconnect window")
 
@@ -2713,6 +2713,7 @@ function _problemConnectingPopupInternal(self, server)
 				end
 	popup:addActionListener("back", self,  cancelAction )
 	popup:addActionListener("go_home", self,  cancelAction )
+	popup:addActionListener("go_home_or_now_playing", self,  cancelAction )
 
 	local count = 0
 	popup:addTimer(1000,
@@ -3234,6 +3235,7 @@ function _attachPlayer(self, player)
 
 	-- update the scanner object
 	self.scanner:setPlayer(player)
+	self.volume:setOffline(false)
 
 	-- nothing to do if we don't have a player or server
 	-- NOTE don't move this, the code above needs to run when disconnecting
@@ -3330,6 +3332,12 @@ function free(self)
 	end
 	
 	return true
+end
+
+
+--service method
+function getAudioVolumeManager(self)
+	return self.volume
 end
 
 
