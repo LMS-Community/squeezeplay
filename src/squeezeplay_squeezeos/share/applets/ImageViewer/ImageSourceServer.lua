@@ -172,7 +172,7 @@ function requestImage(self, imageData)
 
 	local urlString = imageData.image
 	--use SN image proxy for resizing
-	urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. urlString
+	urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)
 
 	self.currentImageFile = urlString
 
