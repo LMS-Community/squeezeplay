@@ -223,7 +223,7 @@ function skin(self, s, reload, useDefaultSize)
 			text = {
 				align = 'right',
 				font = _boldfont(21),
-				padding = { 4, 0, 4, 0 },
+				padding = { 0, 0, 12, 0 },
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
 		},
@@ -235,7 +235,7 @@ function skin(self, s, reload, useDefaultSize)
 					font = _boldfont(24),
 					fg = { 0xe6, 0xe6, 0xe6 },
 					align = 'right',
-					padding = { 4, 0, 4, 0 },
+					padding = { 0, 0, 12, 0 },
 				},
 			},
 		},
@@ -245,6 +245,18 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
 		border = { 25 + 65 + 65, 36, 0, 24 },
+		item = {
+			text = {
+				padding = { 0, 0, 8, 0 },
+			},
+		},
+		selected = {
+			item = {
+				text = {
+					padding = { 0, 0, 8, 0 },
+				},
+			},
+		},
 	})
 	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, {
 		item = {

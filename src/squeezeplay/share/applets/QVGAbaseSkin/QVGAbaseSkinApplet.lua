@@ -911,7 +911,7 @@ function skin(self, s, reload, useDefaultSize)
 			text = {
 				align = 'right',
 				font = _boldfont(21),
-				padding = { 4, 0, 4, 0 },
+				padding = { 2, 0, 12, 0 },
 				fg = { 0xb3, 0xb3, 0xb3 },
 				sh = { },
 			},
@@ -923,9 +923,9 @@ function skin(self, s, reload, useDefaultSize)
 				text = {
 					font = _boldfont(24),
 					fg = { 0xe6, 0xe6, 0xe6 },
-				sh = { },
+					sh = { },
 					align = 'right',
-					padding = { 4, 0, 4, 0 },
+					padding = { 2, 0, 10, 0 },
 				},
 			},
 		},
@@ -935,6 +935,20 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
 		border = { _timeFirstColumnX12h + 65 + 65, 36, 0, 24 },
+		item = {
+			text = {
+				padding = { 0, 0, 8, 0 },
+				font = _boldfont(20),
+			},
+		},
+		selected = {
+			item = {
+				text = {
+					padding = { 0, 0, 8, 0 },
+					font = _boldfont(23),
+				},
+			},
+		},
 	})
 	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, {
 		item = {
@@ -949,6 +963,7 @@ function skin(self, s, reload, useDefaultSize)
 				text = {
 					fg = { 0x66, 0x66, 0x66 },
 					font = _boldfont(21),
+					padding = { 2, 0, 12, 0 },
 				},
 			},
 		},
@@ -966,6 +981,7 @@ function skin(self, s, reload, useDefaultSize)
 				text = {
 					fg = { 0x66, 0x66, 0x66 },
 					font = _boldfont(21),
+					padding = { 2, 0, 12, 0 },
 				},
 			},
 		},
@@ -975,6 +991,7 @@ function skin(self, s, reload, useDefaultSize)
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
 				font = _boldfont(20),
+				padding = { 0, 0, 8, 0 },
 			},
 		},
 		selected = {
@@ -983,6 +1000,7 @@ function skin(self, s, reload, useDefaultSize)
 				text = {
 					fg = { 0x66, 0x66, 0x66 },
 					font = _boldfont(20),
+					padding = { 0, 0, 8, 0 },
 				},
 			},
 		},
