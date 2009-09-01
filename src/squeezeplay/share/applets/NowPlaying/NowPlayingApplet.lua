@@ -275,7 +275,7 @@ end
 
 function _isThisPlayer(self, player)
 
-	if not self.player and not self.player:getId() then
+	if not self.player or not self.player:getId() then -- note happened(revealed 'and' bug) when server was down and restarted
 		self.player = appletManager:callService("getCurrentPlayer")
 	end
 
