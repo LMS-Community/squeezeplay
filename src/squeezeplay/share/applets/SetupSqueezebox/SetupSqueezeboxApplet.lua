@@ -1301,7 +1301,9 @@ function _setSlimserver(self, slimserver)
 
 	-- we are not SqueezeNetwork, so continue
 	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
-	_setupSqueezebox(self)
+
+-- Calling _setupSqueezebox() here again unsubscribes us from notifications
+--	_setupSqueezebox(self)
 end
 
 
@@ -1317,7 +1319,9 @@ function _registerPlayer(self, slimserver)
 	end
 
 	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
-	_setupSqueezebox(self)
+
+-- Calling _setupSqueezebox() here again unsubscribes us from notifications
+--	_setupSqueezebox(self)
 end
 
 
