@@ -4,6 +4,7 @@ local io            = require("io")
 local math          = require("math")
 local string        = require("string")
 local table         = require("jive.utils.table")
+local os            = require("os")
 
 local Decode        = require("squeezeplay.decode")
 local AppletMeta    = require("jive.AppletMeta")
@@ -41,7 +42,9 @@ function registerApplet(meta)
 
 
 	--disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
-	jnt:setArpEnabled(false)
+	if string.match(os.getenv("OS") or "", "Windows") then
+		jnt:setArpEnabled(false)
+	end
 
 
 	local settings = meta:getSettings()
