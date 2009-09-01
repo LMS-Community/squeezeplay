@@ -229,9 +229,62 @@ end
 
 
 
-function _pauseOn(self)
-	--todo: how to do local pause - maybe do locally as a back on server failure or timeout
-	Player._pauseOn(self)
+function pause(self)
+	local active = self.playback:isLocalPauseOrStopTimeoutActive()
+	if not active then
+		self.playback:startLocalPauseTimeout()
+		self.mode = "pause"
+		self:updateIconbar()
+
+		Player.pause(self)
+	else
+		log:debug("discarding pause while timeout active")
+	end
+end
+
+
+function stop(self)
+	local active = self.playback:isLocalPauseOrStopTimeoutActive()
+	if not active then
+		self.playback:startLocalStopTimeout()
+		self.mode = "stop"
+		self:updateIconbar()
+
+		Player.stop(self)
+	else
+		log:debug("discarding stop while timeout active")
+	end
+end
+
+
+--overridden only to prevent unpausing while awaiting possible local timeout, otherwise just call parent, since no local unpause
+function unpause(self)
+	local active = self.playback:isLocalPauseOrStopTimeoutActive()
+	if not active then
+		Player.unpause(self)
+	else
+		log:debug("discarding unpause while timeout active")
+	end
+end
+
+
+--overridden only to prevent unpausing while awaiting possible local timeout, otherwise just call parent, since no local unpause
+function play(self)
+	local active = self.playback:isLocalPauseOrStopTimeoutActive()
+	if not active then
+		Player.play(self)
+	else
+		log:debug("discarding unpause while timeout active")
+	end
+end
+
+
+--overridden to stop playback when powering off
+function setPower(self, on)
+	if not on then
+		self:stop()
+	end
+	Player.setPower(self, on)
 end
 
 

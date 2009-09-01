@@ -44,6 +44,7 @@ local TCP_CLOSE_LOCAL_TIMEOUT = 4
 local STREAM_READ_TIMEOUT = 0
 local STREAM_WRITE_TIMEOUT = 5
 
+local LOCAL_PAUSE_STOP_TIMEOUT = 400
 
 function __init(self, jnt, slimproto)
 	assert(slimproto)
@@ -504,10 +505,8 @@ function _strm(self, data)
 	elseif data.command == 'q' then
 		-- quit
 		-- XXXX check against ip3k
-		decode:stop()
-		self:_streamDisconnect(nil, true)
-
-		self.tracksStarted = 0
+		self:_stopPauseAndStopTimers()
+		self:_stopInternal()
 
 	elseif data.command == 'f' then
 		-- flush
@@ -516,12 +515,9 @@ function _strm(self, data)
 
 	elseif data.command == 'p' then
 		-- pause
+		self:_stopPauseAndStopTimers()
 		local interval_ms = data.replayGain
-
-		decode:pauseAudio(interval_ms)
-		if interval_ms == 0 then
-			self.slimproto:sendStatus('STMp')
-		end
+		self:_pauseInternal(interval_ms)
 
 	elseif data.command == 'a' then
 		-- skip ahead
@@ -547,6 +543,22 @@ function _strm(self, data)
 	end
 
 	return true
+end
+
+
+function _stopInternal(self)
+	decode:stop()
+	self:_streamDisconnect(nil, true)
+
+	self.tracksStarted = 0
+end
+
+
+function _pauseInternal(self, interval_ms)
+	decode:pauseAudio(interval_ms)
+	if interval_ms == 0 then
+		self.slimproto:sendStatus('STMp')
+	end
 end
 
 
@@ -644,6 +656,7 @@ function _audg(self, data, isLocal)
 			return
 		end
 
+		self:_stopPauseAndStopTimers()
 	----NOTE: not using server value for self.volume, because fades come in through the audg mechanism. Instead, wait for the player status before
 	---- setting the locally held self.volume. This could cause a case where remote ui changes volume and the local volume isn't seen as right until playerstatus completes 
 --		--for now only using the translated volume value, not converting gain to a local value
@@ -671,6 +684,52 @@ function translateServerGain(self, serverGain)
 	end
 	--use final value
 	return self:_getGainFromVolume(#_serverVolumeToGain), #_serverVolumeToGain
+end
+
+
+function _stopPauseAndStopTimers(self)
+	log:debug("stopping local pause timer")
+	if self.localPauseTimer then
+		self.localPauseTimer:stop()
+	end
+
+	if self.localStopTimer then
+		self.localStopTimer:stop()
+	end
+end
+
+
+function isLocalPauseOrStopTimeoutActive(self)
+	return (self.localPauseTimer and self.localPauseTimer:isRunning())
+		or (self.localStopTimer and self.localStopTimer:isRunning())
+end
+
+
+function startLocalPauseTimeout(self)
+	if not self.localPauseTimer then
+		self.localPauseTimer = Timer(    LOCAL_PAUSE_STOP_TIMEOUT,
+						function ()
+							log:debug("Local pause since remote stop timed out")
+							self:_pauseInternal(nil)
+						end,
+						true)
+	end
+
+	self.localPauseTimer:restart()
+end
+
+
+function startLocalStopTimeout(self)
+	if not self.localStopTimer then
+		self.localStopTimer = Timer(    LOCAL_PAUSE_STOP_TIMEOUT,
+						function ()
+							log:debug("Local stop since remote stop timed out")
+							self:_stopInternal()
+						end,
+						true)
+	end
+
+	self.localStopTimer:restart()
 end
 
 

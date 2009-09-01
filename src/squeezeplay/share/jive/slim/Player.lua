@@ -1094,7 +1094,7 @@ function updateIconbar(self)
 	
 	if self.isOnStage and self.state then
 		-- set the playmode (nil, stop, play, pause)
-		iconbar:setPlaymode(self.state["mode"])
+		iconbar:setPlaymode(self.mode)
 		
 		-- set the shuffle (nil, 0=off, 1=by song, 2=by album)
 		iconbar:setShuffle(self.state["playlist shuffle"])
@@ -1115,6 +1115,9 @@ function updateIconbar(self)
 			iconbar:setRepeat(0)
 			iconbar:setPlaylistMode(self.state["playlist mode"])
 		end
+	else
+		--still set play mode (for local offline playback)
+		iconbar:setPlaymode(self.state["mode"] or self.mode)
 	end
 end
 
@@ -1302,31 +1305,34 @@ function togglePause(self)
 	log:debug("Player:togglePause(", paused, ")")
 
 	if paused == 'stop' or paused == 'pause' then
-		-- reset the elapsed time epoch
-		self.trackSeen = Framework:getTicks() / 1000
-
-		self:call({'pause', '0'})
-		self.mode = 'play'
+		self:unpause()
 	elseif paused == 'play' then
-		self:_pauseOn()
+		self:pause()
 	end
-	self:updateIconbar()
-end	
+end
 
 
-function _pauseOn(self)
+function pause(self)
+	if not self.state then return end
+
 	self:call({'pause', '1'})
 	self.mode = 'pause'
+
+	self:updateIconbar()
 end
 
 
 function unpause(self)
 	if not self.state then return end
 
+	local paused = self.mode
+
 	if paused == 'stop' or paused == 'pause' then
 		-- reset the elapsed time epoch
 		self.trackSeen = Framework:getTicks() / 1000
 		self:call({'pause', '0'})
+
+		self.mode = 'play'
 	end
 
 	self:updateIconbar()
