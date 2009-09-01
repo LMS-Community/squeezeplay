@@ -619,7 +619,7 @@ function screensaverSetting(self, menuItem, mode)
 
 	-- Bug: 1173, don't show this header widget yet on fab4
 	if System:getMachine() ~= 'fab4' and System:getMachine() ~= 'squeezeplay' then
-		menu:setHeaderWidget(Textarea("text", self:string("SCREENSAVER_SELECT_HELP")))
+		menu:setHeaderWidget(Textarea("help_text", self:string("SCREENSAVER_SELECT_HELP")))
 	end
 	window:addWidget(menu)
 

@@ -51,12 +51,8 @@ local jiveMain               = jiveMain
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-
-local authors = { "Chapple", "Scott Robinson", "Los Cardinalos", "Orin Optiglot", "Ryan McD", "Robbie Fisher" }
-
 local firmwarePrefix = "applets/SetupWallpaper/wallpaper/"
 local downloadPrefix
-
 
 function init(self)
 	jnt:subscribe(self)
