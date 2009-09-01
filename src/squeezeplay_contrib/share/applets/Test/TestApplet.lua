@@ -71,6 +71,11 @@ function menu(self, menuItem)
 				callback = function(event, menuItem)
 				appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
 				end },
+			{ text = "SN playerReset",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'playerReset', 0, 100, 'service:SN' })
+				end },
 			{ text = "Context Menu Nav",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
