@@ -351,7 +351,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 	self.setupMode = setupNext ~= nil
 	self.setupNext = setupNext or 
 		function()
-			window:hide(Window.transitionPushLeft)
+			jiveMain:closeToHome()
 		end
 
 	self.selectedPlayer = appletManager:callService("getCurrentPlayer")

@@ -1519,6 +1519,9 @@ function _setupOK(self)
 	local text = Label("text", self:string("SQUEEZEBOX_SETUP_COMPLETE"))
 	window:addWidget(text)
 
+	local status = Label("subtext", self.squeezeboxIPAddr)
+	window:addWidget(status)
+
 	window:addTimer(2000,
 			function(event)
 				self:_setupDone()
