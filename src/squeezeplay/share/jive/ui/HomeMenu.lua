@@ -126,7 +126,7 @@ function getComplexWeight(self, id, item)
 	if self.menuTable[id]['node'] == 'home' then
 		return item.weight
 	elseif self.menuTable[id]['node'] == 'hidden' then
-		return 100
+		return self.menuTable[id].hiddenWeight and self.menuTable[id].hiddenWeight or 100
 	else
 		local nodeItem = self.menuTable[id]['node']
 		if not self.menuTable[nodeItem] then

@@ -313,6 +313,14 @@ function _massageItem(item)
 			item.isANode = itemMap[id][4]
 		end
 	end
+
+
+	--items such as my apps items that aren't on the home menu come in blank
+	if item.node == "" then
+		item.node = "hidden"
+		item.hiddenWeight = item.weight
+	end
+
 	if itemMap[item.node] then
 		local node = item.node
 		item.node = itemMap[node][1]
@@ -472,6 +480,14 @@ local function _menuSink(self, isCurrentServer, server)
 				--ignore, now shown locally
 			elseif item.id == "radios" then
 				--ignore, shown locally
+			elseif item.id == "music_services" or item.id == "_music_services" then
+				--ignore, handled with app store
+			elseif item.node == "music_services" or item.node == "_music_services" then
+				--ignore, handled with app store
+			elseif item.id == "music_stores" or item.id == "_music_stores" then
+				--ignore, handled with app store
+			elseif item.node == "music_stores" or item.node == "_music_stores" then
+				--ignore, handled with app store
 			elseif v.isANode or item.isANode then
 				if item.id != "_myMusic" then
 					self:_addNode(item, isCurrentServer)
