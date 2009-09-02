@@ -130,10 +130,10 @@ function init(self)
 
 	-- for testing:
 	self.testLowBattery = false
-	Framework:addActionListener("start_demo", self, function()
-		self.testLowBattery = not self.testLowBattery
-		log:warn("battery low test ", self.testLowBattery)
-	end, true)
+	--Framework:addActionListener("start_demo", self, function()
+	--	self.testLowBattery = not self.testLowBattery
+	--	log:warn("battery low test ", self.testLowBattery)
+	--end, true)
 
 	Framework:addListener(EVENT_SWITCH, function(event)
 		local sw,val = event:getSwitch()
