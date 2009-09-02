@@ -104,15 +104,18 @@ function init(self)
 		self:storeSettings()
 	end
 
+	self.lcdBrightness = settings.brightness
+
 	self:initBrightness()
 
-	self.lcdBrightness = settings.brightness
 	self:setPowerState("active")
 
 	brightnessTimer = Timer( 2000,
 		function()
 			if settings.brightnessControl != "manual" then
-				self:doAutomaticBrightnessTimer()
+				if not self:isScreenOff() then
+					self:doAutomaticBrightnessTimer()
+				end
 			end
 		end)
 	brightnessTimer:start()	
@@ -198,7 +201,20 @@ function initBrightness(self)
 	
 	-- Init some values to a default value
 	brightCur = MAX_BRIGHTNESS_LEVEL
+
+	self.brightPrev = self:getBrightness()
+	if self.brightPrev and self.brightPrev == 0 then
+		--don't ever fallback to off
+		self.brightPrev = 70
+	end
+
 end
+
+
+function isScreenOff(self)
+	return self:getBrightness() == 0
+end
+
 
 function doBrightnessRamping(self, target)
 	local diff = 0
@@ -597,6 +613,8 @@ end
 
 
 function _setBrightness(self, level)
+	log:debug("_setBrightness: ", level)
+
 	self.lcdBrightness = level
 
 	level = level + 1 -- adjust 0 based to one based for the brightnessTable
@@ -632,9 +650,11 @@ function setBrightness (self, level)
 	if level == "off" then
 		level = 0
 	elseif level == "on" then
-		level = 70
+		level = self.brightPrev
 	elseif level == nil then
 		return
+	else
+		self.brightPrev = level
 	end
 
 	_setBrightness(self, level)
