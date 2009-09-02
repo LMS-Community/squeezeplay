@@ -58,7 +58,7 @@ function openAlarmWindow(self)
 		return
 	end
 
-	local window = Popup('alarm', self:string('ALARM_SNOOZE_ALARM'))
+	local window = Popup('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
 
 	local time = datetime:getCurrentTime()
 	local icon = Icon('icon_alarm')

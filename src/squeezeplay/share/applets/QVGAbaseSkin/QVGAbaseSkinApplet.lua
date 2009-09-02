@@ -1426,7 +1426,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	-- alarm menu window
-	s.alarm = {
+	s.alarm_popup = {
 		x = 10,
 		y = 10,
 		w = screenWidth - 20,
