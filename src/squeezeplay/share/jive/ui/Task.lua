@@ -16,14 +16,15 @@ module(..., oo.class)
 
 
 -- constants
-PRIORITY_HIGH = 1
-PRIORITY_LOW = 2
+PRIORITY_AUDIO = 1
+PRIORITY_HIGH = 2
+PRIORITY_LOW = 3
 
 
 -- the task list is modified while iterating over the entries,
 -- we use a linked list to make the iteration easier
--- two queues: priority 1 and 2
-local taskHead = { nil, nil }
+-- three queues: streaming, high and low
+local taskHead = { nil, nil, nil }
 
 -- the task that is active, or nil for the main thread
 local taskRunning = nil
@@ -40,7 +41,7 @@ function __init(self, name, obj, f, errf, priority)
 				      args = {},
 				      thread = coroutine.create(f),
 				      errf = errf,
-				      priority = priority or 2,
+				      priority = priority or PRIORITY_LOW,
 			      })
 
 	return obj
@@ -208,7 +209,7 @@ function iterator(class)
 			       entry = entry.next
 		       end
 
-		       if entry == nil then
+		       while entry == nil and priority < PRIORITY_LOW do
 			       priority = priority + 1
  			       entry = taskHead[priority]
 		       end

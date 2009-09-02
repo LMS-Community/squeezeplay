@@ -370,10 +370,10 @@ function _streamConnect(self, serverIp, serverPort)
 
 	self.stream = Stream:connect(serverIp, serverPort)
 
-	local wtask = Task("streambufW", self, _streamWrite)
+	local wtask = Task("streambufW", self, _streamWrite, nil, Task.PRIORITY_AUDIO)
 	self.jnt:t_addWrite(self.stream, wtask, STREAM_WRITE_TIMEOUT)
 	
-	self.rtask = Task("streambufR", self, _streamRead)
+	self.rtask = Task("streambufR", self, _streamRead, nil, Task.PRIORITY_AUDIO)
 	self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
 
 	self.slimproto:sendStatus('STMc')

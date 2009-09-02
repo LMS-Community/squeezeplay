@@ -78,8 +78,8 @@ local function _add(sock, task, sockList, timeout)
 		sockList[sock] = {
 			lastSeen = Framework:getTicks()
 		}
-	elseif sockList[sock].task then
-		-- else remove previous task
+	elseif sockList[sock].task and sockList[sock].task ~= task then
+		-- else remove previous task if different
 		sockList[sock].task:removeTask()
 	end	
 

@@ -309,7 +309,8 @@ function eventLoop(self, netTask)
 
 	local running = true
 	while running do
-		-- process tasks
+		-- process tasks: 
+		-- all audio tasks + as many other tasks as possible until a frame is due
 		local tasks = false
 		for task in Task:iterator() do
 			local start = now
@@ -318,7 +319,7 @@ function eventLoop(self, netTask)
 			if now - start > 20 then
 				log:debug(task.name, " took ", now - start, " ms")
 			end
-			if framedue <= now then
+			if framedue <= now and task.priority > Task.PRIORITY_AUDIO then
 				break
 			end
 		end
