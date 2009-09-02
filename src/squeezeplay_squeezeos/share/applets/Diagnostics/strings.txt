@@ -484,3 +484,54 @@ DIAGNOSTICS_NETWORKING
 
 HARDWARE_VERSION
 	EN	Hardware version\n%s
+
+UPTIME
+	DA	Oppetid\n%s
+	DE	Zeit aktiv\n%s
+	EN	Uptime\n%s
+	ES	Tiempo de actividad\n%s
+	FI	Toiminta-aika\n%s
+	FR	Temps d'utilisation\n%s
+	IT	Tempo di attività\n%s
+	NL	Actieve tijdsduur\n%s
+	NO	Oppetid\n%s
+	SV	Aktiv tid\n%s
+
+UPTIME_DAYS
+	DA	%s dage
+	DE	%s Tage
+	EN	%s days
+	ES	%s días
+	FI	%s päivää
+	FR	%s jours
+	IT	%s giorni
+	NL	%s dagen
+	NO	%s dager
+	SV	%s dagar
+
+UPTIME_HOURS
+	DA	%s timer
+	DE	%s Stunden
+	EN	%s hours
+	ES	%s horas
+	FI	%s tuntia
+	FR	%s heures
+	IT	%s ore
+	NL	%s uren
+	NO	%s timer
+	SV	%s timmar
+
+UPTIME_MINUTES
+	DA	%s minutter
+	DE	%s Minuten
+	EN	%s minutes
+	ES	%s minutos
+	FI	%s minuuttia
+	FR	%s minutes
+	IT	%s minuti
+	NL	%s minuten
+	NO	%s minutter
+	SV	%s minuter
+
+MEMORY
+	EN	Memory used\n%s

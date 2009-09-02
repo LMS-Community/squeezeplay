@@ -3,7 +3,10 @@ local ipairs, tostring = ipairs, tostring
 
 -- stuff we use
 local oo               = require("loop.simple")
+local io               = require("io")
+local math             = require("math")
 local string           = require("string")
+local table            = require("jive.utils.table")
 local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
@@ -55,12 +58,14 @@ local tests = {
       "SC_PING",
       "SC_PORT_3483",
       "SC_PORT_9000",
+      "UPTIME",
+      "MEMORY",
 }
 
 
 function setValue(self, key, value)
 	if not value then
-		value = ''
+		value = '-'
 	end
 	self.diagMenu:setText(self.labels[key], self:string(key, value))
 end
@@ -222,6 +227,58 @@ function ethStatus(self, iface)
 end
 
 
+function systemStatus(self)
+	local uptime = ""
+	local memory = ""
+	
+	local f = io.open("/proc/uptime")
+	if f then
+		local time = f:read("*all")
+		f:close()
+	
+		time = string.match(time, "(%d+)")
+	
+		uptime = {}
+		uptime.days = math.floor(time / 216000)
+		time = math.fmod(time, 216000)
+		uptime.hours = math.floor(time / 3600)
+		time = math.fmod(time, 3600)
+		uptime.minutes = math.floor(time / 60)
+	
+		local ut = {}
+		if uptime.days > 0 then
+		 	ut[#ut + 1] = tostring(self:string("UPTIME_DAYS", uptime.days))
+		end
+		if uptime.hours > 0 then
+			ut[#ut + 1] = tostring(self:string("UPTIME_HOURS", uptime.hours))
+		end
+		ut[#ut + 1] = tostring(self:string("UPTIME_MINUTES", uptime.minutes))
+		uptime = table.concat(ut, " ")
+	end
+	
+	local f = io.open("/proc/meminfo")
+	if f then
+		local mem = {}
+	
+		while true do
+			local line = f:read()
+			if line == nil then
+				break
+			end
+	
+			local key, value = string.match(line, "(.+):%s+(%d+)")
+		 	mem[key] = value
+		end
+		f:close()
+
+		memory = math.ceil(((mem.MemTotal - (mem.MemFree + mem.Buffers + mem.Cached)) / mem.MemTotal) * 100) .. "%"
+	end
+	
+	self:setValue("UPTIME", uptime)
+	self:setValue("MEMORY", memory)
+end
+
+
 function dovalues(self, menu)
 	local machine, revision = System:getMachine();
 
@@ -270,6 +327,8 @@ function dovalues(self, menu)
 		self:serverPort(sc, 3483, "SC_PORT_3483")
 		self:serverPort(sc, 9000, "SC_PORT_9000")
 	end
+
+	self:systemStatus()
 end
 
 
