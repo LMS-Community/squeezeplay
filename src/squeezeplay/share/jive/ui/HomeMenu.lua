@@ -490,7 +490,9 @@ end
 
 -- lock an item in the menu
 function lockItem(self, item, ...)
-	if self.nodeTable[item.node] then
+	if self.customNodes[item.id] then
+		self.nodeTable[self.customNodes[item.id]].menu:lock(...)
+	elseif self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:lock(...)
 	end
 end
@@ -498,7 +500,9 @@ end
 
 -- unlock an item in the menu
 function unlockItem(self, item)
-	if self.nodeTable[item.node] then
+	if self.customNodes[item.id] then
+		self.nodeTable[self.customNodes[item.id]].menu:unlock()
+	elseif self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:unlock()
 	end
 end
