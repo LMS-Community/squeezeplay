@@ -79,6 +79,13 @@ static int handle_msp430_events(int fd) {
 				jive_send_key_event(JIVE_EVENT_KEY_PRESS, (ev[i].value < 0) ? JIVE_KEY_VOLUME_UP : JIVE_KEY_VOLUME_DOWN);
 			}
 		}
+		else if (ev[i].type == EV_SW && ev[i].code == 1 /* SW_1 */) {
+			event.type = (JiveEventType) JIVE_EVENT_SWITCH;
+			event.ticks = TIMEVAL_TO_TICKS(ev[i].time);
+			event.u.sw.code = 3; /* battery state event */
+			event.u.sw.value = ev[i].value;
+			jive_queue_event(&event);
+		}
 		// ignore EV_SYN
 	}
 
