@@ -709,7 +709,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 		step.jsonAction = request
 	end
 
-	if itemType == "slideshow" or params["slideshow"] then
+	if itemType == "slideshow" or (params and params["slideshow"]) then
 		table.insert( request, 'slideshow:1')
 		
 		local serverData = {}
@@ -1792,7 +1792,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
 				elseif nextWindow then
 					_hideToX(nextWindow)
-				elseif itemType == "slideshow" or item["slideshow"] then
+				elseif itemType == "slideshow" or (item and item["slideshow"]) then
 					from, qty = 0, 200
 					
 					skipNewWindowPush = true
