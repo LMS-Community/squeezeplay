@@ -1409,11 +1409,6 @@ function _goShuffleToggleAction()
 	return EVENT_CONSUME
 end
 
---doesn't work yet (SC issue I think), mutes but doesn't unmute (volume just goes to 0)
-function _goMuteToggleAction()
-	_player:mute(true)
-	return EVENT_CONSUME
-end
 
 function _goSleepAction()
 	_player:sleepToggle()
@@ -1457,7 +1452,6 @@ local _globalActionsNEW = {
 	["go_current_track_info"] = _goCurrentTrackInfoAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
-	["mute"] = _goMuteToggleAction,
 	["sleep"] = _goSleepAction,
 	["go_brightness"] = _goBrightnessAction,
 	["play_preset_0"] = _goPlayPresetAction,
@@ -1505,6 +1499,10 @@ local _globalActionsNEW = {
 	        Framework:playSound("PLAYBACK")
 		_player:stop()
 		return EVENT_CONSUME
+	end,
+
+	["mute"] = function(self, event)
+		return self.volume:event(event)
 	end,
 
 	["volume_up"] = function(self, event)

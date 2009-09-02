@@ -1225,11 +1225,16 @@ function _process_status(self, event)
 			local serverVolume = self.state["mixer volume"] and tonumber(self.state["mixer volume"]) or nil
 			if serverVolume ~= self:getVolume() then
 				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
-				self:volumeLocal(self.state["mixer volume"])
+				if serverVolume == 0 and self:getVolume() and self:getVolume() < 0 then
+					--When muted, server sends a 0 vol, ignore it
+					self.state["mixer volume"] = oldState["mixer volume"] 
+				else
+					self:volumeLocal(serverVolume)
+				end
 			end
 		else
 			log:debug("volume value ignored(out of sync), revert to old: ", oldState["mixer volume"])
-			oldState["mixer volume"] = self.state["mixer volume"]
+			self.state["mixer volume"] = oldState["mixer volume"]
 		end
 
 		--finally if we were out of sync at the receipt of playerstatus, refresh so server is in sync with all value

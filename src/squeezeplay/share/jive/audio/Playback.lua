@@ -622,6 +622,8 @@ local _serverVolumeToGain = _defaultVolumeToGain -- same since Squeezeplay.pm us
 
 
 function setVolume(self, volume)
+	log:debug("setVolume: ", volume)
+
 	self.volume = volume
 	self:_setGain(self:_getGainFromVolume(volume))
 end

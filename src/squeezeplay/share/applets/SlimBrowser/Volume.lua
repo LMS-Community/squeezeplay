@@ -164,7 +164,7 @@ function _updateVolume(self, mute, directSet, noAccel)
 	-- keep the popup window open
 	self.popup:showBriefly()
 
-	-- ignore updates while muting
+	-- ignore updates while muting (cleared on key up or on the mute action_
 	if self.muting then
 		return _updateDisplay(self)
 	end
@@ -173,6 +173,9 @@ function _updateVolume(self, mute, directSet, noAccel)
 	if mute then
 		self.muting = true
 		self.volume = self.player:mute(true)
+		--don't perform cleanup volume change
+		self.rateLimitDelta = 0
+
 		return _updateDisplay(self)
 	end
 
@@ -279,6 +282,7 @@ end
 function __init(self, applet)
 	local obj = oo.rawnew(self, {})
 
+	obj.delta = 0
 	obj.applet = applet
 	obj.muting = false
 	obj.lastUpdate = 0
@@ -349,6 +353,13 @@ function event(self, event)
 			self.delta = -1
 			_updateVolume(self, nil, nil, true)
 			self.delta = 0
+			return EVENT_CONSUME
+		end
+
+		if action == "mute" then
+			_updateVolume(self, self.volume >= 0)
+			self.muting = false
+
 			return EVENT_CONSUME
 		end
 

@@ -10,6 +10,7 @@ local oo             = require("loop.simple")
 
 local Framework      = require("jive.ui.Framework")
 local Player         = require("jive.slim.Player")
+local math           = require("math")
 
 local SlimProto      = require("jive.net.SlimProto")
 local Playback       = require("jive.audio.Playback")
@@ -227,6 +228,22 @@ function volumeLocal(self, vol, updateSequenceNumber)
 	self.playback:setVolume(vol)
 end
 
+
+function mute(self, mute)
+	local vol = self:getVolume()
+
+	if mute and vol >= 0 then
+		-- mute
+		self:volumeLocal(-math.abs(vol), true)
+
+	elseif vol < 0 then
+		-- unmute
+		self:volumeLocal(math.abs(vol), true)
+
+	end
+
+	return Player.mute(self, mute)
+end
 
 
 function pause(self)
