@@ -434,7 +434,10 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 		end
 		return
 	end
-	if not self.confirmOnChange or not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server then
+
+	--Confirmation check.  Also, don't show confirmation if current player is not playing and there are tracks in the playlist.
+	if not self.confirmOnChange or not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server
+		or (currentPlayer:getPlayMode() ~= "play" and (not currentPlayer:getPlaylistSize() or currentPlayer:getPlaylistSize() == 0) ) then
        	        self:connectPlayerToServer(currentPlayer, server)
 	else
 		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)
