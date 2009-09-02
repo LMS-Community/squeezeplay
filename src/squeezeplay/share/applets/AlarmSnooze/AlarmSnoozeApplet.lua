@@ -38,14 +38,20 @@ function notify_playerAlarmState(self, player, alarmState)
 
 	log:warn('alarmState: ', alarmState)
 	if player:isLocal() then
-		if alarmState == 'active' and alarmState ~= self.alarmState then
+		if alarmState == 'active' then
 			log:warn('open alarm window')
 			if player ~= Player:getCurrentPlayer() then
 				-- TODO: switch from current player to local player
 				log:warn('switch to local player')
 			end
 			self.player = player
-			self.alarmState = alarmState
+
+			if self.alarmWindow then
+				self.alarmWindow:hide()
+				self.alarmWindow = nil
+			end
+
+			appletManager:callService("deactivateScreensaver")
 			self:openAlarmWindow()
 		end
 	end
@@ -58,7 +64,7 @@ function openAlarmWindow(self)
 		return
 	end
 
-	local window = Popup('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
+	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
 
 	local time = datetime:getCurrentTime()
 	local icon = Icon('icon_alarm')
@@ -83,6 +89,7 @@ function openAlarmWindow(self)
 			self:_alarmOff()
 			end,
 	})	
+	menu:setSelectedIndex(1)
 
 	local cancelAction = function()
 		window:playSound("WINDOWHIDE")
@@ -95,7 +102,9 @@ function openAlarmWindow(self)
 	menu:setHeaderWidget(headerGroup)
 
 	window:addWidget(menu)
-	window:show()
+	window:setShowFrameworkWidgets(false)
+	window:setAllowScreensaver(false)
+	window:show(Window.transitionFadeIn)
 
 	self.alarmWindow = window
 	self.timeWidget  = label
@@ -103,14 +112,14 @@ end
 
 
 function _alarmOff(self)
-	self.player:snooze()
+	self.player:stopAlarm()
 	self.alarmWindow:hide()
 	self.alarmWindow = nil
 end
 
 
 function _alarmSnooze(self)
-	self.player:stopAlarm()
+	self.player:snooze()
 	self.alarmWindow:hide()
 	self.alarmWindow = nil
 end

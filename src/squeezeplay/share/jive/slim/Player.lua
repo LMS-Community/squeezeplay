@@ -875,7 +875,8 @@ end
 -- sends a command
 function call(self, cmd, useBackgroundRequest)
 	log:debug("Player:call():")
---	log:debug(cmd)
+--log:error('traceback')
+--debug.dump(cmd)
 
 	if useBackgroundRequest then
 		self.slimServer:request(
@@ -1345,20 +1346,18 @@ function unpause(self)
 	self:updateIconbar()
 end
 
+function stopAlarm(self)
+	-- currently synonymous with pause
+	self:pause()
+
+end
+
+
 function snooze(self)
 	if not self.state then return end
 
-	if self.alarm_state == 'active' then
-		self.call({'jivealarm', 'snooze:1'})
-	end
-	self:updateIconbar()
-end
-
-function stopAlarm(self)
-	if not self.state then return end
-
-	if self.alarm_state == 'active' then
-		self.call({'jivealarm', 'stop_alarm:1'})
+	if self.alarmState == 'active' then
+		self:call({'jivealarm', 'snooze:1'})
 	end
 	self:updateIconbar()
 end
