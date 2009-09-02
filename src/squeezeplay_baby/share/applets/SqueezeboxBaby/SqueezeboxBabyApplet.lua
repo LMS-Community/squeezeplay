@@ -605,7 +605,7 @@ end
 
 
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS"), squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
@@ -648,6 +648,12 @@ function settingsBrightnessShow (self, menuItem)
 		slider = slider,
 		max = Icon("button_slider_max"),
 	}))
+
+	-- If we are here already, eat this event to avoid piling up this screen over and over
+	window:addActionListener("go_brightness", self,
+				function()
+					return EVENT_CONSUME
+				end)
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()
