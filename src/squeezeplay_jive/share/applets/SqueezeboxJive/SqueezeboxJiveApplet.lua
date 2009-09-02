@@ -871,7 +871,7 @@ end
 
 -- return true to prevent firmware updates
 function isBatteryLow(self)
-	return BSP.ioctl(23) ~= 0 and BSP.ioctl(17) < 830
+	return jiveBSP.ioctl(23) ~= 0 and jiveBSP.ioctl(17) < 830
 end
 
 
