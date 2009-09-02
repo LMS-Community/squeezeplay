@@ -46,26 +46,41 @@ static sample_t pcm_read8bitLE(u8_t *pos) {
 }
 
 static sample_t pcm_read16bitBE(u8_t *pos) { 
-	return (sample_t) (*pos << 24) | (*++pos << 16);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	return sample;
 }
 
 static sample_t pcm_read16bitLE(u8_t *pos) {
-	return (sample_t) (*pos << 16) | (*++pos << 24);
+	sample_t sample = *pos << 16;
+	sample |= *++pos << 24;
+	return sample;
 }
 
 static sample_t pcm_read24bitBE(u8_t *pos) {
-	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	sample |= *++pos << 8;
+	return sample;
 }
 
 static sample_t pcm_read24bitLE(u8_t *pos) {
-	return (sample_t) (*pos << 8) | (*++pos << 16) | (*++pos << 24);
+	sample_t sample = *pos << 8;
+	sample |= *++pos << 16;
+	sample |= *++pos << 24;
+	return sample;
 }
 
 static sample_t pcm_read32bitBE(u8_t *pos) {
-	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8) | (*++pos);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	sample |= *++pos << 8;
+	sample |= *++pos;
+	return sample;
 }
 
 static sample_t pcm_read32bitLE(u8_t *pos) { 
+	/* XXX should this not increment pos? */
 	return *((sample_t *)(void *)pos);
 }
 
