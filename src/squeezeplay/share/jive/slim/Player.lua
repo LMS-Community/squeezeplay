@@ -1189,7 +1189,7 @@ function _process_status(self, event)
 			self.jnt:notify('playerAlarmState', self, nil)
 		else
 			self.alarmState = self.state['alarm_state']
-			self.jnt:notify('playerAlarmState', self, self.state['alarm_set'])
+			self.jnt:notify('playerAlarmState', self, self.state['alarm_state'])
 		end
 	end
 
@@ -1343,12 +1343,11 @@ function unpause(self)
 	self:updateIconbar()
 end
 
--- some sleep methods (heh) not yet implemented for snooze support
 function snooze(self)
 	if not self.state then return end
 
 	if self.alarm_state == 'active' then
-		self.call({'snooze', '0'})
+		self.call({'jivealarm', 'snooze:1'})
 	end
 	self:updateIconbar()
 end
@@ -1357,7 +1356,7 @@ function stopAlarm(self)
 	if not self.state then return end
 
 	if self.alarm_state == 'active' then
-		self.call({'snooze', 'cancel'})
+		self.call({'jivealarm', 'stop_alarm:1'})
 	end
 	self:updateIconbar()
 end
@@ -1533,7 +1532,7 @@ end
 function setPower(self, on)
 	if not self.state then return end
 
-	log:info("Player:setPower(", on, ")")
+	log:debug("Player:setPower(", on, ")")
 
 	if not on then
 		self:call({'power', '0'}, true)
