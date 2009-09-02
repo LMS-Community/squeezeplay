@@ -461,6 +461,12 @@ function settingsBrightnessShow (self, menuItem)
 					return EVENT_CONSUME
 				end)
 
+	-- If we are here already, eat this event to avoid piling up this screen over and over
+	window:addActionListener("go_brightness", self,
+				function()
+					return EVENT_CONSUME
+				end)
+
 --	window:addWidget(slider) - for focus purposes (todo: get style right for this so slider can be focused)
 
 
