@@ -208,7 +208,7 @@ function JiveMain:getSoftPowerState()
 end
 
 
-function JiveMain:setSoftPowerState(softPowerState, doNotUpdatePlayer)
+function JiveMain:setSoftPowerState(softPowerState)
 	if _softPowerState == softPowerState then
 		--already in the desired state, leave (can happen for instance when notify_playerPower comes back after a local power change)
 		 return
@@ -218,14 +218,13 @@ function JiveMain:setSoftPowerState(softPowerState, doNotUpdatePlayer)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if _softPowerState == "off" then
 		log:info("Turn soft power off")
-		if currentPlayer and currentPlayer:isConnected() and not doNotUpdatePlayer then
-			--todo: find way to stop "runon" local music when server is not connected.
+		if currentPlayer and currentPlayer:isConnected() then
 			currentPlayer:setPower(false)
 		end
 		appletManager:callService("activateScreensaver")
 	elseif _softPowerState == "on" then
 		log:info("Turn soft power on")
-		if currentPlayer and currentPlayer:isConnected() and not doNotUpdatePlayer then
+		if currentPlayer and currentPlayer:isConnected() then
 			currentPlayer:setPower(true)
 		end
 

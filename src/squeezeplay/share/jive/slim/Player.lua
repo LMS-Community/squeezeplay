@@ -1529,15 +1529,23 @@ function fwd(self)
 end
 
 
-function setPower(self, on)
+function setPower(self, on, sequenceNumber)
 	if not self.state then return end
 
 	log:debug("Player:setPower(", on, ")")
 
 	if not on then
-		self:call({'power', '0'}, true)
+		if sequenceNumber then
+			self:call({'power', '0', false, "seq_no:" ..  sequenceNumber}, true)
+		else
+			self:call({'power', '0'}, true)
+		end
 	else
-		self:call({'power', '1'}, true)
+		if sequenceNumber then
+			self:call({'power', '1', false, "seq_no:" ..  sequenceNumber}, true)
+		else
+			self:call({'power', '1'}, true)
+		end
 	end
 end
 

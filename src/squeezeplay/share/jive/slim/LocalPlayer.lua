@@ -135,12 +135,12 @@ function isSequenceNumberInSync(self, serverSequenceNumber)
 end
 
 
---resend local values to server
+--resend local values to server, but only update seq number on last call, so that the next player status comes back with a single increase 
 function refreshLocallyMaintainedParameters(self)
 	log:debug("refreshLocallyMaintainedParameters()")
 
 	--refresh volume
-	self:volume(self:getVolume(), true, true)
+	self:_volumeNoIncrement(self:getVolume(), true, true)
 
 	--refresh power state
 	self:setPower(jiveMain:getSoftPowerState() == "on")
@@ -219,6 +219,11 @@ function volume(self, vol, send)
 	return Player.volume(self, vol, send, self:incrementSequenceNumber())
 end
 
+
+function _volumeNoIncrement(self, vol, send)
+	self:volumeLocal(vol)
+	return Player.volume(self, vol, send)
+end
 
 function volumeLocal(self, vol, updateSequenceNumber)
 	--sometime we want to update the sequence number directly, like when there is no server connection and volume is changed
@@ -301,7 +306,7 @@ function setPower(self, on)
 	if not on then
 		self:stop()
 	end
-	Player.setPower(self, on)
+	Player.setPower(self, on, self:incrementSequenceNumber())
 end
 
 

@@ -489,9 +489,9 @@ function notify_playerPower(self,  player, power)
 		--only work for devices that have a dedicated power button
 		log:info("notify_playerPower: ", power)
 		if power then
-			jiveMain:setSoftPowerState("on", true)
+			jiveMain:setSoftPowerState("on")
 		else
-			jiveMain:setSoftPowerState("off", true)
+			jiveMain:setSoftPowerState("off")
 		end
 	end
 end
