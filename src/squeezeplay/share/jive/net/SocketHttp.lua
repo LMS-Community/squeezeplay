@@ -448,7 +448,7 @@ function t_recvDequeue(self)
 				     self:close("idle close")
 			     end
 
-		self:t_addRead(pump, 0) -- No timeout
+		self:t_addRead(pump)
 	end
 end
 
@@ -484,7 +484,6 @@ function t_rcvHeaders(self)
 		log:debug(self, ":t_rcvHeaders.pump()")
 		if NetworkThreadErr then
 			log:error(self, ":t_rcvHeaders.pump:", NetworkThreadErr)
-			--self:t_removeRead()
 			self:close(NetworkThreadErr)
 			return
 		end
