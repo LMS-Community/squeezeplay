@@ -568,7 +568,7 @@ Deletes the player, if connect to the given slimServer
 
 =cut
 --]]
-function free(self, slimServer)
+function free(self, slimServer, serverDeleteOnly)
 	if self.slimServer ~= slimServer then
 		-- ignore, we are not connected to this server
 		return
@@ -576,9 +576,11 @@ function free(self, slimServer)
 
 	log:debug(self, " delete for ", self.slimServer)
 
-	-- player is gone
-	self.lastSeen = 0
-	self.jnt:notify('playerDelete', self)
+	if not serverDeleteOnly then
+		-- player is gone
+		self.lastSeen = 0
+		self.jnt:notify('playerDelete', self)
+	end
 
 	if self == currentPlayer then
 		self.jnt:notify('playerDisconnected', self)
@@ -588,7 +590,7 @@ function free(self, slimServer)
 	end
 
 	-- player is no longer active
-	if not self:isLocal() then
+	if not self:isLocal() and not serverDeleteOnly then
 		playerList[self.id] = nil
 	end
 
