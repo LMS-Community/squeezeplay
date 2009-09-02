@@ -257,17 +257,13 @@ static void decode_alsa_copyright(struct decode_alsa *state,
 static void playback_callback(struct decode_alsa *state,
 			      void *output_buf,
 			      size_t output_frames) {
-	//size_t bytes_used, outputLen;
-	//size_t skip_bytes = 0, add_bytes = 0;
-	size_t decode_frames, skip_frames;
+	size_t decode_frames, skip_frames = 0;
 	int add_silence_ms;
 	bool_t reached_start_point;
-	Uint8 *output_buffer = (u8_t *)output_buf;
+	u8_t *output_buffer = (u8_t *)output_buf;
 
 	ASSERT_AUDIO_LOCKED();
 
-	//outputLen = PCM_FRAMES_TO_BYTES(output_frames);
-	//bytes_used = fifo_bytes_used(&decode_audio->fifo); // XXXX
 	decode_frames = BYTES_TO_SAMPLES(fifo_bytes_used(&decode_audio->fifo));
 
 	/* Should we start the audio now based on having enough decoded data? */
@@ -396,7 +392,7 @@ static void playback_callback(struct decode_alsa *state,
 		fifo_rptr_incby(&decode_audio->fifo, SAMPLES_TO_BYTES(frames_write));
 		decode_audio->elapsed_samples += frames_write;
 
-		output_buffer += PCM_BYTES_TO_FRAMES(frames_write);
+		output_buffer += PCM_FRAMES_TO_BYTES(frames_write);
 		decode_frames -= frames_write;
 	}
 
