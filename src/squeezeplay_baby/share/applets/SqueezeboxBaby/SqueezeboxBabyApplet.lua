@@ -428,6 +428,26 @@ local function _updateWireless(self)
 end
 
 
+-- return true to prevent firmware updates
+function isBatteryLow(self)
+	local chargerState = sysReadNumber(self, "charger_state")
+
+	if chargerState == 3 then
+		local batteryCharge = sysReadNumber(self, "battery_charge")
+		local batteryCapacity = sysReadNumber(self, "battery_capacity")
+
+		local batteryRemain = (batteryCharge / batteryCapacity) * 100
+
+		return batteryRemain < 10
+
+	elseif chargerState == 4 then
+		return true
+	else
+		return false
+	end
+end
+
+
 function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")

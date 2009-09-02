@@ -243,6 +243,13 @@ function lowBatteryCancel(self)
 end
 
 
+-- returns true if the battery is too low for some
+-- operations, like upgrading. overriden by sub-classes
+function isLowBattery(self)
+	return false
+end
+
+
 -- reboot
 function reboot(self)
 	_cleanReboot(self)

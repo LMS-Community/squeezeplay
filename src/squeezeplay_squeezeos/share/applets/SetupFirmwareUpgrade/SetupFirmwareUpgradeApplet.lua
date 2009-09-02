@@ -34,7 +34,6 @@ local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
 local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
-local hasBSP, BSP            = pcall(require, "jiveBSP")
 
 local debug                  = require("jive.utils.debug")
 
@@ -357,8 +356,8 @@ end
 
 
 function _checkBattery()
-	if hasBSP then
-		return BSP.ioctl(23) == 0 or BSP.ioctl(17) > 830
+	if appletManager:hasService("isBatteryLow") then
+		return not appletManager:callService("isBatteryLow")
 	else
 		return true
 	end
