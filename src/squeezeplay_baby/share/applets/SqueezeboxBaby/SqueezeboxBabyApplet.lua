@@ -103,10 +103,12 @@ function init(self)
 		settings.brightness = #brightnessTable
 		self:storeSettings()
 	end
+
+	self:initBrightness()
+
 	self.lcdBrightness = settings.brightness
 	self:setPowerState("active")
 
-	self:initBrightness()
 	brightnessTimer = Timer( 2000,
 		function()
 			if settings.brightnessControl != "manual" then
@@ -551,6 +553,10 @@ function _initBrightnessTable( self)
 	local brightness_step_percent = 10
 	local k = 1
 
+	--first value is "off" value
+	brightnessTable[k] = {0, 0}
+	k = k + 1
+	
 	if self._revision >= 3 then
 		-- Brightness table for PB3 and newer
 		-- First parameter can be 1 to achieve very low brightness
@@ -592,14 +598,25 @@ end
 
 function _setBrightness(self, level)
 	self.lcdBrightness = level
+
+	level = level + 1 -- adjust 0 based to one based for the brightnessTable
+
+	if level > MAX_BRIGHTNESS_LEVEL  then
+		level = MAX_BRIGHTNESS_LEVEL
+	end
+	
 	-- 60% brightness in dimmed power mode
 	if self.powerState == "dimmed" then
-		level = level - 10
+		if level > 11 then
+			level = level - 10
+		else
+			level = 2 --(lowest visible setting)
+		end
 	end
 
 	brightness = brightnessTable[level][2]
 	bl_power   = brightnessTable[level][1]
-		
+
 	sysWrite(self, "brightness", brightness)
 	sysWrite(self, "bl_power",   bl_power)
 end
