@@ -179,7 +179,11 @@ function _runTimer(self, now)
 
 		-- call back may modify the timer so update it first
 		if not timer.once then
-			timer:_insertTimer(timer.expires + timer.interval)
+			local next = timer.expires + timer.interval
+			if next < now then
+				next = now + timer.interval
+			end
+			timer:_insertTimer(next)
 		else
 			timer.expires = nil
 		end
