@@ -562,7 +562,7 @@
 #elif (LUA_NUMBER_MODE % 10) == 1
   #define LUA_NUMBER_SCAN       "%f"
   #define LUA_NUMBER_FMT        "%g"  
-#elif
+#else
   #error "Unknown mode"
 #endif
 
