@@ -95,6 +95,8 @@ function registerApplet(meta)
 	meta:registerService("getDefaultWallpaper")
 	meta:registerService("performHalfDuplexBugTest")
 	meta:registerService("poweroff")
+	meta:registerService("lowBattery")
+	meta:registerService("lowBatteryCancel")
 	meta:registerService("reboot")
 end
 

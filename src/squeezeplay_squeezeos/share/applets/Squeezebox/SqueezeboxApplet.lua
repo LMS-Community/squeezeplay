@@ -192,6 +192,57 @@ function poweroff(self)
 end
 
 
+-- low battery
+function lowBattery(self)
+	if self.lowBatteryWindow then
+		return
+	end
+
+	log:info("battery low")
+
+	local popup = Popup("waiting_popup")
+
+	popup:addWidget(Icon("icon_battery_low"))
+	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
+	popup:addWidget(Label("subtext", self:string("BATTERY_LOW_2")))
+
+	-- make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:ignoreAllInputExcept({})
+
+	popup:show()
+
+	-- FIXME jive made sure the brightness was on (do we really
+	-- want this, I don't think so as it may wake people up)
+
+	self.lowBatteryTimer = Timer(30000, function()
+		-- force poweroff (don't go through init)
+		os.execute("/bin/busybox poweroff -f")
+	end)
+	self.lowBatteryTimer:start()
+
+	self.lowBatteryWindow = popup
+end
+
+
+-- low battery cancel
+function lowBatteryCancel(self)
+	if not self.lowBatteryWindow then
+		return
+	end
+
+	log:info("battery low cancelled")
+
+	self.lowBatteryTimer:stop()
+	self.lowBatteryWindow:hide()
+
+	self.lowBatteryTimer = nil
+	self.lowBatteryWindow = nil
+end
+
+
 -- reboot
 function reboot(self)
 	_cleanReboot(self)

@@ -116,9 +116,10 @@ function init(self)
 	brightnessTimer:start()	
 	
 	-- status bar updates
-	self:update()
-	iconbar.iconWireless:addTimer(2000, function()  -- every two seconds
-	      self:update()
+	local updateTask = Task("statusbar", self, _updateTask)
+	updateTask:addTask()
+	iconbar.iconWireless:addTimer(5000, function()  -- every five seconds
+		updateTask:addTask()
 	end)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
@@ -126,6 +127,13 @@ function init(self)
         Framework:addActionListener("shutdown", self, function()
 		appletManager:callService("poweroff")
 	end)
+
+	-- for testing:
+	self.testLowBattery = false
+	Framework:addActionListener("start_demo", self, function()
+		self.testLowBattery = not self.testLowBattery
+		log:warn("battery low test ", self.testLowBattery)
+	end, true)
 
 	Framework:addListener(EVENT_SWITCH, function(event)
 		local sw,val = event:getSwitch()
@@ -135,8 +143,12 @@ function init(self)
 			self:_headphoneJack(val)
 
 		elseif sw == 2 then
-			-- headphone
+			-- line in
 			self:_lineinJack(val == 1)
+
+		elseif sw == 3 then
+			-- power event
+			self:_updatePower()
 		end
 	end)
 
@@ -388,11 +400,6 @@ function setDate(self, date)
 end
 
 
-function update(self)
-	 Task("statusbar", self, _updateTask):addTask()
-end
-
-
 local function _updateWireless(self)
 	local iface = Networking:activeInterface()
 	local player = Player:getLocalPlayer()
@@ -421,7 +428,7 @@ local function _updateWireless(self)
 end
 
 
-local function _updatePower(self)
+function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
 
@@ -458,58 +465,33 @@ local function _updatePower(self)
 		iconbar:setBattery(nil)
 	end
 
-	self:lowBattery(isLowBattery)
+	self:_lowBattery(isLowBattery or self.testLowBattery)
 end
 
 
-
--- XXXX move to SqueezeboxApplet
-function lowBattery(self, isLowBattery)
+function _lowBattery(self, isLowBattery)
 	if self.isLowBattery == isLowBattery then
 		return
 	end
+
 	self.isLowBattery = isLowBattery
 
 	if not isLowBattery then
-		Framework:removeListener(self.lowBatteryListener)
-		self.lowBatteryWindow:hide()
-		return
+		appletManager:callService("lowBatteryCancel")
+	else
+		appletManager:callService("lowBattery")
 	end
+end
 
-	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("icon_battery_low"))
-	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
-	popup:addWidget(Label("subtext", self:string("BATTERY_LOW_2")))
+function _updateTask(self)
+	while true do
+		_updatePower(self)
+		_updateWireless(self)
 
-	-- make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-	popup:ignoreAllInputExcept({})
-
-	popup:show()
-
-	popup:addTimer(20000, function()
-		appletManager:callService("poweroff")
-	end, true)
-
---[[
-	-- XXXX copied from jive, need to things about these parts
-
-	-- consume all key and scroll events
-	self.lowBatteryListener = Framework:addListener(EVENT_ALL_INPUT,
-		function(event)
-			Framework.wakeup()
-			return EVENT_CONSUME
-		end,
-	true)
-
-	-- make sure the display is on
-	self:setBrightness()
---]]
-
-	self.lowBatteryWindow = popup
+		-- suspend task
+		Task:yield(false)
+	end
 end
 
 
@@ -541,13 +523,6 @@ function setPowerState(self, state)
 	self.powerState = state
 
 	_setBrightness(self, self.lcdBrightness)
-end
-
-function _updateTask(self)
-	-- FIXME ac power / battery
-
-	_updatePower(self)
-	_updateWireless(self)
 end
 
 
