@@ -1184,6 +1184,7 @@ function _process_status(self, event)
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
+	log:debug("self.state['alarm_state']: ", self.state['alarm_state'], ",  oldState['alarm_state']: ", oldState['alarm_state'])
 	if self.state['alarm_state'] ~= oldState['alarm_state'] then
 		log:debug('notify_playerAlarmState')
 		-- none from server for alarm_state changes this to nil
@@ -1357,6 +1358,7 @@ function snooze(self)
 	if not self.state then return end
 
 	if self.alarmState == 'active' then
+		self.alarmState = 'snooze'
 		self:call({'jivealarm', 'snooze:1'})
 	end
 	self:updateIconbar()

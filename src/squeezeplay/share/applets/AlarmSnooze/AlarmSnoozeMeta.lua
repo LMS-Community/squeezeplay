@@ -27,8 +27,10 @@ function configureApplet(self)
 	-- snooze is a resident applet
 
 -- don't do anything in the svn checkin until complete
---	appletManager:loadApplet("AlarmSnooze")
---	jiveMain:addItem(self:menuItem('appletAlarmSnooze', 'home', "ALARM_SNOOZE_SNOOZE", function(applet, ...) applet:openAlarmWindow(...) end, 1))
+	appletManager:loadApplet("AlarmSnooze")
+
+	-- following lineonly used for testing
+	--jiveMain:addItem(self:menuItem('appletAlarmSnooze', 'home', "ALARM_SNOOZE_SNOOZE", function(applet, ...) applet:openAlarmWindow(...) end, 1))
 
 end
 

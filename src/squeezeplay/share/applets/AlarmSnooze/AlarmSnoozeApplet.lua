@@ -98,8 +98,15 @@ function openAlarmWindow(self)
 		return EVENT_CONSUME
 	end
 
+	local snoozeAction = function()
+		self:_alarmSnooze()
+		return EVENT_CONSUME
+	end
+
 	menu:addActionListener("back", self, cancelAction)
 	menu:setHeaderWidget(headerGroup)
+
+	menu:addActionListener("mute", self, snoozeAction)
 
 	window:addWidget(menu)
 	window:setShowFrameworkWidgets(false)
@@ -113,6 +120,7 @@ end
 
 function _alarmOff(self)
 	self.player:stopAlarm()
+	self.alarmWindow:playSound("WINDOWHIDE")
 	self.alarmWindow:hide()
 	self.alarmWindow = nil
 end
@@ -120,6 +128,7 @@ end
 
 function _alarmSnooze(self)
 	self.player:snooze()
+	self.alarmWindow:playSound("WINDOWHIDE")
 	self.alarmWindow:hide()
 	self.alarmWindow = nil
 end
