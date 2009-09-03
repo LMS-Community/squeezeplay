@@ -2786,7 +2786,7 @@ function _problemConnectingInternal(self, server)
 
 	--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
 	menu:addItem({
-			text = "Go Home", --todo bug 13122 - borrow translations from ShortcutsApplet when latest SLT returns.
+			text = self:string("SLIMBROWSER_GO_HOME"), 
 			callback = function()
 				self:_removeRequestAndUnlock(server)
 				goHome()

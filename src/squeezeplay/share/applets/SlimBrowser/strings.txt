@@ -32,6 +32,21 @@ SLIMBROWSER_PLAYLIST
 	RU	Текущий плей-лист
 	SV	Aktuell spellista
 
+SLIMBROWSER_GO_HOME
+	CS	Přejít Domů
+	DA	Til startside
+	DE	Zurück zum Start
+	EN	Go Home
+	ES	Go Home (Ir a casa)
+	FI	Alkuun
+	FR	Aller à l'accueil
+	IT	Go Home (Torna alla base)
+	NL	Go Home (Naar huis gaan)
+	NO	Gå til hovedmenyen
+	PL	Powrót do początku
+	RU	Домой
+	SV	Startsida
+
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno
 	DA	Pause
