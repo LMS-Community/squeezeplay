@@ -107,6 +107,20 @@ end
 
 --[[
 
+=head2 Iconbar:setAlarm(val)
+
+Sets the alarm icon on the iconbar. Values are OFF and ON
+
+=cut
+--]]
+function setAlarm(self, val)
+	log:debug("Iconbar:setAlarm(", val, ")")
+	self.iconAlarm:setStyle("button_alarm_" .. string.upper((val or "OFF")))
+end
+
+
+--[[
+
 =head2 Iconbar:setSleep(val)
 
 Sets the sleep icon on the iconbar. Values are OFF (Sleep Off), and ON (Sleep On)
@@ -232,6 +246,7 @@ function __init(self)
 		iconBattery  = Icon("button_battery_NONE"),
 		iconWireless = Icon("button_wireless_NONE"),
 		iconSleep    = Icon("button_sleep_OFF"),
+		iconAlarm    = Icon("button_alarm_OFF"),
 		button_time  = Label("button_time", "XXXX"),
 	})
 
@@ -239,6 +254,7 @@ function __init(self)
 					play = obj.iconPlaymode,
 					repeat_mode = obj.iconRepeat,  -- repeat is a Lua reserved word
 					shuffle = obj.iconShuffle,
+					alarm = obj.iconAlarm,
 					sleep = obj.iconSleep,
 					battery = obj.iconBattery,
 					wireless = obj.iconWireless,

@@ -1108,6 +1108,12 @@ function updateIconbar(self)
 			iconbar:setSleep('OFF')
 		end
 
+		if self:getAlarmState() == 'set' or self:getAlarmState() == 'snooze' then
+			iconbar:setAlarm('ON')
+		else
+			iconbar:setAlarm('OFF')
+		end
+
 		-- set the playlist mode (nil, 0=off, 1=playlist, 2=party)
 		if self.state['playlist mode'] and
 			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' or self.state['playlist mode'] == json.null )
@@ -1118,6 +1124,15 @@ function updateIconbar(self)
 			iconbar:setRepeat(0)
 			iconbar:setPlaylistMode(self.state["playlist mode"])
 		end
+
+		--[[ useful for layout skinning debug, set all modes to show icons
+			iconbar:setPlaymode('play')
+			iconbar:setShuffle('1')
+			iconbar:setSleep('ON')
+			iconbar:setAlarm('ON')
+			iconbar:setRepeat('1')
+		--]]
+
 	else
 		--still set play mode (for local offline playback)
 		iconbar:setPlaymode(self.state["mode"] or self.mode)

@@ -152,6 +152,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT
 	s.icon_list.menu.itemHeight = c.PORTRAIT_LINE_ITEM_HEIGHT
 
+	-- hide alarm icon on controller status bar, no room
+	s.iconbar_group.order = { 'play', 'repeat_mode', 'shuffle', 'sleep', 'battery', 'wireless' } --'repeat' is a Lua reserved word
+	s.button_sleep_ON.w = WH_FILL
+	s.button_sleep_ON.align = 'right'
+	s.button_sleep_OFF.w = WH_FILL
+	s.button_sleep_OFF.align = 'right'
+
 	s.track_list.menu.scrollbar = _uses(s.scrollbar, {
                 h = 41 * 6 - 8,
         })

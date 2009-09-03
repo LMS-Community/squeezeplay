@@ -2010,6 +2010,20 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_shuffle_album.png"),
 	})
 
+	s._button_alarm = _uses(s._iconbar_icon, {
+		w = WH_FILL,
+		border = 0,
+		padding = { 0, 2, 0, 0},
+		align = 'right',
+	})
+
+	s.button_alarm_OFF = _uses(s._button_alarm, {
+		img = false,
+	})
+	s.button_alarm_ON = _uses(s._button_alarm, {
+		img = _loadImage(self, "Icons/icon_alarm.png"),
+	})
+	
 	s._button_battery = _uses(s._iconbar_icon, {
 		w = 24,
 		align = 'center',
@@ -2043,8 +2057,6 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.button_sleep_ON = _uses(s._iconbar_icon, {
-		w = WH_FILL,
-		align = 'right',
 		img = _loadImage(self, "Icons/icon_mode_sleep_on.png"),
 	})
 	s.button_sleep_OFF = _uses(s.button_sleep_ON, {
@@ -2101,7 +2113,7 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.iconBackground,
 		layer = LAYER_FRAME,
 		position = LAYOUT_SOUTH,
-		order = {'play', 'repeat_mode', 'shuffle', 'sleep', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
+		order = {'play', 'repeat_mode', 'shuffle', 'alarm', 'sleep', 'battery', 'wireless' }, --'repeat' is a Lua reserved word
 	}
 
 	s.demo_text = {
