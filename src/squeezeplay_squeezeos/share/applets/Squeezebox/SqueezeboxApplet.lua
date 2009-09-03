@@ -63,7 +63,13 @@ function sysReadNumber(self, attr)
 	end
 
 	fh:seek("set")
-	return tonumber(fh:read("*a"))
+
+	local line, err = fh:read("*a")
+	if err then
+		return 0
+	else
+		return tonumber(line)
+	end
 end
 
 
