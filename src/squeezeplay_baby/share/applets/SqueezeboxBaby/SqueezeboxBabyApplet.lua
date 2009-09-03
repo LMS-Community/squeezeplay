@@ -18,7 +18,6 @@ local System                 = require("jive.System")
 local Networking             = require("jive.net.Networking")
 
 local Player                 = require("jive.slim.Player")
-local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
@@ -53,6 +52,44 @@ local brightnessTable        = {}
 
 module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
+
+
+--[[
+
+Power states:
+
+ACTIVE
+  The user is interacting with the system, everything is on.
+
+IDLE
+  The user has stopped interating with the system, the lcd is dimmed.
+
+SLEEP
+  A low power mode, the power amp is off.
+
+HIBERNATE
+  Suspend to ram. Not currently supported on baby.
+
+
+State transitions (with default times):
+
+* -> ACTIVE
+  Any user activity changes to the active state.
+
+ACTIVE -> IDLE
+  After 30 seconds of inactivity, player power is on
+
+ACTIVE -> SLEEP
+  After 30 seconds of inactivity, player power is off
+
+IDLE -> SLEEP
+  After 10 minutes of inactivity, when not playing
+
+SLEEP -> HIBERNATE
+  After 1 hour of inactivity
+
+--]]
+
 
 
 local brightnessTimer = nil
@@ -108,7 +145,7 @@ function init(self)
 
 	self:initBrightness()
 
-	self:setPowerState("active")
+	self:setPowerState("ACTIVE")
 
 	brightnessTimer = Timer( 2000,
 		function()
@@ -118,8 +155,8 @@ function init(self)
 				end
 			end
 		end)
-	brightnessTimer:start()	
-	
+	brightnessTimer:start()
+
 	-- status bar updates
 	local updateTask = Task("statusbar", self, _updateTask)
 	updateTask:addTask()
@@ -145,7 +182,7 @@ function init(self)
 
 		if sw == 1 then
 			-- headphone
-			self:_headphoneJack(val)
+			self:_headphoneJack(val == 1)
 
 		elseif sw == 2 then
 			-- line in
@@ -166,10 +203,8 @@ function init(self)
 
 	Decode:open(settings)
 
-	if isHeadphone then
-		-- disable crossover after the device is opened
-		bsp:setMixer("Crossover", false)
-	end
+	-- disable crossover after the device is opened
+	self:_headphoneJack(isHeadphone)
 
 	-- find out when we connect to player
 	jnt:subscribe(self)
@@ -183,7 +218,8 @@ function init(self)
 end
 
 local MAX_BRIGHTNESS_LEVEL = -1
--- Minium Brightness is 11 because "dimmed" powerstate subtracts 10 form the value passed to setBrightness
+-- Minium Brightness is 11 because IDLE powerstate subtracts 10 form the value passed to setBrightness
+
 local MIN_BRIGHTNESS_LEVEL = 11
 local STATIC_AMBIENT_MIN = -1
 
@@ -193,12 +229,12 @@ local AMBIENT_RAMPSTEPS = -1
 local wasDimmed = false
 local brightCur = -1
 
-function initBrightness(self) 
+function initBrightness(self)
 	-- Static Variables
 	MAX_BRIGHTNESS_LEVEL = #brightnessTable
 	STATIC_AMBIENT_MIN = 10000
 	AMBIENT_RAMPSTEPS = 4
-	
+
 	-- Init some values to a default value
 	brightCur = MAX_BRIGHTNESS_LEVEL
 
@@ -219,72 +255,72 @@ end
 function doBrightnessRamping(self, target)
 	local diff = 0
 	diff = (target - brightCur)
-	log:warn("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")	
+	log:warn("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")
 	--log:info("Diff: " .. diff)
 
 	if math.abs(diff) > AMBIENT_RAMPSTEPS then
 		diff = AMBIENT_RAMPSTEPS
-			
+
 		-- is there an easier solution for this?
 		if brightCur > target then
 			diff = diff * -1.0
 		end
 	end
-		
-	brightCur = brightCur + diff	
 
-	-- make sure brighCur is a integer 
+	brightCur = brightCur + diff
+
+	-- make sure brighCur is a integer
 	brightCur = math.floor(brightCur)
-	
+
 	if brightCur > MAX_BRIGHTNESS_LEVEL then
 		brightCur = MAX_BRIGHTNESS_LEVEL
 	elseif brightCur < MIN_BRIGHTNESS_LEVEL then
-		brightCur = MIN_BRIGHTNESS_LEVEL	
+		brightCur = MIN_BRIGHTNESS_LEVEL
 	end
-	
+
 end
 
 function doAutomaticBrightnessTimer(self)
 
 	-- As long as the power state is active don't do anything
-	if self.powerState ==  "active" then
+	if self.powerState ==  "ACTIVE" then
 		if wasDimmed == true then
 			log:info("SWITCHED TO ACTIVE: " .. self.powerState)
-			-- set brightness so that the active power state removes the 60% dimming
+			-- set brightness so that the ACTIVE power state removes the 60% dimming
 			self:setBrightness( brightCur )
 			wasDimmed = false
 		end
 		return
-	else 
+	else
 		wasDimmed = true
 	end
 
-	local settings = self:getSettings()	
-	
-	-- Now continue with the real ambient code 
+	local settings = self:getSettings()
+
+	-- Now continue with the real ambient code
 	local ambient = sysReadNumber(self, "ambient")
-	
+
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
 	log:info("MaxBright:    " .. tostring(MAX_BRIGHTNESS_LEVEL))
 	log:info("Brightness:   " .. tostring(settings.brightness))
 	]]--
-	
+
 	-- switch around ambient value
 	ambient = STATIC_AMBIENT_MIN - ambient
 	if ambient < 0 then
 		ambient = 0
 	end
 	--log:info("AmbientFixed: " .. tostring(ambient))
-	
-	
+
+
 	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
-	
+
 	self:doBrightnessRamping(brightTarget);
-	
+
 	-- Set Brightness
 	self:setBrightness( brightCur )
-	
+
 	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
 
 end
@@ -316,14 +352,41 @@ function getDefaultWallpaper(self)
 end
 
 
-function _headphoneJack(self, val)
-	if val == 0 then
-		bsp:setMixer("Crossover", true)
-		bsp:setMixer("Endpoint", "Speaker")
+function _setEndpoint(self)
+	if self.isHeadphone == nil then
+		-- don't change state during initialization
+		return
+	end
+
+	local endpoint
+	if self.isHeadphone then
+		endpoint = "Headphone"
+	elseif self.powerState == "ACTIVE" or self.powerState == "IDLE" then
+		endpoint = "Speaker"
 	else
-		bsp:setMixer("Endpoint", "Headphone")
+		-- only power off when using the power amp to prevent
+		-- pops on headphones
+		endpoint = "Off"
+	end
+
+	if self.endpoint == endpoint then
+		return
+	end
+	self.endpoint = endpoint
+
+	if endpoint == "Speaker" then
+		bsp:setMixer("Crossover", true)
+		bsp:setMixer("Endpoint", endpoint)
+	else
+		bsp:setMixer("Endpoint", endpoint)
 		bsp:setMixer("Crossover", false)
 	end
+end
+
+
+function _headphoneJack(self, val)
+	self.isHeadphone = val
+	self:_setEndpoint()
 end
 
 
@@ -380,7 +443,7 @@ function notify_playerCurrent(self, player)
 		log:debug('date sync: ', chunk.data.date)
                 self:setDate(chunk.data.date)
  	end
- 
+
 	-- setup a once/hour
         player:subscribe(
 		'/slim/datestatus/' .. player:getId(),
@@ -424,7 +487,7 @@ local function _updateWireless(self)
 
 	if not iface then
 		iconbar:setWirelessSignal(nil)
-	else	
+	else
 		if iface:isWireless() then
 			-- wireless strength
 			local quality, strength = iface:getLinkQuality()
@@ -534,32 +597,97 @@ end
 
 
 function sleep(self)
-	self:setPowerState("dimmed")
+	local state = self.powerState
+	local player = Player:getLocalPlayer()
+
+	log:debug("sleep: ", state)
+
+	if state == "ACTIVE" then
+		if player then
+			local poweron = player:isPowerOn()
+
+			if not poweron then
+				return self:setPowerState("SLEEP")
+			end
+		end
+
+		return self:setPowerState("IDLE")
+
+	elseif state == "IDLE" then
+		if player then
+			local playmode = player:getPlayMode()
+
+			if playmode == "play" then
+				return self.powerTimer:stop()
+			end
+		end
+
+		return self:setPowerState("SLEEP")
+
+	elseif state == "SLEEP" then
+		return self:setPowerState("HIBERNATE")
+	end
 end
 
 
 function wakeup(self)
-	self:setPowerState("active")
+	log:debug("wakeup: ", self.powerState)
+
+	self:setPowerState("ACTIVE")
+end
+
+
+function notify_playerPower(self, player, power)
+	if not player:isLocal() then
+		return
+	end
+
+	if power then
+		self:wakeup()
+	else
+		self:setPowerState(self.powerState)
+	end
+end
+
+
+function notify_playerModeChange(self, player, mode)
+	if not player:isLocal() then
+		return
+	end
+
+	if mode == 'play' then
+		self:wakeup()
+	else
+		self:setPowerState(self.powerState)
+	end
 end
 
 
 function setPowerState(self, state)
 	local settings = self:getSettings()
 
-	if state == "active" then
-		self.powerTimer:restart(settings.dimmedTimeout)
+	if state == "ACTIVE" then
+		self.powerTimer:restart(settings.idleTimeout)
 
-	elseif state == "dimmed" then
+	elseif state == "IDLE" then
+		self.powerTimer:restart(settings.sleepTimeout)
+
+	elseif state == "SLEEP" then
+		self.powerTimer:restart(settings.hibernateTimeout)
+
+	elseif state == "HIBERNATE" then
 		self.powerTimer:stop()
-
 	end
 
 	if self.powerState == state then
 		return
 	end
 
+	log:debug("powerState: ", self.powerState, "->", state)
+
 	self.powerState = state
 
+	_setEndpoint(self)
 	_setBrightness(self, self.lcdBrightness)
 end
 
@@ -572,7 +700,7 @@ function _initBrightnessTable( self)
 	--first value is "off" value
 	brightnessTable[k] = {0, 0}
 	k = k + 1
-	
+
 	if self._revision >= 3 then
 		-- Brightness table for PB3 and newer
 		-- First parameter can be 1 to achieve very low brightness
@@ -622,9 +750,9 @@ function _setBrightness(self, level)
 	if level > MAX_BRIGHTNESS_LEVEL  then
 		level = MAX_BRIGHTNESS_LEVEL
 	end
-	
-	-- 60% brightness in dimmed power mode
-	if self.powerState == "dimmed" then
+
+	-- 60% brightness in idle power mode
+	if self.powerState == "IDLE" then
 		if level > 11 then
 			level = level - 10
 		else
@@ -670,10 +798,10 @@ function settingsBrightnessShow (self, menuItem)
 	local slider = Slider("slider", 1, #brightnessTable, level,
 		function(slider, value, done)
 			settings.brightness = value
-			
+
 			-- If the user modifies the slider - automatically switch to manaul brightness
 			settings.brightnessControl = "manual"
-			
+
 			local bright = value
 
 			self:setBrightness(bright)
@@ -736,7 +864,7 @@ function settingsBrightnessControlShow(self, menuItem)
 						settings.brightnessControl = "automatic"
 					end,
 					settings.brightnessControl == "automatic")
-		},	
+		},
 		{
 			text = self:string("BSP_BRIGHTNESS_MANUAL"),
 			style = "item_choice",
@@ -747,7 +875,7 @@ function settingsBrightnessControlShow(self, menuItem)
 					settings.brightnessControl == "manual")
 		}
 	})
-	
+
 	window:addListener(EVENT_WINDOW_POP,
 		function()
 			self:storeSettings()

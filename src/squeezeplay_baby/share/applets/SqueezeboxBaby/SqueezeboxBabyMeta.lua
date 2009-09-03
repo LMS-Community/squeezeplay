@@ -29,7 +29,9 @@ function defaultSettings(meta)
 		brightness = 61,		-- max
 		brightnessControl = "manual", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
-		dimmedTimeout = 30000,		-- 30 seconds
+		idleTimeout = 30000,		-- 30 seconds
+		sleepTimeout = 10 * 60000,	-- 10 minutes
+		hibernateTimeout = 60 * 60000,	-- 1 hour
 
 		-- audio settings
 		alsaPlaybackDevice = "default",
