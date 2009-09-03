@@ -16,6 +16,7 @@ local Label            = require("jive.ui.Label")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
+local Timer            = require("jive.ui.Timer")
 
 local Player           = require("jive.slim.Player")
                        
@@ -66,9 +67,9 @@ function openAlarmWindow(self)
 
 	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
 
-	local time = datetime:getCurrentTime()
+	self.time = datetime:getCurrentTime()
 	local icon = Icon('icon_alarm')
-	local label = Label('alarm_time', time)
+	local label = Label('alarm_time', self.time)
 	local headerGroup = Group('alarm_header', {
 		icon = icon,
 		time = label,
@@ -108,6 +109,8 @@ function openAlarmWindow(self)
 
 	menu:addActionListener("mute", self, snoozeAction)
 
+        window:addTimer(1000, function() self:_updateTime() end)
+
 	window:addWidget(menu)
 	window:setShowFrameworkWidgets(false)
 	window:setAllowScreensaver(false)
@@ -117,6 +120,15 @@ function openAlarmWindow(self)
 	self.timeWidget  = label
 end
 
+
+function _updateTime(self)
+	local time = datetime:getCurrentTime()
+	if time ~= self.time then
+		log:debug('updating time in alarm window')
+		self.time = time
+		self.timeWidget:setValue(time)
+	end
+end
 
 function _alarmOff(self)
 	self.player:stopAlarm()
