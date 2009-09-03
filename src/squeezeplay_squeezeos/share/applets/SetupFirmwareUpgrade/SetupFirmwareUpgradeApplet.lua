@@ -158,12 +158,12 @@ function _helpString(self, upgrade)
 	local helpString = upgrade.help
 	if not helpString then
 		if string.match(upgrade.url, "file:") then
-			helpString = self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", version or "")
+			helpString = self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", upgrade.version or "")
 		else
 			if _versionCompare(JIVE_VERSION, upgrade.version) <= 0 then
-				helpString = self:string(upgrade.help or "UPDATE_BEGIN_REINSTALL", version or "?")
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_REINSTALL", upgrade.version or "?")
 			else
-				helpString = self:string(upgrade.help or "UPDATE_BEGIN_UPGRADE", version or "?")
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_UPGRADE", upgrade.version or "?")
 			end
 		end
 	end
