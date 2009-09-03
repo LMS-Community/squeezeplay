@@ -23,6 +23,8 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Tile             = require("jive.ui.Tile")
 local Window           = require("jive.ui.Window")
+
+local Player           = require("jive.slim.Player")
                        
 local datetime         = require("jive.utils.datetime")
 
@@ -94,16 +96,8 @@ end
 
 Clock  = oo.class()
 
--- gotcha alert: remember that the : after Clock means self is the first arg
-function Clock:notify_playerCurrent(player)
-	if not player then
-		return
-	end
-	self.player = player
-end
-
 function Clock:notify_playerAlarmState(player, alarmSet)
-	if player ~= self.player then
+	if not player:isLocal() then
 		return
 	end
 	self.alarmSet = alarmSet
@@ -119,7 +113,7 @@ function Clock:__init(skin, windowStyle)
 	obj.screen_width, obj.screen_height = Framework:getScreenSize()
 
 	-- the player object needs adding here for the alarm icon support
-	obj.player = appletManager:callService('getCurrentPlayer')
+	obj.player = Player:getLocalPlayer()
 	if obj.player then
 		jnt:subscribe(obj)
 		obj.alarmSet = obj.player:getAlarmState()
