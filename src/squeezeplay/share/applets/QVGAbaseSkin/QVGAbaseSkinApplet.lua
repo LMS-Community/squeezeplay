@@ -1067,7 +1067,11 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 
-	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item)
+	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, {
+		arrow = { 
+			img = false, 
+		},
+	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_no_arrow = _uses(s.icon_list.menu.item)
 	s.icon_list.menu.item_checked_no_arrow = _uses(s.icon_list.menu.item_checked)
@@ -1078,7 +1082,6 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 
---HERE
 	s.icon_list.menu.selected = {}
 	s.icon_list.menu.selected.item = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'arrow' },
@@ -1105,7 +1108,7 @@ function skin(self, s, reload, useDefaultSize)
 		order = { 'icon', 'text', 'check', 'arrow' },
 	})
 	s.icon_list.menu.selected.item_play             = _uses(s.icon_list.menu.selected.item, {
-		arrow = s.img.playArrow,
+		arrow = { img = false},
 	})
 	s.icon_list.menu.selected.albumcurrent          = _uses(s.icon_list.menu.selected.item, {
 		arrow = {
