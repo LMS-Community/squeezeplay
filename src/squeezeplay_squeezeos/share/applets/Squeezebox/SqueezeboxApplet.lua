@@ -66,7 +66,7 @@ function sysReadNumber(self, attr)
 
 	local line, err = fh:read("*a")
 	if err then
-		return 0
+		return nil
 	else
 		return tonumber(line)
 	end
