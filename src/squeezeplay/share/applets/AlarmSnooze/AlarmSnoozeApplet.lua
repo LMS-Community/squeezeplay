@@ -42,8 +42,8 @@ function notify_playerAlarmState(self, player, alarmState)
 		if alarmState == 'active' then
 			log:warn('open alarm window')
 			if player ~= Player:getCurrentPlayer() then
-				-- TODO: switch from current player to local player
-				log:warn('switch to local player')
+				log:warn('alarm has fired locally, switching to local player')
+                        	appletManager:callService("setCurrentPlayer", player)
 			end
 			self.player = player
 
