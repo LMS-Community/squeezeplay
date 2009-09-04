@@ -977,8 +977,7 @@ function _playlistHasTracks(self)
 		return false
 	end
 	
-	local playerStatus = self.player:getPlayerStatus()
-	if playerStatus and playerStatus.playlist_tracks and playerStatus.playlist_tracks > 0 then
+	if self.player:getPlaylistSize() and self.player:getPlaylistSize() > 0 then 
 		return true
 	else
 		return false
