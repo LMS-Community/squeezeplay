@@ -308,7 +308,7 @@ function __init(self, jnt, playerId)
 		isOnStage = false,
 
 		-- current song info
-		currentSong = {},
+		mixedPopup = {},
 
 		-- text info
 		popupInfo = {},
@@ -920,7 +920,7 @@ end
 
 
 function hideWindows(self)
-	self.currentSong.window:hide()
+	self.mixedPopup.window:hide()
 	self.popupInfo.window:hide()
 	self.popupIcon.window:hide()
 end
@@ -963,18 +963,18 @@ function onStage(self)
 	self.slimServer.comet:endBatch()
 
 	-- create window to display current song info
-	self.currentSong.window = Popup("toast_popup")
-	self.currentSong.window:setAllowScreensaver(true)
-	self.currentSong.window:setAlwaysOnTop(true)
-	self.currentSong.artIcon = Icon("icon")
-	self.currentSong.text = Label("text", "")
+	self.mixedPopup.window = Popup("toast_popup_mixed")
+	self.mixedPopup.window:setAllowScreensaver(true)
+	self.mixedPopup.window:setAlwaysOnTop(true)
+	self.mixedPopup.artIcon = Icon("icon_art")
+	self.mixedPopup.text = Label("text", "")
+	self.mixedPopup.subtext = Label("subtext", "")
+	self.mixedPopup.badge = Icon('badge_none')
 
-	local group = Group("group", {
-			text = self.currentSong.text,
-			icon = self.currentSong.artIcon
-	      })
-
-	self.currentSong.window:addWidget(group)
+	self.mixedPopup.window:addWidget(self.mixedPopup.text)
+	self.mixedPopup.window:addWidget(self.mixedPopup.artIcon)
+	self.mixedPopup.window:addWidget(self.mixedPopup.subtext)
+	self.mixedPopup.window:addWidget(self.mixedPopup.badge)
 
 	-- create window to display current song info
 	self.popupInfo.window = Popup("toast_popup_text")
@@ -1003,7 +1003,7 @@ function onStage(self)
 
 	self.popupIcon.window:addWidget(group)
 
-	local popups = { self.currentSong.window, self.popupInfo.window, self.popupIcon.window }
+	local popups = { self.mixedPopup.window, self.popupInfo.window, self.popupIcon.window }
 
 	for i, popup in ipairs(popups) do
 		--all input cancels the popups, and for all but 'back', 'go' and mouse clicks, input is forwarded to main window
@@ -1031,22 +1031,22 @@ function onStage(self)
 
 --[[
 	--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
-	self.currentSong.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+	self.mixedPopup.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
 
 			if (event:getType() & EVENT_MOUSE_ALL) > 0 then
 				return hideAction(self) 
 			end
 
-			local prev = self.currentSong.window:getLowerWindow()
+			local prev = self.mixedPopup.window:getLowerWindow()
 			if prev then
 				Framework:dispatchEvent(prev, event)
 			end
 			return EVENT_CONSUME
 		end)
 
-	self.currentSong.window:addActionListener("back", self, hideAction)
-	self.currentSong.window.brieflyHandler = 1
+	self.mixedPopup.window:addActionListener("back", self, hideAction)
+	self.mixedPopup.window.brieflyHandler = 1
 
 	self.popupInfo.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
@@ -1087,7 +1087,7 @@ function offStage(self)
 	self.slimServer.comet:unsubscribe('/slim/displaystatus/' .. self.id)
 	self.slimServer.comet:endBatch()
 
-	self.currentSong = {}
+	self.mixedPopup = {}
 end
 
 
@@ -1283,7 +1283,7 @@ function _process_displaystatus(self, event)
 
 		local transitionOn = Window.transitionFadeIn
 		local transitionOff = Window.transitionFadeOut
-		local duration = display['duration'] or 3000
+		local duration = display['duration'] or 5000
 
 		local usingIR = Framework:isMostRecentInput('ir')
 
@@ -1300,11 +1300,20 @@ function _process_displaystatus(self, event)
 			if not usingIR then
 				showMe = false
 			end
-		elseif type == 'popupalbum' then
-			s = self.currentSong
-			s.text:setValue(textValue)
-			s.artIcon:setStyle("icon")
-			self.slimServer:fetchArtwork(display["icon-id"] or display["icon"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
+		elseif type == 'mixed' or type == 'popupalbum' then
+			s = self.mixedPopup
+			local text = display['text'][1] or ''
+			local subtext = display['text'][2] or ''
+			s.text:setValue(text)
+			s.subtext:setValue(subtext)
+			if display['style'] == 'favorite' then
+				s.badge:setStyle('badge_favorite')
+			elseif display['style'] == 'add' then
+				s.badge:setStyle('badge_add')
+			else
+				s.badge:setStyle('none')
+			end
+			self.slimServer:fetchArtwork(display["icon-id"] or display["icon"], s.artIcon, jiveMain:getSkinParam('POPUP_THUMB_SIZE'), 'png')
 		elseif type == 'song' then
 			self.jnt:notify('playerTitleStatus', self, textValue, duration)
 			showMe = false

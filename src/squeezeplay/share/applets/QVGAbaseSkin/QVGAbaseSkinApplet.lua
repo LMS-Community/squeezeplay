@@ -76,6 +76,7 @@ end
 function param(self)
 	return {
 		THUMB_SIZE = 41,
+		POPUP_THUMB_SIZE = 120,
 		NOWPLAYING_MENU = true,
 		nowPlayingBrowseArtworkSize = 154,
 		nowPlayingSSArtworkSize     = 186,
@@ -317,6 +318,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- by putting this in the skin table "s", it's available to child skins
 	s.CONSTANTS = {
 		THUMB_SIZE = self:param().THUMB_SIZE,
+		POPUP_THUMB_SIZE = self:param().POPUP_THUMB_SIZE,
 
 		CHECK_PADDING  = { 0, 0, 0, 0 },
 
@@ -384,10 +386,6 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.img.playArrow = {
 		img = _loadImage(self, "Icons/selection_play_sel.png"),
-		h = WH_FILL
-	}
-	s.img.addArrow  = {
-		img = _loadImage(self, "Icons/selection_ad_sel.png"),
 		h = WH_FILL
 	}
 	s.img.rightArrowSel = {
@@ -620,9 +618,7 @@ function skin(self, s, reload, useDefaultSize)
 			img = false
 		},
 	})
-	s.selected.item_add = _uses(s.selected.item, {
-		arrow = s.img.addArrow
-	})
+	s.selected.item_add = _uses(s.selected.item)
 	s.selected.item_checked = _uses(s.selected.item, {
 		order = { "icon", "text", "check", "arrow" },
 		check = s.img.checkMarkSelected,
@@ -1115,9 +1111,7 @@ function skin(self, s, reload, useDefaultSize)
 			img = _loadImage(self, "Icons/icon_nplay_sel.png"),
 		},
 	})
-	s.icon_list.menu.selected.item_add              = _uses(s.icon_list.menu.selected.item, {
-		arrow = s.img.addArrow,
-	})
+	s.icon_list.menu.selected.item_add              = _uses(s.icon_list.menu.selected.item)
 	s.icon_list.menu.selected.item_no_arrow         = _uses(s.icon_list.menu.selected.item, {
 		order = { 'icon', 'text' },
 	})
@@ -1271,7 +1265,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 
-	-- toast_popup popup
+	-- toast_popup popup (is now text only)
 	s.toast_popup = {
 		x = 19,
 		y = 46,
@@ -1280,37 +1274,98 @@ function skin(self, s, reload, useDefaultSize)
 		bgImg = s.img.popupBox,
 		group = {
 			padding = { 12, 12, 12, 0 },
-			order = { 'icon', 'text' },
+			order = { 'text' },
 			text = {
 				padding = { 6, 3, 8, 8 } ,
-				align = 'top-left',
+				align = 'center',
 				w = WH_FILL,
 				h = WH_FILL,
-				font = _font(c.TITLE_FONT_SIZE),
+				font = _font(18),
 				lineHeight = 17,
 				line = {
 					{
-						font = _boldfont(c.HELP_FONT_SIZE),
+						font = _boldfont(18),
 						height = 17
 					},
 				},
 			},
-			icon = {
-				align = 'top-left',
-				border = { 12, 12, 0, 0 },
-				img = false,
-				h = WH_FILL,
-				w = c.THUMB_SIZE,
-			}
 		}
 	}
 
+	s.waiting_popup = _uses(s.popup)
+
+	s.waiting_popup.text = {
+		padding = { 0, 29, 0, 0 },
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
+		align = "top",
+		position = LAYOUT_NORTH,
+		font = _font(c.POPUP_TEXT_SIZE_1),
+	}
+
+	s.waiting_popup.subtext = {
+		padding = { 0, 0, 0, 34 },
+		font = _boldfont(c.POPUP_TEXT_SIZE_2),
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
+		align = "top",
+		position = LAYOUT_SOUTH,
+		w = WH_FILL,
+	}
+
+	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
+		fg = c.TEXT_COLOR_TEAL,
+	})
+
+
+	-- new style that incorporates text, icon, more text, and maybe a badge
+	s.toast_popup_mixed = {
+		x = 19,
+		y = 16,
+		position = LAYOUT_NONE,
+		w = screenWidth - 38,
+		h = 214,
+		bgImg = s.img.popupBox,
+		text = {
+			position = LAYOUT_NORTH,
+			padding = { 8, 24, 8, 0 },
+			align = 'top',
+			w = WH_FILL,
+			h = WH_FILL,
+			font = _boldfont(18),
+		},
+		subtext = {
+			position = LAYOUT_NORTH,
+			padding = { 8, 178, 8, 0 },
+			align = 'top',
+			w = WH_FILL,
+			h = WH_FILL,
+			font = _boldfont(18),
+			fg = c.TEXT_COLOR,
+			sh = c.TEXT_SH_COLOR,
+		},
+	}
+
+	s._badge = {
+		position = LAYOUT_NONE,
+		zOrder = 99,
+		-- middle of the screen plus half of the icon width minus half of the badge width. gotta love LAYOUT_NONE
+		x = screenWidth/2 + 21,
+		w = 34,
+		y = 34,
+	}
+	s.badge_none = _uses(s._badge, {
+		img = false,
+	})
+	s.badge_favorite = _uses(s._badge, {
+		img = _loadImage(self, "Icons/icon_badge_fav.png")
+	})
+	s.badge_add = _uses(s._badge, {
+		img = _loadImage(self, "Icons/icon_badge_add.png")
+	})
+
 	-- toast without artwork
-	s.toast_popup_text = _uses(s.toast_popup, {
-		group = {
-			order = { 'text' },
-                }
-        })
+	s.toast_popup_text = _uses(s.toast_popup)
 
 	-- toast popup with icon only
 	s.toast_popup_icon = _uses(s.toast_popup, {
@@ -1609,6 +1664,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_locked = _uses(s._icon, {
 		img = _loadImage(self, "Icons/icon_locked.png"),
 	})
+	s.icon_art = _uses(s._icon, {
+		padding = 0,
+                img = _loadImage(self, "UNOFFICIAL/icon_favs.png"),
+	})
+
 
 	s.icon_alarm = {
 		img = _loadImage(self, "Icons/icon_alarm.png")
