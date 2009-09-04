@@ -150,6 +150,8 @@ function skin(self, s, reload, useDefaultSize)
         s.slider_popup.y = 88
         s.slider_popup.w = screenWidth - 12
 	
+	s.multiline_text_list.menu.scrollbar.h = c.MULTILINE_LINE_ITEM_HEIGHT * 3 - 8
+
 	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT
 	s.icon_list.menu.itemHeight = c.PORTRAIT_LINE_ITEM_HEIGHT
 

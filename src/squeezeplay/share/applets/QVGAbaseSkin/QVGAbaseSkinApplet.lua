@@ -215,6 +215,13 @@ function skin(self, s, reload, useDefaultSize)
 			nil,
 		})
 
+	s.img.multiLineSelectionBox =
+		Tile:loadHTiles({
+					nil,
+				       imgpath .. "Menu_Lists/menu_sel_box_82.png",
+				       imgpath .. "Menu_Lists/menu_sel_box_82_r.png",
+			       })
+
 	s.img.timeInputSelectionBox = Tile:loadImage(imgpath .. "Menu_Lists/menu_box_36.png")
 	s.img.oneLineItemSelectionBox =
 		Tile:loadHTiles({
@@ -366,6 +373,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		ITEM_ICON_ALIGN   = 'right',
 		LANDSCAPE_LINE_ITEM_HEIGHT = 45,
+		MULTILINE_LINE_ITEM_HEIGHT = 82,
 		TIME_LINE_ITEM_HEIGHT = 36,
 		PORTRAIT_LINE_ITEM_HEIGHT  = 43,
 	}
@@ -707,6 +715,21 @@ function skin(self, s, reload, useDefaultSize)
 		sh = c.TEXT_SH_COLOR,
 		align = "left",
 	}
+
+	s.multiline_text = {
+		w = WH_FILL,
+		padding = { 10, 0, 2, 0 },
+		lineHeight = 21,
+		font = _font(18),
+		fg = { 0xe6, 0xe6, 0xe6 },
+		sh = { },
+		align = "left",
+	}
+
+	s.multiline_popup_text = _uses(s.multiline_text, {
+		padding = { 14, 18, 14, 18 },
+		border = { 0, 0, 10, 0 },
+	})
 
 	-- FIXME: using volume slider assets as an acceptable workaround
 	-- slider asset rendering is not working when there are four assets (l, middle, r, and end "button")
@@ -1155,6 +1178,49 @@ function skin(self, s, reload, useDefaultSize)
 		}),
 	}
 
+	s.multiline_text_list = _uses(s.text_list)
+
+	s.multiline_text_list.title = _uses(s.title, {
+		h = 51,
+	})
+
+	s.multiline_text_list.menu =  _uses(s.menu, {
+			h = screenHeight - 75,
+			border = { 0, 51, 0, 24 },
+			itemHeight = c.MULTILINE_LINE_ITEM_HEIGHT,
+			scrollbar = { 
+				h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
+				border = {0,4,0,0},
+			},
+			item = {
+				order = { "icon", "text", "arrow" },
+				padding = { 10, 13, 2, 8 },
+				text = {
+					align = "top-left",
+					w = WH_FILL,
+					h = WH_FILL,
+					padding = c.MENU_ALBUMITEM_TEXT_PADDING,
+					font = _font(18),
+					lineHeight = 21,
+					fg = { 0xe6, 0xe6, 0xe6 },
+				},
+				icon = {
+					w = c.THUMB_SIZE,
+					h = c.THUMB_SIZE,
+					padding = { 0, 10, 10, 0 },
+				},
+				arrow = s.img.rightArrow,
+			},
+	})
+
+	s.multiline_text_list.menu.item_no_arrow = _uses(s.multiline_text_list.menu.item)
+
+	s.multiline_text_list.menu.selected = {}
+	s.multiline_text_list.menu.selected.item = _uses(s.multiline_text_list.menu.item, {
+		bgImg = s.img.multiLineSelectionBox,
+		arrow = s.img.rightArrowSel,
+	})
+	s.multiline_text_list.menu.selected.item_no_arrow = _uses(s.multiline_text_list.menu.selected.item)
 
 	-- information window
 	s.information = _uses(s.window)
@@ -1460,6 +1526,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
 	})
+
+	s.multiline_popup = _uses(s.context_menu)
 
 	s.alarm_header = {
 			w = screenWidth,

@@ -568,6 +568,12 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 	if db:windowStyle() == 'text_list' then
 		showIcons = false
 	end
+	-- if multiline_text_list is the window style, use a textarea not a Label for the text
+	local useTextArea = false
+	if db:windowStyle() == 'multiline_text_list' then
+		useTextArea = true
+	end
+
 	if not group then
 
 		if labelStyle == 'title' then
@@ -577,6 +583,15 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 				lbutton = _backButton(),
 				rbutton = _nowPlayingButton(),
 			})
+		elseif useTextArea then
+			group = Group(labelStyle, { 
+				icon  = Icon("icon"), 
+				text  = Textarea("multiline_text", ""), 
+				arrow = Icon('arrow'),
+				check = Icon('check'),
+			})
+			
+
 		else
 			group = Group(labelStyle, { 
 				icon = Icon("icon"), 
@@ -588,7 +603,22 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 	end
 
 	if item then
+		-- special case here. windows that use Textareas for their text widget have a 
+		-- + handler for bringing up a context menu window that has the entirety of the text
+		if useTextArea then
+			local moreAction = function()
+				local window = Popup('multiline_popup')
+				local text = Textarea('multiline_popup_text', item.text)
+				window:addWidget(text)
+				window:setShowFrameworkWidgets(false)
+				window:show(Window.transitionFadeIn)
+				return EVENT_CONSUME
+			end		
+			group:addActionListener('add', step, moreAction)
+		end
+
 		group:setWidgetValue("text", item.text)
+
 		if showIcons then
 			--set "no artwork" unless it has already been set (avoids high cpu looping)
 			local iconWidget = group:getWidget('icon')
