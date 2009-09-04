@@ -268,6 +268,13 @@ function skin(self, s)
 		 imgpath .. "5_line_lists/menu_sel_box_5line_press_r.png",
 	})
 
+	local threeItemSelectionBox            = _loadHTile(self, {
+		 imgpath .. "3_line_lists/menu_sel_box_3line_l.png",
+		 imgpath .. "3_line_lists/menu_sel_box_3line.png",
+		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
+	})
+	local threeItemPressedBox = _loadImageTile(self, imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
+	
 	local contextMenuPressedBox    = _loadTile(self, {
 		imgpath .. "Popup_Menu/button_cm_menu_press.png",
 		imgpath .. "Popup_Menu/button_cm_menu_press_tl.png",
@@ -945,6 +952,20 @@ function skin(self, s)
 		align = "left",
 	}
 
+	s.multiline_text = {
+		w = WH_FILL,
+		padding = { 10, 0, 2, 10 },
+		font = _font(18),
+		height = 21,
+		fg = { 0xe6, 0xe6, 0xe6 },
+		sh = { },
+		align = "left",
+	}
+	s.multiline_popup_text = _uses(s.multiline_text, {
+		padding = { 14, 18, 14, 18 },
+		border = { 0, 0, 10, 0 },
+	})
+
 	s.slider = {
 		border = 10,
                 position = LAYOUT_SOUTH,
@@ -1199,6 +1220,33 @@ function skin(self, s)
 		},
 	})
 
+	s.multiline_text_list = _uses(s.text_list)
+
+	s.multiline_text_list.menu = _uses(s.menu, {
+		itemHeight = THREE_ITEM_HEIGHT,
+		item = {
+			padding = { 10, 10, 0, 10 },
+			bgImg = false,
+			icon = {
+				align = 'top',
+			},
+		},
+	})
+
+	s.multiline_text_list.menu.item_no_arrow = _uses(s.multiline_text_list.menu.item)
+
+	s.multiline_text_list.menu.selected = {}
+	s.multiline_text_list.menu.selected.item = _uses(s.multiline_text_list.menu.item, {
+		bgImg = threeItemSelectionBox,
+	})
+	s.multiline_text_list.menu.selected.item_no_arrow = _uses(s.multiline_text_list.menu.selected.item)
+
+	s.multiline_text_list.menu.pressed = {}
+	s.multiline_text_list.menu.pressed.item = _uses(s.multiline_text_list.menu.item, {
+		bgImg = threeItemPressedBox,
+	})
+	s.multiline_text_list.menu.pressed.item_no_arrow = _uses(s.multiline_text_list.menu.pressed.item)
+ 
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 
@@ -1722,6 +1770,8 @@ function skin(self, s)
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
 	})
+
+	s.multiline_popup = _uses(s.context_menu)
 
 	-- FIXME: this is not to any spec yet
 	-- slider popup (volume)
