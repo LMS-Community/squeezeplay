@@ -1666,7 +1666,7 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.icon_art = _uses(s._icon, {
 		padding = 0,
-                img = _loadImage(self, "UNOFFICIAL/icon_favs.png"),
+                img = false,
 	})
 
 
