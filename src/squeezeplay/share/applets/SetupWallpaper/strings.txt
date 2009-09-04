@@ -64,6 +64,7 @@ ALLEGRO
 	FR	Allegro
 	IT	Allegro
 	NL	Allegro
+	NO	Allegro
 	PL	Allegro
 	RU	Аллегро
 	SV	Allegro
@@ -93,6 +94,7 @@ ENCORE
 	FR	Bis
 	IT	Encore
 	NL	Encore
+	NO	Dakapo
 	PL	Bis
 	RU	На бис
 	SV	Dakapo
@@ -122,6 +124,7 @@ HARMONY
 	FR	Harmonie
 	IT	Armonia
 	NL	Harmony
+	NO	Harmoni
 	PL	Harmonia
 	RU	Harmony
 	SV	Harmony
@@ -136,6 +139,7 @@ NOCTURNE
 	FR	Nocturne
 	IT	Notturno
 	NL	Nocturne
+	NO	Nokturne
 	PL	Nokturn
 	RU	Ноктюрн
 	SV	Nocturne
@@ -150,6 +154,7 @@ QUARTET
 	FR	Quartet
 	IT	Quartetto
 	NL	Kwartet
+	NO	Kvartett
 	PL	Kwartet
 	RU	Квартет
 	SV	Kvartett
@@ -164,6 +169,7 @@ SONATA
 	FR	Sonate
 	IT	Sonata
 	NL	Sonate
+	NO	Sonate
 	PL	Sonata
 	RU	Соната
 	SV	Sonat
@@ -178,6 +184,7 @@ SYMPHONY
 	FR	Symphonie
 	IT	Sinfonia
 	NL	Symfonie
+	NO	Symfoni
 	PL	Symfonia
 	RU	Симфония
 	SV	Symfoni
@@ -192,6 +199,7 @@ VIBRATO
 	FR	Vibrato
 	IT	Vibrato
 	NL	Vibrato
+	NO	Vibrato
 	PL	Vibrato
 	RU	Вибрато
 	SV	Vibrato

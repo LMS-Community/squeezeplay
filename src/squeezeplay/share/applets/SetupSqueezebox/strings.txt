@@ -106,7 +106,7 @@ SQUEEZEBOX_CONNECTING_TO
 # SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung mit
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen

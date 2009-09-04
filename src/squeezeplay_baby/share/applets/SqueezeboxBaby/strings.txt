@@ -91,7 +91,7 @@ BSP_BRIGHTNESS_CTRL
 	NO	Lysstyrke
 	PL	Regulacja jasności
 	RU	Управление яркостью
-	SV	Ljusstyrkekontroll
+	SV	Ljusstyrka
 
 BSP_BRIGHTNESS_AUTOMATIC
 	CS	Automatický jas
@@ -122,7 +122,7 @@ BSP_BRIGHTNESS_MANUAL
 	PL	Ręczna regulacja jasności
 	RU	Ручная настройка яркости
 	SV	Manuell ljusstyrka
-	
+
 GOODBYE
 	CS	Nashledanou
 	DA	Farvel
@@ -130,12 +130,12 @@ GOODBYE
 	EN	Goodbye
 	ES	Adiós
 	FI	Näkemiin
-	FR	A bientôt
-	IT	A presto
+	FR	Au revoir
+	IT	Arrivederci
 	NL	Tot ziens
 	NO	Farvel
 	PL	Do widzenia
-	RU	Прощайте
+	RU	До свидания
 	SV	Hej då!
 
 BATTERY_LOW

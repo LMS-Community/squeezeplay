@@ -109,7 +109,7 @@ DOOMSDAY_MESSAGE1
 
 DOOMSDAY_MESSAGE2
 	CS	Run for the hills!
-	DA	Løb for livet.
+	DA	Run for the hills!
 	DE	Run for the hills!
 	EN	Run for the hills!
 	ES	Run for the hills!

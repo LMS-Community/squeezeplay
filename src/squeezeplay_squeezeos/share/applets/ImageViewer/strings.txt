@@ -943,4 +943,16 @@ IMAGE_VIEWER_LOADING
 	SV	Läser in ...
 
 IMAGE_VIEWER_START_SLIDESHOW
+	DA	Start diasshow
+	DE	Diashow starten
 	EN	Start Slideshow
+	ES	Iniciar presentación
+	FI	Käynnistä diaesitys
+	FR	Lancer le diaporama
+	IT	Avvia presentazione
+	NL	Diavoorstelling starten
+	NO	Start lysbildefremvisning
+	PL	Uruchom pokaz slajdów
+	RU	Запустить слайд-шоу
+	SV	Påbörja bildspel
+

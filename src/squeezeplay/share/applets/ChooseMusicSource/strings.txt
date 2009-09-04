@@ -62,7 +62,6 @@ SWITCH_SERVER_TEXT
 	RU	В результате выбранного действия плеер подключится к другой медиатеке. Воспроизведение будет остановлено.
 	SV	Ditt val innebär att spelaren ansluter till ett annat bibliotek och att uppspelningen stoppas.
 
-
 SWITCH_PASSWORD_WRONG
 	CS	Neplatné uživatelské jméno/ heslo
 	DA	Brugernavnet/adgangskoden er ugyldig
@@ -254,8 +253,8 @@ SLIMSERVER_CONNECTING_TO
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
-	PL	Trwa łączenie z %s
-	RU	Подключение к %s
+	PL	Trwa łączenie z
+	RU	Подключение к
 	SV	Ansluts till
 
 SQUEEZEBOX_PROBLEM

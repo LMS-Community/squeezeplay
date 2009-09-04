@@ -84,7 +84,7 @@ REMOTE_SETTINGS
 	EN	Controller Settings
 	ES	Configuración del mando
 	FI	Kaukosäätimen asetukset
-	FR	Paramètres de la telecommande
+	FR	Paramètres de la télécommande
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 	NO	Kontrollinnstillinger
@@ -271,7 +271,7 @@ INSERT
 	IT	Inserisci
 	NL	Invoegen
 	NO	Sett inn
-	PL	Insert
+	PL	Wstaw
 	RU	Вставить
 	SV	Infoga
 

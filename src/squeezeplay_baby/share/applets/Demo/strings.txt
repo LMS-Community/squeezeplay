@@ -124,7 +124,7 @@ DEMO_VOLUME_MUTED
 
 SLIDE_01
 	CS	Squeezebox rádio\nWi-Fi Internetové rádio
-	DA	Squeezebox Radio\nTrådløs internetradio
+	DA	Squeezebox™ Radio\nTrådløs internetradio
 	DE	Squeezebox™ Radio\nWLAN-Internetradio
 	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
 	ES	Squeezebox™ Radio\nRadio por Internet vía WiFi
@@ -134,8 +134,8 @@ SLIDE_01
 	NL	Squeezebox™-radio\nWifi-internetradio
 	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
 	PL	Radio Squeezebox™\nRadio internetowe Wi-Fi
-	RU	Радио Squeezebox\nWi-Fi интернет-радио
-	SV	Squeezeboxâ„¢-radio\nTrådlös Internetradio
+	RU	Радио Squeezebox™\nWi-Fi интернет-радио
+	SV	Squeezebox™-radio\nTrådlös Internetradio
 
 SLIDE_02
 	CS	Objevte svět digitální hudby.
@@ -155,7 +155,7 @@ SLIDE_02
 SLIDE_03
 	CS	Z tisíců bezplatných internetových radiostanic...
 	DA	Fra tusindvis af gratis radiostationer på internetet...
-	DE	Von Tausenden konstenlosen Internetradiosendern...
+	DE	Von Tausenden kostenlosen Internetradiosendern ...
 	EN	From thousands of free Internet radio stations...
 	ES	Desde miles de emisoras de radio por Internet gratuitas...
 	FI	Tuhansista ilmaisista internet-radioasemista
@@ -165,7 +165,7 @@ SLIDE_03
 	NO	Fra tusenvis av gratis Internett-radiostasjoner...
 	PL	Od tysięcy bezpłatnych internetowych stacji radiowych...
 	RU	От тысяч бесплатных интернет-радиостанций
-	SV	Från tusentals gratis webbradiostationerâ€¦
+	SV	Från tusentals gratis webbradiostationer...
 
 SLIDE_04
 	CS	... vaší osobní hudební sbírce...
@@ -173,11 +173,11 @@ SLIDE_04
 	DE	...zu Ihrer eigenen Musiksammlung...
 	EN	...to your own personal music collection...
 	ES	...hasta su colección de música personal...
-	FI	...henkilökohtaista musiikkikokoelmaasi varten...
+	FI	henkilökohtaista musiikkikokoelmaasi varten
 	FR	...à votre collection musicale personnelle...
 	IT	...alla propria raccolta di musica personale...
 	NL	...naar je persoonlijke muziekcollectie...
-	NO	...til din personlige musikksamling ...
+	NO	...til din personlige musikksamling...
 	PL	...do swojej kolekcji muzyki...
 	RU	до вашей личной музыкальной коллекции
 	SV	...till din egen personliga musiksamling...
@@ -188,9 +188,9 @@ SLIDE_05
 	DE	...zu den angesagtesten Online-Musikdiensten.
 	EN	...to the hottest online music services.
 	ES	...o los mejores servicios de música en línea.
-	FI	...suosituimpiin online-musiikkipalveluihin.
+	FI	suosituimpiin online-musiikkipalveluihin.
 	FR	...aux meilleurs services de musique en ligne.
-	IT	...i servizi di musica online più richiesti.
+	IT	...ai servizi di musica online più richiesti.
 	NL	...naar de beste onlinemuziekservices.
 	NO	...til de beste musikktjenestene på nett.
 	PL	...do najnowszych usług muzycznych w trybie online.
@@ -214,17 +214,17 @@ SLIDE_06
 
 SLIDE_07
 	CS	Přehrát veškerou vaší hudbu. I tu ze zařízení iPod™.
-	DA	Du kan spille alle dine numre, selv dem på din iPod.
+	DA	Du kan spille alle dine numre, selv dem på din iPod™.
 	DE	Spielen Sie Ihre ganze Musik ab. Sogar die Musik von Ihrem iPod™.
 	EN	Play all your music. Even from your iPod™.
 	ES	Toda su música a su alcance. Incluso la de su iPod™.
-	FI	Kuuntele kaikkia musiikkitiedostojasi. Jopa iPod-soittimessa.
+	FI	Kuuntele kaikkia musiikkitiedostojasi. Jopa iPod™-soittimessa.
 	FR	Jouez toute votre musique. Même depuis votre iPod™.
 	IT	Riproduci tutta la musica, anche dell'iPod™.
 	NL	Speel al je muziek af. Zelfs van je iPod™.
 	NO	Spill av all musikken du har, selv på iPod™.
 	PL	Posłuchaj swojej kolekcji muzyki. Także z odtwarzacza iPod™.
-	RU	Слушайте любую музыку. Даже c iPod.
+	RU	Слушайте любую музыку. Даже c iPod™.
 	SV	Spela upp all din musik. Till och med från din iPod™.
 
 SLIDE_08

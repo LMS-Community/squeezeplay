@@ -103,8 +103,8 @@ HTTP_AUTH_CONNECTING_TO
 	IT	Collegamento a
 	NL	Verbinden met
 	NO	Kopler til
-	PL	Trwa łączenie z %s
-	RU	Подключение к %s
+	PL	Trwa łączenie z
+	RU	Подключение к
 	SV	Ansluts till
 
 HTTP_AUTH_PASSWORD_WRONG

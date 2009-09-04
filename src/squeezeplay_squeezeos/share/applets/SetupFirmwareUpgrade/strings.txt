@@ -177,10 +177,10 @@ UPDATE_VERIFY
 	FR	Installation
 	IT	Installazione
 	NL	Installeren
-	NO	Det er nok å installere
+	NO	Installerer
 	PL	Instalowanie
 	RU	Установка
-	SV	Det
+	SV	Installerar
 
 UPDATE_REBOOT
 	CS	\nRestartování
@@ -303,6 +303,17 @@ UPDATE_CANCEL
 	SV	Avbryt
 
 UPDATE_7.4_UPGRADE_MESSAGE_JIVE
-# SLT: this needs to remain squeezenetwork.com. It'll present the user information about the change to mysqueezebox.com
+# SLT: this needs to remain squeezenetwork.com. It will present the user information about the change to mysqueezebox.com
+	DA	Du har opgraderet firmwaren til version 7.4! Der er sket mange ændringer siden forrige version. Du kan læse mere på www.squeezenetwork.com.
+	DE	Sie haben auf die Firmware-Version 7.4 aktualisiert! Dies ist ein wichtiges Upgrade und umfasst zahlreiche Änderungen. Weitere Informationen finden Sie unter www.squeezenetwork.com.
 	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.
+	ES	Acaba de realizar la actualización a la versión 7.4 del firmware. Es una actualización importante y se han producido muchos cambios. Visite www.squeezenetwork.com si desea más información.
+	FI	Olet juuri päivittänyt laitteisto-ohjelmiston versioon 7.4! Tämä on suuri päivitys ja muutoksia on ollut paljon. Saat lisätietoja osoitteesta www.squeezenetwork.com.
+	FR	Vous venez de passer à la version 7.4 du micrologiciel! Cette mise à niveau est importante et comporte de nombreux changements. Pour plus d'informations, veuillez vous rendre sur le site www.squeezenetwork.com.
+	IT	È stato eseguito l'aggiornamento del firmware alla versione 7.4. L'aggiornamento comporta una serie di modifiche importanti. Visitare www.squeezenetwork.com per ulteriori informazioni.
+	NL	Je hebt zojuist een upgrade naar firmwareversie 7.4 uitgevoerd. Dit is een belangrijke upgrade, en er is een groot aantal wijzigingen aangebracht. Ga naar www.squeezenetwork.com voor meer informatie.
+	NO	Du har oppgradert til fastvareversjon 7.4. Dette er en viktig oppgradering, og det har skjedd mange endringer. Gå til www.squeezenetwork.com for mer informasjon.
+	PL	Dokonano aktualizacji oprogramowania układowego do wersji 7.4! Jest to ważna aktualizacja zawierająca wiele zmian. Aby uzyskać więcej informacji, odwiedź witrynę www.squeezenetwork.com.
+	RU	Выполнено обновление микропрограммного обеспечения до версии 7.4. Это важное обновление, содержащее большое количество изменений. Дополнительные сведения см. на сайте www.squeezenetwork.com.
+	SV	Den inbyggda programvaran har uppgraderats till version 7.4. Den nya versionen innehåller omfattande förbättringar, som du kan läsa mer om på www.squeezenetwork.com.
 

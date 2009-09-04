@@ -58,7 +58,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	FI	Voit säätää kirkkautta kiekolla.
 	FR	Utilisez la molette pour régler la luminosité.
 	IT	Usare la rotellina per regolare la luminosità.
-	NL	Gebruik het wiel om de helderheid van de verlichting aan te passen.
+	NL	Gebruik het wiel om de helderheid aan te passen.
 	NO	Bruk hjulet til å justere lysstyrken.
 	PL	Użyj pokrętła, aby ustawić jasność.
 	RU	Используйте колесико для регулировки яркости.
@@ -392,7 +392,7 @@ INVALID_MAC_TEXT
 	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
 	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
 	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
-	SV	Ogiltig MAC-adress eller ogiltigt UUID. Ta kontakt med supportavdelningen.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
 	CS	Pokračovat

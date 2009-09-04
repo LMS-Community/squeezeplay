@@ -89,7 +89,7 @@ SLIMBROWSER_SEARCH_HELP
 	NL	Gebruik het scrollwiel om naar een andere letter te gaan. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
 	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
-	RU	Прокручивайте колесико до нужной буквы и нажимайте для выбора центральную кнопку. Затем нажмите центральную кнопку еще раз, чтобы начать поиск.
+	RU	Прокручивая колесико, дойдите до нужной буквы и нажмите центральную кнопку, чтобы выбрать букву. Затем нажмите центральную кнопку еще раз, чтобы запустить поиск.
 	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck på mittenknappen igen när du vill börja söka.
 
 SLIMBROWSER_PROBLEM_CONNECTING
@@ -243,6 +243,7 @@ SLIMBROWSER_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIMBROWSER_ADD_NEXT_1
+# SLT: this is short for "Play this item next", not "Play next item"
 	CS	Přehrát další
 	DA	Spil næste
 	DE	Als nächstes wiedergeben

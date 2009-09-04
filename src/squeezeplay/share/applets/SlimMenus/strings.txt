@@ -48,16 +48,60 @@ MENUS_OTHER_LIBRARY
 	SV	Byt bibliotek
 
 MENUS_ATTACH_CABLE_DETAILED
+	DA	Der blev ikke fundet en kableforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
+	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
+	ES	No se puede detectar una conexión con cable. Compruebe el cable cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
+	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
+	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
+	IT	Impossibile rilevare una connessione cablata. Verificare il cavo Ethernet e accertarsi che la rete sia in esecuzione e accessibile.
+	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer je ethernetkabel en zorg ervoor dat je netwerk actief en beschikbaar is.
+	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre deg om at nettverket er oppe og tilgjengelig.
+	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
+	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.
+	SV	Ingen kabelanslutning upptäcktes. Kontrollera ethernetkabeln och se till att nätverket är igång och tillgängligt.
 
 MENUS_NO_WIRELESS_DETAILED
+	DA	Der blev ikke fundet et trådløst netværk. Kontroller at netværket er i drift og at der kan etableres forbindelse til det.
+	DE	Es konnte keine kabellose Verbindung erkannt werden. Vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
+	FI	Langallista yhteyttä ei havaita. Tarkista, että verkko on käytössä ja että se on saatavilla.
+	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.
+	IT	Impossibile rilevare una connessione senza fili. Verificare che la rete sia in esecuzione e accessibile.
+	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer of je netwerk actief en beschikbaar is.
+	NO	Finner ikke en trådløs tilkopling. Kontroller at nettverket er oppe og tilgjengelig.
+	PL	Nie można wykryć połączenia bezprzewodowego. Sprawdź, czy sieć działa i jest dostępna.
+	RU	Не удается обнаружить беспроводное подключение. Убедитесь, что сеть работает и доступна.
+	SV	Ingen trådlös anslutning upptäcktes. Kontrollera att nätverket körs och är tillgängligt.
 
 MENUS_CONNECTION_ERROR
+	DA	Forbindelsesfejl
+	DE	Verbindungsproblem
 	EN	Connection Problem
+	ES	Problema de conexión
+	FI	Yhteysongelma
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Verbindingsprobleem
+	NO	Tilkoplingsproblem
+	PL	Problem z połączeniem
+	RU	Ошибка подключения
+	SV	Anslutningsproblem
 
 MENUS_CHOOSE_DIFFERENT_NETWORK
+	DA	Vælg et andet netværk
+	DE	Anderes Netzwerk wählen
 	EN	Choose Different Network
+	ES	Elija otra red
+	FI	Valitse eri verkko
+	FR	Sélectionner un réseau différent
+	IT	Scegli una rete diversa
+	NL	Ander netwerk kiezen
+	NO	Velg et annet nettverk
+	PL	Wybierz inną sieć
+	RU	Выбрать другую сеть
+	SV	Välj ett annat nätverk
 
 MENUS_TRY_AGAIN
 	CS	Zkuste to znovu
@@ -73,7 +117,6 @@ MENUS_TRY_AGAIN
 	PL	Spróbuj ponownie
 	RU	Повторите попытку
 	SV	Försök igen
-
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu

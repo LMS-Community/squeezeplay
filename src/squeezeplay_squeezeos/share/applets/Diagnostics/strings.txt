@@ -33,7 +33,7 @@ PORT_FAIL
 # SLT: please keep these messages as short as possible
 	CS	Nemohu připojit
 	DA	Der kan ikke etableres forbindelse
-	DE	Verbindung kann nicht hergestellt werden
+	DE	Keine Verbindung möglich
 	EN	Can't connect
 	ES	No se puede conectar
 	FI	Ei voi yhdistää
@@ -98,12 +98,12 @@ PING_FAIL
 	EN	Can't ping
 	ES	No se puede hacer ping
 	FI	Ei voi suorittaa ping-toimintoa
-	FR	Impossible d'exécuter la commande PING
-	IT	Impossibile eseguire il ping
+	FR	PING Impossible
+	IT	Impossibile eseguire ping
 	NL	Kan de opdracht Ping niet uitvoeren
 	NO	Kan ikke sende ping
 	PL	Nie można użyć funkcji ping
-	RU	Невозможно выполнить ping
+	RU	Невозможно выполнить проверку связи
 	SV	Det gick inte att skicka ping
 
 ETH_FULL_DUPLEX
@@ -183,17 +183,17 @@ WLAN_SSID
 
 WLAN_ENCRYPTION
 	CS	Bezdrátové šifrování\n%s
-	DA	Kryptering for trådløst netværk\n%s
+	DA	Kryptering af trådløst netværk\n%s
 	DE	Kabellos-Verschlüsselung\n%s
 	EN	Wireless encryption\n%s
 	ES	Cifrado inalámbrico\n%s
 	FI	Langaton salaus\n%s
-	FR	Chiffrement sans fil\n%s
+	FR	Cryptage sans fil\n%s
 	IT	Crittografia rete senza fili\n%s
 	NL	Draadloze codering\n%s
 	NO	Trådløs kryptering\n%s
 	PL	Szyfrowanie w sieci bezprzewodowej\n%s
-	RU	Беспроводное шифрование\n%s
+	RU	Шифрование беспроводной сети\n%s
 	SV	Trådlös kryptering\n%s
 
 WLAN_STRENGTH
@@ -239,7 +239,7 @@ IP_ADDRESS
 	NO	Ip-adresse\n%s
 	PL	Adres IP\n%s
 	RU	IP-адрес\n%s
-	SV	IP-adress\n%s
+	SV	IP-address\n%s
 
 SUBNET_MASK
 	CS	IP podsítě\n%s
@@ -266,11 +266,11 @@ GATEWAY
 	FI	IP-yhdyskäytävä\n%s
 	FR	Passerelle IP\n%s
 	IT	Gateway IP\n%s
-	NL	Gateway van IP\n%s
-	NO	Ip for gateway\n%s
+	NL	IP-gateway\n%s
+	NO	Gateway-ip\n%s
 	PL	Brama IP\n%s
 	RU	Шлюз IP\n%s
-	SV	Gateway-adress\n%s
+	SV	IP-gateway\n%s
 
 DNS_SERVER
 	CS	DNS Server\n%s
@@ -319,7 +319,7 @@ SN_PING
 
 SN_PORT_3483
 	CS	TCP port 3483\n%s
-	DA	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
 	DE	TCP-Anschluss 3483\n%s
 	EN	TCP port 3483\n%s
 	ES	Puerto TCP 3483\n%s
@@ -334,12 +334,12 @@ SN_PORT_3483
 
 SN_PORT_9000
 	CS	TCP port 9000\n%s
-	DA	TCP port 9000\n%s
+	DA	TCP-port 9000\n%s
 	DE	TCP-Anschluss 9000\n%s
 	EN	TCP port 9000\n%s
 	ES	Puerto TCP 9000\n%s
 	FI	TCP-portti 9000\n%s
-	FR	Port  TCP 9000\n%s
+	FR	Port TCP 9000\n%s
 	IT	Porta TCP 9000\n%s
 	NL	TCP-poort 9000\n%s
 	NO	TCP-port 9000\n%s
@@ -371,7 +371,7 @@ SC_NAME
 	FI	Kirjaston nimi\n%s
 	FR	Nom de la collection\n%s
 	IT	Nome libreria\n%s
-	NL	Naam van collectie\n%s
+	NL	Naam van muziekcollectie\n%s
 	NO	Navn på bibliotek\n%s
 	PL	Nazwa biblioteki\n%s
 	RU	Имя медиатеки\n%s
@@ -394,7 +394,7 @@ SC_PING
 
 SC_PORT_3483
 	CS	TCP port 3483\n%s
-	DA	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
 	DE	TCP-Anschluss 3483\n%s
 	EN	TCP port 3483\n%s
 	ES	Puerto TCP 3483\n%s
@@ -409,12 +409,12 @@ SC_PORT_3483
 
 SC_PORT_9000
 	CS	TCP port 9000\n%s
-	DA	TCP port 9000\n%s
+	DA	TCP-port 9000\n%s
 	DE	TCP-Anschluss 9000\n%s
 	EN	TCP port 9000\n%s
 	ES	Puerto TCP 9000\n%s
 	FI	TCP-portti 9000\n%s
-	FR	Port  TCP 9000\n%s
+	FR	Port TCP 9000\n%s
 	IT	Porta TCP 9000\n%s
 	NL	TCP-poort 9000\n%s
 	NO	TCP-port 9000\n%s
@@ -440,7 +440,7 @@ SUPPORT
 SUPPORT_HELP
 	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.mysqueezebox.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
 	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.mysqueezebox.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
-	DE	Weitere Informationen und Kundendient erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
+	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
 	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
 	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.mysqueezebox.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
 	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.mysqueezebox.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
@@ -483,7 +483,18 @@ DIAGNOSTICS_NETWORKING
 	SV	Nätverk
 
 HARDWARE_VERSION
+	DA	Hardwareversion\n%s
+	DE	Hardware-Version\n%s
 	EN	Hardware version\n%s
+	ES	Versión de hardware\n%s
+	FI	Laitteistoversio\n%s
+	FR	Version du matériel\n%s
+	IT	Versione hardware\n%s
+	NL	Hardwareversie\n%s
+	NO	Maskinvareversjon\n%s
+	PL	Wersja sprzętowa\n%s
+	RU	Версия оборудования\n%s
+	SV	Maskinvaruversion\n%s
 
 UPTIME
 	DA	Oppetid\n%s

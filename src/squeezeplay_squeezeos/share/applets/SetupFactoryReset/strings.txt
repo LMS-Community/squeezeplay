@@ -5,16 +5,16 @@
 RESET_FACTORY_RESET
 	CS	Nastavení továrních hodnot
 	DA	Gendan fabriksindstillinger
-	DE	Standardeinstellungen
+	DE	Standardeinstellungen wiederherstellen
 	EN	Restore Factory Settings
-	ES	Configuración de fábrica
+	ES	Restaurar configuración de fábrica
 	FI	Palauta tehdasasetukset
-	FR	Réinitialisation réglages d'usine
-	IT	Ripristino impostazioni di fabbrica
+	FR	Rétablir les réglages d'usine
+	IT	Ripristina impostazioni di fabbrica
 	NL	Fabrieksinstellingen herstellen
-	NO	Fabrikkinnstillinger
-	PL	Przywrócenie ustawień fabrycznych
-	RU	Сброс к фабричным предустановкам
+	NO	Gjenopprett fabrikkinnstillingene
+	PL	Przywróć ustawienia fabryczne
+	RU	Восстановить заводские настройки
 	SV	Återställ standardinställningarna
 
 RESET_CANCEL

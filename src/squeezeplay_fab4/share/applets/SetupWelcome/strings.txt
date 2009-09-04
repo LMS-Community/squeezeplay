@@ -81,7 +81,7 @@ CONNECTING_TO_SN
 # SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung zu
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen
@@ -91,7 +91,7 @@ CONNECTING_TO_SN
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluts till
+	SV	Ansluter till
 
 MYSQUEEZEBOX_DOT_COM
 	CS	mysqueezebox.com

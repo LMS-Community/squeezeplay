@@ -50,7 +50,7 @@ WIRELESS_CONNECTION
 CONNECT_USING_SQUEEZEBOX
 	CS	Připojit pomocí Squeezeboxu
 	DA	Etabler forbindelse vha. Squeezebox
-	DE	Verbindung mit Squeezebox
+	DE	Verbindung über Squeezebox
 	EN	Connect using Squeezebox
 	ES	Conectar mediante Squeezebox
 	FI	Yhdistä Squeezeboxilla
@@ -80,7 +80,7 @@ CONNECT_USING_NETWORK
 CONNECT_HELP
 	CS	Váš Squeezebox můžete použít k připojení k vaší síti nebo k jinému bezdrátovému přístupovému bodu.
 	DA	Du kan bruge din Squeezebox til at oprette forbindelse til afspilleren, eller du kan bruge et andet trådløst adgangspunkt.
-	DE	Sie können Squeezebox mit Ihrem Netzwerk oder einem anderen kabellosen Zugriffspunkt verbinden.
+	DE	Sie können Ihre Squeezebox mit Ihrem Netzwerk oder einem anderen kabellosen Zugriffspunkt verbinden.
 	EN	You can use your Squeezebox to connect to your network or use another wireless access point.
 	ES	Puede usar Squeezebox para conectarse a la red o usar otro punto de acceso inalámbrico.
 	FI	Voit muodostaa verkkoyhteyden Squeezeboxilla tai käyttää jotakin toista langatonta käyttöpistettä.
@@ -125,7 +125,7 @@ DONE
 DONE_HELP
 	CS	Nyní můžete používat svůj ovladač Squeezebox pro přístup k veškeré hudbě. Pokračujte stiskem prostředního tlačítka.
 	DA	Du kan nu bruge din Squeezebox Controller til at lytte til al din musik. Tryk på midterknappen for at fortsætte.
-	DE	Jetzt können Sie mit der Squeezebox Controller auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
+	DE	Jetzt können Sie mit dem Squeezebox Controller auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
 	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
 	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
 	FI	Voit nyt ohjata kaikkia musiikkitiedostojasi Squeezebox-kaukosäätimelläsi. Jatka painamalla keskipainiketta.
@@ -143,14 +143,14 @@ CONNECTING_TO_SN
 	DE	Verbindung zu
 	EN	Connecting to
 	ES	Conectando a
-	FI	Muodostetaan yhteyttä kohteeseen
+	FI	Yhdistää kohteeseen
 	FR	Connexion à
-	IT	Connessione a
-	NL	Bezig verbinding te maken met 
+	IT	Collegamento a
+	NL	Verbinden met
 	NO	Kopler til
-	PL	Nawiązywanie połączenia z
+	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 
 MYSQUEEZEBOX_DOT_COM
 	CS	mysqueezebox.com
@@ -166,7 +166,6 @@ MYSQUEEZEBOX_DOT_COM
 	PL	mysqueezebox.com
 	RU	mysqueezebox.com
 	SV	mysqueezebox.com
-
 
 CANT_CONNECT
 	CS	Nemohu připojit
@@ -257,5 +256,4 @@ SN_CHOOSE_DIFFERENT
 	PL	Wybierz inną sieć
 	RU	Выбрать другую сеть
 	SV	Välj ett annat nätverk
-
 
