@@ -724,12 +724,11 @@ function skin(self, s, reload, useDefaultSize)
 		fg = { 0xe6, 0xe6, 0xe6 },
 		sh = { },
 		align = "left",
+		scrollbar = {
+			h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
+			border = {0,4,20,0},
+		},
 	}
-
-	s.multiline_popup_text = _uses(s.multiline_text, {
-		padding = { 14, 18, 14, 18 },
-		border = { 0, 0, 10, 0 },
-	})
 
 	-- FIXME: using volume slider assets as an acceptable workaround
 	-- slider asset rendering is not working when there are four assets (l, middle, r, and end "button")
@@ -1178,7 +1177,18 @@ function skin(self, s, reload, useDefaultSize)
 		}),
 	}
 
-	s.multiline_text_list = _uses(s.text_list)
+	s.multiline_text_list = _uses(s.text_list, {
+		multiline_text = {
+			w = WH_FILL,
+			padding = { 10, 0, 2, 0 },
+			lineHeight = 21,
+			font = _font(18),
+			fg = { 0xe6, 0xe6, 0xe6 },
+			sh = { },
+			align = "left",
+		},
+	})
+
 
 	s.multiline_text_list.title = _uses(s.title, {
 		h = 51,
@@ -1186,7 +1196,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.multiline_text_list.menu =  _uses(s.menu, {
 			h = screenHeight - 75,
-			border = { 0, 51, 0, 24 },
+			border = { 0, 52, 0, 24 },
 			itemHeight = c.MULTILINE_LINE_ITEM_HEIGHT,
 			scrollbar = { 
 				h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
@@ -1459,7 +1469,8 @@ function skin(self, s, reload, useDefaultSize)
 		x = 10,
 		y = 10,
 		w = screenWidth - 20,
-		h = screenHeight - 17,
+		--h = screenHeight - 17,
+		h = 100,
 		border = 0,
 		padding = 0,
 		bgImg = s.img.contextMenuBox,
@@ -1478,6 +1489,20 @@ function skin(self, s, reload, useDefaultSize)
 			border = 0,
 		},
 
+		multiline_text = {
+			w = WH_FILL,
+			padding = { 14, 18, 14, 18 },
+			border = { 0, 0, 10, 0 },
+			lineHeight = 21,
+			font = _font(18),
+			fg = { 0xe6, 0xe6, 0xe6 },
+			sh = { },
+			align = "left",
+			scrollbar = {
+				h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
+				border = {0,10,6,10},
+			},
+		},
 
 		menu = {
 			h = c.CM_MENU_HEIGHT * 5,
@@ -1526,8 +1551,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
 	})
-
-	s.multiline_popup = _uses(s.context_menu)
 
 	s.alarm_header = {
 			w = screenWidth,

@@ -1771,8 +1771,6 @@ function skin(self, s)
 	        maskImg = false,
 	})
 
-	s.multiline_popup = _uses(s.context_menu)
-
 	-- FIXME: this is not to any spec yet
 	-- slider popup (volume)
 	s.slider_popup = {
