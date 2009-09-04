@@ -898,6 +898,13 @@ function t_connectJiveAdhoc(self)
 	-- configure ad-hoc network
 	local id = self.wireless:t_addNetwork(ssid, option)
 
+	-- We need a valid IP address to be able to send out UDAP commands, but since
+	--  Squeezebox doesn't have an IP address yet it doesn't really matter what
+	--  our IP address is.
+	-- Using a static IP address (instead of DHCP) here makes the process about
+	--  20 seconds shorter as we do not have to wait for a self-assigned IP
+	self.wireless:t_setStaticIP(ssid, "192.168.144.120", "255.255.255.0", "192.168.144.1", "192.168.144.1")
+
 	-- select new network
 	self.wireless:t_selectNetwork(ssid)
 
