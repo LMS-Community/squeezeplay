@@ -64,6 +64,11 @@ function settingsShow(self)
 	selectMusicSource(self)
 end
 
+function selectCompatibleMusicSource(self)
+	self.offerCompatibleSourcesOnly = true
+	selectMusicSource(self)
+end
+
 -- service to select server for a player. Note a current player must exist before calling this method
 -- if specificServer is set to false, then offer a list even if only one server exists. If specificServer, if only on server exists,
 --  it will automatically be selected.
@@ -240,6 +245,11 @@ function _addServerItem(self, server, address)
 
 	if server and server:isSqueezeNetwork() then
 		log:debug("Exclude SN")
+		return
+	end
+
+	if self.offerCompatibleSourcesOnly and not server:isCompatible() then
+		log:info("Exclude non-compatible source: ", server)
 		return
 	end
 

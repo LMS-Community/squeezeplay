@@ -2507,12 +2507,15 @@ function findSqueezeNetwork(self)
 end
 
 
-function squeezeNetworkRequest(self, request)
+function squeezeNetworkRequest(self, request, inSetup)
 	local squeezenetwork = findSqueezeNetwork()
 
 	if not squeezenetwork or not request then
 		return
 	end
+
+	self.inSetup = inSetup
+
 	_server = squeezenetwork
 
 	-- create a window for SN signup
@@ -2784,14 +2787,38 @@ function _problemConnectingInternal(self, server)
 		})
 	end
 
-	--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
-	menu:addItem({
-			text = self:string("SLIMBROWSER_GO_HOME"), 
-			callback = function()
-				self:_removeRequestAndUnlock(server)
-				goHome()
-			end,
-		})
+	if not self.inSetup then
+		--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
+		menu:addItem({
+				text = self:string("SLIMBROWSER_GO_HOME"),
+				callback = function()
+					self:_removeRequestAndUnlock(server)
+					goHome()
+				end,
+			})
+	else
+		window:setAllowScreensaver(false)
+		--Offer local SC's in setup if they exist
+		if _anyCompatibleSqueezeCenterFound() then
+			menu:addItem({
+					     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+					     callback = function()
+								self.inSetup = false
+								self:_removeRequestAndUnlock(server)
+								appletManager:callService("selectCompatibleMusicSource")
+							end,
+					     sound = "WINDOWSHOW",
+				     })
+		end
+
+		menu:addItem({
+				text = self:string("SLIMBROWSER_DIAGNOSTICS"),
+				callback = function()
+					appletManager:callService("diagnosticsMenu")
+				end,
+			        sound = "WINDOWSHOW",
+			})
+	end
 	-- change music source, only for udap players
 --	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
 --		menu:addItem({
@@ -2853,6 +2880,18 @@ function _problemConnectingInternal(self, server)
 end
 
 
+function _anyCompatibleSqueezeCenterFound()
+	local anyFound = false
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isCompatible() and not server:isSqueezeNetwork() then
+			log:debug("At least one compatible SC found. First found: ", server)
+			anyFound = true
+			break
+		end
+	end
+
+	return anyFound
+end
 
 
 --[[

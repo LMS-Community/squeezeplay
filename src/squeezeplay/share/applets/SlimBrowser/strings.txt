@@ -47,6 +47,21 @@ SLIMBROWSER_GO_HOME
 	RU	Домой
 	SV	Startsida
 
+SLIMBROWSER_DIAGNOSTICS
+	CS	Diagnostika
+	DA	Diagnosticering
+	DE	Diagnose
+	EN	Diagnostics
+	ES	Diagnósticos
+	FI	Diagnostiikka
+	FR	Diagnostic
+	IT	Diagnostica
+	NL	Diagnostische gegevens
+	NO	Diagnose
+	PL	Diagnostyka
+	RU	Диагностика
+	SV	Diagnostik
+
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno
 	DA	Pause

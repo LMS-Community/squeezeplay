@@ -55,6 +55,8 @@ local jnt              = jnt
 
 local welcomeTitleStyle = 'setuptitle'
 
+--This can be enabled for situations like MP where a fw upgrade is absolutely required to complete setup
+local UPGRADE_FROM_SCS_ENABLED = false
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -261,12 +263,16 @@ function step7(self)
 		return
 	end
 
-	_squeezenetworkWait(self, squeezenetwork)
+	if UPGRADE_FROM_SCS_ENABLED then
+		_squeezenetworkWait(self, squeezenetwork)
+	else
+		self:_registerRequest(squeezenetwork)
+	end
 end
 
 
 function _squeezenetworkWait(self, squeezenetwork)
-	log:info("Waiting to connect to SqueezeNetwork and find any compatible SCs")
+	log:info("Looking for upgrade, waiting to connect to SqueezeNetwork and find any compatible SCs")
 
 	-- Waiting popup
 	local popup = Popup("waiting_popup")
@@ -444,7 +450,7 @@ function _registerRequest(self, squeezenetwork)
 	self.registerRequest = true
 
 	log:info("registration on SN")
-	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true)
 
 	self.locked = true -- don't free applet
 	jnt:subscribe(self)
@@ -465,7 +471,32 @@ function step9(self)
 end
 
 
+--finish setup if connected server is SC
+function notify_playerCurrent(self, player)
+	if not player then
+		return
+	end
+
+	local server = player:getSlimServer()
+
+	if not server then
+		return
+	end
+
+	if server:isSqueezeNetwork() then
+		return
+	end
+
+	log:info("Calling step9. server: ", server)
+
+	step9(self)
+end
+
+
+
 function notify_serverLinked(self, server)
+	log:info("notify_serverLinked: ", server)
+
 	if not server:isSqueezeNetwork() then
 		return
 	end
