@@ -584,9 +584,11 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 				rbutton = _nowPlayingButton(),
 			})
 		elseif useTextArea then
+			local textarea = Textarea("multiline_text", "")
+			textarea:setHideScrollbar(true)
 			group = Group(labelStyle, { 
 				icon  = Icon("icon"), 
-				text  = Textarea("multiline_text", ""), 
+				text  = textarea, 
 				arrow = Icon('arrow'),
 				check = Icon('check'),
 			})

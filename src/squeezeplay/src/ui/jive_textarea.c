@@ -16,6 +16,7 @@ typedef struct textarea_widget {
 	int *lines;
 	Uint16 line_width;
 	bool has_scrollbar;
+	bool hide_scrollbar;
 	bool is_header_widget;
 
 	// style
@@ -220,6 +221,10 @@ int jiveL_textarea_layout(lua_State *L) {
 
 	lua_getfield(L, 1, "isHeaderWidget");
 	peer->is_header_widget = lua_toboolean(L, -1);
+	lua_pop(L, 1);
+
+	lua_getfield(L, 1, "hideScrollbar");
+	peer->hide_scrollbar = lua_toboolean(L, -1);
 	lua_pop(L, 1);
 
 	/* word wrap text */
@@ -554,7 +559,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 		// Next line
 		line_width = 0;
 
-		if (!has_scrollbar && num_lines > visible_lines && !peer->is_header_widget) {
+		if (!has_scrollbar && num_lines > visible_lines && !(peer->is_header_widget || peer->hide_scrollbar)) {
 			free(lines);
 			return wordwrap(peer, text, visible_lines, scrollbar_width, true);
 		}
@@ -582,7 +587,7 @@ static void wordwrap(TextareaWidget *peer, char *text, int visible_lines, Uint16
 	}
 	lines[num_lines] = (ptr - text);
 
-	if (!has_scrollbar && num_lines > visible_lines) {
+	if (!has_scrollbar && num_lines > visible_lines && !(peer->is_header_widget || peer->hide_scrollbar)) {
 		free(lines);
 		return wordwrap(peer, text, visible_lines, scrollbar_width, true);
 	}

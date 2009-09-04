@@ -163,11 +163,18 @@ Sets the text in the Textarea to I<text>.
 =cut
 --]]
 function setValue(self, text)
-	self.text = text
-	self:invalidate()
-	self:reLayout()
+	local oldText = self.text
+	if text ~= oldText then
+		self.text = text
+		self:invalidate()
+		self:reLayout()
+	end
 end
 
+
+function setHideScrollbar(self, setting)
+	self.hideScrollbar = setting
+end
 
 --[[
 
