@@ -384,7 +384,7 @@ local function _menuSink(self, isCurrentServer, server)
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
-		log:info("_menuSink() ", server, " menuDirective: ", menuDirective)
+		log:info("_menuSink() ", server, " menuDirective: ", menuDirective, " isCurrentServer:" , isCurrentServer)
 
 		for k, v in pairs(menuItems) do
 
@@ -1124,6 +1124,11 @@ end
 
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
+
+	if server:isSqueezeNetwork() and not server:isSpRegisteredWithSn() then
+		log:info("not registered with SN, so not fetching SN menus")
+		return
+	end
 
 	local playerId
 	if _player then

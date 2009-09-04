@@ -766,6 +766,25 @@ function getPin(self)
 end
 
 
+--todo clean up usage of pin for linked and isSpRegisteredWithSn
+-- If the SN comet connection returns a client id starting with "1x", SP is not registered with it.
+function isSpRegisteredWithSn(self)
+	if not self.comet then
+		return false
+	end
+
+	if self.comet.clientId and  string.sub(self.comet.clientId, 1, 2) == "1X" then
+		log:debug("not registered: ", self.comet.clientId)
+
+		return false
+	end
+
+	log:debug("registered: ", self.comet.clientId)
+
+	return true
+end
+
+
 --[[
 
 =head2 jive.slim.SlimServer:linked(pin)
