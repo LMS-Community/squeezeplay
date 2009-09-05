@@ -1200,7 +1200,7 @@ function skin(self, s, reload, useDefaultSize)
 			itemHeight = c.MULTILINE_LINE_ITEM_HEIGHT,
 			scrollbar = { 
 				h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
-				border = {0,4,0,0},
+				border = { 0, 4, 0, 4 },
 			},
 			item = {
 				order = { "icon", "text", "arrow" },
@@ -1231,7 +1231,13 @@ function skin(self, s, reload, useDefaultSize)
 		arrow = s.img.rightArrowSel,
 	})
 	s.multiline_text_list.menu.selected.item_no_arrow = _uses(s.multiline_text_list.menu.selected.item)
-
+	
+	s.multiline_text_list.menu.pressed = _uses(s.multiline_text_list.menu.selected)
+	s.multiline_text_list.menu.locked = _uses(s.multiline_text_list.menu.selected, {
+		item = {
+			arrow = s.img.smallSpinny,
+		},
+	})
 	-- information window
 	s.information = _uses(s.window)
 
