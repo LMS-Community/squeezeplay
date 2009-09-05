@@ -139,6 +139,8 @@ function skin(self, s, reload, useDefaultSize)
         })
 
 	-- misc layout tweaks from base for portrait
+	s.title.h = 38
+	s.menu.border = { 0, 38, 0, 0 }
 	s.icon_software_update.padding     = { 0, 22, 0, 0 }
 	s.icon_connecting.padding          = { 0, 52, 0, 0 }
 	s.icon_connected.padding           = { 0, 52, 0, 0 }
