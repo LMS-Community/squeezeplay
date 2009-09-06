@@ -1459,6 +1459,7 @@ function _goPlayPresetAction(self, event)
 	end
 
 	_player:presetPress(number)
+	_goNowPlayingAction()
 
 	return EVENT_CONSUME
 end
