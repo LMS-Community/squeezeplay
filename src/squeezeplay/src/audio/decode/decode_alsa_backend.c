@@ -473,7 +473,7 @@ static int _pcm_open(struct decode_alsa *state,
 		     snd_pcm_access_t access,
 		     u32_t sample_rate)
 {
-	int err;
+	int err, dir;
 	unsigned int val;
 	snd_pcm_uframes_t size;
 	snd_ctl_elem_id_t *id;
@@ -535,9 +535,11 @@ static int _pcm_open(struct decode_alsa *state,
 		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
+	state->period_count = val;
 
-	val = state->buffer_time / state->period_count;
-	if ((err = snd_pcm_hw_params_set_period_time_near(*pcmp, hw_params, &val, 0)) < 0) {
+	val = state->buffer_time;
+	dir = 1;
+	if ((err = snd_pcm_hw_params_set_buffer_time_near(*pcmp, hw_params, &val, &dir)) < 0) {
 		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
 	}
