@@ -176,6 +176,11 @@ function setHideScrollbar(self, setting)
 	self.hideScrollbar = setting
 end
 
+
+function setIsMenuChild(self, setting)
+	self.isMenuChild = setting
+end
+
 --[[
 
 =head2 jive.ui.Textarea:isScrollable()

@@ -358,6 +358,35 @@ int jiveL_textarea_draw(lua_State *L) {
 	new_clip.x = peer->w.bounds.x;
 	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
 	new_clip.w = peer->w.bounds.w;
+
+	//Fairly ugly hack to support textarea as a menu item for multiline_text style
+	//Otherwise, for the extra hidden menu item for smooth scrolling, the textarea will draw into iconbar
+	lua_getfield(L, 1, "isMenuChild");
+	if (lua_toboolean(L, -1)) {
+		lua_getfield(L, 1, "parent"); //group
+		lua_getfield(L, -1, "parent"); //menu
+		if (jive_getmethod(L, -1, "getBounds")) {
+			int menu_h, menu_y;
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+			menu_h  = lua_tointeger(L, -1);
+			menu_y  = lua_tointeger(L, -3);
+			lua_pop(L, 4);
+
+			//if bottom of textarea is below bottom of bounding menu, don't draw
+			if (new_clip.h + new_clip.y > menu_h + menu_y) {
+				lua_pop(L, 1);
+				lua_pop(L, 1);
+				return 0;
+
+			}
+		}
+		lua_pop(L, 1);
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);
+
+
 	jive_surface_set_clip(srf, &new_clip);
 
 

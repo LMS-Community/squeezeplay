@@ -586,7 +586,8 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		elseif useTextArea then
 			local textarea = Textarea("multiline_text", "")
 			textarea:setHideScrollbar(true)
-			group = Group(labelStyle, { 
+			textarea:setIsMenuChild(true)
+			group = Group(labelStyle, {
 				icon  = Icon("icon"), 
 				text  = textarea, 
 				arrow = Icon('arrow'),
