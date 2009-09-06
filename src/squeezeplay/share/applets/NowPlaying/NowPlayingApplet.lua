@@ -194,6 +194,12 @@ function notify_playerTrackChange(self, player, nowPlaying)
 	self.player = player
 	local playerStatus = player:getPlayerStatus()
 
+	if player:getPlaylistSize() == 0 then
+		--switch to "empty playlist"
+		appletManager:callService("showPlaylist")
+		return
+	end
+
 	-- create the window to display
 	local window = _createUI(self)
 	if self.window then
