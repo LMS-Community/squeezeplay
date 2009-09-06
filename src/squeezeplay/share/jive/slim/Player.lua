@@ -1519,9 +1519,12 @@ function powerToggle(self)
 	self:button('power')
 end
 
--- used to play favorites
 function numberHold(self, number)
 	self:button(number .. '.hold')
+end
+
+function presetPress(self, number)
+	self:button("preset_" .. number .. '.single')
 end
 
 
