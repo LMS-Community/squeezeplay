@@ -980,7 +980,7 @@ function onStage(self)
 	self.popupInfo.window = Popup("toast_popup_text")
 	self.popupInfo.window:setAllowScreensaver(true)
 	self.popupInfo.window:setAlwaysOnTop(true)
-	self.popupInfo.textarea = Textarea("text", '')
+	self.popupInfo.textarea = Textarea("toast_popup_textarea", '')
 
 	local infoGroup = Group("group", {
 			text = self.popupInfo.textarea,

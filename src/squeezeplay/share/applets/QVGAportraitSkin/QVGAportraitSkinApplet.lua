@@ -152,6 +152,9 @@ function skin(self, s, reload, useDefaultSize)
         s.slider_popup.y = 88
         s.slider_popup.w = screenWidth - 12
 	
+	-- titlebar has to be 55px to also have 80px menu items in portrait and have everything fit neatly
+	s.multiline_text_list.title.h = 55
+	s.multiline_text_list.menu.border = { 0, 56, 0, 24 }
 	s.multiline_text_list.menu.scrollbar.h = c.MULTILINE_LINE_ITEM_HEIGHT * 3 - 8
 
 	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT

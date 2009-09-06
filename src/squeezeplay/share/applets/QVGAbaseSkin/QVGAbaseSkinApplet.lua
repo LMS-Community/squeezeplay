@@ -1196,6 +1196,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.multiline_text_list.menu =  _uses(s.menu, {
 			h = screenHeight - 75,
+			--border = { 0, 52, 0, 24 },
 			border = { 0, 52, 0, 24 },
 			itemHeight = c.MULTILINE_LINE_ITEM_HEIGHT,
 			scrollbar = { 
@@ -1348,6 +1349,17 @@ function skin(self, s, reload, useDefaultSize)
 
 
 	-- toast_popup popup (is now text only)
+	s.toast_popup_textarea = {
+		padding = { 6, 10, 8, 8 } ,
+		align = 'left',
+		w = WH_FILL,
+		h = WH_FILL,
+		font = _boldfont(18),
+		lineHeight = 21,
+		fg = c.TEXT_COLOR,
+		sh = c.TEXT_SH_COLOR,
+	}
+
 	s.toast_popup = {
 		x = 19,
 		y = 46,
