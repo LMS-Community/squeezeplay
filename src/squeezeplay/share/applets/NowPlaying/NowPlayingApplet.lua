@@ -847,6 +847,14 @@ function _createUI(self)
 		return EVENT_CONSUME
 	end)
 
+	for i = 1,6 do
+		local actionString = 'set_preset_' .. tostring(i)
+		window:addActionListener(actionString, self, function()
+			appletManager:callService("setPresetCurrentTrack", i)
+			return EVENT_CONSUME
+		end)
+	end
+
 	window:addActionListener("page_down", self,
 				function()
 					local e = Event:new(EVENT_SCROLL, 1)
@@ -977,6 +985,7 @@ function _delayNowPlaying(self)
 	, true)
 	timer:start()
 end
+
 
 function _playlistHasTracks(self)
 	if not self.player then

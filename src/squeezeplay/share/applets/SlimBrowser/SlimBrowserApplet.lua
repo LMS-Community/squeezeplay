@@ -574,6 +574,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		useTextArea = true
 	end
 
+--	debug.dump(item, 8)
 	if not group then
 
 		if labelStyle == 'title' then
@@ -757,7 +758,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	debug.dump(request)
+	--debug.dump(request)
 
 	-- send the command
 	_server:userRequest(sink, playerid, request)
@@ -3109,6 +3110,25 @@ end
 function showCurrentTrack()
 	local currentIndex = _player:getPlaylistCurrentIndex()
 	showTrack(currentIndex)
+end
+
+function setPresetCurrentTrack(self, preset)
+	local key = tostring(preset)
+	local currentIndex = _player:getPlaylistCurrentIndex()
+
+	local serverIndex = currentIndex - 1
+	local jsonAction = {
+		player = 0,
+		cmd = { 'jivefavorites', 'set_preset' },
+		itemsParams = 'params',
+		params = {
+			playlist_index = serverIndex,
+			key = key,
+		},
+	}
+
+	-- send the command
+	_performJSONAction(jsonAction, nil, nil, nil, nil)
 end
 
 

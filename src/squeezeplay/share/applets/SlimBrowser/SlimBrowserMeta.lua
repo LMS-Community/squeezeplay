@@ -42,6 +42,7 @@ function registerApplet(self)
 	self:registerService('goHome')
 	self:registerService('showTrackOne')
 	self:registerService('showPlaylist')
+	self:registerService('setPresetCurrentTrack')
 	self:registerService('squeezeNetworkRequest')
 
 	self:registerService('browserJsonRequest')
