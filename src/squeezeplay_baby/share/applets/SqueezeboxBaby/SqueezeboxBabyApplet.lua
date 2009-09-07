@@ -115,6 +115,12 @@ function init(self)
 		log:warn("Serial not found")
 	end
 
+	if self._revision < 1 then
+		betaHardware(self, true) -- euthanize
+	elseif self._revision < 4 then
+		betaHardware(self, false) -- warning
+	end
+
 	-- sys interface
 	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "brightness", "rw")
 	sysOpen(self, "/sys/class/backlight/mxc_lcdc_bl.0/", "bl_power", "rw")

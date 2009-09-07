@@ -17,12 +17,13 @@ local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
 local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
+local Tile                   = require("jive.ui.Tile")
 local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applet.SqueezeboxSqueezeOS")
+local log                    = require("jive.utils.log").logger("applet.Squeezebox")
 
 local jnt                    = jnt
 local jiveMain               = jiveMain
@@ -108,18 +109,32 @@ function parseCpuInfo(self)
 end
 
 
+local function _errorWindow(self, title)
+	local window = Window("help_info", title)
+	window:setSkin({
+		help_info = {
+			bgImg = Tile:fillColor(0x000000ff),
+		},
+	})
+
+	window:setAllowScreensaver(false)
+	window:setAlwaysOnTop(true)
+	window:setAutoHide(false)
+	window:setShowFrameworkWidgets(false)
+
+	return window
+end
+
+
 function verifyMacUUID(self)
 	mac = System:getMacAddress()
 	uuid = System:getUUID()
 
-	if not uuid or string.match(mac, "^00:40:20") 
+	if not uuid or string.match(mac, "^00:40:20")
 		or uuid == "00000000-0000-0000-0000-000000000000"
 		or mac == "00:04:20:ff:ff:01" then
-		local window = Window("help_list", self:string("INVALID_MAC_TITLE"))
 
-		window:setAllowScreensaver(false)
-		window:setAlwaysOnTop(true)
-		window:setAutoHide(false)
+		local window = _errorWindow(self, self:string("INVALID_MAC_TITLE"))
 
 		local text = Textarea("help_text", self:string("INVALID_MAC_TEXT"))
 		local menu = SimpleMenu("menu", {
@@ -132,10 +147,35 @@ function verifyMacUUID(self)
 			},
 		})
 
-		window:addWidget(text)
+		menu:setHeaderWidget(text)
 		window:addWidget(menu)
+
 		window:show()
 	end
+end
+
+
+function betaHardware(self, euthanize)
+	log:info("beta hardware")
+
+	local window = _errorWindow(self, self:string("BETA_HARDWARE_TITLE"))
+	window:ignoreAllInputExcept({})
+
+	if euthanize then
+		window:addWidget(Textarea("help_text", self:string("BETA_HARDWARE_EUTHANIZE", self._revision)))
+	else
+		window:addWidget(Textarea("help_text", self:string("BETA_HARDWARE_TEXT", self._revision)))
+	end
+
+	jiveMain:registerPostOnScreenInit(function()
+		window:show(Window.transitionNone)
+
+		if not euthanize then
+			local timer = Timer(5000, function()
+				window:hide(Window.transitionNone)
+			end, true):start()
+		end
+	end)
 end
 
 

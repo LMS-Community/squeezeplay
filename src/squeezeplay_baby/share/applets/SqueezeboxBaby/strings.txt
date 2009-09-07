@@ -183,3 +183,11 @@ LINE_IN
 	RU	Линейный вход
 	SV	Ljudingång
 
+BETA_HARDWARE_TITLE
+	EN	Beta Hardware
+
+BETA_HARDWARE_TEXT
+	EN	This is a pre-production unit, hardware revision %s.\n\nSome features may not work.
+
+BETA_HARDWARE_EUTHANIZE
+	EN	This is a pre-production unit, hardware revision %s.\n\nThis unit is no longer supported, please return to Logitech.
