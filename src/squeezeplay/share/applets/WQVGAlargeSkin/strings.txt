@@ -4,7 +4,7 @@
 
 WQVGA_LARGE_SKIN
 # SLT: WQVGA refers to the "wide quarter VGA" resolution of the display
-	CS	Skin velkého písma WQVGA
+	CS	WQVGA skin velkého písma
 	DA	WQVGA-tema med store bogstaver
 	DE	WQVGA-Skin – Große Schrift
 	EN	WQVGA Large Print Skin

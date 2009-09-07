@@ -123,7 +123,7 @@ DEMO_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIDE_01
-	CS	Squeezebox rádio\nWi-Fi Internetové rádio
+	CS	Squeezebox™ rádio\nWi-Fi Internetové rádio
 	DA	Squeezebox™ Radio\nTrådløs internetradio
 	DE	Squeezebox™ Radio\nWLAN-Internetradio
 	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
@@ -168,7 +168,7 @@ SLIDE_03
 	SV	Från tusentals gratis webbradiostationer...
 
 SLIDE_04
-	CS	... vaší osobní hudební sbírce...
+	CS	...k vaší osobní hudební sbírce...
 	DA	... til din egen personlige musiksamling
 	DE	...zu Ihrer eigenen Musiksammlung...
 	EN	...to your own personal music collection...
@@ -183,7 +183,7 @@ SLIDE_04
 	SV	...till din egen personliga musiksamling...
 
 SLIDE_05
-	CS	... nejzajímavějším hudebním službám online.
+	CS	...k nejzajímavějším hudebním službám online.
 	DA	... til de bedste musiktjenester på nettet.
 	DE	...zu den angesagtesten Online-Musikdiensten.
 	EN	...to the hottest online music services.

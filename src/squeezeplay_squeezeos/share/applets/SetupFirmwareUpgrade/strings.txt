@@ -168,7 +168,7 @@ UPDATE_DOWNLOAD
 	SV	Hämtar
 
 UPDATE_VERIFY
-	CS	\nInstalace
+	CS	Instalace
 	DA	Installerer
 	DE	Installieren
 	EN	Installing
@@ -304,6 +304,7 @@ UPDATE_CANCEL
 
 UPDATE_7.4_UPGRADE_MESSAGE_JIVE
 # SLT: this needs to remain squeezenetwork.com. It will present the user information about the change to mysqueezebox.com
+	CS	Právě jste provedli aktualizaci na firmware verze 7.4! Jde o velkou aktualizaci obsahující mnoho změn. Další informace naleznete na www.squeezenetwork.com.
 	DA	Du har opgraderet firmwaren til version 7.4! Der er sket mange ændringer siden forrige version. Du kan læse mere på www.squeezenetwork.com.
 	DE	Sie haben auf die Firmware-Version 7.4 aktualisiert! Dies ist ein wichtiges Upgrade und umfasst zahlreiche Änderungen. Weitere Informationen finden Sie unter www.squeezenetwork.com.
 	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.

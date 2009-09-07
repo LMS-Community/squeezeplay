@@ -123,6 +123,7 @@ DEMO_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIDE_01
+	CS	Hudební přehrávač Squeezebox™ Duet\nWi-Fi
 	DA	Squeezebox™ Duet\nWi-Fi-musikafspiller
 	DE	Squeezebox™ Duet\nWLAN-Musikplayer
 	EN	Squeezebox™ Duet\nWi-Fi Music Player
@@ -137,6 +138,7 @@ SLIDE_01
 	SV	Squeezebox™ Duet\nWi-Fi-spelare
 
 SLIDE_02
+	CS	Objevte svět digitální hudby.
 	DA	Gå på opdagelse i den digitale musikverden.
 	DE	Entdecken Sie die Welt der digitalen Musik.
 	EN	Discover a world of digital music.
@@ -151,6 +153,7 @@ SLIDE_02
 	SV	Upptäck en värld av digital musik.
 
 SLIDE_03
+	CS	Z tisíců bezplatných internetových radiostanic...
 	DA	Fra tusindvis af gratis radiostationer på internetet...
 	DE	Von Tausenden kostenlosen Internetradiosendern ...
 	EN	From thousands of free Internet radio stations...
@@ -165,6 +168,7 @@ SLIDE_03
 	SV	Från tusentals gratis webbradiostationer...
 
 SLIDE_04
+	CS	...k vaší osobní hudební sbírce...
 	DA	... til din egen personlige musiksamling
 	DE	...zu Ihrer eigenen Musiksammlung...
 	EN	...to your own personal music collection...
@@ -179,6 +183,7 @@ SLIDE_04
 	SV	...till din egen personliga musiksamling...
 
 SLIDE_05
+	CS	...k nejzajímavějším hudebním službám online.
 	DA	... til de bedste musiktjenester på nettet.
 	DE	...zu den angesagtesten Online-Musikdiensten.
 	EN	...to the hottest online music services.
@@ -193,6 +198,7 @@ SLIDE_05
 	SV	...till de senaste onlinemusiktjänsterna.
 
 SLIDE_06
+	CS	Snadný přístup k nekonečnému množství hudby vám leží v dlani.
 	DA	En genvej til at få et væld af musik i din hule hånd.
 	DE	Einfacher Zugriff auf ein unbegrenztes Musikangebot und Steuerung direkt aus der Handfläche.
 	EN	Easy access to endless music all in the palm of your hand.
@@ -207,6 +213,7 @@ SLIDE_06
 	SV	Tryck på en knapp och musiken strömmar från en outsinlig källa.
 
 SLIDE_07
+	CS	Prohlédněte si obal alba a dokonce i vlastní fotky na 2.4 palcovém barevném displeji
 	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
 	DE	CD-Cover und eigene Fotos auf dem 6-cm-Farbdisplay anzeigen
 	EN	View album art and even your own photos on the 2.4-inch color display
@@ -221,6 +228,7 @@ SLIDE_07
 	SV	Titta på skivomslag på 2,4-tumsskärmen. Du kan också titta på dina egna bilder.
 
 SLIDE_08
+	CS	Neuvěřitelná kvalita zvuku. Plná, cele digitální hudba ve vaší stereosoustavě.
 	DA	Fantastisk lydkvalitet. Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
 	DE	Unglaubliche Klangqualität. Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
 	EN	Rich, full digital music through your stereo system.
@@ -235,6 +243,7 @@ SLIDE_08
 	SV	Häpnadsväckande ljudkvalitet. Du får fylligt och rikt ljud via din stereoanläggning.
 
 SLIDE_09
+	CS	Snadné nastavení. Plně se integruje do vaší stávající domácí sítě.
 	DA	Hurtig installation uden bøvl. Perfekt integration i dit nuværende hjemmenetværk.
 	DE	Problemlose Einrichtung. Einfach in Ihr Heimnetzwerk zu integrieren.
 	EN	Simple setup. Integrates easily with your existing home network.
@@ -249,6 +258,7 @@ SLIDE_09
 	SV	Snabb och smidig installation. Det är bara att ansluta spelaren till ditt hemnätverk.
 
 SLIDE_10
+	CS	Přidejte více přijímačů Squeezebox nebo další přehrávače Squeezebox a vytvořte si vícepokojový systém.
 	DA	Tilføj flere Squeezebox-modtagere eller Squeezebox-afspillere hvis du vil have et system der dækker flere rum.
 	DE	Fügen Sie weitere Squeezebox Receiver oder andere Squeezebox-Player hinzu und richten Sie so ein Musiksystem für mehrere Räume ein.
 	EN	Add Squeezebox players or Receivers to create a multi-room system.
@@ -263,6 +273,7 @@ SLIDE_10
 	SV	Du kan lägga till fler mottagare och spelare från Squeezebox-sortimentet och förvandla hela hemmet till en musikanläggning.
 
 SLIDE_11
+	CS	Bezdrátový ovladač Squeezebox vám umožňuje ovládat celou rodinu produktů Squeezebox.
 	DA	Med den trådløse Squeezebox Controller kan du styre alle afspillerne i Squeezebox-familien.
 	DE	Mit dem kabellosen Squeezebox Controller steuern Sie alle Geräte aus der Squeezebox-Produktreihe.
 	EN	The wireless Controller works with the entire Squeezebox family.
@@ -277,6 +288,7 @@ SLIDE_11
 	SV	Med Squeezebox-fjärrkontrollen kan du styra alla produkter i Squeezebox-sortimentet.
 
 SLIDE_12
+	CS	Otoč. Klepni. Vychutnej.
 	DA	Drej, klik og rock
 	DE	Drehen. Klicken. Grooven.
 	EN	Spin. Click. Groove.
@@ -291,6 +303,7 @@ SLIDE_12
 	SV	Snurra. Klicka. Rocka.
 
 SLIDE_13
+	CS	\n
 	DA	\n
 	DE	\n
 	EN	\n
@@ -305,6 +318,7 @@ SLIDE_13
 	SV	\n
 
 SLIDE_14
+	CS	Žádejte podrobnosti o rodině produktů Squeezebox.
 	DA	Bed om flere oplysninger om Squeezebox-familien.
 	DE	Fragen Sie nach weiteren Informationen zu den Squeezebox-Produkten.
 	EN	Ask for details about the Squeezebox family.

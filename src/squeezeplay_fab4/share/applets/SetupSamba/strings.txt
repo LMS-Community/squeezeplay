@@ -34,7 +34,7 @@ SAMBA_ENABLE
 
 SAMBA_HOWTO
 # SLT: don't translate "root" it's a username which needs to be used litterally
-	CS	Samba vám umožňuje převádět soubory z vašeho počítače do Squeezebox Touch. Uživatel: kořenové Heslo: 1234
+	CS	Samba vám umožňuje převádět soubory z vašeho počítače do Squeezebox Touch. Uživatel: root Heslo: 1234
 	DA	Samba bruges til at overføre filer fra din computer til Squeezebox Touch. Bruger: root Adgangskode: 1234
 	DE	Mit Samba können Sie Dateien vom Computer auf die Squeezebox Touch übertragen. Benutzer: root Kennwort: 1234
 	EN	Samba allows you to transfer files from your Computer to Squeezebox Touch. User: root Password: 1234

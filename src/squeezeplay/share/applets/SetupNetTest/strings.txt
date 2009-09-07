@@ -16,7 +16,7 @@ SETUPNETTEST
 	SV	Nätverkstest
 
 SETUPNETTEST_NOSERVER
-	CS	Server, ke kterému je nyní přehrávač připojen, nepodporuje síťové testy.  Zajistěte, aby byl povolen zásuvný modul Server and Network Health na vašem serveru.
+	CS	Server, ke kterému je nyní přehrávač připojen, nepodporuje síťové testy.  Zajistěte, aby byl na vašem serveru povolen zásuvný modul pro test sítě.
 	DA	Netværkstest understøttes ikke af den server som afspilleren er tilsluttet.  Kontroller at udvidelsesmodulet til test af netværk er aktiveret på serveren.
 	DE	Netzwerktests werden von dem Server, mit dem dieser Player derzeit verbunden ist, nicht unterstützt. Prüfen Sie, ob das Netzwerktest-Plugin auf dem Server aktiviert ist.
 	EN	Network tests are not supported by the server which this player is currently attached to.  Please ensure the Network Test plugin is enabled on your server.

@@ -4,7 +4,7 @@
 
 WQVGA_SMALL_SKIN
 # SLT: WQVGA refers to the "wide quarter VGA" resolution of the display
-	CS	Skin drobného písma WQVGA
+	CS	WQVGA skin malého písma
 	DA	WQVGA-tema med små bogstaver
 	DE	WQVGA-Skin – Kleine Schrift
 	EN	WQVGA Small Print Skin

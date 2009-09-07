@@ -4,7 +4,7 @@
 
 QVGALANDSCAPE_SKIN
 # SLT: QVGA refers to the "quarter VGA" resolution of the display
-	CS	Horizontální skin QVGA
+	CS	QVGA skin krajiny
 	DA	QVGA-tema, liggende
 	DE	QVGA-Querformat-Skin
 	EN	QVGA Landscape Skin

@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
-	CS	Nastavení továrních hodnot
+	CS	Obnovit tovární nastavení
 	DA	Gendan fabriksindstillinger
 	DE	Standardeinstellungen wiederherstellen
 	EN	Restore Factory Settings

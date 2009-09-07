@@ -119,7 +119,7 @@ SQUEEZEBOX_CONNECTING_TO
 	SV	Ansluts till
 
 SQUEEZEBOX_SETUP_COMPLETE
-	CS	Váš squeezebox je nyní nastaven.
+	CS	Váš Squeezebox je nyní nastaven.
 	DA	Nu er din Squeezebox konfigureret.
 	DE	Die Squeezebox ist eingerichtet.
 	EN	Your squeezebox is now set up.

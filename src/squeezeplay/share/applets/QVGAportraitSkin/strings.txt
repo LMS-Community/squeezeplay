@@ -4,7 +4,7 @@
 
 QVGAPORTRAIT_SKIN
 # SLT: QVGA refers to the "quarter VGA" resolution of the display
-	CS	Vertikální skin QVGA
+	CS	QVGA skin portrétu
 	DA	QVGA-tema, stående
 	DE	QVGA-Portrait-Skin
 	EN	QVGA Portrait Skin

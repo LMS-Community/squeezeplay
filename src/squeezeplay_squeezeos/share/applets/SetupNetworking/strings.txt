@@ -214,7 +214,7 @@ NETWORK_STATE_CONNECTED
 	SV	Ansluten
 
 NETWORK_STATUS
-	CS	Status sítě
+	CS	Stav sítě
 	DA	Netværksstatus
 	DE	Netzwerkstatus
 	EN	Network Status

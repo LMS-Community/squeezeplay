@@ -31,7 +31,7 @@ NOT_CONNECTED
 
 PORT_FAIL
 # SLT: please keep these messages as short as possible
-	CS	Nemohu připojit
+	CS	Nelze připojit
 	DA	Der kan ikke etableres forbindelse
 	DE	Keine Verbindung möglich
 	EN	Can't connect
@@ -92,7 +92,7 @@ PING_OK
 
 PING_FAIL
 # SLT: please keep these messages as short as possible
-	CS	Nemohu zazvonit
+	CS	Nelze zvonit
 	DA	Ping-kommando mislykkedes
 	DE	Ping-Fehler
 	EN	Can't ping
@@ -137,7 +137,7 @@ ETH_HALF_DUPLEX
 	SV	%s Mbps (HD)
 
 FIRMWARE_VERSION
-	CS	Verze\n%s
+	CS	Firmware verze\n%s
 	DA	Firmwareversion\n%s
 	DE	Firmware-Version\n%s
 	EN	Firmware Version\n%s
@@ -227,7 +227,7 @@ ETH_CONNECTION
 	SV	Ethernet\n%s
 
 IP_ADDRESS
-	CS	IP Adresa\n%s
+	CS	IP Adresa:\n%s
 	DA	IP-adresse\n%s
 	DE	IP-Adresse\n%s
 	EN	IP Address\n%s
@@ -483,6 +483,7 @@ DIAGNOSTICS_NETWORKING
 	SV	Nätverk
 
 HARDWARE_VERSION
+	CS	Hardware verze\n%s
 	DA	Hardwareversion\n%s
 	DE	Hardware-Version\n%s
 	EN	Hardware version\n%s

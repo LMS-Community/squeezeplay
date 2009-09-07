@@ -943,6 +943,7 @@ IMAGE_VIEWER_LOADING
 	SV	Läser in ...
 
 IMAGE_VIEWER_START_SLIDESHOW
+	CS	Spustit Slideshow
 	DA	Start diasshow
 	DE	Diashow starten
 	EN	Start Slideshow
