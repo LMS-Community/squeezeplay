@@ -223,7 +223,7 @@ function lowBattery(self)
 	-- FIXME jive made sure the brightness was on (do we really
 	-- want this, I don't think so as it may wake people up)
 
-	self.lowBatteryTimer = Timer(30000, function()
+	self.lowBatteryTimer = Timer(60000, function()
 		-- force poweroff (don't go through init)
 		os.execute("/bin/busybox poweroff -f")
 	end)
