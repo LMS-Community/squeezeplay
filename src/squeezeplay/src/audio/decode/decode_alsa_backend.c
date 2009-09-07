@@ -48,6 +48,11 @@ static __inline void log_printf(int level, const char *format, ...) {
 
 	if (is_debug) {
 		char *lstr;
+		struct timeval t;
+		struct tm tm;
+
+		gettimeofday(&t, NULL);
+		gmtime_r(&t.tv_sec, &tm);
 
 		switch (level) {
 		case LOG_PRIORITY_ERROR:
@@ -65,7 +70,11 @@ static __inline void log_printf(int level, const char *format, ...) {
 			break;
 		}
 
-		printf("%-6s %s\n", lstr, buf);
+		printf("%04d%02d%02d %02d:%02d:%02d.%03ld %-6s %s\n",
+		       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+		       tm.tm_hour, tm.tm_min, tm.tm_sec,
+		       (long)(t.tv_usec / 1000),
+		       lstr, buf);
 	}
 
 #ifdef HAVE_SYSLOG
@@ -207,8 +216,6 @@ static void decode_alsa_copyright(struct decode_alsa *state,
 	snd_ctl_elem_value_t *control;
 	snd_aes_iec958_t iec958;
 	int err;
-
-	LOG_DEBUG("copyright %s asserted", (copyright)?"is":"not");
 
 	if (!state->iec958_elem) {
 		/* not supported */
@@ -401,6 +408,8 @@ static void playback_callback(struct decode_alsa *state,
 		if (decode_audio->track_sample_rate != state->pcm_sample_rate) {
 			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 		}
+
+		LOG_DEBUG("playback started, copyright %s asserted", (decode_audio->track_copyright)?"is":"not");
 
 		decode_alsa_copyright(state, decode_audio->track_copyright);
 	}

@@ -382,6 +382,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 	decode_audio_lock();
 
 	if (decode_first_buffer) {
+		LOG_DEBUG(log_audio_decode, "first buffer sample_rate=%d", sample_rate);
+
 		upload_open();
 
 		crossfade_started = FALSE;
