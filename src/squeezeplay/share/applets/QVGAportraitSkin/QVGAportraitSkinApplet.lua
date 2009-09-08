@@ -145,6 +145,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.icon_connecting.padding          = { 0, 52, 0, 0 }
 	s.icon_connected.padding           = { 0, 52, 0, 0 }
 	s.icon_restart.padding             = { 0, 52, 0, 0 }
+	s.icon_power.padding               = { 0, 47, 0, 0 }
+	s.icon_battery_low.padding         = { 0, 42, 0, 0 }
 	s.waiting_popup.text.padding       = { 0, 42, 0, 0 }
 	s.waiting_popup.subtext.padding    = { 0, 0, 0, 46 }
 

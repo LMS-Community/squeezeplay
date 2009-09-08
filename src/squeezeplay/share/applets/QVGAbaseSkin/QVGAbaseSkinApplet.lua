@@ -1725,7 +1725,7 @@ function skin(self, s, reload, useDefaultSize)
 		w = WH_FILL,
 		align = "center",
 		position = LAYOUT_CENTER,
-		padding = { 0, 44, 0, 0},
+		padding = { 0, 25, 0, 5 }
 	}
 
 	-- icon for albums with no artwork
@@ -1762,9 +1762,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.icon_power = _uses(s._icon, {
 		img = _loadImage(self, "Icons/icon_shut_down.png"),
+		padding = { 0, 18, 0, 5 },
 	})
 
 	s.icon_battery_low = _uses(s._icon, {
+		padding = { 0, 11, 0, 0 },
 		img = _loadImage(self, "Icons/icon_popup_box_battery.png"),
 	})
 	s.icon_locked = _uses(s._icon, {
