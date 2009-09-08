@@ -367,7 +367,6 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 			icy_buf = alloca(icy_len);
 			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
 			assert(r == icy_len);
-			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
 			LOG_DEBUG(log_audio_decode, "got icy metadata: %s", (char *) icy_buf);
 
 			decode_queue_metadata(SHOUTCAST, icy_buf, icy_len);
