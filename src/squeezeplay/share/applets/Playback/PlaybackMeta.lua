@@ -64,7 +64,9 @@ function registerApplet(meta)
 	-- this allows us to share state with the applet
 	meta.state = {}
 
-	jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettingsBetaFeatures', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end))
+	if System:getMachine() == "jive" then
+		jiveMain:addItem(meta:menuItem('audioPlayback', 'advancedSettingsBetaFeatures', "AUDIO_PLAYBACK", function(applet, ...) applet:settingsShow(meta.state) end))
+	end
 end
 
 
