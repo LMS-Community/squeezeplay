@@ -790,7 +790,7 @@ function window_toast_popup(self, item)
 	_windowActions(self, item, popup)
 
 	local group = Group("group", {
-		text = Label("text", data[1])
+		text = Textarea("toast_popup_textarea", data[1])
 	})
 
 	popup:addWidget(group)
@@ -881,6 +881,7 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "power_down", "Power Down", setup_waiting_popup, },
 	{ "input_time", "Time Input", input_time, },
 	{ "update_popup", "Software Update", setup_update_popup, },
 	{ "context_menu", "Context Menu", window_context_menu, },
@@ -909,6 +910,8 @@ windows = {
 
 	{ "help_info", "Help Connection Type", setup_help_info, },
 	{ "waiting_popup", "Connecting to", setup_waiting_popup, },
+	{ "battery_popup", "Battery Low", setup_waiting_popup, },
+	{ "restart", "Restart", setup_waiting_popup, },
 	{ "error", "Error", setup_error, },
 	{ "track_info", "Track Info", window_track_info, },
 	{ "track_list", "Track List", window_track_list, },
@@ -1018,6 +1021,15 @@ testData = {
 	},
 	waiting_1line_popup = {
 		"Just one main line on this screen", "all your base", "icon_connecting",
+	},
+	battery_popup = {
+		"Battery Low", "Please Charge Me", "icon_battery_low",
+	},
+	power_down = {
+		"Goodbye", "", "icon_power",
+	},
+	restart = {
+		"Restarting", "", "icon_restart",
 	},
 	input_ip = {
 		"ip",
