@@ -530,6 +530,7 @@ function showBriefly(self, msecs, callback,
 end
 
 
+--static method
 function getTopNonTransientWindow(self)
 	local stack = Framework.windowStack
 
@@ -1369,6 +1370,9 @@ function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
+			if oldWindow._bg then
+				oldWindow._bg:blit(surface, 0, 0)
+			end
 			if staticTitle then
 				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
 			else
@@ -1438,6 +1442,9 @@ function _transitionPushRight(oldWindow, newWindow, staticTitle)
 			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
+			if oldWindow._bg then
+				oldWindow._bg:blit(surface, 0, 0)
+			end
 			if staticTitle then
 				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
 			else

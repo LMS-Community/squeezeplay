@@ -7,6 +7,7 @@ local oo              = require("loop.simple")
 local Framework       = require("jive.ui.Framework")
 local Widget          = require("jive.ui.Widget")
 local Window          = require("jive.ui.Window")
+local Surface         = require("jive.ui.Surface")
 
 local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
@@ -28,7 +29,6 @@ function __init(self, title, windowId)
 	obj._DEFAULT_HIDE_TRANSITION = Window.transitionNone
 
 	obj:setAllowScreensaver(true)
-	obj:setTransparent(true)
 	obj:setShowFrameworkWidgets(false)
 	obj:setContextMenu(true)
 
@@ -38,6 +38,8 @@ function __init(self, title, windowId)
 	obj:addActionListener("cancel", obj, _cancelContextMenuAction)
 	obj:addActionListener("add", obj, _cancelContextMenuAction)
 
+	obj._bg = _capture()
+
 	return obj
 end
 
@@ -46,22 +48,31 @@ function _cancelContextMenuAction()
 	return EVENT_CONSUME
 end
 
-function show(self)
-
-	local stack = Framework.windowStack
-
-	local idx = 1
-	local topwindow = stack[idx]
-	while topwindow and topwindow.alwaysOnTop do
-		idx = idx + 1
-		topwindow = stack[idx]
+function draw(self, surface, layer)
+	if not Framework.transition then
+		--draw snapshot version of previous version because drawing both windows is too cpu-intensive
+		self._bg:blit(surface, 0, 0)
 	end
+	Window.draw(self, surface, layer)
+end
 
-	if topwindow:isContextMenu() then
+
+function _getTopWindowContextMenu(self)
+	local topWindow = Window:getTopNonTransientWindow()
+
+	if topWindow:isContextMenu() then
+		return topWindow
+	end
+end
+
+function show(self)
+	local topContextMenuWindow = self:_getTopWindowContextMenu()
+	if topContextMenuWindow then
+		self._bg = topContextMenuWindow._bg
 		Window.show(self, Window.transitionPushLeftStaticTitle)
-		self:setStyle("context_submenu")
 	else
 		Window.show(self)
+		self.isTopContextMenu = true
 	end
 
 end
@@ -84,6 +95,21 @@ function hide(self)
 	end
 
 end
+
+
+function _capture()
+	local sw, sh = Framework:getScreenSize()
+	local img = Surface:newRGB(sw, sh)
+
+	--take snapshot of screen
+	Framework:draw(img)
+
+	--apply shading - tried via maskImg, but child CM windows didn't display maksImg correct
+	img:filledRectangle(0, 0, sw, sh, 0x00000085)
+
+	return img
+end
+
 
 --function borderLayout(self)
 --	Window.borderLayout(self, true)

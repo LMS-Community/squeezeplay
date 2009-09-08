@@ -1479,7 +1479,6 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		}
 	})
-	local popupMask = Tile:fillColor(0x00000085)
 
 	-- context menu window
 	s.context_menu = {
@@ -1491,7 +1490,6 @@ function skin(self, s, reload, useDefaultSize)
 		border = 0,
 		padding = 0,
 		bgImg = s.img.contextMenuBox,
-	        maskImg = s.img.popupMask,
 		layer = LAYER_TITLE,
 
 		--FIXME, something very wrong here. space still being allocated for hidden, no height title
@@ -1569,10 +1567,6 @@ function skin(self, s, reload, useDefaultSize)
 		order = { 'text' },
 	})
 	
-	s.context_submenu = _uses(s.context_menu, {
-	        maskImg = false,
-	})
-
 	s.alarm_header = {
 			w = screenWidth,
 			padding = { 50, 0, 0, 0 },
@@ -1781,8 +1775,10 @@ function skin(self, s, reload, useDefaultSize)
                 img = false,
 	})
 	s.icon_linein = _uses(s._icon, {
-		padding = 0,
                 img = _loadImage(self, "IconsResized/icon_linein_143.png"),
+		w = WH_FILL,
+		align = "center",
+		padding = { 0, 66, 0, 0 },
 	})
 
 

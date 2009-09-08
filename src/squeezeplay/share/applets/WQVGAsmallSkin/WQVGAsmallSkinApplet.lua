@@ -1656,7 +1656,6 @@ function skin(self, s)
 			},
 		}
 	})
-	local popupMask = Tile:fillColor(0x00000085)
 
 	s.context_menu = {
 		x = 8,
@@ -1664,7 +1663,6 @@ function skin(self, s)
 		w = screenWidth - 16,
 		h = screenHeight - 32,
 		bgImg = contextMenuBox,
-	        maskImg = popupMask,
 		layer = LAYER_TITLE,
 
 		title = {
@@ -1766,9 +1764,6 @@ function skin(self, s)
 		item = {
 			bgImg = contextMenuPressedBox,
 		},
-	})
-	s.context_submenu = _uses(s.context_menu, {
-	        maskImg = false,
 	})
 
 	-- FIXME: this is not to any spec yet
