@@ -2831,21 +2831,56 @@ function _problemConnectingInternal(self, server)
 					goHome()
 				end,
 			})
+
+			-- change player, only if multiple players
+			-- NOTE also only display this if we have a player selected, this is
+			-- to fix Bug 11457 where Choose Player should not be shown during
+			-- fab4 setup.
+			local numPlayers = appletManager:callService("countPlayers")
+			if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") and player then
+				menu:addItem({
+						     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
+						     callback = function()
+									self:_removeRequestAndUnlock(server)
+									if player:isLocal() then
+										--avoid disconnecting local player (user might cancel inside "Choose Player")
+										player:disconnectServerAndPreserveLocalPlayer()
+									else
+										appletManager:callService("setCurrentPlayer", nil)
+
+									end
+									appletManager:callService("setupShowSelectPlayer")
+								end,
+						     sound = "WINDOWSHOW",
+					     })
+			end
+
 	else
+		--in setup
 		window:setAllowScreensaver(false)
 		--Offer local SC's in setup if they exist
-		if _anyCompatibleSqueezeCenterFound() then
+		if Player:getLocalPlayer() then
+			if _anyCompatibleSqueezeCenterFound() then
+				menu:addItem({
+						     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+						     callback = function()
+									self.inSetup = false
+									self:_removeRequestAndUnlock(server)
+									appletManager:callService("selectCompatibleMusicSource")
+								end,
+						     sound = "WINDOWSHOW",
+					     })
+			end
+		else
 			menu:addItem({
-					     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+					     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
 					     callback = function()
-								self.inSetup = false
-								self:_removeRequestAndUnlock(server)
-								appletManager:callService("selectCompatibleMusicSource")
+								appletManager:callService("setupShowSelectPlayer")
 							end,
 					     sound = "WINDOWSHOW",
 				     })
-		end
 
+		end
 		menu:addItem({
 				text = self:string("SLIMBROWSER_DIAGNOSTICS"),
 				callback = function()
@@ -2870,28 +2905,6 @@ function _problemConnectingInternal(self, server)
 --			     })
 --	end
 
-	-- change player, only if multiple players
-	-- NOTE also only display this if we have a player selected, this is
-	-- to fix Bug 11457 where Choose Player should not be shown during
-	-- fab4 setup.
-	local numPlayers = appletManager:callService("countPlayers")
-	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") and player then
-		menu:addItem({
-				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
-				     callback = function()
-				                        self:_removeRequestAndUnlock(server)
-							if player:isLocal() then
-								--avoid disconnecting local player (user might cancel inside "Choose Player")
-								player:disconnectServerAndPreserveLocalPlayer()
-							else
-								appletManager:callService("setCurrentPlayer", nil)
-
-							end
-							appletManager:callService("setupShowSelectPlayer")
-						end,
-				     sound = "WINDOWSHOW",
-			     })
-	end
 
 	local cancelAction =    function ()
 					self:_removeRequestAndUnlock(server)
