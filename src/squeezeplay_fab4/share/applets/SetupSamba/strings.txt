@@ -40,7 +40,7 @@ SAMBA_HOWTO
 	EN	Samba allows you to transfer files from your Computer to Squeezebox Touch. User: root Password: 1234
 	ES	Samba permite transferir archivos del ordenador a Squeezebox Touch. Usuario: root Contraseña: 1234
 	FI	Samban avulla voit siirtää tiedostoja tietokoneeltasi Squeezebox Touchiin. Käyttäjä: root Salasana: 1234
-	FR	Samba vous permet de transférer des fichiers de votre ordinateur vers Squeezebox Touch. Utilisateur : racine Mot de passe : 1234
+	FR	Samba vous permet de transférer des fichiers de votre ordinateur vers Squeezebox Touch. Utilisateur : root Mot de passe : 1234
 	IT	Samba consente di trasferire i file dal computer a Squeezebox Touch. Utente: root - Password: 1234
 	NL	Met Samba kun je bestanden van je computer overbrengen naar Squeezebox Touch. Gebruiker: root Wachtwoord: 1234
 	NO	Med Samba kan du overføre filer fra datamaskinen til Squeezebox Touch. Bruker: root Passord: 1234
