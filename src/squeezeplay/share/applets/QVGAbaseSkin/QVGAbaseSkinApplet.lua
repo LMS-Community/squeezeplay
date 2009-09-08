@@ -1776,6 +1776,10 @@ function skin(self, s, reload, useDefaultSize)
 		padding = 0,
                 img = false,
 	})
+	s.icon_linein = _uses(s._icon, {
+		padding = 0,
+                img = _loadImage(self, "IconsResized/icon_linein_143.png"),
+	})
 
 
 	s.icon_alarm = {

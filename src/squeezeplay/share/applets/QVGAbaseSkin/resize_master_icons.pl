@@ -67,9 +67,11 @@ sub convert_files {
 	my $source = $assetDir . "/" . "icon_album_noart.png";
 	my $dest   = $resizedIconDir . "/" . "icon_album_noart_143.png";
 	resize_me($source, $dest, 143);
-	my $source = $assetDir . "/" . "icon_linein.png";
-	my $dest   = $resizedIconDir . "/" . "icon_linein_80.png";
+	my $source  = $assetDir . "/" . "icon_linein.png";
+	my $dest    = $resizedIconDir . "/" . "icon_linein_80.png";
+	my $dest2   = $resizedIconDir . "/" . "icon_linein_143.png";
 	resize_me($source, $dest, 80);
+	resize_me($source, $dest2, 143);
 	
 }
 
