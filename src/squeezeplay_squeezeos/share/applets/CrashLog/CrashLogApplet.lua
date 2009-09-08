@@ -1,5 +1,5 @@
 
-local ipairs, tostring = ipairs, tostring
+local ipairs, pairs, tostring = ipairs, pairs, tostring
 
 -- stuff we use
 local oo               = require("loop.simple")
@@ -8,6 +8,7 @@ local io               = require("io")
 local lfs              = require("lfs")
 local ltn12            = require("ltn12")
 local os               = require("os")
+local math             = require("math")
 local string           = require("string")
 local table            = require("jive.utils.table")
 
@@ -35,12 +36,13 @@ oo.class(_M, Applet)
 
 local logs = {}
 
+
 function crashLog(self, file, prompt)
 	local settings = self:getSettings()
 
 	log:info("sending crash log: ", file, " sendLog=", settings.sendLog)
 
-	table.insert(logs, file)
+	logs[file] = true
 
 	if self.prompt then
 		-- prompt already open
@@ -48,9 +50,8 @@ function crashLog(self, file, prompt)
 		-- prompt if we should send logs
 		self:crashLogPrompt(file)
 	else
-		processLogs(self)
+		_processLogs(self)
 	end
-
 end
 
 
@@ -78,7 +79,7 @@ function crashLogPrompt(self, file)
 				window:hide(Window.transitionPushLeft)
 
 				self.prompt = false
-				self:processLogs()
+				_processLogs(self)
 			end
 		},
 		{
@@ -91,7 +92,7 @@ function crashLogPrompt(self, file)
 				window:hide(Window.transitionPushLeft)
 
 				self.prompt = false
-				self:processLogs()
+				_processLogs(self)
 			end
 		},
 	})
@@ -102,27 +103,40 @@ function crashLogPrompt(self, file)
 end
 
 
-function processLogs(self)
+function _processLogs(self)
 	local settings = self:getSettings()
 
-	for i,file in ipairs(logs) do
+	for file,queued in pairs(logs) do
 		if settings.sendLog == true then
-			self:crashLogSend(file)
+			if queued then
+				_crashLogSend(self, file)
+			end
 		else
-			self:crashLogDontSend(file)
+			_crashLogDontSend(self, file)
 		end
 	end
 end
 
 
-function crashLogSend(self, file)
+function _doneLog(self, file, success)
+	logs[file] = nil
+	if success then
+		os.remove(file)
+	end
+end
+
+
+function _crashLogSend(self, file)
 	local data = {}
+
+	logs[file] = false
 
 	data.mac = System:getMacAddress()
 	data.uuid = System:getUUID()
 	data.machine = System:getMachine()
 	data.version = JIVE_VERSION
 	data.logfile = file
+	data.reqid = string.format("%08x", Framework:getTicks())
 
 	fh = io.open(file, "r")
 	data.log = fh:read("*a")
@@ -144,12 +158,12 @@ function crashLogSend(self, file)
 	local sink = function(data, err)
 		if err then
 			log:warn("crash log upload failed ", err)
-			return
+			return _doneLog(self, file, false)
 		end
 
 		if not data then
 			log:info("crash log upload done: ", file)
-			os.remove(file)
+			return _doneLog(self, file, true)
 		end
 	end
 
@@ -167,9 +181,9 @@ function crashLogSend(self, file)
 end
 
 
-function crashLogDontSend(self, file)
+function _crashLogDontSend(self, file)
 	log:info("crash log not sending: ", file)
-	os.remove(file)
+	_doneLog(self, file, true)
 end
 
 
