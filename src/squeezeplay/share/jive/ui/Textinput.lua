@@ -54,7 +54,7 @@ oo.class(_M, Widget)
 -- layout is from SC
 local numberLettersMixed = {
 	[0x76899867] = ' 0',         -- 0
-	[0x7689f00f] = '.,"?!@-1',   -- 1
+	[0x7689f00f] = '1.,"?!@-',   -- 1
 	[0x768908f7] = 'abcABC2',    -- 2
 	[0x76898877] = 'defDEF3',    -- 3
 	[0x768948b7] = 'ghiGHI4',    -- 4
@@ -323,13 +323,12 @@ function _insert(self)
 end
 
 
-function _getMatchingChars(self, charsTable)
+function _getMatchingChars(self, sourceString)
 	local validChars = ""
 
-	local v = self:_getChars()
-	for i = 1, #v do
-		local char = string.sub(v, i, i)
-		if string.find(charsTable, char, 1, true) then
+	for i = 1, sourceString:len() do
+		local char = string.sub(sourceString, i, i)
+		if string.find(self:_getChars(), char, 1, true) then
 			validChars = validChars .. char
 		end
 	end
