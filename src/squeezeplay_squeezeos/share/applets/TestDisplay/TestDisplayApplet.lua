@@ -104,6 +104,8 @@ end
 function DisplayTest(self)
 
 	local window = Window("text_list")
+	window:setShowFrameworkWidgets(false)
+
 	self.window = window
 
 	self.icon = Icon("icon")

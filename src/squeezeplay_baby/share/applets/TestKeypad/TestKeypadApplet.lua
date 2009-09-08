@@ -142,6 +142,8 @@ end
 
 function KeypadTest(self)
 	local window = Window("window")
+	window:setShowFrameworkWidgets(false)
+
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestKeypad/Keypad.png")
