@@ -1508,6 +1508,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		multiline_text = {
 			w = WH_FILL,
+			h = screenHeight - 27,
 			padding = { 14, 18, 14, 18 },
 			border = { 0, 0, 10, 0 },
 			lineHeight = 21,
