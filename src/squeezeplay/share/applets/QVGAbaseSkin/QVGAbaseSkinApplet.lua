@@ -1565,6 +1565,9 @@ function skin(self, s, reload, useDefaultSize)
 
 		},
 	}
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
 	
 	s.context_submenu = _uses(s.context_menu, {
 	        maskImg = false,
