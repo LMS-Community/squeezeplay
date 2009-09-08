@@ -171,7 +171,7 @@ function betaHardware(self, euthanize)
 		window:show(Window.transitionNone)
 
 		if not euthanize then
-			local timer = Timer(5000, function()
+			local timer = Timer(8000, function()
 				window:hide(Window.transitionNone)
 			end, true):start()
 		end

@@ -117,7 +117,7 @@ function init(self)
 
 	if self._revision < 1 then
 		betaHardware(self, true) -- euthanize
-	elseif self._revision < 4 then
+	elseif self._revision < 3 then
 		betaHardware(self, false) -- warning
 	end
 
