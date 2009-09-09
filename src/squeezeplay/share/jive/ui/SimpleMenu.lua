@@ -717,6 +717,8 @@ function _layout(self)
 			end
 		end
 
+		self.headerWidgetHeight =  self.virtualItemCount * self.itemHeight
+		
 		local realItemCount = self:numItems() - self.virtualItemCount
 		if (not self.selected)
 		  and self.numWidgets > self.virtualItemCount

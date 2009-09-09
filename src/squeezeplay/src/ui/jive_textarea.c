@@ -253,9 +253,21 @@ int jiveL_textarea_layout(lua_State *L) {
 
 	/* vertical alignment */
 	widget_height = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
-	max_height = peer->num_lines * peer->line_height;
+	lua_getfield(L, 1, "isHeaderWidget");
+	if (lua_toboolean(L, -1)) {
+		lua_getfield(L, 1, "parent");
+		lua_getfield(L, -1, "headerWidgetHeight");
 
-	/* todo:why this here, seems to be a vertical centering*/
+		if (!lua_isnil(L, -1)) {
+			widget_height = lua_tointeger(L, -1) - peer->w.padding.top - peer->w.padding.bottom;
+		}
+
+		lua_pop(L, 1);
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);
+
+	max_height = peer->num_lines * peer->line_height;
 	if (max_height < widget_height) {
 		peer->y_offset = (widget_height - max_height) / 2;
 	}
