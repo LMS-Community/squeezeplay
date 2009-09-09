@@ -149,8 +149,8 @@ local function _openPopup(self)
 				self.popup = nil
 			end
 		end,
-		Window.transitionPushPopupUp,
-		Window.transitionPushPopupDown
+		Window.transitionNone,
+		Window.transitionNone
 	)
 end
 
