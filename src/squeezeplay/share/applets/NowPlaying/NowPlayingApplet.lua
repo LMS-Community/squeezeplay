@@ -250,21 +250,32 @@ function notify_playerCurrent(self, player)
 		return
 	end
 
-	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
-		jiveMain:addItem({
-			id = 'appletNowPlaying',
-			iconStyle = 'hm_appletNowPlaying',
-			node = 'home',
-                        text = self:string('SCREENSAVER_NOWPLAYING'),
-			sound = 'WINDOWSHOW',
-			weight = 1,
-			callback = function(event, menuItem)
-				self:goNowPlaying(Window.transitionPushLeft)
-			end
-		})
+	if jiveMain:getSkinParam("NOWPLAYING_MENU") and player:isConnected() then
+		self:addNowPlayingItem()
         else
-                jiveMain:removeItemById('appletNowPlaying')
+		self:removeNowPlayingItem()
         end
+end
+
+
+function removeNowPlayingItem(self)
+	jiveMain:removeItemById('appletNowPlaying')
+	self.nowPlayingItem = false
+end
+
+
+function addNowPlayingItem(self)
+	jiveMain:addItem({
+		id = 'appletNowPlaying',
+		iconStyle = 'hm_appletNowPlaying',
+		node = 'home',
+		text = self:string('SCREENSAVER_NOWPLAYING'),
+		sound = 'WINDOWSHOW',
+		weight = 1,
+		callback = function(event, menuItem)
+			self:goNowPlaying(Window.transitionPushLeft)
+			end
+	})
 end
 
 
