@@ -725,6 +725,19 @@ end
 
 --[[
 
+=head2 jive.ui.Window:setWindowId()
+
+Sets the windowId of a window
+
+=cut
+--]]
+function setWindowId(self, id)
+	self.windowId = id
+end
+
+
+--[[
+
 =head2 jive.ui.Window:getTitle()
 
 Returns the text of the title widget.

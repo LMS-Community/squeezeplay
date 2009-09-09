@@ -1190,6 +1190,10 @@ local function _browseSink(step, chunk, err)
 				step.window:setTitleStyle('title')
 			end
 
+			if data.window and data.window.windowId then
+				step.window:setWindowId(data.window.windowId)
+			end
+
 			if not data.window and (data.base and data.base.window) then
 				data.window =  data.base.window
 			end
