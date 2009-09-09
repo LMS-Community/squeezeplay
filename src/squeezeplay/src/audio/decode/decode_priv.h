@@ -86,8 +86,6 @@ extern u32_t decode_output_percent_used(void);
 
 extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_rate);
 
-extern void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate);
-
 extern int decode_output_samplerate(void);
 
 extern void decode_output_song_ended(void);

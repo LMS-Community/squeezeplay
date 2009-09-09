@@ -516,35 +516,6 @@ bool_t decode_output_can_write(u32_t buffer_size, u32_t sample_rate) {
 }
 
 
-/* This removes padding samples from the buffer (for gapless mp3 playback). */
-void decode_output_remove_padding(u32_t nsamples, u32_t sample_rate) {
-	size_t buffer_size;
-
-	buffer_size = SAMPLES_TO_BYTES(nsamples);
-
-	LOG_DEBUG(log_audio_decode, "Removing %d bytes padding from buffer", (unsigned int)buffer_size);
-
-	decode_audio_lock();
-
-	/* have we already started playing the padding? */
-	if (fifo_bytes_used(&decode_audio->fifo) <= buffer_size) {
-		decode_audio_unlock();
-
-		LOG_DEBUG(log_audio_decode, "- already playing padding");
-		return;
-	}
-
-	if (decode_audio->fifo.wptr < buffer_size) {
-		decode_audio->fifo.wptr += decode_audio->fifo.size - buffer_size;
-	}
-	else {
-		decode_audio->fifo.wptr -= buffer_size;
-	}
-
-	decode_audio_unlock();
-}
-
-
 int decode_output_samplerate(void) {
 	u32_t sample_rate;
 

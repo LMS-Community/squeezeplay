@@ -33,9 +33,10 @@ struct decode_mad {
 	sample_t *output_buffer;
 	u8_t *guard_pointer;
 
-	u32_t frames;
+	u32_t packets;
 	u32_t encoder_delay;
 	u32_t encoder_padding;
+	u64_t frame_cnt;
 
 	enum {
 		MAD_STATE_OK = 0,
@@ -70,7 +71,7 @@ struct decode_mad {
 static void xing_parse(struct decode_mad *self) {
 	struct mad_bitptr ptr = self->stream.anc_ptr;
 	unsigned int bitlen = self->stream.anc_bitlen;
-	u32_t magic, flags;
+	u32_t magic, flags, frames;
 
 	if (bitlen < 64) {
 		LOG_DEBUG(log_audio_codec, "no xing header");
@@ -92,7 +93,7 @@ static void xing_parse(struct decode_mad *self) {
 		if (bitlen < 32) {
 			return;
 		}
-		mad_bit_skip(&ptr, 32);
+		frames = mad_bit_read(&ptr, 32);
 		bitlen -= 32;
 	}
 	if (flags & XING_BYTES) {
@@ -143,9 +144,6 @@ static void xing_parse(struct decode_mad *self) {
 	self->encoder_delay += mad_bit_read(&ptr, 12);
 	self->encoder_padding = mad_bit_read(&ptr, 12);
 
-	LOG_DEBUG(log_audio_codec, "encoder delay %d", self->encoder_delay - MAD_DECODER_DELAY);
-	LOG_DEBUG(log_audio_codec, "encoder padding %d", self->encoder_padding);
-
 	/* Remove MAD decoder delay of 529 samples from the end too */
 	if (self->encoder_padding > MAD_DECODER_DELAY) {
 		self->encoder_padding -= MAD_DECODER_DELAY;
@@ -153,6 +151,11 @@ static void xing_parse(struct decode_mad *self) {
 	else {
 		self->encoder_padding = 0;
 	}
+
+	self->frame_cnt = (frames * 1152UL) - self->encoder_delay - self->encoder_padding;
+
+	LOG_DEBUG(log_audio_codec, "encoder delay=%d padding=%d", self->encoder_delay, self->encoder_padding);
+	LOG_DEBUG(log_audio_codec, "total frames %ld", self->frame_cnt);
 }
 
 
@@ -324,12 +327,13 @@ static void decode_mad_output(struct decode_mad *self) {
 	struct mad_pcm *pcm;
 	sample_t *buf, *buf_end;
 	mad_fixed_t *left, *right;
+	u32_t nsamples;
 	int i, offset = 0;
 
 	pcm = &self->synth.pcm;
 
 	/* parse xing header */
-	if (self->frames++ == 0) {
+	if (self->packets++ == 0) {
 		/* Bug 5720, files with CRC will have the ptr in the
 		 * wrong place
 		 */
@@ -340,11 +344,12 @@ static void decode_mad_output(struct decode_mad *self) {
 		}
 
 		xing_parse(self);
+		self->state = MAD_STATE_OK;
 		return;
 	}
 
 	/* Bug 9046, don't allow sample rate to change mid stream */
-	if (self->frames > 2 && self->sample_rate != self->frame.header.samplerate) {
+	if (self->packets > 2 && self->sample_rate != self->frame.header.samplerate) {
 		LOG_DEBUG(log_audio_codec, "Sample rate changed from %d to %d, discarding PCM", self->sample_rate, self->frame.header.samplerate);
 		current_decoder_state |= DECODE_STATE_ERROR;
 		return;
@@ -380,33 +385,37 @@ static void decode_mad_output(struct decode_mad *self) {
 		right += offset;
 	}
 
+	if (self->encoder_padding) {
+		if (pcm->length > self->frame_cnt ) {
+			LOG_DEBUG(log_audio_codec, "Remove encoder padding=%d frames=%ld", self->encoder_padding, self->frame_cnt);
+
+			pcm->length = self->frame_cnt;
+		}
+	}
+
 	for (i=offset; i<pcm->length; i++) {
 		*buf++ = mad_fixed_to_32bit(*left++);
 		*buf++ = mad_fixed_to_32bit(*right++);
 
 		if (buf == buf_end) {
-			decode_output_samples(self->output_buffer,
-					      (buf - self->output_buffer) / 2,
-					      self->sample_rate);
+			nsamples = (buf - self->output_buffer) / 2;
+			decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
+			self->frame_cnt -= nsamples;
 
 			buf = self->output_buffer;
 		}
 	}
 
-	decode_output_samples(self->output_buffer,
-			      (buf - self->output_buffer) / 2,
-			      self->sample_rate);
+	nsamples = (buf - self->output_buffer) / 2;
+	if (nsamples) {
+		decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
+		self->frame_cnt -= (buf - self->output_buffer) / 2;
+	}
 
 	/* If we've come to the guard pointer, we're done */
 	if (self->stream.this_frame == self->guard_pointer) {
 		LOG_DEBUG(log_audio_codec, "Reached end of stream");
-
 		self->state = MAD_STATE_END_OF_FILE;
-
-		if (self->encoder_padding) {
-			LOG_DEBUG(log_audio_codec, "Remove encoder padding=%d", self->encoder_padding);
-			decode_output_remove_padding(self->encoder_padding, self->sample_rate);
-		}
 	}
 	else {
 		self->state = MAD_STATE_OK;
