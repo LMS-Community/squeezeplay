@@ -18,6 +18,7 @@ local System                 = require("jive.System")
 local Networking             = require("jive.net.Networking")
 
 local Player                 = require("jive.slim.Player")
+local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
@@ -215,7 +216,6 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	-- XXXX for testing only
 	if bsp:getMixer("Line In Switch") then
 		self:_lineinJack(true)
 	end
@@ -398,28 +398,9 @@ end
 
 function _lineinJack(self, val)
 	if val then
-		jiveMain:addItem({
-			id = "linein",
-			node = "home",
-			text = self:string("LINE_IN"),
-			style = 'item_choice',
-			iconStyle = 'hm_linein',
-			check = Checkbox("checkbox", function(_, checked)
-				-- XXXX stop track playback
-				Decode:capture(checked)
-			end),
-			weight = 50,
-		})
-		local popup = Popup("toast_popup_icon")
-		local icon  = Icon("icon_popup_lineIn")
-		local group = Group("group", {
-                        icon = icon
-		})
-		popup:addWidget(group)
-		popup:showBriefly(3000, nil, Window.transitionFadeIn, Window.transitionFadeOut )
+		appletManager:callService("addLineInMenuItem")
 	else
-		jiveMain:removeItemById("linein")
-		Decode:capture(false)
+		appletManager:callService("removeLineInMenuItem")
 	end
 end
 
