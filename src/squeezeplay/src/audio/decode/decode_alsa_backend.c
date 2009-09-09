@@ -442,8 +442,8 @@ static void capture_read(struct decode_alsa *state,
 	/* apply gain */
 	ptr = state->cbuf;
 	while(frames--) {
-		*ptr = fixed_mul(decode_audio->lgain, *ptr); ptr++;
-		*ptr = fixed_mul(decode_audio->rgain, *ptr); ptr++;
+		*ptr = fixed_mul(decode_audio->capture_lgain, *ptr); ptr++;
+		*ptr = fixed_mul(decode_audio->capture_rgain, *ptr); ptr++;
 	}
 }
 

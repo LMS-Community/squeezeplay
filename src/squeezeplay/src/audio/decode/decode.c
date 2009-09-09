@@ -851,6 +851,22 @@ static int decode_audio_gain(lua_State *L) {
 	return 0;
 }
 
+static int decode_capture_gain(lua_State *L) {
+	s32_t lgain, rgain;
+
+	lgain = lua_tointeger(L, 2);
+	rgain = lua_tointeger(L, 3);
+
+	if (decode_audio) {
+		decode_audio_lock();
+		decode_audio->capture_lgain = lgain;
+		decode_audio->capture_rgain = rgain;
+		decode_audio_unlock();
+	}
+
+	return 0;
+}
+
 #define VUMETER_DEFAULT_SAMPLE_WINDOW 4 * 1024
 
 static int decode_vumeter(lua_State *L) {
@@ -1035,6 +1051,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "setGuid", decode_set_wma_guid },
 	{ "audioEnable", decode_audio_enable },
 	{ "audioGain", decode_audio_gain },
+	{ "captureGain", decode_capture_gain },
 	{ "vumeter", decode_vumeter },
 	{ NULL, NULL }
 };
