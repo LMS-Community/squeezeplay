@@ -2416,6 +2416,30 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		_stepSetMenuItems(step)
 	end
 	
+	if windowSpec.disableBackButton then
+		window:addListener(EVENT_KEY_PRESS | EVENT_ACTION,
+			function(event)
+				local type = event:getType()
+				if type == ACTION then
+					local action = event:getAction()
+					if action == 'back' then
+						Framework:playSound("BUMP")
+						window:bumpLeft()
+						return EVENT_CONSUME
+					end
+				elseif type == EVENT_KEY_PRESS then
+					local keycode = event:getKeycode()
+					if keycode == KEY_BACK then
+						Framework:playSound("BUMP")
+						window:bumpLeft()
+						return EVENT_CONSUME
+					end
+				end
+				return EVENT_UNUSED
+			end
+		)
+	end
+
 	-- make sure closing our windows do keep the path alive!
 	window:addListener(EVENT_WINDOW_POP,
 		function(evt)
@@ -2562,6 +2586,7 @@ function squeezeNetworkRequest(self, request, inSetup)
 			menuStyle = 'menu',
 			labelItemStyle   = "item",
 			windowStyle = 'text_list',
+			disableBackButton = true,
 		},
 		_browseSink
 	)
