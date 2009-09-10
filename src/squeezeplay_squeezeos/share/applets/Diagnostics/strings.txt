@@ -106,6 +106,79 @@ PING_FAIL
 	RU	Невозможно выполнить проверку связи
 	SV	Det gick inte att skicka ping
 
+PLAYER_TYPE
+	CS	Typ přehrávače\n%s
+	DA	Afspillertype\n%s
+	DE	Gerätetyp\n%s
+	EN	Player Type\n%s
+	ES	Tipo de reproductor\n%s
+	FI	Soittimen tyyppi\n%s
+	FR	Type platine\n%s
+	IT	Tipo lettore\n%s
+	NL	Type muzieksysteem\n%s
+	NO	Spillertype\n%s
+	PL	Typ odtwarzacza\n%s
+	RU	Тип плеера\n%s
+	SV	Spelartyp\n%s
+
+CURRENT_PLAYER
+	CS	Aktuální přehrávač\n%s
+	DA	Nuværende afspiller\n%s
+	DE	Aktueller Player\n%s
+	EN	Current player\n%s
+	ES	Reproductor actual\n%s
+	FI	Käytössä oleva soitin\n%s
+	FR	Platine en cours\n%s
+	IT	Lettore in uso\n%s
+	NL	Huidig muzieksysteem\n%s
+	NO	Gjeldende spiller\n%s
+	PL	Aktualny odtwarzacz\n%s
+	PT	Cliente Actual\n%s
+	RU	Текущий плеер\n%s
+	SV	Aktuell spelare\n%s
+
+DIAGNOSTICS_NONE
+	CS	Žádný
+	DA	Ingen
+	DE	Keine
+	EN	None
+	ES	Ninguno
+	FI	Ei mitään
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+	NO	Ingen
+	PL	Brak
+	RU	Нет
+	SV	Ingen
+
+DIAGNOSTICS_REMOTE
+	CS	Dálkové ovládání
+	DA	Fjernbetjening
+	DE	Fernbedienung
+	EN	Remote
+	ES	Mando a distancia
+	FI	Kaukosäädin
+	FR	Télécommande
+	IT	Telecomando
+	NL	Afstandsbediening
+	NO	Fjernkontroll
+	PL	Pilot zdalnego sterowania
+	RU	Пульт
+	SV	Fjärr
+
+DIAGNOSTICS_LOCAL
+	EN	Local
+
+SN_REG
+	EN	mysqueezebox.com registration\n%s
+
+SN_REG_YES
+	EN	Registered
+
+SN_REG_NO
+	EN	Not Registered
+
 ETH_FULL_DUPLEX
 	CS	%sMb/s
 	DA	%s Mbps

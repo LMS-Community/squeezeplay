@@ -53,11 +53,14 @@ local tests = {
       "SN_PING",
       "SN_PORT_3483",
       "SN_PORT_9000",
+      "SN_REG",
       "SC_ADDRESS",
       "SC_NAME",
       "SC_PING",
       "SC_PORT_3483",
       "SC_PORT_9000",
+      "CURRENT_PLAYER",
+      "PLAYER_TYPE",
       "UPTIME",
       "MEMORY",
 }
@@ -111,12 +114,14 @@ function serverPort(self, server, port, key)
 end
 
 
-function serverPing(self, server, dnsKey, pingKey)
+function serverPing(self, server, dnsKey, pingKey, snRegKey)
 	local serverip = server and server:getIpPort()
 
 	local dnsFail            = tostring(self:string('DNS_FAIL'))
 	local pingFailString     = tostring(self:string('PING_FAIL'))
 	local pingOkString       = tostring(self:string('PING_OK'))
+	local snRegYesString     = tostring(self:string('SN_REG_YES'))
+	local snRegNoString      = tostring(self:string('SN_REG_NO'))
 
 	if not serverip then
 		self:setValue(dnsKey, self.notConnected)
@@ -153,6 +158,15 @@ function serverPing(self, server, dnsKey, pingKey)
 			else
 				if pingOK then
 					self:setValue(pingKey, pingOkString)
+					if snRegKey then
+						if server:getPin() == false then
+							self:setValue(snRegKey, snRegYesString)
+						elseif server:getPin() == nil then
+							self:setValue(snRegKey, "")
+						else
+							self:setValue(snRegKey, snRegNoString)
+						end
+					end
 				else
 					self:setValue(pingKey, pingFailString)
 				end
@@ -310,7 +324,7 @@ function dovalues(self, menu)
 	local sc = SlimServer:getCurrentServer()
 
 
-	self:serverPing(sn, "SN_ADDRESS", "SN_PING")
+	self:serverPing(sn, "SN_ADDRESS", "SN_PING", "SN_REG")
 	self:serverPort(sn, 3483, "SN_PORT_3483")
 	self:serverPort(sn, 9000, "SN_PORT_9000")
 
@@ -326,6 +340,21 @@ function dovalues(self, menu)
 		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
 		self:serverPort(sc, 3483, "SC_PORT_3483")
 		self:serverPort(sc, 9000, "SC_PORT_9000")
+	end
+
+
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	if currentPlayer then
+		self:setValue("CURRENT_PLAYER", currentPlayer:getName())
+		if currentPlayer:isLocal() then
+			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_LOCAL")))
+		else
+			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_REMOTE")))
+		end
+	else
+		self:setValue("CURRENT_PLAYER", tostring(self:string("DIAGNOSTICS_NONE")))
+		self:setValue("PLAYER_TYPE", "")
+
 	end
 
 	self:systemStatus()
