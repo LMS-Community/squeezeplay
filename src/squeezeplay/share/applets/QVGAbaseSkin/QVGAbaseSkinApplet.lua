@@ -1485,7 +1485,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		x = 10,
 		y = 10,
-		w = screenWidth - 20,
+		w = screenWidth - 18,
 		h = screenHeight - 17,
 		border = 0,
 		padding = 0,
@@ -1522,7 +1522,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		menu = {
 			h = c.CM_MENU_HEIGHT * 5,
-			w = screenWidth - 33,
+			w = screenWidth - 32,
 			x = 7,
 			y = 7,
 			border = 0,
