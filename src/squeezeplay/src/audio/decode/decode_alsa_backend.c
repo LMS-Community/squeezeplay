@@ -996,6 +996,7 @@ static int decode_alsa_shared_mem_attach(void)
 
 int main(int argv, char **argc)
 {
+	struct utsname utsname;
 	int err, i;
 
 	/* parse args */
@@ -1063,7 +1064,14 @@ int main(int argv, char **argc)
 	}
 
 	/* set real-time properties */
-	decode_realtime_process(&state);
+	/* do this on RT Linux only, as it seems to interfere with suspend/resume on jive */
+	if ((err = uname(&utsname)) < 0) {
+		LOG_ERROR("uname failed: %s", snd_strerror(err));
+		exit(-1);
+	}
+	if (strstr(utsname.version, "PREEMPT") != NULL) {
+		decode_realtime_process(&state);
+	}
 
 	/* wake parent */
 	decode_audio_lock();
