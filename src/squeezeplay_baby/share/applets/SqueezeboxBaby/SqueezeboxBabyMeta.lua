@@ -105,6 +105,13 @@ function registerApplet(meta)
 end
 
 
+function configureApplet(meta)
+	local applet = appletManager:getAppletInstance("SqueezeboxBaby")
+
+	applet:_configureInit()
+end
+
+
 --[[
 
 =head1 LICENSE

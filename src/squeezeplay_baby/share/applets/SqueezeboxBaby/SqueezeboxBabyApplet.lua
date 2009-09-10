@@ -216,11 +216,14 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
+	playSplashSound(self)
+end
+
+--called during the configure portion of applet initialization
+function _configureInit(self)
 	if self:isLineInConnected() then
 		self:_lineinJack(true)
 	end
-
-	playSplashSound(self)
 end
 
 --service method
