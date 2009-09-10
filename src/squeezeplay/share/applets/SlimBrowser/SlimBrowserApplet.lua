@@ -969,9 +969,11 @@ end
 
 -- _hideMe
 -- hides the top window and refreshes the parent window, via a new request. Optionally, noRefresh can be set to true and the parent window will not be refreshed
-local function _hideMe(noRefresh)
+local function _hideMe(noRefresh, silent)
 
-	Framework:playSound("WINDOWHIDE")
+	if not silent then
+		Framework:playSound("WINDOWHIDE")
+	end
 	_getCurrentStep().window:hide()
 
 	--hiding triggers a stepStack pop, so no need to do it here
@@ -1026,7 +1028,7 @@ local function _goNowPlaying(transition, silent, direct)
 	while _getCurrentStep() and _getCurrentStep()._isNpChildWindow do
 		log:info("Hiding NP child window")
 
-		_hideMe(true)
+		_hideMe(true, true)
 
 	end
 
