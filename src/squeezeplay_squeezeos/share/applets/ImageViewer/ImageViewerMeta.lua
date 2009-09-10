@@ -38,10 +38,10 @@ end
 function registerApplet(meta)
 	if System:getMachine() ~= "baby" and System:getMachine() ~= "jive" then
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'settings', "IMAGE_VIEWER", 
-			function(applet, ...) applet:openImageViewer(...) end, 58))
+			function(applet, ...) applet:openImageViewer(...) end, 58, nil, "hm_appletImageViewer"))
 	else
 		jiveMain:addItem(meta:menuItem('appletImageViewer', 'screenSettings', "IMAGE_VIEWER_SETTINGS",
-			function(applet, ...) applet:openMinimalSettings(...) end, 105))
+			function(applet, ...) applet:openMinimalSettings(...) end, 105, nil, "hm_appletImageViewer"))
 
 	end
 	

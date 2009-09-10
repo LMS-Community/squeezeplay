@@ -131,7 +131,8 @@ is the function executed when the MenuItem is selected.
 --]]
 function menuItem(self, id, node, label, closure, weight, extras, iconStyle)
 	if not iconStyle then
-		iconStyle = 'hm_' .. id
+		--bug #12510
+		iconStyle = "hm_advancedSettings"
 	end
 	return {
 		id = id,
