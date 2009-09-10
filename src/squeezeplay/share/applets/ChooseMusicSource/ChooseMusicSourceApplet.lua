@@ -714,7 +714,7 @@ function _playerRegisterFailed(self, error)
 
 
 	window._isChooseMusicSourceWindow = true
-	window:addWidget(textarea)
+	menu:setHeaderWidget(textarea)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
