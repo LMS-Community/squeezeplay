@@ -225,7 +225,7 @@ function _updateVolume(self, mute, directSet, noAccel)
 			self.lastUpdate = now
 
 			-- change volume
-			local accel = self.accelCount / 4
+			local accel = self.accelCount / 8
 			new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
 		end
 	end
@@ -332,15 +332,21 @@ function event(self, event)
 	if type == EVENT_SCROLL then
 		local scroll = event:getScroll()
 
-		if scroll > 0 then
-			self.delta = 1
-		elseif scroll < 0 then
-			self.delta = -1
+		if System:getMachine() == "jive" then
+			if scroll > 0 then
+				self.delta = 1
+			elseif scroll < 0 then
+				self.delta = -1
+			else
+				self.delta = 0
+			end
+			_updateVolume(self)
 		else
-			self.delta = 0
+			--other devices contain dedicated volume knob so don't use scrolling for volume
+			self.popup:showBriefly(0)
+			return EVENT_CONSUME
+			
 		end
-		_updateVolume(self)
-
 	elseif (type & EVENT_IR_ALL) > 0 then
 		if event:isIRCode("volup") or event:isIRCode("voldown") then
 			--IR vol up/down
@@ -434,19 +440,7 @@ function event(self, event)
 		if keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) == 0 then
 			return EVENT_UNUSED
 		end
-
-		--handle keyboard volume change
-		if (keycode == KEY_VOLUME_UP) then
-			self.delta = 1
-			_updateVolume(self)
-			self.delta = 0
-		end
-		if (keycode == KEY_VOLUME_DOWN) then
-			self.delta = -1
-			_updateVolume(self)
-			self.delta = 0
-		end
-
+		--press handled by down
 		return EVENT_CONSUME
 
 	else
@@ -477,9 +471,7 @@ function event(self, event)
 			end
 
 			self.timer:restart()
-			if onscreen then
-				_updateVolume(self)
-			end
+			_updateVolume(self)
 
 			return EVENT_CONSUME
 		end
