@@ -989,8 +989,8 @@ function _delayNowPlaying(self, direct)
 			if _playlistHasTracks(self) then
 				self:showNowPlaying(transition, direct)
 			else
-				local browser = appletManager:getAppletInstance("SlimBrowser")
-				browser:showPlaylist()
+				--using pushAction here to allow LineIn to override this action
+				Framework:pushAction("go_playlist")
 			end
 		end
 	, true)
