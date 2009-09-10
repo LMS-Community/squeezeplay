@@ -194,8 +194,8 @@ function notify_playerTrackChange(self, player, nowPlaying)
 	self.player = player
 	local playerStatus = player:getPlayerStatus()
 
-	if player:getPlaylistSize() == 0 then
-		--switch to "empty playlist"
+	if player:getPlaylistSize() == 0 and Window:getTopNonTransientWindow() == self.window then
+		--switch to "empty playlist", if currently on NP when all tracks removed
 		appletManager:callService("showPlaylist")
 		return
 	end
