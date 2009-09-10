@@ -105,6 +105,9 @@ end
 
 
 function free(self)
+	-- Make sure we are unsubscribed
+	jnt:unsubscribe(self)
+
 	self.udap:removeSink(self.udapSink)
 	return true
 end
@@ -1168,13 +1171,12 @@ function _chooseSlimserver(self)
 	if self.setupNext then
 		--use SN
 		for i,server in appletManager:callService("iterateSqueezeCenters") do
-			if server:isSqueezeNetwork() then
+			if server:isSqueezeNetwork() and server:getPin() == false then
 				_setSlimserver(self, server)
 				return
 			end
 		end
-		--todo" if no SN, then how to complete setup?
-		log:error("SN not found during setup server auto-selection")
+		log:warn("SN not found during setup server auto-selection - offering SC list")
 	end
 
 	local window = Window("text_list", self:string("SQUEEZEBOX_MUSIC_SOURCE"), setupsqueezeboxTitleStyle)
@@ -1213,7 +1215,7 @@ function _chooseSlimserver(self)
 		popup:addTimer(1000, function() _scanSlimservers(self) end)
 
 		-- close after 5 seconds
-		popup:addTimer(5000, function() popup:hide() end)
+		popup:addTimer(5000, function() popup:hide() end, true)
 
 		self:tieAndShowWindow(popup)
 	end
@@ -1309,8 +1311,7 @@ function _setSlimserver(self, slimserver)
 	-- we are not SqueezeNetwork, so continue
 	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
 
--- Calling _setupSqueezebox() here again unsubscribes us from notifications
---	_setupSqueezebox(self)
+	_setupSqueezebox(self)
 end
 
 
@@ -1327,8 +1328,7 @@ function _registerPlayer(self, slimserver)
 
 	_setAction(self, "t_udapSetSlimserver", "connect_slimserver")
 
--- Calling _setupSqueezebox() here again unsubscribes us from notifications
---	_setupSqueezebox(self)
+	_setupSqueezebox(self)
 end
 
 
@@ -1503,14 +1503,19 @@ function _setupSqueezebox(self)
 
 	-- subscribe to the jnt so that we get notifications of players added
 	window:addListener(EVENT_WINDOW_ACTIVE,
-			   function(event)
-				   jnt:subscribe(self)
-			   end)
+		function(event)
+			jnt:subscribe(self)
+		end)
 
-	window:addListener(EVENT_WINDOW_INACTIVE,
-			   function(event)
-				   jnt:unsubscribe(self)
-			   end)
+-- This is not working for standard wireless / wired setup when
+--  connecting to SN as this evnet is then happening too early
+--  and we are missing the player new notification
+-- Moved unsubscribe to free() and _setupOK()
+--
+--	window:addListener(EVENT_WINDOW_INACTIVE,
+--		function(event)
+--			jnt:unsubscribe(self)
+--		end) 
 
 	self:tieAndShowWindow(window)
 end
@@ -1518,6 +1523,9 @@ end
 
 -- Squeezebox setup completed
 function _setupOK(self)
+	-- Unsubscribe since setup is done
+	jnt:unsubscribe(self)
+
 	local window = Popup("waiting_popup")
 	window:setAllowScreensaver(false)
 
@@ -1532,7 +1540,8 @@ function _setupOK(self)
 	window:addTimer(2000,
 			function(event)
 				self:_setupDone()
-			end)
+			end,
+			true)	-- trigger only once
 
 	window:addListener(ACTION,
 			   function(event)
@@ -1594,6 +1603,9 @@ end
 
 
 function _setupDone(self)
+	-- Make sure we are unsubscribed
+	jnt:unsubscribe(self)
+
 	if self.setupNext then
 		return self.setupNext()
 	end
