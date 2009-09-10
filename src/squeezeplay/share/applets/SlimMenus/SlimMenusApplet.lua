@@ -635,7 +635,6 @@ local function _menuSink(self, isCurrentServer, server)
 								_server:disconnect()
 								switchToSc()
 							end
-							self.playerOrServerChangeInProgress = false
 						else
 							if not _server:isConnected() then
 								if not _server:isSqueezeNetwork() and self:_canSqueezeNetworkServe(item) then
