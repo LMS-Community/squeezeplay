@@ -1989,7 +1989,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_choose_player" .. skinSuffix),
 	})
 	s.hm_quit = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_power_off2" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_power_off" .. skinSuffix),
 	})
 	s.hm_playerpower = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_power_off" .. skinSuffix),
