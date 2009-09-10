@@ -900,7 +900,7 @@ IMAGE_VIEWER_FLICKR_INVALID_DISPLAY_OPTION
 IMAGE_VIEWER_FLICKR_TAGS
 	CS	Klíčová slova označení
 	DA	Nøgleord til mærker
-	DE	Tag-Stickwörter
+	DE	Tag-Stichwörter
 	EN	Tag Keywords
 	ES	Palabras clave de etiquetas
 	FI	Merkitse avainsanat
