@@ -521,10 +521,16 @@ function _registerRequest(self, squeezenetwork)
 	if self.registerRequest then
 		return
 	end
-	self.registerRequest = true
+
+	--defer setting self.registerRequest until first register command completes to avoid race condition where serverLinked occurs early in a
+	--  "register or continue" situation since the server in that case is already linked
+	local successCallback = function(requireAlreadyLinked)
+		self.registerRequest = true
+		self.registerRequestRequireAlreadyLinked = requireAlreadyLinked
+	end
 
 	log:info("registration on SN")
-	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true)
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true, successCallback )
 
 	self.locked = true -- don't free applet
 	jnt:subscribe(self)
@@ -568,7 +574,7 @@ end
 
 
 
-function notify_serverLinked(self, server)
+function notify_serverLinked(self, server, wasAlreadyLinked)
 	log:info("notify_serverLinked: ", server)
 
 	if not server:isSqueezeNetwork() then
@@ -579,7 +585,11 @@ function notify_serverLinked(self, server)
 		return
 	end
 
-	log:info("server linked: ", server, " pin=", server:getPin())
+	--avoid race condition where we are in the registerRequest but for a player that is already linked
+	if  self.registerRequestRequireAlreadyLinked and not wasAlreadyLinked then
+		return
+	end
+	log:info("server linked: ", server, " pin=", server:getPin(), " registerRequestRequireAlreadyLinked: ", self.registerRequestRequireAlreadyLinked, " wasAlreadyLinked: ", wasAlreadyLinked)
 
 	if server:getPin() == false then
 		step8point5(self, server)

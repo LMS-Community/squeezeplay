@@ -1810,7 +1810,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					-- bit of a hack to notify serverLinked after factory reset SN menu
 					if item['serverLinked'] then
 						log:info("serverlinked: pin: ", _server:getPin())
-						_server.jnt:notify('serverLinked', _server)
+						_server.jnt:notify('serverLinked', _server, true)
 					else
 						goHome()
 					end
@@ -2570,7 +2570,7 @@ function findSqueezeNetwork(self)
 end
 
 
-function squeezeNetworkRequest(self, request, inSetup)
+function squeezeNetworkRequest(self, request, inSetup, successCallback)
 	local squeezenetwork = findSqueezeNetwork()
 
 	if not squeezenetwork or not request then
@@ -2594,9 +2594,17 @@ function squeezeNetworkRequest(self, request, inSetup)
 		},
 		_browseSink
 	)
-
+	local sinkWrapper = sink
+	if successCallback then
+		sinkWrapper =  function(...)
+				sink(...)
+				log:info("Calling successCallback after initial SN request succeeded")
+				--first request is always a welcome screen. return success callback including whether this is an already registered SP 
+				successCallback(squeezenetwork:isSpRegisteredWithSn())
+			end
+	end
 	_pushToNewWindow(step)
-        squeezenetwork:userRequest( sink, nil, request )
+        squeezenetwork:userRequest( sinkWrapper, nil, request )
 
 end
 
