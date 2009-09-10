@@ -207,11 +207,20 @@ end
 
 
 -- power off
-function poweroff(self)
+function poweroff(self, now)
 	log:info("Shuting down ...")
 
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
+
+	_cleanReboot(self)
+
+	if now then
+		-- force poweroff (don't go through init)
+		os.execute("/bin/busybox poweroff -f")
+
+		return
+	end
 
 	local popup = Popup("waiting_popup")
 
@@ -227,8 +236,6 @@ function poweroff(self)
 	popup:show()
 
 	popup:playSound("SHUTDOWN")
-
-	_cleanReboot(self)
 
 	local timer = Timer(4000, function()
 		-- force poweroff (don't go through init)

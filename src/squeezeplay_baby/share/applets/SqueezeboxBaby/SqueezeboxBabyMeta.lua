@@ -31,7 +31,7 @@ function defaultSettings(meta)
 		initTimeout = 60000,		-- 60 seconds
 		idleTimeout = 30000,		-- 30 seconds
 		sleepTimeout = 10 * 60000,	-- 10 minutes
-		hibernateTimeout = 60 * 60000,	-- 1 hour
+		hibernateTimeout = 20 * 60000,	-- 20 minutes (30 minutes after idle)
 
 		-- audio settings
 		alsaPlaybackDevice = "default",

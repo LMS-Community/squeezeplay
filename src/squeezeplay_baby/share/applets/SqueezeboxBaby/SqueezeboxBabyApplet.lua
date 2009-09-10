@@ -525,18 +525,23 @@ end
 function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
+	local batteryState
 
 	if chargerState == 1 then
 		-- no battery is installed, we must be on ac!
 		log:debug("no battery")
+		batteryState = "battery"
 		iconbar:setBattery(nil)
 
 	elseif chargerState == 2 then
 		log:debug("on ac, fully charged")
+		batteryState = "ac"
 		iconbar:setBattery("AC")
 
 	elseif chargerState == 3 then
 		-- running on battery
+		batteryState = "battery"
+
 		local batteryCharge = sysReadNumber(self, "battery_charge")
 		local batteryCapacity = sysReadNumber(self, "battery_capacity")
 
@@ -548,16 +553,24 @@ function _updatePower(self)
 	elseif chargerState == 4 then
 		log:debug("low battery")
 		isLowBattery = true
+		batteryState = "battery"
 		iconbar:setBattery(0)
 
 	elseif chargerState & 8 then
 		log:debug("on ac, charging")
+		batteryState = "ac"
 		iconbar:setBattery("CHARGING")
 
 	else
 		log:warn("invalid chargerState")
 		iconbar:setBattery(nil)
 	end
+
+	-- wake up on ac power changes
+	if batteryState ~= self.batteryState then
+		self:wakeup()
+	end
+	self.batteryState = batteryState
 
 	self:_lowBattery(isLowBattery or self.testLowBattery)
 end
@@ -659,6 +672,8 @@ end
 function setPowerState(self, state)
 	local settings = self:getSettings()
 
+	local poweroff = false
+
 	if state == "ACTIVE" then
 		self.powerTimer:restart(settings.idleTimeout)
 
@@ -670,6 +685,10 @@ function setPowerState(self, state)
 
 	elseif state == "HIBERNATE" then
 		self.powerTimer:stop()
+
+		local chargerState = sysReadNumber(self, "charger_state")
+		poweroff = (chargerState == 3 or chargerState == 4)
+		log:debug("hibernate chargerState=", chargerState, " poweroff=", poweroff)
 	end
 
 	if self.powerState == state then
@@ -682,6 +701,10 @@ function setPowerState(self, state)
 
 	_setEndpoint(self)
 	_setBrightness(self, self.lcdBrightness)
+
+	if (poweroff) then
+		appletManager:callService("poweroff", true)
+	end
 end
 
 
