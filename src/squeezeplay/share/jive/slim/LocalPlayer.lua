@@ -207,6 +207,34 @@ function setSignalStrength(self, signalStrength)
 end
 
 
+function getEffectivePlayMode(self)
+	if self:getCapturePlayMode() then
+		return self:getCapturePlayMode()
+	else
+		return self:getPlayMode()
+	end
+end
+
+function getCapturePlayMode(self)
+	return self.playback:getCapturePlayMode()
+end
+
+
+function setCapturePlayMode(self, capturePlayMode)
+	self.playback:setCapturePlayMode(capturePlayMode)
+	self:updateIconbar()
+end
+
+function captureVolume(self, volume)
+	self.playback:setCaptureVolume(volume)
+end
+
+
+function getCaptureVolume(self)
+	return self.playback:getCaptureVolume()
+end
+
+
 function getVolume(self)
 	return self.playback:getVolume()
 end
@@ -304,7 +332,13 @@ end
 --overridden to stop playback when powering off
 function setPower(self, on)
 	if not on then
-		self:stop()
+		if self:getCapturePlayMode() then
+			self:setCapturePlayMode("pause")
+		else
+			--purely local pause so as not to interfere with SC player sync logic
+			self.playback:pause()
+		end
+
 	end
 	Player.setPower(self, on, self:incrementSequenceNumber())
 end

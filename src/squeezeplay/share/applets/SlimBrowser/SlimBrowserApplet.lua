@@ -1019,7 +1019,7 @@ end
 
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
-local function _goNowPlaying(transition, silent)
+local function _goNowPlaying(transition, silent, direct)
 	Window:hideContextMenus()
 	
 	--first hide any "NP related" windows (playlist, track info) that are on top
@@ -1036,7 +1036,7 @@ local function _goNowPlaying(transition, silent)
 	if not silent then
 		Framework:playSound("WINDOWSHOW")
 	end
-	appletManager:callService('goNowPlaying', transition)
+	appletManager:callService('goNowPlaying', transition, direct)
 end
 
 -- _goPlaylist
@@ -1802,7 +1802,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					skipNewWindowPush = true
 
 					step, sink = _emptyDestination(step)
-					_stepLockHandler(step, function () _goNowPlaying(nil, true) end)
+					_stepLockHandler(step, function () _goNowPlaying(nil, true, true ) end)
 
 				elseif nextWindow == 'playlist' then
 					_goPlaylist(true)

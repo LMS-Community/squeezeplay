@@ -1097,7 +1097,8 @@ function updateIconbar(self)
 	
 	if self.isOnStage and self.state then
 		-- set the playmode (nil, stop, play, pause)
-		iconbar:setPlaymode(self.mode)
+
+		iconbar:setPlaymode(self:getEffectivePlayMode())
 		
 		-- set the shuffle (nil, 0=off, 1=by song, 2=by album)
 		iconbar:setShuffle(self.state["playlist shuffle"])
@@ -1408,6 +1409,11 @@ function getPlayMode(self)
 	if self.state then
 		return self.mode
 	end
+end
+
+--identical for non-local player
+function getEffectivePlayMode(self)
+	return self:getPlayMode()
 end
 
 -- isCurrent

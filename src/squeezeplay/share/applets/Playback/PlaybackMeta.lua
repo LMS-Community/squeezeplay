@@ -89,7 +89,12 @@ function configureApplet(meta)
 	if not settings.volume then
 		settings.volume = 40
 	end
+
+	if not settings.captureVolume then
+		settings.captureVolume = 40
+	end
 	meta.state.player:volumeLocal(settings.volume)
+	meta.state.player:captureVolume(settings.captureVolume)
 
 	if not settings.powerState then
 		settings.powerState = "on"
@@ -182,6 +187,14 @@ function configureApplet(meta)
 		end,
 		2
 	)
+
+	jiveMain:registerPostOnScreenInit(      function()
+							if appletManager:callService("isLineInConnected") and settings.capturePlayMode then
+								log:info("Activating Line In")
+								appletManager:callService("activateLineIn", true, settings.capturePlayMode)
+							end
+						end)
+
 end
 
 function _updateLocallyMaintainedParams(meta)
@@ -199,7 +212,16 @@ function _updateLocallyMaintainedParams(meta)
 			settings.powerState = jiveMain:getSoftPowerState()
 		end
 
-		--todo pause, mute, etc..
+		if meta.state.player:getCaptureVolume() ~= settings.captureVolume then
+			saveSettings = true
+			settings.captureVolume = meta.state.player:getCaptureVolume()
+		end
+
+		if meta.state.player:getCapturePlayMode() ~= settings.capturePlayMode then
+			saveSettings = true
+			settings.capturePlayMode = meta.state.player:getCapturePlayMode()
+		end
+
 	end
 
 	if saveSettings then

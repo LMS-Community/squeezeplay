@@ -962,7 +962,7 @@ end
 -- wrapper method to allow showNowPlaying to remain as named so the "screensaver" 
 -- can be found by the Screensaver applet correctly,
 -- while allowing the method to be called via the service API
-function goNowPlaying(self, transition)
+function goNowPlaying(self, transition, direct)
 
 	self.transition = transition
 	if not self.player then
@@ -973,9 +973,9 @@ function goNowPlaying(self, transition)
 		self.isScreensaver = false
 
 		if self:_playlistHasTracks() then
-			self:showNowPlaying(transition)
+			self:showNowPlaying(transition, direct)
 		else
-			_delayNowPlaying(self)
+			_delayNowPlaying(self, direct)
 			return
 		end
 	else
@@ -983,11 +983,11 @@ function goNowPlaying(self, transition)
 	end
 end
 
-function _delayNowPlaying(self)
+function _delayNowPlaying(self, direct)
 	local timer = Timer(1000,
 		function()
 			if _playlistHasTracks(self) then
-				self:showNowPlaying(transition)
+				self:showNowPlaying(transition, direct)
 			else
 				local browser = appletManager:getAppletInstance("SlimBrowser")
 				browser:showPlaylist()
@@ -1020,12 +1020,18 @@ function openScreensaver(self)
 	return false
 end
 
-function showNowPlaying(self, transition)
+function showNowPlaying(self, transition, direct)
 
 	local windowStyle
-	if Framework:isWindowInStack(self.window) then
+	local npWindow = self.window
+
+	local lineInActive = appletManager:callService("isLineInActive")
+	if not direct and lineInActive then -- line in might not be deactivated yet (waits for player status), so look for direct
+		npWindow = appletManager:callService("getLineInNpWindow")
+	end
+	if Framework:isWindowInStack(npWindow) then
 		log:debug('NP already on stack')
-		self.window:moveToTop()
+		npWindow:moveToTop()
 
 		-- restart the screensaver timer if we hit this clause
 		appletManager:callService("restartScreenSaverTimer")
@@ -1043,6 +1049,11 @@ function showNowPlaying(self, transition)
 		end
 	end
 
+	if not direct and lineInActive then
+		npWindow:show()
+		return
+	end
+	
 	-- if we're opening this after freeing the applet, grab the player again
 	if not self.player then
 		self.player = appletManager:callService("getCurrentPlayer")

@@ -67,8 +67,12 @@ function _getVolume(self)
 	end
 
 	if self.player:isLocal() then
-		--use local player volume
-		return self.player:getVolume()
+		if self.player:getCapturePlayMode() then
+			return self.player:getCaptureVolume()
+		else
+			--use local player volume
+			return self.player:getVolume()
+		end
 	else
 		--use self.volume which is updated with server
 		return self.volume
@@ -163,6 +167,19 @@ function _updateVolume(self, mute, directSet, noAccel)
 
 	-- keep the popup window open
 	self.popup:showBriefly()
+
+	if self.player and self.player:isLocal() and self.player:getCapturePlayMode() then
+		local new
+		if directSet then
+			new = math.floor(directSet)
+		else
+			new = math.abs(self:_getVolume()) + self.delta
+		end
+		new = self:_coerceVolume(new)
+		self.player:captureVolume(new)
+
+		return _updateDisplay(self)
+	end
 
 	-- ignore updates while muting (cleared on key up or on the mute action_
 	if self.muting then

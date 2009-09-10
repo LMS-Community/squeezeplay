@@ -554,6 +554,11 @@ function _stopInternal(self)
 end
 
 
+function pause(self)
+	self:_pauseInternal(nil)
+end
+
+
 function _pauseInternal(self, interval_ms)
 	decode:pauseAudio(interval_ms)
 	if interval_ms == 0 then
@@ -686,6 +691,38 @@ function translateServerGain(self, serverGain)
 	end
 	--use final value
 	return self:_getGainFromVolume(#_serverVolumeToGain), #_serverVolumeToGain
+end
+
+
+function setCaptureVolume(self, volume)
+	self.captureVolume = volume
+	if self:getCapturePlayMode() == "play" then
+		local gain = self:_getGainFromVolume(self.captureVolume)
+		log:debug("Setting capture volume: ", self.captureVolume, " gain: ", self:_getGainFromVolume(#_serverVolumeToGain))
+
+		decode:captureGain(gain, gain)
+	end
+end
+
+
+function getCaptureVolume(self)
+	return self.captureVolume
+end
+
+
+function getCapturePlayMode(self)
+	return self.capturePlayMode
+end
+
+
+function setCapturePlayMode(self, capturePlayMode)
+	self.capturePlayMode = capturePlayMode
+	if capturePlayMode == "play" then
+		self:setCaptureVolume(self:getCaptureVolume())
+	else
+		--mute capture  -todo: seems cpu intensive, can we actually just stop capture but not switch back to local player
+		decode:captureGain(0, 0)
+	end
 end
 
 

@@ -216,12 +216,18 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	if bsp:getMixer("Line In Switch") then
+	if self:isLineInConnected() then
 		self:_lineinJack(true)
 	end
 
 	playSplashSound(self)
 end
+
+--service method
+function isLineInConnected(self)
+	return bsp:getMixer("Line In Switch")
+end
+
 
 local MAX_BRIGHTNESS_LEVEL = -1
 -- Minium Brightness is 11 because IDLE powerstate subtracts 10 form the value passed to setBrightness
@@ -602,7 +608,7 @@ function sleep(self)
 
 	elseif state == "IDLE" then
 		if player then
-			local playmode = player:getPlayMode()
+			local playmode = player:getEffectivePlayMode()
 
 			if playmode == "play" then
 				return self.powerTimer:stop()
