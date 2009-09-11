@@ -325,7 +325,7 @@ function _updateTask(self)
 			end
 		else
 			-- wired
-			local status = iface:t_wpaStatus()
+			local status = iface:status()
 			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
 
 			if player then

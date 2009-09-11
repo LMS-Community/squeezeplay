@@ -710,7 +710,7 @@ function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
 					end
 				else
 					-- wired
-					local status = iface:t_wpaStatus()
+					local status = iface:status()
 					if not status.link then
 						return failureCallback(self:_networkFailureWindow(true))
 					end

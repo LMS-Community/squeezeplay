@@ -679,18 +679,8 @@ end
 
 
 
---[[
-
-=head2 jive.net.Networking:t_wpaStatus()
-
-parse and return wpa status
-
-=cut
---]]
-
--- XXXX rename to just status()
-function t_wpaStatus(self)
-	assert(Task:running(), "Networking:wpaStatus must be called in a Task")
+function status(self)
+	assert(Task:running(), "Networking:basicStatus must be called in a Task")
 
 	local status = {}
 
@@ -704,6 +694,25 @@ function t_wpaStatus(self)
 		status = self.t_sock:ethStatus()
 		status.wpa_state = "COMPLETED"
 	end
+
+	return status
+end
+
+
+--[[
+
+=head2 jive.net.Networking:t_wpaStatus()
+
+parse and return wpa status
+
+=cut
+--]]
+
+-- XXXX rename to just status()
+function t_wpaStatus(self)
+	assert(Task:running(), "Networking:wpaStatus must be called in a Task")
+
+	local status = self:status()
 
 	-- exit early if we are not connected
 	if status.wpa_state ~= "COMPLETED" then
