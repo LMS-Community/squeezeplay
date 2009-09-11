@@ -19,6 +19,7 @@ ALARM_SNOOZE_ALARM
 	SV	Alarm
 
 ALARM_SNOOZE_SNOOZE
+# SLT: menu item to make the alarm snooze for a few minutes
 	EN	Snooze
 
 ALARM_SNOOZE_TURN_OFF_ALARM
