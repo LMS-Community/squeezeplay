@@ -1158,8 +1158,8 @@ end
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
 
-	if server:isSqueezeNetwork() and not server:isSpRegisteredWithSn() then
-		log:info("not registered with SN, so not fetching SN menus")
+	if server:isSqueezeNetwork() and (not server:isConnected() or not server:isSpRegisteredWithSn()) then
+		log:info("not registered or not yet connected with SN, so not fetching SN menus. connected:", server:isConnected())
 		return
 	end
 

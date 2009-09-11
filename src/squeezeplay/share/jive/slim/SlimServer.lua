@@ -774,7 +774,12 @@ end
 -- If the SN comet connection returns a client id starting with "1x", SP is not registered with it.
 function isSpRegisteredWithSn(self)
 	if not self.comet then
-		return false
+		log:info("not registered: no comet")
+		return nil
+	end
+	if not self.comet.clientId then
+		log:info("not registered: no clientId")
+		return nil
 	end
 
 	if self.comet.clientId and  string.sub(self.comet.clientId, 1, 2) == "1X" then
