@@ -4,13 +4,19 @@
 #
 
 SQUEEZEBOX_SETUP
-	DA	Indstillinger for Receiver
-	DE	Squeezebox einrichten
+	CS	Nastavit přijímač
+	DA	Konfiguration af modtager
+	DE	Receiver einrichten
 	EN	Set Up Receiver
-	ES	Configuración de Squeezebox
-	FR	Configuration de la Squeezebox
-	IT	Configura Squeezebox
-	NL	Squeezebox instellen
+	ES	Configuración de receptor
+	FI	Ota vastaanotin käyttöön
+	FR	Configuration du récepteur
+	IT	Configura Receiver
+	NL	Ontvanger instellen
+	NO	Konfigurer mottaker
+	PL	Skonfiguruj odbiornik
+	RU	Установить ресивер
+	SV	Konfigurera mottagare
 
 SQUEEZEBOX_NETWORK_CONNECTION
 	CS	Bezdrátové připojení
@@ -134,13 +140,19 @@ SQUEEZEBOX_SETUP_COMPLETE
 	SV	Nu är Squeezebox konfigurerad.
 
 SQUEEZEBOX_PROBLEM
-	DA	Problem med tilslutning
+	CS	Problém s připojováním
+	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
+	FI	Yhteyttä ei voi muodostaa
 	FR	Problème de connexion
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
+	NO	Klarer ikke å kople til
+	PL	Problem podczas nawiązywania połączenia
+	RU	Ошибка при подключении
+	SV	Det uppstod ett problem vid anslutningen
 
 SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	CS	Zkuste to znovu

@@ -122,9 +122,6 @@ HOME
 	RU	Главное меню
 	SV	Hem
 
-MY_MUSIC
-	EN	My Music
-
 ADVANCED_SETTINGS
 	CS	Pokročilé
 	DA	Avanceret

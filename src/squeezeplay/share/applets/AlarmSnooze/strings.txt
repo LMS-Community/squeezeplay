@@ -4,10 +4,27 @@
 
 
 ALARM_SNOOZE_ALARM
+	CS	Budík
+	DA	Vækkeur
+	DE	Wecker
 	EN	Alarm
+	ES	Alarma
+	FI	Herätys
+	FR	Réveil
+	IT	Sveglia
+	NL	Wekker
+	NO	Alarm
+	PL	Alarm
+	RU	Будильник
+	SV	Alarm
 
 ALARM_SNOOZE_SNOOZE
 	EN	Snooze
 
 ALARM_SNOOZE_TURN_OFF_ALARM
+	DE	Wecker deaktivieren
 	EN	Turn Off Alarm
+	ES	Apagar alarma
+	FR	Désactiver le réveil
+	IT	Disattiva sveglia
+	
