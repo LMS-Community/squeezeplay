@@ -250,10 +250,11 @@ function notify_playerCurrent(self, player)
 		return
 	end
 
-	if jiveMain:getSkinParam("NOWPLAYING_MENU") and player:isConnected() then
+--	if jiveMain:getSkinParam("NOWPLAYING_MENU") and player:isConnected() then --reverted until further review 11013
+	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
 		self:addNowPlayingItem()
-        else
-		self:removeNowPlayingItem()
+--        else
+--		self:removeNowPlayingItem()
         end
 end
 
