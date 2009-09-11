@@ -501,13 +501,12 @@ static int _pcm_open(struct decode_alsa *state,
 
 	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
 	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
-
-	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
 		return err;
 	}
 
+	/* set hardware resampling */
 	if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 1)) < 0) {
 		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
 		return err;
@@ -892,7 +891,7 @@ static void *audio_thread_execute(void *data) {
 			}
 
 			if (state->flags & FLAG_STREAM_EFFECTS) {
-				decode_mix_effects(buf, frames, PCM_SAMPLE_WIDTH());
+				decode_mix_effects(buf, frames, PCM_SAMPLE_WIDTH(), state->pcm_sample_rate);
 			}
 
 			TIMER_CHECK("EFFECTS");

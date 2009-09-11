@@ -83,44 +83,113 @@ static inline s16_t s16_clip(s16_t a, s16_t b) {
 	}
 }
 
+#ifdef RESAMPLE_EFFECTS
+#   include "../speex/speex_resampler.h"
+#   define EFFECTS_SAMPLE_RATE 44100
+#   define EFFECTS_RESAMPLE_QUALITY 2
+	static SpeexResamplerState *resampler;
+#endif
+
+static int get_effects_samples(effect_t* output_samples_buf, size_t n_samples, unsigned int output_sample_rate) {
+		size_t samples_available, samples_until_wrap;
+
+        fifo_lock(&decode_audio->effect_fifo);
+
+        samples_available = fifo_bytes_used(&decode_audio->effect_fifo) / sizeof(effect_t);
+
+        /* shortcut the common case */
+        if (samples_available == 0
+#ifdef RESAMPLE_EFFECTS
+        		&& !(resampler && jive_resampler_has_samples(resampler, 0))
+#endif
+			)
+        {
+                fifo_unlock(&decode_audio->effect_fifo);
+                return 0;
+        }
+
+        samples_until_wrap = fifo_bytes_until_rptr_wrap(&decode_audio->effect_fifo) / sizeof(effect_t);
+        if (samples_until_wrap < samples_available) {
+        	samples_available = samples_until_wrap;
+        }
+
+
+#ifdef RESAMPLE_EFFECTS
+       if (output_sample_rate != EFFECTS_SAMPLE_RATE) {
+                spx_uint32_t in_samples;
+                spx_uint32_t out_samples;
+                int err;
+
+                if (!resampler) {
+                        resampler = jive_resampler_init(1, EFFECTS_SAMPLE_RATE, output_sample_rate, EFFECTS_RESAMPLE_QUALITY, &err);
+                } else {
+                        spx_uint32_t in_rate, out_rate;
+                        jive_resampler_get_rate(resampler, &in_rate, &out_rate);
+                        if (out_rate != output_sample_rate) {
+                                jive_resampler_reset_mem(resampler);
+                                jive_resampler_set_rate(resampler, EFFECTS_SAMPLE_RATE, output_sample_rate);
+                        }
+                }
+
+                in_samples = samples_available;
+                out_samples = n_samples;
+
+                jive_resampler_process_int(resampler, 0,
+                        (spx_int16_t *)(effect_t *)(void *)(effect_fifo_buf + decode_audio->effect_fifo.rptr),
+                        &in_samples,
+                        output_samples_buf, &out_samples);
+
+                fifo_rptr_incby(&decode_audio->effect_fifo, in_samples * sizeof(effect_t));
+
+                n_samples = out_samples;
+        }
+#else
+        if (0) {}
+#endif
+        else {          /* no resampling */
+                if (n_samples > samples_available) {
+                        n_samples = samples_available;
+                }
+                memcpy(output_samples_buf,
+                                effect_fifo_buf + decode_audio->effect_fifo.rptr,
+                                n_samples * sizeof(effect_t));
+                fifo_rptr_incby(&decode_audio->effect_fifo, n_samples * sizeof(effect_t));
+        }
+
+        fifo_unlock(&decode_audio->effect_fifo);
+
+        return n_samples;
+}
 
 /*
  * This function is called by to copy effects to the audio buffer.
  */
 void decode_mix_effects(void *outputBuffer,
 			size_t framesPerBuffer,
-			int sample_width)
+			int sample_width,
+			int output_sample_rate)
 {
-	size_t len, bytes_used;
+	effect_t effects_buffer[EFFECT_FIFO_SIZE]; /* pretty arbitrary size */
+	int effects_frames;
 
-	len = framesPerBuffer * sizeof(effect_t);
-
-	fifo_lock(&decode_audio->effect_fifo);
-
-	bytes_used = fifo_bytes_used(&decode_audio->effect_fifo);
-	if (bytes_used > len) {
-		bytes_used = len;
-	}
-
-	while (bytes_used > 0) {
+	for ( ;
+			framesPerBuffer > 0 &&
+				(effects_frames = get_effects_samples(effects_buffer, framesPerBuffer, output_sample_rate)) > 0;
+			framesPerBuffer -= effects_frames)
+	{
 		effect_t *effect_ptr;
-		size_t i, bytes_write;
+		int i;
 		s32_t s;
 
-		bytes_write = fifo_bytes_until_rptr_wrap(&decode_audio->effect_fifo);
-		if (bytes_write > bytes_used) {
-			bytes_write = bytes_used;
-		}
-
-		effect_ptr = (effect_t *)(void *)(effect_fifo_buf + decode_audio->effect_fifo.rptr);
+		effect_ptr = effects_buffer;
 
 		if (sample_width == 24) {
 			s32_t *output_ptr  = (sample_t *)outputBuffer;
 
-			for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
+			for (i=0; i < effects_frames; i++) {
 				s = (*effect_ptr++) << 8;
 				s = fixed_mul(decode_audio->effect_gain, s);
-				
+
 				*output_ptr = sample_clip(*output_ptr, s);
 				output_ptr++;
 
@@ -133,10 +202,10 @@ void decode_mix_effects(void *outputBuffer,
 		else if (sample_width == 16) {
 			s16_t *output_ptr  = (s16_t *)outputBuffer;
 
-			for (i=0; i<(bytes_write / sizeof(effect_t)); i++) {
+			for (i=0; i < effects_frames; i++) {
 				s = (*effect_ptr++) << 8;
 				s = fixed_mul(decode_audio->effect_gain, s);
-				
+
 				*output_ptr = s16_clip(*output_ptr, s >> 8);
 				output_ptr++;
 
@@ -146,10 +215,6 @@ void decode_mix_effects(void *outputBuffer,
 
 			outputBuffer = output_ptr;
 		}
-
-		fifo_rptr_incby(&decode_audio->effect_fifo, bytes_write);
-		bytes_used -= bytes_write;
 	}
-
-	fifo_unlock(&decode_audio->effect_fifo);
 }
+

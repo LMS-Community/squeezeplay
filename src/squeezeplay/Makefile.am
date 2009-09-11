@@ -182,8 +182,11 @@ libui_la_SOURCES = \
 
 libui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 
+libaudio_la_CFLAGS = -DRESAMPLE_EFFECTS -DOUTSIDE_SPEEX -DFIXED_POINT -DRANDOM_PREFIX=jive -DEXPORT=""
+
 libaudio_la_SOURCES = \
 	src/audio/decode/audio_helper.c \
+	src/audio/speex/resample.c \
 	src/audio/fifo.c \
 	src/audio/fixed_math.c
 

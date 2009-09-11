@@ -160,7 +160,7 @@ extern void decode_output_begin(void);
 extern void decode_output_end(void);
 extern void decode_output_flush(void);
 extern bool_t decode_check_start_point(void);
-extern void decode_mix_effects(void *outputBuffer, size_t framesPerBuffer, int sample_width);
+extern void decode_mix_effects(void *outputBuffer, size_t framesPerBuffer, int sample_width, int output_sample_rate);
 
 
 /* Sample playback api (sound effects) */
