@@ -303,12 +303,10 @@ function _timerCallback(self)
 	-- 1) this is the first track since the last strm-q
 	-- 2) we have actually finished processing that strm-q
 	-- 3) we have enough encoded data buffered or the stream is complete
-	-- 4) we have a bit of output ready
 
 	if status.tracksStarted == 0 and
 		status.audioState & DECODE_STOPPING == 0 and
-		(status.bytesReceivedL > self.threshold or not self.stream) and
-		status.outputTime > 50 then
+		(status.bytesReceivedL > self.threshold or not self.stream) then
 
 --	FIXME in a future release we may change the the threshold to use
 --	the amount of audio buffered, see Bug 6442
