@@ -110,18 +110,17 @@ end
 function _activateLineIn(self, initialPlayMode)
 	log:info("_activateLineIn")
 
-	appletManager:callService("goNowPlaying")
-
-	appletManager:callService("deactivateScreensaver")
-	appletManager:callService("restartScreenSaverTimer")
-	
 	Player:getLocalPlayer():pause()
 	Player:getLocalPlayer():setCapturePlayMode(initialPlayMode or "play")
 	Decode:capture(true)
 
 	self:_addListeners()
-	self:showLineInNowPlaying()
+	self:createLineInNowPlaying()
 
+	appletManager:callService("deactivateScreensaver")
+	appletManager:callService("restartScreenSaverTimer")
+
+	appletManager:callService("goNowPlaying")
 end
 
 function _deactivateLineIn(self)
@@ -190,6 +189,8 @@ function _addListeners(self)
 		return EVENT_CONSUME
 	end
 	local goNowPlayingAction = function(self)
+		log:warn("calling NP")
+
 		appletManager:callService("goNowPlaying")
 		return EVENT_CONSUME
 	end
@@ -219,8 +220,8 @@ function _removeListeners(self)
 end
 
 
-function showLineInNowPlaying(self)
-	log:warn("showLineInNowPlaying")
+function createLineInNowPlaying(self)
+	log:debug("createLineInNowPlaying")
 
 	--todo: don't show if already up
 
@@ -247,7 +248,6 @@ function showLineInNowPlaying(self)
 	window:addWidget(nptrackGroup)
 	window:addWidget(artworkGroup)
 
-	window:show()
 	self.npWindow = window
 end
 
