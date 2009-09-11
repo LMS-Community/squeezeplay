@@ -36,7 +36,6 @@ static void mqueue_read_buf(struct mqueue *mqueue, Uint8 *b, size_t n) {
 
 
 mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
-	Uint32 ticks;
 	int err;
 
 	if (fifo_lock(&mqueue->fifo) == -1) {
@@ -53,14 +52,13 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 		return func;
 	}
 
-	ticks = jive_jiffies();
-	if (timeout <= ticks) {
+	if (!timeout) {
 		fifo_unlock(&mqueue->fifo);
 		return NULL;
 	}
 
 	/* Wait until timeout */
-	err = fifo_wait_timeout(&mqueue->fifo, timeout - ticks);
+	err = fifo_wait_timeout(&mqueue->fifo, timeout);
 	if (err == SDL_MUTEX_TIMEDOUT) {
 		fifo_unlock(&mqueue->fifo);
 		return NULL;

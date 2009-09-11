@@ -153,6 +153,9 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	getcwd(path, PATH_MAX);
 	strncat(path, "/jive_alsa", PATH_MAX);
 
+	decode_audio_lock();
+	decode_audio->running = false;
+
 	/* fork + exec */
 	pid = vfork();
 	if (pid < 0) {
@@ -168,9 +171,6 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	}
 
 	/* wait for backend process to start */
-	decode_audio_lock();
-	decode_audio->running = false;
-
 	while (1) {
 		fifo_wait_timeout(&decode_audio->fifo, 500);
 

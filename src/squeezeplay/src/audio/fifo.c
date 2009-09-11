@@ -94,8 +94,10 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 	if ((err = pthread_condattr_init(&cond_attr)) < 0) {
 		return err;
 	}
-	if ((err = pthread_condattr_setpshared(&cond_attr, PTHREAD_PROCESS_SHARED)) < 0) {
-		return err;
+	if (prio_inherit) {
+		if ((err = pthread_condattr_setpshared(&cond_attr, PTHREAD_PROCESS_SHARED)) < 0) {
+			return err;
+		}
 	}
 	if ((err = pthread_cond_init(&fifo->cond, &cond_attr)) < 0) {
 		return err;

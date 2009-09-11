@@ -376,20 +376,20 @@ static int decode_thread_execute(void *unused) {
 
 	while (true) {
 		mqueue_func_t handler;
-		u32_t timeout, delay; // XXXX timer wrap around
+		u32_t delay;
 		bool_t can_decode;
 
 		/* XXXX 30 seconds for testing */
 		watchdog_keepalive(decode_watchdog, 3);
 
 		can_decode = decode_timer_interval(&delay);
-
-		timeout = jive_jiffies() + delay;
-		while ((handler = mqueue_read_request(&decode_mqueue, timeout))) {
+		while ((handler = mqueue_read_request(&decode_mqueue, delay))) {
 			// for debugging race conditions
 			//sleep(2);
 
 			handler();
+
+			can_decode = decode_timer_interval(&delay);
 		}
 
 		if (can_decode && decoder
@@ -981,9 +981,6 @@ static int decode_init_audio(lua_State *L) {
 		}
 	}
 
-	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
-	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
-
 	return 0;
 }
 
@@ -1027,6 +1024,9 @@ static int decode_audio_open(lua_State *L) {
 	decode_audio->f = f;
 
 	/* start decoder thread */
+	mqueue_init(&decode_mqueue, decode_mqueue_buffer, sizeof(decode_mqueue_buffer));
+	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
+
 	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
 
 	lua_pushboolean(L, 1);
