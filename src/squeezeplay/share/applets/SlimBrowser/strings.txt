@@ -32,6 +32,21 @@ SLIMBROWSER_PLAYLIST
 	RU	Текущий плей-лист
 	SV	Aktuell spellista
 
+SLIMBROWSER_ENTER_PASSWORD
+	CS	Zadejte heslo znovu
+	DA	Indtast adgangskoden igen
+	DE	Kennwort erneut eingeben
+	EN	Re-enter password
+	ES	Vuelva a introducir la contraseña
+	FI	Anna salasana uudelleen
+	FR	Entrer à nouveau le mot de passe
+	IT	Immettere di nuovo la password
+	NL	Wachtwoord opnieuw invoeren
+	NO	Angi passord på nytt
+	PL	Wpisz hasło ponownie
+	RU	Повторите ввод пароля
+	SV	Ange lösenordet på nytt
+
 SLIMBROWSER_GO_HOME
 	CS	Přejít Domů
 	DA	Til startside
