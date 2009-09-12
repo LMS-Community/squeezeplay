@@ -287,6 +287,21 @@ UPDATE_BATTERY_HELP
 	RU	Чтобы продолжить обновление ПО, установите пульт в устройство зарядки.
 	SV	Sätt fjärrkontrollen i laddaren om du vill fortsätta med programuppdateringen.
 
+UPDATE_BATTERY_HELP_BABY
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
 UPDATE_CANCEL
 	CS	Storno
 	DA	Annuller
