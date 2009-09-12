@@ -1938,6 +1938,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.player_fab4 = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_fab4.png"),
 	})
+	s.player_baby = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_baby.png"),
+	})
 	s.player_http = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_tunein_url.png"),
 	})

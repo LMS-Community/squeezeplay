@@ -2125,6 +2125,9 @@ function skin(self, s)
 	s.player_http = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_tunein_url" .. skinSuffix),
 	})
+	s.player_baby = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_baby" .. skinSuffix),
+	})
 	s.player_fab4 = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_fab4" .. skinSuffix),
 	})

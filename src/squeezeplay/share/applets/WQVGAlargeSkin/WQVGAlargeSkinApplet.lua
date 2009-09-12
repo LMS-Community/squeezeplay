@@ -1568,6 +1568,9 @@ function skin(self, s)
 	s.player_fab4 = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_fab4" .. skinSuffix),
 	})
+	s.player_baby = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_baby" .. skinSuffix),
+	})
 
 
 	-- indicator icons, on right of menus

@@ -207,9 +207,11 @@ function _addPlayerItem(self, player)
 		squeezeplay = true,
 		http        = true,
 		fab4        = true,
+		baby        = true,
 	}
 
 	local playerModel = player:getModel()
+log:warn(playerModel)
 
 	-- guess model by mac address if we don't have one available
 	-- this is primarily used for players on the network waiting to be setup
