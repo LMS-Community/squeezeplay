@@ -351,13 +351,15 @@ end
 
 
 function applyScreensaverWindow(self, window)
+	if self.serverData and not self.serverData.allowMotion then
 		window:addListener(EVENT_MOTION,
 			function()
 				window:hide(Window.transitionNone)
 				return EVENT_CONSUME
 			end)
-		local manager = appletManager:getAppletInstance("ScreenSavers")
-		manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", "back"})
+	end
+	local manager = appletManager:getAppletInstance("ScreenSavers")
+	manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", "back"})
 end
 
 

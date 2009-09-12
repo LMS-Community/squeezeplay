@@ -752,6 +752,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 		serverData.cmd = request
 		serverData.server = _server
 		serverData.appParameters = _server:getAppParameters(_getAppType(request))
+		serverData.allowMotion = true
 
 		appletManager:callService("openRemoteScreensaver", true, serverData)
 		return
