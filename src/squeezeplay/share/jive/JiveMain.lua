@@ -225,6 +225,9 @@ function JiveMain:setSoftPowerState(softPowerState)
 	elseif _softPowerState == "on" then
 		log:info("Turn soft power on")
 		if currentPlayer and currentPlayer:isConnected() then
+			if currentPlayer.slimServer then
+				currentPlayer.slimServer:wakeOnLan()
+			end
 			currentPlayer:setPower(true)
 		end
 

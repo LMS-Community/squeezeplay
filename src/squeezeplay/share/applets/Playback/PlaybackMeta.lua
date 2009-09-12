@@ -252,14 +252,24 @@ function _updateSettings(meta, player, force)
 		ipChanged = true
 	end
 
-	if not ipChanged and not force and
+	local macChanged = false
+	local settingsMac
+	if meta:getSettings().serverInit then
+		settingsMac = meta:getSettings().serverInit.mac
+	end
+	if player and player:getSlimServer() and player:getSlimServer():getInit().mac ~= settingsMac then
+		log:error("Updating Playback server on new mac address: ", player:getSlimServer():getInit().mac)
+		ipChanged = true
+	end
+
+	if not macChanged and not ipChanged and not force and
 	   settings.serverName == serverName and
 	   settings.squeezeNetwork == server:isSqueezeNetwork() then
 		-- no change
 		return
 	end
 
-	if ipChanged or (server and
+	if macChanged or ipChanged or (server and
 		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
 		  or settings.serverName ~= server:getName() )) then
 		settings.squeezeNetwork = server:isSqueezeNetwork()

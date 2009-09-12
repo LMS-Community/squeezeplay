@@ -34,7 +34,7 @@ local _assert, next, tostring, table, ipairs, pairs, pcall, select, setmetatable
 local io                = require("io")
 local os                = require("os")
 local socket            = require("socket")
-local string            = require("string")
+local string            = require("jive.utils.string")
 local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
@@ -411,11 +411,24 @@ function arp(self, host, sink)
 			if chunk then
 					arp = arp .. chunk
 			else
-					local mac = string.match(arp, "%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x")
+					local mac = string.match(arp, "%x+[:-]%x+[:-]%x+[:-]%x+[:-]%x+[:-]%x+")
 					if mac then
 							mac = string.gsub(mac, "-", ":")
+							--pad 0 to front of any single character element (needed for at least OS X)
+							local elements = string.split(":", mac)
+							mac = ""
+							for i,element in ipairs(elements) do
+								if string.len(element) == 1 then
+									mac = mac .. "0"
+								end
+								mac = mac .. element
+
+								if i < #elements then
+									mac = mac .. ":"
+								end
+							end
 					end
-					
+
 					sink(mac)
 			end
 	end)

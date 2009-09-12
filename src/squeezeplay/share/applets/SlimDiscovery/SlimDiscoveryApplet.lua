@@ -515,15 +515,21 @@ function notify_playerCurrent(self, player)
 
 	local server = player and player:getSlimServer() or false
 	local ipChanged
+	local macChanged = false
 	if server then
 		local serverIp = server:getInit() and server:getInit().ip or nil
 		local settingsIp = settings.serverInit and settings.serverInit.ip or nil
 		ipChanged = serverIp ~= settingsIp
+
+		local serverMac = server:getInit() and server:getInit().mac or nil
+		local settingsMac = settings.serverInit and settings.serverInit.mac or nil
+		macChanged = serverMac ~= settingsMac
+
 	end
 
 	if server and
 		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
-		  or ipChanged
+		  or ipChanged or macChanged
 		  or settings.serverName ~= server:getName() ) then
 		settings.squeezeNetwork = server:isSqueezeNetwork()
 
