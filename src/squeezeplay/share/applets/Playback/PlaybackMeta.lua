@@ -258,7 +258,7 @@ function _updateSettings(meta, player, force)
 		settingsMac = meta:getSettings().serverInit.mac
 	end
 	if player and player:getSlimServer() and player:getSlimServer():getInit().mac ~= settingsMac then
-		log:error("Updating Playback server on new mac address: ", player:getSlimServer():getInit().mac)
+		log:debug("Updating Playback server on new mac address: ", player:getSlimServer():getInit().mac)
 		ipChanged = true
 	end
 
