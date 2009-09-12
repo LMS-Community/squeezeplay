@@ -222,8 +222,6 @@ function showTextWindow(self)
 							return EVENT_CONSUME
 						end)
 
-	window._DEFAULT_SHOW_TRANSITION = Window.transitionNone --todo: do fade in when strange bg flash problem is solved
-
 	window:show() 
 end
 

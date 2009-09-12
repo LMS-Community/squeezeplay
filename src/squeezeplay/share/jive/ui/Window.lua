@@ -1538,6 +1538,10 @@ function _transitionFadeIn(oldWindow, newWindow, duration)
 			end
 			local x = remaining * scale
 
+			--support background surfaces, used for instance by ContextMenuWindow
+			if newWindow._bg then
+				newWindow._bg:blit(surface, 0, 0)
+			end
 			newWindow:draw(surface, LAYER_ALL)
 			srf:blitAlpha(surface, 0, 0, x)
 
