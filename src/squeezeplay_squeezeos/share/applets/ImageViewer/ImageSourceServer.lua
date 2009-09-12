@@ -176,11 +176,27 @@ function requestImage(self, imageData)
 
 	self.currentImageFile = urlString
 
-	self.currentCaption = imageData.caption and imageData.caption or ""
-	if imageData.date then
-		self.currentCaption = self.currentCaption .. "   -   " .. imageData.date
+	local textLines = {}
+	if imageData.caption and imageData.caption ~= "" then
+		table.insert(textLines, imageData.caption)
+	end
+	if imageData.date and imageData.date ~= "" then
+		table.insert(textLines, imageData.date)
+	end
+	if imageData.owner and imageData.owner ~= "" then
+		table.insert(textLines, imageData.owner)
 	end
 
+	self.currentCaption = ""
+	self.currentCaptionMultiline = ""
+	for i,line in ipairs(textLines) do
+		self.currentCaption = self.currentCaption .. line
+		self.currentCaptionMultiline = self.currentCaptionMultiline .. line
+		if i < #textLines then
+			self.currentCaption = self.currentCaption .. " - "
+			self.currentCaptionMultiline = self.currentCaptionMultiline .. "\n\n"
+		end
+	end
 
 	-- Default URI settings
 	local defaults = {
@@ -212,6 +228,11 @@ end
 
 function getText(self)
 	return self.currentCaption
+end
+
+
+function getMultilineText(self)
+	return self.currentCaptionMultiline
 end
 
 

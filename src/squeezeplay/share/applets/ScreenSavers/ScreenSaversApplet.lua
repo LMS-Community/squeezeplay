@@ -521,10 +521,20 @@ end
 --service method
 function deactivateScreensaver(self)
 
-	-- close all screensaver windows
-	for i,w in ipairs(self.active) do
-		_deactivate(self, w, self.demoScreensaver)
+	-- close all screensaver windows -0 do oldActive swap to avoid deleting iterated values when there is more than one window
+	local oldActive = self.active
+
+	if #oldActive == 0 then
+		-- screensaver is not active
+		return
 	end
+
+	self.active = {}
+
+	for i, window in ipairs(oldActive) do
+		_deactivate(self, window, self.demoScreensaver)
+	end
+
 end
 
 

@@ -22,7 +22,7 @@ module(...)
 oo.class(_M, Window)
 
 
-function __init(self, title, windowId)
+function __init(self, title, windowId, noShading)
 	local obj = oo.rawnew(self, Window("context_menu" , title, _, windowId))
 
 	obj._DEFAULT_SHOW_TRANSITION = Window.transitionFadeInFast
@@ -38,7 +38,8 @@ function __init(self, title, windowId)
 	obj:addActionListener("cancel", obj, _cancelContextMenuAction)
 	obj:addActionListener("add", obj, _cancelContextMenuAction)
 
-	obj._bg = _capture()
+	obj.noShading = noShading
+	obj._bg = _capture(obj)
 
 	return obj
 end
@@ -97,16 +98,17 @@ function hide(self)
 end
 
 
-function _capture()
+function _capture(self)
 	local sw, sh = Framework:getScreenSize()
 	local img = Surface:newRGB(sw, sh)
 
 	--take snapshot of screen
 	Framework:draw(img)
 
-	--apply shading - tried via maskImg, but child CM windows didn't display maksImg correct
-	img:filledRectangle(0, 0, sw, sh, 0x00000085)
-
+	if not self.noShading then
+		--apply shading - tried via maskImg, but child CM windows didn't display maksImg correct
+		img:filledRectangle(0, 0, sw, sh, 0x00000085)
+	end
 	return img
 end
 

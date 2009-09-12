@@ -135,4 +135,8 @@ function getText(self)
 	assert(false, "please implement in derived class")
 end
 
+function getMultilineText(self)
+	return self:getText()
+end
+
 

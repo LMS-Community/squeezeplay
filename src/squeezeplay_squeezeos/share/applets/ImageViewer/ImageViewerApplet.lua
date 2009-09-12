@@ -44,6 +44,8 @@ local SimpleMenu	= require("jive.ui.SimpleMenu")
 local Task			= require("jive.ui.Task")
 local Timer			= require("jive.ui.Timer")
 local Process		= require("jive.net.Process")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
+local Textarea               = require("jive.ui.Textarea")
 
 local debug			= require("jive.utils.debug")
 
@@ -205,6 +207,27 @@ function startSlideshowWhenReady(self)
 	self:displaySlide()
 end
 
+function showTextWindow(self)
+	local window = ContextMenuWindow(nil, nil, true)
+	local text = Textarea("multiline_text", self.imgSource:getMultilineText())
+	window:addWidget(text)
+	window:setShowFrameworkWidgets(false)
+
+	if self.isScreensaver then
+		self:applyScreensaverWindow(window)
+	end
+
+	window:addActionListener("back", self,  function ()
+							window:hide()
+							return EVENT_CONSUME
+						end)
+
+	window._DEFAULT_SHOW_TRANSITION = Window.transitionNone --todo: do fade in when strange bg flash problem is solved
+
+	window:show() 
+end
+
+
 function setupEventHandlers(self, window)
 
 	local nextSlideAction = function (self)
@@ -222,12 +245,20 @@ function setupEventHandlers(self, window)
 		return EVENT_CONSUME
 	end
 
+	local showTextWindowAction = function (self)
+		if self.imgSource:getText() then
+			self:showTextWindow()
+		end
+		return EVENT_CONSUME
+	end
+
 	--todo add takes user to meta data page
---	window:addActionListener("add", self, openSettings)
+	window:addActionListener("add", self, showTextWindowAction)
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("play", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)
+	window:addActionListener("back", self, function () return EVENT_UNUSED end)
 
 	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
 		function(event)
@@ -326,7 +357,7 @@ function applyScreensaverWindow(self, window)
 				return EVENT_CONSUME
 			end)
 		local manager = appletManager:getAppletInstance("ScreenSavers")
-		manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", })
+		manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", "back"})
 end
 
 
