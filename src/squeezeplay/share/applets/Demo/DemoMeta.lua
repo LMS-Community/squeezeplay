@@ -36,17 +36,6 @@ function defaultSettings(meta)
 end
 
 function configureApplet(meta)
-	local localPlayer = nil
-	for mac, player in appletManager:callService("iteratePlayers") do
-		if player:isLocal() then
-			localPlayer = player
-			break
-		end
-        end
-
-	if not localPlayer then
-		return
-	end
 
 	if meta:getSettings()['startDemo'] then
 		local demo = appletManager:loadApplet('Demo')
