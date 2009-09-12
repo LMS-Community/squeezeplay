@@ -411,7 +411,7 @@ local function _menuSink(self, isCurrentServer, server)
 		-- if we get here, it was for this player. set menuReceived to true
 		_menuReceived = true
 
-		log:info("_menuSink() ", server, " menuDirective: ", menuDirective, " isCurrentServer:" , isCurrentServer)
+		log:info("_menuSink(" .. #menuItems ..") ", server, " menuDirective: ", menuDirective, " isCurrentServer:" , isCurrentServer)
 
 		for k, v in pairs(menuItems) do
 
