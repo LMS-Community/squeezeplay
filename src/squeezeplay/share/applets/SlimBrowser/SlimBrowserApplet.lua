@@ -3480,7 +3480,12 @@ function free(self)
 	if _statusStep then
 		_statusStep.window:hide()
 	end
-	
+
+	if _emptyStep and _emptyStep.window then
+		_emptyStep.window:hide()
+	end
+	_emptyStep = nil
+
 	return true
 end
 
