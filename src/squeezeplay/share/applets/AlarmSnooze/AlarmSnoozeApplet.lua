@@ -33,6 +33,7 @@ function __init(self, ...)
         local obj = oo.rawnew(self, Applet(...))
 	jnt:subscribe(obj)
 	obj.alarmTone = "applets/AlarmSnooze/alarm.mp3"
+
 	-- arbitrarily set time interval, as it will be set again whenever it is invoked
 	obj.RTCAlarmTimer = Timer(86400,
 			function ()
@@ -42,6 +43,16 @@ function __init(self, ...)
 			end,
 			true
 	)
+	--FIXME: don't seem to be able to get settings values in the __init block
+	-- so this is broken
+	local settings = obj:getSettings()
+	local existingAlarm = settings and settings['alarmNext'] or nil
+	if existingAlarm and existingAlarm > 0 then
+		log:warn('resetting existing fallback alarm timer after reboot')
+		obj.RTCAlarmTimer:setInterval(obj:_timeToAlarm(existingAlarm))
+		obj.RTCAlarmTimer:start()
+	end
+
 	return obj
 	
 end
@@ -54,7 +65,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		self.player = player
 		-- store alarmNext data as epoch seconds
 		if alarmNext then
-			log:debug('storing seconds to next alarm:  ', alarmNext)
+			log:warn('storing seconds to next alarm:  ', alarmNext)
 			local now = os.time()
 	                self:getSettings()['alarmNext'] = alarmNext + now
 			self:storeSettings()
@@ -79,6 +90,13 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
 			appletManager:callService("deactivateScreensaver")
 			self:openAlarmWindow()
+		elseif alarmState == 'none' then
+			log:warn('no alarm, unset this')
+			self:getSettings()['alarmNext'] = nil
+			self:storeSettings()
+			if self.RTCAlarmTimer:isRunning() then
+				self.RTCAlarmTimer:stop()
+			end
 		end
 	end
 end

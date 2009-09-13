@@ -1144,7 +1144,7 @@ end
 -- _process_status
 -- processes the playerstatus data and calls associated functions for notification
 function _process_status(self, event)
-	log:warn("Player:_process_playerstatus()")
+	log:debug("Player:_process_playerstatus()")
 
 	if event.data.error then
 		-- ignore player status sent with an error
@@ -1201,7 +1201,7 @@ function _process_status(self, event)
 	end
 
 	log:debug("self.state['alarm_state']: ", self.state['alarm_state'], ",  oldState['alarm_state']: ", oldState['alarm_state'])
-	log:warn("self.state['alarm_next']: ", self.state['alarm_next'], ",  oldState['alarm_next']: ", oldState['alarm_next'])
+	log:debug("self.state['alarm_next']: ", self.state['alarm_next'], ",  oldState['alarm_next']: ", oldState['alarm_next'])
 
 	if self.state['alarm_state'] ~= oldState['alarm_state'] or self.state['alarm_next'] ~= oldState['alarm_next'] then
 		log:debug('notify_playerAlarmState')
@@ -1209,7 +1209,7 @@ function _process_status(self, event)
 		if self.state['alarm_state'] == 'none' then
 			self.alarmState = nil
 			self.alarmNext  = nil
-			self.jnt:notify('playerAlarmState', self, nil, nil)
+			self.jnt:notify('playerAlarmState', self, 'none', nil)
 		else
 			self.alarmState = self.state['alarm_state']
 			self.alarmNext  = tonumber(self.state['alarm_next'])
