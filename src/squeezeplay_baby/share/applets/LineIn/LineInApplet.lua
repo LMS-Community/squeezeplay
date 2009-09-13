@@ -141,7 +141,7 @@ function notify_playerModeChange(self, player, mode)
 		return
 	end
 
-	if mode == "play" then
+	if mode == "play" and self:isLineInActive() then
 		log:info("player mode changed to play, deactivating line in")
 		self:activateLineIn(false)
 	end
