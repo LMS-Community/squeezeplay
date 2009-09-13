@@ -49,21 +49,20 @@ end
 
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
-
 	if player:isLocal() then
 
 		self.player = player
-		-- store alarmNext data
-		-- this will probably need to be stored in epoch secs eventually
+		-- store alarmNext data as epoch seconds
 		if alarmNext then
 			log:debug('storing seconds to next alarm:  ', alarmNext)
-	                self:getSettings()['alarmNext'] = alarmNext
+			local now = os.time()
+	                self:getSettings()['alarmNext'] = alarmNext + now
 			self:storeSettings()
 			if self.RTCAlarmTimer:isRunning() then
 				self.RTCAlarmTimer:stop()
 			end
-			self.RTCAlarmTimer:setInterval(alarmNext * 1000)
-			self.RTCAlarmTimer:start(alarmNext * 1000)
+			self.RTCAlarmTimer:setInterval(self:_timerToAlarm(alarmNext))
+			self.RTCAlarmTimer:start()
 		end
 
 		if alarmState == 'active' then
@@ -92,6 +91,20 @@ function notify_playerConnected(self, player)
 	end
 end
 
+
+-- returns milliseconds before the stored alarm from settings, stored in epoch secs
+function _timerToAlarm(self, alarmNext)
+
+	local now = os.time()
+	-- milliseconds to next alarm
+	-- if alarmNext is > now, assumption is that this is epochSecs alarmNext (from settings)
+	-- otherwise it's in raw seconds
+	if alarmNext > now then
+		return (alarmNext - now) * 1000
+	else
+		return alarmNext * 1000
+	end
+end
 
 function openAlarmWindow(self, fallback)
 
