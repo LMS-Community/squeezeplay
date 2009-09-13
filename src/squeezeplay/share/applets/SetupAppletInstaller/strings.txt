@@ -28,21 +28,6 @@ APPLET_FETCHING
 	RU	Получение списка Java-приложений
 	SV	Hämtar lista över appletar
 
-INSTALL
-	CS	Instalovat
-	DA	Installer
-	DE	Installieren
-	EN	Install
-	ES	Instalar
-	FI	Asenna
-	FR	Installer
-	IT	Installa
-	NL	Installeren
-	NO	Installer
-	PL	Zainstaluj
-	RU	Установить
-	SV	Installera
-
 NONE_FOUND
 	CS	Nenalezeny žádné aplety
 	DA	Der blev ikke fundet nogen underprogrammer
@@ -118,3 +103,32 @@ RESTART_JIVE
 	RU	\nПерезапуск
 	SV	\nStartar om
 
+DESCRIPTION
+	EN	Description
+
+CURRENT
+	EN	Current
+
+AUTHOR
+	EN	Author
+
+INSTALL
+	CS	Instalovat
+	DA	Installer
+	DE	Installieren
+	EN	Install
+	ES	Instalar
+	FI	Asenna
+	FR	Installer
+	IT	Installa
+	NL	Installeren
+	NO	Installer
+	PL	Zainstaluj
+	RU	Установить
+	SV	Installera
+
+REMOVE
+	EN	Remove
+
+INSTALLREMOVE
+	EN	Install/Remove
