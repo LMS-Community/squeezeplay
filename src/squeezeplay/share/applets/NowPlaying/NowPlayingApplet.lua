@@ -1,4 +1,4 @@
-local pairs, ipairs, tostring, type, setmetatable, tonumber = pairs, ipairs, tostring, type, setmetatable, tonumber
+local _assert, pairs, ipairs, tostring, type, setmetatable, tonumber = _assert, pairs, ipairs, tostring, type, setmetatable, tonumber
 
 local math             = require("math")
 local table            = require("jive.utils.table")
@@ -21,6 +21,8 @@ local RadioGroup       = require("jive.ui.RadioGroup")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Window           = require("jive.ui.Window")
+local Widget           = require("jive.ui.Widget")
+local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
                        
@@ -142,10 +144,11 @@ function _setTitleStatus(self, text, duration)
 		--artist and artistalbumTitle widget are used as title
 		local msgs = string.split("\n", text)
 
-		self.trackTitle:setValue(msgs[1], duration)
-
 		if #msgs > 1 then
-			self.artistalbumTitle:setValue(msgs[2], duration)
+			self.artistalbumTitle:setValue(msgs[1], duration)
+			self.trackTitle:setValue(msgs[2], duration)
+		else
+			self.trackTitle:setValue(msgs[1], duration)
 		end
 	else
 		--use title widget
@@ -200,21 +203,58 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		return
 	end
 
-	-- create the window to display
-	local window = _createUI(self)
-	if self.window then
-		window:replace(self.window, Window.transitionFadeIn)
-		self.window = window
+	if not self.window then
+		--no np window yet exists so don't need to create the window yet until user goes to np.
+		return
+	end
 
-	        if playerStatus and playerStatus.item_loop
-			and self.nowPlaying ~= nowPlaying
-		then
-			-- for remote streams, nowPlaying = text
-			-- for local music, nowPlaying = track_id
-			self.nowPlaying = nowPlaying
-	
-			--update everything
-			self:_updateAll(self)
+	if not self.snapshot then
+		self.snapshot = SnapshotWindow()
+	else
+		self.snapshot:refresh()
+	end
+	--temporarily swap in snapshot window of previous track window to allow for fade transition in to new track
+	self.snapshot:replace(self.window)
+	self.window:replace(self.snapshot, _nowPlayingTrackTransition)
+
+	if playerStatus and playerStatus.item_loop
+		and self.nowPlaying ~= nowPlaying
+	then
+		-- for remote streams, nowPlaying = text
+		-- for local music, nowPlaying = track_id
+		self.nowPlaying = nowPlaying
+
+		--update everything
+--		self:_updateAll(self) -- handled in WINDOW_ACTIVE listener
+	end
+end
+
+
+function _nowPlayingTrackTransition(oldWindow, newWindow)
+	_assert(oo.instanceof(oldWindow, Widget))
+	_assert(oo.instanceof(newWindow, Widget))
+
+	--single frame fade
+	local frames = 2
+	local scale = 255/frames
+	local animationCount = 0
+
+
+--	local bgImage = Framework:getBackground() --handled by SnapshotWindow
+	local sw, sh = Framework:getScreenSize()
+	local srf = Surface:newRGB(sw, sh)
+
+	oldWindow:draw(srf, LAYER_ALL)
+
+	return function(widget, surface)
+		local x = (frames  - 1 ) * scale
+
+		newWindow:draw(surface, LAYER_ALL)
+		srf:blitAlpha(surface, 0, 0, x)
+
+		frames = frames - 1
+		if frames == 0 then
+			Framework:_killTransition()
 		end
 	end
 end
@@ -1084,7 +1124,9 @@ function showNowPlaying(self, transition, direct)
 		transition = Window.transitionFadeIn
 	end
 
-	self.window = _createUI(self)
+	if not self.window then
+		self.window = _createUI(self)
+	end
 
 	self.player = appletManager:callService("getCurrentPlayer")
 
