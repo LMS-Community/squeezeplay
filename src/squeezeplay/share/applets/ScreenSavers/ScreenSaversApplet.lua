@@ -55,6 +55,7 @@ local _globalSsAllowedActions = {
 			["scanner_rew"] = 1,
 			["jump_fwd"] = 1,
 			["scanner_fwd"] = 1,
+			["shutdown"] = 1,
 		}
 
 function init(self, ...)
@@ -371,7 +372,8 @@ local _powerAllowedActions = {
 			["play_preset_7"] = 1,
 			["play_preset_8"] = 1,
 			["play_preset_9"] = 1,
-			["play"]            = "pause",
+			["play"]          = "pause",
+			["shutdown"]      = 1,
 		}
 
 function _powerActionHandler(self, actionEvent)
