@@ -51,26 +51,25 @@ local volumeMap = {
 16, 18, 22, 26, 31, 36, 43, 51, 61, 72, 85, 101, 120, 142, 168, 200, 237, 281, 333, 395, 468, 555, 658, 781, 926, 980, 1037, 1098, 1162, 1230, 1302, 1378, 1458, 1543, 1634, 1729, 1830, 1937, 2050, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3328, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 6144, 6400, 6656, 7168, 7680, 7936, 8448, 8960, 9472, 9984, 10752, 11264, 12032, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19968, 20992, 22272, 23552, 24832, 26368, 27904, 29696, 31232, 33024, 35072, 37120, 39424, 41728, 44032, 46592, 49408, 52224, 55296, 58624, 61952, 65536,
 }
 
-function __init(self)
-	local obj = oo.rawnew(self, {})
+function init(self)
 
-	obj.delta = 0
-	obj.volume = 51
+	self.delta = 0
+	self.volume = 51
 
-	obj.idleTimer = Timer(
+	self.idleTimer = Timer(
 		30000, 
 		function()
-			_volumeAutoAdjust(obj)
+			_volumeAutoAdjust(self)
 		end
 	)
-	obj.volumePrefSaver = Timer(
+	self.volumePrefSaver = Timer(
 		60000,
 		function()
-			_saveVolPref(obj)
+			_saveVolPref(self)
 		end
 	)
 
-        return obj
+        return self
 end
 
 

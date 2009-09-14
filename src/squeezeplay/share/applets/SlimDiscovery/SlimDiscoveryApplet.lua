@@ -206,47 +206,44 @@ end
 
 -- init
 -- Initializes the applet
-function __init(self, ...)
-
-	-- init superclass
-	local obj = oo.rawnew(self, Applet(...))
+function init(self, ...)
 
 	-- default poll list, udp broadcast
-	obj.poll = { [ "255.255.255.255" ] = "255.255.255.255" }
+	self.poll = { [ "255.255.255.255" ] = "255.255.255.255" }
 
 	-- slim discovery socket
-	obj.socket = SocketUdp(jnt,
+	self.socket = SocketUdp(jnt,
 		function(...)
-			_slimDiscoverySink(obj, ...)
+			_slimDiscoverySink(self, ...)
 		end)
 
 	-- udap discovery socket
-	obj.udap = Udap(jnt, 
+	self.udap = Udap(jnt, 
 		function(chunk, err)
 			self:_udapSink(chunk, err)
 		end)
 
 	-- wireless discovery
 	if hasNetworking then
-		obj.wireless = Networking:wirelessInterface(jnt)
+		self.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	-- discovery timer
-	obj.timer = Timer(DISCOVERY_PERIOD,
-			  function() obj:_discover() end)
+	self.timer = Timer(DISCOVERY_PERIOD,
+			  function() self:_discover() end)
 
 	-- initial state
-	obj.state = 'searching'
+	self.state = 'searching'
 
 	-- start discovering
 	-- FIXME we need a slight delay here to allow the settings to be loaded
 	-- really the settings should be loaded before the applets start.
-	obj.timer:restart(2000)
+	self.timer:restart(2000)
 
 	-- subscribe to the jnt so that we get network/server notifications
-	jnt:subscribe(obj)
+	jnt:subscribe(self)
 
-	return obj
+	return self
 end
 
 

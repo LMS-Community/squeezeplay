@@ -25,8 +25,6 @@ end
 
 function configureApplet(self)
 	-- snooze is a resident applet
-
--- don't do anything in the svn checkin until complete
 	appletManager:loadApplet("AlarmSnooze")
 
 	-- following lineonly used for testing

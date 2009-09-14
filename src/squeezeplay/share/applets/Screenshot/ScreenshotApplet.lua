@@ -84,15 +84,13 @@ local function _takeScreenshotAction(self)
 end
 
 
-function __init(self, ...)
+function init(self, ...)
 
-	-- init superclass
-	local obj = oo.rawnew(self, Applet(...))
-	obj.number = 1
+	self.number = 1
 	
-	Framework:addActionListener("take_screenshot", obj, _takeScreenshotAction)
+	Framework:addActionListener("take_screenshot", self, _takeScreenshotAction)
 	
-	return obj
+	return self
 end
 
 

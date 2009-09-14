@@ -60,10 +60,9 @@ local jnt              = jnt
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-function __init(self, ...)
-        local obj = oo.rawnew(self, Applet(...))
-	jnt:subscribe(obj)
-	return obj
+function init(self, ...)
+	jnt:subscribe(self)
+	return self
 
 end
 

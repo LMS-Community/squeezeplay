@@ -60,8 +60,7 @@ function _changeDutyCycle(self, newValue)
 end
 
 
-function __init(self, ...)
-	local obj = oo.rawnew(self, Applet(...))
+function init(self, ...)
 
 	-- skins, could be configurable via settings
 	local touchSkin = "WQVGAsmallSkin"
@@ -153,7 +152,7 @@ function __init(self, ...)
 		end,
 		-100)
 
-	return obj
+	return self
 end
 
 

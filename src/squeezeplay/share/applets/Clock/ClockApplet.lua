@@ -105,42 +105,40 @@ function Clock:notify_playerAlarmState(player, alarmSet)
 	self:Draw()
 end
 
-function Clock:__init(skin, windowStyle)
+function Clock:init(skin, windowStyle)
 	log:debug("Init Clock")
 
-	local obj = oo.rawnew(self)
-
-	obj.screen_width, obj.screen_height = Framework:getScreenSize()
+	self.screen_width, self.screen_height = Framework:getScreenSize()
 
 	-- the player object needs adding here for the alarm icon support
-	obj.player = Player:getLocalPlayer()
-	if obj.player then
-		jnt:subscribe(obj)
-		obj.alarmSet = obj.player:getAlarmState()
+	self.player = Player:getLocalPlayer()
+	if self.player then
+		jnt:subscribe(self)
+		self.alarmSet = self.player:getAlarmState()
 	else
-		obj.alarmSet = nil
+		self.alarmSet = nil
 	end
 
 	-- create window and icon
 	if not windowStyle then
 		windowStyle = 'Clock'
 	end
-	obj.window = Window(windowStyle)
-	obj.window:setSkin(skin)
-	obj.window:reSkin()
-	obj.window:setShowFrameworkWidgets(false)
+	self.window = Window(windowStyle)
+	self.window:setSkin(skin)
+	self.window:reSkin()
+	self.window:setShowFrameworkWidgets(false)
 
-	obj.window:addListener(EVENT_MOTION,
+	self.window:addListener(EVENT_MOTION,
 		function()
-			obj.window:hide(Window.transitionNone)
+			self.window:hide(Window.transitionNone)
 			return EVENT_CONSUME
 		end)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(obj.window)
+	manager:screensaverWindow(self.window)
 
-	return obj
+	return self
 end
 
 DotMatrix = oo.class({}, Clock)

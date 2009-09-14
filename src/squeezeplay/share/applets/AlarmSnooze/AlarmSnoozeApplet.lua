@@ -29,33 +29,41 @@ local jnt               = jnt
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-function __init(self, ...)
-        local obj = oo.rawnew(self, Applet(...))
-	jnt:subscribe(obj)
-	obj.alarmTone = "applets/AlarmSnooze/alarm.mp3"
+function init(self, ...)
 
-	-- arbitrarily set time interval, as it will be set again whenever it is invoked
-	obj.RTCAlarmTimer = Timer(86400,
+	local alarmNext = self:getSettings()['alarmNext']
+	log:warn(alarmNext)
+
+	jnt:subscribe(self)
+	self.alarmTone = "applets/AlarmSnooze/alarm.mp3"
+
+	local timeToAlarm
+	if alarmNext then
+		timeToAlarm = alarmNext
+	else
+		-- arbitrarily set timeToAlarmif there isn't one, 
+		-- as it will be set again whenever it is invoked by an alarmNext param
+		timeToAlarm = 86400
+	end
+	log:warn('RTC alarm timer: ', timeToAlarm)
+	self.RTCAlarmTimer = Timer(timeToAlarm,
 			function ()
 				log:warn("RTC ALARM FIRING")
 				appletManager:callService("deactivateScreensaver")
-				obj:openAlarmWindow(true)
+				self:openAlarmWindow(true)
 			end,
 			true
 	)
-	--FIXME: don't seem to be able to get settings values in the __init block
-	-- so this is broken
-	local settings = obj:getSettings()
-	local existingAlarm = settings and settings['alarmNext'] or nil
-	if existingAlarm and existingAlarm > 0 then
-		log:warn('resetting existing fallback alarm timer after reboot')
-		obj.RTCAlarmTimer:setInterval(obj:_timeToAlarm(existingAlarm))
-		obj.RTCAlarmTimer:start()
+	
+	if alarmNext then
+		log:warn('starting RTC alarm timer')
+		self.RTCAlarmTimer:start()
 	end
 
-	return obj
-	
+	return self
 end
+	
+
 
 
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
@@ -65,9 +73,9 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		self.player = player
 		-- store alarmNext data as epoch seconds
 		if alarmNext then
-			log:warn('storing seconds to next alarm:  ', alarmNext)
+			log:warn('storing epochseconds of next alarm:  ', alarmNext)
 			local now = os.time()
-	                self:getSettings()['alarmNext'] = alarmNext + now
+	                self:getSettings()['alarmNext'] = alarmNext
 			self:storeSettings()
 			if self.RTCAlarmTimer:isRunning() then
 				self.RTCAlarmTimer:stop()
@@ -77,7 +85,6 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		end
 
 		if alarmState == 'active' then
-			log:warn('open alarm window')
 			if player ~= Player:getCurrentPlayer() then
 				log:warn('alarm has fired locally, switching to local player')
                         	appletManager:callService("setCurrentPlayer", player)
@@ -88,8 +95,14 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 				self.alarmWindow = nil
 			end
 
+			if self.RTCAlarmTimer:isRunning() then
+				self.RTCAlarmTimer:stop()
+			end
+
 			appletManager:callService("deactivateScreensaver")
+			log:warn('open alarm window')
 			self:openAlarmWindow()
+
 		elseif alarmState == 'none' then
 			log:warn('no alarm, unset this')
 			self:getSettings()['alarmNext'] = nil
