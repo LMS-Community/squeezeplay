@@ -1246,7 +1246,9 @@ function _process_status(self, event)
 	--might use server volume
 	if useSequenceNumber then
 		if isSequenceNumberInSync then
-			local serverVolume = self.state["mixer volume"] and tonumber(self.state["mixer volume"]) or nil
+			--Ignore fractional component of volume
+			self.state["mixer volume"] = self.state["mixer volume"] and math.floor(tonumber(self.state["mixer volume"])) or nil
+			local serverVolume = self.state["mixer volume"]
 			if serverVolume ~= self:getVolume() then
 				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
 				if serverVolume == 0 and self:getVolume() and self:getVolume() < 0 then
