@@ -140,7 +140,7 @@ function _setTitleStatus(self, text, duration)
 	log:debug("_setTitleStatus", text)
 
 	local nowPlayingTitleStatusLabel = jiveMain:getSkinParam("nowPlayingTitleStatusLabel")
-	if nowPlayingTitleStatusLabel == "artist" then
+	if nowPlayingTitleStatusLabel == "artist" and self.artistalbumTitle then
 		--artist and artistalbumTitle widget are used as title
 		local msgs = string.split("\n", text)
 
@@ -150,7 +150,7 @@ function _setTitleStatus(self, text, duration)
 		else
 			self.trackTitle:setValue(msgs[1], duration)
 		end
-	else
+	elseif self.titleGroup then --might not exist yet if NP window hasn't yet been created
 		--use title widget
 		--only use first two lines, and slightly hackishly produce 3 lines with newline in between to get spacing right
 		local msgs = string.split("\n", text)
