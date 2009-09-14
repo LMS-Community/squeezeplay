@@ -104,13 +104,46 @@ RESTART_JIVE
 	SV	\nStartar om
 
 DESCRIPTION
+	CS	Popis
+	DA	Beskrivelse
+	DE	Beschreibung
 	EN	Description
+	ES	Descripción
+	FI	Kuvaus
+	FR	Description
+	IT	Descrizione
+	NL	Beschrijving
+	NO	Beskrivelse
+	PL	Opis
+	RU	Описание
+	SV	Beskrivning
 
 CURRENT
+	DA	Nu
+	DE	Aktuell
 	EN	Current
+	ES	Actual
+	FI	Nykyinen
+	FR	Actuellement
+	IT	Attualmente
+	NL	Het is nu
+	NO	Nåværende
+	SV	Aktuell
 
 AUTHOR
+	CS	Autor
+	DA	Lavet af
+	DE	Autor
 	EN	Author
+	ES	Autor
+	FI	Tekijä
+	FR	Auteur
+	IT	Autore
+	NL	Auteur
+	NO	Forfatter
+	PL	Autor
+	RU	Автор
+	SV	Upphovsman
 
 INSTALL
 	CS	Instalovat
@@ -128,7 +161,31 @@ INSTALL
 	SV	Installera
 
 REMOVE
+	CS	Odebrat
+	DA	Fjern
+	DE	Entfernen
 	EN	Remove
+	ES	Quitar
+	FI	Poista
+	FR	Supprimer
+	IT	Rimuovi
+	NL	Verwijderen
+	NO	Fjern
+	PL	Usuń
+	RU	Удалить
+	SV	Ta bort
 
 INSTALLREMOVE
+	CS	Instalovat/Odebrat
+	DA	Installer/Fjern
+	DE	Installieren/Entfernen
 	EN	Install/Remove
+	ES	Instalar/Quitar
+	FI	Asenna/Poista
+	FR	Installer/Supprimer
+	IT	Installa/Rimuovi
+	NL	Installeren/Verwijderen
+	NO	Installer/Fjern
+	PL	Zainstaluj/Usuń
+	RU	Установить/Удалить
+	SV	Installera/Ta bort
