@@ -239,6 +239,7 @@ function poweroff(self, now)
 
 	local timer = Timer(4000, function()
 		-- force poweroff (don't go through init)
+		log:info("... now")
 		os.execute("/bin/busybox poweroff -f")
 	end)
 	timer:start()
