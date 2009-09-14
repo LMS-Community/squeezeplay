@@ -265,14 +265,6 @@ function _addServerItem(self, server, address)
 
 	local currentPlayer    = appletManager:callService("getCurrentPlayer")
 
-	-- Bug 9900
-	-- squeezeplay cannot connect to production SN
-	--todo: this SN bit needs to be reviewed
-	if server and server:getIpPort() == "www.squeezenetwork.com" and 
-		currentPlayer and currentPlayer:getModel() == "squeezeplay" then
-			return
-	end
-
 	-- remove existing entry
 	if self.serverList[id] then
 		self.serverMenu:removeItem(self.serverList[id])

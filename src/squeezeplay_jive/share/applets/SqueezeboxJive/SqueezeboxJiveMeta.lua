@@ -72,8 +72,7 @@ function registerApplet(meta)
 	-- Set player device type
 	LocalPlayer:setDeviceType("controller", "Controller")
 
-	-- Bug 9900
-	-- Use SN test during development
+	-- SH hostname
 	jnt:setSNHostname("jive.squeezenetwork.com")
 
 	-- Set the minimum support server version

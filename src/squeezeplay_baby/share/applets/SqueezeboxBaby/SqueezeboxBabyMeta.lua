@@ -74,8 +74,7 @@ function registerApplet(meta)
 	-- System sound effects attenuation
 	Sample:setEffectAttenuation(Sample.MAXVOLUME / 25)
 
-	-- Bug 9900
-	-- Use SN test during development
+	-- SN hostname
 	jnt:setSNHostname("baby.squeezenetwork.com")
 
 	-- BSP is a resident Applet

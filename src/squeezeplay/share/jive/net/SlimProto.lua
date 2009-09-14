@@ -515,10 +515,6 @@ function connectTask(self, serverip)
 		self.txqueue = {}
 	end
 
-	-- Bug 9900
-	-- Don't allow connections to production SN yet
-	assert(not string.match(serverip, "www.squeezenetwork.com"))
-
 	if self.state == CONNECTED and self.serverip == serverip then
 		log:debug("already connected to ", self.serverip)
 		return
