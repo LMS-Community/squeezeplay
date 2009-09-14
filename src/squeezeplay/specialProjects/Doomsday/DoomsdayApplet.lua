@@ -49,6 +49,9 @@ function menu(self, menuItem)
 		{	
 			-- text for the menu item
 			text = self:string("DOOMSDAY_OPTION1"),
+			-- radio buttons (and checkboxes and choice items) 
+			-- need to be styled with the style 'item_choice' so the radio show up correctly
+			style = 'item_choice',
 			-- add a radiobutton with a callback function to be used when selected
 			icon = RadioButton(
 				-- skin style of radio button (defined in DefaultSkin)
@@ -70,7 +73,8 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION2"),
-			icon = RadioButton(
+			style = 'item_choice',
+			check = RadioButton(
 				"radio",
 				group,
 				function()
@@ -84,7 +88,8 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION3"),
-			icon = RadioButton(
+			style = 'item_choice',
+			check = RadioButton(
 				"radio",
 				group,
 				function()
@@ -98,7 +103,8 @@ function menu(self, menuItem)
 		},
 		{	
 			text = self:string("DOOMSDAY_OPTION4"),
-			icon = RadioButton(
+			style = 'item_choice',
+			check = RadioButton(
 				"radio",
 				group,
 				function()
@@ -113,7 +119,7 @@ function menu(self, menuItem)
 	})
 
 	-- create a window object
-	local window = Window("window", self:string("DOOMSDAY")) 
+	local window = Window("text_list", self:string("DOOMSDAY")) 
 	
 	-- add the SimpleMenu to the window
 	window:addWidget(menu)
@@ -125,8 +131,8 @@ end
 function warnMasses(self, warning)
 	log:info(self:string(warning))
 
-	-- create a Popup object, using already established 'currentsong' skin style
-	local doomsday = Popup('currentsong')
+	-- create a Popup object, using already established 'toast_popup' skin style
+	local doomsday = Popup('toast_popup')
 
 	-- add message to popup
 	local doomsdayMessage = Textarea('popupplay', self:string(warning))

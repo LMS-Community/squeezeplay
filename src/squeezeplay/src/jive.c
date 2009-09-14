@@ -23,10 +23,8 @@
 #include "common.h"
 #include "version.h"
 
-
 #include "audio/streambuf.h"
 #include "audio/decode/decode.h"
-
 
 #if defined (_MSC_VER)
 #include <windows.h>
@@ -38,16 +36,15 @@
 #include <lualib.h>
 
 /* Module initialization functions */
+extern int squeezeplay_system_init(lua_State *L);
+extern int squeezeplay_log_init(lua_State *L);
+
+extern int luaopen_squeezeplay_system(lua_State *L);
+extern int luaopen_log(lua_State *L);
 extern int luaopen_jive(lua_State *L);
 extern int luaopen_jive_ui_framework(lua_State *L);
 extern int luaopen_jive_net_dns(lua_State *L);
 extern int luaopen_jive_debug(lua_State *L);
-
-
-/* OPEN_ALL_STDLIBS
-** If defined, we will open all standard lua libraries
-*/
-#define OPEN_ALL_STDLIBS
 
 /* LUA_DEFAULT_SCRIPT
 ** The default script this program runs, unless another script is given
@@ -70,6 +67,7 @@ extern int luaopen_jive_debug(lua_State *L);
 // our lua state
 static lua_State *globalL = NULL;
 
+
 /* lmessage
 ** prints a message to std err. pname is optional 
 */
@@ -89,40 +87,7 @@ static void l_message (const char *pname, const char *msg) {
 /******************************************************************************/
 
 
-/* openlibs
-** open the libraries we want to use
-*/
-static void openlibs(lua_State *L) {
-
-#ifdef OPEN_ALL_STDLIBS
-
-	// default lua call to open all libs
-	 luaL_openlibs(L);
-
-#else
-	// individual selection; in this case they must be require-d from lua
-	lua_pushcfunction(L, luaopen_base);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_io);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_debug);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_package);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_string);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_table);
-	lua_call(L, 0, 0);
-	
-	lua_pushcfunction(L, luaopen_math);
-	lua_call(L, 0, 0);
-#endif
-
+static void squeezeplay_openlibs(lua_State *L) {
 	// jive version
 	lua_newtable(L);
 	lua_pushstring(L, JIVE_VERSION);
@@ -147,6 +112,12 @@ static void openlibs(lua_State *L) {
 
 	lua_pushcfunction(L, luaopen_streambuf);
 	lua_call(L, 0, 0);
+
+	lua_pushcfunction(L, luaopen_squeezeplay_system);
+	lua_call(L, 0, 0);
+
+	lua_pushcfunction(L, luaopen_log);
+	lua_call(L, 0, 0);
 }
 
 
@@ -170,8 +141,6 @@ char *dirname(char *path) {
 static void paths_setup(lua_State *L, char *app) {
 	char *temp, *binpath, *path;
 	
-	DEBUG_TRACE("Setting up paths");
-
 	temp = malloc(PATH_MAX+1);
 	if (!temp) {
 		l_message("Error", "malloc failure for temp");
@@ -204,8 +173,6 @@ static void paths_setup(lua_State *L, char *app) {
 	// directory containing jive
 	strcpy(binpath, dirname(path));
 
-	DEBUG_TRACE("* Jive binary directory: %s", binpath);
-
 	// set paths in lua (package.path & package cpath)
 	lua_getglobal(L, "package");
 	if (lua_istable(L, -1)) {
@@ -233,18 +200,13 @@ static void paths_setup(lua_State *L, char *app) {
 		strcpy(temp, binpath);
 		strcat(temp, "/" LUA_DEFAULT_PATH);
 		realpath(temp, path);
-		DEBUG_TRACE("* Script directory: %s", path);
 
 		luaL_addstring(&b, path);
 		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
-
 		
 		// set lua path
 		luaL_pushresult(&b);
-
-		DEBUG_TRACE("* LUA_PATH: %s", lua_tostring(L, -1));
 		lua_setfield(L, -2, "path");
-
 
 		luaL_buffinit(L, &b);
 
@@ -276,7 +238,6 @@ static void paths_setup(lua_State *L, char *app) {
 		// set lua cpath
 		luaL_pushresult(&b);
 
-		DEBUG_TRACE("* LUA_CPATH: %s", lua_tostring(L, -1));
 		lua_setfield(L, -2, "cpath");
 	}
 	else {
@@ -446,8 +407,6 @@ static int handle_script (lua_State *L, char **argv, int n) {
 		fname = LUA_DEFAULT_SCRIPT;
 	}
 
-	l_message("\nLoading", fname);
-
 	// use 'require' to search the lua path
 	lua_getglobal(L, "require");
 	lua_pushstring(L, fname);
@@ -504,7 +463,7 @@ static void redirect_stdio() {
 	}
 
 	get_stdout_file_path(stdoutpath);
-    get_stderr_file_path(stderrpath);
+	get_stderr_file_path(stderrpath);
     	
 	freopen(stdoutpath, TEXT("w"), stdout);
 	freopen(stderrpath, TEXT("w"), stderr);
@@ -529,15 +488,24 @@ static int pmain (lua_State *L) {
 	
 	// stop collector during initialization
 	lua_gc(L, LUA_GCSTOP, 0);
-	
-	// open libraries
-	openlibs(L);
+
+	// open lua libraries
+	luaL_openlibs(L);
+
+	// configure paths
+	paths_setup(L, argv[0]);
+
+	// init system and platform information
+	squeezeplay_system_init(L);
+
+	// init logging
+	squeezeplay_log_init(L);
+
+	// open squeezeplay libraries
+	squeezeplay_openlibs(L);
 	
 	// restart collector
 	lua_gc(L, LUA_GCRESTART, 0);
-
-	// setup our paths
-	paths_setup(L, argv[0]);
 
 #ifdef NO_STDIO_REDIRECT
 	/* SDL not redirecting. Instead, put console output in user writable directory - used for Vista, for instance which disallows writing to app dir */ 
@@ -558,6 +526,7 @@ static int pmain (lua_State *L) {
 	return 0;
 }
 
+
 /* main 
 */
 int main (int argc, char **argv) {
@@ -566,7 +535,7 @@ int main (int argc, char **argv) {
 	lua_State *L;
 
 	// say hello
-	l_message(NULL, "\nJive " JIVE_VERSION);
+	l_message(NULL, "\nSqueezeplay " JIVE_VERSION);
 	
 	// create state
 	L = lua_open();
@@ -585,7 +554,7 @@ int main (int argc, char **argv) {
 	
 	// close state
 	lua_close(L);
-	
+
 	// report status to caller
 	return (status || s.status) ? EXIT_FAILURE : EXIT_SUCCESS;
 }

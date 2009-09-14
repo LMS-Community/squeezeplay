@@ -27,7 +27,6 @@ local Textarea      = require("jive.ui.Textarea")
 local Popup         = require("jive.ui.Popup")
 local Timer         = require("jive.ui.Timer")
 
-local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
 
 local appletManager = appletManager
@@ -43,7 +42,7 @@ local gulp    = 20     -- get this many entries per request
 function menu(self, menuItem)
 
 	local list = {}
-	local window = Window("window", menuItem.text, "infobrowsertitle")
+	local window = Window("text_list", menuItem.text, "infobrowsertitle")
 	local menu = SimpleMenu("menu", list)
 	window:addWidget(menu)
 
@@ -66,7 +65,8 @@ function menu(self, menuItem)
 	if self.server then
 		self:request(nil, 0, window, menu, list)
 		self.timer = Timer(5000, function()
-									 window:addWidget(Textarea("help", self:string('INFOBROWSER_NORESPONSE')))
+									 menu:setHeaderWidget(Textarea("help_text", self:string('INFOBROWSER_NORESPONSE')))
+									 menu:reSkin()
 								 end)
 		self.timer:start()
 	end
@@ -109,7 +109,8 @@ function response(self, result, window, widget, list, prevmenu, locked)
 
 	-- display help if no feeds found
 	if result.loop_loop == nil then
-		window:addWidget(Textarea("help", self:string( 'INFOBROWSER_NOINFO_' .. (self.server:isSqueezeNetwork() and 'SN' or 'SC') ) ) )
+		prevmenu:setHeaderWidget(Textarea("help_text", self:string( 'INFOBROWSER_NOINFO_' .. (self.server:isSqueezeNetwork() and 'SN' or 'SC') ) ) )
+		prevmenu:reSkin()
 		return
 	end
 
@@ -123,7 +124,7 @@ function response(self, result, window, widget, list, prevmenu, locked)
 				sound = "WINDOWSHOW",
 				callback = function(_, menuItem)
 							   local newlist = {}
-							   local newwindow = Window("window", menuItem.text)
+							   local newwindow = Window("text_list", menuItem.text)
 							   -- assume new level is a menu for the moment, this is replaced later if it is not
 							   local newmenu = SimpleMenu("menu", newlist)
 							   newwindow:addWidget(newmenu)
@@ -136,26 +137,29 @@ function response(self, result, window, widget, list, prevmenu, locked)
 			window:setTitle(entry.name or entry.title)
 			if oo.instanceof(widget, SimpleMenu) then
 				window:removeWidget(widget)
-				widget = Textarea("textarea")
+				widget = Textarea("text")
 				window:addWidget(widget)
 			end
+
+			-- update the display, ensuring we go back to the top
+			widget.topLine = 0
 			widget:setValue(entry.description)
 
-                        local _navigateEntriesAction =  function (self, event)
-                        	local pre, c = _split(id)
-                        	if event:getAction() == "play" and c+1 < prevmenu.listSize then
-                        		c = c + 1
-                        	elseif event:getAction() == "add" and c > 0 then
-                        		c = c - 1
-                        	else
-                        		window:bumpRight()
-                        	end
-                        	-- fetch next item and update index on previous menu to match
-                        	self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
-                        	prevmenu:setSelectedIndex(c+1)
-                        	return EVENT_CONSUME
-                        
-                        end
+			local _navigateEntriesAction =  function (self, event)
+												local pre, c = _split(id)
+												if event:getAction() == "play" and c+1 < prevmenu.listSize then
+													c = c + 1
+												elseif event:getAction() == "add" and c > 0 then
+													c = c - 1
+												else
+													window:bumpRight()
+												end
+												-- fetch next item and update index on previous menu to match
+												self:request(pre .. "." .. tostring(c), 0, window, widget, list, prevmenu)
+												prevmenu:setSelectedIndex(c+1)
+												return EVENT_CONSUME
+												
+											end
 			
 			widget:addActionListener("play", self, _navigateEntriesAction)
 			widget:addActionListener("add", self, _navigateEntriesAction)

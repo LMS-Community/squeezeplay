@@ -28,6 +28,8 @@ extern size_t streambuf_get_freebytes(void);
 
 extern size_t streambuf_get_usedbytes(void);
 
+extern size_t streambuf_fast_usedbytes(void);
+
 extern bool_t streambuf_would_wait_for(size_t bytes);
 
 extern void streambuf_get_status(size_t *size, size_t *usedbytes, u32_t *bytesL, u32_t *bytesH);

@@ -8,7 +8,6 @@ local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
 local io                     = require("io")
-local log                    = require("jive.utils.log").logger("applets.misc")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
@@ -25,7 +24,7 @@ oo.class(_M, Applet)
 
 
 function settingsShow(self)
-	local window = Window("window", self:string("TEST_MOTION"), 'settingstitle')
+	local window = Window("text_list", self:string("TEST_MOTION"), 'settingstitle')
 --"Test Motion")
 
 	self.valX = Slider("slider", 0, 127, 0)
@@ -36,12 +35,12 @@ function settingsShow(self)
 	self.maxY = Slider("slider", 0, 127, 0)
 	self.maxZ = Slider("slider", 0, 127, 0)
 
-	window:addWidget(Label("item", self:string("TEST_MOTION_VALUE")))
+	window:addWidget(Label("text", self:string("TEST_MOTION_VALUE")))
 	window:addWidget(self.valX)
 	window:addWidget(self.valY)
 	window:addWidget(self.valZ)
 
-	window:addWidget(Label("item", self:string("TEST_MOTION_MAX")))
+	window:addWidget(Label("text", self:string("TEST_MOTION_MAX")))
 	window:addWidget(self.maxX)
 	window:addWidget(self.maxY)
 	window:addWidget(self.maxZ)

@@ -24,6 +24,8 @@ include Makefile.am.jive-install.include
 install-data-local: jive-static-install
 	##eliminate anything we still want private
 	rm -rf $(JIVE_BUILD_DIR)/strict.lua
+	rm -rf $(JIVE_BUILD_DIR)/applets/*/images/Reference_Screens
+	rm -rf $(JIVE_BUILD_DIR)/applets/*/images/Guidelines
 
 
 OSX_LIB_DIR = $(PREFIX)/lib
@@ -45,7 +47,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(OSX_LIB_DIR)/libSDLmain.a \
 	$(OSX_LIB_DIR)/libpng.a \
 	$(OSX_LIB_DIR)/libjpeg.a \
-	$(JIVE_DEPENDENCIES_LIB_DIR)/libjiveaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjivenet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libjiveui.a
+	$(JIVE_DEPENDENCIES_LIB_DIR)/libaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libnet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libui.a $(JIVE_DEPENDENCIES_LIB_DIR)/libdecode.a
 
 SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	$(CC) $(LDFLAGS) \
@@ -54,7 +56,7 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
 	-lSystemStubs \
-	-lz
+	-lz -lresolv
 
 BUNDLE_NAME = SqueezePlay.app
 APP_NAME = SqueezePlay Beta
@@ -138,7 +140,7 @@ squeezeplay-deb:
 	cd ../platforms; fakeroot dpkg-buildpackage -b; ls -lah ../squeezeplay*.deb
 
 # Convenience library:
-noinst_LTLIBRARIES = libjiveui.la libjiveaudio.la libjivenet.la
+noinst_LTLIBRARIES = libui.la libaudio.la libdecode.la libnet.la
 
 BUILT_SOURCES = \
 	src/ui/lua_jiveui.c \
@@ -156,7 +158,7 @@ src/version.h: FORCE
 
 FORCE:
 
-libjiveui_la_SOURCES = \
+libui_la_SOURCES = \
 	src/ui/jive_event.c \
 	src/ui/jive_font.c \
 	src/ui/jive_framework.c \
@@ -178,13 +180,21 @@ libjiveui_la_SOURCES = \
 	src/ui/jive_window.c \
 	src/ui/lua_jiveui.c
 
-libjiveui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
+libui_la_LIBADD = -ltolua++ -llua -lSDL_image -lSDL_ttf -lSDL_gfx -lSDL
 
-libjiveaudio_la_SOURCES = \
+libaudio_la_CFLAGS = -DRESAMPLE_EFFECTS -DOUTSIDE_SPEEX -DFIXED_POINT -DRANDOM_PREFIX=jive -DEXPORT=""
+
+libaudio_la_SOURCES = \
+	src/audio/decode/audio_helper.c \
+	src/audio/speex/resample.c \
 	src/audio/fifo.c \
-	src/audio/fixed_math.c \
+	src/audio/fixed_math.c
+
+libdecode_la_SOURCES = \
+	src/audio/mp4.c \
 	src/audio/mqueue.c \
 	src/audio/streambuf.c \
+	src/audio/alac/alac.c \
 	src/audio/decode/decode.c \
 	src/audio/decode/decode_alsa.c \
 	src/audio/decode/decode_flac.c \
@@ -193,21 +203,24 @@ libjiveaudio_la_SOURCES = \
 	src/audio/decode/decode_pcm.c \
 	src/audio/decode/decode_portaudio.c \
 	src/audio/decode/decode_sample.c \
-	src/audio/decode/decode_tones.c \
-	src/audio/decode/decode_vorbis.c
+	src/audio/decode/decode_vorbis.c \
+	src/audio/decode/decode_alac.c
 
 
-libjiveaudio_la_LIBADD = -lSDL -lFLAC -lmad -lvorbisidec
+libdecode_la_LIBADD = libaudio.la -lSDL -lFLAC -lmad -lvorbisidec
 
-libjivenet_la_SOURCES = \
+libnet_la_SOURCES = \
 	src/net/jive_dns.c
 
-libjivenet_la_LIBADD = -lSDL
+libnet_la_LIBADD = -lSDL -lresolv
 
 
 # Program: jivebrowser
+if ALSA_ENABLED
+bin_PROGRAMS = jive jive_alsa
+else
 bin_PROGRAMS = jive
-
+endif
 
 # Test programs: jiveblit
 testdir = $(bindir)
@@ -220,9 +233,15 @@ endif
 
 jive_SOURCES = \
 	src/jive.c \
-	src/jive_debug.c
+	src/jive_debug.c \
+	src/log.c
 
-jive_LDADD = libjiveui.la libjiveaudio.la libjivenet.la -llua
+jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
+
+jive_alsa_SOURCES = \
+	src/audio/decode/decode_alsa_backend.c
+
+jive_alsa_LDADD = libaudio.la -lasound
 
 
 # Test program: jiveblit

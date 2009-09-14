@@ -24,6 +24,7 @@ local os                 = require("os")
 local string             = require("string")
 
 local Applet             = require("jive.Applet")
+local System             = require("jive.System")
 local SimpleMenu         = require("jive.ui.SimpleMenu")
 local RadioGroup         = require("jive.ui.RadioGroup")
 local RadioButton        = require("jive.ui.RadioButton")
@@ -38,7 +39,6 @@ local LocalPlayer        = require("jive.slim.LocalPlayer")
 
 local hasNetworking, Networking  = pcall(require, "jive.net.Networking")
 
-local log                = require("jive.utils.log").logger("applets.setup")
 local debug              = require("jive.utils.debug")
 
 local SetupSqueezeboxApplet = require("applets.SetupSqueezebox.SetupSqueezeboxApplet")
@@ -62,10 +62,7 @@ function init(self, ...)
 	self.scanResults = {}
 
 	if hasNetworking then
-		local wirelessInterface = Networking:wirelessInterface()
-		if wirelessInterface then
-			self.wireless = Networking(jnt, wirelessInterface)
-		end
+		self.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	jnt:subscribe(self)
@@ -151,13 +148,21 @@ function manageSelectPlayerMenu(self)
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
 	if _numberOfPlayers > 1 or not currentPlayer then
 		if not self.selectPlayerMenuItem then
+			local node = "home"
+			local weight = 80
+			if System:getMachine() ~= "jive" then
+				node = "settings"
+				weight = 50
+			end
+
 			local menuItem = {
 				id = 'selectPlayer',
-				node = 'home',
+				iconStyle = 'hm_selectPlayer',
+				node = node,
 				text = self:string("SELECT_PLAYER"),
 				sound = "WINDOWSHOW",
 				callback = function() self:setupShowSelectPlayer() end,
-				weight = 80
+				weight = weight,
 			}
 			jiveMain:addItem(menuItem)
 			self.selectPlayerMenuItem = menuItem
@@ -176,6 +181,17 @@ function _addPlayerItem(self, player)
 	local playerName = player:getName()
 	local playerWeight = PLAYER_WEIGHT
 
+	-- 08/29/09 - fm
+	-- Only allow Controller to setup not yet setup players (i.e. Receiver)
+	-- If other squeezeplay based devices need to be able to setup players
+	--  additional work is needed as soon as this devices not only have
+	--  a wireless interface but ethernet also. If such a device is using
+	--  ethernet itself it can only setup a player to also using ethernet
+	--  since wireless parameters are not available.
+	if System:getMachine() ~= "jive" and player.config == "needsNetwork" then
+		return
+	end
+
 	-- create a lookup table of valid models, 
 	-- so Choose Player does not attempt to render a style that doesn't exist
 	local validModel = {
@@ -190,9 +206,12 @@ function _addPlayerItem(self, player)
 		controller  = true,
 		squeezeplay = true,
 		http        = true,
+		fab4        = true,
+		baby        = true,
 	}
 
 	local playerModel = player:getModel()
+log:warn(playerModel)
 
 	-- guess model by mac address if we don't have one available
 	-- this is primarily used for players on the network waiting to be setup
@@ -222,22 +241,26 @@ function _addPlayerItem(self, player)
 
 	local item = {
 		id = mac,
-		style = playerModel,
-		text = "\n" .. playerName,
+		style = 'item',
+		iconStyle = "player_" .. playerModel,
+		text = playerName,
 		sound = "WINDOWSHOW",
 		callback = function()
+			log:info("select player item: ", player)
 			if self:selectPlayer(player) then
+				log:info("going to setupnext: : ", self.setupNext)
 				self.setupNext()
 			end
 		end,
 		focusGained = function(event)
 			self:_showWallpaper(mac)
+			return EVENT_UNUSED
 		end,
 		weight = playerWeight
 	}
 
 	if player == self.selectedPlayer and player:isConnected() then
-		item.style = playerModel .. "checked"
+		item.style = "item_checked"
 	end
 
 	self.playerMenu:addItem(item)
@@ -267,7 +290,7 @@ function _refreshPlayerItem(self, player)
 		else
 			-- update player state
 			if player == self.selectedPlayer then
-				item.style = "checked"
+				item.style = "item_checked"
 			end
 		end
 
@@ -298,7 +321,7 @@ function _updateServerItem(self, server)
 		text = server:getName(),
 		sound = "WINDOWSHOW",
 		callback = function()
-			appletManager:callService("squeezeCenterPassword", server)
+			appletManager:callService("squeezeCenterPassword", server, nil, nil, true)
 		end,
 		weight = SERVER_WEIGHT,
 	}
@@ -320,17 +343,17 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 		windowStyle = 'settingstitle'
 	end
 	-- get list of slimservers
-	local window = Window("window", self:string("SELECT_PLAYER"), windowStyle)
+	local window = Window("text_list", self:string("SELECT_PLAYER"), windowStyle)
 	window:setAllowScreensaver(false)
 
-        local menu = SimpleMenu("albummenu")
+        local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	self.playerMenu = menu
 	self.setupMode = setupNext ~= nil
 	self.setupNext = setupNext or 
 		function()
-			window:hide(Window.transitionPushLeft)
+			jiveMain:closeToHome()
 		end
 
 	self.selectedPlayer = appletManager:callService("getCurrentPlayer")
@@ -343,15 +366,24 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 		_updateServerItem(self, server)
 	end
 
+	-- 08/29/09 - fm
+	-- Only allow Controller to setup not yet setup players (i.e. Receiver)
+	-- If other squeezeplay based devices need to be able to setup players
+	--  additional work is needed as soon as this devices not only have
+	--  a wireless interface but ethernet also. If such a device is using
+	--  ethernet itself it can only setup a player to also using ethernet
+	--  since wireless parameters are not available.
+
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	if setupNext then
+	if setupNext and System:getMachine() == "jive" then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				appletManager:callService("setupSqueezeboxSettingsShow")
+				appletManager:callService("setupSqueezeboxSettingsShow", self.setupNext)
 			end,
-			style = 'receiver',
+			iconStyle = 'receiver',
+			style = 'item',
 			weight = 10,
 		})
 	end
@@ -395,8 +427,8 @@ function _showPopulatingPlayersPopup(self, timer)
                 return
         end
 
-        local popup = Popup("popupIcon")
-        local icon  = Icon("iconConnecting")
+        local popup = Popup("waiting_popup")
+        local icon  = Icon("icon_connecting")
         local label = Label("text", self:string("SEARCHING"))
         popup:addWidget(icon)
         popup:addWidget(label)
@@ -417,7 +449,8 @@ function selectPlayer(self, player)
 	-- if connecting to SqueezeNetwork, first check we are linked
 	if player:getPin() then
 		-- as we are not linked this is a dummy player, after we need linked we
-		-- need to return to the choose player screen 
+		-- need to return to the choose player screen
+		log:info("calling enterPin")
 		appletManager:callService("enterPin", nil, player)
 
 		return false
@@ -429,10 +462,11 @@ function selectPlayer(self, player)
 
 	-- network configuration needed?
 	if player:needsNetworkConfig() then
-		appletManager:callService("startSqueezeboxSetup", 
+		log:info("needsNetworkConfig")
+		appletManager:callService("startSqueezeboxSetup",
 			player:getId(),
 			player:getSSID(),
-			function()
+			self.setupNext or function()
 				jiveMain:closeToHome()
 			end
 		)
@@ -440,7 +474,9 @@ function selectPlayer(self, player)
 	end
 
 	-- udap setup needed?
-	if player:needsMusicSource() then
+	if player:needsMusicSource() and not self.setupNext then
+		log:info("selectMusicSource")
+		--todo review this with new SlimMenus changes
 		appletManager:callService("selectMusicSource")
 		return false
 	end

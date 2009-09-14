@@ -65,7 +65,7 @@ oo.class(_M, Socket)
 
 -- _createUdpSocket
 -- creates our socket safely
-local _createUdpSocket = socket.protect(function()
+local _createUdpSocket = socket.protect(function(localport)
 	--log:debug("_createUdpSocket()")
 	
 	local sock = socket.try(socket.udp())
@@ -75,6 +75,10 @@ local _createUdpSocket = socket.protect(function()
 	try(sock:setoption("broadcast", true))
 	try(sock:settimeout(0))
 	
+	if localport then
+		try(sock:setsockname( '*', localport))
+	end	
+
 	return sock
 end)
 
@@ -101,7 +105,7 @@ B<port> : the source port
 
 =cut
 --]]
-function __init(self, jnt, sink, name)
+function __init(self, jnt, sink, name, localport)
 	--log:debug("SocketUdp:__init()")
 
 --	_assert(sink)
@@ -110,7 +114,7 @@ function __init(self, jnt, sink, name)
 	local obj = oo.rawnew(self, Socket(jnt, name))
 
 	-- create a udp socket
-	local sock, err = _createUdpSocket()
+	local sock, err = _createUdpSocket( localport)
 	
 	if err then
 		log:error(err)
@@ -203,7 +207,7 @@ function t_getWritePump(self, t_source)
 		local err = socket.skip(1, ltn12.pump.step(t_source, sink))
 		
 		if err then
-			log:error("SocketUdp:writePump:", err)
+			log:warn("SocketUdp:writePump:", err)
 		end
 	end
 end

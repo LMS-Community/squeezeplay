@@ -34,7 +34,7 @@ local _assert, next, tostring, table, ipairs, pairs, pcall, select, setmetatable
 local io                = require("io")
 local os                = require("os")
 local socket            = require("socket")
-local string            = require("string")
+local string            = require("jive.utils.string")
 local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
 local oo                = require("loop.base")
@@ -78,8 +78,8 @@ local function _add(sock, task, sockList, timeout)
 		sockList[sock] = {
 			lastSeen = Framework:getTicks()
 		}
-	else
-		-- else remove previous task
+	elseif sockList[sock].task and sockList[sock].task ~= task then
+		-- else remove previous task if different
 		sockList[sock].task:removeTask()
 	end	
 
@@ -143,7 +143,7 @@ local function _timeout(now, sockList)
 		-- we want the second case, the sock is a userdata (implemented by LuaSocket)
 		-- we also want the timeout to exist and have expired
 		if type(v) == "userdata" and t.timeout > 0 and now - t.lastSeen > t.timeout then
-			log:error("network thread timeout for ", t.task)
+			log:warn("network thread timeout for ", t.task)
 			t.task:addTask("inactivity timeout")
 		end
 	end
@@ -194,7 +194,7 @@ end
 local function _run(self, timeout)
 	local ok, err
 
-	log:info("NetworkThread starting...")
+	log:debug("NetworkThread starting...")
 
 	while true do
 		local timeoutSecs = timeout / 1000
@@ -253,7 +253,7 @@ function notify(self, event, ...)
 	for i=1, select('#', ...) do
 		a[i] = tostring(select(i, ...))
 	end
-	log:info("NOTIFY: ", event, "(", table.concat(a, ", "), ")")
+	log:debug("NOTIFY: ", event, "(", table.concat(a, ", "), ")")
 	
 	local method = "notify_" .. event
 	
@@ -411,11 +411,24 @@ function arp(self, host, sink)
 			if chunk then
 					arp = arp .. chunk
 			else
-					local mac = string.match(arp, "%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x[:-]%x%x")
+					local mac = string.match(arp, "%x+[:-]%x+[:-]%x+[:-]%x+[:-]%x+[:-]%x+")
 					if mac then
 							mac = string.gsub(mac, "-", ":")
+							--pad 0 to front of any single character element (needed for at least OS X)
+							local elements = string.split(":", mac)
+							mac = ""
+							for i,element in ipairs(elements) do
+								if string.len(element) == 1 then
+									mac = mac .. "0"
+								end
+								mac = mac .. element
+
+								if i < #elements then
+									mac = mac .. ":"
+								end
+							end
 					end
-					
+
 					sink(mac)
 			end
 	end)

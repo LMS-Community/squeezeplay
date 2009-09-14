@@ -39,7 +39,7 @@ local RadioGroup = require("jive.ui.RadioGroup")
 
 local math = require("math")
 local debug = require("jive.utils.debug")
-local log = require("jive.utils.log").logger("player.browse.data")
+local log = require("jive.utils.log").logger("applet.SlimBrowser.data")
 
 -- our class
 module(..., oo.class)
@@ -77,6 +77,9 @@ function menuStyle(self)
 	return self.windowSpec.menuStyle
 end
 
+function windowStyle(self)
+	return self.windowSpec.windowStyle
+end
 
 function labelItemStyle(self)
 	return self.windowSpec.labelItemStyle
@@ -142,6 +145,9 @@ function updateStatus(self, chunk)
 			self.windowSpec.menuStyle = window.menuStyle .. "menu"
 			self.windowSpec.labelItemStyle = window.menuStyle .. "item"
 		end
+		if window.windowStyle then
+			self.windowSpec.windowStyle = window.windowStyle
+		end
 	end
 
 
@@ -159,7 +165,7 @@ function menuItems(self, chunk)
 
 	-- we may be called with no chunk, f.e. when building the window
 	if not chunk then
-		return self, self.count
+		return self.count
 	end
 
 	-- update the status
@@ -187,7 +193,7 @@ function menuItems(self, chunk)
 
 	self.store[key] = chunk["item_loop"]
 
-	return self, self.count, cFrom, cTo
+	return self.count, cFrom, cTo
 end
 
 
@@ -285,7 +291,7 @@ function missing(self, index)
 	-- if both down and up are done, then we are done
 	if self.downCompleted and self.upCompleted then
 		-- if we reach here we're complete (for next time)
-		log:warn(self, " scan complete (calculated)")
+		log:debug(self, " scan complete (calculated)")
 		self.complete = true
 		return
 	end

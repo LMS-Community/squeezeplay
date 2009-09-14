@@ -23,7 +23,6 @@ local pairs, type = pairs, type
 local table           = require("table")
 
 local oo              = require("loop.simple")
-local logging         = require("logging")
 
 local Applet          = require("jive.Applet")
 local RadioButton     = require("jive.ui.RadioButton")
@@ -33,10 +32,8 @@ local Checkbox      = require("jive.ui.Checkbox")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
-local jul             = require("jive.utils.log")
 
 local JiveMain        = jiveMain
-local log             = jul.logger("applets.browser")
 
 
 module(..., Framework.constants)
@@ -44,7 +41,7 @@ oo.class(_M, Applet)
 
 
 function selectSkin(self, menuItem)
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
 
@@ -55,7 +52,8 @@ function selectSkin(self, menuItem)
 	for appletName, name in JiveMain:skinIterator() do
 		menu:addItem({
 			text = name,
-			icon = RadioButton(
+			style = 'item_choice',
+			check = RadioButton(
 				"radio", 
 				group, 
 				function()
@@ -68,17 +66,6 @@ function selectSkin(self, menuItem)
 			)
 		})
 	end
-	menu:addItem({
-		text = self:string("FULLSCREEN_MODE"),
-		icon = Checkbox(
-			"checkbox", 
-			function(object, isSelected)
-				JiveMain:setFullscreen(isSelected)
-				JiveMain:reloadSkin()
-			end,
-			JiveMain:isFullscreen()
-		)
-	})
 
 	window:addWidget(menu)
 

@@ -1,7 +1,7 @@
 #
 
 SETUPNETTEST
-	CS	Síťový test
+	CS	Test sítě
 	DA	Test af netværk
 	DE	Netzwerktest
 	EN	Network Test
@@ -16,19 +16,19 @@ SETUPNETTEST
 	SV	Nätverkstest
 
 SETUPNETTEST_NOSERVER
-	CS	Server, ke kterému je nyní přehrávač připojen, nepodporuje síťové testy.  Zajistěte, aby byl povolen zásuvný modul Server and Network Health na vašem serveru.
-	DA	Netværkstest understøttes ikke af den server som afspilleren er tilsluttet.  Kontroller at udvidelsesmodulet Server- og netværkstilstand er aktiveret på serveren.
-	DE	Netzwrktests werden nicht vom Server, mit dem dieser Player derzeit verbunden ist, unterstützt.  Vergewissern Sie sich, dass das Plugin 'Zustand von Server und Netzwerk' auf dem Server aktiviert ist.
-	EN	Network tests are not supported by the server which this player is currently attached to.  Please ensure the Server and Network Health plugin is enabled on your server.
+	CS	Server, ke kterému je nyní přehrávač připojen, nepodporuje síťové testy.  Zajistěte, aby byl na vašem serveru povolen zásuvný modul pro test sítě.
+	DA	Netværkstest understøttes ikke af den server som afspilleren er tilsluttet.  Kontroller at udvidelsesmodulet til test af netværk er aktiveret på serveren.
+	DE	Netzwerktests werden von dem Server, mit dem dieser Player derzeit verbunden ist, nicht unterstützt. Prüfen Sie, ob das Netzwerktest-Plugin auf dem Server aktiviert ist.
+	EN	Network tests are not supported by the server which this player is currently attached to.  Please ensure the Network Test plugin is enabled on your server.
 	ES	El servidor al cual se ha adjuntado el reproductor no admite pruebas de red. Asegúrese de que el complemento de estado de servidor y red está activado en su servidor.
-	FI	Palvelin, johon soitin on tällä hetkellä yhdistettynä, ei tue verkkotestejä.  Varmista, että palvelimen ja verkon kunnon laajennus on käytössä palvelimessa.
-	FR	Les tests réseau ne sont pas pris en charge par le serveur auquel cette platine est actuellement connectée. Veuillez vérifier que le plugin Contrôle Serveur et réseau est activé sur votre serveur.
-	IT	Le verifiche di rete non sono supportate dal server correntemente collegato al lettore. Assicurarsi che il plugin dello stato del server e della rete sia attivato nel server.
-	NL	Netwerktests worden niet ondersteund door de server waarmee dit muzieksysteem momenteel verbonden is. Zorg ervoor dat de plug-in Server- en netwerkstatus op je server is ingeschakeld.
-	NO	Nettverkstester støttes ikke av serveren som denne spilleren er koplet til for øyeblikket. Forsikre deg om at plugin-modulen Server- og nettverksstatus er aktivert på serveren.
-	PL	Testy sieci nie są obsługiwane przez serwer, z którym aktualnie jest połączony ten odtwarzacz. Upewnij się, czy na serwerze włączono wtyczki Serwer i Stan sieci.
-	RU	Сетевые тесты не поддерживаются сервером, к которому в данный момент подключен плеер. Убедитесь, что на сервере включен плагин состояния сервера и сети.
-	SV	Servern som spelaren är ansluten till har inte stöd för nätverkstester.  Kontrollera att plugin-programmet Server- och nätverksfunktionalitet har aktiverats på servern.
+	FI	Palvelin, johon soitin on tällä hetkellä yhdistettynä, ei tue verkkotestejä.  Varmista, että verkkotestin laajennus on käytössä palvelimessa.
+	FR	Les tests réseau ne sont pas pris en charge par le serveur auquel cette platine est actuellement connectée. Veuillez vérifier que le plugin Test réseau est activé sur votre serveur.
+	IT	Le verifiche di rete non sono supportate dal server correntemente collegato al lettore. Assicurarsi che il plugin delle verifiche di rete sia attivato nel server.
+	NL	Netwerktests worden niet ondersteund door de server waarmee dit muzieksysteem momenteel verbonden is. Zorg ervoor dat de plug-in Netwerktest op je server is ingeschakeld.
+	NO	Nettverkstester støttes ikke av serveren som denne spilleren er koplet til for øyeblikket. Forsikre deg om at plugin-modulen Nettverkstesting er aktivert på serveren.
+	PL	Testy sieci nie są obsługiwane przez serwer, z którym aktualnie jest połączony ten odtwarzacz. Upewnij się, czy na serwerze włączono wtyczkę Test sieci.
+	RU	Сетевые тесты не поддерживаются сервером, к которому в данный момент подключен плеер. Убедитесь, что на сервере включен подключаемый модуль тестирования сети.
+	SV	Servern som spelaren är ansluten till saknar stöd för nätverkstester.  Kontrollera att plugin-programmet för nätverkstest har aktiverats på servern.
 
 SETUPNETTEST_TESTING
 	CS	Testuji:
@@ -113,7 +113,7 @@ SETUPNETTEST_HELPTITLE
 	ES	Ayuda de prueba de red
 	FI	Verkkotestin ohje
 	FR	Aide sur le test réseau
-	IT	Guida verifica rete
+	IT	Guida sulla verifica della rete
 	NL	Help voor netwerktest
 	NO	Hjelp til nettverkstesting
 	PL	Pomoc do testu sieci

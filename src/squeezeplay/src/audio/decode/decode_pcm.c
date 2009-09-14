@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/streambuf.h"
@@ -48,26 +46,41 @@ static sample_t pcm_read8bitLE(u8_t *pos) {
 }
 
 static sample_t pcm_read16bitBE(u8_t *pos) { 
-	return (sample_t) (*pos << 24) | (*++pos << 16);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	return sample;
 }
 
 static sample_t pcm_read16bitLE(u8_t *pos) {
-	return (sample_t) (*pos << 16) | (*++pos << 24);
+	sample_t sample = *pos << 16;
+	sample |= *++pos << 24;
+	return sample;
 }
 
 static sample_t pcm_read24bitBE(u8_t *pos) {
-	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	sample |= *++pos << 8;
+	return sample;
 }
 
 static sample_t pcm_read24bitLE(u8_t *pos) {
-	return (sample_t) (*pos << 8) | (*++pos << 16) | (*++pos << 24);
+	sample_t sample = *pos << 8;
+	sample |= *++pos << 16;
+	sample |= *++pos << 24;
+	return sample;
 }
 
 static sample_t pcm_read32bitBE(u8_t *pos) {
-	return (sample_t) (*pos << 24) | (*++pos << 16) | (*++pos << 8) | (*++pos);
+	sample_t sample = *pos << 24;
+	sample |= *++pos << 16;
+	sample |= *++pos << 8;
+	sample |= *++pos;
+	return sample;
 }
 
 static sample_t pcm_read32bitLE(u8_t *pos) { 
+	/* XXX should this not increment pos? */
 	return *((sample_t *)(void *)pos);
 }
 
@@ -93,11 +106,6 @@ static bool_t decode_pcm_callback(void *data) {
 	u32_t s, num_samples;
 	sample_t sample;
 	size_t sz;
-
-
-	if (!decode_output_can_write(sizeof(sample_t) * BLOCKSIZE, self->sample_rate)) {
-		return FALSE;
-	}
 
 	sz = streambuf_read(self->read_buffer + self->leftover, 0, BLOCKSIZE - self->leftover, NULL);
 	if (!sz) {
@@ -142,22 +150,15 @@ static bool_t decode_pcm_callback(void *data) {
 }		
 
 
-static u32_t decode_pcm_period(void *data) {
-	struct decode_pcm *self = (struct decode_pcm *) data;
-
-	if (self->sample_rate <= 48000) {
-		return 8;
-	}
-	else {
-		return 1;
-	}
+static size_t decode_pcm_samples(void *data) {
+	return BLOCKSIZE;
 }
 
 
 static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 	struct decode_pcm *self;
 
-	DEBUG_TRACE("decode_pcm_start()");
+	LOG_DEBUG(log_audio_codec, "decode_pcm_start()");
 
 	self = malloc(sizeof(struct decode_pcm));
 	memset(self, 0, sizeof(struct decode_pcm));
@@ -167,7 +168,7 @@ static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 	self->stereo = (params[2] == '2');
 	self->big_endian = (params[3] == '0');
 
-	DEBUG_TRACE("sample_size=%d sample_rate=%d stereo=%d big_endian=%d",
+	LOG_DEBUG(log_audio_codec, "sample_size=%d sample_rate=%d stereo=%d big_endian=%d",
 		    self->sample_size, self->sample_rate, self->stereo, self->big_endian);
 
 	self->read_buffer = malloc(sizeof(u8_t) * BLOCKSIZE);
@@ -180,7 +181,7 @@ static void *decode_pcm_start(u8_t *params, u32_t num_params) {
 static void decode_pcm_stop(void *data) {
 	struct decode_pcm *self = (struct decode_pcm *) data;
 
-	DEBUG_TRACE("decode_pcm_stop()");
+	LOG_DEBUG(log_audio_codec, "decode_pcm_stop()");
 	
 	free(self->read_buffer);
 	free(self->write_buffer);
@@ -193,6 +194,6 @@ struct decode_module decode_pcm = {
 	"pcm",
 	decode_pcm_start,
 	decode_pcm_stop,
-	decode_pcm_period,
+	decode_pcm_samples,
 	decode_pcm_callback,
 };

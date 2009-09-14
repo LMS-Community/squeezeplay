@@ -63,13 +63,14 @@ AC_ARG_ENABLE(alsa, [  --disable-alsa          disable alsa [[default=yes]] ],
 if test "x$enable_alsa" = "xyes"
 then
 	# check for portaudio
-	AC_CHECK_LIB([asound], [snd_pcm_drop], [], [])
-fi
+	AC_CHECK_LIB([asound], [snd_pcm_drop])
+fi	  
 
+AM_CONDITIONAL(ALSA_ENABLED, test "x$enable_alsa" = "xyes")
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/socket.h unistd.h netdb.h arpa/inet.h])
+AC_CHECK_HEADERS([dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h sys/utsname.h unistd.h netdb.h arpa/inet.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -79,7 +80,7 @@ AC_HEADER_TIME
 # Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS([malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair])
+AC_CHECK_FUNCS([malloc calloc clock_gettime fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog uname])
 
 # Test programs
 AC_ARG_ENABLE(tests,
@@ -100,15 +101,33 @@ AC_ARG_WITH(spprivate,
 [if test "$withval" = yes; then
   AC_MSG_RESULT(yes)
   AC_DEFINE(WITH_SPPRIVATE,1,[Define if using spprivate package])
-  LIBS="$LIBS -lspprivate"
+  SPPRIVATE_LIB="-lspprivate"
 else
   AC_MSG_RESULT(no)
 fi], [AC_MSG_RESULT(no)])
 ])
+AC_SUBST([SPPRIVATE_LIB])
 
 AU_DEFUN([fp_WITH_SPPRIVATE], [AM_WITH_SPPRIVATE])
 
 AM_WITH_SPPRIVATE
+
+
+dnl enable screen rotation
+AC_ARG_ENABLE(screen_rotation,
+AC_HELP_STRING([--enable-screen-rotation], [Enable the screen rotation [[default=no]]]),
+              , enable_screen_rotation=no)
+if test x$enable_screen_rotation == xyes; then
+    AC_DEFINE(SCREEN_ROTATION_ENABLED, 1, [Define for screen rotation])
+fi
+
+dnl broken fsync
+AC_ARG_ENABLE(fsync_workaround,
+AC_HELP_STRING([--enable-fsync-workaround], [Enable workaround for broken fsync [[default=no]]]),
+              , enable_fsync_workaround=no)
+if test x$enable_fsync_workaround == xyes; then
+    AC_DEFINE(FSYNC_WORKAROUND_ENABLED, 1, [Define for fsync workaround])
+fi
 
 
 dnl Dmalloc (multi-threaded version)
@@ -149,9 +168,10 @@ AC_MSG_RESULT(${enable_profiling-no})
 dnl Be pedantic when compiling
 if test x"$GCC" = x"yes"
 then
-	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
+	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-unused-function"
 fi
 
+CFLAGS="$CFLAGS -DSQUEEZEPLAY"
 
 test -n "$profile" && CFLAGS="$CFLAGS $profile" LDFLAGS="$LDFLAGS $profile"
 

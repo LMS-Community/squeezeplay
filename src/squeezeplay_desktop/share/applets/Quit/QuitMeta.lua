@@ -43,6 +43,7 @@ function configureApplet(self)
 	-- add ourselves to the end of the main menu
 	jiveMain:addItem({
 		id = 'appletQuit',
+		iconStyle = 'hm_quit',
 		node = 'home',
 		text = self:string("QUIT"),
 		callback = function() 
@@ -51,7 +52,7 @@ function configureApplet(self)
 
 			return (EVENT_CONSUME | EVENT_QUIT)
 		end,
-		weight = 1000,
+		weight = 1010,
 	})
 end
 

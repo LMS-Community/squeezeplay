@@ -10,30 +10,12 @@ SELECT_SKIN
 	ES	Seleccionar máscara
 	FI	Valitse olemus
 	FR	Sélectionner un habillage
-	IT	Seleziona interfaccia
+	IT	Seleziona skin
 	NL	Skin selecteren
 	NO	Velg skall
 	PL	Wybierz karnację
 	RU	Выберите обложку
 	SV	Välj skal
-
-CONTROLLER_SKIN
-	EN	Controller Skin
-
-DESKTOP_SKIN
-	CS	Vzhled pracovní plochy
-	DA	Tema til skrivebord
-	DE	Desktop Skin
-	EN	Desktop Skin
-	ES	Máscara de escritorio
-	FI	Työpöydän olemus
-	FR	Habillage du bureau
-	IT	Interfaccia desktop
-	NL	Skin van desktop
-	NO	Skrivebordsskall
-	PL	Karnacja pulpitu
-	RU	Обложка рабочего стола
-	SV	Skrivbordsskal
 
 FULLSCREEN_MODE
 	CS	Celá obrazovka

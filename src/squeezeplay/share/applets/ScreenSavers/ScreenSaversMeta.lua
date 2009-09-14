@@ -35,9 +35,10 @@ end
 
 function defaultSettings(self)
 	return {
-		whenStopped = "Clock:openAnalogClock",
+		whenStopped = "Clock:openDetailedClock",
 		whenPlaying = "NowPlaying:openScreensaver",
-		timeout = 10000,
+		whenOff = "BlankScreen:openScreensaver",
+		timeout = 30000,
 	}
 end
 
@@ -45,6 +46,11 @@ end
 function registerApplet(meta)
 
 	meta:registerService("addScreenSaver")
+	meta:registerService("removeScreenSaver")
+	meta:registerService("restartScreenSaverTimer")
+	meta:registerService("isScreensaverActive")
+	meta:registerService("deactivateScreensaver")
+	meta:registerService("activateScreensaver")
 
 	-- Menu for configuration
 	jiveMain:addItem(meta:menuItem('appletScreenSavers', 'screenSettings', "SCREENSAVERS", function(applet, ...) applet:openSettings(...) end))

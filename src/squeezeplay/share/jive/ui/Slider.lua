@@ -11,7 +11,7 @@ A slider widget, extends L<jive.ui.Widget>.
 =head1 SYNOPSIS
 
  -- Create a new label to display 'Hello World'
- local slider = jive.ui.Slider("label")
+ local slider = jive.ui.Slider("slider")
 
  -- Set the slider range, 10 items bubble is in the middle
  slider:setScroll(1, 10, 5)
@@ -35,14 +35,15 @@ B<horizontal> : true if the slider is horizontal, otherwise the slider is vertia
 
 
 -- stuff we use
-local tostring, type = tostring, type
+local tonumber, tostring, type = tonumber, tostring, type
 
 local oo	= require("loop.simple")
 local math      = require("math")
 
 local Widget	= require("jive.ui.Widget")
+local Framework	= require("jive.ui.Framework")
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL    = jive.ui.EVENT_SCROLL
@@ -63,6 +64,11 @@ local KEY_GO          = jive.ui.KEY_GO
 local KEY_RIGHT       = jive.ui.KEY_RIGHT
 local KEY_FWD         = jive.ui.KEY_FWD
 
+local MOUSE_COMPLETE = 0
+local MOUSE_DOWN = 1
+local MOUSE_DRAG = 2
+
+local PAGING_BOUNDARY_BUFFER_FRACTION = .25
 
 -- our class
 module(...)
@@ -70,7 +76,7 @@ oo.class(_M, Widget)
 
 
 
-function __init(self, style, min, max, value, closure)
+function __init(self, style, min, max, value, closure, dragDoneClosure)
 
 	local obj = oo.rawnew(self, Widget(style))
 
@@ -78,6 +84,11 @@ function __init(self, style, min, max, value, closure)
 	obj.range = max or 1
 	obj.value = 1
 	obj.closure = closure
+	obj.dragDoneClosure = dragDoneClosure
+	obj.dragThreshold = 25
+
+	obj.distanceFromMouseDownMax = 0
+	obj.jumpOnDown = true
 
 	obj:setValue(value or obj.min)
 
@@ -138,16 +149,16 @@ Set the slider value to I<value>.
 =cut
 --]]
 function setValue(self, value)
-	if self.size == value then
+	if self.size == tonumber(value) then
 		return
 	end
 
-	self.size = value or 0
+	self.size = tonumber(value) or 0
 
-	if self.size < self.min then
-		self.size = self.min
+	if tonumber(self.size) < tonumber(self.min) then
+		self.size = tonumber(self.min)
 	elseif self.size > self.range then
-		self.size = self.range
+		self.size = tonumber(self.range)
 	end
 
 	self:reDraw()
@@ -209,8 +220,23 @@ function _eventHandler(self, event)
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())
 		return EVENT_CONSUME
-	elseif type == EVENT_MOUSE_DOWN or
-		type == EVENT_MOUSE_DRAG then
+	elseif type == EVENT_MOUSE_DOWN and not self.jumpOnDown then
+
+		self.mouseState = MOUSE_DOWN
+		updateMouseOriginOffset(self, event)
+
+		return EVENT_CONSUME
+	elseif type == EVENT_MOUSE_DRAG or (type == EVENT_MOUSE_DOWN and self.jumpOnDown) then
+		updateMouseOriginOffset(self, event)
+
+		if not self.jumpOnDown then
+			--ignore value up until dragThreshold so that a sloppy press can still be seen
+			if not mouseExceededBufferDistance(self, self.dragThreshold) then
+				return EVENT_CONSUME
+			end
+		end
+
+		self.mouseState = MOUSE_DRAG
 
 		local x,y,w,h = self:mouseBounds(event)
 
@@ -221,9 +247,48 @@ function _eventHandler(self, event)
 			-- vertical
 			self:_setSlider(y / h)
 		end
+		self.useDragDoneClosure = true
+
 		return EVENT_CONSUME
-	elseif type == EVENT_MOUSE_UP or
-		type == EVENT_MOUSE_PRESS or
+	elseif type == EVENT_MOUSE_UP then
+
+		if self.useDragDoneClosure then
+			self.useDragDoneClosure = false
+			if self.dragDoneClosure then
+				self.dragDoneClosure(self, self.size, false)
+			end
+		end
+
+		if self.mouseState == MOUSE_COMPLETE or self.mouseState == MOUSE_DRAG then
+			return finishMouseSequence(self)
+		end
+
+		if not self.jumpOnDown then
+			--perform pageup/pagedown (some of this is actually scrollbar specific.. Currently regular scrollbars
+			 -- are self.jumpOnDown true by default, so this code won't be hit, but todo: refactor this so that scrollbar code isn't
+			 -- inside the slider class.
+			local x,y,w,h = self:mouseBounds(event)
+			local sliderFraction
+			if w > h then
+				-- horizontal
+				sliderFraction = x / w
+			else
+				-- vertical
+				sliderFraction = y / h
+			end
+
+			local pos = sliderFraction * (self.range)
+			local inUpperBufferZone = sliderFraction < PAGING_BOUNDARY_BUFFER_FRACTION
+			local inLowerBufferZone = sliderFraction > (1 - PAGING_BOUNDARY_BUFFER_FRACTION)
+
+			if inUpperBufferZone or (pos <= self.value and not inLowerBufferZone ) then
+				Framework:pushAction("page_up")
+			elseif inLowerBufferZone or pos > self.value + self.size then
+				Framework:pushAction("page_down")
+			end
+		end
+		return finishMouseSequence(self)
+	elseif type == EVENT_MOUSE_PRESS or
 		type == EVENT_MOUSE_HOLD then
 		--ignore
 		return EVENT_CONSUME
@@ -238,6 +303,46 @@ function _eventHandler(self, event)
 
 		return EVENT_UNUSED
 	end
+end
+
+
+
+function finishMouseSequence(self)
+	self.mouseState = MOUSE_COMPLETE
+
+	self.mouseDownX = nil
+	self.mouseDownY = nil
+	self.distanceFromMouseDownMax = 0
+
+	return EVENT_CONSUME
+end
+
+
+function updateMouseOriginOffset(self, event)
+	local x, y = event:getMouse()
+
+	if not self.mouseDownX then
+		--new drag, set origin
+		self.mouseDownX = x
+		self.mouseDownY = y
+	else
+		--2nd or later point gathered
+
+	        local distanceFromOrigin = math.sqrt(
+					math.pow(x - self.mouseDownX, 2)
+					+ math.pow(y - self.mouseDownY, 2) )
+
+		if distanceFromOrigin > self.distanceFromMouseDownMax then
+			self.distanceFromMouseDownMax = distanceFromOrigin
+		end
+
+	end
+
+end
+
+
+function mouseExceededBufferDistance(self, value)
+	return self.distanceFromMouseDownMax >= value
 end
 
 

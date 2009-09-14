@@ -1657,6 +1657,39 @@ static int tolua_jive_jive_ui_Tile_loadImage00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: jive_surface_load_image_data of class  Title - manually added by Triode */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Tile_loadImageData00
+static int tolua_jive_jive_ui_Tile_loadImageData00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertable(tolua_S,1,"Tile",0,&tolua_err) ||
+ !tolua_isstring(tolua_S,2,0,&tolua_err) ||
+ !tolua_isinteger(tolua_S,3,0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,4,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  const char* data = ((const char*)  tolua_tostring(tolua_S,2,0));
+  unsigned int len = (( unsigned int)  tolua_tointeger(tolua_S,3,0));
+ {
+  tolua_create Tile* tolua_ret = (tolua_create Tile*)  jive_tile_load_image_data(data,len);
+ tolua_pushusertype_and_takeownership(tolua_S,(void *)tolua_ret,"Tile");
+ }
+ }
+ return 1;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'loadImageData'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+
 /* method: jive_tile_load_tiles of class  Tile */
 #ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Tile_loadTiles00
 static int tolua_jive_jive_ui_Tile_loadTiles00(lua_State* tolua_S)
@@ -2172,6 +2205,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"LAYOUT_CENTER",JIVE_LAYOUT_CENTER);
    tolua_constant(tolua_S,"LAYOUT_NONE",JIVE_LAYOUT_NONE);
    tolua_constant(tolua_S,"LAYER_FRAME",JIVE_LAYER_FRAME);
+   tolua_constant(tolua_S,"LAYER_TITLE",JIVE_LAYER_TITLE);
    tolua_constant(tolua_S,"LAYER_CONTENT",JIVE_LAYER_CONTENT);
    tolua_constant(tolua_S,"LAYER_CONTENT_OFF_STAGE",JIVE_LAYER_CONTENT_OFF_STAGE);
    tolua_constant(tolua_S,"LAYER_CONTENT_ON_STAGE",JIVE_LAYER_CONTENT_ON_STAGE);
@@ -2180,6 +2214,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_NONE",JIVE_EVENT_NONE);
    tolua_constant(tolua_S,"EVENT_SCROLL",JIVE_EVENT_SCROLL);
    tolua_constant(tolua_S,"EVENT_ACTION",JIVE_EVENT_ACTION);
+   tolua_constant(tolua_S,"EVENT_GESTURE",JIVE_EVENT_GESTURE);
    tolua_constant(tolua_S,"EVENT_KEY_DOWN",JIVE_EVENT_KEY_DOWN);
    tolua_constant(tolua_S,"EVENT_KEY_UP",JIVE_EVENT_KEY_UP);
    tolua_constant(tolua_S,"EVENT_KEY_PRESS",JIVE_EVENT_KEY_PRESS);
@@ -2202,6 +2237,12 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_WINDOW_RESIZE",JIVE_EVENT_WINDOW_RESIZE);
    tolua_constant(tolua_S,"EVENT_SWITCH",JIVE_EVENT_SWITCH);
    tolua_constant(tolua_S,"EVENT_MOTION",JIVE_EVENT_MOTION);
+   tolua_constant(tolua_S,"EVENT_IR_PRESS",JIVE_EVENT_IR_PRESS);
+   tolua_constant(tolua_S,"EVENT_IR_UP",JIVE_EVENT_IR_UP);
+   tolua_constant(tolua_S,"EVENT_IR_DOWN",JIVE_EVENT_IR_DOWN);
+   tolua_constant(tolua_S,"EVENT_IR_REPEAT",JIVE_EVENT_IR_REPEAT);
+   tolua_constant(tolua_S,"EVENT_IR_HOLD",JIVE_EVENT_IR_HOLD);
+   tolua_constant(tolua_S,"EVENT_IR_ALL",JIVE_EVENT_IR_ALL);
    tolua_constant(tolua_S,"EVENT_KEY_ALL",JIVE_EVENT_KEY_ALL);
    tolua_constant(tolua_S,"ACTION",JIVE_ACTION);
    tolua_constant(tolua_S,"EVENT_MOUSE_ALL",JIVE_EVENT_MOUSE_ALL);
@@ -2211,6 +2252,8 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_UNUSED",JIVE_EVENT_UNUSED);
    tolua_constant(tolua_S,"EVENT_CONSUME",JIVE_EVENT_CONSUME);
    tolua_constant(tolua_S,"EVENT_QUIT",JIVE_EVENT_QUIT);
+   tolua_constant(tolua_S,"GESTURE_L_R",JIVE_GESTURE_L_R);
+   tolua_constant(tolua_S,"GESTURE_R_L",JIVE_GESTURE_R_L);
    tolua_constant(tolua_S,"KEY_NONE",JIVE_KEY_NONE);
    tolua_constant(tolua_S,"KEY_GO",JIVE_KEY_GO);
    tolua_constant(tolua_S,"KEY_BACK",JIVE_KEY_BACK);
@@ -2226,6 +2269,15 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"KEY_FWD",JIVE_KEY_FWD);
    tolua_constant(tolua_S,"KEY_VOLUME_UP",JIVE_KEY_VOLUME_UP);
    tolua_constant(tolua_S,"KEY_VOLUME_DOWN",JIVE_KEY_VOLUME_DOWN);
+   tolua_constant(tolua_S,"KEY_MUTE",JIVE_KEY_MUTE);
+   tolua_constant(tolua_S,"KEY_ALARM",JIVE_KEY_ALARM);
+   tolua_constant(tolua_S,"KEY_POWER",JIVE_KEY_POWER);
+   tolua_constant(tolua_S,"KEY_PRESET_1",JIVE_KEY_PRESET_1);
+   tolua_constant(tolua_S,"KEY_PRESET_2",JIVE_KEY_PRESET_2);
+   tolua_constant(tolua_S,"KEY_PRESET_3",JIVE_KEY_PRESET_3);
+   tolua_constant(tolua_S,"KEY_PRESET_4",JIVE_KEY_PRESET_4);
+   tolua_constant(tolua_S,"KEY_PRESET_5",JIVE_KEY_PRESET_5);
+   tolua_constant(tolua_S,"KEY_PRESET_6",JIVE_KEY_PRESET_6);
    tolua_constant(tolua_S,"KEY_PAGE_UP",JIVE_KEY_PAGE_UP);
    tolua_constant(tolua_S,"KEY_PAGE_DOWN",JIVE_KEY_PAGE_DOWN);
    tolua_constant(tolua_S,"KEY_PRINT",JIVE_KEY_PRINT);
@@ -2273,6 +2325,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_beginmodule(tolua_S,"Tile");
     tolua_function(tolua_S,"fillColor",tolua_jive_jive_ui_Tile_fillColor00);
     tolua_function(tolua_S,"loadImage",tolua_jive_jive_ui_Tile_loadImage00);
+    tolua_function(tolua_S,"loadImageData",tolua_jive_jive_ui_Tile_loadImageData00);
     tolua_function(tolua_S,"loadTiles",tolua_jive_jive_ui_Tile_loadTiles00);
     tolua_function(tolua_S,"loadVTiles",tolua_jive_jive_ui_Tile_loadVTiles00);
     tolua_function(tolua_S,"loadHTiles",tolua_jive_jive_ui_Tile_loadHTiles00);

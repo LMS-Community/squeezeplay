@@ -1,7 +1,7 @@
 
--- Private class to handle player position scanner 
+-- Private class to handle player position scanner
 
-local tostring, tonumber = tostring, tonumber
+local ipairs, tostring, tonumber = ipairs, tostring, tonumber
 
 local oo                     = require("loop.base")
 local os                     = require("os")
@@ -18,7 +18,7 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("player")
+local log                    = require("jive.utils.log").logger("applet.SlimBrowser")
 
 
 local ACTION                 = jive.ui.ACTION
@@ -69,10 +69,8 @@ local function _updateDisplay(self)
 	self.title:setValue(self.applet:string("SLIMBROWSER_SCANNER"))
 	self.slider:setValue(tonumber(self.elapsed))
 	local strElapsed = _secondsToString(self.elapsed)
-	local strRemain = "-" .. _secondsToString(self.duration - self.elapsed)
 
-	self.scannerGroup:setWidgetValue("elapsed", strElapsed)
-	self.scannerGroup:setWidgetValue("remain", strRemain)
+	self.heading:setValue(strElapsed)
 end
 
 
@@ -101,23 +99,24 @@ local function _openPopup(self)
 		return
 	end
 	
-	local popup = Popup("scannerPopup")
+	local popup = Popup("scanner_popup")
 	popup:setAutoHide(false)
+	popup:setAlwaysOnTop(true)
 
-	local title = Label("title", "")
+	local title = Label("heading", "")
 	popup:addWidget(title)
 
-	local slider = Slider("scanner", 0, tonumber(self.duration), tonumber(self.elapsed),
+	local slider = Slider("scanner_slider", 0, tonumber(self.duration), tonumber(self.elapsed),
 			function(slider, value, done)
 				self.delta = value - self.elapsed
 				self.elapsed = value
 				_updateSelectedTime(self)
 			end)
-	self.scannerGroup = Group("scannerGroup", {
-					      elapsed = Label("text", ""),
-					      slider = slider,
-					      remain = Label("text", "")
-				      })
+	self.heading = title
+	self.scannerGroup = Group("slider_group", {
+		slider = slider,
+	})
+
 	popup:addWidget(self.scannerGroup)
 	popup:addListener(ACTION | EVENT_KEY_ALL | EVENT_SCROLL,
 			  function(event)
@@ -140,14 +139,29 @@ local function _openPopup(self)
 		self.autoinvokeTime = AUTOINVOKE_INTERVAL_LOCAL
 	end
 
+	popup:focusWidget(nil)
+
 	_updateDisplay(self)
 
 	popup:showBriefly(POPUP_AUTOCLOSE_INTERVAL,
 		function()
-			self.popup = nil
+			--This happens on ANY window pop, not necessarily the popup window's pop
+			local isPopupOnStack = false
+			local stack = Framework.windowStack
+			for i in ipairs(stack) do
+				if stack[i] == popup then
+					isPopupOnStack = true
+					break
+				end
+			end
+
+			--don't clear it out if the pop was from another window
+			if not isPopupOnStack then
+				self.popup = nil
+			end
 		end,
-		Window.transitionPushPopupUp,
-		Window.transitionPushPopupDown
+		Window.transitionNone,
+		Window.transitionNone
 	)
 
 end
@@ -239,7 +253,18 @@ function event(self, event)
 
 	local type = event:getType()
 	
-	if type == ACTION then
+        if type == EVENT_SCROLL then
+                local scroll = event:getScroll()
+
+                if scroll > 0 then
+                        self.delta = 1
+                elseif scroll < 0 then
+                        self.delta = -1
+                else
+                        self.delta = 0
+                end
+                _updateSelectedTime(self)
+	elseif type == ACTION then
 		local action = event:getAction()
 
 		-- GO closes the popup & executes any pending change
@@ -274,33 +299,17 @@ function event(self, event)
 
 		-- any other actions forward to the lower window
 		local lower = self.popup:getLowerWindow()
+		if self.popup then
+			self.popup:showBriefly(0)
+		end
 		if lower then
 			Framework:dispatchEvent(lower, event)
 		end
 
-		self.popup:showBriefly(0)
 		return EVENT_CONSUME
 
 	elseif type == EVENT_KEY_PRESS then
-		if Framework:isAnActionTriggeringKeyEvent(event, EVENT_KEY_ALL) then
-			--will come back as an ACTION, let's respond to it then to give other action listeners a chance
-			return 	EVENT_UNUSED
-		end
-
-		local keycode = event:getKeycode()
-
-		-- any other keys forward to the lower window
-		if keycode & (KEY_FWD|KEY_REW) == 0 then
-			local lower = self.popup:getLowerWindow()
-			if lower then
-				Framework:dispatchEvent(lower, event)
-			end
-
-			self.popup:showBriefly(0)
-			return EVENT_CONSUME
-		end
-
-		return EVENT_CONSUME
+		return EVENT_UNUSED
 	else
 		local keycode = event:getKeycode()
 

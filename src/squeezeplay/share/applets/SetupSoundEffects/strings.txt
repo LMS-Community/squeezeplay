@@ -257,9 +257,6 @@ SOUND_SELECT
 	RU	Выбранный элемент меню
 	SV	Val av menyalternativ
 
-SOUND_PLAYBACK
-	EN	Playback
-
 SOUND_DOCKING
 	CS	Dokování
 	DA	Fastgørelse

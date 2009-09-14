@@ -4,13 +4,19 @@
 #
 
 SQUEEZEBOX_SETUP
-	DA	Indstillinger for Receiver
-	DE	Squeezebox einrichten
+	CS	Nastavit přijímač
+	DA	Konfiguration af modtager
+	DE	Receiver einrichten
 	EN	Set Up Receiver
-	ES	Configuración de Squeezebox
-	FR	Configuration de la Squeezebox
-	IT	Configura Squeezebox
-	NL	Squeezebox instellen
+	ES	Configuración de receptor
+	FI	Ota vastaanotin käyttöön
+	FR	Configuration du récepteur
+	IT	Configura Receiver
+	NL	Ontvanger instellen
+	NO	Konfigurer mottaker
+	PL	Skonfiguruj odbiornik
+	RU	Установить ресивер
+	SV	Konfigurera mottagare
 
 SQUEEZEBOX_NETWORK_CONNECTION
 	CS	Bezdrátové připojení
@@ -45,7 +51,7 @@ SQUEEZEBOX_CONNECT_HELP
 SQUEEZEBOX_WIRELESS
 	CS	Bezdrátová technologie
 	DA	Trådløst
-	DE	Drahtlos
+	DE	Kabellos
 	EN	Wireless
 	ES	Inalámbrica
 	FI	Langaton
@@ -103,22 +109,23 @@ SQUEEZEBOX_FINDING_SOURCES
 	SV	Söker efter musikkällor
 
 SQUEEZEBOX_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung mit %s
-	EN	Connecting to\n%s
-	ES	Conectando a %s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à %s
-	IT	Connessione a %s
-	NL	Er wordt een verbinding met %s gemaakt
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
+# SLT: please keep this short
+	CS	Připojování k
+	DA	Etablerer forbindelse til
+	DE	Verbinden mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistää kohteeseen
+	FR	Connexion à
+	IT	Collegamento a
+	NL	Verbinden met
+	NO	Kopler til
+	PL	Trwa łączenie z
+	RU	Подключение к
+	SV	Ansluts till
 
 SQUEEZEBOX_SETUP_COMPLETE
-	CS	Váš squeezebox je nyní nastaven.
+	CS	Váš Squeezebox je nyní nastaven.
 	DA	Nu er din Squeezebox konfigureret.
 	DE	Die Squeezebox ist eingerichtet.
 	EN	Your squeezebox is now set up.
@@ -133,13 +140,19 @@ SQUEEZEBOX_SETUP_COMPLETE
 	SV	Nu är Squeezebox konfigurerad.
 
 SQUEEZEBOX_PROBLEM
-	DA	Problem med tilslutning
+	CS	Problém s připojováním
+	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
 	EN	Problem Connecting
 	ES	Problema de conexión
+	FI	Yhteyttä ei voi muodostaa
 	FR	Problème de connexion
 	IT	Problema di connessione
 	NL	Probleem bij verbinden
+	NO	Klarer ikke å kople til
+	PL	Problem podczas nawiązywania połączenia
+	RU	Ошибка при подключении
+	SV	Det uppstod ett problem vid anslutningen
 
 SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	CS	Zkuste to znovu
@@ -148,7 +161,7 @@ SQUEEZEBOX_PROBLEM_TRY_AGAIN
 	EN	Try again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Réessayer
+	FR	Veuillez réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen

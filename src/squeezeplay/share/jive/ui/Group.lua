@@ -11,7 +11,7 @@ A group widget, extends L<jive.ui.Widget>, it is a container for other widgets. 
 =head1 SYNOPSIS
 
  -- Create a new group
- local group = jive.ui.Group("item", { text = Label("text", "Hello World"), icon = Icon("icon") })
+ local group = jive.ui.Group("group", { text = Label("text", "Hello World"), icon = Icon("icon") })
 
 =head1 STYLE
 
@@ -34,7 +34,7 @@ local Widget            = require("jive.ui.Widget")
 
 local table             = require("jive.utils.table")
 local debug             = require("jive.utils.debug")
-local log               = require("jive.utils.log").logger("ui")
+local log               = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_ALL         = jive.ui.EVENT_ALL
 local EVENT_MOUSE_ALL   = jive.ui.EVENT_MOUSE_ALL
@@ -61,6 +61,7 @@ Constructs a new Group widget. I<style> is the widgets style. I<widgets> is a ta
 --]]
 function __init(self, style, widgets)
 	_assert(type(style) == "string")
+	_assert(widgets)
 
 	local obj = oo.rawnew(self, Widget(style))
 	obj.widgets = widgets
@@ -94,8 +95,6 @@ function __init(self, style, widgets)
 				end
 
 				if r == EVENT_UNUSED and event:getType() == EVENT_MOUSE_DOWN then
-					log:error("here looking for a group widget")
-
 					--no match for the down found, send to closest group member
 					local mouseX, mouseY = event:getMouse()
 					local closestDistance = 99999
@@ -209,14 +208,14 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:setWidgetValue(widget, value)
+=head2 jive.ui.Widget:setWidgetValue(widget, value, ...)
 
 Set the value of a widget in this Group.
 
 =cut
 --]]
-function setWidgetValue(self, w, value)
-	return self.widgets[w]:setValue(value)
+function setWidgetValue(self, w, value, ...)
+	return self.widgets[w]:setValue(value, ...)
 end
 
 

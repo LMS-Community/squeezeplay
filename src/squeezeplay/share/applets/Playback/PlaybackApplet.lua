@@ -28,7 +28,6 @@ local SlimProto     = require("jive.net.SlimProto")
 local Playback      = require("jive.audio.Playback")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local jnt           = jnt
 local jiveMain      = jiveMain
@@ -43,7 +42,7 @@ oo.class(_M, Applet)
 function settingsShow(self, metaState)
 	local settings = self:getSettings()
 
-	local window = Window("window", self:string("AUDIO_PLAYBACK"))
+	local window = Window("text_list", self:string("AUDIO_PLAYBACK"))
 	local menu = SimpleMenu("menu", items)
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	window:addWidget(menu)
@@ -52,7 +51,8 @@ function settingsShow(self, metaState)
 		text = self:string("ENABLE_AUDIO"),
 		sound = "SELECT",
 		weight = 1,
-		icon = Checkbox(
+		style = 'item_choice',
+		check = Checkbox(
                 	"checkbox",
 			function(_, isSelected)
 				local settings = self:getSettings()
@@ -94,15 +94,6 @@ function settingsShow(self, metaState)
 			   end,
 	})
 
-	menu:addItem({
-		text = self:string("TEST_TONES"),
-		sound = "WINDOWSHOW",
-		weight = 2,
-		callback = function(event, menuItem)
-				   self:_tonesMenu()
-			   end,
-	})
-
 	self:tieAndShowWindow(window)
 end
 
@@ -117,7 +108,7 @@ local decoders = {
 }
 
 function _debugMenu(self)
-	local window = Window("window", self:string("DEBUG_AUDIO"))
+	local window = Window("text_list", self:string("DEBUG_AUDIO"))
 	window:setAllowScreensaver(false)
 
 	local values = {}
@@ -146,91 +137,6 @@ function _debugMenu(self)
 			values[5]:setValue(status.tracksStarted)
 			values[6]:setValue(status.decodeState .. " " .. status.audioState)
 	end)
-
-	window:show()
-	return window
-end
-
-
-function _tonesMenu(self)
-	local window = Window("window", self:string("TEST_TONES"))
-
-	local menu = SimpleMenu("menu", {
-		{ text = self:string("MULTITONE"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 1
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("LEFT_CHANNEL"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 2
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_44_1K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 10
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_48k"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 11
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_88_2K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 12
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},
-		{ text = self:string("SINE_96K"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:flush()
-		  	decode:start(
-				string.byte('t'), 0, 0, 0, 0, 0, 13
-			)
-			decode:resumeDecoder()
-			decode:resumeAudio()
-		  end
-		},			
-		{ text = self:string("SINE_STOP"),
-		  sound = "WINDOWSHOW",
-		  callback = function(event)
-			decode:stop()
-		  end
-		},			
-	})
-
-	window:addWidget(menu)
 
 	window:show()
 	return window

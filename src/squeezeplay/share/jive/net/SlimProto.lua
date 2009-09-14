@@ -65,6 +65,7 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 local Timer       = require("jive.ui.Timer")
 
+local DNS         = require("jive.net.DNS")
 local SocketTcp   = require("jive.net.SocketTcp")
 
 local debug       = require("jive.utils.debug")
@@ -102,9 +103,20 @@ end
 local function unpackNumber(str, pos, len)
 	local v = 0
 	for i = pos, pos + len - 1 do
-		v = (v << 8) | (string.byte(str, i, i + 1) or 0)
+		v = (v << 8) + (string.byte(str, i) or 0)
 	end
 	return v
+end
+
+
+function _ipstring(ip)
+	local str = {}
+	for i = 4,1,-1 do
+		str[i] = string.format("%d", ip & 0xFF)
+		ip = ip >> 8
+	end
+	str = table.concat(str, ".")
+	return str
 end
 
 
@@ -144,6 +156,16 @@ local opcodes = {
 			wlanList = wlanList | 0x4000
 		end
 
+		local capabilities = table.concat(self.capabilities, ",")
+
+		-- always clear the syncgroupid after using it
+		for i, key in ipairs(self.capabilities) do
+			if string.match(key, "SyncgroupID=") then
+				table.remove(self.capabilities, i)
+				break
+			end
+		end
+
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
 			packNumber(0, 1),
@@ -152,7 +174,7 @@ local opcodes = {
 			packNumber(wlanList, 2),
 			packNumber(0, 8), -- XXXX bytes received
 			"EN", -- XXXX language
-			table.concat(self.capabilities, ",")
+			capabilities			
 		}
 	end,
 
@@ -175,7 +197,7 @@ local opcodes = {
 			packNumber(data.decodeFull, 4),
 			packNumber(data.bytesReceivedH, 4),
 			packNumber(data.bytesReceivedL, 4),
-			packNumber(data.signalStrength or 0, 2),
+			packNumber(data.signalStrength or 0xffff, 2),
 			packNumber(data.elapsed_jiffies, 4),
 			packNumber(data.outputSize, 4),
 			packNumber(data.outputFull, 4),
@@ -205,7 +227,7 @@ local opcodes = {
 
 	BODY = function(self, data)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 
 	DSCO = function(self, data)
@@ -223,7 +245,7 @@ local opcodes = {
 	end,
 
 	audg = function(self, packet)
-		local gainL, gainR, fixedDigital, preampAtten
+		local gainL, gainR, fixedDigital, preampAtten, sequenceNumber
 
 		gainL = unpackNumber(packet, 5, 4) << 9
 		gainR = unpackNumber(packet, 9, 4) << 9
@@ -240,12 +262,16 @@ local opcodes = {
 			gainL = unpackNumber(packet, 15, 4)
 			gainR = unpackNumber(packet, 19, 4)
 		end
+		if #packet > 22 then
+			sequenceNumber = unpackNumber(packet, 23, 4)
+		end
 
 		return {
 			gainL = gainL,
 			gainR = gainR,
 			fixedDigital = fixedDigital,
 			preampAtten = preampAtten,
+			sequenceNumber = sequenceNumber,
 		}	end,
 
 	strm = function(self, packet)
@@ -275,7 +301,8 @@ local opcodes = {
 		return {
 			icyMetaInterval = unpackNumber(packet, 5, 4),
 			loop = unpackNumber(packet, 9, 1),
-			-- XXXX read wma guid's
+			guid_len = unpackNumber(packet, 10, 2),
+			guid = string.sub(packet, 12)
 		}
 	end,
 
@@ -286,17 +313,18 @@ local opcodes = {
 	serv = function(self, packet)
 		return {
 			serverip = unpackNumber(packet, 5, 4),
+			syncgroupid = string.sub(packet, 9, 19),
 		}
 	end,
 
 	http = function(self, packet)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 
 	body = function(self, packet)
 		-- XXXX
-		log:warn("TODO")
+		log:error("TODO")
 	end,
 }
 
@@ -345,16 +373,24 @@ function __init(self, jnt, heloPacket)
 	end)
 
 	obj:subscribe("serv", function(_, data)
-		local server = data.serverip
+		local serverip = data.serverip
 
-		if server == 1 then
-			server = "www.squeezenetwork.com"
+		if serverip == 0 then
+			serverip = obj.lastServerip
+		elseif serverip == 1 then
+			serverip = "www.squeezenetwork.com"
+		elseif serverip == 2 then
+			serverip = "www.beta.squeezenetwork.com"
 		else
-			server = "www.test.squeezenetwork.com"
+			serverip = _ipstring(serverip)
 		end
 
-		log:info("server told us to connect to ", server)
-		obj:connect(server)
+		log:info("server told us to connect to ", serverip, " syncgroupid=", data.syncgroupid)
+
+		-- set syncgroupid
+		obj:capability("SyncgroupID", data.syncgroupid)
+
+		_connectToAddr(obj, serverip)
 	end)
 
 	return obj
@@ -373,8 +409,35 @@ function getId(self)
 end
 
 
+-- Return true if connected to server
+function isConnected(self)
+	return self.state == CONNECTED
+end
+
+
 -- Open the slimproto connection to SqueezeCenter.
 function connect(self, server)
+	local serverip = self.serverip
+	if server then
+		-- the server may have moved, get a fresh ip address
+		serverip = server:getIpPort()
+		
+		-- remember last SqueezeCenter for 'serv 0'
+		if not server:isSqueezeNetwork() then
+			self.lastServerip = serverip
+		end
+	end
+
+	_connectToAddr(self, serverip, nil)
+end
+
+
+function _connectToAddr(self, serverip)
+	Task("slimprotoConnect", self, connectTask):addTask(serverip)
+end
+
+
+function connectTask(self, serverip)
 	local pump = function(NetworkThreadErr)
 		if NetworkThreadErr then
 			return _handleDisconnect(self, NetworkThreadErr)
@@ -393,6 +456,13 @@ function connect(self, server)
 
 		-- decode opcode
 		local opcode = string.sub(data, 1, 4)
+
+		-- discard network test packets without processing
+		-- we need to minimse processing as they can arrive at a high rate
+		if opcode == 'test' then
+			return
+		end
+
 		log:debug("read opcode=", opcode, " #", #data)
 
 		--_hexDump(opcode, data)
@@ -445,24 +515,45 @@ function connect(self, server)
 		self.txqueue = {}
 	end
 
-	if server then
-		self.server = server
+	-- Bug 9900
+	-- Don't allow connections to production SN yet
+	assert(not string.match(serverip, "www.squeezenetwork.com"))
+
+	if self.state == CONNECTED and self.serverip == serverip then
+		log:debug("already connected to ", self.serverip)
+		return
+	end
+
+	-- disconnect from previous server
+	self:disconnect()
+
+	-- update connection state
+	self.state = CONNECTING
+	self.serverip = serverip
+
+	if serverip then
 		self.reconnect = false
 	end
 
-	-- the server may have moved, get a fresh ip address
-	self.serverip = self.server:getIpPort()
+	local ip = self.serverip
+	if not DNS:isip(ip) then
+		ip = DNS:toip(ip)
 
-	-- Bug 9900
-	-- Don't allow connections to production SN yet
-	assert(not string.match(self.serverip, "www.squeezenetwork.com"))
+		if not ip then
+			log:warn("dns lookup failed for ", self.serverip)
+			_handleDisconnect(self, "DNS lookup")
+			return
+		end
+	end
 
-	log:info("connect to ", self.serverip)
+	log:info("connect to ", self.serverip, " (", ip, ")")
 
-	self.socket = SocketTcp(self.jnt, self.serverip, PORT, "SlimProto")
+	self.socket = SocketTcp(self.jnt, ip, PORT, "SlimProto")
 
 	-- connect
 	self.socket:t_connect()
+	self.state = CONNECTED
+	self.txqueue = {}
 
 	-- SC and SN ping the player every 5 and 30 seconds respectively.
 	-- This timeout could be made shorter in the SC case.
@@ -475,8 +566,6 @@ function connect(self, server)
 		self.reconnect and
 		(status.isStreaming or status.isLooping)
 
-	self.state = CONNECTED
-
 	-- send helo packet
 	self:send(self.heloPacket)
 end
@@ -484,16 +573,14 @@ end
 
 -- Disconnect from SqueezeCenter.
 function disconnect(self)
-	if self.state ~= CONNECTED then
-		return
-	end
-
-	log:info("disconnect")
+	log:debug("disconnect")
 
 	self.state = UNCONNECTED
-	self.socket:close()
 
-	self.socket = nil
+	if self.socket then
+		self.socket:close()
+		self.socket = nil
+	end
 end
 
 
@@ -612,7 +699,7 @@ end
 
 function _handleTimer(self)
 	if self.state == CONNECTED then
-		log:warn("bogus timer")
+		log:error("bogus timer")
 		return
 	end
 

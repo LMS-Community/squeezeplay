@@ -1,8 +1,6 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
-local log           = require("jive.utils.log").logger("applets.setup")
 local debug         = require("jive.utils.debug")
 
 local appletManager = appletManager

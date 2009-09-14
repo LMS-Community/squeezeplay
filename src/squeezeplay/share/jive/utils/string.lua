@@ -24,9 +24,8 @@ Builds on Lua's built-in string.* class
 --]]
 
 
-local setmetatable = setmetatable
+local tonumber, setmetatable = tonumber, setmetatable
 local table  = require('jive.utils.table')
-local log    = require("jive.utils.log").logger("applets.setup")
 local ltable = require("string")
 
 module(...)
@@ -87,13 +86,21 @@ function split(inSplitPattern, myString, returnTable)
 		returnTable = {}
 	end
 	local theStart = 1
-	local theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
-	while theSplitStart do
-		table.insert(returnTable, ltable.sub(myString, theStart, theSplitStart-1))
-		theStart = theSplitEnd + 1
-		theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+
+	if inSplitPattern == '' then
+		local length = ltable.len(myString)
+		for i=1,length do
+			table.insert(returnTable, ltable.sub(myString, i, i) )
+		end
+	else
+		local theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+		while theSplitStart do
+			table.insert(returnTable, ltable.sub(myString, theStart, theSplitStart-1))
+			theStart = theSplitEnd + 1
+			theSplitStart, theSplitEnd = ltable.find(myString, inSplitPattern, theStart)
+		end
+		table.insert(returnTable, ltable.sub(myString, theStart))
 	end
-	table.insert(returnTable, ltable.sub(myString, theStart))
 	return returnTable
 end
 
@@ -119,6 +126,47 @@ function matchLiteral(s, pattern, init)
 	local escapedPattern = ltable.gsub(pattern, "[%^%$%(%)%%%.%[%]%*%+%-%?]", "%%%1")
 	return ltable.match(s, escapedPattern, init)
  
+end
+
+--[[
+
+=head2 urlDecode(s)
+
+Decodes a URL-encoded string
+
+=cut
+==]]
+
+function urlDecode (str)
+	str = ltable.gsub(str, "+", " ")
+	str = ltable.gsub(str, "%%(%x%x)", 
+		function(h) 
+			return ltable.char(tonumber(h,16)) 
+		end
+	)
+	str = ltable.gsub (str, "\r\n", "\n")
+	return str
+end
+
+
+--[[
+
+=head2 urlEncode(s)
+
+Takes a string as an arg and returns an encoded URL-encoded string
+
+=cut
+==]]
+
+function urlEncode (str)
+	str = ltable.gsub(str, "\n", "\r\n")
+	str = ltable.gsub(str, "([^0-9a-zA-Z ])",
+		function(c) 
+			return ltable.format("%%%02X", ltable.byte(c)) 
+		end
+	)
+	str = ltable.gsub(str, " ", "+")
+	return str
 end
 
 --[[

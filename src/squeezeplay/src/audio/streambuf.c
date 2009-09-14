@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 
 #include "audio/fifo.h"
@@ -82,6 +80,13 @@ size_t streambuf_get_usedbytes(void) {
 
 	return n;
 }
+
+size_t streambuf_fast_usedbytes(void) {
+	ASSERT_FIFO_LOCKED(&streambuf_fifo);
+
+	return fifo_bytes_used(&streambuf_fifo);
+}
+
 /* returns true if the stream is still open but cannot yet supply the requested bytes */
 bool_t streambuf_would_wait_for(size_t bytes) {
 	size_t n;
@@ -221,6 +226,8 @@ ssize_t streambuf_feed_fd(int fd) {
 size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	size_t sz, w;
 
+	ASSERT_FIFO_LOCKED(&streambuf_fifo);
+
 	if (streaming) {
 		*streaming = streambuf_streaming;
 	}
@@ -247,6 +254,18 @@ size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming)
 	if ((streambuf_fifo.rptr == streambuf_fifo.wptr) && streambuf_loop) {
 		streambuf_fifo.rptr = streambuf_lptr;
 	}
+
+#if 0
+	{
+		static FILE *fp = NULL;
+		
+		if (!fp) {
+			fp = fopen("stream.dat", "w");
+		}
+
+		fwrite(buf, sz, 1, fp);
+	}
+#endif
 
 	return sz;
 }
@@ -348,8 +367,7 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 			icy_buf = alloca(icy_len);
 			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
 			assert(r == icy_len);
-			assert( strstr( (char *)icy_buf, "StreamTitle" ) != NULL );
-			DEBUG_TRACE("got icy metadata: %s", (char *) icy_buf);
+			LOG_DEBUG(log_audio_decode, "got icy metadata: %s", (char *) icy_buf);
 
 			decode_queue_metadata(SHOUTCAST, icy_buf, icy_len);
 
@@ -371,6 +389,65 @@ struct stream {
 	u8_t *body;
 	int body_len;
 };
+
+
+static int stream_load_loopL(lua_State *L) {
+	int fd;
+	ssize_t n, len;
+	char *filename;
+
+	/*
+	 * 1: self
+	 * 2: file
+	 */
+
+	streambuf_mark_loop();
+
+	filename = alloca(PATH_MAX);
+	if (!squeezeplay_find_file(lua_tostring(L, 2), filename)) {
+		LOG_ERROR(log_audio_decode, "Can't find image %s\n", lua_tostring(L, 2));
+		return 0;
+	}
+
+
+	if ((fd = open(filename, O_RDONLY)) < 0) {
+		LOG_ERROR(log_audio_decode, "Can't open %s", lua_tostring(L, 2));
+		return 0;
+	}
+
+	fifo_lock(&streambuf_fifo);
+
+	n = fifo_bytes_free(&streambuf_fifo);
+	if ((len = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
+		goto read_err;
+	}
+	fifo_wptr_incby(&streambuf_fifo, len);
+
+	n = fifo_bytes_free(&streambuf_fifo);
+	if (n) {
+		if ((n = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
+			goto read_err;
+		}
+		fifo_wptr_incby(&streambuf_fifo, n);
+		len += n;
+	}
+
+	fifo_unlock(&streambuf_fifo);
+	close(fd);
+
+	streambuf_streaming = FALSE;
+	streambuf_bytes_received = len;
+	streambuf_filter = streambuf_next_filter;
+	streambuf_next_filter = NULL;
+
+	return 0;
+
+ read_err:
+	fifo_unlock(&streambuf_fifo);
+	close(fd);
+
+	return 0;
+}
 
 
 static int stream_connectL(lua_State *L) {
@@ -399,7 +476,7 @@ static int stream_connectL(lua_State *L) {
 	serv_addr.sin_family = AF_INET;
 
 
-	DEBUG_TRACE("streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), serv_addr.sin_port);
+	LOG_DEBUG(log_audio_decode, "streambuf connect %s:%d", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
 
 	/* Create socket */
 	fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -446,6 +523,7 @@ static int stream_connectL(lua_State *L) {
 
 	streambuf_clear_loop();
 	streambuf_bytes_received = 0;
+	streambuf_copyright = FALSE;
 	streambuf_filter = streambuf_next_filter;
 	streambuf_next_filter = NULL;
 
@@ -472,9 +550,6 @@ static int stream_disconnectL(lua_State *L) {
 		CLOSESOCKET(stream->fd);
 		stream->fd = 0;
 	}
-
-	streambuf_bytes_received = 0;
-	streambuf_copyright = FALSE;
 
 	return 0;
 }
@@ -596,7 +671,7 @@ static int stream_readL(lua_State *L) {
 			if (stream->num_crlf == 4) {
 				header_len = body_ptr - stream->body - 1;
 
-				//DEBUG_TRACE("headers %d %*s\n", header_len, header_len, stream->body);
+				//LOG_DEBUG(log_audio_decode, "headers %d %*s\n", header_len, header_len, stream->body);
 
 				/* Send headers to SqueezeCenter */
 				lua_getfield(L, 2, "_streamHttpHeaders");
@@ -638,9 +713,8 @@ static int stream_writeL(lua_State *L) {
 	 */
 
 	stream = lua_touserdata(L, 1);
-	header = luaL_checkstring(L, 3);
+	header = lua_tolstring(L, 3, &len);
 
-	len = strlen(header);
 	while (len > 0) {
 		n = send(stream->fd, header, len, 0);
 
@@ -667,6 +741,66 @@ static int stream_writeL(lua_State *L) {
 
 	lua_pushboolean(L, TRUE);
 	return 1;
+}
+
+
+/* feed data from a lua string into the streambuf fifo */
+static int stream_feedfromL(lua_State *L) {
+	struct stream *stream;
+	u8_t *data;
+	size_t len, n;
+
+	/*
+	 * 1: Stream (self)
+	 * 2: string to enqueue to streambuf
+	 */
+
+	n = streambuf_get_freebytes();
+
+	if (n == 0) {
+		lua_pushinteger(L, 0);
+		return 1;
+	}
+
+	stream = lua_touserdata(L, 1);
+	data = (u8_t*)lua_tolstring(L, 2, &len);
+
+	if (n > len) {
+		n = len;
+	}
+
+	streambuf_feed(data, n);
+
+	lua_pushinteger(L, n);
+	return 1;
+}
+
+
+/* read data from the stream socket into a lua string */
+static int stream_readtoL(lua_State *L) {
+	struct stream *stream;
+	char buf[4094];
+	int n;
+	/*
+	 * 1: Stream (self)
+	 */
+
+	stream = lua_touserdata(L, 1);
+
+	n = recv(stream->fd, buf, sizeof(buf), 0);	
+
+	if (n > 0) {
+		lua_pushlstring(L, buf, n);
+		return 1;
+	} else if (n == -1 && errno == EAGAIN) {
+		lua_pushnil(L);
+		return 1;
+	} else {
+		CLOSESOCKET(stream->fd);
+		lua_pushnil(L);
+		lua_pushstring(L, strerror(SOCKETERROR));
+		return 2;
+	}
 }
 
 
@@ -698,25 +832,27 @@ static int stream_icy_metaintervalL(lua_State *L) {
 
 static const struct luaL_Reg stream_f[] = {
 	{ "connect", stream_connectL },
+	{ "flush", stream_flushL },
+	{ "loadLoop", stream_load_loopL },
+	{ "markLoop", stream_mark_loopL },
+	{ "icyMetaInterval", stream_icy_metaintervalL },
 	{ NULL, NULL }
 };
 
 static const struct luaL_Reg stream_m[] = {
 	{ "__gc", stream_disconnectL },
 	{ "disconnect", stream_disconnectL },
-	{ "flush", stream_flushL },
 	{ "getfd", stream_getfdL },
 	{ "read", stream_readL },
 	{ "write", stream_writeL },
-	{ "markLoop", stream_mark_loopL },
-	{ "icyMetaInterval", stream_icy_metaintervalL },
+	{ "feedFromLua", stream_feedfromL },
+	{ "readToLua", stream_readtoL },
 	{ NULL, NULL }
 };
 
 
 int luaopen_streambuf(lua_State *L) {
-
-	fifo_init(&streambuf_fifo, STREAMBUF_SIZE);
+	fifo_init(&streambuf_fifo, STREAMBUF_SIZE, false);
 
 	/* stream methods */
 	luaL_newmetatable(L, "squeezeplay.stream");

@@ -31,11 +31,9 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Tile                   = require("jive.ui.Tile")
 local Timer                  = require("jive.ui.Timer")
-local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
 local iconbar                = iconbar
@@ -117,8 +115,7 @@ function init(self)
 				 end)
 
 	-- wireless
-	local wireless = Networking:wirelessInterface()
-	self.wireless = Networking(jnt, wireless)
+	self.wireless = Networking:wirelessInterface(jnt)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)
@@ -425,7 +422,7 @@ function setBrightness(self, level)
 end
 
 function settingsBrightnessShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local level = jiveBSP.ioctl(12) / 2047
 
@@ -439,12 +436,12 @@ function settingsBrightnessShow(self, menuItem)
 				      end
 			      end)
 
-	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
-				       Icon("sliderMin"),
-				       slider,
-				       Icon("sliderMax")
-			       }))
+		min = Icon("button_slider_min"),
+		slider = slider,
+		max = Icon("button_slider_max")
+	}))
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()
@@ -466,7 +463,7 @@ end
 
 
 function settingsBacklightTimerShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local timeout = settings.dimmedTimeout
@@ -475,27 +472,33 @@ function settingsBacklightTimerShow(self, menuItem)
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("BSP_TIMER_10_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
 					},
 					{
 						text = self:string("BSP_TIMER_20_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
 					},
 					{
 						text = self:string("BSP_TIMER_30_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
 					},
 					{
 						text = self:string("BSP_TIMER_1_MIN"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
 					},
 					{
 						text = self:string("BSP_TIMER_NEVER"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
 					},
 					{
 						text = self:string("DIM_WHEN_CHARGING"),
-						icon = Checkbox("checkbox",
+						style = 'item_choice',
+						check = Checkbox("checkbox",
 								function(obj, isSelected)
 									settings.dimmedAC = isSelected
 								end,
@@ -666,16 +669,16 @@ end
 
 function lockScreen(self)
 	-- lock
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
 
 	-- FIXME change icon and text
-	popup:addWidget(Icon("iconLocked"))
+	popup:addWidget(Icon("icon_locked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
-	popup:addWidget(Textarea("lockedHelp", self:string("BSP_SCREEN_LOCKED_HELP")))
+	popup:addWidget(Textarea("help_text", self:string("BSP_SCREEN_LOCKED_HELP")))
 
 	popup:show()
 
@@ -726,9 +729,9 @@ function batteryLowShow(self)
 
 	log:info("batteryLowShow")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("iconBatteryLow"))
+	popup:addWidget(Icon("icon_battery_low"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
 
 	-- make sure this popup remains on screen
@@ -779,10 +782,10 @@ end
 function settingsPowerDown(self, menuItem)
         log:debug("powerDown menu")
 	-- add window
-	local window = Window("window", menuItem.text, 'settingstitle')
-	window:addWidget(Textarea("help", self:string("POWER_DOWN_HELP")))
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 
 	local menu = SimpleMenu("menu")
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_DOWN_HELP")))
 	window:addWidget(menu)
 
 
@@ -813,9 +816,9 @@ function settingsSleep(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting_popup")
 
-	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
 
 	-- make sure this popup remains on screen
@@ -840,9 +843,9 @@ function settingsPowerOff(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("iconPower"))
+	popup:addWidget(Icon("icon_power"))
 	popup:addWidget(Label("text", self:string("GOODBYE")))
 
 	-- make sure this popup remains on screen
@@ -871,7 +874,7 @@ end
 
 
 function settingsTestSuspend(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 
@@ -896,7 +899,8 @@ function settingsTestSuspend(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{ 
 			text = "Sleep Timeout", 
-			icon = Choice(
+			style = 'item_choice',
+			check = Choice(
 				      "choice", 
 				      sleepOptions,
 				      function(obj, selectedIndex)
@@ -908,7 +912,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = "Suspend Timeout", 
-			icon = Choice(
+			style = 'item_choice',
+			check = Choice(
 				      "choice", 
 				      suspendOptions,
 				      function(obj, selectedIndex)
@@ -920,7 +925,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = "Suspend Enabled", 
-			icon = Checkbox(
+			style = 'item_choice',
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendEnabled = isSelected
@@ -931,7 +937,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = "Suspend Wake", 
-			icon = Checkbox(
+			style = 'item_choice',
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendWake = isSelected and 30 or nil
@@ -942,7 +949,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = self:string("WLAN_POWER_SAVE"), 
-			icon = Checkbox(
+			style = 'item_choice',
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.wlanPSEnabled = isSelected
@@ -954,7 +962,7 @@ function settingsTestSuspend(self, menuItem)
 		},
 	})
 
-	window:addWidget(Textarea("help", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -1099,12 +1107,12 @@ function _suspend(self)
 	log:info("Suspend ...")
 
 	-- draw popup ready for resume
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
 
-	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("icon_connecting"))
 	popup:addWidget(Label("text", self:string("PLEASE_WAIT")))
 
 	-- ignore all events

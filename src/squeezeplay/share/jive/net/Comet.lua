@@ -57,7 +57,7 @@ This class implements a HTTP socket running in a L<jive.net.NetworkThread>.
 
 
 -- stuff we use
-local assert, ipairs, table, pairs, string, tonumber = assert, ipairs, table, pairs, string, tonumber
+local assert, ipairs, table, pairs, string, tonumber, tostring = assert, ipairs, table, pairs, string, tonumber, tostring
 
 local oo            = require("loop.simple")
 local math          = require("math")
@@ -171,7 +171,7 @@ end
 -- I<path> is the absolute path to the servers cometd handler and defaults to
 -- '/cometd'.
 function setEndpoint(self, ip, port, path)
-	log:error(self, ": setEndpoint state=", self.state, ", ", ip, ", ", port, ", ", path)
+	log:debug(self, ": setEndpoint state=", self.state, ", ", ip, ", ", port, ", ", path)
 
 	local oldState = self.state
 
@@ -451,7 +451,12 @@ function request(self, func, playerid, request, priority)
 	local id = self.reqid
 
 	if log:isDebug() then
-		log:debug(self, ": request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(request, ","), ", priority:", priority, ")")
+		local _request = {}
+		for i,v in ipairs(request) do
+			_request[i] = tostring(v)
+		end
+
+		log:debug(self, ": request(", func, ", reqid:", id, ", ", playerid, ", ", table.concat(_request, ","), ", priority:", priority, ")")
 	end
 
 	-- Add to pending requests
@@ -469,7 +474,8 @@ function request(self, func, playerid, request, priority)
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
-			self.jnt:notify('cometDisconnected', self)
+			self.jnt:notify('cometDisconnected', self, self.idleTimeoutTriggered)
+			self.idleTimeoutTriggered = nil
 		end
 
 		return id
@@ -551,7 +557,9 @@ _state = function(self, state)
 		self.chttp:close()
 		self.rhttp:close()
 
-		self.jnt:notify('cometDisconnected', self)
+		self.jnt:notify('cometDisconnected', self, self.idleTimeoutTriggered)
+		self.idleTimeoutTriggered = nil
+
 	end
 end
 
@@ -586,16 +594,13 @@ _handshake = function(self)
 		},
 	} }
 
-	-- only send the mac address for hardware devices
-	if System:isHardware() then
-		data[1].ext.mac = System:getMacAddress()
-	end
+	data[1].ext.mac = System:getMacAddress()
 
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
 
 	_state(self, CONNECTING)
-	
+
 	local req = CometRequest(
 			_getHandshakeSink(self),
 			self.uri,
@@ -720,8 +725,6 @@ end
 
 
 _connected = function(self)
-	_state(self, CONNECTED)
-
 	local data = { }
 
 	-- Add any un-acknowledged requests to the outgoing data
@@ -747,6 +750,43 @@ _connected = function(self)
 		)
 
 		self.rhttp:fetch(req)
+	end
+
+	_state(self, CONNECTED)
+end
+
+
+function _resetIdleTimer(self)
+	if not self.idleTimeout or self.idleTimeout == 0 then
+		return
+	end
+
+	if not self.idleTimer then
+		self.idleTimer = Timer( 0,
+					function()
+						if self.state == CONNECTED then
+							log:debug(self, " disconnect after idleTimeout: ", self.idleTimeout)
+							self.idleTimeoutTriggered = true
+							_disconnect(self)
+						end
+					end,
+					true)
+	end
+	self.idleTimer:restart(self.idleTimeout * 1000)
+end
+
+
+-- if >0, disconnect from server idleTimeout seconds after the most recent request
+function setIdleTimeout(self, idleTimeout)
+	self.idleTimeout = idleTimeout
+
+	if not idleTimeout or idleTimeout == 0 then
+		if self.idleTimer then
+			self.idleTimer:stop()
+		end
+	else
+		-- >0 time, adjust timer
+		self:_resetIdleTimer()
 	end
 end
 
@@ -781,6 +821,30 @@ _getRequestSink = function(self)
 			_response(self, chunk)
 		end
 	end
+end
+
+function removeRequest(self, requestId)
+	if self.state == CONNECTED then
+		log:warn("Can't remove sent request while connection is active. ", requestId)
+		return false
+	end
+
+	--try both sent and pending,s ince request may have been sent prior to knowing server was down
+	for i, request in ipairs( self.sent_reqs ) do
+		if request.id == requestId then
+			table.remove( self.sent_reqs, i )
+			return true
+		end
+	end
+
+	for i, request in ipairs( self.pending_reqs ) do
+		if request.reqid == requestId then
+			table.remove( self.pending_reqs, i )
+			return true
+		end
+	end
+
+	log:warn("request not found to remove, unexpected. ", requestId )
 end
 
 
@@ -858,6 +922,10 @@ _response = function(self, chunk)
 				
 			if string.find(subscription, '/slim/request') then
 				-- an async notification from a normal request
+				if not event.id then
+					log:error("No id. event:")
+					return
+				end
 				subscription = subscription .. '|' .. event.id
 				onetime_request = true
 			end

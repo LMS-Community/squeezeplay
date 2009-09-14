@@ -2,21 +2,6 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-WELCOME
-	CS	Vítejte
-	DA	Velkommen
-	DE	Willkommen
-	EN	Welcome
-	ES	Bienvenido
-	FI	Tervetuloa
-	FR	Bienvenue
-	IT	Benvenuti
-	NL	Welkom
-	NO	Velkommen
-	PL	Zapraszamy
-	RU	Добро пожаловать!
-	SV	Välkommen
-
 SETTINGS
 	CS	Nastavení
 	DA	Indstillinger
@@ -32,6 +17,66 @@ SETTINGS
 	RU	Настройки
 	SV	Inställningar
 
+INTERNET_RADIO
+	CS	Internetové rádio
+	DA	Internetradio
+	DE	Internetradio
+	EN	Internet Radio
+	ES	Radio por Internet
+	FI	Nettiradio
+	FR	Radio Internet
+	IT	Radio Internet
+	NL	Internetradio
+	NO	Internett-radio
+	PL	Radio internetowe
+	RU	Радиостанции Интернета
+	SV	Webbradio
+
+MY_MUSIC
+	CS	Hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Omat musiikkitiedostot
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
+
+GLOBAL_HELP
+	CS	Nápověda
+	DA	Hjælp
+	DE	Hilfe
+	EN	Help
+	ES	Ayuda
+	FI	Ohje
+	FR	Aide
+	IT	Guida in linea
+	NL	Help
+	NO	Hjelp
+	PL	Pomoc
+	RU	Справка
+	SV	Hjälp
+
+GLOBAL_SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Hilfe
+	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная справка
+	SV	Ytterligare hjälp
+
 REMOTE_SETTINGS
 	CS	Nastavení ovladače
 	DA	Indstillinger for Controller
@@ -39,7 +84,7 @@ REMOTE_SETTINGS
 	EN	Controller Settings
 	ES	Configuración del mando
 	FI	Kaukosäätimen asetukset
-	FR	Parametres de la telecommande
+	FR	Paramètres de la télécommande
 	IT	Impostazioni telecomando
 	NL	Afstandsbedieningsinstellingen
 	NO	Kontrollinnstillinger
@@ -90,11 +135,71 @@ ADVANCED_SETTINGS
 	NO	Avansert
 	PL	Zaawansowane
 	RU	Дополнительно
-	SV	Avancerad
+	SV	Avancerat
+
+AUDIO_SETTINGS
+	CS	Nastavení zvuku
+	DA	Lydindstillinger
+	DE	Audioeinstellungen
+	EN	Audio Settings
+	ES	Configuración de audio
+	FI	Ääniasetukset
+	FR	Paramètres audio
+	IT	Impostazioni audio
+	NL	Geluidsinstellingen
+	NO	Lydinnstillinger
+	PL	Ustawienia audio
+	RU	Настройки аудиоканала
+	SV	Ljudinställningar
+
+BETA_FEATURES
+	CS	Beta vlastnosti
+	DA	Beta-funktioner
+	DE	Beta-Funktionen
+	EN	Beta Features
+	ES	Características beta
+	FI	Beeta-ominaisuudet
+	FR	Fonctions bêta
+	IT	Funzionalità Beta
+	NL	Bètafuncties
+	NO	Betafunksjoner
+	PL	Funkcje w wersji beta
+	RU	Функции бета-версии
+	SV	Beta-funktioner
+
+BRIGHTNESS_SETTINGS
+	CS	Jas
+	DA	Lysstyrke
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
+	SV	Ljusstyrka
+
+NETWORK_NETWORKING
+	CS	Připojování do sítě
+	DA	Netværk
+	DE	Netzwerke
+	EN	Networking
+	ES	Redes
+	FI	Verkko
+	FR	Mise en réseau
+	IT	Connessione alla rete in corso
+	NL	Netwerken
+	NO	Nettverk
+	PL	Sieć
+	RU	Работа в сети
+	SV	Nätverk
 
 FACTORY_TEST
 	CS	Tovární zkouška
-	DA	Test af standardindstillinger
+	DA	Fabrikstest
 	DE	Fabriktest
 	EN	Factory Test
 	ES	Prueba de fábrica
@@ -105,17 +210,17 @@ FACTORY_TEST
 	NO	Fabrikktest
 	PL	Test fabryczny
 	RU	Фабричный тест
-	SV	Fabrikstestning
+	SV	Test av ursprungsinställningar
 
 DEBUG_LOG
-	CS	Přihlašování
+	CS	Protokolování
 	DA	Logføring
 	DE	Protokoll
 	EN	Logging
 	ES	Registrando
 	FI	Kirjaus
 	FR	Journalisation
-	IT	Registrazione in corso
+	IT	Registrazione
 	NL	Loggen
 	NO	Loggføring
 	PL	Rejestrowanie
@@ -153,7 +258,7 @@ GAMES
 	SV	Spel
 
 INSERT
-	CS	Insert
+	CS	Vložit
 	DA	Indsæt
 	DE	Einfügen
 	EN	Insert
@@ -163,7 +268,7 @@ INSERT
 	IT	Inserisci
 	NL	Invoegen
 	NO	Sett inn
-	PL	Insert
+	PL	Wstaw
 	RU	Вставить
 	SV	Infoga
 
@@ -227,6 +332,21 @@ ALLOWEDCHARS_WITHCAPS
 	RU	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
 
+ALLOWEDCHARS_EMAIL
+	CS	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	FI	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	PL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	RU	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'*+-/=?^_`{|}~0123456789@.
+
 RETURN_TO_SETUP
 	CS	Zpět k nastavení
 	DA	Tilbage til Konfiguration
@@ -241,4 +361,34 @@ RETURN_TO_SETUP
 	PL	Powrót do konfiguracji
 	RU	Вернуться к установке
 	SV	Återgå till installationen
+
+SHORTCUTS_RESET
+	CS	Opětovně nastavit na výchozí
+	DA	Nulstil
+	DE	Zurücksetzen
+	EN	Reset to Defaults
+	ES	Restablecer a valores predeterminados
+	FI	Palauta oletuksiin
+	FR	Restauration des valeurs par défaut
+	IT	Impostazioni predefinite
+	NL	Standaardwaarden
+	NO	Tilbakestill til standardinnstillinger
+	PL	Resetuj do wartości domyślnych
+	RU	Восстановление стандартных настроек
+	SV	Återställ standardinställningarna
+
+KEYBOARD_DONE
+	CS	hotovo
+	DA	udført
+	DE	Fertig
+	EN	done
+	ES	listo
+	FI	valmis
+	FR	terminé
+	IT	fine
+	NL	gereed
+	NO	ferdig
+	PL	gotowe
+	RU	готово
+	SV	klart
 

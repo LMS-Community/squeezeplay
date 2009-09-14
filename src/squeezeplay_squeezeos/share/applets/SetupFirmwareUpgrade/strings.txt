@@ -9,33 +9,18 @@ UPDATE
 	EN	Software Update
 	ES	Actualización de software
 	FI	Ohjelmiston päivitys
-	FR	Mise à jour logicielle
+	FR	Mise à jour du logiciel
 	IT	Aggiornamento software
 	NL	Software-update
 	NO	Programvareoppdatering
 	PL	Aktualizacja oprogramowania
 	RU	Обновление ПО
-	SV	Mjukvaruppgradering av spelaren
-
-NETWORK_UPDATE
-	CS	Aktualizace sítě
-	DA	Netværksopdatering
-	DE	Netzwerk-Update
-	EN	Network update
-	ES	Actualización de red
-	FI	Verkkopäivitys
-	FR	Mise à jour du réseau
-	IT	Aggiornamento rete
-	NL	Netwerk-update
-	NO	Nettverksoppdatering
-	PL	Aktualizacja sieciowa
-	RU	Сетевое обновление
-	SV	Nätverksuppdatering
+	SV	Programvaruuppdatering
 
 BEGIN_UPDATE
 	CS	Zahájit aktualizaci
 	DA	Start opdateringen
-	DE	Aktualisierung starten
+	DE	Update starten
 	EN	Begin update
 	ES	Iniciar actualización
 	FI	Aloita päivitys
@@ -56,56 +41,71 @@ CONTINUE
 	FI	Jatka
 	FR	Continuer
 	IT	Continua
-	NL	Doorgaan
+	NL	Verdergaan
 	NO	Fortsett
 	PL	Kontynuuj
 	RU	Продолжить
 	SV	Fortsätt
 
-UPDATE_CONTINUE_SDCARD
-	CS	Aktualizovat z SD karty
-	DA	Opdater fra SD-kort
-	DE	Aktualisierung von SD-Karte
-	EN	Update from SD card
-	ES	Actualizar desde tarjeta SD
-	FI	Päivitä SD-kortista
-	FR	Mise à jour à partir de la carte SD
-	IT	Aggiorna da scheda SD
-	NL	Updaten via SD-kaart
-	NO	Oppdatering fra sd-kort
-	PL	Aktualizuj z karty SD
-	RU	Обновить с SD-карты
-	SV	Uppdatera från SD-kort
+UPDATE_FROM_REMOVABLE_MEDIA
+	CS	Aktualizovat z výměnného média
+	DA	Opdater fra flytbart medie
+	DE	Aktualisierung vom Wechseldatenträger
+	EN	Update from removable media
+	ES	Actualizar desde medios extraíbles
+	FI	Päivitä siirrettävästä tietovälineestä
+	FR	Mise à jour à partir d'un support amovible
+	IT	Aggiorna da supporto rimovibile
+	NL	Update van verwijderbare media
+	NO	Oppdater fra flyttbar stasjon
+	PL	Aktualizacja z nośnika wymiennego
+	RU	Обновить со съемного носителя
+	SV	Uppdatera från flyttbart medium
+
+UPDATE_TO_X
+	CS	Aktualizovat do %s
+	DA	Opdatering til %s
+	DE	Aktualisierung auf %s
+	EN	Update to %s
+	ES	Actualizar a %s
+	FI	Päivitä kohteeseen %s
+	FR	Mettre à jour vers %s
+	IT	Aggiorna a %s
+	NL	Naar %s updaten
+	NO	Oppdater til %s
+	PL	Aktualizuj do %s
+	RU	Обновить до %s
+	SV	Uppdatera till %s
 
 UPDATE_FAILURE
-	CS	Upgrade selhal
-	DA	Opgraderingen mislykkedes
-	DE	Aktualisierungsfehler
-	EN	Upgrade failed
-	ES	Error de actualización
+	CS	Aktualizace selhala
+	DA	Opdateringen mislykkedes
+	DE	Update-Fehler
+	EN	Update failed
+	ES	Fallo al actualizar
 	FI	Päivitys epäonnistui
 	FR	Echec de la mise à jour
 	IT	Aggiornamento non riuscito
-	NL	Upgrade mislukt
-	NO	Oppgraderingen mislyktes
+	NL	Update mislukt
+	NO	Oppdatering mislyktes
 	PL	Aktualizacja nie powiodła się
 	RU	Ошибка при обновлении
-	SV	Uppgraderingen misslyckades
+	SV	Uppdateringen misslyckades
 
 UPDATE_FAILURE_HELP
-	CS	Při upgradu tohoto ovládání se vyskytl problém. Zkuste to znovu nebo kontaktujte zákaznickou podporu.
-	DA	Der opstod et problem under opgraderingen af denne fjernbetjening. Prøv igen, eller kontakt kundeservice.
-	DE	Fehler beim Aktualisieren der Fernbedienung. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
-	EN	There was a problem upgrading this remote. Please try again, or contact support.
-	ES	Hubo un problema al actualizar este mando. Vuelva a intentarlo o contacte con asistencia técnica.
-	FI	Kaukosäätimen päivittämisessä oli ongelma. Yritä uudelleen tai ota yhteyttä tekniseen tukeen.
-	FR	Un problème est survenu lors de la mise à niveau de la télécommande. Veuillez réessayer ou contacter le service de support.
-	IT	Si è verificato un problema durante l'aggiornamento del telecomando. Riprovare o contattare l'assistenza.
-	NL	Er heeft zich een probleem voorgedaan bij het upgraden van deze afstandsbediening. Probeer het opnieuw, of neem contact op met ondersteuning.
-	NO	Det oppsto et problem med oppgraderingen av denne fjernkontrollen. Prøv på nytt, eller kontakt kundestøtte.
-	PL	Wystąpił błąd podczas aktualizowania tego pilota zdalnego sterowania. Spróbuj ponownie lub skontaktuj się z działem wsparcia.
-	RU	Ошибка при обновлении этого удаленного устройства. Повторите попытку или обратитесь в службу поддержки.
-	SV	Det uppstod ett problem vid uppgraderingen av fjärrkontrollen. Försök igen eller kontakta supporten.
+	CS	Při instalaci této aktualizace došlo k potížím. Zkuste laskavě znovu nebo kontaktujte asistenční službu.
+	DA	Der opstod et problem under installationen af denne opdatering. Prøv igen, eller kontakt kundeservice.
+	DE	Fehler bei der Installation des Updates. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
+	EN	There was a problem installing this update. Please try again, or contact support.
+	ES	Se ha producido un problema al instalar la actualización. Vuelva a intentarlo o póngase en contacto con el servicio de asistencia.
+	FI	Tätä päivitystä asennettaessa ilmeni ongelma. Yritä uudelleen tai ota yhteys tukeen.
+	FR	Un problème est survenu lors de l'installation de cette mise à jour. Essayez à nouveau ou contactez le support.
+	IT	Si è verificato un problema durante l'installazione dell'aggiornamento. Riprovare o contattare l'assistenza.
+	NL	Er is een probleem opgetreden bij de installatie van deze update. Probeer het opnieuw, of neem contact op met de helpdesk.
+	NO	Det oppsto et problem med installeringen av denne oppdateringen. Prøv på nytt, eller kontakt kundestøtte.
+	PL	Wystąpił błąd podczas instalowania tej aktualizacji. Spróbuj ponownie lub skontaktuj się z działem wsparcia.
+	RU	Ошибка при установке обновления. Повторите попытку или обратитесь в службу поддержки.
+	SV	Det uppstod ett fel när uppdateringen skulle installeras. Försök igen eller ta kontakt med support.
 
 UPDATE_TRY_AGAIN
 	CS	Zkuste to znovu...
@@ -117,100 +117,145 @@ UPDATE_TRY_AGAIN
 	FR	Veuillez réessayer...
 	IT	Riprova...
 	NL	Probeer opnieuw...
-	NO	Prøv igjen ...
+	NO	Prøv igjen...
 	PL	Spróbuj ponownie...
 	RU	Повторите попытку...
 	SV	Försök igen ...
 
+UPDATE_USB
+	CS	Rozhraní USB
+	DA	Usb-port
+	DE	USB
+	EN	USB
+	ES	USB
+	FI	USB
+	FR	USB
+	IT	USB
+	NL	USB
+	NO	USB-port
+	PL	USB
+	RU	USB
+	SV	USB-port
+
+UPDATE_SD
+	CS	SD
+	DA	SD
+	DE	SD
+	EN	SD
+	ES	SD
+	FI	SD
+	FR	SD
+	IT	SD
+	NL	SD
+	NO	SD
+	PL	Karta SD
+	RU	SD
+	SV	SD
+
 UPDATE_DOWNLOAD
-	CS	\nKopíruji aktualizaci
-	DA	\nKopierer opdateringen
-	DE	\nAktualisierung wird kopiert
-	EN	\nCopying Update
-	ES	\nCopiando actualización
-	FI	\nKopioidaan päivitystä
-	FR	\nCopie de la mise à jour
-	IT	\nCopia aggiornamento in corso
-	NL	\nUpdates kopiëren
-	NO	\nKopierer oppdatering
-	PL	\nKopiowanie aktualizacji
-	RU	\nКопирование обновления
-	SV	\nKopierar uppdatering
+	CS	Stahování
+	DA	Henter
+	DE	Daten werden heruntergeladen
+	EN	Downloading
+	ES	Descargando
+	FI	Ladataan
+	FR	Téléchargement en cours...
+	IT	Download in corso...
+	NL	Downloaden
+	NO	Laster ned
+	PL	Pobieranie
+	RU	Загрузка
+	SV	Hämtar
 
 UPDATE_VERIFY
-	CS	\nOvěřuji aktualizaci
-	DA	\nKontrollerer opdateringen
-	DE	\nAktualisierung wird geprüft
-	EN	\nVerifying Update
-	ES	\nComprobando actualización
-	FI	\nTarkistetaan päivitystä
-	FR	\nVérification des mises à jour
-	IT	\nVerifica aggiornamento
-	NL	\nUpdate verifiëren
-	NO	\nBekrefter oppdatering
-	PL	\nSprawdzanie aktualizacji
-	RU	\nПроверка обновления
-	SV	\nVerifierar uppdatering
+	CS	Instalace
+	DA	Installerer
+	DE	Installieren
+	EN	Installing
+	ES	Instalar
+	FI	Asentaminen
+	FR	Installation
+	IT	Installazione
+	NL	Installeren
+	NO	Installerer
+	PL	Instalowanie
+	RU	Установка
+	SV	Installerar
 
 UPDATE_REBOOT
-	CS	\nRestartuji
-	DA	\nGenstarter
-	DE	\nNeustart
-	EN	\nRestarting
-	ES	\nReiniciando
-	FI	\nKäynnistetään uudelleen
-	FR	\nRedémarrage
-	IT	\nRiavvio
-	NL	\nOpnieuw opstarten
-	NO	\nStarter på nytt
-	PL	\nRestartowanie
-	RU	\nПерезапуск
-	SV	\nStartar om
+	CS	\nRestartování
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
 
 UPDATE_BEGIN_UPGRADE
-	CS	Pro toto dálkové ovládání je k dispozici aktualizovaný software. Aktualizace na verzi %s může trvat několik minut.
-	DA	Der er kommet en softwareopdatering til denne fjernbetjening. Det kan tage et par minutter at opdatere til version %s.
-	DE	Für diese Fernbedienung ist eine aktualisierte Software verfügbar. Die Aktualisierung auf Version %s kann ein paar Minuten dauern.
-	EN	Updated software is available for this remote. It may take a few minutes to update to version %s.
-	ES	Hay software actualizado disponible para este mando a distancia. Puede que la actualización a la versión %s tarde varios minutos.
-	FI	Kaukosäätimelle on saatavilla päivitetty ohjelmisto. Päivittäminen versioon %s saattaa viedä muutaman minuutin.
-	FR	Une mise à jour logicielle est disponible pour cette télécommande. La mise à jour à la version %s peut prendre quelques minutes.
-	IT	Per questo telecomando è disponibile software aggiornato. L'aggiornamento alla versione %s può richiedere alcuni minuti.
-	NL	Er is bijgewerkte software beschikbaar voor deze afstandsbediening. Het bijwerken naar versie %s kan enkele minuten duren.
-	NO	Oppdatert programvare er tilgjengelig for denne fjernkontrollen. Det kan ta et par minutter å oppgradere til versjon %s.
-	PL	Dostępne jest zaktualizowane oprogramowanie dla tego pilota zdalnego sterowania. Aktualizacja do wersji %s może zająć kilka minut.
-	RU	Для этого удаленного устройства имеется обновленное ПО. Обновление до версии %s может занять несколько минут.
-	SV	Det finns uppdaterad programvara för den här fjärrkontrollen. Det kan ta några minuter att uppdatera till version %s.
+	CS	Je dostupná nová aktualizace softwaru. Stažení a instalace této aktualizace může trvat několik minut.
+	DA	Der er en ny softwareopdatering. Det kan tage et par minutter at hente og installere den.
+	DE	Ein neues Software-Update ist verfügbar. Es kann ein paar Minuten dauern, bis das Update heruntergeladen und installiert wurde.
+	EN	A new software update is available. It may take a few minutes to download and install this update.
+	ES	Existe una nueva actualización de software. Puede que se tarde unos minutos en descargar e instalar esta actualización.
+	FI	Uusi ohjelmisto on käytettävissä. Tämän päivityksen lataaminen ja asentaminen saattaa kestää joitakin minuutteja.
+	FR	Une nouvelle mise à jour logicielle est disponible. Son téléchargement et son installation peuvent prendre quelques minutes.
+	IT	È disponibile un nuovo aggiornamento del software. Per scaricarlo e installarlo potrebbero essere necessari alcuni minuti.
+	NL	Er is een nieuwe software-update beschikbaar. Het kan enkele minuten duren om deze update te downloaden en te installeren.
+	NO	En ny programvareoppdatering er tilgjengelig. Det kan ta noen minutter å laste ned og installere denne oppdateringen.
+	PL	Dostępna jest nowa aktualizacja oprogramowania. Pobranie i zainstalowanie aktualizacji może zająć kilka minut.
+	RU	Доступно новое обновление ПО. Для загрузки и установки обновления может потребоваться несколько минут.
+	SV	En ny uppdatering finns tillgänglig. Det kan ta några minuter innan den har laddats ner och installerats.
 
 UPDATE_BEGIN_REINSTALL
-	CS	Software pro toto dálkové ovládání je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
-	DA	Softwaren til denne fjernbetjening er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
-	DE	Die Software für diese Fernbedienung ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Aktualisierung starten'.
-	EN	The software for this remote is up to date. If you'd like to reinstall version %s, choose Begin Update.
-	ES	El software de este mando a distancia está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
-	FI	Tämän kaukosäätimen ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
-	FR	Le logiciel de cette télécommande est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
-	IT	Il software di questo telecomando è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
-	NL	De software voor deze afstandsbediening is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
+	CS	Software pro tento Squeezebox je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DA	Softwaren til denne Squeezebox er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
+	DE	Die Software für diese Squeezebox ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
+	EN	The software for this Squeezebox is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este Squeezebox está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FI	Tämän Squeezeboxin ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
+	FR	Le logiciel de cette Squeezebox est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	IT	Il software di questo Squeezebox è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze Squeezebox is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
 	NO	Programvaren for denne fjernkontrollen er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.
 	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
-	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите начало обновления.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
 	SV	Fjärrkontrollens programvara är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
 
-UPDATE_BEGIN_SDCARD
-	CS	Nainstalujte %s z SD karty.
-	DA	Installer %s fra SD-kort.
-	DE	%s von SD-Karte installieren.
-	EN	Install %s from SD card.
-	ES	Instalar %s desde tarjeta SD.
-	FI	Asenna %s SD-kortista.
-	FR	Installer %s à partir d'une carte SD.
-	IT	Installa %s dalla scheda SD.
-	NL	%s installeren van een SD-kaart.
-	NO	Installer %s fra sd-kort.
-	PL	Zainstaluj %s z karty SD.
-	RU	Установить %s с SD-карты.
-	SV	Installera %s från SD-kort.
+UPDATE_BEGIN_REINSTALL_JIVE
+	CS	Software pro tento ovladač je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DA	Softwaren til denne fjernbetjening er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
+	DE	Die Software für diesen Controller ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
+	EN	The software for this controller is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este controlador está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FI	Tämän ohjaimen ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
+	FR	Le logiciel de ce contrôleur est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	IT	Il software di questo telecomando è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze controller is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
+	NO	Programvaren for denne fjernkontrollen er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.
+	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
+	SV	Fjärrkontrollens programvara är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
+
+UPDATE_BEGIN_REMOVABLE_MEDIA
+	CS	Instalovat %s z výměnného média.
+	DA	Installer %s fra flytbart medie.
+	DE	%s vom Wechseldatenträger installieren.
+	EN	Install %s from removable media.
+	ES	Instalar %s desde medios extraíbles.
+	FI	Asenna %s siirrettävästä tietovälineestä.
+	FR	Installet %s à partir du support amovible.
+	IT	Installa %s da supporto rimovibile.
+	NL	Installeer %s via verwijderbare media.
+	NO	Installer %s fra flyttbar stasjon.
+	PL	Instaluj %s z nośnika wymiennego.
+	RU	Установить %s со съемного носителя.
+	SV	Installera %s från flyttbart medium.
 
 UPDATE_BATTERY
 	CS	Dobijte baterii
@@ -242,6 +287,21 @@ UPDATE_BATTERY_HELP
 	RU	Чтобы продолжить обновление ПО, установите пульт в устройство зарядки.
 	SV	Sätt fjärrkontrollen i laddaren om du vill fortsätta med programuppdateringen.
 
+UPDATE_BATTERY_HELP_BABY
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
 UPDATE_CANCEL
 	CS	Storno
 	DA	Annuller
@@ -256,4 +316,20 @@ UPDATE_CANCEL
 	PL	Anuluj
 	RU	Отмена
 	SV	Avbryt
+
+UPDATE_7.4_UPGRADE_MESSAGE_JIVE
+# SLT: this needs to remain squeezenetwork.com. It will present the user information about the change to mysqueezebox.com
+	CS	Právě jste provedli aktualizaci na firmware verze 7.4! Jde o velkou aktualizaci obsahující mnoho změn. Další informace naleznete na www.squeezenetwork.com.
+	DA	Du har opgraderet firmwaren til version 7.4! Der er sket mange ændringer siden forrige version. Du kan læse mere på www.squeezenetwork.com.
+	DE	Sie haben auf die Firmware-Version 7.4 aktualisiert! Dies ist ein wichtiges Upgrade und umfasst zahlreiche Änderungen. Weitere Informationen finden Sie unter www.squeezenetwork.com.
+	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.
+	ES	Acaba de realizar la actualización a la versión 7.4 del firmware. Es una actualización importante y se han producido muchos cambios. Visite www.squeezenetwork.com si desea más información.
+	FI	Olet juuri päivittänyt laitteisto-ohjelmiston versioon 7.4! Tämä on suuri päivitys ja muutoksia on ollut paljon. Saat lisätietoja osoitteesta www.squeezenetwork.com.
+	FR	Vous venez de passer à la version 7.4 du micrologiciel! Cette mise à niveau est importante et comporte de nombreux changements. Pour plus d'informations, veuillez vous rendre sur le site www.squeezenetwork.com.
+	IT	È stato eseguito l'aggiornamento del firmware alla versione 7.4. L'aggiornamento comporta una serie di modifiche importanti. Visitare www.squeezenetwork.com per ulteriori informazioni.
+	NL	Je hebt zojuist een upgrade naar firmwareversie 7.4 uitgevoerd. Dit is een belangrijke upgrade, en er is een groot aantal wijzigingen aangebracht. Ga naar www.squeezenetwork.com voor meer informatie.
+	NO	Du har oppgradert til fastvareversjon 7.4. Dette er en viktig oppgradering, og det har skjedd mange endringer. Gå til www.squeezenetwork.com for mer informasjon.
+	PL	Dokonano aktualizacji oprogramowania układowego do wersji 7.4! Jest to ważna aktualizacja zawierająca wiele zmian. Aby uzyskać więcej informacji, odwiedź witrynę www.squeezenetwork.com.
+	RU	Выполнено обновление микропрограммного обеспечения до версии 7.4. Это важное обновление, содержащее большое количество изменений. Дополнительные сведения см. на сайте www.squeezenetwork.com.
+	SV	Den inbyggda programvaran har uppgraderats till version 7.4. Den nya versionen innehåller omfattande förbättringar, som du kan läsa mer om på www.squeezenetwork.com.
 

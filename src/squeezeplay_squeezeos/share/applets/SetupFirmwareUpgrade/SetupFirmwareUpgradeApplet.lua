@@ -7,7 +7,7 @@
 
 
 -- stuff we use
-local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring = assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring
+local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring, type = assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring, type
 
 local oo                     = require("loop.simple")
 
@@ -26,6 +26,7 @@ local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
 local Tile                   = require("jive.ui.Tile")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
+local Slider                 = require("jive.ui.Slider")
 local Surface                = require("jive.ui.Surface")
 local Task                   = require("jive.ui.Task")
 local Textarea               = require("jive.ui.Textarea")
@@ -33,14 +34,12 @@ local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
 local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
-local hasBSP, BSP            = pcall(require, "jiveBSP")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
 local jnt                    = jnt
+local jiveMain               = jiveMain
 local appletManager          = appletManager
-local upgradeUrl             = upgradeUrl
 
 local JIVE_VERSION           = jive.JIVE_VERSION
 
@@ -54,7 +53,6 @@ local LAYOUT_WEST            = jive.ui.LAYOUT_WEST
 local LAYOUT_CENTER          = jive.ui.LAYOUT_CENTER
 local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
-local firmwareupgradeTitleStyle = 'settingstitle'
 
 local MEDIA_PATH = "/media/"
 
@@ -92,91 +90,137 @@ function _versionCompare(a, b)
 end
 
 
-function _makeUpgradeItems(self, window, menu, optional, url, urlHelp)
-	local machine = System:getMachine()
+function _findServerUpgrade(self, url, urlHelp, server)
 
-	local help = Textarea("help", "")
+	local machine = System:getMachine()
 
 	if url and string.match(url, machine) then
 		local version = self:_firmwareVersion(url)
-		local networkUpdateItem = {
-			text = self:string("BEGIN_UPDATE"),
-			sound = "WINDOWSHOW",
-			callback = function()
-				self.url = url
-				self:_upgrade()
-			end,
-			focusGained = function()
-				if _versionCompare(JIVE_VERSION, version) <= 0 then
-					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_REINSTALL", version or "?"))
-				else
-					help:setValue(self:string(urlHelp or "UPDATE_BEGIN_UPGRADE", version or "?"))
-				end
-			end
+		log:info("Adding to Upgrades: ", url, " version: ", version)
+		local serverName = server and server:getName() or nil
+		return {
+			url = url,
+			version = version,
+			help = urlHelp,
+			serverName = serverName,
 		}
-		menu:addItem(networkUpdateItem)
+	end
+
+	return nil
+end
+
+
+function _findUpgrades(self, url, urlHelp, server)
+	local upgrades = {}
+
+	local machine = System:getMachine()
+
+	if not url then
+		--no specific url given means gather from discovered SCs
+	                for _,server in appletManager:callService("iterateSqueezeCenters") do
+                		local scUrl = server:getUpgradeUrl()
+                		log:info("\t", server, "\t url: ", scUrl)
+                		local upgrade = _findServerUpgrade(self, scUrl, urlHelp, server)
+                		if upgrade then
+	                		upgrades[#upgrades + 1] = upgrade
+	                	end
+                	end
+
+	else
+		upgrades[#upgrades + 1] = _findServerUpgrade(self, url, urlHelp, server)
 	end
 
 	for media in lfs.dir(MEDIA_PATH) do
 		local path = MEDIA_PATH .. media .. "/"
 
-		for entry in lfs.dir(path) do
-			local fileurl = "file:" .. path .. entry
-			local version = self:_firmwareVersion(fileurl)
-	
-			if version or entry == machine .. ".bin" then
-				menu:addItem({
-					text = self:string("UPDATE_CONTINUE_SDCARD"),
-				     	sound = "WINDOWSHOW",
-				     	callback = function()
-						self.url = fileurl
-						self:_upgrade()
-					end,
-					focusGained = function()
-						help:setValue(self:string("UPDATE_BEGIN_SDCARD", version or ""))
-					end
-			     	})
+		local attrs = lfs.attributes(path)
+		if attrs and attrs.mode == "directory" then
+
+			for entry in lfs.dir(path) do
+				local url = "file:" .. path .. entry
+				local version = self:_firmwareVersion(url)
+
+				if version or entry == machine .. ".bin" then
+					upgrades[#upgrades + 1] = {
+						url = url,
+						version = version,
+					}
+				end
 			end
 		end
 	end
 
-	if optional then
-		-- offered upgrade
-		menu:addItem({
-			text = self:string("UPDATE_CANCEL"),
-			sound = "WINDOWHIDE",
-			callback = function()
-				window:hide()
-			end,
-			focusGained = function()
-				help:setValue(nil)
+	return upgrades
+end
+
+
+function _helpString(self, upgrade)
+	local helpString = upgrade.help
+	if not helpString then
+		if string.match(upgrade.url, "file:") then
+			helpString = self:string("UPDATE_BEGIN_REMOVABLE_MEDIA", upgrade.version or "")
+		else
+			if _versionCompare(JIVE_VERSION, upgrade.version) <= 0 then
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_REINSTALL", upgrade.version or "?")
+			else
+				helpString = self:string(upgrade.help or "UPDATE_BEGIN_UPGRADE", upgrade.version or "?")
 			end
-		})
+		end
 	end
 
-	window:addWidget(help)
-	window:addWidget(menu)
+	return helpString
 end
 
--- when the server disconnects we clear the upgrade Url 
-function clearUpgradeUrl(self)
-	upgradeUrl = { false }
+
+function _upgradeWindow(self, upgrades, optional, disallowScreensaver)
+	local window
+	if #upgrades == 1 then
+		window = _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
+	else
+		window = _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
+	end
+
+	self:tieAndShowWindow(window)
 end
 
-function forceUpgrade(self, optional, upgUrl, urlHelp)
-	local url = upgUrl
-	if not upgUrl then
-		url = upgradeUrl[1]
-	end
-	if not url then
-		return
-	end
 
-	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+function _upgradeWindowSingle(self, upgrades, optional, disallowScreensaver)
+	local window = Window("help_list", self:string("UPDATE"), 'settingstitle')
+	window:setButtonAction("rbutton", "help")
+
+	local text = Textarea("help_text", _helpString(self, upgrades[1]))
+
 	local menu = SimpleMenu("menu")
+
+	local itemString = self:string("BEGIN_UPDATE")
+	itemString = itemString.str or itemString
+	if upgrades[1].version then
+		itemString = itemString .. " (" .. upgrades[1].version .. ")"
+	end
+	menu:addItem({
+		text = itemString,
+		sound = "WINDOWSHOW",
+		callback = function()
+			self:_upgrade(upgrades[1].url)
+		end,
+	})
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
+
+	menu:setHeaderWidget(text)
+	window:addWidget(menu)
+
+	if disallowScreensaver then
+		--disallowScreensaver regardless of optional state (useful when coming down this path during this path: setup->diagnostics->FW update
+		window:setAllowScreensaver(false)
+	end
 
 	if not optional then
 		-- forced upgrade, don't allow the user to break out
+		window:setAllowScreensaver(false)
+
+		window:setButtonAction("lbutton", nil)
 		menu:setCloseable(false)
 
 		window:addListener(EVENT_KEY_PRESS,
@@ -190,32 +234,130 @@ function forceUpgrade(self, optional, upgUrl, urlHelp)
 			end)
 	end
 
-	self:_makeUpgradeItems(window, menu, optional, url, urlHelp)
-
-	self:tieAndShowWindow(window)
 	return window
 end
 
-function settingsShow(self)
-	local window = Window("window", self:string("UPDATE"), firmwareupgradeTitleStyle)
+
+function _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
+	local window = Window("text_list", self:string("UPDATE"), 'settingstitle')
+	window:setButtonAction("rbutton", "help")
 
 	local menu = SimpleMenu("menu")
 
-	local url = upgradeUrl[1]
-	if not url then
-		url = false
+	for i,upgrade in ipairs(upgrades) do
+		local itemString
+		if string.match(upgrade.url, "file:") then
+			if upgrade.version then
+				itemString = self:string("UPDATE_TO_X", upgrade.version)
+			else
+				itemString = self:string("UPDATE_FROM_REMOVABLE_MEDIA")
+			end
+		else
+			itemString = self:string("BEGIN_UPDATE")
+			itemString = itemString.str or itemString
+			if upgrade.version then
+				itemString = itemString .. " (" .. upgrade.version .. ")"
+			end
+			if upgrade.serverName then
+				itemString = itemString .. " - [" .. upgrade.serverName .. "]"
+			end
+
+		end
+
+		menu:addItem({
+			text = itemString,
+			sound = "WINDOWSHOW",
+			callback = function()
+				self:_upgrade(upgrade.url)
+			end,
+		})
 	end
 
-	self:_makeUpgradeItems(window, menu, true, url)
+	window:addWidget(menu)
 
-	self:tieAndShowWindow(window)
+	if disallowScreensaver then
+		--disallowScreensaver regardless of optional state (useful when coming down this path during this path: setup->diagnostics->FW update
+		window:setAllowScreensaver(false)
+	end
+
+	if not optional then
+		-- forced upgrade, don't allow the user to break out
+		window:setAllowScreensaver(false)
+
+		window:setButtonAction("lbutton", nil)
+		menu:setCloseable(false)
+
+		window:addListener(EVENT_KEY_PRESS,
+			function(event)
+				local keycode = event:getKeycode()
+				if keycode == KEY_HOME then
+					return EVENT_CONSUME
+				end
+
+				return EVENT_UNUSED
+			end)
+	else
+		menu:addItem({
+			text = self:string("UPDATE_CANCEL"),
+			sound = "WINDOWHIDE",
+			callback = function()
+				window:hide()
+			end,
+		})
+	end
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
+
 	return window
+end
+
+--service method
+function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
+	local upgrades, force, disallowScreensaver
+	if not server then
+		-- in "SC Discovery Mode"
+		log:info("firmware upgrade from discovered SCs")
+		upgrades = _findUpgrades(self, nil)
+		if optionalForScDiscoveryMode then
+			--used for diagnostics page (which offers a FW upgrade page and is offerred during setup, so SS must not work)
+			force = false
+			disallowScreensaver = true
+		else
+			force = true
+		end
+	else
+		local url
+		url, force = server:getUpgradeUrl()
+		upgrades = _findUpgrades(self, url, nil, server)
+		log:info("firmware upgrade from ", server, " url=", url, " force=", force)
+	end
+
+
+	return _upgradeWindow(self, upgrades, not force, disallowScreensaver)
+end
+
+
+function showFirmwareUpgradeMenu(self)
+	local url = false
+	local server
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		server = player:getSlimServer()
+		if server then
+			url = server:getUpgradeUrl()
+		end
+	end
+
+	local upgrades = _findUpgrades(self, url, nil, server)
+
+	return _upgradeWindow(self, upgrades, true)
 end
 
 
 function _checkBattery()
-	if hasBSP then
-		return BSP.ioctl(23) == 0 or BSP.ioctl(17) > 830
+	if appletManager:hasService("isBatteryLow") then
+		return not appletManager:callService("isBatteryLow")
 	else
 		return true
 	end
@@ -223,25 +365,28 @@ end
 
 
 function _chargeBattery(self)
-	local window = Window("window", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	local window = Window("help_list", self:string("UPDATE_BATTERY"), firmwareupgradeTitleStyle)
+	window:setButtonAction("rbutton", "help")
 
-	local menu = SimpleMenu("menu",
-				{
-					{
-						text = self:string("CONTINUE"),
-						sound = "WINDOWSHOW",
-						callback = function()
-								   if _checkBattery() then
-									   self:_upgrade()
-								   else
-									   window:bumpRight()
-								   end
-							   end
-					}
-				})
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				if _checkBattery() then
+					self:_upgrade()
+				else
+					window:bumpRight()
+				end
+			end
+		}
+	})
 
-	local help = Textarea("help", self:string("UPDATE_BATTERY_HELP"))
-	window:addWidget(help)
+	local help = Textarea("help_text", self:string("UPDATE_BATTERY_HELP"))
+	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -250,10 +395,17 @@ end
 
 
 function _t_setText(self, done, msg, count)
-	self.counter:setValue(count or "")
-	self.textarea:setValue(self:string(msg))
+	if type(count) == "number" then
+		self.counter:setValue(count .. "%")
+		self.progress:setRange(1, 100, count)
+	else
+		self.counter:setValue("")
+	end
+
+	self.text:setValue(self:string(msg))
+
 	if done then
-		self.icon:setStyle("iconConnected")
+		self.icon:setStyle("icon_restart")
 	end
 end
 
@@ -269,7 +421,7 @@ function _t_upgrade(self)
 	if not t then
 		-- error
 		log:error("Upgrade failed: ", err)
-		self:_upgradeFailed():showInstead()
+		self:_upgradeFailed()
 
 		if self.popup then
 			self.popup:hide()
@@ -279,24 +431,30 @@ function _t_upgrade(self)
 end
 
 
-function _upgrade(self)
+function _upgrade(self, url)
+	self.url = url
+
 	-- require ac power or sufficient battery to continue
 	if not _checkBattery() then
 		return self:_chargeBattery()
 	end
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("update_popup")
 
 	-- don't allow power saving during upgrades
 	self.popup:setAllowPowersave(false)
 
-	self.icon = Icon("iconConnecting")
+	self.icon = Icon("icon_software_update")
 	self.popup:addWidget(self.icon)
 
-	self.counter = Label("text", "")
-	self.textarea = Label("text", self:string("UPDATE_DOWNLOAD", ""))
+	self.text = Label("text", self:string("UPDATE_DOWNLOAD", ""))
+	self.counter = Label("subtext", "")
+	self.progress = Slider("progress", 1, 100, 1)
+
+	self.popup:addWidget(self.text)
 	self.popup:addWidget(self.counter)
-	self.popup:addWidget(self.textarea)
+	self.popup:addWidget(self.progress)
+	self.popup:focusWidget(self.text)
 
 	-- make sure this popup remains on screen
 	self.popup:setAllowScreensaver(false)
@@ -333,7 +491,9 @@ function _upgradeFailed(self)
 	-- reconnect to server
 	appletManager:callService("connectPlayer")
 
-	local window = Window("window", self:string("UPDATE_FAILURE"))
+	local window = Window("help_list", self:string("UPDATE_FAILURE"))
+	window:setButtonAction("rbutton", "help")
+	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu",
 				{
@@ -343,7 +503,7 @@ function _upgradeFailed(self)
 						callback = function()
 								   if _checkBattery() then
 									   window:hide()
-									   self:_upgrade()
+									   self:_upgrade(self.url)
 
 								   else
 									   window:bumpRight()
@@ -352,11 +512,14 @@ function _upgradeFailed(self)
 					}
 				})
 
-	local help = Textarea("help", self:string("UPDATE_FAILURE_HELP"))
-	window:addWidget(help)
+	local help = Textarea("help_text", self:string("UPDATE_FAILURE_HELP"))
+	menu:setHeaderWidget(help)
+	jiveMain:addHelpMenuItem(menu, self,    function()
+							appletManager:callService("supportMenu")
+						end)
 	window:addWidget(menu)
 
-	return window
+	self:tieAndShowWindow(window)
 end
 
 

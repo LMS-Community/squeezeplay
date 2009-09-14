@@ -58,19 +58,30 @@ local Framework     = require("jive.ui.Framework")
 local Task          = require("jive.ui.Task")
 local Timer         = require("jive.ui.Timer")
 local Event         = require("jive.ui.Event")
+local table         = require("jive.utils.table")
 
 local Canvas        = require("jive.ui.Canvas")
 
 local _inputToActionMap = require("jive.InputToActionMap")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("jive.main")
-local logheap       = require("jive.utils.log").logger("jive.heap")
+local log           = require("jive.utils.log").logger("squeezeplay")
+local logheap       = require("jive.utils.log").logger("squeezeplay.heap")
 --require("profiler")
 
+local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
+local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
+local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_UP          = jive.ui.EVENT_IR_UP
+local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_HOLD        = jive.ui.EVENT_IR_HOLD
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local ACTION               = jive.ui.ACTION
+local EVENT_ALL_INPUT      = jive.ui.EVENT_ALL_INPUT
+local EVENT_MOUSE_ALL      = jive.ui.EVENT_MOUSE_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
+local EVENT_KEY_UP         = jive.ui.EVENT_KEY_UP
+local EVENT_KEY_DOWN       = jive.ui.EVENT_KEY_DOWN
 local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
 local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
@@ -106,6 +117,19 @@ local _globalStrings
 -- should not need to have an id passed when creating it
 local _idTranslations = {}
 
+_softPowerState = "on"
+
+-- Squeezebox remote IR codes
+local irCodes = {
+	[ 0x7689c03f ] = KEY_REW,
+	[ 0x7689a05f ] = KEY_FWD,
+	[ 0x7689807f ] = KEY_VOLUME_UP,
+	[ 0x768900ff ] = KEY_VOLUME_DOWN,
+}
+
+--require"remdebug.engine"
+--  remdebug.engine.start()
+  
 local _defaultSkin
 local _fullscreen
 
@@ -127,32 +151,124 @@ function JiveMain:disconnectPlayer( event) --self, event not used in our case, c
 end
 
 
-local function _addUserPathToLuaPath()
-    local dirSeparator = package.path:match( "(%p)%?%." )
-    package.path = package.path .. System.getUserDir() .. dirSeparator .."?.lua;"
-    package.path = package.path .. System.getUserDir() .. dirSeparator .. "?" .. dirSeparator .. "?.lua;"
+--fallback IR->KEY handler after widgets have had a chance to listen for ir - probably will be removed - still using for rew/fwd and volume for now
+local function _irHandler(event)
+	local irCode = event:getIRCode()
+	local buttonName = Framework:getIRButtonName(irCode)
+
+	if log:isDebug() then
+		log:debug("IR event in fallback _irHandler: ", event:tostring(), " button:", buttonName )
+	end
+	if not buttonName then
+		--code may have come from a "foreign" remote that the user is using
+		return EVENT_CONSUME
+	end
+
+	local keyCode = irCodes[irCode]
+	if (keyCode) then
+		if event:getType() == EVENT_IR_PRESS  then
+			Framework:pushEvent(Event:new(EVENT_KEY_PRESS, keyCode))
+			return EVENT_CONSUME
+		elseif event:getType() == EVENT_IR_HOLD then
+			Framework:pushEvent(Event:new(EVENT_KEY_HOLD, keyCode))
+			return EVENT_CONSUME
+		elseif event:getType() == EVENT_IR_DOWN  then
+			Framework:pushEvent(Event:new(EVENT_KEY_DOWN, keyCode))
+			return EVENT_CONSUME
+		elseif event:getType() == EVENT_IR_UP  then
+			Framework:pushEvent(Event:new(EVENT_KEY_UP, keyCode))
+			return EVENT_CONSUME
+		end
+	end
+
+	return EVENT_UNUSED
 end
-
-
-
-
-
---local lastResortActionToKeyMap = {	
---	["back"]  = { keyCode = KEY_LEFT, event = EVENT_KEY_PRESS },
---	["disconnect_player "]  = { keyCode = KEY_BACK, event = EVENT_KEY_HOLD },
---	["go_home"]  = { keyCode = KEY_HOME, event = EVENT_KEY_PRESS },
---	["play"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
---	["create_mix"]  = { keyCode = KEY_PLAY, event = EVENT_KEY_HOLD },
---	["pause"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_PRESS },
---	["stop"]  = { keyCode = KEY_PAUSE, event = EVENT_KEY_HOLD },
---	["add"]  = { keyCode = KEY_ADD, event = EVENT_KEY_PRESS },
---	["addNext"]  = { keyCode = KEY_ADD, event = EVENT_KEY_HOLD },
---}
-
 
 function _goHomeAction(self)
 	JiveMain:goHome()
 
+	return EVENT_CONSUME
+end
+
+
+function _goFactoryTestModeAction(self)
+	local key = "factoryTest"
+
+	if jiveMain:getMenuTable()[key] then
+		Framework:playSound("JUMP")
+		jiveMain:getMenuTable()[key].callback()
+	end
+
+	return EVENT_CONSUME
+end
+
+
+function JiveMain:getSoftPowerState()
+	return _softPowerState
+end
+
+
+function JiveMain:setSoftPowerState(softPowerState)
+	if _softPowerState == softPowerState then
+		--already in the desired state, leave (can happen for instance when notify_playerPower comes back after a local power change)
+		 return
+	end
+
+	_softPowerState = softPowerState
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	if _softPowerState == "off" then
+		log:info("Turn soft power off")
+		if currentPlayer and currentPlayer:isConnected() then
+			currentPlayer:setPower(false)
+		end
+		appletManager:callService("activateScreensaver")
+	elseif _softPowerState == "on" then
+		log:info("Turn soft power on")
+		if currentPlayer and currentPlayer:isConnected() then
+			if currentPlayer.slimServer then
+				currentPlayer.slimServer:wakeOnLan()
+			end
+			currentPlayer:setPower(true)
+		end
+
+		appletManager:callService("deactivateScreensaver")
+		appletManager:callService("restartScreenSaverTimer")
+
+	else
+		log:error("unknown desired soft power state: ", _softPowerState)
+	end
+end
+
+function JiveMain:togglePower()
+	local powerState = JiveMain:getSoftPowerState()
+	if powerState == "off" then
+		JiveMain:setSoftPowerState("on")
+	elseif powerState == "on" then
+		JiveMain:setSoftPowerState("off")
+	else
+		log:error("unknown current soft power state: ", powerState)
+	end
+
+end
+
+local function _powerAction()
+	JiveMain:togglePower()
+	return EVENT_CONSUME
+end
+
+local function _powerOffAction()
+	JiveMain:setSoftPowerState("off")
+	return EVENT_CONSUME
+end
+
+local function _powerOnAction()
+	JiveMain:setSoftPowerState("on")
+	return EVENT_CONSUME
+end
+
+
+function _defaultContextMenuAction(self)
+	--do nothing by default
 	return EVENT_CONSUME
 end
 
@@ -168,8 +284,6 @@ function JiveMain:__init()
 	-- Initialise UI
 	Framework:init()
 
-	_addUserPathToLuaPath()
-
 	-- Singleton instances (globals)
 	jnt = NetworkThread()
 
@@ -178,6 +292,8 @@ function JiveMain:__init()
 	
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()
+
+	Framework:initIRCodeMappings()
 
 	-- register the default actions
 	Framework:registerActions(_inputToActionMap)
@@ -195,6 +311,11 @@ function JiveMain:__init()
 	jiveMain.skins = {}
 
 
+	Framework:addListener(EVENT_IR_ALL,
+		function(event) return _irHandler(event) end,
+		false
+	)
+
 	-- global listener: resize window (only desktop versions)
 	Framework:addListener(EVENT_WINDOW_RESIZE,
 		function(event)
@@ -204,7 +325,65 @@ function JiveMain:__init()
 		10)		
 
 	Framework:addActionListener("go_home", self, _goHomeAction, 10)
-	
+
+	--before NP exists (from SlimBrowseApplet), have go_home_or_now_playing go home
+	Framework:addActionListener("go_home_or_now_playing", self, _goHomeAction, 10)
+
+	Framework:addActionListener("add", self, _defaultContextMenuAction, 10)
+
+	Framework:addActionListener("go_factory_test_mode", self, _goFactoryTestModeAction, 9999)
+
+	--Consume up and down actions
+	Framework:addActionListener("up", self, function() return EVENT_CONSUME end, 9999)
+	Framework:addActionListener("down", self, function() return EVENT_CONSUME end, 9999)
+
+	Framework:addActionListener("power", self, _powerAction, 10)
+	Framework:addActionListener("power_off", self, _powerOffAction, 10)
+	Framework:addActionListener("power_on", self, _powerOnAction, 10)
+
+	Framework:addActionListener("nothing", self, function() return EVENT_CONSUME end, 10)
+
+	--Last input type tracker (used by, for instance, Menu, to determine wheter selected style should be displayed)
+	Framework:addListener(EVENT_ALL_INPUT,
+		function(event)
+			local type = event:getType()
+			if (type & EVENT_IR_ALL ) > 0 then
+				if (Framework:isValidIRCode(event)) then
+					Framework.mostRecentInputType = "ir"
+				end
+			end
+			if (type & EVENT_KEY_ALL ) > 0 then
+				Framework.mostRecentInputType = "key"
+			end
+			if (type & EVENT_SCROLL ) > 0 then
+				Framework.mostRecentInputType = "scroll"
+			end
+			if (type & EVENT_MOUSE_ALL) > 0 then
+				Framework.mostRecentInputType = "mouse"
+			end
+			--not sure what to do about char, since it is a bit of a hybrid input type. So far usages don't care.
+			
+			return EVENT_UNUSED
+		end,
+		true
+	)
+
+	--Ignore foreign remote codes
+	Framework:addListener( EVENT_IR_ALL,
+		function(event)
+			if (not Framework:isValidIRCode(event)) then
+				--is foreign remote code, consume so it doesn't appear as input to the app (future ir blaster code might still care)
+				if log:isDebug() then
+					log:debug("Consuming foreign IR event: ", event:tostring())
+				end
+				return EVENT_CONSUME
+			end
+
+			return EVENT_UNUSED
+		end,
+		true
+	)
+
 	-- show our window!
 	jiveMain.window:show()
 
@@ -219,11 +398,13 @@ function JiveMain:__init()
 	Framework:setUpdateScreen(false)
 	local splashHandler = Framework:addListener(ACTION | EVENT_CHAR_PRESS | EVENT_KEY_ALL | EVENT_SCROLL,
 							    function()
+							        JiveMain:performPostOnScreenInit()
 								Framework:setUpdateScreen(true)
 								return EVENT_UNUSED
 							    end)
 	local splashTimer = Timer(2000 - (os.time() - initTime),
 		function()
+			JiveMain:performPostOnScreenInit()
 			Framework:setUpdateScreen(true)
 			Framework:removeListener(splashHandler)
 		end,
@@ -259,6 +440,27 @@ function JiveMain:__init()
 end
 
 
+function JiveMain:registerPostOnScreenInit(callback)
+	if not JiveMain.postOnScreenInits then
+		JiveMain.postOnScreenInits = {}
+	end
+	table.insert(JiveMain.postOnScreenInits, callback)
+
+end
+
+-- perform activities that need to run once the skin is loaded and the screen is visible
+function JiveMain:performPostOnScreenInit()
+	if not JiveMain.postOnScreenInits then
+		return
+	end
+
+	for i, callback in ipairs(JiveMain.postOnScreenInits) do
+		log:info("Calling postOnScreenInits callback")
+		callback()
+	end
+	JiveMain.postOnScreenInits = {}
+end
+
 function JiveMain:jiveMainNodes(globalStrings)
 
 	-- this can be called after language change, 
@@ -270,14 +472,49 @@ function JiveMain:jiveMainNodes(globalStrings)
 	end
 
 	jiveMain:addNode( { id = 'hidden', node = 'nowhere' } )
-	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 50  } )
+	jiveMain:addNode( { id = 'extras', node = 'hidden', text = _globalStrings:str("EXTRAS"), weight = 50, hiddenWeight = 91  } )
+	jiveMain:addNode( { id = 'radios', iconStyle = 'hm_radio', node = 'home', text = _globalStrings:str("INTERNET_RADIO"), weight = 20  } )
+	jiveMain:addNode( { id = '_myMusic', iconStyle = 'hm_myMusic', node = 'hidden', text = _globalStrings:str("MY_MUSIC"), synthetic = true , hiddenWeight = 2  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
-	jiveMain:addNode( { id = 'settings', node = 'home', noCustom = 1, text = _globalStrings:str("SETTINGS"), weight = 70, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'advancedSettings', node = 'settings', noCustom = 1, text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 110, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'screenSettings', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 50, titleStyle = 'settings' })
-	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("FACTORY_TEST"), weight = 105, titleStyle = 'settings' })
+	jiveMain:addNode( { id = 'settings', iconStyle = 'hm_settings', node = 'home', noCustom = 1, text = _globalStrings:str("SETTINGS"), weight = 1005, })
+	jiveMain:addNode( { id = 'advancedSettings', iconStyle = 'hm_advancedSettings', node = 'settings', text = _globalStrings:str("ADVANCED_SETTINGS"), weight = 105, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'screenSettings', iconStyle = 'hm_settingsScreen', node = 'settings', text = _globalStrings:str("SCREEN_SETTINGS"), weight = 60, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'factoryTest', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("FACTORY_TEST"), weight = 120, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'advancedSettingsBetaFeatures', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("BETA_FEATURES"), weight = 100, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'networkSettings', node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("NETWORK_NETWORKING"), weight = 100, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'settingsAudio', iconStyle = "hm_settingsAudio", node = 'settings', noCustom = 1, text = _globalStrings:str("AUDIO_SETTINGS"), weight = 40, windowStyle = 'text_only' })
+	jiveMain:addNode( { id = 'settingsBrightness', iconStyle = "hm_settingsBrightness", node = 'settings', noCustom = 1, text = _globalStrings:str("BRIGHTNESS_SETTINGS"), weight = 45, windowStyle = 'text_only' })
+
 
 end
+
+--[[
+
+=head2 jive.JiveMain:addHelpMenuItem()
+
+Adds a 'Help' menu item to I<menu> if the most recent input was not touch or mouse (which generally would have a help button instead)
+
+=cut
+--]]
+function JiveMain:addHelpMenuItem(menu, obj, callback, textToken, iconStyle)
+	-- only deliver an icon if specified
+	if not iconStyle then
+		iconStyle = "_BOGUS_"
+	end
+	if not Framework:isMostRecentInput("mouse") then
+		menu:addItem({
+			iconStyle = iconStyle,
+			text = textToken and _globalStrings:str(textToken) or _globalStrings:str("GLOBAL_HELP"),
+			sound = "WINDOWSHOW",
+			callback =      function ()
+						callback(obj)
+					end,
+			weight = 100
+		})
+	end
+end
+
+
 
 -- reload
 -- 
@@ -301,15 +538,9 @@ function JiveMain:reload()
 end
 
 
-function JiveMain:registerSkin(name, appletName, method, params)
+function JiveMain:registerSkin(name, appletName, method)
 	log:debug("registerSkin(", name, ",", appletName, ")")
 	self.skins[appletName] = { name, method }
-	local defaultParams = {
-		THUMB_SIZE = 56,
-	}
-	local params = params or defaultParams
-	JiveMain:setSkinParams(appletName, params)
-
 end
 
 
@@ -344,6 +575,7 @@ local function _loadSkin(self, appletName, reload, useDefaultSize)
 	jive.ui.style = {}
 
 	obj[method](obj, jive.ui.style, reload==nil and true or reload, useDefaultSize)
+	self._skin = obj
 
 	Framework:styleChanged()
 
@@ -362,32 +594,25 @@ end
 
 
 function JiveMain:setSelectedSkin(appletName)
-	log:info("Select skin ", appletName)
+	log:info("select skin: ", appletName)
 	if _loadSkin(self, appletName, false, true) then
 		self.selectedSkin = appletName
+		jnt:notify("skinSelected")
 	end
 end
 
 
 function JiveMain:getSkinParam(key)
-	local skinName = self.selectedSkin or JiveMain:getDefaultSkin()
-	
-	if key and self.skinParams and self.skinParams[skinName] and self.skinParams[skinName][key] then
-		return self.skinParams[skinName][key]
-	else
-		log:error('no value for skinParam ', key, ' found') 
-		return nil
-	end
-end
+	if self._skin then
+		local param = self._skin:param()
 
-
--- service method to allow other applets to set skin-specific settings like THUMB_SIZE
-function JiveMain:setSkinParams(skinName, settings)
-	_assert(type(settings) == 'table')
-	if not self.skinParams then
-		self.skinParams = {}
+		if key and param[key] ~= nil then
+			return param[key]
+		end
 	end
-	self.skinParams[skinName] = settings
+
+	log:error('no value for skinParam ', key, ' found') 
+	return nil
 end
 
 
@@ -398,7 +623,7 @@ function JiveMain:reloadSkin(reload)
 end
 
 function JiveMain:freeSkin()
-	log:error("self.selectedSkin: ", self.selectedSkin)
+	log:info("freeSkin: self.selectedSkin: ", self.selectedSkin)
 
 	if not self.skins[self.selectedSkin] then
 		return false
@@ -413,7 +638,7 @@ end
 
 
 function JiveMain:getDefaultSkin()
-	return _defaultSkin or "DefaultSkin"
+	return _defaultSkin or "QVGAportraitSkin"
 end
 
 

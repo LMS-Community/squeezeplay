@@ -30,22 +30,11 @@ local Icon          = require("jive.ui.Icon")
 local Popup         = require("jive.ui.Popup")
 local Timer         = require("jive.ui.Timer")
 
-local log           = require("jive.utils.log").logger("applets.misc")
 local debug         = require("jive.utils.debug")
-
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_GO           = jive.ui.KEY_GO
-local KEY_ADD          = jive.ui.KEY_ADD
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local ACTION           = jive.ui.ACTION
 
 local appletManager    = appletManager
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local scroll = 2
@@ -66,26 +55,29 @@ function open(self, menuItem)
 		self.server = self.player:getSlimServer()
 	end
 
+	local sw, sh = Framework:getScreenSize()
+	local edge = (sw - 200) / 2
+
 	self.window = Window("nettest", self:string('SETUPNETTEST_TESTING'))
 	self.window:setSkin({
 		nettest = {
 			icon = {
-				padding = { 20, 3, 20, 1 }
+				padding = { edge, 3, edge, 1 }
 			},
 			graphtitle = {
-				padding = { 20, 7, 0, 0 },
+				padding = { edge, 7, 0, 0 },
 				fg = { 0xE7, 0xE7, 0xE7 }
 			},
 			graphaxis = {
-				  padding = { 20, 1, 0, 0 },
-				  fg = { 0xE7, 0xE7, 0xE7 }
+				padding = { edge, 1, 0, 0 },
+				fg = { 0xE7, 0xE7, 0xE7 }
 			}
 		}
 	})
 
 	self:tieAndShowWindow(self.window)
 
-	local timer = Timer(1000, function() self.window:addWidget(Textarea("textarea", self:string('SETUPNETTEST_NOSERVER'))) end, true)
+	local timer = Timer(1000, function() self.window:addWidget(Textarea("text", self:string('SETUPNETTEST_NOSERVER'))) end, true)
 	timer:start()
 
 	self:requestStatus(function() timer:stop() self:showMainWindow() end)
@@ -94,24 +86,22 @@ end
 
 function showMainWindow(self)
 	self.window:addWidget(Label("graphtitle", self:string('SETUPNETTEST_CURRENT')))
+	local sw, sh = Framework:getScreenSize()
 
-	self.graph1 = Surface:newRGBA(200, 80)
-	self.graph1:filledRectangle(0, 0, 200, 80, graphBG)
+	local graphHeight =  sh / 7
+	self.graph1 = Surface:newRGBA(200, graphHeight)
+	self.graph1:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon1 = Icon("icon", self.graph1)
 	self.window:addWidget(icon1)
-	icon1:setPosition(20, 20)
-
 	self.window:addWidget(Label("graphtitle", self:string('SETUPNETTEST_HISTORY')))
 
-	self.graph2 = Surface:newRGBA(200, 80)
-	self.graph2:filledRectangle(0, 0, 200, 80, graphBG)
+	self.graph2 = Surface:newRGBA(200, graphHeight)
+	self.graph2:filledRectangle(0, 0, 200, graphHeight, graphBG)
 	local icon2 = Icon("icon", self.graph2)
 	self.window:addWidget(icon2)
-	icon2:setPosition(20, 180)
-
 	self.window:addWidget(Label("graphaxis", "0                                         100 %"))
 
-	self.window:addWidget(Textarea("help", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
+	self.window:addWidget(Textarea("help_text", tostring(self:string('SETUPNETTEST_TESTINGTO')) .. ' ' .. self.player:getName() .. "\n" .. tostring(self:string('SETUPNETTEST_INFO'))))
 
 	self.window:setAllowScreensaver(false)
 
@@ -170,8 +160,8 @@ end
 
 
 function showHelpWindow(self)
-	local window = Window("window", self:string('SETUPNETTEST_HELPTITLE'))
-	local help = Textarea("textarea", self:string('SETUPNETTEST_HELP'))
+	local window = Window("text_list", self:string('SETUPNETTEST_HELPTITLE'))
+	local help = Textarea("text", self:string('SETUPNETTEST_HELP'))
 
 	window:addWidget(help)
 	
@@ -284,5 +274,7 @@ end
 function free(self)
 	self.timer:stop()
 	self:stopTest()
+
+	return true
 end
 

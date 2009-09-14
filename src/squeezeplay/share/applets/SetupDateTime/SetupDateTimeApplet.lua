@@ -32,7 +32,6 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local datetime         = require("jive.utils.datetime")
 local table            = require("jive.utils.table")
@@ -45,7 +44,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function settingsShow(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 
 	local curHours = ""
 	if self:getSettings()["hours"] == 12 then
@@ -79,6 +78,14 @@ function settingsShow(self, menuItem)
 					end
 			},
 			{
+				text = self:string("DATETIME_SHORTDATEFORMAT"),
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+						self:shortDateFormatSetting(menuItem)
+						return EVENT_CONSUME
+					end
+			},
+			{
 				text = self:string("DATETIME_WEEKSTART"),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -100,7 +107,7 @@ function settingsShow(self, menuItem)
 end
 
 function timeSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["hours"]
@@ -108,14 +115,16 @@ function timeSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{
 			text = self:string("DATETIME_TIMEFORMAT_12H"),
-			icon = RadioButton("radio", group, function(event, menuItem)
+			style = 'item_choice',
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("12")
 				end,
 			current == "12")
 		},
 		{
 			text = self:string("DATETIME_TIMEFORMAT_24H"),
-			icon = RadioButton("radio", group, function(event, menuItem)
+			style = 'item_choice',
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setHours("24")
 				end,
 			current == "24")
@@ -128,8 +137,43 @@ function timeSetting(self, menuItem)
 	return window;
 end
 
+function shortDateFormatSetting(self, menuItem)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
+	local group = RadioGroup()
+
+	local current = self:getSettings()["shortdateformat"]
+
+	local menu = SimpleMenu("menu", {})
+
+	for k,v in pairs(datetime:getAllShortDateFormats()) do
+		local _text = os.date(v)
+		if string.match(v, '%%d') or string.match(v, '%%m') then
+			local _help = _getDateHelpString(v)
+			_text = _text .. " (" .. _help .. ")"
+		end
+--[[		if tostring(v) == '%D' then
+			_text = _text .. " (mm/dd/yy)"
+		end
+--]]
+		menu:addItem({
+				text = _text,
+				style = 'item_choice',
+				check = RadioButton("radio", group, function(event, menuItem)
+						self:setShortDateFormat(v)
+					end,
+				current == v)
+		})
+	end
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
 function dateFormatSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["dateformat"]
@@ -148,7 +192,8 @@ function dateFormatSetting(self, menuItem)
 --]]
 		menu:addItem({
 				text = _text,
-				icon = RadioButton("radio", group, function(event, menuItem)
+				style = 'item_choice',
+				check = RadioButton("radio", group, function(event, menuItem)
 						self:setDateFormat(v)
 					end,
 				current == v)
@@ -174,7 +219,7 @@ function _getDateHelpString(dateString)
 end
 
 function weekstartSetting(self, menuItem)
-	local window = Window("window", menuItem.text, datetimeTitleStyle)
+	local window = Window("text_list", menuItem.text, datetimeTitleStyle)
 	local group = RadioGroup()
 
 	local current = self:getSettings()["weekstart"]
@@ -182,14 +227,16 @@ function weekstartSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{
 			text = self:string("DATETIME_SUNDAY"),
-			icon = RadioButton("radio", group, function(event, menuItem)
+			style = 'item_choice',
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Sunday")
 				end,
 			current == "Sunday")
 		},
 		{
 			text = self:string("DATETIME_MONDAY"),
-			icon = RadioButton("radio", group, function(event, menuItem)
+			style = 'item_choice',
+			check = RadioButton("radio", group, function(event, menuItem)
 					self:setWeekStart("Monday")
 				end,
 			current == "Monday")
@@ -206,6 +253,12 @@ function setDateFormat(self, format)
 	self:getSettings()["dateformat"] = format
 	datetime:setDateFormat(format)
 end
+
+function setShortDateFormat(self, format)
+	self:getSettings()["shortdateformat"] = format
+	datetime:setShortDateFormat(format)
+end
+
 
 function setWeekStart(self, day)
 	self:getSettings()["weekstart"] = day

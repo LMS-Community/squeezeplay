@@ -21,9 +21,13 @@ Notifications:
  playerTrackChange
  playerModeChange
  playerPlaylistChange
+ playerShuffleModeChange
+ playerRepeatModeChange
  playerPlaylistSize
  playerNeedsUpgrade
-
+ playerTitleStatus
+ playerLoaded (player and server connected and initial home menu from server has been loaded)
+ 
 =head1 FUNCTIONS
 
 =cut
@@ -31,11 +35,11 @@ Notifications:
 
 
 -- stuff we need
-local _assert, assert, require, setmetatable, tonumber, tostring, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, pairs, type
+local _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs, type = _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs, type
 
 local os             = require("os")
 local math           = require("math")
-local table          = require("table")
+local table          = require("jive.utils.table")
 
 local oo             = require("loop.base")
 
@@ -54,7 +58,8 @@ local Udap           = require("jive.net.Udap")
 
 local debug          = require("jive.utils.debug")
 local string         = require("jive.utils.string")
-local log            = require("jive.utils.log").logger("player")
+local log            = require("jive.utils.log").logger("squeezebox.player")
+local socket         = require("socket")
 
 local EVENT_KEY_ALL    = jive.ui.EVENT_KEY_ALL
 local EVENT_CHAR_PRESS = jive.ui.EVENT_CHAR_PRESS
@@ -71,6 +76,7 @@ local ACTION           = jive.ui.ACTION
 local jnt            = jnt
 local jiveMain       = jiveMain
 local iconbar        = iconbar
+local json           = json 
 
 
 local fmt = string.format
@@ -138,9 +144,26 @@ function getCurrentPlayer(self)
 	return currentPlayer
 end
 
--- class method, returns whether the player is local 
+-- class method, returns whether the player is local
 function isLocal(self)
 	return false
+end
+
+--class method, returns the delay used before which consecutive commands like volume will be suppressed 
+function getRateLimitTime(self)
+	return MIN_KEY_INT
+end
+
+-- class method, returns the first local player found
+function getLocalPlayer(self)
+	for _,player in pairs(playerList) do
+		if player:isLocal() then
+			return player
+		end
+	end
+
+	--no local player
+	return nil
 end
 
 -- class method, sets the current player
@@ -160,6 +183,11 @@ function setCurrentPlayer(class, player)
 end
 
 
+function getLastSqueezeCenter(self)
+	--not used for remote SC, since the controller isn't the decider for where to return to, the local player is.
+	return nil
+end
+
 function getLastBrowse(self, key)
 	if self.browseHistory[key] then
 		return self.browseHistory[key]
@@ -169,6 +197,9 @@ function getLastBrowse(self, key)
 end
 
 function setLastBrowse(self, key, lastBrowse)
+	if not self.browseHistory then
+		return
+	end
 	self.browseHistory[key] = lastBrowse
 end
 
@@ -178,9 +209,8 @@ end
 -- this sink receives all the data from our Comet interface
 local function _getSink(self, cmd)
 	return function(chunk, err)
-	
-		if err then
-			log:warn("########### ", err)
+	       	if err then
+			log:warn("err in player sink ", err)
 			
 		elseif chunk then
 			local proc = "_process_" .. cmd[1]
@@ -201,6 +231,13 @@ local function _formatShowBrieflyText(msg)
 
 	-- showBrieflyText needs to deal with both \n instructions within a string 
 	-- and also adding newlines between table elements
+
+	-- table msg needs to have elements of only strings/numbers so table.concat will work
+	for i, v in ipairs(msg) do
+		if type(v) ~= 'string' and type(v) ~= 'number' then
+			table.remove(msg, i)
+		end
+	end
 
 	-- first compress the table elements into a single string with newlines
 	local text = table.concat(msg, "\n")
@@ -271,7 +308,13 @@ function __init(self, jnt, playerId)
 		isOnStage = false,
 
 		-- current song info
-		currentSong = {},
+		mixedPopup = {},
+
+		-- text info
+		popupInfo = {},
+
+		-- icon popup
+		popupIcon = {},
 
 		-- browse history
 		browseHistory = {}
@@ -293,7 +336,7 @@ function updateInit(self, slimServer, init)
 	playerList[self.id] = self
 
 	if slimServer then
-		log:info(self, " new for ", slimServer)
+		log:debug(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 	end
@@ -311,13 +354,13 @@ end
 
 --[[
 
-=head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo)
+=head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 Updates the player with fresh data from SS.
 
 =cut
 --]]
-function updatePlayerInfo(self, slimServer, playerInfo)
+function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 	-- ignore updates from a different server if the player
 	-- is not connected to it
@@ -361,7 +404,7 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 		oldInfo.connected = false
 
 		-- add to new server
-		log:info(self, " new for ", slimServer)
+		log:debug(self, " new for ", slimServer)
 		self.slimServer = slimServer
 		self.slimServer:_addPlayer(self)
 
@@ -386,8 +429,12 @@ function updatePlayerInfo(self, slimServer, playerInfo)
 	end
 
 	-- Check if the player power status has changed
-	if oldInfo.power ~= self.info.power then
+
+	if (not useSequenceNumber or isSequenceNumberInSync) and oldInfo.power ~= self.info.power then
 		self.jnt:notify('playerPower', self, self.info.power)
+	elseif useSequenceNumber and not isSequenceNumberInSync then
+		log:debug("power value ignored(out of sync), revert to old: ", oldInfo.power)
+		self.info.power = oldInfo.power
 	end
 
 	log:debug('oldInfo.connected says: ', oldInfo.connected, ' self.info.connected says: ', self.info.connected)
@@ -521,17 +568,19 @@ Deletes the player, if connect to the given slimServer
 
 =cut
 --]]
-function free(self, slimServer)
+function free(self, slimServer, serverDeleteOnly)
 	if self.slimServer ~= slimServer then
 		-- ignore, we are not connected to this server
 		return
 	end
 
-	log:info(self, " delete for ", self.slimServer)
+	log:debug(self, " delete for ", self.slimServer)
 
-	-- player is gone
-	self.lastSeen = 0
-	self.jnt:notify('playerDelete', self)
+	if not serverDeleteOnly then
+		-- player is gone
+		self.lastSeen = 0
+		self.jnt:notify('playerDelete', self)
+	end
 
 	if self == currentPlayer then
 		self.jnt:notify('playerDisconnected', self)
@@ -541,8 +590,10 @@ function free(self, slimServer)
 	end
 
 	-- player is no longer active
-	playerList[self.id] = nil
-	
+	if not self:isLocal() and not serverDeleteOnly then
+		playerList[self.id] = nil
+	end
+
 	if self.slimServer then
 		self:offStage()
 
@@ -648,6 +699,19 @@ returns the playlist size for a given player object
 --]]
 function getPlaylistSize(self)
 	return self.playlistSize
+end
+
+
+--[[
+
+=head2 jive.slim.Player:getPlaylistCurrentIndex()
+
+returns the playlist index of the currently selected track
+
+=cut
+--]]
+function getPlaylistCurrentIndex(self)
+	return self.playlistCurrentIndex
 end
 
 
@@ -809,9 +873,19 @@ end
 
 -- call
 -- sends a command
-function call(self, cmd)
+function call(self, cmd, useBackgroundRequest)
 	log:debug("Player:call():")
---	log:debug(cmd)
+--log:error('traceback')
+--debug.dump(cmd)
+
+	if useBackgroundRequest then
+		self.slimServer:request(
+			_getSink(self, cmd),
+			self.id,
+			cmd
+		)
+		return
+	end
 
 	local reqid = self.slimServer:userRequest(
 		_getSink(self, cmd),
@@ -825,9 +899,17 @@ end
 
 -- send
 -- sends a command but does not look for a response
-function send(self, cmd)
+function send(self, cmd, useBackgroundRequest)
 	log:debug("Player:send():")
 --	log:debug(cmd)
+	if useBackgroundRequest then
+		self.slimServer:request(
+			nil,
+			self.id,
+			cmd
+		)
+		return
+	end
 
 	self.slimServer:userRequest(
 		nil,
@@ -837,8 +919,15 @@ function send(self, cmd)
 end
 
 
-local function hideAction(self)
-	self.currentSong.window:hide()
+function hideWindows(self)
+	self.mixedPopup.window:hide()
+	self.popupInfo.window:hide()
+	self.popupIcon.window:hide()
+end
+
+
+function hideAction(self)
+	self:hideWindows()
 	return EVENT_CONSUME
 end
 
@@ -854,7 +943,7 @@ function onStage(self)
 	self.slimServer.comet:startBatch()
 	
 	-- subscribe to player status updates
-	local cmd = { 'status', '-', 10, 'menu:menu', 'subscribe:30' }
+	local cmd = { 'status', '-', 10, 'menu:menu', 'useContextMenu:1', 'subscribe:30' }
 	self.slimServer.comet:subscribe(
 		'/slim/playerstatus/' .. self.id,
 		_getSink(self, cmd),
@@ -874,45 +963,109 @@ function onStage(self)
 	self.slimServer.comet:endBatch()
 
 	-- create window to display current song info
-	self.currentSong.window = Popup("currentsong")
-	self.currentSong.window:setAllowScreensaver(true)
-	self.currentSong.window:setAlwaysOnTop(true)
-	self.currentSong.artIcon = Icon("icon")
-	self.currentSong.text = Label("text", "")
-	self.currentSong.textarea = Textarea('popupplay', '')
+	self.mixedPopup.window = Popup("toast_popup_mixed")
+	self.mixedPopup.window:setAllowScreensaver(true)
+	self.mixedPopup.window:setAlwaysOnTop(true)
+	self.mixedPopup.artIcon = Icon("icon_art")
+	self.mixedPopup.text = Label("text", "")
+	self.mixedPopup.subtext = Label("subtext", "")
+	self.mixedPopup.badge = Icon('badge_none')
 
-	local group = Group("popupToast", {
-			text = self.currentSong.text,
-			textarea = self.currentSong.textarea,
-			icon = self.currentSong.artIcon
+	self.mixedPopup.window:addWidget(self.mixedPopup.text)
+	self.mixedPopup.window:addWidget(self.mixedPopup.artIcon)
+	self.mixedPopup.window:addWidget(self.mixedPopup.subtext)
+	self.mixedPopup.window:addWidget(self.mixedPopup.badge)
+
+	-- create window to display current song info
+	self.popupInfo.window = Popup("toast_popup_text")
+	self.popupInfo.window:setAllowScreensaver(true)
+	self.popupInfo.window:setAlwaysOnTop(true)
+	self.popupInfo.textarea = Textarea("toast_popup_textarea", '')
+
+	local infoGroup = Group("group", {
+			text = self.popupInfo.textarea,
 	      })
 
-	self.currentSong.window:addWidget(group)
+	self.popupInfo.window:addWidget(infoGroup)
 
 	--don't let the textarea get the focus, because we want the window to manage events
-	self.currentSong.window:focusWidget(nil)
+	self.popupInfo.window:focusWidget(nil)
+
+	-- create window to display current song info
+	self.popupIcon.window = Popup("toast_popup_icon")
+	self.popupIcon.window:setAllowScreensaver(true)
+	self.popupIcon.window:setAlwaysOnTop(true)
+	self.popupIcon.icon = Icon("icon")
+
+	local group = Group("group", {
+			icon = self.popupIcon.icon
+	      })
+
+	self.popupIcon.window:addWidget(group)
+
+	local popups = { self.mixedPopup.window, self.popupInfo.window, self.popupIcon.window }
+
+	for i, popup in ipairs(popups) do
+		--all input cancels the popups, and for all but 'back', 'go' and mouse clicks, input is forwarded to main window
+		popup:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+			function(event)
+
+				local prev = popup:getLowerWindow()
+				--might be more than one of our windows here, look for first non player popup window
+				while prev and table.contains(popups, prev) do
+				        prev = prev:getLowerWindow()
+			        end
+				self:hideWindows()
+
+				if prev then
+					Framework:dispatchEvent(prev, event)
+				end
+				return EVENT_CONSUME
+			end)
+
+		popup:addActionListener("back", self, hideAction)
+		popup:addActionListener("go", self, hideAction)
+		popup.brieflyHandler = 1
+	end
 
 
+--[[
 	--Only 'back' and mouse clicks clear the popup, all other input is forwarded to main window
-
-	self.currentSong.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+	self.mixedPopup.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 		function(event)
 
 			if (event:getType() & EVENT_MOUSE_ALL) > 0 then
 				return hideAction(self) 
 			end
 
-			local prev = self.currentSong.window:getLowerWindow()
+			local prev = self.mixedPopup.window:getLowerWindow()
 			if prev then
 				Framework:dispatchEvent(prev, event)
 			end
 			return EVENT_CONSUME
 		end)
 
+	self.mixedPopup.window:addActionListener("back", self, hideAction)
+	self.mixedPopup.window.brieflyHandler = 1
 
-	self.currentSong.window:addActionListener("back", self, hideAction)
+	self.popupInfo.window:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+		function(event)
 
-	self.currentSong.window.brieflyHandler = 1
+			if (event:getType() & EVENT_MOUSE_ALL) > 0 then
+				return hideAction(self) 
+			end
+
+			local prev = self.popupInfo.window:getLowerWindow()
+			if prev then
+				Framework:dispatchEvent(prev, event)
+			end
+			return EVENT_CONSUME
+		end)
+
+	self.popupInfo.window:addActionListener("back", self, hideAction)
+	self.popupInfo.window.brieflyHandler = 1
+--]]
+
 end
 
 
@@ -934,7 +1087,7 @@ function offStage(self)
 	self.slimServer.comet:unsubscribe('/slim/displaystatus/' .. self.id)
 	self.slimServer.comet:endBatch()
 
-	self.currentSong = {}
+	self.mixedPopup = {}
 end
 
 
@@ -944,14 +1097,27 @@ function updateIconbar(self)
 	
 	if self.isOnStage and self.state then
 		-- set the playmode (nil, stop, play, pause)
-		iconbar:setPlaymode(self.state["mode"])
+
+		iconbar:setPlaymode(self:getEffectivePlayMode())
 		
 		-- set the shuffle (nil, 0=off, 1=by song, 2=by album)
 		iconbar:setShuffle(self.state["playlist shuffle"])
 
+		if self.state['sleep'] and tonumber(self.state['sleep']) > 0 then
+			iconbar:setSleep('ON')
+		else
+			iconbar:setSleep('OFF')
+		end
+
+		if self:getAlarmState() == 'set' or self:getAlarmState() == 'snooze' then
+			iconbar:setAlarm('ON')
+		else
+			iconbar:setAlarm('OFF')
+		end
+
 		-- set the playlist mode (nil, 0=off, 1=playlist, 2=party)
-		if self.state['playlist mode'] and 
-			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' ) 
+		if self.state['playlist mode'] and
+			( self.state['playlist mode'] == 'disabled' or self.state['playlist mode'] == 'off' or self.state['playlist mode'] == json.null )
 			then
 			iconbar:setPlaylistMode('off')
 			iconbar:setRepeat(self.state["playlist repeat"])
@@ -959,6 +1125,18 @@ function updateIconbar(self)
 			iconbar:setRepeat(0)
 			iconbar:setPlaylistMode(self.state["playlist mode"])
 		end
+
+		--[[ useful for layout skinning debug, set all modes to show icons
+			iconbar:setPlaymode('play')
+			iconbar:setShuffle('1')
+			iconbar:setSleep('ON')
+			iconbar:setAlarm('ON')
+			iconbar:setRepeat('1')
+		--]]
+
+	else
+		--still set play mode (for local offline playback)
+		iconbar:setPlaymode(self.state["mode"] or self.mode)
 	end
 end
 
@@ -984,6 +1162,8 @@ function _process_status(self, event)
 	self.trackTime = tonumber(event.data.time)
 	self.trackDuration = tonumber(event.data.duration)
 	self.playlistSize = tonumber(event.data.playlist_tracks)
+	-- add 1 to playlist_cur_index to get 1-based place in playlist
+	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -996,8 +1176,18 @@ function _process_status(self, event)
 	playerInfo.player_needs_upgrade = event.data.player_needs_upgrade
 	playerInfo.player_is_upgrading = event.data.player_is_upgrading
 	playerInfo.pin = self.info.pin
+	playerInfo.seq_no = event.data.seq_no
 
-	self:updatePlayerInfo(self.slimServer, playerInfo)
+	local useSequenceNumber = false
+	local isSequenceNumberInSync = true
+
+	if self:isLocal() and playerInfo.seq_no then
+		useSequenceNumber = true
+		if not self:isSequenceNumberInSync(tonumber(playerInfo.seq_no)) then
+			isSequenceNumberInSync = false
+		end
+	end
+	self:updatePlayerInfo(self.slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 	-- update track list
 	local nowPlaying = _whatsPlaying(event.data)
@@ -1005,19 +1195,77 @@ function _process_status(self, event)
 	if self.state.mode ~= oldState.mode then
 		-- self.mode is set immedidately by togglePause and stop methods to give immediate user feedback in e.g. iconbar
 		-- getPlayerMode method uses self.mode not self.state.mode, so we need to set self.mode again here to be certain it's correct                                          
+		log:debug('notify_playerModeChange')
 		self.mode = self.state.mode
 		self.jnt:notify('playerModeChange', self, self.state.mode)
 	end
 
+	log:debug("self.state['alarm_state']: ", self.state['alarm_state'], ",  oldState['alarm_state']: ", oldState['alarm_state'])
+	log:debug("self.state['alarm_next']: ", self.state['alarm_next'], ",  oldState['alarm_next']: ", oldState['alarm_next'])
+
+	if self.state['alarm_state'] ~= oldState['alarm_state'] or self.state['alarm_next'] ~= oldState['alarm_next'] then
+		log:debug('notify_playerAlarmState')
+		-- none from server for alarm_state changes this to nil
+		if self.state['alarm_state'] == 'none' then
+			self.alarmState = nil
+			self.alarmNext  = nil
+			self.jnt:notify('playerAlarmState', self, 'none', nil)
+		else
+			self.alarmState = self.state['alarm_state']
+			self.alarmNext  = tonumber(self.state['alarm_next'])
+			self.jnt:notify('playerAlarmState', self, self.state['alarm_state'], self.state['alarm_next'])
+		end
+	end
+
+	if self.state['playlist shuffle'] ~= oldState['playlist shuffle'] then
+		log:debug('notify_playerShuffleModeChange')
+		self.jnt:notify('playerShuffleModeChange', self, self.state['playlist shuffle'])
+	end
+
+	if self.state['sleep'] ~= oldState['sleep'] then
+		log:debug('notify_playerSleepChange')
+		self.jnt:notify('playerSleepChange', self, self.state['sleep'])
+	end
+
+	if self.state['playlist repeat'] ~= oldState['playlist repeat'] then
+		log:debug('notify_playerRepeatModeChange')
+		self.jnt:notify('playerRepeatModeChange', self, self.state['playlist repeat'])
+	end
+
 	if self.nowPlaying ~= nowPlaying then
+		log:debug('notify_playerTrackChange')
 		self.nowPlaying = nowPlaying
 		self.jnt:notify('playerTrackChange', self, nowPlaying)
 	end
 
 	if self.state.playlist_timestamp ~= oldState.playlist_timestamp then
+		log:debug('notify_playerPlaylistChange')
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
+	--might use server volume
+	if useSequenceNumber then
+		if isSequenceNumberInSync then
+			local serverVolume = self.state["mixer volume"] and tonumber(self.state["mixer volume"]) or nil
+			if serverVolume ~= self:getVolume() then
+				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
+				if serverVolume == 0 and self:getVolume() and self:getVolume() < 0 then
+					--When muted, server sends a 0 vol, ignore it
+					self.state["mixer volume"] = oldState["mixer volume"] 
+				else
+					self:volumeLocal(serverVolume)
+				end
+			end
+		else
+			log:debug("volume value ignored(out of sync), revert to old: ", oldState["mixer volume"])
+			self.state["mixer volume"] = oldState["mixer volume"]
+		end
+
+		--finally if we were out of sync at the receipt of playerstatus, refresh so server is in sync with all value
+		if not isSequenceNumberInSync then
+			self:refreshLocallyMaintainedParameters()
+		end
+	end
 	-- update iconbar
 	self:updateIconbar()
 end
@@ -1033,27 +1281,55 @@ function _process_displaystatus(self, event)
 	if data.display then
 		local display = data.display
 		local type    = display["type"] or 'text'
+		local special = display and (type == 'icon' and display.style)
 
-		local s = self.currentSong
-
+		local s
 		local textValue = _formatShowBrieflyText(display['text'])
-		if type == 'song' then
-			s.textarea:setValue("")
-			s.text:setValue(textValue)
-			s.artIcon:setStyle("icon")
-			if display['icon'] then
-				self.slimServer:fetchArtworkURL(display['icon'], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'))
-			else
-				self.slimServer:fetchArtworkThumb(display["icon-id"], s.artIcon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
+
+		local transitionOn = Window.transitionFadeIn
+		local transitionOff = Window.transitionFadeOut
+		local duration = display['duration'] or 5000
+
+		local usingIR = Framework:isMostRecentInput('ir')
+
+		-- this showBriefly should be displayed unless there's a good reason not to
+		local showMe = true
+		if special then
+			s = self.popupIcon
+			local style = 'icon_popup_' .. special
+			s.icon:setStyle(style)	
+			transitionOn = Window.transitionNone
+			transitionOff = Window.transitionNone
+			duration = display['duration'] or 1500
+			-- icon-based showBrieflies only appear for IR
+			if not usingIR then
+				showMe = false
 			end
+		elseif type == 'mixed' or type == 'popupalbum' then
+			s = self.mixedPopup
+			local text = display['text'][1] or ''
+			local subtext = display['text'][2] or ''
+			s.text:animate(true)
+			s.subtext:setValue(subtext)
+			s.subtext:animate(true)
+			if display['style'] == 'favorite' then
+				s.badge:setStyle('badge_favorite')
+			elseif display['style'] == 'add' then
+				s.badge:setStyle('badge_add')
+			else
+				s.badge:setStyle('none')
+			end
+			self.slimServer:fetchArtwork(display["icon-id"] or display["icon"], s.artIcon, jiveMain:getSkinParam('POPUP_THUMB_SIZE'), 'png')
+		elseif type == 'song' then
+			self.jnt:notify('playerTitleStatus', self, textValue, duration)
+			showMe = false
 		else
-			s.text:setValue('')
-			s.artIcon:setStyle("noimage")
-			s.artIcon:setValue(nil)
+			s = self.popupInfo
 			s.textarea:setValue(textValue)
 		end
-		local duration = display['duration'] or 3000
-		s.window:showBriefly(duration, nil, Window.transitionPushPopupUp, Window.transitionPushPopupDown)
+		if showMe then
+			s.window:showBriefly(duration, nil, transitionOn, transitionOff)
+		end
 	end
 end
 
@@ -1068,18 +1344,55 @@ function togglePause(self)
 	log:debug("Player:togglePause(", paused, ")")
 
 	if paused == 'stop' or paused == 'pause' then
+		self:unpause()
+	elseif paused == 'play' then
+		self:pause()
+	end
+end
+
+
+function pause(self)
+	if not self.state then return end
+
+	self:call({'pause', '1'})
+	self.mode = 'pause'
+
+	self:updateIconbar()
+end
+
+
+function unpause(self)
+	if not self.state then return end
+
+	local paused = self.mode
+
+	if paused == 'stop' or paused == 'pause' then
 		-- reset the elapsed time epoch
 		self.trackSeen = Framework:getTicks() / 1000
-
 		self:call({'pause', '0'})
+
 		self.mode = 'play'
-	elseif paused == 'play' then
-		self:call({'pause', '1'})
-		self.mode = 'pause'
+	end
+
+	self:updateIconbar()
+end
+
+function stopAlarm(self)
+	-- currently synonymous with pause
+	self:pause()
+
+end
+
+
+function snooze(self)
+	if not self.state then return end
+
+	if self.alarmState == 'active' then
+		self.alarmState = 'snooze'
+		self:call({'jivealarm', 'snooze:1'})
 	end
 	self:updateIconbar()
-end	
-
+end
 
 -- isPaused
 --
@@ -1090,12 +1403,21 @@ function isPaused(self)
 end
 
 
+function getAlarmState(self)
+	return self.alarmState
+end
+
 -- getPlayMode returns nil|stop|play|pause
 --
 function getPlayMode(self)
 	if self.state then
 		return self.mode
 	end
+end
+
+--identical for non-local player
+function getEffectivePlayMode(self)
+	return self:getPlayMode()
 end
 
 -- isCurrent
@@ -1204,9 +1526,16 @@ function shuffleToggle(self)
 	self:button('shuffle')
 end
 
--- used to play favorites
+function powerToggle(self)
+	self:button('power')
+end
+
 function numberHold(self, number)
 	self:button(number .. '.hold')
+end
+
+function presetPress(self, number)
+	self:button("preset_" .. number .. '.single')
 end
 
 
@@ -1241,13 +1570,37 @@ function fwd(self)
 end
 
 
+function setPower(self, on, sequenceNumber)
+	if not self.state then return end
+
+	log:debug("Player:setPower(", on, ")")
+
+	if not on then
+		if sequenceNumber then
+			self:call({'power', '0', false, "seq_no:" ..  sequenceNumber}, true)
+		else
+			self:call({'power', '0'}, true)
+		end
+	else
+		if sequenceNumber then
+			self:call({'power', '1', false, "seq_no:" ..  sequenceNumber}, true)
+		else
+			self:call({'power', '1'}, true)
+		end
+	end
+end
+
 -- volume
 -- send new volume value to SS, returns a negitive value if the player is muted
-function volume(self, vol, send)
+function volume(self, vol, send, sequenceNumber)
 	local now = Framework:getTicks()
 	if self.mixerTo == nil or self.mixerTo < now or send then
 		log:debug("Sending player:volume(", vol, ")")
-		self:send({'mixer', 'volume', vol })
+		if sequenceNumber then
+			self:send({'mixer', 'volume', vol, "seq_no:" ..  sequenceNumber})
+		else
+			self:send({'mixer', 'volume', vol})
+		end
 		self.mixerTo = now + MIN_KEY_INT
 		self.state["mixer volume"] = vol
 		return vol
@@ -1328,12 +1681,18 @@ function connectToServer(self, server)
 	server:wakeOnLan()
 
 	if self.config == "needsServer" then
+		SlimServer:addLocallyRequestedServer(server)
 		_udapConnect(self, server)
 		return
 
 	elseif self.slimServer then
 		local ip, port = server:getIpPort()
-		self:send({'connect', ip})
+
+		--disconnect else serverstatus not being sent (TW: but how to force a serverstatus instead)
+		server:disconnect()
+
+		SlimServer:addLocallyRequestedServer(server)
+		self:send({'connect', ip}, true)
 		return true
 
 	else
@@ -1367,11 +1726,14 @@ function _udapConnect(self, server)
 			-- data.server_address = Udap.packNumber(2, 4)
 		else
 			-- for locally edited values (SN developers)
+			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
 			local ip = socket.dns.toip(sn_hostname)
+			log:info("Found ip address: ", ip)
+
 			data.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
-		log:info("SN server_address=", data.server_address)
+		log:debug("SN server_address=", data.server_address)
 
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
@@ -1379,7 +1741,7 @@ function _udapConnect(self, server)
 	else
 		local serverip = server:getIpPort()
 
-		log:info("SC slimserver_address=", serverip)
+		log:debug("SC slimserver_address=", serverip)
 
 		data.server_address = Udap.packNumber(0, 4)
 		data.slimserver_address = Udap.packNumber(parseip(serverip), 4)
@@ -1397,6 +1759,11 @@ function _udapConnect(self, server)
 	udap:send(function() return packet end, "255.255.255.255")
 	udap:send(function() return packet end, "255.255.255.255")
 	udap:send(function() return packet end, "255.255.255.255")
+end
+
+
+function disconnectFromServer(self)
+	-- nothing to do for remote player
 end
 
 

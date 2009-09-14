@@ -11,7 +11,7 @@ The window widget, extends L<jive.ui.Widget>. This is a container for other widg
 =head1 SYNOPSIS
 
  -- Create a new window with title "Jive" and title style "hometitle"
- local window = jive.ui.Window("window", "Jive", "hometitle")
+ local window = jive.ui.Window("text_list", "Jive", "hometitle")
 
  -- Show the window on the screen
  window:show()
@@ -52,7 +52,7 @@ local Event                   = require("jive.ui.Event")
 local Surface                 = require("jive.ui.Surface")
 
 local debug                   = require("jive.utils.debug")
-local log                     = require("jive.utils.log").logger("ui")
+local log                     = require("jive.utils.log").logger("squeezeplay.ui")
 
 local max                     = math.max
 local min                     = math.min
@@ -93,6 +93,7 @@ local LAYER_CONTENT           = jive.ui.LAYER_CONTENT
 local LAYER_CONTENT_OFF_STAGE = jive.ui.LAYER_CONTENT_OFF_STAGE
 local LAYER_CONTENT_ON_STAGE  = jive.ui.LAYER_CONTENT_ON_STAGE
 local LAYER_FRAME             = jive.ui.LAYER_FRAME
+local LAYER_TITLE             = jive.ui.LAYER_TITLE
 local LAYER_LOWER             = jive.ui.LAYER_LOWER
 
 local LAYOUT_NORTH            = jive.ui.LAYOUT_NORTH
@@ -104,6 +105,7 @@ local LAYOUT_NONE             = jive.ui.LAYOUT_NONE
 
 local appletManager           = require("jive.AppletManager")
 
+local HORIZONTAL_PUSH_TRANSITION_DURATION = 500
 
 -- our class
 module(...)
@@ -129,13 +131,13 @@ end
 
 --[[
 
-=head2 jive.ui.Window(style, title, titleStyle)
+=head2 jive.ui.Window(style, title, titleStyle, windowId)
 
-Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>, and an optional titleStyle I<titleStyle>
+Constructs a new window widget. I<style> is the widgets style. The window can have an optional I<title>, an optional titleStyle I<titleStyle>, and an optional windowId string I<windowId>
 
 =cut
 --]]
-function __init(self, style, title, titleStyle)
+function __init(self, style, title, titleStyle, windowId)
 	_assert(type(style) == "string", "style parameter is " .. type(style) .. " expected string - " .. debug.traceback())
 
 	local obj = oo.rawnew(self, Widget(style))
@@ -145,6 +147,9 @@ function __init(self, style, title, titleStyle)
 	obj.autoHide = false
 	obj.showFrameworkWidgets = true
 	obj.transparent = false
+	obj.transient = false
+
+	obj.windowId = windowId
 
 	obj.widgets = {} -- child widgets
 	obj.zWidgets = {} -- child widgets and framework widgets in z order
@@ -155,60 +160,44 @@ function __init(self, style, title, titleStyle)
 	obj._DEFAULT_HIDE_TRANSITION = transitionPushRight
 
 	if title then
-		obj:setTitleWidget(
-			Group(titleStyle or 'title', { 
-				text = Label("text", title), 
-				icon = Icon("icon"), 
-				back = Button(
-					Icon("back"), 
-					function() 
-						Framework:pushAction("back")
-						return EVENT_CONSUME
-					end,
-					function()
-						Framework:pushAction("go_home")
-						return EVENT_CONSUME
-					end
-				), 
-				nowplaying = Button(
-					Icon("nowplaying"), 
-					function() 
-						-- check if player is connected
-						if appletManager then
-							Framework:pushAction("go_now_playing")
-						end
-						return EVENT_CONSUME 
-					end
-				)
-			})
-		)
+		obj:setTitle(title)
+		if titleStyle then
+			obj:setIconWidget("icon", Icon(titleStyle))
+		end
+
+		-- default actions
+		obj:setDefaultLeftButtonAction()
+		obj:setDefaultRightButtonAction()
+		
+		--kind of a hack, always resetting the buttons if default so that ShortcutApplet's overrides can be seen in every window
+		obj:addListener(EVENT_WINDOW_ACTIVE,
+			function(event)
+				local left = obj:getIconWidget("lbutton")
+				if left and left.isDefaultButtonGroup and obj ~= Framework.windowStack[1] then --exclude home which has alternate button handling due to power
+					obj:setDefaultLeftButtonAction()
+				end
+				local right = obj:getIconWidget("rbutton")
+				if right and right.isDefaultButtonGroup and obj ~= Framework.windowStack[1] then --exclude home which has alternate button handling due to power
+					obj:setDefaultRightButtonAction()
+				end
+				return EVENT_UNUSED
+			end)
 	end
-	
+
 	-- by default, hide the window on BACK actions, add this as a
 	-- listener to allow other handlers to act on these events first
 	self.defaultActionListenerHandles = {}
 	table.insert(self.defaultActionListenerHandles, obj:addActionListener("back", obj, upAction))
 
-
 	return obj
 end
 
--- If an action is associated with the inputEvent, create and push the corresponding action onto the queue.  returns false if no matching action was found
-local function convertToActionAndPush(self, inputEvent)
-	local actionEvent = Framework:convertInputToAction(inputEvent)
-	if not actionEvent then
-		return false
+
+function _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
+	if log:isDebug() then
+		log:debug("_ignoreAllInputListener: ", event:tostring())
 	end
-
-	log:debug("Pushing action event (", actionEvent:getAction(), "), triggered from source event:", inputEvent:tostring())
-	_event(self, actionEvent)
-	return true
-end
-
-
-local function ignoreAllInputListener(self, event, excludedActions)
-	log:debug("ignoreAllInputListener: ", event:tostring())
-
+	
 	if event:getType() == ACTION then
 		local action = event:getAction()
 		if excludedActions then
@@ -216,33 +205,45 @@ local function ignoreAllInputListener(self, event, excludedActions)
 				Framework:assertActionName(excludedAction)
 				
 				if action == excludedAction then
-					log:debug("action excluded from ignoreAllInputListener: ", action)
+					log:debug("action excluded from _ignoreAllInputListener: ", action)
 
 					return EVENT_UNUSED
 				end
 			end
 		end
 
-		log:debug("Discarding unconsumed action")
+		if log:isDebug() then
+			log:debug("Ignoring action: ", event:getAction())
+		end
+		if ignoredCallback then
+			ignoredCallback(event)
+		end
 		return EVENT_CONSUME
 	end
 
 	--else try to convert to action to allow this window the chance to handle actions
-	Framework:convertInputToAction(event)
+	local action = Framework:getAction(event)
+	if not action then
+		return EVENT_CONSUME
+	end
 
-	return EVENT_CONSUME
+	local actionEvent = Framework:newActionEvent(action)
+
+	--recurse as an action
+	return _ignoreAllInputListener(self, actionEvent, excludedActions, ignoredCallback)
 
 end
 
 --[[
 
-=head2 ignoreAllInputExcept(excludedActions)
+=head2 ignoreAllInputExcept(excludedActions, ignoredCallback)
 
 Consume all input events except for i<excludedActions>. Note: The action "soft_reset" is always included in the excluded actions.
+if ignoredCallback exists, ignoredCallback(actionEvent) will be called for any ignored action.
 
 =cut
 --]]
-function ignoreAllInputExcept(self, excludedActions)
+function ignoreAllInputExcept(self, excludedActions, ignoredCallback)
 	if not self.ignoreAllInputHandle then
 		--also need to remove any hideOnAllButtonInputHandle, since in the ignoreAllInput case
 		-- we want excluded actions to be seen by global listeners. Leaving hideOnAllButtonInputHandle in place would
@@ -259,7 +260,7 @@ function ignoreAllInputExcept(self, excludedActions)
 	
 		self.ignoreAllInputHandle = self:addListener(EVENT_ALL_INPUT,
 								function(event)
-									return ignoreAllInputListener(self, event, excludedActions)
+									return _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
 								end)
 	end
 
@@ -339,6 +340,11 @@ function show(self, transition)
 		return
 	end
 
+
+	if not self.contextMenu and not self.transient then
+		self:hideContextMenus()
+	end
+
 	-- remove the window if it is already in the stack
 	local onstack = table.delete(stack, self)
 
@@ -369,7 +375,10 @@ function show(self, transition)
 			while window do
 				window:dispatchNewEvent(EVENT_HIDE)
 				window:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
-
+				if not window:canActivateScreensaver() then
+					-- #13412
+					appletManager:callService("restartScreenSaverTimer")
+				end
 				window = window.transparent and window:getLowerWindow() or nil
 			end
 		end
@@ -474,6 +483,7 @@ function showBriefly(self, msecs, callback,
 		     pushTransition,
 		     popTransition)
 
+	self:setTransient(true)
 	if not self.visible and self.brieflyTimer ~= nil then
 		--other source may have hidden then window, but not cleaned up the timer.
 		 -- Without this visible check, the "briefly" window would not appear until the old timer timeout
@@ -519,6 +529,29 @@ function showBriefly(self, msecs, callback,
 	self:show(pushTransition)
 end
 
+
+--static method
+function getTopNonTransientWindow(self)
+	local stack = Framework.windowStack
+
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.transient do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
+
+	return topwindow
+end
+
+
+function hideContextMenus(self)
+	local top = getTopNonTransientWindow(self)
+	while top and top:isContextMenu() do
+		top:hide()
+		top = getTopNonTransientWindow(self)
+	end
+end
 
 --[[
 
@@ -567,6 +600,10 @@ function hide(self, transition)
 		self:dispatchNewEvent(EVENT_HIDE)
 
 		-- this window is inactive
+		if not self:canActivateScreensaver() then
+			-- #13412
+			appletManager:callService("restartScreenSaverTimer")
+		end
 		self:dispatchNewEvent(EVENT_WINDOW_INACTIVE)
 	end
 
@@ -594,6 +631,13 @@ function hideToTop(self, transition)
 	end
 end
 
+function moveToTop(self)
+	if Framework:isCurrentWindow(self) then
+		return
+	end
+	self:hide()
+	self:show()
+end
 
 --[[
 
@@ -610,6 +654,15 @@ function setAutoHide(self, enabled)
 	self.autoHide = enabled and true or nil
 end
 
+
+function bumpDown(self)
+	Framework:_startTransition(self:transitionBumpDown(self))
+end
+
+
+function bumpUp(self)
+	Framework:_startTransition(self:transitionBumpUp(self))
+end
 
 --[[
 
@@ -655,6 +708,33 @@ function hideAll(self)
 
 	-- FIXME window events
 end
+
+
+--[[
+
+=head2 jive.ui.Window:getWindowId()
+
+Returns the windowId of a window
+
+=cut
+--]]
+function getWindowId(self)
+	return self.windowId
+end
+
+
+--[[
+
+=head2 jive.ui.Window:setWindowId()
+
+Sets the windowId of a window
+
+=cut
+--]]
+function setWindowId(self, id)
+	self.windowId = id
+end
+
 
 --[[
 
@@ -719,16 +799,116 @@ function setTitle(self, title)
 	if self.title then
 		self.title:setWidgetValue("text", title)
 	else
-		self.title = Group("title",
-					{ text = Label("text", title),
-					icon = Icon("icon"),
-					back = Button(Icon("back"), 
-						Framework:pushAction("back"),
-						Framework:pushAction("go_home"))
-					})
-		self:_addWidget(self.title)
-		self.title:_event(Event:new(EVENT_FOCUS_GAINED))
+		self:setIconWidget("text", Label("text", title))
 	end
+end
+
+
+--[[
+
+Sets (or adds) a widget into the title. This is used by Menu to add a 'position' widget with "X of Y" text into the appropraite windows.
+
+--]]
+function setIconWidget(self, widgetKey, widget)
+	if not self.title then
+		self:setTitleWidget(Group("title", {}))
+	end
+
+	self.title:setWidget(widgetKey, widget)
+end
+
+
+function getIconWidget(self, widgetKey)
+	if not self.title then
+		return nil
+	end
+
+	return self.title:getWidget(widgetKey)
+end
+
+
+--[[
+
+Sets the style of a title widget, default options are 'icon', 'lbutton', 'rbutton', 'text'. This probably would only be used to modify the icon style.
+
+--]]
+function setIconStyle(self, widgetKey, widgetStyle)
+	self.title:getWidget(widgetKey):setStyle(widgetStyle)
+end
+
+
+function setDefaultLeftButtonAction(self)
+	self:setIconWidget("lbutton", self:createDefaultLeftButton())
+end
+
+
+function setDefaultRightButtonAction(self)
+	self:setIconWidget("rbutton", self:createDefaultRightButton())
+end
+
+
+--static method
+function createDefaultLeftButton(self)
+	return self:createButtonActionButton("title_left_press", "title_left_hold", "soft_reset", true)
+end
+
+--static method
+function createDefaultRightButton(self)
+	return self:createButtonActionButton("title_right_press", "title_right_hold", "soft_reset", true)
+end
+
+--[[
+
+Sets a button action. This sets both the action and button style (using "button_" .. buttonAction).
+
+--]]
+function setButtonAction(self, buttonKey, buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup)
+	self:setIconWidget(buttonKey, self:createButtonActionButton(buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup))
+end
+
+
+--static method
+function createButtonActionButton(self, buttonAction, buttonHoldAction, buttonLongHoldAction, isDefaultButtonGroup)
+	local buttonFunc = nil
+	local buttonHoldFunc = nil
+	local buttonLongHoldFunc = nil
+
+	if buttonAction then
+		buttonFunc = function()
+			Framework:pushAction(buttonAction)
+		end
+	end
+	if buttonHoldAction then
+		buttonHoldFunc = function()
+			Framework:pushAction(buttonHoldAction)
+		end
+	end
+	if buttonLongHoldAction then
+		buttonLongHoldFunc = function()
+			Framework:pushAction(buttonLongHoldAction)
+		end
+	end
+
+	local actionStyle = Framework:getActionToActionTranslation(buttonAction)
+	if not actionStyle or actionStyle == "disabled" then
+		actionStyle = "none"
+	end
+
+	local group = Group("button_" .. actionStyle, {
+		icon = Icon("icon"),
+		icon_text = Label("text"),
+	})
+
+	local button = Button(group, buttonFunc, buttonHoldFunc, buttonLongHoldFunc)
+	button.isDefaultButtonGroup = isDefaultButtonGroup
+
+	return button
+end
+
+
+-- deprecated
+function setTitleIcon(self, iconName, iconStyle)
+	assert(false)
 end
 
 
@@ -737,6 +917,8 @@ end
 =head2 jive.ui.Window:setTitleStyle(style)
 
 Sets the windows title style to I<style>.
+
+Deprecated, still used by SlimBrowser.
 
 =cut
 --]]
@@ -752,6 +934,8 @@ end
 =head2 jive.ui.Window:setTitleWidget(titleWidget)
 
 Sets the windows title to I<titleWidget>.
+
+Deprecated, still used by SlimBrowser.
 
 =cut
 --]]
@@ -842,6 +1026,7 @@ function removeWidget(self, widget)
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_HIDE)
 	end
+	widget.parent = nil
 
 	table.delete(self.widgets, widget)
 
@@ -932,6 +1117,18 @@ function setAlwaysOnTop(self, alwaysOnTop)
 	-- FIXME modify window position if already shown?
 end
 
+--Used, for example, by context menu handling so that a context menu doesn't exit when Popups and showBrieflies occur
+function getTransient(self)
+	return self.transient
+end
+
+
+function setTransient(self, transient)
+	_assert(type(transient) == "boolean")
+
+	self.transient = transient
+end
+
 
 function getShowFrameworkWidgets(self)
 	return self.showFrameworkWidgets
@@ -956,6 +1153,19 @@ function setTransparent(self, transparent)
 
 	self.transparent = transparent
 	self:reLayout()
+end
+
+
+function setContextMenu(self, contextMenu)
+	_assert(type(contextMenu) == "boolean")
+
+	self.contextMenu = contextMenu
+	self:reLayout()
+end
+
+
+function isContextMenu(self)
+	return self.contextMenu
 end
 
 
@@ -1024,6 +1234,62 @@ function transitionNone(self)
 end
 
 
+--with animation in both directions
+function transitionBumpDown(self)
+
+	local frames = 1
+	local screenWidth = Framework:getScreenSize()
+	local inReturn = false
+	return function(widget, surface)
+			local y = frames * 3
+
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			surface:setOffset(0, y)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			surface:setOffset(0, 0)
+
+			if not inReturn and frames < 2 then
+				frames = frames + 1
+
+			else
+				inReturn = true
+				frames = frames - 1
+			end
+
+			if frames == 0 then
+				Framework:_killTransition()
+			end
+		end
+end
+
+--with animation in both directions
+function transitionBumpUp(self)
+
+	local frames = 1
+	local screenWidth = Framework:getScreenSize()
+	local inReturn = false
+	return function(widget, surface)
+			local y = frames * 3
+
+			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			surface:setOffset(0, -y)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			surface:setOffset(0, 0)
+
+			if not inReturn and frames < 2 then
+				frames = frames + 1
+
+			else
+				inReturn = true
+				frames = frames - 1
+			end
+
+			if frames == 0 then
+				Framework:_killTransition()
+			end
+		end
+end
+
 --[[
 
 =head2 jive.ui.Window:transitionBumpLeft()
@@ -1042,7 +1308,7 @@ function transitionBumpLeft(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(x, 0)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			frames = frames - 1
@@ -1071,7 +1337,7 @@ function transitionBumpRight(self)
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(-x, 0)
-			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE)
+			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
 			frames = frames - 1
@@ -1082,41 +1348,79 @@ function transitionBumpRight(self)
 end
 
 
+function transitionPushLeftStaticTitle(oldWindow, newWindow)
+	return _transitionPushLeft(oldWindow, newWindow, true)
+end
+
 --[[
 
 =head2 jive.ui.Window:transitionPushLeft(newWindow)
 
-Returns a push left window transition.
+Returns a push right window transition.
 
 =cut
 --]]
 function transitionPushLeft(oldWindow, newWindow)
+	return _transitionPushLeft(oldWindow, newWindow, false)
+end
+
+
+function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
+	local startT
+	local transitionDuration = HORIZONTAL_PUSH_TRANSITION_DURATION
+	local remaining = transitionDuration
 	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
-
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			if oldWindow._bg then
+				oldWindow._bg:blit(surface, 0, 0)
+			end
+			if staticTitle then
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+			else
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			end
 
 			surface:setOffset(-x, 0)
-			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
+			if staticTitle then
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE )
+			else
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(screenWidth - x, 0)
-			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			else
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(0, 0)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
+end
+
+
+function transitionPushRightStaticTitle(oldWindow, newWindow)
+	return _transitionPushRight(oldWindow, newWindow, true)
 end
 
 
@@ -1129,31 +1433,60 @@ Returns a push right window transition.
 =cut
 --]]
 function transitionPushRight(oldWindow, newWindow)
+	return _transitionPushRight(oldWindow, newWindow, false)
+end
+
+
+function _transitionPushRight(oldWindow, newWindow, staticTitle)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
+	local startT
+	local transitionDuration = HORIZONTAL_PUSH_TRANSITION_DURATION
+	local remaining = transitionDuration
 	local screenWidth = Framework:getScreenSize()
-	local scale = (frames * frames * frames) / screenWidth
-
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
 	return function(widget, surface)
-			local x = screenWidth - ((frames * frames * frames) / scale)
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = screenWidth - ((remaining * remaining * remaining) / scale)
 
 			surface:setOffset(0, 0)
-			newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			if oldWindow._bg then
+				oldWindow._bg:blit(surface, 0, 0)
+			end
+			if staticTitle then
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+			else
+				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			end
 
 			surface:setOffset(x, 0)
-			oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE)
+			if staticTitle then
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE )
+			else
+				oldWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(x - screenWidth, 0)
-			newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			if staticTitle then
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE)
+			else
+				newWindow:draw(surface, LAYER_CONTENT | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
+			end
 
 			surface:setOffset(0, 0)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
@@ -1167,11 +1500,27 @@ Returns a fade in window transition.
 =cut
 --]]
 function transitionFadeIn(oldWindow, newWindow)
+	return _transitionFadeIn(oldWindow, newWindow, 400)
+end
+
+function transitionFadeInFast(oldWindow, newWindow)
+	return _transitionFadeIn(oldWindow, newWindow, 100)
+end
+
+
+function _transitionFadeIn(oldWindow, newWindow, duration)
 	_assert(oo.instanceof(oldWindow, Widget))
 	_assert(oo.instanceof(newWindow, Widget))
 
-	local frames = FRAME_RATE / 2 -- 0.5 sec
-	local scale = 255 / frames
+
+	local startT
+	local transitionDuration = duration
+	local remaining = transitionDuration
+	local screenWidth = Framework:getScreenSize()
+	local scale = (transitionDuration * transitionDuration * transitionDuration) / screenWidth
+	local animationCount = 0
+
+	local scale = 255 / transitionDuration
 
 	local bgImage = Framework:getBackground()
 
@@ -1183,15 +1532,26 @@ function transitionFadeIn(oldWindow, newWindow)
 	oldWindow:draw(srf, LAYER_ALL)
 
 	return function(widget, surface)
-			local x = frames * scale
+			if animationCount == 0 then
+				--getting start time on first loop avoids initial delay that can occur
+				startT = Framework:getTicks()
+			end
+			local x = remaining * scale
 
+			--support background surfaces, used for instance by ContextMenuWindow
+			if newWindow._bg then
+				newWindow._bg:blit(surface, 0, 0)
+			end
 			newWindow:draw(surface, LAYER_ALL)
 			srf:blitAlpha(surface, 0, 0, x)
 
-			frames = frames - 1
-			if frames == 0 then
+			local elapsed = Framework:getTicks() - startT
+			remaining = transitionDuration - elapsed
+
+			if remaining <= 0 then
 				Framework:_killTransition()
 			end
+			animationCount = animationCount + 1
 		end
 end
 
@@ -1401,12 +1761,18 @@ function borderLayout(self, fitWindow)
 			if position == LAYOUT_NORTH then
 				x = x or 0
 				y = y or 0
-				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, ww - rb, h))
+				w = w or ww
+				w = min(ww, w) - rb
+
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, h))
 
 			elseif position == LAYOUT_SOUTH then
 				x = x or 0
 				y = y or (wh - maxS)
-				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, ww - rb, h))
+				w = w or ww
+				w = min(ww, w) - rb
+
+				widget:setBounds(maxBounds(wx + x + lb, wy + y + tb, w, h))
 
 			elseif position == LAYOUT_EAST then
 				x = x or (ww - maxE)

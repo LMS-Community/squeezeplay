@@ -44,8 +44,8 @@ function registerApplet(meta)
 
 	local settings = meta:getSettings()
 
-	for servername, cred in pairs(settings) do
-		SlimServer:setCredentials(cred, servername)
+	for serveruuid, cred in pairs(settings) do
+		SlimServer:setCredentials(cred, serveruuid)
 	end
 
 end

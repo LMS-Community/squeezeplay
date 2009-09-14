@@ -5,11 +5,14 @@
 */
 
 
-/* decoder state */
+/* decoder & audio-output states */
 #define DECODE_STATE_RUNNING 		(1 << 0)
 #define DECODE_STATE_UNDERRUN		(1 << 1)
 #define DECODE_STATE_ERROR		(1 << 2)
 #define DECODE_STATE_NOT_SUPPORTED	(1 << 3)
+#define DECODE_STATE_LOOPBACK 		(1 << 4)
+#define DECODE_STATE_STOPPING 		(1 << 5)
+#define DECODE_STATE_AUTOSTART 		(1 << 6)
 
 /* Transitions */
 #define TRANSITION_NONE               0x0

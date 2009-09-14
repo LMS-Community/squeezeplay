@@ -8,10 +8,11 @@
 
 #include "audio/fifo.h"
 #include "audio/mqueue.h"
+#include "audio/decode/decode_priv.h"
 
 
 void mqueue_init(struct mqueue *mqueue, void *buffer, size_t buffer_size) {
-	fifo_init(&mqueue->fifo, buffer_size);
+	fifo_init(&mqueue->fifo, buffer_size, false);
 	mqueue->buffer = buffer;
 }
 
@@ -35,16 +36,10 @@ static void mqueue_read_buf(struct mqueue *mqueue, Uint8 *b, size_t n) {
 
 
 mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
-	Uint32 ticks;
 	int err;
 
-	ticks = SDL_GetTicks();
-	if (timeout <= ticks) {
-		return NULL;
-	}
-
 	if (fifo_lock(&mqueue->fifo) == -1) {
-		DEBUG_ERROR("Failed to lock mutex %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to lock mutex %s", SDL_GetError());
 		return NULL;
 	}
 
@@ -57,14 +52,19 @@ mqueue_func_t mqueue_read_request(struct mqueue *mqueue, Uint32 timeout) {
 		return func;
 	}
 
+	if (!timeout) {
+		fifo_unlock(&mqueue->fifo);
+		return NULL;
+	}
+
 	/* Wait until timeout */
-	err = fifo_wait_timeout(&mqueue->fifo, timeout - ticks);
+	err = fifo_wait_timeout(&mqueue->fifo, timeout);
 	if (err == SDL_MUTEX_TIMEDOUT) {
 		fifo_unlock(&mqueue->fifo);
 		return NULL;
 	}
 	else if (err == -1) {
-		DEBUG_ERROR("Failed to wait on condition %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to wait on condition %s", SDL_GetError());
 
 		fifo_unlock(&mqueue->fifo);
 		return NULL;
@@ -106,6 +106,12 @@ Uint32 mqueue_read_u32(struct mqueue *mqueue) {
 }
 
 
+void mqueue_read_array(struct mqueue *mqueue, Uint8 *array, size_t len)
+{
+	mqueue_read_buf(mqueue, array, len);
+}
+
+
 static void mqueue_write_buf(struct mqueue *mqueue, Uint8 *b, size_t n) {
 	size_t bytes_write;
 
@@ -126,7 +132,7 @@ static void mqueue_write_buf(struct mqueue *mqueue, Uint8 *b, size_t n) {
 
 int mqueue_write_request(struct mqueue *mqueue, mqueue_func_t func, size_t len) {
 	if (fifo_lock(&mqueue->fifo) == -1) {
-		DEBUG_ERROR("Failed to lock mutex %s", SDL_GetError());
+		LOG_ERROR(log_audio_decode, "Failed to lock mutex %s", SDL_GetError());
 		return 0;
 	}
 
@@ -164,3 +170,9 @@ void mqueue_write_u16(struct mqueue *mqueue, Uint16 val) {
 void mqueue_write_u32(struct mqueue *mqueue, Uint32 val) {
 	mqueue_write_buf(mqueue, (Uint8 *)&val, sizeof(val));
 }
+
+void mqueue_write_array(struct mqueue *mqueue, Uint8 *array, size_t len)
+{
+	mqueue_write_buf(mqueue, array, len);
+}
+

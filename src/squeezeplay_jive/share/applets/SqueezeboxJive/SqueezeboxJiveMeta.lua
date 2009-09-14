@@ -1,12 +1,15 @@
 
+local pairs = pairs
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
-local jul           = require("jive.utils.log")
+local SlimServer    = require("jive.slim.SlimServer")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jnt           = jnt
 
 
 module(...)
@@ -28,13 +31,34 @@ function defaultSettings(meta)
 		suspendEnabled  = true,
 		dimmedAC	= false,
 		wlanPSEnabled   = true,
+
+		alsaPlaybackDevice = "default",
+		alsaPlaybackBufferTime = 30000,
+		alsaPlaybackPeriodCount = 2,
+		alsaSampleSize = 16,
 	}
 end
 
 
-function registerApplet(meta)
-	jul.addCategory("squeezeboxJive", jul.DEBUG)
+function upgradeSettings(meta, settings)
+	-- fix broken settings
+	if not settings.brightness or settings.brightness > 40 then
+		settings.brightness = 40	-- max
+	end
 
+	-- fill in any blanks
+	local defaults = defaultSettings(meta)
+	for k, v in pairs(defaults) do
+		if not settings[k] then
+			settings[k] = v
+		end
+	end
+
+	return settings
+end
+
+
+function registerApplet(meta)
 	-- Fixup settings after upgrade
 	local settings = meta:getSettings()
 	if not settings.suspendWhenPlayingTimeout then
@@ -48,8 +72,18 @@ function registerApplet(meta)
 	-- Set player device type
 	LocalPlayer:setDeviceType("controller", "Controller")
 
+	-- Bug 9900
+	-- Use SN test during development
+	jnt:setSNHostname("jive.squeezenetwork.com")
+
+	-- Set the minimum support server version
+	SlimServer:setMinimumVersion("7.0")
+
 	-- SqueezeboxJive is a resident Applet
 	appletManager:loadApplet("SqueezeboxJive")
+
+	-- audio playback defaults
+	appletManager:addDefaultSetting("Playback", "enableAudio", 2)
 
 	jiveMain:addItem(meta:menuItem('backlightSetting', 'screenSettings', "BSP_BACKLIGHT_TIMER", function(applet, ...) applet:settingsBacklightTimerShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'screenSettings', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
@@ -58,6 +92,9 @@ function registerApplet(meta)
 
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")
+	meta:registerService("isBatteryLow")
+	meta:registerService("poweroff")
+	meta:registerService("reboot")
 end
 
 

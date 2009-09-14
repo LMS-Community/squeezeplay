@@ -28,7 +28,7 @@ User interface framework
 
 
 -- stuff we use
-local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type = _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type
+local _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type, loadfile = _assert, collectgarbage, jive, ipairs, load, pairs, require, setfenv, string, tostring, type, loadfile
 
 local oo            = require("loop.simple")
 local table         = require("jive.utils.table")
@@ -77,8 +77,8 @@ local Widget        = require("jive.ui.Widget")
 local Window        = require("jive.ui.Window")
 local Sample        = require("squeezeplay.sample")
 
-local log           = require("jive.utils.log").logger("ui")
-local logTask       = require("jive.utils.log").logger("ui.task")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
+local logTask       = require("jive.utils.log").logger("squeezeplay.task")
 
 local dumper        = require("jive.utils.dumper")
 local io            = require("io")
@@ -97,7 +97,7 @@ sound = {} -- sounds
 soundEnabled = {} -- sound enabled state
 
 screen = {}
-screen.bounds = { 0, 0, 240, 320 }
+screen.bounds = { 0, 0, 0, 0 }
 
 actions = {}
 actions.byName = {}
@@ -199,11 +199,20 @@ function constants(module)
 	module.EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
 	module.EVENT_SWITCH = jive.ui.EVENT_SWITCH
 	module.EVENT_MOTION = jive.ui.EVENT_MOTION
+	module.EVENT_IR_PRESS = jive.ui.EVENT_IR_PRESS
+	module.EVENT_IR_HOLD = jive.ui.EVENT_IR_HOLD
+	module.EVENT_IR_ALL = jive.ui.EVENT_IR_ALL
+	module.EVENT_IR_DOWN = jive.ui.EVENT_IR_DOWN
+	module.EVENT_IR_UP = jive.ui.EVENT_IR_UP
+	module.EVENT_GESTURE = jive.ui.EVENT_GESTURE
 	module.EVENT_KEY_ALL = jive.ui.EVENT_KEY_ALL
 	module.EVENT_MOUSE_ALL = jive.ui.EVENT_MOUSE_ALL
 	module.EVENT_ALL_INPUT = jive.ui.EVENT_ALL_INPUT
 	module.EVENT_VISIBLE_ALL = jive.ui.EVENT_VISIBLE_ALL
 	module.EVENT_ALL = jive.ui.EVENT_ALL
+
+	module.GESTURE_L_R = jive.ui.GESTURE_L_R
+	module.GESTURE_R_L = jive.ui.GESTURE_R_L
 
 	module.KEY_NONE = jive.ui.KEY_NONE
 	module.KEY_GO = jive.ui.KEY_GO
@@ -222,6 +231,15 @@ function constants(module)
 	module.KEY_PAGE_DOWN = jive.ui.KEY_PAGE_DOWN
 	module.KEY_VOLUME_UP = jive.ui.KEY_VOLUME_UP
 	module.KEY_VOLUME_DOWN = jive.ui.KEY_VOLUME_DOWN
+	module.KEY_MUTE = jive.ui.KEY_MUTE
+	module.KEY_ALARM = jive.ui.KEY_ALARM
+	module.KEY_POWER = jive.ui.KEY_POWER
+	module.KEY_PRESET_1 = jive.ui.KEY_PRESET_1
+	module.KEY_PRESET_2 = jive.ui.KEY_PRESET_2
+	module.KEY_PRESET_3 = jive.ui.KEY_PRESET_3
+	module.KEY_PRESET_4 = jive.ui.KEY_PRESET_4
+	module.KEY_PRESET_5 = jive.ui.KEY_PRESET_5
+	module.KEY_PRESET_6 = jive.ui.KEY_PRESET_6
 	module.KEY_PRINT = jive.ui.KEY_PRINT
 
 	module.FRAME_RATE = jive.ui.FRAME_RATE
@@ -234,7 +252,7 @@ function init(self)
 
 	-- action mapping listener, should be last listener in chain to 
 	-- allow for direct access to keys/other input types if needed.
-	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS ,
+	self:addListener(jive.ui.EVENT_KEY_ALL | jive.ui.EVENT_CHAR_PRESS | jive.ui.EVENT_IR_ALL | jive.ui.EVENT_GESTURE,
 		function(event)
 			return self:convertInputToAction(event)
 		end,
@@ -243,6 +261,11 @@ function init(self)
 	self:registerAction("soft_reset")
 
 	self.longHoldBackTimer = Timer(LONG_HOLD_TIME,
+		function()
+			self:pushAction("soft_reset")
+		end,
+		true)
+	self.longHoldLeftIrTimer = Timer(LONG_HOLD_TIME,
 		function()
 			self:pushAction("soft_reset")
 		end,
@@ -286,7 +309,8 @@ function eventLoop(self, netTask)
 
 	local running = true
 	while running do
-		-- process tasks
+		-- process tasks: 
+		-- all audio tasks + as many other tasks as possible until a frame is due
 		local tasks = false
 		for task in Task:iterator() do
 			local start = now
@@ -295,7 +319,7 @@ function eventLoop(self, netTask)
 			if now - start > 20 then
 				log:debug(task.name, " took ", now - start, " ms")
 			end
-			if framedue <= now then
+			if framedue <= now and task.priority > Task.PRIORITY_AUDIO then
 				break
 			end
 		end
@@ -313,7 +337,7 @@ function eventLoop(self, netTask)
 		-- draw frame and process ui event queue
 		now = self:getTicks()
 		if framedue <= now then
-			logTask:info("--------")
+			logTask:debug("--------")
 
 			-- draw screen
 			self:updateScreen()
@@ -337,6 +361,43 @@ function eventLoop(self, netTask)
 	end
 
 	collectgarbage("restart")
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:isCurrentWindow()
+
+Returns true if I<window> is the window currently being viewed
+
+=cut
+--]]
+function isCurrentWindow(self, window)
+	--FIXME, this should also cover the case where window is on top but obscured by toast(s)
+	if self.windowStack and window == self.windowStack[1] then
+		return true
+	end
+	return false
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:isWindowInStack(window)
+
+Returns true if I<window> is in the window stack
+
+=cut
+--]]
+function isWindowInStack(self, window)
+	local stack = self.windowStack
+
+	for i=1,#stack do
+		if stack[i] == window then
+			return true
+		end
+	end
+	return false
 end
 
 
@@ -413,6 +474,21 @@ function removeWidget(self, widget)
 	widget:dispatchNewEvent(EVENT_HIDE)
 
 	self:reDraw(nil)
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:isMostRecentInput(inputType)
+
+Takes an input type as an argument and returns whether this input type was the last input given to squeezeplay.
+
+Possible inputTypes: "ir", "key", "mouse", "scroll". Note: "mouse" is used for both mouse and touch
+
+=cut
+--]]
+function isMostRecentInput(self, inputType)
+	return inputType and self.mostRecentInputType == inputType
 end
 
 
@@ -578,7 +654,7 @@ function removeListener(self, handle)
 end
 
 function dumpActions(self)
-	local result = "Available Actions: " 
+	local result = "Actions: " 
 	for action in table.pairsByKeys(self.actions.byName) do
 		result = result .. " " .. action
 	end
@@ -611,12 +687,15 @@ Returns a new ACTION event or nil if no matching action has been registered.
 =cut
 --]]
 function newActionEvent(self, action)
+	--first look for any action->action translation
+	action = self:getActionToActionTranslation(action)
+
 	local actionIndex = self:_getActionEventIndexByName(action)
 	if not actionIndex then
 		log:error("action name not registered: (" , action, "). Available actions: ", self:dumpActions() )
 		return nil
 	end
-	
+
 	return Event:new(ACTION, actionIndex)
 	
 end
@@ -668,13 +747,28 @@ function getAction(self, event)
 
 	if eventType == jive.ui.EVENT_KEY_PRESS then
 		action = self.inputToActionMap.keyActionMappings.press[event:getKeycode()]
+	elseif eventType == jive.ui.EVENT_GESTURE then
+		action = self.inputToActionMap.gestureActionMappings[event:getGesture()]
 	elseif eventType == jive.ui.EVENT_KEY_HOLD then
 		action = self.inputToActionMap.keyActionMappings.hold[event:getKeycode()]
 	elseif eventType == jive.ui.EVENT_CHAR_PRESS then
 		action = self.inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
+	elseif eventType == jive.ui.EVENT_IR_PRESS then
+		action = inputToActionMap.irActionMappings.press[self:getIRButtonName(event:getIRCode())]
+	elseif eventType == jive.ui.EVENT_IR_HOLD then
+		action = inputToActionMap.irActionMappings.hold[self:getIRButtonName(event:getIRCode())]
 	end
 
 	return action
+end
+
+function getActionToActionTranslation(self, action)
+	local translatedAction = self.inputToActionMap.actionActionMappings[action]
+	if not translatedAction then
+		return action
+	end
+	log:debug("Translated action " , action, " to ", translatedAction )
+	return translatedAction 
 end
 
 
@@ -690,8 +784,75 @@ function registerActions(self, map)
 	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
 		self:registerAction(action)
 	end
+	for key, action in pairs(self.inputToActionMap.irActionMappings.press) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.irActionMappings.hold) do
+		self:registerAction(action)
+	end
 	for i, action in ipairs(self.inputToActionMap.unassignedActionMappings) do
 		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.actionActionMappings) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.gestureActionMappings) do
+		self:registerAction(action)
+	end
+end
+
+
+function applyInputToActionOverrides(self, overrideMap)
+	self:applyInputToActionOverridesToDestination(overrideMap, self.inputToActionMap)
+end
+
+
+function applyInputToActionOverridesToDestination(self, overrideMap, destinationMap)
+	--future: make/find a fancy table merge function instead of this hardcoding
+
+	if not overrideMap then
+		return
+	end
+
+	if overrideMap.keyActionMappings and overrideMap.keyActionMappings.press then
+		for key, action in pairs(overrideMap.keyActionMappings.press) do
+			destinationMap.keyActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.keyActionMappings and overrideMap.keyActionMappings.hold then
+		for key, action in pairs(overrideMap.keyActionMappings.hold) do
+			destinationMap.keyActionMappings.hold[key] = action
+		end
+	end
+
+	if overrideMap.charActionMappings and overrideMap.charActionMappings.press then
+		for key, action in pairs(overrideMap.charActionMappings.press) do
+			destinationMap.charActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.irActionMappings and overrideMap.irActionMappings.press then
+		for key, action in pairs(overrideMap.irActionMappings.press) do
+			destinationMap.irActionMappings.press[key] = action
+		end
+	end
+
+	if overrideMap.irActionMappings and overrideMap.irActionMappings.hold then
+		for key, action in pairs(overrideMap.irActionMappings.hold) do
+			destinationMap.irActionMappings.hold[key] = action
+		end
+	end
+
+	if overrideMap.actionActionMappings then
+		for key, action in pairs(overrideMap.actionActionMappings) do
+			destinationMap.actionActionMappings[key] = action
+		end
+	end
+	if overrideMap.gestureActionMappings then
+		for key, action in pairs(overrideMap.gestureActionMappings) do
+			destinationMap.gestureActionMappings[key] = action
+		end
 	end
 end
 
@@ -714,6 +875,20 @@ function convertInputToAction(self, inputEvent)
 			end
 			if type == jive.ui.EVENT_KEY_UP then
 				self.longHoldBackTimer:stop()
+			end
+		end
+
+	end
+
+	if (inputEvent:getType() & (jive.ui.EVENT_IR_DOWN | jive.ui.EVENT_IR_UP ) ) > 0  then
+		if inputEvent:isIRCode("arrow_left") then
+
+			local type = inputEvent:getType()
+			if type == jive.ui.EVENT_IR_DOWN then
+				self.longHoldLeftIrTimer:start()
+			end
+			if type == jive.ui.EVENT_IR_UP then
+				self.longHoldLeftIrTimer:stop()
 			end
 		end
 
@@ -742,7 +917,7 @@ end
 --if the passed in actionName is not a registered action, an error is logged and false is returned. 
 function assertActionName(self, actionName)
 	if not self:_getActionEventIndexByName(actionName) then
-		log:error("action name not registered:(" , actionName, "). Available actions: ", self:dumpActions() )
+		log:error("action name '", actionName, "' is not registered. ", self:dumpActions() )
 		return false
 	end
 
@@ -800,6 +975,140 @@ function isAnActionTriggeringKeyEvent(self, event, keyEventMask)
 	return false
 end
 
+
+function _loadIRMap(file)
+	log:debug("_loadIRMap: ", file)
+
+	if not file then 
+		return nil
+	end
+	
+	local f, err = loadfile(file)
+	if not f then
+		log:error(string.format ("error loading IR map file `%s' (%s)", file, err))
+		return nil
+	end
+	
+	-- evaluate the settings in a sandbox
+	local env = {}
+	setfenv(f, env)
+	f()
+	return env.irMap
+end
+
+
+function initIRCodeMappings(self)
+	self.irMaps = {}
+	
+	-- location of mapping file not yet set - might want to be in user area so users can modify and add more for other remotes
+        local defaultMapPath = System:findFile("jive/irMap_default.lua")
+        local defaultMapWrapper = _loadIRMap(defaultMapPath)
+        
+        
+        if not defaultMapWrapper then
+                log:error("Unable to load IR mapping file: ", defaultMapWrapper)
+                return nil
+        end
+        
+        --just doing default for now, todo: add other remote, and warn if duplicate ir codes exist across the mappings
+        local mapWrapper = defaultMapWrapper
+        self.irMaps[mapWrapper.name] = {}
+        self.irMaps[mapWrapper.name].byCode = mapWrapper.map
+
+        self.irMaps[mapWrapper.name].byName = {}
+        for irCode, buttonName in pairs(mapWrapper.map) do
+	        self.irMaps[mapWrapper.name].byName[buttonName] = irCode
+        end
+        
+        
+	
+end
+
+function _dumpIrButtonNames(self)
+	local result = "Available IR Button Names: " 
+	for mapName, map in pairs(self.irMaps) do
+		result = result .. " (from " .. mapName .. ")"
+		for name, code in table.pairsByKeys(map.byName) do
+			result = result .. " " .. name
+		end
+	end
+	return result
+end
+
+
+function isIRCode(self, buttonName, seekingIRCode)
+	for mapName, irCode in pairs(self:getIRCodes(buttonName)) do
+		if seekingIRCode == irCode then
+			return true
+		end
+	end
+	
+	return false
+end
+
+
+--[[
+
+=head2 jive.ui.Framework:getIRCodes(buttonName)
+
+Get the IR codes associated with buttonName in a dict keyed by mapName, returns empty table if none found.
+
+=cut
+--]]
+function getIRCodes(self, buttonName)
+	local irCodes = {}
+	local matchFound = false
+	for mapName, map in pairs(self.irMaps) do
+		local irCode = map.byName[buttonName]
+		if irCode then
+			irCodes[mapName] = irCode
+			matchFound = true
+			break
+		end
+	end
+	
+	if not matchFound then
+		log:error("No IR code exists for requested button name (", buttonName, "). ", self:_dumpIrButtonNames())
+		log:error("Source of the incorrect button name request: (", debug.traceback())
+	end
+	
+	return irCodes
+end
+
+--[[
+
+=head2 jive.ui.Framework:getIRButtonName(irCode)
+
+return the button name associated with the irCode 
+
+=cut
+--]]
+function getIRButtonName(self, irCode)
+	local buttonName
+	
+	for mapName, map in pairs(self.irMaps) do
+		buttonName = map.byCode[irCode]
+		if buttonName then
+			log:debug("Mapping for ", buttonName, " found (", irCode, ") in mapName (", mapName, ")")
+			break
+		end
+	end
+	
+	return buttonName
+end
+
+--[[
+
+=head2 jive.ui.Framework:isValidIRCode(irEvent)
+
+return true if any loaded IR map file contains a mapping for the given irEvent. Useful to filter out IR signals from 
+other IR remote controls that the user might have.
+
+=cut
+--]]
+function isValidIRCode(self, irEvent)
+	return self:getIRButtonName(irEvent:getIRCode()) ~= nil
+end
 
 --[[
 
@@ -859,9 +1168,9 @@ function setGlobalSetting(self, key, value)
 	end
 
 	self._global_settings[key] = value
-	local file = _assert(io.open(global_settings_file, "w"))
-	file:write(dumper.dump(self._global_settings, "global_settings", true))
-	file:close()
+
+	System:atomicWrite(global_settings_file,
+		dumper.dump(self._global_settings, "global_settings", true))
 end
 
 

@@ -13,6 +13,7 @@ static char *mac_address;
 static char *uuid;
 static char *arch;
 static char *machine;
+static int hardware_rev;
 static char *homedir;
 static char *resource_path = NULL;
 
@@ -53,11 +54,13 @@ static int system_get_arch(lua_State *L) {
 static int system_get_machine(lua_State *L) {
 	if (machine) {
 		lua_pushstring(L, machine);
+		lua_pushinteger(L, hardware_rev);
+		return 2;
 	}
 	else {
 		lua_pushnil(L);
+		return 1;
 	}
-	return 1;
 }
 
 
@@ -66,7 +69,7 @@ static int system_get_uptime(lua_State *L) {
 	int updays, upminutes, uphours;
 
 	// FIXME wraps around after 49.7 days
-	uptime = SDL_GetTicks() / 1000;
+	uptime = jive_jiffies() / 1000;
 
 	updays = (int) uptime / (60*60*24);
         upminutes = (int) uptime / 60;
@@ -134,6 +137,12 @@ static int system_init(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
+	lua_getfield(L, 2, "revision");
+	if (!lua_isnil(L, -1)) {
+		hardware_rev = lua_tointeger(L, -1);
+	}
+	lua_pop(L, 1);
+
 	return 0;
 }
 
@@ -149,7 +158,7 @@ static int system_find_file(lua_State *L) {
 
 	path = luaL_checkstring(L, 2);
 
-	if (jive_find_file(path, fullpath)) {
+	if (squeezeplay_find_file(path, fullpath)) {
 		lua_pushstring(L, fullpath);
 	}
 	else {
@@ -160,7 +169,7 @@ static int system_find_file(lua_State *L) {
 }
 
 
-static int system_init_path(lua_State *L) {
+static int system_init_file_path(lua_State *L) {
 	const char *lua_path;
 	char *ptr;
 
@@ -212,7 +221,7 @@ static int system_init_path(lua_State *L) {
 }
 
 
-int jive_find_file(const char *path, char *fullpath) {
+int squeezeplay_find_file(const char *path, char *fullpath) {
 	char *begin, *end;
 	FILE *fp;
 
@@ -261,6 +270,79 @@ int jive_find_file(const char *path, char *fullpath) {
 }
 
 
+/*
+ * 
+ */
+static int system_atomic_write(lua_State *L)
+{
+	const char *fname, *fdata;
+	char *tname;
+	size_t n, len;
+	FILE *fp;
+#if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
+	DIR *dp;
+#endif
+	fname = lua_tostring(L, 2);
+	fdata = lua_tolstring(L, 3, &len);
+
+	tname = alloca(strlen(fname) + 5);
+	strcpy(tname, fname);
+	strcat(tname, ".new");
+	
+	if (!(fp = fopen(tname, "w"))) {
+		return luaL_error(L, "fopen: %s", strerror(errno));
+	}
+
+	n = 0;
+	while (n < len) {
+		n += fwrite(fdata + n, 1, len - n, fp);
+
+		if (ferror(fp)) {
+			fclose(fp);
+			return luaL_error(L, "fwrite: %s", strerror(errno));
+		}
+	}
+
+	if (fflush(fp) != 0) {
+		fclose(fp);
+		return luaL_error(L, "fflush: %s", strerror(errno));
+	}
+#if HAVE_FSYNC && !defined(FSYNC_WORKAROUND_ENABLED)
+	if (fsync(fileno(fp)) != 0) {
+		fclose(fp);
+		return luaL_error(L, "fsync: %s", strerror(errno));
+	}
+#endif
+	if (fclose(fp) != 0) {
+		return luaL_error(L, "fclose: %s", strerror(errno));
+	}
+
+	if (rename(tname, fname) != 0) {
+		return luaL_error(L, "rename: %s", strerror(errno));
+	}
+
+#ifdef FSYNC_WORKAROUND_ENABLED
+	/* sync filesystem if fsync is broken */
+	sync();
+#elif HAVE_FSYNC
+	if (!(dp = opendir(dirname(tname)))) {
+		return luaL_error(L, "opendir: %s", strerror(errno));
+	}
+	
+	if (fsync(dirfd(dp)) != 0) {
+		closedir(dp);
+		return luaL_error(L, "fsync: %s", strerror(errno));
+	}
+
+	if (closedir(dp) != 0) {
+		return luaL_error(L, "closedir: %s", strerror(errno));
+	}
+#endif
+
+	return 0;
+}
+
+
 static const struct luaL_Reg squeezeplay_system_methods[] = {
 	{ "getArch", system_get_arch },
 	{ "getMachine", system_get_machine },
@@ -269,12 +351,26 @@ static const struct luaL_Reg squeezeplay_system_methods[] = {
 	{ "getUptime", system_get_uptime },
 	{ "getUserDir", system_get_user_dir },
 	{ "findFile", system_find_file },
+	{ "atomicWrite", system_atomic_write },
 	{ "init", system_init },
 	{ NULL, NULL }
 };
 
 
-int squeezeplayL_system_init(lua_State *L) {
+int luaopen_squeezeplay_system(lua_State *L) {
+	/* register methods */
+	lua_getglobal(L, "jive");
+
+	lua_newtable(L);
+	luaL_register(L, NULL, squeezeplay_system_methods);
+	lua_setfield(L, -2, "System");
+
+	lua_pop(L, 1);
+	return 0;
+}
+
+
+int squeezeplay_system_init(lua_State *L) {
 	const char *homeenv = getenv("SQUEEZEPLAY_HOME");
 	char *ptr;
 
@@ -289,6 +385,8 @@ int squeezeplayL_system_init(lua_State *L) {
 
 	arch = platform_get_arch();
 	machine = strdup("squeezeplay");
+
+	/* add homedir to lua patch */
 	if (homeenv) {
 		homedir = strdup(homeenv);
 	}
@@ -296,15 +394,26 @@ int squeezeplayL_system_init(lua_State *L) {
 		homedir = platform_get_home_dir();
 	}
 
-	system_init_path(L);
+	lua_getglobal(L, "package");
+	if (lua_istable(L, -1)) {
+		luaL_Buffer b;
+		luaL_buffinit(L, &b);
 
-	/* register methods */
-	lua_getglobal(L, "jive");
+                /* add homedir */
+                luaL_addstring(&b, homedir);
+                luaL_addstring(&b, DIR_SEPARATOR_STR "userpath" DIR_SEPARATOR_STR "?.lua;");
 
-	lua_getfield(L, 1, "System");
-	luaL_register(L, NULL, squeezeplay_system_methods);
-	lua_pop(L, 1);
+		/* existing lua path */
+		lua_getfield(L, -1, "path");
+		luaL_addvalue(&b);
+		luaL_addstring(&b, ";");
 
-	lua_pop(L, 1);
+		/* store new path */
+		luaL_pushresult(&b);
+		lua_setfield(L, -2, "path");
+	}
+
+	system_init_file_path(L);
+
 	return 0;
 }

@@ -29,15 +29,8 @@ local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
 local Framework        = require("jive.ui.Framework")
 
-local log              = require("jive.utils.log").logger("applets.screensavers")
 
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_WINDOW_RESIZE = jive.ui.EVENT_WINDOW_RESIZE
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local FRAME_RATE       = jive.ui.FRAME_RATE
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
@@ -50,7 +43,7 @@ function Sprite:__init(screen_w, screen_h, surface, step)
 	
 	local w,h = surface:getSize()
 
-	obj.icon = Icon("sprite", surface)
+	obj.icon = Icon("icon", surface)
 	local x = screen_w / 2 - w / 2
 	local y = screen_h / 2 - h / 2
 	obj.icon:setPosition(x, y)
@@ -95,14 +88,8 @@ end
 -- by the ScreenSaversApplet.
 function bounce(self)
 
-	local window = Window("bounce")
+	local window = Window("absolute")
 	local w, h = Framework:getScreenSize()
-
-	window:setSkin({
-		bounce = {
-			layout = Window.noLayout,
-		}
-	})
 
 	self.sprits = {}
 
@@ -123,7 +110,7 @@ function bounce(self)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
 	srf:rectangle(10, 10, w - 10, h - 10, 0xFFFFFFFF)
 
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	-- animation function
 	self.bg:addAnimation(

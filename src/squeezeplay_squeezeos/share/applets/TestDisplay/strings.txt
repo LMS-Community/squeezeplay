@@ -1,0 +1,35 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+TEST_DISPLAY
+	CS	Zobrazit
+	DA	Display
+	DE	Anzeige
+	EN	Display
+	ES	Pantalla
+	FI	Näyttö
+	FR	Affichage
+	IT	Visualizza
+	NL	Display
+	NO	Skjerm
+	PL	Wyświetlacz
+	RU	Экран
+	SV	Display
+
+TEST_COMPLETE
+	CS	Test ukončen
+	DA	Test fuldført
+	DE	Test abgeschlossen
+	EN	Test Complete
+	ES	Prueba completada
+	FI	Testi suoritettu
+	FR	Test terminé
+	IT	Verifica completata
+	NL	Test voltooid
+	NO	Testing fullført
+	PL	Test został ukończony
+	RU	Тесты завершены
+	SV	Testet har slutförts
+

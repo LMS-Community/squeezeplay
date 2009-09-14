@@ -29,7 +29,8 @@ local io               = require("io")
 local lfs              = require("lfs")
                        
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.misc")
+local utilLog          = require("jive.utils.log")
+local log              = require("jive.utils.log").logger("squeezeplay.applets")
 local locale           = require("jive.utils.locale")
 local dumper           = require("jive.utils.dumper")
 local table            = require("jive.utils.table")
@@ -66,7 +67,7 @@ local _defaultSettingsByAppletName = {}
 -- allowed applets, can be used for debugging to limit applets loaded
 --[[
 local allowedApplets = {
-	DefaultSkin = true,
+	QVGAportraitSkin = true,
 	SqueezeDiscovery = true,
 }
 --]]
@@ -103,7 +104,8 @@ function _mkdirRecursive(dir)
         newPath = newPath .. element
         if i ~= 1 then --first element is (for full path): blank for unix , "<drive-letter>:" for windows
             if lfs.attributes(newPath, "mode") == nil then
-                log:warn("Making directory: " , newPath)
+                log:debug("Making directory: " , newPath)
+
                 local created, err = lfs.mkdir(newPath)
                 if not created then
                     error (string.format ("error creating dir '%s' (%s)", newPath, err))
@@ -125,20 +127,24 @@ local function _saveApplet(name, dir)
 	end
 
 	if not _appletsDb[name] then
-	
+
+		local dirpath = dir .. "/" .. name .. "/"
+
 		local newEntry = {
 			appletName = name,
 
 			-- file paths
-			metaFilepath = dir .. "/" .. name .. "/" .. name .. "Meta.lua",
-			appletFilepath = dir .. "/" .. name .. "/" .. name .. "Applet.lua",
-			stringsFilepath = dir .. "/" .. name .. "/" .. "strings.txt",
+			dirpath = dirpath,
+			basename = dirpath .. name,
+
 			settingsFilepath = _usersettingsdir .. "/" .. name .. ".lua",
-			settingsFilepathLegacy = dir .. "/" .. name .. "/" .. "settings.lua",
 
 			-- lua paths
 			appletModule = "applets." .. name .. "." .. name .. "Applet",
 			metaModule = "applets." .. name .. "." .. name .. "Meta",
+
+			-- logger is automatically set for applets
+			appletLogger = utilLog.logger("applet." .. name),
 
 			settings = false,
 			metaLoaded = false,
@@ -159,20 +165,30 @@ local function _findApplets()
 	log:debug("_findApplets")
 
 	-- Find all applets/* directories on lua path
-	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
+	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do repeat
 	
 		dir = dir .. "applets"
 		log:debug("..in ", dir)
 		
 		local mode = lfs.attributes(dir, "mode")
-		if mode == "directory" then
-			for entry in lfs.dir(dir) do
-				if not entry:match("^%.") then
-					_saveApplet(entry, dir)
-				end
-			end
+		if mode ~= "directory" then
+			break
 		end
-	end
+
+		for entry in lfs.dir(dir) do repeat
+			local entrydir = dir .. "/" .. entry
+			local entrymode = lfs.attributes(entrydir, "mode")
+
+			if entry:match("^%.") or entrymode ~= "directory" then
+				break
+			end
+
+			local metamode = lfs.attributes(entrydir  .. "/" .. entry .. "Meta.lua", "mode")
+			if metamode == "file" then
+				_saveApplet(entry, dir)
+			end
+		until true end
+	until true end
 end
 
 
@@ -188,7 +204,7 @@ local function _loadMeta(entry)
 		end
 		return p
 	end
-	local f, err = loadfile(entry.metaFilepath)
+	local f, err = loadfile(entry.basename .. "Meta.lua")
 	if not f then
 		error (string.format ("error loading meta `%s' (%s)", entry.appletName, err))
 	end
@@ -237,6 +253,8 @@ local function _registerMeta(entry)
 	entry.metaRegistered = true
 
 	local class = require(entry.metaModule)
+	class.log = entry.appletLogger
+
 	local obj = class()
  
 	-- check Applet version
@@ -415,7 +433,7 @@ local function _loadApplet(entry)
 		end
 		return p
 	end
-	local f, err = loadfile(entry.appletFilepath)
+	local f, err = loadfile(entry.basename .. "Applet.lua")
 	if not f then
 		error (string.format ("error loading applet `%s' (%s)", entry.appletName, err))
 	end
@@ -429,7 +447,7 @@ local function _loadApplet(entry)
 	-- give the function the global environment
 	-- sandboxing would happen here!
 	setfenv(f, getfenv(0))
-	
+
 	local res = f(entry.appletModule)
 	if res then
 		entry.appletLoaded = res
@@ -464,6 +482,8 @@ local function _evalApplet(entry)
 	entry.appletEvaluated = true
 
 	local class = require(entry.appletModule)
+	class.log = entry.appletLogger
+
 	local obj = class()
 
 	-- we're run protected
@@ -535,7 +555,7 @@ function loadApplet(self, appletName)
 	if _ploadApplet(entry) then
 		local obj = _pevalApplet(entry)
 		if obj then
-			log:info("Loaded: ", appletName)
+			log:debug("Loaded: ", appletName)
 		end
 		return obj
 	end
@@ -582,7 +602,7 @@ function _loadLocaleStrings(entry)
 	end
 
 	log:debug("_loadLocaleStrings: ", entry.appletName)
-	entry.stringsTable = locale:readStringsFile(entry.stringsFilepath)
+	entry.stringsTable = locale:readStringsFile(entry.dirpath .. "strings.txt")
 end
 
 
@@ -627,7 +647,7 @@ function _loadSettingsLegacy(entry)
 
 	log:debug("_loadSettingsLegacy: ", entry.appletName)
 
-	local fh = io.open(entry.settingsFilepathLegacy)
+	local fh = io.open(entry.dirpath .. "settings.lua")
 	if fh == nil then
 		-- no settings file
 		return
@@ -681,11 +701,10 @@ end
 function _storeSettings(entry)
 	assert(entry)
 
-	log:info("Store settings: ", entry.appletName)
+	log:info("store settings: ", entry.appletName)
 
-	local file = assert(io.open(entry.settingsFilepath, "w"))
-	file:write(dumper.dump(entry.settings, "settings", true))
-	file:close()
+	System:atomicWrite(entry.settingsFilepath,
+		dumper.dump(entry.settings, "settings", true))
 end
 
 
@@ -714,17 +733,16 @@ function _freeApplet(self, entry)
 
 		local continue = true
 
+		-- swallow any error
 		local status, err = pcall(
 			function()
 				continue = entry.appletEvaluated:free()
 			end
 		)
 
-		-- swallow any error
-		
 		if continue == nil then
 			-- warn if applet returns nil
-			log:warn(entry.appletName, ":free() returned nil")
+			log:error(entry.appletName, ":free() returned nil")
 		end
 
 		if continue == false then
@@ -734,7 +752,7 @@ function _freeApplet(self, entry)
 		end
 	end
 	
-	log:info("Freeing: ", entry.appletName)
+	log:debug("Freeing: ", entry.appletName)
 	
 	entry.appletEvaluated = false
 	entry.appletLoaded = false

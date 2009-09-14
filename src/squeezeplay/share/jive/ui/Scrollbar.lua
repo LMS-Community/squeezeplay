@@ -43,7 +43,7 @@ local Slider	= require("jive.ui.Slider")
 local Widget	= require("jive.ui.Widget")
 
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_SCROLL    = jive.ui.EVENT_SCROLL
@@ -69,6 +69,7 @@ function __init(self, style, closure)
 	obj.value = 1
 	obj.size = 1
 	obj.closure = closure
+	obj.jumpOnDown = false
 
 	return obj
 end
@@ -88,6 +89,7 @@ function setScrollbar(self, min, max, pos, size)
 	self.range = max - min
 	self.value = pos - min
 	self.size = size
+
 
 	self:reDraw()
 end

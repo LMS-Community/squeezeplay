@@ -4,16 +4,29 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 #include "jive.h"
+
+
+#ifdef SCREEN_ROTATION_ENABLED
+static SDL_Surface *real_sdl = NULL;
+#endif
 
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
 	Uint32 flags;
+
+#ifdef SCREEN_ROTATION_ENABLED
+	{
+		Uint16 tmp;
+	  
+		tmp = w;
+		w = h;
+		h = tmp;
+	}
+#endif
 
 	if (fullscreen) {
 	    flags = SDL_FULLSCREEN;
@@ -25,29 +38,47 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	sdl = SDL_GetVideoSurface();
 
 	if (sdl) {
+		const SDL_VideoInfo *video_info;
+		Uint32 mask;
+
 		/* check if we can reuse the existing suface? */
-		Uint32 mask = (SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+		video_info = SDL_GetVideoInfo();
+		if (video_info->wm_available) {
+			mask = (SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+		}
+		else {
+			mask = (SDL_HWSURFACE | SDL_DOUBLEBUF);
+		}
 
 		if ((sdl->w != w) || (sdl->h != h)
-		    || (sdl->format->BitsPerPixel != bpp) || ((sdl->flags & mask) != flags)) {
+		    || (bpp && sdl->format->BitsPerPixel != bpp)
+		    || ((sdl->flags & mask) != (flags & mask))) {
 			sdl = NULL;
 		}
 	}
 
 	if (!sdl) {
 		/* create new surface */
-		sdl = SDL_SetVideoMode (w, h, bpp, flags);
+		sdl = SDL_SetVideoMode(w, h, bpp, flags);
 		if (!sdl) {
-			DEBUG_ERROR("SDL_SetVideoMode(%d,%d,%d): %s",
-				    w, h, bpp, SDL_GetError());
+			LOG_ERROR(log_ui_draw, "SDL_SetVideoMode(%d,%d,%d): %s",
+				  w, h, bpp, SDL_GetError());
 			return NULL;
 		}
 
 		if ( (sdl->flags & SDL_HWSURFACE) && (sdl->flags & SDL_DOUBLEBUF)) {
-			DEBUG_TRACE("Using a hardware double buffer");
+			LOG_INFO(log_ui_draw, "Using a hardware double buffer");
 		}
 
-		DEBUG_TRACE("Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift)
+		LOG_DEBUG(log_ui_draw, "Video mode: %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", sdl->format->BitsPerPixel, sdl->format->BytesPerPixel, sdl->format->Rshift, sdl->format->Gshift, sdl->format->Bshift);
+
+#ifdef SCREEN_ROTATION_ENABLED
+		/* orientaion hack */
+		real_sdl = sdl;
+		bpp = sdl->format->BitsPerPixel;
+		sdl = SDL_CreateRGBSurface(SDL_SWSURFACE, h, w, bpp, 0, 0, 0, 0);
+		SDL_SetAlpha(sdl, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
+#endif
 	}
 
 	srf = calloc(sizeof(JiveSurface), 1);
@@ -133,7 +164,7 @@ JiveSurface *jive_surface_ref(JiveSurface *srf) {
 static JiveSurface *jive_surface_display_format(JiveSurface *srf) {
 	SDL_Surface *sdl;
 
-	if (srf->sdl == NULL) {
+	if (srf->sdl == NULL || SDL_GetVideoSurface() == NULL) {
 		return srf;
 	}
 
@@ -160,15 +191,15 @@ JiveSurface *jive_surface_load_image(const char *path) {
 	}
 
 	fullpath = malloc(PATH_MAX);
-	if (!jive_find_file(path, fullpath)) {
-		fprintf(stderr, "Cannot find image %s\n", path);
+	if (!squeezeplay_find_file(path, fullpath)) {
+		LOG_ERROR(log_ui_draw, "Can't find image %s\n", path);
 		free(fullpath);
 		return NULL;
 	}
 
 	sdl = IMG_Load(fullpath);
 	if (!sdl) {
-		fprintf(stderr, "Error in jive_surface_load_image: %s\n", IMG_GetError());
+		LOG_WARN(log_ui_draw, "Error loading surface: %s\n", IMG_GetError());
 	}
 
 	free(fullpath);
@@ -286,6 +317,11 @@ int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {
 	return (int)(((float)equal / count) * 100);
 }
 
+void jive_surface_get_offset(JiveSurface *srf, Sint16 *x, Sint16 *y) {
+	*x = srf->offset_x;
+	*y = srf->offset_y;
+}
+
 void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {
 	srf->offset_x = x;
 	srf->offset_y = y;
@@ -340,7 +376,55 @@ void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w
 }
 
 void jive_surface_flip(JiveSurface *srf) {
+#ifdef SCREEN_ROTATION_ENABLED
+	int x, y;
+
+	/* orientation hack */
+	SDL_LockSurface(real_sdl);
+	SDL_LockSurface(srf->sdl);
+
+	switch (real_sdl->format->BytesPerPixel) {
+	case 2: {
+		Uint16 *srcp, *dstp;
+
+		for (y=0; y<srf->sdl->h; y++) {
+			srcp = ((Uint16 *)srf->sdl->pixels) + (y * srf->sdl->pitch/2);
+			dstp = ((Uint16 *)real_sdl->pixels) + y + ((real_sdl->h - 1) * real_sdl->pitch/2);
+
+			for (x=0; x<srf->sdl->w; x++) {
+				*dstp = *srcp;
+				srcp++;
+				dstp -= real_sdl->pitch/2;
+			}
+		}
+		break;
+	}
+
+	case 4: {
+		Uint32 *srcp, *dstp;
+
+		for (y=0; y<srf->sdl->h; y++) {
+			srcp = ((Uint32 *)srf->sdl->pixels) + (y * srf->sdl->pitch/4);
+			dstp = ((Uint32 *)real_sdl->pixels) + y + ((real_sdl->h - 1) * real_sdl->pitch/4);
+
+			for (x=0; x<srf->sdl->w; x++) {
+				*dstp = *srcp;
+				srcp++;
+				dstp -= real_sdl->pitch/4;
+			}
+		}
+		break;
+	}
+	}
+
+	SDL_UnlockSurface(srf->sdl);
+	SDL_UnlockSurface(real_sdl);
+
+	SDL_Flip(real_sdl);
+#else
 	SDL_Flip(srf->sdl);
+#endif
+
 }
 
 
@@ -354,7 +438,7 @@ void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, 
 
 void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
@@ -364,7 +448,7 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -373,7 +457,7 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
 			  JiveSurface* dst, Uint16 dx, Uint16 dy) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect sr, dr;
@@ -383,7 +467,7 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 	SDL_BlitSurface(src->sdl, &sr, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -391,7 +475,7 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 
 void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint8 alpha) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
@@ -402,7 +486,7 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_surface_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }

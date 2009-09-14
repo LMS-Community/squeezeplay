@@ -4,8 +4,6 @@
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
 
-#define RUNTIME_DEBUG 1
-
 #include "common.h"
 #include "jive.h"
 
@@ -15,6 +13,8 @@
 
 int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
+
+LOG_CATEGORY *log_ui_draw;
 
 SDL_Rect jive_dirty_region;
 
@@ -27,13 +27,10 @@ static Uint32 next_jive_origin = 0;
 struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 
-/* Frame rate calculations */
-//static Uint32 framedue = 0;
-//static Uint32 framerate = 1000 / JIVE_FRAME_RATE;
-
-
 /* button hold threshold 1 seconds */
 #define HOLD_TIMEOUT 1000
+
+#define LONG_HOLD_TIMEOUT 3500
 
 #define POINTER_TIMEOUT 20000
 
@@ -50,6 +47,11 @@ struct jive_keymap {
 	JiveKey keycode;
 };
 
+struct jive_keyir {
+	SDLKey keysym;
+	Uint32 code;
+};
+
 static enum jive_key_state {
 	KEY_STATE_NONE,
 	KEY_STATE_DOWN,
@@ -59,7 +61,6 @@ static enum jive_key_state {
 static enum jive_mouse_state {
 	MOUSE_STATE_NONE,
 	MOUSE_STATE_DOWN,
-	MOUSE_STATE_DRAG,
 	MOUSE_STATE_SENT,
 } mouse_state = MOUSE_STATE_NONE;
 
@@ -68,11 +69,14 @@ static JiveKey key_mask = 0;
 static Uint32 key_timeout = 0;
 
 static Uint32 mouse_timeout = 0;
+static Uint32 mouse_long_timeout = 0;
 static Uint32 mouse_timeout_arg;
 
 static Uint32 pointer_timeout = 0;
 
 static Uint16 mouse_origin_x, mouse_origin_y;
+
+static int ui_watchdog;
 
 static struct jive_keymap keymap[] = {
 	{ SDLK_RIGHT,		JIVE_KEY_GO },
@@ -90,7 +94,36 @@ static struct jive_keymap keymap[] = {
 	{ SDLK_PAGEDOWN,	JIVE_KEY_PAGE_DOWN },
 	{ SDLK_PRINT,		JIVE_KEY_PRINT },
 	{ SDLK_SYSREQ,		JIVE_KEY_PRINT },
+	{ SDLK_F1,              JIVE_KEY_PRESET_1 },
+	{ SDLK_F2,              JIVE_KEY_PRESET_2 },
+	{ SDLK_F3,              JIVE_KEY_PRESET_3 },
+	{ SDLK_F4,              JIVE_KEY_PRESET_4 },
+	{ SDLK_F5,              JIVE_KEY_PRESET_5 },
+	{ SDLK_F6,              JIVE_KEY_PRESET_6 },
+	{ SDLK_AudioMute,       JIVE_KEY_MUTE },
+	{ SDLK_POWER,           JIVE_KEY_POWER },
+	{ SDLK_Sleep,           JIVE_KEY_ALARM },
 	{ SDLK_UNKNOWN,		JIVE_KEY_NONE },
+};
+
+static struct jive_keyir irmap[] = {
+	{ SDLK_UP,       0x7689e01f }, /* arrow_up */
+	{ SDLK_DOWN,     0x7689b04f }, /* arrow_down */
+	{ SDLK_LEFT,     0x7689906f }, /* arrow_left */
+	{ SDLK_RIGHT,    0x7689d02f }, /* arrow_right */
+	{ SDLK_0,        0x76899867 },
+	{ SDLK_1,        0x7689f00f },
+	{ SDLK_2,        0x768908f7 },
+	{ SDLK_3,        0x76898877 },
+	{ SDLK_4,        0x768948b7 },
+	{ SDLK_5,        0x7689c837 },
+	{ SDLK_6,        0x768928d7 },
+	{ SDLK_7,        0x7689a857 },
+	{ SDLK_8,        0x76896897 },
+	{ SDLK_9,        0x7689e817 },
+	{ SDLK_x,        0x768910ef }, /* play */
+	{ SDLK_a,        0x7689609f }, /* add */
+	{ SDLK_UNKNOWN,	 0x0        },
 };
 
 
@@ -119,42 +152,27 @@ int jive_traceback (lua_State *L) {
 
 
 static int jiveL_initSDL(lua_State *L) {
-	SDL_Rect r;
 	const SDL_VideoInfo *video_info;
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
 
-	/* screen properties */
-	lua_getfield(L, 1, "screen");
-	if (lua_isnil(L, -1)) {
-		luaL_error(L, "Framework.screen is ni");
-	}
-
-	lua_getfield(L, -1, "bounds");
-	jive_torect(L, -1, &r);
-	lua_pop(L, 1);
-
-	lua_getfield(L, -1, "bpp");
-	screen_bpp = luaL_optint(L, -1, 0);
-	lua_pop(L, 1);
-
-	screen_w = r.w;
-	screen_h = r.h;
+	/* logging */
+	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
 
 	/* linux fbcon does not need a mouse */
 	SDL_putenv("SDL_NOMOUSE=1");
 
 	/* initialise SDL */
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		fprintf(stderr, "SDL_Init(V|T|A): %s\n", SDL_GetError());
+		LOG_ERROR(log_ui_draw, "SDL_Init(V|T|A): %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(-1);
 	}
 
 	/* report video info */
 	video_info = SDL_GetVideoInfo();
-	DEBUG_TRACE("%d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift)
-	DEBUG_TRACE("Hardware acceleration %s available", video_info->hw_available?"is":"is not");
+	LOG_INFO(log_ui_draw, "%d,%d %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->current_w, video_info->current_h, video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
+	LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
 
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
@@ -164,6 +182,47 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
+	SDL_ShowCursor(SDL_DISABLE);
+	SDL_EnableKeyRepeat (100, 100);
+	SDL_EnableUNICODE(1);
+
+	/* load the icon */
+	icon = jive_surface_load_image("jive/app.png");
+	if (icon) {
+		jive_surface_set_wm_icon(icon);
+		jive_surface_free(icon);
+	}
+
+#ifdef SCREEN_ROTATION_ENABLED
+	screen_w = video_info->current_h;
+	screen_h = video_info->current_w;
+#else
+	screen_w = video_info->current_w;
+	screen_h = video_info->current_h;
+#endif
+	screen_bpp = video_info->vfmt->BitsPerPixel;
+
+	if (video_info->wm_available) {
+		/* desktop build */
+		splash = jive_surface_load_image("jive/splash.png");
+		if (splash) {
+			jive_surface_get_size(splash, &splash_w, &splash_h);
+
+			screen_w = splash_w;
+			screen_h = splash_h;
+		}
+	}
+	else {
+		/* product build */
+		char splashfile[40];
+
+		sprintf(splashfile, "jive/splash%dx%d.png", screen_w, screen_h);
+
+		splash = jive_surface_load_image(splashfile);
+		if (splash) {
+			jive_surface_get_size(splash, &splash_w, &splash_h);
+		}
+	}
 
 	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, false);
 	if (!srf) {
@@ -171,28 +230,32 @@ static int jiveL_initSDL(lua_State *L) {
 		exit(-1);
 	}
 
-	/* load the icon */
-	icon = jive_surface_load_image("jive/app.png");
-	jive_surface_set_wm_icon(icon);
-	jive_surface_free(icon);
+	if (splash) {
+		jive_surface_blit(splash, srf, MIN(0, (screen_w - splash_w) / 2), MIN(0, (screen_h - splash_h) / 2));
+		jive_surface_flip(srf);
+	}
 
-	SDL_ShowCursor(SDL_DISABLE);
-	SDL_EnableKeyRepeat (100, 100);
-	SDL_EnableUNICODE(1);
+	lua_getfield(L, 1, "screen");
+	if (lua_isnil(L, -1)) {
+		LOG_ERROR(log_ui_draw, "no screen table");
 
+		SDL_Quit();
+		exit(-1);
+	}
+
+	/* store screen surface */
 	tolua_pushusertype(L, srf, "Surface");
 	lua_setfield(L, -2, "surface");
 
+	lua_getfield(L, -1, "bounds");
+	lua_pushinteger(L, screen_w);
+	lua_rawseti(L, -2, 3);
+	lua_pushinteger(L, screen_h);
+	lua_rawseti(L, -2, 4);
+	lua_pop(L, 2);
+
 	/* background image */
 	jive_background = jive_tile_fill_color(0x000000FF);
-
-	/* show splash screen */
-	splash = jive_surface_load_image("jive/splash.png");
-	if (splash) {
-		jive_surface_get_size(splash, &splash_w, &splash_h);
-		jive_surface_blit(splash, srf, (screen_w - splash_w) / 2, (screen_h - splash_h) / 2);
-		jive_surface_flip(srf);
-	}
 
 	/* jive.ui.style = {} */
 	lua_getglobal(L, "jive");
@@ -200,6 +263,9 @@ static int jiveL_initSDL(lua_State *L) {
 	lua_newtable(L);
 	lua_setfield(L, -2, "style");
 	lua_pop(L, 2);
+
+	ui_watchdog = watchdog_get();
+	watchdog_keepalive(ui_watchdog, 4); /* 40 seconds to start */
 
 	return 0;
 }
@@ -218,10 +284,31 @@ void jive_send_key_event(JiveEventType keyType, JiveKey keyCode) {
 	memset(&keyEvent, 0, sizeof(JiveEvent));
 	
 	keyEvent.type = keyType;
-	keyEvent.ticks = SDL_GetTicks();
+	keyEvent.ticks = jive_jiffies();
 	keyEvent.u.key.code = keyCode;
 	jive_queue_event(&keyEvent);
 }
+
+void jive_send_gesture_event(JiveGesture code) {
+	JiveEvent event;
+	memset(&event, 0, sizeof(JiveEvent));
+
+	event.type = JIVE_EVENT_GESTURE;
+	event.ticks = jive_jiffies();
+	event.u.gesture.code = code;
+	jive_queue_event(&event);
+}
+
+void jive_send_char_press_event(Uint16 unicode) {
+	JiveEvent event;
+	memset(&event, 0, sizeof(JiveEvent));
+
+	event.type = JIVE_EVENT_CHAR_PRESS;
+	event.ticks = jive_jiffies();
+	event.u.text.unicode = unicode;
+	jive_queue_event(&event);
+}
+
 
 static int jiveL_quit(lua_State *L) {
 
@@ -352,7 +439,7 @@ static int _draw_screen(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 	if (perfwarn.screen) {
-		t0 = SDL_GetTicks();
+		t0 = jive_jiffies();
 		c0 = clock();
 	}
 
@@ -369,7 +456,7 @@ static int _draw_screen(lua_State *L) {
 		/* check in case the origin changes during layout */
 	} while (jive_origin != next_jive_origin);
 
-	if (perfwarn.screen) t1 = SDL_GetTicks();
+	if (perfwarn.screen) t1 = jive_jiffies();
  
 	/* Widget animations */
 	lua_getfield(L, 1, "animations");
@@ -406,7 +493,7 @@ static int _draw_screen(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
-	if (perfwarn.screen) t2 = SDL_GetTicks();
+	if (perfwarn.screen) t2 = jive_jiffies();
 
 	/* Window transitions */
 	lua_getfield(L, 1, "transition");
@@ -416,7 +503,7 @@ static int _draw_screen(lua_State *L) {
 		jive_tile_set_alpha(jive_background, 0); // no alpha channel
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t3 = jive_jiffies();
 		
 		/* Animate screen transition */
 		lua_pushvalue(L, -1);
@@ -439,7 +526,7 @@ static int _draw_screen(lua_State *L) {
 		/* Draw background */
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
 
-		if (perfwarn.screen) t3 = SDL_GetTicks();
+		if (perfwarn.screen) t3 = jive_jiffies();
 
 		/* Draw screen */
 		if (jive_getmethod(L, -2, "draw")) {
@@ -454,7 +541,7 @@ static int _draw_screen(lua_State *L) {
 	}
 
 	if (perfwarn.screen) {
-		t4 = SDL_GetTicks();
+		t4 = jive_jiffies();
 		c1 = clock();
 		if (t4-t0 > perfwarn.screen) {
 			if (!t3) {
@@ -488,7 +575,7 @@ int jiveL_draw(lua_State *L) {
 	lua_pushboolean(L, 1);
 
 	if (lua_pcall(L, 3, 0, 3) != 0) {
-		fprintf(stderr, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));
+		LOG_WARN(log_ui_draw, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
@@ -504,6 +591,10 @@ int jiveL_update_screen(lua_State *L) {
 	/* stack is:
 	 * 1: framework
 	 */
+
+	/* ping watchdog */
+	// FIXME 30 seconds
+	watchdog_keepalive(ui_watchdog, 3);
 
 	if (!update_screen) {
 		return 0;
@@ -522,7 +613,7 @@ int jiveL_update_screen(lua_State *L) {
 	lua_pushboolean(L, 0);
 
 	if (lua_pcall(L, 3, 1, 2) != 0) {
-		fprintf(stderr, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
+		LOG_WARN(log_ui_draw, "error in update_screen:\n\t%s\n", lua_tostring(L, -1));
 		return 0;
 	}
 
@@ -621,7 +712,7 @@ int jiveL_dispatch_event(lua_State *L) {
 	 */
 
 	if (perfwarn.event) {
-		t0 = SDL_GetTicks();
+		t0 = jive_jiffies();
 		c0 = clock();
 	}
 
@@ -634,7 +725,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushboolean(L, 1); // global listeners
 
 		if (lua_pcall(L, 3, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 
@@ -662,7 +753,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushvalue(L, 3); // event
 
 		if (lua_pcall(L, 2, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 
@@ -677,7 +768,7 @@ int jiveL_dispatch_event(lua_State *L) {
 		lua_pushboolean(L, 0); // unused listeners
 
 		if (lua_pcall(L, 3, 1, 4) != 0) {
-			fprintf(stderr, "error in event function:\n\t%s\n", lua_tostring(L, -1));
+			LOG_WARN(log_ui_draw, "error in event function:\n\t%s\n", lua_tostring(L, -1));
 			return 0;
 		}
 
@@ -686,7 +777,7 @@ int jiveL_dispatch_event(lua_State *L) {
 	}
 
 	if (perfwarn.event) {
-		t1 = SDL_GetTicks();
+		t1 = jive_jiffies();
 		c1 = clock();
 		if (t1-t0 > perfwarn.event) {
 			printf("process_event > %dms: %4dms (%dms) ", perfwarn.event, t1-t0, (int)((c1-c0) * 1000 / CLOCKS_PER_SEC));
@@ -792,7 +883,7 @@ int jiveL_push_event(lua_State *L) {
 	jive_queue_event(evt);
 
 	return 0;
-}
+} 
 
 int jiveL_event(lua_State *L) {
 	int r = 0;
@@ -845,7 +936,7 @@ int jiveL_event(lua_State *L) {
 
 
 int jiveL_get_ticks(lua_State *L) {
-	lua_pushinteger(L, SDL_GetTicks());
+	lua_pushinteger(L, jive_jiffies());
 	return 1;
 }
 
@@ -878,7 +969,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	Uint32 now;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-	jevent.ticks = now = SDL_GetTicks();
+	jevent.ticks = now = jive_jiffies();
 
 	switch (event->type) {
 	case SDL_QUIT:
@@ -920,6 +1011,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				mouse_state = MOUSE_STATE_DOWN;
 				mouse_timeout_arg = (event->button.y << 16) | event->button.x;
 				mouse_timeout = now + HOLD_TIMEOUT;
+				mouse_long_timeout = now + LONG_HOLD_TIMEOUT;
 
 				mouse_origin_x = event->button.x;
 				mouse_origin_y = event->button.y;
@@ -935,13 +1027,14 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				memset(&up, 0, sizeof(JiveEvent));
 				up.type = JIVE_EVENT_MOUSE_PRESS;
-				up.ticks = SDL_GetTicks();
+				up.ticks = jive_jiffies();
 				up.u.mouse.x = event->button.x;
 				up.u.mouse.y = event->button.y;
 				do_dispatch_event(L, &up);
 			}
 
 			mouse_timeout = 0;
+			mouse_long_timeout = 0;
 			mouse_state = MOUSE_STATE_NONE;
 		}
 		break;
@@ -955,15 +1048,10 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		pointer_timeout = now + POINTER_TIMEOUT;
 
 		if (event->motion.state & SDL_BUTTON(1)) {
-			if ( ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)
-			       && (abs(mouse_origin_x - event->motion.x) > 10
-				   || abs(mouse_origin_y - event->motion.y) > 10))
-			     || mouse_state == MOUSE_STATE_DRAG) {
+			if ( (mouse_state == MOUSE_STATE_DOWN || mouse_state == MOUSE_STATE_SENT)) {
 				jevent.type = JIVE_EVENT_MOUSE_DRAG;
 				jevent.u.mouse.x = event->motion.x;
 				jevent.u.mouse.y = event->motion.y;
-
-				mouse_state = MOUSE_STATE_DRAG;
 			}
 		}
 		else {
@@ -974,21 +1062,57 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		break;
 
 	case SDL_KEYDOWN:
-		if (event->key.keysym.sym == SDLK_UP) {
-			jevent.type = JIVE_EVENT_SCROLL;
-			--(jevent.u.scroll.rel);
-			break;
-		}
-		else if (event->key.keysym.sym == SDLK_DOWN) {
-			jevent.type = JIVE_EVENT_SCROLL;
-			++(jevent.u.scroll.rel);
-			break;
+		if (event->key.keysym.mod == 0) {
+			if (event->key.keysym.sym == SDLK_UP) {
+				jevent.type = JIVE_EVENT_SCROLL;
+				--(jevent.u.scroll.rel);
+				break;
+			}
+			else if (event->key.keysym.sym == SDLK_DOWN) {
+				jevent.type = JIVE_EVENT_SCROLL;
+				++(jevent.u.scroll.rel);
+				break;
+			}
 		}
 		// Fall through
 
 	case SDL_KEYUP: {
 		struct jive_keymap *entry = keymap;
 		
+		if (event->key.keysym.mod & (KMOD_ALT|KMOD_MODE)) {
+			/* simulate IR input, using alt key */
+			struct jive_keyir *ir = irmap;
+
+			while (ir->keysym != SDLK_UNKNOWN) {
+				if (ir->keysym == event->key.keysym.sym) {
+					break;
+				}
+				ir++;
+			}
+			if (ir->keysym == SDLK_UNKNOWN) {
+				break;
+			}
+
+			if (event->type == SDL_KEYDOWN) {
+				jevent.type = JIVE_EVENT_IR_DOWN;
+				jevent.u.ir.code = ir->code;
+			}
+			else {
+				JiveEvent irup;
+
+				jevent.type = JIVE_EVENT_IR_PRESS;
+				jevent.u.ir.code = ir->code;
+
+				memset(&irup, 0, sizeof(JiveEvent));
+				irup.type = JIVE_EVENT_IR_UP;
+				irup.ticks = jive_jiffies();
+				irup.u.ir.code = ir->code;
+				jive_queue_event(&irup);
+			}
+
+			break;
+		}
+
 		while (entry->keysym != SDLK_UNKNOWN) {
 			if (entry->keysym == event->key.keysym.sym) {
 				break;
@@ -1013,7 +1137,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		else if (entry->keysym == SDLK_PAGEUP || entry->keysym == SDLK_PAGEDOWN) {
 			if (event->type == SDL_KEYDOWN) {
 				jevent.type = JIVE_EVENT_KEY_PRESS;
-				jevent.ticks = SDL_GetTicks();
+				jevent.ticks = jive_jiffies();
 				jevent.u.key.code = entry->keycode;
 			}
 		}
@@ -1067,7 +1191,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 
 				memset(&keyup, 0, sizeof(JiveEvent));
 				keyup.type = JIVE_EVENT_KEY_UP;
-				keyup.ticks = SDL_GetTicks();
+				keyup.ticks = jive_jiffies();
 				keyup.u.key.code = entry->keycode;
 				jive_queue_event(&keyup);
 
@@ -1147,7 +1271,7 @@ static void process_timers(lua_State *L) {
 	Uint32 now;
 
 	memset(&jevent, 0, sizeof(JiveEvent));
-	jevent.ticks = now = SDL_GetTicks();
+	jevent.ticks = now = jive_jiffies();
 
 	if (pointer_timeout && pointer_timeout < now) {
 		SDL_ShowCursor(SDL_DISABLE);
@@ -1164,6 +1288,18 @@ static void process_timers(lua_State *L) {
 			do_dispatch_event(L, &jevent);
 		}
 		mouse_timeout = 0;
+	}
+
+	if (mouse_long_timeout && mouse_long_timeout < now) {
+		if (mouse_state == MOUSE_STATE_SENT) {
+			jevent.type = JIVE_EVENT_MOUSE_HOLD;
+			jevent.u.mouse.x = (mouse_timeout_arg >> 0) & 0xFFFF;
+			jevent.u.mouse.y = (mouse_timeout_arg >> 16) & 0xFFFF;
+			mouse_state = MOUSE_STATE_SENT;
+
+			do_dispatch_event(L, &jevent);
+		}
+		mouse_long_timeout = 0;
 	}
 
 	if (key_timeout && key_timeout < now) {
@@ -1240,6 +1376,7 @@ static const struct luaL_Reg textinput_methods[] = {
 };
 
 static const struct luaL_Reg menu_methods[] = {
+	{ "getPreferredBounds", jiveL_menu_get_preferred_bounds },
 	{ "_skin", jiveL_menu_skin },
 	{ "_layout", jiveL_menu_layout },
 	{ "iterate", jiveL_menu_iterate },
@@ -1258,6 +1395,7 @@ static const struct luaL_Reg slider_methods[] = {
 static const struct luaL_Reg textarea_methods[] = {
 	{ "getPreferredBounds", jiveL_textarea_get_preferred_bounds },
 	{ "_skin", jiveL_textarea_skin },
+	{ "invalidate", jiveL_textarea_invalidate },
 	{ "_layout", jiveL_textarea_layout },
 	{ "draw", jiveL_textarea_draw },
 	{ NULL, NULL }
@@ -1267,6 +1405,7 @@ static const struct luaL_Reg widget_methods[] = {
 	{ "setBounds", jiveL_widget_set_bounds }, 
 	{ "getBounds", jiveL_widget_get_bounds },
 	{ "getZOrder", jiveL_widget_get_z_order },
+	{ "isHidden", jiveL_widget_is_hidden },
 	{ "getPreferredBounds", jiveL_widget_get_preferred_bounds },
 	{ "getBorder", jiveL_widget_get_border },
 	{ "mouseBounds", jiveL_widget_mouse_bounds },
@@ -1306,6 +1445,8 @@ static const struct luaL_Reg event_methods[] = {
 	{ "getActionInternal", jiveL_event_get_action_internal },
 	{ "getMotion", jiveL_event_get_motion },
 	{ "getSwitch", jiveL_event_get_switch },
+	{ "getIRCode", jiveL_event_get_ircode },
+	{ "getGesture", jiveL_event_get_gesture },
 	{ "tostring", jiveL_event_tostring },
 	{ NULL, NULL }
 };
@@ -1334,8 +1475,6 @@ static const struct luaL_Reg core_methods[] = {
 
 
 static int jiveL_core_init(lua_State *L) {
-
-	squeezeplayL_system_init(L);
 
 	lua_getglobal(L, "jive");
 	lua_getfield(L, -1, "ui");

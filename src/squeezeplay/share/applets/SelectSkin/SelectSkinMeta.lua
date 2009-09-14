@@ -20,8 +20,6 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
-local log             = require("jive.utils.log").logger("applets.browser")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -41,7 +39,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSelectSkin', 'settings', 'SELECT_SKIN', function(applet, ...) applet:selectSkin(...) end))
+	jiveMain:addItem(meta:menuItem('appletSelectSkin', 'screenSettings', 'SELECT_SKIN', function(applet, ...) applet:selectSkin(...) end))
 end
 
 

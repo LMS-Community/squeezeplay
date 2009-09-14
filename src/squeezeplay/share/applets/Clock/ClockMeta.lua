@@ -1,7 +1,6 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -17,8 +16,7 @@ end
 
 function defaultSettings(self)
 	return {
-		digitalsimple_preset = "White",
-		digitalstyled_preset = "White"
+		-- nothing to see here, move along, move along
 	}
 end
 
@@ -31,19 +29,39 @@ function configureApplet(self)
 	appletManager:callService("addScreenSaver",
 		self:string("SCREENSAVER_CLOCK_STYLE_ANALOG"), 
 		"Clock", 
-		"openAnalogClock", _, _, 20
+		"openAnalogClock", _, _, 23
+	)
+
+	--[[
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_RADIAL"), 
+		"Clock", 
+		"openRadialClock", _, _, 28
+	)
+	--]]
+
+
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL"), 
+		"Clock", 
+		"openDetailedClock", _, _, 24
 	)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALSTYLED"), 
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL_BLACK"), 
 		"Clock", 
-		"openStyledClock", _, _, 24
+		"openDetailedClockBlack", _, _, 25
 	)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_CLOCK_STYLE_DIGITALDETAILED"), 
+		self:string("SCREENSAVER_CLOCK_STYLE_DIGITAL_TRANSPARENT"), 
 		"Clock", 
-		"openDetailedClock", _, _, 26
+		"openDetailedClockTransparent", _, _, 26
+	)
+	appletManager:callService("addScreenSaver",
+		self:string("SCREENSAVER_CLOCK_STYLE_DOTMATRIX"), 
+		"Clock", 
+		"openStyledClock", _, _, 27
 	)
 end
 

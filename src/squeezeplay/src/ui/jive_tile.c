@@ -45,8 +45,8 @@ JiveTile *jive_tile_load_image(const char *path) {
 
 	fullpath = malloc(PATH_MAX);
 
-	if (!jive_find_file(path, fullpath)) {
-		fprintf(stderr, "Cannot find image %s\n", path);
+	if (!squeezeplay_find_file(path, fullpath)) {
+		LOG_ERROR(log_ui_draw, "Can't find image %s\n", path);
 		free(fullpath);
 		free(tile);
 		return NULL;
@@ -54,7 +54,7 @@ JiveTile *jive_tile_load_image(const char *path) {
 
 	tmp = IMG_Load(fullpath);
 	if (!tmp) {
-		fprintf(stderr, "Error in jive_file_load_image: %s\n", IMG_GetError());
+		LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
 		free(fullpath);
 		free(tile);
 		return NULL;
@@ -78,6 +78,41 @@ JiveTile *jive_tile_load_image(const char *path) {
 	return tile;
 }
 
+
+JiveTile *jive_tile_load_image_data(const char *data, size_t len) {
+	JiveTile *tile;
+	SDL_Surface *tmp;
+	SDL_RWops *src ;
+
+	tile = calloc(sizeof(JiveTile), 1);
+	tile->refcount = 1;
+
+	src = SDL_RWFromConstMem(data, (int) len);
+	tmp = IMG_Load_RW(src, 1);
+
+	if (!tmp) {
+		LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
+		free(tile);
+		return NULL;
+	}
+	else {
+		if (tmp->format->Amask) {
+			tile->srf[0] = SDL_DisplayFormatAlpha(tmp);
+		}
+		else {
+			tile->srf[0] = SDL_DisplayFormat(tmp);
+		}
+		SDL_FreeSurface(tmp);
+	}
+
+	/* tile sizes */
+	tile->w[0] = tile->srf[0]->w;
+	tile->h[0] = tile->srf[0]->h;
+
+	return tile;
+}
+
+
 JiveTile *jive_tile_load_tiles(char *path[9]) {
 	JiveTile *tile;
 	char *fullpath;
@@ -94,14 +129,14 @@ JiveTile *jive_tile_load_tiles(char *path[9]) {
 			continue;
 		}
 
-		if (!jive_find_file(path[i], fullpath)) {
-			fprintf(stderr, "Cannot find image %s\n", path[i]);
+		if (!squeezeplay_find_file(path[i], fullpath)) {
+			LOG_ERROR(log_ui_draw, "Can't find image %s\n", path[i]);
 			continue;
 		}
 
 		tmp = IMG_Load(fullpath);
 		if (!tmp) {
-			fprintf(stderr, "Error in jive_file_load_tiles: %s\n", IMG_GetError());
+			LOG_WARN(log_ui_draw, "Error loading tile: %s\n", IMG_GetError());
 		}
 		else {
 			if (tmp->format->Amask) {
@@ -344,7 +379,7 @@ static void _blit_tile(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, U
 
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
@@ -361,7 +396,7 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 	_blit_tile(tile, dst, dx, dy, dw, dh);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_tile_blit took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }
@@ -369,7 +404,7 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 
 void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {
 #ifdef JIVE_PROFILE_BLIT
-	Uint32 t0 = SDL_GetTicks(), t1;
+	Uint32 t0 = jive_jiffies(), t1;
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
@@ -384,7 +419,7 @@ void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16
 	_blit_tile(tile, dst, dx - (dw/2), dy -  (dh/2), dw, dh);
 
 #ifdef JIVE_PROFILE_BLIT
-	t1 = SDL_GetTicks();
+	t1 = jive_jiffies();
 	printf("\tjive_tile_blit_centered took=%d\n", t1-t0);
 #endif //JIVE_PROFILE_BLIT
 }

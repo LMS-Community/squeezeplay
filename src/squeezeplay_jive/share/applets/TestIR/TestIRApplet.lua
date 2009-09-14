@@ -16,8 +16,6 @@ local Window                 = require("jive.ui.Window")
 local Surface                = require("jive.ui.Surface")
 local Framework              = require("jive.ui.Framework")
 
-local log                    = require("jive.utils.log").logger("applets.misc")
-
 local bin_path	= "/usr/bin/testir"
 
 local wheel_index_last = 1
@@ -85,7 +83,7 @@ end
 
 
 function IRTest(self)
-	local window = Window("window")
+	local window = Window("text_list")
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestIR/TestIR.png")

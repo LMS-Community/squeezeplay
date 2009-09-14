@@ -10,7 +10,7 @@ DESKTOP_SKIN
 	ES	Máscara de escritorio
 	FI	Työpöydän olemus
 	FR	Habillage du bureau
-	IT	Interfaccia desktop
+	IT	Skin desktop
 	NL	Skin van desktop
 	NO	Skrivebordsskall
 	PL	Karnacja pulpitu

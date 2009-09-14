@@ -34,7 +34,6 @@ local Icon             = require("jive.ui.Icon")
 local Timer            = require("jive.ui.Timer")
 local Task             = require("jive.ui.Task")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 local debug            = require("jive.utils.debug")
@@ -45,42 +44,66 @@ local jiveMain         = jiveMain
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+local locales = {
+	NO = 'Norsk',
+	SV = 'Svenska',
+	FI = 'Suomi',
+	DA = 'Dansk',
+	DE = 'Deutsch',
+	EN = 'English',
+	ES = 'Español',
+	FR = 'Français',
+	IT = 'Italiano',
+	NL = 'Nederlands',
+	RU = 'русский',
+	PL = 'Polski',
+	CS = 'Čeština',
+}
 
-function setupShowSetupLanguage(self, setupNext, windowStyle)
+function setupShowSetupLanguage(self, setupNext, helpText)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
-	if not windowStyle then
-		windowStyle = 'settingstitle'
-	end
-
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
-	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
+	self.allStrings = locale:loadAllStrings(self._entry.dirpath .. "strings.txt")
 
 	-- setup menu
-	local window = Window("window", self:string("CHOOSE_LANGUAGE"), windowStyle)
+	local window = Window("text_list", self:string("CHOOSE_LANGUAGE"), "setuptitle")
 	window:setAllowScreensaver(false)
+
+	window:setButtonAction("lbutton", nil)
+	window:setButtonAction("rbutton", nil)
 
 	local menu = SimpleMenu("menu")
 
 	for _, locale in ipairs(locale:getAllLocales()) do 
-		menu:addItem({
-		        text = self:string("LANGUAGE_" .. locale),
-			sound = "WINDOWSHOW",
-			callback = function()
-					   self:setLang(locale, setupNext)
-				   end,
-			focusGained = function() self:_showLang(locale) end
-		})
-
-		if locale == currentLocale then
-			menu:setSelectedIndex(menu:numItems())
+		if not locales[locale] then
+			log:warn("unknown lang ", locale)
+		else
+			menu:addItem({
+				locale = locale,
+				text = locales[locale],
+				sound = "WINDOWSHOW",
+				callback = function()
+					self:setLang(locale, setupNext)
+				end,
+				focusGained = function() self:_showLang(locale) end
+			})
 		end
 	end
 
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
-	window:addWidget(Textarea("help", self:string("CHOOSE_LANGUAGE_HELP")))
+	for i, item in menu:iterator() do
+		if item.locale == currentLocale then
+			menu:setSelectedIndex(i)
+		end
+	end
+
+	if helpText ~= false then
+		menu:setHeaderWidget(Textarea("help_text", self:string("CHOOSE_LANGUAGE_HELP")))
+	end
 	window:addWidget(menu)
 
 	-- Store the selected language when the menu is exited
@@ -105,31 +128,40 @@ function settingsShow(self, menuItem)
 
 	-- this uses private data/methods from Applet and locale. don't do this elsewhere,
 	-- but it's needed for speed here
-	self.allStrings = locale:loadAllStrings(self._entry.stringsFilepath)
+	self.allStrings = locale:loadAllStrings(self._entry.dirpath .. "strings.txt")
 
 	-- setup menu
-	local window = Window("window", self:string("LANGUAGE"), 'settingstitle')
+	local window = Window("text_list", self:string("LANGUAGE"), 'settingstitle')
 	local menu = SimpleMenu("menu")
 
 	local group = RadioGroup()
 	for _, locale in ipairs(locale:getAllLocales()) do 
-		local button = RadioButton(
-			"radio", 
-			group, 
-			function() self:setLang(locale) end, 
-			locale == currentLocale
-		)
-		menu:addItem({
-		        text = self:string("LANGUAGE_" .. locale),
-			icon = button,
-			focusGained = function() self:_showLang(locale) end
-		})
-
-		if locale == currentLocale then
-			menu:setSelectedIndex(menu:numItems())
+		if not locales[locale] then
+			log:warn("unknown lang ", locale)
+		else
+			local button = RadioButton(
+				"radio", 
+				group, 
+				function() self:setLang(locale) end, 
+				locale == currentLocale
+			)
+			menu:addItem({
+				locale = locale,
+				text = locales[locale],
+				style = 'item_choice',
+				check = button,
+				focusGained = function() self:_showLang(locale) end
+			})
 		end
 	end
+	menu:setComparator(SimpleMenu.itemComparatorAlpha)
 
+	for i, item in menu:iterator() do
+		if item.locale == currentLocale then
+			menu:setSelectedIndex(i)
+			break
+		end
+	end
 	window:addWidget(menu)
 
 	-- Store the selected language when the menu is exited
@@ -177,13 +209,13 @@ function setLang(self, choice, next)
 	end
 
 	-- changing the locale is slow, do this in a task with a spinny
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting_popup")
 	self.popup:setAllowScreensaver(false)
 	self.popup:setAlwaysOnTop(true)
 	self.popup:setAutoHide(false)
 	self.popup:ignoreAllInputExcept()
 
-	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Icon("icon_connecting"))
   	local stringChoice = "LOADING_LANGUAGE"
 	self.popup:addWidget(Label("text", self:string(stringChoice)))
    	self.popup:show()

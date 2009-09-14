@@ -1,0 +1,20 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+QVGAPORTRAIT_SKIN
+# SLT: QVGA refers to the "quarter VGA" resolution of the display
+	CS	QVGA skin portrétu
+	DA	QVGA-tema, stående
+	DE	QVGA-Portrait-Skin
+	EN	QVGA Portrait Skin
+	ES	Máscara vertical QVGA
+	FI	QVGA-pystyolemus
+	FR	Habillage portrait QVGA
+	IT	Skin QVGA verticale
+	NL	QVGA Portrait-skin
+	NO	QVGA stående skall
+	PL	Karnacja pionowa QVGA
+	RU	Обложка: QVGA, книжная ориентация
+	SV	QVGA-skal i stående format
+

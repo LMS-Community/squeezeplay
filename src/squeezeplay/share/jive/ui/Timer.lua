@@ -34,7 +34,7 @@ local table	= require("jive.utils.table")
 local Framework = require("jive.ui.Framework")
 
 local debug	= require("jive.utils.debug")
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.timer")
 
 
 -- our class
@@ -179,7 +179,11 @@ function _runTimer(self, now)
 
 		-- call back may modify the timer so update it first
 		if not timer.once then
-			timer:_insertTimer(timer.expires + timer.interval)
+			local next = timer.expires + timer.interval
+			if next < now then
+				next = now + timer.interval
+			end
+			timer:_insertTimer(next)
 		else
 			timer.expires = nil
 		end

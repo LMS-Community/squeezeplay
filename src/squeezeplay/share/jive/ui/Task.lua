@@ -9,21 +9,22 @@ local debug            = require("jive.utils.debug")
 local table            = require("jive.utils.table")
 local coxpcall         = require("jive.utils.coxpcall")
 
-local log              = require("jive.utils.log").logger("ui.task")
+local log              = require("jive.utils.log").logger("squeezeplay.task")
 
 
 module(..., oo.class)
 
 
 -- constants
-PRIORITY_HIGH = 1
-PRIORITY_LOW = 2
+PRIORITY_AUDIO = 1
+PRIORITY_HIGH = 2
+PRIORITY_LOW = 3
 
 
 -- the task list is modified while iterating over the entries,
 -- we use a linked list to make the iteration easier
--- two queues: priority 1 and 2
-local taskHead = { nil, nil }
+-- three queues: streaming, high and low
+local taskHead = { nil, nil, nil }
 
 -- the task that is active, or nil for the main thread
 local taskRunning = nil
@@ -40,7 +41,7 @@ function __init(self, name, obj, f, errf, priority)
 				      args = {},
 				      thread = coroutine.create(f),
 				      errf = errf,
-				      priority = priority or 2,
+				      priority = priority or PRIORITY_LOW,
 			      })
 
 	return obj
@@ -49,7 +50,7 @@ end
 
 -- returns true if the task is suspened or false if it is completed
 function resume(self)
-	log:info("task: ", self.name)
+	log:debug("task: ", self.name)
 
 	taskRunning = self
 
@@ -71,7 +72,7 @@ function resume(self)
 		end
 	else
 		-- task has error
-		log:warn("task error ", self.name, ": ", val)
+		log:error("task error ", self.name, ": ", val)
 		self:removeTask()
 		self.state = "error"
 
@@ -183,12 +184,12 @@ function dump(class)
 		local entry = taskHead[i]
 
 		if entry and not header then
-			log:warn("Task queue:")
+			log:info("Task queue:")
 			header = true
 		end
 
 		while entry do
-			log:warn(i, ": ", entry.name, " (", entry, ")")
+			log:info(i, ": ", entry.name, " (", entry, ")")
 			entry = entry.next
 		end
 	end
@@ -208,7 +209,7 @@ function iterator(class)
 			       entry = entry.next
 		       end
 
-		       if entry == nil then
+		       while entry == nil and priority < PRIORITY_LOW do
 			       priority = priority + 1
  			       entry = taskHead[priority]
 		       end

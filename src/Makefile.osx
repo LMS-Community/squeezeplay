@@ -126,9 +126,9 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 # lua
 #####
 
-.PHONY: lua-all tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter luamd5
+.PHONY: lua-all tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
-lua-all: lua tolua++ luasocket slnunicode luajson loop lualogging luaexpat luafilesystem luaprofiler luazipfilter luamd5
+lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
 # lua (requires readline ncurses)
 lua:
@@ -137,7 +137,7 @@ lua:
 
 # luasocket (requires lua)
 luasocket:
-	cd luasocket-2.0.1; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
+	cd luasocket-2.0.2; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
 
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=osx
@@ -169,9 +169,6 @@ loop:
 	cd loop-2.2-alpha; install loop/table.lua ${PREFIX}/share/lua/5.1/loop/.
 	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
-
-lualogging:
-	cd lualogging-1.1.2; make install LUA_DIR=${PREFIX}/share/lua/5.1
 
 luaexpat: lua
 	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=osx CC="cc -arch i386 -arch ppc" && make install PREFIX=${PREFIX} PLATFORM=osx
@@ -230,7 +227,7 @@ tremor: Tremor/Makefile
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-alsa --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
@@ -309,7 +306,7 @@ clean:
 	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luasocket"
-	-cd luasocket-2.0.1; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
+	-cd luasocket-2.0.2; make clean PLATFORM=osx ; rm -rf src/x86; rm -rf src/ppc
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luaprofiler"
 	-cd luaprofiler-2.0; make -f Makefile.darwin clean ; rm -rf x86; rm -rf ppc

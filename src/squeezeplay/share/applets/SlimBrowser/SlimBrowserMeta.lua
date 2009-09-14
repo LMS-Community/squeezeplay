@@ -19,9 +19,10 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
+local utilLog       = require("jive.utils.log")
 
 local appletManager = appletManager
+local jiveMain      = jiveMain
 
 
 module(...)
@@ -35,17 +36,19 @@ end
 
 function registerApplet(self)
 	
-	-- SlimBrowser uses its own log categories
-	-- defined here so that it can be changed using LogSettingsApplet before the applet is run.
-	jul.addCategory("player.browse", jul.WARN)
-	jul.addCategory("player.browse.db", jul.WARN)
-	jul.addCategory("player.browse.data", jul.WARN)
-
+	-- SlimBrowser uses its an extra log category
+	utilLog.logger("applet.SlimBrowser.data")
 
 	self:registerService('goHome')
 	self:registerService('showTrackOne')
 	self:registerService('showPlaylist')
-	self:registerService('hideConnectingToPlayer')
+	self:registerService('setPresetCurrentTrack')
+	self:registerService('squeezeNetworkRequest')
+
+	self:registerService('browserJsonRequest')
+	self:registerService('browserActionRequest')
+	self:registerService('browserCancel')
+	self:registerService('getAudioVolumeManager')
 
 	appletManager:loadApplet("SlimBrowser")
 

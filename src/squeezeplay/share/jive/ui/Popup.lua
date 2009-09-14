@@ -11,7 +11,7 @@ The popup widget, extends L<jive.ui.Window>. This is a container for other widge
 =head1 SYNOPSIS
 
  -- Create a popup window with title "Boo!"
- local popup = jive.ui.Popup("popup", "Boo1")
+ local popup = jive.ui.Popup("waiting_popup", "Boo1")
 
  -- Show the window on the screen
  popup:show()
@@ -42,7 +42,7 @@ local Framework       = require("jive.ui.Framework")
 local Widget          = require("jive.ui.Widget")
 local Window          = require("jive.ui.Window")
 
-local log             = require("jive.utils.log").logger("ui")
+local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
@@ -65,6 +65,7 @@ function __init(self, style, title)
 	obj:setAutoHide(true)
 	obj:setShowFrameworkWidgets(false)
 	obj:setTransparent(true)
+	obj:setTransient(true)
 
 	-- by default close popup on keypress
 	obj:hideOnAllButtonInput()

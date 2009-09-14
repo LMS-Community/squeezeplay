@@ -2,7 +2,6 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local jul           = require("jive.utils.log")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -18,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupSSH', 'advancedSettings', "SSH", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupSSH', 'advancedSettings', "SSH", function(applet, ...) applet:settingsShow(...) end, 110))
 end
 
 

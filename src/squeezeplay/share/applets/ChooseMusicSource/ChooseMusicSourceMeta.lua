@@ -19,7 +19,6 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -44,7 +43,11 @@ end
 
 function registerApplet(meta)
 
+	meta:registerService("selectCompatibleMusicSource")
 	meta:registerService("selectMusicSource")
+	meta:registerService("connectPlayerToServer")
+	meta:registerService("hideConnectingToServer")
+	meta:registerService("showConnectToServer")
 
 end
 
@@ -55,16 +58,15 @@ function configureApplet(meta)
 		appletManager:callService("setPollList", meta:getSettings().poll)
 	end
 
-	-- add item, then immediately disable it. Music Source should only show up when playerCurrent notification comes through
 	jiveMain:addItem(
 		meta:menuItem(
-			'appletSlimservers', 
-			'settings', 
-			"SLIMSERVER_SERVERS", 
-			function(applet, ...) 
-				applet:settingsShow(...) 
-			end, 
-			60
+			'appletRemoteSlimservers',
+			'networkSettings',
+			"REMOTE_LIBRARIES",
+			function(applet, ...)
+				applet:remoteServersWindow(...)
+			end,
+			11
 		)
 	)
 

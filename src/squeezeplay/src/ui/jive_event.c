@@ -42,7 +42,7 @@ int jiveL_event_new(lua_State *L) {
 
 	/* send attributes */
 	event->type = lua_tointeger(L, 2);
-	event->ticks = SDL_GetTicks();
+	event->ticks = jive_jiffies();
 	if (!lua_isnil(L, 3)) {
 		switch (event->type) {
 		case JIVE_EVENT_SCROLL:
@@ -60,6 +60,14 @@ int jiveL_event_new(lua_State *L) {
 			event->u.key.code = lua_tointeger(L, 3);
 			break;
 		
+		case JIVE_EVENT_CHAR_PRESS:
+			event->u.text.unicode = lua_tointeger(L, 3);
+			break;
+		
+		case JIVE_EVENT_GESTURE:
+			event->u.gesture.code = lua_tointeger(L, 3);
+			break;
+
 		case JIVE_EVENT_MOUSE_DOWN:
 		case JIVE_EVENT_MOUSE_UP:
 		case JIVE_EVENT_MOUSE_PRESS:
@@ -68,6 +76,14 @@ int jiveL_event_new(lua_State *L) {
 		case JIVE_EVENT_MOUSE_DRAG:
 			event->u.mouse.x = lua_tointeger(L, 3);
 			event->u.mouse.y = lua_tointeger(L, 4);
+			event->u.mouse.finger_count = luaL_optinteger(L, 5, 0);
+			event->u.mouse.finger_width = luaL_optinteger(L, 6, 0);
+			event->u.mouse.finger_pressure = luaL_optinteger(L, 7, 0);
+			break;
+
+		case JIVE_EVENT_IR_PRESS:
+		case JIVE_EVENT_IR_HOLD:
+			event->u.ir.code = lua_tointeger(L, 3);
 			break;
 
 		case JIVE_EVENT_MOTION:
@@ -75,7 +91,7 @@ int jiveL_event_new(lua_State *L) {
 			event->u.motion.y = lua_tointeger(L, 4);
 			event->u.motion.z = lua_tointeger(L, 5);
 			break;
-    	
+
 		default:
 			break;
 		}
@@ -179,7 +195,20 @@ int jiveL_event_get_mouse(lua_State *L) {
 	case JIVE_EVENT_MOUSE_DRAG:
 		lua_pushinteger(L, event->u.mouse.x);
 		lua_pushinteger(L, event->u.mouse.y);
-		return 2;
+		if (event->u.mouse.finger_count == 0) {
+			return 2;
+		}
+
+		lua_pushinteger(L, event->u.mouse.finger_count);
+		lua_pushinteger(L, event->u.mouse.finger_width);
+		lua_pushinteger(L, event->u.mouse.finger_pressure);
+		if (event->u.mouse.chiral_active) {
+			lua_pushinteger(L, event->u.mouse.chiral_value);
+		}
+		else {
+	                lua_pushnil(L);
+		}
+		return 6;
 
 	default:
 		luaL_error(L, "Not a mouse event");
@@ -244,6 +273,45 @@ int jiveL_event_get_switch(lua_State *L) {
 }
 
 
+int jiveL_event_get_ircode(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_EVENT_IR_UP:
+	case JIVE_EVENT_IR_DOWN:
+	case JIVE_EVENT_IR_PRESS:
+	case JIVE_EVENT_IR_REPEAT:
+	case JIVE_EVENT_IR_HOLD:
+		lua_pushinteger(L, event->u.ir.code);
+		return 1;
+
+	default:
+		luaL_error(L, "Not an IR event");
+	}
+	return 0;
+}
+
+int jiveL_event_get_gesture(lua_State *L) {
+	JiveEvent* event = (JiveEvent*)lua_touserdata(L, 1);
+	if (event == NULL) {
+		luaL_error(L, "invalid Event");
+	}
+
+	switch (event->type) {
+	case JIVE_EVENT_GESTURE:
+		lua_pushinteger(L, event->u.gesture.code);
+		return 1;
+
+	default:
+		luaL_error(L, "Not a GESTURE event");
+	}
+	return 0;
+}
+
+
 int jiveL_event_tostring(lua_State* L) {
 	luaL_Buffer buf;
 
@@ -286,28 +354,62 @@ int jiveL_event_tostring(lua_State* L) {
 		lua_pushfstring(L, "CHAR_PRESS code=%d", event->u.text.unicode);
 		break;
 
+	case JIVE_EVENT_GESTURE:
+		lua_pushfstring(L, "GESTURE code=%d", event->u.gesture.code);
+		break;
+
 	case JIVE_ACTION:
 	    //todo: also show actionEventName - convert index to actionEventName by calling Framework:getActionEventNameByIndex
 		lua_pushfstring(L, "ACTION actionIndex=%d", event->u.action.index);
 		break;
-		
+
 	case JIVE_EVENT_MOUSE_DOWN:
-		lua_pushfstring(L, "MOUSE_DOWN x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_DOWN x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_DOWN x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_UP:
-		lua_pushfstring(L, "MOUSE_UP x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_UP x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_UP x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_PRESS:
-		lua_pushfstring(L, "MOUSE_PRESS x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_PRESS x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_PRESS x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_HOLD:
-		lua_pushfstring(L, "MOUSE_HOLD x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_HOLD x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_HOLD x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_MOVE:
-		lua_pushfstring(L, "MOUSE_MOVE x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_MOVE x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_MOVE x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 	case JIVE_EVENT_MOUSE_DRAG:
-		lua_pushfstring(L, "MOUSE_DRAG x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		if (event->u.mouse.finger_count) {
+			lua_pushfstring(L, "FINGER_DRAG x=%d,y=%d,n=%d,w=%d,p=%d,c=%d", event->u.mouse.x, event->u.mouse.y, event->u.mouse.finger_count, event->u.mouse.finger_width, event->u.mouse.finger_pressure, event->u.mouse.chiral_value);
+		}
+		else {
+			lua_pushfstring(L, "MOUSE_DRAG x=%d,y=%d", event->u.mouse.x, event->u.mouse.y);
+		}
 		break;
 
 	case JIVE_EVENT_MOTION:
@@ -315,6 +417,22 @@ int jiveL_event_tostring(lua_State* L) {
 		break;
 	case JIVE_EVENT_SWITCH:
 		lua_pushfstring(L, "SWITCH code=%d,value=%d", event->u.sw.code, event->u.sw.value);
+		break;
+
+	case JIVE_EVENT_IR_DOWN:
+		lua_pushfstring(L, "IR_DOWN code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_UP:
+		lua_pushfstring(L, "IR_UP code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_REPEAT:
+		lua_pushfstring(L, "IR_REPEAT code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_PRESS:
+		lua_pushfstring(L, "IR_PRESS code=%p", event->u.ir.code);
+		break;
+	case JIVE_EVENT_IR_HOLD:
+		lua_pushfstring(L, "IR_HOLD code=%p", event->u.ir.code);
 		break;
     
 	case JIVE_EVENT_WINDOW_PUSH:

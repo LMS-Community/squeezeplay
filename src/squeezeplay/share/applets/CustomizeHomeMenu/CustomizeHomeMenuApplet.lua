@@ -30,14 +30,13 @@ local Textarea               = require('jive.ui.Textarea')
 local Framework              = require('jive.ui.Framework')
 
 local SimpleMenu             = require("jive.ui.SimpleMenu")
-local log                    = require("jive.utils.log").addCategory("customizeHome", jive.utils.log.DEBUG)
 
 local debug                  = require("jive.utils.debug")
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 local jnt                    = jnt
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 -- FIXME: this method should be farmed out to SimpleMenu as a function called from _itemRenderer()
@@ -73,7 +72,7 @@ function menu(self, menuItem)
 	table.insert(homeMenuItems,
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
-			weights = { 1001 },
+			weights = { 2000 },
 			callback = function()
 				self:restoreDefaultsMenu()
 			end
@@ -132,14 +131,15 @@ function menu(self, menuItem)
 				text = title,
 				weights = item.weights,
 				indent = indentSize,
-				style = 'itemNoAction'
+				style = 'item_no_arrow'
 			}
 		else
 			menuItem = {
 				text = title,
 				weights = item.weights,
 				indent = indentSize,
-				icon = Checkbox(
+				style = 'item_choice',
+				check = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						if isSelected then
@@ -165,20 +165,22 @@ function menu(self, menuItem)
 				),
 			}
 		end
-		table.insert(homeMenuItems, menuItem)
+		if not item.synthetic then
+			table.insert(homeMenuItems, menuItem)
+		end
 		end
 	end
 
 	local menu = SimpleMenu("menu",  homeMenuItems  )
 	menu:setComparator(menu.itemComparatorComplexWeightAlpha)
 
-	local window = Window("window", self:string("CUSTOMIZE_HOME"), 'settingstitle')
+	local window = Window("text_list", self:string("CUSTOMIZE_HOME"), 'settingstitle')
 	window:addWidget(menu)
 	window:show()
 end
 
 function restoreDefaultsMenu(self, id)
-	local window = Window("window", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
+	local window = Window("help_list", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
         local menu = SimpleMenu("menu", {
 		{
 			text = self:string("CUSTOMIZE_CANCEL"),
@@ -207,7 +209,7 @@ function restoreDefaultsMenu(self, id)
 		},
 	})
 
-	window:addWidget(Textarea("help", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("CUSTOMIZE_RESTORE_DEFAULTS_HELP")))
         window:addWidget(menu)
 	window:show()
 end
@@ -221,4 +223,3 @@ function _goHome()
 		windowStack[#windowStack - 1]:hide()
 	end
 end
-

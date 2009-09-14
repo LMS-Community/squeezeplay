@@ -1,0 +1,109 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+TEST_AUDIO_ROUTING
+	CS	Audio Routing
+	DA	Lydsignalets rute
+	DE	Audiosignalverteilung
+	EN	Audio Routing
+	ES	Enrutamiento de audio
+	FI	Äänen reititys
+	FR	Routage audio
+	IT	Instradamento audio
+	NL	Audioroutering
+	NO	Lydstyring
+	PL	Przekazywanie dźwięku
+	RU	Маршрутизация аудио
+	SV	Ljuddirigering
+
+ENABLE_LINE_IN_PASSTHROUGH
+	CS	Passthrough vstupem
+	DA	Linjeindgang – signalgennemgang
+	DE	Line-In-Durchschleifsignal
+	EN	Line In Passthrough
+	ES	Paso a través de entrada de línea
+	FI	Linjatulon läpivienti
+	FR	Liaison d'entrée
+	IT	Passthrough ingresso
+	NL	Doorvoer lijningang
+	NO	Gjennomgang for lydinngang
+	PL	Przekazywanie przez wejście liniowe
+	RU	Воспроизведение через линейный вход
+	SV	Linjeingång: genomströmning
+
+LINE_IN_SENSE
+	CS	Detekován vstup
+	DA	Linjeindgang fundet
+	DE	Line-In-Signal erkannt
+	EN	Line In Detected
+	ES	Entrada de línea detectada
+	FI	Linjatulo havaittu
+	FR	Entrée détectée
+	IT	Ingresso rilevato
+	NL	Lijningang gedetecteerd
+	NO	Fant lydinnsignal
+	PL	Wykryto wejście liniowe
+	RU	Обнаружен линейный вход
+	SV	Linjeingång upptäcktes
+
+HEADPHONE_SENSE
+	CS	Detekována sluchátka
+	DA	Hovedtelefoner fundet
+	DE	Kopfhörer erkannt
+	EN	Headphone Detected
+	ES	Auriculares detectados
+	FI	Kuulokkeet havaittu
+	FR	Casque détecté
+	IT	Cuffia rilevata
+	NL	Hoofdtelefoon gedetecteerd
+	NO	Fant hodetelefoner
+	PL	Wykryto słuchawki
+	RU	Обнаружены наушники
+	SV	Hörlurar upptäcktes
+
+HEADPHONE_STATE_WITH_MIC
+	CS	Ano - s mikrofonem
+	DA	Ja, med mikrofon
+	DE	Headset erkannt
+	EN	Yes - with mic
+	ES	Sí, con micrófono
+	FI	Kyllä - mikrofonin kanssa
+	FR	Oui, avec micro
+	IT	Sì - Con microfono
+	NL	Ja - met mic
+	NO	Ja, med mikrofon
+	PL	Tak – z mikrofonem
+	RU	Да - с микрофоном
+	SV	Ja - med mikrofon
+
+AUDIO_ROUTING_YES
+	CS	Ano
+	DA	Ja
+	DE	Ja
+	EN	Yes
+	ES	Sí
+	FI	Kyllä
+	FR	Oui
+	IT	Sì
+	NL	Ja
+	NO	Ja
+	PL	Tak
+	RU	Да
+	SV	Ja
+
+AUDIO_ROUTING_NO
+	CS	Ne
+	DA	Nej
+	DE	Nein
+	EN	No
+	ES	No
+	FI	Ei
+	FR	Non
+	IT	No
+	NL	Nee
+	NO	Nei
+	PL	Nie
+	RU	Нет
+	SV	Nej
+

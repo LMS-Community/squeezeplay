@@ -35,8 +35,21 @@ end
 
 function defaultSettings(meta)
 	return { 
-		wallpaper = "sunrise.png",
+		WQVGAsmallSkin = "fab4_encore.png",
+		WQVGAlargeSkin = "fab4_encore.png",
+		FullscreenSkin = "jive_midnight.png",
+		QVGAportraitSkin  = "jive_encore.png",
+		QVGAlandscapeSkin = _getQVGAlandscapeSkinWallpaper(meta),
 	}
+end
+
+function _getQVGAlandscapeSkinWallpaper(meta)
+	local wallpaper = appletManager:callService("getDefaultWallpaper")
+
+	if not wallpaper then
+		wallpaper = "bb_encore.png"
+	end
+	return wallpaper
 end
 
 

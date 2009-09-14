@@ -74,7 +74,7 @@ local Event         = require("jive.ui.Event")
 local Timer         = require("jive.ui.Timer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
 local FRAME_RATE    = jive.ui.FRAME_RATE
 local EVENT_SHOW    = jive.ui.EVENT_SHOW
@@ -239,7 +239,20 @@ end
 
 --[[
 
-=head2 jive.ui.Widget:setStyle(styleModifier)
+=head2 jive.ui.Widget:getStyleModifier()
+
+Returns the widgets style modifier.
+
+=cut
+--]]
+function getStyleModifier(self)
+	return self.styleModifier
+end
+
+
+--[[
+
+=head2 jive.ui.Widget:setStyleModifier(styleModifier)
 
 Sets the widgets style modifier.
 
@@ -665,6 +678,17 @@ function dump(self, level)
 		     end)
 
 	return table.concat(str, "\n")
+end
+
+
+function shortWidgetToString(self)
+	local widgetToString = tostring(self)
+	local parenLoc = string.find(widgetToString, "%(")
+	if not parenLoc then
+		return widgetToString
+	end
+
+	return string.sub(widgetToString, 0, parenLoc - 1)
 end
 
 

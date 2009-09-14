@@ -9,7 +9,7 @@ local UpgradeMTD  = require("applets.SetupFirmwareUpgrade.UpgradeMTD")
 local UpgradeUBI  = require("applets.SetupFirmwareUpgrade.UpgradeUBI")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("applets.setup")
+local log         = require("jive.utils.log").logger("applet.SetupFirmware")
 
 
 module(..., oo.class)

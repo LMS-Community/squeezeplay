@@ -17,7 +17,7 @@ An icon widget, extends L<jive.ui.Widget>. This widget displays an image.
  local right = jive.ui.Icon("icon_playmode_play")
 
  -- Load icon from URL
- local icon = jive.ui.Icon("image")
+ local icon = jive.ui.Icon("icon")
  local http = SocketHttp(jnt, host, port, "example")
  local req = RequestHttp(icon:getSink())
  http:fetch(req)
@@ -47,7 +47,7 @@ local oo        = require("loop.simple")
 local Widget    = require("jive.ui.Widget")
 local Surface   = require("jive.ui.Surface")
 
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
 
 -- our class

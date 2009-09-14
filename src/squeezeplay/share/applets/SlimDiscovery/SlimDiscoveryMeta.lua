@@ -23,7 +23,6 @@ local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("applets.setup")
 
 local appletManager = appletManager
 local jnt = jnt
@@ -50,6 +49,7 @@ function registerApplet(meta)
 	meta:registerService("setCurrentPlayer")
 
 	meta:registerService("discoverPlayers")
+	meta:registerService("discoverServers")
 
 	meta:registerService("connectPlayer")
 	meta:registerService("disconnectPlayer")
@@ -60,6 +60,7 @@ function registerApplet(meta)
 
 	meta:registerService("getPollList")
 	meta:registerService("setPollList")
+	meta:registerService("getInitialSlimServer")
 end
 
 
@@ -70,9 +71,19 @@ function configureApplet(meta)
 	local slimDiscovery = appletManager:loadApplet("SlimDiscovery")
 
 	-- Current server
-	if settings.serverName then
-		server = SlimServer(jnt, settings.serverName)
+	if settings.squeezeNetwork then
+		server = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
+		server:updateInit({ip=jnt:getSNHostname()}, 9000)
+		SlimServer:addLocallyRequestedServer(server)
+
+	elseif settings.serverName then
+--	elseif settings.serverName then
+		if not settings.serverUuid then
+			settings.serverUuid = settings.serverName
+		end
+		server = SlimServer(jnt, settings.serverUuid, settings.serverName)
 		server:updateInit(settings.serverInit)
+		SlimServer:addLocallyRequestedServer(server)
 	end
 
 	-- Current player
@@ -82,12 +93,22 @@ function configureApplet(meta)
 		if settings.squeezeNetwork then
 			player:updateInit(nil, settings.playerInit)
 		else
-			player:updateInit(server, settings.playerInit)
+			player:updateInit(nil, settings.playerInit)
 		end
 
 	elseif settings.currentPlayer then
 		-- legacy setting
 		player = Player(jnt, settings.currentPlayer)
+	end
+
+	if not player then
+		for i, candidatePlayer in Player:iterate() do
+		        if candidatePlayer:isLocal() then
+				log:info("Setting local player as current player since no saved player found and a local player exists")
+		                player = candidatePlayer
+		                break
+		        end
+		end
 	end
 
 	if player then

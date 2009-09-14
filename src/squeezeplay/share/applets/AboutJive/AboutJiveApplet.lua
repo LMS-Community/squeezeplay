@@ -22,66 +22,63 @@ local jnt                    = jnt
 local JIVE_VERSION           = jive.JIVE_VERSION
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
 function settingsShow(self)
-	local window = Window("window", self:string("ABOUT_JIVE"), 'settingstitle')
+	local window = Window("information", self:string("ABOUT_JIVE"), 'settingstitle')
 
 	local version = JIVE_VERSION
-
-	local uptime = System:getUptime()
-
-	local ut = {}
-	if uptime.days > 0 then
-		ut[#ut + 1] = tostring(self:string("UPTIME_DAYS", uptime.days))
-	end
-	if uptime.hours > 0 then
-		ut[#ut + 1] = tostring(self:string("UPTIME_HOURS", uptime.hours))
-	end
-	ut[#ut + 1] = tostring(self:string("UPTIME_MINUTES", uptime.minutes))
-	ut = table.concat(ut, " ")
 
 	local about = {
 		tostring(self:string("ABOUT_VERSION")),
 		version,
 		"",
-		tostring(self:string("ABOUT_MAC_ADDRESS", System:getMacAddress()) or ""),
-		"",
-		tostring(self:string("UPTIME")),
-		ut,
-		"",
 		tostring(self:string("ABOUT_CREDITS")),
 		"     Sean Adams",
+		"     Maurice Alou",
 		"     Ena Bi",
 		"     Dean Blackketter",
 		"     Fred Bould",
 		"     Randy Buswell",
 		"     Jim Carlton",
 		"     Caleb Crome",
+		"     Matt Cuson",
 		"     Kevin Deane-Freeman",
 		"     Julius Dauz",
+		"     Remco Derksen",
 		"     Noah DiJulio",
 		"     Mike Dilley",
 		"     Brian Dils",
 		"     Ben Dooks",
 		"     Dan Evans",
+		"     Sam Feng",
+		"     Mike Fieger",
+		"     Eric Fields",
 		"     Lukas Frey",
 		"     Mickey Gee",
 		"     Andy Grundman",
 		"     Michael Herger",
+		"     Dane Johnson", 
 		"     Raphael Juchli",
 		"     Ben Klaas",
 		"     Wallace Lai",
 		"     Diane Lee",
 		"     Ross Levine",
+		"     Angela Martin",
+		"     Matthew Martin",
+		"     Pamela McCracken", 
 		"     Anoop Mehta",
 		"     Felix Mueller",
+		"     Laura Nelson",
 		"     Chris Owens",
+		"     Matt Parry",
+		"     Pat Ransil",
+		"     Dylan Rhodes",
 		"     James Richardson",
+		"     Seth Schulte",
 		"     Robin Selden",
 		"     Martin Sénéclauze",
 		"     Adrian Smith",
@@ -89,15 +86,20 @@ function settingsShow(self)
 		"     David Stein",
 		"     Fred Thomas",
 		"     Richard Titmuss",
+		"     Michael Valera",
 		"     Julien Venetz",
 		"     Tom Wadzinski",
+		"     LaRon Walker",
+		"     Matt Weldon",
+		"     Matt Wise",
 		"     Osama Zaidan",
 		"",
 		"",
 		tostring(self:string("ABOUT_COPYRIGHT")),
+		"",
 	}
 
-	window:addWidget(Textarea("textarea", table.concat(about, "\n")))
+	window:addWidget(Textarea("text", table.concat(about, "\n")))
 
 	self:tieAndShowWindow(window)
 	return window

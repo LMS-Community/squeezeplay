@@ -2,6 +2,7 @@
 ** Copyright 2007 Logitech. All Rights Reserved.
 **
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+*<touch>
 */
 
 
@@ -9,6 +10,7 @@
 #define JIVE_H
 
 #include "common.h"
+#include "log.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -16,8 +18,9 @@
 #include <SDL_rotozoom.h>
 
 
-/* target frame rate 14 fps - may be tuned per platform, should be /2 */
-#define JIVE_FRAME_RATE 14
+/* target frame rate 14 fps (originally) - may be tuned per platform, should be /2 */
+/* updated to the max effective rate of scrolling on a fab4 */
+#define JIVE_FRAME_RATE 22
 
 /* print profile information for blit's */
 #undef JIVE_PROFILE_BLIT
@@ -62,6 +65,7 @@ typedef enum {
 	JIVE_LAYER_CONTENT_OFF_STAGE	= 0x04,
 	JIVE_LAYER_CONTENT_ON_STAGE	= 0x08,
 	JIVE_LAYER_LOWER		= 0x10,
+	JIVE_LAYER_TITLE		= 0x20,
 	JIVE_LAYER_ALL			= 0xFF,
 } JiveLayer;
 
@@ -98,13 +102,22 @@ typedef enum {
 	JIVE_EVENT_SWITCH		= 0x00400000,
 	JIVE_EVENT_MOTION		= 0x00800000,
 
-	JIVE_EVENT_CHAR_PRESS	= 0x02000000,
-	JIVE_ACTION	            = 0x04000000,
+	JIVE_EVENT_CHAR_PRESS           = 0x02000000,
+	JIVE_EVENT_IR_PRESS             = 0x04000000,
+	JIVE_EVENT_IR_HOLD              = 0x08000000,
+	JIVE_EVENT_IR_UP                = 0x00000004,
+	JIVE_EVENT_IR_DOWN              = 0x20000000,
+	JIVE_EVENT_IR_REPEAT            = 0x40000000,
+	JIVE_ACTION                     = 0x10000000,
+	JIVE_EVENT_GESTURE              = 0x00000008,
+
+	//Note: don't use 0x80000000, 0x40000000 is the highest usable value
 	
 	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
+	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD | JIVE_EVENT_IR_UP | JIVE_EVENT_IR_DOWN | JIVE_EVENT_IR_REPEAT),
 	JIVE_EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
 	JIVE_EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_UP | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_MOVE | JIVE_EVENT_MOUSE_DRAG ),
-	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_ACTION),
+	JIVE_EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_EVENT_IR_ALL | JIVE_EVENT_GESTURE),
 
 	JIVE_EVENT_VISIBLE_ALL		= ( JIVE_EVENT_SHOW | JIVE_EVENT_HIDE ),
 	JIVE_EVENT_ALL			= 0x7FFFFFFF,
@@ -137,7 +150,21 @@ typedef enum {
 	JIVE_KEY_PAGE_UP		= 0x4000,
 	JIVE_KEY_PAGE_DOWN		= 0x8000,
 	JIVE_KEY_PRINT			= 0x10000,
+	JIVE_KEY_PRESET_1		= 0x20000,
+	JIVE_KEY_PRESET_2		= 0x40000,
+	JIVE_KEY_PRESET_3		= 0x80000,
+	JIVE_KEY_PRESET_4		= 0x100000,
+	JIVE_KEY_PRESET_5		= 0x200000,
+	JIVE_KEY_PRESET_6		= 0x400000,
+	JIVE_KEY_ALARM			= 0x800000,
+	JIVE_KEY_MUTE			= 0x1000000,
+	JIVE_KEY_POWER			= 0x2000000,
 } JiveKey;
+
+typedef enum {
+	JIVE_GESTURE_L_R                = 0x0001,
+	JIVE_GESTURE_R_L 	        = 0x0002,
+} JiveGesture;
 
 
 enum {
@@ -184,6 +211,7 @@ struct jive_widget {
 	JiveAlign align;
 	Uint8 layer;
 	Sint16 z_order;
+	bool hidden;
 };
 
 struct jive_surface {
@@ -212,6 +240,12 @@ struct jive_char_event {
 struct jive_mouse_event {
 	Uint16 x;
 	Uint16 y;
+	/* extended to support touchscreens */
+	Uint16 finger_count;
+	Uint16 finger_pressure;
+	Uint16 finger_width;
+	Sint16 chiral_value;
+	bool chiral_active;
 };
 
 struct jive_motion_event {
@@ -223,6 +257,14 @@ struct jive_motion_event {
 struct jive_sw_event {
 	Uint16 code;
 	Uint16 value;
+};
+
+struct jive_ir_event {
+	Uint32 code;
+};
+
+struct jive_gesture_event {
+	JiveGesture code;
 };
 
 struct jive_event {
@@ -237,6 +279,8 @@ struct jive_event {
 		struct jive_mouse_event mouse;
 		struct jive_motion_event motion;
 		struct jive_sw_event sw;
+		struct jive_ir_event ir;
+		struct jive_gesture_event gesture;
 	} u;
 };
 
@@ -271,11 +315,16 @@ struct jive_perfwarn {
 };
 
 
+/* logging */
+extern LOG_CATEGORY *log_ui_draw;
+
 /* extra pump function */
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
 void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
+void jive_send_gesture_event(JiveGesture code);
+void jive_send_char_press_event(Uint16 unicode);
 
 
 /* platform functions */
@@ -283,8 +332,6 @@ void platform_init(lua_State *L);
 char *platform_get_mac_address();
 char *platform_get_home_dir();
 char *platform_get_arch();
-
-int squeezeplayL_system_init(lua_State *L);
 
 
 /* global counter used to invalidate widget */
@@ -299,7 +346,6 @@ void *jive_getpeer(lua_State *L, int index, JivePeerMeta *peerMeta);
 void jive_torect(lua_State *L, int index, SDL_Rect *rect);
 void jive_rect_union(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
 void jive_rect_intersection(SDL_Rect *a, SDL_Rect *b, SDL_Rect *c);
-int jive_find_file(const char *path, char *fullpath);
 void jive_queue_event(JiveEvent *evt);
 int jive_traceback (lua_State *L);
 
@@ -314,6 +360,7 @@ JiveSurface *jive_surface_load_image_data(const char *data, size_t len);
 int jive_surface_set_wm_icon(JiveSurface *srf);
 int jive_surface_save_bmp(JiveSurface *srf, const char *file);
 int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key);
+void jive_surface_get_offset(JiveSurface *src, Sint16 *x, Sint16 *y);
 void jive_surface_set_offset(JiveSurface *src, Sint16 x, Sint16 y);
 void jive_surface_get_clip(JiveSurface *srf, SDL_Rect *r);
 void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r);
@@ -354,6 +401,7 @@ void jive_surface_filledTrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint
 /* Tile functions */
 JiveTile *jive_tile_fill_color(Uint32 col);
 JiveTile *jive_tile_load_image(const char *path);
+JiveTile *jive_tile_load_image_data(const char *data, size_t len);
 JiveTile *jive_tile_load_tiles(char *path[9]);
 JiveTile *jive_tile_load_vtiles(char *path[3]);
 JiveTile *jive_tile_load_htiles(char *path[3]);
@@ -371,12 +419,15 @@ JiveFont *jive_font_ref(JiveFont *font);
 void jive_font_free(JiveFont *font);
 int jive_font_width(JiveFont *font, const char *str);
 int jive_font_nwidth(JiveFont *font, const char *str, size_t len);
+int jive_font_miny_char(JiveFont *font, Uint16 ch);
+int jive_font_maxy_char(JiveFont *font, Uint16 ch);
 int jive_font_height(JiveFont *font);
 int jive_font_capheight(JiveFont *font);
 int jive_font_ascend(JiveFont *font);
 int jive_font_offset(JiveFont *font);
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str);
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len);
+Uint32 utf8_get_char(const char *ptr, const char **nptr);
 
 
 /* C helper functions */
@@ -417,10 +468,13 @@ int jiveL_event_get_mouse(lua_State *L);
 int jiveL_event_get_action_internal(lua_State *L);
 int jiveL_event_get_motion(lua_State *L);
 int jiveL_event_get_switch(lua_State *L);
+int jiveL_event_get_ircode(lua_State *L);
+int jiveL_event_get_gesture(lua_State *L);
 
 int jiveL_widget_set_bounds(lua_State *L);
 int jiveL_widget_get_bounds(lua_State *L);
 int jiveL_widget_get_z_order(lua_State *L);
+int jiveL_widget_is_hidden(lua_State *L);
 int jiveL_widget_get_preferred_bounds(lua_State *L);
 int jiveL_widget_get_border(lua_State *L);
 int jiveL_widget_mouse_bounds(lua_State *L);
@@ -460,6 +514,7 @@ int jiveL_textinput_layout(lua_State *L);
 int jiveL_textinput_draw(lua_State *L);
 int jiveL_textinput_gc(lua_State *L);
 
+int jiveL_menu_get_preferred_bounds(lua_State *L);
 int jiveL_menu_skin(lua_State *L);
 int jiveL_menu_layout(lua_State *L);
 int jiveL_menu_iterate(lua_State *L);
@@ -468,6 +523,7 @@ int jiveL_menu_gc(lua_State *L);
 
 int jiveL_textarea_get_preferred_bounds(lua_State *L);
 int jiveL_textarea_skin(lua_State *L);
+int jiveL_textarea_invalidate(lua_State *L);
 int jiveL_textarea_layout(lua_State *L);
 int jiveL_textarea_draw(lua_State *L);
 int jiveL_textarea_gc(lua_State *L);

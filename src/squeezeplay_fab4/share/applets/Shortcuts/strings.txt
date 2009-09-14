@@ -1,0 +1,290 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+SHORTCUTS_TITLE
+	CS	Klávesové zkratky
+	DA	Genveje
+	DE	Funktionen
+	EN	Shortcuts
+	ES	Métodos abreviados
+	FI	pikatoiminnot
+	FR	Raccourcis
+	IT	Scorciatoie
+	NL	Snelkoppelingen
+	NO	Snarveier
+	PL	Skróty
+	RU	Ярлыки
+	SV	Kortkommandon
+
+SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
+	CS	Stisknutí levého tlačítka
+	DA	Tryk på venstre knap
+	DE	Auf linke Taste tippen
+	EN	Left Button Touch
+	ES	Botón izquierdo Tocar
+	FI	Vasemman painikkeen painaminen
+	FR	Appuyer sur la flèche Gauche
+	IT	Tocco del pulsante Sinistra
+	NL	Knop Links aanraken
+	NO	Trykk på venstre knapp
+	PL	Naciśnięcie lewego przycisku
+	RU	Касание левой кнопки
+	SV	Tryck på vänster knapp
+
+SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
+	CS	Přidržení levého tlačítka
+	DA	Hold venstre knap nede
+	DE	Linke Taste halten
+	EN	Left Button Hold
+	ES	Botón izquierdo Mantener
+	FI	Vasemman painikkeen pito
+	FR	Flèche Gauche enfoncée
+	IT	Pulsante Sinistra tenuto premuto
+	NL	Knop Links ingedrukt houden
+	NO	Hold nede venstre knapp
+	PL	Przytrzymanie lewego przycisku
+	RU	Удержание левой кнопки
+	SV	Håll ned vänster knapp
+
+SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
+	CS	Stisknutí pravého tlačítka
+	DA	Tryk på højre knap
+	DE	Auf rechte Taste tippen
+	EN	Right Button Touch
+	ES	Botón derecho Tocar
+	FI	Oikean painikkeen painaminen
+	FR	Appuyer sur la flèche Droite
+	IT	Tocco del pulsante Destra
+	NL	Knop Rechts aanraken
+	NO	Trykk på høyre knapp
+	PL	Naciśnięcie prawego przycisku
+	RU	Касание правой кнопки
+	SV	Tryck ned höger knapp
+
+SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
+	CS	Přidržení pravého tlačítka
+	DA	Hold højre knap nede
+	DE	Rechte Taste halten
+	EN	Right Button Hold
+	ES	Botón derecho Mantener
+	FI	Oikean painikkeen pito
+	FR	Flèche Droite enfoncée
+	IT	Pulsante Destra tenuto premuto
+	NL	Knop Rechts ingedrukt
+	NO	Hold nede høyre knapp
+	PL	Przytrzymanie prawego przycisku
+	RU	Удержание правой кнопки
+	SV	Håll ned höger knapp
+
+SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
+	CS	Home Stisknutí levého tlačítka
+	DA	Startside: tryk på venstre knap
+	DE	Haupt - Linke Taste tippen
+	EN	Home Left Button Touch
+	ES	Inicio Botón izquierdo Tocar
+	FI	Vasemman painikkeen painaminen kotivalikossa
+	FR	Flèche Gauche du menu principal
+	IT	Home - Tocco del pulsante Sinistra
+	NL	Knop Home en Links aanraken
+	NO	Trykk på venstre knapp med hovedmenyen åpen
+	PL	Dotknięcie lewego przycisku Home
+	RU	Касание левой кнопки "Домой"
+	SV	Tryck på vänster knapp i Startmenyn
+
+SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
+	CS	Home Přidržení levého tlačítka
+	DA	Startside: hold venstre knap nede
+	DE	Haupt - Linke Taste halten
+	EN	Home Left Button Hold
+	ES	Inicio Botón izquierdo Mantener
+	FI	Vasemman painikkeen pito kotivalikossa
+	FR	Flèche Gauche du menu principal enfoncée
+	IT	Home - Pulsante Sinistra tenuto premuto
+	NL	Knop Home en Links ingedrukt houden
+	NO	Hold nede venstre knapp med hovedmenyen åpen
+	PL	Przytrzymanie lewego przycisku Home
+	RU	Удержание левой кнопки "Домой"
+	SV	Håll ned vänster knapp i Startmenyn
+
+SHORTCUTS_INPUT_GESTURE_L_R
+	CS	Pravá páčka
+	DA	Træk til højre
+	DE	Nach rechts schieben
+	EN	Right Swipe
+	ES	Derecha Pasar
+	FI	Pyyhkäisy oikealle
+	FR	Glisser vers la droite
+	IT	Scorrimento del dito verso destra
+	NL	Naar rechts bladeren
+	NO	Rull mot høyre
+	PL	Przeciągnięcie po prawym przycisku
+	RU	Резкое движение вправо
+	SV	Svep åt höger
+
+SHORTCUTS_INPUT_GESTURE_R_L
+	CS	Levá páčka
+	DA	Træk til venstre
+	DE	Nach links schieben
+	EN	Left Swipe
+	ES	Izquierda Pasar
+	FI	Pyyhkäisy vasemmalle
+	FR	Glisser vers la gauche
+	IT	Scorrimento del dito verso sinistra
+	NL	Naar links bladeren
+	NO	Rull mot venstre
+	PL	Przeciągnięcie po lewym przycisku
+	RU	Резкое движение влево
+	SV	Svep åt vänster
+
+SHORTCUTS_OUTPUT_BACK
+	CS	Zpět
+	DA	Tilbage
+	DE	Zurück
+	EN	Back
+	ES	Atrás
+	FI	Edellinen
+	FR	Retour
+	IT	Indietro
+	NL	Terug
+	NO	Tilbake
+	PL	Wstecz
+	RU	Назад
+	SV	Bakåt
+
+SHORTCUTS_OUTPUT_GO_HOME
+	CS	Přejít Domů
+	DA	Til startside
+	DE	Zurück zum Start
+	EN	Go Home
+	ES	Go Home (Ir a casa)
+	FI	Alkuun
+	FR	Aller à l'accueil
+	IT	Go Home (Torna alla base)
+	NL	Go Home (Naar huis gaan)
+	NO	Gå til hovedmenyen
+	PL	Powrót do początku
+	RU	Домой
+	SV	Startsida
+
+SHORTCUTS_OUTPUT_GO_NOW_PLAYING
+	CS	Právě hraje
+	DA	Nu spiller
+	DE	Aktueller Titel
+	EN	Now Playing
+	ES	Reproduciendo
+	FI	Nyt soi
+	FR	En cours de lecture
+	IT	Riproduzione in corso
+	NL	Speelt nu
+	NO	Spilles nå
+	PL	Teraz odtwarzane
+	RU	Воспроизводится
+	SV	Nu spelas
+
+SHORTCUTS_OUTPUT_GO_PLAYLIST
+	CS	Aktuální seznam skladeb
+	DA	Nuværende afspilningsliste
+	DE	Aktuelle Wiedergabeliste
+	EN	Current Playlist
+	ES	Lista de reproducción actual
+	FI	Nykyinen soittoluettelo
+	FR	Liste de lecture en cours
+	IT	El. di riproduz. corrente
+	NL	Huidige playlist
+	NO	Gjeldende spilleliste
+	PL	Aktualna lista odtwarzania
+	RU	Текущий плей-лист
+	SV	Aktuell spellista
+
+SHORTCUTS_OUTPUT_DISABLED
+	CS	Zakázáno
+	DA	Deaktiveret
+	DE	Deaktiviert
+	EN	Disabled
+	ES	Desactivado
+	FI	Ei käytössä
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uitgeschakeld
+	NO	Deaktivert
+	PL	Wyłączone
+	RU	Отключено
+	SV	Avaktiverat
+
+SHORTCUTS_OUTPUT_GO_FAVORITES
+	CS	Oblíbené položky
+	DA	Favoritter
+	DE	Favoriten
+	EN	Favorites
+	ES	Favoritos
+	FI	Suosikit
+	FR	Favoris
+	IT	Preferiti
+	NL	Favorieten
+	NO	Favoritter
+	PL	Ulubione
+	RU	Выбранное
+	SV	Favoriter
+
+SHORTCUTS_OUTPUT_POWER
+	CS	Napájení
+	DA	Tænd/sluk
+	DE	Ein/Aus
+	EN	Power
+	ES	Encendido
+	FI	Virta
+	FR	Mise sous tension
+	IT	Accensione
+	NL	Voeding
+	NO	Av/på
+	PL	Zasilanie
+	RU	Питание
+	SV	Av/på
+
+SHORTCUTS_OUTPUT_SETTINGS
+	CS	Nastavení
+	DA	Indstillinger
+	DE	Einstellungen
+	EN	Settings
+	ES	Configuración
+	FI	Asetukset
+	FR	Paramètres
+	IT	Impostazioni
+	NL	Instellingen
+	NO	Innstillinger
+	PL	Ustawienia
+	RU	Настройки
+	SV	Inställningar
+
+SHORTCUTS_OUTPUT_MUTE
+	CS	Ztlumit
+	DA	Lyd fra
+	DE	Stumm
+	EN	Mute
+	ES	Silenciar
+	FI	Mykistys
+	FR	Sourdine
+	IT	Disattiva audio
+	NL	Dempen
+	NO	Stille
+	PL	Wycisz
+	RU	Без звука
+	SV	Ljud av (mute)
+
+SHORTCUTS_OUTPUT_PAUSE
+	CS	Pozastavit
+	DA	Pause
+	DE	Pause
+	EN	Pause
+	ES	Pausa
+	FI	Tauko
+	FR	Pause
+	IT	Pausa
+	NL	Pauzeren
+	NO	Pause
+	PL	Wstrzymaj
+	RU	Пауза
+	SV	Paus
+

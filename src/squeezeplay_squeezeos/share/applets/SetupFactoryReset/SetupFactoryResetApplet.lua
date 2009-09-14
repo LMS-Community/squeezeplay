@@ -5,6 +5,7 @@ local io                     = require("io")
 local os                     = require("os")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
@@ -14,7 +15,6 @@ local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 local appletManager          = appletManager
 
 
@@ -23,7 +23,7 @@ oo.class(_M, Applet)
 
 
 function settingsShow(self, menuItem)
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 
 	local menu = SimpleMenu("menu", {
 					{
@@ -53,8 +53,8 @@ function _factoryReset(self)
 	-- disconnect from Player/SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	local popup = Popup("popupIcon")
-	popup:addWidget(Icon("iconConnected"))
+	local popup = Popup("waiting_popup")
+	popup:addWidget(Icon("icon_connected"))
 	popup:addWidget(Label("text", self:string("RESET_RESETTING")))
 
 	-- make sure this popup remains on screen
@@ -73,8 +73,8 @@ function _factoryReset(self)
 				     log:info("Factory reset...")
 
 				     -- touch .factoryreset and reboot
-				     io.open("/.factoryreset", "w"):close()
-				     os.execute("/bin/busybox reboot -f")
+				     System:atomicWrite("/.factoryreset", "")
+				     appletManager:callService("reboot")
 			      end)
 
 	self:tieAndShowWindow(popup)

@@ -40,30 +40,17 @@ local Group           = require("jive.ui.Group")
 local Slider          = require("jive.ui.Slider")
 local Textarea        = require("jive.ui.Textarea")
 local Sample          = require("squeezeplay.sample")
-local jul             = require("jive.utils.log")
 
 local RequestHttp     = require("jive.net.RequestHttp")
 local SocketHttp      = require("jive.net.SocketHttp")
 
-local log             = jul.logger("applets.setup")
-
 local jnt             = jnt
 local appletManager   = appletManager
 
-local EVENT_WINDOW_POP       = jive.ui.EVENT_WINDOW_POP
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
-
-local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
-local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
-
-
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local path = string.match(System:findFile("applets/SetupSoundEffects/sounds/bump.wav"), "(.*)bump.wav")
-log:info("path: ", path)
 
 local REFRESH_TIME = 300
 
@@ -111,7 +98,7 @@ function settingsShow(self, menuItem)
 
 	local settings = self:getSettings()
 
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorWeightAlpha)
 
@@ -135,7 +122,8 @@ function settingsShow(self, menuItem)
 
 	menu:addItem({
 			     text = self:string("SOUND_NONE"),
-			     icon = offButton,
+				style = 'item_choice',
+			     check = offButton,
 			     weight = 1
 		     })
 
@@ -177,7 +165,8 @@ function settingsShow(self, menuItem)
 			-- insert suitable entry for Choice menu
 			menu:addItem({
 					     text = self:string(k),
-					     icon = button,
+						style = 'item_choice',
+					     check = button,
 					     weight = 10
 				     })
 		end
@@ -239,7 +228,6 @@ function _setVolume(self, value)
 
 	Sample:setEffectVolume(value * VOLUME_STEP)
 
-	self.slider:setValue(value)
 	self.slider:playSound("CLICK")
 
 	settings["_VOLUME"] = value * VOLUME_STEP
@@ -247,11 +235,11 @@ end
 
 
 function volumeShow(self)
-	local window = Window("window", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
+	local window = Window("text_list", self:string("SOUND_EFFECTS_VOLUME"), "settingstitle")
 
-	self.slider = Slider("volume", 0, VOLUME_STEPS, Sample:getEffectVolume() / VOLUME_STEP,
+	self.slider = Slider("volume_slider", 1, VOLUME_STEPS + 1, Sample:getEffectVolume() / VOLUME_STEP,
 			     function(slider, value)
-				     self:_setVolume(value)
+				     self:_setVolume(value - 1)
 			     end)
 
 	self.slider:addListener(EVENT_KEY_PRESS,
@@ -267,11 +255,12 @@ function volumeShow(self)
 					return EVENT_UNUSED
 				end)
 
-	window:addWidget(Textarea("help", self:string("SOUND_VOLUME_HELP")))
-	window:addWidget(Group("volumeGroup", {
-				     Icon("volumeMin"),
-				     self.slider,
-				     Icon("volumeMax")
+	-- bug 10511, remove platform-specific help. Needs revisiting
+	--window:addWidget(Textarea("help_text", self:string("SOUND_VOLUME_HELP")))
+	window:addWidget(Group("slider_group", {
+				     min = Icon("button_volume_min"),
+				     slider = self.slider,
+				     max = Icon("button_volume_max")
 			     }))
 
 	self:tieAndShowWindow(window)
@@ -310,10 +299,10 @@ function _customMenu(self, custom)
 		text = self:string("SOUND_CUSTOMIZE"),
 		weight = 100,
 		callback = function(event, item)
- 					   local window = Window("window", item.text)
+ 					   local window = Window("text_list", item.text)
 					   local menu = SimpleMenu("menu")
 					   menu:setComparator(menu.itemComparatorAlpha)
-					   window:addWidget(Textarea("help", self:string("SOUND_CUSTOM_HELP")))
+					   menu:setHeaderWidget(Textarea("help_text", self:string("SOUND_CUSTOM_HELP")))
 					   window:addWidget(menu)
 					   for k,v in pairs(sounds) do
 						   menu:addItem({
@@ -328,11 +317,11 @@ end
 
 
 function _customSoundMenu(self, sound, custom)
-	local window = Window("window", self:string("SOUND_" .. sound))
+	local window = Window("text_list", self:string("SOUND_" .. sound))
 	local menu = SimpleMenu("menu")
 	local group = RadioGroup()
 	menu:setComparator(menu.itemComparatorWeightAlpha)
-	window:addWidget(Textarea("help", self:string("SOUND_CUSTOMSOUND_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("SOUND_CUSTOMSOUND_HELP")))
 	window:addWidget(menu)
 
 	local settings = self:getSettings()
@@ -340,7 +329,8 @@ function _customSoundMenu(self, sound, custom)
 	menu:addItem({
 		weight = 1,
 		text = self:string("SOUND_DEFAULT"),
-		icon = RadioButton("radio",
+		style = 'item_choice',
+		check = RadioButton("radio",
 						   group,
 						   function()
 							   log:info("setting default as active sound for ", sound)
@@ -355,7 +345,8 @@ function _customSoundMenu(self, sound, custom)
 		menu:addItem({
 			weight = 10,
 			text = v.title,
-			icon = RadioButton("radio",
+			style = 'item_choice',
+			check = RadioButton("radio",
 							   group,
 							   function()
 								   local path = path .. v.name

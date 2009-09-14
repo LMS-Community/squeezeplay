@@ -17,9 +17,9 @@ DATETIME_TITLE
 	SV	Datum och tid
 
 DATETIME_TIMEFORMAT
-	CS	Time Format (Formát času)
+	CS	Formát času
 	DA	Klokkeslætformat
-	DE	Zeit Format
+	DE	Zeitformat
 	EN	Time Format
 	ES	Formato de hora
 	FI	Ajan muoto
@@ -58,8 +58,23 @@ DATETIME_TIMEFORMAT_24H
 	NL	24 uur
 	NO	24 timer
 	PL	24 godziny
-	RU	24 часов
+	RU	24 часа
 	SV	24 timmar
+
+DATETIME_SHORTDATEFORMAT
+	CS	Formát krátkého data
+	DA	Kort datoformat
+	DE	Kurzes Datumsformat
+	EN	Short Date Format
+	ES	Formato de fecha corto
+	FI	Lyhyt päivämäärämuoto
+	FR	Date au format court
+	IT	Formato data breve
+	NL	Korte datumnotatie
+	NO	Kort datoformat
+	PL	Format krótkiej daty
+	RU	Краткий формат даты
+	SV	Kort datumformat
 
 DATETIME_DATEFORMAT
 	CS	Formát data

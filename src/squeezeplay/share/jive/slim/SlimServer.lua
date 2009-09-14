@@ -11,7 +11,7 @@ Represents and interfaces with a real SlimServer on the network.
 =head1 SYNOPSIS
 
  -- Create a SlimServer
- local myServer = SlimServer(jnt, '192.168.1.1', 'Raoul')
+ local myServer = SlimServer(jnt, '192.168.1.1', 'Raoul', 'Raoul')
 
  -- Allow some time here for newtork IO to occur
 
@@ -36,9 +36,11 @@ local pairs, ipairs, require, setmetatable = pairs, ipairs, require, setmetatabl
 
 local os          = require("os")
 local table       = require("jive.utils.table")
-local string      = require("string")
+local string      = require("jive.utils.string")
 
 local oo          = require("loop.base")
+
+local System      = require("jive.System")
 
 local Comet       = require("jive.net.Comet")
 local HttpPool    = require("jive.net.HttpPool")
@@ -53,9 +55,13 @@ local Framework   = require("jive.ui.Framework")
 local ArtworkCache = require("jive.slim.ArtworkCache")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("slimserver")
-local logcache    = require("jive.utils.log").logger("slimserver.cache")
+local log         = require("jive.utils.log").logger("squeezebox.server")
+local logcache    = require("jive.utils.log").logger("squeezebox.server.cache")
 
+local JIVE_VERSION = jive.JIVE_VERSION
+local jnt          = jnt
+
+local SERVER_DISCONNECT_LAG_TIME = 10000
 
 -- jive.slim.SlimServer is a base class
 module(..., oo.class)
@@ -64,6 +70,9 @@ module(..., oo.class)
 -- we must load this after the module declartion to dependancy loops
 local Player      = require("jive.slim.Player")
 
+
+-- minimum support server version, can be set per device
+local minimumVersion = "7.4"
 
 -- list of servers index by id. this weak table is used to enforce
 -- object equality with the server name.
@@ -79,10 +88,28 @@ local currentServer = nil
 -- credential list for http auth
 local credentials = {}
 
+local lastServerSwitchT = nil
+
+--holds the server for which a local connection request has been made. Will be nilled out when SERVER_DISCONNECT_LAG_TIME has passed.
+local locallyRequestedServers = {}
 
 -- class function to iterate over all SqueezeCenters
 function iterate(class)
 	return pairs(serverList)
+end
+
+
+--class method
+function getServerByAddress(self, address)
+	local serverByAddress
+
+	for id, server in self:iterate() do
+		if server.ip == address then
+			serverByAddress = server
+			break
+		end
+	end
+	return serverByAddress
 end
 
 
@@ -92,8 +119,20 @@ function getCurrentServer(class)
 end
 
 
+-- class method to add the locally requested server (mihgt be more than one - one for local player and one for remote player, for instance)
+function addLocallyRequestedServer(class, server)
+	table.insert(locallyRequestedServers, server)
+end
+
+
 -- class method to set the current server
 function setCurrentServer(class, server)
+	if lastCurrentServer and ( (server and lastCurrentServer ~= server) or (not server and lastCurrentServer) ) then
+		log:debug("setting lastServerSwitchT for server: ", server)
+
+		lastServerSwitchT = Framework:getTicks()
+	end
+
 	lastCurrentServer = currentServer
 
 	currentServer = server
@@ -141,10 +180,32 @@ function _serverstatusSink(self, event, err)
 		return
 	end
 
-	-- remember players from server
-	local serverPlayers = data.players_loop
-	data.players_loop = nil
+	-- remember players from server, avoid possibly inaccurate player information that can happen in race conditions when SlimProto socket disconnection is not
+	 -- registered yet when the serverstatus response occurs
+	local now = Framework:getTicks()
+	local serverPlayers = nil
+	if lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME < now then
+		--after SERVER_DISCONNECT_LAG_TIME, no need to consider locallyRequestedServers in the bad server player data check
+		locallyRequestedServers = {}
+	end
+	if data.players_loop then
+		serverPlayers = {}
+
+		for _, player_info in ipairs(data.players_loop) do
+			if ((#locallyRequestedServers > 0 and not table.contains(locallyRequestedServers, self)) or (#locallyRequestedServers == 0 and self ~= currentServer))
+			  and tonumber(player_info.connected) == 1
+			  and Player:getCurrentPlayer() and player_info.playerid == Player:getCurrentPlayer().id
+			  and lastServerSwitchT and lastServerSwitchT + SERVER_DISCONNECT_LAG_TIME > now then
+				--SlimProto disconnects can take several seconds to "take", during which time a disconnected player might still be in the serverstatus list
+				log:info("Ignoring potentially inaccurate player data for current player in serverstatus from other servers (excluding any locally requested server) until SERVER_DISCONNECT_LAG_TIME passes: server:", self)
+			else
+				table.insert(serverPlayers, player_info)
+			end
+		end
+	end
 	
+	data.players_loop = nil
+
 	-- remember our state
 	local selfState = self.state
 	
@@ -174,8 +235,8 @@ function _serverstatusSink(self, event, err)
 		selfPlayers[k] = k
 	end
 
-	self.pin = nil
-	
+	local pin = false
+
 	if tonumber(data["player count"]) > 0 then
 
 		for i, player_info in ipairs(serverPlayers) do
@@ -183,7 +244,7 @@ function _serverstatusSink(self, event, err)
 			local playerId = player_info.playerid
 
 			if player_info.pin then
-				self.pin = player_info.pin
+				pin = player_info.pin
 			end
 
 			-- remove the player from our list since it is reported by the server
@@ -195,12 +256,28 @@ function _serverstatusSink(self, event, err)
 			end
 
 			-- update player state
-			self.players[playerId]:updatePlayerInfo(self, player_info)
+
+			local useSequenceNumber = false
+			local isSequenceNumberInSync = true
+			if self.players[playerId]:isLocal() and player_info.seq_no then
+				useSequenceNumber = true
+				if not self.players[playerId]:isSequenceNumberInSync(tonumber(player_info.seq_no)) then
+					isSequenceNumberInSync = false
+				end
+			end
+
+			self.players[playerId]:updatePlayerInfo(self, player_info, useSequenceNumber, isSequenceNumberInSync)
 		end
 	else
-		log:info(self, ": has no players!")
+		log:debug(self, ": has no players!")
 	end
-	
+
+	--pin check here also used by non SN to know when first serverstatus for new server is complete
+	if self.pin ~= pin then
+		self.pin = pin
+		self.jnt:notify('serverLinked', self)
+	end
+
 	-- any players still in the list are gone...
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
@@ -210,6 +287,36 @@ function _serverstatusSink(self, event, err)
 	end
 	
 end
+
+
+function _upgradeSink(self, chunk, err)
+	local url
+
+	if err then
+		log:warn("Error in upgrade sink: ", err)
+		return
+	end
+
+	-- store firmware upgrade url
+	-- Bug 6828, use a relative URL from SC to handle dual-homed servers
+	if chunk.data.relativeFirmwareUrl then
+		url = 'http://' .. self.ip .. ':' .. self.port .. chunk.data.relativeFirmwareUrl
+	elseif chunk.data.firmwareUrl then
+		url = chunk.data.firmwareUrl
+	end
+
+	local oldUpgradeUrl = self.upgradeUrl
+
+	self.upgradeUrl = url
+	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
+
+	log:info(self.name, " firmware=", self.upgradeUrl, " force=", self.upgradeForce)
+
+	if oldUpgradeUrl ~= self.upgradeUrl then
+		self.jnt:notify('firmwareAvailable', self)
+	end
+end
+
 
 -- package private method to delete a player
 function _deletePlayer(self, player)
@@ -223,10 +330,12 @@ end
 
 
 -- can be called as a object or class method
-function setCredentials(self, cred, name)
-	if not name then
+function setCredentials(self, cred, id)
+	if not id then
 		-- object method
-		name = self:getName()
+		id = self:getId()
+
+		self.authFailureCount = 0
 
 		SocketHttp:setCredentials({
 			ipport = { self:getIpPort() },
@@ -236,16 +345,16 @@ function setCredentials(self, cred, name)
 		})
 
 		-- force re-connection
-		self:connect()
+		self:reconnect()
 	end
 
-	credentials[name] = cred
+	credentials[id] = cred
 end
 
 
 --[[
 
-=head2 jive.slim.SlimServer(jnt, ip, name)
+=head2 jive.slim.SlimServer(jnt, ip, name, version)
 
 Create a SlimServer object at IP address I<ip> with name I<name>. Once created, the
 object will immediately connect to slimserver to discover players and other attributes
@@ -253,18 +362,18 @@ of the server.
 
 =cut
 --]]
-function __init(self, jnt, name)
+function __init(self, jnt, id, name, version)
 	-- Only create one server object per server. This avoids duplicates
 	-- following a server disconnect.
 
-	if serverIds[name] then
-		return serverIds[name]
+	if serverIds[id] then
+		return serverIds[id]
 	end
 
-	log:debug("SlimServer:__init(", name, ")")
+	log:debug("SlimServer:__init(", name, ")", " ", id)
 
 	local obj = oo.rawnew(self, {
-		id = name,
+		id = id,
 		name = name,
 		jnt = jnt,
 
@@ -275,6 +384,10 @@ function __init(self, jnt, name)
 
 		-- data from SqueezeCenter
 		state = {},
+
+		-- firmware upgrade url
+		upgradeUrl = false,
+		upgradeForce = false,
 
 		-- players
 		players = {},
@@ -310,6 +423,8 @@ function __init(self, jnt, name)
 		imageCache = {},
 	})
 
+	obj.state.version = version
+
 	-- subscribe to server status, max 50 players every 60 seconds.
 	-- FIXME: what if the server has more than 50 players?
 	obj.comet:aggressiveReconnect(true)
@@ -318,6 +433,25 @@ function __init(self, jnt, name)
 		nil,
 		{ 'serverstatus', 0, 50, 'subscribe:60' }
 	)
+
+	local inSetup = jnt.inSetupHack and 1 or 0
+
+	local machine = System:getMachine()
+	-- this is not relevant to desktop SP
+	if machine ~= 'squeezeplay' then
+		obj.comet:subscribe('/slim/firmwarestatus',
+			_getSink(obj, '_upgradeSink'),
+			nil,
+			{
+				'firmwareupgrade',
+				'firmwareVersion:' .. JIVE_VERSION,
+				'inSetup:' .. tostring(inSetup),
+				'machine:' .. machine,
+				'subscribe:0'
+			}
+		)
+	end
+
 
 	setmetatable(obj.imageCache, { __mode = "kv" })
 
@@ -359,15 +493,15 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:updateAddress(ip, port)
+=head2 jive.slim.SlimServer:updateAddress(ip, port, name)
 
 Called to update (or initially set) the ip address and port for SqueezeCenter
 
 =cut
 --]]
-function updateAddress(self, ip, port)
-	if self.ip ~= ip or self.port ~= port then
-		log:info(self, ": address set to ", ip , ":", port, " netstate=", self.netstate)
+function updateAddress(self, ip, port, name)
+	if self.ip ~= ip or self.port ~= port or self.name ~= name then
+		log:debug(self, ": address set to ", ip , ":", port, " netstate=", self.netstate, " name: ", name)
 
 		local oldstate = self.netstate
 
@@ -377,10 +511,14 @@ function updateAddress(self, ip, port)
 		-- open new comet connection
 		self.ip = ip
 		self.port = port
+		if name then
+			self.name = name
+		end
 
 		-- http authentication
-		local cred = credentials[self.name]
+		local cred = credentials[self.id]
 		if cred then
+			self.authFailureCount = 0
 			SocketHttp:setCredentials({
 				ipport = { ip, port },
 				realm = cred.realm,
@@ -389,10 +527,12 @@ function updateAddress(self, ip, port)
 			})
 		end
 
-		-- artwork http pool
-		self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
+		if not self:isSqueezeNetwork() then
+			-- artwork http pool
+			self.artworkPool = HttpPool(self.jnt, self.name, ip, port, 2, 1, Task.PRIORITY_LOW)
+		end
 
-		-- commet
+		-- comet
 		self.comet:setEndpoint(ip, port, '/cometd')
 
 		-- reconnect, if we were already connected
@@ -445,6 +585,11 @@ function free(self)
 	end
 	self.players = {}
 
+	self.upgradeUrl = false
+	self.upgradeForce = false
+
+	self.appParameters = {}
+
 	-- server is no longer active
 	serverList[self.id] = nil
 
@@ -459,7 +604,7 @@ function wakeOnLan(self)
 		return
 	end
 
-	log:info("Sending WOL to ", self.mac)
+	log:debug("Sending WOL to ", self.mac)
 
 	-- send WOL packet to SqueezeCenter
 	local wol = WakeOnLan(self.jnt)
@@ -478,15 +623,33 @@ function connect(self)
 		return
 	end
 
-	log:info(self, ":connect")
+	log:debug(self, ":connect")
 
 	assert(self.comet)
-	assert(self.artworkPool)
+
+	self.authFailureCount = 0
+
+	if not self:isSqueezeNetwork() then
+		assert(self.artworkPool)
+	end
 
 	self.netstate = 'connecting'
 
 	-- artwork pool connects on demand
 	self.comet:connect()
+end
+
+
+function _disconnectServerInternals(self)
+
+	self.netstate = 'disconnected'
+
+	if not self:isSqueezeNetwork() then
+		self.artworkPool:close()
+	end
+	
+	self.comet:disconnect()
+
 end
 
 
@@ -496,21 +659,24 @@ function disconnect(self)
 		return
 	end
 
-	log:info(self, ":disconnect")
+	log:debug(self, ":disconnect")
 
-	self.netstate = 'disconnected'
-
-	self.artworkPool:close()
-	self.comet:disconnect()
+	self:_disconnectServerInternals()
 end
 
 
 -- force reconnection to SqueezeCenter
 function reconnect(self)
-	log:info(self, ":reconnect")
+	log:debug(self, ":reconnect")
 
 	self:disconnect()
 	self:connect()
+end
+
+
+-- if >0, disconnect from server idleTimeout seconds after the most recent request
+function setIdleTimeout(self, idleTimeout)
+	self.comet:setIdleTimeout(idleTimeout)
 end
 
 
@@ -520,52 +686,73 @@ function notify_cometConnected(self, comet)
 		return
 	end
 
-	log:info(self, " connected")
+	log:info("connected ", self.name)
 
 	self.netstate = 'connected'
 	self.jnt:notify('serverConnected', self)
 
-    -- auto discovery SqueezeCenter's mac address
-    self.jnt:arp(self.ip,
-             function(chunk, err)
-                 if err then
-                     log:info("arp: " .. err)
-                 else
-                     self.mac = chunk
-                 end
-             end)
+	self.authFailureCount = 0
+
+	-- auto discovery SqueezeCenter's mac address
+ 	self.jnt:arp(self.ip, function(chunk, err)
+		if err then
+			log:debug("arp: " .. err)
+		else
+			self.mac = chunk
+		end
+	end)
 end
 
 -- comet is disconnected from SC
-function notify_cometDisconnected(self, comet)
+function notify_cometDisconnected(self, comet, idleTimeoutTriggered)
 	if self.comet ~= comet then
 		return
 	end
 
-	if self.netstate == 'connected' then
-		log:info(self, " disconnected")
+	log:info("disconnected ", self.name, " idleTimeoutTriggered: ", idleTimeoutTriggered)
 
-		self.netstate = 'connecting'
+	if idleTimeoutTriggered then
+		log:info("idle disconnected ", self.name)
+		--disconnect self - normally self triggers a clean comet disconnect during self:disconnect, except in the idleDisconnect case
+		self:_disconnectServerInternals()
+	else
+		if self.netstate == 'connected' then
+			log:debug(self, " disconnected")
+
+			self.netstate = 'connecting'
+		end
 	end
 
 	-- always send the notification
 	self.jnt:notify('serverDisconnected', self, #self.userRequests)
 end
 
-
 -- comet http error
 function notify_cometHttpError(self, comet, cometRequest)
 	if cometRequest:t_getResponseStatus() == 401 then
+
 		local authenticate = cometRequest:t_getResponseHeader("WWW-Authenticate")
 
 		self.realm = string.match(authenticate, 'Basic realm="(.*)"')
+		if not self:isConnected() then
+			if not self.authFailureCount then
+				self.authFailureCount = 0
+			end
+			if self.authFailureCount > 0 then
+				--don't count first auth error as a failure, to allow challenge to complete
+				log:info("failed auth. Count: ", self.authFailureCount, " server: ", self, " state: ", self.netstate)
+				self.jnt:notify('serverAuthFailed', self, self.authFailureCount)
+
+			end
+			self.authFailureCount = self.authFailureCount + 1
+		end
 	end
 end
 
 
 -- Returns true if the server is SqueezeNetwork
 function isSqueezeNetwork(self)
-	return self.name == "SqueezeNetwork"
+	return self.name == "mysqueezebox.com"
 end
 
 
@@ -573,12 +760,37 @@ end
 
 =head2 jive.slim.SlimServer:getPin()
 
-Returns the PIN for SqueezeNetwork, if it needs to be registered
+Returns the PIN for SqueezeNetwork, if it needs to be registered. Returns
+nil if the state is unknown, or false if the player is already linked.
 
 =cut
 --]]
 function getPin(self)
 	return self.pin
+end
+
+
+--todo clean up usage of pin for linked and isSpRegisteredWithSn
+-- If the SN comet connection returns a client id starting with "1x", SP is not registered with it.
+function isSpRegisteredWithSn(self)
+	if not self.comet then
+		log:info("not registered: no comet")
+		return nil
+	end
+	if not self.comet.clientId then
+		log:info("not registered: no clientId")
+		return nil
+	end
+
+	if self.comet.clientId and  string.sub(self.comet.clientId, 1, 2) == "1X" then
+		log:debug("not registered: ", self.comet.clientId)
+
+		return false
+	end
+
+	log:debug("registered: ", self.comet.clientId)
+
+	return true
 end
 
 
@@ -592,7 +804,7 @@ Called once the server or player are linked on SqueezeNetwork.
 --]]
 function linked(self, pin)
 	if self.pin == pin then
-		self.pin = nil
+		self.pin = false
 	end
 
 	for id, player in pairs(self.players) do
@@ -616,12 +828,16 @@ local function _loadArtworkImage(self, cacheKey, chunk, size)
 		return nil
 	end
 
+	-- parse size specification for width and height if in format <W>x<H>
+	local sizeW = string.match(size, "(%d+)x%d+") or size
+	local sizeH = string.match(size, "%d+x(%d+)") or size
+
 	-- Resize image
 	-- Note this allows for artwork to be resized to a larger
 	-- size than the original.  This is intentional so smaller cover
 	-- art will still fill the space properly on the Now Playing screen
-	if w ~= size and h ~= size then
-		image = image:rotozoom(0, size / w, 1)
+	if w ~= sizeW and h ~= sizeH then
+		image = image:rotozoom(0, sizeW / w, 1)
 		if logcache:isDebug() then
 			local wnew, hnew = image:getSize()
 			logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)
@@ -637,7 +853,7 @@ end
 
 -- _getArworkThumbSink
 -- returns a sink for artwork so we can cache it as Surface before sending it forward
-local function _getArtworkThumbSink(self, cacheKey, size)
+local function _getArtworkThumbSink(self, cacheKey, size, url)
 
 	assert(size)
 	
@@ -651,11 +867,11 @@ local function _getArtworkThumbSink(self, cacheKey, size)
 
 		-- on error, print something...
 		if err then
-			logcache:error("_getArtworkThumbSink(", iconId, ", ", size, ") error: ", err)
+			logcache:error("_getArtworkThumbSink(", url, ") error: ", err)
 		end
 		-- if we have data
 		if chunk then
-			logcache:debug("_getArtworkThumbSink(", iconId, ", ", size, ")")
+			logcache:debug("_getArtworkThumbSink(", url, ", ", size, ")")
 
 			-- store the compressed artwork in the cache
 			self.artworkCache:set(cacheKey, chunk)
@@ -683,18 +899,14 @@ function processArtworkQueue(self)
 
 			--log:debug("ARTWORK ID=", entry.key)
 			local req = RequestHttp(
-				_getArtworkThumbSink(self, entry.key, entry.size),
+				_getArtworkThumbSink(self, entry.key, entry.size, entry.url),
 				'GET',
 				entry.url
 			)
 
 			self.artworkFetchCount = self.artworkFetchCount + 1
 
-
-			if entry.id then
-				-- slimserver icon id
-				self.artworkPool:queue(req)
-			else
+			if string.find(entry.url, "^http") then
 				-- image from remote server
 
 				-- XXXX manage pool of connections to remote server
@@ -702,6 +914,12 @@ function processArtworkQueue(self)
 				local http = SocketHttp(self.jnt, uri.host, uri.port, uri.host)
  
 				http:fetch(req)
+			elseif self.artworkPool then
+				-- slimserver icon id
+				self.artworkPool:queue(req)
+			else
+				log:error("Server ", self.name, " cannot handle artwork for ", entry.url)
+				self.artworkFetchCount = self.artworkFetchCount - 1
 			end
 
 			-- try again
@@ -716,7 +934,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:artworkThumbCached(iconId, size)
+=head2 jive.slim.SlimServer:artworkThumbCached(iconId, size, imgFormat)
 
 Returns true if artwork for iconId and size are in the cache.  This may be used to decide
 whether to display the thumb straight away or wait before fetching it.
@@ -725,8 +943,8 @@ whether to display the thumb straight away or wait before fetching it.
 
 --]]
 
-function artworkThumbCached(self, iconId, size)
-	local cacheKey = iconId .. "@" .. (size)
+function artworkThumbCached(self, iconId, size, imgFormat)
+	local cacheKey = iconId .. "@" .. size .. "/" .. (imgFormat or '')	
 	if self.artworkCache:get(cacheKey) then
 		return true
 	else
@@ -784,7 +1002,7 @@ end
 
 --[[
 
-=head2 jive.slim.SlimServer:fetchArtworkThumb(iconId, icon, size, imgFormat)
+=head2 jive.slim.SlimServer:fetchArtwork(iconId, icon, size, imgFormat)
 
 The SlimServer object maintains an artwork cache. This function either loads from the cache or
 gets from the network the thumb for I<iconId>. A L<jive.ui.Surface> is used to perform
@@ -793,61 +1011,14 @@ argument to control the image format.
 
 =cut
 --]]
-function fetchArtworkThumb(self, iconId, icon, size, imgFormat)
-	logcache:debug(self, ":fetchArtworkThumb(", iconId, ")")
+function fetchArtwork(self, iconId, icon, size, imgFormat)
+	logcache:debug(self, ":fetchArtwork(", iconId, ", ", size, ", ", imgFormat, ")")
 
 	assert(size)
 
-	-- we want jpg if it wasn't specified
-	if not imgFormat then
-		imgFormat = 'jpg'
-	end
+	local cacheKey = iconId .. "@" .. size .. "/" .. (imgFormat or '')
 
-	local cacheKey = iconId .. "@" .. size
-
-	-- request SqueezeCenter resizes the thumbnail, use 'o' for
-	-- original aspect ratio
-	local resizeFrag = '_' .. size .. 'x' .. size .. '_o'
-
-	local url
-	if string.match(iconId, "^%d+$") then
-		-- if the iconId is a number, this is cover art
-		url = '/music/' .. iconId .. '/cover' .. resizeFrag .. "." .. imgFormat
-	else
-		url = string.gsub(iconId, "(%a+)(%.%a+)", "%1" .. resizeFrag .. "%2")
-
-		if not string.find(url, "^/") then
-			-- Bug 7123, Add a leading slash if needed
-			url = "/" .. url
-		end
-	end
-
-	return _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
-end
-
---[[
-
-=head2 jive.slim.SlimServer:fetchArtworkURL(url, icon, size)
-
-Same as fetchArtworkThumb except it fetches the artwork from a remote URL.
-This method is in the SlimServer class so it can reuse the other artwork code.
-
-=cut
---]]
-function fetchArtworkURL(self, url, icon, size)
-	logcache:debug(self, ":fetchArtworkURL(", url, ")")
-
-	assert(size)
-	local cacheKey = url .. "@" .. size
-
-	return _fetchArtworkURL(self, icon, nil, size, cacheKey, url)
-end
-
-
--- common parts of fetchArtworkThumb and fetchArtworkURL
-function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
-
-	-- do we have an image cached
+	-- do we have an image already cached?
 	local image = self.imageCache[cacheKey]
 	if image then
 		logcache:debug("..image in cache")
@@ -867,8 +1038,8 @@ function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 			return
 		end
 	end
-
-	-- or do is the compressed artwork cached
+	
+	-- or is the compressed artwork cached?
 	local artwork = self.artworkCache:get(cacheKey)
 	if artwork then
 		if artwork == true then
@@ -889,7 +1060,38 @@ function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 		end
 	end
 
-	-- no luck, generate a request for the artwork
+	-- parse size specification for width and height if in format <W>x<H>
+	local sizeW = string.match(size, "(%d+)x%d+") or size
+	local sizeH = string.match(size, "%d+x(%d+)") or size
+
+	-- request SqueezeCenter resizes the thumbnail, use 'm' for
+	-- original aspect ratio
+	local resizeFrag = '_' .. sizeW .. 'x' .. sizeH .. '_m'
+
+	local url
+	if string.match(iconId, "^%d+$") then
+		-- if the iconId is a number, this is cover art
+		url = '/music/' .. iconId .. '/cover' .. resizeFrag
+		if imgFormat then
+		 	url = url .. "." .. imgFormat
+		end
+	else
+		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
+		if string.find(iconId, "^http") then
+			url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. sizeW .. '&h=' .. sizeH .. '&f=' .. (imgFormat or '') .. '&u=' .. string.urlEncode(iconId)
+		else
+			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
+
+			if not string.find(url, "^/") then
+				-- Bug 7123, Add a leading slash if needed
+				url = "/" .. url
+			end
+		end
+		
+		logcache:debug(self, ":fetchArtwork(", iconId, " => ", url, ")")
+	end
+
+	-- generate a request for the artwork
 	self.artworkCache:set(cacheKey, true)
 	if icon then
 		icon:setValue(nil)
@@ -907,6 +1109,32 @@ function _fetchArtworkURL(self, icon, iconId, size, cacheKey, url)
 	self.artworkFetchTask:addTask()
 end
 
+function getAppParameters(self, appType)
+	if not self.appParameters then
+		return nil
+	end
+
+	if not self.appParameters[appType] then
+		return nil
+	end
+
+	return self.appParameters[appType]
+end
+
+--set a app specific parameter, such as the iconId for facebook
+function setAppParameter(self, appType, parameter, value)
+	log:debug("Setting ", appType, " parameter ", parameter , " to: ", value)
+	
+	if not self.appParameters then
+		self.appParameters = {}
+	end
+
+	if not self.appParameters[appType] then
+		self.appParameters[appType] = {}
+	end
+
+	self.appParameters[appType][parameter] = value
+end
 
 --[[
 
@@ -937,6 +1165,37 @@ function getVersion(self)
 end
 
 
+-- return true if the server is compatible with this controller, false
+-- if an upgrade is needed, or nil if the server version is not currently
+-- known.
+function isCompatible(self)
+	if self:isSqueezeNetwork() then
+		return true
+	end
+
+	if not self.state.version then
+		return nil
+	end
+
+	local serVer = string.split("%.", self.state.version)
+	local minVer = string.split("%.", minimumVersion)
+
+	for i,v in ipairs(serVer) do
+		if minVer[i] and v < minVer[i] then
+			return false
+		end
+	end
+
+	return true
+end
+
+
+-- class method to set the minimum useable server version
+function setMinimumVersion(class, minVersion)
+	minimumVersion = minVersion
+end
+
+
 --[[
 
 =head2 jive.slim.SlimServer:getIpPort()
@@ -960,6 +1219,19 @@ Returns the server name
 --]]
 function getName(self)
 	return self.name
+end
+
+
+--[[
+
+=head2 jive.slim.SlimServer:getId()
+
+Returns the server id
+
+=cut
+--]]
+function getId(self)
+	return self.id
 end
 
 
@@ -1002,6 +1274,12 @@ function isPasswordProtected(self)
 end
 
 
+-- returns upgrade url and force flag
+function getUpgradeUrl(self)
+	return self.upgradeUrl, self.upgradeForce
+end
+
+
 --[[
 
 =head2 jive.slim.SlimServer:allPlayers()
@@ -1033,7 +1311,7 @@ function userRequest(self, func, ...)
 	local req = { func, ... }
 	table.insert(self.userRequests, req)
 
-	self.comet:request(
+	req.cometRequestId = self.comet:request(
 		function(...)
 			table.delete(self.userRequests, req)
 			if func then
@@ -1041,6 +1319,19 @@ function userRequest(self, func, ...)
 			end
 		end,
 		...)
+end
+
+--different from cancel since the callback would still return if the response was pending, so this is currently only
+--useful if the connection is down and we don't want our request(s) fulfilled on reconnection
+function removeAllUserRequests(self)
+	for _,request in ipairs(self.userRequests) do
+		if not self.comet:removeRequest(request.cometRequestId) then
+			log:warn("Couldn't remove request: ")
+			debug.dump(request)
+		end
+	end
+
+	self.userRequests = {}
 end
 
 

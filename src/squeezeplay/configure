@@ -875,8 +875,11 @@ LIBTOOL
 SDL_CONFIG
 SDL_CFLAGS
 SDL_LIBS
+ALSA_ENABLED_TRUE
+ALSA_ENABLED_FALSE
 TEST_PROGRAMS_TRUE
 TEST_PROGRAMS_FALSE
+SPPRIVATE_LIB
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -1485,6 +1488,10 @@ Optional Features:
   --enable-portaudio      enable portaudio [ default=yes]
   --disable-alsa          disable alsa [default=yes]
   --enable-tests          Compile test programs
+  --enable-screen-rotation
+                          Enable the screen rotation [default=no]
+  --enable-fsync-workaround
+                          Enable workaround for broken fsync [default=no]
   --enable-profiling      generate profiling code
 
 Optional Packages:
@@ -4397,7 +4404,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 4400 "configure"' > conftest.$ac_ext
+  echo '#line 4407 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7455,11 +7462,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7458: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7465: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7462: \$? = $ac_status" >&5
+   echo "$as_me:7469: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7745,11 +7752,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7748: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7755: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7752: \$? = $ac_status" >&5
+   echo "$as_me:7759: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7849,11 +7856,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7852: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7859: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7856: \$? = $ac_status" >&5
+   echo "$as_me:7863: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10226,7 +10233,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10229 "configure"
+#line 10236 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10326,7 +10333,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10329 "configure"
+#line 10336 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12727,11 +12734,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12730: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12737: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12734: \$? = $ac_status" >&5
+   echo "$as_me:12741: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12831,11 +12838,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12834: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12841: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12838: \$? = $ac_status" >&5
+   echo "$as_me:12845: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14429,11 +14436,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14432: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14439: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14436: \$? = $ac_status" >&5
+   echo "$as_me:14443: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14533,11 +14540,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14536: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14543: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14540: \$? = $ac_status" >&5
+   echo "$as_me:14547: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16753,11 +16760,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16756: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16763: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16760: \$? = $ac_status" >&5
+   echo "$as_me:16767: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17043,11 +17050,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17046: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17053: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:17050: \$? = $ac_status" >&5
+   echo "$as_me:17057: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -17147,11 +17154,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:17150: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:17157: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:17154: \$? = $ac_status" >&5
+   echo "$as_me:17161: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -20560,6 +20567,16 @@ fi
 fi
 
 
+
+if test "x$enable_alsa" = "xyes"; then
+  ALSA_ENABLED_TRUE=
+  ALSA_ENABLED_FALSE='#'
+else
+  ALSA_ENABLED_TRUE='#'
+  ALSA_ENABLED_FALSE=
+fi
+
+
 # Checks for header files.
 { echo "$as_me:$LINENO: checking for ANSI C header files" >&5
 echo $ECHO_N "checking for ANSI C header files... $ECHO_C" >&6; }
@@ -20745,7 +20762,10 @@ fi
 
 
 
-for ac_header in fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/socket.h unistd.h netdb.h arpa/inet.h
+
+
+
+for ac_header in dirent.h fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h sys/shm.h sys/socket.h sys/utsname.h unistd.h netdb.h arpa/inet.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if { as_var=$as_ac_Header; eval "test \"\${$as_var+set}\" = set"; }; then
@@ -21244,7 +21264,11 @@ _ACEOF
 
 
 
-for ac_func in malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair
+
+
+
+
+for ac_func in malloc calloc clock_gettime fsync realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt inet_aton socketpair syslog uname
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 { echo "$as_me:$LINENO: checking for $ac_func" >&5
@@ -21366,6 +21390,7 @@ fi
 
 
 
+
 # This is what autoupdate's m4 run will expand.  It fires
 # the warning (with _au_warn_XXX), outputs it into the
 # updated configure.ac (with AC_DIAGNOSE), and then outputs
@@ -21399,7 +21424,7 @@ cat >>confdefs.h <<\_ACEOF
 #define WITH_SPPRIVATE 1
 _ACEOF
 
-  LIBS="$LIBS -lspprivate"
+  SPPRIVATE_LIB="-lspprivate"
 else
   { echo "$as_me:$LINENO: result: no" >&5
 echo "${ECHO_T}no" >&6; }
@@ -21410,6 +21435,37 @@ echo "${ECHO_T}no" >&6; }
 fi
 
 
+
+
+# Check whether --enable-screen_rotation was given.
+if test "${enable_screen_rotation+set}" = set; then
+  enableval=$enable_screen_rotation;
+else
+  enable_screen_rotation=no
+fi
+
+if test x$enable_screen_rotation == xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define SCREEN_ROTATION_ENABLED 1
+_ACEOF
+
+fi
+
+# Check whether --enable-fsync_workaround was given.
+if test "${enable_fsync_workaround+set}" = set; then
+  enableval=$enable_fsync_workaround;
+else
+  enable_fsync_workaround=no
+fi
+
+if test x$enable_fsync_workaround == xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define FSYNC_WORKAROUND_ENABLED 1
+_ACEOF
+
+fi
 
 
 
@@ -21479,9 +21535,10 @@ echo "${ECHO_T}${enable_profiling-no}" >&6; }
 
 if test x"$GCC" = x"yes"
 then
-	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter"
+	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-unused-function"
 fi
 
+CFLAGS="$CFLAGS -DSQUEEZEPLAY"
 
 test -n "$profile" && CFLAGS="$CFLAGS $profile" LDFLAGS="$LDFLAGS $profile"
 
@@ -21601,6 +21658,13 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCXX\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${ALSA_ENABLED_TRUE}" && test -z "${ALSA_ENABLED_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"ALSA_ENABLED\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"ALSA_ENABLED\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -22289,13 +22353,16 @@ LIBTOOL!$LIBTOOL$ac_delim
 SDL_CONFIG!$SDL_CONFIG$ac_delim
 SDL_CFLAGS!$SDL_CFLAGS$ac_delim
 SDL_LIBS!$SDL_LIBS$ac_delim
+ALSA_ENABLED_TRUE!$ALSA_ENABLED_TRUE$ac_delim
+ALSA_ENABLED_FALSE!$ALSA_ENABLED_FALSE$ac_delim
 TEST_PROGRAMS_TRUE!$TEST_PROGRAMS_TRUE$ac_delim
 TEST_PROGRAMS_FALSE!$TEST_PROGRAMS_FALSE$ac_delim
+SPPRIVATE_LIB!$SPPRIVATE_LIB$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 13; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 16; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

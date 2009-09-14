@@ -2,6 +2,21 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
+APP_GUIDE
+	CS	Aplikační galerie
+	DA	Programgalleri
+	DE	Anwendungsgalerie
+	EN	App Gallery
+	ES	Galería de aplicaciones
+	FI	Sovellusvalikoima
+	FR	Diaporama d'applications
+	IT	Galleria applicazioni
+	NL	Toep.gallerie
+	NO	Tjenesteliste
+	PL	Galeria aplikacji
+	RU	Галерея приложений
+	SV	Applikationsgalleri
+
 CUSTOMIZE_HOME
 	CS	Výchozí menu
 	DA	Hovedmenu
@@ -16,21 +31,6 @@ CUSTOMIZE_HOME
 	PL	Menu główne
 	RU	Главное меню
 	SV	Hem-meny
-
-CUSTOMIZE_HIDDEN
-	CS	Skrytý
-	DA	Skjult
-	DE	Versteckt
-	EN	Hidden
-	ES	Oculto
-	FI	Piilotettu
-	FR	Masqué
-	IT	Nascosto
-	NL	Verborgen
-	NO	Skjult
-	PL	Ukryte
-	RU	Скрыто
-	SV	Dold
 
 CUSTOMIZE_RESTORE_DEFAULTS
 	CS	Obnovit výchozí

@@ -138,6 +138,18 @@ int jiveL_window_iterate(lua_State *L) {
 	lua_getfield(L, 1, "zWidgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
+		if (jive_getmethod(L, -1, "isHidden")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 1);
+
+			if (lua_toboolean(L, -1)) {
+				lua_pop(L, 2);
+				continue;
+			}
+
+			lua_pop(L, 1);
+		}
+
 		lua_pushvalue(L, 2);
 		lua_pushvalue(L, -2);
 		lua_call(L, 1, 1);
@@ -155,7 +167,7 @@ int jiveL_window_iterate(lua_State *L) {
 static int draw_closure(lua_State *L) {
 	Uint32 t0 = 0, t1 = 0;
 
-	if (perfwarn.draw) t0 = SDL_GetTicks();
+	if (perfwarn.draw) t0 = jive_jiffies();
 
 	if (jive_getmethod(L, 1, "draw")) {
 		lua_pushvalue(L, 1); // widget
@@ -165,7 +177,7 @@ static int draw_closure(lua_State *L) {
 	}
 
 	if (perfwarn.draw) {
-		t1 = SDL_GetTicks();
+		t1 = jive_jiffies();
 		if (t1 - t0 > perfwarn.draw) {
 			lua_getglobal(L, "tostring");
 			lua_pushvalue(L, 1);

@@ -8,10 +8,14 @@ local string        = require("jive.utils.string")
 local Framework     = require("jive.ui.Framework")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
+local Icon          = require("jive.ui.Icon")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
+local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
+local EVENT_WINDOW_ACTIVE         = jive.ui.EVENT_WINDOW_ACTIVE
+local EVENT_WINDOW_INACTIVE       = jive.ui.EVENT_WINDOW_INACTIVE
+local EVENT_UNUSED                = jive.ui.EVENT_UNUSED
 
 -- our class
 module(..., oo.class)
@@ -44,7 +48,7 @@ end
 -- create a new menu
 function __init(self, name, style, titleStyle)
 	local obj = oo.rawnew(self, {
-		window = Window(style or "window", name, titleStyle),
+		window = Window(style or "home_menu", name),
 		windowTitle = name,
 		menuTable = {},
 		nodeTable = {},
@@ -52,7 +56,7 @@ function __init(self, name, style, titleStyle)
 		customNodes = {},
 	})
 
-	local menu = SimpleMenu("splitmenu")
+	local menu = SimpleMenu("menu")
 	menu:setComparator(SimpleMenu.itemComparatorComplexWeightAlpha)
 
 	-- home menu is not closeable
@@ -66,6 +70,33 @@ function __init(self, name, style, titleStyle)
 	
 	--Avoid inadvertantly quitting the app.
 	obj.window:addActionListener("back", obj, bumpAction)
+
+
+	-- power button, delayed display so that "back back back power" is avoided (if power button is selected as home press
+	obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
+
+	obj.window:addListener( EVENT_WINDOW_ACTIVE,
+				function()
+					--only do timer when we know "home press" is power (still might be missing from INACTIVE handling if shortcuts changed recently) 
+					if Framework:getActionToActionTranslation("home_title_left_press") == "power" then
+						obj.window:addTimer(    1000,
+									function ()
+										obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
+									end,
+									true)
+					else
+						obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
+					end
+					return EVENT_UNUSED
+				end)
+
+	obj.window:addListener( EVENT_WINDOW_INACTIVE,
+				function()
+					if Framework:getActionToActionTranslation("home_title_left_press") == "power" then
+						obj.window:setButtonAction("lbutton", nil)
+					end
+					return EVENT_UNUSED
+				end)
 
 	return obj
 end
@@ -95,7 +126,7 @@ function getComplexWeight(self, id, item)
 	if self.menuTable[id]['node'] == 'home' then
 		return item.weight
 	elseif self.menuTable[id]['node'] == 'hidden' then
-		return 100
+		return self.menuTable[id].hiddenWeight and self.menuTable[id].hiddenWeight or 100
 	else
 		local nodeItem = self.menuTable[id]['node']
 		if not self.menuTable[nodeItem] then
@@ -173,6 +204,10 @@ function _changeNode(self, id, node)
 	end
 end
 
+function exists(self, id)
+	return self.menuTable[id] ~= nil
+end
+
 function addNode(self, item)
 
 	if not item or not item.id or not item.node then
@@ -187,6 +222,9 @@ function addNode(self, item)
 		item.weight = 100
 	end
 
+	if item.iconStyle then
+		item.icon = Icon(item.iconStyle)
+	end
 	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
 		self.menuTable[item.id].text = item.text
@@ -200,12 +238,22 @@ function addNode(self, item)
 	end
 
 	local window
+	-- FIXME: this if clause is mostly for mini icon support, which is either going obsolete
+	-- or will need to be implemented differently after the skin reorg effort
+	--[[
 	if item.window and item.window.titleStyle then
-		window = Window("window", item.text, item.window.titleStyle .. "title")
+		window = Window("text_list", item.text, item.window.titleStyle .. "title")
 	elseif item.titleStyle then
-		window = Window("window", item.text, item.titleStyle .. "title")
+		window = Window("text_list", item.text, item.titleStyle .. "title")
 	else
-		window = Window("window", item.text)
+		window = Window("text_list", item.text)
+	end
+	--]]
+
+	if item.windowStyle then
+		window = Window(item.windowStyle, item.text)
+	else
+		window = Window("home_menu", item.text)
 	end
 
 	local menuStyle = 'menu'
@@ -224,7 +272,7 @@ function addNode(self, item)
 	}
 
 	if not item.callback then
-		item.callback = function () 
+		item.callback = function ()
 			window:setTitle(item.text)
 			window:show()
 		end
@@ -269,7 +317,10 @@ function addItem(self, item)
 	assert(item.id)
 	assert(item.node)
 
-	if not item.weight then 
+	if item.iconStyle then
+		item.icon = Icon(item.iconStyle)
+	end
+	if not item.weight then
 		item.weight = 100
 	end
 
@@ -380,6 +431,20 @@ function removeItem(self, item)
 
 end
 
+
+function openNodeById(self, id, resetSelection)
+	if self.nodeTable[id] then
+		if resetSelection then
+			self.nodeTable[id].menu:setSelectedIndex(1)
+		end
+		self.nodeTable[id].item.callback()
+		return true
+	else
+		return false
+	end
+end
+
+
 function enableItem(self, item)
 	
 end
@@ -425,7 +490,9 @@ end
 
 -- lock an item in the menu
 function lockItem(self, item, ...)
-	if self.nodeTable[item.node] then
+	if self.customNodes[item.id] then
+		self.nodeTable[self.customNodes[item.id]].menu:lock(...)
+	elseif self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:lock(...)
 	end
 end
@@ -433,7 +500,9 @@ end
 
 -- unlock an item in the menu
 function unlockItem(self, item)
-	if self.nodeTable[item.node] then
+	if self.customNodes[item.id] then
+		self.nodeTable[self.customNodes[item.id]].menu:unlock()
+	elseif self.nodeTable[item.node] then
 		self.nodeTable[item.node].menu:unlock()
 	end
 end

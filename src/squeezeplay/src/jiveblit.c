@@ -210,7 +210,7 @@ int main(int argc, char *args[]) {
 
 	/* small image (with alpha) */
 	printf("Small image (with alpha):\n");
-	img = loadImage("/usr/share/jive/applets/DefaultSkin/images/icon_battery_charging.png", 1);
+	img = loadImage("/usr/share/jive/applets/QVGAbaseSkin/images/icon_battery_charging.png", 1);
 	timedBlit(srf, img);
 
 

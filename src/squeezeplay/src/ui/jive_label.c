@@ -7,12 +7,14 @@
 #include "common.h"
 #include "jive.h"
 
-#define SCROLL_FPS	7
-#define SCROLL_OFFSET	6
+
+/* actual FPS will only run as a fraction of JIVE_FRAME_RATE */
+#define SCROLL_FPS	JIVE_FRAME_RATE / 2
+#define SCROLL_OFFSET	5
 
 #define SCROLL_PAD_RIGHT  40
-#define SCROLL_PAD_LEFT   -20
-#define SCROLL_PAD_START  -60
+#define SCROLL_PAD_LEFT   -200
+#define SCROLL_PAD_START  -100
 
 
 typedef struct label_line {
@@ -122,7 +124,9 @@ static void prepare(lua_State *L) {
 	int max_width = 0;
 	int total_height = 0;
 	size_t num_lines = 0;
-	const char *str, *ptr;
+	const char *str, *ptr, *nptr;
+	char *tmp;
+	Uint32 c;
 
 	peer = jive_getpeer(L, 1, &labelPeerMeta);
 
@@ -133,6 +137,17 @@ static void prepare(lua_State *L) {
 	/* split multi-line text */
 	lua_getglobal(L, "tostring");
 	lua_getfield(L, 1, "value");
+
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+
+		/* use text from skin if no value */
+		lua_pushcfunction(L, jiveL_style_value);
+		lua_pushvalue(L, 1);
+		lua_pushstring(L, "text");
+		lua_pushstring(L, "");
+		lua_call(L, 3, 1);
+	}
 	lua_call(L, 1, 1);
 
 	ptr = str = lua_tostring(L, -1);
@@ -141,18 +156,22 @@ static void prepare(lua_State *L) {
 		return;
 	}
 
+	tmp = alloca(strlen(ptr) + 1);
+
 	do {
-		char *tmp;
 		LabelLine *line;
 		JiveFont *font;
 		Uint32 fg, sh;
 		bool is_sh;
+		size_t len;
 
 		/* find line ending */
-		/* FIXME correct utf8 handling! */
-		if (*ptr != '\0' && *ptr != '\n' && *ptr != '\r') {
-			continue;
+		c = utf8_get_char(ptr, &nptr);
+		while (c != '\0' && c != '\n' && c != '\r') {
+			ptr = nptr;
+			c = utf8_get_char(ptr, &nptr);
 		}
+		len = nptr - str - 1;
 
 		peer->num_lines = num_lines + 1;
 		peer->line = realloc(peer->line, peer->num_lines * sizeof(LabelLine));
@@ -184,14 +203,11 @@ static void prepare(lua_State *L) {
 		line = &peer->line[num_lines++];
 
 		/* shadow and foreground text */
-		//tmp = strndup(str, ptr - str);
-		tmp = malloc(ptr - str + 1);
-		strncpy(tmp, str, ptr - str + 1);
-		tmp[ptr - str] = '\0';
+		strncpy(tmp, str, len);
+		tmp[len] = '\0';
 
 		line->text_sh = is_sh ? jive_font_draw_text(font, sh, tmp) : NULL;
 		line->text_fg = jive_font_draw_text(font, fg, tmp);
-		free(tmp);
 
 		/* label dimensions */
 		jive_surface_get_size(line->text_fg, &width, NULL);
@@ -202,11 +218,13 @@ static void prepare(lua_State *L) {
 		line->textOffset = offset;
 
 		/* skip white space */
-		while (*ptr == '\n' || *ptr == '\r' || *ptr == ' ') {
-			ptr++;
+		while (c == '\n' || c == '\r' || c == ' ') {
+			ptr = nptr;
+			c = utf8_get_char(ptr, &nptr);
 		}
+
 		str = ptr;
-	} while (*ptr++ != '\0');
+	} while (c != '\0');
 
 	/* text width and height */
 	peer->text_h = total_height;
@@ -272,6 +290,9 @@ int jiveL_label_do_animate(lua_State *L) {
 		peer->scroll_offset = SCROLL_PAD_LEFT;
 	}
 
+	if (peer->scroll_offset < 0) {
+		return 0;
+	}
 	jive_getmethod(L, 1, "reDraw");
 	lua_pushvalue(L, 1);
 	lua_call(L, 1, 0);
@@ -356,6 +377,7 @@ int jiveL_label_draw(lua_State *L) {
 
 		jive_surface_get_size(line->text_fg, &w, &h);
 
+	
 		/* second text when scrolling */
 		o = (peer->scroll_offset < 0) ? 0 : peer->scroll_offset;
 		if (w < peer->label_w) {

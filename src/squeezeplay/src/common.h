@@ -19,12 +19,20 @@
 #include <direct.h>
 #endif
 
+#ifdef HAVE_DIRENT_H
+#include "dirent.h"
+#endif
+
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 
 #ifdef HAVE_LIBGEN_H
 #include <libgen.h>
+#endif
+
+#ifdef HAVE_LIBPTHREAD
+#include <pthread.h>
 #endif
 
 #ifdef HAVE_STDLIB_H
@@ -43,8 +51,16 @@
 #include <sys/time.h>
 #endif
 
+#ifdef HAVE_SYS_SHM_H
+#include <sys/shm.h>
+#endif
+
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
+
+#ifdef HAVE_SYS_UTSNAME_H
+#include <sys/utsname.h>
 #endif
 
 #ifdef HAVE_UNISTD_H
@@ -90,8 +106,29 @@ typedef _W64 int   ssize_t;
 #include "lauxlib.h"
 #include "tolua++.h"
 
-#include "debug.h"
+#include "log.h"
 #include "types.h"
+
+/* utilities */
+extern int squeezeplay_find_file(const char *path, char *fullpath);
+
+/* watchdog */
+int watchdog_get();
+int watchdog_keepalive(int watchdog_id, int count);
+
+/* time */
+#if HAVE_CLOCK_GETTIME
+static inline u32_t jive_jiffies(void)
+{
+	struct timespec now;
+
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	return (now.tv_sec*1000)+(now.tv_nsec/1000000);
+}
+#else
+#define jive_jiffies() SDL_GetTicks()
+#endif
+
 
 #if WITH_DMALLOC
 #include <dmalloc.h>

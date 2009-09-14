@@ -25,14 +25,17 @@ local oo                     = require("loop.simple")
 local math                   = require("math")
 local string                 = require("string")
 local table                  = require("jive.utils.table")
+local debug                  = require("jive.utils.debug")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 local Checkbox               = require("jive.ui.Checkbox")
 local Choice                 = require("jive.ui.Choice")
 local Framework              = require("jive.ui.Framework")
+local Event                  = require("jive.ui.Event")
 local Icon                   = require("jive.ui.Icon")
 local Label                  = require("jive.ui.Label")
+local Button                 = require("jive.ui.Button")
 local Popup                  = require("jive.ui.Popup")
 local Group                  = require("jive.ui.Group")
 local RadioButton            = require("jive.ui.RadioButton")
@@ -43,9 +46,10 @@ local Surface                = require("jive.ui.Surface")
 local Textarea               = require("jive.ui.Textarea")
 local Textinput              = require("jive.ui.Textinput")
 local Window                 = require("jive.ui.Window")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 local Timer                  = require("jive.ui.Timer")
+local Keyboard               = require("jive.ui.Keyboard")
 
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local appletManager = appletManager
 
 
@@ -62,6 +66,51 @@ function menu(self, menuItem)
 	-- Menu	
 	local menu = SimpleMenu("menu",
 		{
+			{ text = "SN registration",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+				end },
+			{ text = "SN playerReset",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'playerReset', 0, 100, 'service:SN' })
+				end },
+			{ text = "Context Menu Nav",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmTopWindow()
+				end },
+			{ text = "Button Menu",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:menuWindow(menuItem, 'button')
+				end 
+			},
+			{ text = "Keyboard lowercase input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'qwerty')
+				end
+			},
+			{ text = "Keyboard hex input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'hex')
+				end
+			},
+			{ text = "Keyboard numeric input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'numeric')
+				end
+			},
+			{ text = "Keyboard special char input",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:keyboardWindow(menuItem, 'chars')
+				end
+			},
 			{ text = "Text input",
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
@@ -76,7 +125,8 @@ function menu(self, menuItem)
 			},
 			{ 
 				text = "Choice, and some more text so that this item scrolls.", 
-				icon = Choice(
+				style = 'item_choice',
+				check = Choice(
 				       "choice", 
 				       { "Off", "Low", "Medium", "High" },
 				       function(obj, selectedIndex)
@@ -91,7 +141,8 @@ function menu(self, menuItem)
 			},
 			{
 				text = "RadioButton 1, and some more text so that this item scrolls", 
-				icon = RadioButton(
+				style = 'item_choice',
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -102,7 +153,8 @@ function menu(self, menuItem)
 			},
 			{
 				text = "RadioButton 2", 
-				icon = RadioButton(
+				style = 'item_choice',
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -112,7 +164,8 @@ function menu(self, menuItem)
 			},
 			{
 				text = "RadioButton 3", 
-				icon = RadioButton(
+				style = 'item_choice',
+				check = RadioButton(
 					"radio", 
 					group, 
 					function()
@@ -122,7 +175,8 @@ function menu(self, menuItem)
 			},
 			{
 				text = "Checkbox", 
-				icon = Checkbox(
+				style = 'item_choice',
+				check = Checkbox(
 					"checkbox",
 					function(object, isSelected)
 						log:info("checkbox updated: ", isSelected)
@@ -212,7 +266,7 @@ function menu(self, menuItem)
 				end },
 		})
 
-	local window = Window("window", "Test") -- is a really long title to test the bounding box")
+	local window = Window("text_list", "Test") -- is a really long title to test the bounding box")
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -220,8 +274,105 @@ function menu(self, menuItem)
 end
 
 
+function cmTopWindow(self, title)
+	local window = ContextMenuWindow( "More")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Subcontext " .. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "SN registration",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+				appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' })
+				end })
+	menu:addItem({ text = "leave context ",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Subcontext ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+
+	window:addWidget(menu)
+
+
+	self:tieAndShowWindow(window)
+end
+
+function cmWindow(self, title)
+	local window = ContextMenuWindow( "More")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Textarea " .. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "leave context ",
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmRegularFinishWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+	menu:addItem({ text = "Textarea ".. title,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+					self:cmWindow(#Framework.windowStack)
+				end })
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+end
+
+function cmRegularFinishWindow(self, title)
+	local window = Window("menu", "Somewhere else")
+
+	local menu = SimpleMenu("menu")
+	title = title or "top"
+	menu:addItem({ text = "Textarea " .. title})
+	self:tieAndShowWindow(window)
+end
+
+
 function sortedMenuWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
 
@@ -252,15 +403,22 @@ function sortedMenuWindow(self, menuItem)
 	return window
 end
 
-
-function menuWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
-	local menu = SimpleMenu("menu")
+function menuWindow(self, menuItem, style)
+	local itemStyle, menuStyle
+	if not style then
+		menuStyle = 'menu'
+		itemStyle = 'item'
+	else
+		menuStyle = style .. "menu"
+		itemStyle = style .. "item"
+	end
+	local window = Window("text_list", menuItem.text)
+	local menu = SimpleMenu(menuStyle)
 	window:addWidget(menu)
 
 	local items = {}
 	for i=1,2000 do
-		items[#items + 1] = { text = "Artist " .. i }
+		items[#items + 1] = { text = "Artist " .. i, style = itemStyle  }
 	end
 
 	menu:setItems(items)
@@ -272,20 +430,20 @@ end
 
 function textWindow(self, menuItem, filename)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	filename = System:findFile(filename)
 	local fh = io.open(filename, "rb")
 	if fh == nil then
 		-- FIXME error dialog
-		window:addWidget(Textarea("textarea", "Cannot load text " .. filename))
+		window:addWidget(Textarea("text", "Cannot load text " .. filename))
 		return window
 	end
 
 	local text = fh:read("*all")
 	fh:close()
 
-	local textarea = Textarea("textarea", text)
+	local textarea = Textarea("text", text)
 
 	window:addWidget(textarea)
 
@@ -296,7 +454,7 @@ end
 
 function sliderWindow(self, menuItem)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local slider = Slider("slider", 1, 20, 5,
 		function(slider, value, done)
@@ -308,7 +466,7 @@ function sliderWindow(self, menuItem)
 			end
 		end)
 
-	local help = Textarea("help", "We can add some help text here.\n\nThis screen is for testing the slider.")
+	local help = Textarea("help_text", "We can add some help text here.\n\nThis screen is for testing the slider.")
 
 	window:addWidget(help)
 	window:addWidget(slider)
@@ -319,10 +477,10 @@ end
 
 
 function errorWindow(self)
-	local window = Popup("errorWindow", "Error Message")
+	local window = Window("error", "Error Message")
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", "A description of the error. This may be several lines long.")
+	local textarea = Textarea("text", "A description of the error. This may be several lines long.")
 
 	local menu = SimpleMenu("menu",
 				{
@@ -350,10 +508,34 @@ function errorWindow(self)
 	return window
 end
 
+function keyboardWindow(self, menuItem, style)
+
+	local window = Window("text_list", menuItem.text)
+
+	local v = Textinput.textValue("", 8, 20)
+
+	local textinput = Textinput("textinput", v,
+		function(_, value)
+			log:warn("Input ", value)
+
+			window:playSound("WINDOWSHOW")
+			window:hide(Window.transitionPushLeft)
+			return true
+		end)
+	local backspace = Keyboard.backspace()
+        local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
+
+        window:addWidget(group)
+	window:addWidget(Keyboard('keyboard', style, textinput))
+	window:focusWidget(group)
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function textinputWindow(self, menuItem)
 
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 --	local v = Textinput.textValue("A test string which is so long it goes past the end of the window", 8)
 	local v = Textinput.textValue("", 8, 10)
@@ -378,7 +560,7 @@ end
 
 
 function timeinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.timeValue("00:00")
 	local input = Textinput("textinput", v,
@@ -390,7 +572,7 @@ function timeinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of Time (24h)")
+	local help = Textarea("help_text", "Input of Time (24h)")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -400,7 +582,7 @@ function timeinputWindow(self, menuItem)
 end
 
 function hexinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
 	local v = Textinput.hexValue("000000000000")
 	local input = Textinput("textinput", v,
@@ -412,7 +594,7 @@ function hexinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of HEX numbers.")
+	local help = Textarea("help_text", "Input of HEX numbers.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -423,9 +605,9 @@ end
 
 
 function ipinputWindow(self, menuItem)
-	local window = Window("window", menuItem.text)
+	local window = Window("text_list", menuItem.text)
 
-	local v = Textinput.ipAddressValue("0.0.0.0")
+	local v = Textinput.ipAddressValue("")
 	local input = Textinput("textinput", v,
 				function(_, value)
 					log:warn("Input " .. value:getValue())
@@ -435,7 +617,7 @@ function ipinputWindow(self, menuItem)
 					return true
 				end)
 
-	local help = Textarea("help", "Input of IP addresses.")
+	local help = Textarea("help_text", "Input of IP addresses.")
 
 	window:addWidget(help)
 	window:addWidget(input)
@@ -446,15 +628,15 @@ end
 
 
 function lockedScreen(self, menuItem)
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
         popup:setAllowScreensaver(false)
         popup:setAlwaysOnTop(true)
         popup:setAutoHide(false)
 
-        popup:addWidget(Icon("iconLocked"))
+        popup:addWidget(Icon("icon_locked"))
         popup:addWidget(Label("text", "Locked"))
-	popup:addWidget(Textarea("lockedHelp", 'To unlock press the ADD and PLAY buttons at the same time.'))
+	popup:addWidget(Textarea("help_text", 'To unlock press the ADD and PLAY buttons at the same time.'))
 
 	popup:addTimer(10000, function()
 			       popup:hide()
@@ -466,14 +648,14 @@ end
 
 function downloadingSoftware(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
 	popup:setTransparent(false)
 
 	--FIXME, this window does not layout correctly (Bug 5412)
-	local icon = Icon("iconConnecting")
-	local text = Label("text", "\nDownloading Firmware")
-	local label = Label("text", "0%")
+	local icon = Icon("icon_connecting")
+	local text = Label("text", "Downloading Firmware")
+	local label = Label("subtext", "0%")
 
 	popup:addWidget(label)
 	popup:addWidget(icon)
@@ -495,7 +677,7 @@ function downloadingSoftware(self, menuItem)
 				       elseif state == 6 then
 					       label:setValue("74%")
 				       elseif state == 7 then
-					       icon:setStyle("iconConnected")
+					       icon:setStyle("icon_connected")
 					       label:setValue("100%")
 						text:setValue("\nDownloading Complete!")
 				       else
@@ -515,13 +697,15 @@ end
 
 function ignoreAllInputPopup(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
-	local icon = Icon("iconConnecting")
-	local label = Label("text", "All input is ignored, except:\n'soft_reset', 'back', 'go'")
+	local icon = Icon("icon_connecting")
+	local label = Label("text", "All input is ignored, except:")
+	local sublabel = Label('subtext', "'soft_reset', 'back', 'go'")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
+	popup:addWidget(sublabel)
 
 	-- disable input
 	popup:ignoreAllInputExcept({"go", "back"})
@@ -536,24 +720,26 @@ end
 
 function connectingPopup(self, menuItem)
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
-	local icon = Icon("iconConnecting")
-	local label = Label("text", "")
+	local icon = Icon("icon_connecting")
+	local label = Label("text", "Connecting to")
+	local label2 = Label("subtext", "Ficticious Network")
 
 	popup:addWidget(icon)
 	popup:addWidget(label)
-
+	popup:addWidget(label2)
 
 	local state = 1
 	popup:addTimer(4000, function()
 				       if state == 1 then
-					       label:setValue("\na long test string!")
+					       label:setValue("a long test string!")
 				       elseif state == 2 then
-					       label:setValue("\na very very very long test string!")
+					       label:setValue("a very very very long test string!")
 				       elseif state == 3 then
-					       icon:setStyle("iconConnected")
-					       label:setValue("Connected to\na test string!")
+						icon:setStyle("icon_connected")
+						label:setValue("Connected to")
+						label2:setStyle('subtext_connected')
 				       else
 					       popup:hide()
 				       end
@@ -567,12 +753,12 @@ end
 
 function imageWindow(self, menuItem, filename)
 
-	local window = Window("window")
+	local window = Window("text_list")
 
 	local image = Surface:loadImage(filename)
 	if image == nil then
 		-- FIXME error dialog
-		window:addWidget(Textarea("textarea", "Cannot load image " .. filename))
+		window:addWidget(Textarea("text", "Cannot load image " .. filename))
 		return window
 	end
 
@@ -591,7 +777,7 @@ function imageWindow(self, menuItem, filename)
 	end
 	log:debug("w = " .. w .. " h = " .. h)
 	
-	window:addWidget(Icon("image", image))
+	window:addWidget(Icon("icon", image))
 
 	-- by default close popup on keypress
 	window:hideOnAllButtonInput()
@@ -602,8 +788,8 @@ end
 
 
 function timerTestWindow(self, instead)
-	local popup = Popup("popupIcon")
-	local icon = Icon("iconConnecting")
+	local popup = Popup("waiting_popup")
+	local icon = Icon("icon_connecting")
 	local label = Label("text", "Timer test 1")
 
 	popup:addWidget(icon)
@@ -623,8 +809,8 @@ end
 
 
 function timerTestWindow2(self)
-	local window = Popup("popupIcon")
-	local icon = Icon("iconConnected")
+	local window = Popup("waiting_popup")
+	local icon = Icon("icon_connected")
 	local label = Label("text", "Timer test 2")
 
 	window:addWidget(icon)

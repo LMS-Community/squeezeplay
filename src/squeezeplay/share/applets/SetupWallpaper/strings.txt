@@ -1,6 +1,13 @@
 #
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+# NOTE: this strings.txt file is a bit special, in that it provides
+# strings for not only squeezeplay/share/applets/SetupWallpaper, but
+# for the platform-specific wallpapers found in 
+# squeezeplay_fab4/share/applets/SetupWallpaper/wallpaper/
+# squeezeplay_jive/share/applets/SetupWallpaper/wallpaper/
+# etc.
 
 WALLPAPER
 	CS	Wallpaper (Tapeta)
@@ -47,95 +54,20 @@ WALLPAPER_HELP_NO_PLAYER
 	RU	Выберите фоновый рисунок экрана, отображаемый по умолчанию
 	SV	Välj standardbakgrund för skärmen
 
-CREDITS
-	CS	Uznání
-	DA	Tak til
-	DE	Mitwirkende
-	EN	Credits
-	ES	Créditos
-	FI	Tekijät
-	FR	Crédits
-	IT	Riconoscimenti
-	NL	Credits
-	NO	Bidragsytere
-	PL	Autorzy
-	RU	Разработчики
-	SV	Erkännanden
-
-CREATIVE_COMMONS
-	CS	Pro obrázky na pozadí platí licence Creative Commons Attribution. Viz http://creativecommons.org/licenses/by/3.0/.
-	DA	Baggrundsbillederne er underlagt en licens fra Creative Commons Attribution. Se http://creativecommons.org/licenses/by/3.0/.
-	DE	Die Hintergrundbilder unterliegen einer "Creative Commons Attribution"-Lizenz (siehe http://creativecommons.org/licenses/by/3.0/).
-	EN	The background images are under a Creative Commons Attribution license. See http://creativecommons.org/licenses/by/3.0/.
-	ES	Imágenes de fondo con licencia Creative Commons Attribution. Consulte http://creativecommons.org/licenses/by/3.0/.
-	FI	Taustakuvat kuuluvat Creative Commons Attribution -käyttöoikeusluvan alaisuuteen. Katso http://creativecommons.org/licenses/by/3.0/.
-	FR	Les images d'arrière-plan sont sous licence Creative Commons. Voir http://creativecommons.org/licenses/by/3.0/.
-	IT	Le immagini degli sfondi sono concesse in licenza da Creative Commons Attribution. Vedere http://creativecommons.org/licenses/by/3.0/.
-	NL	De achtergrondafbeeldingen zijn onderhevig aan een Creative Commons Attribution-licentie. Zie http://creativecommons.org/licenses/by/3.0/.
-	NO	Bakgrunnsbildene er underlagt en Creative Commons navngivelseslisens. Se http://creativecommons.org/licenses/by/3.0/.
-	PL	Obrazy tła podlegają licencji Creative Commons Attribution. Zobacz http://creativecommons.org/licenses/by/3.0/.
-	RU	Фоновые изображения предоставляются на условиях лицензии Creative Commons. См. http://creativecommons.org/licenses/by/3.0/.
-	SV	För bakgrundsbilderna gäller en Creative Commons-licens av typen Erkännande. Se http://creativecommons.org/licenses/by/3.0/.
-
-CREDITS_BY
-	CS	Foto:
-	DA	Billeder af:
-	DE	Bilder von:
-	EN	Pictures by:
-	ES	Imágenes de:
-	FI	Kuvaaja:
-	FR	Images de:
-	IT	Immagini di:
-	NL	Foto's door:
-	NO	Bilder av:
-	PL	Obrazy według:
-	RU	Рисунки от:
-	SV	Bilder av:
-
-CONCRETE
-	CS	Beton
-	DA	Cement
-	DE	Beton
-	EN	Concrete
-	ES	Hormigón
-	FI	Betoni
-	FR	Béton
-	IT	Cemento
-	NL	Beton
-	NO	Betong
-	PL	Beton
-	RU	Бетон
-	SV	Betong
-
-MIDNIGHT
-	CS	Půlnoc
-	DA	Midnat
-	DE	Mitternacht
-	EN	Midnight
-	ES	Medianoche
-	FI	Keskiyö
-	FR	Minuit
-	IT	Mezzanotte
-	NL	Middernacht
-	NO	Midnatt
-	PL	Północ
-	RU	Полночь
-	SV	Midnatt
-
-PEA
-	CS	Hrášek
-	DA	Ært
-	DE	Erbse
-	EN	Pea
-	ES	Guisante
-	FI	Herne
-	FR	Poire
-	IT	Pisello
-	NL	Doperwt
-	NO	Ert
-	PL	Groszek
-	RU	Горошек
-	SV	Ärta
+ALLEGRO
+	CS	Allegro
+	DA	Allegro
+	DE	Allegro
+	EN	Allegro
+	ES	Allegro
+	FI	Allegro
+	FR	Allegro
+	IT	Allegro
+	NL	Allegro
+	NO	Allegro
+	PL	Allegro
+	RU	Аллегро
+	SV	Allegro
 
 BLACK
 	CS	Černá
@@ -148,247 +80,127 @@ BLACK
 	IT	Nero
 	NL	Zwart
 	NO	Svart
-	PL	Kolor czarny
+	PL	Czarny
 	RU	Черный
 	SV	Svart
 
-STONE
-	CS	Kámen
-	DA	Sten
-	DE	Stein
-	EN	Stone
-	ES	Piedra
-	FI	Kivi
-	FR	Pierre
-	IT	Pietra
-	NL	Steen
-	NO	Stein
-	PL	Kamień
-	RU	Камень
-	SV	Sten
+ENCORE
+	CS	Přídavek
+	DA	Ekstranummer
+	DE	Encore
+	EN	Encore
+	ES	Bis
+	FI	Ylimääräinen numero
+	FR	Bis
+	IT	Encore
+	NL	Encore
+	NO	Dakapo
+	PL	Bis
+	RU	На бис
+	SV	Dakapo
 
-DUNES
-	CS	Duny
-	DA	Klitter
-	DE	Dünen
-	EN	Dunes
-	ES	Dunas
-	FI	Dyynit
-	FR	Dunes
-	IT	Dune
-	NL	Duinen
-	NO	Sanddyner
-	PL	Wydmy
-	RU	Дюны
-	SV	Sanddyner
+ENCORERED
+	CS	Encore červená
+	DA	Rødt igen
+	DE	Encore Red
+	EN	Encore Red
+	ES	Más rojo
+	FI	Encore-punainen
+	FR	Bis rouge
+	IT	Encore Red
+	NL	Encore Red
+	NO	Dakapo, rødt
+	PL	Czerwony
+	RU	Encore (красный)
+	SV	Dakaporöd
 
-IRIS
-	CS	Tulipán
-	DA	Tulipan
-	DE	Tulpe
-	EN	Tulip
-	ES	Tulipán
-	FI	Tulppaani
-	FR	Tulipe
-	IT	Tulipano
-	NL	Tulp
-	NO	Tulipan
-	PL	Tulipan
-	RU	Тюльпан
-	SV	Tulpan
+HARMONY
+	CS	Harmonie
+	DA	Harmoni
+	DE	Harmony
+	EN	Harmony
+	ES	Armonía
+	FI	Harmonia
+	FR	Harmonie
+	IT	Armonia
+	NL	Harmony
+	NO	Harmoni
+	PL	Harmonia
+	RU	Harmony
+	SV	Harmony
 
-SMOKE
-	CS	Dým
-	DA	Røg
-	DE	Rauch
-	EN	Smoke
-	ES	Humo
-	FI	Savu
-	FR	Fumée
-	IT	Fumo
-	NL	Rook
-	NO	Røyk
-	PL	Dym
-	RU	Дым
-	SV	Rök
+NOCTURNE
+	CS	Nokturno
+	DA	Nocturne
+	DE	Nocturne
+	EN	Nocturne
+	ES	Nocturno
+	FI	Nokturni
+	FR	Nocturne
+	IT	Notturno
+	NL	Nocturne
+	NO	Nokturne
+	PL	Nokturn
+	RU	Ноктюрн
+	SV	Nocturne
 
-AMBER
-	CS	Oranžová
-	DA	Rav
-	DE	Bernstein
-	EN	Amber
-	ES	Ámbar
-	FI	Keltainen
-	FR	Ambre
-	IT	Ambra
-	NL	Amber
-	NO	Gul
-	PL	Bursztynowy
-	RU	Янтарно-желтый
-	SV	Bärnsten
+QUARTET
+	CS	Kvartet
+	DA	Kvartet
+	DE	Quartet
+	EN	Quartet
+	ES	Cuarteto
+	FI	Kvartetti
+	FR	Quartet
+	IT	Quartetto
+	NL	Kwartet
+	NO	Kvartett
+	PL	Kwartet
+	RU	Квартет
+	SV	Kvartett
 
-FLAME
-	CS	Plamen
-	DA	Flamme
-	DE	Flamme
-	EN	Flame
-	ES	Llama
-	FI	Liekki
-	FR	Flamme
-	IT	Fiamma
-	NL	Vlam
-	NO	Flamme
-	PL	Płomień
-	RU	Пламя
-	SV	Flamma
+SONATA
+	CS	Sonáta
+	DA	Sonate
+	DE	Sonata
+	EN	Sonata
+	ES	Sonata
+	FI	Sonaatti
+	FR	Sonate
+	IT	Sonata
+	NL	Sonate
+	NO	Sonate
+	PL	Sonata
+	RU	Соната
+	SV	Sonat
 
-GRAFFITI
-	CS	Graffiti
-	DA	Graffiti
-	DE	Graffiti
-	EN	Graffiti
-	ES	Graffiti
-	FI	Graffiti
-	FR	Graffiti
-	IT	Graffiti
-	NL	Graffiti
-	NO	Graffiti
-	PL	Graffiti
-	RU	Граффити
-	SV	Graffiti
+SYMPHONY
+	CS	Symfonie
+	DA	Symfoni
+	DE	Symphony
+	EN	Symphony
+	ES	Sinfonía
+	FI	Sinfonia
+	FR	Symphonie
+	IT	Sinfonia
+	NL	Symfonie
+	NO	Symfoni
+	PL	Symfonia
+	RU	Симфония
+	SV	Symfoni
 
-WEATHERED_WOOD
-	CS	Zvětralé dřevo
-	DA	Slidt træ
-	DE	Verwittertes Holz
-	EN	Weathered Wood
-	ES	Madera vieja
-	FI	Säänpieksemä metsä
-	FR	Bois patiné
-	IT	Legno invecchiato
-	NL	Verweerd hout
-	NO	Værbitt treverk
-	PL	Wyblakłe drewno
-	RU	Старое дерево
-	SV	Väderbitet trä
-
-SUNRISE
-	CS	Východ slunce
-	DA	Solopgang
-	DE	Sonnenaufgang
-	EN	Sun Rise
-	ES	Amanecer
-	FI	Auringonnousu
-	FR	Lever de soleil
-	IT	Alba
-	NL	Zonsopgang
-	NO	Soloppgang
-	PL	Wschód słońca
-	RU	Восход
-	SV	Soluppgång
-
-SUNLIGHT
-	CS	Sluneční svit
-	DA	Sollys
-	DE	Sonnenschein
-	EN	Sun Light
-	ES	Sol
-	FI	Auringonvalo
-	FR	Rayon de soleil
-	IT	Luce solare
-	NL	Zonlicht
-	NO	Sollys
-	PL	Światło słoneczne
-	RU	Солнечный свет
-	SV	Solsken
-
-FADETOBLACK
-	CS	Vyblednout do černé
-	DA	Går i sort
-	DE	Ausblenden
-	EN	Fade to Black
-	ES	Fundido a negro
-	FI	Häivytys mustaan
-	FR	Fondu au noir
-	IT	Verso il nero
-	NL	Faden naar zwart
-	NO	Ton til svart
-	PL	Znikanie do czerni
-	RU	Угасание до черного
-	SV	Svarttoning
-
-WEATHEREDRED
-	CS	Vybledlá červená
-	DA	Slidt rød
-	DE	Verwittertes Rot
-	EN	Weathered Red
-	ES	Rojo desgastado
-	FI	Säänpieksemä punainen
-	FR	Rouge patiné
-	IT	Rosso invecchiato
-	NL	Oudrood
-	NO	Værbitt rød
-	PL	Wyblakła czerwień
-	RU	Старый красный
-	SV	Bleknat rött
-
-PURPLENOTE
-	CS	Nachové noty
-	DA	Lilla noter
-	DE	Violette Noten
-	EN	Purple Notes
-	ES	Notas moradas
-	FI	Violetit nuotit
-	FR	Notes violettes
-	IT	Note viola
-	NL	Paarse muzieknoten
-	NO	Lilla noter
-	PL	Fioletowe nuty
-	RU	Пурпурные ноты
-	SV	Lila noter
-
-ORANGEMARBLE
-	CS	Oranžový mramor
-	DA	Orange marmor
-	DE	Orangefarbener Marmor
-	EN	Orange Marble
-	ES	Mármol naranja
-	FI	Oranssi marmori
-	FR	Orange marbré
-	IT	Marmo arancione
-	NL	Oranje marmer
-	NO	Oransje marmor
-	PL	Pomarańczowy marmur
-	RU	Оранжевый мрамор
-	SV	Orange kula
-
-NOTE
-	CS	Poznámky
-	DA	Noter
-	DE	Noten
-	EN	Notes
-	ES	Notas
-	FI	Nuotit
-	FR	Notes
-	IT	Note
-	NL	Muzieknoten
-	NO	Noter
-	PL	Uwagi
-	RU	Примечания
-	SV	Noter
-
-GREENFLOWERS
-	CS	Zelené květiny
-	DA	Grønne blomster
-	DE	Grüne Blumen
-	EN	Green Flowers
-	ES	Flores verdes
-	FI	Vihreitä kukkia
-	FR	Fleurs vertes
-	IT	Fiori verdi
-	NL	Groene bloemen
-	NO	Grønne blomster
-	PL	Zielone kwiaty
-	RU	Зеленые цветы
-	SV	Gröna blommor
+VIBRATO
+	CS	Vibráto
+	DA	Vibrato
+	DE	Vibrato
+	EN	Vibrato
+	ES	Vibrato
+	FI	Vibrato
+	FR	Vibrato
+	IT	Vibrato
+	NL	Vibrato
+	NO	Vibrato
+	PL	Vibrato
+	RU	Вибрато
+	SV	Vibrato
 

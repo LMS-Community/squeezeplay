@@ -4,17 +4,20 @@ local io            = require("io")
 local math          = require("math")
 local string        = require("string")
 local table         = require("jive.utils.table")
+local os            = require("os")
 
+local Decode        = require("squeezeplay.decode")
 local AppletMeta    = require("jive.AppletMeta")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Framework     = require("jive.ui.Framework")
 local System        = require("jive.System")
+local Player        = require("jive.slim.Player")
+local SlimServer        = require("jive.slim.SlimServer")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
+local jive          = jive
 local jnt           = jnt
-
-local log         = require("jive.utils.log").logger("applets.setup")
 
 
 module(...)
@@ -34,8 +37,14 @@ end
 
 
 function registerApplet(meta)
+	-- profile functions, 1 second warn, 10 second die
+	jive.perfhook(1000, 10000)
+
+
 	--disable arp to avoid os calls, which is problematic on windows - popups, vista permissions -  disabling disables WOL functionality
-	jnt:setArpEnabled(false)
+	if string.match(os.getenv("OS") or "", "Windows") then
+		jnt:setArpEnabled(false)
+	end
 
 
 	local settings = meta:getSettings()
@@ -87,20 +96,23 @@ function registerApplet(meta)
 
 	-- Bug 9900
 	-- Use SN test during development
-	jnt:setSNHostname("test.squeezenetwork.com")
+	jnt:setSNHostname("fab4.squeezenetwork.com")
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
-	jiveMain:setDefaultSkin("FullscreenSkin")
+	jiveMain:setDefaultSkin("WQVGAsmallSkin")
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
-
+	-- open audio device
+	Decode:open(settings)
 end
 
 
+--disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player
 function _softResetAction(self, event)
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 	jiveMain:goHome()
 end
 

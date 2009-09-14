@@ -39,13 +39,9 @@ local Process                = require("jive.net.Process")
 local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
 local debug                  = require("jive.utils.debug")
 
-local EVENT_KEY_PRESS        = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD         = jive.ui.EVENT_KEY_HOLD
-local EVENT_CONSUME          = jive.ui.EVENT_CONSUME
-
 local jnt = jnt
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local imgFiles = {}
@@ -121,7 +117,7 @@ function displaySlide(self)
 	local image = Surface:loadImage(imgFiles[self.whichImage])
 
 	local window = Window('window')
-	window:addWidget(Icon("background", image))
+	window:addWidget(Icon("icon", image))
 
 	-- replace the window if it's already there
 	if self.window then

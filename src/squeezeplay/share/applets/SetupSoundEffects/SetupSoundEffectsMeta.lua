@@ -36,13 +36,14 @@ end
 
 
 function defaultSettings(meta)
+	-- Don't modify this default effects volume, instead add a per
+	-- platform attenuation in the Squeezebox<Platform>Meta files.
 	return {
-		_VOLUME = Sample.MAXVOLUME / 3
+		_VOLUME = (Sample.MAXVOLUME / 4) * 3
 	}
 end
 
 function registerApplet(meta)
-
 	-- set volume
 	local settings = meta:getSettings()
 	Sample:setEffectVolume(settings["_VOLUME"])
@@ -51,15 +52,11 @@ function registerApplet(meta)
 	meta:registerService("loadSounds")
 
 	-- add a menu to load us
-	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'advancedSettings', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupSoundEffects', 'settingsAudio', "SOUND_EFFECTS", function(applet, ...) applet:settingsShow(...) end))
+end
 
-	-- The startup sound needs to be played with the minimum
-	-- delay, load and play it first
-	appletManager:callService("loadSounds", "STARTUP")
-	Framework:playSound("STARTUP")
-
-	-- Load all other sounds
-	appletManager:callService("loadSounds", nil) -- nil is default from settingsend
+function configureApplet(meta)
+	appletManager:callService("loadSounds")
 end
 
 

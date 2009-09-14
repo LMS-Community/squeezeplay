@@ -16,40 +16,24 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Surface                = require("jive.ui.Surface")
 local Window                 = require("jive.ui.Window")
 
-local log                    = require("jive.utils.log").addCategory("test", jive.utils.log.DEBUG)
-
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_DOWN   = jive.ui.EVENT_KEY_DOWN
-local EVENT_KEY_UP     = jive.ui.EVENT_KEY_UP
-local ACTION           = jive.ui.ACTION
-
-local KEY_GO		= jive.ui.KEY_GO
-local KEY_UP		= jive.ui.KEY_UP
-local KEY_BACK		= jive.ui.KEY_BACK
-local KEY_LEFT          = jive.ui.KEY_LEFT
-local KEY_RIGHT         = jive.ui.KEY_RIGHT
-local KEY_PLAY		= jive.ui.KEY_PLAY
-
-local FRAME_RATE       = jive.ui.FRAME_RATE
 
 -- One Shots Per Second
-local RATE_OF_FIRE = FRAME_RATE
+local RATE_OF_FIRE = jive.ui.FRAME_RATE
 
 -- Bomb Rate
-local BOMB_RATE = FRAME_RATE / 3
+local BOMB_RATE = jive.ui.FRAME_RATE / 3
 local BOMB_PROP = 0.3
 
 local MAX_INVADERS = 50
-local INVADER_SPAWNRATE = FRAME_RATE - (FRAME_RATE/2)
+local INVADER_SPAWNRATE = jive.ui.FRAME_RATE - (jive.ui.FRAME_RATE/2)
 local INVADER_Y = 23
 
-local UFO_SPAWNRATE = FRAME_RATE * 2
+local UFO_SPAWNRATE = jive.ui.FRAME_RATE * 2
 local UFO_Y = 0
 
 local entity_id = 1
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
@@ -63,7 +47,7 @@ function Ufo:__init(sw, sh, gameplay)
 		UfoSprite = Surface:loadImage("applets/Invaders/ufo.png")
 	end
 
-	obj.sprite = Icon("ufo", UfoSprite)
+	obj.sprite = Icon("icon", UfoSprite)
 	
 	local spritew, spriteh = UfoSprite:getSize()
 	obj.width = spritew
@@ -132,7 +116,7 @@ function Invader:__init(sw, sh, gameplay)
 		InvaderSprite = Surface:loadImage("applets/Invaders/invader.png")
 	end
 	
-	obj.sprite = Icon("invader" .. obj.id, InvaderSprite)
+	obj.sprite = Icon("icon" .. obj.id, InvaderSprite)
 	obj.x = 0
 	obj.y = INVADER_Y
 	obj.direction = 1
@@ -194,7 +178,7 @@ function Shot:__init(sw, sh, gameplay)
 		ShotSprite:filledRectangle(0, 0, SHOT_WIDTH, SHOT_HEIGHT, 0xFF0000FF)
 	end
 
-	obj.sprite = Icon("Shot_" .. obj.id, ShotSprite)
+	obj.sprite = Icon("icon" .. obj.id, ShotSprite)
 
 	obj.gameplay = gameplay
 	obj.x = 0
@@ -262,7 +246,7 @@ function Bomb:__init(sw, sh, gameplay)
 		BombSprite = Surface:loadImage("applets/Invaders/bomb.png")
 	end
 
-	obj.sprite = Icon("Shot_" .. obj.id, BombSprite)
+	obj.sprite = Icon("icon" .. obj.id, BombSprite)
 
 	obj.gameplay = gameplay
 	obj.x = 0
@@ -324,7 +308,7 @@ Player = oo.class()
 function Player:__init(sw, sh, gameplay)
 	local obj = oo.rawnew(self)
 	local img = Surface:loadImage("applets/Invaders/player.png")
-	obj.sprite = Icon("player", img)	
+	obj.sprite = Icon("icon", img)	
 
 	local spritew, spriteh = img:getSize()
 
@@ -415,7 +399,7 @@ function Score:_update()
 		self.sprite:setValue(self.surface)
 	else 
 		-- Add New
-		self.sprite = Icon("score", self.surface)
+		self.sprite = Icon("icon", self.surface)
 		self.window:addWidget(self.sprite)
 		self.sprite:setPosition(self.x, self.y)
 	end
@@ -528,7 +512,7 @@ function Gameplay:removeUfo()
 end
 
 function Gameplay:gameOver()
-	local popup = Popup("popup", "Congratulations!\nYou lost!\n---\nFinal Score: " .. self.score.score)
+	local popup = Popup("waiting_popup", "Congratulations!\nYou lost!\n---\nFinal Score: " .. self.score.score)
 	popup:addListener(ACTION,
 		function(evt)
 			self.window:hideToTop(Window.transitionPushLeft)
@@ -690,7 +674,7 @@ function _window(self, ...)
 	local srf = Surface:newRGBA(w, h)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
 
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	window:addListener(EVENT_SCROLL,
 		function(evt)

@@ -18,7 +18,6 @@ local Textarea               = require("jive.ui.Textarea")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
 local debug                  = require("jive.utils.debug")
 
 local jnt                    = jnt
@@ -38,7 +37,7 @@ end
 
 
 function _enterPin(self, force, server, player, next)
-	local window = Window("window", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
+	local window = Window("help_list", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
 	window:setAllowScreensaver(false)
 
 	local menu = SimpleMenu("menu")
@@ -81,7 +80,7 @@ function _enterPin(self, force, server, player, next)
 						nil)
 		      end)
 
-	window:addWidget(Textarea("help", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
+	menu:setHeaderWidget(Textarea("help_text", self:string("SQUEEZENETWORK_PIN_HELP", jnt:getSNHostname())))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)
@@ -132,10 +131,10 @@ end
 
 
 function displayNotLinked(self)
-	local window = Window("window", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
+	local window = Window("text_list", self:string("SQUEEZENETWORK_PIN_TITLE"), "settingstitle")
 	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", self:string("SQUEEZENETWORK_NOT_LINKED"))
+	local textarea = Textarea("text", self:string("SQUEEZENETWORK_NOT_LINKED"))
 
 	local menu = SimpleMenu("menu",
 				{

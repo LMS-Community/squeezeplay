@@ -31,18 +31,6 @@ local Icon             = require("jive.ui.Icon")
 local Framework        = require("jive.ui.Framework")
 local Audio	       = require("jive.ui.Audio")
 
-local log              = require("jive.utils.log").logger("game.snake")
-
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_DOWN	 = jive.ui.EVENT_KEY_DOWN
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_LEFT         = jive.ui.KEY_LEFT
-local KEY_RIGHT        = jive.ui.KEY_RIGHT
-local KEY_UP           = jive.ui.KEY_UP
-local KEY_DOWN         = jive.ui.KEY_DOWN
-local ACTION           = jive.ui.ACTION
-
 local FRAMERATE        = 5
 local BLOCKSIZE        = 8
 local srf = nil
@@ -55,7 +43,7 @@ local border           = {}
 local red_dots         = {}
 local posX = 0
 local posY = 0
-local direction = KEY_UP
+local direction = jive.ui.KEY_UP
 local score = 0
 local length = 0
 local lives = 3
@@ -78,7 +66,7 @@ local pointSound = Framework:loadSound("applets/Snake/point.wav", 1)
 local crashSound = Framework:loadSound("applets/Snake/crash.wav", 1)
 local labelStatus = nil
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function displayName(self)
@@ -153,7 +141,7 @@ function drawField(self)
 	if labelStatus != nil then
 		labelStatus:setValue(lStatus)
 	else 
-		labelStatus = Icon("lives", lStatus)
+		labelStatus = Icon("icon", lStatus)
 		window:addWidget(labelStatus)
 	end
 
@@ -168,7 +156,7 @@ end
 
 function gameOver()
 	gameover = true
-	local popup = Popup("popup", "\n \nGame over!\n \n \nYour score: " .. score)
+	local popup = Popup("waiting_popup", "\n \nGame over!\n \n \nYour score: " .. score)
 	popup:addListener(ACTION,
 		function(evt)
 			window:hideToTop(Window.transitionPushLeft)
@@ -283,7 +271,7 @@ function _window(self, ...)
 
 	srf = Surface:newRGBA(w, h)
 	srf:filledRectangle(0, 0, w, h, 0x000000FF)
-	self.bg = Icon("background", srf)
+	self.bg = Icon("icon", srf)
 
 	window:addListener(EVENT_KEY_DOWN, 
 		function(evt)

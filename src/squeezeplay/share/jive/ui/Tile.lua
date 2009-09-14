@@ -32,6 +32,10 @@ Create a tile with a fill colour.
 
 Create a tile with a single image, this is repeated to fill the area if required.
 
+=head2 jive.ui.Tile:loadImageData(data, len)
+
+Create a tile using image from I<data> using I<len> bytes. Returns the tile.
+
 =head2 jive.ui.Tile:loadTiles({ p1, p2, p3, p4, p5, ... })
 
 Create a rectangular tile with nine images:

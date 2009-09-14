@@ -4,7 +4,7 @@
 AC_PREREQ(2.59)
 AC_INIT(squeezeplay_squeezeos, 0.1, bugs@slimdevices.com)
 AC_CONFIG_AUX_DIR([config])
-AC_CONFIG_SRCDIR([src/watchdog.c])
+AC_CONFIG_SRCDIR([src/wireless.c])
 AC_CONFIG_HEADER([src/config.h])
 
 dnl Detect the canonical host and target build environment

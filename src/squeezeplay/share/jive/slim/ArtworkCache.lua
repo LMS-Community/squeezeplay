@@ -12,7 +12,7 @@ local os          = require("os")
 local oo          = require("loop.base")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("slimserver.cache")
+local log         = require("jive.utils.log").logger("squeezebox.server.cache")
 
 
 -- ArtworkCache is a base class

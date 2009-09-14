@@ -11,6 +11,7 @@
 typedef struct menu_widget {
 	JiveWidget w;
 
+	Uint16 max_height;
 	Uint16 item_height;
 	bool has_scrollbar;
 
@@ -44,6 +45,7 @@ int jiveL_menu_skin(lua_State *L) {
 
 	/* menu properties */
 	peer->item_height = jive_style_int(L, 1, "itemHeight", 20);
+	peer->max_height = jive_style_int(L, 1, "maxHeight", JIVE_WH_NIL);
 
 	lua_pushinteger(L, peer->item_height);
 	lua_setfield(L, 1, "itemHeight");
@@ -65,7 +67,10 @@ int jiveL_menu_layout(lua_State *L) {
 	Uint16 x, y;
 	Uint16 sx, sy, sw, sh, tmp;
 	JiveInset sborder;
+	Uint16 hwx, hwy, hww, hwh, hwtmp;
+	JiveInset hwborder;
 	int numWidgets, listSize;
+	bool hide_scrollbar;
 
 	peer = jive_getpeer(L, 1, &menuPeerMeta);
 
@@ -87,11 +92,15 @@ int jiveL_menu_layout(lua_State *L) {
 	listSize = lua_tointeger(L, -1);
 	lua_pop(L, 1);
 
-	peer->has_scrollbar = (listSize > numWidgets);
+	lua_getfield(L, 1, "hideScrollbar");
+	hide_scrollbar = lua_toboolean(L, -1);
+	lua_pop(L, 1);
+
+	peer->has_scrollbar = ( (!hide_scrollbar) && (listSize > numWidgets));
 
 	/* measure scrollbar */
 	sw = 0;
-	sh = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
+	sh = peer->w.bounds.h;
 	sborder.left = 0;
 	sborder.top = 0;
 	sborder.right = 0;
@@ -138,8 +147,59 @@ int jiveL_menu_layout(lua_State *L) {
 		sh += sborder.top + sborder.bottom;
 	}
 
-	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left - peer->w.padding.right;
-	sy = peer->w.bounds.y + peer->w.padding.top + sborder.top;
+	sx = peer->w.bounds.x + peer->w.bounds.w - sw + sborder.left;
+	sy = peer->w.bounds.y + sborder.top;
+
+
+	/* measure headerWidget */
+	hww = 0;
+	hwh = peer->w.bounds.h;
+	hwborder.left = 0;
+	hwborder.top = 0;
+	hwborder.right = 0;
+	hwborder.bottom = 0;
+
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		if (jive_getmethod(L, -1, "getPreferredBounds")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+
+			if (!lua_isnil(L, -2)) {
+				hwtmp = lua_tointeger(L, -2);
+				if (hwtmp != JIVE_WH_FILL) {
+					hww = hwtmp;
+				}
+			}
+			if (!lua_isnil(L, -1)) {
+				hwtmp = lua_tointeger(L, -1);
+				if (hwtmp != JIVE_WH_FILL) {
+					hwh = hwtmp;
+				}
+			}
+
+			lua_pop(L, 4);
+		}
+
+		if (jive_getmethod(L, -1, "getBorder")) {
+			lua_pushvalue(L, -2);
+			lua_call(L, 1, 4);
+
+			hwborder.left = lua_tointeger(L, -4);
+			hwborder.top = lua_tointeger(L, -3);
+			hwborder.right = lua_tointeger(L, -2);
+			hwborder.bottom = lua_tointeger(L, -1);
+			lua_pop(L, 4);
+		}
+	}
+	lua_pop(L, 1);
+
+	//todo: fixme: right and bottom are ignored with this code
+	hww += hwborder.left + hwborder.right;
+	hwh += hwborder.top + hwborder.bottom;
+
+	hwx = peer->w.bounds.x + hwborder.left;
+	hwy = peer->w.bounds.y + hwborder.top;
 
 
 	/* position widgets */
@@ -181,6 +241,20 @@ int jiveL_menu_layout(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
+	/* position headerWidget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		if (jive_getmethod(L, -1, "setBounds")) {
+			lua_pushvalue(L, -2);
+			lua_pushinteger(L, hwx);
+			lua_pushinteger(L, hwy);
+			lua_pushinteger(L, hww - hwborder.left - hwborder.right);
+			lua_pushinteger(L, hwh - hwborder.top - hwborder.bottom);
+			lua_call(L, 5, 0);
+		}
+	}
+	lua_pop(L, 1);
+
 	return 0;
 }
 
@@ -211,6 +285,15 @@ int jiveL_menu_iterate(lua_State *L) {
 	}	
 	lua_pop(L, 1);
 
+	/* iterate header widget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1)) {
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, -2);
+		lua_call(L, 1, 0);
+	}
+	lua_pop(L, 1);
+
 	return 0;
 }
 
@@ -226,6 +309,8 @@ int jiveL_menu_draw(lua_State *L) {
 	MenuWidget *peer = jive_getpeer(L, 1, &menuPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
+	Sint16 old_pixel_offset_x, old_pixel_offset_y, new_pixel_offset_y;
+	SDL_Rect old_clip, new_clip;
 
 	lua_getfield(L, 1, "accelKey");
 	accelKey = lua_tostring(L, -1);
@@ -247,6 +332,21 @@ int jiveL_menu_draw(lua_State *L) {
 
 
 	/* draw widgets */
+	jive_surface_get_clip(srf, &old_clip);
+
+	new_clip.x = peer->w.bounds.x;
+	new_clip.y = peer->w.bounds.y;
+	new_clip.w = peer->w.bounds.w;
+	new_clip.h = peer->w.bounds.h;
+	jive_surface_set_clip(srf, &new_clip);
+
+	lua_getfield(L, 1, "pixelOffsetY");
+	new_pixel_offset_y = lua_tointeger(L, -1);
+	lua_pop(L, 1);
+
+	jive_surface_get_offset(srf, &old_pixel_offset_x, &old_pixel_offset_y);
+	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y + old_pixel_offset_y);
+
 	lua_getfield(L, 1, "widgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
@@ -261,6 +361,9 @@ int jiveL_menu_draw(lua_State *L) {
 	}
 	lua_pop(L, 1);
 
+	jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
+	jive_surface_set_clip(srf, &old_clip);
+
 	/* draw scrollbar */
 	if (peer->has_scrollbar) {
 		lua_getfield(L, 1, "scrollbar");
@@ -273,7 +376,70 @@ int jiveL_menu_draw(lua_State *L) {
 		lua_pop(L, 1);
 	}
 
+	/* draw header widget */
+	lua_getfield(L, 1, "headerWidget");
+	if (!lua_isnil(L, -1) && jive_getmethod(L, -1, "draw")) {
+		lua_pushvalue(L, -2);
+		lua_pushvalue(L, 2);
+		lua_pushvalue(L, 3);
+		lua_call(L, 3, 0);
+	}
+	lua_pop(L, 1);
+
 	return 0;
+}
+
+
+int jiveL_menu_get_preferred_bounds(lua_State *L) {
+	MenuWidget *peer;
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+	
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		return 0;
+	}
+
+	if (peer->w.preferred_bounds.x == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.x);
+	}
+	if (peer->w.preferred_bounds.y == JIVE_XY_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.y);
+	}
+	if (peer->w.preferred_bounds.w == JIVE_WH_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.w);
+	}
+
+	if (peer->max_height != JIVE_WH_NIL) {
+		/* calculate menu max height using list size */
+		int max_height = INT_MAX;
+
+		lua_getfield(L, 1, "listSize");
+		max_height = lua_tointeger(L, -1) * peer->item_height;
+		lua_pop(L, 1);
+
+		lua_pushinteger(L, MIN(max_height, peer->max_height));
+	}
+	else if (peer->w.preferred_bounds.h == JIVE_WH_NIL) {
+		lua_pushnil(L);
+	}
+	else {
+		lua_pushinteger(L, peer->w.preferred_bounds.h);
+	}
+	return 4;
 }
 
 

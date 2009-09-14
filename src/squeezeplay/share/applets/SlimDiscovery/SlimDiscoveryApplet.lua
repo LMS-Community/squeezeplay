@@ -12,10 +12,13 @@ connected: we are connected to a player, only a connection to our
  SC (or SN) is maintained. udp scanning is still performed in the
  background to update the SqueezeCenter list.
 
-probing: we are connected to a player, but we must probe all SC/SN
+probing_player: we are connected to a player, but we must probe all SC/SN
  update our internal state. this is used for example in the choose
  player screen.
 
+probing_server: we are connected to a player, but we must probe all SC/SN
+ update our internal state. this is used for example in the choose
+ server screen. we do not need to find players via udap or wireless scanning.
 
 --]]
 
@@ -43,14 +46,13 @@ local Player        = require("jive.slim.Player")
 local SlimServer    = require("jive.slim.SlimServer")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("slimserver")
 
 local jnt           = jnt
 local jiveMain      = jiveMain
 local appletManager = appletManager
 
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
@@ -69,6 +71,8 @@ local function _slimDiscoverySource()
 		'IPAD', string.char(0x00),                                     -- request IP address of server
 		'NAME', string.char(0x00),                                     -- request Name of server
 		'JSON', string.char(0x00),                                     -- request JSONRPC port 
+		'VERS', string.char(0x00),                                     -- request version 
+		'UUID', string.char(0x00),                                     -- request uuid
 		'JVID', string.char(0x06, 0x12, 0x34, 0x56, 0x78, 0x12, 0x34), -- My ID - FIXME mac of no use!
 	}
 end
@@ -87,7 +91,7 @@ local function _slimDiscoverySink(self, chunk, err)
 		return
 	end
 
-	local name, ip, port = nil, chunk.ip, nil
+	local name, ip, port, version, uuid = nil, chunk.ip, nil, nil, nil
 
 	local ptr = 2
 	while (ptr <= chunk.data:len() - 5) do
@@ -100,25 +104,31 @@ local function _slimDiscoverySink(self, chunk, err)
 			if     t == 'NAME' then name = v
 			elseif t == 'IPAD' then ip = v
 			elseif t == 'JSON' then port = v
+			elseif t == 'VERS' then version = v
+			elseif t == 'UUID' then uuid = v
 			end
 		end
 	end
 
 	if name and ip and port then
 		-- get instance for SqueezeCenter
-		local server = SlimServer(jnt, name)
+		if not uuid then
+			uuid = name
+		end
+		local server = SlimServer(jnt, uuid, name, version)
 
 		-- update SqueezeCenter address
-		self:_serverUpdateAddress(server, ip, port)
+		self:_serverUpdateAddress(server, ip, port, name)
 	end
 end
 
 
-function _serverUpdateAddress(self, server, ip, port)
-	server:updateAddress(ip, port)
+function _serverUpdateAddress(self, server, ip, port, name)
+	server:updateAddress(ip, port, name)
 
 	if self.state == 'searching'
-		or self.state == 'probing' then
+		or self.state == 'probing_player'
+		or self.state == 'probing_server' then
 
 		-- connect to server when searching or probing
 		server:connect()
@@ -169,7 +179,7 @@ local function _squeezeCenterCleanup(self)
 		if not server:isConnected() and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
 		
-			log:info("Removing server ", server)
+			log:debug("Removing server ", server)
 			server:free()
 		end
 	end
@@ -187,7 +197,7 @@ local function _playerCleanup(self)
 			currentPlayer ~= player and
 			now - player:getLastSeen() > DISCOVERY_TIMEOUT then
 		
-			log:info("Removing player ", player)
+			log:debug("Removing player ", player)
 			player:free(false)
 		end
 	end
@@ -218,10 +228,7 @@ function __init(self, ...)
 
 	-- wireless discovery
 	if hasNetworking then
-		local wirelessInterface = Networking:wirelessInterface()
-		if wirelessInterface then
-			obj.wireless = Networking(jnt, wirelessInterface)
-		end
+		obj.wireless = Networking:wirelessInterface(jnt)
 	end
 
 	-- discovery timer
@@ -250,24 +257,25 @@ function _discover(self)
 		self.socket:send(_slimDiscoverySource, address, PORT)
 	end
 
+	-- Discover players via udap or wireless scanning
 	-- UDAP discovery
 	local packet = Udap.createAdvancedDiscover(nil, 1)
 	log:debug("sending udap discovery to 255.255.255.255")
 	self.udap:send(function() return packet end, "255.255.255.255")
 
-	-- Wireless discovery, only in probing state
-	if self.state == 'probing' and self.wireless then
-		self.wireless:scan(
-			function(scanTable)
+	if self.state == 'probing_player' then
+		if self.wireless then
+			self.wireless:scan(function(scanTable)
 				_scanComplete(self, scanTable)
 			end)
+		end
 	end
 
 
 	-- Special case Squeezenetwork
 	if System:getUUID() then
-		squeezenetwork = SlimServer(jnt, "SqueezeNetwork")
-		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000)
+		squeezenetwork = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
+		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000, "mysqueezebox.com")
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
@@ -277,7 +285,7 @@ function _discover(self)
 	_playerCleanup(self)
 
 
-	if self.state == 'probing' and
+	if self.state == 'probing_player' or self.state == 'probing_server' and
 		Framework:getTicks() > self.probeUntil then
 
 		local currentPlayer = Player:getCurrentPlayer()
@@ -303,6 +311,7 @@ end
 
 function _setState(self, state)
 	if self.state == state then
+		self.timer:restart(0)
 		return -- no change
 	end
 
@@ -324,7 +333,7 @@ function _setState(self, state)
 	elseif state == 'connected' then
 		self:_idleDisconnect()
 
-	elseif state == 'probing' then
+	elseif state == 'probing_player' or state == 'probing_server' then
 		self.probeUntil = Framework:getTicks() + 60000
 		self.timer:restart(0)
 		self:_connect()
@@ -350,7 +359,7 @@ function _debug(self)
 	log:info("CurrentServer: ", SlimServer:getCurrentServer())
 	log:info("Servers:")
 	for i, server in SlimServer.iterate() do
-		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()))
+		log:info("\t", server:getName(), " [", server:getIpPort(), "] connected=", server:isConnected(), " timeout=", DISCOVERY_TIMEOUT - (now - server:getLastSeen()), " version=", server:getVersion())
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
@@ -382,8 +391,10 @@ function _idleDisconnect(self)
 
 	for i, server in SlimServer:iterate() do
 		if server ~= currentServer then
-			server:disconnect()
+			--allow up to 30 seconds for any remaining server requests to complete
+			server:setIdleTimeout(30)
 		else
+			server:setIdleTimeout(0)
 			server:connect()
 		end
 	end
@@ -392,7 +403,7 @@ end
 
 -- restart discovery if the player is disconnect from SqueezeCenter
 function notify_playerDisconnected(self, player)
-	log:info("playerDisconnected")
+	log:debug("playerDisconnected")
 
 	if Player:getCurrentPlayer() ~= player then
 		return
@@ -405,12 +416,14 @@ end
 
 -- stop discovery if the player is reconnects
 function notify_playerConnected(self, player)
-	log:info("playerConnected")
+	log:debug("playerConnected")
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if currentPlayer ~= player then
 		return
 	end
+
+	log:info("connected ", player:getName())
 
 	-- stop discovery, we have the player
 	self:_setState('connected')
@@ -423,7 +436,7 @@ end
 
 -- restart discovery if SqueezeCenter disconnects
 function notify_serverDisconnected(self, slimserver)
-	log:info("serverDisconnected ", slimserver)
+	log:debug("serverDisconnected ", slimserver)
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
@@ -439,7 +452,7 @@ end
 
 -- stop discovery if SqueezeCenter reconnects
 function notify_serverConnected(self, slimserver)
-	log:info("serverConnected")
+	log:debug("serverConnected")
 
 	local currentPlayer = Player:getCurrentPlayer()
 	if not currentPlayer or currentPlayer:getSlimServer() ~= slimserver then
@@ -453,7 +466,7 @@ end
 
 -- restart discovery on new network connection
 function notify_networkConnected(self)
-	log:info("networkConnected")
+	log:debug("networkConnected")
 
 	if self.state == 'disconnected' then
 		return
@@ -471,6 +484,17 @@ function notify_networkConnected(self)
 	end
 end
 
+function notify_playerPower(self,  player, power)
+	if Player:getCurrentPlayer() == player and System:getMachine() ~= "jive" then
+		--only work for devices that have a dedicated power button
+		log:info("notify_playerPower: ", power)
+		if power then
+			jiveMain:setSoftPowerState("on")
+		else
+			jiveMain:setSoftPowerState("off")
+		end
+	end
+end
 
 function notify_playerCurrent(self, player)
 	local settings = self:getSettings()
@@ -480,8 +504,6 @@ function notify_playerCurrent(self, player)
 
 	if settings.playerId ~= playerId then
 		-- update player
-		log:info("selected player: ", player)
-
 		settings.playerId = playerId
 		settings.playerInit = player and player:getInit()
 
@@ -492,14 +514,29 @@ function notify_playerCurrent(self, player)
 	end
 
 	local server = player and player:getSlimServer() or false
-	if server and 
+	local ipChanged
+	local macChanged = false
+	if server then
+		local serverIp = server:getInit() and server:getInit().ip or nil
+		local settingsIp = settings.serverInit and settings.serverInit.ip or nil
+		ipChanged = serverIp ~= settingsIp
+
+		local serverMac = server:getInit() and server:getInit().mac or nil
+		local settingsMac = settings.serverInit and settings.serverInit.mac or nil
+		macChanged = serverMac ~= settingsMac
+
+	end
+
+	if server and
 		( settings.squeezeNetwork ~= server:isSqueezeNetwork()
+		  or ipChanged or macChanged
 		  or settings.serverName ~= server:getName() ) then
 		settings.squeezeNetwork = server:isSqueezeNetwork()
 
 		-- remember server if it's not SN
 		if not settings.squeezeNetwork then
 			settings.serverName = server:getName()
+			settings.serverUuid = server:getId()
 			settings.serverInit = server:getInit()
 		end
 
@@ -520,18 +557,48 @@ function notify_playerCurrent(self, player)
 end
 
 
+--todo:uses serverName but should use uuid when that comes online
+--service method
+function getInitialSlimServer(self)
+	local serverName = self:getSettings().serverName
+	if self:getSettings().squeezeNetwork then
+		serverName = "mysqueezebox.com"
+	end
+
+	if serverName then
+		for i, server in SlimServer:iterate() do
+			if server:getName() == serverName then
+				log:debug("found initial server: ", server)
+
+				return server
+			end
+		end
+	end
+	log:debug("could not find initial server: ", server)
+
+	return nil
+end
+
+
 function getCurrentPlayer(self)
 	return Player:getCurrentPlayer()
 end
 
 
 function setCurrentPlayer(self, player)
+	log:info("selected ", player and player:getName() or nil)
+
 	Player:setCurrentPlayer(player)
 end
 
 
 function discoverPlayers(self)
-	self:_setState("probing")
+	self:_setState("probing_player")
+end
+
+
+function discoverServers(self)
+	self:_setState("probing_server")
 end
 
 
@@ -548,6 +615,11 @@ end
 
 function disconnectPlayer(self)
 	self:_setState("disconnected")
+
+	local player = Player:getCurrentPlayer()
+	if player then
+		player:disconnectFromServer()
+	end
 end
 
 

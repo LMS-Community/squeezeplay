@@ -41,6 +41,8 @@ local Choice                 = require("jive.ui.Choice")
 local Slider                 = require("jive.ui.Slider")
 local Timer                  = require("jive.ui.Timer")
 local Textinput              = require("jive.ui.Textinput")
+local Timeinput              = require("jive.ui.Timeinput")
+local Keyboard               = require("jive.ui.Keyboard")
 local Textarea               = require("jive.ui.Textarea")
 local RadioGroup             = require("jive.ui.RadioGroup")
 local RadioButton            = require("jive.ui.RadioButton")
@@ -48,32 +50,46 @@ local Checkbox               = require("jive.ui.Checkbox")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Button                 = require("jive.ui.Button")
 local DateTime               = require("jive.utils.datetime")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 
 local DB                     = require("applets.SlimBrowser.DB")
 local Volume                 = require("applets.SlimBrowser.Volume")
 local Scanner                = require("applets.SlimBrowser.Scanner")
 
 local debug                  = require("jive.utils.debug")
-
-local log                    = require("jive.utils.log").logger("player.browse")
-local logd                   = require("jive.utils.log").logger("player.browse.data")
+-- log automatically assigned
+local logd                   = require("jive.utils.log").logger("applet.SlimBrowser.data")
 
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
+local json                   = json 
 
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
---==============================================================================
--- Global "constants"
---==============================================================================
+--[[
 
--- number of volume steps
-local VOLUME_STEPS = 20
+The 'step' contains the browser state for each request. It has the following
+attributes:
+	origin	- the parent step, or nil if this is a root
+	sink	- the comet sink for this step
+	db	- a sparse database of menu items and render state
+	loaded	- an optional callback, called when this step has loaded
+	window	- the steps window
+	menu	- the steps menu
+	data	- opaque data for the step
+	cancelled	- a flag, set to true if the step is cancelled
+	actionModifier	- action modifier (used for playlist actions)
+
+XXXX I think these are unused attributes:
+	destination - the child step
+
+--]]
+
 
 --==============================================================================
 -- Local variables (globals)
@@ -87,31 +103,30 @@ local _player = false
 local _server = false
 
 -- The path of enlightenment
-local _statusStep = false
-local _emptyStep = false
 local _stepStack = {}
 
-local _lockedItem = false
-
 -- Our main menu/handlers
-local _playerMenus = {}
 local _playerKeyHandler = false
 
 -- The last entered text
 local _lastInput = ""
+local _inputParams = {}
 
--- connectingToPlayer and _upgradingPlayer popup handlers
-local _connectingPopup = false
-local _updatingPlayerPopup = false
-local _userUpdatePopup = false
-local _menuReceived = false
-
-local modeTokens = {	
-			play  = "SLIMBROWSER_PLAYLIST",
-			pause = "SLIMBROWSER_PAUSED", 
-			stop  = "SLIMBROWSER_STOPPED",
-			off   = "SLIMBROWSER_OFF"
+-- legacy map of menuStyles to windowStyles
+-- this allows SlimBrowser to make an educated guess at window style when one is not sent but a menu style is
+local menu2window = {
+	album = 'icon_list',
 }
+
+-- legacy map of item styles to new item style names
+local styleMap = {
+	itemplay = 'item_play',
+	itemadd  = 'item_add',
+	itemNoAction = 'item_no_arrow',
+	albumitem = 'item',
+	albumitemplay = 'item_play',
+}
+
 
 --==============================================================================
 -- Local functions
@@ -163,7 +178,9 @@ local function _stringifyJsonRequest(jsonAction)
 	if jsonAction.params then
 		local sortedParams = table.sort(jsonAction.params)
 		for k in table.pairsByKeys (jsonAction.params) do
-			command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
+			if jsonAction.params[k] ~= json.null then
+				command[#command + 1] = ' ' .. k .. ":" .. jsonAction.params[k]
+			end
 		end
 	end
 
@@ -184,12 +201,23 @@ end
 
 -- _decideFirstChunk
 -- figures out the from values for performJSONAction, including logic for finding the previous browse index in this list
-local function _decideFirstChunk(db, jsonAction)
+local function _decideFirstChunk(step, jsonAction)
+	local db = step.db
 	local qty           = DB:getBlockSize()
+
+	if not _player then
+		return 0, qty
+	end
+
+	local isContextMenu = false
+	if step and step.window and step.window:isContextMenu() then
+		isContextMenu = true
+	end
+
 	local commandString = _stringifyJsonRequest(jsonAction)
 	local lastBrowse    = _player:getLastBrowse(commandString)
 
-	if not lastBrowse then
+	if not lastBrowse or isContextMenu then
 		_player.menuAnchor = nil
 	end
 
@@ -198,7 +226,7 @@ local function _decideFirstChunk(db, jsonAction)
 	log:debug('Saving this json command to browse history table:')
 	log:debug(commandString)
 
-	if lastBrowse then
+	if lastBrowse and not isContextMenu then
 		from = _getNewStartValue(lastBrowse.index)
 		_player.menuAnchor = lastBrowse.index 
 	else
@@ -209,7 +237,13 @@ local function _decideFirstChunk(db, jsonAction)
 	log:debug('We\'ve been here before, lastBrowse index was: ', lastBrowse.index)
 	_player.lastKeyTable = lastBrowse
 	_player.menuAnchorSet = false
-	
+
+	--don't use anchor if position is first element, breaks windows that have zero sized menu (textarea, for example), and
+	-- by default the first item is selected without the need of menuAnchor
+	if _player.menuAnchor and _player.menuAnchor == 1 then
+		_player.menuAnchor = nil
+	end
+
 	return from, qty
 
 end
@@ -229,6 +263,40 @@ local function _priorityAssign(key, defaultValue, ...)
 	end
 	return defaultValue
 end
+
+
+local function _backButton(self)
+	return Window:createDefaultLeftButton()
+end
+
+
+local function _invisibleButton(self)
+	return Group("button_none", { Icon("icon") })
+end
+
+
+local function _nowPlayingButton(self, absolute)
+	if not absolute then
+		return Window:createDefaultRightButton()
+	end
+
+	return Button(
+		Group("button_go_now_playing", { Icon("icon") }),
+		function()
+			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+		end,
+		function()
+			Framework:pushAction("title_right_hold") 
+			return EVENT_CONSUME
+		end,
+		function()
+			Framework:pushAction("soft_reset")
+			return EVENT_CONSUME
+		end
+	)
+end
+
 
 local function _dumpStepStack()
 	log:debug("---Step Stack")
@@ -262,6 +330,11 @@ end
 
 
 local function _pushStep(step)
+	--CM windows auto-hide, but step stack / window stack gets out of order unless we close any CM prior to pushing the next window
+	if step.window and not step.window:isContextMenu() then
+		Window:hideContextMenus()
+	end
+	
 	table.delete(_stepStack, step) -- duplicate what window:hide does (deosn't allow same window on the stack twice)
 
 	table.insert(_stepStack, step)
@@ -297,7 +370,12 @@ local function _getParentStep()
 end
 
 
-local function _pushToNewWindow(step)
+local function _stepSetMenuItems(step, data)
+	step.menu:setItems(step, step.db:menuItems(data))
+end
+
+
+local function _stepLockHandler(step, loadedCallback)
 	if not step then
 		return
 	end
@@ -308,21 +386,38 @@ local function _pushToNewWindow(step)
 			function()
 				step.cancelled = true
 			end)
+		if currentStep.simpleMenu then
+			currentStep.simpleMenu:lock(
+				function()
+					step.cancelled = true
+				end)
+		end
 	end
 	step.loaded = function()
 		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
 		end
-		_pushStep(step)
-		step.window:show()
+		if currentStep and currentStep.simpleMenu then
+			currentStep.simpleMenu:unlock()
+		end
+
+		loadedCallback()
       	end
 end
+
+
+local function _pushToNewWindow(step)
+	_stepLockHandler(step,  function()
+					_pushStep(step)
+					step.window:show()
+				end)
+end
+
 
 -- _newWindowSpec
 -- returns a Window spec based on the concatenation of base and item
 -- window definition
-local function _newWindowSpec(db, item, titleStyle)
-	if not titleStyle then titleStyle = '' end
+local function _newWindowSpec(db, item, isContextMenu)
 	log:debug("_newWindowSpec()")
 	
 	local bWindow
@@ -336,12 +431,17 @@ local function _newWindowSpec(db, item, titleStyle)
 
 	-- determine style
 	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
+	local windowStyle = (iWindow and iWindow['windowStyle']) or menu2window[menuStyle] or 'text_list'
+	local windowId = (bWindow and bWindow.windowId) or (iWindow and iWindow.windowId) or nil
+
 	return {
-		["windowStyle"]      = "",
-		["labelTitleStyle"]  = _priorityAssign('titleStyle', titleStyle, iWindow, bWindow) .. "title",
+		["isContextMenu"]    = isContextMenu,
+		['windowId']         = windowId,
+		["windowStyle"]      = windowStyle,
+		["labelTitleStyle"]  = 'title',
+		["menuStyle"]        = "menu",
+		["labelItemStyle"]   = "item",
 		['help']             = help,
-		["menuStyle"]        = menuStyle .. "menu",
-		["labelItemStyle"]   = menuStyle .. "item",
 		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
 		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
 		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
@@ -352,37 +452,22 @@ end
 
 -- _artworkItem
 -- updates a group widget with the artwork for item
-local function _artworkItem(item, group, menuAccel)
+local function _artworkItem(step, item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 	local iconSize
 
 	local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
+	iconSize = THUMB_SIZE
+	
+	local iconId = item["icon-id"] or item["icon"]
 
-	if icon then
-		iconSize = icon:getSize()
-		if not iconSize or iconSize == 0 then
-			iconSize = THUMB_SIZE
-		end
-	else
-		iconSize = THUMB_SIZE
-	end
-
-	if item["icon-id"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon-id"], iconSize) then
+	if iconId then
+		if menuAccel and not _server:artworkThumbCached(iconId, iconSize) then
 			-- Don't load artwork while accelerated
 			_server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtworkThumb(item["icon-id"], icon, iconSize)
-		end
-
-	elseif item["icon"] then
-		if menuAccel and not _server:artworkThumbCached(item["icon"], iconSize) then
-			-- Don't load artwork while accelerated
-			_server:cancelArtwork(icon)
-		else
-			-- Fetch a remote image URL, sized to iconSize x iconSize (artwork from a streamed source)
-			_server:fetchArtworkURL(item["icon"], icon, iconSize)
+			_server:fetchArtwork(iconId, icon, iconSize)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], iconSize) then
@@ -390,7 +475,7 @@ local function _artworkItem(item, group, menuAccel)
 			_server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			_server:fetchArtworkThumb(item["params"]["track_id"], icon, iconSize, 'png')
+			_server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
 		end
 	else
 		_server:cancelArtwork(icon)
@@ -419,10 +504,10 @@ local function _checkboxItem(item, db)
 			function(_, checkboxFlag)
 				log:debug("checkbox updated: ", checkboxFlag)
 				if (checkboxFlag) then
-					log:debug("ON: ", checkboxFlag)
+					log:warn("ON: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'on', item) 
 				else
-					log:debug("OFF: ", checkboxFlag)
+					log:warn("OFF: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'off', item) 
 				end
 			end,
@@ -474,38 +559,79 @@ end
 
 -- _decoratedLabel
 -- updates or generates a label cum decoration in the given labelStyle
-local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
+local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
+	local db = step.db
+
 	-- if item is a windowSpec, then the icon is kept in the spec for nothing (overhead)
 	-- however it guarantees the icon in the title is not shared with (the same) icon in the menu.
-	if not group then
-		group = Group("item", { 
-			text = Label("text", ""), 
-			icon = Icon("icon"), 
-			play = Icon("play"), 
-			back = Button(
-				Icon("back"), 
-				function()
-					Framework:pushAction("back")
+	local showIcons = true
+	if db:windowStyle() == 'text_list' then
+		showIcons = false
+	end
+	-- if multiline_text_list is the window style, use a textarea not a Label for the text
+	local useTextArea = false
+	if db:windowStyle() == 'multiline_text_list' then
+		useTextArea = true
+	end
 
-					return EVENT_CONSUME
-				end,
-				function()
-					Framework:pushAction("go_home")
-					return EVENT_CONSUME
-				end
-			), 
-			nowplaying = Button(
-				Icon("nowplaying"), 
-				function() 
-					Framework:pushAction("go_now_playing")
-					return EVENT_CONSUME 
-				end
-			), 
+--	debug.dump(item, 8)
+	if not group then
+
+		if labelStyle == 'title' then
+			group = Group(labelStyle, { 
+				text = Label("text", ""), 
+				icon = Icon("icon"), 
+				lbutton = _backButton(),
+				rbutton = _nowPlayingButton(),
 			})
+		elseif useTextArea then
+			local textarea = Textarea("multiline_text", "")
+			textarea:setHideScrollbar(true)
+			textarea:setIsMenuChild(true)
+			group = Group(labelStyle, {
+				icon  = Icon("icon"), 
+				text  = textarea, 
+				arrow = Icon('arrow'),
+				check = Icon('check'),
+			})
+			
+
+		else
+			group = Group(labelStyle, { 
+				icon = Icon("icon"), 
+				text = Label("text", ""), 
+				arrow = Icon('arrow'),
+				check = Icon('check'),
+			})
+		end
 	end
 
 	if item then
+		-- special case here. windows that use Textareas for their text widget have a 
+		-- + handler for bringing up a context menu window that has the entirety of the text
+		if useTextArea then
+			local moreAction = function()
+				local window = ContextMenuWindow()
+				local text = Textarea('multiline_text', item.text)
+				window:addWidget(text)
+				window:setShowFrameworkWidgets(false)
+				window:show(Window.transitionFadeIn)
+				return EVENT_CONSUME
+			end		
+			group:addActionListener('add', step, moreAction)
+		end
+
 		group:setWidgetValue("text", item.text)
+
+		if showIcons then
+			--set "no artwork" unless it has already been set (avoids high cpu looping)
+			local iconWidget = group:getWidget('icon')
+			if iconWidget then
+				if group:getWidget('icon'):getStyle() ~= 'icon_no_artwork' then
+					group:setWidget('icon', Icon('icon_no_artwork'))
+				end
+			end
+		end
 
 		-- set an acceleration key, but not for playlists
 		if item.params and item.params.textkey then
@@ -515,34 +641,37 @@ local function _decoratedLabel(group, labelStyle, item, db, menuAccel)
 
 		if item["radio"] then
 			group._type = "radio"
-			group:setWidget("icon", _radioItem(item, db))
-
-		elseif item['selectedIndex'] then
-			group._type = 'choice'
-			group:setWidget('icon', _choiceItem(item, db))
+			group:setWidget("check", _radioItem(item, db))
 
 		elseif item["checkbox"] then
 			group._type = "checkbox"
-			group:setWidget("icon", _checkboxItem(item, db))
+			group:setWidget("check", _checkboxItem(item, db))
+
+		elseif item['selectedIndex'] then
+			group._type = 'choice'
+			group:setWidget('check', _choiceItem(item, db))
 
 		else
 			if group._type then
-				group:setWidget("icon", Icon("icon"))
+				if showIcons then
+					group:setWidget("icon", Icon("icon_no_artwork"))
+				end
 				group._type = nil
 			end
-			_artworkItem(item, group, menuAccel)
+			_artworkItem(step, item, group, menuAccel)
 		end
 		group:setStyle(labelStyle)
 
 	else
 		if group._type then
-			group:setWidget("icon", Icon("icon"))
+			if showIcons then
+				group:setWidget("icon", Icon("icon_no_artwork"))
+			end
 			group._type = nil
 		end
 
 		group:setWidgetValue("text", "")
-		group:setWidgetValue("icon", nil)
-		group:setStyle(labelStyle .. "waiting")
+		group:setStyle(labelStyle .. "waiting_popup")
 	end
 
 	return group
@@ -551,7 +680,7 @@ end
 
 -- _performJSONAction
 -- performs the JSON action...
-local function _performJSONAction(jsonAction, from, qty, step, sink)
+local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
 
 	local cmdArray = jsonAction["cmd"]
@@ -564,30 +693,37 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	
 	-- replace player if needed
 	local playerid = jsonAction["player"]
-	if not playerid or tostring(playerid) == "0" then
+	if _player and (not playerid or tostring(playerid) == "0") then
 		playerid = _player:getId()
 	end
 	
+	-- look for multiple input keys in inputParamKeys
+	local newparams = {}
+	local inputParamKeys = jsonAction['inputParamKeys']
+	if inputParamKeys then
+		newparams = {}
+		for k, v in pairs(inputParamKeys) do
+			table.insert( newparams, k .. ":" .. v)
+		end
+	end
+
 	-- look for __INPUT__ as a param value
 	local params = jsonAction["params"]
-	local newparams
 	if params then
 		newparams = {}
 		for k, v in pairs(params) do
 			if v == '__INPUT__' then
 				table.insert( newparams, _lastInput )
 			elseif v == '__TAGGEDINPUT__' then
-				if k == 'time' then
-					local _secondsFromMidnight = DateTime:secondsFromMidnight(_lastInput)
-					log:debug("SECONDS FROM MIDNIGHT", _secondsFromMidnight)
-					table.insert( newparams, k .. ":" .. _secondsFromMidnight )
-				else 
-					table.insert( newparams, k .. ":" .. _lastInput )
-				end
+				table.insert( newparams, k .. ":" .. _lastInput )
 			else
-				table.insert( newparams, k .. ":" .. v )
+				if v ~= json.null then
+					table.insert( newparams, k .. ":" .. v )
+				end
 			end
 		end
+		-- tells SC to give response that includes context menu handler
+		table.insert( newparams, 'useContextMenu:1')
 	end
 	
 	local request = {}
@@ -599,19 +735,46 @@ local function _performJSONAction(jsonAction, from, qty, step, sink)
 	table.insert(request, from)
 	table.insert(request, qty)
 	
-	if newparams then
-		for i, v in ipairs(newparams) do
-			table.insert(request, v)
-		end
+	for i, v in ipairs(newparams) do
+		table.insert(request, v)
 	end
 
 	if step then
 		step.jsonAction = request
 	end
 
+	if itemType == "slideshow" or (params and params["slideshow"]) then
+		table.insert( request, 'slideshow:1')
+		
+		local serverData = {}
+		serverData.id = table.concat(request, " ")
+		serverData.playerId = playerid
+		serverData.cmd = request
+		serverData.server = _server
+		serverData.appParameters = _server:getAppParameters(_getAppType(request))
+		serverData.allowMotion = true
+
+		appletManager:callService("openRemoteScreensaver", true, serverData)
+		return
+	end
+
+	-- it's very helpful at times to dump the request table here to see what command is being issued
+	--debug.dump(request)
+
 	-- send the command
 	_server:userRequest(sink, playerid, request)
 end
+
+
+function _getAppType(request)
+	if not request or #request == 0 then
+		return nil
+	end
+	local appType = request[1]
+
+	return appType
+end
+
 
 -- for a given step, rerun the json request that created that slimbrowser menu
 local function _refreshJSONAction(step)
@@ -634,170 +797,17 @@ local function _refreshJSONAction(step)
 
 end
 
--- _getStepSink
--- returns a closure to a sink embedding step
-local function _getStepSink(step, sink)
-	return function(chunk, err)
-		sink(step, chunk, err)
-	end
-end
-
 -- _inputInProgress
 -- full screen popup that appears until action from text input is complete
 local function _inputInProgress(self, msg)
-	local popup = Popup("popupIcon")
-	local icon  = Icon("iconConnecting")
+	local popup = Popup("waiting_popup")
+	local icon  = Icon("icon_connecting")
 	popup:addWidget(icon)
 	if msg then
 		local label = Label("text", msg)
 		popup:addWidget(label)
 	end
 	popup:show()
-end
-
--- _hideUserUpdatePopup
--- hide the full screen popup that appears until player is updated
-local function _hideUserUpdatePopup()
-	if _userUpdatePopup then
-		log:info("_userUpdatePopup popup hide")
-		_userUpdatePopup:hide()
-		_userUpdatePopup = false
-	end
-end
-
-
--- _hidePlayerUpdating
--- hide the full screen popup that appears until player is updated
-local function _hidePlayerUpdating()
-	if _updatingPlayerPopup then
-		log:info("_updatingPlayer popup hide")
-		_updatingPlayerPopup:hide()
-		_updatingPlayerPopup = false
-	end
-end
-
-
--- _connectingToPlayer
--- full screen popup that appears until menus are loaded
-local function _connectingToPlayer(self)
-	log:info("_connectingToPlayer popup show")
-
-	if _connectingPopup or _userUpdatePopup or _updatingPlayerPopup then
-		-- don't open this popup twice or when firmware update windows are on screen
-		return
-	end
-
-	local popup = Popup("popupIcon")
-	local icon  = Icon("iconConnecting")
-	local playerName = _player:getName()
-	local label = Label("text", self:string("SLIMBROWSER_CONNECTING_TO", playerName))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	popup:setAlwaysOnTop(true)
-
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		popup:hide()
-	end
-
-	popup:addActionListener("back", self, disconnectPlayer)
-		
-	popup:show()
-
-	_connectingPopup = popup
-end
-
--- _userTriggeredUpdate
--- full screen popup that appears until user hits brightness on player to start upgrade
-local function _userTriggeredUpdate(self)
-	log:warn("_connectingToPlayer popup show")
-
-
-	if _userUpdatePopup then
-		return
-	end
-
-
-	-- only show this window if the player has a brightness button available
-	local playerModel = _player:getModel()
-	if playerModel == 'receiver' 
-		or playerModel == 'softsqueeze'
-		or playerModel == 'softsqueeze3'
-		or playerModel == 'controller'
-		or playerModel == 'squeezeplay'
-		or playerModel == 'squeezeslave'
-		then
-			return
-	end
-
-	local window = Window("window", self:string('SLIMBROWSER_PLAYER_UPDATE_REQUIRED'))
-	local label = Textarea("textarea", self:string('SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX', _player:getName()))
-	window:addWidget(label)
-	window:setAlwaysOnTop(true)
-	window:setAllowScreensaver(false)
-
-	-- add a listener for KEY_HOLD that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		window:hide()
-	end
-
-	window:addActionListener("back", self, disconnectPlayer)
-
-	window:show()
-
-	_userUpdatePopup = window
-end
-
-
--- _updatingPlayer
--- full screen popup that appears until menus are loaded
-local function _updatingPlayer(self)
-	log:warn("_connectingToPlayer popup show")
-
-	if _userUpdatePopup then
-		_hideUserUpdatePopup()
-	end
-
-	if _updatingPlayerPopup then
-		-- don't open this popup twice
-		return
-	end
-
-	local popup = Popup("popupIcon")
-	local icon  = Icon("iconConnecting")
-	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX', _player:getName()))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	popup:setAlwaysOnTop(true)
-
-	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
-	local disconnectPlayer = function()
-		appletManager:callService("setCurrentPlayer", nil)
-		popup:hide()
-	end
-
-	popup:addActionListener("back", self, disconnectPlayer)
-
-	popup:show()
-
-	_updatingPlayerPopup = popup
-end
-
--- _renderTextArea
--- special case when single SlimBrowse item is a textarea
-local function _renderTextArea(step, item)
-
-	if not step and step.window then
-		return
-	end
-	_assert(item)
-	_assert(item.textArea)
-
-	local textArea = Textarea("textarea", item.textArea)
-	step.window:addWidget(textArea)
-
 end
 
 
@@ -843,27 +853,27 @@ local function _renderSlider(step, item)
                 end)
 	local help, text
 	if item.text then
-		text = Textarea("textarea", item.text)
+		text = Textarea("text", item.text)
 		step.window:addWidget(text)
 	end
 	if item.help then
-        	help = Textarea("help", item.help)
+        	help = Textarea("help_text", item.help)
 		step.window:addWidget(help)
 	end
 
 	if item.sliderIcons == 'none' then
         	step.window:addWidget(slider)
 	elseif item.sliderIcons == 'volume' then
-		step.window:addWidget(Group("sliderGroup", {
-			Icon("volumeMin"),
-			slider,
-			Icon("volumeMax")
+		step.window:addWidget(Group("slider_group", {
+			min = Icon("button_volume_min"),
+			slider = slider,
+			max = Icon("button_volume_max")
 		}))
 	else
-		step.window:addWidget(Group("sliderGroup", {
-			Icon("sliderMin"),
-			slider,
-			Icon("sliderMax")
+		step.window:addWidget(Group("slider_group", {
+			min = Icon("button_slider_min"),
+			slider = slider,
+			max = Icon("button_slider_max")
 		}))
 	end
 
@@ -871,27 +881,62 @@ local function _renderSlider(step, item)
 
 end
 
+
+-- add a help button to a window with the data from the help arg delivered in the help window
+local function _addHelpButton(self, help, setupWindow, menu)
+	local titleText = self:getTitle()
+	local helpWindow = function()
+		Framework:playSound('WINDOWSHOW')
+		local window = Window("text_list")
+		window:setAllowScreensaver(false)
+		local nowPlaying = _nowPlayingButton()
+		if setupWindow == 1 then
+			nowPlaying = _invisibleButton()
+		end
+		window:setTitleWidget(
+			Group('title', { 
+				text = Label("text", titleText), 
+				lbutton = _backButton(),
+				rbutton = nowPlaying,
+			})	
+		)
+		local textarea = Textarea("text", help)
+		window:addWidget(textarea)
+		window:show()
+	end
+	self:addActionListener("help", _, helpWindow)
+	self:setButtonAction("rbutton", "help")
+	if menu then
+		jiveMain:addHelpMenuItem(menu, self, helpWindow)
+	end
+
+end
+	
+
 -- _bigArtworkPopup
 -- special case sink that pops up big artwork
 local function _bigArtworkPopup(chunk, err)
 
 	log:debug("Rendering artwork")
-	local popup = Popup("popupArt")
+	local popup = Popup("image_popup")
 	popup:setAllowScreensaver(true)
 
-	local icon = Icon("artwork")
+	local icon = Icon("image")
 
 	local screenW, screenH = Framework:getScreenSize()
 	local shortDimension = screenW
 	if screenW > screenH then
 		shortDimension = screenH
 	end
+	
+	local artworkId
+	if chunk.data then
+		artworkId = chunk.data.artworkId or chunk.data.artworkUrl
+	end
 
 	log:debug("Artwork width/height will be ", shortDimension)
-	if chunk.data and chunk.data.artworkId then
-		_server:fetchArtworkThumb(chunk.data.artworkId, icon, shortDimension)
-	elseif chunk.data and chunk.data.artworkUrl then
-		_server:fetchArtworkURL(chunk.data.artworkUrl, icon, shortDimension)
+	if artworkId then
+		_server:fetchArtwork(artworkId, icon, shortDimension)
 	end
 	popup:addWidget(icon)
 	popup:show()
@@ -925,9 +970,11 @@ end
 
 -- _hideMe
 -- hides the top window and refreshes the parent window, via a new request. Optionally, noRefresh can be set to true and the parent window will not be refreshed
-local function _hideMe(noRefresh)
+local function _hideMe(noRefresh, silent)
 
-	Framework:playSound("WINDOWHIDE")
+	if not silent then
+		Framework:playSound("WINDOWHIDE")
+	end
 	_getCurrentStep().window:hide()
 
 	--hiding triggers a stepStack pop, so no need to do it here
@@ -942,11 +989,32 @@ local function _hideMe(noRefresh)
 	end
 end
 
+-- _hideToX
+-- hides all windows back to window named X, or top of stack, whichever comes first
+local function _hideToX(windowId)
+	log:debug("_hideToX, x=", windowId)
+
+	while _getCurrentStep() and _getCurrentStep().window and _getCurrentStep().window:getWindowId() ~= windowId do
+		log:info('hiding ', _getCurrentStep().window:getWindowId())
+		_getCurrentStep().window:hide()
+	end
+
+	if _getCurrentStep() and _getCurrentStep().window and _getCurrentStep().window:getWindowId() == windowId then
+		log:info('refreshing window: ', windowId)
+		local timer = Timer(1000,
+			function()
+				_refreshJSONAction(_getCurrentStep())
+			end, true)
+		timer:start()
+	end
+
+end
+
 
 -- _hideMeAndMyDad
 -- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
 local function _hideMeAndMyDad()
-	log:error("_hideMeAndMyDad")
+	log:debug("_hideMeAndMyDad")
 
 	_hideMe(true)
 	_hideMe()
@@ -954,18 +1022,32 @@ end
 
 -- _goNowPlaying
 -- pushes next window to the NowPlaying window
-local function _goNowPlaying(transition)
-	if not transition then
-		transition = Window.transitionPushRight
+local function _goNowPlaying(transition, silent, direct)
+	Window:hideContextMenus()
+	
+	--first hide any "NP related" windows (playlist, track info) that are on top
+	while _getCurrentStep() and _getCurrentStep()._isNpChildWindow do
+		log:info("Hiding NP child window")
+
+		_hideMe(true, true)
+
 	end
-	Framework:playSound("WINDOWSHOW")
-	appletManager:callService('goNowPlaying', 'browse', transition)
+
+	if not transition then
+		transition = Window.transitionPushLeft
+	end
+	if not silent then
+		Framework:playSound("WINDOWSHOW")
+	end
+	appletManager:callService('goNowPlaying', transition, direct)
 end
 
 -- _goPlaylist
 -- pushes next window to the Playlist window
-local function _goPlaylist()
-	Framework:playSound("WINDOWSHOW")
+local function _goPlaylist(silent)
+	if not silent then
+		Framework:playSound("WINDOWSHOW")
+	end
 	showPlaylist()
 end
 
@@ -976,6 +1058,28 @@ local function _devnull(chunk, err)
 	log:debug('_devnull()')
 	log:debug(chunk)
 end
+
+
+--destination that does nothing, but handles step.cancelled and step.loaded
+local function _emptyDestination(step)
+	local step = {}
+
+	step.sink = function(chunk, err)
+		-- are we cancelled?
+		if step.cancelled then
+			log:debug("_devnull(): , action cancelled...")
+			return
+		end
+
+		if step.loaded then
+			step.loaded()
+			step.loaded = nil
+		end
+	end
+
+	return step, step.sink
+end
+
 
 -- _goNow
 -- go immediately to a particular destination
@@ -1011,7 +1115,7 @@ local function _browseSink(step, chunk, err)
 
 	if chunk then
 		local data
-		
+
 		-- move result key up to top-level
 		if chunk.result then
 			data = chunk.result
@@ -1025,48 +1129,63 @@ local function _browseSink(step, chunk, err)
 		if step.window and data and data.goNow then
 			_goNow(data.goNow)
 		end
+
+		local setupWindow = _safeDeref(data, 'base', 'window', 'setupWindow')
+		if step.window and setupWindow then
+			step.window:setAllowScreensaver(false)
+		end
+
 		if data.networkerror then
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
-			local textArea = Textarea("textarea", data.networkerror)
+			local textArea = Textarea("text", data.networkerror)
 			if step.window then
 				step.window:setTitle(_string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 				step.window:addWidget(textArea)
 			end
-		elseif step.window and data and data.window and data.window.textArea then
-			if step.menu then
-				step.window:removeWidget(step.menu)
-			end
-			local textArea = Textarea("textarea", data.window.textArea)
-			step.window:addWidget(textArea)
-		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and (data.item_loop[1].slider or data.item_loop[1].textArea) then
+		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and data.item_loop[1].slider then
 			-- no menus here, thankyouverymuch
 			if step.menu then
 				step.window:removeWidget(step.menu)
 			end
 
-			if data.item_loop[1].slider then
-				_renderSlider(step, data.item_loop[1])
-			else
-				_renderTextArea(step, data.item_loop[1])
-			end
+			_renderSlider(step, data.item_loop[1])
 
 		-- avoid infinite request loop on count == 0
 		elseif step.menu and data and data.count and data.count == 0 then
 			-- this will render a blank menu, which is typically undesirable 
 			-- but we don't want to reach the next clause
 			-- count == 0 responses should not be typical
+
+			--textarea only case
+			if step.window and data and data.window and data.window.textarea then
+				if step.menu then
+					step.window:removeWidget(step.menu)
+				end
+				local text = string.gsub(data.window.textarea, '\\n', '\n')
+				local textArea = Textarea("text", text)
+				step.window:addWidget(textArea)
+			end
 		elseif step.menu then
-			step.menu:setItems(step.db:menuItems(data))
-			if _player.menuAnchor and not _player.menuAnchorSet then
-				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)
+			_stepSetMenuItems(step, data)
+			if _player and _player.menuAnchor and not _player.menuAnchorSet then
+				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)				step.menu:setSelectedIndex(_player.menuAnchor)
 				step.menu:setSelectedIndex(_player.menuAnchor)
 				_player.menuAnchorSet = true
+				if _player.loadedCallback then
+					local loadedCallback = _player.loadedCallback
+					_player.loadedCallback = nil
+
+					loadedCallback(step)
+					_pushStep(step)
+					step.window:show()
+
+				end
 			end
 
 			-- update the window properties
-			step.menu:setStyle(step.db:menuStyle())
+			--step.menu:setStyle(step.db:menuStyle())
 			local titleBar = step.window:getTitleWidget()
 			-- styling both the menu and title with icons is problematic to the layout
 			if step.db:menuStyle() == 'albummenu' and titleBar:getStyle() == 'albumtitle' then
@@ -1074,9 +1193,22 @@ local function _browseSink(step, chunk, err)
 				step.window:setTitleStyle('title')
 			end
 
-			if data.window then
-				-- if a titleStyle is being sent, we need to setTitleWidget completely
-				if data.window.titleStyle or data.window['icon-id'] then
+			if data.window and data.window.windowId then
+				step.window:setWindowId(data.window.windowId)
+			end
+
+			if not data.window and (data.base and data.base.window) then
+				data.window =  data.base.window
+			end
+			if not step.window:isContextMenu() and (data.window or data.base and data.base.window) then
+				local windowStyle = data.window and data.window.windowStyle or
+							data.base and data.base.window and data.base.window.windowStyle
+				if windowStyle then
+					step.window:setStyle(data.window['windowStyle'])
+				end
+				-- if a titleStyle is being sent or prevWindow or setupWindow params are given, we need to setTitleWidget completely
+				if data.window.titleStyle or data.window['icon-id'] or data.window['icon'] or data.window.setupWindow == 1 or data.window.prevWindow == 0 then
+
 					local titleText, titleStyle, titleIcon
 					local titleWidget = step.window:getTitleWidget()
 					-- set the title text if specified
@@ -1095,50 +1227,102 @@ local function _browseSink(step, chunk, err)
 					else
 						titleStyle = step.window:getTitleStyle()
 					end
+					
 					-- add the icon if it's been specified in the window params
-					if data.window['icon-id'] then
+					local iconId = data.window['icon-id'] or data.window['icon']
+					if iconId then
 						-- Fetch an image from SlimServer
 						titleIcon = Icon("icon")
-						_server:fetchArtworkThumb(data.window["icon-id"], titleIcon, jiveMain:getSkinParam("THUMB_SIZE"))
+						_server:fetchArtwork(iconId, titleIcon, jiveMain:getSkinParam("THUMB_SIZE"))
 					-- only allow the existing icon to stay if titleStyle isn't being changed
 					elseif not data.window.titleStyle and titleWidget:getWidget('icon') then
 						titleIcon = titleWidget:getWidget('icon')
 					else
 						titleIcon = Icon("icon")
 					end
+					
+					local backButton, nowPlayingButton
+					if data.window.prevWindow == 0 then
+						backButton = _invisibleButton()
+					else
+						backButton = _backButton()
+					end
+					if data.window.setupWindow == 1 then
+						nowPlayingButton = _invisibleButton()
+					else
+						nowPlayingButton = _nowPlayingButton()
+					end
+
 					local newTitleWidget = 
-						Group(titleStyle, { 
+						Group('title', { 
 							text = Label("text", titleText), 
 							icon = titleIcon,
-							back = Button(
-								Icon("back"), 
-								function()
-									Framework:pushAction("back")
-
-									return EVENT_CONSUME
-								end,
-								function()
-									Framework:pushAction("go_home")
-									return EVENT_CONSUME
-								end
-							), 
-							nowplaying = Button(
-								Icon("nowplaying"), 
-								function() 
-									Framework:pushAction("go_now_playing")
-									return EVENT_CONSUME
-								end
-							), 
+							lbutton = backButton,
+							rbutton = nowPlayingButton,
 						})	
 					step.window:setTitleWidget(newTitleWidget)
 				-- change the text as specified if no titleStyle param was also sent
 				elseif data.window.text then
 					step.window:setTitle(data.window.text)
+				elseif data.title then
+					step.window:setTitle(data.title)
+				end
+				-- textarea data for the window
+				if data.window and data.window.textarea then
+					local text = string.gsub(data.window.textarea, '\\n', "\n")
+					local textarea = Textarea('help_text', text)
+					if step.menu then
+						local item_loop = _safeDeref(step.menu, 'list', 'db', 'last_chunk', "item_loop")
+						if item_loop then
+							local maxItems = 100
+							if #item_loop > maxItems then
+								log:warn("item_loop exceeds max items, not showing textarea: ", #item_loop)
+							else
+								step.menu:setStyle("menu_hidden")
+								-- Make a SimpleMenu to support headerWidget, in place of the step menu, but keep the step menu around, which has the item listener logic
+								local menu = SimpleMenu("menu")
+
+								step.simpleMenu = menu
+								for i, item in ipairs(item_loop) do
+									if item.text then
+										menu:addItem( {
+												text = item.text,
+												sound = "WINDOWSHOW",
+												callback = function(event, menuItem)
+													--hack alert, selecting item from hidden step menu, but since not really rendered, forcing numWidgets size to 100 so all
+													--  step menu widgets are available. Limits menu size to maxItems for menus with textarea
+													step.menu:setSelectedIndex(i)
+													step.menu.numWidgets = maxItems
+													step.menu:_updateWidgets()
+													step.menu:_event(Event:new(EVENT_ACTION))
+												end,
+										})
+									end
+								end
+
+								if data.window and data.window.help  then
+									_addHelpButton(step.window, data.window.help, data.window.setupWindow, menu)
+								end
+
+
+								step.window:addWidget(menu)
+								menu:setHeaderWidget(textarea)
+							end
+
+						else
+							log:warn("Can't extract item loop, not showing textarea")
+
+						end
+					end
+				end
+				-- contextual help comes from data.window.help
+				if data.window and data.window.help and not data.window.textarea then
+					_addHelpButton(step.window, data.window.help, data.window.setupWindow, step.menu)
 				end
 			end
 
 			-- what's missing?
-			local from, qty = step.db:missing(_player.menuAnchor)
+			local from, qty = step.db:missing(_player and _player.menuAnchor)
 		
 			if from then
 				_performJSONAction(step.data, from, qty, step, step.sink)
@@ -1150,215 +1334,7 @@ local function _browseSink(step, chunk, err)
 	end
 end
 
--- _menuSink
--- returns a sink with a closure to self
--- cmd is passed in so we know what process function to call
--- this sink receives all the data from our Comet interface
-local function _menuSink(self, cmd)
-	return function(chunk, err)
 
-		-- catch race condition if we've switch player
-		if not _player then
-			return
-		end
-
-		log:info("_menuSink()")
-
-		-- process data from a menu notification
-		-- each chunk.data[2] contains a table that needs insertion into the menu
-		local menuItems = chunk.data[2]
-		-- directive for these items is in chunk.data[3]
-		local menuDirective = chunk.data[3]
-		-- the player ID this notification is for is in chunk.data[4]
-		local playerId = chunk.data[4]
-
-		if playerId ~= 'all' and playerId ~= _player:getId() then
-			log:debug('This menu notification was not for this player')
-			log:debug("Notification for: ", playerId)
-			log:debug("This player is: ", _player:getId())
-			return
-		end
-
-		-- if we get here, it was for this player. set menuReceived to true
-		_menuReceived = true
-
-		for k, v in pairs(menuItems) do
-
-			--debug.dump(v.actions, -1)
-
-			local item = {
-					id = v.id,
-					node = v.node,
-					style = v.style,
-					text = v.text,
-					homeMenuText = v.homeMenuText,
-					weight = v.weight,
-					window = v.window,
-					sound = "WINDOWSHOW",
-				}
-
-			local choiceAction = _safeDeref(v, 'actions', 'do', 'choices')
-
-			if v.isANode then
-				jiveMain:addNode(item)
-
-			elseif menuDirective == 'remove' then
-				jiveMain:removeItemById(item.id)
-
-			elseif choiceAction then
-
-				local selectedIndex = 1
-				if v.selectedIndex then
-					selectedIndex = tonumber(v.selectedIndex)
-				end
-
-				local choice = Choice(
-					"choice",
-					v.choiceStrings,
-					function(obj, selectedIndex)
-						local jsonAction = v.actions['do'].choices[selectedIndex]
-						_performJSONAction(jsonAction, nil, nil, nil, nil)
-					end,
-					selectedIndex
-				)
-				
-				item.icon = choice
-
-				--add the item to the menu
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
-
-			else
-
-				item.callback = function()
-					--	local jsonAction = v.actions.go
-						local jsonAction, from, qty, step, sink
-						local doAction = _safeDeref(v, 'actions', 'do')
-						local goAction = _safeDeref(v, 'actions', 'go')
-
-						if doAction then
-							jsonAction = v.actions['do']
-						elseif goAction then
-							jsonAction = v.actions.go
-						else
-							return false
-						end
-
-						-- we need a new window for go actions, or do actions that involve input
-						if goAction or (doAction and v.input) then
-							log:debug(v.nextWindow)
-							if v.nextWindow then
-								if v.nextWindow == 'home' then
-									sink = goHome
-								elseif v.nextWindow == 'playlist' then
-									sink = _goPlaylist
-								elseif v.nextWindow == 'nowPlaying' then
-									sink = _goNowPlaying
-								end
-							else
-								step, sink =_newDestination(nil,
-											  v,
-											  _newWindowSpec(nil, v),
-											  _browseSink,
-											  jsonAction
-										  )
-								if v.input then
-									step.window:show()
-									_pushStep(step)
-								else
-									from, qty = _decideFirstChunk(step.db, jsonAction)
-
-									_lockedItem = item
-									jiveMain:lockItem(item,
-										  function()
-										  step.cancelled = true
-									  end)
-		
-									step.loaded = function()
-										      jiveMain:unlockItem(item)
-		
-										      _lockedItem = false
-										      _pushStep(step)
-										      step.window:show()
-									      end
-								end
-							end
-						end
-
-						if not v.input then
-							_performJSONAction(jsonAction, from, qty, step, sink)
-						end
-					end
-
-				_playerMenus[item.id] = item
-				jiveMain:addItem(item)
-			end
-		end
-		if _menuReceived then
-			hideConnectingToPlayer()
-		end
-         end
-end
-
-
--- _requestStatus
--- request the next chunk from the player status (playlist)
-local function _requestStatus()
-	local step = _statusStep
-
-	local from, qty = step.db:missing()
-	if from then
-		-- note, this is not a userRequest as the playlist is
-		-- updated when the playlist changes
-		_server:request(
-				step.sink,
-				_player:getId(),
-				{ 'status', from, qty, 'menu:menu' }
-			)
-	end
-end
-
-
--- _statusSink
--- sink that sets the data for our status window(s)
-local function _statusSink(step, chunk, err)
-	log:debug("_statusSink()")
-		
-	-- currently we're not going anywhere with current playlist...
-	_assert(step == _statusStep)
-
-	local data = chunk.data
-	if data then
-
-		local hasSize = _safeDeref(data, 'item_loop', 1)
-		if not hasSize then return end
-
-		if logd:isDebug() then
-			debug.dump(data, 8)
-		end
-		
-		-- handle the case where the player disappears
-		-- return silently
-		if data.error then
-			log:info("_statusSink() chunk has error: returning")
-			return
-		end
-		
-		-- FIXME: this can go away once we dispense of the upgrade messages
-		-- if we have a data.item_loop[1].text == 'READ ME', 
-		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
-		if data.item_loop and data.item_loop[1].text == 'READ ME' then
-			log:debug('This is not a message suitable for the current playlist')
-			return
-		end
-
-		step.menu:setItems(step.db:menuItems(data))
-		_requestStatus()
-
-	else
-		log:error(err)
-	end
-end
 
 -- _globalActions
 -- provides a function for default button behaviour, called outside of the context of the browser
@@ -1423,7 +1399,7 @@ function _goSearchAction()
 end
 
 function _goMusicLibraryAction()
-	_goMenuTableItem("myMusic")
+	_goMenuTableItem("_myMusic")
 	return EVENT_CONSUME
 end
 
@@ -1451,6 +1427,17 @@ function _goRhapsodyAction()
 	return EVENT_CONSUME
 end
 
+function _goAlarmsAction()
+	_goMenuTableItem("settingsAlarm")
+	return EVENT_CONSUME
+end
+
+
+function _goBrightnessAction()
+	_goMenuTableItem("brightnessSetting")
+	return EVENT_CONSUME
+end
+
 
 function _goRepeatToggleAction()
 	_player:repeatToggle()
@@ -1470,7 +1457,7 @@ function _goSleepAction()
 end
 
 
-function _goPlayFavoriteAction(self, event)
+function _goPlayPresetAction(self, event)
 	local action = event:getAction()
 	local number = string.sub(action, -1 , -1)
 	if not number or not string.find(number, "%d") then
@@ -1478,17 +1465,16 @@ function _goPlayFavoriteAction(self, event)
 		return EVENT_CONSUME
 	end
 
-	_player:numberHold(number)
+	_player:presetPress(number)
+	_goNowPlayingAction()
 
 	return EVENT_CONSUME
 end
 
 
-function _goCurrentTrackDetailsAction()
-	--todo -get menu object, iterate through to current, select it - doh, harder than I thought for something that's not yet a requirement
---	showPlaylist()
---	Framework:pushAction( "go")
-	return EVENT_CONSUME
+function _goCurrentTrackInfoAction()
+	showCurrentTrack()
+	return EVENT_CONSUME	
 end
 
 -- _globalActions
@@ -1504,20 +1490,22 @@ local _globalActionsNEW = {
 	["go_playlists"] = _goPlaylistsAction,
 	["go_music_library"] = _goMusicLibraryAction,
 	["go_rhapsody"] = _goRhapsodyAction,
-	["go_current_track_details"] = _goCurrentTrackDetailsAction,
+	["go_alarms"] = _goAlarmsAction,
+	["go_current_track_info"] = _goCurrentTrackInfoAction,
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
 	["sleep"] = _goSleepAction,
-	["play_favorite_0"] = _goPlayFavoriteAction,
-	["play_favorite_1"] = _goPlayFavoriteAction,
-	["play_favorite_2"] = _goPlayFavoriteAction,
-	["play_favorite_3"] = _goPlayFavoriteAction,
-	["play_favorite_4"] = _goPlayFavoriteAction,
-	["play_favorite_5"] = _goPlayFavoriteAction,
-	["play_favorite_6"] = _goPlayFavoriteAction,
-	["play_favorite_7"] = _goPlayFavoriteAction,
-	["play_favorite_8"] = _goPlayFavoriteAction,
-	["play_favorite_9"] = _goPlayFavoriteAction,
+	["go_brightness"] = _goBrightnessAction,
+	["play_preset_0"] = _goPlayPresetAction,
+	["play_preset_1"] = _goPlayPresetAction,
+	["play_preset_2"] = _goPlayPresetAction,
+	["play_preset_3"] = _goPlayPresetAction,
+	["play_preset_4"] = _goPlayPresetAction,
+	["play_preset_5"] = _goPlayPresetAction,
+	["play_preset_6"] = _goPlayPresetAction,
+	["play_preset_7"] = _goPlayPresetAction,
+	["play_preset_8"] = _goPlayPresetAction,
+	["play_preset_9"] = _goPlayPresetAction,
 	
 	["go_home_or_now_playing"] = function()
 		local windowStack = Framework.windowStack
@@ -1553,6 +1541,10 @@ local _globalActionsNEW = {
 	        Framework:playSound("PLAYBACK")
 		_player:stop()
 		return EVENT_CONSUME
+	end,
+
+	["mute"] = function(self, event)
+		return self.volume:event(event)
 	end,
 
 	["volume_up"] = function(self, event)
@@ -1602,6 +1594,7 @@ local _defaultActions = {
 		return EVENT_CONSUME
 	end,
 
+	--FIXME: add and add-hold should instead be delivered by the context menu
 	["add-status"] = function(_1, _2, _3, dbIndex)
 		_player:playlistDeleteIndex(dbIndex)
 		return EVENT_CONSUME
@@ -1611,6 +1604,18 @@ local _defaultActions = {
 		_player:playlistZapIndex(dbIndex)
 		return EVENT_CONSUME
 	end,
+
+}
+
+-- Liberace says: "touch is play"
+_defaultActions['go-status'] = _defaultActions['play-status']
+
+
+--maps actionName to item action alias
+local _actionAliasMap = {
+	["play"]      = "playAction",
+	["play-hold"] = "playHoldAction",
+	["add"]       = "addAction",
 }
 
 
@@ -1632,10 +1637,28 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		local iAction
 		local onAction
 		local offAction
+		local nextWindow
+		--nextWindow on the base
+		local bNextWindow
+		--nextWindow on the item
+		local iNextWindow
+		--nextWindow on the action
+		local aNextWindow
 		
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
 			return EVENT_UNUSED
+		end
+
+		--if item instructs us to use a different Action for the given action, tranform to the new Action
+		--todo handle all alias names and handle base aliases
+		local aliasName = _actionAliasMap[actionName]
+		if aliasName then
+			local aliasActionName = item[aliasName]
+			if aliasActionName then
+				actionName = aliasActionName
+				log:debug("item for action after transform: ", actionName )
+			end
 		end
 
 		-- special cases for go action:
@@ -1669,8 +1692,17 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
 
+		-- dissect base and item for nextWindow params
+		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
+		iNextWindow = item['nextWindow']
+
+		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
+			or _safeDeref(chunk, 'base', 'actions', actionName, 'window', 'isContextMenu')
+
+		local itemType = _safeDeref(item, 'actions', actionName, 'params', 'type')
+
 		choiceAction = _safeDeref(item, 'actions', 'do', 'choices')
-		
+
 		-- now check for a run-of-the mill action
 		if not (iAction or bAction or onAction or offAction or choiceAction) then
 			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
@@ -1680,10 +1712,16 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- okay to call on or off this, as they are just special cases of 'do'
 			actionName = 'do'
 		end
-		
-		-- XXX: Fred: After an input box is used, chunk is nil, so base can't be used
+
+		-- is there a nextWindow on the action
+		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow')
+
+		-- actions take precedence over items/base, item takes precendence over base
+		nextWindow = aNextWindow or iNextWindow or bNextWindow
+
+		-- XXX: After an input box is used, chunk is nil, so base can't be used
 	
-		if iAction or bAction or choiceAction then
+		if iAction or bAction or choiceAction or nextWindow then
 			-- the resulting action, if any
 			local jsonAction
 	
@@ -1700,6 +1738,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 			
 			-- not item action, look for a base one
+			-- Bug 13097, if we have nextWindow, don't look for an action,------ breaks "touch to play", reverted
 			elseif bAction then
 				log:debug("_actionHandler(", actionName, "): base action")
 			
@@ -1750,54 +1789,90 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			end -- elseif bAction
 	
 			-- now we may have found a command
-			if jsonAction then
+			if jsonAction or nextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
-
-				if menuItem then
+				if menuItem and not (nextWindow and nextWindow == "home") then
 					menuItem:playSound("WINDOWSHOW")
 				end
-			
+
+				local skipNewWindowPush = false
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
-				local step
-				local sink = _devnull
+				local step, sink
 				local from, qty
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
-				if item['nextWindow'] == 'nowPlaying' then
-					sink = _goNowPlaying
-				elseif item['nextWindow'] == 'playlist' then
-					sink = _goPlaylist
-				elseif item['nextWindow'] == 'home' then
-					sink = goHome
-				elseif item['nextWindow'] == 'parent' then
-					sink = _hideMe()
-				elseif item['nextWindow'] == 'grandparent' then
-					log:error("GP")
-					log:error("GP")
-					log:error("GP")
+				if nextWindow == 'nowPlaying' then
+					skipNewWindowPush = true
 
-					sink = _hideMeAndMyDad()
-				elseif item['nextWindow'] == 'refreshOrigin' then
-					sink = _refreshOrigin()
-				elseif item['nextWindow'] == 'refresh' then
-					sink = _refreshMe()
+					step, sink = _emptyDestination(step)
+					_stepLockHandler(step, function () _goNowPlaying(nil, true, true ) end)
+
+				elseif nextWindow == 'playlist' then
+					_goPlaylist(true)
+				elseif nextWindow == 'home' then
+					-- bit of a hack to notify serverLinked after factory reset SN menu
+					if item['serverLinked'] then
+						log:info("serverlinked: pin: ", _server:getPin())
+						_server.jnt:notify('serverLinked', _server, true)
+					else
+						goHome()
+					end
+					
+				elseif nextWindow == 'parent' then
+					_hideMe()
+				elseif nextWindow == 'grandparent' then
+					local currentStep = _getCurrentStep()
+					if currentStep and currentStep.window and currentStep.window:isContextMenu() then
+						Window:hideContextMenus()
+					else
+						_hideMeAndMyDad()
+					end
+				elseif nextWindow == 'refreshOrigin' then
+					_refreshOrigin()
+				elseif nextWindow == 'refresh' then
+					_refreshMe()
+				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
+				elseif nextWindow then
+					_hideToX(nextWindow)
+				elseif itemType == "slideshow" or (item and item["slideshow"]) then
+					from, qty = 0, 200
+					
+					skipNewWindowPush = true
+
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
-				elseif actionName == 'go'
-					-- when we want play or add action to do the same thing as 'go', and give us a new window
-					or ( item['playAction'] == 'go' and actionName == 'play' )
-					or ( item['playHoldAction'] == 'go' and actionName == 'play-hold' )
-					or ( item['addAction'] == 'go' and actionName == 'add' ) then
-					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item), _browseSink, jsonAction)
+				elseif actionName == 'go' then
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
 					if step.menu then
-						from, qty = _decideFirstChunk(step.db, jsonAction)
+						from, qty = _decideFirstChunk(step, jsonAction)
+					end
+				-- context menu handler
+				elseif actionName == 'more' or
+					actionName == "add" and (item['addAction'] == 'more' or
+					-- using addAction is temporary to ensure backwards compatibility 
+					-- until all 'add' commands are removed in SC in favor of 'more'
+					_safeDeref(chunk, 'base', 'addAction') == 'more') then
+
+					log:debug('Context Menu')
+
+
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
+					if step.menu then
+						from, qty = _decideFirstChunk(step, jsonAction)
 					end
 				end
 
-				_pushToNewWindow(step)
-			
-				-- send the command
-				 _performJSONAction(jsonAction, from, qty, step, sink)
+				if jsonAction then
+					if not skipNewWindowPush then
+						_pushToNewWindow(step)
+					end
+					_performJSONAction(jsonAction, from, qty, step, sink, itemType)
+				else
+					-- if there's not jsonAction, sink is a nextWindow function, so just call it
+					if sink or not nextWindow then -- still try if "not nextWindow" so error occurs, since sink should exist in those cases
+						sink()
+					end
+				end
 			
 				return EVENT_CONSUME
 			end
@@ -1844,9 +1919,15 @@ local _actionToActionName = {
 	["pause"]   = 'pause',
 	["stop"]   = 'pause-hold',
 	["play"]    = 'play',
+	["set_preset_1"]    = 'set-preset-1',
+	["set_preset_2"]    = 'set-preset-2',
+	["set_preset_3"]    = 'set-preset-3',
+	["set_preset_4"]    = 'set-preset-4',
+	["set_preset_5"]    = 'set-preset-5',
+	["set_preset_6"]    = 'set-preset-6',
 	["create_mix"]    = 'play-hold',
-	["add"]     = 'add',
-	["add_next"]     = 'add-hold',
+	["add"]     = 'more',
+	["add_next"]     = 'add',
 	["go"]      = 'go',
 	["go_hold"]      = 'go-hold',
 
@@ -1857,7 +1938,9 @@ local _actionToActionName = {
 
 -- _browseMenuListener
 -- called 
-local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
+local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
+	local db = step.db
+
 	log:debug("_browseMenuListener(", event:tostring(), ", " , index, ")")
 	
 
@@ -1866,7 +1949,7 @@ local function _browseMenuListener(menu, db, menuItem, dbIndex, event)
 	local evtType = event:getType()
 
 	local currentlySelectedIndex = _getCurrentStep().menu:getSelectedIndex()
-	if _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
+	if _player and _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
 		if currentlySelectedIndex then
 			_player.lastKeyTable.index = currentlySelectedIndex 
 		else
@@ -1954,7 +2037,9 @@ end
 
 -- _browseMenuRenderer
 -- renders a basic menu
-local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderSize)
+local function _browseMenuRenderer(menu, step, widgets, toRenderIndexes, toRenderSize)
+	local db = step.db
+
 	--	log:debug("_browseMenuRenderer(", toRenderSize, ", ", db, ")")
 	-- we must create or update the widgets for the indexes in toRenderIndexes.
 	-- this last list can contain null, so we iterate from 1 to toRenderSize
@@ -1973,7 +2058,7 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			
 			-- the widget in widgets[widgetIndex] shall correspond to data[dataIndex]
 --			log:debug(
---				"_browseMenuRenderer: rendering widgetIndex:", 
+--				"_browseMenuRenderer: rendering widgetIndex:",
 --				widgetIndex, ", dataIndex:", dbIndex, ")"
 --			)
 			
@@ -1990,15 +2075,17 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 			if current then
 				style = "albumcurrent"
 			elseif item and item["style"] then
-				local menuStyle = menu:getStyle()
-				local menuPrefix = string.match(menuStyle, "(%a+)menu")
-				if menuPrefix then
-					style = menuPrefix .. item["style"]
-				else
-					style = item["style"]
-				end
+				style = item["style"]
 			end
-			widgets[widgetIndex] = _decoratedLabel(widget, style, item, db, menuAccel)
+
+			-- support legacy styles for play and add
+			if styleMap[style] then
+				style = styleMap[style]
+			end
+			if item and (item['checkbox'] or item['radio'] or item['selectedIndex']) then
+				style = 'item_choice'
+			end
+			widgets[widgetIndex] = _decoratedLabel(widget, style, item, step, menuAccel)
 		end
 	end
 
@@ -2018,7 +2105,7 @@ local function _browseMenuRenderer(menu, db, widgets, toRenderIndexes, toRenderS
 	for dbIndex = startIndex, startIndex + toRenderSize do
 		local item = db:item(dbIndex)
 		if item then
-			_artworkItem(item, nil, false)
+			_artworkItem(step, item, nil, false)
 		end
 	end
 end
@@ -2026,7 +2113,9 @@ end
 
 -- _browseMenuAvailable
 -- renders a basic menu
-local function _browseMenuAvailable(menu, db, dbIndex, dbVisible)
+local function _browseMenuAvailable(menu, step, dbIndex, dbVisible)
+	local db = step.db
+
 	-- check range
 	local minIndex = math.max(1, dbIndex)
 	local maxIndex = math.min(dbIndex + dbVisible, db:size())
@@ -2036,6 +2125,199 @@ local function _browseMenuAvailable(menu, db, dbIndex, dbVisible)
 	return (db:item(minIndex) ~= nil) and (db:item(maxIndex) ~= nil)
 end
 
+
+-- _browseInput: method to render a textinput/keyboard for SlimBrowse input
+local function _browseInput(window, item, db, inputSpec, last, timeFormat)
+
+	local titleWidgetComplete = false
+	if not inputSpec then
+		log:error('no input spec')
+		return
+	end
+	-- never allow screensavers in an input window
+	window:setAllowScreensaver(false)
+	if inputSpec.title then
+		window:setTitle(inputSpec.title)
+	end
+
+	local nowPlayingButton
+	if inputSpec.setupWindow == 1 then
+		nowPlayingButton = _invisibleButton()
+	else
+		nowPlayingButton = _nowPlayingButton()
+	end
+
+	local titleText = window:getTitle()
+	if inputSpec.title then
+		titleText = inputSpec.title
+	end
+
+	if titleText then
+		titleWidgetComplete = true
+	end
+
+	local newTitleWidget = Group('title', {
+		text = Label("text", titleText),
+		lbutton = _backButton(),
+		rbutton = nowPlayingButton,
+	})	
+	window:setTitleWidget(newTitleWidget)
+	
+	
+	-- make sure it's a number for the comparison below
+	-- Lua insists on checking type while Perl couldn't care less :(
+	inputSpec.len = tonumber(inputSpec.len)
+	
+	-- default allowedChars
+	if not inputSpec.allowedChars then
+		if inputSpec._kbType and string.match(inputSpec._kbType, 'email') then
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_EMAIL")
+		else
+			inputSpec.allowedChars = _string("ALLOWEDCHARS_WITHCAPS")
+		end
+	end
+	local v = ""
+	local initialText = inputSpec.initialText
+	local inputStyle  = inputSpec._inputStyle
+
+	if initialText then
+		v = tostring(initialText)
+	end
+
+	local inputValue
+	-- time input now handled without a textinput widget
+	if inputStyle == 'time' then
+		local initTime   = DateTime:timeTableFromSFM(v, timeFormat)
+		local submitCallback = function( hour, minute, ampm)
+
+			log:debug('Time entered as: ', hour, ':', minute, ' ', ampm)
+			local totalSecs = ( tonumber(hour) * 3600 ) + ( tonumber(minute) * 60 )
+
+			if ampm == 'AM' and tonumber(hour) == 12 then
+				totalSecs = minute * 60
+			elseif ampm == 'PM' then
+				totalSecs = totalSecs + 43200
+			end
+			-- input is done
+			item['_inputDone'] = true
+			-- set _lastInput to the total seconds from midnight
+			_lastInput = tostring(totalSecs)
+			-- do the action
+			_actionHandler(nil, nil, db, nil, nil, 'go', item)
+			-- close the window if this is a "do" action
+			local doAction = _safeDeref(item, 'actions', 'do')
+			local nextWindow = _safeDeref(item, 'nextWindow')
+
+			--Close the window, unless the 'do' item also has a nextWindow param, which trumps
+			if doAction and not nextWindow then
+				-- close the window
+				window:playSound("WINDOWHIDE")
+				window:hide()
+			else
+				window:playSound("WINDOWSHOW")
+			end
+		end
+		local timeInput = Timeinput(window, submitCallback, initTime)
+
+		return true
+
+	elseif inputStyle == 'ip' then
+		if not initialText then
+			initialText = ''
+		end
+		v = Textinput.ipAddressValue(initialText)
+		inputValue = v
+	elseif inputSpec.len and tonumber(inputSpec.len) > 0 then
+		inputValue = Textinput.textValue(v, tonumber(inputSpec.len), 200)
+	else
+		inputValue = v
+	end
+
+	-- create a text input
+	local input = Textinput(
+		"textinput", 
+		inputValue,
+		function(_, value)
+			_lastInput = tostring(value)
+			--table.insert(_inputParams, value)
+			item['_inputDone'] = tostring(value)
+			
+			-- popup time
+			local displayPopup = _safeDeref(inputSpec, 'processingPopup')
+			local displayPopupText = _safeDeref(inputSpec, 'processingPopup', 'text')
+			if displayPopup then
+				_inputInProgress(window, displayPopupText)
+			end
+			-- now we should perform the action !
+			_actionHandler(nil, nil, db, nil, nil, 'go', item)
+			-- close the text input if this is a "do"
+			local doAction = _safeDeref(item, 'actions', 'do')
+			local nextWindow = _safeDeref(item, 'nextWindow')
+
+			--Close the window, unless the 'do' item also has a nextWindow param, which trumps
+			if doAction and not nextWindow then
+				-- close the window
+				window:playSound("WINDOWHIDE")
+				window:hide()
+			else
+				window:playSound("WINDOWSHOW")
+			end
+			return true
+		end,
+		inputSpec.allowedChars
+	)
+
+	--[[ FIXME: removing help (all platforms) until a per-platform solution can be made for help
+	-- fix up help
+	local helpText
+	if inputSpec.help then
+		local help = inputSpec.help
+		helpText = help.text
+		if not helpText then
+			if help.token then
+				helpText = _string(help.token)
+			end
+		end
+	end
+	
+	local softButtons = { inputSpec.softbutton1, inputSpec.softbutton2 }
+	local helpStyle = 'help'
+
+	if softButtons[1] or softButtons[2] then
+		helpStyle = 'softHelp'
+	end
+
+	if helpText then
+		local help = Textarea(helpStyle, helpText)
+		window:addWidget(help)
+	end
+
+	if softButtons[1] then
+		window:addWidget(Label("softButton1", softButtons[1]))
+	end
+	if softButtons[2] then
+		window:addWidget(Label("softButton2", softButtons[2]))
+	end
+	--]]
+	
+	if inputSpec.help and inputSpec.help.text then
+		_addHelpButton(window, inputSpec.help.text, inputSpec.setupWindow)
+	end
+
+	local kbType = inputSpec._kbType or 'qwerty'
+	if kbType == 'qwertyLower' then
+		kbType = 'qwerty'
+	end
+	local keyboard = Keyboard("keyboard", kbType, input)
+	local backspace = Keyboard.backspace()
+	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
+
+	window:addWidget(group)
+	window:addWidget(keyboard)
+	window:focusWidget(group)
+
+	return titleWidgetComplete
+end
 
 -- _newDestination
 -- origin is the step we are coming from
@@ -2048,139 +2330,52 @@ end
 _newDestination = function(origin, item, windowSpec, sink, data)
 	log:debug("_newDestination():")
 	log:debug(windowSpec)
-	
-	
+
 	-- a DB (empty...) 
 	local db = DB(windowSpec)
-	
-	-- create a window in all cases
-	local window = Window(windowSpec.windowStyle)
-	window:setTitleWidget(_decoratedLabel(nil, windowSpec.labelTitleStyle, windowSpec, db, false))
-	
-	local menu
 
-	-- if the item has an input field, we must ask for it
+	local window
+	if windowSpec.isContextMenu then
+		window = ContextMenuWindow("More", windowSpec.windowId) -- todo localize or decide what title text should be
+	else
+		window = Window(windowSpec.windowStyle or 'text_list', _, _, windowSpec.windowId)
+	end
+
+	local titleWidgetComplete = false
+	local timeFormat = nil
+	local menu
+	-- if the item has an input field or fields, we must ask for it
 	if item and item['input'] and not item['_inputDone'] then
 
-		local inputSpec
-		
-		-- legacy SS compatibility
-		-- FIXME: remove SS compatibility with legacy JiveMLON generation
-		if type(item['input']) != "table" then
-			inputSpec = {
-				len = item['input'],
-				help = {
-					token = "SLIMBROWSER_SEARCH_HELP",
-				},
-			}
+		if item['input'] and item['input']['_inputStyle'] == 'time' then
+			timeFormat = _getTimeFormat()
+			if timeFormat == '12' then
+				window:setStyle('input_time_12h')
+			else
+				window:setStyle('input_time_24h')
+			end
 		else
-			inputSpec = item["input"]
+			window:setStyle('input')
 		end
-		
-		-- make sure it's a number for the comparison below
-		-- Lua insists on checking type while Perl couldn't care less :(
-		inputSpec.len = tonumber(inputSpec.len)
-		
-		-- default allowedChars
-		if not inputSpec.allowedChars then
-			inputSpec.allowedChars = _string("ALLOWEDCHARS_CAPS")
-		end
-		local v = ""
-		local initialText = _safeDeref(item, 'input', 'initialText')
-                local inputStyle  = _safeDeref(item, 'input', '_inputStyle')
+		inputSpec = item.input
 
-		if initialText then
-			v = tostring(initialText)
-		end
-
-		if inputStyle == 'time' then
-			if not initialText then
-				initialText = '0'
+		-- multiple input
+		if #inputSpec > 0 then
+			for i, v in ipairs(inputSpec) do
+				local last = false
+				if i == #inputSpec then
+					last = true
+				end
+				titleWidgetComplete = _browseInput(window, item, db, v, last, timeFormat)
 			end
-			local timeFormat = _getTimeFormat()
-			local _v = DateTime:timeFromSFM(v, timeFormat)
-			v = Textinput.timeValue(_v, timeFormat)
-		elseif inputStyle == 'ip' then
-			if not initialText then
-				initialText = '0.0.0.0'
-			end
-			v = Textinput.ipAddressValue(initialText)
+		-- single input
+		else
+			titleWidgetComplete = _browseInput(window, item, db, inputSpec, true, timeFormat)
 		end
-
-		-- create a text input
-		local input = Textinput(
-			"textinput", 
-			v,
-			function(_, value)
-				-- check for min number of chars
-				if #value < inputSpec.len then
-					return false
-				end
-
-				
-				log:debug("Input: " , value)
-				_lastInput = value
-				item['_inputDone'] = value
-				
-				-- popup time
-				local displayPopup = _safeDeref(item, 'input', 'processingPopup')
-				local displayPopupText = _safeDeref(item, 'input', 'processingPopup', 'text')
-				if displayPopup then
-					_inputInProgress(self, displayPopupText)
-				end
-				-- now we should perform the action !
-				_actionHandler(nil, nil, db, nil, nil, 'go', item)
-				-- close the text input if this is a "do"
-				local doAction = _safeDeref(item, 'actions', 'do')
-				local nextWindow = _safeDeref(item, 'nextWindow')
-
-				--Close the window, unless the 'do' item also has a nextWindow param, which trumps
-				if doAction and not nextWindow then
-					-- close the window
-					window:playSound("WINDOWHIDE")
-					window:hide()
-				end
-				return true
-			end,
-			inputSpec.allowedChars
-		)
-
-		-- fix up help
-		local helpText
-		if inputSpec.help then
-			local help = inputSpec.help
-			helpText = help.text
-			if not helpText then
-				if help.token then
-					helpText = _string(help.token)
-				end
-			end
-		end
-		
-		local softButtons = { inputSpec.softbutton1, inputSpec.softbutton2 }
-		local helpStyle = 'help'
-
-		if softButtons[1] or softButtons[2] then
-			helpStyle = 'softHelp'
-		end
-
-		if helpText then
-			local help = Textarea(helpStyle, helpText)
-			window:addWidget(help)
-		end
-
-		if softButtons[1] then
-			window:addWidget(Label("softButton1", softButtons[1]))
-		end
-		if softButtons[2] then
-			window:addWidget(Label("softButton2", softButtons[2]))
-		end
-		
-		window:addWidget(input)
 
 	-- special case for sending over textArea
 	elseif item and item['textArea'] then
-		local textArea = Textarea("textarea", item['textArea'])
+		local textArea = Textarea("text", item['textArea'])
 		window:addWidget(textArea)
 	else
 	
@@ -2191,7 +2386,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 		menu = Menu(db:menuStyle(), _browseMenuRenderer, _browseMenuListener, _browseMenuAvailable)
 		
 		-- alltogether now
-		menu:setItems(db:menuItems())
 		window:addWidget(menu)
 
 		-- add support for help text on a regular menu
@@ -2220,7 +2414,39 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	}
 	
 	log:debug("new step: " , step)
+
+	if not windowSpec.isContextMenu and not titleWidgetComplete then
+		window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
+	end
+
+	if step.menu then
+		_stepSetMenuItems(step)
+	end
 	
+	if windowSpec.disableBackButton then
+		window:addListener(EVENT_KEY_PRESS | EVENT_ACTION,
+			function(event)
+				local type = event:getType()
+				if type == ACTION then
+					local action = event:getAction()
+					if action == 'back' then
+						Framework:playSound("BUMP")
+						window:bumpLeft()
+						return EVENT_CONSUME
+					end
+				elseif type == EVENT_KEY_PRESS then
+					local keycode = event:getKeycode()
+					if keycode == KEY_BACK then
+						Framework:playSound("BUMP")
+						window:bumpLeft()
+						return EVENT_CONSUME
+					end
+				end
+				return EVENT_UNUSED
+			end
+		)
+	end
+
 	-- make sure closing our windows do keep the path alive!
 	window:addListener(EVENT_WINDOW_POP,
 		function(evt)
@@ -2238,10 +2464,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	)
 		
 	-- manage sink
-	local stepSink = _getStepSink(step, sink)
-	step.sink = stepSink
-	
-	return step, stepSink
+	step.sink = function(chunk, err)
+		sink(step, chunk, err)
+	end
+
+	return step, step.sink
 end
 
 
@@ -2250,10 +2477,17 @@ local function _installPlayerKeyHandler(self)
 		return
 	end
 
-	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD,
+	_playerKeyHandler = Framework:addListener(EVENT_KEY_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_ALL,
 		function(event)
 			local type = event:getType()
-			
+
+			if (type & EVENT_IR_ALL ) > 0 then
+				if event:isIRCode("volup") or event:isIRCode("voldown") then
+					return self.volume:event(event)
+				end
+				return EVENT_UNUSED
+			end
+
 			local actionName = _keycodeActionName[event:getKeycode()]
 			if not actionName then
 				return EVENT_UNUSED
@@ -2289,7 +2523,7 @@ local function _removePlayerKeyHandler(self)
 end
 
 local function _installActionListeners(self)
-	if _actionListenerHandles  then
+	if _actionListenerHandles then
 		return
 	end
 	
@@ -2321,412 +2555,162 @@ end
 
 -- goHome
 -- pushes the home window to the top
-function goHome()
-	local windowStack = Framework.windowStack
-	Framework:playSound("JUMP")
-	while #windowStack > 1 do
-		windowStack[#windowStack - 1]:hide()
-	end
+function goHome(self, transition)
+	appletManager:callService("goHome")
 end
 
 
--- showTrackOne
---
--- pushes the song info window for track one on stage
--- this method is used solely by NowPlaying Applet for
--- skipping the playlist screen when the playlist size == 1
-function showTrackOne()
-	local playerStatus = _player:getPlayerStatus()
-	local item = playerStatus and playerStatus.item_loop and playerStatus.item_loop[1]
-	local iWindow = _safeDeref(item, 'window')
-
-	local baseData = playerStatus and playerStatus.base
-	local bWindow = _safeDeref(baseData, 'window')
-
-	local bAction = _safeDeref(baseData, 'actions', 'go')
-	local iAction = _safeDeref(item, 'actions', 'go')
-
-	local jsonAction
-
-	-- if the action is defined in the item, then do that
-	if iAction then
-		jsonAction = iAction
-	-- bAction contains (possibly) the start of the songinfo command for track 1
-	else
-		jsonAction = bAction
-		local params = jsonAction["params"]
-                if not params then
-			params = {}
-		end
-		-- but also get params in the item
-		if item["params"] then
-			for k,v in pairs(item['params']) do
-				params[k] = v
-			end
-		end
-		jsonAction["params"] = params
-	end
-
-	-- determine style
-	local menuStyle = _priorityAssign('menuStyle', "", iWindow, bWindow)
-	local newWindowSpec = {
-		["windowStyle"]      = "",
-		["labelTitleStyle"]  = _priorityAssign('titleStyle', iWindow, bWindow, 'album') .. "title",
-		["menuStyle"]        = menuStyle .. "menu",
-		["labelItemStyle"]   = menuStyle .. "item",
-		["text"]             = _priorityAssign('text',       item["text"],    iWindow, bWindow),
-		["icon-id"]          = _priorityAssign('icon-id',    item["icon-id"], iWindow, bWindow),
-		["icon"]             = _priorityAssign('icon',       item["icon"],    iWindow, bWindow),
-	}		
-
-	local step, sink = _newDestination(nil, item, newWindowSpec, _browseSink)
-	step.window:addActionListener("back", step, _goNowPlayingAction)
-	step.window:show()
-	_pushStep(step)
-
-	-- send the command
-	local from, qty
-	_performJSONAction(jsonAction, 0, 200, step, sink)
-end
-
--- showEmptyPlaylist
--- if the player playlist is empty, we replace _statusStep with this window
-function showEmptyPlaylist(token)
-
-	local window = Window("window", _string(modeTokens['play']), 'currentplaylisttitle')
-	local menu = SimpleMenu("menu")
-	menu:addItem({
-		     text = _string(token),
-			style = 'albumitemNoAction'
-	})
-	window:addWidget(menu)
-
-	_emptyStep = {}
-	_emptyStep.window = window
-
-	return window
-
-end
-
-function _leavePlayListAction()
-	local windowStack = Framework.windowStack
-	-- if this window is #2 on the stack there is no NowPlaying window
-	-- (e.g., when playlist is empty)
-	if #windowStack == 2 then
-		_goNow('home')
-	else
-		_goNow('nowPlaying')
-	end
-	return EVENT_CONSUME
+function findSqueezeNetwork(self)
+	-- get squeezenetwork object
+        for mac, server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isSqueezeNetwork() then
+                        log:debug("found SN")
+                        return server
+                end
+        end
+	log:error('SN not found')
+	return nil
 end
 
 
--- showPlaylist
---
-function showPlaylist()
-	if _statusStep then
+function squeezeNetworkRequest(self, request, inSetup, successCallback)
+	local squeezenetwork = findSqueezeNetwork()
 
-		-- arrange so that menuListener works
-		_pushStep(_statusStep)
-
-		-- current playlist should select currently playing item 
-		-- if there is only one item in the playlist, bring the selected item to top
-		local playerStatus = _player:getPlayerStatus()
-		local playlistSize = _player:getPlaylistSize() 
-
-		if not _player:isPowerOn() then
-			_statusStep.window:setTitle(_string(modeTokens['off']))
-		end
-
-		if playlistSize == 0 then
-			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
-			customWindow:show()
-			return EVENT_CONSUME
-		end
-
-
-		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
-			_statusStep.menu:setSelectedIndex(1)
-		-- where we are in the playlist is stored in the item list as currentIndex
-		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
-			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
-		end
-
-		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
-
-		_statusStep.window:show()
-
-
-		return EVENT_CONSUME
-	end
-	return EVENT_UNUSED
-
-end
-
-function notify_playerPower(self, player, power)
-	log:debug('SlimBrowser.notify_playerPower')
-	if _player ~= player then
-		return
-	end
-	local playerStatus = player:getPlayerStatus()
-	if not playerStatus then
-		log:info('no player status')
+	if not squeezenetwork or not request then
 		return
 	end
 
-	local playlistSize = playerStatus.playlist_tracks
-	local mode = player:getPlayMode()
+	self.inSetup = inSetup
 
-	-- when player goes off, user should get single item styled 'Off' playlist
-	local step = _statusStep
-	local emptyStep = _emptyStep
+	_server = squeezenetwork
 
-	if step.menu then
-		-- show 'OFF' in playlist window title when the player is off
-		if not power then
-			if step.window then
-				step.window:setTitle(_string("SLIMBROWSER_OFF"))
-			end
-		else
-			if step.window then
-				if emptyStep then
-					step.window:replace(emptyStep.window, Window.transitionFadeIn)
-				end
-				step.window:setTitle(_string(modeTokens[mode]))
-			end
-		end
-	end
-end
-
-function notify_playerModeChange(self, player, mode)
-	log:debug('SlimBrowser.notify_playerModeChange')
-	if _player ~= player then
-		return
-	end
-
-	local step = _statusStep
-	local token = mode
-	if mode != 'play' and not player:isPowerOn() then
-		token = 'off'
-	end
-
-	step.window:setTitle(_string(modeTokens[token]))
-
-end
-
-function notify_playerPlaylistChange(self, player)
-	log:debug('SlimBrowser.notify_playerPlaylistChange')
-	if _player ~= player then
-		return
-	end
-
-	local playerStatus = player:getPlayerStatus()
-	local playlistSize = _player:getPlaylistSize()
-	local step         = _statusStep
-	local emptyStep    = _emptyStep
-
-	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
-	if _player:isPowerOn() and playlistSize == 0 then
-		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING') 
-		if emptyStep then
-			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-		if step.window then
-			customWindow:replace(step.window, Window.transitionFadeIn)
-		end
-		-- we've done all we need to when the playlist is 0, so let's get outta here
-		return
-	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
-	elseif playlistSize and emptyStep then
-		if step.window then
-			step.window:replace(emptyStep.window, Window.transitionFadeIn)
-		end
-	
-	end
-
-	-- update the window
-	step.db:updateStatus(playerStatus)
-	step.menu:reLayout()
-
-	-- does the playlist need loading?
-	_requestStatus()
-
-end
-
-function notify_playerTrackChange(self, player, nowplaying)
-	log:debug('SlimBrowser.notify_playerTrackChange')
-
-	if _player ~= player then
-		return
-	end
-
-	if not player:isPowerOn() then
-		return
-	end
-
-	local playerStatus = player:getPlayerStatus()
-	local step = _statusStep
-
-	step.db:updateStatus(playerStatus)
-	if step.db:playlistIndex() then
-		step.menu:setSelectedIndex(step.db:playlistIndex())
-	else
-		step.menu:setSelectedIndex(1)
-	end
-	step.menu:reLayout()
-
-end
-
--- notify_playerNewName
--- this is called when the player name changes
--- we update our main window title
-function notify_playerNewName(self, player, newName)
-	log:debug("SlimBrowserApplet:notify_playerNewName(", player, ",", newName, ")")
-
-	-- if this concerns our player
-	if _player == player then
-		jiveMain:setTitle(newName)
-	end
-end
-
-
--- notify_playerDelete
--- this is called when the player disappears
-function notify_playerDelete(self, player)
-	log:debug("SlimBrowserApplet:notify_playerDelete(", player, ")")
-
-	-- if this concerns our player
-	if _player == player then
-		-- panic!
-		log:info("Player gone while browsing it ! -- packing home!")
-		self:free()
-	end
-end
-
-
--- notify_playerCurrent
--- this is called when the current player changes (possibly from no player)
-function notify_playerCurrent(self, player)
-	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
-
-	-- has the player actually changed?
-	if _player == player then
-		return
-	end
-
-	-- free current player
-	if _player then
-		self:free()
-	end
-
-	-- clear any errors, we may have changed servers
-	iconbar:setServerError("OK")
-
-	-- update the volume object
-	if self.volume then
-		self.volume:setPlayer(player)
-	end
-
-	-- update the scanner object
-	self.scanner:setPlayer(player)
-
-	-- nothing to do if we don't have a player or server
-	-- NOTE don't move this, the code above needs to run when disconnecting
-	-- for all players.
-	if not player or not player:getSlimServer() then
-		return
-	end
-
-	-- assign our locals
-	_player = player
-	_server = player:getSlimServer()
-	_string = function(token) return self:string(token) end
-	local _playerId = _player:getId()
-
-	log:info('Subscribing to /slim/menustatus/', _playerId)
-	local cmd = { 'menustatus' }
-	_player:subscribe(
-		'/slim/menustatus/' .. _playerId,
-		_menuSink(sink, cmd),
-		_playerId,
-		cmd
-	)
-
-	-- create a window for the current playlist, this is our _statusStep
+	-- create a window for SN signup
 	local step, sink = _newDestination(
 		nil,
 		nil,
-		_newWindowSpec(
-			nil, 
-			{
-				text = _string("SLIMBROWSER_PLAYLIST"),
-				window = { 
-					["menuStyle"] = "album", 
-				}
-			},
-			'currentplaylist'
-		),
-		_statusSink
+		{
+			text = self:string("SN_SIGNUP"),
+			menuStyle = 'menu',
+			labelItemStyle   = "item",
+			windowStyle = 'text_list',
+			disableBackButton = true,
+		},
+		_browseSink
 	)
-	_statusStep = step
-	
-	-- make sure it has our modifier (so that we use different default action in Now Playing)
-	_statusStep.actionModifier = "-status"
+	local sinkWrapper = sink
+	if successCallback then
+		sinkWrapper =  function(...)
+				sink(...)
+				log:info("Calling successCallback after initial SN request succeeded")
+				--first request is always a welcome screen. return success callback including whether this is an already registered SP 
+				successCallback(squeezenetwork:isSpRegisteredWithSn())
+			end
+	end
+	_pushToNewWindow(step)
+        squeezenetwork:userRequest( sinkWrapper, nil, request )
 
-	-- showtime for the player
-	_server.comet:startBatch()
-	_server:userRequest(sink, _playerId, { 'menu', 0, 100 })
-	_player:onStage()
-	_requestStatus()
-	_server.comet:endBatch()
+end
 
-	-- look to see if the playlist has size and the state of player power
-	-- if playlistSize is 0 or power is off, we show and empty playlist
-	if not _player:isPowerOn() then
-		if _statusStep.window then
-			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
-		end
+
+-- XXXX
+function browserJsonRequest(self, server, jsonAction)
+	-- XXXX allow any server
+
+	if not _player then
+		local currentPlayer = appletManager:callService("getCurrentPlayer")
+		--notify_playerCurrent might not have been called yet.
+		_attachPlayer(self, currentPlayer)
 	end
 
-	if _player:isNeedsUpgrade() then
-		if _player:isUpgrading() then
-			_updatingPlayer(self)
+	_performJSONAction(jsonAction, nil, nil, nil, nil)
+end
+
+
+-- XXXX
+function browserActionRequest(self, server, v, loadedCallback)
+	-- XXXX allow any server
+
+	if not _player then
+		local currentPlayer = appletManager:callService("getCurrentPlayer")
+		--notify_playerCurrent might not have been called yet.
+		_attachPlayer(self, currentPlayer)
+	end
+
+	local jsonAction, from, qty, step, sink
+	local doAction = _safeDeref(v, 'actions', 'do')
+	local goAction = _safeDeref(v, 'actions', 'go')
+
+	if doAction then
+		jsonAction = v.actions['do']
+	elseif goAction then
+		jsonAction = v.actions.go
+	else
+		return false
+	end
+
+	-- we need a new window for go actions, or do actions that involve input
+	if goAction or (doAction and v.input) or v.id == "playerpower" then --slightly hackish, not sure how to handle playerpower case generically
+		log:debug(v.nextWindow)
+		if v.nextWindow then
+			if loadedCallback then
+				loadedCallback(step)
+			end
+			if v.nextWindow == 'home' then
+				sink = function () goHome() end
+			elseif v.nextWindow == 'playlist' then
+				sink = _goPlaylist
+			elseif v.nextWindow == 'nowPlaying' then
+				sink = function () _goNowPlaying() end
+			end
 		else
-			_userTriggeredUpdate(self)
+			if doAction and v.id == "playerpower" then --slightly hackish, not sure how to handle playerpower case generically
+				step, sink = _emptyDestination(step)
+				step.loaded = function()
+					if  loadedCallback then
+						loadedCallback(step)
+					end
+				end
+			else
+				step, sink =_newDestination(nil,
+					v,
+					_newWindowSpec(nil, v),
+					_browseSink,
+					jsonAction
+				)
+
+				if v.input then
+					step.window:show()
+					_pushStep(step)
+				else
+					from, qty = _decideFirstChunk(step, jsonAction)
+
+					step.loaded = function()
+						--if _player.menuAnchor then defer callback until menuAnchor chunk received.
+						if not _player.menuAnchor and loadedCallback then
+							loadedCallback(step)
+							_pushStep(step)
+							step.window:show()
+						else
+							_player.loadedCallback = loadedCallback
+						end
+					end
+				end
+			end
 		end
-	else
-		_hidePlayerUpdating()
 	end
 
-	-- add a fullscreen popup that waits for the _menuSink to load
-	_menuReceived = false
-	_connectingToPlayer(self)
+	if not v.input then
+		_performJSONAction(jsonAction, from, qty, step, sink)
+	end
 
-	jiveMain:setTitle(_player:getName())
-	_installActionListeners(self)
-	_installPlayerKeyHandler(self)
-	
+	return step
 end
 
-function notify_playerNeedsUpgrade(self, player, needsUpgrade, isUpgrading)
-	log:debug("SlimBrowserApplet:notify_playerNeedsUpgrade(", player, ")")
 
-	if _player ~= player then
-		return
-	end
-
-	if isUpgrading then
-		log:info('Show upgradingPlayer popup')
-		_updatingPlayer(self)
-	elseif needsUpgrade then
-		log:info('Show userUpdate popup')
-		_userTriggeredUpdate(self)
-	else
-		_hideUserUpdatePopup()
-		_hidePlayerUpdating()
-	end
-
+function browserCancel(self, step)
+	 step.cancelled = true
 end
+
 
 function notify_serverConnected(self, server)
 	if _server ~= server then
@@ -2758,15 +2742,54 @@ function notify_serverDisconnected(self, server, numUserRequests)
 end
 
 
+function _removeRequestAndUnlock(self, server)
+							if server then
+								server:removeAllUserRequests()
+							end
+							local currentStep = _getCurrentStep()
+							if currentStep then
+								currentStep.menu:unlock()
+							end
+
+end
+
+
 function _problemConnectingPopup(self, server)
+	log:debug("_problemConnectingPopup")
+	local successCallback = function()
+					self:_problemConnectingPopupInternal(server)
+				end
+	local failureCallback = self:_networkFailureCallback(server)
+
+	appletManager:callService("warnOnAnyNetworkFailure", successCallback, failureCallback)
+end
+
+
+function _problemConnectingPopupInternal(self, server)
+	log:info("_problemConnectingPopupInternal")
 	-- attempt to reconnect, this may send WOL
 	server:wakeOnLan()
 	server:connect()
 
 	-- popup
-	local popup = Popup("popupIcon")
-	popup:addWidget(Icon("iconConnecting"))
-	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO", server:getName())))
+	local popup = Popup("waiting_popup")
+	popup:addWidget(Icon("icon_connecting"))
+	popup:addWidget(Label("text", self:string("SLIMBROWSER_CONNECTING_TO")))
+	popup:addWidget(Label("subtext", server:getName()))
+
+	popup:ignoreAllInputExcept({"back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
+	local cancelAction =    function ()
+					log:info("Cancel reconnect window")
+
+					self:_removeRequestAndUnlock(server)
+					self.serverErrorWindow = nil
+					popup:hide()
+
+					return EVENT_CONSUME
+				end
+	popup:addActionListener("back", self,  cancelAction )
+	popup:addActionListener("go_home", self,  cancelAction )
+	popup:addActionListener("go_home_or_now_playing", self,  cancelAction )
 
 	local count = 0
 	popup:addTimer(1000,
@@ -2784,9 +2807,33 @@ function _problemConnectingPopup(self, server)
 end
 
 
+function _networkFailureCallback(self, server)
+	return function(failureWindow)
+		self.serverErrorWindow = failureWindow
+		failureWindow:addListener(EVENT_WINDOW_POP,
+			function()
+				self.serverErrorWindow = false
+				self:_removeRequestAndUnlock(server)
+			end)
+	end
+end
+
+
 function _problemConnecting(self, server)
+	log:debug("_problemConnecting")
+	local successCallback = function()
+					self:_problemConnectingInternal(server)
+				end
+	local failureCallback = self:_networkFailureCallback(server)
+
+	appletManager:callService("warnOnAnyNetworkFailure", successCallback, failureCallback)
+end
+
+
+function _problemConnectingInternal(self, server)
+	log:info("_problemConnectingInternal")
 	-- open connection error window
-	local window = Window("window", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
+	local window = Window("text_list", self:string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 
 	local menu = SimpleMenu("menu")
 
@@ -2815,32 +2862,100 @@ function _problemConnecting(self, server)
 		})
 	end
 
+	if not self.inSetup then
+		--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
+		menu:addItem({
+				text = self:string("SLIMBROWSER_GO_HOME"),
+				callback = function()
+					self:_removeRequestAndUnlock(server)
+					goHome()
+				end,
+			})
+
+			-- change player, only if multiple players
+			-- NOTE also only display this if we have a player selected, this is
+			-- to fix Bug 11457 where Choose Player should not be shown during
+			-- fab4 setup.
+			local numPlayers = appletManager:callService("countPlayers")
+			if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") and player then
+				menu:addItem({
+						     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
+						     callback = function()
+									self:_removeRequestAndUnlock(server)
+									if player:isLocal() then
+										--avoid disconnecting local player (user might cancel inside "Choose Player")
+										player:disconnectServerAndPreserveLocalPlayer()
+									else
+										appletManager:callService("setCurrentPlayer", nil)
+
+									end
+									appletManager:callService("setupShowSelectPlayer")
+								end,
+						     sound = "WINDOWSHOW",
+					     })
+			end
+
+	else
+		--in setup
+		window:setAllowScreensaver(false)
+		--Offer local SC's in setup if they exist
+		if Player:getLocalPlayer() then
+			if _anyCompatibleSqueezeCenterFound() then
+				menu:addItem({
+						     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+						     callback = function()
+									self.inSetup = false
+									self:_removeRequestAndUnlock(server)
+									appletManager:callService("selectCompatibleMusicSource")
+								end,
+						     sound = "WINDOWSHOW",
+					     })
+			end
+		else
+			menu:addItem({
+					     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
+					     callback = function()
+								appletManager:callService("setupShowSelectPlayer")
+							end,
+					     sound = "WINDOWSHOW",
+				     })
+
+		end
+		menu:addItem({
+				text = self:string("SLIMBROWSER_DIAGNOSTICS"),
+				callback = function()
+					appletManager:callService("diagnosticsMenu")
+				end,
+			        sound = "WINDOWSHOW",
+			})
+	end
 	-- change music source, only for udap players
-	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
-		menu:addItem({
-				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
-				     callback = function()
-							appletManager:callService("setCurrentPlayer", nil)
-							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
-						end,
-				     sound = "WINDOWSHOW",
-			     })
-	end
+--	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
+--		menu:addItem({
+--				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+--				     callback = function()
+--				                        self:_removeRequestAndUnlock(server)
+--							appletManager:callService("selectMusicSource")
+--
+--							--todo autoswitch - test Receiver setup
+----							appletManager:callService("setCurrentPlayer", nil)
+----							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
+--						end,
+--				     sound = "WINDOWSHOW",
+--			     })
+--	end
 
-	-- change player, only if multiple players
-	local numPlayers = appletManager:callService("countPlayers")
-	if numPlayers > 1 and appletManager:hasApplet("SelectPlayer") then
-		menu:addItem({
-				     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
-				     callback = function()
-							appletManager:callService("setCurrentPlayer", nil)
-							appletManager:callService("setupShowSelectPlayer")
-						end,
-				     sound = "WINDOWSHOW",
-			     })
-	end
 
-	window:addWidget(Textarea("help", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
+	local cancelAction =    function ()
+					self:_removeRequestAndUnlock(server)
+					window:hide()
+
+					return EVENT_CONSUME
+				end
+	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("go_home", self,  cancelAction )
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window
@@ -2852,15 +2967,478 @@ function _problemConnecting(self, server)
 	window:show()
 end
 
--- hideConnectingToPlayer
--- hide the full screen popup that appears until menus are loaded
-function hideConnectingToPlayer()
-	if _connectingPopup then
-		log:info("_connectingToPlayer popup hide")
-		_connectingPopup:hide()
-		_connectingPopup = nil
+
+function _anyCompatibleSqueezeCenterFound()
+	local anyFound = false
+	for _,server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isCompatible() and not server:isSqueezeNetwork() then
+			log:debug("At least one compatible SC found. First found: ", server)
+			anyFound = true
+			break
+		end
+	end
+
+	return anyFound
+end
+
+
+--[[
+********************************************************************************
+
+Playlist management code is below here. This really should be refactored into
+a different applet, but at the moment it is a little bit too tangled with the
+SlimBrowser code.
+
+This section includes the volume and scanner popups.
+
+
+********************************************************************************
+--]]
+
+
+local _statusStep = false
+local _emptyStep = false
+
+local modeTokens = {	
+	play  = "SLIMBROWSER_PLAYLIST",
+	pause = "SLIMBROWSER_PAUSED", 
+	stop  = "SLIMBROWSER_STOPPED",
+	off   = "SLIMBROWSER_OFF"
+}
+
+
+-- _requestStatus
+-- request the next chunk from the player status (playlist)
+local function _requestStatus()
+	local step = _statusStep
+
+	local from, qty = step.db:missing()
+	if from then
+		-- note, this is not a userRequest as the playlist is
+		-- updated when the playlist changes
+		_server:request(
+				step.sink,
+				_player:getId(),
+				{ 'status', from, qty, 'menu:menu', 'useContextMenu:1' }
+			)
 	end
 end
+
+
+-- _statusSink
+-- sink that sets the data for our status window(s)
+local function _statusSink(step, chunk, err)
+	log:debug("_statusSink()")
+		
+	-- currently we're not going anywhere with current playlist...
+	_assert(step == _statusStep)
+
+	local data = chunk.data
+	if data then
+
+		local hasSize = _safeDeref(data, 'item_loop', 1)
+		if not hasSize then return end
+
+		if logd:isDebug() then
+			debug.dump(data, 8)
+		end
+		
+		-- handle the case where the player disappears
+		-- return silently
+		if data.error then
+			log:info("_statusSink() chunk has error: returning")
+			return
+		end
+		
+		-- FIXME: this can go away once we dispense of the upgrade messages
+		-- if we have a data.item_loop[1].text == 'READ ME', 
+		-- we've hit the SC upgrade message and shouldn't be dropping it into NOW PLAYING
+		if data.item_loop and data.item_loop[1].text == 'READ ME' then
+			log:debug('This is not a message suitable for the current playlist')
+			return
+		end
+
+		_stepSetMenuItems(step, data)
+		_requestStatus()
+
+	else
+		log:error(err)
+	end
+end
+
+
+-- showEmptyPlaylist
+-- if the player playlist is empty, we replace _statusStep with this window
+function showEmptyPlaylist(token)
+
+	local window = Window("icon_list", _string(modeTokens['play']), 'currentplaylisttitle')
+	local menu = SimpleMenu("menu")
+	menu:addItem({
+		     text = _string(token),
+			style = 'item_no_arrow'
+	})
+	window:addWidget(menu)
+
+	_emptyStep = {}
+	_emptyStep.window = window
+	_emptyStep._isNpChildWindow = true
+
+	return window
+
+end
+
+
+function _leavePlayListAction()
+	local windowStack = Framework.windowStack
+	-- if this window is #2 on the stack there is no NowPlaying window
+	-- (e.g., when playlist is empty)
+	if #windowStack == 2 then
+		_goNow('home')
+	else
+		_goNow('nowPlaying')
+	end
+	return EVENT_CONSUME
+end
+
+
+-- showPlaylist
+--
+function showPlaylist()
+	if _statusStep then
+
+		-- arrange so that menuListener works
+		_pushStep(_statusStep)
+
+		-- current playlist should select currently playing item 
+		-- if there is only one item in the playlist, bring the selected item to top
+		local playerStatus = _player:getPlayerStatus()
+		local playlistSize = _player:getPlaylistSize() 
+
+		if not _player:isPowerOn() then
+			_statusStep.window:setTitle(_string(modeTokens['off']))
+		end
+
+		if playlistSize == 0 or not playlistSize then
+			if _emptyStep and _emptyStep.window and _emptyStep.window == Window:getTopNonTransientWindow() then 
+			        log:debug("emptyPlaylist already on screen")
+				return EVENT_CONSUME
+			end
+			local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING')
+			customWindow:show()
+			return EVENT_CONSUME
+		end
+
+
+		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
+			_statusStep.menu:setSelectedIndex(1)
+		-- where we are in the playlist is stored in the item list as currentIndex
+		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
+			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
+		end
+
+		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
+
+		_statusStep.window:setButtonAction("rbutton", "go_now_playing", "go_playlist")
+
+
+		_statusStep.window:show()
+
+
+		return EVENT_CONSUME
+	end
+	return EVENT_UNUSED
+
+end
+
+
+-- showTrackOne
+--
+-- pushes the song info window for track one on stage
+-- this method is used solely by NowPlaying Applet for
+-- skipping the playlist screen when the playlist size == 1
+function showTrackOne()
+	showTrack(1)
+end
+
+
+function showCurrentTrack()
+	local currentIndex = _player:getPlaylistCurrentIndex()
+	showTrack(currentIndex)
+end
+
+function setPresetCurrentTrack(self, preset)
+	local key = tostring(preset)
+	local currentIndex = _player:getPlaylistCurrentIndex()
+
+	local serverIndex = currentIndex - 1
+	local jsonAction = {
+		player = 0,
+		cmd = { 'jivefavorites', 'set_preset' },
+		itemsParams = 'params',
+		params = {
+			playlist_index = serverIndex,
+			key = key,
+		},
+	}
+
+	-- send the command
+	_performJSONAction(jsonAction, nil, nil, nil, nil)
+end
+
+
+function showTrack(index)
+	local serverIndex = index - 1
+	local jsonAction = {
+		cmd = { 'contextmenu' },
+		itemsParams = 'params',
+		window = {
+			isContextMenu = 1,
+		},
+		player = 0,
+		params = {
+			playlist_index = serverIndex,
+			menu = 'track',
+			context = 'playlist',
+		},
+	}
+	-- determine style
+	local newWindowSpec = {
+		['isContextMenu']    = true,
+		["menuStyle"]        = "menu",
+		["labelItemStyle"]   = "item",
+	}		
+
+	local step, sink = _newDestination(nil, nil, newWindowSpec, _browseSink)
+	step.window:addActionListener("back", step, _goNowPlayingAction)
+	step.window:show()
+	step._isNpChildWindow = true
+	_pushStep(step)
+
+	-- send the command
+	local from, qty
+	_performJSONAction(jsonAction, 0, 200, step, sink)
+end
+
+
+function notify_playerPower(self, player, power)
+	log:debug('SlimBrowser.notify_playerPower')
+	if _player ~= player then
+		return
+	end
+	local playerStatus = player:getPlayerStatus()
+	if not playerStatus then
+		log:info('no player status')
+		return
+	end
+
+	local playlistSize = playerStatus.playlist_tracks
+	local mode = player:getPlayMode()
+
+	-- when player goes off, user should get single item styled 'Off' playlist
+	local step = _statusStep
+	local emptyStep = _emptyStep
+
+	if step and step.menu then
+		-- show 'OFF' in playlist window title when the player is off
+		if not power then
+			if step.window then
+				step.window:setTitle(_string("SLIMBROWSER_OFF"))
+			end
+		else
+			if step.window then
+				if emptyStep then
+					step.window:replace(emptyStep.window, Window.transitionFadeIn)
+				end
+				step.window:setTitle(_string(modeTokens[mode]))
+			end
+		end
+	end
+end
+
+
+function notify_playerModeChange(self, player, mode)
+	log:debug('SlimBrowser.notify_playerModeChange')
+	if _player ~= player then
+		return
+	end
+
+	local step = _statusStep
+	local token = mode
+	if mode != 'play' and not player:isPowerOn() then
+		token = 'off'
+	end
+
+	step.window:setTitle(_string(modeTokens[token]))
+
+end
+
+
+function notify_playerPlaylistChange(self, player)
+	log:debug('SlimBrowser.notify_playerPlaylistChange')
+	if _player ~= player then
+		return
+	end
+
+	local playerStatus = player:getPlayerStatus()
+	local playlistSize = _player:getPlaylistSize()
+	local step         = _statusStep
+	local emptyStep    = _emptyStep
+
+	-- display 'NOTHING' if the player is on and there aren't any tracks in the playlist
+	if _player:isPowerOn() and playlistSize == 0 then
+		local customWindow = showEmptyPlaylist('SLIMBROWSER_NOTHING')
+		if emptyStep then
+			customWindow:replace(emptyStep.window, Window.transitionFadeIn)
+		end
+		if step.window then
+			customWindow:replace(step.window, Window.transitionFadeIn)
+		end
+		-- we've done all we need to when the playlist is 0, so let's get outta here
+		return
+	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
+	elseif playlistSize and emptyStep then
+		_goNowPlaying(nil, true)
+		if emptyStep.window then
+			emptyStep.window:hide()
+		end
+		_emptyStep = nil
+	
+	end
+
+	-- update the window
+	step.db:updateStatus(playerStatus)
+	step.menu:reLayout()
+
+	-- does the playlist need loading?
+	_requestStatus()
+
+end
+
+
+function notify_playerTrackChange(self, player, nowplaying)
+	log:debug('SlimBrowser.notify_playerTrackChange')
+
+	if _player ~= player then
+		return
+	end
+
+	if not player:isPowerOn() then
+		return
+	end
+
+	local playerStatus = player:getPlayerStatus()
+	local step = _statusStep
+
+	step.db:updateStatus(playerStatus)
+	if step.db:playlistIndex() then
+		step.menu:setSelectedIndex(step.db:playlistIndex())
+	else
+		step.menu:setSelectedIndex(1)
+	end
+	step.menu:reLayout()
+
+end
+
+
+-- notify_playerDelete
+-- this is called when the player disappears
+function notify_playerDelete(self, player)
+	log:debug("SlimBrowserApplet:notify_playerDelete(", player, ")")
+
+	-- if this concerns our player
+	if _player == player then
+		-- panic!
+		log:info("Player gone while browsing it ! -- packing home!")
+		self:free()
+	end
+end
+
+
+-- notify_playerLoaded
+-- this is called when the current player changes (possibly from no player) and the new menus are loaded
+function notify_playerLoaded(self, player)
+	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
+	_attachPlayer(self, player)
+end
+
+function _attachPlayer(self, player)
+	-- has the player actually changed?
+	if _player == player then
+		return
+	end
+
+	log:debug("SlimBrowserApplet:_attachPlayer(", player, ")")
+
+	-- free current player
+	if _player then
+		log:debug("Freeing current player")
+		self:free()
+	end
+
+	-- clear any errors, we may have changed servers
+	iconbar:setServerError("OK")
+
+	-- update the volume object
+	if self.volume then
+		self.volume:setPlayer(player)
+	end
+
+	-- update the scanner object
+	self.scanner:setPlayer(player)
+	self.volume:setOffline(false)
+
+	-- nothing to do if we don't have a player or server
+	-- NOTE don't move this, the code above needs to run when disconnecting
+	-- for all players.
+	if not player or not player:getSlimServer() then
+		return
+	end
+
+	-- assign our locals
+	_player = player
+	_server = player:getSlimServer()
+	local _playerId = _player:getId()
+
+	-- create a window for the current playlist, this is our _statusStep
+	local step, sink = _newDestination(
+		nil,
+		nil,
+		_newWindowSpec(
+			nil, 
+			{
+				text = _string("SLIMBROWSER_PLAYLIST"),
+				window = { 
+					["menuStyle"] = "album", 
+				}
+			}
+		),
+		_statusSink
+	)
+	_statusStep = step
+	
+	-- make sure it has our modifier (so that we use different default action in Now Playing)
+	_statusStep.actionModifier = "-status"
+	_statusStep._isNpChildWindow = true
+
+	-- showtime for the player
+	_server.comet:startBatch()
+	_player:onStage()
+	_requestStatus()
+	_server.comet:endBatch()
+
+	-- look to see if the playlist has size and the state of player power
+	-- if playlistSize is 0 or power is off, we show and empty playlist
+	if not _player:isPowerOn() then
+		if _statusStep.window then
+			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
+		end
+	end
+
+	_installActionListeners(self)
+	_installPlayerKeyHandler(self)
+	
+end
+
 
 --[[
 
@@ -2873,12 +3451,6 @@ Overridden to close our player.
 function free(self)
 	log:debug("SlimBrowserApplet:free()")
 
-	-- unsubscribe from this player's menustatus
-	log:info("Unsubscribe /slim/menustatus/", _player:getId())
-	if _player then
-		_player:unsubscribe('/slim/menustatus/' .. _player:getId())
-	end
-
 	if _player then
 		_player:offStage()
 	end
@@ -2886,27 +3458,8 @@ function free(self)
 	_removePlayerKeyHandler(self)
 	_removeActionListeners(self)
 	
-	-- remove player menus
-	jiveMain:setTitle(nil)
-	for id, v in pairs(_playerMenus) do
-		jiveMain:removeItem(v)
-	end
-	_playerMenus = {}
-
-	-- remove connecting popup
-	hideConnectingToPlayer()
-	_hidePlayerUpdating()
-	_hideUserUpdatePopup()
-
 	_player = false
 	_server = false
-	_string = false
-
-	-- make sure any home menu itema are unlocked
-	if _lockedItem then
-		jiveMain:unlockItem(_lockedItem)
-		_lockedItem = false
-	end
 
 	-- walk down our path and close...
 	local currentStep = _getCurrentStep()
@@ -2927,25 +3480,33 @@ function free(self)
 	if _statusStep then
 		_statusStep.window:hide()
 	end
-	
+
+	if _emptyStep and _emptyStep.window then
+		_emptyStep.window:hide()
+	end
+	_emptyStep = nil
+
 	return true
 end
 
 
---[[
+--service method
+function getAudioVolumeManager(self)
+	return self.volume
+end
 
-=head2 applets.SlimBrowser.SlimBrowserApplet:init()
 
-Overridden to subscribe to events about players
-
-=cut
---]]
 function init(self)
+	_string = function(token)
+		return self:string(token)
+	end
+
 	jnt:subscribe(self)
 
 	self.volume = Volume(self)
 	self.scanner = Scanner(self)
 end
+
 
 --[[
 

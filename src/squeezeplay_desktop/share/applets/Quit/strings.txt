@@ -12,7 +12,7 @@ QUIT
 	FR	Quitter
 	IT	Esci
 	NL	Stoppen
-	NO	Gi opp
+	NO	Avslutt
 	PL	Zamknij
 	RU	Выйти
 	SV	Avsluta

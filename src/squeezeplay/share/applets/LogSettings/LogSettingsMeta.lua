@@ -19,6 +19,7 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -38,14 +39,18 @@ function registerApplet(meta)
 	-- only make this available if an SD card is slotted in and
 	-- a /media/*/log directory is present
 	local media = false
-	for dir in lfs.dir("/media") do
-		if lfs.attributes("/media/" .. dir .. "/log", "mode") == "directory" then
-			media = true
-			break
+	if lfs.attributes("/media", "mode") ~= nil then
+		for dir in lfs.dir("/media") do
+			if lfs.attributes("/media/" .. dir .. "/log", "mode") == "directory" then
+				media = true
+				break
+			end
 		end
 	end
 
-	if media then
+	local desktop = not System:isHardware()
+
+	if desktop or media then
 		jiveMain:addItem(meta:menuItem('appletLogSettings', 'advancedSettings', 'DEBUG_LOG', function(applet, ...) applet:logSettings(...) end))
 	end
 end

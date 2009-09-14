@@ -32,11 +32,11 @@ SCREENSAVER_PAUSED
 	RU	Пауза
 	SV	Pausad
 
-SCREENSAVER_STOPPED
+SCREENSAVER_WHEN_STOPPED
 	CS	Při zastavení
-	DA	På pause
-	DE	Bei Pause
-	EN	Stopped
+	DA	Når den er stoppet
+	DE	Wenn angehalten
+	EN	When stopped
 	ES	Al detener
 	FI	Keskeytettynä
 	FR	A l'arrêt
@@ -47,20 +47,20 @@ SCREENSAVER_STOPPED
 	RU	При остановке
 	SV	I stoppat läge
 
-SCREENSAVER_NOWPLAYING_SETTINGS
-	CS	Nastavení právě přehrávaných skladeb
-	DA	Indstillinger for Nu spiller
-	DE	Aktueller Titel - Einstellung
-	EN	Now Playing Settings
-	ES	Configuración de reproducción en curso
-	FI	Nyt soi -asetukset
-	FR	Paramètres des éléments en cours de lecture
-	IT	Impostazioni della riproduzione in corso
-	NL	Instellingen Speelt nu
-	NO	Innstillinger for Spilles nå
-	PL	Ustawienia teraz odtwarzanych
-	RU	Настройки воспроизведения
-	SV	Nu spelas-inställningar
+SCREENSAVER_STOPPED
+	CS	Při zastavení
+	DA	Når den er stoppet
+	DE	Wenn angehalten
+	EN	When stopped
+	ES	Al detener
+	FI	Keskeytettynä
+	FR	A l'arrêt
+	IT	Quando la riproduzione è interrotta
+	NL	Wanneer gestopt
+	NO	Ved stopp
+	PL	Po zatrzymaniu
+	RU	При остановке
+	SV	I stoppat läge
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
@@ -78,19 +78,19 @@ SCREENSAVER_NOWPLAYING_OF
 	SV	%s av %s
 
 SCREENSAVER_OFF
-	CS	Vypnuto
-	DA	Fra
-	DE	Aus
-	EN	Off
-	ES	Desactivado
-	FI	Ei käytössä
-	FR	Désactivé
-	IT	Disattivato
-	NL	Uit
-	NO	Av
-	PL	wył.
-	RU	Выкл.
-	SV	Av
+	CS	Při vypnutí
+	DA	Når den er slukket
+	DE	Wenn aus
+	EN	When off
+	ES	Al apagar
+	FI	Laitteen ollessa pois päältä
+	FR	En état éteint
+	IT	Se disattivato
+	NL	Wanneer uit
+	NO	Når av
+	PL	Po wyłączeniu
+	RU	При выкл.
+	SV	I avstängt läge
 
 SCREENSAVER_ARTWORK_SIZE
 	CS	Velikost obalu právě přehrávané skladby

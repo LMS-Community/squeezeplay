@@ -2,37 +2,22 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
+SN_SIGNUP
+	CS	Přihlášení do mysqueezebox.com
+	DA	Tilmelding til mysqueezebox.com
+	DE	Anmeldung bei mysqueezebox.com
+	EN	mysqueezebox.com Signup
+	ES	Registro de mysqueezebox.com
+	FI	mysqueezebox.com-rekisteröityminen
+	FR	Inscription à mysqueezebox.com
+	IT	Iscrizione a mysqueezebox.com
+	NL	Aanmelding bij mysqueezebox.com
+	NO	mysqueezebox.com-registrering
+	PL	Rejestracja w usłudze mysqueezebox.com
+	RU	Подписка mysqueezebox.com
+	SV	Registrering för mysqueezebox.com
+
 SLIMBROWSER_PLAYLIST
-	CS	Seznam skladeb
-	DA	Afspilningsliste
-	DE	Wiedergabeliste
-	EN	Playlist
-	ES	Lista de reproducción
-	FI	Soittoluettelo
-	FR	Liste de lecture
-	IT	Elenco di riproduzione
-	NL	Playlist
-	NO	Spilleliste
-	PL	Lista odtwarzania
-	RU	Плей-лист
-	SV	Spellista
-
-SLIMBROWSER_NOW_PLAYING
-	CS	Právě hraje
-	DA	Nu spiller
-	DE	Aktueller Titel
-	EN	Now Playing
-	ES	Reproduciendo
-	FI	Nyt soi
-	FR	Lecture en cours
-	IT	Riproduzione in corso
-	NL	Speelt nu
-	NO	Spilles nå
-	PL	Odtwarzanie
-	RU	Воспроизводится
-	SV	Nu spelas
-
-SLIMBROWSER_CURRENT_PLAYLIST
 	CS	Aktuální seznam skladeb
 	DA	Nuværende afspilningsliste
 	DE	Aktuelle Wiedergabeliste
@@ -46,6 +31,51 @@ SLIMBROWSER_CURRENT_PLAYLIST
 	PL	Aktualna lista odtwarzania
 	RU	Текущий плей-лист
 	SV	Aktuell spellista
+
+SLIMBROWSER_ENTER_PASSWORD
+	CS	Zadejte heslo znovu
+	DA	Indtast adgangskoden igen
+	DE	Kennwort erneut eingeben
+	EN	Re-enter password
+	ES	Vuelva a introducir la contraseña
+	FI	Anna salasana uudelleen
+	FR	Entrer à nouveau le mot de passe
+	IT	Immettere di nuovo la password
+	NL	Wachtwoord opnieuw invoeren
+	NO	Angi passord på nytt
+	PL	Wpisz hasło ponownie
+	RU	Повторите ввод пароля
+	SV	Ange lösenordet på nytt
+
+SLIMBROWSER_GO_HOME
+	CS	Přejít Domů
+	DA	Til startside
+	DE	Zurück zum Start
+	EN	Go Home
+	ES	Go Home (Ir a casa)
+	FI	Alkuun
+	FR	Aller à l'accueil
+	IT	Go Home (Torna alla base)
+	NL	Go Home (Naar huis gaan)
+	NO	Gå til hovedmenyen
+	PL	Powrót do początku
+	RU	Домой
+	SV	Startsida
+
+SLIMBROWSER_DIAGNOSTICS
+	CS	Diagnostika
+	DA	Diagnosticering
+	DE	Diagnose
+	EN	Diagnostics
+	ES	Diagnósticos
+	FI	Diagnostiikka
+	FR	Diagnostic
+	IT	Diagnostica
+	NL	Diagnostische gegevens
+	NO	Diagnose
+	PL	Diagnostyka
+	RU	Диагностика
+	SV	Diagnostik
 
 SLIMBROWSER_PAUSED
 	CS	Pozastaveno
@@ -85,11 +115,11 @@ SLIMBROWSER_SEARCH_HELP
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
 	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
 	FR	Utiliser la molette pour choisir une lettre, puis appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
-	IT	Usa la rotellina per cambiare le lettere e premi il pulsante centrale per selezionarle. Premi nuovamente il pulsante centrale per avviare la ricerca.
-	NL	Gebruik het scrollwiel om letters te wijzigen. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
+	IT	Utilizzare la rotellina per cambiare le lettere, quindi premere il pulsante centrale per selezionarle. Premere nuovamente il pulsante centrale per avviare la ricerca.
+	NL	Gebruik het scrollwiel om naar een andere letter te gaan. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
 	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
 	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
-	RU	Прокручивайте колесико до нужной буквы и нажимайте для выбора центральную кнопку. Затем нажмите центральную кнопку еще раз, чтобы начать поиск.
+	RU	Прокручивая колесико, дойдите до нужной буквы и нажмите центральную кнопку, чтобы выбрать букву. Затем нажмите центральную кнопку еще раз, чтобы запустить поиск.
 	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck på mittenknappen igen när du vill börja söka.
 
 SLIMBROWSER_PROBLEM_CONNECTING
@@ -114,7 +144,7 @@ SLIMBROWSER_TRY_AGAIN
 	EN	Try Again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Réessayer
+	FR	Veuillez réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
@@ -140,11 +170,11 @@ SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 SLIMBROWSER_CHOOSE_PLAYER
 	CS	Zvolit přehrávač
 	DA	Vælg afspiller
-	DE	Player auswählen
+	DE	Player wählen
 	EN	Choose Player
 	ES	Elegir reproductor
 	FI	Valitse soitin
-	FR	Sélectionner lecteur
+	FR	Sélectionner une platine
 	IT	Scegli lettore
 	NL	Muzieksysteem kiezen
 	NO	Velg spiller
@@ -159,7 +189,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	EN	There is a problem connecting to %s
 	ES	Problema al conectar a %s
 	FI	Yhteyttä ei voida muodostaa kohteeseen %s
-	FR	%s ne peut se connecter à %s
+	FR	Impossible de se connecter à %s
 	IT	Problema di connessione a %s
 	NL	Probleem bij verbinden met %s
 	NO	Klarer ikke å kople til %s
@@ -197,21 +227,6 @@ SLIMBROWSER_OFF
 	RU	Выкл.
 	SV	Av
 
-SLIMBROWSER_CONNECTING_TO
-	CS	Připojuji se k\n%s
-	DA	Etablerer forbindelse til\n%s
-	DE	Verbindung mit %s
-	EN	Connecting to\n%s
-	ES	Conectando a\n%s
-	FI	Yhdistetään kohteeseen\n%s
-	FR	Connexion à %s
-	IT	Connessione a %s
-	NL	Er wordt een verbinding met %s gemaakt
-	NO	Kopler til\n%s
-	PL	Łączenie z\n%s
-	RU	Подключение к\n%s
-	SV	Ansluter till \n%s
-
 SLIMBROWSER_VOLUME
 	CS	Hlasitost
 	DA	Lydstyrke
@@ -226,6 +241,21 @@ SLIMBROWSER_VOLUME
 	PL	Głośność
 	RU	Громкость
 	SV	Volym
+
+SLIMBROWSER_MUTED
+	CS	Ztlumeno
+	DA	Lyden er slået fra
+	DE	Stumm
+	EN	Muted
+	ES	Silenciado
+	FI	Mykistetty
+	FR	En sourdine
+	IT	Audio disattivato
+	NL	Gedempt
+	NO	Stille
+	PL	Bez dźwięku
+	RU	Без звука
+	SV	Inget ljud
 
 SLIMBROWSER_VOLUME_MUTED
 	CS	Hlasitost  (ztlumeno)
@@ -242,20 +272,66 @@ SLIMBROWSER_VOLUME_MUTED
 	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
-SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
-	CS	Aktualizuji firmware Squeezeboxu
-	DA	Opdaterer Squeezebox-firmwaren
-	DE	Squeezebox-Firmware wird aktualisiert
-	EN	Updating Squeezebox firmware
-	ES	Actualizando firmware de Squeezebox
-	FI	Squeezeboxin laitteisto-ohjelmiston päivitys
-	FR	Mise à jour du micrologiciel Squeezebox
-	IT	Aggiornamento firmware Squeezebox
-	NL	Squeezebox-firmware wordt bijgewerkt
-	NO	Oppdaterer Squeezebox-fastvare
-	PL	Aktualizowanie oprogramowania układowego urządzenia Squeezebox
-	RU	Обновление микропрограмм Squeezebox
-	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
+SLIMBROWSER_ADD_NEXT_1
+# SLT: this is short for "Play this item next", not "Play next item"
+	CS	Přehrát další
+	DA	Spil næste
+	DE	Als nächstes wiedergeben
+	EN	Play Next
+	ES	Reproducir a continuación
+	FI	Soita seuraava
+	FR	Lire à la suite
+	IT	Brano successivo
+	NL	Volgende afspelen
+	NO	Spill av neste
+	PL	Odtwórz następny
+	RU	След. дорожка
+	SV	Spela härnäst
+
+SLIMBROWSER_ADD_NEXT_2
+	CS	Přidat další
+	DA	Tilføj næste
+	DE	Als nächstes hinzufügen
+	EN	Add Next
+	ES	Agregar a continuación
+	FI	Lisää seuraava
+	FR	Ajouter le suivant
+	IT	Aggiungi prossimo
+	NL	Volgende toevoegen
+	NO	Legg til neste
+	PL	Dodaj następny element
+	RU	Добавить следующий
+	SV	Lägg till text
+
+SLIMBROWSER_PASSWORD_WRONG
+	CS	Neplatné uživatelské jméno/ heslo
+	DA	Brugernavnet/adgangskoden er ugyldig
+	DE	Benutzername/Kennwort ungültig
+	EN	Username/Password Invalid
+	ES	Nombre de usuario/contraseña no válidos
+	FI	Käyttäjätunnus/salasana ei kelpaa
+	FR	Nom d'utilisateur/mot de passe non valide
+	IT	Nome utente/password non validi
+	NL	Gebruikersnaam/wachtwoord ongeldig
+	NO	Brukernavn/passord er ugyldig
+	PL	Nieprawidłowa nazwa użytkownika/hasło
+	RU	Недействительные имя пользователя или пароль
+	SV	Användarnamn/lösenord är felaktigt
+
+SLIMBROWSER_PASSWORD_WRONG_BODY
+	CS	Zadané uživatelské jméno a heslo není platné.
+	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
+	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
+	EN	The username or password you entered is not valid.
+	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
+	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
+	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
+	IT	Il nome utente o la password immessi non sono validi.
+	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
+	NO	Brukernavnet eller passordet du oppga, er ugyldig.
+	PL	Wprowadzona nazwa użytkownika lub hasło są nieprawidłowe.
+	RU	Введены неверные пароль или имя пользователя.
+	SV	Det användarnamn eller lösenord du angav är inte giltigt.
 
 SLIMBROWSER_SCANNER
 	CS	Pozice skladby
@@ -272,48 +348,18 @@ SLIMBROWSER_SCANNER
 	RU	Позиция песни
 	SV	Spårets placering
 
-SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
-	CS	Pro %s je připravena aktualizace softwaru. K jejímu spuštění stiskněte a přidržte tlačítko Brightness (jas) na  originálním dálkovém ovládání IR.
-	DA	Softwareopdateringen til %s er klar. Hold lysstyrkeknappen (Brightness) på den originale fjernbetjening nede for at starte.
-	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
-	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
-	ES	La actualización de software para %s está lista. Para iniciarla, mantenga pulsado el botón de brillo en el mando a distancia IR original.
-	FI	Ohjelmistopäivitys valmiina kohteelle %s. Aloita pitämällä alkuperäisen infrapunakaukosäätimen Brightness-painike pohjassa.
-	FR	Mise à jour du logiciel prête pour %s. Pour commencer, appuyez sur le bouton Brightness de votre télécommande infrarouge d'origine et maintenez-le enfoncé.
-	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
-	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
-	NO	Programvareoppdatering er klar for %s. Trykk og hold nede Brightness-knappen på den opprinnelige ir-fjernkontrollen for å starte.
-	PL	Aktualizacja oprogramowania jest dostępna dla urządzenia %s. Aby rozpocząć, naciśnij i przytrzymaj przycisk Brightness na oryginalnym pilocie zdalnego sterowania.
-	RU	Подготовлено обновление ПО для %s. Чтобы начать, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
-	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
-
-SLIMBROWSER_PLAYER_UPDATE_REQUIRED
-	CS	Aktualizace přehrávače
-	DA	Opdatering af afspiller
-	DE	Player-Update
-	EN	Player Update
-	ES	Actualización de reproductor
-	FI	Soittimen päivitys
-	FR	Mise à jour de la platine
-	IT	Aggiornamento lettore
-	NL	Update van muzieksysteem
-	NO	Spilleroppdatering
-	PL	Aktualizacja odtwarzacza
-	RU	Обновление плеера
-	SV	Spelaruppdatering
-
-SLIMBROWSER_ENTER_PASSWORD
-	CS	Zadejte heslo
-	DA	Indtast adgangskode
-	DE	Kennwort eingeben
-	EN	Enter Password
-	ES	Introduzca la contraseña
-	FI	Anna salasana
-	FR	Saisir le mot de passe
-	IT	Immettere password
-	NL	Wachtwoord invoeren
-	NO	Skriv inn passord
-	PL	Wprowadź hasło
-	RU	Введите пароль
-	SV	Ange lösenord
+SLIMBROWSER_CONNECTING_TO
+	CS	Připojování k
+	DA	Etablerer forbindelse til
+	DE	Verbindung mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistää kohteeseen
+	FR	Connexion à
+	IT	Collegamento a
+	NL	Verbinden met
+	NO	Kopler til
+	PL	Trwa łączenie z
+	RU	Подключение к
+	SV	Ansluts till
 

@@ -28,20 +28,28 @@ The Iconbar class implements the Jive iconbar at the bottom of the screen. It re
 local tostring  = tostring
 
 local os        = require("os")
+local math      = require("math")
+local string    = require("string")
 
 local oo        = require("loop.base")
 
 local Framework = require("jive.ui.Framework")
 local Icon      = require("jive.ui.Icon")
 local Label     = require("jive.ui.Label")
+local Group     = require("jive.ui.Group")
 
-local string    = require("string")
+local hasDecode, decode = pcall(require, "squeezeplay.decode")
+
 local datetime  = require("jive.utils.datetime")
-local log       = require("jive.utils.log").logger("ui")
+local log       = require("jive.utils.log").logger("squeezeplay.iconbar")
 
 
 -- our class
 module(..., oo.class)
+
+
+-- to debug buffer fullness
+local bufferFullness = false
 
 
 --[[
@@ -54,7 +62,7 @@ Set the playmode icon of the iconbar. Values are nil (off), "stop", "play" or "p
 --]]
 function setPlaymode(self, val)
 	log:debug("Iconbar:setPlaymode(", val, ")")
-	self.iconPlaymode:setStyle("iconPlaymode" .. string.upper((val or "OFF")))
+	self.iconPlaymode:setStyle("button_playmode_" .. string.upper((val or "OFF")))
 end
 
 --[[
@@ -68,8 +76,15 @@ When not 1 or 2, setRepeat()
 --]]
 function setPlaylistMode(self, val)
 	log:debug("Iconbar:setPlaylistMode(", val, ")")
-	-- FIXME: need new styles for playlist and party mode
-	self.iconPlaylistMode:setStyle("iconPlaylistMode" .. string.upper((val or "OFF")))
+
+	local mode = string.upper((val or "OFF"))
+	if mode ~= "OFF" and mode ~= "DISABLED" then
+		self.preferPlaylistModeIcon = true
+		self.iconRepeat:setStyle("button_playlist_mode_" .. mode)
+	else
+		self.preferPlaylistModeIcon = false
+		self:setRepeat(self.repeatMode)
+	end
 end
 
 
@@ -83,7 +98,38 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-	self.iconRepeat:setStyle("iconRepeat" .. string.upper((val or "OFF")))
+	self.repeatMode = string.upper((val or "OFF"))
+	if not self.preferPlaylistModeIcon then
+		self.iconRepeat:setStyle("button_repeat_" .. self.repeatMode)
+	end
+end
+
+
+--[[
+
+=head2 Iconbar:setAlarm(val)
+
+Sets the alarm icon on the iconbar. Values are OFF and ON
+
+=cut
+--]]
+function setAlarm(self, val)
+	log:debug("Iconbar:setAlarm(", val, ")")
+	self.iconAlarm:setStyle("button_alarm_" .. string.upper((val or "OFF")))
+end
+
+
+--[[
+
+=head2 Iconbar:setSleep(val)
+
+Sets the sleep icon on the iconbar. Values are OFF (Sleep Off), and ON (Sleep On)
+
+=cut
+--]]
+function setSleep(self, val)
+	log:debug("Iconbar:setSleep(", val, ")")
+	self.iconSleep:setStyle("button_sleep_" .. string.upper((val or "OFF")))
 end
 
 
@@ -97,7 +143,7 @@ Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle 
 --]]
 function setShuffle(self, val)
 	log:debug("Iconbar:setShuffle(", val, ")")
-	self.iconShuffle:setStyle("iconShuffle" .. string.upper((val or "OFF")))
+	self.iconShuffle:setStyle("button_shuffle_" .. string.upper((val or "OFF")))
 end
 
 
@@ -111,7 +157,7 @@ Set the state of the battery icon of the iconbar. Values are nil (no battery), C
 --]]
 function setBattery(self, val)
 	log:debug("Iconbar:setBattery(", val, ")")
-	self.iconBattery:setStyle("iconBattery" .. string.upper((val or "NONE")))
+	self.iconBattery:setStyle("button_battery_" .. string.upper((val or "NONE")))
 end
 
 
@@ -129,11 +175,13 @@ function setWirelessSignal(self, val)
 	self.wirelessSignal = val
 
 	if val == "ERROR" then
-		self.iconWireless:setStyle("iconWireless" .. val)
+		self.iconWireless:setStyle("button_wireless_" .. val)
+	elseif val == 0 then
+		self.iconWireless:setStyle("button_wireless_ERROR")
 	elseif self.serverError == "ERROR" then
-		self.iconWireless:setStyle("iconWirelessSERVERERROR")
+		self.iconWireless:setStyle("button_wireless_SERVERERROR")
 	else
-		self.iconWireless:setStyle("iconWireless" .. (val or "NONE"))
+		self.iconWireless:setStyle("button_wireless_" .. (val or "NONE"))
 	end
 end
 
@@ -152,6 +200,15 @@ function setServerError(self, val)
 end
 
 
+
+-- show debug in place of the time in the iconbar, for elapsed seconds
+function showDebug(self, value, elapsed)
+	self.button_time:setValue(value)
+
+	self.debugTimeout = Framework:getTicks() + ((elapsed or 10) * 1000)
+end
+
+
 --[[
 
 =head2 Iconbar:update()
@@ -163,7 +220,11 @@ Updates the iconbar.
 function update(self)
 	log:debug("Iconbar:update()")
 
-	self.iconTime:setValue(datetime:getCurrentTime())
+	if self.debugTimeout and Framework:getTicks() < self.debugTimeout then
+		return
+	end
+
+	self.button_time:setValue(datetime:getCurrentTime())
 end
 
 
@@ -179,30 +240,32 @@ function __init(self)
 	log:debug("Iconbar:__init()")
 
 	local obj = oo.rawnew(self, {
-	        -- FIXME the background should be an icon, but icons use Surfaces not Tiles.
-		iconBackground = Label("iconBackground", ""),
-		iconPlaymode = Icon("iconPlaymodeOFF"),
-		iconRepeat = Icon("iconRepeatOFF"),
-		iconPlaylistMode = Icon("iconPlaylistModeOFF"),
-		iconShuffle = Icon("iconShuffleOFF"),
-		iconBattery = Icon("iconBatteryNONE"),
-		iconWireless = Icon("iconWirelessNONE"),
-		iconTime = Label("iconTime", "XXXX"),
+		iconPlaymode = Icon("button_playmode_OFF"),
+		iconRepeat   = Icon("button_repeat_OFF"),
+		iconShuffle  = Icon("button_shuffle_OFF"),
+		iconBattery  = Icon("button_battery_NONE"),
+		iconWireless = Icon("button_wireless_NONE"),
+		iconSleep    = Icon("button_sleep_OFF"),
+		iconAlarm    = Icon("button_alarm_OFF"),
+		button_time  = Label("button_time", "XXXX"),
 	})
 
+	obj.iconbarGroup = Group("iconbar_group", {
+					play = obj.iconPlaymode,
+					repeat_mode = obj.iconRepeat,  -- repeat is a Lua reserved word
+					shuffle = obj.iconShuffle,
+					alarm = obj.iconAlarm,
+					sleep = obj.iconSleep,
+					battery = obj.iconBattery,
+					wireless = obj.iconWireless,
+				})
 
 	obj:update()
 
-	Framework:addWidget(obj.iconBackground)
-	Framework:addWidget(obj.iconPlaymode)
-	Framework:addWidget(obj.iconRepeat)
-	Framework:addWidget(obj.iconPlaylistMode)
-	Framework:addWidget(obj.iconShuffle)
-	Framework:addWidget(obj.iconBattery)
-	Framework:addWidget(obj.iconWireless)
-	Framework:addWidget(obj.iconTime)
+	Framework:addWidget(obj.iconbarGroup)
+	Framework:addWidget(obj.button_time)
 
-	obj.iconTime:addTimer(1000,  -- every second
+	obj.button_time:addTimer(1000,  -- every second
 			      function() 
 				      obj:update()
 			      end)

@@ -16,6 +16,7 @@ setWeekstart(self, day)
 getWeekstart(self)
 setDateFormat(self, dateformat)
 getDateFormat(self)
+getShortDateFormat(self)
 getCurrentTime(self)
 getTimeZone(self, timezone)
 getAllTimeZones(self)
@@ -36,7 +37,7 @@ local string, type, tonumber, tostring = string, type, tonumber, tostring
 local os               = require("os")
 local math             = require("math")
 
-local log              = require("jive.utils.log").logger("utils")
+local log              = require("jive.utils.log").logger("squeezeplay")
 
 
 module(...)
@@ -44,6 +45,7 @@ module(...)
 -- FIXME: i8n
 local globalWeekstart = "Sunday"
 local globalDateFormat = "%a, %B %d %Y"
+local globalShortDateFormat = "%d.%m.%Y"
 local globalHours = "12"
 local globalTimeZone = "GMT"
 
@@ -82,6 +84,11 @@ local DateFormats = {
 	"%m/%d/%y"
 }
 
+local ShortDateFormats = {
+	"%m.%d.%Y",
+	"%d.%m.%Y",
+}
+
 local TimeZones = {
         GMT = {
                 offset = 0,
@@ -94,7 +101,6 @@ local TimeZones = {
         },
 }
 
-
 --[[
 =head2 getAllDateFormats(self)
 
@@ -106,6 +112,19 @@ function getAllDateFormats(self)
 	return DateFormats
 end
 
+
+--[[
+=head2 getAllShortDateFormats(self)
+
+Returns all available Short Date Formats defined in the local table ShortDateFormat
+
+=cut
+--]]
+function getAllShortDateFormats(self)
+	return ShortDateFormats
+end
+
+
 --[[
 =head2 setWeekstart(self, day)
 
@@ -116,7 +135,7 @@ Usualy Monday in Europe and Sunday in the USA
 --]]
 function setWeekstart(self, day)
 	if day == nil then
-		log:warn("setWeekstart() - day is nil")
+		log:error("setWeekstart() - day is nil")
 		return
 	end
 
@@ -125,7 +144,7 @@ function setWeekstart(self, day)
 	elseif day == "Monday" then
 		globalWeekstart = day
 	else
-		log:warn("Invalid Weekstart: " .. day)
+		log:error("Invalid Weekstart: " .. day)
 	end
 end
 
@@ -139,6 +158,31 @@ Returns the current setting for the first day in the week.
 function getWeekstart(self)
 	return globalWeekstart
 end
+
+
+--[[
+=head2 setShortDateFormat(self, dateformat)
+
+Set the default short date format.
+
+=cut
+--]]
+function setShortDateFormat(self, dateformat)
+	globalShortDateFormat = dateformat
+end
+
+
+--[[
+=head2 getShorDateFormat(self)
+
+Return the default short date format.
+
+=cut
+--]]
+function getShortDateFormat(self)
+	return globalShortDateFormat
+end
+
 
 --[[
 =head2 setDateFormat(self, dateformat)
@@ -213,7 +257,7 @@ function setTimeZone(self, timezone)
 	local test_tz = self:getTimeZone(timezone)
 
 	if test_tz == nil then
-		log:warn("Set Invalid TimeZone")
+		log:error("Set Invalid TimeZone")
 		return false
 	else
 		globalTimeZone = timezone
@@ -233,7 +277,7 @@ function setHours(self, hours)
 		if hours == "12" or hours == "24" then
 			globalHours = hours
 		else 
-			log:warn("datetime:setHours() - hours is not 12 or 24")
+			log:error("datetime:setHours() - hours is not 12 or 24")
 		end
 	elseif type(hours) == "number" then
 		if hours == 12 then
@@ -241,10 +285,10 @@ function setHours(self, hours)
 		elseif hours == 24 then 
 			globalHours = "24"
 		else
-			log:warn("datetime:setHours() - hours is not 12 or 24")
+			log:error("datetime:setHours() - hours is not 12 or 24")
 		end
 	else
-		log:warn("Invalid Parameter for datetime:setHours()")
+		log:error("Invalid Parameter for datetime:setHours()")
 	end
 end
 
@@ -296,6 +340,74 @@ function secondsFromMidnight(self, hhmm)
 	secondsFromMidnight = (timeElements[1] * 3600) + (timeElements[2] * 60)
 	return secondsFromMidnight
 end
+
+
+--[[
+=head2 timeTableFromSFM()
+
+Takes seconds from midnight and returns table of { hour, minute, ampm } ( ampm nil when format is 24 )
+
+=cut
+--]]
+function timeTableFromSFM(self, secondsFromMidnight, format)
+
+	if not format then
+		format = '24'
+	end
+
+	local sfm = tonumber(secondsFromMidnight)
+	-- 24h format
+	if format == '24' then
+		if (sfm >= 86400 or sfm < 0) then
+			return { 
+				hour   = 0, 
+				minute = 0, 
+				ampm   = nil,
+			}
+		end
+
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+	
+		return { 
+			hour   = hours, 
+			minute = minutes, 
+			ampm   = nil 
+		}
+	-- 12h format
+	else
+		local ampm
+		if (sfm >= 86400 or sfm < 0) then
+			return { 
+				hour   = 12, 
+				minute = 0, 
+				ampm   = 'PM',
+			}
+		end
+
+		if (sfm < 43200) then
+			ampm = 'AM'
+		else
+			ampm = 'pm'
+		end
+
+		local hours   = tonumber(math.floor(sfm/3600))
+		local minutes = tonumber(math.floor((sfm % 3600) / 60 ))
+
+		if hours < 1 then
+			hours = 12
+		elseif hours > 12 then
+			hours = hours - 12
+		end
+	
+		return { 
+			hour   = hours, 
+			minute = minutes, 
+			ampm   = ampm,
+		}
+	end
+end
+
 
 --[[
 =head2 timeFromSFM()

@@ -38,7 +38,6 @@ local Timer            = require("jive.ui.Timer")
 local Window           = require("jive.ui.Window")
 
 local debug            = require("jive.utils.debug")
-local log              = require("jive.utils.log").logger("applets.misc")
 
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
@@ -87,30 +86,28 @@ function loadConfig(self)
 	if f then
 		self.configFile = dirorerr .. "Macros.lua"
 		self.config = f()
-	else
+	elseif dirorerr then
 		log:warn("Error loading Macros: ", dirorerr)
 	end
 end
 
 
 function saveConfig(self)
-	local file = assert(io.open(self.configFile, "w"))
-	file:write(dumper.dump(self.config, nil, false))
-	file:close()
+	System:atomicWrite(self.configFile, dumper.dump(self.config, nil, false))
 end
 
 
 function autoplayShow(self, countdown)
 	-- Create window
-	local window = Window("window", self:string("MACRO_AUTOSTART"))
+	local window = Window("text_list", self:string("MACRO_AUTOSTART"))
 	local menu = SimpleMenu("menu", items)
-	local help = Textarea("textarea", "")
+	local help = Textarea("text", "")
 
 	window:setSkin({
-		macroPass = {
+		macro_pass = {
 			img = Surface:loadImage("applets/MacroPlay/pass.png"),
 		},
-		macroFail = {
+		macro_fail = {
 			img = Surface:loadImage("applets/MacroPlay/fail.png"),
 		},
 	})
@@ -147,10 +144,10 @@ function autoplayShow(self, countdown)
 		}
 
 		if macro.passed then
-			item.icon = Icon("macroPass")
+			item.icon = Icon("macro_pass")
 		end
 		if macro.failed then
-			item.icon = Icon("macroFail")
+			item.icon = Icon("macro_fail")
 		end
 
 		menu:addItem(item)
@@ -189,13 +186,13 @@ end
 
 function settingsShow(self)
 	-- Create window
-	local window = Window("window", self:string("MACRO_PLAY"))
+	local window = Window("help_list", self:string("MACRO_PLAY"))
 	local menu = SimpleMenu("menu", items)
-	local help = Textarea("help", "")
+	local help = Textarea("help_text", "")
 
 	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
-	window:addWidget(help)
+	menu:setHeaderWidget(help)
 	window:addWidget(menu)
 
 	-- Macro menus
@@ -504,7 +501,7 @@ function macroParameter(key)
 end
 
 
-function macroPass(msg)
+function macro_pass(msg)
 	local self = instance
 
 	log:warn("Macro PASS ", self.macro.name, ": ", msg)
@@ -516,7 +513,7 @@ function macroPass(msg)
 end
 
 
-function macroFail(msg)
+function macro_fail(msg)
 	local self = instance
 
 	log:warn("Macro FAIL ", self.macro.name, ": ", msg)

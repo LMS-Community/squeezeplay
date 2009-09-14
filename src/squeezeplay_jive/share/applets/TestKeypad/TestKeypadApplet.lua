@@ -5,7 +5,6 @@ local string              = require("string")
 local table               = require("jive.utils.table")
 local io                  = require("io")
 local oo                  = require("loop.simple")
-local log                 = require("jive.utils.log").logger("applets.misc")
 local debug               = require("jive.utils.debug")
 
 local Label               = require("jive.ui.Label")
@@ -63,8 +62,8 @@ end
 
 
 function _completedShow(self)
-	local popup = Window("window")
-	popup:addWidget(Textarea("textarea", self:string("TEST_COMPLETE")))
+	local popup = Window("text_list")
+	popup:addWidget(Textarea("text", self:string("TEST_COMPLETE")))
 
 	self:tieWindow(popup)
 	popup:showBriefly(2000, function() self.window:hideToTop() end)
@@ -72,12 +71,9 @@ end
 
 
 function drawKeypad(self)
-	local w, h = Framework:getScreenSize()
-	local srf  = Surface:newRGB(w, h)
 	local currentKeyUp = 0
 
-	self.background:blit(srf, 0, 0)
-	self.icon:setValue(srf)
+	self.background:blit(self.surface, 0, 0)
 
 	local started = false
 
@@ -85,9 +81,9 @@ function drawKeypad(self)
 		local state = keyState[k.key]
 		if state ~= nil then
 			started = true
-			srf:filledCircle(k.x, k.y, 10, stateToColor[state])
+			self.surface:filledCircle(k.x, k.y, 10, stateToColor[state])
 		else
-			srf:circle(k.x, k.y, 10, 0x00FF00FF)
+			self.surface:circle(k.x, k.y, 10, 0x00FF00FF)
 		end
 	end
 
@@ -131,15 +127,19 @@ end
 
 
 function KeypadTest(self)
-	local window = Window("window")
+	local window = Window("text_list")
+	window:setShowFrameworkWidgets(false)
+
 	self.window = window
 
 	self.background = Surface:loadImage("applets/TestKeypad/Keypad.png")
+	local w, h = self.background:getSize()
+ 
+	self.surface = Surface:newRGB(w, h)
 
-	self.icon = Icon("icon")
-	window:addWidget(self.icon)
+	window:addWidget(Icon("icon", self.surface))
 
-	self.help = Textarea("help", self:string("TEST_KEYPAD_HELP"))
+	self.help = Textarea("help_text", self:string("TEST_KEYPAD_HELP"))
 	window:addWidget(self.help)
 
 	self:drawKeypad()

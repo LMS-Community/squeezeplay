@@ -1,17 +1,21 @@
 
 DIAGNOSTICS
-	DA	Systemdiagnosticering
-	DE	Systemdiagnose
+	CS	Diagnostika
+	DA	Diagnosticering
+	DE	Diagnose
 	EN	Diagnostics
-	ES	Diagnóstico del sistema
-	FI	Järjestelmädiagnostiikka
-	FR	Diagnostic système
-	IT	Diagnostica del sistema
-	NL	Diagnostische gegevens van het systeem
-	NO	Systemdiagnose
-	SV	Systemdiagnostik
+	ES	Diagnósticos
+	FI	Diagnostiikka
+	FR	Diagnostic
+	IT	Diagnostica
+	NL	Diagnostische gegevens
+	NO	Diagnose
+	PL	Diagnostyka
+	RU	Диагностика
+	SV	Diagnostik
 
 NOT_CONNECTED
+	CS	Nepřipojeno
 	DA	Ikke tilsluttet
 	DE	Nicht verbunden
 	EN	Not connected
@@ -21,11 +25,15 @@ NOT_CONNECTED
 	IT	Non connesso
 	NL	Niet verbonden
 	NO	Ikke koplet til
+	PL	Niepołączony
+	RU	Не подключено
 	SV	Ej ansluten
 
 PORT_FAIL
+# SLT: please keep these messages as short as possible
+	CS	Nelze připojit
 	DA	Der kan ikke etableres forbindelse
-	DE	Verbindung kann nicht hergestellt werden
+	DE	Keine Verbindung möglich
 	EN	Can't connect
 	ES	No se puede conectar
 	FI	Ei voi yhdistää
@@ -33,9 +41,12 @@ PORT_FAIL
 	IT	Impossibile connettersi
 	NL	Kan geen verbinding maken
 	NO	Kan ikke kople til
+	PL	Nie można nawiązać połączenia
+	RU	Подключение невозможно
 	SV	Det gick inte att ansluta
 
 PORT_OK
+	CS	OK
 	DA	OK
 	DE	OK
 	EN	OK
@@ -45,9 +56,12 @@ PORT_OK
 	IT	OK
 	NL	OK
 	NO	OK
+	PL	OK
+	RU	ОК
 	SV	OK
 
 DNS_FAIL
+	CS	DNS selhalo
 	DA	DNS mislykkedes
 	DE	DNS-Fehler
 	EN	DNS failed
@@ -57,9 +71,12 @@ DNS_FAIL
 	IT	Errore DNS
 	NL	DNS mislukt
 	NO	DNS mislyktes
+	PL	Niepowodzenie DNS
+	RU	Ошибка DNS
 	SV	DNS misslyckades
 
 PING_OK
+	CS	OK
 	DA	OK
 	DE	OK
 	EN	OK
@@ -69,247 +86,501 @@ PING_OK
 	IT	OK
 	NL	OK
 	NO	OK
+	PL	OK
+	RU	ОК
 	SV	OK
 
 PING_FAIL
+# SLT: please keep these messages as short as possible
+	CS	Nelze zvonit
 	DA	Ping-kommando mislykkedes
 	DE	Ping-Fehler
 	EN	Can't ping
 	ES	No se puede hacer ping
 	FI	Ei voi suorittaa ping-toimintoa
-	FR	Impossible d'exécuter la commande PING
-	IT	Impossibile eseguire il ping
+	FR	PING Impossible
+	IT	Impossibile eseguire ping
 	NL	Kan de opdracht Ping niet uitvoeren
 	NO	Kan ikke sende ping
+	PL	Nie można użyć funkcji ping
+	RU	Невозможно выполнить проверку связи
 	SV	Det gick inte att skicka ping
 
-WLAN_SNR
-	DA	%s signal/støjforhold:
-	DE	%s-SNR
-	EN	%s SNR
-	ES	%s SNR
-	FI	%s SNR
-	FR	SNR %s
-	IT	%s SNR
-	NL	%s SNR
-	NO	%s signal-til-støy-forhold
-	SV	Brusvärde %s
+PLAYER_TYPE
+	CS	Typ přehrávače\n%s
+	DA	Afspillertype\n%s
+	DE	Gerätetyp\n%s
+	EN	Player Type\n%s
+	ES	Tipo de reproductor\n%s
+	FI	Soittimen tyyppi\n%s
+	FR	Type platine\n%s
+	IT	Tipo lettore\n%s
+	NL	Type muzieksysteem\n%s
+	NO	Spillertype\n%s
+	PL	Typ odtwarzacza\n%s
+	RU	Тип плеера\n%s
+	SV	Spelartyp\n%s
+
+CURRENT_PLAYER
+	CS	Aktuální přehrávač\n%s
+	DA	Nuværende afspiller\n%s
+	DE	Aktueller Player\n%s
+	EN	Current player\n%s
+	ES	Reproductor actual\n%s
+	FI	Käytössä oleva soitin\n%s
+	FR	Platine en cours\n%s
+	IT	Lettore in uso\n%s
+	NL	Huidig muzieksysteem\n%s
+	NO	Gjeldende spiller\n%s
+	PL	Aktualny odtwarzacz\n%s
+	PT	Cliente Actual\n%s
+	RU	Текущий плеер\n%s
+	SV	Aktuell spelare\n%s
+
+DIAGNOSTICS_NONE
+	CS	Žádný
+	DA	Ingen
+	DE	Keine
+	EN	None
+	ES	Ninguno
+	FI	Ei mitään
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+	NO	Ingen
+	PL	Brak
+	RU	Нет
+	SV	Ingen
+
+DIAGNOSTICS_REMOTE
+	CS	Dálkové ovládání
+	DA	Fjernbetjening
+	DE	Fernbedienung
+	EN	Remote
+	ES	Mando a distancia
+	FI	Kaukosäädin
+	FR	Télécommande
+	IT	Telecomando
+	NL	Afstandsbediening
+	NO	Fjernkontroll
+	PL	Pilot zdalnego sterowania
+	RU	Пульт
+	SV	Fjärr
+
+DIAGNOSTICS_LOCAL
+	EN	Local
+
+SN_REG
+	EN	mysqueezebox.com registration\n%s
+
+SN_REG_YES
+	EN	Registered
+
+SN_REG_NO
+	EN	Not Registered
+
+ETH_FULL_DUPLEX
+	CS	%sMb/s
+	DA	%s Mbps
+	DE	%sMbit/s
+	EN	%sMbps
+	ES	%s Mbps
+	FI	%sMbps
+	FR	%sMbps
+	IT	%s Mbps
+	NL	%sMbps
+	NO	%s Mbps
+	PL	%s Mb/s
+	RU	%s Мбит/с
+	SV	%s Mbps
+
+ETH_HALF_DUPLEX
+	CS	%sMb/s HD
+	DA	%s Mbps HD
+	DE	%sMbit/s HD
+	EN	%sMbps HD
+	ES	%s Mbps HD
+	FI	%sMbps HD
+	FR	HD %sMbps
+	IT	HD da %s Mbps
+	NL	%sMbps vaste schijf
+	NO	%s Mbps HD
+	PL	%s Mb/s HD
+	RU	%s Мбит/с HD
+	SV	%s Mbps (HD)
 
 FIRMWARE_VERSION
-	DA	Version:
-	DE	Version:
-	EN	Version:
-	ES	Versión:
-	FI	Versio:
-	FR	Version:
-	IT	Versione:
-	NL	Versie:
-	NO	Versjon:
-	SV	Version:
+	CS	Firmware verze\n%s
+	DA	Firmwareversion\n%s
+	DE	Firmware-Version\n%s
+	EN	Firmware Version\n%s
+	ES	Versión de firmware\n%s
+	FI	Laitteisto-ohjelmiston versio\n%s
+	FR	Version du micrologiciel\n%s
+	IT	Versione firmware\n%s
+	NL	Firmwareversie\n%s
+	NO	Fastvareversjon\n%s
+	PL	Wersja oprogramowania układowego\n%s
+	RU	Версия микропрограммы\n%s
+	SV	Inbyggd programvaruversion\n%s
 
 MAC_ADDRESS
-	DA	MAC-adresse:
-	DE	MAC-Adresse:
-	EN	MAC Address:
-	ES	Dirección MAC:
-	FI	MAC-osoite:
-	FR	Adresse MAC:
-	IT	Indirizzo MAC:
-	NL	MAC-adres:
-	NO	MAC-adresse:
-	SV	MAC-adress:
+	CS	MAC adresa\n%s
+	DA	MAC-adresse\n%s
+	DE	MAC-Adresse\n%s
+	EN	MAC Address\n%s
+	ES	Dirección MAC\n%s
+	FI	MAC-osoite\n%s
+	FR	Adresse MAC\n%s
+	IT	Indirizzo MAC\n%s
+	NL	MAC-adres\n%s
+	NO	MAC-adresse\n%s
+	PL	Adres MAC\n%s
+	RU	MAC-адрес\n%s
+	SV	MAC-adress\n%s
 
 WLAN_SSID
-	DA	Trådløst netværk:
-	DE	Kabelloses Netzwerk:
-	EN	Wireless network:
-	ES	Red inalámbrica:
-	FI	Langaton verkko:
-	FR	Réseau sans fil:
-	IT	Rete senza fili:
-	NL	Draadloos netwerk:
-	NO	Trådløst nettverk:
-	SV	Trådlöst nätverk:
+	CS	Bezdrátová síť\n%s
+	DA	Trådløst netværk\n%s
+	DE	Kabelloses Netzwerk\n%s
+	EN	Wireless network\n%s
+	ES	Red inalámbrica\n%s
+	FI	Langaton verkko\n%s
+	FR	Réseau sans fil\n%s
+	IT	Rete senza fili\n%s
+	NL	Draadloos netwerk\n%s
+	NO	Trådløst nettverk\n%s
+	PL	Sieć bezprzewodowa\n%s
+	RU	Беспроводная сеть\n%s
+	SV	Trådlöst nätverk\n%s
 
 WLAN_ENCRYPTION
-	DA	Kryptering for trådløst netværk:
-	DE	Kabellos-Verschlüsselung:
-	EN	Wireless encryption:
-	ES	Cifrado inalámbrico:
-	FI	Langaton salaus:
-	FR	Chiffrement sans fil:
-	IT	Crittografia senza fili:
-	NL	Draadloze codering:
-	NO	Trådløs kryptering:
-	SV	Trådlös kryptering:
+	CS	Bezdrátové šifrování\n%s
+	DA	Kryptering af trådløst netværk\n%s
+	DE	Kabellos-Verschlüsselung\n%s
+	EN	Wireless encryption\n%s
+	ES	Cifrado inalámbrico\n%s
+	FI	Langaton salaus\n%s
+	FR	Cryptage sans fil\n%s
+	IT	Crittografia rete senza fili\n%s
+	NL	Draadloze codering\n%s
+	NO	Trådløs kryptering\n%s
+	PL	Szyfrowanie w sieci bezprzewodowej\n%s
+	RU	Шифрование беспроводной сети\n%s
+	SV	Trådlös kryptering\n%s
 
 WLAN_STRENGTH
-	DA	Trådløst signal:
-	DE	Kabellos-Signal:
-	EN	Wireless signal:
-	ES	Señal inalámbrica:
-	FI	Langaton signaali:
-	FR	Signal sans fil:
-	IT	Segnale senza fili:
-	NL	Draadloos signaal:
-	NO	Trådløst signal:
-	SV	Trådlös signal:
+	CS	Bezdrátový signál\n%s
+	DA	Trådløst signal\n%s
+	DE	Kabellos-Signal\n%s
+	EN	Wireless signal\n%s
+	ES	Señal inalámbrica\n%s
+	FI	Langaton signaali\n%s
+	FR	Signal sans fil\n%s
+	IT	Segnale rete senza fili\n%s
+	NL	Draadloos signaal\n%s
+	NO	Trådløst signal\n%s
+	PL	Sygnał sieci bezprzewodowej\n%s
+	RU	Беспроводной сигнал\n%s
+	SV	Trådlös signal\n%s
+
+ETH_CONNECTION
+	CS	Ethernet\n%s
+	DA	Ethernet\n%s
+	DE	Ethernet\n%s
+	EN	Ethernet\n%s
+	ES	Ethernet\n%s
+	FI	Ethernet\n%s
+	FR	Ethernet\n%s
+	IT	Ethernet\n%s
+	NL	Ethernet\n%s
+	NO	Ethernet\n%s
+	PL	Ethernet\n%s
+	RU	Ethernet\n%s
+	SV	Ethernet\n%s
 
 IP_ADDRESS
-	DA	IP-adresse:
-	DE	IP-Adresse:
-	EN	IP Address:
-	ES	Dirección IP:
-	FI	IP-osoite:
-	FR	Adresse IP:
-	IT	Indirizzo IP:
-	NL	IP-adres:
-	NO	Ip-adresse:
-	SV	IP-adress:
+	CS	IP Adresa:\n%s
+	DA	IP-adresse\n%s
+	DE	IP-Adresse\n%s
+	EN	IP Address\n%s
+	ES	Dirección IP\n%s
+	FI	IP-osoite\n%s
+	FR	Adresse IP\n%s
+	IT	Indirizzo IP\n%s
+	NL	IP-adres\n%s
+	NO	Ip-adresse\n%s
+	PL	Adres IP\n%s
+	RU	IP-адрес\n%s
+	SV	IP-address\n%s
 
 SUBNET_MASK
-	DA	IP-undernet:
-	DE	IP-Subnetzmaske:
-	EN	IP Subnet:
-	ES	Subred IP:
-	FI	IP-aliverkko:
-	FR	Sous-réseau IP:
-	IT	Subnet IP:
-	NL	IP-subnet:
-	NO	Ip-delnett:
-	SV	IP-delnät:
+	CS	IP podsítě\n%s
+	DA	IP-undernet\n%s
+	DE	IP-Subnetzmaske\n%s
+	EN	IP Subnet\n%s
+	ES	Subred IP\n%s
+	FI	IP-aliverkko\n%s
+	FR	Sous-réseau IP\n%s
+	IT	Subnet IP\n%s
+	NL	IP-subnet\n%s
+	NO	Ip-delnett\n%s
+	PL	Podsieć IP\n%s
+	RU	Подсеть IP\n%s
+	SV	IP-delnät\n%s
 
 GATEWAY
-	DA	Gatewayens IP-adresse:
-	DE	IP-Gateway:
-	EN	IP Gateway:
-	ES	Puerta de enlace IP:
-	FI	IP-yhdyskäytävä:
-	FR	Passerelle IP:
-	IT	Gateway IP:
-	NL	Gateway van IP:
-	NO	Ip for gateway:
-	SV	Gateway-adress:
+# SLT: please keep these messages as short as possible, max. like EN
+	CS	IP brána\n%s
+	DA	Gatewayens IP-adresse\n%s
+	DE	IP-Gateway\n%s
+	EN	IP Gateway\n%s
+	ES	Puerta de enlace IP\n%s
+	FI	IP-yhdyskäytävä\n%s
+	FR	Passerelle IP\n%s
+	IT	Gateway IP\n%s
+	NL	IP-gateway\n%s
+	NO	Gateway-ip\n%s
+	PL	Brama IP\n%s
+	RU	Шлюз IP\n%s
+	SV	IP-gateway\n%s
 
 DNS_SERVER
-	DA	DNS-server:
-	DE	DNS-Server:
-	EN	DNS Server:
-	ES	Servidor DNS:
-	FI	DNS-palvelin:
-	FR	Serveur DNS:
-	IT	Server DNS:
-	NL	DNS-server:
-	NO	DNS-server:
-	SV	DNS-server:
+	CS	DNS Server\n%s
+	DA	DNS-server\n%s
+	DE	DNS-Server\n%s
+	EN	DNS Server\n%s
+	ES	Servidor DNS\n%s
+	FI	DNS-palvelin\n%s
+	FR	Serveur DNS\n%s
+	IT	Server DNS\n%s
+	NL	DNS-server\n%s
+	NO	DNS-server\n%s
+	PL	Serwer DNS\n%s
+	RU	DNS-сервер\n%s
+	SV	DNS-server\n%s
 
 SN_ADDRESS
-	DA	SqueezeNetwork:
-	DE	SqueezeNetwork:
-	EN	SqueezeNetwork:
-	ES	SqueezeNetwork:
-	FI	SqueezeNetwork:
-	FR	SqueezeNetwork:
-	IT	SqueezeNetwork:
-	NL	SqueezeNetwork:
-	NO	SqueezeNetwork:
-	SV	SqueezeNetwork:
+	CS	mysqueezebox.com\n%s
+	DA	mysqueezebox.com\n%s
+	DE	mysqueezebox.com\n%s
+	EN	mysqueezebox.com\n%s
+	ES	mysqueezebox.com\n%s
+	FI	mysqueezebox.com\n%s
+	FR	mysqueezebox.com\n%s
+	IT	mysqueezebox.com\n%s
+	NL	mysqueezebox.com\n%s
+	NO	mysqueezebox.com\n%s
+	PL	mysqueezebox.com\n%s
+	RU	mysqueezebox.com\n%s
+	SV	mysqueezebox.com\n%s
 
 SN_PING
-	DA	  Ping:
-	DE	  Ping:
-	EN	  Ping:
-	ES	  Ping:
-	FI	  Ping:
-	FR	  Ping:
-	IT	  Ping:
-	NL	  Ping:
-	NO	  Ping:
-	SV	  Ping:
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
 
 SN_PORT_3483
-	DA	  TCP port 3483:
-	DE	  TCP-Anschluss 3483:
-	EN	  TCP port 3483:
-	ES	  Puerto TCP 3483:
-	FI	  TCP-portti 3483:
-	FR	  Port TCP 3483:
-	IT	  Porta TCP 3483:
-	NL	  TCP-poort 3483:
-	NO	  TCP-port 3483:
-	SV	  TCP-port 3483:
+	CS	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
 
 SN_PORT_9000
-	DA	  TCP port 9000:
-	DE	  TCP-Anschluss 9000:
-	EN	  TCP port 9000:
-	ES	  Puerto TCP 9000:
-	FI	  TCP-portti 9000:
-	FR	  Port  TCP 9000:
-	IT	  Porta TCP 9000:
-	NL	  TCP-poort 9000:
-	NO	  TCP-port 9000:
-	SV	  TCP-port 9000:
+	CS	TCP port 9000\n%s
+	DA	TCP-port 9000\n%s
+	DE	TCP-Anschluss 9000\n%s
+	EN	TCP port 9000\n%s
+	ES	Puerto TCP 9000\n%s
+	FI	TCP-portti 9000\n%s
+	FR	Port TCP 9000\n%s
+	IT	Porta TCP 9000\n%s
+	NL	TCP-poort 9000\n%s
+	NO	TCP-port 9000\n%s
+	PL	Port TCP 9000\n%s
+	RU	TCP-порт 9000\n%s
+	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	DA	SqueezeCenter:
-	DE	SqueezeCenter:
-	EN	SqueezeCenter:
-	ES	SqueezeCenter:
-	FI	SqueezeCenter:
-	FR	SqueezeCenter:
-	IT	SqueezeCenter:
-	NL	SqueezeCenter:
-	NO	SqueezeCenter:
-	SV	SqueezeCenter:
+	CS	Squeezebox Server\n%s
+	DA	Squeezebox Server\n%s
+	DE	Squeezebox Server\n%s
+	EN	Squeezebox Server\n%s
+	ES	Squeezebox Server\n%s
+	FI	Squeezebox Server\n%s
+	FR	Squeezebox Server\n%s
+	IT	Squeezebox Server\n%s
+	NL	Squeezebox Server\n%s
+	NO	Squeezebox Server\n%s
+	PL	Squeezebox Server\n%s
+	RU	Squeezebox Server\n%s
+	SV	Squeezebox Server\n%s
+
+SC_NAME
+	CS	Název knihovny\n%s
+	DA	Bibliotekets navn\n%s
+	DE	Name der Musiksammlung\n%s
+	EN	Library name\n%s
+	ES	Nombre de biblioteca\n%s
+	FI	Kirjaston nimi\n%s
+	FR	Nom de la collection\n%s
+	IT	Nome libreria\n%s
+	NL	Naam van muziekcollectie\n%s
+	NO	Navn på bibliotek\n%s
+	PL	Nazwa biblioteki\n%s
+	RU	Имя медиатеки\n%s
+	SV	Bibliotekets namn\n%s
 
 SC_PING
-	DA	  Ping:
-	DE	  Ping:
-	EN	  Ping:
-	ES	  Ping:
-	FI	  Ping:
-	FR	  Ping:
-	IT	  Ping:
-	NL	  Ping:
-	NO	  Ping:
-	SV	  Ping:
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
 
 SC_PORT_3483
-	DA	  TCP port 3483:
-	DE	  TCP-Anschluss 3483:
-	EN	  TCP port 3483:
-	ES	  Puerto TCP 3483:
-	FI	  TCP-portti 3483:
-	FR	  Port TCP 3483:
-	IT	  Porta TCP 3483:
-	NL	  TCP-poort 3483:
-	NO	  TCP-port 3483:
-	SV	  TCP-port 3483:
+	CS	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
 
 SC_PORT_9000
-	DA	  TCP port 9000:
-	DE	  TCP-Anschluss 9000:
-	EN	  TCP port 9000:
-	ES	  Puerto TCP 9000:
-	FI	  TCP-portti 9000:
-	FR	  Port  TCP 9000:
-	IT	  Porta TCP 9000:
-	NL	  TCP-poort 9000:
-	NO	  TCP-port 9000:
-	SV	  TCP-port 9000:
+	CS	TCP port 9000\n%s
+	DA	TCP-port 9000\n%s
+	DE	TCP-Anschluss 9000\n%s
+	EN	TCP port 9000\n%s
+	ES	Puerto TCP 9000\n%s
+	FI	TCP-portti 9000\n%s
+	FR	Port TCP 9000\n%s
+	IT	Porta TCP 9000\n%s
+	NL	TCP-poort 9000\n%s
+	NO	TCP-port 9000\n%s
+	PL	Port TCP 9000\n%s
+	RU	TCP-порт 9000\n%s
+	SV	TCP-port 9000\n%s
+
+SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Hilfe
+	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная справка
+	SV	Ytterligare hjälp
+
+SUPPORT_HELP
+	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.mysqueezebox.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
+	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.mysqueezebox.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
+	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
+	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
+	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.mysqueezebox.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
+	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.mysqueezebox.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
+	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.mysqueezebox.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
+	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.mysqueezebox.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
+	NL	Ga naar \nwww.mysqueezebox.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
+	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.mysqueezebox.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
+	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.mysqueezebox.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
+	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.mysqueezebox.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
+	SV	Mer information och kundsupport finns på \nwww.mysqueezebox.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
+
+SOFTWARE_UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+
+DIAGNOSTICS_NETWORKING
+	CS	Připojování do sítě
+	DA	Netværk
+	DE	Netzwerke
+	EN	Networking
+	ES	Redes
+	FI	Verkko
+	FR	Mise en réseau
+	IT	Connessione alla rete in corso
+	NL	Netwerken
+	NO	Nettverk
+	PL	Sieć
+	RU	Работа в сети
+	SV	Nätverk
+
+HARDWARE_VERSION
+	CS	Hardware verze\n%s
+	DA	Hardwareversion\n%s
+	DE	Hardware-Version\n%s
+	EN	Hardware version\n%s
+	ES	Versión de hardware\n%s
+	FI	Laitteistoversio\n%s
+	FR	Version du matériel\n%s
+	IT	Versione hardware\n%s
+	NL	Hardwareversie\n%s
+	NO	Maskinvareversjon\n%s
+	PL	Wersja sprzętowa\n%s
+	RU	Версия оборудования\n%s
+	SV	Maskinvaruversion\n%s
 
 UPTIME
-	DA	Oppetid:
-	DE	Zeit aktiv:
-	EN	Uptime:
-	ES	Tiempo de actividad:
-	FI	Toiminta-aika:
-	FR	Temps d'utilisation :
-	IT	Tempo di attività:
-	NL	Actieve tijdsduur:
-	NO	Oppetid:
-	SV	Aktiv tid:
+	DA	Oppetid\n%s
+	DE	Zeit aktiv\n%s
+	EN	Uptime\n%s
+	ES	Tiempo de actividad\n%s
+	FI	Toiminta-aika\n%s
+	FR	Temps d'utilisation\n%s
+	IT	Tempo di attività\n%s
+	NL	Actieve tijdsduur\n%s
+	NO	Oppetid\n%s
+	SV	Aktiv tid\n%s
 
 UPTIME_DAYS
 	DA	%s dage
@@ -348,4 +619,4 @@ UPTIME_MINUTES
 	SV	%s minuter
 
 MEMORY
-	EN	Memory used
+	EN	Memory used\n%s

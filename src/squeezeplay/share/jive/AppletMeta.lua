@@ -19,7 +19,8 @@ be accessed and loaded on demand.
 local error = error
 
 local oo = require("loop.base")
-local log = require("jive.utils.log").logger("jive.main")
+
+local log = require("jive.utils.log").logger("squeezeplay.applets")
 
 local appletManager = appletManager
 
@@ -116,6 +117,8 @@ function storeSettings(self)
 end
 
 
+local lastMenuApplet = false
+
 --[[
 
 =head2 self:menuItem(label, closure)
@@ -126,16 +129,26 @@ is the function executed when the MenuItem is selected.
 
 =cut
 --]]
-function menuItem(self, id, node, label, closure, weight, extras)
+function menuItem(self, id, node, label, closure, weight, extras, iconStyle)
+	if not iconStyle then
+		--bug #12510
+		iconStyle = "hm_advancedSettings"
+	end
 	return {
 		id = id,
+		iconStyle = iconStyle,
 		node = node,
 		text = self:string(label),
 		weight = weight,
 		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
-				local applet = appletManager:loadApplet(self._entry.appletName)
-				return closure(applet, menuItem)
+			if lastMenuApplet ~= self._entry.appletName then
+				log:info("entering ", self._entry.appletName)
+				lastMenuApplet = self._entry.appletName
+			end
+
+			local applet = appletManager:loadApplet(self._entry.appletName)
+			return closure(applet, menuItem)
 		end,
 		extras = extras
 	}

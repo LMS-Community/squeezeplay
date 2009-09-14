@@ -1,6 +1,6 @@
 
 -- stuff we use
-local ipairs, pcall, tostring = ipairs, pcall, tostring
+local ipairs, pcall, tonumber, tostring = ipairs, pcall, tonumber, tostring
 
 local oo                     = require("loop.simple")
 local string                 = require("string")
@@ -9,11 +9,12 @@ local os                     = require("os")
 local io                     = require("io")
 
 local jiveBSP                = require("jiveBSP")
-local Watchdog               = require("jiveWatchdog")
 local Networking             = require("jive.net.Networking")
+local Player                 = require("jive.slim.Player")
 local LocalPlayer            = require("jive.slim.LocalPlayer")
 
 local Applet                 = require("jive.Applet")
+local Decode                 = require("squeezeplay.decode")
 local System                 = require("jive.System")
 
 local Sample                 = require("squeezeplay.sample")
@@ -35,11 +36,11 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Tile                   = require("jive.ui.Tile")
 local Timer                  = require("jive.ui.Timer")
-local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
 
 local debug                  = require("jive.utils.debug")
-local log                    = require("jive.utils.log").logger("applets.setup")
+
+local SqueezeboxApplet       = require("applets.Squeezebox.SqueezeboxApplet")
 
 local jiveMain               = jiveMain
 local jnt                    = jnt
@@ -61,7 +62,7 @@ local SW_PHONE_DETECT        = 1
 
 local squeezeboxjiveTitleStyle = 'settingstitle'
 module(..., Framework.constants)
-oo.class(_M, Applet)
+oo.class(_M, SqueezeboxApplet)
 
 
 -- disable battery low test, useful for debugging
@@ -69,7 +70,10 @@ local CHECK_BATTERY_LOW      = true
 
 
 function init(self)
-	local uuid, mac
+	local settings = self:getSettings()
+
+	-- read uuid, serial and revision
+	parseCpuInfo(self)
 
 	-- read device uuid
 	local f = io.popen("/usr/sbin/fw_printenv")
@@ -77,62 +81,17 @@ function init(self)
 		local printenv = f:read("*all")
 		f:close()
 
-		uuid = string.match(printenv, "serial#=(%x+)")
+		self._uuid = string.match(printenv, "serial#=(%x+)")
 	end
 
 	System:init({
-		uuid = uuid,
 		machine = "jive",
+		uuid = self._uuid,
+		revision = self._revision,
 	})
 
-	mac = System:getMacAddress()
-	uuid = System:getUUID()
-
-	if not uuid or string.match(mac, "^00:40:20") then
-		local popup = Popup("errorWindow", self:string("INVALID_MAC_TITLE"))
-
-		popup:setAllowScreensaver(false)
-		popup:setAlwaysOnTop(true)
-		popup:setAutoHide(false)
-
-		local text = Textarea("textarea", self:string("INVALID_MAC_TEXT"))
-		local menu = SimpleMenu("menu", {
-			{
-				text = self:string("INVALID_MAC_CONTINUE"),
-				sound = "WINDOWHIDE",
-				callback = function()
-						   popup:hide()
-					   end
-			},
-		})
-
-		popup:addWidget(text)
-		popup:addWidget(menu)
-		popup:show()
-	end
-
-
-	-- watchdog timer
-	self.watchdog = Watchdog:open()
-	if self.watchdog then
-		-- allow 30 seconds to boot
-		log:info("watchdog timeout 30")
-		self.watchdog:setTimeout(30)
-
-		local timer = Timer(2000, -- 2 seconds
-			function()
-				-- allow 10 seconds after boot
-				if not self.watchdogRunning then
-					log:info("watchdog timeout 10")
-					self.watchdog:setTimeout(10)
-					self.watchdogRunning = true
-				end
-				self.watchdog:keepAlive()
-			end)
-		timer:start()
-	else
-		log:warn("Watchdog timer is disabled")
-	end
+	-- warn if uuid or mac are invalid
+	verifyMacUUID(self)
 
 	-- sync clock to hw clock every 10 minutes
 	clockSyncTimer = Timer(600000, -- 10 minutes
@@ -151,8 +110,7 @@ function init(self)
 				 end)
 
 	-- wireless
-	local wireless = Networking:wirelessInterface()
-	self.wireless = Networking(jnt, wireless)
+	self.wireless = Networking:wirelessInterface(jnt)
 
 	-- register network active function
 	jnt:registerNetworkActive(function(active)
@@ -163,10 +121,9 @@ function init(self)
 		self:_cpuPowerOverride(active)
 	end)
 
-	iconbar.iconWireless:addTimer(5000,  -- every 5 seconds
-				      function() 
-					      self:update()
-				      end)
+	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
+	      self:update()
+	end)
 
 	Framework:addListener(EVENT_SWITCH,
 			      function(event)
@@ -235,7 +192,7 @@ function init(self)
 
 			-- press-hold home is for power down
 			if keycode == KEY_HOME then
-				settingsPowerOff(self)
+				appletManager:callService("poweroff")
 				return EVENT_CONSUME
 			end
 			return EVENT_UNUSED
@@ -246,6 +203,8 @@ function init(self)
 	-- brightness
 	self.lcdLevel = jiveBSP.ioctl(12) / 2048
 	self.keyLevel = jiveBSP.ioctl(14) / 512
+
+	self.brightPrev = self.lcdLevel
 
 	-- ac or battery
 	self.acpower = (jiveBSP.ioctl(23) == 0)
@@ -262,15 +221,19 @@ function init(self)
 	-- set initial state
 	self:update()
 
+	-- open audio device
+	Decode:open(settings)
+
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	return self
+	playSplashSound(self)
 end
 
 
 function _softResetAction(self, event)
-	jiveMain:disconnectPlayer()
+	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
+	jiveMain:goHome()
 end
 
 
@@ -339,6 +302,13 @@ end
 
 
 function update(self)
+	 Task("statusbar", self, _updateTask):addTask()
+end
+
+
+function _updateTask(self)
+	local player = Player:getLocalPlayer()
+
 	-- ac power / battery
 	if self.acpower then
 		if self.batteryPopup then
@@ -371,6 +341,9 @@ function update(self)
 	-- wireless strength
 	local quality = self.wireless:getLinkQuality()
 	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+	if player then
+		player:setSignalStrength(strength)
+	end
 end
 
 
@@ -483,9 +456,17 @@ function getBrightness(self)
 end
 
 function setBrightness(self, level)
+
 	local settings = self:getSettings()
 
 	if level then
+		if level == "off" or level == 0 then
+			level = 0
+		elseif level == "on" then
+			level = self.brightPrev or self:getBrightness()
+		else
+			self.brightPrev = level
+		end
 		settings.brightness = level
 	end
 
@@ -500,7 +481,7 @@ function setBrightness(self, level)
 end
 
 function settingsBrightnessShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local level = jiveBSP.ioctl(12) / 2047
 
@@ -514,12 +495,12 @@ function settingsBrightnessShow(self, menuItem)
 				      end
 			      end)
 
-	window:addWidget(Textarea("help", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group("sliderGroup", {
-				       Icon("sliderMin"),
-				       slider,
-				       Icon("sliderMax")
-			       }))
+	       min = Icon("button_slider_min"),
+	       slider = slider,
+	       max = Icon("button_slider_max")
+	}))
 
 	window:addListener(EVENT_WINDOW_POP,
 		function()
@@ -541,7 +522,7 @@ end
 
 
 function settingsBacklightTimerShow(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local timeout = settings.dimmedTimeout
@@ -550,27 +531,33 @@ function settingsBacklightTimerShow(self, menuItem)
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("BSP_TIMER_10_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(10000) end, timeout == 10000),
 					},
 					{
 						text = self:string("BSP_TIMER_20_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(20000) end, timeout == 20000),
 					},
 					{
 						text = self:string("BSP_TIMER_30_SEC"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(30000) end, timeout == 30000),
 					},
 					{
 						text = self:string("BSP_TIMER_1_MIN"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(60000) end, timeout == 60000),
 					},
 					{
 						text = self:string("BSP_TIMER_NEVER"),
-						icon = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
+						style = 'item_choice',
+						check = RadioButton("radio", group, function() self:setBacklightTimeout(0) end, timeout == 0),
 					},
 					{
 						text = self:string("DIM_WHEN_CHARGING"),
-						icon = Checkbox("checkbox",
+						style = 'item_choice',
+						check = Checkbox("checkbox",
 								function(obj, isSelected)
 									settings.dimmedAC = isSelected
 								end,
@@ -771,16 +758,16 @@ end
 
 function lockScreen(self)
 	-- lock
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
 
 	-- FIXME change icon and text
-	popup:addWidget(Icon("iconLocked"))
+	popup:addWidget(Icon("icon_locked"))
 	popup:addWidget(Label("text", self:string("BSP_SCREEN_LOCKED")))
-	popup:addWidget(Textarea("lockedHelp", self:string("BSP_SCREEN_LOCKED_HELP")))
+	popup:addWidget(Textarea("help_text", self:string("BSP_SCREEN_LOCKED_HELP")))
 
 	popup:show()
 
@@ -831,10 +818,11 @@ function batteryLowShow(self)
 
 	log:info("batteryLowShow")
 
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 
-	popup:addWidget(Icon("iconBatteryLow"))
+	popup:addWidget(Icon("icon_battery_low"))
 	popup:addWidget(Label("text", self:string("BATTERY_LOW")))
+	popup:addWidget(Label("subtext", self:string("BATTERY_LOW_2")))
 
 	-- make sure this popup remains on screen
 	popup:setAllowScreensaver(false)
@@ -845,7 +833,7 @@ function batteryLowShow(self)
 
 	popup:addTimer(30000,
 		       function()
-			       self:_powerOff()
+			       appletManager:callService("poweroff")
 		       end,
 		       true)
 
@@ -857,7 +845,7 @@ function batteryLowShow(self)
 
 						-- allow power off
 						if event:getType() == EVENT_KEY_HOLD and event:getKeycode() == KEY_HOME then
-							self:settingsPowerOff()
+							appletManager:callService("poweroff")
 						end
 						return EVENT_CONSUME
 					end,
@@ -881,13 +869,19 @@ function batteryLowHide(self)
 end
 
 
+-- return true to prevent firmware updates
+function isBatteryLow(self)
+	return jiveBSP.ioctl(23) ~= 0 and jiveBSP.ioctl(17) < 830
+end
+
+
 function settingsPowerDown(self, menuItem)
         log:debug("powerDown menu")
 	-- add window
-	local window = Window("window", menuItem.text, 'settingstitle')
-	window:addWidget(Textarea("help", self:string("POWER_DOWN_HELP")))
+	local window = Window("text_list", menuItem.text, 'settingstitle')
 
 	local menu = SimpleMenu("menu")
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_DOWN_HELP")))
 	window:addWidget(menu)
 
 
@@ -900,7 +894,9 @@ function settingsPowerDown(self, menuItem)
 		{ 
 			text = self:string("POWER_DOWN"),
 			sound = "SELECT",
-			callback = function() settingsPowerOff(self) end
+			callback = function()
+				appletManager:callService("poweroff")
+			end
 		},	
 		{ 
 			text = self:string("POWER_DOWN_SLEEP"),
@@ -918,9 +914,9 @@ function settingsSleep(self)
 	-- disconnect from SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
-	self.popup = Popup("popupIcon")
+	self.popup = Popup("waiting_popup")
 
-	self.popup:addWidget(Icon("iconConnecting"))
+	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("SLEEPING")))
 
 	-- make sure this popup remains on screen
@@ -941,42 +937,10 @@ function settingsSleep(self)
 end
 
 
-function settingsPowerOff(self)
-	-- disconnect from SqueezeCenter
-	appletManager:callService("disconnectPlayer")
-
-	local popup = Popup("popupIcon")
-
-	popup:addWidget(Icon("iconPower"))
-	popup:addWidget(Label("text", self:string("GOODBYE")))
-
-	-- make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-
-	-- we're shutting down, so prohibit any key presses or holds
-	Framework:addListener(EVENT_ALL_INPUT,
-			      function () 
-				      return EVENT_CONSUME
-			      end,
-			      true)
-
-	popup:addTimer(4000, 
-		function()
-			self:_powerOff()
-		end,
-		true
-	)
-
-	popup:show()
-
-	popup:playSound("SHUTDOWN")
-end
 
 
 function settingsTestSuspend(self, menuItem)
-	local window = Window("window", menuItem.text, squeezeboxjiveTitleStyle)
+	local window = Window("text_list", menuItem.text, squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 
@@ -1001,7 +965,8 @@ function settingsTestSuspend(self, menuItem)
 	local menu = SimpleMenu("menu", {
 		{ 
 			text = "Sleep Timeout", 
-			icon = Choice(
+			style = 'item_choice',
+			check = Choice(
 				      "choice", 
 				      sleepOptions,
 				      function(obj, selectedIndex)
@@ -1013,7 +978,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = "Suspend Timeout", 
-			icon = Choice(
+			style = 'item_choice',
+			check = Choice(
 				      "choice", 
 				      suspendOptions,
 				      function(obj, selectedIndex)
@@ -1026,7 +992,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = "Suspend Enabled", 
-			icon = Checkbox(
+			style = 'item_choice',
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.suspendEnabled = isSelected
@@ -1037,7 +1004,8 @@ function settingsTestSuspend(self, menuItem)
 		},
 		{
 			text = self:string("WLAN_POWER_SAVE"), 
-			icon = Checkbox(
+			style = 'item_choice',
+			check = Checkbox(
 				      "checkbox", 
 				      function(obj, isSelected)
 					      settings.wlanPSEnabled = isSelected
@@ -1049,7 +1017,7 @@ function settingsTestSuspend(self, menuItem)
 		},
 	})
 
-	window:addWidget(Textarea("help", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("POWER_MANAGEMENT_SETTINGS_HELP")))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP,
@@ -1092,15 +1060,6 @@ function _setCPUSpeed(self, fast)
 
 	fh:write(speed)
 	fh:close()
-
-	-- the system clock runs slow in low power mode, so we need
-	-- to modify watchdog interval based on cpu speed
-	if self.watchdogRunning then
-		local timeout = fast and 10 or 30
-
-		log:info("watchdog timeout ", timeout)
-		self.watchdog:setTimeout(timeout)
-	end
 end
 
 
@@ -1244,13 +1203,13 @@ function _suspend(self)
 	log:info("Suspend ...")
 
 	-- draw popup ready for resume
-	local popup = Popup("popupIcon")
+	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
 	popup:setAlwaysOnTop(true)
 	popup:setAutoHide(false)
 	popup:setTransparent(false)
 
-	popup:addWidget(Icon("iconConnecting"))
+	popup:addWidget(Icon("icon_connecting"))
 	popup:addWidget(Label("text", self:string("PLEASE_WAIT")))
 
 	-- ignore all events
@@ -1285,25 +1244,6 @@ function _goToSleep(self)
 	self.popup:hide()
 	self:setPowerState('suspend')
 
-end
-
-function _powerOff(self)
-	log:info("Poweroff begin")
-
-	self:_setBrightness(true, 0, 0)
-
-	-- power off when lcd is off, or after 1 seconds
-	local tries = 10
-	self.powerOffTimer = Timer(100,
-				   function()
-					   if self.lcdLevel == 0 or tries  == 0 then
-						   log:info("Poweroff on")
-						   os.execute("/sbin/poweroff")
-					   else
-						   tries = tries - 1
-					   end
-				   end)
-	self.powerOffTimer:start()
 end
 
 

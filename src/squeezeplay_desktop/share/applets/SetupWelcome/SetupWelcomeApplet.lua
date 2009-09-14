@@ -34,22 +34,11 @@ local Window           = require("jive.ui.Window")
 local Player           = require("jive.slim.Player")
 local LocalPlayer      = require("jive.slim.LocalPlayer")
 
-local log              = require("jive.utils.log").logger("applets.setup")
 local locale           = require("jive.utils.locale")
 local table            = require("jive.utils.table")
 
 local jnt               = jnt
 local appletManager    = appletManager
-local EVENT_KEY_PRESS  = jive.ui.EVENT_KEY_PRESS
-local EVENT_KEY_HOLD   = jive.ui.EVENT_KEY_HOLD
-local EVENT_SCROLL     = jive.ui.EVENT_SCROLL
-local EVENT_CONSUME    = jive.ui.EVENT_CONSUME
-local EVENT_UNUSED     = jive.ui.EVENT_UNUSED
-local EVENT_ACTION     = jive.ui.EVENT_ACTION
-local EVENT_WINDOW_POP = jive.ui.EVENT_WINDOW_POP
-local KEY_GO           = jive.ui.KEY_GO
-local KEY_BACK         = jive.ui.KEY_BACK
-local KEY_HOME         = jive.ui.KEY_HOME
 
 local jiveMain         = jiveMain
 
@@ -57,7 +46,7 @@ local welcomeTitleStyle = 'setuptitle'
 local disableHomeKeyDuringSetup
 local freeAppletWhenEscapingSetup
 
-module(...)
+module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function init(self, ...)
@@ -114,7 +103,7 @@ function step1(self)
 end
 
 function step2(self)
-	return self:setupWelcome(function() self:step3() end)
+	return self:setupWelcomeShow(function() self:step3() end)
 end
 
 function step3(self)
@@ -139,30 +128,32 @@ function step4(self)
 end
 
 
-function setupWelcome(self, setupNext)
-	local window = Window("window", self:string("WELCOME"), welcomeTitleStyle)
+function setupWelcomeShow(self, setupNext)
+	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
+	window:setAllowScreensaver(false)
 
-	local textarea = Textarea("textarea", self:string("WELCOME_WALKTHROUGH"))
-	local help = Textarea("help", self:string("WELCOME_HELP"))
+	window:setButtonAction("rbutton", nil)
 
-	window:addWidget(textarea)
-	window:addWidget(help)
+	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
-        local setupNextAction = function (self)
-		window:playSound("WINDOWSHOW")
-        	setupNext()
-        	return EVENT_CONSUME
-        end
+	local continueButton = SimpleMenu("menu")
 
-	window:addActionListener("go", self, setupNextAction)
+	continueButton:addItem({
+		text = (self:string("DONE_CONTINUE")),
+		sound = "WINDOWSHOW",
+		callback = setupNext,
+		weight = 1
+	})
+
+	continueButton:setHeaderWidget(textarea)
+	window:addWidget(continueButton)
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
-
 function setupDone(self, setupNext)
-	local window = Window("window", self:string("DONE"), welcomeTitleStyle)
+	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({ text = self:string("DONE_CONTINUE"),
@@ -170,7 +161,7 @@ function setupDone(self, setupNext)
 		       callback = setupNext
 		     })
 
-	window:addWidget(Textarea("help", self:string("DONE_HELP")))
+	menu:setHeaderWidget(Textarea("help_text", self:string("DONE_HELP")))
 	window:addWidget(menu)
 
 	self:tieAndShowWindow(window)

@@ -1,13 +1,14 @@
 
+local ipairs, pairs = ipairs, pairs
+
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
-local Canvas        = require("jive.ui.Canvas")
 local Framework     = require("jive.ui.Framework")
 
 local debug         = require("jive.utils.debug")
-local log           = require("jive.utils.log").logger("ui")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -27,80 +28,35 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService('debugSkin')
+	meta:registerService('debugStyle')
 end
 
 
 function configureApplet(meta)
+	local desktop = not System:isHardware()
 
 	Framework:addActionListener("reload_skin", meta, _reloadSkinFromDiskAction, 9999)
 
-	Framework:addActionListener("debug_skin", meta, _debugSkin, 9999)
-end
+	Framework:addActionListener("debug_skin", meta, function()
+		appletManager:callService("debugSkin")
 
-
-function _debugWidget(meta, screen, widget)
-	if meta.mouseEvent and widget:mouseInside(meta.mouseEvent) then
-		local x,y,w,h = widget:getBounds()
-		local l,t,r,b = widget:getBorder()
-
-		screen:filledRectangle(x-l,y-t, x+w+r,y, 0x00FF003F)
-		screen:filledRectangle(x-l,y+h, x+w+r,y+h+b, 0x00FF003F)
-
-		screen:filledRectangle(x-l,y, x,y+h, 0x00FF003F)
-		screen:filledRectangle(x+w,y, x+w+r,y+h, 0x00FF003F)
-
-		screen:filledRectangle(x,y, x+w,y+h, 0xFF00003F)
-
-		log:info("-> ", widget, " (", x, ",", y, " ", w, "x", h, ")")
-	end
-
-	widget:iterate(function(child)
-		_debugWidget(meta, screen, child)
+		if not desktop then
+			appletManager:callService("debugStyle")
+		end
 	end)
-end
 
-
-function _debugSkin(meta)
-	if meta.enabled then
-		meta.enabled = nil
-
-		Framework:removeWidget(meta.canvas)
-		Framework:removeListener(meta.mouseListener)
-
-		--reload skin, so existing windows will pick up the canvas change
-		_reloadSkinFromDiskAction(meta)
-
-		return
+	if desktop then
+--		appletManager:callService("debugStyle")
 	end
-
-	meta.enabled = true
-
-	meta.canvas = Canvas("debug_canvas", function(screen)
-		local window = Framework.windowStack[1]
-
-		log:info("Mouse in: ", window)
-		window:iterate(function(w)
-			_debugWidget(meta, screen, w)
-		end)
-	end)
-	Framework:addWidget(meta.canvas)
-
-	--reload skin, so existing windows will pick up the canvas change
-	_reloadSkinFromDiskAction(meta)
-
-	meta.mouseListener = Framework:addListener(EVENT_MOUSE_ALL,
-		function(event)
-			meta.mouseEvent = event
-			Framework:reDraw(nil)
-		end, -99)
 end
+
 
 function _reloadSkinFromDiskAction(self, event)
 	--free first so skin changes can be seen without jive rerun
 	jiveMain:freeSkin()
 	jiveMain:reloadSkin()
 end
-
 
 --[[
 

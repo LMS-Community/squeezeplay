@@ -11,6 +11,7 @@ local zip         = require("zipfilter")
 local ltn12       = require("ltn12")
 local string      = require("string")
 local url         = require("socket.url")
+local md5         = require("md5")
 
 local RequestHttp = require("jive.net.RequestHttp")
 local SocketHttp  = require("jive.net.SocketHttp")
@@ -19,12 +20,17 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("applets.setup")
+local log         = require("jive.utils.log").logger("applet.SetupFirmware")
 
 local jnt = jnt
+local appletManager = appletManager
 
 module(..., oo.class)
 
+
+function _percent(x, y)
+	return math.min(100, math.floor((x/y) * 100))
+end
 
 function __init(self)
 	local obj = oo.rawnew(self, {
@@ -60,9 +66,26 @@ function _upgrade(self)
 		return nil, err
 	end
 
-	-- remove old image
-	self:rmvol("kernel_bak")
-	self:rmvol("cramfs_bak")
+	-- parse the current root volume
+	t, err = self:parseCmdLine()
+	if not t then
+		log:warn("parseCmdLine failed")
+		return nil, err
+	end 
+
+	if self._backup then
+		log:info("upgrading main image")
+
+		-- this path means that the system now won't boot normally,
+		-- however this is unavoidable without storing a third image
+		-- on flash
+		self:rmvol("kernel")
+		self:rmvol("cramfs")
+	else
+		-- remove old image
+		self:rmvol("kernel_bak")
+		self:rmvol("cramfs_bak")
+	end
 
 	-- remove any failed upgrades
 	self:rmvol("kernel_upg")
@@ -76,18 +99,45 @@ function _upgrade(self)
 
 	self._callback(false, "UPDATE_VERIFY")
 
+	-- check the correct ubi volumes exist
+	local oldvol = self:parseUbi()
+	assert(oldvol.kernel_upg)
+	assert(oldvol.cramfs_upg)
+
+
 	-- verify new volumes
 	self:parseMtd()
+	self.verifyBytes = 0
+	self.verifySize = self._size["kernel_upg"] + self._size["cramfs_upg"]
 	self:checksum("kernel_upg")
 	self:checksum("cramfs_upg")
 
 	-- automically rename volumes
-	self:renamevol({
-		["kernel"] = "kernel_bak",
-		["kernel_upg"] = "kernel",
-		["cramfs"] = "cramfs_bak",
-		["cramfs_upg"] = "cramfs",
-	})
+	if self._backup then
+		self:renamevol({
+			["kernel_upg"] = "kernel",
+			["cramfs_upg"] = "cramfs",
+		})
+	else
+		self:renamevol({
+			["kernel"] = "kernel_bak",
+			["kernel_upg"] = "kernel",
+			["cramfs"] = "cramfs_bak",
+			["cramfs_upg"] = "cramfs",
+		})
+	end
+
+	-- check the volume rename worked
+	local newvol = self:parseUbi()
+	assert(newvol.kernel)
+	assert(newvol.cramfs)
+	if self._backup then
+		assert(newvol.kernel ~= oldvol.kernel_bak)
+		assert(newvol.cramfs ~= oldvol.cramfs_bak)
+	else
+		assert(newvol.kernel ~= oldvol.kernel)
+		assert(newvol.cramfs ~= oldvol.cramfs)
+	end
 
 	-- reboot
 	self._callback(true, "UPDATE_REBOOT")
@@ -98,7 +148,24 @@ function _upgrade(self)
 		Task:yield(true)
 	end
 
-	os.execute("/bin/busybox reboot -f")
+	appletManager:callService("reboot")
+
+	return true
+end
+
+
+-- utility function to parse /proc/cmdline
+function parseCmdLine(self)
+	local fh, err = io.open("/proc/cmdline")
+	if fh == nil then
+		return fh, err
+	end
+
+	local t = fh:read("*all")
+	fh:close()
+
+	local rootfs = string.lower(string.match(t, "root.+:([%w_]+)"))
+	self._backup = (rootfs == "cramfs_bak")
 
 	return true
 end
@@ -166,6 +233,28 @@ function parseMtd(self)
 	fh:close()
 
 	self._mtd = mtd
+end
+
+function parseUbi(self)
+	local ubi = {}
+
+	-- parse mtd to work out what partitions to use
+	local fh, err = assert(io.popen("/usr/sbin/ubinfo /dev/ubi0 -a"))
+
+	local volid = false
+	for line in fh:lines() do
+		if string.match(line, "Volume ID:") then
+			volid = string.match(line, "Volume ID:%s+(%d+)")
+		elseif string.match(line, "Name:") then
+			volname = string.match(line, "Name:%s+([^%s]+)")
+
+			ubi[volname] = volid
+			volid = false
+		end
+	end
+	fh:close()
+
+	return ubi
 end
 
 
@@ -248,7 +337,8 @@ function upgradeSink(self)
 			-- new file
 			local filename = chunk.filename
 
-			if string.match(filename, "^zImage") then
+			if string.match(filename, "^zImage") or
+			   string.match(filename, "^Image") then
 				if not self:verifyPlatformRevision() then
 					self.sinkErr = "Incompatible firmware"
 					return nil
@@ -318,7 +408,7 @@ function download(self)
 
 		while true do
 			local t, err = ltn12.pump.step(source, sink)
-			self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+			self._callback(false, "UPDATE_DOWNLOAD", _percent(self.downloadBytes, totalBytes))
 
 			Task:yield()
 			if not t then
@@ -342,7 +432,7 @@ function download(self)
 		while not self.sinkErr and not self.downloadClose do
 			local totalBytes = req:t_getResponseHeader("Content-Length")
 			if totalBytes then
-				self._callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+				self._callback(false, "UPDATE_DOWNLOAD", _percent(self.downloadBytes, totalBytes))
 			end
 			Task:yield(true)
 		end
@@ -460,30 +550,30 @@ function checksum(self, volume)
 	assert(size)
 	assert(md5check)
 
-	local cmd = "/usr/bin/head -c " .. size .. " " .. self._mtd[volume] .. " | md5sum"
-	log:info(cmd)
+	local file = assert(io.open(self._mtd[volume], "r"))
+	local digest = md5.new()
 
-	local md5flash = {}
+	local len = 0
+	while len < size do
+		local n = 4096
+		if n > (size - len) then
+			n = (size - len)
+		end
 
-	local proc = Process(jnt, cmd)
-	proc:read(
-		function(chunk, err)
-			if err then
-				log:warn("md5sum error ", err)
-				return nil
-			end
-			if chunk ~= nil then
-				table.insert(md5flash, chunk)
-			end
-			return 1			
-		end)
+		local c = file:read(n)
+		assert(c) -- we should never reach eof
 
-	while proc:status() ~= "dead" do
-		-- wait for the process to complete
+		len = len + n
+		digest:update(c)
+
+		self.verifyBytes = self.verifyBytes + n
+		self._callback(false, "UPDATE_VERIFY", _percent(self.verifyBytes, self.verifySize))
+
 		Task:yield()
 	end
+	file:close()
 
-	md5flash = string.match(table.concat(md5flash), "(%x+)%s+.+")
+	local md5flash = digest:digest()
 
 	log:info("md5check=", md5check, " md5flash=", md5flash, " ", md5check == md5flash)
 	assert(md5check == md5flash, "Firmware checksum failed for " .. volume)

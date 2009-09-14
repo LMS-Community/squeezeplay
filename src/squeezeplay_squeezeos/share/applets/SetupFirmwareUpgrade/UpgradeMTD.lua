@@ -20,9 +20,10 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 
 local debug       = require("jive.utils.debug")
-local log         = require("jive.utils.log").logger("applets.setup")
+local log         = require("jive.utils.log").logger("applet.SetupFirmware")
 
 local jnt = jnt
+local appletManager = appletManager
 
 module(..., oo.class)
 
@@ -128,7 +129,7 @@ function start(self, url, mtd, callback)
 		Task:yield(true)
 	end
 
-	os.execute("/bin/busybox reboot -f")
+	appletManager:callService("reboot")
 
 	return true
 end
@@ -416,7 +417,7 @@ function download(self, callback)
 
 		while true do
 			local t, err = ltn12.pump.step(source, sink)
-			callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+			callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
 
 			Task:yield()
 			if not t then
@@ -436,7 +437,7 @@ function download(self, callback)
 		while not self.sinkErr and not self.downloadClose do
 			local totalBytes = req:t_getResponseHeader("Content-Length")
 			if totalBytes then
-				callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100) .. "%")
+				callback(false, "UPDATE_DOWNLOAD", math.floor((self.downloadBytes / totalBytes) * 100))
 			end
 			Task:yield(true)
 		end

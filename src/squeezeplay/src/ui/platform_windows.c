@@ -91,6 +91,14 @@ char *platform_get_arch() {
     return "unknown";
 }
 
+int watchdog_get() {
+	return -1;
+}
+
+int watchdog_keepalive(int watchdog_id, int count) {
+	return -1;
+}
+
 void platform_init(lua_State *L) {
 	jive_sdlfilter_pump = windows_filter_pump;
 }

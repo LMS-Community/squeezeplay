@@ -1,6 +1,6 @@
 
 -- stuff we use
-local tostring,unpack = tostring, unpack
+local tostring, unpack, pairs = tostring, unpack, pairs
 
 local oo                     = require("loop.simple")
 local io                     = require("io")
@@ -9,6 +9,7 @@ local math                   = require("math")
 local string                 = require("string")
 
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Checkbox               = require("jive.ui.Checkbox")
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
@@ -18,8 +19,9 @@ local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local Networking             = require("jive.net.Networking")
 
-local log                    = require("jive.utils.log").logger("applets.setup")
+local jnt                    = jnt
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -28,11 +30,12 @@ oo.class(_M, Applet)
 function settingsShow(self, menuItem)
 	local sshEnabled = _fileMatch("/etc/inetd.conf", "^ssh")
 
-	local window = Window("window", menuItem.text, 'settingstitle')
+	local window = Window("help_list", menuItem.text, 'settingstitle')
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("SSH_ENABLE"),
-						icon = Checkbox("checkbox",
+						style = 'item_choice',
+						check = Checkbox("checkbox",
 								function(_, isSelected)
 									if isSelected then
 										self:_enableSSH()
@@ -62,8 +65,9 @@ function _enableSSH(self, window)
 	log:warn("ipaddr = ", ipaddr)
 	log:warn("password = ", password)
 
-	self.howto = Textarea("help", self:string("SSH_HOWTO", tostring(password), tostring(ipaddr)))
-	self.window:addWidget(self.howto)
+	self.howto = Textarea("help_text", self:string("SSH_HOWTO", tostring(password), tostring(ipaddr)))
+	self.menu:setHeaderWidget(self.howto)
+	self.menu:reLayout()
 
 	-- FIXME currently the last widget added to the window has focus, until this is fixed
 	-- pass events from the textarea to the menu.
@@ -93,14 +97,14 @@ end
 function _getIPAddress()
 	local ipaddr
 
-	local cmd = io.popen("/sbin/ifconfig")
-	for line in cmd:lines() do
-		ipaddr = string.match(line, "inet addr:([%d%.]+)")
-		if ipaddr ~= nil and not string.match(ipaddr, "127.") then
+	local interfaces = Networking:interfaces(jnt)
+
+	for interface, ifObj in pairs(interfaces) do
+		ipaddr = Networking:getIP(ifObj)
+		if ipaddr then
 			break
 		end
 	end
-	cmd:close()
 
 	return ipaddr or "?.?.?.?"
 end
@@ -143,19 +147,16 @@ end
 
 
 function _fileSub(file, pattern, repl)
-	local fi = io.open(file, "r")
-	local fo = io.open(file .. ".tmp", "w")
+	local data = ""
 
+	local fi = io.open(file, "r")
 	for line in fi:lines() do
 		line = string.gsub(line, pattern, repl)
-		fo:write(line)
-		fo:write("\n")
+		data = data .. line .. "\n"
 	end
-
 	fi:close()
-	fo:close()
-	
-	os.execute("/bin/mv " .. file .. ".tmp " .. file)
+
+	System:atomicWrite(file, data)
 end
 
 
@@ -166,7 +167,7 @@ function _sighup(process)
 
 	log:warn("pattern is ", pattern)
 
-	local cmd = io.popen("/bin/ps")
+	local cmd = io.popen("/bin/ps -o pid,command")
 	for line in cmd:lines() do
 		pid = string.match(line, pattern)
 		if pid then break end

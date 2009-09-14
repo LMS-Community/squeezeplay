@@ -53,12 +53,15 @@ local debug           = require("jive.utils.debug")
 local Group           = require("jive.ui.Group")
 local Label           = require("jive.ui.Label")
 local Icon            = require("jive.ui.Icon")
+local Textarea        = require("jive.ui.Textarea")
+local math                 = require("math")
 local Menu            = require("jive.ui.Menu")
 local Widget          = require("jive.ui.Widget")
 
 local table           = require("jive.utils.table")
-local log             = require("jive.utils.log").logger("ui")
+local log             = require("jive.utils.log").logger("squeezeplay.ui")
 
+local ACTION    = jive.ui.ACTION
 local EVENT_ACTION    = jive.ui.EVENT_ACTION
 local EVENT_FOCUS_GAINED = jive.ui.EVENT_FOCUS_GAINED
 local EVENT_FOCUS_LOST   = jive.ui.EVENT_FOCUS_LOST
@@ -118,19 +121,35 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			if icon == nil then
 				icon = Icon(iconStyle)
 				menu.icons[i] = icon
+			else
+				icon:setStyle(iconStyle)
 			end
 
+			local check = item.check or menu.checks[i]
+			if check == nil then
+				check = Icon("check")
+				menu.checks[i] = check
+			end
+
+			local arrow = item.arrow or menu.arrows[i]
+			if arrow == nil then
+				arrow = Icon("arrow")
+				menu.arrows[i] = arrow
+			end
 
 			if widgetList[i] == nil then
 				widgetList[i] = Group(item.style or "item", {
-					text = Label("text", item.text),
-					check = Icon("check"),
-					icon = icon,
+					text  = Label("text", item.text),
+					check = check,
+					icon  = icon,
+					arrow = arrow,
 				})
 			else
 				widgetList[i]:setStyle(item.style or "item")
 				widgetList[i]:setWidgetValue("text", item.text)
 				widgetList[i]:setWidget("icon", icon)
+				widgetList[i]:setWidget("check", check)
+				widgetList[i]:setWidget("arrow", arrow)
 			end
 		end
 	end
@@ -146,7 +165,8 @@ local function _itemListener(menu, list, menuItem, index, event)
 		return EVENT_UNUSED
 	end
 
-	if event:getType() == EVENT_ACTION and item.callback then
+	if (event:getType() == EVENT_ACTION and item.callback) or
+		(item.isPlayableItem and event:getType() == ACTION and event:getAction() == "play")  then
 		if item.sound then
 			menuItem:playSound(item.sound)
 		end
@@ -170,6 +190,8 @@ function __init(self, style, items)
 	local obj = oo.rawnew(self, Menu(style, _itemRenderer, _itemListener))
 	obj.items = items or {}
 	obj.icons = {}
+	obj.checks = {}
+	obj.arrows = {}
 
 	obj:setItems(obj.items, #obj.items)
 
@@ -410,6 +432,19 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:setText(item)
+
+Replaces the text for I<item> with I<text>
+
+=cut
+--]]
+function setText(self, item, text)
+	item.text = text
+	self:updatedItem(item)
+end
+
+--[[
+
 =head2 jive.ui.Menu:setItems(items)
 
 Efficiently replaces the current menu items, with I<items>.
@@ -617,6 +652,87 @@ function setSelectedItem(self, item)
 	if index ~= nil then
 		self:setSelectedIndex(index)
 	end
+end
+
+
+function setHeaderWidget(self, headerWidget)
+	if headerWidget then
+		headerWidget.isHeaderWidget = true
+		headerWidget.parent = self
+	end
+
+	self.headerWidget = headerWidget
+
+end
+
+
+function _removeHeaderItems(self)
+	for i, item in self:iterator() do
+		if item.isHeaderItem then
+			self:removeItem(item)
+		end
+	end
+end
+
+
+--override
+function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
+	if self.headerWidget then
+	        isNewOperation = false
+	end
+	Menu.scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
+
+	if self.headerWidget and self.headerWidget.handleMenuHeaderWidgetScrollBy then
+		self.headerWidget:handleMenuHeaderWidgetScrollBy(scroll, self)
+	end
+end
+
+
+--override
+function _layout(self)
+
+	if self.headerWidget then
+		local _wx, _wy, _ww, widgetHeight = self.headerWidget:getPreferredBounds()
+		if not widgetHeight or widgetHeight == 0 then
+			return
+		end
+
+		local virtualItemCount = math.ceil(widgetHeight/self.itemHeight)   --todo: might want padding
+		if virtualItemCount ~= self.virtualItemCount then
+			--happens on first load and also on a skin reload where virtual
+			self:_removeHeaderItems()
+
+			self.virtualItemCount = virtualItemCount
+			for i = 1, virtualItemCount do
+				local style = "item_blank"
+				if i == virtualItemCount then
+					style = "item_blank_bottom"
+				end
+				self:insertItem({
+					id = "_HEADER_" .. i,
+					text = "",
+					style = "item_blank",
+					isHeaderItem=true,
+				}, 1)
+			end
+		end
+
+		self.headerWidgetHeight =  self.virtualItemCount * self.itemHeight
+		
+		local realItemCount = self:numItems() - self.virtualItemCount
+		if (not self.selected)
+		  and self.numWidgets > self.virtualItemCount
+		  and not (realItemCount > 1 and self.virtualItemCount == self.numWidgets - 1) then
+		  -- and self:numItems() <= self.numWidgets then
+			--shift to the first onscreen menu item if no selected item and shifting would not cause a menu scroll
+			self.selected = self.virtualItemCount + 1
+			self:_scrollList()
+			self:reLayout()
+		end
+
+	end
+
+	Menu._layout(self)
 end
 
 function _skin(self)
