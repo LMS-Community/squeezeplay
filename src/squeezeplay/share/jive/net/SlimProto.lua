@@ -373,24 +373,12 @@ function __init(self, jnt, heloPacket)
 	end)
 
 	obj:subscribe("serv", function(_, data)
-		local serverip = data.serverip
-
-		if serverip == 0 then
-			serverip = obj.lastServerip
-		elseif serverip == 1 then
-			serverip = "www.squeezenetwork.com"
-		elseif serverip == 2 then
-			serverip = "www.beta.squeezenetwork.com"
-		else
-			serverip = _ipstring(serverip)
-		end
-
-		log:info("server told us to connect to ", serverip, " syncgroupid=", data.syncgroupid)
+		log:info("slimproto serv command - syncgroupid=", data.syncgroupid)
 
 		-- set syncgroupid
 		obj:capability("SyncgroupID", data.syncgroupid)
 
-		_connectToAddr(obj, serverip)
+		connectIp(obj, data.serverip)
 	end)
 
 	return obj
@@ -412,6 +400,29 @@ end
 -- Return true if connected to server
 function isConnected(self)
 	return self.state == CONNECTED
+end
+
+
+-- Open the slimproto connetion to Ip.
+-- Called by slimproto 'serv' and udap
+function connectIp(self, serverip)
+	if serverip == 0 then
+		if not self.lastServerip then
+			log:warn("no last SC ip address stored - ignore connection request")
+			return
+		end
+		serverip = self.lastServerip
+	elseif serverip == 1 then
+		serverip = "www.squeezenetwork.com"
+	elseif serverip == 2 then
+		serverip = "www.test.squeezenetwork.com"
+	else
+		serverip = _ipstring(serverip)
+	end
+
+	log:info("server told us to connect to ", serverip)
+
+	_connectToAddr(self, serverip)
 end
 
 
