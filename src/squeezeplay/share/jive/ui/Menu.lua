@@ -1275,7 +1275,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 		   
 	else -- isNewOperation nil, so use breakthrough barrier
 		-- virtual barrier when scrolling off the ends of the list
-		if self.barrier and Framework:getTicks() > self.barrier + 1000 then
+		if self.barrier and Framework:getTicks() > self.barrier + 1400 then
 			self.barrier = nil
 		end
 	
@@ -1283,7 +1283,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 			selected = self.listSize
 			if self.barrier == nil then
 				self.barrier = Framework:getTicks()
-			elseif Framework:getTicks() > self.barrier + 500 then
+			elseif Framework:getTicks() > self.barrier + 900 then
 				selected = _coerce(1, self.listSize)
 				self.barrier = nil
 			end
@@ -1292,7 +1292,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 			selected = _coerce(1, self.listSize)
 			if self.barrier == nil then
 				self.barrier = Framework:getTicks()
-			elseif Framework:getTicks() > self.barrier + 500 then
+			elseif Framework:getTicks() > self.barrier + 900 then
 				selected = self.listSize
 				self.barrier = nil
 			end
