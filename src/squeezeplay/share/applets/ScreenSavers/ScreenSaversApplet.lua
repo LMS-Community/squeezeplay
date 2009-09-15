@@ -458,6 +458,8 @@ If I<ssAllowedActions> is nil, no actions will be passed on. If an empty table i
 --]]
 function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
 
+	window:setIsScreensaver(true)
+
 	self:_setSSAllowedActions(scrollAllowed, ssAllowedActions, mouseAllowed)
 	
 	-- the screensaver is active when this window is pushed to the window stack

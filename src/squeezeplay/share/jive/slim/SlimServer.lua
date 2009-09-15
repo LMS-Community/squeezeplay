@@ -306,13 +306,15 @@ function _upgradeSink(self, chunk, err)
 	end
 
 	local oldUpgradeUrl = self.upgradeUrl
+	local oldUpgradeForce = self.upgrdaeForce
 
 	self.upgradeUrl = url
 	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
 
 	log:info(self.name, " firmware=", self.upgradeUrl, " force=", self.upgradeForce)
 
-	if oldUpgradeUrl ~= self.upgradeUrl then
+	if oldUpgradeUrl ~= self.upgradeUrl
+		or oldUpgradeForce ~= self.upgradeForce then
 		self.jnt:notify('firmwareAvailable', self)
 	end
 end

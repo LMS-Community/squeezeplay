@@ -180,7 +180,8 @@ function _upgradeWindow(self, upgrades, optional, disallowScreensaver)
 		window = _upgradeWindowChoice(self, upgrades, optional, disallowScreensaver)
 	end
 
-	self:tieAndShowWindow(window)
+	self:tieWindow(window)
+	window:showAfterScreensaver()
 end
 
 

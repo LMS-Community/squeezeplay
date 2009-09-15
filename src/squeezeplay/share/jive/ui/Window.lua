@@ -418,6 +418,29 @@ end
 
 --[[
 
+Push window below any screensavers on the window stack, this window will then be visible when the screensaver exits. If no screensavers are on the stack then the window is shown.
+
+--]]
+function showAfterScreensaver(self, transition)
+	local stack = Framework.windowStack
+
+	local idx = 1
+	local topwindow = stack[idx]
+	while topwindow and topwindow.isScreensaver do
+		idx = idx + 1
+		topwindow = stack[idx]
+	end
+
+	if idx == 1 then
+		return self:show(transition)
+	end
+
+	table.insert(stack, idx, self)
+end
+
+
+--[[
+
 =head2 jive.ui.Window:replace(toReplace, transition)
 
 Replaces toReplace window with a new window object
@@ -1079,6 +1102,16 @@ function canActivateScreensaver(self)
 	else
 		return self.allowScreensaver
 	end
+end
+
+
+function getIsScreensaver(self)
+	return self.isScreensaver
+end
+
+
+function setIsScreensaver(self, isScreensaver)
+	self.isScreensaver = isScreensaver
 end
 
 
