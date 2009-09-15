@@ -2201,7 +2201,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 	s.button_alarm_ON = _uses(s._button_alarm, {
-		img = _loadImage(self, "Icons/icon_alarm.png"),
+		img = _loadImage(self, "Icons/icon_mode_alarm_on.png"),
 	})
 	
 	s._button_battery = _uses(s._iconbar_icon, {
