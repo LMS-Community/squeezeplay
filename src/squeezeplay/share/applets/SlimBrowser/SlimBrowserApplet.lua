@@ -2195,7 +2195,7 @@ local function _browseInput(window, item, db, inputSpec, last, timeFormat)
 
 			if ampm == 'AM' and tonumber(hour) == 12 then
 				totalSecs = minute * 60
-			elseif ampm == 'PM' then
+			elseif ampm == 'PM' and tonumber(hour) < 12 then
 				totalSecs = totalSecs + 43200
 			end
 			-- input is done
