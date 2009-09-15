@@ -39,7 +39,6 @@ function registerApplet(self)
 	-- SlimBrowser uses its an extra log category
 	utilLog.logger("applet.SlimBrowser.data")
 
-	self:registerService('goHome')
 	self:registerService('showTrackOne')
 	self:registerService('showPlaylist')
 	self:registerService('setPresetCurrentTrack')

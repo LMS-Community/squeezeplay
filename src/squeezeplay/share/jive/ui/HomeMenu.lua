@@ -71,6 +71,25 @@ function __init(self, name, style, titleStyle)
 	--Avoid inadvertantly quitting the app.
 	obj.window:addActionListener("back", obj, bumpAction)
 
+	local homeRootHandler = function()
+					local windowStack = Framework.windowStack
+
+					-- if not at root of home, go to root of home :bug #14066
+					if #windowStack == 1 then
+						local homeMenu = obj.nodeTable["home"].menu
+						if homeMenu:getSelectedIndex() and homeMenu:getSelectedIndex() > 1 then
+							homeMenu:setSelectedIndex(1)
+							return EVENT_CONSUME
+						end
+					end
+
+					--otherwise let standard action hanlder take over
+					return EVENT_UNUSED
+				end
+
+	obj.window:addActionListener("go_home", obj, homeRootHandler)
+	obj.window:addActionListener("go_home_or_now_playing", obj, homeRootHandler)
+
 
 	-- power button, delayed display so that "back back back power" is avoided (if power button is selected as home press
 	obj.window:setButtonAction("lbutton", "home_title_left_press", "home_title_left_hold", "soft_reset", true)
@@ -170,10 +189,16 @@ end
 --[[
 
 Close all windows to expose the home menu. By default alwaysOnTop windows
-are not hidden.
+are not hidden. Also move to root home item.
 
 --]]
 function closeToHome(self, hideAlwaysOnTop, transition)
+
+	--move to root item :bug #14066
+	if self.nodeTable then
+		self.nodeTable["home"].menu:setSelectedIndex(1)
+	end
+
 	local stack = Framework.windowStack
 
 	local k = 1

@@ -217,9 +217,5 @@ end
 -- goHome
 -- pushes the home window to the top
 function _goHome()
-	local windowStack = Framework.windowStack
-	Framework:playSound("JUMP")
-	while #windowStack > 1 do
-		windowStack[#windowStack - 1]:hide()
-	end
+	jiveMain:goHome()
 end
