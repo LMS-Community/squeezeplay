@@ -1339,6 +1339,9 @@ function transitionBumpLeft(self)
 	return function(widget, surface)
 			local x = frames * 3
 
+			if widget._bg then
+				widget._bg:blit(surface, 0, 0)
+			end
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
@@ -1368,6 +1371,9 @@ function transitionBumpRight(self)
 	return function(widget, surface)
 			local x = frames * 3
 
+			if widget._bg then
+				widget._bg:blit(surface, 0, 0)
+			end
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
 			surface:setOffset(-x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
