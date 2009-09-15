@@ -509,7 +509,7 @@ end
 function isBatteryLow(self)
 	local chargerState = sysReadNumber(self, "charger_state")
 
-	if chargerState == 3 then
+	if chargerState  ==  3 then
 		local batteryCharge = sysReadNumber(self, "battery_charge")
 		local batteryCapacity = sysReadNumber(self, "battery_capacity")
 
@@ -517,7 +517,9 @@ function isBatteryLow(self)
 
 		return batteryRemain < 10
 
-	elseif chargerState == 4 then
+	elseif chargerState == (3 |(1<<5)) then
+	        -- this state means the battery is really low and will fail 
+		-- soon.
 		return true
 	else
 		return false
@@ -553,7 +555,7 @@ function _updatePower(self)
 
 		iconbar:setBattery(math.min(math.floor(batteryRemain / 25) + 1, 4))
 
-	elseif chargerState == 4 then
+	elseif chargerState == (3| (1<<5)) then
 		log:debug("low battery")
 		isLowBattery = true
 		batteryState = "battery"
@@ -690,7 +692,7 @@ function setPowerState(self, state)
 		self.powerTimer:stop()
 
 		local chargerState = sysReadNumber(self, "charger_state")
-		poweroff = (chargerState == 3 or chargerState == 4)
+		poweroff = (chargerState & 3)
 		log:debug("hibernate chargerState=", chargerState, " poweroff=", poweroff)
 	end
 
