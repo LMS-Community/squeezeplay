@@ -489,6 +489,7 @@ end
 --todo: this should hide if connection returns
 function _confirmServerSwitch(self, currentPlayer, server, serverForRetry)
 	local window = Window("help_list", self:string("SWITCH_SERVER_TITLE"), "setuptitle")
+	window:setAllowScreensaver(false)
 
 	local textarea = Textarea("help_text", self:string("SWITCH_SERVER_TEXT"))
 
