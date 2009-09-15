@@ -28,7 +28,7 @@ function __init(self, title, windowId, noShading)
 	obj._DEFAULT_SHOW_TRANSITION = Window.transitionFadeInFast
 	obj._DEFAULT_HIDE_TRANSITION = Window.transitionNone
 
-	obj:setAllowScreensaver(true)
+	obj:setAllowScreensaver(false)
 	obj:setShowFrameworkWidgets(false)
 	obj:setContextMenu(true)
 
