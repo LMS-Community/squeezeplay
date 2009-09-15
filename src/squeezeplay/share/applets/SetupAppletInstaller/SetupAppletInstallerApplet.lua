@@ -58,10 +58,19 @@ local jiveMain         = jiveMain
 local jnt              = jnt
 
 local JIVE_VERSION     = jive.JIVE_VERSION
+local EVENT_SHOW       = jive.ui.EVENT_SHOW
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+
+function count(tab)
+	local i = 0
+	for _, _ in pairs(tab) do
+		i = i + 1
+	end
+	return i
+end
 
 function menu(self, menuItem)
 
@@ -180,8 +189,8 @@ function menuSink(self, data)
 	end
 
 	if self.menu:numItems() > 0 then
-		self.menu:addItem( {
-			text = self:string("INSTALLREMOVE"),
+		local item = {
+			text = tostring(self:string("INSTALLREMOVE")) .. " (" .. count(self.todownload) .. "/" .. count(self.toremove) .. ")",
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 						   if next(self.todownload) or next(self.toremove) then
@@ -191,7 +200,15 @@ function menuSink(self, data)
 						   end
 					   end,
 			weight = 6
-		})
+		}
+		self.menu:addItem(item) 
+		self.menu:addListener(EVENT_SHOW, 
+			function(event)
+				self.menu:setText(item, 
+					tostring(self:string("INSTALLREMOVE")) .. " (" .. count(self.todownload) .. "/" .. count(self.toremove) .. ")")
+			end
+		)
+
 	else
 		self.menu:addItem( {
 			text = self:string("NONE_FOUND"), 
