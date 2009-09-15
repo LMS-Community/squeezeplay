@@ -39,11 +39,11 @@ function init(self, ...)
 
 	local timeToAlarm
 	if alarmNext then
-		timeToAlarm = alarmNext
+		timeToAlarm = alarmNext + 30000
 	else
 		-- arbitrarily set timeToAlarmif there isn't one, 
 		-- as it will be set again whenever it is invoked by an alarmNext param
-		timeToAlarm = 86400
+		timeToAlarm = 86400000
 	end
 	log:warn('RTC alarm timer: ', timeToAlarm)
 	self.RTCAlarmTimer = Timer(timeToAlarm,
@@ -62,8 +62,6 @@ function init(self, ...)
 
 	return self
 end
-	
-
 
 
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
@@ -118,7 +116,9 @@ end
 function notify_playerConnected(self, player)
 	if player:isLocal() then
 		self.player = player
-		decode:stop()
+		if self.fallbackRunning then
+			decode:stop()
+		end
 	end
 end
 
@@ -149,6 +149,7 @@ function openAlarmWindow(self, fallback)
 		log:warn('activate RTC alarm')
 		self.player:playFileInLoop(self.alarmTone)
 		decode:audioGain(4096, 4096)
+		self.fallbackRunning = true
 	end
 
 	self.time = datetime:getCurrentTime()
