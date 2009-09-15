@@ -465,8 +465,10 @@ function updateUdap(self, udap)
 	self.lastSeen = Framework:getTicks()
 
 	-- player is now available
-	playerList[self.id] = self
-	self.jnt:notify('playerNew', self)
+	if playerList[self.id] ~= self then
+		playerList[self.id] = self
+		self.jnt:notify('playerNew', self)
+	end
 end
 
 
@@ -1721,9 +1723,9 @@ function _udapConnect(self, server)
 		local sn_hostname = jnt:getSNHostname()
 
 		if string.match(sn_hostname, ".*test.squeezenetwork.com$") then
-			self.data2.server_address = Udap.packNumber(2, 4)
+			data.server_address = Udap.packNumber(2, 4)
 		elseif string.match(sn_hostname, ".*squeezenetwork.com$") then
-			self.data2.server_address = Udap.packNumber(1, 4)
+			data.server_address = Udap.packNumber(1, 4)
 		else
 			-- for locally edited values (SN developers)
 			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
@@ -1733,7 +1735,7 @@ function _udapConnect(self, server)
 			local ip = socket.dns.toip(sn_hostname)
 
 			log:info("Found ip address: ", ip)
-			self.data2.server_address = Udap.packNumber(parseip(ip), 4)
+			data.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
 		log:debug("SN server_address=", data.server_address)
