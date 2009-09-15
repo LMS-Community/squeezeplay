@@ -95,7 +95,7 @@ SWITCH_PASSWORD_WRONG_BODY
 SWITCH_BUTTON
 	CS	Přepnout na knihovnu: %s
 	DA	Skift til biblioteket: %s
-	DE	Auf Musiksammlung umschalten: %s
+	DE	Auf '%s' umschalten
 	EN	Switch to library: %s
 	ES	Cambiar a biblioteca: %s
 	FI	Vaihda kirjastoon: %s
