@@ -40,6 +40,7 @@ local EVENT_UNUSED           = jive.ui.EVENT_UNUSED
 local KEY_GO                 = jive.ui.KEY_GO
 local KEY_VOLUME_DOWN        = jive.ui.KEY_VOLUME_DOWN
 local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
+local appletManager          = appletManager
 
 
 -- number of volume steps
@@ -323,6 +324,10 @@ end
 
 
 function event(self, event)
+	--hack to handle screensaver, in volume and scanner, actions are not used due to need for down handling
+	appletManager:callService("deactivateScreensaver")
+	appletManager:callService("restartScreenSaverTimer")
+
 	local onscreen = true
 	if not self.popup then
 		onscreen = false

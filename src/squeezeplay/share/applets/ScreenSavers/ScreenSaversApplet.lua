@@ -49,12 +49,6 @@ oo.class(_M, Applet)
 
 local _globalSsAllowedActions = {
 			["pause"] = 1,
-			["volume_up"] = 1,
-			["volume_down"] = 1,
-			["jump_rew"] = 1,
-			["scanner_rew"] = 1,
-			["jump_fwd"] = 1,
-			["scanner_fwd"] = 1,
 			["shutdown"] = 1,
 		}
 

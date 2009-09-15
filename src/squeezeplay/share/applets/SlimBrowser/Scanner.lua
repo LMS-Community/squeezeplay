@@ -37,6 +37,8 @@ local KEY_BACK               = jive.ui.KEY_BACK
 local KEY_FWD                = jive.ui.KEY_FWD
 local KEY_REW                = jive.ui.KEY_REW
 
+local appletManager          = appletManager
+
 -- Tuning
 local POSITION_STEP = 5
 local POPUP_AUTOCLOSE_INTERVAL = 10000  -- close popup after this much inactivity
@@ -245,6 +247,12 @@ end
 
 
 function event(self, event)
+	log:warn("scanner event: ", event:tostring())
+
+	--hack to handle screensaver, in volume and scanner, actions are not used due to need for down handling
+	appletManager:callService("deactivateScreensaver")
+	appletManager:callService("restartScreenSaverTimer")
+
 	local onscreen = true
 	if not self.popup then
 		onscreen = false
