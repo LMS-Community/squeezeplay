@@ -1720,19 +1720,20 @@ function _udapConnect(self, server)
 	if server:isSqueezeNetwork() then
 		local sn_hostname = jnt:getSNHostname()
 
-		if sn_hostname == "www.squeezenetwork.com" then
-			data.server_address = Udap.packNumber(1, 4)
-		elseif sn_hostname == "www.test.squeezenetwork.com" then
-			data.server_address = Udap.packNumber(1, 4)
-			-- XXX the above should be this when "serv 2" in all firmware:
-			-- data.server_address = Udap.packNumber(2, 4)
+		if string.match(sn_hostname, ".*test.squeezenetwork.com$") then
+			self.data2.server_address = Udap.packNumber(2, 4)
+		elseif string.match(sn_hostname, ".*squeezenetwork.com$") then
+			self.data2.server_address = Udap.packNumber(1, 4)
 		else
 			-- for locally edited values (SN developers)
 			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
-			local ip = socket.dns.toip(sn_hostname)
-			log:info("Found ip address: ", ip)
 
-			data.server_address = Udap.packNumber(parseip(ip), 4)
+			-- FIXME BAD CODE! this uses block DNS, I am not fixing this now
+			-- as it is only used during development
+			local ip = socket.dns.toip(sn_hostname)
+
+			log:info("Found ip address: ", ip)
+			self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		end
 
 		log:debug("SN server_address=", data.server_address)

@@ -253,7 +253,7 @@ function _scanComplete(self, scanTable, keepOldEntries)
 
 			if not self.scanResults[mac] then
 				local item = {
-					text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 7)),
+					text = self:string("SQUEEZEBOX_BRIDGED_NAME", string.sub(mac, 10)),
 					sound = "WINDOWSHOW",
 					icon = Icon("icon"),
 					callback = function()
@@ -1266,16 +1266,18 @@ function _setSlimserver(self, slimserver)
 	if slimserver:isSqueezeNetwork() then
 		local sn_hostname = jnt:getSNHostname()
 
-		if sn_hostname == "www.squeezenetwork.com" then
+		if string.match(sn_hostname, ".*test.squeezenetwork.com$") then
+			self.data2.server_address = Udap.packNumber(2, 4)
+		elseif string.match(sn_hostname, ".*squeezenetwork.com$") then
 			self.data2.server_address = Udap.packNumber(1, 4)
-		elseif sn_hostname == "www.test.squeezenetwork.com" then
-			self.data2.server_address = Udap.packNumber(1, 4)
-			-- XXX the above should be this when "serv 2" in all firmware:
-			-- self.data2.server_address = Udap.packNumber(2, 4)
 		else
 			-- for locally edited values (SN developers)
 			log:info("Fetching sn ip address by lookup of: ", sn_hostname)
+
+			-- FIXME BAD CODE! this uses block DNS, I am not fixing this now
+			-- as it is only used during development
 			local ip = socket.dns.toip(sn_hostname)
+
 			log:info("Found ip address: ", ip)
 			self.data2.server_address = Udap.packNumber(parseip(ip), 4)
 		end
@@ -1438,13 +1440,16 @@ function _setAction(self, action, label)
 
 	-- update status
 	if label == "connect_slimserver" then
-		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO", tostring(self.slimserver))
+		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO")
+		self.statusSubtext = tostring(self.slimserver)
 	elseif label == "find_slimserver" then
 		-- displayed when setting squeezebox follow udap discovery
 		-- e.g. when squeezebox is discovered with blue led
 		self.statusText = self:string("SQUEEZEBOX_FINDING_SOURCES")
+		self.statusSubtext = ''
 	elseif label == "connect_network" then
-		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO", self.networkName)
+		self.statusText = self:string("SQUEEZEBOX_CONNECTING_TO")
+		self.statusSubtext = tostring(self.networkName)
 	end
 end
 
@@ -1484,7 +1489,9 @@ function _setupSqueezebox(self)
 	window:addWidget(Icon("icon_connecting"))
 
 	local statusLabel = Label("text", self.statusText)
+	local statusSublabel = Label("subtext", self.statusSubtext)
 	window:addWidget(statusLabel)
+	window:addWidget(statusSublabel)
 
 	-- run action now, and then every second
 	self.actionTask:addTask()
@@ -1497,6 +1504,7 @@ function _setupSqueezebox(self)
 				end
 
 				statusLabel:setValue(self.statusText)
+				statusSublabel:setValue(self.statusSubtext)
 			end)
 
 	window:ignoreAllInputExcept()
