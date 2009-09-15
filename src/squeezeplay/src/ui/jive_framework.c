@@ -279,12 +279,12 @@ static int filter_events(const SDL_Event *event)
 	return 1;
 }
 
-void jive_send_key_event(JiveEventType keyType, JiveKey keyCode) {
+void jive_send_key_event(JiveEventType keyType, JiveKey keyCode, Uint32 ticks) {
 	JiveEvent keyEvent;
 	memset(&keyEvent, 0, sizeof(JiveEvent));
 	
 	keyEvent.type = keyType;
-	keyEvent.ticks = jive_jiffies();
+	keyEvent.ticks = ticks;
 	keyEvent.u.key.code = keyCode;
 	jive_queue_event(&keyEvent);
 }

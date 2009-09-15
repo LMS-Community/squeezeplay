@@ -7,6 +7,7 @@ local oo                     = require("loop.base")
 local os                     = require("os")
 local math                   = require("math")
 
+local table                = require("jive.utils.table")
 local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Group                  = require("jive.ui.Group")
@@ -44,6 +45,7 @@ local KEY_VOLUME_UP          = jive.ui.KEY_VOLUME_UP
 -- number of volume steps
 local VOLUME_STEP = 100 / 40
 
+local SMALL_KNOB_ACCEL_CONSTANT = 22
 
 module(..., oo.class)
 
@@ -417,12 +419,12 @@ function event(self, event)
 		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:getMachine() == "baby" then
 			--handle keyboard volume change
 			if (keycode == KEY_VOLUME_UP) then
-				self.delta = 1
+				self.delta = self:_getSmallKnobDelta(1, event:getTicks())
 				_updateVolume(self, nil, nil, true)
 				self.delta = 0
 			end
 			if (keycode == KEY_VOLUME_DOWN) then
-				self.delta = -1
+				self.delta = self:_getSmallKnobDelta(-1, event:getTicks())
 				_updateVolume(self, nil, nil, true)
 				self.delta = 0
 			end
@@ -480,6 +482,46 @@ function event(self, event)
 	return EVENT_CONSUME
 end
 
+
+function _getSmallKnobDelta(self, dir, eventTime)
+	local delta = dir --default to use no accelerated value 
+
+	--First, calculate velocity based a a moving time window
+	if not self._smallKnobPoints then
+		self._smallKnobPoints = {}
+	end
+
+	table.insert(self._smallKnobPoints, eventTime)
+
+	local totalTime = 0
+	--remove stale points
+	while #self._smallKnobPoints > 1 do
+		totalTime = self._smallKnobPoints[#self._smallKnobPoints] - self._smallKnobPoints[1]
+
+		if totalTime > 150 then
+			--only collect events that occurred in the last few ms
+			table.remove(self._smallKnobPoints, 1)
+		else
+			break
+		end
+	end
+
+	--need three points for acceleration to kick in (to forgive accidental double turns)
+	if #self._smallKnobPoints > 2 then
+		totalTime = self._smallKnobPoints[#self._smallKnobPoints] - self._smallKnobPoints[1]
+		local velocity = #self._smallKnobPoints/totalTime 
+
+		local deltaReal = SMALL_KNOB_ACCEL_CONSTANT * velocity
+		if deltaReal < 1 then
+			deltaReal = 1
+		end
+		delta = math.floor(deltaReal) * dir
+		log:debug("Using accelerated delta: ", delta)
+
+	end
+
+	return delta
+end
 
 --[[
 

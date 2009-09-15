@@ -322,7 +322,7 @@ extern LOG_CATEGORY *log_ui_draw;
 extern int (*jive_sdlevent_pump)(lua_State *L);
 
 extern int (*jive_sdlfilter_pump)(const SDL_Event *event);
-void jive_send_key_event(JiveEventType keyType, JiveKey keyCode);
+void jive_send_key_event(JiveEventType keyType, JiveKey keyCode, Uint32 ticks);
 void jive_send_gesture_event(JiveGesture code);
 void jive_send_char_press_event(Uint16 unicode);
 

@@ -62,21 +62,21 @@ static int windows_filter_pump(const SDL_Event *event) {
 		if (wmmsg->msg == WM_APPCOMMAND) {
 			switch (GET_APPCOMMAND_LPARAM(wmmsg->lParam)) {
 				case APPCOMMAND_MEDIA_NEXTTRACK:
-					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_FWD);
+					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_FWD, jive_jiffies());
 					return 0; // return non-zero, because we have handled the message (see MSDN doc)
 				case APPCOMMAND_MEDIA_PREVIOUSTRACK:
-					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_REW);
+					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_REW, jive_jiffies());
 					return 0;
 				case APPCOMMAND_MEDIA_PLAY_PAUSE:
-					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_PAUSE);
+					jive_send_key_event(JIVE_EVENT_KEY_PRESS, JIVE_KEY_PAUSE, jive_jiffies());
 					return 0;
 				case APPCOMMAND_VOLUME_DOWN:
-					jive_send_key_event(JIVE_EVENT_KEY_DOWN, JIVE_KEY_VOLUME_DOWN);
-					jive_send_key_event(JIVE_EVENT_KEY_UP, JIVE_KEY_VOLUME_DOWN);
+					jive_send_key_event(JIVE_EVENT_KEY_DOWN, JIVE_KEY_VOLUME_DOWN, jive_jiffies());
+					jive_send_key_event(JIVE_EVENT_KEY_UP, JIVE_KEY_VOLUME_DOWN, jive_jiffies());
 					return 0;
 				case APPCOMMAND_VOLUME_UP:
-					jive_send_key_event(JIVE_EVENT_KEY_DOWN, JIVE_KEY_VOLUME_UP);
-					jive_send_key_event(JIVE_EVENT_KEY_UP, JIVE_KEY_VOLUME_UP);
+					jive_send_key_event(JIVE_EVENT_KEY_DOWN, JIVE_KEY_VOLUME_UP, jive_jiffies());
+					jive_send_key_event(JIVE_EVENT_KEY_UP, JIVE_KEY_VOLUME_UP, jive_jiffies());
 					return 0;
 				//todo: APPCOMMAND_MEDIA_STOP or JIVE_KEY_VOLUME_UP - do anything for these?
 				default : break;

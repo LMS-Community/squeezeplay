@@ -53,7 +53,7 @@ static int handle_msp430_events(int fd) {
 	for (i = 0; i < rd / sizeof(struct input_event); i++) {	
 		Uint32 ev_time = TIMEVAL_TO_TICKS(ev[i].time);
 		event.ticks = ev_time;
-		
+
 		if (ev[i].type == EV_MSC) {
 			//TIMEVAL_TO_TICKS doesn't not really return ticks since these ev times are jiffies, but we won't be comparing against real ticks.
 			Uint32 ir_code = ev[i].value;
@@ -76,7 +76,7 @@ static int handle_msp430_events(int fd) {
 				scroll += value;
 			}
 			else if (ev[i].code == REL_MISC) {
-				jive_send_key_event(JIVE_EVENT_KEY_PRESS, (ev[i].value < 0) ? JIVE_KEY_VOLUME_UP : JIVE_KEY_VOLUME_DOWN);
+				jive_send_key_event(JIVE_EVENT_KEY_PRESS, (ev[i].value < 0) ? JIVE_KEY_VOLUME_UP : JIVE_KEY_VOLUME_DOWN, ev_time);
 			}
 		}
 		else if (ev[i].type == EV_SW && ev[i].code == 1 /* SW_1 */) {
