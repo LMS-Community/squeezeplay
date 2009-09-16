@@ -692,7 +692,7 @@ function setPowerState(self, state)
 		self.powerTimer:stop()
 
 		local chargerState = sysReadNumber(self, "charger_state")
-		poweroff = (chargerState & 3)
+		poweroff = ((chargerState & 3) == 3)
 		log:debug("hibernate chargerState=", chargerState, " poweroff=", poweroff)
 	end
 
