@@ -29,6 +29,7 @@ ALARM_SNOOZE_SNOOZE
 	FR	Répétition
 	IT	Snooze
 	NL	Snoozen
+	NO	Slumre
 	PL	Wyciszanie
 	RU	Повтор сигнала
 	SV	Snooze-funktion
@@ -43,6 +44,7 @@ ALARM_SNOOZE_TURN_OFF_ALARM
 	FR	Désactiver l'alarme
 	IT	Disattiva sveglia
 	NL	Wekker uitzetten
+	NO	Slå av alarm
 	PL	Wyłącz alarm
 	RU	Выключить будильник
 	SV	Stäng av alarm
