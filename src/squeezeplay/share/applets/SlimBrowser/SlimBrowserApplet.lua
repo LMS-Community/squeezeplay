@@ -2899,7 +2899,7 @@ function _problemConnectingInternal(self, server)
 		--in setup
 		window:setAllowScreensaver(false)
 		--Offer local SC's in setup if they exist
-		if Player:getLocalPlayer() then
+		if Player:getCurrentPlayer() then
 			if _anyCompatibleSqueezeCenterFound() then
 				menu:addItem({
 						     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),

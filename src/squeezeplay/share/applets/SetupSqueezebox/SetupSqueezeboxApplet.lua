@@ -42,6 +42,14 @@ local _updatingPlayerPopup = false
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+
+-- XXXX
+--
+-- This applet used to setup the Squeezebox network and also connect it to an available server. The flow has
+-- changed, so this now only sets the Squeezebox up on the network. BUT the old code has not yet been removed.
+
+
+
 -- _updatingPlayer
 -- full screen popup that appears while player is getting fw update
 local function _updatingPlayer(self)
@@ -1101,10 +1109,12 @@ function t_udapSink(self, chunk, err)
 				ip_addr_str = ip_addr_str .. "."
 			end
 		end
+
 		-- Save Squeezebox IP address to be shown in next screen
 		self.squeezeboxIPAddr = ip_addr_str
 
-		_chooseSlimserver(self)
+		-- and then we're done
+		_setupOK(self)
 	end
 end
 
@@ -1166,8 +1176,9 @@ end
 
 
 -- menu allowing the user to choose the slimserver they want to connect to
+-- XXXX no longer used
 function _chooseSlimserver(self)
-
+--[[
 	if self.setupNext then
 		--use SN
 		for i,server in appletManager:callService("iterateSqueezeCenters") do
@@ -1219,6 +1230,7 @@ function _chooseSlimserver(self)
 
 		self:tieAndShowWindow(popup)
 	end
+--]]
 end
 
 
@@ -1357,39 +1369,33 @@ end
 
 -- this is called by jnt when the playerNew message is sent
 function notify_playerNew(self, player)
-	log:info("notify_playerNew()")
-	local playerId = string.gsub(player:getId(), ":", "")
-
-	if playerId == self.mac then
-
-		-- wait until the player is connected before continuing
-		if not player:isConnected() then
-			log:info("player not connected to SC")
-			return
-		end
-
-		-- increase timeout if the player is upgrading
-		if player:isNeedsUpgrade() then
-			log:info("Upgrading....")
-
-			-- make sure we are in the waiting for slimserver state, this is
-			-- needed in case the set slimserver udap packets got lost
-			_setAction(self, "t_waitSlimserver")
-			self._totalTimeout = SETUP_EXTENDED_TIMEOUT
-
-			_updatingPlayer(self)
-			return
-		else
-			log:info("to _hidePlayerUpdating....")
-			_hidePlayerUpdating()
-		end
-
-		-- player is connected to slimserver, set as current player
-		appletManager:callService("setCurrentPlayer", player)
-
-		-- and then we're done
-		_setupOK(self)
+-- XXXX no longer used
+--[[
+	-- wait until the player is connected before continuing
+	if not player:isConnected() then
+		log:info("player not connected to SC")
+		return
 	end
+
+	-- increase timeout if the player is upgrading
+	if player:isNeedsUpgrade() then
+		log:info("Upgrading....")
+
+		-- make sure we are in the waiting for slimserver state, this is
+		-- needed in case the set slimserver udap packets got lost
+		_setAction(self, "t_waitSlimserver")
+		self._totalTimeout = SETUP_EXTENDED_TIMEOUT
+
+		_updatingPlayer(self)
+		return
+	else
+		log:info("to _hidePlayerUpdating....")
+		_hidePlayerUpdating()
+	end
+
+	-- and then we're done
+	_setupOK(self)
+--]]
 end
 
 
@@ -1533,6 +1539,18 @@ end
 function _setupOK(self)
 	-- Unsubscribe since setup is done
 	jnt:unsubscribe(self)
+
+	-- Select the player as the current player
+	local player = false
+	for mac, aplayer in appletManager:callService("iteratePlayers") do
+		if string.gsub(mac, ":", "") == self.mac then
+			player = aplayer
+			break
+		end
+	end
+	if player then
+		appletManager:callService("setCurrentPlayer", player)
+	end
 
 	local window = Popup("waiting_popup")
 	window:setAllowScreensaver(false)

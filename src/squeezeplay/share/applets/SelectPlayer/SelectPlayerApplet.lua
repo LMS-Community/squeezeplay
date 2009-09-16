@@ -211,7 +211,6 @@ function _addPlayerItem(self, player)
 	}
 
 	local playerModel = player:getModel()
-log:warn(playerModel)
 
 	-- guess model by mac address if we don't have one available
 	-- this is primarily used for players on the network waiting to be setup
@@ -463,13 +462,18 @@ function selectPlayer(self, player)
 	-- network configuration needed?
 	if player:needsNetworkConfig() then
 		log:info("needsNetworkConfig")
+		-- setup networking
 		appletManager:callService("startSqueezeboxSetup",
 			player:getId(),
 			player:getSSID(),
-			self.setupNext or function()
-				jiveMain:closeToHome()
-			end
-		)
+			function()
+				if self.setupMode then
+					self.setupNext()
+				elseif player:needsMusicSource() then
+					-- then choose a server
+					appletManager:callService("selectMusicSource")
+				end
+			end)
 		return false
 	end
 
