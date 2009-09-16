@@ -94,6 +94,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			log:info('storing epochseconds of next alarm:  ', self:_timerToAlarm())
 	                self:getSettings()['alarmNext'] = alarmNext
 			self:storeSettings()
+			self:_setWakeupTime()
 			self:_stopTimer()
 			self.RTCAlarmTimer:setInterval(self:_timerToAlarm())
 			self:_startTimer()
@@ -121,6 +122,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			log:info('no alarm set, unset this')
 			self:getSettings()['alarmNext'] = false
 			self:storeSettings()
+			self:_setWakeupTime('none')
 			self:_stopTimer()
 		end
 	end
@@ -156,6 +158,15 @@ function _timerToAlarm(self)
 	else
 		return self.alarmNext * 1000
 	end
+end
+
+
+function _setWakeupTime(self, setting)
+	if not setting then
+		-- wakeup 3 minutes before alarm
+		setting = self.alarmNext - 180
+	end
+	appletManager:callService("setWakeupAlarm", setting)
 end
 
 

@@ -130,6 +130,7 @@ function init(self)
 	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_charge")
 	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "battery_capacity")
 	sysOpen(self, "/sys/devices/platform/i2c-adapter:i2c-1/1-0010/", "charger_state")
+	sysOpen(self, "/sys/bus/i2c/devices/1-0010/", "alarm_time", "rw")
 
 	-- register wakeup/sleep functions
 	Framework:registerWakeup(function() wakeup(self) end)
@@ -802,6 +803,29 @@ end
 
 function getBrightness (self)
 	return self.lcdBrightness
+end
+
+
+function getWakeupAlarm(self)
+	return self.wakeupAlarm
+end
+
+
+function setWakeupAlarm (self, epochsecs)
+	if not epochsecs then
+		return
+	end
+	local wakeup
+	if epochsecs == 'none' then
+		-- FIXME: this needs to be set to -1 but that can't be echoed into the file successfully
+		wakeup = 0
+	else
+		wakeup = epochsecs
+	end
+	self.wakeupAlarm = wakeup
+
+	-- FIXME: Bug 12253 blocks this from being working correctly, so do nothing until that's fixed
+	--sysWrite(self, "alarm_time", wakeup)
 end
 
 

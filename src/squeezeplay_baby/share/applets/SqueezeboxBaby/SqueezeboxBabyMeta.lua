@@ -93,6 +93,8 @@ function registerApplet(meta)
 	-- services
 	meta:registerService("getBrightness")
 	meta:registerService("setBrightness")
+	meta:registerService("getWakeupAlarm")
+	meta:registerService("setWakeupAlarm")
 	meta:registerService("getDefaultWallpaper")
 	meta:registerService("performHalfDuplexBugTest")
 	meta:registerService("poweroff")
