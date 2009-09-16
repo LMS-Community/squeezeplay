@@ -331,7 +331,7 @@ static void playback_callback(struct decode_alsa *state,
 	}
 
 	if (decode_frames < output_frames) {
-		memset(output_buffer + SAMPLES_TO_BYTES(decode_frames), 0, PCM_FRAMES_TO_BYTES(output_frames) - SAMPLES_TO_BYTES(decode_frames));
+		memset(output_buffer + PCM_FRAMES_TO_BYTES(decode_frames), 0, PCM_FRAMES_TO_BYTES(output_frames) - PCM_FRAMES_TO_BYTES(decode_frames));
 
 		if ((decode_audio->state & DECODE_STATE_UNDERRUN) == 0) {
 			decode_audio->state |= DECODE_STATE_UNDERRUN;

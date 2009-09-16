@@ -334,7 +334,7 @@ static bool_t decode_timer_interval(u32_t *delay) {
 	}
 
 	/* Small delay if the stream empty but still streaming? */
-	if (streambuf_would_wait_for(1)) {
+	if (streambuf_would_wait_for(512)) {
 		*delay = DECODE_WAIT_INTERVAL;
 		
 		return false;
