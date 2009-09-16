@@ -92,6 +92,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="SQUEEZEPLAY"
 				RuntimeLibrary="2"
 			/>
 			<Tool
