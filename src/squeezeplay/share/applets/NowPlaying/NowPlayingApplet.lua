@@ -149,6 +149,7 @@ function _setTitleStatus(self, text, duration)
 			self.trackTitle:setValue(msgs[2], duration)
 		else
 			self.trackTitle:setValue(msgs[1], duration)
+			self.artistalbumTitle:setValue(self.artistalbumTitle:getValue(), duration) --keep any temporary text up for same duration to avoid flickering
 		end
 	elseif self.titleGroup then --might not exist yet if NP window hasn't yet been created
 		--use title widget
