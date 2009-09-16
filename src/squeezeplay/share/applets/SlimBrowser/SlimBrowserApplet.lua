@@ -3079,6 +3079,8 @@ function showEmptyPlaylist(token)
 	})
 	window:addWidget(menu)
 
+	window:setButtonAction("rbutton", nil, nil)
+
 	_emptyStep = {}
 	_emptyStep.window = window
 	_emptyStep._isNpChildWindow = true
@@ -3106,9 +3108,6 @@ end
 function showPlaylist()
 	if _statusStep then
 
-		-- arrange so that menuListener works
-		_pushStep(_statusStep)
-
 		-- current playlist should select currently playing item 
 		-- if there is only one item in the playlist, bring the selected item to top
 		local playerStatus = _player:getPlayerStatus()
@@ -3128,6 +3127,8 @@ function showPlaylist()
 			return EVENT_CONSUME
 		end
 
+		-- arrange so that menuListener works
+		_pushStep(_statusStep)
 
 		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
 			_statusStep.menu:setSelectedIndex(1)
@@ -3293,7 +3294,9 @@ function notify_playerPlaylistChange(self, player)
 		if step.window then
 			customWindow:replace(step.window, Window.transitionFadeIn)
 		end
-		-- we've done all we need to when the playlist is 0, so let's get outta here
+		--also hide any nowPlaying window
+		appletManager:callService("hideNowPlaying")
+
 		return
 	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
 	elseif playlistSize and emptyStep then

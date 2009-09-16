@@ -1039,6 +1039,14 @@ function _delayNowPlaying(self, direct)
 	timer:start()
 end
 
+--service method
+function hideNowPlaying(self)
+	log:warn("hideNowPlaying")
+
+	if self.window then
+		self.window:hide()
+	end
+end
 
 function _playlistHasTracks(self)
 	if not self.player then

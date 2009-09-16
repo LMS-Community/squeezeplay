@@ -23,6 +23,7 @@ end
 function registerApplet(self)
 
 	self:registerService('goNowPlaying')
+	self:registerService("hideNowPlaying")
 
 end
 
