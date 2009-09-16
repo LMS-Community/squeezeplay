@@ -1561,6 +1561,11 @@ function skin(self, s, reload, useDefaultSize)
 					arrow = _uses(s.selected.item.arrow),
 				},
 			},
+			locked = {
+				item = {
+					bgImg = s.img.contextMenuSelectionBox,
+				},
+			}
 
 		},
 	}
