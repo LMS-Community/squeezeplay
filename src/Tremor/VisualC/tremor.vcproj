@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="tremor"
 	ProjectGUID="{FDE00EDD-4CAA-4A1D-8148-4507DC0A1279}"
+	RootNamespace="tremor"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -37,6 +38,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="SQUEEZEPLAY"
 				RuntimeLibrary="3"
 			/>
 			<Tool
