@@ -219,7 +219,7 @@ libmad: libmad-0.15.1b/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; ./configure --prefix=${PREFIX}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --prefix=${PREFIX}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install

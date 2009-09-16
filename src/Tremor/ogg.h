@@ -198,6 +198,8 @@ extern void     ogg_page_dup(ogg_page *d, ogg_page *s);
 #define  OGG_EINVAL   -14
 #define  OGG_EEOS     -15
 
+/* SQUEEZEPLAY */
+#define  OGG_STARVED  -16
 
 #ifdef __cplusplus
 }

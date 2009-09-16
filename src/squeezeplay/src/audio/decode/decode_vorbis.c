@@ -10,6 +10,7 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
+#include <tremor/ogg.h>
 #include <tremor/ivorbiscodec.h>
 #include <tremor/ivorbisfile.h>
 
@@ -46,17 +47,22 @@ static size_t decode_vorbis_read(void *ptr, size_t size, size_t nmemb, void *dat
 	read_bytes = streambuf_read(ptr, 0, requested_bytes, &streaming);
 
 	if (read_bytes == 0) {
-		LOG_DEBUG(log_audio_codec, "ogg decoder underrun");
+		LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - decoder underrun, still streaming? %d", streaming);
 
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
 
-		if (!streaming) {
-			return 0; // XXXX OGG_STARVED;
+		if (streaming) {
+			return OGG_STARVED;
+		}
+		else {
+			return 0;
 		}
 	}
 	else {
 		current_decoder_state &= ~DECODE_STATE_UNDERRUN;
 	}
+	
+	LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - read %d bytes", read_bytes);
 
 	return read_bytes;
 }
@@ -138,6 +144,8 @@ static bool_t decode_vorbis_callback(void *data) {
 			}
 
 			bytes = ov_read(&self->vf, self->output_buffer, buffer_size, &self->bitstream);
+			
+			LOG_DEBUG(log_audio_codec, "ov_read decoded %d bytes of PCM\n", bytes);
 
 			switch (bytes) {
 			case OV_HOLE:
@@ -193,6 +201,7 @@ static bool_t decode_vorbis_callback(void *data) {
 		}
 	}
 
+	// XXX this is FALSE in ip3k
 	return TRUE;
 }
 

@@ -124,6 +124,14 @@ static ogg_int64_t _get_next_page(OggVorbis_File *vf,ogg_page *og,
 	{
 	  long ret=_get_data(vf);
 	  if(ret==0)return OV_EOF;
+#ifdef SQUEEZEPLAY
+    /* OGG_STARVED is returned when the decoder underruns and we are still
+	   * streaming, pass a hole to the upper layers and back to the decoder
+	   * NOTE this may break if we underrun while still reading the headers
+	   */
+	  if (ret == OGG_STARVED)
+		  return OV_HOLE;
+#endif
 	  if(ret<0)return OV_EREAD;
 	}
       }else{
