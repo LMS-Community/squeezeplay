@@ -95,6 +95,7 @@ function __init(self, jnt, slimproto)
 	end
 	decode:initAudio(slimproto)
 
+	self.mode = 0
 	self.threshold = 0
 	self.tracksStarted = 0
 
@@ -283,18 +284,26 @@ function _timerCallback(self)
 		self.tracksStarted = status.tracksStarted
 	end
 
+	-- We can begin decoding with 2K of data
+	local decodeThreshold = 2048
+	
+	-- Except for Vorbis, where we should use the buffer threshold value
+	-- Even this may not be enough for files with large comments...
+	if self.mode == 'o' then
+		decodeThreshold = self.threshold
+	end
 
 	-- Start the decoder if:
 	-- 1) some encoded data is buffered
 	-- 2) if we are auto-starting
 	-- 3) decode is not already running
 	-- 4) we have finished processing any strm-q command
-	if status.decodeFull > 2048 and
+	if status.decodeFull > decodeThreshold and
 		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 and not self.sentResumeDecoder and
 		status.audioState & DECODE_STOPPING == 0 then
 
-		log:debug("resume decoder")
+		log:debug("resume decoder, ", status.decodeFull, " bytes buffered, decode threshold ", decodeThreshold)
 		decode:resumeDecoder()
 		self.sentResumeDecoder = true
 	end
@@ -485,6 +494,7 @@ function _strm(self, data)
 
 		-- reset stream state
 		-- XXXX flags
+		self.mode = data.mode
 		self.header = data.header
 		self.autostart = data.autostart
 		self.threshold = data.threshold * 1024
