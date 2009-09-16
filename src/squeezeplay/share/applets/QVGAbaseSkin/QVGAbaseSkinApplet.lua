@@ -1558,7 +1558,7 @@ function skin(self, s, reload, useDefaultSize)
 						fg = c.TEXT_COLOR,
 						sh = c.TEXT_SH_COLOR,
 					},
-					arrow = _uses(s.item.arrow),
+					arrow = _uses(s.selected.item.arrow),
 				},
 			},
 
