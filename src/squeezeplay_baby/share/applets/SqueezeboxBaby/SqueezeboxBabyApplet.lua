@@ -301,6 +301,12 @@ function doAutomaticBrightnessTimer(self)
 	if self.powerState ==  "ACTIVE" then
 		if wasDimmed == true then
 			log:info("SWITCHED TO ACTIVE: " .. self.powerState)
+
+			-- Bug: 14040 - Fix race condition with blank screensaver
+			if self:isScreenOff() then
+				return
+			end
+
 			-- set brightness so that the ACTIVE power state removes the 60% dimming
 			self:setBrightness( brightCur )
 			wasDimmed = false
@@ -332,6 +338,11 @@ function doAutomaticBrightnessTimer(self)
 	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
 
 	self:doBrightnessRamping(brightTarget);
+
+	-- Bug: 14040 - Fix race condition with blank screensaver
+	if self:isScreenOff() then
+		return
+	end
 
 	-- Set Brightness
 	self:setBrightness( brightCur )
