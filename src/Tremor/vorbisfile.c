@@ -701,6 +701,11 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
 	  int ret=_fetch_headers(vf,&vf->vi,&vf->vc,&vf->current_serialno,&og);
 	  if(ret) goto cleanup;
 	  vf->current_link++;
+#ifdef SQUEEZEPLAY
+		/* flag that we've crossed a chained bitstream boundary so
+		   the decoder can read the new metadata */
+		vf->chained = 1;
+#endif
 	}
       }
       

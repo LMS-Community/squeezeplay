@@ -69,6 +69,10 @@ typedef struct OggVorbis_File {
   ogg_int64_t      bittrack;
   ogg_int64_t      samptrack;
 
+#ifdef SQUEEZEPLAY
+  int              chained;
+#endif
+
   ogg_stream_state *os; /* take physical pages, weld into a logical
                           stream of packets */
   vorbis_dsp_state *vd; /* central working state for the packet->PCM decoder */

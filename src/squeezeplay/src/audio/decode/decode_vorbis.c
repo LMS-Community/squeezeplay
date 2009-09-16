@@ -16,7 +16,7 @@
 
 
 #define OUTPUT_BUFFER_SIZE 8192
-
+#define METADATA_SIZE      1024
 
 struct decode_vorbis {
 	OggVorbis_File vf;
@@ -47,7 +47,7 @@ static size_t decode_vorbis_read(void *ptr, size_t size, size_t nmemb, void *dat
 	read_bytes = streambuf_read(ptr, 0, requested_bytes, &streaming);
 
 	if (read_bytes == 0) {
-		LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - decoder underrun, still streaming? %d", streaming);
+		//LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - wanted %d, decoder underrun, still streaming? %d", requested_bytes, streaming);
 
 		current_decoder_state |= DECODE_STATE_UNDERRUN;
 
@@ -62,7 +62,7 @@ static size_t decode_vorbis_read(void *ptr, size_t size, size_t nmemb, void *dat
 		current_decoder_state &= ~DECODE_STATE_UNDERRUN;
 	}
 	
-	LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - read %d bytes", read_bytes);
+	//LOG_DEBUG(log_audio_codec, "decode_vorbis_read() - wanted %d, read %d bytes (%d bytes left)", requested_bytes, read_bytes, streambuf_get_usedbytes());
 
 	return read_bytes;
 }
@@ -90,10 +90,70 @@ static ov_callbacks vorbis_callbacks = {
 	decode_vorbis_tell,
 };
 
+static bool_t decode_vorbis_read_header(struct decode_vorbis *self) {
+	vorbis_info *vi;
+	vorbis_comment *vc;
+	
+	vi = ov_info(&self->vf, -1);
+
+	if (!vi ||
+	    vi->channels > 2) {
+		LOG_WARN(log_audio_codec, "too many channels %d", vi->channels);
+		current_decoder_state |= (DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED);
+		return FALSE;
+	}
+
+	self->channels = vi->channels;
+	self->sample_rate = vi->rate;
+	
+	// XXX handle mid-stream channel/rate changes?
+
+	LOG_DEBUG(log_audio_codec, "ov_info channels=%d rate=%d", self->channels, self->sample_rate);
+	
+	// Read comments and send them to server
+	vc = ov_comment(&self->vf, -1);
+	if (vc) {
+		u8_t *meta = alloca(METADATA_SIZE);
+		u8_t *ptr = meta;
+		if (ptr) {
+			u16_t ptr_free = METADATA_SIZE;
+			u16_t len;
+			int i;
+			
+			/* Packet is prefixed with 'Ogg' */
+			ptr[0] = 'O';
+			ptr[1] = 'g';
+			ptr[2] = 'g';
+			ptr += 3;
+			ptr_free -= 3;
+		
+			LOG_DEBUG(log_audio_codec, "Sending %d comments to server", vc->comments);
+		
+			for (i = 0; i < vc->comments; i++) {
+				len = (u16_t)vc->comment_lengths[i];
+				if (len <= ptr_free - 2) {
+					ptr[0] = (len >> 8) & 0xFF;
+					ptr[1] = len & 0xFF;
+					ptr += 2;
+					memcpy(ptr, vc->user_comments[i], len);
+					ptr += len;
+					ptr_free -= len + 2;
+					LOG_DEBUG(log_audio_codec, "saved comment of length %d: %s", len, vc->user_comments[i]);
+				}
+				else {
+					LOG_DEBUG(log_audio_codec, "skipping large comment of length %d: %s", len, vc->user_comments[i]);
+				}
+			}
+			
+			decode_queue_metadata(VORBIS_META, meta, METADATA_SIZE - ptr_free);
+		}
+	}
+	
+	return TRUE;
+}
 
 static bool_t decode_vorbis_callback(void *data) {
 	struct decode_vorbis *self = (struct decode_vorbis *) data;
-	vorbis_info *vi;
 	size_t i, nsamples;
 	int r, buffer_size;
 	long bytes;
@@ -106,9 +166,8 @@ static bool_t decode_vorbis_callback(void *data) {
 			LOG_DEBUG(log_audio_codec, "Calling ov_open_callbacks");
 
 			r = ov_open_callbacks(self, &self->vf, NULL, 0, vorbis_callbacks);
+			LOG_DEBUG(log_audio_codec, "ov_open_callbacks r=%d", r);
 			if (r < 0) {
-				LOG_WARN(log_audio_codec, "ov_open_callbacks r=%d", r);
-
 				ov_clear(&self->vf);
 				current_decoder_state |= (DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED);
 				return FALSE;
@@ -118,20 +177,9 @@ static bool_t decode_vorbis_callback(void *data) {
 			// fall through
 
 		case OGG_STATE_HEADER:
-			vi = ov_info(&self->vf, -1);
-
-			if (!vi ||
-			    vi->channels > 2) {
-				LOG_WARN(log_audio_codec, "too many channels %d", vi->channels);
-				current_decoder_state |= (DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED);
+			if ( !decode_vorbis_read_header(self) )
 				return FALSE;
-			}
-
-			self->channels = vi->channels;
-			self->sample_rate = vi->rate;
-
-			LOG_DEBUG(log_audio_codec, "ov_info channels=%d rate=%d", self->channels, self->sample_rate);
-
+			
 			self->state = OGG_STATE_STREAM;
 			// fall through
 
@@ -145,7 +193,7 @@ static bool_t decode_vorbis_callback(void *data) {
 
 			bytes = ov_read(&self->vf, self->output_buffer, buffer_size, &self->bitstream);
 			
-			LOG_DEBUG(log_audio_codec, "ov_read decoded %d bytes of PCM\n", bytes);
+			//LOG_DEBUG(log_audio_codec, "ov_read decoded %d bytes of PCM\n", bytes);
 
 			switch (bytes) {
 			case OV_HOLE:
@@ -166,6 +214,14 @@ static bool_t decode_vorbis_callback(void *data) {
 				return FALSE;
 
 			default:
+				// If we've crossed a chained bitstream, re-read the header information
+				if (self->vf.chained) {
+					LOG_DEBUG(log_audio_codec, "Chained bitstream detected, will read new header");
+					self->vf.chained = 0;
+					if ( !decode_vorbis_read_header(self) )
+						return FALSE;
+				}
+				
 				if (self->channels == 1) {
 					nsamples = bytes / 2;
 

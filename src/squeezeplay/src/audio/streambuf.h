@@ -14,6 +14,7 @@ typedef ssize_t (*streambuf_filter_t)(u8_t *buf, size_t min, size_t max, bool_t 
 enum metadata_type {
 	SHOUTCAST = 0,
 	WMA_GUID = 1,
+	VORBIS_META = 2,
 };
 
 extern void decode_queue_metadata(enum metadata_type type, u8_t *metadata, size_t metadata_len);
