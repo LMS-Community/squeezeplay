@@ -405,11 +405,11 @@ function _showPowerOnWindow(self)
 			return
 		end
 
-		local instance = appletManager:loadApplet(screensaver.applet)
-		if instance.usePowerOnWindow and not instance:usePowerOnWindow() then
+		if System:getMachine() ~= "fab4" and System:isHardware() then
 			log:debug("ss: don't use power on window")
 			return
 		end
+		local instance = appletManager:loadApplet(screensaver.applet)
 		if instance.onOverlayWindowShown then
 			instance:onOverlayWindowShown()
 		end
@@ -450,7 +450,7 @@ If I<ssAllowedActions> is nil, no actions will be passed on. If an empty table i
 
 =cut
 --]]
-function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
+function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed, lockMostInputWhenOff)
 
 	window:setIsScreensaver(true)
 
@@ -479,7 +479,7 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 				   return EVENT_UNUSED
 			   end)
 
-	if not self:isSoftPowerOn() then
+	if not self:isSoftPowerOn() and lockMostInputWhenOff then
 		--allow input to pass through, so that the following listeners will be honored
 	        self:_setSSAllowedActions(true, {}, true)
 
@@ -528,6 +528,10 @@ function deactivateScreensaver(self)
 	end
 
 	self.active = {}
+
+	if not self:isSoftPowerOn() then
+		jiveMain:setSoftPowerState("on")
+	end
 
 	for i, window in ipairs(oldActive) do
 		_deactivate(self, window, self.demoScreensaver)

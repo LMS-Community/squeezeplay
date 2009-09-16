@@ -75,7 +75,7 @@ function openScreensaver(self, menuItem)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(self.window)
+	manager:screensaverWindow(self.window, nil, nil, nil, true)
 
 	self.window:show(Window.transitionFadeIn)
 end
@@ -93,16 +93,6 @@ end
 
 function onOverlayWindowHidden(self)
 	self:_setBrightness("off")
-end
-
-
-function usePowerOnWindow(self)
-	-- not for baby -- bug 12541
-	if System:getMachine() == "baby" then
-		return false
-	end
-
-	return true
 end
 
 
