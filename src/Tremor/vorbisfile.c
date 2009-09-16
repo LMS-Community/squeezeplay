@@ -28,12 +28,12 @@
 #include "os.h"
 #include "misc.h"
 
-#ifdef SQUEEZEPLAY
 // Uncomment for debugging
+//#ifdef SQUEEZEPLAY
 //#define LOG_DEBUG(...) fprintf(stderr, __VA_ARGS__)
 //#else
 #define LOG_DEBUG(...)
-#endif
+//#endif
 
 #define  NOTOPEN   0
 #define  PARTOPEN  1
