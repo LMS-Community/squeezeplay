@@ -28,6 +28,13 @@
 #include "os.h"
 #include "misc.h"
 
+#ifdef SQUEEZEPLAY
+// Uncomment for debugging
+//#define LOG_DEBUG(...) fprintf(stderr, __VA_ARGS__)
+//#else
+#define LOG_DEBUG(...)
+#endif
+
 #define  NOTOPEN   0
 #define  PARTOPEN  1
 #define  OPENED    2
@@ -129,8 +136,10 @@ static ogg_int64_t _get_next_page(OggVorbis_File *vf,ogg_page *og,
 	   * streaming, pass a hole to the upper layers and back to the decoder
 	   * NOTE this may break if we underrun while still reading the headers
 	   */
-	  if (ret == OGG_STARVED)
-		  return OV_HOLE;
+		if (ret == OGG_STARVED) {
+			LOG_DEBUG("OGG_STARVED, returning OV_HOLE\n");
+			return OV_HOLE;
+		}
 #endif
 	  if(ret<0)return OV_EREAD;
 	}
@@ -614,13 +623,22 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
     }
 
     if(vf->ready_state>=OPENED){
+#ifdef SQUEEZEPLAY
+		/* XXX bug in Tremor, ret is redefined here? */
+		ret = 0;
+#else
       int ret;
+#endif
       if(!readp){
 	ret=0;
 	goto cleanup;
       }
       if((ret=_get_next_page(vf,&og,-1))<0){
+#ifdef SQUEEZEPLAY
+		/* don't return EOF here, when streaming we can underrun safely here */
+#else
 	ret=OV_EOF; /* eof. leave unitialized */
+#endif
 	goto cleanup;
       }
 
@@ -631,6 +649,7 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
       /* has our decoding just traversed a bitstream boundary? */
       if(vf->ready_state==INITSET){
 	if(vf->current_serialno!=ogg_page_serialno(&og)){
+	  LOG_DEBUG("serialno change: %x -> %x\n", vf->current_serialno, ogg_page_serialno(&og));
 	  if(!spanp){
 	    ret=OV_EOF;
 	    goto cleanup;
