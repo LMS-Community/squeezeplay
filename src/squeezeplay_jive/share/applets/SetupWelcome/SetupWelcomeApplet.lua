@@ -319,7 +319,6 @@ function step7(self)
 	local settings = self:getSettings()
 	if settings.registerDone then
 		log:error("SqueezeNetwork registration complete")
-
 		step8point5(self, squeezenetwork)
 		return
 	end
@@ -506,14 +505,60 @@ function step8(self, squeezenetwork)
 end
 
 
+-- step 8.5 makes sure we have a current player, this will already be the
+-- case for a local player or a bridged setup (on jive).
+
 function step8point5(self, squeezenetwork)
 	log:info("step8point5")
+	assert(squeezenetwork)
+
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		return self:step8point6(squeezenetwork)
+	end
 
 	-- find player
-	return appletManager:callService("setupShowSelectPlayer",
-		function()
-			self:step9()
-		end, 'setuptitle')
+	return appletManager:callService("setupShowSelectPlayer", function()
+		self:step8point6(squeezenetwork)
+	end, 'setuptitle')
+end
+
+
+-- step 8.6 we have a player, make sure it's linked in SN.
+
+function step8point6(self, squeezenetwork)
+	log:info("step8point6")
+	assert(squeezenetwork)
+
+	local player = appletManager:callService("getCurrentPlayer")
+	assert(player)
+
+	-- XXXX we don't wait for a reply
+	log:info("playerRegister ", player)
+	squeezenetwork:request(nil, nil, {
+		'playerRegister', player:getUuid(), player:getId()
+	})
+
+	self:step8point7(squeezenetwork)
+end
+
+
+-- step 8.7 make sure the player is connected to SN
+
+function step8point7(self, squeezenetwork)
+	log:info("step8point7")
+	assert(squeezenetwork)
+
+	-- if player is still not connected, now connect to SN
+	local player = appletManager:callService("getCurrentPlayer")
+	assert(player)
+
+	if not player:getSlimServer() then
+		log:info("connect ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+	end
+
+	self:step9()
 end
 
 
@@ -537,7 +582,7 @@ function _registerRequest(self, squeezenetwork)
 end
 
 
-function step9(self, squeezenetwork)
+function step9(self)
 	log:info("step9")
 
 	_setupComplete(self, false)
@@ -593,7 +638,6 @@ function notify_serverLinked(self, server, wasAlreadyLinked)
 
 	if server:getPin() == false then
 		step8point5(self, server)
-		return
 	end
 end
 
