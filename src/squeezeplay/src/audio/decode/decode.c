@@ -102,7 +102,9 @@ static inline void debug_fullness(void)
 		dfull = (float)(usedbytes * 100) / (float)size;
 		ofull = (float)(fifo_bytes_used(&decode_audio->fifo) * 100) / (float)decode_audio->fifo.size;
 		
-		LOG_DEBUG(log_audio_decode, "fullness: %0.2f%% / %0.2f%%", dfull, ofull);
+		LOG_DEBUG(log_audio_decode, "fullness: %d / %d | %0.2f%% / %0.2f%%",
+			usedbytes, fifo_bytes_used(&decode_audio->fifo), 
+			dfull, ofull);
 		decode_audio_unlock();
 	}
 }
