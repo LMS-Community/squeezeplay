@@ -55,7 +55,7 @@ local _globalSsAllowedActions = {
 function init(self, ...)
 	self.screensavers = {}
 	self.screensaverSettings = {}
-	self:addScreenSaver(self:string("SCREENSAVER_NONE"), false, false, _, _, 100)
+	self:addScreenSaver(self:string("SCREENSAVER_NONE"), false, false, _, _, 100, nil, nil, nil, {"whenOff"})
 
 	self.timeout = self:getSettings()["timeout"]
 
@@ -557,7 +557,7 @@ end
 
 
 --service method
-function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod, methodParam, additionalKey)
+function addScreenSaver(self, displayName, applet, method, settingsName, settings, weight, closeMethod, methodParam, additionalKey, modeExclusions)
 	local key = self:getKey(applet, method, additionalKey)
 	self.screensavers[key] = {
 		applet = applet,
@@ -567,6 +567,7 @@ function addScreenSaver(self, displayName, applet, method, settingsName, setting
 		weight = weight,
 		closeMethod = closeMethod,
 		methodParam = methodParam,
+		modeExclusions = modeExclusions
 	}
 
 	if settingsName then
@@ -596,31 +597,33 @@ function screensaverSetting(self, menuItem, mode)
 
 	local group = RadioGroup()
 	for key, screensaver in pairs(self.screensavers) do
-		local button = RadioButton(
-			"radio", 
-			group, 
-			function()
-				self:setScreenSaver(mode, key)
-			end,
-			key == activeScreensaver
-		)
-		local testScreensaverAction = function (self)
-			self.demoScreensaver = key
-			self:_activate(key, true)
-			return EVENT_CONSUME
+		if not screensaver.modeExclusions or not table.contains(screensaver.modeExclusions, mode) then -- not all SSs should appear in all modes
+			local button = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setScreenSaver(mode, key)
+				end,
+				key == activeScreensaver
+			)
+			local testScreensaverAction = function (self)
+				self.demoScreensaver = key
+				self:_activate(key, true)
+				return EVENT_CONSUME
+			end
+
+			-- pressing play should play the screensaver, so we need a handler
+			button:addActionListener("play", self, testScreensaverAction)
+
+			-- set default weight to 100
+			if not screensaver.weight then screensaver.weight = 100 end
+			menu:addItem({
+					text = screensaver.displayName,
+					style = 'item_choice',
+					check = button,
+					weight = screensaver.weight
+				     })
 		end
-
-		-- pressing play should play the screensaver, so we need a handler
-		button:addActionListener("play", self, testScreensaverAction)
-
-		-- set default weight to 100
-		if not screensaver.weight then screensaver.weight = 100 end
-		menu:addItem({
-				text = screensaver.displayName,
-				style = 'item_choice',
-				check = button,
-				weight = screensaver.weight
-			     })
 	end
 
 	local window = Window("text_list", menuItem.text, 'settingstitle')

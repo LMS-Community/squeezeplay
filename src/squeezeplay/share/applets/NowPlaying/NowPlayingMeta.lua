@@ -36,7 +36,11 @@ function configureApplet(self)
 		"openScreensaver", 
 		_,
 		_,
-		10
+		10,
+		nil,
+		nil,
+		nil,
+		{"whenOff"}
 	)
 
 	-- NowPlaying is a resident applet
