@@ -182,6 +182,8 @@ end
 function playSplashSound(self)
 	local settings = self:getSettings()
 
+	self._wasLastShutdownUnclean = not settings.cleanReboot
+	
 	if settings.cleanReboot == false then
 		-- unclean reboot, not splash sound
 		log:info("unclean reboot")
@@ -203,6 +205,12 @@ function _cleanReboot(self)
 
 	settings.cleanReboot = true
 	self:storeSettings()
+end
+
+
+--service method
+function wasLastShutdownUnclean(self)
+	return self._wasLastShutdownUnclean
 end
 
 

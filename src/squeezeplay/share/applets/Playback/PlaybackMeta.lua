@@ -101,7 +101,13 @@ function configureApplet(meta)
 	end
 	--must defer this since skin isn't loaded yet
 	jiveMain:registerPostOnScreenInit(      function()
-							jiveMain:setSoftPowerState(settings.powerState)
+							--always start on, unless was unclean shutdown, then start up with saved state
+							if appletManager:callService("wasLastShutdownUnclean") then
+								log:info("Last shutdown was unclean, restarting with previous soft power state: ", settings.powerState)
+								jiveMain:setSoftPowerState(settings.powerState)
+							else
+								jiveMain:setSoftPowerState("on")
+							end
 						end)
 	
 	-- Connect player

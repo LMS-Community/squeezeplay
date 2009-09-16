@@ -102,6 +102,7 @@ function registerApplet(meta)
 	meta:registerService("lowBatteryCancel")
 	meta:registerService("isBatteryLow")
 	meta:registerService("reboot")
+	meta:registerService("wasLastShutdownUnclean")
 	meta:registerService("isLineInConnected")
 end
 

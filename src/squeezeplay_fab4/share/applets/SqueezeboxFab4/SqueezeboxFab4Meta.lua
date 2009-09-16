@@ -88,6 +88,7 @@ function registerApplet(meta)
 	meta:registerService("setBrightness")
 	meta:registerService("poweroff")
 	meta:registerService("reboot")
+	meta:registerService("wasLastShutdownUnclean")
 end
 
 
