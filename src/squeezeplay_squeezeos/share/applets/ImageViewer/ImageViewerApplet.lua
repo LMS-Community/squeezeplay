@@ -254,7 +254,6 @@ function setupEventHandlers(self, window)
 	window:addActionListener("add", self, showTextWindowAction)
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
-	window:addActionListener("play", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)
 	window:addActionListener("back", self, function () return EVENT_UNUSED end)
 
@@ -357,7 +356,7 @@ function applyScreensaverWindow(self, window)
 			end)
 	end
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window, true, {"add", "go", "play", "up", "down", "back"})
+	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
 end
 
 
