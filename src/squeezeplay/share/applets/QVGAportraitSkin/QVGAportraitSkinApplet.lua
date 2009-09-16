@@ -389,7 +389,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- context menu window
 	s.context_menu.menu.h = c.CM_MENU_HEIGHT * 7
-	s.context_menu.menu.scrollbar.h = c.CM_MENU_HEIGHT * 7 - 8
+	s.context_menu.menu.scrollbar.h = c.CM_MENU_HEIGHT * 7 - 6
+	s.context_menu.menu.scrollbar.border = { 0, 4, 0, 4 }
 
 	local NP_ARTISTALBUM_FONT_SIZE = 15
 	local NP_TRACK_FONT_SIZE = 21

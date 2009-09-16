@@ -1529,8 +1529,8 @@ function skin(self, s, reload, useDefaultSize)
 			itemHeight = c.CM_MENU_HEIGHT,
 			position = LAYOUT_NORTH,
 			scrollbar = { 
-				h = c.CM_MENU_HEIGHT * 5 - 8,
-				border = {0,4,0,0},
+				h = c.CM_MENU_HEIGHT * 5 - 4,
+				border = {0,4,0,4},
 			},
 			item = {
 				h = c.CM_MENU_HEIGHT,
