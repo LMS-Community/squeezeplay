@@ -817,8 +817,9 @@ function setWakeupAlarm (self, epochsecs)
 	end
 	local wakeup
 	if epochsecs == 'none' then
-		-- FIXME: this needs to be set to -1 but that can't be echoed into the file successfully
-		wakeup = 0
+		-- to unset, pass in the largest integer possible
+		-- pass it as a string or else this fails
+		wakeup = '4294967295'
 	else
 		wakeup = epochsecs
 	end
