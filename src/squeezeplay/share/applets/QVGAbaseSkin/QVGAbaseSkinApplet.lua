@@ -1544,6 +1544,7 @@ function skin(self, s, reload, useDefaultSize)
 					sh = TEXT_SH_COLOR,
 				},
 				arrow = _uses(s.item.arrow),
+				bgImg = false,
 			},
 			selected = {
 				item = {
