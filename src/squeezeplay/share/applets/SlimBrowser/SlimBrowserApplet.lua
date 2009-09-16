@@ -1527,7 +1527,9 @@ local _globalActionsNEW = {
 
 	["play"] = function()
 	        Framework:playSound("PLAYBACK")
-		_player:play()
+	        if _player:getPlaylistSize() and _player:getPlaylistSize() > 0 then
+			_player:play()
+		end
 		return EVENT_CONSUME
 	end,
 
