@@ -1546,6 +1546,9 @@ function skin(self, s, reload, useDefaultSize)
 				arrow = _uses(s.item.arrow),
 				bgImg = false,
 			},
+			item_no_arrow = {
+				bgImg = false,
+			},
 			selected = {
 				item = {
 					bgImg = s.img.contextMenuSelectionBox,
