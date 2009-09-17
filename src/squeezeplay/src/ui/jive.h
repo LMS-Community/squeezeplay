@@ -374,6 +374,7 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h);
 int jive_surface_get_bytes(JiveSurface *srf);
 void jive_surface_free(JiveSurface *srf);
+void jive_surface_release(JiveSurface *srf);
 
 /* Encapsulated SDL_gfx functions */
 JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double zoom, int smooth);

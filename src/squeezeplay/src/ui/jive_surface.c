@@ -526,6 +526,16 @@ void jive_surface_free(JiveSurface *srf) {
 	free(srf);
 }
 
+void jive_surface_release(JiveSurface *srf) {
+	if (--srf->refcount > 0) {
+		return;
+	}
+
+	if (srf->sdl) {
+		SDL_FreeSurface (srf->sdl);
+		srf->sdl = NULL;
+	}
+}
 
 /* SDL_gfx encapsulated functions */
 JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double zoom, int smooth){

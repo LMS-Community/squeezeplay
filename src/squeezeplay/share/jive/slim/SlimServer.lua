@@ -831,15 +831,17 @@ local function _loadArtworkImage(self, cacheKey, chunk, size)
 	end
 
 	-- parse size specification for width and height if in format <W>x<H>
-	local sizeW = string.match(size, "(%d+)x%d+") or size
-	local sizeH = string.match(size, "%d+x(%d+)") or size
+	local sizeW = tonumber(string.match(size, "(%d+)x%d+") or size)
+	local sizeH = tonumber(string.match(size, "%d+x(%d+)") or size)
 
 	-- Resize image
 	-- Note this allows for artwork to be resized to a larger
 	-- size than the original.  This is intentional so smaller cover
 	-- art will still fill the space properly on the Now Playing screen
 	if w ~= sizeW and h ~= sizeH then
-		image = image:rotozoom(0, sizeW / w, 1)
+		local tmp = image:rotozoom(0, sizeW / w, 1)
+		image:release()
+		image = tmp
 		if logcache:isDebug() then
 			local wnew, hnew = image:getSize()
 			logcache:debug("Resized artwork from ", w, "x", h, " to ", wnew, "x", hnew)

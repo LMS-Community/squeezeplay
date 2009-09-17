@@ -376,6 +376,7 @@ function Analog:_reDraw(screen)
 	x = math.floor((self.screen_width/2) - (facew/2))
 	y = math.floor((self.screen_height/2) - (faceh/2))
 	tmp:blit(screen, x, y)
+	tmp:release()
 
 	-- Minute Pointer
 	local angle = (360 / 60) * m 
@@ -385,6 +386,7 @@ function Analog:_reDraw(screen)
 	x = math.floor((self.screen_width/2) - (facew/2))
 	y = math.floor((self.screen_height/2) - (faceh/2))
 	tmp:blit(screen, x, y)
+	tmp:release()
 
 	if self.alarmSet then
 		local tmp = self.alarmIcon
@@ -741,6 +743,7 @@ function Radial:_reDraw(screen)
 		x = math.floor((self.screen_width/2) - (facew/2))
 		y = math.floor((self.screen_height/2) - (faceh/2))
 		tmp:blit(screen, x, y)
+		tmp:release()
 	end
 
 	-- Minute Pointer
@@ -751,6 +754,7 @@ function Radial:_reDraw(screen)
 		x = math.floor((self.screen_width/2) - (facew/2))
 		y = math.floor((self.screen_height/2) - (faceh/2))
 		tmp:blit(screen, x, y)
+		tmp:release()
 	end
 
 end

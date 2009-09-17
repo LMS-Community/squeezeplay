@@ -69,6 +69,12 @@ Blits this surface to the I<dst> surface at I<dx, dy> using a per surface alpha 
 
 Returns I<w, h>, the surface size.
 
+=head2 release()
+
+Free the wrapped surface object. This can be useful if temporary surfaces are created frequently (such as when using rotozoom), Lua has
+  garbage collection that will eventually free it, but since Lua does not realize the size of the data, it make the gc of it a low priority.
+  This can lead to an OOM error, so it prudent to use release when working with any temporary surface. 
+
 =back
 
 =head1 DRAWING METHODS

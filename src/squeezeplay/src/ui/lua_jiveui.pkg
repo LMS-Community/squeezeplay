@@ -164,6 +164,7 @@ class Surface {
 	static tolua_create Surface *jive_surface_load_image_data @ loadImageData(const char *data, size_t len);
 	static tolua_create Surface *jive_font_draw_text @ drawText(Font *font, Uint32 color, const char *str);
 	tolua_destroy void jive_surface_free @ free();
+	tolua_destroy void jive_surface_release @ release();
 
 	tolua_outside int jive_surface_save_bmp @ saveBMP(const char *file);
 	tolua_outside int jive_surface_cmp @ compare(Surface *b, Uint32 key);

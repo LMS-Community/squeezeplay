@@ -368,6 +368,37 @@ static int tolua_jive_jive_ui_Surface_free00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* method: jive_surface_release of class  Surface */
+#ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Surface_release00
+static int tolua_jive_jive_ui_Surface_release00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+ !tolua_isusertype(tolua_S,1,"Surface",0,&tolua_err) ||
+ !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+ goto tolua_lerror;
+ else
+#endif
+ {
+  Surface* self = (Surface*)  tolua_tousertype(tolua_S,1,0);
+#ifndef TOLUA_RELEASE
+ if (!self) tolua_error(tolua_S,"invalid 'self' in function 'jive_surface_release'",NULL);
+#endif
+ {
+  jive_surface_release(self);
+ }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'release'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* method: jive_surface_save_bmp of class  Surface */
 #ifndef TOLUA_DISABLE_tolua_jive_jive_ui_Surface_saveBMP00
 static int tolua_jive_jive_ui_Surface_saveBMP00(lua_State* tolua_S)
@@ -2289,6 +2320,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
     tolua_function(tolua_S,"loadImageData",tolua_jive_jive_ui_Surface_loadImageData00);
     tolua_function(tolua_S,"drawText",tolua_jive_jive_ui_Surface_drawText00);
     tolua_function(tolua_S,"free",tolua_jive_jive_ui_Surface_free00);
+    tolua_function(tolua_S,"release",tolua_jive_jive_ui_Surface_release00);
     tolua_function(tolua_S,"saveBMP",tolua_jive_jive_ui_Surface_saveBMP00);
     tolua_function(tolua_S,"compare",tolua_jive_jive_ui_Surface_compare00);
     tolua_function(tolua_S,"setOffset",tolua_jive_jive_ui_Surface_setOffset00);
