@@ -151,24 +151,21 @@ static void l_json_encode_value(lua_State *L, int pos, luaL_Buffer *B) {
 		break;
 	}
 
-	case LUA_TFUNCTION:
+	case LUA_TUSERDATA:
 		/* special json.null value? */
 		lua_getglobal(L, "json");
 		lua_getfield(L, -1, "null");
 		if (lua_equal(L, pos, -1)) {
 			lua_pop(L, 2);
 			luaL_addstring(B, "null");
+			break;
 		}
-		else {
-			lua_pushstring(L, "Cannot encode function to json");
-			lua_error(L);
-		}
-		break;
+		/* fall through */
 
-	case LUA_TUSERDATA:
+	case LUA_TFUNCTION:
 	case LUA_TTHREAD:
 	case LUA_TLIGHTUSERDATA:
-		lua_pushstring(L, "Cannot encode userdata or thread to json");
+		lua_pushstring(L, "Cannot encode function, userdata or thread to json");
 		lua_error(L);
 		break;
 	}
@@ -199,19 +196,32 @@ static int l_json_decode(lua_State *L) {
 	return 1;
 }
 
-static int l_json_null(lua_State *L) {
-	return 0;
+static int l_json_null_string(lua_State *L) {
+	lua_pushstring(L, "null");
+	return 1;
 }
 
 static const struct luaL_Reg jsonlib[] = {
 	{ "decode", l_json_decode },
 	{ "encode", l_json_encode },
-	{ "null", l_json_null },
 	{ NULL, NULL }
 };
 
 LUAJSON_API int luaopen_json(lua_State *L) {
 	luaL_register(L, "json", jsonlib);
+
+	lua_newuserdata(L, 1);
+
+	lua_getglobal(L, "json");
+	lua_pushvalue(L, -2);
+	lua_setfield(L, -2, "null");
+
+	lua_newtable(L);
+	lua_pushcfunction(L, l_json_null_string);
+	lua_setfield(L, -2, "__tostring");
+
+	lua_setmetatable(L, -2);
+
 	return 1;
 }
 
