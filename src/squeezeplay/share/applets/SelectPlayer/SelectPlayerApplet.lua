@@ -146,7 +146,7 @@ function manageSelectPlayerMenu(self)
 	local currentPlayer    = appletManager:callService("getCurrentPlayer") or nil
 
 	-- if _numberOfPlayers is > 1 and selectPlayerMenuItem doesn't exist, create it
-	if _numberOfPlayers > 1 or not currentPlayer then
+	if _numberOfPlayers > 1 or not currentPlayer or not currentPlayer:isConnected() then
 		if not self.selectPlayerMenuItem then
 			local node = "home"
 			local weight = 80
