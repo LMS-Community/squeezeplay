@@ -249,6 +249,8 @@ function addNode(self, item)
 
 	if item.iconStyle then
 		item.icon = Icon(item.iconStyle)
+	else
+		item.iconStyle = 'hm_advancedSettings'
 	end
 	-- remove/update node from previous node (if changed)
 	if self.menuTable[item.id] then
