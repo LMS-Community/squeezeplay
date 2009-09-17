@@ -255,18 +255,6 @@ size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming)
 		streambuf_fifo.rptr = streambuf_lptr;
 	}
 
-#if 0
-	{
-		static FILE *fp = NULL;
-		
-		if (!fp) {
-			fp = fopen("stream.dat", "w");
-		}
-
-		fwrite(buf, sz, 1, fp);
-	}
-#endif
-
 	return sz;
 }
 
@@ -293,6 +281,18 @@ size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming) {
 	fifo_unlock(&streambuf_fifo);
 
 	return n;
+}
+
+
+void streambuf_filter_lock(void)
+{
+	fifo_lock(&streambuf_fifo);
+}
+
+
+void streambuf_filter_unlock(void)
+{
+	fifo_unlock(&streambuf_fifo);
 }
 
 
