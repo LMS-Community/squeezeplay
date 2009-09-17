@@ -194,7 +194,7 @@ function init(self)
 
 		elseif sw == 2 then
 			-- line in
-			self:_lineinJack(val == 1)
+			self:_lineinJack(val == 1, true)
 
 		elseif sw == 3 then
 			-- power event
@@ -417,9 +417,13 @@ function _headphoneJack(self, val)
 end
 
 
-function _lineinJack(self, val)
+function _lineinJack(self, val, activate)
 	if val then
-		appletManager:callService("addLineInMenuItem")
+		if activate then
+			appletManager:callService("activateLineIn", true)
+		else
+			appletManager:callService("addLineInMenuItem")
+		end
 	else
 		appletManager:callService("removeLineInMenuItem")
 	end

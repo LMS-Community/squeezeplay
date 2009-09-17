@@ -80,13 +80,13 @@ function addLineInMenuItem(self)
 		check = self.checkbox,
 		weight = 50,
 	})
-	local popup = Popup("toast_popup_icon")
-	local icon  = Icon("icon_popup_lineIn")
-	local group = Group("group", {
-		icon = icon
-	})
-	popup:addWidget(group)
-	popup:showBriefly(3000, nil, Window.transitionFadeIn, Window.transitionFadeOut )
+--	local popup = Popup("toast_popup_icon")
+--	local icon  = Icon("icon_popup_lineIn")
+--	local group = Group("group", {
+--		icon = icon
+--	})
+--	popup:addWidget(group)
+--	popup:showBriefly(3000, nil, Window.transitionFadeIn, Window.transitionFadeOut )
 
 end
 
@@ -161,6 +161,7 @@ end
 --service method
 function removeLineInMenuItem(self)
 	jiveMain:removeItemById("linein")
+	self.checkbox = nil
 	self:_deactivateLineIn()
 end
 

@@ -513,8 +513,10 @@ function _strm(self, data)
 	elseif data.command == 'q' then
 		-- quit
 		-- XXXX check against ip3k
-		self:_stopPauseAndStopTimers()
-		self:_stopInternal()
+		if not self:getCapturePlayMode() then -- avoid stopping line-in on server restarts, which send a stop.
+			self:_stopPauseAndStopTimers()
+			self:_stopInternal()
+		end
 
 	elseif data.command == 'f' then
 		-- flush
