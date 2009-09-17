@@ -514,32 +514,13 @@ function step8point5(self, squeezenetwork)
 
 	local player = appletManager:callService("getCurrentPlayer")
 	if player then
-		return self:step8point6(squeezenetwork)
+		return self:step8point7(squeezenetwork)
 	end
 
 	-- find player
 	return appletManager:callService("setupShowSelectPlayer", function()
-		self:step8point6(squeezenetwork)
+		self:step8point7(squeezenetwork)
 	end, 'setuptitle')
-end
-
-
--- step 8.6 we have a player, make sure it's linked in SN.
-
-function step8point6(self, squeezenetwork)
-	log:info("step8point6")
-	assert(squeezenetwork)
-
-	local player = appletManager:callService("getCurrentPlayer")
-	assert(player)
-
-	-- XXXX we don't wait for a reply
-	log:info("playerRegister ", player)
-	squeezenetwork:request(nil, nil, {
-		'playerRegister', player:getUuid(), player:getId()
-	})
-
-	self:step8point7(squeezenetwork)
 end
 
 
