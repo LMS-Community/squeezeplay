@@ -1,4 +1,4 @@
-local assert, pairs = assert, pairs
+local _assert, pairs = _assert, pairs
 local os	       = require("os")	
 local table            = require("jive.utils.table")
 local string	       = require("jive.utils.string")
@@ -147,7 +147,7 @@ end
 -- returns milliseconds before the stored alarm from settings, stored in epoch secs
 function _timerToAlarm(self)
 
-	assert(self.alarmNext)
+	_assert(self.alarmNext)
 
 	local now = os.time()
 	-- milliseconds to next alarm
