@@ -1745,6 +1745,11 @@ function _udapConnect(self, server)
 		-- set slimserver address to 0.0.0.1 to workaround a bug in
 		-- squeezebox firmware
 		data.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
+
+		-- make sure the player is linked on SN
+		server:request(nil, nil, {
+			'playerRegister', self.uuid, self.id
+		})
 	else
 		local serverip = server:getIpPort()
 

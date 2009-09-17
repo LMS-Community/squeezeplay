@@ -1093,6 +1093,10 @@ function t_udapSink(self, chunk, err)
 		log:info("squeezebox uuid=", pkt.uuid)
 
 		self.uuid = pkt.uuid
+
+		local player = _findMyPlayer(self)
+		player.uuid = pkt.uuid
+
 		_setAction(self, "t_udapGetIPAddr")
 
 	-- Get Squeezebox IP address to be shown to user
@@ -1183,7 +1187,6 @@ function parseip(str)
 	end
 	return ip
 end
-
 
 
 -- make sure Jive is reconnected to it's network when setup fails.
@@ -1305,19 +1308,24 @@ function _setupSqueezebox(self)
 end
 
 
+function _findMyPlayer(self)
+	for mac, player in appletManager:callService("iteratePlayers") do
+		if string.gsub(mac, ":", "") == self.mac then
+			return player
+		end
+	end
+
+	return false
+end
+
+
 -- Squeezebox setup completed
 function _setupOK(self)
 	-- Unsubscribe since setup is done
 	jnt:unsubscribe(self)
 
 	-- Select the player as the current player
-	local player = false
-	for mac, aplayer in appletManager:callService("iteratePlayers") do
-		if string.gsub(mac, ":", "") == self.mac then
-			player = aplayer
-			break
-		end
-	end
+	local player = _findMyPlayer(self)
 	if player then
 		appletManager:callService("setCurrentPlayer", player)
 	end
