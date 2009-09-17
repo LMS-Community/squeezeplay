@@ -55,8 +55,8 @@ end
 
 
 function registerApplet(meta)
-	-- profile functions, 1 second warn, 10 second die
-	jive.perfhook(1000, 10000)
+	-- profile functions, 1 second warn, 10 second die - this cuts down app performance so only use for testing....
+--	jive.perfhook(1000, 10000)
 
 	-- Set player device type
 	LocalPlayer:setDeviceType("fab4", "Squeezebox Touch")
