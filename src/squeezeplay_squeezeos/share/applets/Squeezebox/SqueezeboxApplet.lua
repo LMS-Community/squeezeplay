@@ -22,6 +22,8 @@ local Timer                  = require("jive.ui.Timer")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Window                 = require("jive.ui.Window")
 
+local squeezeos              = require("squeezeos_bsp")
+
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("applet.Squeezebox")
 
@@ -225,7 +227,7 @@ function poweroff(self, now)
 
 	if now then
 		-- force poweroff (don't go through init)
-		os.execute("/bin/busybox poweroff -f")
+		squeezeos.poweroff()
 
 		return
 	end
@@ -249,7 +251,7 @@ function poweroff(self, now)
 	self._poweroffTimer = Timer(4000, function()
 		-- force poweroff (don't go through init)
 		log:info("... now")
-		os.execute("/bin/busybox poweroff -f")
+		squeezeos.poweroff()
 	end)
 	self._poweroffTimer:start()
 end
@@ -282,7 +284,7 @@ function lowBattery(self)
 
 	self.lowBatteryTimer = Timer(60000, function()
 		-- force poweroff (don't go through init)
-		os.execute("/bin/busybox poweroff -f")
+		squeezeos.poweroff()
 	end)
 	self.lowBatteryTimer:start()
 
@@ -311,7 +313,7 @@ function reboot(self)
 	_cleanReboot(self)
 
 	-- force reboot (don't go through init)
-	os.execute("/bin/busybox reboot -f")
+	squeezeos.reboot()
 end
 
 

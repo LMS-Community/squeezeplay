@@ -16,12 +16,16 @@ jive-static-install:
 
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
 
-lib_LTLIBRARIES = jiveWireless.la
+lib_LTLIBRARIES = jiveWireless.la squeezeos_bsp.la
 
 jiveWireless_la_LDFLAGS = -module -no-version
 jiveWireless_la_SOURCES = \
 	src/wireless.c \
 	src/wpa_ctrl.c
+
+squeezeos_bsp_la_LDFLAGS = -module -no-version
+squeezeos_bsp_la_SOURCES = \
+	src/squeezeos.c
 
 JIVE_BUILD_DIR = $(DESTDIR)$(datadir)/jive
 
