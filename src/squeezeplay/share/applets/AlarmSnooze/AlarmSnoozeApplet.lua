@@ -287,6 +287,9 @@ end
 
 
 function _startTimer(self, interval)
+	if not self.alarmNext then
+		return
+	end
 	if self.RTCalarmOff then
 		return
 	end
