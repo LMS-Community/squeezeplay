@@ -144,17 +144,29 @@ function _udapSink(self, chunk, err)
 
 	local pkt = Udap.parseUdap(chunk.data)
 
-	if pkt.uapMethod ~= "adv_discover"
-		or pkt.ucp.device_status ~= "wait_slimserver"
-		or pkt.ucp.type ~= "squeezebox" then
+	if pkt.uapMethod == "adv_discover" 
+		and pkt.ucp.device_status == "wait_slimserver"
+		and pkt.ucp.type == "squeezebox" then
 		-- we are only looking for squeezeboxen trying to connect to SC
+
+		local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+
+		local player = Player(jnt, playerId)
+		player:updateUdap(pkt)
+
+		if not player:getUuid() then
+			local packet = Udap.createGetUUID(pkt.source, 1)
+			self.udap:send(function() return packet end, "255.255.255.255")
+		end
 		return
 	end
 
-	local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
+	if pkt.uapMethod == "get_uuid" then
+		local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
 
-	local player = Player(jnt, playerId)
-	player:updateUdap(pkt)
+		local player = Player(jnt, playerId)
+		player.info.uuid = pkt.uuid
+	end
 end
 
 
@@ -360,7 +372,7 @@ function _debug(self)
 	end
 	log:info("Players:")
 	for i, player in Player.iterate() do
-		log:info("\t", player:getName(), " [", player:getId(), "] server=", player:getSlimServer(), " connected=", player:isConnected(), " available=", player:isAvailable(), " timeout=", DISCOVERY_TIMEOUT - (now - player:getLastSeen()))
+		log:info("\t", player:getName(), " [", player:getId(), "] uuid=", player:getUuid() ," server=", player:getSlimServer(), " connected=", player:isConnected(), " available=", player:isAvailable(), " timeout=", DISCOVERY_TIMEOUT - (now - player:getLastSeen()))
 	end
 	log:info("----")
 end
