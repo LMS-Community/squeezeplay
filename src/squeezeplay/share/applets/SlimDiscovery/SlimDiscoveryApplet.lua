@@ -144,9 +144,14 @@ function _udapSink(self, chunk, err)
 
 	local pkt = Udap.parseUdap(chunk.data)
 
+	-- We are only interested in udap responses
+	if pkt.udapFlag ~= 0x00 then
+		return
+	end
+
 	if pkt.uapMethod == "adv_discover" 
 		and pkt.ucp.device_status == "wait_slimserver"
-		and pkt.ucp.type == "squeezebox" then
+		and (pkt.ucp.type == "squeezebox" or pkt.ucp.type == "fab4" or pkt.ucp.type == "baby") then
 		-- we are only looking for squeezeboxen trying to connect to SC
 
 		local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")

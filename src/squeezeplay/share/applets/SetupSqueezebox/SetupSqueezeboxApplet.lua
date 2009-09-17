@@ -1040,6 +1040,12 @@ function t_udapSink(self, chunk, err)
 	end
 
 	local pkt = Udap.parseUdap(chunk.data)
+
+	-- We are only interested in udap responses
+	if pkt.udapFlag ~= 0x00 then
+		return
+	end
+
 	log:debug("seqno=", self.seqno, " pkt=", Udap.tostringUdap(pkt))
 
 	if self.seqno ~= pkt.seqno then
