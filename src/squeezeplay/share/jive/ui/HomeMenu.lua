@@ -78,6 +78,7 @@ function __init(self, name, style, titleStyle)
 					if #windowStack == 1 then
 						local homeMenu = obj.nodeTable["home"].menu
 						if homeMenu:getSelectedIndex() and homeMenu:getSelectedIndex() > 1 then
+							Framework:playSound("JUMP")
 							homeMenu:setSelectedIndex(1)
 							return EVENT_CONSUME
 						end
