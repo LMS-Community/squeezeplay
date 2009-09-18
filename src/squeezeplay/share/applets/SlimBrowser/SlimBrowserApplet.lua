@@ -1929,7 +1929,8 @@ local _actionToActionName = {
 	["set_preset_6"]    = 'set-preset-6',
 	["create_mix"]    = 'play-hold',
 	["add"]     = 'more',
-	["add_next"]     = 'add',
+	["add_end"]     = 'add',
+	["play_next"]     = 'add-hold',
 	["go"]      = 'go',
 	["go_hold"]      = 'go-hold',
 

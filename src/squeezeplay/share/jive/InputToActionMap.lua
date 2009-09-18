@@ -32,7 +32,8 @@ charActionMappings.press = {
 	["c"]   = "pause",
 	["C"]   = "stop",
 	["a"]   = "add",
-	["A"]   = "add_next",
+	["A"]   = "add_end",
+	["W"]   = "play_next",
 	["M"]   = "mute",
 	["\b"]  = "back", -- BACKSPACE
 	["\27"] = "back", -- ESC
@@ -110,9 +111,9 @@ gestureActionMappings = {
 }
 
 keyActionMappings.hold = {
-	[KEY_HOME] = "go_home",
+	[KEY_HOME] = "go_now_playing",
 	[KEY_PLAY] = "create_mix",
-	[KEY_ADD]  = "add_next",
+	[KEY_ADD]  = "add_end",
 	[KEY_BACK] = "go_home",
 	[KEY_LEFT] = "go_home",
 	[KEY_GO] = "add", --has no default assignment yet
@@ -194,7 +195,7 @@ irActionMappings.hold = {
 	["arrow_right"]  = "go_hold",
 	["play"]  = "create_mix",
 	["pause"]  = "stop",
-	["add"]  = "add_next",
+	["add"]  = "add_end",
 	["fwd"]  = "scanner_fwd",
 	["rew"]  = "scanner_rew",
 	["volup"]  = "volume_up",
@@ -224,6 +225,7 @@ actionActionMappings = {
 
 -- enter actions here that are triggered in the app but not by any hard input mechanism. Entering them here will get them registered so they can be used
 unassignedActionMappings = {
+	"play_next",
 	"finish_operation",
 	"more_help",
 	"cursor_left",
