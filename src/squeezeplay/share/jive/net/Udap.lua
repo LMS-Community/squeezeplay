@@ -1,5 +1,5 @@
 
-local pairs, ipairs, print, tonumber, unpack = pairs, ipairs, print, tonumber, unpack
+local pairs, ipairs, print, tonumber, unpack, tostring = pairs, ipairs, print, tonumber, unpack, tostring
 
 local oo          = require("loop.base")
 
@@ -10,6 +10,8 @@ local table       = require("jive.utils.table")
 local SocketUdp   = require("jive.net.SocketUdp")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local System         = require("jive.System")
+local JIVE_VERSION   = jive.JIVE_VERSION
 
 module(..., oo.class)
 
@@ -126,7 +128,9 @@ function __init(self, jnt, sink)
 					       sink(chunk, err)
 				       end
 				       return 1
-			       end)
+			       end,
+			       "",
+			       PORT)
 
 	if sink then
 		obj:addSink(sink)
@@ -218,6 +222,35 @@ function parseGetData(pkt, recv, offset)
 end
 
 
+function parseSetData(pkt, recv, offset)
+	local num, off, len, data
+
+	pkt.data = {}
+
+	local username = ""
+	local password = ""
+
+	username, offset = unpackString(recv, offset, 16)
+	password, offset = unpackString(recv, offset, 16)
+
+	num, offset = unpackNumber(recv, offset, 2)
+
+	for i = 1,num do
+		off, offset = unpackNumber(recv, offset, 2)
+		len, offset = unpackNumber(recv, offset, 2)
+		data = string.sub(recv, offset, offset + len - 1)
+		offset = offset + len
+
+		for k,v in pairs(configSettings) do
+			if v[1] == off and v[2] == len then
+				pkt.data[k] = data
+				break
+			end
+		end
+	end
+end
+
+
 function parseGetUUID(pkt, recv, offset)
 	local num, off, len, data
 
@@ -233,7 +266,7 @@ function parseGetUUID(pkt, recv, offset)
 	pkt.uuid = table.concat(pkt.uuid)
 end
 
-
+-- Handlers for udap responses we receive upon requests we've sent
 local ucpMethodHandlers = {
 	[ "discover" ] = parseDiscover,
 	[ "get_ip" ] = parseDiscover,
@@ -247,31 +280,49 @@ local ucpMethodHandlers = {
 	[ "get_uuid" ] = parseGetUUID,
 }
 
+-- Handlers for udap requests we receive from other devices and need to send an response
+local ucpMethodHandlersRequest = {
+	[ "discover" ] = parseDiscover,
+	[ "get_ip" ] = parseDiscover,
+	[ "set_ip" ] = nil,
+	[ "reset" ] = nil,
+	[ "get_data" ] = nil,
+	[ "set_data" ] = parseSetData,
+	[ "error" ] = nil,
+	[ "credentials_error" ] = nil,
+	[ "adv_discover" ] = parseDiscover,
+	[ "get_uuid" ] = nil,
+}
+
 
 function parseUdap(recv)
 	local offset = 1
 	local pkt = {}
 
 	pkt.destType, offset = unpackNumber(recv, offset, 2)
-	if pkt.destType == 1 then
+	-- Check destination type, but don't care about the broadcast flag
+	if pkt.destType & 0x00FF == 0x0001 then
 		-- mac address
 		pkt.dest, offset = unpackString(recv, offset, 6)
-	elseif pkt.destType == 2 then
+	elseif pkt.destType & 0x00FF == 0x0002 then
 		-- ip address
 		pkt.dest, offset = unpackString(recv, offset, 6)
+	elseif pkt.destType & 0x00FF == 0x0000 then
+		-- raw
+		pkt.dest, offset = unpackString(recv, offset, 6)
 	else
-		error("uknown address type " .. pkt.destType)
+		log:error("uknown address type " .. pkt.destType)
 	end
 
 	pkt.sourceType, offset = unpackNumber(recv, offset, 2)
-	if pkt.sourceType == 1 then
+	if pkt.sourceType == 0x0001 then
 		-- mac address
 		pkt.source, offset = unpackString(recv, offset, 6)
-	elseif pkt.sourceType == 2 then
+	elseif pkt.sourceType == 0x0002 then
 		-- ip address
 		pkt.source, offset = unpackString(recv, offset, 6)
 	else
-		error("uknown address type " .. pkt.sourceType)
+		log:error("uknown address type " .. pkt.sourceType)
 	end
 
 	pkt.seqno, offset = unpackNumber(recv, offset, 2)
@@ -281,40 +332,57 @@ function parseUdap(recv)
 	pkt.uapMethodId, offset = unpackNumber(recv, offset, 2)
 	
 	pkt.uapMethod = ucpMethods[pkt.uapMethodId]
-	
-	if ucpMethodHandlers[pkt.uapMethod] then
-		ucpMethodHandlers[pkt.uapMethod](pkt, recv, offset)
+
+	-- Handle udap responses we receive upon requests we've sent
+	if pkt.udapFlag == 0x00 then
+		if ucpMethodHandlers[pkt.uapMethod] then
+			ucpMethodHandlers[pkt.uapMethod](pkt, recv, offset)
+		end
+
+	-- Handle udap requests from other devices sent to us and we need to provide an response
+	elseif pkt.udapFlag == 0x01 then
+		if ucpMethodHandlersRequest[pkt.uapMethod] then
+			ucpMethodHandlersRequest[pkt.uapMethod](pkt, recv, offset)
+		end
 	end
 
 	return pkt
 end
 
 
-function createUdap(mac, seq, ...)
-	local macstr = {}
+function createUdap(destmac, seq, ...)
+	local destmacstr = {}
 	local bcast = 0
 
-	if mac == nil then
+	if destmac == nil then
 		bcast = 1
-		mac = "000000000000"
+		destmac = "000000000000"
 	end
 
-	mac = string.gsub(mac, "[^%x]", "")
+	destmac = string.gsub(destmac, "[^%x]", "")
 
 	for i=1,12,2 do
-		macstr[#macstr + 1] = string.char(tonumber(string.sub(mac, i, i+1), 16))
+		destmacstr[#destmacstr + 1] = string.char(tonumber(string.sub(destmac, i, i+1), 16))
+	end
+
+	local srcmacstr = {}
+	local srcmac = System:getMacAddress()
+
+	srcmac = string.gsub(srcmac, "[^%x]", "")
+
+	for i=1,12,2 do
+		srcmacstr[#srcmacstr + 1] = string.char(tonumber(string.sub(srcmac, i, i+1), 16))
 	end
 
 	return table.concat {
-		packNumber(bcast, 1),         -- broadcast
-		packNumber(0x01, 1),          -- ethernet
-		table.concat(macstr),         -- destination mac
-		packNumber(0x0002, 2),        -- source type udp
-		packNumber(0x00000000, 4),    -- source ip
-		packNumber(0x0000, 2),        -- source port
+		packNumber(bcast, 1),         -- destination broadcast
+		packNumber(0x01, 1),          -- destination type ethernet
+		table.concat(destmacstr),     -- destination mac
+		packNumber(0x0001, 2),        -- source type ethernet
+		table.concat(srcmacstr),      -- source mac
 		packNumber(seq, 2),           -- seqno number
 		packNumber(0xC001, 2),        -- udap_type_ucp
-		packNumber(0x01, 1),          -- flags
+		packNumber(0x01, 1),          -- flags (1 for request)
 		packNumber(0x00001, 2),       -- uap_class_ucp
 		packNumber(0x00001, 2),
 		table.concat({...})
@@ -444,6 +512,104 @@ function tostringUdap(pkt)
 	return table.concat(t, "\n")
 end
 
+
+
+-- Client methods Udap response
+function createUdapResponse(srcmac, destmac, seq, ...)
+	local srcmacstr = {}
+	local destmacstr = {}
+
+	for i=1,12,2 do
+		srcmacstr[#srcmacstr + 1] = string.char(tonumber(string.sub(srcmac, i, i+1), 16))
+	end
+
+	for i=1,12,2 do
+		destmacstr[#destmacstr + 1] = string.char(tonumber(string.sub(destmac, i, i+1), 16))
+	end
+
+	return table.concat {
+		packNumber(0x0002, 2),        -- destination type ethernet
+		table.concat(destmacstr),     -- destination mac
+		packNumber(0x0001, 2),        -- source type ethernet
+		table.concat(srcmacstr),      -- source mac
+		packNumber(seq, 2),           -- seqno number
+		packNumber(0xC001, 2),        -- udap_type_ucp
+		packNumber(0x00, 1),          -- flags (0 for response)
+		packNumber(0x00001, 2),       -- uap_class_ucp
+		packNumber(0x00001, 2),
+		table.concat({...})
+	}
+end
+
+function createDiscoverResponse(srcmac, destmac, seq, devName, devType)
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(0x0001, 2),		-- discover
+				  packNumber(0x03, 1),			-- device type
+				  packNumber(#devType, 1),		-- device type len
+				  devType,
+				  packNumber(0x02, 1),			-- device name
+				  packNumber(#devName, 1),		-- device name len
+				  devName
+	)
+end
+
+function createAdvancedDiscoverResponse(srcmac, destmac, seq, devName, devType, devId, devStatus)
+
+	local machine, revision = System:getMachine()
+	local hwRev = tostring(revision)
+
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(0x0009, 2),		-- adv discover
+				  packNumber(0x0C, 1),			-- device status
+				  packNumber(#devStatus, 1),		-- device status len
+				  devStatus,
+				  packNumber(0x0B, 1),			-- device id
+				  packNumber(#devId, 1),		-- device id len
+				  devId,
+				  packNumber(0x0A, 1),			-- hardware rev
+				  packNumber(#hwRev, 1),		-- hardware rev len
+				  hwRev,
+				  packNumber(0x09, 1),			-- firmware rev
+				  packNumber(#JIVE_VERSION, 1),		-- firmware rev len
+				  JIVE_VERSION,
+				  packNumber(0x03, 1),			-- device type
+				  packNumber(#devType, 1),		-- device type len
+				  devType,
+				  packNumber(0x02, 1),			-- device name
+				  packNumber(#devName, 1),		-- device name len
+				  devName
+	)
+end
+
+function createSetDataResponse(srcmac, destmac, seq)
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(0x0006, 2)			-- set data
+	)
+end
+
+function createGetUUIDResponse(srcmac, destmac, seq)
+	local uuidstr = {}
+	local uuid = System:getUUID()
+
+	for i=1,32,2 do
+		uuidstr[#uuidstr + 1] = string.char(tonumber(string.sub(uuid, i, i+1), 16))
+	end
+
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(0x000B, 2),		-- get uuid
+				  packNumber(0x0D, 1),			-- uuid
+				  packNumber(#uuidstr, 1),		-- uuid len
+				  table.concat(uuidstr)
+	)
+end
 
 --[[
 

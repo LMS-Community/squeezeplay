@@ -39,6 +39,12 @@ function setDeviceType(self, model, name)
 end
 
 
+-- class method to get the device type etc.
+function getDeviceType(self)
+	return DEVICE_ID, DEVICE_MODEL, DEVICE_NAME
+end
+
+
 --class method - disconnect from player and server and re-set "clean (no server)" LocalPlayer as current player (if there is a local player), otherwise set current player to nil
 function disconnectServerAndPreserveLocalPlayer(self)
 	--disconnect from player and server
@@ -184,6 +190,12 @@ function connectToServer(self, server)
 	
 		self.slimproto:connect(server)
 	end
+end
+
+
+function connectIp(self, serverip)
+	self.slimproto:disconnect()
+	self.slimproto:connectIp(serverip)
 end
 
 
