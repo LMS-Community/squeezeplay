@@ -109,7 +109,7 @@ end
 function _activateLineIn(self, initialPlayMode)
 	log:info("_activateLineIn")
 
-	Player:getLocalPlayer():pause()
+	Player:getLocalPlayer():pause(true)
 	Player:getLocalPlayer():setCapturePlayMode(initialPlayMode or "play")
 	Decode:capture(true)
 

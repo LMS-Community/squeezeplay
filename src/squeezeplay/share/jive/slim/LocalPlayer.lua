@@ -293,14 +293,14 @@ function mute(self, mute)
 end
 
 
-function pause(self)
+function pause(self, useBackgroundRequest)
 	local active = self.playback:isLocalPauseOrStopTimeoutActive()
 	if not active then
 		self.playback:startLocalPauseTimeout()
 		self.mode = "pause"
 		self:updateIconbar()
 
-		Player.pause(self)
+		Player.pause(self, useBackgroundRequest)
 	else
 		log:debug("discarding pause while timeout active")
 	end

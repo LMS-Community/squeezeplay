@@ -1353,10 +1353,10 @@ function togglePause(self)
 end
 
 
-function pause(self)
+function pause(self, useBackgroundRequest)
 	if not self.state then return end
 
-	self:call({'pause', '1'})
+	self:call({'pause', '1'}, useBackgroundRequest)
 	self.mode = 'pause'
 
 	self:updateIconbar()
