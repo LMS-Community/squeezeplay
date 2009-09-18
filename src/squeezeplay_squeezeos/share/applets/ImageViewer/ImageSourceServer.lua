@@ -171,8 +171,19 @@ function requestImage(self, imageData)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local urlString = imageData.image
-	--use SN image proxy for resizing
-	urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)
+	
+	-- Bug 13937, if URL references a private IP address, don't use imageproxy
+	-- Tests for a numeric IP first to avoid extra string.find calls
+	if string.find(urlString, "^http://%d") and (
+		string.find(urlString, "^http://192%.168") or
+		string.find(urlString, "^http://172%.16%.") or
+		string.find(urlString, "^http://10%.")
+	) then
+		-- use raw urlString
+	else
+		--use SN image proxy for resizing
+		urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)
+	end
 
 	self.currentImageFile = urlString
 
