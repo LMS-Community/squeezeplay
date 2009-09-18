@@ -27,11 +27,17 @@ function registerApplet(meta)
 
 	meta:registerService("firmwareUpgrade")
 	meta:registerService("showFirmwareUpgradeMenu")
+	meta:registerService("wasFirmwareUpgraded")
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so
 	-- do this in the meta class
 	jnt:subscribe(meta)
+end
+
+
+function configureApplet(meta)
+	appletManager:callService("wasFirmwareUpgraded")
 end
 
 

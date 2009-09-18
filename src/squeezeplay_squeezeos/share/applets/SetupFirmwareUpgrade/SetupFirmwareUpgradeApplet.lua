@@ -11,8 +11,9 @@ local assert, getmetatable, ipairs, pcall, setmetatable, tonumber, tostring, typ
 
 local oo                     = require("loop.simple")
 
+local io                     = require("io")
 local math                   = require("math")
-local string                 = require("string")
+local string                 = require("jive.utils.string")
 local table                  = require("jive.utils.table")
 local socket                 = require("socket")
 local lfs                    = require("lfs")
@@ -392,6 +393,64 @@ function _chargeBattery(self)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function wasFirmwareUpgraded(self)
+
+	-- previous version
+	local previous = "/etc/squeezeos.version.bak"
+	-- existing version
+	local current  = "/etc/squeezeos.version"
+
+	local wasRunning73 = self:_whatVersion(previous, '7.3')
+	local running74 = self:_whatVersion(current, '7.4')
+
+	if running74 and wasRunning73 then
+		log:warn('Show upgrade window message')
+		self:_updatedFirmwareMessage()
+	end
+	
+end
+
+
+function _updatedFirmwareMessage(self)
+
+	local window = Window("help_list", self:string("UPDATE"))
+	window:setButtonAction("rbutton", "help")
+
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				window:hide()
+			end
+		}
+	})
+
+	local help = Textarea("help_text", self:string('UPDATE_7.4_UPGRADE_MESSAGE_JIVE'))
+	menu:setHeaderWidget(help)
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+-- opens file and checks for version
+function _whatVersion(self, file, version)
+
+        local fh, err = io.open(file)
+        if fh == nil then
+                return false
+        end
+
+        local t = fh:read("*all")
+        fh:close()
+
+        local match = string.match(t, version)
+        return match
 end
 
 
