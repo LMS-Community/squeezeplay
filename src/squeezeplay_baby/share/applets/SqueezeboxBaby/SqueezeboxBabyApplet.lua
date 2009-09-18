@@ -155,7 +155,7 @@ function init(self)
 
 	self:setPowerState("ACTIVE")
 
-	brightnessTimer = Timer( 2000,
+	brightnessTimer = Timer( 500,
 		function()
 			if settings.brightnessControl != "manual" then
 				if not self:isScreenOff() then
@@ -242,6 +242,10 @@ local STATIC_AMBIENT_MIN = -1
 -- Maximum number of brightness levels up/down per run of the timer
 local AMBIENT_RAMPSTEPS = -1
 
+-- Lux Value Smoothing
+local MAX_SMOOTHING_VALUES = 8
+local luxSmooth = {}
+
 local wasDimmed = false
 local brightCur = -1
 
@@ -296,31 +300,67 @@ function doBrightnessRamping(self, target)
 
 end
 
-function doAutomaticBrightnessTimer(self)
-
-	-- As long as the power state is active don't do anything
-	if self.powerState ==  "ACTIVE" then
-		if wasDimmed == true then
-			log:info("SWITCHED TO ACTIVE: " .. self.powerState)
-
-			-- Bug: 14040 - Fix race condition with blank screensaver
-			if self:isScreenOff() then
-				return
-			end
-
-			-- set brightness so that the ACTIVE power state removes the 60% dimming
-			self:setBrightness( brightCur )
-			wasDimmed = false
-		end
-		return
-	else
-		wasDimmed = true
+function getSmoothedLux() 
+	local sum = 0.0
+	
+	-- First Pass, Average
+	for i = 1, #luxSmooth do
+		--log:info("#" .. i .. " " .. luxSmooth[i])
+		sum = sum + luxSmooth[i]
+	end	
+	local avg = sum / #luxSmooth;	
+	log:info("AVG: " .. avg)
+	
+	-- Second Pass, Standard Deviation
+	sum = 0.0
+	for i = 1, #luxSmooth do
+		local variation = (luxSmooth[i] - avg)
+		sum = sum + (variation * variation)
 	end
+	local sdev = math.sqrt(sum / #luxSmooth)
+	--log:info("SDEV: " .. sdev);	
+	
+	-- If not deviation, return average
+	if sdev == 0 then 
+		return avg
+	end
+	
+	-- Third Pass, Filter out values > Standard Deviation
+	sum = 0.0;
+	local values = 0;
+	local high = avg + sdev;
+	local low  = avg - sdev
+	for i = 1, #luxSmooth do
+		if luxSmooth[i] > low and luxSmooth[i] < high then 
+			--log:info("##" .. i .. " " .. luxSmooth[i])
+			values = values + 1
+			sum = sum + luxSmooth[i]
+		end
+	end
+	
+	if values >= 1 then 	
+		avg = sum / values;
+		log:info("AVG2: " .. avg)
+	end
+	
+	return avg
+
+end
+
+function doAutomaticBrightnessTimer(self)
 
 	local settings = self:getSettings()
 
 	-- Now continue with the real ambient code
 	local ambient = sysReadNumber(self, "ambient")
+	
+	-- Use the table to smooth out ambient value spikes
+	table.insert(luxSmooth, ambient)	
+	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
+		table.remove(luxSmooth, 1)
+	end
+	
+	ambient = self:getSmoothedLux(luxSmooth)
 
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -454,7 +494,7 @@ function notify_playerCurrent(self, player)
 		end
 		log:debug('date sync: ', chunk.data.date)
                 self:setDate(chunk.data.date)
- 	end
+	end
 
 	-- setup a once/hour
         player:subscribe(
