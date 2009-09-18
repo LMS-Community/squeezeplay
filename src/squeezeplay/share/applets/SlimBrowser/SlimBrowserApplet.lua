@@ -619,6 +619,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 				return EVENT_CONSUME
 			end		
 			group:addActionListener('add', step, moreAction)
+			group:addActionListener('go', step, moreAction)
 		end
 
 		group:setWidgetValue("text", item.text)
