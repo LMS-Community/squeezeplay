@@ -111,7 +111,7 @@ gestureActionMappings = {
 }
 
 keyActionMappings.hold = {
-	[KEY_HOME] = "go_now_playing",
+	[KEY_HOME] = "go_home",
 	[KEY_PLAY] = "create_mix",
 	[KEY_ADD]  = "add_end",
 	[KEY_BACK] = "go_home",
