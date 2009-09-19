@@ -63,6 +63,17 @@ local tests = {
       "PLAYER_TYPE",
       "UPTIME",
       "MEMORY",
+      "MSP_VERSION",
+}
+
+local powerTests = {
+      "BATTERY_VOLTAGE",
+      "BATTERY_VMON1",
+      "BATTERY_VMON2",
+      "WALL_VOLTAGE",
+      "BATTERY_TEMPERATURE",
+      "POWER_MODE",
+      "CHARGE_STATE",
 }
 
 
@@ -72,6 +83,15 @@ function setValue(self, key, value)
 	end
 	self.diagMenu:setText(self.labels[key], self:string(key, value))
 end
+
+
+function setPowerValue(self, key, value)
+	if not value then
+		value = '-'
+	end
+	self.powerDiagMenu:setText(self.labels[key], self:string(key, value))
+end
+
 
 function serverPort(self, server, port, key)
 	if not server then
@@ -292,6 +312,27 @@ function systemStatus(self)
 	self:setValue("MEMORY", memory)
 end
 
+function _getSysValue(self, param)
+
+	local f = io.open("/sys/bus/i2c/devices/1-0010/" .. param)
+	log:warn("opening: ", param)
+
+	local value = f:read("*all")
+	f:close()
+
+	return value
+end
+
+function _getPowerSysValue(self, param)
+
+	local f = io.open("/sys/devices/platform/i2c-adapter:i2c-1/1-0010/" .. param)
+	log:warn("opening: ", param)
+
+	local value = f:read("*all")
+	f:close()
+
+	return value
+end
 
 function dovalues(self, menu)
 	local machine, revision = System:getMachine();
@@ -358,8 +399,52 @@ function dovalues(self, menu)
 	end
 
 	self:systemStatus()
+
+	if System:getMachine() == "baby" then
+		self:setValue("MSP_VERSION", self:_getSysValue("fw"))
+	end
 end
 
+
+function doPowerValues(self, menu)
+	self:setValue("BATTERY_VOLTAGE", self:_getPowerSysValue("battery_voltage"))
+	self:setValue("BATTERY_VMON1", self:_getPowerSysValue("battery_vmon1_voltage"))
+	self:setValue("BATTERY_VMON2", self:_getPowerSysValue("battery_vmon2_voltage"))
+	self:setValue("WALL_VOLTAGE", self:_getPowerSysValue("wall_voltage"))
+	self:setValue("BATTERY_TEMPERATURE", self:_getPowerSysValue("battery_temperature"))
+	self:setValue("POWER_MODE", self:_getPowerSysValue("power_mode"))
+	self:setValue("CHARGE_STATE", self:_getPowerSysValue("charger_state"))
+end
+
+
+function showPowerDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("POWER"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(powerTests) do
+		self.labels[name] = {
+			text = self:string(name, ''),
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	self.powerDiagMenu = menu
+	doPowerValues(self, menu)
+	menu:addTimer(5000, function()
+		doPowerValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
 
 function diagnosticsMenu(self, suppressNetworkingItem)
 	local window = Window("text_list", self:string("DIAGNOSTICS"))
@@ -380,6 +465,16 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 		end
 	end
 
+	if System:getMachine() == "baby" then
+		menu:addItem({
+			text = self:string("POWER"),
+			style = 'item',
+			callback = function ()
+				self:showPowerDiagnosticsMenu()
+			end
+		})
+	end
+	
 	if System:isHardware() then
 		menu:addItem({
 			text = self:string("SOFTWARE_UPDATE"),

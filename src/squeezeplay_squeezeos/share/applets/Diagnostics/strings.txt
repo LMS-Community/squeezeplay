@@ -620,3 +620,30 @@ UPTIME_MINUTES
 
 MEMORY
 	EN	Memory used\n%s
+
+POWER
+	EN	Power
+
+MSP_VERSION
+	EN	MSP version\n%s
+
+BATTERY_VOLTAGE
+	EN	Battery voltage\n%s
+
+BATTERY_VMON1
+	EN	Battery vmon1\n%s
+
+BATTERY_VMON2
+	EN	Battery vmon2\n%s
+
+WALL_VOLTAGE
+	EN	Wall voltage\n%s
+
+BATTERY_TEMPERATURE
+	EN	Battery temperature\n%s
+
+POWER_MODE
+	EN	Power mode\n%s
+
+CHARGE_STATE
+	EN	Charger state\n%s
