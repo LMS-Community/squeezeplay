@@ -1311,6 +1311,7 @@ function _process_displaystatus(self, event)
 			s = self.mixedPopup
 			local text = display['text'][1] or ''
 			local subtext = display['text'][2] or ''
+			s.text:setValue(text)
 			s.text:animate(true)
 			s.subtext:setValue(subtext)
 			s.subtext:animate(true)

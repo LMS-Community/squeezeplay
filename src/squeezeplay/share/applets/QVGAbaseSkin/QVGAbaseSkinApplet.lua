@@ -1427,6 +1427,8 @@ function skin(self, s, reload, useDefaultSize)
 			w = WH_FILL,
 			h = WH_FILL,
 			font = _boldfont(18),
+			fg = c.TEXT_COLOR,
+			sh = c.TEXT_SH_COLOR,
 		},
 		subtext = {
 			position = LAYOUT_NORTH,

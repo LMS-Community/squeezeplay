@@ -1821,6 +1821,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 						goHome()
 					end
 					
+				elseif nextWindow == 'parentNoRefresh' then
+					_hideMe(true)
 				elseif nextWindow == 'parent' then
 					_hideMe()
 				elseif nextWindow == 'grandparent' then
@@ -1857,6 +1859,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_safeDeref(chunk, 'base', 'addAction') == 'more') then
 
 					log:debug('Context Menu')
+					-- Bug 14061: send command flag to have XMLBrowser fork CM response off to get playback controls
+					if jsonAction.params then
+						jsonAction.params.xmlBrowseInterimCM = 1
+					end
 
 
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
