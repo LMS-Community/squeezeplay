@@ -312,10 +312,18 @@ function _timerCallback(self)
 	-- 1) this is the first track since the last strm-q
 	-- 2) we have actually finished processing that strm-q
 	-- 3) we have enough encoded data buffered or the stream is complete
+	-- 4) we have a bit of output ready; actually this test is not necessary as such
+	--		because the AUTOSTART mechanism for the audio startup performs the same function
+	--		and would allow slightly quicker startup, but we still need the test as a way to
+	--		determine that we have actually started to stream and decode a track as none
+	--		of the other conditions are sufficient to guarantee that. It would probably
+	--		better to introduce another local state variable such as 'isActive' (being the
+	--		opposite of isStopped) but that would need more-careful review.
 
 	if status.tracksStarted == 0 and
 		status.audioState & DECODE_STOPPING == 0 and
-		(status.bytesReceivedL > self.threshold or not self.stream) then
+		(status.bytesReceivedL > self.threshold or not self.stream) and
+		status.outputTime > 50 then
 
 --	FIXME in a future release we may change the the threshold to use
 --	the amount of audio buffered, see Bug 6442
