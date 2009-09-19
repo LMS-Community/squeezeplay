@@ -405,7 +405,14 @@ end
 
 -- Open the slimproto connetion to Ip.
 -- Called by slimproto 'serv' and udap
-function connectIp(self, serverip)
+function connectIp(self, serverip, slimserverip)
+	-- A bug in ip3k firmware forces Jive to sometimes set slimserverip
+	--  to 0.0.0.1 to work around that bug.
+	-- Do not store this bogus slimserver ip address.
+	if slimserverip and slimserverip ~= 0 and slimserverip ~= 1 then
+		self.lastServerip = _ipstring(slimserverip)
+	end
+
 	if serverip == 0 then
 		if not self.lastServerip then
 			log:warn("no last SC ip address stored - ignore connection request")

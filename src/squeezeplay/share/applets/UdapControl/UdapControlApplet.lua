@@ -86,6 +86,8 @@ function _udapSink( self, chunk, err)
 	elseif pkt.uapMethod == "set_data" and pkt.dest == ownMacAddress then
 		if pkt.data["server_address"] then
 			acceptPacket = true
+		elseif pkt.data["slimserver_address"] then
+			acceptPacket = true
 		end
 
 	-- Only accept get uuid packets with our mac address as target
@@ -93,6 +95,7 @@ function _udapSink( self, chunk, err)
 		acceptPacket = true
 	end
 
+	-- Check for supported methods
 	if not acceptPacket then
 		log:debug("UDAP: not supported method - discard packet")
 		return
@@ -100,6 +103,7 @@ function _udapSink( self, chunk, err)
 
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 
+	-- Check if there is a current player
 	if not currentPlayer then
 		log:debug("UDAP: no current player - discard packet")
 		return
@@ -107,11 +111,13 @@ function _udapSink( self, chunk, err)
 
 	log:debug("UDAP: curPlayer: ", currentPlayer, " local: ", currentPlayer:isLocal(), " connected: ", currentPlayer:isConnected())
 
+	-- Check if current player is local
 	if not currentPlayer:isLocal() then
 		log:debug("UDAP: current player is not local - discard packet")
 		return
 	end
 
+	-- Check if local player is connected
 	if currentPlayer:isConnected() then
 		log:debug("UDAP: current local player is connected - discard packet")
 		return
@@ -148,14 +154,32 @@ function _udapSink( self, chunk, err)
 
 		log:debug("UDAP - set data request received - sending answer...")
 
-		if pkt.data["server_address"] then
+		if pkt.data["server_address"] and pkt.data["slimserver_address"] then
 			local serverip = pkt.data["server_address"]
+			local a1, b1, c1, d1 = string.byte(serverip, 1, 4)
 
-			local a, b, c, d = string.byte(serverip, 1, 4)
+			serverip = (a1 << 24) + (b1 << 16) + (c1 << 8) + d1
 
-			serverip = (a << 24) + (b << 16) + (c << 8) + d
+			local slimserverip = pkt.data["slimserver_address"]
+			local a2, b2, c2, d2 = string.byte(slimserverip, 1, 4)
 
+			slimserverip = (a2 << 24) + (b2 << 16) + (c2 << 8) + d2
+			currentPlayer:connectIp(serverip, slimserverip)
+
+		elseif pkt.data["server_address"] then
+			local serverip = pkt.data["server_address"]
+			local a1, b1, c1, d1 = string.byte(serverip, 1, 4)
+
+			serverip = (a1 << 24) + (b1 << 16) + (c1 << 8) + d1
 			currentPlayer:connectIp(serverip)
+
+		elseif pkt.data["slimserver_address"] then
+			local slimserverip = pkt.data["slimserver_address"]
+			local a2, b2, c2, d2 = string.byte(slimserverip, 1, 4)
+
+			slimserverip = (a2 << 24) + (b2 << 16) + (c2 << 8) + d2
+
+			currentPlayer:connectIp(0, slimserverip)
 		end
 
 		local packet = Udap.createSetDataResponse(ownMacAddress, pkt.source, pkt.seqno)

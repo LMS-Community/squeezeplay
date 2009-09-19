@@ -193,9 +193,9 @@ function connectToServer(self, server)
 end
 
 
-function connectIp(self, serverip)
+function connectIp(self, serverip, slimserverip)
 	self.slimproto:disconnect()
-	self.slimproto:connectIp(serverip)
+	self.slimproto:connectIp(serverip, slimserverip)
 end
 
 
