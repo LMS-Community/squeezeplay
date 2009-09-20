@@ -1,5 +1,5 @@
 
-local ipairs, tostring = ipairs, tostring
+local ipairs, tostring = ipairs, tostring, tonumber
 
 -- stuff we use
 local oo               = require("loop.simple")
@@ -76,6 +76,20 @@ local powerTests = {
       "CHARGE_STATE",
 }
 
+local powerMode = {
+	  ["3"] = "POWER_ON_AC",
+	  ["7"] = "POWER_ON_AC_AND_BATT",
+	  ["5"] = "POWER_ON_BATT",
+}
+
+local chargerState = {
+	  ["1"]  = "BATT_NONE",
+	  ["2"]  = "BATT_IDLE",
+	  ["3"]  = "BATT_DISCHARGING",
+	  ["35"] = "BATT_DISCHARGING_WARNING",
+	  ["8"]  = "BATT_CHARGING",
+	  ["24"] = "BATT_CHARGING_PAUSED",
+}
 
 function setValue(self, key, value)
 	if not value then
@@ -407,13 +421,16 @@ end
 
 
 function doPowerValues(self, menu)
-	self:setValue("BATTERY_VOLTAGE", self:_getPowerSysValue("battery_voltage"))
-	self:setValue("BATTERY_VMON1", self:_getPowerSysValue("battery_vmon1_voltage"))
-	self:setValue("BATTERY_VMON2", self:_getPowerSysValue("battery_vmon2_voltage"))
-	self:setValue("WALL_VOLTAGE", self:_getPowerSysValue("wall_voltage"))
-	self:setValue("BATTERY_TEMPERATURE", self:_getPowerSysValue("battery_temperature"))
-	self:setValue("POWER_MODE", self:_getPowerSysValue("power_mode"))
-	self:setValue("CHARGE_STATE", self:_getPowerSysValue("charger_state"))
+	self:setValue("BATTERY_VOLTAGE"	   , tostring(self:_getPowerSysValue("battery_voltage")      /1000.0) .. " V")
+	self:setValue("BATTERY_VMON1"  	   , tostring(self:_getPowerSysValue("battery_vmon1_voltage")/1000.0) .. " V")
+	self:setValue("BATTERY_VMON2"  	   , tostring(self:_getPowerSysValue("battery_vmon2_voltage")/1000.0) .. " V")
+	self:setValue("WALL_VOLTAGE"   	   , tostring(self:_getPowerSysValue("wall_voltage")         /1000.0) .. " V")
+	self:setValue("BATTERY_TEMPERATURE", tostring(self:_getPowerSysValue("battery_temperature")  /32.0  ) .. " C")
+
+	local mode = self:_getPowerSysValue("power_mode"):gsub("^%s*(.-)%s*$", "%1")
+	self:setValue("POWER_MODE"         , tostring(self:string(powerMode[mode])))
+	local mode = self:_getPowerSysValue("charger_state"):gsub("^%s*(.-)%s*$", "%1")
+	self:setValue("CHARGE_STATE"       , tostring(self:string(chargerState[mode])))
 end
 
 

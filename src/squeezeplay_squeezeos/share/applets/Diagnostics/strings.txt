@@ -645,5 +645,32 @@ BATTERY_TEMPERATURE
 POWER_MODE
 	EN	Power mode\n%s
 
+POWER_ON_AC
+	EN	Wall power
+
+POWER_ON_BATT
+	EN	Battery power
+
+BATT_NONE
+	EN	No Battery
+
+BATT_IDLE
+	EN	Battery not charging
+
+BATT_DISCHARGING
+	EN	Battery discharging
+
+BATT_DISCHARGING_WANRING
+	EN	Battery discharging battery is low
+
+BATT_CHARGING
+	EN	Battery charging
+
+BATT_CHARGING_PAUSED
+	EN	Battery charging paused.  Cooling down
+
+POWER_ON_AC_AND_BATT
+	EN	Wall & battery power
+
 CHARGE_STATE
 	EN	Charger state\n%s
