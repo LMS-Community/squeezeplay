@@ -1284,6 +1284,8 @@ function _process_displaystatus(self, event)
 		local display = data.display
 		local type    = display["type"] or 'text'
 		local special = display and (type == 'icon' and display.style)
+		local playMode = display["play-mode"]
+		local isRemote = display["is-remote"] and (display["is-remote"] == 1) or false
 
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])
@@ -1306,6 +1308,10 @@ function _process_displaystatus(self, event)
 			-- icon-based showBrieflies only appear for IR
 			if not usingIR then
 				showMe = false
+			end
+			if not isRemote and playMode and playMode == "play" then
+				--provide quicker feedback on NP screen that a new track is playing, other display delay for next local track can be long.
+				self.jnt:notify('playerTitleStatus', self, textValue, duration)
 			end
 		elseif type == 'mixed' or type == 'popupalbum' then
 			s = self.mixedPopup
