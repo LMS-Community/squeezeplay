@@ -1213,7 +1213,7 @@ function _process_status(self, event)
 		else
 			self.alarmState = self.state['alarm_state']
 			self.alarmNext  = tonumber(self.state['alarm_next'])
-			self.jnt:notify('playerAlarmState', self, self.state['alarm_state'], self.state['alarm_next'])
+			self.jnt:notify('playerAlarmState', self, self.state['alarm_state'], self.state['alarm_next'] and tonumber(self.state['alarm_next']) or nil)
 		end
 	end
 
@@ -1290,7 +1290,7 @@ function _process_displaystatus(self, event)
 
 		local transitionOn = Window.transitionFadeIn
 		local transitionOff = Window.transitionFadeOut
-		local duration = display['duration'] or 5000
+		local duration = tonumber(display['duration'] or 5000)
 
 		local usingIR = Framework:isMostRecentInput('ir')
 
@@ -1302,7 +1302,7 @@ function _process_displaystatus(self, event)
 			s.icon:setStyle(style)	
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
-			duration = display['duration'] or 1500
+			duration = tonumber(display['duration'] or 1500)
 			-- icon-based showBrieflies only appear for IR
 			if not usingIR then
 				showMe = false
