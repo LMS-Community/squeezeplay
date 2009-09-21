@@ -268,7 +268,9 @@ end
 
 
 function _defaultContextMenuAction(self)
-	--do nothing by default
+	Framework:playSound("BUMP")
+	Framework.windowStack[1]:bumpLeft()
+	
 	return EVENT_CONSUME
 end
 
