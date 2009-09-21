@@ -329,7 +329,6 @@ end
 function _getSysValue(self, param)
 
 	local f = io.open("/sys/bus/i2c/devices/1-0010/" .. param)
-	log:warn("opening: ", param)
 
 	local value = f:read("*all")
 	f:close()
