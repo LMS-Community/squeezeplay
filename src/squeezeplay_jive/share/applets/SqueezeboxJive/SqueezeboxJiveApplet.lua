@@ -1247,6 +1247,15 @@ function _goToSleep(self)
 end
 
 
+function free(self)
+	log:error("free should never be called for this resident applet")
+
+	return false
+end
+
+
+
+
 --[[
 
 =head1 LICENSE

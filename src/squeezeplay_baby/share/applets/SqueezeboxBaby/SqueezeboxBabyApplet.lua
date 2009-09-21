@@ -984,8 +984,15 @@ function settingsBrightnessControlShow(self, menuItem)
 	)
 
 	window:addWidget(menu)
-	self:tieAndShowWindow(window)
+	window:show()
 
+end
+
+
+function free(self)
+	log:error("free should never be called for this resident applet")
+
+	return false
 end
 
 
