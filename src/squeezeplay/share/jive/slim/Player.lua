@@ -1292,7 +1292,7 @@ function _process_displaystatus(self, event)
 
 		local transitionOn = Window.transitionFadeIn
 		local transitionOff = Window.transitionFadeOut
-		local duration = tonumber(display['duration'] or 5000)
+		local duration = tonumber(display['duration'] or 3000)
 
 		local usingIR = Framework:isMostRecentInput('ir')
 
