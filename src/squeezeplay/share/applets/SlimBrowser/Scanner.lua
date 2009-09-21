@@ -247,8 +247,6 @@ end
 
 
 function event(self, event)
-	log:warn("scanner event: ", event:tostring())
-
 	--hack to handle screensaver, in volume and scanner, actions are not used due to need for down handling
 	appletManager:callService("deactivateScreensaver")
 	appletManager:callService("restartScreenSaverTimer")
