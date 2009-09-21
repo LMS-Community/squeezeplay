@@ -162,7 +162,7 @@ local function _openPopup(self)
 end
 
 
-function _updateVolume(self, mute, directSet, noAccel)
+function _updateVolume(self, mute, directSet, noAccel, minAccelDelta)
 	if not self.popup then
 		self.timer:stop()
 		return
@@ -228,8 +228,15 @@ function _updateVolume(self, mute, directSet, noAccel)
 			self.lastUpdate = now
 
 			-- change volume
-			local accel = self.accelCount / 8
-			new = math.floor(math.abs(self.volume) + self.delta * accel * VOLUME_STEP)
+			local accel = self.accelCount / 5.5 -- constant made high enough to avoid two steps occurring on a typical push, but low enough for fast acceleration
+
+			local dir = math.abs(self.delta) / self.delta
+			local change = dir * math.floor(math.abs(self.delta) * accel * VOLUME_STEP)
+			if change == 0 and minAccelDelta then
+				new = math.abs(self.volume) + minAccelDelta
+			else
+				new = math.abs(self.volume) + change
+			end
 		end
 	end
 
@@ -478,7 +485,7 @@ function event(self, event)
 			end
 
 			self.timer:restart()
-			_updateVolume(self)
+			_updateVolume(self, nil, nil, nil, self.delta)
 
 			return EVENT_CONSUME
 		end
