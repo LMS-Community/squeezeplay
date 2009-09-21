@@ -149,7 +149,7 @@ function manageSelectPlayerMenu(self)
 	if _numberOfPlayers > 1 or not currentPlayer or not currentPlayer:isConnected() then
 		if not self.selectPlayerMenuItem then
 			local node = "home"
-			local weight = 80
+			local weight = 103
 			if System:getMachine() ~= "jive" then
 				node = "settings"
 				weight = 50
