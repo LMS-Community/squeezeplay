@@ -289,7 +289,7 @@ function mute(self, mute)
 
 	end
 
-	return Player.mute(self, mute)
+	return Player.mute(self, mute, self:incrementSequenceNumber())
 end
 
 

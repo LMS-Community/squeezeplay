@@ -1642,16 +1642,24 @@ end
 
 -- mute
 -- mutes or ummutes the player, returns a negitive value if the player is muted
-function mute(self, mute)
+function mute(self, mute, sequenceNumber)
 	local vol = self.state["mixer volume"]
 	if mute and vol >= 0 then
 		-- mute
-		self:send({'mixer', 'muting'})
+		if sequenceNumber then
+			self:send({'mixer', 'muting', "1", "seq_no:" ..  sequenceNumber})
+		else
+			self:send({'mixer', 'muting'})
+		end
 		vol = -math.abs(vol)
 
 	elseif vol < 0 then
 		-- unmute
-		self:send({'mixer', 'muting'})
+		if sequenceNumber then
+			self:send({'mixer', 'muting', "0", "seq_no:" ..  sequenceNumber})
+		else
+			self:send({'mixer', 'muting'})
+		end
 		vol = math.abs(vol)
 	end
 
