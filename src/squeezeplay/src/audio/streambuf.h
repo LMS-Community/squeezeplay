@@ -35,12 +35,6 @@ extern bool_t streambuf_would_wait_for(size_t bytes);
 
 extern void streambuf_get_status(size_t *size, size_t *usedbytes, u32_t *bytesL, u32_t *bytesH);
 
-extern void streambuf_mark_loop(void);
-
-extern void streambuf_clear_loop(void);
-
-extern bool_t streambuf_is_looping(void);
-
 extern void streambuf_flush(void);
 
 /* the mutex should be locked when using fast read */

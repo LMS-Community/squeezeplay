@@ -117,38 +117,6 @@ void streambuf_get_status(size_t *size, size_t *usedbytes, u32_t *bytesL, u32_t 
 }
 
 
-void streambuf_mark_loop(void) {
-	fifo_lock(&streambuf_fifo);
-
-	streambuf_lptr = streambuf_fifo.wptr;
-	streambuf_loop = TRUE;
-
-	fifo_unlock(&streambuf_fifo);
-}
-
-
-void streambuf_clear_loop(void) {
-	fifo_lock(&streambuf_fifo);
-
-	streambuf_loop = FALSE;
-
-	fifo_unlock(&streambuf_fifo);
-}
-
-
-bool_t streambuf_is_looping(void) {
-	bool_t n;
-
-	fifo_lock(&streambuf_fifo);
-
-	n = streambuf_loop;
-
-	fifo_unlock(&streambuf_fifo);
-
-	return n;
-}
-
-
 void streambuf_flush(void) {
 	fifo_lock(&streambuf_fifo);
 
@@ -401,8 +369,6 @@ static int stream_load_loopL(lua_State *L) {
 	 * 2: file
 	 */
 
-	streambuf_mark_loop();
-
 	filename = alloca(PATH_MAX);
 	if (!squeezeplay_find_file(lua_tostring(L, 2), filename)) {
 		LOG_ERROR(log_audio_decode, "Can't find image %s\n", lua_tostring(L, 2));
@@ -416,6 +382,9 @@ static int stream_load_loopL(lua_State *L) {
 	}
 
 	fifo_lock(&streambuf_fifo);
+
+	streambuf_lptr = streambuf_fifo.wptr;
+	streambuf_loop = TRUE;
 
 	n = fifo_bytes_free(&streambuf_fifo);
 	if ((len = read(fd, streambuf_buf + streambuf_fifo.wptr, n)) < 0) {
@@ -432,13 +401,13 @@ static int stream_load_loopL(lua_State *L) {
 		len += n;
 	}
 
-	fifo_unlock(&streambuf_fifo);
-	close(fd);
-
 	streambuf_streaming = FALSE;
 	streambuf_bytes_received = len;
 	streambuf_filter = streambuf_next_filter;
 	streambuf_next_filter = NULL;
+
+	fifo_unlock(&streambuf_fifo);
+	close(fd);
 
 	return 0;
 
@@ -521,11 +490,15 @@ static int stream_connectL(lua_State *L) {
 	luaL_getmetatable(L, "squeezeplay.stream");
 	lua_setmetatable(L, -2);
 
-	streambuf_clear_loop();
+	fifo_lock(&streambuf_fifo);
+
+	streambuf_loop = FALSE;
 	streambuf_bytes_received = 0;
 	streambuf_copyright = FALSE;
 	streambuf_filter = streambuf_next_filter;
 	streambuf_next_filter = NULL;
+
+	fifo_unlock(&streambuf_fifo);
 
 	return 1;
 }
@@ -688,9 +661,8 @@ static int stream_readL(lua_State *L) {
 		}
 	}
 
-
-	// XXXX handle body and cont state
-
+	/* we need to loop when playing sound effects, so we need to remember where the stream starts */
+	streambuf_lptr = streambuf_fifo.wptr;
 
 	/* feed remaining buffer */
 	streambuf_feed(buf_ptr, n);
@@ -805,7 +777,11 @@ static int stream_readtoL(lua_State *L) {
 
 
 static int stream_mark_loopL(lua_State *L) {
-	streambuf_mark_loop();
+	fifo_lock(&streambuf_fifo);
+
+	streambuf_loop = TRUE;
+
+	fifo_unlock(&streambuf_fifo);
 
 	return 0;
 }
