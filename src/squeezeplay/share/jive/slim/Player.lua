@@ -1762,12 +1762,10 @@ function _udapConnect(self, server)
 		data.slimserver_address = Udap.packNumber(parseip("0.0.0.1"), 4)
 
 		-- make sure the player is linked on SN
-		if self.uuid then
-			log:info("linking player ", self.id, " on SN")
-			server:request(nil, nil, {
-				'playerRegister', self.uuid, self.id, self.info.name
-			})
-		end
+		log:info("linking player ", self.id, " on SN")
+		server:request(nil, nil, {
+			'playerRegister', self.uuid, self.id, self.info.name
+		})
 	else
 		local serverip = server:getIpPort()
 
