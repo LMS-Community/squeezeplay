@@ -125,6 +125,8 @@ function playFileInLoop(self, file)
 
 	log:info("loop file ", file)
 
+	self.source = "file"
+
 	self:_streamDisconnect(nil, true)
 
 	Stream:loadLoop(file)
@@ -382,6 +384,8 @@ end
 
 function _streamConnect(self, serverIp, serverPort)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
+
+	self.source = "stream"
 
 	self.stream = Stream:connect(serverIp, serverPort)
 
@@ -723,6 +727,11 @@ function setCaptureVolume(self, volume)
 end
 
 
+function getSource(self)
+	return self.source
+end
+
+
 function getCaptureVolume(self)
 	return self.captureVolume
 end
@@ -735,6 +744,13 @@ end
 
 function setCapturePlayMode(self, capturePlayMode)
 	self.capturePlayMode = capturePlayMode
+
+	if capturePlayMode then
+		self.source = "capture"
+	else
+		self.source = nil
+	end
+
 	if capturePlayMode == "play" then
 		self:setCaptureVolume(self:getCaptureVolume())
 	else
