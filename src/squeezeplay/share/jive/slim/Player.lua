@@ -1764,7 +1764,7 @@ function _udapConnect(self, server)
 		-- make sure the player is linked on SN
 		log:info("linking player ", self.id, " on SN")
 		server:request(nil, nil, {
-			'playerRegister', self.uuid, self.id
+			'playerRegister', self.uuid, self.id, self.info.name
 		})
 	else
 		local serverip = server:getIpPort()

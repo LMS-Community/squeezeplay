@@ -222,8 +222,12 @@ end
 
 
 function getEffectivePlayMode(self)
-	if self:getCapturePlayMode() then
-		return self:getCapturePlayMode()
+	local source = self.playback:getSource()
+
+	if source == "capture" then
+		return self.capturePlayMode
+	elseif source == "file" then
+		return "play"
 	else
 		return self:getPlayMode()
 	end
