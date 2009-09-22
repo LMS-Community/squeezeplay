@@ -10,6 +10,8 @@ local table                  = require("jive.utils.table")
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 
+local Player                 = require("jive.slim.Player")
+
 local Framework              = require("jive.ui.Framework")
 local Icon                   = require("jive.ui.Icon")
 local Event                  = require("jive.ui.Event")
@@ -263,6 +265,11 @@ function lowBattery(self)
 		return
 	end
 
+	local player = Player:getLocalPlayer()
+	if player then
+		player:pause(true)
+	end
+
 	log:info("battery low")
 
 	local popup = Popup("waiting_popup")
@@ -282,7 +289,7 @@ function lowBattery(self)
 	-- FIXME jive made sure the brightness was on (do we really
 	-- want this, I don't think so as it may wake people up)
 
-	self.lowBatteryTimer = Timer(60000, function()
+	self.lowBatteryTimer = Timer(1200000, function()
 		-- force poweroff (don't go through init)
 		squeezeos.poweroff()
 	end)
