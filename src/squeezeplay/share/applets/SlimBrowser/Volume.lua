@@ -230,12 +230,18 @@ function _updateVolume(self, mute, directSet, noAccel, minAccelDelta)
 			-- change volume
 			local accel = self.accelCount / 5.5 -- constant made high enough to avoid two steps occurring on a typical push, but low enough for fast acceleration
 
-			local dir = math.abs(self.delta) / self.delta
-			local change = dir * math.floor(math.abs(self.delta) * accel * VOLUME_STEP)
-			if change == 0 and minAccelDelta then
-				new = math.abs(self.volume) + minAccelDelta
+			if self.delta == 0 then
+					--happens on an un-mute
+					new = math.abs(self.volume)
+					self.rateLimitDelta = 0 --don't perform cleanup volume change
 			else
-				new = math.abs(self.volume) + change
+				local dir = math.abs(self.delta) / self.delta
+				local change = dir * math.floor(math.abs(self.delta) * accel * VOLUME_STEP)
+				if change == 0 and minAccelDelta then
+					new = math.abs(self.volume) + minAccelDelta
+				else
+					new = math.abs(self.volume) + change
+				end
 			end
 		end
 	end
@@ -258,7 +264,7 @@ function _updateVolume(self, mute, directSet, noAccel, minAccelDelta)
 	local remoteVolume = self.player:volume(new)
 
 	if not remoteVolume then -- player suppressed volume due to rate limiting, hold onto difference lost
-		self.rateLimitDelta = new - self.volume
+		self.rateLimitDelta = math.abs(new) - math.abs(self.volume)
 	end
 
 	self.volume = remoteVolume or self.volume
