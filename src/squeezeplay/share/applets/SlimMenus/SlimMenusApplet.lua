@@ -45,7 +45,6 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
-local json                   = json
 
 
 module(..., Framework.constants)

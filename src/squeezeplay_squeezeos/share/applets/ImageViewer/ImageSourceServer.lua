@@ -27,6 +27,7 @@ local oo			= require("loop.simple")
 local math			= require("math")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
+local json              = require("json")
 local debug                  = require("jive.utils.debug")
 local lfs			= require('lfs')
 local Group			= require("jive.ui.Group")
@@ -44,7 +45,6 @@ local Framework		= require("jive.ui.Framework")
 
 local jnt = jnt
 local jiveMain = jiveMain
-local json                   = json
 
 local log 		= require("jive.utils.log").logger("applet.ImageViewer")
 local require = require
