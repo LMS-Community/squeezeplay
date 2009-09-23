@@ -259,8 +259,12 @@ function notify_playerCurrent(self, player)
 				     log:warn(err)
 				     return
 			     end
-				log:debug('Date being synched from player to controller: ', chunk.data.date)
-                             self:setDate(chunk.data.date)
+			     log:debug('date sync: local: ', chunk.data.date, ' utc: ', chunk.data.date_utc)
+			     if chunk.data.date_utc then
+                		     self:setDate(chunk.data.date_utc, true)
+			     else
+                		     self:setDate(chunk.data.date, false)
+			     end
  		     end
 
  
@@ -285,17 +289,22 @@ function notify_playerDelete(self, player)
 
 end
 
-function setDate(self, date)
+function setDate(self, date, is_utc)
 	-- matches date format 2007-09-08T20:40:42+00:00
 	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
 
-	log:info("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
+	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ, " is_utc=", is_utc)
+
+	local utcflag = ""
+	if is_utc then
+		utcflag = " -u "
+	end
 
 	-- set system date
-	os.execute("date " .. MM..DD..hh..mm..CCYY.."."..ss)
+	os.execute("/bin/date " .. utcflag .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	-- set RTC to system time
-	os.execute("hwclock -w")
+	os.execute("hwclock -w" .. utcflag)
 
 	iconbar:update()
 end
