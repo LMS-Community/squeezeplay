@@ -112,27 +112,21 @@ function configureApplet(meta)
 	
 	-- Connect player
 	local server = nil
-	if settings.squeezeNetwork then
-		server = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
-		server:updateInit({ip=jnt:getSNHostname()}, 9000)
-
-	elseif settings.serverName then
+	if settings.serverName then
 		if not settings.serverUuid then
 			settings.serverUuid = settings.serverName
 		end
 		server = SlimServer(jnt, settings.serverUuid, settings.serverName)
+
 		server:updateInit(settings.serverInit)
+		meta.state.player:setLastSqueezeCenter(server)
 	end
 
-	if settings.serverName then
-		-- create and track last SC
-		if not settings.serverUuid then
-			settings.serverUuid = settings.serverName
-		end
-		local sc = SlimServer(jnt, settings.serverUuid, settings.serverName)
-		meta.state.player:setLastSqueezeCenter(sc)
+	if settings.squeezeNetwork then
+		server = SlimServer(jnt, "mysqueezebox.com", "mysqueezebox.com")
+		server:updateInit({ip=jnt:getSNHostname()}, 9000)
 	end
-	
+
 	-- Init player
 	if settings.playerInit then
 	--always try to go back to last SC - good/bad?

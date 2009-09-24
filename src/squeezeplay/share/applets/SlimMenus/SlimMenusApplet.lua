@@ -147,6 +147,12 @@ function _addSwitchToSnMenuItem(self)
 		sound = 'WINDOWSHOW',
 		weight = 90,
 		callback =      function(event, menuItem)
+					if not self:_getSqueezeNetwork() then
+						local windowStack = Framework.windowStack
+						Framework:playSound("BUMP")
+						windowStack[1]:bumpLeft()
+						return
+					end
 					self:_selectMusicSource(function()
 									jiveMain:goHome()
 								end,
@@ -611,10 +617,10 @@ local function _menuSink(self, isCurrentServer, server)
 						--this case is a bit ugly. We don't know if SC will be able to serve it, so we shouldn't switch to SC
 						local initServer = appletManager:callService("getInitialSlimServer")
 						if not initServer  or (initServer and not initServer:isSqueezeNetwork() and  self:_canSqueezeNetworkServe(item)) then
-							log:debug("Switch to SN when _server is nil")
+							log:info("Switch to SN when _server is nil")
 							switchToSn()
 						else
-							log:debug("Switch to SC when _server is nil")
+							log:info("Switch to SC when _server is nil")
 							switchToSc()
 						end
 					else
@@ -622,24 +628,30 @@ local function _menuSink(self, isCurrentServer, server)
 						if self.playerOrServerChangeInProgress then
 							--happens on failed attempt to chose a different server, re-connect to same
 							if _server:isSqueezeNetwork() then
-								log:debug("switching to SN from SC, server change failure: ", _server)
+								log:info("switching to SN from SC, server change failure: ", _server)
+								if _player then
+									_player:setServerRefreshInProgress(true)
+								end
 								_server:disconnect()
 								switchToSn()
 							else
-								log:debug("switching to SC from SN, server change failure: ", _server)
+								log:info("switching to SC from SN, server change failure: ", _server)
+								if _player then
+									_player:setServerRefreshInProgress(true)
+								end
 								_server:disconnect()
 								switchToSc()
 							end
 						else
 							if not _server:isConnected() then
 								if not _server:isSqueezeNetwork() and self:_canSqueezeNetworkServe(item) then
-									log:debug("switching to SN from SC, connection issue: ", _server)
+									log:info("switching to SN from SC, connection issue: ", _server)
 									switchToSn()
 								elseif _server:isSqueezeNetwork() and self:_canSqueezeCenterServe(item) then
-									log:debug("switching to SC from SN, connection issue: ", _server)
+									log:info("switching to SC from SN, connection issue: ", _server)
 									switchToSc()
 								else
-									log:debug("only the current server can serve, let slim browse handle the connection issue")
+									log:info("only the current server can serve, let slim browse handle the connection issue")
 									action()
 								end
 							else
@@ -1162,10 +1174,16 @@ function _fetchServerMenu(self, server)
 	if _player then
 		playerId = _player:getId()
 	else
-		-- Use local player ID if we don't have a controlling player
-		local localPlayer = Player:getLocalPlayer()
-		if localPlayer then --might not have a local player either
-			playerId = localPlayer:getId()
+		--_player might not be set yet(during startup), so fallback to getCurrentPlayer()
+		local currentPlayer = appletManager:callService("getCurrentPlayer")
+		if currentPlayer then
+			playerId = currentPlayer:getId()
+		else
+			-- Use local player ID if we don't have a controlling player
+			local localPlayer = Player:getLocalPlayer()
+			if localPlayer then --might not have a local player either
+				playerId = localPlayer:getId()
+			end
 		end
 	end
 	if playerId then
