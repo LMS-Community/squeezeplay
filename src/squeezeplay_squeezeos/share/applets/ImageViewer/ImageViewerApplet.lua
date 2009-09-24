@@ -149,9 +149,10 @@ function showInitWindow(self)
 
 	local label = Label("text", "")
 	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
-	local icon = Icon("icon_photo_loading")
+	local icon = Icon("") -- blank for now until we get a proper default loading image
 
-	self.imgSource:updateLoadingIcon(icon)
+	--ran out of time for 7.4
+--	self.imgSource:updateLoadingIcon(icon)
 	
 	popup:addWidget(label)
 	popup:addWidget(icon)
