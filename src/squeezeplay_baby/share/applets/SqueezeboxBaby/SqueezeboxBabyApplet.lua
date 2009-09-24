@@ -217,7 +217,19 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	playSplashSound(self)
+	local now = os.time()
+	local alarmTime = sysReadNumber(self, "alarm_time")
+
+	-- FIXME before 19 January 2038 (Y2K38)
+	if (alarmTime > 0 and (alarmTime < now)) then
+		log:info("supress splash sound, alarm wakeup")
+
+		-- clear the alarm time, otherwise the system can't be
+		-- powered down
+		self:setWakeupAlarm('none')
+	else
+		playSplashSound(self)
+	end
 end
 
 --called during the configure portion of applet initialization
@@ -869,8 +881,7 @@ function setWakeupAlarm (self, epochsecs)
 	end
 	self.wakeupAlarm = wakeup
 
-	-- FIXME: Bug 12253 blocks this from being working correctly, so do nothing until that's fixed
-	--sysWrite(self, "alarm_time", wakeup)
+	sysWrite(self, "alarm_time", wakeup)
 end
 
 
