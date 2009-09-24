@@ -260,11 +260,12 @@ local luxSmooth = {}
 
 local wasDimmed = false
 local brightCur = -1
+local lastAmbient = -1
 
 function initBrightness(self)
 	-- Static Variables
 	MAX_BRIGHTNESS_LEVEL = #brightnessTable
-	STATIC_AMBIENT_MIN = 10000
+	STATIC_AMBIENT_MIN = 90000
 	AMBIENT_RAMPSTEPS = 4
 
 	-- Init some values to a default value
@@ -366,6 +367,14 @@ function doAutomaticBrightnessTimer(self)
 	-- Now continue with the real ambient code
 	local ambient = sysReadNumber(self, "ambient")
 	
+	-- Ignore spurious 65535 values
+	if ambient == 65535 and lastAmbient < 65535 then
+		lastAmbient = ambient
+		return
+	else
+		lastAmbient = ambient
+	end
+
 	-- Use the table to smooth out ambient value spikes
 	table.insert(luxSmooth, ambient)	
 	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
