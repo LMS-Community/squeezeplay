@@ -1528,10 +1528,12 @@ local _globalActionsNEW = {
 
 	["play"] = function()
 	        Framework:playSound("PLAYBACK")
-	        if _player:getPlaylistSize() and _player:getPlaylistSize() > 0 then
+	        if _player:getPlaylistSize() and _player:getPlaylistSize() > 0 and _player:getPlayMode() ~= 'play' then
 			_player:play()
+			return EVENT_CONSUME
+		else
+			return EVENT_UNUSED
 		end
-		return EVENT_CONSUME
 	end,
 
 	["pause"] = function()
