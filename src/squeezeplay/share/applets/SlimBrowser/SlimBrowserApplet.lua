@@ -25,6 +25,7 @@ local oo                     = require("loop.simple")
 local math                   = require("math")
 local table                  = require("jive.utils.table")
 local string                 = require("string")
+local json                   = require("json")
                              
 local Applet                 = require("jive.Applet")
 local Player                 = require("jive.slim.Player")
@@ -64,7 +65,6 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
-local json                   = json 
 
 
 module(..., Framework.constants)

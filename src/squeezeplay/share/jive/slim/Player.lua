@@ -40,6 +40,7 @@ local _assert, assert, require, setmetatable, tonumber, tostring, ipairs, pairs,
 local os             = require("os")
 local math           = require("math")
 local table          = require("jive.utils.table")
+local json           = require("json")
 
 local oo             = require("loop.base")
 
@@ -76,7 +77,6 @@ local ACTION           = jive.ui.ACTION
 local jnt            = jnt
 local jiveMain       = jiveMain
 local iconbar        = iconbar
-local json           = json 
 
 
 local fmt = string.format
