@@ -293,7 +293,6 @@ function __init(self, jnt, playerId)
 
 		id = playerId,
 
-		uuid = false,
 		slimServer = false,
 		config = false,
 		lastSeen = 0,
@@ -352,6 +351,11 @@ function getInit(self)
 end
 
 
+
+function setServerRefreshInProgress(self, serverRefreshInProgress)
+	self.serverRefreshInProgress = serverRefreshInProgress
+end
+
 --[[
 
 =head2 jive.slim.Player:updatePlayerInfo(squeezeCenter, playerInfo, useSequenceNumber, isSequenceNumberInSync)
@@ -373,9 +377,17 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 	local oldInfo = self.info
 	self.info = {}
 
+	if type(playerInfo.uuid) == "string" then
+		self.info.uuid = playerInfo.uuid
+	elseif type(playerInfo.uuid) == "number" then
+		self.info.uuid = tostring(playerInfo.uuid)	
+	else
+		--handle json.null case
+		self.info.uuid = nil
+	end
+
 	-- Update player info, cast to fix perl bugs :)
 	self.config = true
-	self.info.uuid = tostring(playerInfo.uuid)
 	self.info.name = tostring(playerInfo.name)
 	self.info.model = tostring(playerInfo.model)
 	self.info.connected = tonumber(playerInfo.connected) == 1
@@ -392,7 +404,13 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 	end
 
 	-- Check have we changed SqueezeCenter
-	if self.slimServer ~= slimServer then
+        if self.serverRefreshInProgress or self.slimServer ~= slimServer then
+ 		if self.slimServer == slimServer and self.serverRefreshInProgress then
+ 		        log:info("Same server but serverRefreshInProgress in progress: ", slimServer)
+ 		end
+
+		self:setServerRefreshInProgress(false)
+
 		-- delete from old server
 		if self.slimServer then
 			self:free(self.slimServer)
@@ -1764,7 +1782,7 @@ function _udapConnect(self, server)
 		-- make sure the player is linked on SN
 		log:info("linking player ", self.id, " on SN")
 		server:request(nil, nil, {
-			'playerRegister', self.uuid, self.id, self.info.name
+			'playerRegister', self.info.uuid, self.id, self.info.name
 		})
 	else
 		local serverip = server:getIpPort()
