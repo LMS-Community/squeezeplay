@@ -217,7 +217,19 @@ function init(self)
 	-- find out when we connect to player
 	jnt:subscribe(self)
 
-	playSplashSound(self)
+	local now = os.time()
+	local alarmTime = sysReadNumber(self, "alarm_time")
+
+	-- FIXME before 19 January 2038 (Y2K38)
+	if (alarmTime > 0 and (alarmTime < now)) then
+		log:info("supress splash sound, alarm wakeup")
+
+		-- clear the alarm time, otherwise the system can't be
+		-- powered down
+		self:setWakeupAlarm('none')
+	else
+		playSplashSound(self)
+	end
 end
 
 --called during the configure portion of applet initialization
@@ -248,11 +260,12 @@ local luxSmooth = {}
 
 local wasDimmed = false
 local brightCur = -1
+local lastAmbient = -1
 
 function initBrightness(self)
 	-- Static Variables
 	MAX_BRIGHTNESS_LEVEL = #brightnessTable
-	STATIC_AMBIENT_MIN = 10000
+	STATIC_AMBIENT_MIN = 90000
 	AMBIENT_RAMPSTEPS = 4
 
 	-- Init some values to a default value
@@ -354,6 +367,14 @@ function doAutomaticBrightnessTimer(self)
 	-- Now continue with the real ambient code
 	local ambient = sysReadNumber(self, "ambient")
 	
+	-- Ignore spurious 65535 values
+	if ambient == 65535 and lastAmbient < 65535 then
+		lastAmbient = ambient
+		return
+	else
+		lastAmbient = ambient
+	end
+
 	-- Use the table to smooth out ambient value spikes
 	table.insert(luxSmooth, ambient)	
 	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
@@ -492,8 +513,12 @@ function notify_playerCurrent(self, player)
 			log:warn(err)
 			return
 		end
-		log:debug('date sync: ', chunk.data.date)
-                self:setDate(chunk.data.date)
+		log:debug('date sync: local: ', chunk.data.date, ' utc: ', chunk.data.date_utc)
+		if chunk.data.date_utc then
+                	self:setDate(chunk.data.date_utc, true)
+		else
+                	self:setDate(chunk.data.date, false)
+		end
 	end
 
 	-- setup a once/hour
@@ -517,17 +542,22 @@ function notify_playerDelete(self, player)
 end
 
 
-function setDate(self, date)
+function setDate(self, date, is_utc)
 	-- matches date format 2007-09-08T20:40:42+00:00
 	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
 
-	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
+	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ, " is_utc=", is_utc)
+
+	local utcflag = ""
+	if is_utc then
+		utcflag = " -u "
+	end
 
 	-- set system date
-	os.execute("/bin/date " .. MM..DD..hh..mm..CCYY.."."..ss)
+	os.execute("/bin/date " .. utcflag .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	-- set RTC to system time
-	os.execute("hwclock -w")
+	os.execute("hwclock -w" .. utcflag)
 
 	iconbar:update()
 end
@@ -869,8 +899,7 @@ function setWakeupAlarm (self, epochsecs)
 	end
 	self.wakeupAlarm = wakeup
 
-	-- FIXME: Bug 12253 blocks this from being working correctly, so do nothing until that's fixed
-	--sysWrite(self, "alarm_time", wakeup)
+	sysWrite(self, "alarm_time", wakeup)
 end
 
 

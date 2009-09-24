@@ -170,7 +170,11 @@ function _udapSink(self, chunk, err)
 		local playerId = string.gsub(pkt.source, "(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)(%x%x)", "%1:%2:%3:%4:%5:%6")
 
 		local player = Player(jnt, playerId)
-		player.info.uuid = pkt.uuid
+		if pkt.uuid == "00000000000000000000000000000000" then --all zeros is considered nil
+			player.info.uuid = nil
+		else
+			player.info.uuid = pkt.uuid
+		end
 	end
 end
 

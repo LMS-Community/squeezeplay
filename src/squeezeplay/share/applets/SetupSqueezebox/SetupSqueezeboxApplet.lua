@@ -1101,7 +1101,7 @@ function t_udapSink(self, chunk, err)
 		self.uuid = pkt.uuid
 
 		local player = _findMyPlayer(self)
-		player.uuid = pkt.uuid
+		player.info.uuid = pkt.uuid
 
 		_setAction(self, "t_udapGetIPAddr")
 

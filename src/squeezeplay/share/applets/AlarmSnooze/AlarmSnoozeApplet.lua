@@ -4,7 +4,6 @@ local table            = require("jive.utils.table")
 local string	       = require("jive.utils.string")
 local debug	       = require("jive.utils.debug")
 local datetime         = require("jive.utils.datetime")
-local log              = require("jive.utils.log").logger('jive.applets.SnoozeAlarm')
 
 local oo               = require("loop.simple")
 
@@ -33,6 +32,8 @@ oo.class(_M, Applet)
 function init(self, ...)
 
 	self.alarmNext = self:getSettings()['alarmNext']
+
+	self.player = Player:getLocalPlayer()
 
 	jnt:subscribe(self)
 	self.alarmTone = "applets/AlarmSnooze/alarm.mp3"
@@ -172,7 +173,17 @@ end
 
 function openAlarmWindow(self, fallback)
 
-	log:info('openAlarmWindow()')
+	-- this method is called when the alarm time is hit
+	-- when the alarm time is it, unset the wakeup mcu time
+	self:_setWakeupTime('none')
+
+	if not self.player then
+		self.player = Player:getLocalPlayer()
+		if not self.player then
+			log:warn('cannot play an alarm without a player')
+			return
+		end
+	end
 	if self.alarmWindow then
 		return
 	end

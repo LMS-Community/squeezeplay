@@ -25,6 +25,7 @@ local oo                     = require("loop.simple")
 local math                   = require("math")
 local table                  = require("jive.utils.table")
 local string                 = require("string")
+local json                   = require("json")
                              
 local Applet                 = require("jive.Applet")
 local Player                 = require("jive.slim.Player")
@@ -64,7 +65,6 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local iconbar                = iconbar
 local jnt                    = jnt
-local json                   = json 
 
 
 module(..., Framework.constants)
@@ -1528,10 +1528,12 @@ local _globalActionsNEW = {
 
 	["play"] = function()
 	        Framework:playSound("PLAYBACK")
-	        if _player:getPlaylistSize() and _player:getPlaylistSize() > 0 then
+	        if _player:getPlaylistSize() and _player:getPlaylistSize() > 0 and _player:getPlayMode() ~= 'play' then
 			_player:play()
+			return EVENT_CONSUME
+		else
+			return EVENT_UNUSED
 		end
-		return EVENT_CONSUME
 	end,
 
 	["pause"] = function()
