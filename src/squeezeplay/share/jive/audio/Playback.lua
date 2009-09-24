@@ -125,6 +125,7 @@ function playFileInLoop(self, file)
 
 	log:info("loop file ", file)
 
+	Framework.wakeup()
 	self.source = "file"
 
 	self:_streamDisconnect(nil, true)
@@ -385,6 +386,7 @@ end
 function _streamConnect(self, serverIp, serverPort)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
+	Framework.wakeup()
 	self.source = "stream"
 
 	self.stream = Stream:connect(serverIp, serverPort)
@@ -549,6 +551,7 @@ function _strm(self, data)
 
 	elseif data.command == 'u' then
 		-- unpause
+		Framework.wakeup()
 		local jiffies = data.replayGain
 
 		log:debug("resume unpause")
@@ -746,6 +749,7 @@ function setCapturePlayMode(self, capturePlayMode)
 	self.capturePlayMode = capturePlayMode
 
 	if capturePlayMode then
+		Framework.wakeup()
 		self.source = "capture"
 	else
 		self.source = nil
