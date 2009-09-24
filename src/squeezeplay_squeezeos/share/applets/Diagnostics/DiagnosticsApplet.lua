@@ -63,10 +63,10 @@ local tests = {
       "PLAYER_TYPE",
       "UPTIME",
       "MEMORY",
-      "MSP_VERSION",
 }
 
 local powerTests = {
+      "MSP_VERSION",
       "BATTERY_VOLTAGE",
       "BATTERY_VMON1",
       "BATTERY_VMON2",
@@ -413,13 +413,11 @@ function dovalues(self, menu)
 
 	self:systemStatus()
 
-	if System:getMachine() == "baby" then
-		self:setValue("MSP_VERSION", self:_getSysValue("fw"))
-	end
 end
 
 
 function doPowerValues(self, menu)
+	self:setValue("MSP_VERSION", self:_getSysValue("fw"))
 	self:setValue("BATTERY_VOLTAGE"	   , tostring(self:_getPowerSysValue("battery_voltage")      /1000.0) .. " V")
 	self:setValue("BATTERY_VMON1"  	   , tostring(self:_getPowerSysValue("battery_vmon1_voltage")/1000.0) .. " V")
 	self:setValue("BATTERY_VMON2"  	   , tostring(self:_getPowerSysValue("battery_vmon2_voltage")/1000.0) .. " V")
