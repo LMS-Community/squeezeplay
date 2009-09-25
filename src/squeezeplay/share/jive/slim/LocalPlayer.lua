@@ -50,13 +50,12 @@ function disconnectServerAndPreserveLocalPlayer(self)
 	--disconnect from player and server
 	self:setCurrentPlayer(nil)
 
-	--Free server from local player, and re-set current player to LocalPlayer
+	--Free server from local player (removed: todo clean up this method name), and re-set current player to LocalPlayer
 	local localPlayer = Player:getLocalPlayer()
 	if localPlayer then
 		if localPlayer:getSlimServer() then
 			localPlayer:stop()
 		end
-		localPlayer:free(localPlayer:getSlimServer(), true)
 		Player:setCurrentPlayer(localPlayer)
 	end
 
