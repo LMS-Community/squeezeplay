@@ -615,9 +615,9 @@ function notify_serverLinked(self, server, wasAlreadyLinked)
 	if  self.registerRequestRequireAlreadyLinked and not wasAlreadyLinked then
 		return
 	end
-	log:info("server linked: ", server, " pin=", server:getPin(), " registerRequestRequireAlreadyLinked: ", self.registerRequestRequireAlreadyLinked, " wasAlreadyLinked: ", wasAlreadyLinked)
+	log:info("server linked: ", server, " pin=", server:getPin(), " registerRequestRequireAlreadyLinked: ", self.registerRequestRequireAlreadyLinked, " wasAlreadyLinked: ", wasAlreadyLinked, " server:isSpRegisteredWithSn(): ", server:isSpRegisteredWithSn())
 
-	if server:getPin() == false then
+	if server:isSpRegisteredWithSn() then
 		step8point5(self, server)
 	end
 end
