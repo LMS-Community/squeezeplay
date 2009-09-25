@@ -75,7 +75,7 @@ function openScreensaver(self, menuItem)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(self.window, nil, nil, nil, true)
+	manager:screensaverWindow(self.window)
 
 	self.window:show(Window.transitionFadeIn)
 end
