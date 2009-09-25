@@ -403,8 +403,8 @@ function wasFirmwareUpgraded(self)
 	-- existing version
 	local current  = "/etc/squeezeos.version"
 
-	local wasRunning73 = self:_whatVersion(previous, '7.3')
-	local running74 = self:_whatVersion(current, '7.4')
+	local wasRunning73 = self:_whatVersion(previous, '^7\.[0123]')
+	local running74 = self:_whatVersion(current, '^7\.4')
 
 	if running74 and wasRunning73 then
 		log:warn('Show upgrade window message')
