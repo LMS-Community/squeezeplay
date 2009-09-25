@@ -1161,6 +1161,9 @@ function skin(self, s, reload, useDefaultSize)
                 item_checked_no_arrow = _uses(s.icon_list.menu.selected.item_checked_no_arrow, {
 			bgImg = threeItemPressedBox
 		}),
+                albumcurrent = _uses(s.icon_list.menu.selected.albumcurrent, {
+			bgImg = threeItemPressedBox
+		}),
         }
 	s.icon_list.menu.locked = {
 		item = _uses(s.icon_list.menu.pressed.item, {
@@ -1173,6 +1176,9 @@ function skin(self, s, reload, useDefaultSize)
 			arrow = s.img.smallSpinny
 		}),
 		item_add = _uses(s.icon_list.menu.pressed.item_add, {
+			arrow = s.img.smallSpinny
+		}),
+                albumcurrent = _uses(s.icon_list.menu.pressed.albumcurrent, {
 			arrow = s.img.smallSpinny
 		}),
 	}
@@ -1510,15 +1516,15 @@ function skin(self, s, reload, useDefaultSize)
 			w = WH_FILL,
 			h = screenHeight - 27,
 			padding = { 14, 18, 14, 18 },
-			border = { 0, 0, 10, 0 },
-			lineHeight = 21,
+			border = { 0, 0, 6, 15 },
+			lineHeight = 22,
 			font = _font(18),
 			fg = { 0xe6, 0xe6, 0xe6 },
 			sh = { },
-			align = "left",
+			align = "top-left",
 			scrollbar = {
-				h = c.MULTILINE_LINE_ITEM_HEIGHT * 2 - 8,
-				border = {0,10,6,10},
+				h = screenHeight - 47,
+				border = {0, 10, 2, 10},
 			},
 		},
 

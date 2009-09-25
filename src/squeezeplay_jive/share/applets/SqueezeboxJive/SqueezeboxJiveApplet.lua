@@ -98,7 +98,7 @@ function init(self)
 		function()
 			local systemTime = os.date()
 			log:info('syncing system clock to hw clock: ', systemTime)
-			os.execute("hwclock -s")
+			os.execute("hwclock -s -u")
 			systemTime = os.date()
 			log:info('system clock now synced to hw clock: ', systemTime)
 		end)
@@ -261,9 +261,7 @@ function notify_playerCurrent(self, player)
 			     end
 			     log:debug('date sync: local: ', chunk.data.date, ' utc: ', chunk.data.date_utc)
 			     if chunk.data.date_utc then
-                		     self:setDate(chunk.data.date_utc, true)
-			     else
-                		     self:setDate(chunk.data.date, false)
+                		     self:setDate(chunk.data.date_utc)
 			     end
  		     end
 
@@ -289,22 +287,17 @@ function notify_playerDelete(self, player)
 
 end
 
-function setDate(self, date, is_utc)
-	-- matches date format 2007-09-08T20:40:42+00:00
+function setDate(self, date)
+	-- matches date format 2007-09-08T20:40:42+00:00, expects UTC
 	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
 
-	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ, " is_utc=", is_utc)
-
-	local utcflag = ""
-	if is_utc then
-		utcflag = " -u "
-	end
+	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
 
 	-- set system date
-	os.execute("/bin/date " .. utcflag .. MM..DD..hh..mm..CCYY.."."..ss)
+	os.execute("/bin/date -u " .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	-- set RTC to system time
-	os.execute("hwclock -w" .. utcflag)
+	os.execute("hwclock -w -u")
 
 	iconbar:update()
 end
@@ -606,7 +599,7 @@ function wakeup(self, action)
 	else
 		-- the system clock drifts in sleep mode, reset it
 		if self.powerState == "sleep" or self.powerState == "suspend" then
-			os.execute("hwclock -s")
+			os.execute("hwclock -s -u")
 		end
 
 		self:setPowerState("active")

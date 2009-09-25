@@ -83,6 +83,8 @@ function registerApplet(meta)
 
 	-- audio playback defaults
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
+	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
+	appletManager:addDefaultSetting("ScreenSavers", "whenOff", "Clock:openDetailedClockBlack")
 
 	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 

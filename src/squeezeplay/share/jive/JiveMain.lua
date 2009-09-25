@@ -252,6 +252,7 @@ function JiveMain:togglePower()
 end
 
 local function _powerAction()
+	Framework:playSound("SELECT")
 	JiveMain:togglePower()
 	return EVENT_CONSUME
 end
