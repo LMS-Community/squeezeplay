@@ -266,9 +266,7 @@ function notify_playerCurrent(self, player)
 		end
 		log:debug('date sync: local: ', chunk.data.date, ' utc: ', chunk.data.date_utc)
 		if chunk.data.date_utc then
-                	self:setDate(chunk.data.date_utc, true)
-		else
-                	self:setDate(chunk.data.date, false)
+                	self:setDate(chunk.data.date_utc)
 		end
  	end
  
@@ -293,19 +291,14 @@ function notify_playerDelete(self, player)
 end
 
 
-function setDate(self, date, is_utc)
-	-- matches date format 2007-09-08T20:40:42+00:00
+function setDate(self, date)
+	-- matches date format 2007-09-08T20:40:42+00:00, expects UTC time
 	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
 
-	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ, " is_utc=", is_utc)
-
-	local utcflag = ""
-	if is_utc then
-		utcflag = " -u "
-	end
+	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
 
 	-- set system date
-	os.execute("/bin/date " .. utcflag .. MM..DD..hh..mm..CCYY.."."..ss)
+	os.execute("/bin/date -u " .. MM..DD..hh..mm..CCYY.."."..ss)
 
 	iconbar:update()
 end
