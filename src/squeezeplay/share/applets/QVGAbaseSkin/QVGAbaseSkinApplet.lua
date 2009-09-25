@@ -1161,6 +1161,9 @@ function skin(self, s, reload, useDefaultSize)
                 item_checked_no_arrow = _uses(s.icon_list.menu.selected.item_checked_no_arrow, {
 			bgImg = threeItemPressedBox
 		}),
+                albumcurrent = _uses(s.icon_list.menu.selected.albumcurrent, {
+			bgImg = threeItemPressedBox
+		}),
         }
 	s.icon_list.menu.locked = {
 		item = _uses(s.icon_list.menu.pressed.item, {
@@ -1173,6 +1176,9 @@ function skin(self, s, reload, useDefaultSize)
 			arrow = s.img.smallSpinny
 		}),
 		item_add = _uses(s.icon_list.menu.pressed.item_add, {
+			arrow = s.img.smallSpinny
+		}),
+                albumcurrent = _uses(s.icon_list.menu.pressed.albumcurrent, {
 			arrow = s.img.smallSpinny
 		}),
 	}
