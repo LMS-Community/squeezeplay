@@ -27,7 +27,7 @@ end
 function defaultSettings(meta)
 	return {
 		brightness = 61,		-- max
-		brightnessControl = "manual", -- Automatic Brightness
+		brightnessControl = "automatic", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
 		idleTimeout = 30000,		-- 30 seconds
 		sleepTimeout = 10 * 60000,	-- 10 minutes
