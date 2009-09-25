@@ -98,7 +98,7 @@ function init(self)
 		function()
 			local systemTime = os.date()
 			log:info('syncing system clock to hw clock: ', systemTime)
-			os.execute("hwclock -s")
+			os.execute("hwclock -s -u")
 			systemTime = os.date()
 			log:info('system clock now synced to hw clock: ', systemTime)
 		end)
@@ -599,7 +599,7 @@ function wakeup(self, action)
 	else
 		-- the system clock drifts in sleep mode, reset it
 		if self.powerState == "sleep" or self.powerState == "suspend" then
-			os.execute("hwclock -s")
+			os.execute("hwclock -s -u")
 		end
 
 		self:setPowerState("active")
