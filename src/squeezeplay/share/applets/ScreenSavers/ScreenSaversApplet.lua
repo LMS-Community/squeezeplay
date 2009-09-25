@@ -142,6 +142,15 @@ function init(self, ...)
 					appletManager:callService("goHome")
 					return EVENT_CONSUME
 				end
+
+				if event:getAction() == "power" or event:getAction() == "power_on" then
+					Framework:playSound("SELECT")
+					--first power press deactivates	SS (power on already handled in deactivateSS())
+					-- this make consistent behavior for any type of SS that is up, power button will always deactivate SS
+					-- so user doesn't have to worry if "when off" SS is up or "when stopped" SS is up
+					-- and since when playing NP SS isn't really a SS, pwer off will work when NP "SS" engages.
+					return EVENT_CONSUME
+				end
 			end
 			return EVENT_UNUSED
 		end,
@@ -450,7 +459,7 @@ If I<ssAllowedActions> is nil, no actions will be passed on. If an empty table i
 
 =cut
 --]]
-function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed, lockMostInputWhenOff)
+function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
 
 	window:setIsScreensaver(true)
 
@@ -479,7 +488,7 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 				   return EVENT_UNUSED
 			   end)
 
-	if not self:isSoftPowerOn() and lockMostInputWhenOff then
+	if not self:isSoftPowerOn() then
 		--allow input to pass through, so that the following listeners will be honored
 	        self:_setSSAllowedActions(true, {}, true)
 
@@ -529,14 +538,13 @@ function deactivateScreensaver(self)
 
 	self.active = {}
 
-	if not self:isSoftPowerOn() then
-		jiveMain:setSoftPowerState("on")
-	end
-
 	for i, window in ipairs(oldActive) do
 		_deactivate(self, window, self.demoScreensaver)
 	end
 
+	if not self:isSoftPowerOn() then
+		jiveMain:setSoftPowerState("on")
+	end
 end
 
 
