@@ -1759,7 +1759,7 @@ function _udapConnect(self, server)
 			data.server_address = Udap.packNumber(1, 4)
 
 			-- XXXX testing only REMOVE ME!
-			data.server_address = Udap.packNumber(parseip("67.155.107.20"), 4)
+			--data.server_address = Udap.packNumber(parseip("67.155.107.20"), 4)
 
 		else
 			-- for locally edited values (SN developers)
