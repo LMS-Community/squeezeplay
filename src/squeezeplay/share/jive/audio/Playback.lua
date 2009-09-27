@@ -118,6 +118,28 @@ function stop(self)
 end
 
 
+function _setSource(self, source)
+	if self.source == source then
+		return
+	end
+
+	log:debug("source=", source)
+
+	-- switched from capture
+	if self.source == "capture" then
+		decode:capture(false)
+	end
+
+	self.source = source
+
+	-- switched to capture
+	if self.source == "capture" then
+		decode:stop()
+		decode:capture(true)
+	end
+end
+
+
 -- Load a file and play it in a loop. This is for playing test tones.
 -- Currently only works with mp3 files.
 function playFileInLoop(self, file)
@@ -126,7 +148,7 @@ function playFileInLoop(self, file)
 	log:info("loop file ", file)
 
 	Framework.wakeup()
-	self.source = "file"
+	_setSource(self, "file")
 
 	self:_streamDisconnect(nil, true)
 
@@ -387,7 +409,7 @@ function _streamConnect(self, serverIp, serverPort)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
 	Framework.wakeup()
-	self.source = "stream"
+	_setSource(self, "stream")
 
 	self.stream = Stream:connect(serverIp, serverPort)
 
@@ -748,21 +770,20 @@ end
 function setCapturePlayMode(self, capturePlayMode)
 	self.capturePlayMode = capturePlayMode
 
-	if capturePlayMode then
-		Framework.wakeup()
-		self.source = "capture"
-
-		decode:capture(true)
-	else
-		self.source = nil
-
-		decode:capture(false)
+	if capturePlayMode == nil then
+		-- turn off capture mode
+		return
 	end
+
+	Framework.wakeup()
+
+	_setSource(self, "capture")
 
 	if capturePlayMode == "play" then
 		self:setCaptureVolume(self:getCaptureVolume())
 	else
-		--mute capture  -todo: seems cpu intensive, can we actually just stop capture but not switch back to local player
+		-- mute capture
+		-- todo: seems cpu intensive, can we actually just stop capture but not switch back to local player
 		decode:captureGain(0, 0)
 	end
 end
