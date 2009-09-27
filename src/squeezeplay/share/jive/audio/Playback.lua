@@ -751,8 +751,12 @@ function setCapturePlayMode(self, capturePlayMode)
 	if capturePlayMode then
 		Framework.wakeup()
 		self.source = "capture"
+
+		decode:capture(true)
 	else
 		self.source = nil
+
+		decode:capture(false)
 	end
 
 	if capturePlayMode == "play" then
