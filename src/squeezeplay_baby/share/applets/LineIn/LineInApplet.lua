@@ -108,8 +108,10 @@ end
 function _activateLineIn(self, initialPlayMode)
 	log:info("_activateLineIn")
 
-	Player:getLocalPlayer():pause(true)
-	Player:getLocalPlayer():setCapturePlayMode(initialPlayMode or "play")
+	local player = Player:getLocalPlayer()
+
+	player:stop(true)
+	player:setCapturePlayMode(initialPlayMode or "play")
 
 	self:_addListeners()
 	self:createLineInNowPlaying()
@@ -122,7 +124,11 @@ end
 
 function _deactivateLineIn(self)
 	log:info("_deactivateLineIn")
-	Player:getLocalPlayer():setCapturePlayMode(nil)
+
+	local player = Player:getLocalPlayer()
+
+	player:setCapturePlayMode(nil)
+
 	self:_removeListeners()
 
 	if self.npWindow then
