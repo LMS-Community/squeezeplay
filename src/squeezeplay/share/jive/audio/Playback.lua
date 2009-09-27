@@ -773,6 +773,7 @@ function setCapturePlayMode(self, capturePlayMode)
 
 	if capturePlayMode == nil then
 		-- turn off capture mode
+		_setSource(self, "stream")
 		return
 	end
 
