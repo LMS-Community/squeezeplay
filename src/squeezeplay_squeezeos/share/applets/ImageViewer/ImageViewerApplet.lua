@@ -46,6 +46,7 @@ local Timer			= require("jive.ui.Timer")
 local Process		= require("jive.net.Process")
 local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 local Textarea               = require("jive.ui.Textarea")
+local System           = require("jive.System")
 
 local debug			= require("jive.utils.debug")
 
