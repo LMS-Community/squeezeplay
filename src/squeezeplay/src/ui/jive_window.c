@@ -338,6 +338,11 @@ int jiveL_window_event_handler(lua_State *L) {
 	case JIVE_EVENT_KEY_UP:
 	case JIVE_EVENT_KEY_PRESS:
 	case JIVE_EVENT_KEY_HOLD:
+	case JIVE_EVENT_IR_PRESS:
+	case JIVE_EVENT_IR_HOLD:
+	case JIVE_EVENT_IR_UP:
+	case JIVE_EVENT_IR_DOWN:
+	case JIVE_EVENT_IR_REPEAT:
 	case JIVE_ACTION:
 
 		/*
