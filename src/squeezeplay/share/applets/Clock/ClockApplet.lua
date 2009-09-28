@@ -23,6 +23,7 @@ local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Tile             = require("jive.ui.Tile")
 local Window           = require("jive.ui.Window")
+local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 
 local Player           = require("jive.slim.Player")
                        
@@ -57,8 +58,18 @@ local function _imgpath(self)
 	return "applets/" .. self.skinName .. "/images/"
 end
 
-local function _loadImage(self, file)
-	return Surface:loadImage(self.imgpath .. file)
+-- reuse images instead of loading them twice
+-- FIXME can be removed after Bug 10001 is fixed
+function _loadImage(self, file)
+	if not self.images then
+		self.images = {}
+	end
+	local now = Framework:getTicks()
+	if not self.images[file] then
+		self.images[file] = Surface:loadImage(self.imgpath .. file)
+	end
+
+	return self.images[file]
 end
 
 -- define a local function that makes it easier to set fonts
@@ -148,9 +159,11 @@ function DotMatrix:__init(ampm, shortDateFormat)
 	log:debug("Init Dot Matrix Clock")
 
 	local skinName   = jiveMain:getSelectedSkin()
-	local skin       = DotMatrix:getDotMatrixClockSkin(skinName)
-
-	obj = oo.rawnew(self, Clock(skin))
+	if not self.skin and skinName ~= self.oldSkinName then
+		self.oldSkinName = skinName
+		self.skin = DotMatrix:getDotMatrixClockSkin(skinName)
+	end
+	obj = oo.rawnew(self, Clock(self.skin))
 
 	obj.ampm = ampm
 
@@ -332,9 +345,11 @@ function Analog:__init(applet)
 	log:info("Init Analog Clock")
 
 	local skinName   = jiveMain:getSelectedSkin()
-	local skin       = Analog:getAnalogClockSkin(skinName)
-
-	obj = oo.rawnew(self, Clock(skin))
+	if not self.skin and skinName ~= self.oldSkinName then
+		self.oldSkinName = skinName
+		self.skin = Analog:getAnalogClockSkin(skinName)
+	end
+	obj = oo.rawnew(self, Clock(self.skin))
 
 	obj.skinParams = Analog:getSkinParams(skinName)
 	obj.pointer_hour = Surface:loadImage(obj.skinParams.hourHand)
@@ -402,9 +417,13 @@ function Digital:__init(applet, ampm)
 	local windowStyle = applet.windowStyle or 'Clock'
 
 	local skinName   = jiveMain:getSelectedSkin()
-	local skin       = Digital:getDigitalClockSkin(skinName)
 
-	obj = oo.rawnew(self, Clock(skin, windowStyle))
+	if not self.skin and skinName ~= self.oldSkinName then
+		self.oldSkinName = skinName
+		self.skin = Digital:getDigitalClockSkin(skinName)
+	end
+
+	obj = oo.rawnew(self, Clock(self.skin, windowStyle))
 
 	-- store the applet's self so we can call self.applet:string() for localizations
 	obj.applet = applet
@@ -610,9 +629,11 @@ function Radial:__init(applet, weekstart)
 	log:info("Init Radial Clock")
 
 	local skinName   = jiveMain:getSelectedSkin()
-	local skin       = Radial:getRadialClockSkin(skinName)
-
-	obj = oo.rawnew(self, Clock(skin))
+	if not self.skin and skinName ~= self.oldSkinName then
+		self.oldSkinName = skinName
+		self.skin = Radial:getRadialClockSkin(skinName)
+	end
+	obj = oo.rawnew(self, Clock(self.skin))
 
 	obj.skinParams = Radial:getSkinParams(skinName)
 
@@ -788,7 +809,7 @@ end
 
 
 function _tick(self)
-	local theTime = os.date(self.clock[1].clock_format)
+	local theTime = os.date(self.clock.clock_format)
 	if theTime == self.oldTime then
 		-- nothing to do yet
 		return
@@ -796,10 +817,17 @@ function _tick(self)
 
 	self.oldTime = theTime
 
-	self.clock[self.buffer]:Draw()
-	self.clock[self.buffer].window:showInstead(Window.transitionFadeIn)
+	if not self.snapshot then
+		self.snapshot = SnapshotWindow()
+		local manager = appletManager:getAppletInstance("ScreenSavers")
+		manager:screensaverWindow(self.snapshot)
+	else
+		self.snapshot:refresh()
+	end
+	self.snapshot:replace(self.clock.window)
+	self.clock:Draw()
+	self.clock.window:replace(self.snapshot, Window.transitionFadeIn)
 
-	self.buffer = (self.buffer == 1) and 2 or 1
 end
 
 
@@ -820,32 +848,25 @@ function _openScreensaver(self, type, windowStyle, force)
 	hours = (hours == "12")
 
 	-- Create two clock instances, so that we can do use a fade in transition
-	self.clock = {}
-	self.buffer = 2 -- buffer to display
 
 	if type == "DotMatrix" then
-		self.clock[1] = DotMatrix(hours, shortDateFormat)
-		self.clock[2] = DotMatrix(hours, shortDateFormat)
+		self.clock = DotMatrix(hours, shortDateFormat)
 	elseif type == "Digital" then
 		self.windowStyle = windowStyle
-		self.clock[1] = Digital(self, hours)
-		self.clock[2] = Digital(self, hours)
+		self.clock = Digital(self, hours)
 	elseif type == "Radial" then
-		self.clock[1] = Radial(self, weekstart)
-		self.clock[2] = Radial(self, weekstart)
+		self.clock = Radial(self, weekstart)
 	elseif type == "Analog" then
-		self.clock[1] = Analog(self)
-		self.clock[2] = Analog(self)
+		self.clock = Analog(self)
 	else
 		log:error("Unknown clock type")
 		return
 	end
 
-	self.clock[1].window:addTimer(1000, function() self:_tick() end)
-	self.clock[2].window:addTimer(1000, function() self:_tick() end)
+	self.clock.window:addTimer(1000, function() self:_tick() end)
 
-	self.clock[1]:Draw()
-	self.clock[1].window:show(Window.transitionFadeIn)
+	self.clock:Draw()
+	self.clock.window:show(Window.transitionFadeIn)
 
 	return true
 end
