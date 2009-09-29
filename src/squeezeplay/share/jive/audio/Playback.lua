@@ -549,10 +549,8 @@ function _strm(self, data)
 	elseif data.command == 'q' then
 		-- quit
 		-- XXXX check against ip3k
-		if not self:getCapturePlayMode() then -- avoid stopping line-in on server restarts, which send a stop.
-			self:_stopPauseAndStopTimers()
-			self:_stopInternal()
-		end
+		self:_stopPauseAndStopTimers()
+		self:_stopInternal()
 
 	elseif data.command == 'f' then
 		-- flush
@@ -594,7 +592,10 @@ end
 
 
 function _stopInternal(self)
-	decode:stop()
+	if self.source ~= "capture" then
+		-- don't call stop when using capture mode
+		decode:stop()
+	end
 	self:_streamDisconnect(nil, true)
 
 	self.tracksStarted = 0
