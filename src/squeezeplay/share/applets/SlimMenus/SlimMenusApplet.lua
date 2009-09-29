@@ -944,7 +944,8 @@ end
 
 function myMusicSelector(self)
 	--first check for "new device, no SC situation"
-	if not appletManager:callService("getInitialSlimServer") and not self:_anyKnownSqueezeCenters() then
+	local initialServer = appletManager:callService("getInitialSlimServer")
+	if (not initialServer or initialServer:isSqueezeNetwork()) and not self:_anyKnownSqueezeCenters() then
 		self:_showInstallServerWindow()
 		return
 	end
