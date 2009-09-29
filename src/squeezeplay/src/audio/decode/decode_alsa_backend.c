@@ -1046,7 +1046,15 @@ int main(int argv, char **argc)
 		LOG_ERROR("Can't attach to shared memory");
 		exit(-1);
 	}
-	decode_lock_memory();
+
+	/* do this on RT Linux only, as it seems to interfere with suspend/resume on jive */
+	if ((err = uname(&utsname)) < 0) {
+		LOG_ERROR("uname failed: %s", snd_strerror(err));
+		exit(-1);
+	}
+	if (strstr(utsname.version, "PREEMPT") != NULL) {
+		decode_lock_memory();
+	}
 
 	/* who is our parent */
 	state.parent_pid = getppid();
@@ -1063,14 +1071,7 @@ int main(int argv, char **argc)
 	}
 
 	/* set real-time properties */
-	/* do this on RT Linux only, as it seems to interfere with suspend/resume on jive */
-	if ((err = uname(&utsname)) < 0) {
-		LOG_ERROR("uname failed: %s", snd_strerror(err));
-		exit(-1);
-	}
-	if (strstr(utsname.version, "PREEMPT") != NULL) {
-		decode_realtime_process(&state);
-	}
+	decode_realtime_process(&state);
 
 	/* wake parent */
 	decode_audio_lock();
