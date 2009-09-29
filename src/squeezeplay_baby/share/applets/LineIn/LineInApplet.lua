@@ -37,7 +37,6 @@ local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
 local Player           = require("jive.slim.Player")
-local Decode           = require("squeezeplay.decode")
 local Checkbox         = require("jive.ui.Checkbox")
 
 local localPlayer      = require("jive.slim.LocalPlayer")
@@ -109,9 +108,10 @@ end
 function _activateLineIn(self, initialPlayMode)
 	log:info("_activateLineIn")
 
-	Player:getLocalPlayer():pause(true)
-	Player:getLocalPlayer():setCapturePlayMode(initialPlayMode or "play")
-	Decode:capture(true)
+	local player = Player:getLocalPlayer()
+
+	player:stop(true)
+	player:setCapturePlayMode(initialPlayMode or "play")
 
 	self:_addListeners()
 	self:createLineInNowPlaying()
@@ -124,8 +124,11 @@ end
 
 function _deactivateLineIn(self)
 	log:info("_deactivateLineIn")
-	Player:getLocalPlayer():setCapturePlayMode(nil)
-	Decode:capture(false)
+
+	local player = Player:getLocalPlayer()
+
+	player:setCapturePlayMode(nil)
+
 	self:_removeListeners()
 
 	if self.npWindow then

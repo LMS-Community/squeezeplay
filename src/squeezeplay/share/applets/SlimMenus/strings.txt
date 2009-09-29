@@ -212,3 +212,18 @@ INSTALL_SC_TEXT_BABY
 	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение Squeezebox Server с сайта www.mysqueezebox.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 	SV	Om du vill aktivera Min musik laddar du ned Squeezebox Server-programvaran från www.mysqueezebox.com och se till att den är installerad och körs på en dator i nätverket.
 
+INSTALL_SC_TEXT_JIVE
+	CS	Pro aktivaci "Moje hudba" si stáhněte software Squeezebox Server z adresy www.mysqueezebox.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.
+	DA	Hent Squeezebox Server-softwaren på www.mysqueezebox.com, og sørg for at den er installeret og kører på en computer som er på netværket.
+	DE	Laden Sie sich unter www.mysqueezebox.com die Squeezebox Server-Software herunter, um 'Eigene Musik' zu aktivieren. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.
+	EN	To enable "My Music", download the Squeezebox Server software from www.mysqueezebox.com and make sure it is installed and running on a computer on the network.
+	ES	Para activar "Mi música", descargue el software de Squeezebox Server desde www.mysqueezebox.com e instálelo y ejecútelo en un ordenador de la red.
+	FI	Ota Oma musiikki käyttöön lataamalla Squeezebox Server -ohjelmisto osoitteesta www.mysqueezebox.com. Tarkista, että se on asennettu ja että sitä suoritetaan verkossa olevalla tietokoneella.
+	FR	Pour activer «Ma musique», téléchargez le logiciel du Squeezebox Server à partir du site www.mysqueezebox.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.
+	IT	Per attivare Musica, scaricare il software di Squeezebox Server da www.mysqueezebox.com e accertarsi che sia installato e in esecuzione su un computer della rete.
+	NL	Download de Squeezebox Server-software van www.mysqueezebox.com en zorg ervoor dat deze op een computer in het netwerk geïnstalleerd en actief is om Mijn muziek te activeren.
+	NO	Hvis du vil aktivere Min musikk, laster du ned Squeezebox Server-programvaren fra www.mysqueezebox.com. Installer den på en datamaskin på nettverket, og sørg for at den er i gang.
+	PL	Aby włączyć opcję „Moja muzyka”, pobierz oprogramowanie Squeezebox Server z witryny www.mysqueezebox.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.
+	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение Squeezebox Server с сайта www.mysqueezebox.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
+	SV	Om du vill aktivera Min musik laddar du ned Squeezebox Server-programvaran från www.mysqueezebox.com och se till att den är installerad och körs på en dator i nätverket.
+

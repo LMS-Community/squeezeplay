@@ -46,6 +46,7 @@ local Timer			= require("jive.ui.Timer")
 local Process		= require("jive.net.Process")
 local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 local Textarea               = require("jive.ui.Textarea")
+local System           = require("jive.System")
 
 local debug			= require("jive.utils.debug")
 
@@ -405,7 +406,7 @@ function displaySlide(self)
 	local deviceCanRotate = false
 	
 	-- FIXME: better detection for device type
-	if ((screenWidth == 240) and (screenHeight == 320)) then
+	if System:getMachine() == "jive" then
 		-- Jive device
 		deviceCanRotate = true
 	end
