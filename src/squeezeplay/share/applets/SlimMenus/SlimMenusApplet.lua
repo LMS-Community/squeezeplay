@@ -435,6 +435,13 @@ local function _menuSink(self, isCurrentServer, server)
 				itemIcon = v['icon-id'] or v['icon']
 			end
 
+			if not v.window then
+				v.window = {}
+			end
+			if not v.window.windowId then
+				v.window.windowId = v.id
+			end
+
 			if itemIcon then
 				-- Fetch artwork if we're connected, or it's remote
 				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed

@@ -419,7 +419,7 @@ end
 -- window definition
 local function _newWindowSpec(db, item, isContextMenu)
 	log:debug("_newWindowSpec()")
-	
+
 	local bWindow
 	local iWindow = _safeDeref(item, 'window')
 
@@ -1384,8 +1384,13 @@ local _globalActions = {
 
 function _goMenuTableItem(key)
 	if jiveMain:getMenuTable()[key] then
-		Framework:playSound("JUMP")
-		jiveMain:getMenuTable()[key].callback()
+		if Window:getTopNonTransientWindow():getWindowId() == key then
+			Framework:playSound("BUMP")
+			Window:getTopNonTransientWindow():bumpLeft()
+		else
+			Framework:playSound("JUMP")
+			jiveMain:getMenuTable()[key].callback()
+		end
 	end
 end
 
