@@ -1665,7 +1665,7 @@ function mute(self, mute, sequenceNumber)
 	if mute and vol >= 0 then
 		-- mute
 		if sequenceNumber then
-			self:send({'mixer', 'muting', "1", "seq_no:" ..  sequenceNumber})
+			self:send({'mixer', 'muting', "toggle", "seq_no:" ..  sequenceNumber})
 		else
 			self:send({'mixer', 'muting'})
 		end
@@ -1674,7 +1674,7 @@ function mute(self, mute, sequenceNumber)
 	elseif vol < 0 then
 		-- unmute
 		if sequenceNumber then
-			self:send({'mixer', 'muting', "0", "seq_no:" ..  sequenceNumber})
+			self:send({'mixer', 'muting', "toggle", "seq_no:" ..  sequenceNumber})
 		else
 			self:send({'mixer', 'muting'})
 		end
