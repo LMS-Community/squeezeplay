@@ -1261,11 +1261,12 @@ function _process_status(self, event)
 		self.jnt:notify('playerPlaylistChange', self)
 	end
 
+	--Ignore fractional component of volume
+	self.state["mixer volume"] = self.state["mixer volume"] and math.floor(tonumber(self.state["mixer volume"])) or nil
+
 	--might use server volume
 	if useSequenceNumber then
 		if isSequenceNumberInSync then
-			--Ignore fractional component of volume
-			self.state["mixer volume"] = self.state["mixer volume"] and math.floor(tonumber(self.state["mixer volume"])) or nil
 			local serverVolume = self.state["mixer volume"]
 			if serverVolume ~= self:getVolume() then
 				--update local volume so that it is persisted locally (actual volume will have already been changed by audg sub)
