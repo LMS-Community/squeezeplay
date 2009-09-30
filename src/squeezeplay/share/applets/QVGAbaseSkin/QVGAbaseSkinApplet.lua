@@ -1,4 +1,3 @@
-
 --[[
 =head1 NAME
 
@@ -2157,7 +2156,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 	s.button_playmode_STOP = _uses(s._button_playmode, {
-		img = _loadImage(self, "MISSING_PLAYMODE_STOP_ICON"),
+		img = _loadImage(self, "Icons/icon_mode_stop.png"),
 	})
 	s.button_playmode_PLAY = _uses(s._button_playmode, {
 		img = _loadImage(self, "Icons/icon_mode_play.png"),
@@ -2186,11 +2185,13 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_playlist_mode_DISABLED = _uses(s._button_repeat, {
 		img = false,
 	})
+
+	-- XXX: these two can probably be removed after party mode is fully dead and buried
 	s.button_playlist_mode_ON = _uses(s._button_repeat, {
-		img = _loadImage(self, "MISSING_PLAYLIST_MODE_ICON"),
+		img = false,
 	})
 	s.button_playlist_mode_PARTY = _uses(s._button_repeat, {
-		img = _loadImage(self, "MISSING_PARTY_MODE_ICON"),
+		img = false,
 	})
 
 	s._button_shuffle = _uses(s._iconbar_icon)
