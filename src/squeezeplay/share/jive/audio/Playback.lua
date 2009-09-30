@@ -598,12 +598,12 @@ function _stopInternal(self)
 	if self.source ~= "capture" then
 		-- don't call stop when using capture mode
 		decode:stop()
+
+		_setSource(self, "off")
 	end
 	self:_streamDisconnect(nil, true)
 
 	self.tracksStarted = 0
-
-	_setSource(self, "off")
 end
 
 
