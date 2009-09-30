@@ -115,6 +115,8 @@ end
 function stop(self)
 	decode:stop()
 	self.timer:stop()
+
+	_setSource(self, "off")
 end
 
 
@@ -124,6 +126,8 @@ function _setSource(self, source)
 	end
 
 	log:debug("source=", source)
+
+	Framework.wakeup()
 
 	-- switched from capture
 	if self.source == "capture" then
@@ -408,7 +412,6 @@ end
 function _streamConnect(self, serverIp, serverPort)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
-	Framework.wakeup()
 	_setSource(self, "stream")
 
 	self.stream = Stream:connect(serverIp, serverPort)
@@ -599,6 +602,8 @@ function _stopInternal(self)
 	self:_streamDisconnect(nil, true)
 
 	self.tracksStarted = 0
+
+	_setSource(self, "off")
 end
 
 
@@ -773,11 +778,9 @@ function setCapturePlayMode(self, capturePlayMode)
 
 	if capturePlayMode == nil then
 		-- turn off capture mode
-		_setSource(self, "stream")
+		_setSource(self, "off")
 		return
 	end
-
-	Framework.wakeup()
 
 	_setSource(self, "capture")
 
