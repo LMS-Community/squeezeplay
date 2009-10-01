@@ -385,19 +385,32 @@ void jive_surface_flip(JiveSurface *srf) {
 
 	switch (real_sdl->format->BytesPerPixel) {
 	case 2: {
-		Uint16 *srcp, *dstp;
+		Uint32 *src1, *src2, *dstp;
+		unsigned int x, y, wdp;
+		unsigned int w = srf->sdl->w;
+		unsigned int h = srf->sdl->h;
+		int sp = srf->sdl->pitch / 4;
+		int dp = srf->sdl->pitch / 4;
 
-		for (y=0; y<srf->sdl->h; y++) {
-			srcp = ((Uint16 *)srf->sdl->pixels) + (y * srf->sdl->pitch/2);
-			dstp = ((Uint16 *)real_sdl->pixels) + y + ((real_sdl->h - 1) * real_sdl->pitch/2);
+		wdp = (w - 1) * dp;
 
-			for (x=0; x<srf->sdl->w; x++) {
-				*dstp = *srcp;
-				srcp++;
-				dstp -= real_sdl->pitch/2;
+		for (y=0; y<h; y+=2) {
+			src1 = ((Uint32 *)srf->sdl->pixels) + (y * sp);
+			src2 = src1 + sp;
+
+			dstp = ((Uint32 *)real_sdl->pixels) + (y/2) + wdp;
+
+			for (x=w; x!=0; x-=2) {
+				Uint32 a = *(src1++);
+				Uint32 b = *(src2++);
+
+				*dstp = (a & 0xFFFF) | ((b & 0xFFFF) << 16);
+				dstp -= dp;
+
+				*dstp = (a & 0xFFFF0000) >> 16 | (b & 0xFFFF0000);
+				dstp -= dp;
 			}
 		}
-		break;
 	}
 
 	case 4: {
