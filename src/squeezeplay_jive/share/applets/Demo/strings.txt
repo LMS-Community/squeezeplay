@@ -213,21 +213,6 @@ SLIDE_06
 	SV	Tryck på en knapp och musiken strömmar från en outsinlig källa.
 
 SLIDE_07
-	CS	Prohlédněte si obal alba a dokonce i vlastní fotky na 2.4 palcovém barevném displeji
-	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
-	DE	CD-Cover und eigene Fotos auf dem 6-cm-Farbdisplay anzeigen
-	EN	View album art and even your own photos on the 2.4-inch color display
-	ES	Vea carátulas de álbumes y hasta sus propias fotos en la pantalla en color de 6 cm.
-	FI	Nauti kansitaiteesta ja jopa omista valokuvistasi 2,4 tuuman värinäytöllä
-	FR	Visualisez les pochettes d'album et même vos propres photos sur l'écran couleur 2,4 pouces
-	IT	Display a colori da 2,4 pollici per la visualizzazione di copertine di album e foto
-	NL	Bekijk hoesafbeeldingen en zelfs je eigen foto's op de 2,4-inch kleurendisplay.
-	NO	Se albumgrafikk og egne bilder på fargeskjermen på 2,4 tommer
-	PL	Wyświetla okładki albumów, a nawet własne zdjęcia na kolorowym wyświetlaczu o przekątnej 2,4 cala
-	RU	Цветной экран диагональю 2,4 дюйма позволяет просматривать обложки альбомов и даже фотографии.
-	SV	Titta på skivomslag på 2,4-tumsskärmen. Du kan också titta på dina egna bilder.
-
-SLIDE_08
 	CS	Neuvěřitelná kvalita zvuku. Plná, cele digitální hudba ve vaší stereosoustavě.
 	DA	Fantastisk lydkvalitet. Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
 	DE	Unglaubliche Klangqualität. Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
@@ -241,6 +226,21 @@ SLIDE_08
 	PL	Niesamowita jakość dźwięku. Wspaniale brzmiąca, w pełni cyfrowa muzyka odtwarzana przez system stereo.
 	RU	Невероятное качество звука. Богатый, насыщенный цифровой звук на вашей стереосистеме.
 	SV	Häpnadsväckande ljudkvalitet. Du får fylligt och rikt ljud via din stereoanläggning.
+
+SLIDE_08
+	CS	Prohlédněte si obal alba a dokonce i vlastní fotky na 2.4 palcovém barevném displeji
+	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
+	DE	CD-Cover und eigene Fotos auf dem 6-cm-Farbdisplay anzeigen
+	EN	View album art and even your own photos on the 2.4-inch color display
+	ES	Vea carátulas de álbumes y hasta sus propias fotos en la pantalla en color de 6 cm.
+	FI	Nauti kansitaiteesta ja jopa omista valokuvistasi 2,4 tuuman värinäytöllä
+	FR	Visualisez les pochettes d'album et même vos propres photos sur l'écran couleur 2,4 pouces
+	IT	Display a colori da 2,4 pollici per la visualizzazione di copertine di album e foto
+	NL	Bekijk hoesafbeeldingen en zelfs je eigen foto's op de 2,4-inch kleurendisplay.
+	NO	Se albumgrafikk og egne bilder på fargeskjermen på 2,4 tommer
+	PL	Wyświetla okładki albumów, a nawet własne zdjęcia na kolorowym wyświetlaczu o przekątnej 2,4 cala
+	RU	Цветной экран диагональю 2,4 дюйма позволяет просматривать обложки альбомов и даже фотографии.
+	SV	Titta på skivomslag på 2,4-tumsskärmen. Du kan också titta på dina egna bilder.
 
 SLIDE_09
 	CS	Snadné nastavení. Plně se integruje do vaší stávající domácí sítě.
