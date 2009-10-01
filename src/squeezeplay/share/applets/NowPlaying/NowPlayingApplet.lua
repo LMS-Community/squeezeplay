@@ -534,13 +534,23 @@ function _updateProgress(self, data)
 	end
 
 	-- http streams show duration of 0 before starting, so update to a progress bar on the fly
-	if duration and not showProgresBar then
+	if duration and not showProgressBar then
+
 		-- swap out progressBar
 		self.window:removeWidget(self.progressNBGroup)
 		self.window:addWidget(self.progressBarGroup)
 
 		self.progressGroup = self.progressBarGroup
 		showProgressBar = true
+	end
+	if not duration and showProgressBar then
+
+		-- swap out progressBar
+		self.window:removeWidget(self.progressBarGroup)
+		self.window:addWidget(self.progressNBGroup)
+
+		self.progressGroup = self.progressNBGroup
+		showProgressBar = false
 	end
 
 	_updatePosition(self)
@@ -827,19 +837,18 @@ function _createUI(self)
 			self.gotoElapsed = value
 			self.gotoTimer:restart()
 		end)
-	self.progressSlider:addTimer(1000, function() self:_updatePosition() end)
 
 	self.progressBarGroup = Group('npprogress', {
 			      elapsed = Label("elapsed", ""),
 			      slider = self.progressSlider,
 			      remain = Label("remain", "")
 		      })
-	self.progressBarGroup:addTimer(1000, function() self:_updatePosition() end)
 
 	self.progressNBGroup = Group('npprogressNB', {
 		      elapsed = Label("elapsed", "")
 	})
-	self.progressNBGroup:addTimer(1000, function() self:_updatePosition() end)
+
+	window:addTimer(1000, function() self:_updatePosition() end)
 
 	if showProgressBar then
 		self.progressGroup = self.progressBarGroup
