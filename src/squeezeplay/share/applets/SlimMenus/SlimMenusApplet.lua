@@ -435,6 +435,13 @@ local function _menuSink(self, isCurrentServer, server)
 				itemIcon = v['icon-id'] or v['icon']
 			end
 
+			if not v.window then
+				v.window = {}
+			end
+			if not v.window.windowId then
+				v.window.windowId = v.id
+			end
+
 			if itemIcon then
 				-- Fetch artwork if we're connected, or it's remote
 				-- XXX: this is wrong, it fetches *all* icons in the menu even if they aren't displayed
@@ -944,7 +951,8 @@ end
 
 function myMusicSelector(self)
 	--first check for "new device, no SC situation"
-	if not appletManager:callService("getInitialSlimServer") and not self:_anyKnownSqueezeCenters() then
+	local initialServer = appletManager:callService("getInitialSlimServer")
+	if (not initialServer or initialServer:isSqueezeNetwork()) and not self:_anyKnownSqueezeCenters() then
 		self:_showInstallServerWindow()
 		return
 	end

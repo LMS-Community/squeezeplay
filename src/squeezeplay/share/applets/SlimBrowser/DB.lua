@@ -135,6 +135,9 @@ function updateStatus(self, chunk)
 	if reset then
 		self.store = {}
 		self.complete = false
+		self.upCompleted = false
+		self.downCompleted = false
+
 	end
 
 	-- update the window properties

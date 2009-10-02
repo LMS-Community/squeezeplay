@@ -139,9 +139,34 @@ function _crashLogSend(self, file)
 	data.reqid = string.format("%08x", Framework:getTicks())
 
 	fh = io.open(file, "r")
+	if not fh then
+		_doneLog(self, file, true)
+	end
+
 	data.log = fh:read("*a")
 	fh:close()
 
+
+	-- parse log
+	data.uptime = string.match(data.log, "up ([^/n]+), load average:")
+
+	local patterns = {
+		"SIGSEGV",
+		"oom-killer",
+		"(semaphore) %d+(:%d was not changed)",
+		"Audio thread exited",
+		"No such process",
+	}
+
+	for i,pattern in ipairs(patterns) do
+		local match = { string.match(data.log, pattern) }
+		if match[1] then
+			data.failure = table.concat(match, " ")
+			break
+		end
+	end
+
+	-- upload
 	local sent = false
 	local source = ltn12.source.chain(
 		function()

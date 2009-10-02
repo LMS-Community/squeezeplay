@@ -1,4 +1,3 @@
-
 --[[
 =head1 NAME
 
@@ -276,15 +275,15 @@ function skin(self, s)
 	local threeItemPressedBox = _loadImageTile(self, imgpath .. "3_line_lists/menu_sel_box_3item_press.png")
 	
 	local contextMenuPressedBox    = _loadTile(self, {
-		imgpath .. "Popup_Menu/button_cm_menu_press.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_tl.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_t.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_tr.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_r.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_br.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_b.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_bl.png",
-		imgpath .. "Popup_Menu/button_cm_menu_press_l.png",
+		imgpath .. "Popup_Menu/button_cm_press.png",
+		imgpath .. "Popup_Menu/button_cm_tl_press.png",
+		imgpath .. "Popup_Menu/button_cm_t_press.png",
+		imgpath .. "Popup_Menu/button_cm_tr_press.png",
+		imgpath .. "Popup_Menu/button_cm_r_press.png",
+		imgpath .. "Popup_Menu/button_cm_br_press.png",
+		imgpath .. "Popup_Menu/button_cm_b_press.png",
+		imgpath .. "Popup_Menu/button_cm_bl_press.png",
+		imgpath .. "Popup_Menu/button_cm_l_press.png",
 	})
 	
 	local keyTopLeft = _loadTile(self, {
@@ -2179,7 +2178,7 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_choose_player" .. skinSuffix),
 	})
 	s.hm_quit = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_power_off2" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_power_off" .. skinSuffix),
 	})
 	s.hm_playerpower = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_power_off" .. skinSuffix),
