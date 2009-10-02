@@ -2315,7 +2315,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.demo_text = {
-		h = 36,
+		h = 50,
 		font = _boldfont(14),
 		position = LAYOUT_SOUTH,
 		w = screenWidth,
