@@ -357,7 +357,9 @@ function setPower(self, on)
 		end
 
 	end
-	Player.setPower(self, on, self:incrementSequenceNumber())
+	if self:getSlimServer() then
+		Player.setPower(self, on, self:incrementSequenceNumber())
+	end
 end
 
 
