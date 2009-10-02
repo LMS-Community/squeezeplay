@@ -208,6 +208,7 @@ function JiveMain:getSoftPowerState()
 end
 
 
+--Note: Jive does not use setSoftPowerState since it doesn't have a soft power concept
 function JiveMain:setSoftPowerState(softPowerState)
 	if _softPowerState == softPowerState then
 		--already in the desired state, leave (can happen for instance when notify_playerPower comes back after a local power change)
@@ -218,13 +219,16 @@ function JiveMain:setSoftPowerState(softPowerState)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
 	if _softPowerState == "off" then
 		log:info("Turn soft power off")
-		if currentPlayer and currentPlayer:isConnected() then
+		if currentPlayer and (currentPlayer:isConnected() or currentPlayer:isLocal()) then
 			currentPlayer:setPower(false)
 		end
+		--todo: also pause/power off local player since local player might be playing and not be the current player
 		appletManager:callService("activateScreensaver")
 	elseif _softPowerState == "on" then
 		log:info("Turn soft power on")
-		if currentPlayer and currentPlayer:isConnected() then
+		--todo: Define what should happen for a non-jive remote player. Currently if a server is down, locally a SS will engage, but when the server
+		--       comes back up the server is considered the master power might soft power SP back on 
+		if currentPlayer and (currentPlayer:isConnected() or currentPlayer:isLocal()) then
 			if currentPlayer.slimServer then
 				currentPlayer.slimServer:wakeOnLan()
 			end
