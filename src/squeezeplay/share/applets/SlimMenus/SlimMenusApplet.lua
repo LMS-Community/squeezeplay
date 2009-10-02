@@ -198,9 +198,10 @@ function _updatingPlayer(self)
 	local popup = Popup("waiting_popup")
 	local icon  = Icon("icon_connecting")
 	local label = Label("text", self:string('SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX'))
-	local label = Label("subtext", _player:getName())
+	local sublabel = Label("subtext", _player:getName())
 	popup:addWidget(icon)
 	popup:addWidget(label)
+	popup:addWidget(sublabel)
 	popup:setAlwaysOnTop(true)
 
 	-- add a listener for KEY_PRESS that disconnects from the player and returns to home
