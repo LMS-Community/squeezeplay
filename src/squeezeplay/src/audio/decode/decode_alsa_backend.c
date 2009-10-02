@@ -235,13 +235,16 @@ static void decode_alsa_copyright(struct decode_alsa *state,
 
 	snd_ctl_elem_value_get_iec958(control, &iec958);
 
-	/* 0 = copyright, 1 = not copyright */
+	/* bit 2, 0 = copyright, 1 = not copyright */
 	if (copyright) {
 		iec958.status[0] &= ~(1<<2);
 	}
 	else {
 		iec958.status[0] |= (1<<2);
 	}
+
+	/* bit 3:5, 2 audio channels without pre-emphasis */
+	iec958.status[0] &= ~(7<<3);
 
 	snd_ctl_elem_value_set_iec958(control, &iec958);
 
