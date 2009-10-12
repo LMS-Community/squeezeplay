@@ -1342,10 +1342,11 @@ function transitionBumpLeft(self)
 			if widget._bg then
 				widget._bg:blit(surface, 0, 0)
 			end
-			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			self:draw(surface, LAYER_LOWER)
 			surface:setOffset(x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
+			self:draw(surface, LAYER_FRAME)
 
 			frames = frames - 1
 			if frames == 0 then
@@ -1374,10 +1375,11 @@ function transitionBumpRight(self)
 			if widget._bg then
 				widget._bg:blit(surface, 0, 0)
 			end
-			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
+			self:draw(surface, LAYER_LOWER)
 			surface:setOffset(-x, 0)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
+			self:draw(surface, LAYER_FRAME)
 
 			frames = frames - 1
 			if frames == 0 then
@@ -1419,16 +1421,16 @@ function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 				--getting start time on first loop avoids initial delay that can occur
 				startT = Framework:getTicks()
 			end
-			local x = screenWidth - ((remaining * remaining * remaining) / scale)
+			local x = math.ceil(screenWidth - ((remaining * remaining * remaining) / scale))
 
 			surface:setOffset(0, 0)
 			if oldWindow._bg then
 				oldWindow._bg:blit(surface, 0, 0)
 			end
 			if staticTitle then
-				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+				newWindow:draw(surface, LAYER_LOWER | LAYER_TITLE)
 			else
-				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+				newWindow:draw(surface, LAYER_LOWER)
 			end
 
 			surface:setOffset(-x, 0)
@@ -1446,11 +1448,12 @@ function _transitionPushLeft(oldWindow, newWindow, staticTitle)
 			end
 
 			surface:setOffset(0, 0)
-
+			newWindow:draw(surface, LAYER_FRAME)
+			
 			local elapsed = Framework:getTicks() - startT
 			remaining = transitionDuration - elapsed
 
-			if remaining <= 0 then
+			if remaining <= 0 or x >= screenWidth then
 				Framework:_killTransition()
 			end
 			animationCount = animationCount + 1
@@ -1491,16 +1494,16 @@ function _transitionPushRight(oldWindow, newWindow, staticTitle)
 				--getting start time on first loop avoids initial delay that can occur
 				startT = Framework:getTicks()
 			end
-			local x = screenWidth - ((remaining * remaining * remaining) / scale)
+			local x = math.ceil(screenWidth - ((remaining * remaining * remaining) / scale))
 
 			surface:setOffset(0, 0)
 			if oldWindow._bg then
 				oldWindow._bg:blit(surface, 0, 0)
 			end
 			if staticTitle then
-				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER | LAYER_TITLE)
+				newWindow:draw(surface, LAYER_LOWER | LAYER_TITLE)
 			else
-				newWindow:draw(surface, LAYER_FRAME | LAYER_LOWER)
+				newWindow:draw(surface, LAYER_LOWER)
 			end
 
 			surface:setOffset(x, 0)
@@ -1518,11 +1521,12 @@ function _transitionPushRight(oldWindow, newWindow, staticTitle)
 			end
 
 			surface:setOffset(0, 0)
+			newWindow:draw(surface, LAYER_FRAME)
 
 			local elapsed = Framework:getTicks() - startT
 			remaining = transitionDuration - elapsed
 
-			if remaining <= 0 then
+			if remaining <= 0 or x >= screenWidth then
 				Framework:_killTransition()
 			end
 			animationCount = animationCount + 1
