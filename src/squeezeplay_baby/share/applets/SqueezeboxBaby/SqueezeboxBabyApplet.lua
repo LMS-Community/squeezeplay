@@ -694,9 +694,7 @@ function sleep(self)
 
 	if state == "ACTIVE" then
 		if player then
-			local poweron = player:isPowerOn()
-
-			if not poweron then
+			if jiveMain:getSoftPowerState() ~= "on" then
 				return self:setPowerState("SLEEP")
 			end
 		end
