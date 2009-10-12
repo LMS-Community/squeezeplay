@@ -203,6 +203,14 @@ end
 function t_sendResolve(self)
 	log:debug(self, ":t_sendResolve()")
 
+	if self.cachedIp then
+		log:debug("Using cached ip address: ", self.cachedIp, " for: ", self.host)
+		-- don't lookup an ip address
+		self.t_tcp.address = self.cachedIp
+		self:t_nextSendState(true, 't_sendConnect')
+		return
+	end
+
 	if DNS:isip(self.host) then
 		-- don't lookup an ip address
 		self.t_tcp.address = self.host
