@@ -84,7 +84,7 @@ function addTimeInputWidgets(self)
 			elseif self.initHour == 2 then
 				hours = { '12', '1', '2' }
 			else
-				hours = { self.initHour - 2, self.initHour - 1, self.initHour }
+				hours = { tostring(self.initHour - 2), tostring(self.initHour - 1), tostring(self.initHour) }
 			end
 			local nextItem = self.initHour + 1
 			local inc = 1
@@ -126,11 +126,11 @@ function addTimeInputWidgets(self)
 			elseif self.initHour == 1 then
 				hours = { '23', '0', '1' }
 			else
-				hours = { self.initHour - 2, self.initHour - 1, self.initHour }
+				hours = { tostring(self.initHour - 2), tostring(self.initHour - 1), tostring(self.initHour) }
 			end
 			local nextItem = self.initHour + 1
 			local inc = 0
-			while inc < 24 do
+			while inc < 25 do
 				if nextItem > 23 then
 					nextItem = 0
 				end
