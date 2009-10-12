@@ -1149,7 +1149,7 @@ local function _browseSink(step, chunk, err)
 			_renderSlider(step, data.item_loop[1])
 
 		-- avoid infinite request loop on count == 0
-		elseif step.menu and data and data.count and data.count == 0 then
+		elseif step.menu and data and data.count and tonumber(data.count) == 0 then
 			-- this will render a blank menu, which is typically undesirable 
 			-- but we don't want to reach the next clause
 			-- count == 0 responses should not be typical
@@ -1470,8 +1470,13 @@ function _goPlayPresetAction(self, event)
 		return EVENT_CONSUME
 	end
 
-	_player:presetPress(number)
-	_goNowPlayingAction()
+	if _player and _player:isPresetDefined(tonumber(number)) then
+		_player:presetPress(number)
+		_goNowPlayingAction()
+	else
+		Framework:playSound("BUMP")
+		Window:getTopNonTransientWindow():bumpLeft()
+	end
 
 	return EVENT_CONSUME
 end
@@ -1633,7 +1638,7 @@ local _actionAliasMap = {
 _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, selectedIndex)
 	log:debug("_actionHandler(", actionName, ")")
 
-	if logd:isDebug() then
+	if log:isDebug() then
 		debug.dump(item, 4)
 	end
 

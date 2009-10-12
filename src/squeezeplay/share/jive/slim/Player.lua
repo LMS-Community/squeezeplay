@@ -1197,6 +1197,7 @@ function _process_status(self, event)
 	self.playlistSize = tonumber(event.data.playlist_tracks)
 	-- add 1 to playlist_cur_index to get 1-based place in playlist
 	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
+	self.definedPresets = event.data.preset_loop
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -1442,6 +1443,15 @@ end
 function isPaused(self)
 	if self.state then
 		return self.mode == 'pause'
+	end
+end
+
+
+function isPresetDefined(self, preset)
+	if self.definedPresets and tonumber(self.definedPresets[preset]) == 0 then
+		return false
+	else
+		return true
 	end
 end
 
