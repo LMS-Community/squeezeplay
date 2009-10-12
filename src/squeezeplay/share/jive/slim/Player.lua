@@ -188,6 +188,19 @@ function getLastSqueezeCenter(self)
 	return nil
 end
 
+
+function setLastBrowseIndex(self, key, index)
+	local lastBrowse = self:getLastBrowse(key)
+	lastBrowse.index = index
+end
+
+
+function getLastBrowseIndex(self, key)
+	local lastBrowse = self:getLastBrowse(key)
+	return lastBrowse and lastBrowse.index
+end
+
+
 function getLastBrowse(self, key)
 	if self.browseHistory[key] then
 		return self.browseHistory[key]
@@ -1098,7 +1111,9 @@ function offStage(self)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
 	iconbar:setPlaylistMode(nil)
-	
+
+	self.browseHistory = {}
+
 	-- unsubscribe from playerstatus and displaystatus events
 	self.slimServer.comet:startBatch()
 	self.slimServer.comet:unsubscribe('/slim/playerstatus/' .. self.id)
