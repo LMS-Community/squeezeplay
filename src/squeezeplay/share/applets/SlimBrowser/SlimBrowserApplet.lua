@@ -1659,6 +1659,16 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			return EVENT_UNUSED
 		end
 
+		-- dissect base and item for nextWindow params
+		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
+		iNextWindow = item['nextWindow']
+
+		local useNextWindow
+		local actionHandlersExist = _safeDeref(item, 'actions') or _safeDeref(chunk, 'base', 'actions')
+		if (iNextWindow or bNextWindow) and not actionHandlersExist and actionName == 'go' then
+			useNextWindow = true
+		end
+
 		--if item instructs us to use a different Action for the given action, tranform to the new Action
 		--todo handle all alias names and handle base aliases
 		local aliasName = _actionAliasMap[actionName]
@@ -1700,10 +1710,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			onAction = _safeDeref(item, 'actions', 'on')
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
-
-		-- dissect base and item for nextWindow params
-		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
-		iNextWindow = item['nextWindow']
 
 		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
 			or _safeDeref(chunk, 'base', 'actions', actionName, 'window', 'isContextMenu')
@@ -1798,7 +1804,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			end -- elseif bAction
 	
 			-- now we may have found a command
-			if jsonAction or nextWindow then
+			if jsonAction or useNextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
 				if menuItem and not (nextWindow and nextWindow == "home") then
 					menuItem:playSound("WINDOWSHOW")
