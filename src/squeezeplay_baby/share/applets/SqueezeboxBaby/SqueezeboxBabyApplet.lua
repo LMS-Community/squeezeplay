@@ -175,6 +175,7 @@ function init(self)
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
         Framework:addActionListener("shutdown", self, function()
+		appletManager:callService("setWakeupAlarm", 'none')
 		appletManager:callService("poweroff")
 	end)
 
