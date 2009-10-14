@@ -415,6 +415,55 @@ int jiveL_style_color(lua_State *L) {
 	return 1;
 }
 
+int jiveL_style_array_color(lua_State *L) {
+	Uint32 r, g, b, a;
+	
+	/* stack is:
+	 * 1: widget
+	 * 2: key
+	 * 3: default
+	 */
+
+	jiveL_style_array_value(L);
+
+	//todo: this is an exact copy of the code in jiveL_style_color - Check with Richard about refactoring a helper method (thought there was some issue with L and a helper method)
+	if (lua_isnil(L, -1)) {
+		return 1;
+	}
+
+	if (!lua_istable(L, -1)) {
+		luaL_error(L, "invalid component in style color, table expected");
+	}
+
+	/* use empty table for not set */
+	if (lua_objlen(L, -1) == 0) {
+		lua_pop(L, 1);
+
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_rawgeti(L, -1, 1);
+	lua_rawgeti(L, -2, 2);
+	lua_rawgeti(L, -3, 3);
+	lua_rawgeti(L, -4, 4);
+
+	r = (int) luaL_checknumber(L, -4);
+	g = (int) luaL_checknumber(L, -3);
+	b = (int) luaL_checknumber(L, -2);
+	if (lua_isnumber(L, -1)) {
+		a = (int) luaL_checknumber(L, -1);
+	}
+	else {
+		a = 0xFF;
+	}
+
+	lua_pop(L, 5);
+ 
+	lua_pushnumber(L, (lua_Integer)((r << 24) | (g << 16) | (b << 8) | a) );
+	return 1;
+}
+
 
 Uint32 jive_style_color(lua_State *L, int index, const char *key, Uint32 def, bool *is_set) {
 	Uint32 col;
@@ -426,6 +475,40 @@ Uint32 jive_style_color(lua_State *L, int index, const char *key, Uint32 def, bo
 	lua_pushstring(L, key);
 	lua_pushnil(L);
 	lua_call(L, 3, 1);
+
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+
+		if (is_set) {
+			*is_set = 0;
+		}
+		return def;
+	}
+
+	col = (Uint32) lua_tointeger(L, -1);
+	if (is_set) {
+		*is_set = 1;
+	}
+	lua_pop(L, 1);
+
+	JIVEL_STACK_CHECK_END(L);
+
+	return col;
+}
+
+Uint32 jive_style_array_color(lua_State *L, int index, const char *array, int n, const char *key, Uint32 def, bool *is_set) {
+	Uint32 col;
+
+	JIVEL_STACK_CHECK_BEGIN(L);
+
+	lua_pushcfunction(L, jiveL_style_array_color);
+	lua_pushvalue(L, index);
+	lua_pushstring(L, array);
+	lua_pushnumber(L, n);
+	lua_pushstring(L, key);
+	lua_pushnil(L);
+	lua_call(L, 5, 1);
+
 
 	if (lua_isnil(L, -1)) {
 		lua_pop(L, 1);

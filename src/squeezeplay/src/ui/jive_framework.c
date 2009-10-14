@@ -1421,6 +1421,7 @@ static const struct luaL_Reg widget_methods[] = {
 	{ "styleValue", jiveL_style_value },
 	{ "styleInt", jiveL_style_value },
 	{ "styleColor", jiveL_style_color },
+	{ "styleArrayColor", jiveL_style_color },
 	{ "styleImage", jiveL_style_value },
 	{ "styleFont", jiveL_style_font },
 	{ NULL, NULL }

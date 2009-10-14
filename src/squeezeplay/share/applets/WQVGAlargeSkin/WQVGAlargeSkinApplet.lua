@@ -877,6 +877,8 @@ function skin(self, s)
 						},
 						{
 							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+--							fg = BLACK,
+--							sh = NONE,
 						},
 					},
 					fg = OFFWHITE,
