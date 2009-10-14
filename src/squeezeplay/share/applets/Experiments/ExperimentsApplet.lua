@@ -34,18 +34,10 @@ local debug               = require("jive.utils.debug")
 local jiveMain      = jiveMain
 --local contextMenuManager  = contextMenuManager
 
-local VuMeter             = require("applets.Experiments.VuMeter")
-
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-
---a few globals to avoid saving settinsg, since we are a temporary hack applet anyway :)
-if not Framework.experiments_vuMeter then
-	Framework.experiments_vuOn = false
-	Framework.experiments_vuMeter = VuMeter(Framework)
-end
 
 if Framework.experiments_multiTapOn == nil then
 	Framework.experiments_multiTapOn = false
@@ -66,23 +58,6 @@ function menu(self)
 --				callback = function(event, menuItem)
 --					self:menuWindow(menuItem)
 --				end },
-			{ text = "Enable VU Meter on all screens",
-				style = 'item_choice',
-				check  = Checkbox(
-						"checkbox",
-						function(_, enable)
-							Framework.experiments_vuOn = enable
-							log:error("Switching experiments_vuOn to: ", Framework.experiments_vuOn)
-
-							Framework.experiments_vuMeter:enableMeter(Framework.experiments_vuOn)
-
-							--reload skin, so existing windows will pick up the canvas change
-							jiveMain:freeSkin()
-							jiveMain:reloadSkin()
-						end,
-						Framework.experiments_vuOn == true
-				),
-			},
 			{ text = "2+ finger: tap to NP, T-B pause, L-R fwd, R-L rew anywhere",
 				style = 'item_choice',
 				check  = Checkbox(

@@ -25,7 +25,10 @@ local Widget           = require("jive.ui.Widget")
 local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
-                       
+
+local VUMeter          = require("jive.audio.VUMeter")
+local SpectrumMeter    = require("jive.audio.SpectrumMeter")
+
 local debug            = require("jive.utils.debug")
 local datetime         = require("jive.utils.datetime")
 
@@ -857,6 +860,8 @@ function _createUI(self)
 	end
 
 	self.artwork = Icon("artwork")
+--	self.artwork = VUMeter("vumeter")
+--	self.artwork = SpectrumMeter("spectrum")
 
 	self.artworkGroup = Group('npartwork', {
 			artwork = self.artwork,

@@ -168,6 +168,11 @@ extern int decode_sample_init(lua_State *L);
 extern void decode_sample_fill_buffer(void);
 
 
+/* visualizers */
+extern int decode_vumeter(lua_State *L);
+extern int decode_spectrum(lua_State *L);
+
+
 /* Internal state */
 
 #define SAMPLES_TO_BYTES(n)  (2 * (n) * sizeof(sample_t))

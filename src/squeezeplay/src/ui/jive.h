@@ -477,6 +477,7 @@ int jiveL_widget_get_bounds(lua_State *L);
 int jiveL_widget_get_z_order(lua_State *L);
 int jiveL_widget_is_hidden(lua_State *L);
 int jiveL_widget_get_preferred_bounds(lua_State *L);
+int jiveL_widget_get_padding(lua_State *L);
 int jiveL_widget_get_border(lua_State *L);
 int jiveL_widget_mouse_bounds(lua_State *L);
 int jiveL_widget_mouse_inside(lua_State *L);

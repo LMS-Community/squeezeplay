@@ -2414,6 +2414,23 @@ function skin(self, s)
 				padding = 0,
 				img = false,
 			},
+
+			vumeter = {
+				padding = { 20, 5, 20, 55 },
+				bgImg = _loadImageTile(self, imgpath .. "VUMeter/visualizer_bkgrd_album.png"),
+
+				tickCap = _loadImageTile(self, imgpath .. "VUMeter/VU_tick_bounce.png"),
+				tickOn = _loadImageTile(self, imgpath .. "VUMeter/VU_tick_on.png"),
+				tickOff = _loadImageTile(self, imgpath .. "VUMeter/VU_tick_off.png"),
+			},
+
+			spectrum = {
+				padding = { 20, 5, 20, 55 },
+				bgImg = _loadImageTile(self, imgpath .. "VUMeter/visualizer_bkgrd_album.png"),
+
+				bar = { 0x14, 0xbc, 0xbc, 0xff },
+				cap = { 0xb4, 0x56, 0xa1, 0xff },
+			},
 		},
 	
 		--transport controls
@@ -2553,7 +2570,7 @@ function skin(self, s)
 				sh = { 0x37, 0x37, 0x37 },
 			},
 		},
-	
+
 	})
 
 	-- sliders

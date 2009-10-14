@@ -186,6 +186,28 @@ int jiveL_widget_get_preferred_bounds(lua_State *L) {
 }
 
 
+int jiveL_widget_get_padding(lua_State *L) {
+	JiveWidget *peer;
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+	
+	lua_getfield(L, 1, "peer");
+	peer = lua_touserdata(L, -1);
+	if (!peer) {
+		return 0;
+	}
+
+	lua_pushinteger(L, peer->padding.left);
+	lua_pushinteger(L, peer->padding.top);
+	lua_pushinteger(L, peer->padding.right);
+	lua_pushinteger(L, peer->padding.bottom);
+	return 4;
+}
+
+
 int jiveL_widget_get_border(lua_State *L) {
 	JiveWidget *peer;
 

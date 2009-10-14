@@ -1407,6 +1407,7 @@ static const struct luaL_Reg widget_methods[] = {
 	{ "getZOrder", jiveL_widget_get_z_order },
 	{ "isHidden", jiveL_widget_is_hidden },
 	{ "getPreferredBounds", jiveL_widget_get_preferred_bounds },
+	{ "getPadding", jiveL_widget_get_padding },
 	{ "getBorder", jiveL_widget_get_border },
 	{ "mouseBounds", jiveL_widget_mouse_bounds },
 	{ "mouseInside", jiveL_widget_mouse_inside },
