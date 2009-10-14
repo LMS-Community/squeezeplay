@@ -464,6 +464,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_wireless_NONE.border           = s._button_wireless.border
 
 	s.nowplaying = _uses(s.window, {
+		bgImg = Tile:fillColor(0x000000ff),
 		title = {
 			h = 79,
 			text = {
