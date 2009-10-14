@@ -22,7 +22,7 @@ local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 
 local DOUBLE_CLICK_HOLD_TIME = 400 -- ms
 local INITIAL_ITEM_CHANGE_PERIOD = 350 -- ms
-local CYCLES_BEFORE_ACCELERATION_STARTS = 8
+local CYCLES_BEFORE_ACCELERATION_STARTS = 1
 
 -- our class
 module(..., oo.class)
@@ -93,8 +93,8 @@ function event(self, event, listTop, listIndex, listVisible, listSize)
 		if self.lastDownT and (now - self.lastDownT < DOUBLE_CLICK_HOLD_TIME) then
 			--make the acceleration kick in faster on a quick second down
 			self.lastDownT = nil
-			self.itemChangeCycles = self.cyclesBeforeAccelerationStarts - 1
-			self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD
+			self.itemChangeCycles = 12
+			self.itemChangePeriod = INITIAL_ITEM_CHANGE_PERIOD * .6
 		else
 			self.lastDownT = now
 			self.itemChangeCycles = 1
