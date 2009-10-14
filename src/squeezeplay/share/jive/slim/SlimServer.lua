@@ -968,7 +968,10 @@ Cancel loading the artwork for icon.
 function cancelArtwork(self, icon)
 	-- prevent artwork being display when it has been loaded
 	if icon then
-		icon:setValue(nil)
+		if icon:getImage() then
+			--only set nil if not already nil
+			icon:setValue(nil)
+		end
 		self.artworkThumbIcons[icon] = nil
 	end
 end

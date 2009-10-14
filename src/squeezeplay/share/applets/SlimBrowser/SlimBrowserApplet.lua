@@ -597,9 +597,13 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 			
 
 		else
+			local textLabel = Label("text", "")
+			--label never changes the group size, so optimize it with layoutRoot, layout won't trickle up the chain now
+			textLabel.layoutRoot = true
+
 			group = Group(labelStyle, { 
 				icon = Icon("icon"), 
-				text = Label("text", ""), 
+				text = textLabel, 
 				arrow = Icon('arrow'),
 				check = Icon('check'),
 			})

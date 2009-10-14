@@ -319,7 +319,14 @@ end
 local function _eventHandler(self, event)
 
 	local evtype = event:getType()
+	if Framework.mostRecentInputType ~= "mouse" and evtype == EVENT_SHOW then
+		local lastSelected = self._lastSelected
 
+		if lastSelected then
+			lastSelected:setStyleModifier(nil)
+		end
+	end
+	
 	if Framework.mostRecentInputType ~= "mouse" or evtype == EVENT_SHOW then
 		self.usePressedStyle = false
 	end
@@ -1387,7 +1394,6 @@ function _updateWidgets(self)
 	-- clear focus -- todo support "no highlight scroll"
 	if lastSelectedIndex ~= nextSelectedIndex then
 		if lastSelected then
-			lastSelected:setStyleModifier(nil)
 			_itemListener(self, lastSelected, Event:new(EVENT_FOCUS_LOST))
 		end
 	end
