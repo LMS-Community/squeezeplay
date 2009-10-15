@@ -146,15 +146,22 @@ function updateFlickData(self, mouseEvent)
 
 	table.insert(self.flickData.points, {y = y, ticks = ticks})
 
-	local time = 0
+	--remove stale points
+	while #self.flickData.points > 1 do
+		local time = self.flickData.points[#self.flickData.points].ticks - self.flickData.points[1].ticks
 
-	if #self.flickData.points > 1 then
-		time = self.flickData.points[#self.flickData.points].ticks - self.flickData.points[1].ticks
+		if time > 100 then
+			--only collect events that occurred in the last few ms
+			table.remove(self.flickData.points, 1)
+		else
+			break
+		end
 	end
 
-	if #self.flickData.points >= 20 or time > 100 then
+	--remove any more than 20 points
+	if #self.flickData.points >= 20 then
 		--only keep last 20 values (number was come up by trial and error, flick and quick stopping, quick flicks, multi-speed flicks)
-		-- if ound that having this number lower (less averging) made the afterscroll "jump"
+		-- I found that having this number lower (less averging) made the afterscroll "jump"
 		-- also only collect events that occurred in the last 100ms
 		table.remove(self.flickData.points, 1)
 	end
