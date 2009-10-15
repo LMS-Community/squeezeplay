@@ -3032,14 +3032,6 @@ This section includes the volume and scanner popups.
 local _statusStep = false
 local _emptyStep = false
 
-local modeTokens = {	
-	play  = "SLIMBROWSER_PLAYLIST",
-	pause = "SLIMBROWSER_PAUSED", 
-	stop  = "SLIMBROWSER_STOPPED",
-	off   = "SLIMBROWSER_OFF"
-}
-
-
 -- _requestStatus
 -- request the next chunk from the player status (playlist)
 local function _requestStatus()
@@ -3104,7 +3096,7 @@ end
 -- if the player playlist is empty, we replace _statusStep with this window
 function showEmptyPlaylist(token)
 
-	local window = Window("icon_list", _string(modeTokens['play']), 'currentplaylisttitle')
+	local window = Window("icon_list", _string('SLIMBROWSER_PLAYLIST'))
 	local menu = SimpleMenu("menu")
 	menu:addItem({
 		     text = _string(token),
@@ -3146,9 +3138,6 @@ function showPlaylist()
 		local playerStatus = _player:getPlayerStatus()
 		local playlistSize = _player:getPlaylistSize() 
 
-		if not _player:isPowerOn() then
-			_statusStep.window:setTitle(_string(modeTokens['off']))
-		end
 
 		if playlistSize == 0 or not playlistSize then
 			if _emptyStep and _emptyStep.window and _emptyStep.window == Window:getTopNonTransientWindow() then 
@@ -3273,17 +3262,11 @@ function notify_playerPower(self, player, power)
 	local emptyStep = _emptyStep
 
 	if step and step.menu then
-		-- show 'OFF' in playlist window title when the player is off
-		if not power then
-			if step.window then
-				step.window:setTitle(_string("SLIMBROWSER_OFF"))
-			end
-		else
+		if power then
 			if step.window then
 				if emptyStep then
 					step.window:replace(emptyStep.window, Window.transitionFadeIn)
 				end
-				step.window:setTitle(_string(modeTokens[mode]))
 			end
 		end
 	end
@@ -3291,19 +3274,7 @@ end
 
 
 function notify_playerModeChange(self, player, mode)
-	log:debug('SlimBrowser.notify_playerModeChange')
-	if _player ~= player then
-		return
-	end
-
-	local step = _statusStep
-	local token = mode
-	if mode != 'play' and not player:isPowerOn() then
-		token = 'off'
-	end
-
-	step.window:setTitle(_string(modeTokens[token]))
-
+	-- BUG 11819, Current Playlist window should always show Current Playlist, so do nothing
 end
 
 
@@ -3461,14 +3432,6 @@ function _attachPlayer(self, player)
 	_player:onStage()
 	_requestStatus()
 	_server.comet:endBatch()
-
-	-- look to see if the playlist has size and the state of player power
-	-- if playlistSize is 0 or power is off, we show and empty playlist
-	if not _player:isPowerOn() then
-		if _statusStep.window then
-			_statusStep.window:setTitle(_string("SLIMBROWSER_OFF"))
-		end
-	end
 
 	_installActionListeners(self)
 	_installPlayerKeyHandler(self)
