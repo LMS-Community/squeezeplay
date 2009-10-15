@@ -248,6 +248,7 @@ function skin(self, s)
 	local touchToolbarKeyDivider  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_divider.png")
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
+        local helpTextBackground  = _loadImageTile(self, imgpath .. "Titlebar/tbar_dropdwn_bkrgd.png")
 
 
 	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
@@ -916,6 +917,7 @@ function skin(self, s)
 	s.item_blank = {
 		padding = {  },
 		text = {},
+		bgImg = helpTextBackground,
 	}
 
 	s.pressed.item_blank = _uses(s.item_blank)
