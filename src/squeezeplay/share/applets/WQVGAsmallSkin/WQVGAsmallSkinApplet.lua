@@ -1413,6 +1413,8 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_nplay_3line_off.png"),
 		},
 		text = { padding = 0, },
+		-- Bug 11482c#13, don't know why the bgImg has to be redefined again here, but this fixes the issue
+		bgImg = fiveItemBox,
 	})
 	s.icon_list.menu.item_add  = _uses(s.icon_list.menu.item, { 
 		arrow = addArrow,
