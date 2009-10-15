@@ -2228,10 +2228,6 @@ function skin(self, s)
 	s.hm_skinTest = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_blank" .. skinSuffix),
 	})
-	s.hm_randomtracks = _uses(s.hm_randomplay)
-	s.hm_randomartists = _uses(s.hm_randomplay)
-	s.hm_randomalbums = _uses(s.hm_randomplay)
-	s.hm_randomyears = _uses(s.hm_randomplay)
 
         s.hm_settingsRepeat = _uses(_buttonicon, {
                 img = _loadImage(self, "IconsResized/icon_settings_repeat" .. skinSuffix),

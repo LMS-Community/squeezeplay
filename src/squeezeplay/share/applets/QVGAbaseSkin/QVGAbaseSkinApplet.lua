@@ -2054,10 +2054,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_skinTest = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_blank" .. skinSuffix),
 	})
-	s.hm_randomtracks = _uses(s.hm_randomplay)
-	s.hm_randomartists = _uses(s.hm_randomplay)
-	s.hm_randomalbums = _uses(s.hm_randomplay)
-	s.hm_randomyears = _uses(s.hm_randomplay)
 
 	s.hm_settingsBrightness = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings_brightness" .. skinSuffix),
