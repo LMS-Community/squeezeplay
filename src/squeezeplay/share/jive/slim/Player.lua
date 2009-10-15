@@ -188,6 +188,19 @@ function getLastSqueezeCenter(self)
 	return nil
 end
 
+
+function setLastBrowseIndex(self, key, index)
+	local lastBrowse = self:getLastBrowse(key)
+	lastBrowse.index = index
+end
+
+
+function getLastBrowseIndex(self, key)
+	local lastBrowse = self:getLastBrowse(key)
+	return lastBrowse and lastBrowse.index
+end
+
+
 function getLastBrowse(self, key)
 	if self.browseHistory[key] then
 		return self.browseHistory[key]
@@ -1098,7 +1111,9 @@ function offStage(self)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
 	iconbar:setPlaylistMode(nil)
-	
+
+	self.browseHistory = {}
+
 	-- unsubscribe from playerstatus and displaystatus events
 	self.slimServer.comet:startBatch()
 	self.slimServer.comet:unsubscribe('/slim/playerstatus/' .. self.id)
@@ -1182,6 +1197,7 @@ function _process_status(self, event)
 	self.playlistSize = tonumber(event.data.playlist_tracks)
 	-- add 1 to playlist_cur_index to get 1-based place in playlist
 	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
+	self.definedPresets = event.data.preset_loop
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -1427,6 +1443,15 @@ end
 function isPaused(self)
 	if self.state then
 		return self.mode == 'pause'
+	end
+end
+
+
+function isPresetDefined(self, preset)
+	if self.definedPresets and tonumber(self.definedPresets[preset]) == 0 then
+		return false
+	else
+		return true
 	end
 end
 

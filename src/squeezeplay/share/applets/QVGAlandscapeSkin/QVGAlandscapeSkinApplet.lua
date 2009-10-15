@@ -74,7 +74,7 @@ function param(self)
 		THUMB_SIZE = 41,
 		POPUP_THUMB_SIZE = 120,
 		NOWPLAYING_MENU = true,
-		nowPlayingBrowseArtworkSize = "300x143",
+		nowPlayingBrowseArtworkSize = "320x320",
 		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,
 		nowPlayingTitleStatusLabel  = "artist",
@@ -201,7 +201,9 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.nowplaying = _uses(s.window, {
+		bgImg = Tile:fillColor(0x000000ff),
 		title = {
+			zOrder = 10,
 			h = 60,
 			text = {
 				hidden = 1,
@@ -209,6 +211,7 @@ function skin(self, s, reload, useDefaultSize)
 		},
 		-- Song metadata
 		nptitle = {
+			zOrder = 10,
 			order = { 'nptrack', 'xofy' },
 			position   = _tracklayout.position,
 			nptrack =  {
@@ -237,6 +240,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 		npartistalbum  = {
+			zOrder = 10,
 			position   = _tracklayout.position,
 			w          = _tracklayout.w,
 			align      = _tracklayout.align,
@@ -250,13 +254,13 @@ function skin(self, s, reload, useDefaultSize)
 	
 		-- cover art
 		npartwork = {
-			position = LAYOUT_WEST,
+			position = LAYOUT_NORTH,
 			w = WH_FILL,
 			align = "center",
 			artwork = {
+				zOrder = 1,
 				w = WH_FILL,
 				align = "center",
-				padding = { 0, 66, 0, 0 },
 				img = false,
 			},
 		},
@@ -266,6 +270,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 		-- Progress bar
 		npprogress = {
+			zOrder = 10,
 			position = LAYOUT_NORTH,
 			padding = { 0, 0, 0, 0 },
 			border = { 0, 59, 0, 0 },

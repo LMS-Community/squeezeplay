@@ -478,10 +478,12 @@ function selectPlayer(self, player)
 	end
 
 	-- udap setup needed?
-	if player:needsMusicSource() and not self.setupNext then
+	if player:needsMusicSource() and not self.setupMode then
 		log:info("selectMusicSource")
 		--todo review this with new SlimMenus changes
-		appletManager:callService("selectMusicSource")
+		--until server is connected, we offer sn switch since the user should be allowed to choose SC or SN in this limbo state
+		appletManager:callService("addSwitchToSnMenuItem")
+		appletManager:callService("selectMusicSource", nil, nil, nil, nil, nil, nil, nil, true)
 		return false
 	end
 

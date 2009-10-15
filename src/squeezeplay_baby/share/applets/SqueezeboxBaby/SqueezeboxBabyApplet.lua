@@ -175,6 +175,7 @@ function init(self)
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
         Framework:addActionListener("shutdown", self, function()
+		appletManager:callService("setWakeupAlarm", 'none')
 		appletManager:callService("poweroff")
 	end)
 
@@ -694,9 +695,7 @@ function sleep(self)
 
 	if state == "ACTIVE" then
 		if player then
-			local poweron = player:isPowerOn()
-
-			if not poweron then
+			if jiveMain:getSoftPowerState() ~= "on" then
 				return self:setPowerState("SLEEP")
 			end
 		end

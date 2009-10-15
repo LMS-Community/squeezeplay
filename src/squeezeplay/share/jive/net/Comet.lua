@@ -68,6 +68,7 @@ local HttpPool      = require("jive.net.HttpPool")
 local SocketHttp    = require("jive.net.SocketHttp")
 local Timer         = require("jive.ui.Timer")
 local Task          = require("jive.ui.Task")
+local DNS           = require("jive.net.DNS")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("net.comet")
@@ -361,7 +362,11 @@ _sendPendingRequests = function(self)
 			 self.uri,
 			 data
 		)
-
+		-- always use the long lived connection's (chttp) ip address, otherwise the ip address of rhttp can change from chhtp's. 
+		if DNS:isip(self.chttp.t_tcp.address) then
+			log:debug("caching chttp ip address: ", self.chttp.t_tcp.address, " for: ", self.uri)
+			self.rhttp.cachedIp = self.chttp.t_tcp.address
+		end
 		self.rhttp:fetch(req)
 	end
 end

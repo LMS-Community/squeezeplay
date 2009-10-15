@@ -362,7 +362,7 @@ local function _eventHandler(self, event)
 		local action = event:getAction()
 
 		if self.locked ~= nil then
-			if action == "back" or action == "go_home" then
+			if action == "back" or action == "go_home" or action == "go_home_or_now_playing" then
 
 				if type(self.locked) == "function" then
 					self.locked(self)

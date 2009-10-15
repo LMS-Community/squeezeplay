@@ -216,10 +216,7 @@ local function _decideFirstChunk(step, jsonAction)
 
 	local commandString = _stringifyJsonRequest(jsonAction)
 	local lastBrowse    = _player:getLastBrowse(commandString)
-
-	if not lastBrowse or isContextMenu then
-		_player.menuAnchor = nil
-	end
+	step.commandString = commandString
 
 	local from = 0
 
@@ -227,21 +224,19 @@ local function _decideFirstChunk(step, jsonAction)
 	log:debug(commandString)
 
 	if lastBrowse and not isContextMenu then
-		from = _getNewStartValue(lastBrowse.index)
-		_player.menuAnchor = lastBrowse.index 
+		from = _getNewStartValue(_player:getLastBrowseIndex(commandString))
 	else
 		lastBrowse = { index = 1 }
 		_player:setLastBrowse(commandString, lastBrowse)
 	end
 
 	log:debug('We\'ve been here before, lastBrowse index was: ', lastBrowse.index)
-	_player.lastKeyTable = lastBrowse
-	_player.menuAnchorSet = false
+	step.lastBrowseIndexUsed = false
 
-	--don't use anchor if position is first element, breaks windows that have zero sized menu (textarea, for example), and
-	-- by default the first item is selected without the need of menuAnchor
-	if _player.menuAnchor and _player.menuAnchor == 1 then
-		_player.menuAnchor = nil
+	--don't use lastBrowse index if position is first element, breaks windows that have zero sized menu (textarea, for example), and
+	-- by default the first item is selected without the need of lastBrowse
+	if _player:getLastBrowseIndex(commandString) == 1 then
+		_player:setLastBrowseIndex(commandString, nil)
 	end
 
 	return from, qty
@@ -1158,7 +1153,7 @@ local function _browseSink(step, chunk, err)
 			_renderSlider(step, data.item_loop[1])
 
 		-- avoid infinite request loop on count == 0
-		elseif step.menu and data and data.count and data.count == 0 then
+		elseif step.menu and data and data.count and tonumber(data.count) == 0 then
 			-- this will render a blank menu, which is typically undesirable 
 			-- but we don't want to reach the next clause
 			-- count == 0 responses should not be typical
@@ -1174,18 +1169,21 @@ local function _browseSink(step, chunk, err)
 			end
 		elseif step.menu then
 			_stepSetMenuItems(step, data)
-			if _player and _player.menuAnchor and not _player.menuAnchorSet then
-				log:debug("Selecting  menuAnchor: ", _player.menuAnchor)				step.menu:setSelectedIndex(_player.menuAnchor)
-				step.menu:setSelectedIndex(_player.menuAnchor)
-				_player.menuAnchorSet = true
-				if _player.loadedCallback then
-					local loadedCallback = _player.loadedCallback
-					_player.loadedCallback = nil
+			if _player then
+				local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
+				if lastBrowseIndex and not step.lastBrowseIndexUsed then
+					log:debug("Selecting  lastBrowseIndex: ", lastBrowseIndex)
+					step.menu:setSelectedIndex(lastBrowseIndex)
+					step.lastBrowseIndexUsed = true
+					if _player.loadedCallback then
+						local loadedCallback = _player.loadedCallback
+						_player.loadedCallback = nil
 
-					loadedCallback(step)
-					_pushStep(step)
-					step.window:show()
+						loadedCallback(step)
+						_pushStep(step)
+						step.window:show()
 
+					end
 				end
 			end
 
@@ -1327,8 +1325,9 @@ local function _browseSink(step, chunk, err)
 			end
 
 			-- what's missing?
-			local from, qty = step.db:missing(_player and _player.menuAnchor)
-		
+			local lastBrowseIndex = _player and _player:getLastBrowseIndex(step.commandString)
+			local from, qty = step.db:missing(lastBrowseIndex)
+
 			if from then
 				_performJSONAction(step.data, from, qty, step, step.sink)
 			end
@@ -1475,8 +1474,13 @@ function _goPlayPresetAction(self, event)
 		return EVENT_CONSUME
 	end
 
-	_player:presetPress(number)
-	_goNowPlayingAction()
+	if _player and _player:isPresetDefined(tonumber(number)) then
+		_player:presetPress(number)
+		_goNowPlayingAction()
+	else
+		Framework:playSound("BUMP")
+		Window:getTopNonTransientWindow():bumpLeft()
+	end
 
 	return EVENT_CONSUME
 end
@@ -1638,7 +1642,7 @@ local _actionAliasMap = {
 _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, selectedIndex)
 	log:debug("_actionHandler(", actionName, ")")
 
-	if logd:isDebug() then
+	if log:isDebug() then
 		debug.dump(item, 4)
 	end
 
@@ -1662,6 +1666,16 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
 			return EVENT_UNUSED
+		end
+
+		-- dissect base and item for nextWindow params
+		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
+		iNextWindow = item['nextWindow']
+
+		local useNextWindow
+		local actionHandlersExist = _safeDeref(item, 'actions') or _safeDeref(chunk, 'base', 'actions')
+		if (iNextWindow or bNextWindow) and not actionHandlersExist and actionName == 'go' then
+			useNextWindow = true
 		end
 
 		--if item instructs us to use a different Action for the given action, tranform to the new Action
@@ -1705,10 +1719,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			onAction = _safeDeref(item, 'actions', 'on')
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
-
-		-- dissect base and item for nextWindow params
-		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
-		iNextWindow = item['nextWindow']
 
 		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
 			or _safeDeref(chunk, 'base', 'actions', actionName, 'window', 'isContextMenu')
@@ -1803,7 +1813,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			end -- elseif bAction
 	
 			-- now we may have found a command
-			if jsonAction or nextWindow then
+			if jsonAction or useNextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
 				if menuItem and not (nextWindow and nextWindow == "home") then
 					menuItem:playSound("WINDOWSHOW")
@@ -1969,12 +1979,13 @@ local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
 	-- figure out the item action...
 	local evtType = event:getType()
 
-	local currentlySelectedIndex = _getCurrentStep().menu:getSelectedIndex()
-	if _player and _player.lastKeyTable and evtType == EVENT_FOCUS_GAINED then
+	local currentlySelectedIndex =step.menu:getSelectedIndex()
+	if _player and _player:getLastBrowse(step.commandString) and evtType == EVENT_FOCUS_GAINED then
 		if currentlySelectedIndex then
-			_player.lastKeyTable.index = currentlySelectedIndex 
+			log:debug("step.commandString: ", step.commandString, " menu: ", step.menu, " currentlySelectedIndex: ", currentlySelectedIndex)
+			_player:setLastBrowseIndex(step.commandString, currentlySelectedIndex)
 		else
-			_player.lastKeyTable.index = 1
+			_player:setLastBrowseIndex(step.commandString, nil)
 		end
 	end
 
@@ -2706,8 +2717,9 @@ function browserActionRequest(self, server, v, loadedCallback)
 					from, qty = _decideFirstChunk(step, jsonAction)
 
 					step.loaded = function()
-						--if _player.menuAnchor then defer callback until menuAnchor chunk received.
-						if not _player.menuAnchor and loadedCallback then
+						--if lastBrowseIndex then defer callback until lastBrowseIndex chunk received.
+						local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
+						if not lastBrowseIndex and loadedCallback then
 							loadedCallback(step)
 							_pushStep(step)
 							step.window:show()

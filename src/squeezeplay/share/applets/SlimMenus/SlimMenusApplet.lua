@@ -135,6 +135,10 @@ function _removeSwitchToSnMenuItem(self)
 	jiveMain:removeItemById("switchToSn")
 end
 
+--service method
+function addSwitchToSnMenuItem(self)
+	self:_addSwitchToSnMenuItem(self)
+end
 
 function _addSwitchToSnMenuItem(self)
 	log:debug("_addSwitchToSnMenuItem")

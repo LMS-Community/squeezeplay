@@ -72,7 +72,7 @@ end
 -- service to select server for a player. Note a current player must exist before calling this method
 -- if specificServer is set to false, then offer a list even if only one server exists. If specificServer, if only on server exists,
 --  it will automatically be selected.
-function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected, confirmOnChange)
+function selectMusicSource(self, playerConnectedCallback, titleStyle, includedServers, specificServer, serverForRetry, ignoreServerConnected, confirmOnChange, offerSn)
 
 	if includedServers then
 		self.includedServers = includedServers
@@ -95,6 +95,7 @@ function selectMusicSource(self, playerConnectedCallback, titleStyle, includedSe
 	self.serverList = {}
 	self.ignoreServerConnected = ignoreServerConnected
 	self.confirmOnChange = confirmOnChange
+	self.offerSn = offerSn
 
 	if specificServer then
 		log:debug("selecting specific server ", specificServer)
@@ -243,7 +244,7 @@ function _addServerItem(self, server, address)
 		end
 	end
 
-	if server and server:isSqueezeNetwork() then
+	if server and server:isSqueezeNetwork() and not self.offerSn then
 		log:debug("Exclude SN")
 		return
 	end

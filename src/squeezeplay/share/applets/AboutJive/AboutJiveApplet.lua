@@ -43,6 +43,7 @@ function settingsShow(self)
 		"     Dean Blackketter",
 		"     Fred Bould",
 		"     Randy Buswell",
+		"     François Campart",
 		"     Jim Carlton",
 		"     Caleb Crome",
 		"     Matt Cuson",
