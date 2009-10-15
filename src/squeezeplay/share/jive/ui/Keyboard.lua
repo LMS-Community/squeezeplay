@@ -224,15 +224,6 @@ function _predefinedKeyboards(self)
 				},
 				emailKeyboardBottomRow
 		} ,
-		['emailUpper']  = { 
-				{ 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O', 'P' },
-				{ self:_spacer(), 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', self:_spacer() },
-				{ self:_shiftKey('email'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 
-					self:_arrow('left', 'middle'),
-					self:_arrow('right', 'right'),
-				},
-				emailKeyboardBottomRow
-		} ,
 		['email_FR']  = { 
 				{ 'a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p' },
 				{ 'q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm' },
