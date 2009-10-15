@@ -391,6 +391,14 @@
 				RelativePath="..\src\ui\system.c"
 				>
 			</File>
+			<File
+				RelativePath="..\src\audio\decode\visualizer_spectrum.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\visualizer_vumeter.c"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\jive.rc"
