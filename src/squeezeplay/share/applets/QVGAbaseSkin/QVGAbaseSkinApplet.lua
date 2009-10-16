@@ -803,6 +803,11 @@ function skin(self, s, reload, useDefaultSize)
 					order = { 'text', 'arrow', },
 				}
 			},
+			pressed = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
 		},
 	})
 

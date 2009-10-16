@@ -1218,6 +1218,11 @@ function skin(self, s)
 					order = { 'text', 'arrow', },
 				}
 			},
+			pressed = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
 		},
 	})
 
