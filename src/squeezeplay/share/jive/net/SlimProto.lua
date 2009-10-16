@@ -60,6 +60,7 @@ local oo          = require("loop.base")
 local math        = require("math")
 local string      = require("string")
 local table       = require("jive.utils.table")
+local os          = require("os")
 
 local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
@@ -317,6 +318,18 @@ local opcodes = {
 		}
 	end,
 
+	geek = function(self, packet)
+		return {
+			geekmode = unpackNumber(packet, 5, 1),
+		}
+	end,
+
+	blst = function(self, packet)
+		return {
+			irstr = string.sub( packet, 5),
+	}
+	end,
+
 	http = function(self, packet)
 		-- XXXX
 		log:error("TODO")
@@ -379,6 +392,20 @@ function __init(self, jnt, heloPacket)
 		obj:capability("SyncgroupID", data.syncgroupid)
 
 		connectIp(obj, data.serverip)
+	end)
+
+	obj:subscribe("geek", function(_, data)
+		local geekmode = data.geekmode
+		log:info( "IR Blaster - geekmode: ", geekmode)
+
+		_setGeekmode( obj, geekmode)
+	end)
+
+	obj:subscribe("blst", function(_, data)
+		local irstr = data.irstr
+		log:info( "IR Blaster - irstr: ", irstr)
+
+		_blastIR( obj, irstr)
 	end)
 
 	return obj
@@ -582,6 +609,35 @@ function connectTask(self, serverip)
 
 	-- send helo packet
 	self:send(self.heloPacket)
+end
+
+
+function _setGeekmode( self, geekmode)
+	Task( "setGeekmode", self, setGeekmodeTask):addTask( geekmode)
+end
+
+
+function setGeekmodeTask( self, geekmode)
+	if geekmode == 1 then
+		os.execute( "echo 0 > /sys/devices/platform/fab4_gpio.0/HDP_EN0")
+		os.execute( "echo 0 > /sys/devices/platform/fab4_gpio.0/HDP_EN1")
+	else
+		os.execute( "echo 1 > /sys/devices/platform/fab4_gpio.0/HDP_EN0")
+		os.execute( "echo 1 > /sys/devices/platform/fab4_gpio.0/HDP_EN1")
+	end
+end
+
+
+function _blastIR( self, irstr)
+	Task( "blastIR", self, blastIRTask):addTask( irstr)
+end
+
+
+function blastIRTask( self, irstr)
+	local cmd = "cd /sys/bus/i2c/drivers/fab4-ir/0-0047; "
+	cmd = cmd .. "echo \"" .. irstr .. "\" > ir_blaster; "
+	cmd = cmd .. "echo 1 > ir_blaster; "
+	os.execute( cmd)
 end
 
 
