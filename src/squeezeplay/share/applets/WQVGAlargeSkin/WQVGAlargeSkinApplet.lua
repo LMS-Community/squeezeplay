@@ -547,8 +547,8 @@ function skin(self, s)
 	s.checkbox.align = 'center'
 	s.checkbox.padding = CHECKBOX_RADIO_PADDING
 	s.checkbox.h = WH_FILL
-        s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
-        s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
+        s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on_3line.png")
+        s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off_3line.png")
 
 
         -- Radio button
@@ -556,8 +556,8 @@ function skin(self, s)
 	s.radio.align = 'center'
 	s.radio.padding = CHECKBOX_RADIO_PADDING
 	s.radio.h = WH_FILL
-        s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
-        s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
+        s.radio.img_on = _loadImage(self, "Icons/radiobutton_on_3line.png")
+        s.radio.img_off = _loadImage(self, "Icons/radiobutton_off_3line.png")
 
 	s.item_choice = _uses(s.item, {
 		order  = { 'icon', 'text', 'check' },
@@ -575,7 +575,7 @@ function skin(self, s)
 		check = {
 			align = ITEM_ICON_ALIGN,
 			padding = CHECK_PADDING,
-			img = _loadImage(self, "Icons/icon_check_5line.png")
+			img = _loadImage(self, "Icons/icon_check_3line.png")
 	      	}
 	})
 
@@ -645,7 +645,10 @@ function skin(self, s)
 		}),
 		item_checked        = _uses(s.item_checked, {
 			text = selectedTextBlock,
-			bgImg = threeItemSelectionBox
+			bgImg = threeItemSelectionBox,
+			arrow = {
+	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+			},
 		}),
 		item_no_arrow        = _uses(s.item_no_arrow, {
 			text = selectedTextBlock,
@@ -661,7 +664,10 @@ function skin(self, s)
 		}),
 		item_info  = _uses(s.item_info, {
 			text = itemInfoSelectedTextBlock,
-			bgImg = threeItemSelectionBox
+			bgImg = threeItemSelectionBox,
+			arrow = {
+	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+			},
 		}),
 	}
 
@@ -669,10 +675,16 @@ function skin(self, s)
 		item = _uses(s.item, {
 			text = selectedTextBlock,
 			bgImg = threeItemPressedBox,
+			arrow = {
+	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+			},
 		}),
 		item_checked = _uses(s.item_checked, {
 			text = selectedTextBlock,
 			bgImg = threeItemPressedBox,
+			arrow = {
+	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+			},
 		}),
 		item_play = _uses(s.item_play, {
 			text = selectedTextBlock,
@@ -696,7 +708,10 @@ function skin(self, s)
 		}),
 		item_info  = _uses(s.item_info, {
 			text = itemInfoSelectedTextBlock,
-			bgImg = threeItemPressedBox
+			bgImg = threeItemPressedBox,
+			arrow = {
+	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+			},
 		}),
 	}
 
