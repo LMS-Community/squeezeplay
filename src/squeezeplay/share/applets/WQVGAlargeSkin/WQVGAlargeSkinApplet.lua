@@ -512,7 +512,7 @@ function skin(self, s)
 	})
 
 	s.item = {
-		order = { "icon", "text", "arrow" },
+		order = { "text", "arrow" },
 		padding = { ITEM_LEFT_PADDING, 0, 5, 0 },
 		text = {
 			padding = { 0, 0, 2, 0 },
@@ -844,7 +844,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
 		position = LAYOUT_NORTH,
-		border = { 0, 14, 0, 4 },
+		border = { 0, 12, 0, 0 },
 		padding = { 15, 0, 15, 0 },
 		align = "center",
 		font = _font(POPUP_TEXT_SIZE_1),
@@ -1486,10 +1486,12 @@ function skin(self, s)
 		img = _loadImage(self, "Alerts/wifi_connecting.png"),
 		frameRate = 8,
 		frameWidth = 120,
+		padding = { 0, 0, 0, 48 },
 	})
 
 	s.icon_connected = _uses(_icon, {
 		img = _loadImage(self, "Alerts/connecting_success_icon.png"),
+		padding = { 0, 0, 0, 48 },
 	})
 
 	s.icon_photo_loading = _uses(_icon, {
