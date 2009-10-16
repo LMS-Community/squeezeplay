@@ -622,7 +622,6 @@ function window_playlist(self, item)
 
 	local menu = SimpleMenu("menu")
 	for i,subdata in ipairs(data) do
-		log:warn('here')
 		menu:addItem({
 			text = subdata[1],
 			icon = Icon('icon_no_artwork'),
@@ -651,11 +650,9 @@ function window_playlist(self, item)
 	})
 	menu:addItem({
 			text  = "Clear Playlist",
-			style = 'item_playlist_clear',
 	})
 	menu:addItem({
 			text  = "Save Playlist",
-			style = 'item_playlist_save',
 	})
 
 	window:addWidget(menu)
