@@ -579,6 +579,28 @@ function skin(self, s)
 	      	}
 	})
 
+	s.item_info = _uses(s.item, {
+		order = { 'text' },
+		padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+		text = {
+			align = "top-left",
+			w = WH_FILL,
+			h = WH_FILL,
+			padding = { 0, 12, 0, 12 },
+			font = _font(34),
+			line = {
+				{
+					font = _font(18),
+					height = 18,
+				},
+				{
+					font = _boldfont(34),
+					height = 34,
+				},
+			},
+		},
+	})
+
 	s.item_no_arrow = _uses(s.item, {
 		order = { 'icon', 'text' },
 	})
@@ -591,6 +613,20 @@ function skin(self, s)
 		sh = NONE,
 		font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
 	}
+	local itemInfoSelectedTextBlock = _uses(s.item_info.text, {
+		font = _font(40),
+		line = {
+			{
+				font = _font(20),
+				height = 20,
+			},
+			{
+				font = _boldfont(40),
+				height = 40,
+			},
+		},
+	})
+
 	s.selected = {
 		item               = _uses(s.item, {
 			bgImg = threeItemSelectionBox,
@@ -623,6 +659,10 @@ function skin(self, s)
 			text = selectedTextBlock,
 			bgImg = threeItemSelectionBox
 		}),
+		item_info  = _uses(s.item_info, {
+			text = itemInfoSelectedTextBlock,
+			bgImg = threeItemSelectionBox
+		}),
 	}
 
 	s.pressed = {
@@ -653,6 +693,10 @@ function skin(self, s)
 		item_choice = _uses(s.item_choice, {
 			text = selectedTextBlock,
 			bgImg = threeItemPressedBox,
+		}),
+		item_info  = _uses(s.item_info, {
+			text = itemInfoSelectedTextBlock,
+			bgImg = threeItemPressedBox
 		}),
 	}
 

@@ -838,6 +838,28 @@ function skin(self, s)
 	      	}
 	})
 
+	s.item_info = _uses(s.item, {
+		order = { 'text' },
+		padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+		text = {
+			align = "top-left",
+			w = WH_FILL,
+			h = WH_FILL,
+			padding = { 0, 6, 0, 6 },
+			font = _font(14),
+			line = {
+				{
+					font = _font(14),
+					height = 14,
+				},
+				{
+					font = _boldfont(18),
+					height = 18,
+				},
+			},
+		},
+	})
+
 	s.item_no_arrow = _uses(s.item, {
 		order = { 'icon', 'text' },
 	})
@@ -867,6 +889,9 @@ function skin(self, s)
 		item_choice         = _uses(s.item_choice, {
 			bgImg = fiveItemSelectionBox
 		}),
+		item_info         = _uses(s.item_info, {
+			bgImg = fiveItemSelectionBox
+		}),
 	}
 
 	s.pressed = {
@@ -891,6 +916,9 @@ function skin(self, s)
 		item_choice = _uses(s.item_choice, {
 			bgImg = fiveItemPressedBox,
 		}),
+		item_info         = _uses(s.item_info, {
+			bgImg = fiveItemPressedBox,
+		}),
 	}
 
 	s.locked = {
@@ -911,6 +939,9 @@ function skin(self, s)
 		}),
 		item_checked_no_arrow = _uses(s.item_checked_no_arrow, {
 			arrow = smallSpinny
+		}),
+		item_info         = _uses(s.item_info, {
+			arrow = smallSpinny,
 		}),
 	}
 
