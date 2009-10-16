@@ -100,15 +100,17 @@ end
 
 
 local function dirIter(self, path)
-	local rpath = "applets/" .. self._entry.appletName .. "/" .. path .. "/"
+	local rpath = "applets/" .. self._entry.appletName .. "/" .. path
+	
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
 		dir = dir .. rpath
 
 		local mode = lfs.attributes(dir, "mode")
+		
 		if mode == "directory" then
 			for entry in lfs.dir(dir) do
 				if entry ~= "." and entry ~= ".." and entry ~= ".svn" then
-					coroutine.yield(rpath .. entry)
+					coroutine.yield(rpath .. '/' .. entry)
 				end
 			end
 		end
