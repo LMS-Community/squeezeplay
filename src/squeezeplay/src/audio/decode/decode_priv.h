@@ -171,6 +171,7 @@ extern void decode_sample_fill_buffer(void);
 /* visualizers */
 extern int decode_vumeter(lua_State *L);
 extern int decode_spectrum(lua_State *L);
+extern int decode_spectrum_init(lua_State *L);
 
 
 /* Internal state */

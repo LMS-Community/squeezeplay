@@ -206,7 +206,8 @@ libdecode_la_SOURCES = \
 	src/audio/decode/decode_vorbis.c \
 	src/audio/decode/decode_alac.c \
 	src/audio/decode/visualizer_vumeter.c \
-	src/audio/decode/visualizer_spectrum.c
+	src/audio/decode/visualizer_spectrum.c \
+	src/audio/kiss_fft.c
 
 
 libdecode_la_LIBADD = libaudio.la -lSDL -lFLAC -lmad -lvorbisidec

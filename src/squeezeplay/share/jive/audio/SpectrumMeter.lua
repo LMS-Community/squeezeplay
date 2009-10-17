@@ -26,6 +26,8 @@ function __init(self, style)
 
 	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE / 4)
 
+	decode:spectrum_init()
+
 	return obj
 end
 
@@ -76,10 +78,14 @@ end
 function draw(self, surface)
 	self.bgImg:blit(surface, self:getBounds())
 
-	local bins = _randBins(self.numBins, self.h)
+--	local bins = _randBins(self.numBins, self.h)
+
+	local bins = { {}, {}}
+
+	bins[1], bins[2] = decode:spectrum( self.numBins)
 
 	_drawBins(self, surface, bins, 1, self.x, self.y, 1)
-	_drawBins(self, surface, bins, 1, self.x + (self.numBins*3), self.y, 1)
+	_drawBins(self, surface, bins, 2, self.x + (self.numBins*3), self.y, 1)
 end
 
 

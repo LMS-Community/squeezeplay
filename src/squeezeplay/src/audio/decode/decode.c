@@ -1003,6 +1003,7 @@ static const struct luaL_Reg decode_f[] = {
 	{ "audioGain", decode_audio_gain },
 	{ "captureGain", decode_capture_gain },
 	{ "vumeter", decode_vumeter },
+	{ "spectrum_init", decode_spectrum_init },
 	{ "spectrum", decode_spectrum },
 	{ NULL, NULL }
 };
