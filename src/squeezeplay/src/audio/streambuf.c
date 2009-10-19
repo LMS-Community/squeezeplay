@@ -349,6 +349,12 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 }
 
 
+bool_t streambuf_is_icy()
+{
+	return streambuf_filter == streambuf_icy_filter;
+}
+
+
 struct stream {
 	socket_t fd;
 	int num_crlf;

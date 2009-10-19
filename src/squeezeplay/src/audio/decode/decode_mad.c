@@ -89,7 +89,7 @@ static void xing_parse(struct decode_mad *self) {
 
 	// skip traditional xing vbr tag data
 	if (flags & XING_FRAMES) {
-		LOG_DEBUG(log_audio_codec, "skipping xing frames");
+		LOG_DEBUG(log_audio_codec, "reading xing frames");
 		if (bitlen < 32) {
 			return;
 		}
@@ -97,7 +97,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 32;
 	}
 	if (flags & XING_BYTES) {
-		LOG_DEBUG(log_audio_codec, "skipping xing bytes");
+		LOG_DEBUG(log_audio_codec, "reading xing bytes");
 		if (bitlen < 32) {
 			return;
 		}
@@ -105,7 +105,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 32;
 	}
 	if (flags & XING_TOC) {
-		LOG_DEBUG(log_audio_codec, "skipping xing toc");
+		LOG_DEBUG(log_audio_codec, "reading xing toc");
 		if (bitlen < 800) {
 			return;
 		}
@@ -113,7 +113,7 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 800;
 	}
 	if (flags & XING_SCALE) {
-		LOG_DEBUG(log_audio_codec, "skipping xing scale");
+		LOG_DEBUG(log_audio_codec, "reading xing scale");
 		if (bitlen < 32) {
 			return;
 		}
@@ -385,7 +385,11 @@ static void decode_mad_output(struct decode_mad *self) {
 		right += offset;
 	}
 
-	if (self->encoder_padding) {
+	/* Remove encoder padding. Only do this if we are streaming a file,
+	 * some radio stations seem to incorrectly include a xing header in 
+	 * the stream.
+	 */
+	if (self->encoder_padding && !streambuf_is_icy()) {
 		if (pcm->length > self->frame_cnt ) {
 			LOG_DEBUG(log_audio_codec, "Remove encoder padding=%d frames=%ld", self->encoder_padding, self->frame_cnt);
 

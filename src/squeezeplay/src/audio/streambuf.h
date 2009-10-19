@@ -50,4 +50,6 @@ extern void streambuf_set_copyright();
 
 extern void streambuf_set_filter(streambuf_filter_t filter);
 
+extern bool_t streambuf_is_icy();
+
 extern int luaopen_streambuf(lua_State *L);
