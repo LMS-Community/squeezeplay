@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#ifdef WIN32
 #include <malloc.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
