@@ -1257,6 +1257,21 @@ function skin(self, s)
 		},
 	})
 
+	s.text_list.title = _uses(s.title, {
+		text = {
+			line = {
+				{
+					font = _boldfont(18),
+					height = 21,
+				},
+				{
+					font = _font(14),
+					fg   = { 0xB3, 0xB3, 0xB3 },
+				},
+			},
+                },
+	})
+
 	s.multiline_text_list = _uses(s.text_list)
 
 	s.multiline_text_list.menu = _uses(s.menu, {

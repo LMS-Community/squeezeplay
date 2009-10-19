@@ -837,6 +837,20 @@ function skin(self, s)
 	s.text_list = _uses(s.window)
 	s.text_only = _uses(s.text_list)
 
+	s.text_list.title = _uses(s.title, {
+		text = {
+			line = {
+				{
+					font = _boldfont(30),
+					height = 32,
+				},
+				{
+					font = _font(18),
+					fg = { 0xB3, 0xB3, 0xB3 },
+				},
+			},
+		},
+	})
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 
