@@ -7,6 +7,7 @@ local oo                = require("loop.simple")
 local Widget            = require("jive.ui.Widget")
 local ScrollAccel       = require("jive.ui.ScrollAccel")
 local IRMenuAccel       = require("jive.ui.IRMenuAccel")
+local NumberLetterAccel = require("jive.ui.NumberLetterAccel")
 local Timer             = require("jive.ui.Timer")
 local Framework         = require("jive.ui.Framework")
 
@@ -51,19 +52,6 @@ local NUMBER_LETTER_TIMER_TIME = 1100 --ms
 module(...)
 oo.class(_M, Widget)
 
--- layout is from SC
-local numberLettersMixed = {
-	[0x76899867] = ' 0',         -- 0
-	[0x7689f00f] = '1.,"?!@-',   -- 1
-	[0x768908f7] = 'abcABC2',    -- 2
-	[0x76898877] = 'defDEF3',    -- 3
-	[0x768948b7] = 'ghiGHI4',    -- 4
-	[0x7689c837] = 'jklJKL5',    -- 5
-	[0x768928d7] = 'mnoMNO6',    -- 6
-	[0x7689a857] = 'pqrsPQRS7',  -- 7
-	[0x76896897] = 'tuvTUV8',    -- 8
-	[0x7689e817] = 'wxyzWXYZ9'   -- 9
-}
 
 -- return valid characters at cursor position.
 function _getChars(self)
@@ -323,20 +311,6 @@ function _insert(self)
 end
 
 
-function _getMatchingChars(self, sourceString)
-	local validChars = ""
-
-	for i = 1, sourceString:len() do
-		local char = string.sub(sourceString, i, i)
-		if string.find(self:_getChars(), char, 1, true) then
-			validChars = validChars .. char
-		end
-	end
-
-	return validChars
-end
-
-
 function _cursorAtEnd(self)
 	return self.cursor > #tostring(self.value)
 end
@@ -516,11 +490,11 @@ function _eventHandler(self, event)
 	if type == EVENT_IR_PRESS then
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
-			self.numberLetterTimer:stop()
+			self.numberLetterAccel:stopCurrentCharacter()
 			return _goAction(self)
 		end
 		if event:isIRCode("add") then
-			self.numberLetterTimer:stop()
+			self.numberLetterAccel:stopCurrentCharacter()
 			return _insertAction(self)
 		end
 
@@ -551,7 +525,7 @@ function _eventHandler(self, event)
 
 			--IR left/right
 			if event:isIRCode("arrow_left") or event:isIRCode("arrow_right") then
-				self.numberLetterTimer:stop()
+				self.numberLetterAccel:stopCurrentCharacter()
 				if self.locked == nil then
 					local direction =  self.leftRightIrAccel:event(event, 1, 1, 1, #self:getValue())
 
@@ -578,7 +552,7 @@ function _eventHandler(self, event)
 
 			--IR down/up
 			if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
-				self.numberLetterTimer:stop()
+				self.numberLetterAccel:stopCurrentCharacter()
 				if self.locked == nil then
 					local chars = self:_getChars()
 					local idx = string.find(chars, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)
@@ -595,63 +569,32 @@ function _eventHandler(self, event)
 			end
 		end
 		if type == EVENT_IR_DOWN or type == EVENT_IR_HOLD then
-			local timerWasRunning = self.numberLetterTimer:isRunning()
-
-			local numberLetters = numberLettersMixed[irCode]
-			if numberLetters then
-				self.numberLetterTimer:stop()
-				if timerWasRunning and self.lastNumberLetterIrCode and irCode != self.lastNumberLetterIrCode then
+			local consume, switchCharacters, scrollLetter, directLetter = self.numberLetterAccel:handleEvent(event, self:_getChars())
+			if consume then
+				if switchCharacters and scrollLetter then
 					_moveCursor(self, 1)
 					self:reDraw()
 
-					_scroll(self, 1, tostring(_getMatchingChars(self, numberLetters)), true)
-				else
-					---First check for "overshoot"
-					if self.lastNumberLetterT then
-						local numberLetterTimeDelta = event:getTicks() - self.lastNumberLetterT
-						if not timerWasRunning and numberLetterTimeDelta > NUMBER_LETTER_TIMER_TIME and
-								numberLetterTimeDelta < NUMBER_LETTER_TIMER_TIME + NUMBER_LETTER_OVERSHOOT_TIME then
-							--If timer has just fired and another press on the same key is entered,
-							 -- follow observed SC behavior: don't use the input, making for
-							 -- less unexpected input due to the key press happening right
-							 -- as the timer fired even though the user meant for the press to refer to the last letter.
-							return EVENT_CONSUME
-						end
-					end
+					_scroll(self, 1, scrollLetter, true)
+				elseif scrollLetter then
+					_scroll(self, 1, scrollLetter, true)
+				
+				elseif directLetter then
+					_scroll(self, 1, directLetter, true)
 
-					----continue scroll if timer was active, otherwise start new scroll
-
-					local availableNumberLetters = tostring(_getMatchingChars(self, numberLetters))
-
-					local lastCharacterIfNumber = string.match(availableNumberLetters, "%d$")
-					if type == EVENT_IR_HOLD and lastCharacterIfNumber then
-						-- on hold, select the number character directly (always the last character), if it is available
-
-						_scroll(self, 1, tostring(lastCharacterIfNumber), true)
-
-						_moveCursor(self, 1)
-						self.lastNumberLetterIrCode = nil
-
-						return EVENT_CONSUME
-					end
-
-					local resetNumberLettersIndex = not timerWasRunning or self:_cursorAtEnd()
-					_scroll(self, 1, availableNumberLetters, resetNumberLettersIndex)
+					_moveCursor(self, 1)
+				
 				end
-
-				self.lastNumberLetterIrCode = irCode
-
-				self.lastNumberLetterT = event:getTicks()
-				self.numberLetterTimer:restart()
-
+				
 				return EVENT_CONSUME
-
-			end
+			else
+				return EVENT_UNUSED 
+			end			
 		end
 
 	elseif type == EVENT_SCROLL then
 		-- XXX optimize by caching v and i in _scroll?
-		self.numberLetterTimer:stop()
+		self.numberLetterAccel:stopCurrentCharacter()
 		local v = self:_getChars()
 		local idx = string.find(v, string.sub(tostring(self.value), self.cursor, self.cursor), 1, true)
 
@@ -659,7 +602,7 @@ function _eventHandler(self, event)
 		return EVENT_CONSUME
 
 	elseif type == EVENT_CHAR_PRESS then
-		self.numberLetterTimer:stop()
+		self.numberLetterAccel:stopCurrentCharacter()
 
 		--assuming ascii level values for now
 		local keyboardEntry = string.char(event:getUnicode())
@@ -694,11 +637,11 @@ function _eventHandler(self, event)
 		return EVENT_CONSUME
 
 	elseif type == EVENT_WINDOW_RESIZE then
-		self.numberLetterTimer:stop()
+		self.numberLetterAccel:stopCurrentCharacter()
 		_moveCursor(self, 0)
 
 	elseif type == EVENT_KEY_PRESS then
-		self.numberLetterTimer:stop()
+		self.numberLetterAccel:stopCurrentCharacter()
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
@@ -710,7 +653,7 @@ function _eventHandler(self, event)
 
 		end
 	elseif type == EVENT_KEY_HOLD then
-		self.numberLetterTimer:stop()
+		self.numberLetterAccel:stopCurrentCharacter()
 		local keycode = event:getKeycode()
 
 		if keycode == KEY_REW then
@@ -769,17 +712,14 @@ function __init(self, style, value, closure, allowedChars)
 	obj.leftRightIrAccel.onlyScrollByOne = true
 
 	obj.irAccel = IRMenuAccel()
-	obj.lastNumberLetterIrCode = nil
-	obj.lastNumberLetterT = nil
-	obj.numberLetterTimer = Timer(NUMBER_LETTER_TIMER_TIME,
+	obj.numberLetterAccel = NumberLetterAccel(
 					function()
 						obj.lastNumberLetterIrCode = nil
 						obj.lastNumberLetterKeyCode = nil
 						obj:_moveCursor(1)
 						obj:reDraw()
-					end,
-					true)
-
+					end
+	)
 	obj:addActionListener("play", obj, _goAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)

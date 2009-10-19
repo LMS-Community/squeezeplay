@@ -413,13 +413,13 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:getTextIndex(item)
+=head2 jive.ui.Menu:getItemIndex(text)
 
 Returns the index of item given by I<text>, or nil if it is not in this menu.
 
 =cut
 --]]
-function getTextIndex(self, text)
+function getItemIndex(self, text)
 	for k,v in ipairs(self.items) do
 		if text == v.text then
 			return k

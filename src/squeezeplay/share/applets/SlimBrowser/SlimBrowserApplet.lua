@@ -2453,6 +2453,29 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 	if step.menu then
 		_stepSetMenuItems(step)
+                step.menu.textIndexHandler = {
+                        getTextIndexes = function ()             
+                                return step.db:getTextIndexes()
+                        end,
+                        getIndex = function (char)
+				for i, wrapper in ipairs(step.db:getTextIndexes()) do
+					if wrapper.key == char then
+						return wrapper.index
+					end
+				end
+
+                                return nil
+                        end,
+                        getValidChars =  function ()             
+                                local validChars = ""
+                                
+				for i, wrapper in ipairs(step.db:getTextIndexes()) do
+					validChars = validChars .. wrapper.key
+				end
+				
+				return validChars
+                        end,
+		}
 	end
 	
 	if windowSpec.disableBackButton then

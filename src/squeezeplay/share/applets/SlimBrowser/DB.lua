@@ -32,7 +32,7 @@ TODO
 --]]
 
 -- stuff we use
-local _assert, tonumber, tostring, type, ipairs = _assert, tonumber, tostring, type, ipairs
+local _assert, tonumber, tostring, type, ipairs, pairs, table = _assert, tonumber, tostring, type, ipairs, pairs, table
 
 local oo = require("loop.base")
 local RadioGroup = require("jive.ui.RadioGroup")
@@ -56,6 +56,7 @@ function __init(self, windowSpec)
 		
 		-- data
 		store = {},
+		textIndex = {},
 		last_chunk = false,  -- last_chunk received, to access other non DB fields
 
 		-- major items extracted from data
@@ -137,7 +138,7 @@ function updateStatus(self, chunk)
 		self.complete = false
 		self.upCompleted = false
 		self.downCompleted = false
-
+		self.textIndex = {}
 	end
 
 	-- update the window properties
@@ -196,9 +197,34 @@ function menuItems(self, chunk)
 
 	self.store[key] = chunk["item_loop"]
 
+	for i,item in ipairs(chunk["item_loop"]) do
+		local index = i + tonumber(chunk["offset"])
+		local textKey = item.params and item.params.textkey
+		if textKey then
+			local textKeyIndex = self.textIndex[textKey]
+			if not textKeyIndex or textKeyIndex > index then
+				--hold lowest index for the given textKey
+				self.textIndex[textKey] = index
+			end
+			
+		end
+	end
 	return self.count, cFrom, cTo
 end
 
+function getTextIndexes(self)
+	local tmp = {}
+	for key, index in pairs(self.textIndex) do
+		table.insert(tmp, {key = key, index = index})
+	end
+	
+	table.sort(tmp, 
+			function(a,b)
+				return a.index < b.index
+			end
+	)
+	return tmp
+end
 
 function chunk(self)
 	return self.last_chunk

@@ -45,6 +45,7 @@ local Scrollbar            = require("jive.ui.Scrollbar")
 local Surface              = require("jive.ui.Surface")
 local ScrollAccel          = require("jive.ui.ScrollAccel")
 local IRMenuAccel          = require("jive.ui.IRMenuAccel")
+local NumberLetterAccel    = require("jive.ui.NumberLetterAccel")
 local Flick                = require("jive.ui.Flick")
 local Timer                = require("jive.ui.Timer")
 
@@ -61,6 +62,7 @@ local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
 local EVENT_IR_ALL         = jive.ui.EVENT_IR_ALL
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
+local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
 local EVENT_KEY_ALL        = jive.ui.EVENT_KEY_ALL
 local EVENT_KEY_PRESS      = jive.ui.EVENT_KEY_PRESS
 local EVENT_SHOW           = jive.ui.EVENT_SHOW
@@ -314,6 +316,20 @@ function _showContextMenu(self)
 	return EVENT_CONSUMED
 end
 
+
+function _getMatchingChars(self, stringA, stringB)
+	local validChars = ""
+
+	for i = 1, stringA:len() do
+		local char = string.sub(stringA, i, i)
+		if string.find(stringB, char, 1, true) then
+			validChars = validChars .. char
+		end
+	end
+
+	return validChars
+end
+
 -- _eventHandler
 -- manages all menu events
 local function _eventHandler(self, event)
@@ -344,10 +360,45 @@ local function _eventHandler(self, event)
 	if evtype == EVENT_SCROLL then
 		if self.locked == nil then
 			self:resetDragData()
+			if self.textMode then
+				local textIndexes = self.textIndexHandler.getTextIndexes()
+				--todo if size == 0
+				local newIndex = (self.lastTextIndex and self.lastTextIndex or 0) + event:getScroll()
+				
+				--wraparound
+				if newIndex > #textIndexes then
+					newIndex = newIndex - #textIndexes
+				elseif newIndex < 1 then
+					newIndex = #textIndexes + newIndex				
+				end
+
+				self.accelKey = textIndexes[newIndex].key
+					
+				self:setSelectedIndex(textIndexes[newIndex].index, true )
+				
+				self.lastTextIndex = newIndex
+				return EVENT_CONSUME
+			end
 			self:scrollBy(self.scroll:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize))
 			return EVENT_CONSUME
 		end
 
+	elseif evtype == EVENT_IR_PRESS then
+		if self.textIndexHandler then
+			local consume, switchCharacters, scrollLetter = self.numberLetterAccel:handleEvent(event, self.textIndexHandler.getValidChars())
+			if consume then
+				if scrollLetter then
+					local newIndex = self.textIndexHandler.getIndex(scrollLetter)
+					self:setSelectedIndex(newIndex)
+					
+					self.accelKey = scrollLetter
+					self.accelKeyTimer:restart()
+				end
+				
+				return EVENT_CONSUME
+			end			
+		end
+				
 	elseif evtype == EVENT_IR_DOWN or evtype == EVENT_IR_REPEAT then
 		--todo add lock cancelling like in key press - let action hanlding take care of this
 		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
@@ -372,14 +423,53 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 			end
 		else
+			if action == "go" and self.textMode then
+				self.textMode = nil
+				self.accelKey = nil
+				self:reDraw()
+				return EVENT_CONSUME
+			end
+
 			-- first send actions to selected widgets
 			local r = _itemListener(self, _selectedItem(self), event)
 			if r ~= EVENT_UNUSED then
 				return r
 			end
 
+			if action == "text_mode" and self.textIndexHandler then
+				--todo turn off text mode when leaving the menu
+				self.textMode = not self.textMode
+				if self.textMode then
+					local textIndexes = self.textIndexHandler.getTextIndexes()
+					
+					if #textIndexes > 0 then
+						--reset in case none found
+						self.accelKey  = nil
+
+						local selectedIndex = self:getSelectedIndex() or 1
+						for i, wrapper in ipairs(textIndexes) do
+							if wrapper.index > selectedIndex then
+								break
+							else
+								self.accelKey  = wrapper.key
+								self.lastTextIndex = i
+							end
+						end
+
+--						log:warn("self.accelKey: ", self.accelKey)
+
+					else
+						
+						self.accelKey  = nil
+					end
+				else
+					self.accelKey  = nil
+				end
+				self:reDraw()
+				return EVENT_CONSUME
+				
 			-- otherwise try default behaviour
-			if action == "page_up" then
+			elseif action == "page_up" then
 				--when paging up, top item becomes the bottom item
 				if self.selected and self.selected > 1  then
 					self:setSelectedIndex(self.topItem, true )
@@ -807,6 +897,11 @@ local function _eventHandler(self, event)
 		return EVENT_UNUSED
 	end
 
+	if self.locked ~= nil then
+		self:playSound("BUMP")
+		return EVENT_UNUSED		
+	end
+	
 	-- other events to selected widgets
 	return _itemListener(self, _selectedItem(self), event)
 end
@@ -909,6 +1004,8 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable, contextM
 						obj:reLayout()	
 					end,
 					true)
+
+	obj.numberLetterAccel = NumberLetterAccel(function() end)
 
 --	obj:addActionListener("context_menu", obj, _showContextMenuAction)
 	obj.contextMenuManager = contextMenuManager
@@ -1113,7 +1210,7 @@ if I<coerce> is true, index < 1 will be treat as 1 and index > listSize will be 
 =cut
 --]]
 function setSelectedIndex(self, index, coerce)
-	_assert(type(index) == "number", "setSelectedIndex index is not a number")
+	_assert(type(index) == "number", "setSelectedIndex index is not a number: ", index)
 
 	if coerce then
 		if index < 1 then
