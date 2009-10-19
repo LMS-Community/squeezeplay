@@ -290,7 +290,7 @@ function _timerCallback(self)
 		elseif not self.sentOutputUnderrunEvent and
 			self.stream then
 
-			log:debug("status OUTPUT UNDERRUN")
+			log:info("output underrun")
 			decode:pauseAudio(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
@@ -382,6 +382,8 @@ function _timerCallback(self)
 		if log:isDebug() then
 			local dbuf = (status.decodeFull * 100) / status.decodeSize
 			local obuf = (status.outputFull * 100) / status.outputSize
+
+			log:info(string.format('%0.1f%%/%0.1f%%', dbuf, obuf))
 
 			iconbar:showDebug(string.format('%0.1f%%/%0.1f%%', dbuf, obuf), 10)
 		end

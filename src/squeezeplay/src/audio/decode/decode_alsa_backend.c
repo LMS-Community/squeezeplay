@@ -325,21 +325,14 @@ static void playback_callback(struct decode_alsa *state,
 	}
 
 	/* audio underrun? */
-	if (decode_frames == 0) {
-		decode_audio->state |= DECODE_STATE_UNDERRUN;
-		memset(output_buffer, 0, PCM_FRAMES_TO_BYTES(output_frames));
-		LOG_ERROR("Audio underrun: used 0 bytes");
-
-		return;
-	}
-
 	if (decode_frames < output_frames) {
 		memset(output_buffer + PCM_FRAMES_TO_BYTES(decode_frames), 0, PCM_FRAMES_TO_BYTES(output_frames) - PCM_FRAMES_TO_BYTES(decode_frames));
 
 		if ((decode_audio->state & DECODE_STATE_UNDERRUN) == 0) {
-			decode_audio->state |= DECODE_STATE_UNDERRUN;
-			LOG_ERROR("Audio underrun: used %d frames , requested %d frames", (int)decode_frames, (int)output_frames);
+			LOG_ERROR("Audio underrun: used %ld frames, requested %ld frames. elapsed samples %ld", decode_frames, output_frames, decode_audio->elapsed_samples);
 		}
+
+		decode_audio->state |= DECODE_STATE_UNDERRUN;
 	}
 	else {
 		decode_audio->state &= ~DECODE_STATE_UNDERRUN;

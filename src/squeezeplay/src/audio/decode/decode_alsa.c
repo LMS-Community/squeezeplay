@@ -68,8 +68,6 @@ static void decode_alsa_resume(void) {
 
 	ASSERT_AUDIO_LOCKED();
 
-	decode_audio->set_sample_rate = decode_audio->track_sample_rate;
-
 	decode_alsa_check_pids();
 }
 
@@ -78,8 +76,6 @@ static void decode_alsa_pause(void) {
 	LOG_DEBUG(log_audio_output, "decode_alsa_pause");
 
 	ASSERT_AUDIO_LOCKED();
-
-	decode_audio->set_sample_rate = 44100;
 
 	decode_alsa_check_pids();
 }
