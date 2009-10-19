@@ -1876,8 +1876,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_rew.png"),
 	}
 	s.icon_popup_stop = {
-		--FIXME, need a stop icon for this
-		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
+		img = _loadImage(self, "Icons/icon_popup_box_stop.png"),
 	}
 	s.icon_popup_lineIn = {
 		img = _loadImage(self, "IconsResized/icon_linein_80.png"),
