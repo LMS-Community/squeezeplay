@@ -875,6 +875,7 @@ end
 -- DOT MATRIX CLOCK SKIN
 function DotMatrix:getDotMatrixClockSkin(skinName)
 
+	-- 10' and 3'UIs send the same clock
 	if skinName == 'WQVGAlargeSkin' then
 		skinName = 'WQVGAsmallSkin'
 	end
@@ -960,31 +961,31 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		local _clockDigit = {
 			position = LAYOUT_NONE,
 			w = 61,
-			y = 35,
+			y = 38,
 		}
 		local _dateDigit = {
 			position = LAYOUT_NONE,
 			w = 27,
-			y = 191,
+			y = 192,
 		}
 
 		local x = {}
-		x.h1 = 72
-		x.h2 = x.h1 + 73
-		x.dots = x.h2 + 71
-		x.m1 = x.dots + 28
-		x.m2 = x.m1 + 73
-		x.alarm = 72
-		x.M1 = 72 + 36 + 14
-		x.M2 = x.M1 + 28
-		x.dot1 = x.M2 + 27 + 6
-		x.D1 = x.dot1 + 13
-		x.D2 = x.D1 + 28
-		x.dot2 = x.D2 + 27 + 6
-		x.Y1 = x.dot2 + 13
-		x.Y2 = x.Y1 + 28
-		x.Y3 = x.Y2 + 28
-		x.Y4 = x.Y3 + 28
+		x.h1 = 68
+		x.h2 = x.h1 + 72
+		x.dots = x.h2 + 75
+		x.m1 = x.dots + 27
+		x.m2 = x.m1 + 72
+		x.alarm = 73
+		x.M1 = x.alarm + 36 + 13
+		x.M2 = x.M1 + 30
+		x.dot1 = x.M2 + 26 + 6
+		x.D1 = x.dot1 + 10
+		x.D2 = x.D1 + 30
+		x.dot2 = x.D2 + 26 + 6
+		x.Y1 = x.dot2 + 10
+		x.Y2 = x.Y1 + 30
+		x.Y3 = x.Y2 + 30
+		x.Y4 = x.Y3 + 29
 
 		s.Clock = {
 			w = 480,
@@ -1000,7 +1001,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				position = LAYOUT_NONE,
 				x = x.dots,
 				w = 38,
-				y = 70,
+				y = 75,
 			},
 			m1 = _uses(_clockDigit, {
 				x = x.m1,
@@ -1011,6 +1012,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 
 			alarm = _uses(_dateDigit, {
 				w = 36,
+				y = 191,
 				x = x.alarm,
 			}),
 			M1 = _uses(_dateDigit, {
@@ -1022,7 +1024,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			dot1 = _uses(_dateDigit, {
 				x = x.dot1,
 				w = 13,
-				y = 221,
+				y = 222,
 			}),
 			D1 = _uses(_dateDigit, {
 				x = x.D1,
@@ -1033,7 +1035,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			dot2 = _uses(_dateDigit, {
 				x = x.dot2,
 				w = 13,
-				y = 221,
+				y = 222,
 			}),
 			Y1 = _uses(_dateDigit, {
 				x = x.Y1,
