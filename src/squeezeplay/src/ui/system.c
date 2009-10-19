@@ -317,6 +317,15 @@ static int system_atomic_write(lua_State *L)
 		return luaL_error(L, "fclose: %s", strerror(errno));
 	}
 
+#if defined(WIN32)
+	/* windows systems must delete old file first */
+	if (_access_s(fname, 0) == 0) {
+		if (remove(fname) != 0) {
+			return luaL_error(L, "remove old file: %s", strerror(errno));
+		}
+	}
+#endif
+
 	if (rename(tname, fname) != 0) {
 		return luaL_error(L, "rename: %s", strerror(errno));
 	}

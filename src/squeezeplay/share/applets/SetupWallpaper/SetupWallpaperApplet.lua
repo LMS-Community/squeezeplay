@@ -167,7 +167,7 @@ function settingsShow(self)
 						   function()
 							   self:setBackground(name, self.currentPlayerId)
 						   end,
-						   wallpaper == img
+						   wallpaper == name
 					   ),
 				focusGained = function(event)
 						  self:showBackground(name, self.currentPlayerId)

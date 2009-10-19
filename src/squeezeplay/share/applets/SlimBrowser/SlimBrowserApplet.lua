@@ -3155,8 +3155,8 @@ function showPlaylist()
 		if playlistSize == nil or (playlistSize and playlistSize <= 1) then
 			_statusStep.menu:setSelectedIndex(1)
 		-- where we are in the playlist is stored in the item list as currentIndex
-		elseif _statusStep.menu:getItems() and _statusStep.menu:getItems().currentIndex then
-			_statusStep.menu:setSelectedIndex(_statusStep.menu:getItems().currentIndex)
+		elseif _statusStep.db and _statusStep.db:playlistIndex() then
+			_statusStep.menu:setSelectedIndex(_statusStep.db:playlistIndex())
 		end
 
 		_statusStep.window:addActionListener("back", _statusStep, _leavePlayListAction)
