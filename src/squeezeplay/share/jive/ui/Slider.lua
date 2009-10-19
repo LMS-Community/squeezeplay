@@ -41,6 +41,7 @@ local oo	= require("loop.simple")
 local math      = require("math")
 
 local Widget	= require("jive.ui.Widget")
+local IRMenuAccel            = require("jive.ui.IRMenuAccel")
 local Framework	= require("jive.ui.Framework")
 
 local log       = require("jive.utils.log").logger("squeezeplay.ui")
@@ -55,6 +56,9 @@ local EVENT_MOUSE_PRESS       = jive.ui.EVENT_MOUSE_PRESS
 local EVENT_MOUSE_DOWN        = jive.ui.EVENT_MOUSE_DOWN
 local EVENT_MOUSE_UP          = jive.ui.EVENT_MOUSE_UP
 local EVENT_MOUSE_ALL         = jive.ui.EVENT_MOUSE_ALL
+local EVENT_IR_ALL            = jive.ui.EVENT_IR_ALL
+local EVENT_IR_DOWN           = jive.ui.EVENT_IR_DOWN
+local EVENT_IR_REPEAT         = jive.ui.EVENT_IR_REPEAT
 
 local KEY_BACK        = jive.ui.KEY_BACK
 local KEY_UP          = jive.ui.KEY_UP
@@ -85,6 +89,9 @@ function __init(self, style, min, max, value, closure, dragDoneClosure)
 	obj.value = 1
 	obj.closure = closure
 	obj.dragDoneClosure = dragDoneClosure
+
+        obj.irAccel = IRMenuAccel("arrow_up", "arrow_down")
+	
 	obj.dragThreshold = 25
 
 	obj.distanceFromMouseDownMax = 0
@@ -94,7 +101,7 @@ function __init(self, style, min, max, value, closure, dragDoneClosure)
 
 	obj:addActionListener("go", obj, _callClosureAction)
 	obj:addActionListener("play", obj, _callClosureAction)
-	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_ALL,
+	obj:addListener(EVENT_SCROLL | EVENT_KEY_PRESS | EVENT_MOUSE_ALL | EVENT_IR_DOWN | EVENT_IR_REPEAT,
 			function(event)
 				return obj:_eventHandler(event)
 			end)
@@ -302,6 +309,19 @@ function _eventHandler(self, event)
 		end
 
 		return EVENT_UNUSED
+	elseif (type & EVENT_IR_ALL) > 0 then
+		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
+			if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
+				local value = self.irAccel:event(event, 1, 1, 1, 100)
+
+				if value ~= 0 then
+					self:_moveSlider(value)
+				end
+			end
+		end
+		--all non-volume IR, pass through.
+		return EVENT_UNUSED
+
 	end
 end
 
