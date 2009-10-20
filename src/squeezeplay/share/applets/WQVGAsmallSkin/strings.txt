@@ -18,6 +18,9 @@ WQVGA_SMALL_SKIN
 	RU	Мелкая обложка, WQVGA
 	SV	WQVGA-skal med liten text
 
+WQVGA_SMALL_SKIN_FAB4
+	EN	Small Text Skin
+
 ENTER_SMALL
 	CS	hotovo
 	DA	udført
