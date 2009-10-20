@@ -128,17 +128,21 @@ int jiveL_window_check_layout(lua_State *L) {
 
 int jiveL_window_iterate(lua_State *L) {
 	int r = 0;
+	bool_t nohidden;
 
 	/* stack is:
 	 * 1: widget
 	 * 2: closure
+	 * 3: include hidden (optional)
 	 */
+
+	nohidden = !lua_toboolean(L, 3);
 
 	// window widgets in z order
 	lua_getfield(L, 1, "zWidgets");
 	lua_pushnil(L);
 	while (lua_next(L, -2) != 0) {
-		if (jive_getmethod(L, -1, "isHidden")) {
+		if (nohidden && jive_getmethod(L, -1, "isHidden")) {
 			lua_pushvalue(L, -2);
 			lua_call(L, 1, 1);
 

@@ -471,7 +471,8 @@ int jiveL_widget_check_layout(lua_State *L) {
 		jive_getmethod(L, 1, "iterate");
 		lua_pushvalue(L, 1);
 		lua_pushcfunction(L, jiveL_widget_check_layout);
-		lua_call(L, 2, 0);
+		lua_pushboolean(L, 1); /* include hidden widgets */
+		lua_call(L, 3, 0);
 	}
 
 	return 0;
