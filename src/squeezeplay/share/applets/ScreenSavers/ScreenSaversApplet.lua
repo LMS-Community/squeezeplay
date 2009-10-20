@@ -626,6 +626,7 @@ function screensaverSetting(self, menuItem, mode)
 
 			-- pressing play should play the screensaver, so we need a handler
 			button:addActionListener("play", self, testScreensaverAction)
+			button:addActionListener("add", self, testScreensaverAction)
 
 			-- set default weight to 100
 			if not screensaver.weight then screensaver.weight = 100 end
