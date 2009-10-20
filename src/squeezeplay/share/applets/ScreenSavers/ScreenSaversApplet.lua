@@ -640,9 +640,14 @@ function screensaverSetting(self, menuItem, mode)
 
 	local window = Window("text_list", menuItem.text, 'settingstitle')
 
-	-- Bug: 1173, don't show this header widget yet on fab4
-	if System:getMachine() ~= 'fab4' and System:getMachine() ~= 'squeezeplay' then
-		menu:setHeaderWidget(Textarea("help_text", self:string("SCREENSAVER_SELECT_HELP")))
+	if System:getMachine() ~= 'squeezeplay' then
+		local token = 'SCREENSAVER_SELECT_PLAYING_HELP'
+		if mode == 'whenStopped' then
+			token = 'SCREENSAVER_SELECT_STOPPED_HELP'
+		elseif mode == 'whenOff' then
+			token = 'SCREENSAVER_SELECT_OFF_HELP'
+		end
+		menu:setHeaderWidget(Textarea("help_text", self:string(token)))
 	end
 	window:addWidget(menu)
 
