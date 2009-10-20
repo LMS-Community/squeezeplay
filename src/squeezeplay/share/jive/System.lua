@@ -34,8 +34,10 @@ Return the user-specific path that holds settings, 3rd-party applets, wallpaper,
 Find a file on the lua path. Returns the full path of the file, or nil if it was not found.
 
 --]]
+local tonumber, tostring, type, pairs = tonumber, tostring, type, pairs
 
 local oo           = require("loop.simple")
+local log           = require("jive.utils.log").logger("squeezeplay")
 
 
 -- our class
@@ -47,8 +49,77 @@ function isHardware(class)
 	return (class:getMachine() ~= "squeezeplay")
 end
 
+local allCapabilities = {
+	["touch"] = 1,
+	["ir"] = 1,
+	["homeKey"] = 1,
+	["powerKey"] = 1,
+	["muteKey"] = 1,
+	["audioByDefault"] = 1,
+	["wiredNetworking"] = 1,
+	["deviceRotation"] = 1,
+	["coreKeys"] = 1,
+}
 
--- C implementation
+local _capabilities = {} -- of form string, 1 so
+
+function setCapabilities(self, capabilities)
+
+	for capability, value in pairs(capabilities) do
+		if not allCapabilities[capability] then
+			log:error("Unknown capability: ", capability)
+		end
+	end
+	
+	_capabilities = capabilities
+end
+
+function hasTouch(self)
+	return _capabilities["touch"] ~= nil
+end
+
+function hasIr(self)
+	return _capabilities["ir"] ~= nil
+end
+
+function hasHomeKey(self)
+	return _capabilities["homeKey"] ~= nil
+end
+
+function hasPowerKey(self)
+	return _capabilities["powerKey"] ~= nil
+end
+
+function hasMuteKey(self)
+	return _capabilities["muteKey"] ~= nil
+end
+
+function hasVolumeKnob(self)
+	return _capabilities["volumeKnob"] ~= nil
+end
+
+function hasAudioByDefault(self)
+	return _capabilities["audioByDefault"] ~= nil
+end
+
+function hasWiredNetworking(self)
+	return _capabilities["wiredNetworking"] ~= nil
+end
+
+function hasSoftPower(self)
+	return ( self:hasTouch() or self:hasPowerKey() )
+end
+
+function hasDeviceRotation(self)
+	return _capabilities["deviceRotation"] ~= nil
+end
+
+function hasCoreKeys(self)
+	return _capabilities["coreKeys"] ~= nil
+end
+
+
+-- rest is C implementation
 
 
 --[[

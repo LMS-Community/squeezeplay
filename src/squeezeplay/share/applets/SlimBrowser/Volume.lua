@@ -352,7 +352,7 @@ function event(self, event)
 	if type == EVENT_SCROLL then
 		local scroll = event:getScroll()
 
-		if System:getMachine() == "jive" then
+		if not System:hasVolumeKnob() then
 			if scroll > 0 then
 				self.delta = 1
 			elseif scroll < 0 then
@@ -433,8 +433,8 @@ function event(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
-		--Baby volume keys have no down/up and must have unique handling
-		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:getMachine() == "baby" then
+		--Handle Volume knob
+		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:hasVolumeKnob() then
 			--handle keyboard volume change
 			if (keycode == KEY_VOLUME_UP) then
 				self.delta = self:_getSmallKnobDelta(1, event:getTicks())

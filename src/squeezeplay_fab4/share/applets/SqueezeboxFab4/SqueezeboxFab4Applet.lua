@@ -61,6 +61,13 @@ function init(self)
 		revision = self._revision,
 	})
 
+	System:setCapabilities({
+		["touch"] = 1,
+		["ir"] = 1,
+		["audioByDefault"] = 1,
+		["wiredNetworking"] = 1,
+	})
+
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 

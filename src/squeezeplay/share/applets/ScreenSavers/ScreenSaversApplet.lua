@@ -290,7 +290,7 @@ function _getDefaultScreensaver(self)
 	local ss
 
 	local player = appletManager:callService("getCurrentPlayer")
-	if not self:isSoftPowerOn() and System:getMachine() ~= "jive" then
+	if not self:isSoftPowerOn() and System:hasSoftPower() then
 		ss = self:_getOffScreensaver()
 		log:debug("whenOff: ", ss)
 	else
@@ -414,7 +414,7 @@ function _showPowerOnWindow(self)
 			return
 		end
 
-		if System:getMachine() ~= "fab4" and System:isHardware() then
+		if not System:hasTouch() then
 			log:debug("ss: don't use power on window")
 			return
 		end

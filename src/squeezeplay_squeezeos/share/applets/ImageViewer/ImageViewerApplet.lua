@@ -406,7 +406,7 @@ function displaySlide(self)
 	local deviceCanRotate = false
 	
 	-- FIXME: better detection for device type
-	if System:getMachine() == "jive" then
+	if System:hasDeviceRotation() then
 		-- Jive device
 		deviceCanRotate = true
 	end

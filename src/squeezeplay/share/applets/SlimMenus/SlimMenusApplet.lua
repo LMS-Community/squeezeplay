@@ -508,7 +508,7 @@ local function _menuSink(self, isCurrentServer, server)
 
 			if not item.id then
 				log:info("no id for menu item: ", item.text)
-			elseif item.id == "playerpower" and System:getMachine() ~= "jive" and System:getMachine() ~= 'squeezeplay' then
+			elseif item.id == "playerpower" and System:hasSoftPower() and System:getMachine() ~= 'squeezeplay' then
 				--ignore, playerpower no longer shown to users since we use power button, unless this is a device without a power button
 			elseif item.id == "settingsPIN" then
 				--ignore, pin no longer shown to users since we use user/pass now

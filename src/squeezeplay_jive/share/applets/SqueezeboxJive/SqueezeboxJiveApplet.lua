@@ -90,6 +90,11 @@ function init(self)
 		revision = self._revision,
 	})
 
+	System:setCapabilities({
+		["coreKeys"] = 1,
+		["deviceRotation"] = 1,
+	})
+	
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 

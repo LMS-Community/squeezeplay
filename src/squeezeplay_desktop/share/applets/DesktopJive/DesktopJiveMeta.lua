@@ -94,6 +94,19 @@ function registerApplet(meta)
 		uuid = settings.uuid,
 	})
 
+	System:setCapabilities({
+		["touch"] = 1,
+		["ir"] = 1,
+		["homeKey"] = 1,
+		["powerKey"] = 1,
+		["muteKey"] = 1,
+		["volumeKnob"] = 1,
+		["audioByDefault"] = 1,
+		["wiredNetworking"] = 1,
+		["deviceRotation"] = 1,
+		["coreKeys"] = 1,
+	})
+	
 	-- SN hosthame
 	jnt:setSNHostname("jive.squeezenetwork.com")
 	

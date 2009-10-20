@@ -362,7 +362,7 @@ function dovalues(self, menu)
 	local ethIface = Networking:wiredInterface(jnt)
 
 	self:wlanStatus(wlanIface)
-	if System:getMachine() ~= 'jive' then
+	if System:hasWiredNetworking() then
 		self:ethStatus(ethIface)
 	end
 

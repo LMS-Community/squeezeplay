@@ -109,6 +109,16 @@ function init(self)
 		revision = self._revision,
 	})
 
+	System:setCapabilities({
+		["ir"] = 1,
+		["coreKeys"] = 1,
+		["powerKey"] = 1,
+		["muteKey"] = 1,
+		["volumeKnob"] = 1,
+		["audioByDefault"] = 1,
+		["wiredNetworking"] = 1,
+	})
+
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 

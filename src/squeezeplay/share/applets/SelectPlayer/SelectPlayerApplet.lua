@@ -150,7 +150,7 @@ function manageSelectPlayerMenu(self)
 		if not self.selectPlayerMenuItem then
 			local node = "home"
 			local weight = 103
-			if System:getMachine() ~= "jive" then
+			if System:hasAudioByDefault() then
 				node = "settings"
 				weight = 50
 			end
@@ -188,7 +188,7 @@ function _addPlayerItem(self, player)
 	--  a wireless interface but ethernet also. If such a device is using
 	--  ethernet itself it can only setup a player to also using ethernet
 	--  since wireless parameters are not available.
-	if System:getMachine() ~= "jive" and player.config == "needsNetwork" then
+	if System:hasAudioByDefault() and player.config == "needsNetwork" then
 		return
 	end
 
@@ -374,7 +374,7 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 	--  since wireless parameters are not available.
 
 	-- Bug 6130 add a Set up Squeezebox option, only in Setup not Settings
-	if setupNext and System:getMachine() == "jive" then
+	if setupNext and not System:hasAudioByDefault() then
 		self.playerMenu:addItem({
 			text = self:string("SQUEEZEBOX_SETUP"),
 			sound = "WINDOWSHOW",
