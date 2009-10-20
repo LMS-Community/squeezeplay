@@ -209,7 +209,7 @@ end
 
 
 --Note: Jive does not use setSoftPowerState since it doesn't have a soft power concept
-function JiveMain:setSoftPowerState(softPowerState)
+function JiveMain:setSoftPowerState(softPowerState, isServerRequest)
 	if _softPowerState == softPowerState then
 		--already in the desired state, leave (can happen for instance when notify_playerPower comes back after a local power change)
 		 return
@@ -220,7 +220,7 @@ function JiveMain:setSoftPowerState(softPowerState)
 	if _softPowerState == "off" then
 		log:info("Turn soft power off")
 		if currentPlayer and (currentPlayer:isConnected() or currentPlayer:isLocal()) then
-			currentPlayer:setPower(false)
+			currentPlayer:setPower(false, nil, isServerRequest)
 		end
 		--todo: also pause/power off local player since local player might be playing and not be the current player
 		appletManager:callService("activateScreensaver")
@@ -232,7 +232,7 @@ function JiveMain:setSoftPowerState(softPowerState)
 			if currentPlayer.slimServer then
 				currentPlayer.slimServer:wakeOnLan()
 			end
-			currentPlayer:setPower(true)
+			currentPlayer:setPower(true, nil, isServerRequest)
 		end
 
 		appletManager:callService("deactivateScreensaver")

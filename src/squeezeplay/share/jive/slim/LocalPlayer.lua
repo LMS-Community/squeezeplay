@@ -347,7 +347,7 @@ end
 
 
 --overridden to stop playback when powering off
-function setPower(self, on)
+function setPower(self, on, _, isServerRequest) -- ignoring third param 'sequenceNumber' (only used by parent class's version)
 	if not on then
 		if self:getCapturePlayMode() then
 			self:setCapturePlayMode("pause")
@@ -357,7 +357,7 @@ function setPower(self, on)
 		end
 
 	end
-	if self:getSlimServer() then
+	if self:getSlimServer() and not isServerRequest then
 		Player.setPower(self, on, self:incrementSequenceNumber())
 	end
 end
