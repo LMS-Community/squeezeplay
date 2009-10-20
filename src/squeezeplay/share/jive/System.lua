@@ -55,6 +55,7 @@ local allCapabilities = {
 	["homeKey"] = 1,
 	["powerKey"] = 1,
 	["muteKey"] = 1,
+	["volumeKnob"] = 1,
 	["audioByDefault"] = 1,
 	["wiredNetworking"] = 1,
 	["deviceRotation"] = 1,
