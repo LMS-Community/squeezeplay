@@ -1623,7 +1623,8 @@ function fwd(self)
 end
 
 
-function setPower(self, on, sequenceNumber)
+function setPower(self, on, sequenceNumber, isServerRequest)
+	if isServerRequest then return end -- don't loop the request back to the server.
 	if not self.state then return end
 
 	log:debug("Player:setPower(", on, ")")
