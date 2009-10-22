@@ -200,8 +200,8 @@ static spectrum_defaults_t channel_defaults[2][NUM_CHANNEL_DEFAULTS] = {
 
 int decode_spectrum( lua_State *L) {
 
-	int sample_bin_ch0[num_bars[0]];
-	int sample_bin_ch1[num_bars[1]];
+	int sample_bin_ch0[MAX_SUBBANDS];
+	int sample_bin_ch1[MAX_SUBBANDS];
 
 	int i;
 	int w;
@@ -224,8 +224,8 @@ int decode_spectrum( lua_State *L) {
 	}
 
 	for( w = 0; w < num_windows; w++) {
-		kiss_fft_cpx fin_buf[sample_window];
-		kiss_fft_cpx fout_buf[sample_window];
+		kiss_fft_cpx fin_buf[MAX_SAMPLE_WINDOW];
+		kiss_fft_cpx fout_buf[MAX_SAMPLE_WINDOW];
 
 		int avg_ptr;
 		int s;
