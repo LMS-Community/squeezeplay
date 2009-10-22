@@ -119,7 +119,7 @@ oo.class(_M, Widget)
 
 -- _selectedItem
 -- returns the selected Item or nil if off stage
-local function _selectedItem(self)
+function _selectedItem(self)
 	if self.selected then
 		return self.widgets[self.selected - self.topItem + 1]
 	else
@@ -898,7 +898,6 @@ local function _eventHandler(self, event)
 	end
 
 	if self.locked ~= nil then
-		self:playSound("BUMP")
 		return EVENT_UNUSED		
 	end
 	
