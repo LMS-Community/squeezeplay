@@ -2452,6 +2452,9 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	end
 
 	if step.menu then
+		if windowSpec.isContextMenu then
+			step.menu:setDisableVerticalBump(true)
+		end
 		_stepSetMenuItems(step)
                 step.menu.textIndexHandler = {
                         getTextIndexes = function ()             

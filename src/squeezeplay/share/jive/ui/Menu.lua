@@ -256,11 +256,11 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 				self:_updateScrollbar()
 
 				--should we bump?
-				if self:isAtTop() and itemShift < 0 then
+				if not self.disableVerticalBump and self:isAtTop() and itemShift < 0 then
 					self:getWindow():bumpDown()
 				end
 
-				if self:isAtBottom() and itemShift > 0 then
+				if not self.disableVerticalBump and self:isAtBottom() and itemShift > 0 then
 					self:getWindow():bumpUp()
 				end
 
@@ -287,6 +287,10 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 	end
 end
 
+
+function setDisableVerticalBump(self, value)
+	self.disableVerticalBump = value
+end
 
 function _unpressSelectedItem(self)
 	if _selectedItem(self) then

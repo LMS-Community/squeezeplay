@@ -659,6 +659,9 @@ function setHeaderWidget(self, headerWidget)
 	if headerWidget then
 		headerWidget.isHeaderWidget = true
 		headerWidget.parent = self
+		self:setDisableVerticalBump(true)
+	else
+		self:setDisableVerticalBump(false)
 	end
 
 	self.headerWidget = headerWidget
