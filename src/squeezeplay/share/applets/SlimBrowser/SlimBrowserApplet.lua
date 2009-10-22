@@ -1392,7 +1392,7 @@ function _goMenuTableItem(key)
 			Window:getTopNonTransientWindow():bumpLeft()
 		else
 			Framework:playSound("JUMP")
-			jiveMain:getMenuTable()[key].callback()
+			jiveMain:getMenuTable()[key].callback(nil, nil, true)
 		end
 	end
 end
@@ -1443,7 +1443,12 @@ end
 
 
 function _goBrightnessAction()
-	_goMenuTableItem("brightnessSetting")
+	_goMenuTableItem("settingsBrightness")
+	return EVENT_CONSUME
+end
+
+function _goSettingsAction()
+	_goMenuTableItem("settings")
 	return EVENT_CONSUME
 end
 
@@ -1509,6 +1514,7 @@ local _globalActionsNEW = {
 	["repeat_toggle"] = _goRepeatToggleAction,
 	["shuffle_toggle"] = _goShuffleToggleAction,
 	["sleep"] = _goSleepAction,
+	["go_settings"] = _goSettingsAction,
 	["go_brightness"] = _goBrightnessAction,
 	["play_preset_0"] = _goPlayPresetAction,
 	["play_preset_1"] = _goPlayPresetAction,

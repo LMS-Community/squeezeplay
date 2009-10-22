@@ -132,6 +132,7 @@ keyActionMappings.hold = {
 	[KEY_REW | KEY_PAUSE] = "take_screenshot",  -- a stab at how to handle multi-press
 	[KEY_BACK | KEY_PLAY] = "start_demo", 
 	[KEY_POWER] = "shutdown",
+	[KEY_ALARM] = "go_alarms",
 }
 
 irActionMappings = {}
@@ -192,7 +193,7 @@ irActionMappings.hold = {
 	["repeat"]  = "repeat_toggle",
 
 	["arrow_left"]  = "go_home",
-	["arrow_right"]  = "go_hold",
+	["arrow_right"]  = "add",
 	["play"]  = "create_mix",
 	["pause"]  = "stop",
 	["add"]  = "add_end",
@@ -232,6 +233,7 @@ unassignedActionMappings = {
 	"cursor_left",
 	"cursor_right",
 	"clear",
+	"go_settings",
 	"go_rhapsody",
 	"nothing",
 	"ignore",

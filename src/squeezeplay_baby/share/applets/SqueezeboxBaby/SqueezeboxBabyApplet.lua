@@ -112,6 +112,8 @@ function init(self)
 	System:setCapabilities({
 		["ir"] = 1,
 		["coreKeys"] = 1,
+		["presetKeys"] = 1,
+		["alarmKey"] = 1,
 		["powerKey"] = 1,
 		["muteKey"] = 1,
 		["volumeKnob"] = 1,

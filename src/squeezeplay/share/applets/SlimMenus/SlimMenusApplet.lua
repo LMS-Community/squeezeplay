@@ -566,7 +566,7 @@ local function _menuSink(self, isCurrentServer, server)
 				self:_addItem(item, isCurrentServer)
 
 			else
-				local action = function ()
+				local actionInternal = function (noLocking)
 							log:debug("send browserActionRequest request")
 							local alreadyUnlocked = false
 							local step = appletManager:callService("browserActionRequest", nil, v,
@@ -578,7 +578,7 @@ local function _menuSink(self, isCurrentServer, server)
 
 							if not v.input then -- no locks for an input item, which is immediate
 								_lockedItem = item
-								if not alreadyUnlocked  then
+								if not alreadyUnlocked and not noLocking then
 									jiveMain:lockItem(item, function()
 										appletManager:callService("browserCancel", step)
 									end)
@@ -591,7 +591,8 @@ local function _menuSink(self, isCurrentServer, server)
 					item.isPlayableItem = true
 				end
 
-				item.callback = function()
+				item.callback = function(_, _, noLocking)
+					local action = function () actionInternal(noLocking) end
 					local switchToSn =
 						function()
 							local lastSc

@@ -97,13 +97,14 @@ function registerApplet(meta)
 	System:setCapabilities({
 		["touch"] = 1,
 		["ir"] = 1,
-		["homeKey"] = 1,
 		["powerKey"] = 1,
 		["muteKey"] = 1,
+		["alarmKey"] = 1,
 		["audioByDefault"] = 1,
 		["wiredNetworking"] = 1,
 		["deviceRotation"] = 1,
 		["coreKeys"] = 1,
+		["presetKeys"] = 1,
 	})
 	
 	-- SN hosthame

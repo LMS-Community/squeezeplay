@@ -92,6 +92,7 @@ function init(self)
 
 	System:setCapabilities({
 		["coreKeys"] = 1,
+		["homeAsPowerKey"] = 1,
 		["deviceRotation"] = 1,
 	})
 	

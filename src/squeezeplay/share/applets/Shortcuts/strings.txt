@@ -18,6 +18,60 @@ SHORTCUTS_TITLE
 	RU	Ярлыки
 	SV	Kortkommandon
 
+SHORTCUTS_RESTORE_DEFAULTS
+	CS	Obnovit výchozí
+	DA	Standardindstillinger
+	DE	Standardwerte wiederherstellen
+	EN	Restore Defaults
+	ES	Restaurar configuración predeterminada
+	FI	Palauta oletukset
+	FR	Restaurer les valeurs par défaut
+	IT	Ripristina impostazioni predefinite
+	NL	Standaardinstellingen
+	NO	Tilbakestill til standardinnstillinger
+	PL	Przywróć domyślne
+	RU	Восстановить настройки по умолчанию
+	SV	Återställ standardinställningar
+	
+SHORTCUTS_RESTORE_DEFAULTS_HELP
+	EN	Select "Continue" to restore all custom shortcuts to their default value
+	
+SHORTCUTS_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+SHORTCUTS_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+	
+SHORTCUTS_MODIFIED
+	EN	(custom)
+
+SHORTCUTS_DEFAULT
+	EN	(default)
+
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
 	CS	Stisknutí levého tlačítka
 	DA	Tryk på venstre knap
@@ -137,6 +191,24 @@ SHORTCUTS_INPUT_GESTURE_R_L
 	PL	Przeciągnięcie po lewym przycisku
 	RU	Резкое движение влево
 	SV	Svep åt vänster
+
+SHORTCUTS_INPUT_IR_HOLD
+	EN	IR Hold %s
+
+SHORTCUTS_INPUT_IR_PRESS
+	EN	IR Press %s
+
+SHORTCUTS_INPUT_KEY_HOLD
+	EN	Key Hold %s
+
+SHORTCUTS_INPUT_KEY_PRESS
+	EN	Key Press %s
+
+SHORTCUTS_INPUT_KEY_PRESET_PRESS
+	EN	Preset Key Press %s
+
+SHORTCUTS_INPUT_KEY_PRESET_HOLD
+	EN	Preset Key Hold %s
 
 SHORTCUTS_OUTPUT_BACK
 	CS	Zpět
@@ -287,4 +359,31 @@ SHORTCUTS_OUTPUT_PAUSE
 	PL	Wstrzymaj
 	RU	Пауза
 	SV	Paus
+
+SHORTCUTS_OUTPUT_GO_ALARMS
+	EN	Alarms
+
+SHORTCUTS_OUTPUT_GO_BRIGHTNESS
+	EN	Brightness
+
+SHORTCUTS_OUTPUT_STOP
+	EN	Stop
+
+SHORTCUTS_OUTPUT_SLEEP
+	EN	Sleep
+
+SHORTCUTS_OUTPUT_MORE
+	EN	More
+
+SHORTCUTS_OUTPUT_CREATE_MIX
+	EN	Custom Mix
+
+SHORTCUTS_OUTPUT_ADD_END
+	EN	Add to End
+
+SHORTCUTS_OUTPUT_PLAY_PRESET
+	EN	Play preset %s
+
+SHORTCUTS_OUTPUT_SET_PRESET
+	EN	Set preset %s
 

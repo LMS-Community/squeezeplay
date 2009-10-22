@@ -52,8 +52,10 @@ end
 local allCapabilities = {
 	["touch"] = 1,
 	["ir"] = 1,
-	["homeKey"] = 1,
 	["powerKey"] = 1,
+	["presetKeys"] = 1,
+	["alarmKey"] = 1,
+	["homeAsPowerKey"] = 1,
 	["muteKey"] = 1,
 	["volumeKnob"] = 1,
 	["audioByDefault"] = 1,
@@ -83,8 +85,8 @@ function hasIr(self)
 	return _capabilities["ir"] ~= nil
 end
 
-function hasHomeKey(self)
-	return _capabilities["homeKey"] ~= nil
+function hasHomeAsPowerKey(self)
+	return _capabilities["homeAsPowerKey"] ~= nil
 end
 
 function hasPowerKey(self)
@@ -117,6 +119,14 @@ end
 
 function hasCoreKeys(self)
 	return _capabilities["coreKeys"] ~= nil
+end
+
+function hasPresetKeys(self)
+	return _capabilities["presetKeys"] ~= nil
+end
+
+function hasAlarmKey(self)
+	return _capabilities["alarmKey"] ~= nil
 end
 
 
