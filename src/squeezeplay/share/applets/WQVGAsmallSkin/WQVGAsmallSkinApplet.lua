@@ -1746,6 +1746,7 @@ function skin(self, s)
 
 		},
 		menu = {
+			h = CM_MENU_HEIGHT * 4,
 			border = { 7, 0, 0, 0 },
 			padding = { 0, 0, 0, 100 },
 			-- FIXME: hard-coding the height of the scrollbar here is a bit of a hack
