@@ -98,6 +98,8 @@ function addTimeInputWidgets(self)
 			end
 		end
 		self.ampmMenu = SimpleMenu('ampmUnselected')
+		self.ampmMenu:setDisableVerticalBump(true)
+		
 		ampm = { '', '', 'PM', 'AM', '', '' }
 		if self.initampm == 'AM' then
 			ampm = { '', '', 'AM', 'PM', '', '' }
@@ -143,6 +145,8 @@ function addTimeInputWidgets(self)
 
 	-- construction of hour menu from here on is not specific to 12h/24h
 	self.hourMenu = SimpleMenu("hour")
+	self.hourMenu:setDisableVerticalBump(true)
+	
 	for i, hour in ipairs(hours) do
 		self.hourMenu:addItem({
 			text = hour,
@@ -160,6 +164,8 @@ function addTimeInputWidgets(self)
 	-- minute menu the same between 12h and 24h
 	local minutes = { '58', '59', '00' }
 	self.minuteMenu = SimpleMenu('minuteUnselected')
+	self.minuteMenu:setDisableVerticalBump(true)
+	
 	-- deal with inital minute setting
 	if self.initMinute then
 		if self.initMinute == 0 then
