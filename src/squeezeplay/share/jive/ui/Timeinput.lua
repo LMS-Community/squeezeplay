@@ -74,6 +74,7 @@ function addTimeInputWidgets(self)
 
 	if self.initampm then
 		self.background = Icon('time_input_background_12h')
+		self.menu_box   = Icon('time_input_menu_box_12h')
 
 		-- 12h hour menu
 		hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
@@ -118,6 +119,7 @@ function addTimeInputWidgets(self)
 
 	else
 		self.background = Icon('time_input_background_24h')
+		self.menu_box   = Icon('time_input_menu_box_24h')
 
 		-- 24h hour menu
 		hours = { '22', '23', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '0', '1' }
@@ -262,6 +264,7 @@ function addTimeInputWidgets(self)
 	end
 
 	self.window:addWidget(self.background)
+	self.window:addWidget(self.menu_box)
 	self.window:addWidget(self.minuteMenu)
 	self.window:addWidget(self.hourMenu)
 	if self.ampmMenu then

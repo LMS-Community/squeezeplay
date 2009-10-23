@@ -900,6 +900,9 @@ function skin(self, s, reload, useDefaultSize)
 	local _timeFirstColumnX12h = 65
 	local _timeFirstColumnX24h = 98
 
+	s.time_input_menu_box_12h = { hidden = 1, img = false }
+	s.time_input_menu_box_24h = { hidden = 1, img = false }
+
 	s.time_input_background_12h = {
 		w = WH_FILL,
 		h = 60,

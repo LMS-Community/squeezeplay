@@ -1236,7 +1236,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/multi_char_bkgrd.png"),
+		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_3c.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
@@ -1245,10 +1245,22 @@ function skin(self, s)
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/multi_char_bkgrd.png"),
+		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_2c.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
+
+	s.time_input_menu_box_12h = {
+		position = LAYOUT_NONE,
+		img = _loadImage(self, "Multi_Character_Entry/menu_box_fixed.png"),
+		w = 220,
+		h = 40,
+		x = 130,
+		y = 140,
+	}
+	s.time_input_menu_box_24h = _uses(s.time_input_menu_box_12h, {
+	
+	})
 
 	-- time input window
 	s.input_time_12h = _uses(s.window)
