@@ -1230,7 +1230,7 @@ function skin(self, s)
 	}
 
 	local _timeFirstColumnX12h = 123
-	local _timeFirstColumnX24h = 98
+	local _timeFirstColumnX24h = 164
 
 	s.time_input_background_12h = {
 		w = WH_FILL,
@@ -1259,6 +1259,9 @@ function skin(self, s)
 		y = 140,
 	}
 	s.time_input_menu_box_24h = _uses(s.time_input_menu_box_12h, {
+		img = _loadImage(self, "UNOFFICIAL/menu_box_fixed_2c.png"),
+		w = 180,
+		x = 167,
 	
 	})
 
@@ -1277,7 +1280,7 @@ function skin(self, s)
 			text = {
 				align = 'right',
 				font = _boldfont(30),
-				padding = { 2, 0, 12, 0 },
+				padding = { 2, 4, 8, 0 },
 				fg = { 0xb3, 0xb3, 0xb3 },
 				sh = { },
 			},
@@ -1291,7 +1294,7 @@ function skin(self, s)
 					fg = { 0xe6, 0xe6, 0xe6 },
 					sh = { },
 					align = 'right',
-					padding = { 2, 0, 12, 0 },
+					padding = { 2, 4, 8, 0 },
 				},
 			},
 		},
@@ -1304,26 +1307,26 @@ function skin(self, s)
 					fg = { 0xe6, 0xe6, 0xe6 },
 					sh = { },
 					align = 'right',
-					padding = { 2, 0, 12, 0 },
+					padding = { 2, 4, 8, 0 },
 				},
 			},
 		},
 	})
 	s.input_time_12h.minute = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 65, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75, TITLE_HEIGHT, 0, 0 },
 	})
 	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 65 + 65, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75 + 75, TITLE_HEIGHT, 0, 0 },
 		item = {
 			text = {
-				padding = { 0, 0, 8, 0 },
+				padding = { 0, 2, 8, 0 },
 				font = _boldfont(26),
 			},
 		},
 		selected = {
 			item = {
 				text = {
-					padding = { 0, 0, 8, 0 },
+					padding = { 0, 4, 8, 0 },
 					font = _boldfont(26),
 				},
 			},
@@ -1331,28 +1334,28 @@ function skin(self, s)
 		pressed = {
 			item = {
 				text = {
-					padding = { 0, 0, 8, 0 },
+					padding = { 0, 4, 8, 0 },
 					font = _boldfont(26),
 				},
 			},
 		},
 	})
-	s.input_time_12h.hourUnselected = s.input_time_12h.hour
+	s.input_time_12h.hourUnselected   = s.input_time_12h.hour
 	s.input_time_12h.minuteUnselected = s.input_time_12h.minute
-	s.input_time_12h.ampmUnselected = s.input_time_12h.ampm
+	s.input_time_12h.ampmUnselected   = s.input_time_12h.ampm
 
 	s.input_time_24h = _uses(s.input_time_12h, {
 		hour = {
 			border = { _timeFirstColumnX24h, TITLE_HEIGHT, 0, 0 },
 		},
 		minute = {
-			border = { _timeFirstColumnX24h + 65, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h + 75, TITLE_HEIGHT, 0, 0 },
 		},
 		hourUnselected = {
 			border = { _timeFirstColumnX24h, TITLE_HEIGHT, 0, 0 },
 		},
 		minuteUnselected = {
-			border = { _timeFirstColumnX24h + 65, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h + 75, TITLE_HEIGHT, 0, 0 },
 		},
 	})
 
