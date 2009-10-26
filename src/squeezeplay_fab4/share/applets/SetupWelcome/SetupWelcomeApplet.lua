@@ -175,6 +175,7 @@ end
 
 function step3(self, transition)
 	log:info("step3")
+	self:_disableNormalEscapeMechanisms()
 
 	-- network connection type
 	appletManager:callService("setupNetworking", 
@@ -548,8 +549,16 @@ function _setupDone(self, setupDone, registerDone)
 end
 
 function _jumpToDemo(self)
+	log:warn('JUMP TO DEMO')
         appletManager:callService("jumpToInStoreDemo")
 end
+
+
+function _addDemoListener(self)
+	log:warn('ADD DEMO LISTENER')
+	self.window:addActionListener("go_now_playing", self, _jumpToDemo)
+end
+
 
 function setupWelcomeShow(self, setupNext)
 	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
@@ -557,22 +566,10 @@ function setupWelcomeShow(self, setupNext)
 
 	window:setButtonAction("rbutton", nil)
 
+
 	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
 
 	local continueButton = SimpleMenu("menu")
-
-	window:addTimer(20000, function()
-		window:addListener(EVENT_GESTURE,
-			function(evt)
-				if evt:getType() == GESTURE_L_R then
-					_jumpToDemo(self)
-				end
-				return EVENT_CONSUME
-                	end
-        	)
-		end
-	)
-
 
 	continueButton:addItem({
 		text = (self:string("CONTINUE")),
@@ -583,6 +580,10 @@ function setupWelcomeShow(self, setupNext)
 	
 	continueButton:setHeaderWidget(textarea)
 	window:addWidget(continueButton)
+	self.window = window
+	self:_enableNormalEscapeMechanisms()
+	window:addActionListener("go_home", self, _addDemoListener)
+
 
 	self:tieAndShowWindow(window)
 	return window
