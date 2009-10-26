@@ -2853,6 +2853,7 @@ function skin(self, s)
                 font = _boldfont(18),
                 position = LAYOUT_SOUTH,
                 w = screenWidth,
+		h = 50,
                 align = 'center',
                 padding = { 6, 0, 6, 10 },
                 fg = TEXT_COLOR,
