@@ -102,6 +102,7 @@ local MOUSE_QUICK_DRAG_DISTANCE = 50
 local MOUSE_QUICK_TOUCH_TIME_MS = 120
 local MOUSE_SLOW_DRAG_DISTANCE = 25
 
+local ITEMS_BEFORE_SCROLL_DEFAULT = 1
 
 --Mouse operation states
 
@@ -285,6 +286,20 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 			self:reDraw()
 		end
 	end
+end
+
+
+function snapToNearest(self)
+	if math.abs(self.pixelOffsetY) > (self.itemHeight / 2) then
+		self.flick:snap(1)
+	else
+		self.flick:snap(-1)
+	end
+end
+
+
+function isWraparoundEnabled(self)
+	return (self.wraparoundGap > 0)
 end
 
 
@@ -808,7 +823,7 @@ local function _eventHandler(self, event)
 
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
 		if self.mouseState == MOUSE_COMPLETE or self.sliderDragInProgress then
-			return finishMouseSequence(self)
+			return (finishMouseSequence(self))
 		end
 
 		local x1, y1 = event:getMouse()
@@ -826,12 +841,13 @@ local function _eventHandler(self, event)
 
 				if flickSpeed then
 					self.flick:flick(flickSpeed, flickDirection)
+				elseif self.snapToItemEnabled and (self.pixelOffsetY and self.pixelOffsetY ~= 0) then
+					self:snapToNearest()					
 				end
 			end
 
 			self.flick:resetFlickData()
-
-			return finishMouseSequence(self)
+			return (finishMouseSequence(self))
 		end
 
 		if mouseExceededBufferDistance(self, MOUSE_QUICK_SLOPPY_PRESS_DISTANCE) then
@@ -843,20 +859,23 @@ local function _eventHandler(self, event)
 			self.usePressedStyle = false
 			_selectedItem(self):setStyleModifier(nil)
 
-			return finishMouseSequence(self)
+			return (finishMouseSequence(self))
 		end
 
 		--treat as a PRESS
 
 		if self.flick.flickInterruptedByFinger then
+			if self.snapToItemEnabled and (self.pixelOffsetY and self.pixelOffsetY ~= 0) then
+				self:snapToNearest()					
+			end			
 			--flick just stopped (on the down event), so ignore this press - do the same for hold when implemented
 			self.flick.flickInterruptedByFinger = nil
-			return finishMouseSequence(self)
+			return (finishMouseSequence(self))
 		end
 
 		if not self:_selectAndHighlightItemUnderPointer(event) then
 			--tried to select but mouse not under a selectable area
-			return finishMouseSequence(self)
+			return (finishMouseSequence(self))
 		end
 
 		finishMouseSequence(self)
@@ -981,7 +1000,7 @@ function __init(self, style, itemRenderer, itemListener, itemAvailable, contextM
 
 
 	obj.wraparoundGap = 0
-	obj.itemsBeforeScroll = 1
+	obj.itemsBeforeScroll = ITEMS_BEFORE_SCROLL_DEFAULT
 	obj.noBarrier = false
 
 	obj.usePressedStyle = true
@@ -1181,6 +1200,22 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:getMiddleIndex()
+
+Returns the index of the middle onscreen item. returns nil if numWidgets is not odd (thus no middle item)
+
+=cut
+--]]
+function getMiddleIndex(self)
+	if self.numWidgets % 2 == 0 then
+		return nil
+	end
+	return self.topItem + ((self.numWidgets - 1) /2)
+end
+
+
+--[[
+
 =head2 jive.ui.Menu:getSelectedItem()
 
 Returns the widget of the selected item.
@@ -1282,6 +1317,26 @@ function unlock(self)
 	self:reLayout()
 end
 
+function getItemsBeforeScrollGap(self)
+	if Framework:isMostRecentInput("mouse") then
+		return 0
+	end
+	
+	if self.itemsBeforeScroll > 1 then
+		return self.itemsBeforeScroll
+	end
+	
+	return 0
+end
+	
+function getEffectiveItemsBeforeScroll(self)
+	if Framework:isMostRecentInput("mouse") then
+		--if mouse then user selects item under cursor. On completion, the selection point will be moved to the middle item instead.
+		return ITEMS_BEFORE_SCROLL_DEFAULT
+	else
+		return self.itemsBeforeScroll
+	end
+end
 
 --[[
 
@@ -1365,19 +1420,21 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	if self.noBarrier then
 		isNewOperation = true
+	elseif self:getItemsBeforeScrollGap() then
+		isNewOperation = false
 	end
 	--for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
 	if isNewOperation == false then
-		if selected > self.listSize then
-			selected = self.listSize
-		elseif selected < 1 then
-			selected = _coerce(1, self.listSize)
+		if selected > self.listSize - self:getItemsBeforeScrollGap() then
+			selected = self.listSize - self:getItemsBeforeScrollGap()
+		elseif selected < 1 + self:getItemsBeforeScrollGap()then
+			selected = _coerce(1, self.listSize) + self:getItemsBeforeScrollGap()
 		end	
 	elseif isNewOperation == true then
-		if selected > self.listSize - self.wraparoundGap then
-			selected = _coerce(1 + self.wraparoundGap, self.listSize)
-		elseif selected < 1 + self.wraparoundGap then
-			selected = self.listSize - self.wraparoundGap
+		if selected > self.listSize then
+			selected = _coerce(1, self.listSize)
+		elseif selected < 1 then
+			selected = self.listSize
 		end	
 		   
 	else -- isNewOperation nil, so use breakthrough barrier
@@ -1443,7 +1500,7 @@ function _scrollList(self)
 	-- otherwise, try to leave one item above the selected one (we've scrolled out of the view)
 	elseif selected <= topItem  + ( self.itemsBeforeScroll - 1 ) then
 		-- if we land here, selected > 1 so topItem cannot become < 1
-		topItem = selected - self.itemsBeforeScroll
+		topItem = selected - self:getEffectiveItemsBeforeScroll() 
 
 	-- show the last item if it is selected
 	elseif selected == self.listSize then
@@ -1455,7 +1512,7 @@ function _scrollList(self)
 	
 	-- otherwise, try to leave one item below the selected one (we've scrolled out of the view)
 	elseif selected >= topItem + self.numWidgets - self.itemsBeforeScroll then
-		topItem = selected - self.numWidgets + self.itemsBeforeScroll + 1
+		topItem = selected - self.numWidgets + self:getEffectiveItemsBeforeScroll() + 1
 	end
 
 	self.topItem = topItem

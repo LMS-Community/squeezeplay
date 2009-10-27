@@ -87,6 +87,10 @@ local FLICK_THRESHOLD_BY_PIXEL_SPEED = 400/1000
 --speed (pixels/ms) at which flick scrolling will stop
 local FLICK_STOP_SPEED =  3/1000
 
+local FLICK_STOP_SPEED_WITH_SNAP =  60/1000
+
+local SNAP_PIXEL_SHIFT = 1 -- todo: anything other than one will not works since it will go endlessly
+
 --if initial speed is greater than this, "letter" accelerators will occur for the flick
 local FLICK_FORCE_ACCEL_SPEED = 72 * 30/1000
 
@@ -115,7 +119,7 @@ function stopFlick(self, byFinger)
 	self.flickTimer:stop()
 	self.flickInterruptedByFinger = byFinger
 	self.flickInProgress = false
---	self.flickInitialScrollT = nil
+	self.snapToItemInProgress = false
 
 	self:resetFlickData()
 end
@@ -225,19 +229,25 @@ function getFlickSpeed(self, itemHeight, mouseUpT)
 end
 
 
+function snap(self, direction)
+	self:flick(FLICK_STOP_SPEED, direction, true)
+end
 
 --if initialSpeed nil, then continue any existing flick. If non nil, start a new flick at that rate
-function flick(self, initialSpeed, direction)
+function flick(self, initialSpeed, direction, noMinimum)
 	if initialSpeed then
 		self:stopFlick()
-		if initialSpeed < FLICK_THRESHOLD_START_SPEED then
+		if not noMinimum and initialSpeed < FLICK_THRESHOLD_START_SPEED then
 			log:debug("Under threshold, not flicking: ", initialSpeed )
-
+			if self.parent.snapToItemEnabled then
+				self.parent:snapToNearest()
+			end
 			return
 		end
 		self.flickInProgress = true
 		self.flickInitialSpeed = initialSpeed
 		self.flickDirection = direction
+		self.snapToItemInProgress = false
 		self.flickTimer:start()
 
 		if not self.flickInitialScrollT then
@@ -272,16 +282,32 @@ function flick(self, initialSpeed, direction)
 	if self.flickInitialDecelerationScrollT then	
 		local elapsedTime = now - self.flickInitialDecelerationScrollT
 
-		-- y = v0*t +.5 * a * t^2
-		flickCurrentY = self.flickPreDecelY + self.flickInitialSpeed * elapsedTime + (.5 * self.flickAccelRate * elapsedTime * elapsedTime )
 
 		--v = v0 + at
 		local flickCurrentSpeed = self.flickInitialSpeed + (self.flickAccelRate * elapsedTime)
+		
+		if self.snapToItemInProgress then
+			flickCurrentY = self.flickLastY + SNAP_PIXEL_SHIFT
+		else
+			-- y = v0*t +.5 * a * t^2
+			flickCurrentY = self.flickPreDecelY + self.flickInitialSpeed * elapsedTime + (.5 * self.flickAccelRate * elapsedTime * elapsedTime )
+		end
+		
 		byItemOnly = flickCurrentSpeed > FLICK_THRESHOLD_BY_PIXEL_SPEED
-		if flickCurrentSpeed <= FLICK_STOP_SPEED then
-			log:debug("*******Stopping Flick at slow down point. current speed:", flickCurrentSpeed)
-			self:stopFlick()
-			return
+		local stopSpeed = FLICK_STOP_SPEED
+		if self.parent.snapToItemEnabled then
+			stopSpeed = FLICK_STOP_SPEED_WITH_SNAP
+		end
+		
+		if self.snapToItemInProgress or flickCurrentSpeed <= stopSpeed then
+			if self.parent.snapToItemEnabled and self.parent.pixelOffsetY ~= 0 then
+				log:debug("*******Snapping Flick at slow down point. current speed:", flickCurrentSpeed, " offset", self.parent.pixelOffsetY)
+				self.snapToItemInProgress = true
+			else
+				log:debug("*******Stopping Flick at slow down point. current speed:", flickCurrentSpeed, " offset", self.parent.pixelOffsetY)
+				self:stopFlick()
+				return
+			end
 		end
 	end
 
@@ -292,7 +318,7 @@ function flick(self, initialSpeed, direction)
 
 	self.flickLastY = self.flickLastY + pixelOffset
 
-	if (self.parent:isAtBottom() and self.flickDirection > 0)
+	if not self.parent:isWraparoundEnabled() and (self.parent:isAtBottom() and self.flickDirection > 0)
 		or (self.parent:isAtTop() and self.flickDirection < 0) then
 		--stop at boundaries
 		log:debug("*******Stopping Flick at boundary") -- need a ui cue that this has happened

@@ -71,33 +71,26 @@ function addTimeInputWidgets(self)
 
 	local hours = {}
 	local ampm = {}
-
+	local hourMenuMiddle
+	
 	if self.initampm then
 		self.background = Icon('time_input_background_12h')
 		self.menu_box   = Icon('time_input_menu_box_12h')
 
 		-- 12h hour menu
-		hours = { '10', '11', '12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1' }
-		-- deal with inital hour setting
-		if self.initHour then
-			if self.initHour == 1 then
-				hours = { '11', '12', '1' }
-			elseif self.initHour == 2 then
-				hours = { '12', '1', '2' }
-			else
-				hours = { tostring(self.initHour - 2), tostring(self.initHour - 1), tostring(self.initHour) }
-			end
-			local nextItem = self.initHour + 1
-			local inc = 1
-			while inc < 14 do
-				if nextItem > 12 then
-					nextItem = 1
+		local hourCopies = 100
+		for i = 1, hourCopies do
+			for j = 1, 12 do
+				local value = tostring(j)
+				if (i == 1 and j < 3) or (i == hourCopies and j > 10) then
+				        value = ""
 				end
-				table.insert(hours, tostring(nextItem))
-				nextItem = nextItem + 1
-				inc = inc + 1
-			end
+			        table.insert(hours, value)  
+			end	
 		end
+		hourMenuMiddle = 12 * (hourCopies / 2) + 1
+		 
+
 		self.ampmMenu = SimpleMenu('ampmUnselected')
 		self.ampmMenu:setDisableVerticalBump(true)
 		
@@ -109,11 +102,11 @@ function addTimeInputWidgets(self)
 		for i, t in ipairs(ampm) do
 			self.ampmMenu:addItem({
 				text = t,
+				callback = function () return EVENT_CONSUME end,
 			})
 		end
-		self.ampmMenu.wraparoundGap = 2
 		self.ampmMenu.itemsBeforeScroll = 2
-		self.ampmMenu.noBarrier = true
+		self.ampmMenu.snapToItemEnabled = true
 		self.ampmMenu:setSelectedIndex(3)
 		self.ampmMenu:setHideScrollbar(true)
 
@@ -121,28 +114,40 @@ function addTimeInputWidgets(self)
 		self.background = Icon('time_input_background_24h')
 		self.menu_box   = Icon('time_input_menu_box_24h')
 
-		-- 24h hour menu
-		hours = { '22', '23', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '0', '1' }
-		-- deal with inital hour setting
-		if self.initHour then
-			if self.initHour == 0 then
-				hours = { '22', '23', '0' }
-			elseif self.initHour == 1 then
-				hours = { '23', '0', '1' }
-			else
-				hours = { tostring(self.initHour - 2), tostring(self.initHour - 1), tostring(self.initHour) }
-			end
-			local nextItem = self.initHour + 1
-			local inc = 0
-			while inc < 25 do
-				if nextItem > 23 then
-					nextItem = 0
+		local hourCopies = 50
+		for i = 1, hourCopies do
+			for j = 1, 24 do
+				local value = tostring(j)
+				if (i == 1 and j < 3) or (i == hourCopies and j > 22) then
+				        value = ""
 				end
-				table.insert(hours, tostring(nextItem))
-				nextItem = nextItem + 1
-				inc = inc + 1
-			end
+			        table.insert(hours, value)  
+			end	
 		end
+		hourMenuMiddle = 24 * (hourCopies / 2) + 1
+
+--		-- 24h hour menu
+--		hours = { '22', '23', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '0', '1' }
+--		-- deal with inital hour setting
+--		if self.initHour then
+--			if self.initHour == 0 then
+--				hours = { '22', '23', '0' }
+--			elseif self.initHour == 1 then
+--				hours = { '23', '0', '1' }
+--			else
+--				hours = { tostring(self.initHour - 2), tostring(self.initHour - 1), tostring(self.initHour) }
+--			end
+--			local nextItem = self.initHour + 1
+--			local inc = 0
+--			while inc < 25 do
+--				if nextItem > 23 then
+--					nextItem = 0
+--				end
+--				table.insert(hours, tostring(nextItem))
+--				nextItem = nextItem + 1
+--				inc = inc + 1
+--			end
+--		end
 	end
 
 	-- construction of hour menu from here on is not specific to 12h/24h
@@ -152,59 +157,52 @@ function addTimeInputWidgets(self)
 	for i, hour in ipairs(hours) do
 		self.hourMenu:addItem({
 			text = hour,
+			callback = function () return EVENT_CONSUME end,
 		})
 	end
-	self.hourMenu.wraparoundGap = 2
+
 	self.hourMenu.itemsBeforeScroll = 2
-	self.hourMenu.noBarrier = true
-	local initHour = 3
+	self.hourMenu.snapToItemEnabled = true
 	if self.initHour then
-		initHour = initHour + self.initHour
+		self.hourMenu:setSelectedIndex(hourMenuMiddle + self.initHour - 1)
+	else
+		self.hourMenu:setSelectedIndex(hourMenuMiddle)
 	end
-	self.hourMenu:setSelectedIndex(3)
+
 
 	-- minute menu the same between 12h and 24h
-	local minutes = { '58', '59', '00' }
 	self.minuteMenu = SimpleMenu('minuteUnselected')
 	self.minuteMenu:setDisableVerticalBump(true)
-	
-	-- deal with inital minute setting
-	if self.initMinute then
-		if self.initMinute == 0 then
-			minutes = { '58', '59', '00' }
-		elseif self.initMinute == 1 then
-			minutes = { '59', '00', '01' }
-		else
-			minutes = { 
-				_minuteString(self.initMinute - 2), 
-				_minuteString(self.initMinute - 1), 
-				_minuteString(self.initMinute) 
-			}
-		end
-		local nextItem = self.initMinute + 1
-		local inc = 1
-		while inc < 62 do
-			if nextItem > 59 then
-				nextItem = 0
-			end
-			local nextItemString = _minuteString(nextItem)
-			table.insert(minutes, nextItemString)
-			nextItem = nextItem + 1
-			inc = inc + 1
-		end
-	end
 
+	local minutes = {}
+	local minuteCopies = 20
+	for i = 1, minuteCopies do
+	        for j = 0, 59 do
+			local value = _minuteString(j)
+			if (i == 1 and j < 2) or (i == minuteCopies and j > 57) then
+				value = ""
+			end
+			table.insert(minutes, value)  
+		end	
+	end
+	local minuteMenuMiddle = 60 * (minuteCopies / 2) + 1
+	
 	for i, minute in ipairs(minutes) do
 		self.minuteMenu:addItem({
 			text = minute,
+			callback = function () return EVENT_CONSUME end,
 		})
 	end
 	local minute = 0
 
-	self.minuteMenu.wraparoundGap = 2
 	self.minuteMenu.itemsBeforeScroll = 2
-	self.minuteMenu.noBarrier = true
-	self.minuteMenu:setSelectedIndex(3)
+	if self.initMinute then
+		self.minuteMenu:setSelectedIndex(minuteMenuMiddle + self.initMinute)
+	else
+		self.minuteMenu:setSelectedIndex(minuteMenuMiddle)
+	end
+
+	self.minuteMenu.snapToItemEnabled = true
 
 	self.hourMenu:setHideScrollbar(true)
 	self.minuteMenu:setHideScrollbar(true)
@@ -229,8 +227,8 @@ function addTimeInputWidgets(self)
 				Framework:styleChanged()
 				self.window:focusWidget(self.ampmMenu)
 			else
-				local hour   = self.hourMenu:getItem(self.hourMenu:getSelectedIndex()).text
-				local minute = self.minuteMenu:getItem(self.minuteMenu:getSelectedIndex()).text
+				local hour   = self.hourMenu:getItem(self.hourMenu:getMiddleIndex()).text
+				local minute = self.minuteMenu:getItem(self.minuteMenu:getMiddleIndex()).text
 				self.window:hide() 
 				self.submitCallback( hour, minute, nil )
 			end
@@ -247,9 +245,9 @@ function addTimeInputWidgets(self)
 	if self.ampmMenu then
 		self.ampmMenu:addActionListener('go', self, 
 			function() 
-				local hour   = self.hourMenu:getItem(self.hourMenu:getSelectedIndex()).text
-				local minute = self.minuteMenu:getItem(self.minuteMenu:getSelectedIndex()).text
-				local ampm   = self.ampmMenu:getItem(self.ampmMenu:getSelectedIndex()).text
+				local hour   = self.hourMenu:getItem(self.hourMenu:getMiddleIndex()).text
+				local minute = self.minuteMenu:getItem(self.minuteMenu:getMiddleIndex()).text
+				local ampm   = self.ampmMenu:getItem(self.ampmMenu:getMiddleIndex()).text
 				self.window:hide() 
 				self.submitCallback( hour, minute, ampm )
 			end)
