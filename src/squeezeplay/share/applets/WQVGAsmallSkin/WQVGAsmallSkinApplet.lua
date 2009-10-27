@@ -712,6 +712,11 @@ function skin(self, s)
 		imgpath .. "Touch_Toolbar/tch_volume_slider.png",
 	})
 
+	local _popupSliderBar = _loadHTile(self, {
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+        })
 
 --------- DEFAULT WIDGET STYLES ---------
 	--
@@ -1966,9 +1971,6 @@ function skin(self, s)
 		      align = "center",
 		      bgImg = false,
 		},
-		text = _uses(s.text, {
-			--padding = { 20, 20, 0, 10 },
-		}),
 		slider_group = {
 			w = WH_FILL,
 			align = 'center',
@@ -1978,9 +1980,11 @@ function skin(self, s)
 	}
 
 
-	-- FIXME: this is not to any spec yet
        -- scanner popup
-	s.scanner_popup = _uses(s.slider_popup)
+	s.scanner_popup = _uses(s.slider_popup, {
+		h = 110,
+		y = screenHeight/2 - 55,
+	})
 
 	s.image_popup = _uses(s.popup, {
 		image = {
@@ -1992,15 +1996,16 @@ function skin(self, s)
 --------- SLIDERS ---------
 
 
-	-- FIXME: this is not to any spec yet
 	s.volume_slider = {
 		w = WH_FILL,
 		border = { 0, 0, 0, 10 },
                 bgImg = _volumeSliderBackground,
-                img = _volumeSliderBar,
+                img = _popupSliderBar,
 	}
-	-- FIXME: this is not to any spec yet
-        s.scanner_slider = _uses(s.volume_slider)
+
+        s.scanner_slider = _uses(s.volume_slider, {
+                img = _volumeSliderBar,
+	})
 	
 --------- BUTTONS ---------
 
