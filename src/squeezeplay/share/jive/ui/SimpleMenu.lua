@@ -172,6 +172,13 @@ local function _itemListener(menu, list, menuItem, index, event)
 		end
 		return item.callback(event, item) or EVENT_CONSUME
 	
+	elseif (event:getType() == ACTION and event:getAction() == "add")  then
+		local cmCallback = function() return EVENT_CONSUME end
+		if item.cmCallback then
+			cmCallback = item.cmCallback
+		end
+		return cmCallback(event, item) or EVENT_CONSUME
+	
 	elseif event:getType() == EVENT_FOCUS_GAINED and item.focusGained then
 		return item.focusGained(event, item) or EVENT_CONSUME
 
@@ -184,10 +191,10 @@ local function _itemListener(menu, list, menuItem, index, event)
 end
 
 
-function __init(self, style, items)
+function __init(self, style, items, itemRenderer, itemListener)
 	_assert(type(style) == "string")
 
-	local obj = oo.rawnew(self, Menu(style, _itemRenderer, _itemListener))
+	local obj = oo.rawnew(self, Menu(style, itemRenderer or _itemRenderer, itemListener or _itemListener))
 	obj.items = items or {}
 	obj.icons = {}
 	obj.checks = {}
