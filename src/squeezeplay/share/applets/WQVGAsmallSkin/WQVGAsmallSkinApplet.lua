@@ -707,10 +707,8 @@ function skin(self, s)
 	})
 
 	local _volumeSliderBar = _loadHTile(self, {
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-		--FIXME, we don't have support for putting this asset on screen correctly
-		--imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+		nil, 
+		nil,
 		imgpath .. "Touch_Toolbar/tch_volume_slider.png",
 	})
 
@@ -1963,7 +1961,7 @@ function skin(self, s)
 			w = WH_FILL,
 		      border = 10,
 		      fg = TEXT_COLOR,
-		      font = _boldfont(22),
+		      font = _boldfont(32),
 			padding = { 4, 16, 4, 0 },
 		      align = "center",
 		      bgImg = false,
@@ -2210,10 +2208,15 @@ function skin(self, s)
 		img = _loadImage(self, "IconsResized/icon_linein_134.png"),
 	})
 
-	s.icon_popup_volume = _uses(_popupicon, {
+	s.icon_popup_volume = {
 		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
-	})
-	s.icon_popup_mute = _uses(_popupicon, {
+		w = WH_FILL,
+		h = 90,
+		align = 'center',
+		padding = { 0, 5, 0, 5 },
+	}
+
+	s.icon_popup_mute = _uses(s.icon_popup_volume, {
 		img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
 	})
 

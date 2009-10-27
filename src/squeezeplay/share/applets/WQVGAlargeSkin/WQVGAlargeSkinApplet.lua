@@ -353,7 +353,7 @@ function skin(self, s)
 	local _volumeSliderBar = _loadHTile(self, {
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-		imgpath .. "UNOFFICIAL/tch_volume_slider.png",
+		imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
 	})
 
 	local volumeBar        = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volumebar_fill.png")
@@ -1449,12 +1449,11 @@ function skin(self, s)
 			border = 10,
 			fg = WHITE,
 			sh = {},
-			font = _boldfont(22),
+			font = _boldfont(32),
 			align = "center",
 			bgImg = false,
 			padding = { 4, 16, 4, 0 },
 		},
---		text = _uses(s.text),
 		slider_group = {
 			w = WH_FILL,
 			h = WH_FILL,
@@ -1676,12 +1675,17 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/icon_popup_box_stop.png"),
 	})
 
-	s.icon_popup_volume = _uses(_popupicon, {
-                img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
-        })
-        s.icon_popup_mute = _uses(_popupicon, {
-                img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
-        })
+	s.icon_popup_volume = {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_bar.png"),
+		w = WH_FILL,
+		h = 90,
+		align = 'center',
+		padding = { 0, 5, 0, 5 },
+	}
+	s.icon_popup_mute = _uses(s.icon_popup_volume, {
+		img = _loadImage(self, "Icons/icon_popup_box_volume_mute.png"),
+	})
+
 	s.icon_popup_shuffle0 = _uses(_popupicon, {
 		img = _loadImage(self, "Icons/icon_popup_box_shuffle_off.png"),
 	})
