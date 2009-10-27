@@ -83,6 +83,7 @@ function registerApplet(meta)
 
 	-- settings
 	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end))
+	jiveMain:addItem(meta:menuItem('minBrightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MIN", function(applet, ...) applet:settingsMinBrightnessShow(...) end))
 	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'settingsBrightness', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessControlShow(...) end))
 
 	-- services

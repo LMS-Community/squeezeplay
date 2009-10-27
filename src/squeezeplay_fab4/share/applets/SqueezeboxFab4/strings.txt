@@ -168,6 +168,10 @@ BSP_BRIGHTNESS_MANUAL
 	RU	Ручная настройка яркости
 	SV	Manuell ljusstyrka
 
+BSP_BRIGHTNESS_MIN
+	DE	Minimale Helligkeit
+	EN	Minimal Brightness
+
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.
 	DA	Brug drejeknappen til at justere lysstyrken.

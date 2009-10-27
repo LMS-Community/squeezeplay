@@ -8,6 +8,7 @@ local oo                     = require("loop.simple")
 local os                     = require("os")
 local io                     = require("io")
 local string                 = require("string")
+local table                  = require("jive.utils.table")
 local math                   = require("math")
 
 local Applet                 = require("jive.Applet")
@@ -72,11 +73,12 @@ function init(self)
 	verifyMacUUID(self)
 
 	settings.brightness = settings.brightness or 100
+	settings.brightnessMinimal = settings.brightnessMinimal or 1
 	settings.ambient = settings.ambient or 0
 	settings.brightnessControl = settings.brightnessControl or "manual"
 
 	self:initBrightness()
-	local brightnessTimer = Timer( 2000,
+	local brightnessTimer = Timer( 500,
 		function()
 			if settings.brightnessControl == "manual" then
 				self:doManualBrightnessTimer()
@@ -85,7 +87,7 @@ function init(self)
 			end
 		end)
 	brightnessTimer:start()
-
+	
 	-- status bar updates
 	self:update()
 	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
@@ -109,18 +111,25 @@ end
 -- Ambient SysFS Path
 local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 
+-- 3500 Is about the value I've seen in my room during full daylight
+-- so set it somewhere below that
+local STATIC_LUX_MAX = 2000
+
+-- Lux Value Smoothing
+local MAX_SMOOTHING_VALUES = 8
+local luxSmooth = {}
+
 -- Default/Start Values
+local TOUCHBRIGHTNESS_INCREASE = 10
+local MAX_BRIGHTNESS_LEVEL = 100
+local MIN_BRIGHTNESS_LEVEL = 1
+
 local brightCur = 100
-local brightMax = 100
 local brightTarget = 100
 local brightSettings = 0;
-
+local brightMin = 1;
 local brightOverride = 0
 
--- Minimum Brightness - Default:1, calculated using settings.brightness
--- 	- This variable should probably be configurable by the users
-local brightMinMax = 50
-local brightMin = 1
 
 -- Maximum number of brightness levels up/down per run of the timer
 local AMBIENT_RAMPSTEPS = 7
@@ -132,6 +141,7 @@ function initBrightness(self)
 		--don't ever fallback to off
 		self.brightPrev = 50
 	end
+	
 	-- Initialize the Ambient Sensor with a factor of 30
 	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
 	f:write("30")
@@ -139,14 +149,16 @@ function initBrightness(self)
 		
 	-- Set Initial Settings Brightness
 	if not settings.brightness then
-		settings.brightness = brightMax
+		settings.brightness = MAX_BRIGHTNESS_LEVEL
 	end
 
+	-- Set Initial minimal brightness
+	brightMin = settings.brightnessMinimal
+	
 	-- Set Brightness after reboot
 	self:setBrightness(settings.brightness)	
 	
 	brightSettings = settings.brightness
-	brightMax = (settings.brightness/2) + brightMinMax
 		
 	-- Create a global listener to set 
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
@@ -157,10 +169,15 @@ function initBrightness(self)
 					
 			-- if this is a new 'touch' event set brightness to max
 			if brightOverride == 0 then
-				self:setBrightness( math.floor(brightCur) )
+				b = brightCur + TOUCHBRIGHTNESS_INCREASE;
+				if  b > MAX_BRIGHTNESS_LEVEL then
+					b = MAX_BRIGHTNESS_LEVEL
+				end
+				
+				self:setBrightness( math.floor(b) )
 			end
 			
-			brightOverride = 2	
+			brightOverride = 6	
 			return EVENT_UNUSED
 		end
 		,true)		
@@ -183,20 +200,65 @@ function doBrightnessRamping(self, target)
 		
 	brightCur = brightCur + diff	
 
-	if brightCur > 100 then
-		brightCur = 100
-	elseif brightCur < 1 then
-		brightCur = 1	
+	-- make sure brighCur is a integer
+	brightCur = math.floor(brightCur)
+	
+	if brightCur > MAX_BRIGHTNESS_LEVEL then
+		brightCur = MAX_BRIGHTNESS_LEVEL
+	elseif brightCur < MIN_BRIGHTNESS_LEVEL then
+		brightCur = MIN_BRIGHTNESS_LEVEL	
 	end
 	
 	--log:info("Cur: " .. brightCur)
 end
 
--- Fully Automatic Brigthness
+function getSmoothedLux() 
+	local sum = 0.0
+	
+	-- First Pass, Average
+	for i = 1, #luxSmooth do
+		--log:info("#" .. i .. " " .. luxSmooth[i])
+		sum = sum + luxSmooth[i]
+	end	
+	local avg = sum / #luxSmooth;	
+	log:debug("AVG: " .. avg)
+	
+	-- Second Pass, Standard Deviation
+	sum = 0.0
+	for i = 1, #luxSmooth do
+		local variation = (luxSmooth[i] - avg)
+		sum = sum + (variation * variation)
+	end
+	local sdev = math.sqrt(sum / #luxSmooth)
+	--log:info("SDEV: " .. sdev);	
+	
+	-- If not deviation, return average
+	if sdev == 0 then 
+		return avg
+	end
+	
+	-- Third Pass, Filter out values > Standard Deviation
+	sum = 0.0;
+	local values = 0;
+	local high = avg + sdev;
+	local low  = avg - sdev
+	for i = 1, #luxSmooth do
+		if luxSmooth[i] > low and luxSmooth[i] < high then 
+			--log:info("##" .. i .. " " .. luxSmooth[i])
+			values = values + 1
+			sum = sum + luxSmooth[i]
+		end
+	end
+	
+	if values >= 1 then 	
+		avg = sum / values;
+		log:debug("AVG2: " .. avg)
+	end
+	
+	return avg
 
--- 3500 Is about the value I've seen in my room during full daylight
--- so set it somewhere below that
-local staticLuxMax = 2000
+end
+
 
 function doAutomaticBrightnessTimer(self)
 
@@ -214,20 +276,38 @@ function doAutomaticBrightnessTimer(self)
 	
 	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 	
-	if luxvalue > staticLuxMax then
+	if luxvalue > STATIC_LUX_MAX then
 		-- Fix calculation for very high lux values
-		luxvalue = staticLuxMax
+		luxvalue = STATIC_LUX_MAX
 	end
 	
-	local brightTarget = (100.0 / staticLuxMax) * luxvalue
+	-- Use the table to smooth out ambient value spikes
+	table.insert(luxSmooth, luxvalue)	
+	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
+		table.remove(luxSmooth, 1)
+	end
+	
+	ambient = self:getSmoothedLux(luxSmooth)	
+	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_LUX_MAX) * ambient
+
+	--[[
+	log:info("Ambient:      " .. tostring(ambient))
+	log:info("BrightTarget: " .. tostring(brightTarget))
+	log:info("Brightness:   " .. tostring(settings.brightness))	
+	log:info("MinBrightness:" .. tostring(settings.brightnessMinimal))	
+	]]--
 	
 	self:doBrightnessRamping(brightTarget);
 	
+	-- Make sure bright Cur stays above minimum
+	if brightMin > brightCur then
+		brightCur = brightMin
+	end
+
 	-- Set Brightness
-	self:setBrightness( math.floor(brightCur) )
-	
-	--log:info("LuxValue: " .. tostring(luxvalue))
-	--log:info("CurTarMax: " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
+	self:setBrightness( brightCur )
+
+	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
 	
 end
 
@@ -378,6 +458,77 @@ function setBrightness (self, level)
 	end
 end
 
+function settingsMinBrightnessShow (self, menuItem)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MIN"), squeezeboxjiveTitleStyle)
+
+	local settings = self:getSettings()
+	local level = settings.brightnessMinimal
+
+	local slider = Slider('brightness_slider', 1, 75, level,
+				function(slider, value, done)
+										
+					log:info("Value: " .. value)
+					settings.brightnessMinimal = value
+					
+					-- done is true for 'go' and 'play' but we do not want to leave
+					if done then
+						window:playSound("BUMP")
+						window:bumpRight()
+					end
+				end)
+	slider.jumpOnDown = false
+	slider.dragThreshold = 5
+
+--	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
+	window:addWidget(Group('brightness_group', {
+				div6 = Icon('div6'),
+				div7 = Icon('div7'),
+
+
+				down  = Button(
+					Icon('down'),
+					function()
+						local e = Event:new(EVENT_SCROLL, -1)
+						Framework:dispatchEvent(slider, e)
+						return EVENT_CONSUME
+					end
+				),
+				up  = Button(
+					Icon('up'),
+					function()
+						local e = Event:new(EVENT_SCROLL, 1)
+						Framework:dispatchEvent(slider, e)
+						return EVENT_CONSUME
+					end
+				),
+				slider = slider,
+			}))
+
+	window:addActionListener("page_down", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, 1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+	window:addActionListener("page_up", self,
+				function()
+					local e = Event:new(EVENT_SCROLL, -1)
+					Framework:dispatchEvent(self.volSlider, e)
+					return EVENT_CONSUME
+				end)
+
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			brightMin = settings.brightnessMinimal
+			--log:info("Save: " .. brightMin)			
+			self:storeSettings()
+		end
+	)
+
+	window:show()
+	return window
+end
 
 function settingsBrightnessShow (self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS"), squeezeboxjiveTitleStyle)
