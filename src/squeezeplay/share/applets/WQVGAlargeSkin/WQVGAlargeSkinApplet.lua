@@ -806,14 +806,14 @@ function skin(self, s)
 	}
 
 
-	local _timeFirstColumnX12h = 123
+	local _timeFirstColumnX12h = 130
 	local _timeFirstColumnX24h = 98
 
 	s.time_input_background_12h = {
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/multi_char_bkgrd.png"),
+		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_3c_10ft.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
@@ -822,7 +822,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/multi_char_bkgrd.png"),
+		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_2c_10ft.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
@@ -850,7 +850,7 @@ function skin(self, s)
 		selected = {
 			item = {
 				order = { 'text' },
-				bgImg = false,
+				img = _loadImage(self, "Multi_Character_Entry/menu_box_fixed_72.png"),
 				text = {
 					font = _boldfont(30),
 					fg = { 0xe6, 0xe6, 0xe6 },
@@ -875,10 +875,10 @@ function skin(self, s)
 		},
 	})
 	s.input_time_12h.minute = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 65, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75, TITLE_HEIGHT, 0, 0 },
 	})
 	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 65 + 65, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75 + 75, TITLE_HEIGHT, 0, 0 },
 		item = {
 			text = {
 				padding = { 0, 0, 8, 0 },
@@ -887,6 +887,7 @@ function skin(self, s)
 		},
 		selected = {
 			item = {
+				img = _loadImage(self, "Multi_Character_Entry/menu_box_fixed_72.png"),
 				text = {
 					padding = { 0, 0, 8, 0 },
 					font = _boldfont(26),
@@ -906,16 +907,14 @@ function skin(self, s)
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
-				font = _boldfont(20),
 				padding = { 0, 0, 8, 0 },
 			},
 		},
 		selected = {
 			item = {
-				bgImg = false,
+				img = false,
 				text = {
 					fg = { 0x66, 0x66, 0x66 },
-					font = _boldfont(20),
 					padding = { 0, 0, 8, 0 },
 				},
 			},
