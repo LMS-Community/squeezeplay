@@ -1572,7 +1572,13 @@ function skin(self, s)
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 10 }
 	}
-	local _popupicon = _uses(_icon, { padding = 0, h = 80 })
+
+	local _popupicon = {
+		padding = 0,
+		border = { 22, 22, 0, 0 },
+		h = WH_FILL,
+		w = 146,
+	}
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {

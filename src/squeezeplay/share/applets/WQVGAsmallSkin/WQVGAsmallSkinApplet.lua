@@ -2153,11 +2153,11 @@ function skin(self, s)
 	}
 
 	local _popupicon = {
-		w = 146,
-		h = 134,
-		align = 'center',
-		position = LAYOUT_CENTER,
-	}
+                padding = 0,
+                border = { 22, 22, 0, 0 },
+                h = WH_FILL,
+                w = 146,
+        }
 
 	-- icon for albums with no artwork
 	s.icon_no_artwork = {
