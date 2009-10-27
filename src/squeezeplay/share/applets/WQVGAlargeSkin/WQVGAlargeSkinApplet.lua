@@ -683,49 +683,7 @@ function skin(self, s)
 		}),
 	}
 
-	s.pressed = {
-		item = _uses(s.item, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-			arrow = {
-	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
-			},
-		}),
-		item_checked = _uses(s.item_checked, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-			arrow = {
-	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
-			},
-		}),
-		item_play = _uses(s.item_play, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-		}),
-		item_add = _uses(s.item_add, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-		}),
-		item_no_arrow = _uses(s.item_no_arrow, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-		}),
-		item_checked_no_arrow = _uses(s.item_checked_no_arrow, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-		}),
-		item_choice = _uses(s.item_choice, {
-			text = selectedTextBlock,
-			bgImg = threeItemPressedBox,
-		}),
-		item_info  = _uses(s.item_info, {
-			text = itemInfoSelectedTextBlock,
-			bgImg = threeItemPressedBox,
-			arrow = {
-	      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
-			},
-		}),
-	}
+	s.pressed = s.selected
 
 	s.locked = {
 		item = _uses(s.pressed.item, {
@@ -1165,26 +1123,8 @@ function skin(self, s)
 			bgImg = threeItemSelectionBox
 		}),
         }
-        s.icon_list.menu.pressed = {
-                item = _uses(s.icon_list.menu.item, { 
-			bgImg = threeItemPressedBox 
-		}),
-                item_checked = _uses(s.icon_list.menu.item_checked, { 
-			bgImg = threeItemPressedBox 
-		}),
-                item_play = _uses(s.icon_list.menu.item_play, { 
-			bgImg = threeItemPressedBox 
-		}),
-                item_add = _uses(s.icon_list.menu.item_add, { 
-			bgImg = threeItemPressedBox 
-		}),
-                item_no_arrow = _uses(s.icon_list.menu.item_no_arrow, { 
-			bgImg = threeItemPressedBox 
-		}),
-                item_checked_no_arrow = _uses(s.icon_list.menu.item_checked_no_arrow, { 
-			bgImg = threeItemPressedBox 
-		}),
-        }
+	s.icon_list.menu.pressed = s.icon_list.menu.selected
+
 	s.icon_list.menu.locked = {
 		item = _uses(s.icon_list.menu.pressed.item, {
 			arrow = smallSpinny
@@ -1293,10 +1233,7 @@ function skin(self, s)
 			bgImg = threeItemSelectionBox
 		}),
         }
-        s.play_list.menu.pressed = {
-                item = _uses(s.play_list.menu.item, { bgImg = threeItemPressedBox }),
-                item_checked = _uses(s.play_list.menu.item_checked, { bgImg = threeItemPressedBox }),
-        }
+	s.play_list.menu.pressed = s.play_list.menu.selected
 	s.play_list.menu.locked = {
 		item = _uses(s.play_list.menu.pressed.item, {
 			arrow = smallSpinny
@@ -2076,6 +2013,7 @@ function skin(self, s)
 			img = _loadImage(self, "Icons/icon_toolbar_brightness_up.png"),
 		}),
 	}
+
 	s.brightness_group.pressed = {
 
 		down   = _uses(s.brightness_group.down, { bgImg = keyMiddlePressed }),
