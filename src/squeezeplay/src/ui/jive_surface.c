@@ -527,7 +527,7 @@ void jive_surface_free(JiveSurface *srf) {
 }
 
 void jive_surface_release(JiveSurface *srf) {
-	if (--srf->refcount > 0) {
+	if (srf->refcount > 0) {
 		return;
 	}
 
