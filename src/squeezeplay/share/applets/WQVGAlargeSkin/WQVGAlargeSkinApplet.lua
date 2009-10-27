@@ -350,10 +350,22 @@ function skin(self, s)
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_r.png",
 	})
 
-	local _volumeSliderBar = _loadHTile(self, {
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-		imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+        local _popupSliderBar = _loadHTile(self, {
+                imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
+                imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
+                imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+        })
+
+	local _scannerSliderBar = _loadHTile(self, {
+		nil,
+		nil,
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_slider.png",
+	})
+
+	local _scannerSliderBackground = _loadHTile(self, {
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_sliderbar_bkgrd_l.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_sliderbar_bkgrd.png",
+		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_sliderbar_bkgrd_r.png",
 	})
 
 	local volumeBar        = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volumebar_fill.png")
@@ -1462,8 +1474,11 @@ function skin(self, s)
 		},
 	}
 
-	-- FIXME: this is not to any spec yet
-	s.scanner_popup = _uses(s.slider_popup)
+	-- scanner popup
+        s.scanner_popup = _uses(s.slider_popup, {
+                h = 110,
+                y = screenHeight/2 - 55,
+        })
 
 	s.image_popup = _uses(s.popup, {
 		image = {
@@ -1474,15 +1489,16 @@ function skin(self, s)
 
 --------- SLIDERS ---------
 
-
 	s.volume_slider = _uses(s.slider, {
-		img = _volumeSliderBar,
+		img = _popupSliderBar,
 		bgImg = _volumeSliderBackground,
 		border = 0,
 	})
 
-	-- FIXME: this is not to any spec yet
-	s.scanner_slider = _uses(s.volume_slider)
+	s.scanner_slider = _uses(s.volume_slider, {
+		img = _scannerSliderBar,
+		bgImg = _scannerSliderBackground,
+	})
 
 --------- BUTTONS ---------
 
@@ -1848,6 +1864,24 @@ function skin(self, s)
 		fg = WHITE,
 	}
 
+	local controlHeight = 38
+        local controlWidth = 45
+        local volumeBarWidth = 150
+        local buttonPadding = 0
+
+        local _transportControlButton = {
+                w = controlWidth,
+                h = controlHeight,
+                align = 'center',
+                padding = buttonPadding,
+        }
+
+        local _transportControlBorder = _uses(_transportControlButton, {
+                w = 2,
+                padding = 0,
+                img = touchToolbarKeyDivider,
+        })
+
 	s.nowplaying = _uses(s.window, {
 		title = _uses(s.title, {
 			text = {
@@ -2054,7 +2088,7 @@ function skin(self, s)
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = _volumeSliderBackground,
-                img = _volumeSliderBar,
+                img = _popupSliderBar,
 	}
 	
 	s.debug_canvas = {
