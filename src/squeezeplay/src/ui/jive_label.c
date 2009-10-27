@@ -281,6 +281,10 @@ int jiveL_label_do_animate(lua_State *L) {
 
 	/* scroll? */
 	if (peer->text_w <= peer->label_w) {
+		if (jive_getmethod(L, 1, "textStopCallback")) {
+			lua_pushvalue(L, 1); // framework
+			lua_call(L, 1, 0);
+		}	
 		return 0;
 	}
 
@@ -288,6 +292,11 @@ int jiveL_label_do_animate(lua_State *L) {
 
 	if (peer->scroll_offset > peer->text_w  + SCROLL_PAD_RIGHT) {
 		peer->scroll_offset = SCROLL_PAD_LEFT;
+
+		if (jive_getmethod(L, 1, "textStopCallback")) {
+			lua_pushvalue(L, 1); // framework
+			lua_call(L, 1, 0);
+		}	
 	}
 
 	if (peer->scroll_offset < 0) {

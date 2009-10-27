@@ -511,12 +511,16 @@ function _updateTrack(self, trackinfo, pos, length)
 			artistalbum = album
 		end
 
+		if self.scrollSwitchTimer:isRunning() then
+			self.scrollSwitchTimer:stop()
+		end
+		
 		self.trackTitle:setValue(track)
 		self.albumTitle:setValue(album)
 		self.artistTitle:setValue(artist)
 		self.artistalbumTitle:setValue(artistalbum)
 		self.trackTitle:animate(true)
-		self.artistalbumTitle:animate(true)
+		self.artistalbumTitle:animate(false)
 
 	end
 end
@@ -823,6 +827,34 @@ function _createUI(self)
 		self.albumTitle  = Label('npalbum', "")
 		self.artistTitle = Label('npartist', "")
 		self.artistalbumTitle = Label('npartistalbum', "")
+
+	if not self.scrollSwitchTimer then
+		self.scrollSwitchTimer = Timer(3000,
+					function()
+						log:debug("in scrollSwitchTimer timer")
+						self.trackTitle:animate(true)
+						self.artistalbumTitle:animate(false)
+					end, true)
+		
+	end
+	self.trackTitle.textStopCallback = 
+		function(label) 
+			if not self.scrollSwitchTimer:isRunning() then
+				log:debug("in scrollSwitchTimer callback: ", label)
+				self.artistalbumTitle:animate(true)
+				self.trackTitle:animate(false)
+			end
+		end
+
+	self.artistalbumTitle.textStopCallback = 
+		function(label)
+			self.artistalbumTitle:animate(false)
+			self.trackTitle:animate(false)
+			if not self.scrollSwitchTimer:isRunning() then
+				log:debug("in scrollSwitchTimer callback, setting timer: ", label)
+				self.scrollSwitchTimer:restart()
+			end
+		end
 
 	if not self.gotoTimer then
 		self.gotoTimer = Timer(400,
