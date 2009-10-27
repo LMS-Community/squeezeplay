@@ -103,6 +103,7 @@ local MOUSE_QUICK_TOUCH_TIME_MS = 120
 local MOUSE_SLOW_DRAG_DISTANCE = 25
 
 local ITEMS_BEFORE_SCROLL_DEFAULT = 1
+local GO_AS_CANCEL_TIME = 1500 -- (Note: under high load a quick double click might still trigger ht ecancel due to using getTicks() (which would include the even tloop time_. ideally we'd be based on input time, not getTicks, but lock doesn't always have easy access to input event)
 
 --Mouse operation states
 
@@ -823,6 +824,14 @@ local function _eventHandler(self, event)
 
 		self.dragOrigin.x, self.dragOrigin.y = nil, nil;
 		if self.mouseState == MOUSE_COMPLETE or self.sliderDragInProgress then
+			if self.lockedT and Framework:getTicks() > self.lockedT + GO_AS_CANCEL_TIME then
+				if type(self.locked) == "function" then
+					self.locked(self)
+				end
+				self:unlock()
+				return EVENT_CONSUME
+			end
+
 			return (finishMouseSequence(self))
 		end
 
@@ -1280,6 +1289,7 @@ Lock the menu. Pressing back unlocks it and calls the I<cancel> closure. The sty
 --]]
 function lock(self, cancel)
 	self.locked = cancel or true
+	self.lockedT = Framework:getTicks()
 	self:reLayout()
 
 	-- don't allow screensaver while locked
