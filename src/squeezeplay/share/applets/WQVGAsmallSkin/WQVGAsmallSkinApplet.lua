@@ -1239,7 +1239,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_3c.png"),
+		img = _loadImage(self, "Multi_Character_Entry/tch_multi_char_bkgrd_3c.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
@@ -1248,7 +1248,7 @@ function skin(self, s)
 		w = WH_FILL,
 		h = 60,
 		position = LAYOUT_NONE,
-		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_2c.png"),
+		img = _loadImage(self, "Multi_Character_Entry/tch_multi_char_bkgrd_2c.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
 	}
