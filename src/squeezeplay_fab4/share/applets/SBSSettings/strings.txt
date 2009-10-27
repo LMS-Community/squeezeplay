@@ -1,0 +1,44 @@
+
+SBS_SETTINGS
+	EN	Squeezebox Server Settings
+
+USB_SD_STORAGE
+	EN	USB & SD Storage
+
+DEVICES
+	EN	Devices
+
+USB_DISK_VOLUMENAME
+	EN	USB Disk:\n%s
+
+USB_DISK_SIZE
+	EN	Size:\n%s
+
+USB_DISK_FREE
+	EN	Free:\n%s
+
+SD_CARD_VOLUMENAME
+	EN	SD Card:\n%s
+
+SD_CARD_SIZE
+	EN	Size:\n%s
+
+SD_CARD_FREE
+	EN	Free:\n%s
+
+
+NETWORK_SHARING
+	EN	Network Sharing
+
+SHARING_ENABLE
+	EN	Sharing:\n%s
+
+SHARING_ACCOUNT
+	EN	Account:\n%s
+
+SHARING_PASSWORD
+	EN	Password:\n%s
+
+
+
+
