@@ -249,6 +249,14 @@ function skin(self, s)
 		 imgpath .. "3_line_lists/menu_sel_box_3line.png",
 		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
 	})
+
+	-- BUG 14953: need assets for horizontal divider line in menus
+	local threeItemBox             = _loadHTile(self, {
+		nil,
+		nil,
+		nil,
+        })
+
 	local threeItemPressedBox     = _loadImageTile(self, imgpath .. "3_line_lists/menu_sel_box_3item_press.png" )
 
 	local titleBox                =
@@ -526,6 +534,7 @@ function skin(self, s)
 	s.item = {
 		order = { "text", "arrow" },
 		padding = { ITEM_LEFT_PADDING, 0, 5, 0 },
+		bgImg = threeItemBox,
 		text = {
 			padding = { 0, 0, 2, 0 },
 			align = "left",
