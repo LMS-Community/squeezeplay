@@ -162,6 +162,7 @@ irActionMappings.press = {
 	["rew"]  = "jump_rew",
 	["volup"]  = "volume_up",
 	["voldown"]  = "volume_down",
+	["mute"] = "mute",
 --	["0"]  = "play_preset_0",
 --	["1"]  = "play_preset_1",
 --	["2"]  = "play_preset_2",
