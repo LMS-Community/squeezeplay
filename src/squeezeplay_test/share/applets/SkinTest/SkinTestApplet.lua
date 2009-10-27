@@ -870,6 +870,21 @@ function window_scanner_popup(self, item)
 	return popup
 end
 
+--[[
+Popup:   "icon_popup"
+Group:	 "group"
+  Label:   "text"
+  Icon:    "icon"
+--]]
+function window_icon_popup(self, item)
+	local popup = Popup("toast_popup_icon")
+	local icon  = Icon("icon_popup_stop")
+	_windowActions(self, item, popup)
+	popup:addWidget(icon)
+
+	return popup
+end
+
 
 -- REFERENCE WINDOW STYLES ARE ABOVE
 
@@ -919,6 +934,7 @@ windows = {
 	{ "toast_popup_withicon", "Popup Toast w/art", window_toast_popup_withicon, },
 	{ "scanner_popup", "Song Position", window_scanner_popup, },
 	{ "slider_popup", "Volume", window_slider_popup, },
+	{ "icon_popup", "Icon Popup", window_icon_popup, },
 }
 
 
