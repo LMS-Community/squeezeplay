@@ -2497,7 +2497,7 @@ function skin(self, s)
 
 	local controlHeight = 38
 	local controlWidth = 45
-	local volumeBarWidth = 150
+	local volumeBarWidth = 163 -- screenWidth - (transport controls + volume controls + dividers + border around volume bar)
 	local buttonPadding = 0
 
 	local _transportControlButton = {
@@ -2678,9 +2678,11 @@ function skin(self, s)
 				img = _loadImage(self, "Icons/icon_toolbar_repeat_song_on.png"),
 			}),
 			volDown   = _uses(_transportControlButton, {
+				w = 34,
 				img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
 			}),
 			volUp   = _uses(_transportControlButton, {
+				w = 34,
 				img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
 			}),
 			thumbsUp   = _uses(_transportControlButton, {
