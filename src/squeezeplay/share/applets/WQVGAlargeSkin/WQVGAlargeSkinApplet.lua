@@ -250,11 +250,10 @@ function skin(self, s)
 		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
 	})
 
-	-- BUG 14953: need assets for horizontal divider line in menus
 	local threeItemBox             = _loadHTile(self, {
-		nil,
-		nil,
-		nil,
+		 imgpath .. "3_line_lists/rem_3line_divider_l.png",
+		 imgpath .. "3_line_lists/rem_3line_divider.png",
+		 imgpath .. "3_line_lists/rem_3line_divider_r.png",
         })
 
 	local threeItemPressedBox     = _loadImageTile(self, imgpath .. "3_line_lists/menu_sel_box_3item_press.png" )
