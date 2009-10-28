@@ -707,9 +707,9 @@ function skin(self, s)
 	})
 
 	local _volumeSliderBar = _loadHTile(self, {
-               imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
-               imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
-               imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill_l_test.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill_test.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill_r_test.png",
 	})
 	
 	local _volumeSliderPill = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volume_slider.png")
