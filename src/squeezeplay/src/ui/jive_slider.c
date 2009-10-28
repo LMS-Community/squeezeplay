@@ -186,7 +186,7 @@ int jiveL_slider_draw(lua_State *L) {
 		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + y, w, h);
 
 		if (peer->pill_img) {
-			jive_surface_blit(peer->pill_img, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + pill_x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + pill_y);
+			jive_surface_blit(peer->pill_img, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + pill_x, 4 + peer->w.bounds.y + peer->slider_y + peer->w.padding.top + pill_y);
 		}
 	}
 
