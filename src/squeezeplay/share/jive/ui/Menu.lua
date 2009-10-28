@@ -1430,7 +1430,7 @@ function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)
 
 	if self.noBarrier then
 		isNewOperation = true
-	elseif self:getItemsBeforeScrollGap() then
+	elseif self:getItemsBeforeScrollGap() and self:getItemsBeforeScrollGap() ~= 0 then
 		isNewOperation = false
 	end
 	--for input sources such as ir remote, follow the "ir remote" list behavior seen on classic players
