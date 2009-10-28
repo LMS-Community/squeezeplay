@@ -1405,6 +1405,9 @@ function skin(self, s)
                 },
 	})
 
+	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge
+	s.choose_player = s.text_list
+
 	s.multiline_text_list = _uses(s.text_list)
 
 	s.multiline_text_list.menu = _uses(s.menu, {

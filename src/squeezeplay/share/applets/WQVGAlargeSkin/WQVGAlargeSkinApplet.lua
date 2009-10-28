@@ -580,7 +580,7 @@ function skin(self, s)
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off_3line.png")
 
 	s.item_choice = _uses(s.item, {
-		order  = { 'icon', 'text', 'check' },
+		order  = { 'text', 'check' },
 		choice = {
 			h = WH_FILL,
 			padding = CHECKBOX_RADIO_PADDING,
@@ -591,7 +591,7 @@ function skin(self, s)
 		},
 	})
 	s.item_checked = _uses(s.item, {
-		order = { "icon", "text", "check", "arrow" },
+		order = { "text", "check", "arrow" },
 		check = {
 			align = ITEM_ICON_ALIGN,
 			padding = CHECK_PADDING,
@@ -962,6 +962,43 @@ function skin(self, s)
 			},
 		},
 	})
+
+	-- choose player window. identical to text_list on all windows except WQVGAlarge, which needs to show the icon
+	s.choose_player = _uses(s.text_list, {
+		menu = {
+			item = {
+				order = { 'icon', 'text', 'arrow' },
+			},
+			item_checked = {
+				order = { 'icon', 'text', 'check', 'arrow' },
+			},
+			selected = {
+				item = {
+					order = { 'icon', 'text', 'arrow' },
+				},
+				item_checked = {
+					order = { 'icon', 'text', 'check', 'arrow' },
+				},
+			},
+			locked = {
+				item = {
+					order = { 'icon', 'text', 'arrow' },
+				},
+				item_checked = {
+					order = { 'icon', 'text', 'check', 'arrow' },
+				},
+			},
+			locked = {
+				item = {
+					order = { 'icon', 'text', 'arrow' },
+				},
+				item_checked = {
+					order = { 'icon', 'text', 'check', 'arrow' },
+				},
+			},
+		},
+	})
+
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 

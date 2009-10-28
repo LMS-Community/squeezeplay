@@ -897,6 +897,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.help_list = _uses(s.text_list)
 
+	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge
+        s.choose_player = s.text_list
+
 	local _timeFirstColumnX12h = 65
 	local _timeFirstColumnX24h = 98
 
