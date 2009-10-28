@@ -17,6 +17,21 @@ SCREENSAVER_NOWPLAYING
 	RU	Воспроизводится
 	SV	Nu spelas
 
+SCREENSAVER_STOPPED
+	CS	Zastaveno
+	DA	Stoppet
+	DE	Angehalten
+	EN	Stopped
+	ES	Detenido
+	FI	Pysäytetty
+	FR	Arrêté
+	IT	Arrestato
+	NL	Gestopt
+	NO	Stoppet
+	PL	Zatrzymane
+	RU	Остановлено
+	SV	Stoppad
+
 SCREENSAVER_PAUSED
 	CS	Pozastaveno
 	DA	Pause
@@ -28,39 +43,24 @@ SCREENSAVER_PAUSED
 	IT	In pausa
 	NL	Gepauzeerd
 	NO	Pause
-	PL	Wstrzymano
+	PL	Wstrzymane
 	RU	Пауза
 	SV	Pausad
 
-SCREENSAVER_WHEN_STOPPED
-	CS	Při zastavení
-	DA	Når den er stoppet
-	DE	Wenn angehalten
-	EN	When stopped
-	ES	Al detener
-	FI	Keskeytettynä
-	FR	A l'arrêt
-	IT	Quando la riproduzione è interrotta
-	NL	Wanneer gestopt
-	NO	Ved stopp
-	PL	Po zatrzymaniu
-	RU	При остановке
-	SV	I stoppat läge
-
-SCREENSAVER_STOPPED
-	CS	Při zastavení
-	DA	Når den er stoppet
-	DE	Wenn angehalten
-	EN	When stopped
-	ES	Al detener
-	FI	Keskeytettynä
-	FR	A l'arrêt
-	IT	Quando la riproduzione è interrotta
-	NL	Wanneer gestopt
-	NO	Ved stopp
-	PL	Po zatrzymaniu
-	RU	При остановке
-	SV	I stoppat läge
+SCREENSAVER_OFF
+	CS	Vypnuto
+	DA	Fra
+	DE	Aus
+	EN	Off
+	ES	Apagado
+	FI	Ei käytössä
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uit
+	NO	Av
+	PL	Wył.
+	RU	Выкл
+	SV	Av
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s
@@ -76,21 +76,6 @@ SCREENSAVER_NOWPLAYING_OF
 	PL	%s z %s
 	RU	%s из %s
 	SV	%s av %s
-
-SCREENSAVER_OFF
-	CS	Při vypnutí
-	DA	Når den er slukket
-	DE	Wenn aus
-	EN	When off
-	ES	Al apagar
-	FI	Laitteen ollessa pois päältä
-	FR	En état éteint
-	IT	Se disattivato
-	NL	Wanneer uit
-	NO	Når av
-	PL	Po wyłączeniu
-	RU	При выкл.
-	SV	I avstängt läge
 
 SCREENSAVER_ARTWORK_SIZE
 	CS	Velikost obalu právě přehrávané skladby
