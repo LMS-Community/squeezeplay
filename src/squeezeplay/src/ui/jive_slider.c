@@ -16,6 +16,9 @@ typedef struct slider_widget {
 
 	JiveTile *bg;
 	JiveTile *tile;
+	JiveSurface *pill_img;
+	Uint16 pill_image_width;
+	Uint16 pill_image_height;
 	bool horizontal;
 } SliderWidget;
 
@@ -30,7 +33,7 @@ static JivePeerMeta sliderPeerMeta = {
 int jiveL_slider_skin(lua_State *L) {
 	SliderWidget *peer;
 	JiveTile *bg, *tile;
-
+	JiveSurface *pill_img;
 	/* stack is:
 	 * 1: widget
 	 */
@@ -66,6 +69,14 @@ int jiveL_slider_skin(lua_State *L) {
 		peer->tile = jive_tile_ref(tile);
 	}
 
+	pill_img = jive_style_image(L, 1, "pillImg", NULL);
+	if (peer->pill_img != pill_img) {
+		if (peer->pill_img) {
+			jive_surface_free(peer->pill_img);
+		}
+		peer->pill_img = jive_surface_ref(pill_img);
+	}
+
 	peer->align = jive_style_align(L, 1, "align", JIVE_ALIGN_CENTER);
 
 	return 0;
@@ -83,6 +94,13 @@ int jiveL_slider_layout(lua_State *L) {
 
 	if (!peer->tile) {
 		return 0;
+	}
+	if (peer->pill_img) {
+		jive_surface_get_size(peer->pill_img, &peer->pill_image_width, &peer->pill_image_height);
+	}
+	else {
+		peer->pill_image_width = 0;
+		peer->pill_image_height = 0;
 	}
 
 	jive_tile_get_min_size(peer->tile, &tw, &th);
@@ -127,7 +145,7 @@ int jiveL_slider_draw(lua_State *L) {
 	if (peer->tile) {
 		int height, width;
 		int range, value, size;
-		int x, y, w, h;
+		int x, y, w, h, pill_x, pill_y;
 		Uint16 tw, th;
 
 		height = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
@@ -150,18 +168,26 @@ int jiveL_slider_draw(lua_State *L) {
 			width -= tw;
 			x = (width / (float)(range - 1)) * (value - 1);
 			w = (width / (float)(range - 1)) * (size - 1) + tw;
+			pill_x = w - tw;
 			y = 0;
+			pill_y = y;
 			h = height;
 		}
 		else {
 			height -= th;
 			x = 0;
+			pill_x = x;
 			w = width;
 			y = (height / (float)(range - 1)) * (value - 1);
 			h = (height / (float)(range - 1)) * (size - 1) + th;
+			pill_y = h - th;
 		}
 
 		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + y, w, h);
+
+		if (peer->pill_img) {
+			jive_surface_blit(peer->pill_img, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + pill_x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + pill_y);
+		}
 	}
 
 	return 0;
@@ -225,6 +251,11 @@ int jiveL_slider_gc(lua_State *L) {
 	if (peer->tile) {
 		jive_tile_free(peer->tile);
 		peer->tile = NULL;
+	}
+
+	if (peer->pill_img) {
+		jive_surface_free(peer->pill_img);
+		peer->pill_img = NULL;
 	}
 
 	return 0;

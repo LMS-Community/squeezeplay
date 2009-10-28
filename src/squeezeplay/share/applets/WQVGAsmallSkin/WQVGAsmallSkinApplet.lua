@@ -707,10 +707,12 @@ function skin(self, s)
 	})
 
 	local _volumeSliderBar = _loadHTile(self, {
-		nil, 
-		nil,
-		imgpath .. "Touch_Toolbar/tch_volume_slider.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill.png",
+               imgpath .. "Touch_Toolbar/tch_volumebar_fill_r.png",
 	})
+	
+	local _volumeSliderPill = _loadImageTile(self, imgpath .. "Touch_Toolbar/tch_volume_slider.png")
 
 	local _popupSliderBar = _loadHTile(self, {
 		imgpath .. "Touch_Toolbar/tch_volumebar_fill_l.png",
@@ -2788,6 +2790,7 @@ function skin(self, s)
                 horizontal = 1,
                 bgImg = _volumeSliderBackground,
                 img = _volumeSliderBar,
+                pillImg = _volumeSliderPill,
 	}
 
 	-- pressed styles
