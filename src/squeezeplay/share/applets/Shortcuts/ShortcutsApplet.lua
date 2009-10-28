@@ -89,6 +89,7 @@ function _getOutputActionMap(self)
 --			["7"]                  = {text = "7", offerOn = {"ir"}, weight = 90},
 --			["8"]                  = {text = "8", offerOn = {"ir"}, weight = 90},
 --			["9"]                  = {text = "9", offerOn = {"ir"}, weight = 90},
+			["text_mode"]          = {text = self:string("SHORTCUTS_OUTPUT_TEXT_MODE", 6), offerOn = {"touch", "ir", "keys"}, weight = 94},
 		}
 		if System:hasTouch() then
 			self.outputActionMap["power"]  = {text = self:string("SHORTCUTS_OUTPUT_POWER"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 60}

@@ -225,6 +225,9 @@ SHORTCUTS_OUTPUT_BACK
 	RU	Назад
 	SV	Bakåt
 
+SHORTCUTS_OUTPUT_TEXT_MODE
+	EN	Text Mode
+	
 SHORTCUTS_OUTPUT_GO_HOME
 	CS	Přejít Domů
 	DA	Til startside

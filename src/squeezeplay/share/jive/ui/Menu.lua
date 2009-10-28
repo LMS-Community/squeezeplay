@@ -443,7 +443,7 @@ local function _eventHandler(self, event)
 				return EVENT_CONSUME
 			end
 		else
-			if action == "go" and self.textMode then
+			if (action == "go" or action == "back") and self.textMode then
 				self.textMode = nil
 				self.accelKey = nil
 				self:reDraw()
