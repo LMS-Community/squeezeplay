@@ -86,6 +86,7 @@ function param(self)
         return {
 		THUMB_SIZE = 40,
 		NOWPLAYING_MENU = false,
+		POPUP_THUMB_SIZE = 120,
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
 		nowPlayingLargeArtworkSize  = 180,
@@ -1850,6 +1851,54 @@ function skin(self, s)
 		}
 	})
 
+	-- new style that incorporates text, icon, more text, and maybe a badge
+	s.toast_popup_mixed = {
+		x = 19,
+		y = 16,
+		position = LAYOUT_NONE,
+		w = screenWidth - 38,
+		h = 214,
+		bgImg = popupBox,
+		text = {
+			position = LAYOUT_NORTH,
+			padding = { 8, 24, 8, 0 },
+			align = 'top',
+			w = WH_FILL,
+			h = WH_FILL,
+			font = _boldfont(18),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+		},
+		subtext = {
+			position = LAYOUT_NORTH,
+			padding = { 8, 178, 8, 0 },
+			align = 'top',
+			w = WH_FILL,
+			h = WH_FILL,
+			font = _boldfont(18),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+		},
+	}
+
+	s._badge = {
+		position = LAYOUT_NONE,
+		zOrder = 99,
+		-- middle of the screen plus half of the icon width minus half of the badge width. gotta love LAYOUT_NONE
+		x = screenWidth/2 + 21,
+		w = 34,
+		y = 34,
+	}
+	s.badge_none = _uses(s._badge, {
+		img = false,
+	})
+	s.badge_favorite = _uses(s._badge, {
+		img = _loadImage(self, "Icons/icon_badge_fav.png")
+	})
+	s.badge_add = _uses(s._badge, {
+		img = _loadImage(self, "Icons/icon_badge_add.png")
+	})
+
 	s.context_menu = {
 		x = 8,
 		y = 16,
@@ -2291,6 +2340,11 @@ function skin(self, s)
 -- FIXME no asset for this (needed?)
 --		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
 	})
+
+        s.icon_art = _uses(_icon, {
+                padding = 0,
+                img = false,
+        })
 
 	s.player_transporter = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_transporter" .. skinSuffix),
