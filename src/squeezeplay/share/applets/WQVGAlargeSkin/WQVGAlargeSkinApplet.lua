@@ -271,19 +271,7 @@ function skin(self, s)
 				 nil,
 		})
 
-      local textinputBackground =
-                _loadTile(self, {
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_tl.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_t.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_tr.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_r.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_br.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_b.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_bl.png",
-                                       imgpath .. "Text_Entry/Classic/text_entry_bkgrd_l.png",
-                               })
-
+	local textinputBackground = _loadImageTile(self, imgpath .. "Text_Entry/Classic_10ft/text_entry_bkgrd_whole.png")
 
 	local pressedTitlebarButtonBox =
 		_loadTile(self, {
@@ -380,9 +368,11 @@ function skin(self, s)
 
 	local popupBackground  = _loadImageTile(self, imgpath .. "Alerts/popup_fullscreen_100.png")
 
-	local textinputCursor     = _loadImageTile(self, imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
-	local textinputWheel      = _loadImageTile(self, imgpath .. "Text_Entry/Classic/text_entry_select_bar_vert_overlay.png")
-        local textinputRightArrow = _loadImageTile(self, imgpath .. "Icons/selection_right_textentry.png")
+	-- FIXME: Noah needs to provide a better asset for the cursor image
+	local textinputCursor     = _loadImageTile(self, imgpath .. "UNOFFICIAL/text_bar_vert_fill.png")
+
+	local textinputWheel      = _loadImageTile(self, imgpath .. "Text_Entry/Classic_10ft/text_bar_vert.png")
+        local textinputRightArrow = _loadImageTile(self, imgpath .. "Icons/sel_right_textentry.png")
 
 	local THUMB_SIZE = self:param().THUMB_SIZE
 	
@@ -415,9 +405,6 @@ function skin(self, s)
 	local TRACK_FONT_SIZE = 18
 	local TEXTAREA_FONT_SIZE = 24
 	local CENTERED_TEXTAREA_FONT_SIZE = 24
-
-	local TEXTINPUT_FONT_SIZE = 34
-	local TEXTINPUT_SELECTED_FONT_SIZE = 40
 
 	local HELP_FONT_SIZE = 18
 	local UPDATE_SUBTEXT_SIZE = 20
@@ -770,41 +757,33 @@ function skin(self, s)
 
 --------- SPECIAL WIDGETS ---------
 
-
 	-- text input
+
 	s.textinput = {
-		h = 72,
-		padding = { 6, 0, 6, 0 },
-		font = _boldfont(TEXTINPUT_FONT_SIZE),
-		cursorFont = _boldfont(TEXTINPUT_SELECTED_FONT_SIZE),
-		wheelFont = _boldfont(TEXTINPUT_FONT_SIZE),
-		charHeight = TEXTINPUT_SELECTED_FONT_SIZE, 
-		fg = BLACK,
-		charOffsetY = 16,
-		wh = { 0x55, 0x55, 0x55 },
-		cursorImg = textinputCursor,
-		wheelImg = textinputWheel,
-		enterImg = textinputRightArrow,
+		h                = WH_FILL,
+		border           = { 8, 0, 8, 0 },
+		padding          = { 12, 0, 6, 0 },
+		align            = 'center',
+		font             = _boldfont(64),
+		cursorFont       = _boldfont(72),
+		wheelFont        = _boldfont(34),
+		charHeight       = 72,
+		wheelCharHeight  = 34,
+		fg               = BLACK,
+		wh               = { 0x55, 0x55, 0x55 },
+		bgImg            = textinputBackground,
+		cursorImg        = textinputCursor,
+                cursorColor      = WHITE,
+		enterImg         = textinputRightArrow,
+		wheelImg         = textinputWheel,
+		charOffsetY      = 20,
+		wheelCharOffsetY = 4,
 	}
 
 	-- keyboard
 	s.keyboard = {
 		hidden = 1,
 	}
-
-	s.keyboard_textinput = {
-		bgImg = textinputBackground,
-		w = WH_FILL,
-		h = 72,
-		align = 'center',
-		order = { "textinput", "backspace" },
-		backspace = { hidden = 1 },
-		border = { 0, 55, 0, 0 },
-		textinput = {
-			padding = { 16, 0, 0, 4 },
-		},
-	}
-
 
 	local _timeFirstColumnX12h = 130
 	local _timeFirstColumnX24h = 98
