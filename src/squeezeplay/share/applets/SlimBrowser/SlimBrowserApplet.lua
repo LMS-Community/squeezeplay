@@ -2374,7 +2374,7 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 
 	local window
 	if windowSpec.isContextMenu then
-		window = ContextMenuWindow("More", windowSpec.windowId) -- todo localize or decide what title text should be
+		window = ContextMenuWindow("", windowSpec.windowId) -- todo localize or decide what title text should be
 	else
 		window = Window(windowSpec.windowStyle or 'text_list', _, _, windowSpec.windowId)
 	end
