@@ -1417,7 +1417,7 @@ function skin(self, s)
 	s.multiline_text_list.menu = _uses(s.menu, {
 		itemHeight = THREE_ITEM_HEIGHT,
 		item = {
-			padding = { 10, 10, 0, 10 },
+			padding = { 10, 8, 0, 8 },
 			bgImg = false,
 			icon = {
 				align = 'top',
@@ -1907,6 +1907,22 @@ function skin(self, s)
 		bgImg = contextMenuBox,
 		layer = LAYER_TITLE,
 
+		multiline_text = {
+                        w = WH_FILL,
+                        h = 172,
+                        padding = { 18, 2, 14, 18 },
+                        border = { 0, 0, 6, 15 },
+                        lineHeight = 22,
+                        font = _font(18),
+                        fg = { 0xe6, 0xe6, 0xe6 },
+                        sh = { },
+                        align = "top-left",
+                        scrollbar = {
+                                h = 164,
+                                border = {0, 2, 2, 10},
+                        },
+                },
+
 		title = {
 		layer = LAYER_TITLE,
 			h = 52,
@@ -1915,6 +1931,7 @@ function skin(self, s)
 			button_cancel  = {
 				layer = LAYER_TITLE,
 				w       = 43,
+				align = 'right',
 			},
 			pressed = {
 				button_cancel  = {

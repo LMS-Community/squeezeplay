@@ -610,7 +610,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		-- + handler for bringing up a context menu window that has the entirety of the text
 		if useTextArea then
 			local moreAction = function()
-				local window = ContextMenuWindow()
+				local window = ContextMenuWindow("")
 				local text = Textarea('multiline_text', item.text)
 				window:addWidget(text)
 				window:setShowFrameworkWidgets(false)
