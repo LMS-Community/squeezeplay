@@ -741,6 +741,8 @@ function skin(self, s)
 		align = "left",
 	}
 
+	s.multiline_text = s.text
+
 	s.slider = {
 		border = 10,
                 position = LAYOUT_CENTER,
@@ -978,6 +980,8 @@ function skin(self, s)
 			},
 		},
 	})
+
+	s.multiline_text_list = s.text_list
 
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
@@ -1386,6 +1390,20 @@ function skin(self, s)
 		title = {
 			hidden = 1,
 		},
+
+                multiline_text = {
+                        w = WH_FILL,
+                        h = 223,
+                        padding = { 18, 20, 14, 18 },
+                        border = { 0, 0, 6, 15 },
+                        fg = { 0xe6, 0xe6, 0xe6 },
+                        sh = { },
+                        align = "top-left",
+                        scrollbar = {
+                                h = 210,
+                                border = {0, 10, 2, 10},
+                        },
+                },
 		menu = {
 			border = { 7, 0, 0, 0 },
 			padding = { 0, 0, 0, 100 },
