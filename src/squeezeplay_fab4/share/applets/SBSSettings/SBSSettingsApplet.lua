@@ -55,11 +55,49 @@ end
 
 
 function doDevicesValues(self)
+	local usbLabel = "none"
+	local sdCardLabel = "none"
+	local blkid = io.popen("/sbin/blkid")
 
---	local value = os.execute("test -e /media/mmcblk0p1/")
---	log:warn("****** SD card " .. value)
---	self:setValue( self.devicesMenu, "USB_DISK_VOLUMENAME", tostring( value))
+	for line in blkid:lines() do
+		local label = string.match(line, "/dev/sda1:%s*LABEL=\"(%S*)\"")
+		if label then
+			usbLabel = tostring(label)
+		end
 
+		label = string.match(line, "/dev/mmcblk0p1:%s*LABEL=\"(%S*)\"")
+		if label then
+			sdCardLabel = tostring(label)
+		end
+	end
+	blkid:close()
+	self:setValue(self.devicesMenu, "USB_DISK_VOLUMENAME", usbLabel)
+	self:setValue(self.devicesMenu, "SD_CARD_VOLUMENAME", sdCardLabel)
+
+	local usbSize = "-"
+	local usbFree = "-"
+	local sdCardSize = "-"
+	local sdCardFree = "-"
+	local df = io.popen("/bin/df")
+
+	for line in df:lines() do
+		local size, free = string.match(line, "/dev/sda1%s*(%d+)%s*%d+%s*(%d+)")
+		if size and free then
+			usbSize = tostring(math.floor(size / 1000)) .. " MB"
+			usbFree = tostring(math.floor(free / 1000)) .. " MB"
+		end
+
+		size, free = string.match(line, "/dev/mmcblk0p1%s*(%d+)%s*%d+%s*(%d+)")
+		if size and free then
+			sdCardSize = tostring(math.floor(size / 1000)) .. " MB"
+			sdCardFree = tostring(math.floor(free / 1000)) .. " MB"
+		end
+	end
+	df:close()
+	self:setValue(self.devicesMenu, "USB_DISK_SIZE", usbSize)
+	self:setValue(self.devicesMenu, "USB_DISK_FREE", usbFree)
+	self:setValue(self.devicesMenu, "SD_CARD_SIZE", sdCardSize)
+	self:setValue(self.devicesMenu, "SD_CARD_FREE", sdCardFree)
 end
 
 
