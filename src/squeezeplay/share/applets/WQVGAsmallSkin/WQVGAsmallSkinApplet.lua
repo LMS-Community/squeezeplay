@@ -1117,6 +1117,7 @@ function skin(self, s)
 		text = _uses(s.keyboard.key_bottomRight_small, {
 			text = self:string("ENTER_SMALL"),
 			fg = { 0x00, 0xbe, 0xbe },
+			sh = { },
 			h = WH_FILL,
 			padding = { 0, 0, 0, 1 },
 		}),
