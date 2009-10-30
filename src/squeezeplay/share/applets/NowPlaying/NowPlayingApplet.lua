@@ -940,7 +940,8 @@ function _createUI(self)
 
 				adjustVolume(self, value, false)
 			end)
-	self.volSlider.jumpOnDown = false
+	self.volSlider.jumpOnDown = true
+	self.volSlider.pillDragOnly = true
 	self.volSlider.dragThreshold = 5
 	window:addActionListener('add', self, function()
 		Framework:pushAction('go_current_track_info')

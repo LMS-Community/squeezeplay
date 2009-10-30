@@ -17,8 +17,10 @@ typedef struct slider_widget {
 	JiveTile *bg;
 	JiveTile *tile;
 	JiveSurface *pill_img;
-	Uint16 pill_image_width;
-	Uint16 pill_image_height;
+	Uint16 pill_x;
+	Uint16 pill_y;
+	Uint16 pill_w;
+	Uint16 pill_h;
 	bool horizontal;
 } SliderWidget;
 
@@ -96,11 +98,11 @@ int jiveL_slider_layout(lua_State *L) {
 		return 0;
 	}
 	if (peer->pill_img) {
-		jive_surface_get_size(peer->pill_img, &peer->pill_image_width, &peer->pill_image_height);
+		jive_surface_get_size(peer->pill_img, &peer->pill_w, &peer->pill_h);
 	}
 	else {
-		peer->pill_image_width = 0;
-		peer->pill_image_height = 0;
+		peer->pill_w = 0;
+		peer->pill_h = 0;
 	}
 
 	jive_tile_get_min_size(peer->tile, &tw, &th);
@@ -145,7 +147,7 @@ int jiveL_slider_draw(lua_State *L) {
 	if (peer->tile) {
 		int height, width;
 		int range, value, size;
-		int x, y, w, h, pill_x, pill_y;
+		int x, y, w, h;
 		Uint16 tw, th;
 
 		height = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
@@ -168,30 +170,59 @@ int jiveL_slider_draw(lua_State *L) {
 			width -= tw;
 			x = (width / (float)(range - 1)) * (value - 1);
 			w = (width / (float)(range - 1)) * (size - 1) + tw;
-			pill_x = w - tw;
 			y = 0;
-			pill_y = y;
 			h = height;
+			peer->pill_x = peer->w.bounds.x + peer->slider_x + peer->w.padding.left + (w - tw);
+			peer->pill_y = peer->w.bounds.y + peer->slider_y + peer->w.padding.top + y;
 		}
 		else {
 			height -= th;
 			x = 0;
-			pill_x = x;
 			w = width;
 			y = (height / (float)(range - 1)) * (value - 1);
 			h = (height / (float)(range - 1)) * (size - 1) + th;
-			pill_y = h - th;
+			peer->pill_x = peer->w.bounds.x + peer->slider_x + peer->w.padding.left + x;
+			peer->pill_y = peer->w.bounds.y + peer->slider_y + peer->w.padding.top + (h - th);
 		}
 
 		jive_tile_blit(peer->tile, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + x, peer->w.bounds.y + peer->slider_y + peer->w.padding.top + y, w, h);
 
 		if (peer->pill_img) {
-			jive_surface_blit(peer->pill_img, srf, peer->w.bounds.x + peer->slider_x + peer->w.padding.left + pill_x, 4 + peer->w.bounds.y + peer->slider_y + peer->w.padding.top + pill_y);
+			jive_surface_blit(peer->pill_img, srf, peer->pill_x, peer->pill_y);
 		}
 	}
 
 	return 0;
 }
+
+int jiveL_slider_get_pill_bounds(lua_State *L) {
+	SliderWidget *peer;
+
+	/* stack is:
+	 * 1: widget
+	 */
+
+	if (jive_getmethod(L, 1, "checkSkin")) {
+		lua_pushvalue(L, 1);
+		lua_call(L, 1, 0);
+	}
+
+	peer = jive_getpeer(L, 1, &sliderPeerMeta);
+
+	if (peer->pill_img) {
+		lua_pushinteger(L, peer->pill_x);
+		lua_pushinteger(L, peer->pill_y);
+		lua_pushinteger(L, peer->pill_w);
+		lua_pushinteger(L, peer->pill_h);
+	} else {
+		lua_pushnil(L);
+		lua_pushnil(L);
+		lua_pushnil(L);
+		lua_pushnil(L);
+	}
+	return 4;
+}
+
 
 int jiveL_slider_get_preferred_bounds(lua_State *L) {
 	SliderWidget *peer;

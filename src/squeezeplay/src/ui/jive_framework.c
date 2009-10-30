@@ -1386,6 +1386,7 @@ static const struct luaL_Reg menu_methods[] = {
 
 static const struct luaL_Reg slider_methods[] = {
 	{ "getPreferredBounds", jiveL_slider_get_preferred_bounds },
+	{ "getPillBounds", jiveL_slider_get_pill_bounds },
 	{ "_skin", jiveL_slider_skin },
 	{ "_layout", jiveL_slider_layout },
 	{ "draw", jiveL_slider_draw },

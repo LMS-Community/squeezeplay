@@ -2872,6 +2872,7 @@ function skin(self, s)
 	s.npvolumeB = {
 		w = volumeBarWidth,
 		border = { 5, 3, 5, 0 },
+		padding = { 6, 0, 6, 0 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
                 bgImg = _volumeSliderBackground,

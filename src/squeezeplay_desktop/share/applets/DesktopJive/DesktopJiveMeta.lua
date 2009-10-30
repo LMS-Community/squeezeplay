@@ -106,6 +106,9 @@ function registerApplet(meta)
 		["coreKeys"] = 1,
 		["presetKeys"] = 1,
 	})
+
+	--uncomment this to simulate fab4 scrollbar behavior
+--	System:setTouchpadBottomCorrection(30)
 	
 	-- SN hosthame
 	jnt:setSNHostname("jive.squeezenetwork.com")

@@ -542,6 +542,7 @@ int jiveL_slider_skin(lua_State *L);
 int jiveL_slider_layout(lua_State *L);
 int jiveL_slider_draw(lua_State *L);
 int jiveL_slider_get_preferred_bounds(lua_State *L);
+int jiveL_slider_get_pill_bounds(lua_State *L);
 int jiveL_slider_gc(lua_State *L);
 
 int jiveL_style_path(lua_State *L);

@@ -66,6 +66,8 @@ local allCapabilities = {
 
 local _capabilities = {} -- of form string, 1 so
 
+local _touchpadBottomCorrection = 0
+
 function setCapabilities(self, capabilities)
 
 	for capability, value in pairs(capabilities) do
@@ -129,6 +131,14 @@ function hasAlarmKey(self)
 	return _capabilities["alarmKey"] ~= nil
 end
 
+
+function getTouchpadBottomCorrection(self)
+	return _touchpadBottomCorrection
+end
+
+function setTouchpadBottomCorrection(self, value)
+	_touchpadBottomCorrection = value
+end
 
 -- rest is C implementation
 

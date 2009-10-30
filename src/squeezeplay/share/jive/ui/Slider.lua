@@ -43,6 +43,7 @@ local math      = require("math")
 local Widget	= require("jive.ui.Widget")
 local IRMenuAccel            = require("jive.ui.IRMenuAccel")
 local Framework	= require("jive.ui.Framework")
+local System    = require("jive.System")
 
 local log       = require("jive.utils.log").logger("squeezeplay.ui")
 
@@ -74,6 +75,9 @@ local MOUSE_DRAG = 2
 
 local PAGING_BOUNDARY_BUFFER_FRACTION = .25
 
+--BUFFER_ZONE area beyond pill bounds to allow a sloppy touch to still be considered in contact with the pill 
+local BUFFER_ZONE = 15
+
 -- our class
 module(...)
 oo.class(_M, Widget)
@@ -92,11 +96,13 @@ function __init(self, style, min, max, value, closure, dragDoneClosure)
 
         obj.irAccel = IRMenuAccel("arrow_up", "arrow_down")
 	
-	obj.dragThreshold = 25
+--	obj.dragThreshold = 25
+	obj.dragThreshold = 12 -- todo: test this lower value on fab4 to see if sloppy taps still work as page up/down
 
 	obj.distanceFromMouseDownMax = 0
 	obj.jumpOnDown = true
 
+	obj.touchpadBottomCorrection = System:getTouchpadBottomCorrection()
 	obj:setValue(value or obj.min)
 
 	obj:addActionListener("go", obj, _callClosureAction)
@@ -246,13 +252,48 @@ function _eventHandler(self, event)
 		self.mouseState = MOUSE_DRAG
 
 		local x,y,w,h = self:mouseBounds(event)
-
 		if w > h then
+			if self.pillDragOnly then
+				local xPill,yPill,wPill,hPill = self:getPillBounds(true)
+				local xMouse, yMouse = event:getMouse()
+				if not self.pillOffset then
+					if xMouse >= xPill and xMouse <= xPill + wPill then			                        
+						--adjust so movement is reference to the pill location, not the pointer location
+						self.pillOffset = xMouse - xPill
+						--no need to move initially, since stuck on pill
+						return EVENT_CONSUME
+					else
+						--only drag if inside pill 
+						return EVENT_CONSUME
+					end
+				end
+				x = x - self.pillOffset
+				self:_setSlider( x / (w - wPill) )
+			else
+				self:_setSlider(x / w)
+			end
 			-- horizontal
-			self:_setSlider(x / w)
 		else
 			-- vertical
-			self:_setSlider(y / h)
+			if self.pillDragOnly then
+				local xPill,yPill,wPill,hPill = self:getPillBounds(false)
+				local xMouse, yMouse = event:getMouse()
+				if not self.pillOffset then
+					if yMouse >= (yPill) and yMouse <= (yPill + hPill) then			                        
+						--adjust so movement is reference to the pill location, not the pointer location
+						self.pillOffset = yMouse - yPill
+						--no need to move initially, since stuck on pill
+						return EVENT_CONSUME
+					else
+						--only drag if inside pill 
+						return EVENT_CONSUME
+					end
+				end
+				y = y - self.pillOffset
+				self:_setSlider( y  / (h - hPill) )
+			else
+				self:_setSlider(y / (h - self.touchpadBottomCorrection))
+			end
 		end
 		self.useDragDoneClosure = true
 
@@ -333,7 +374,7 @@ function finishMouseSequence(self)
 	self.mouseDownX = nil
 	self.mouseDownY = nil
 	self.distanceFromMouseDownMax = 0
-
+	self.pillOffset = nil
 	return EVENT_CONSUME
 end
 

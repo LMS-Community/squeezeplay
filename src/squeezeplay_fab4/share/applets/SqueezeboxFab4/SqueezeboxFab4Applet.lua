@@ -69,6 +69,9 @@ function init(self)
 		["wiredNetworking"] = 1,
 	})
 
+	--account for fab4 touchpad hardware issue: the bottom pixels aren't reported correctly 
+	System:setTouchpadBottomCorrection(30)
+	
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 
