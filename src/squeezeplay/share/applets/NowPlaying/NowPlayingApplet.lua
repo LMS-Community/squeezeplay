@@ -377,8 +377,6 @@ function _updateAll(self)
 			self:_refreshRightButton()
 			self:_updatePlaylist()
 		
-			self.window:focusWidget(self.nptitleGroup)
-
 			-- preload artwork for next track
 			if playerStatus.item_loop[2] then
 				_getIcon(self, playerStatus.item_loop[2], Icon("artwork"), playerStatus.remote)
@@ -845,18 +843,35 @@ function _createUI(self)
 	self.titleGroup = self:_createTitleGroup(window, 'button_playlist')
 	self.titleGroupOneTrackPlaylist = self:_createTitleGroup(window, 'button_more')
 
-		self.rbutton = 'playlist'
+	self.rbutton = 'playlist'
 	
 
-		self.trackTitle  = Label('nptrack', "")
-		self.XofY        = Label('xofy', "")
-		self.nptrackGroup = Group('nptitle', {
-			nptrack = self.trackTitle,
-			xofy    = self.XofY,
-		})
-		self.albumTitle  = Label('npalbum', "")
-		self.artistTitle = Label('npartist', "")
-		self.artistalbumTitle = Label('npartistalbum', "")
+	self.trackTitle  = Label('nptrack', "")
+	self.XofY        = Label('xofy', "")
+	self.albumTitle  = Label('npalbum', "")
+	self.artistTitle = Label('npartist', "")
+	self.artistalbumTitle = Label('npartistalbum', "")
+
+	local launchContextMenu = 
+		function() 
+			Framework:pushAction('go_current_track_info') 
+			return EVENT_CONSUME 
+		end
+
+	self.trackTitleButton  = Button(self.trackTitle, launchContextMenu)
+	self.albumTitleButton  = Button(self.albumTitle, launchContextMenu)
+	self.artistTitleButton = Button(self.artistTitle, launchContextMenu)
+
+	self.nptrackGroup = Group('nptitle', {
+		nptrack = self.trackTitleButton,
+		xofy    = self.XofY,
+	})
+	self.npartistGroup = Group('npartistgroup', {
+		npartist = self.artistTitleButton,
+	})
+	self.npalbumGroup = Group('npalbumgroup', {
+		npalbum = self.albumTitleButton,
+	})
 
 	if not self.scrollSwitchTimer then
 		self.scrollSwitchTimer = Timer(3000,
@@ -1089,8 +1104,8 @@ function _createUI(self)
 
 	window:addWidget(self.titleGroup)
 	window:addWidget(self.nptrackGroup)
-	window:addWidget(self.albumTitle)
-	window:addWidget(self.artistTitle)
+	window:addWidget(self.npalbumGroup)
+	window:addWidget(self.npartistGroup)
 	window:addWidget(self.artistalbumTitle)
 	window:addWidget(self.artworkGroup)
 	window:addWidget(self.controlsGroup)

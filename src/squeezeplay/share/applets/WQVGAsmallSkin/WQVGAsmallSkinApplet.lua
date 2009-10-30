@@ -2600,11 +2600,12 @@ function skin(self, s)
 
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
-		position = LAYOUT_NORTH,
+		position = LAYOUT_NONE,
 		w = WH_FILL,
 		align = "left",
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = TEXT_COLOR,
+		x = ARTWORK_SIZE + 18,
 	}
 
 	s.nowplaying = _uses(s.window, {
@@ -2641,34 +2642,46 @@ function skin(self, s)
 			order = { 'nptrack' },
 			position   = _tracklayout.position,
 			border     = _tracklayout.border,
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 20,
+			h          = 30,
 			nptrack =  {
-				w          = _tracklayout.w,
+				w          = screenWidth - _tracklayout.x - 10,
 				align      = _tracklayout.align,
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
 				font       = _boldfont(NP_TRACK_FONT_SIZE), 
 			},
 		},
-		npartist  = {
-			border     = _tracklayout.border,
+		npartistgroup = {
+			order = { 'npartist' },
 			position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 55, 20, 10 },
-			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			border     = _tracklayout.border,
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 55,
+			h          = 30,
+			npartist = {
+				w          = screenWidth - _tracklayout.x - 10,
+				align      = _tracklayout.align,
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			},
 		},
-		npalbum = {
-			border     = _tracklayout.border,
+		npalbumgroup = {
+			order = {'npalbum' },
 			position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-			padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 85, 20, 10 },
-			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			border     = _tracklayout.border,
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 85,
+			h          = 30,
+			npalbum = {
+				w          = screenWidth - _tracklayout.x - 10,
+				align      = _tracklayout.align,
+				lineHeight = _tracklayout.lineHeight,
+				fg         = _tracklayout.fg,
+				font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			},
 		},
 		npartistalbum = {
 			hidden = 1,
@@ -2892,6 +2905,11 @@ function skin(self, s)
 			bgImg = pressedTitlebarButtonBox,
 		},
 	})
+
+	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
+	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
+	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
+
 	s.nowplaying.npcontrols.pressed = {
 		rew     = _uses(s.nowplaying.npcontrols.rew, { bgImg = keyMiddlePressed }),
 		play    = _uses(s.nowplaying.npcontrols.play, { bgImg = keyMiddlePressed }),

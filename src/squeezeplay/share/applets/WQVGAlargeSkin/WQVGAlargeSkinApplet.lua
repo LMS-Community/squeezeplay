@@ -1936,8 +1936,9 @@ function skin(self, s)
 
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
-		position = LAYOUT_NORTH,
-		w = WH_FILL,
+		position = LAYOUT_NONE,
+		x = ARTWORK_SIZE + 18,
+		w = screenWidth - (ARTWORK_SIZE + 18) - 10,
 		align = "left",
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = WHITE,
@@ -1984,37 +1985,43 @@ function skin(self, s)
 		}),
 		nptitle = {
 			order = { 'nptrack' },
-       	         	border     = _tracklayout.border,
 	                position   = _tracklayout.position,
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 20,
 			nptrack = {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
-				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
-				padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 20, 20, 10 },
 				font       = _boldfont(NP_TRACK_FONT_SIZE),
+		                h          = 45,
 			},
 		},
-		npartist = {
-                	border     = _tracklayout.border,
+		npartistgroup = {
+			order = { 'npartist' },
 	                position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-                	padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 75, 20, 10 },
-	                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 75,
+			npartist = {
+				w          = _tracklayout.w,
+				align      = _tracklayout.align,
+				fg         = _tracklayout.fg,
+		                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+		                h          = 45,
+			},
 
 		},
-		npalbum = {
-                	border     = _tracklayout.border,
+		npalbumgroup = {
+			order = { 'npalbum' },
 	                position   = _tracklayout.position,
-			w          = _tracklayout.w,
-			align      = _tracklayout.align,
-			lineHeight = _tracklayout.lineHeight,
-			fg         = _tracklayout.fg,
-                	padding    = { ARTWORK_SIZE + 18, TITLE_HEIGHT + 120, 20, 10 },
-	                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+			x          = _tracklayout.x,
+			y          = TITLE_HEIGHT + 120,
+			npalbum = {
+				w          = _tracklayout.w,
+				align      = _tracklayout.align,
+				fg         = _tracklayout.fg,
+		                font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+		                h          = 45,
+			},
 		},
 		npartistalbum = {
 			hidden = 1,
@@ -2136,6 +2143,9 @@ function skin(self, s)
                 img = _songProgressBar,
         }
 
+	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
+	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
+	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
 
 	--todo: FIX! is just same as 3ft skin for now
 	s.brightness_group = {
