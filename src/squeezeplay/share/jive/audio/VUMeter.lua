@@ -22,6 +22,8 @@ oo.class(_M, Icon)
 function __init(self, style)
 	local obj = oo.rawnew(self, Icon(style))
 
+	obj.style = style
+
 	obj.cap = { 0, 0 }
 
 	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE / 4)
@@ -33,10 +35,15 @@ end
 function _skin(self)
 	Icon._skin(self)
 
-	self.bgImg = self:styleImage("bgImg")
-	self.tickCap = self:styleImage("tickCap")
-	self.tickOn = self:styleImage("tickOn")
-	self.tickOff = self:styleImage("tickOff")
+	if self.style == "vumeter" then
+		self.bgImg = self:styleImage("bgImg")
+		self.tickCap = self:styleImage("tickCap")
+		self.tickOn = self:styleImage("tickOn")
+		self.tickOff = self:styleImage("tickOff")
+
+	elseif self.style == "vumeter_analog" then
+		self.bgImg = self:styleImage("bgImg")
+	end
 end
 
 
@@ -44,21 +51,32 @@ function _layout(self)
 	local x,y,w,h = self:getBounds()
 	local l,t,r,b = self:getPadding()
 
-	local tw,th = self.tickOn:getMinSize()
+	if self.style == "vumeter" then
+		self.w = w - l - r
+		self.h = h - t - b
 
-	self.w = w - l - r
-	self.h = h - t - b
+		local tw,th = self.tickOn:getMinSize()
 
-	self.x1 = x + l + ((self.w - tw * 2) / 3)
-	self.x2 = x + l + ((self.w - tw * 2) / 3) * 2 + tw
+		self.x1 = x + l + ((self.w - tw * 2) / 3)
+		self.x2 = x + l + ((self.w - tw * 2) / 3) * 2 + tw
 
-	self.bars = self.h / th
-	self.y = y + t + (self.bars * th)
+		self.bars = self.h / th
+		self.y = y + t + (self.bars * th)
+
+	elseif self.style == "vumeter_analog" then
+		self.x1 = x
+		self.x2 = x
+		self.y = y
+		self.w = w
+		self.h = h
+	end
 end
 
 
 function draw(self, surface)
-	self.bgImg:blit(surface, self:getBounds())
+	if self.style == "vumeter" then
+		self.bgImg:blit(surface, self:getBounds())
+	end
 
 	local sampleAcc = decode:vumeter()
 
@@ -94,17 +112,32 @@ function _drawMeter(self, surface, sampleAcc, ch, x, y, w, h)
 		self.cap[ch] = self.cap[ch] - 1
 	end
 
-	local tw,th = self.tickOn:getMinSize()
+	if self.style == "vumeter" then
 
-	for i = 1, self.bars do
-		if i == self.cap[ch] then
-			self.tickCap:blit(surface, x, y, tw, th)
-		elseif i < val then
-			self.tickOn:blit(surface, x, y, tw, th)
-		else
-			self.tickOff:blit(surface, x, y, tw, th)
+		local tw,th = self.tickOn:getMinSize()
+
+		for i = 1, self.bars do
+			if i == self.cap[ch] then
+				self.tickCap:blit(surface, x, y, tw, th)
+			elseif i < val then
+				self.tickOn:blit(surface, x, y, tw, th)
+			else
+				self.tickOff:blit(surface, x, y, tw, th)
+			end
+
+			y = y - th
 		end
 
-		y = y - th
+	elseif self.style == "vumeter_analog" then
+
+--		local x,y,w,h = self:getBounds()
+
+		if ch == 1 then
+			self.bgImg:blitClip(x + self.cap[ch] * 240, y, w, h, surface, 0, 0)
+		else
+			self.bgImg:blitClip(x + self.cap[ch] * 240, y, w, h, surface, 240, 0)
+		end
 	end
 end
+
+

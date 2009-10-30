@@ -893,6 +893,7 @@ function _createUI(self)
 
 	self.artwork = Icon("artwork")
 --	self.artwork = VUMeter("vumeter")
+--	self.artwork = VUMeter("vumeter_analog")
 --	self.artwork = SpectrumMeter("spectrum")
 
 	self.artworkGroup = Group('npartwork', {

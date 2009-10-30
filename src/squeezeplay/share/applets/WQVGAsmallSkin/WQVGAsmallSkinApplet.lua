@@ -2673,17 +2673,22 @@ function skin(self, s)
 	
 		-- cover art
 		npartwork = {
-			w = ARTWORK_SIZE,
-			border = { 8, TITLE_HEIGHT + 4, 10, 0 },
+--			w = ARTWORK_SIZE,
+--			border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 			position = LAYOUT_WEST,
 			align = "center",
+
 			artwork = {
+				w = ARTWORK_SIZE,
+				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 				align = "center",
 				padding = 0,
 				img = false,
 			},
 
 			vumeter = {
+				w = ARTWORK_SIZE,
+				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 				padding = { 20, 5, 20, 55 },
 				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
 
@@ -2692,7 +2697,16 @@ function skin(self, s)
 				tickOff = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_off.png"),
 			},
 
+			vumeter_analog = {
+				w = 480,
+				border = { 0, 20, 0, 0},
+				padding = { 0, 0, 0, 100 },
+				bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
+			},
+
 			spectrum = {
+				w = ARTWORK_SIZE,
+				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 				padding = { 20, 5, 20, 55 },
 				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
 
