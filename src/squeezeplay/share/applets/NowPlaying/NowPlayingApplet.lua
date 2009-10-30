@@ -520,6 +520,8 @@ function _updateTrack(self, trackinfo, pos, length)
 		self.artistTitle:setValue(artist)
 		self.artistalbumTitle:setValue(artistalbum)
 		self.trackTitle:animate(true)
+		self.artistTitle:animate(false)
+		self.albumTitle:animate(false)
 		self.artistalbumTitle:animate(false)
 
 	end
@@ -834,28 +836,58 @@ function _createUI(self)
 						log:debug("in scrollSwitchTimer timer")
 						self.trackTitle:animate(true)
 						self.artistalbumTitle:animate(false)
+						self.artistTitle:animate(false)
+						self.albumTitle:animate(false)
 					end, true)
 		
 	end
+
 	self.trackTitle.textStopCallback = 
 		function(label) 
 			if not self.scrollSwitchTimer:isRunning() then
 				log:debug("in scrollSwitchTimer callback: ", label)
 				self.artistalbumTitle:animate(true)
+				self.artistTitle:animate(true)
 				self.trackTitle:animate(false)
 			end
 		end
 
-	self.artistalbumTitle.textStopCallback = 
-		function(label)
-			self.artistalbumTitle:animate(false)
-			self.trackTitle:animate(false)
-			if not self.scrollSwitchTimer:isRunning() then
-				log:debug("in scrollSwitchTimer callback, setting timer: ", label)
-				self.scrollSwitchTimer:restart()
-			end
-		end
+	local hasArtistAlbum = jiveMain:getSkinParam("NOWPLAYING_TRACKINFO_LINES") == 2
 
+	if hasArtistAlbum then
+		self.artistalbumTitle.textStopCallback = 
+			function(label)
+				self.artistalbumTitle:animate(false)
+				self.trackTitle:animate(false)
+				if not self.scrollSwitchTimer:isRunning() then
+					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
+					self.scrollSwitchTimer:restart()
+				end
+			end
+
+	else
+		self.artistTitle.textStopCallback =
+			function(label)
+				if not self.scrollSwitchTimer:isRunning() then
+					log:debug("in scrollSwitchTimer callback: ", label)
+					self.trackTitle:animate(false)
+					self.artistTitle:animate(false)
+					self.albumTitle:animate(true)
+				end
+			end
+	
+		self.albumTitle.textStopCallback =
+			function(label)
+				self.artistTitle:animate(false)
+				self.albumTitle:animate(false)
+				self.trackTitle:animate(false)
+				if not self.scrollSwitchTimer:isRunning() then
+					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
+					self.scrollSwitchTimer:restart()
+				end
+			end
+	end
+	
 	if not self.gotoTimer then
 		self.gotoTimer = Timer(400,
 			function()

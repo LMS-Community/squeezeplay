@@ -86,6 +86,10 @@ function param(self)
         return {
 		THUMB_SIZE = 40,
 		NOWPLAYING_MENU = false,
+		-- NOWPLAYING_TRACKINFO_LINES used in assisting scroll behavior animation on NP
+		-- 3 is for a three line track, artist, and album (e.g., SBtouch)
+		-- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
+		NOWPLAYING_TRACKINFO_LINES = 3,
 		POPUP_THUMB_SIZE = 120,
 		nowPlayingBrowseArtworkSize = 180,
 		nowPlayingSSArtworkSize     = 180,
@@ -1954,7 +1958,6 @@ function skin(self, s)
 			h = CM_MENU_HEIGHT * 4,
 			border = { 7, 0, 0, 0 },
 			padding = { 0, 0, 0, 100 },
-			-- FIXME: hard-coding the height of the scrollbar here is a bit of a hack
 			scrollbar = { 
 				h = CM_MENU_HEIGHT * 4,
 			},
@@ -2026,7 +2029,6 @@ function skin(self, s)
 		},
 	})
 
-	-- FIXME: this is not to any spec yet
 	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
@@ -2344,8 +2346,7 @@ function skin(self, s)
 	})
 
 	s.icon_power = _uses(_icon, {
--- FIXME no asset for this (needed?)
---		img = _loadImage(self, "Alerts/popup_shutdown_icon.png"),
+		img = _loadImage(self, "IconsResized/icon_restart" .. skinSuffix),
 	})
 
 	s.icon_locked = _uses(_icon, {

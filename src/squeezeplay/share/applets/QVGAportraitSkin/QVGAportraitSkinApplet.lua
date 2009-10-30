@@ -76,6 +76,10 @@ function param(self)
 		THUMB_SIZE = 41,
 		POPUP_THUMB_SIZE = 120,
 		NOWPLAYING_MENU = true,
+		-- NOWPLAYING_TRACKINFO_LINES used in assisting scroll behavior animation on NP
+                -- 3 is for a three line track, artist, and album (e.g., SBtouch)
+                -- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
+                NOWPLAYING_TRACKINFO_LINES = 2,
 		nowPlayingBrowseArtworkSize = "240x240",
 		nowPlayingSSArtworkSize     = 240,
 		nowPlayingLargeArtworkSize  = 240,
