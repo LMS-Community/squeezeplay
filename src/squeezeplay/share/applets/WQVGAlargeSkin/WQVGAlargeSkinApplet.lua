@@ -251,6 +251,30 @@ function skin(self, s)
 		 imgpath .. "3_line_lists/menu_sel_box_3line_r.png",
 	})
 
+	local threeItemCMSelectionBox   = _loadTile(self, {
+		imgpath .. "Popup_Menu/button_cm.png",
+		imgpath .. "Popup_Menu/button_cm_tl.png",
+		imgpath .. "Popup_Menu/button_cm_t.png",
+		imgpath .. "Popup_Menu/button_cm_tr.png",
+		imgpath .. "Popup_Menu/button_cm_r.png",
+		imgpath .. "Popup_Menu/button_cm_br.png",
+		imgpath .. "Popup_Menu/button_cm_b.png",
+		imgpath .. "Popup_Menu/button_cm_bl.png",
+		imgpath .. "Popup_Menu/button_cm_l.png",
+	})
+
+	local threeItemCMPressedBox   = _loadTile(self, {
+		imgpath .. "Popup_Menu/button_cm_press.png",
+		imgpath .. "Popup_Menu/button_cm_tl_press.png",
+		imgpath .. "Popup_Menu/button_cm_t_press.png",
+		imgpath .. "Popup_Menu/button_cm_tr_press.png",
+		imgpath .. "Popup_Menu/button_cm_r_press.png",
+		imgpath .. "Popup_Menu/button_cm_br_press.png",
+		imgpath .. "Popup_Menu/button_cm_b_press.png",
+		imgpath .. "Popup_Menu/button_cm_bl_press.png",
+		imgpath .. "Popup_Menu/button_cm_l_press.png",
+	})
+
 	local threeItemBox             = _loadHTile(self, {
 		 imgpath .. "3_line_lists/rem_3line_divider_l.png",
 		 imgpath .. "3_line_lists/rem_3line_divider.png",
@@ -1405,11 +1429,12 @@ function skin(self, s)
                         },
                 },
 		menu = {
-			border = { 7, 0, 0, 0 },
+			border = { 7, 8, 0, 0 },
 			padding = { 0, 0, 0, 100 },
 			-- FIXME: hard-coding the height of the scrollbar here is a bit of a hack
 			scrollbar = { 
-				h = CM_MENU_HEIGHT * 3,
+				h = CM_MENU_HEIGHT * 3, 
+				border = { 0, 4, 2, 0 },
 			},
 			item = {
 				h = CM_MENU_HEIGHT,
@@ -1418,6 +1443,7 @@ function skin(self, s)
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
+					padding = { 0, 0, 0, 8 },
 					align = 'left',
 					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
 					line = {
@@ -1441,6 +1467,8 @@ function skin(self, s)
 			},
 			selected = {
 				item = {
+					--FIXME: change to different selection box when asset for 14966 is delivered
+					--bgImg = threeItemCMSelectionBox,
 					bgImg = threeItemSelectionBox,
 					order = { "icon", "text", "arrow" },
 					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
@@ -1448,6 +1476,7 @@ function skin(self, s)
 						w = WH_FILL,
 						h = WH_FILL,
 						align = 'left',
+						padding = { 0, 0, 0, 12 },
 						font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
 						line = {
 							{
@@ -1466,13 +1495,24 @@ function skin(self, s)
 						padding = MENU_ITEM_ICON_PADDING,
 						align = 'center',
 					},
-					arrow = _uses(s.item.arrow),
+					arrow = _uses(s.item.arrow, {
+			      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+					}),
 				},
 			},
 
 		},
 	}
 	
+	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		order = { 'icon', 'text' },
+	})
+	
+	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
+		--FIXME: change to different selection box when asset for 14966 is delivered
+		--bgImg = threeItemCMPressedBox,
+		bgImg = threeItemPressedBox,
+	})
 
 	-- FIXME: this is not to any spec yet
 	-- slider popup (volume)
