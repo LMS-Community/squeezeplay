@@ -374,6 +374,7 @@ function _updateAll(self)
 			self:_updateTrack(trackInfo)
 			self:_updateProgress(playerStatus)
 			self:_updateButtons(playerStatus)
+			self:_refreshRightButton()
 			self:_updatePlaylist()
 		
 			self.window:focusWidget(self.nptitleGroup)
@@ -445,6 +446,25 @@ function _updateButtons(self, playerStatus)
 	else
 		self.controlsGroup:setWidget('rew', self.rewButton)
 		self.controlsGroup:setWidget('fwd', self.fwdButton)
+	end
+end
+
+
+function _refreshRightButton(self)
+	local playlistSize = self.player and self.player:getPlaylistSize()
+	if not playlistSize then
+		return
+	end
+	if playlistSize == 1 and self.rbutton == 'playlist' then
+		log:debug('changing rbutton to + button')
+		self.window:removeWidget(self.titleGroup)
+		self.window:addWidget(self.titleGroupOneTrackPlaylist)
+		self.rbutton = 'more'
+	elseif self.rbutton == 'more' and playlistSize > 1 then
+		log:debug('changing rbutton to playlist button')
+		self.window:removeWidget(self.titleGroupOneTrackPlaylist)
+		self.window:addWidget(self.titleGroup)
+		self.rbutton = 'playlist'
 	end
 end
 	
@@ -717,7 +737,6 @@ function _installListeners(self, window)
 		window:playSound("WINDOWSHOW")
 	
 		local playlistSize = self.player and self.player:getPlaylistSize()
-
 		if playlistSize == 1 then
 			-- use special showTrackOne method from SlimBrowser
 			appletManager:callService("showTrackOne")
@@ -774,6 +793,33 @@ function adjustVolume(self, value, useRateLimit)
 	end
 end
 
+function _createTitleGroup(self, window, buttonStyle)
+	local titleGroup = Group('title', {
+		lbutton = window:createDefaultLeftButton(),
+
+		text = Label("text", self:_titleText(self.mainTitle)),
+
+		rbutton = Button(
+				Group(buttonStyle, { Icon("icon") }), 
+				function() 
+					Framework:pushAction("go") -- go action must work (as ir right and controller go must work also) 
+					return EVENT_CONSUME 
+				end,
+				function()
+					Framework:pushAction("title_right_hold")
+					return EVENT_CONSUME
+				end,
+				function()
+					Framework:pushAction("soft_reset")
+					return EVENT_CONSUME
+				end
+
+		),
+	   })
+	return titleGroup
+end
+
+
 ----------------------------------------------------------------------------------------
 -- Screen Saver Display 
 --
@@ -796,28 +842,10 @@ function _createUI(self)
 
 	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")
 
-	self.titleGroup = Group('title', {
-		lbutton = window:createDefaultLeftButton(),
+	self.titleGroup = self:_createTitleGroup(window, 'button_playlist')
+	self.titleGroupOneTrackPlaylist = self:_createTitleGroup(window, 'button_more')
 
-		text = Label("text", self:_titleText(self.mainTitle)),
-
-		rbutton = Button(
-				Group("button_playlist", { Icon("icon") }), 
-				function() 
-					Framework:pushAction("go") -- go action must work (as ir right and controller go must work also) 
-					return EVENT_CONSUME 
-				end,
-				function()
-					Framework:pushAction("title_right_hold")
-					return EVENT_CONSUME
-				end,
-				function()
-					Framework:pushAction("soft_reset")
-					return EVENT_CONSUME
-				end
-
-		),
-	   })
+		self.rbutton = 'playlist'
 	
 
 		self.trackTitle  = Label('nptrack', "")
