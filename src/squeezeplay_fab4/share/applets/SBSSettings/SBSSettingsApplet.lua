@@ -59,13 +59,16 @@ function doDevicesValues(self)
 	local sdCardLabel = "none"
 	local blkid = io.popen("/sbin/blkid")
 
+	-- Allow a-z, A-Z, 0-9, '_' and ' ' in volume lables => [%w_ ]
+	-- Win2k and OSX 10.6.1 do not allow '.' in volume labels
 	for line in blkid:lines() do
-		local label = string.match(line, "/dev/sda1:%s*LABEL=\"(%S*)\"")
+
+		local label = string.match(line, "/dev/sda1:%s*LABEL=\"([%w_ ]*)\"")
 		if label then
 			usbLabel = tostring(label)
 		end
 
-		label = string.match(line, "/dev/mmcblk0p1:%s*LABEL=\"(%S*)\"")
+		label = string.match(line, "/dev/mmcblk0p1:%s*LABEL=\"([%w_ ]*)\"")
 		if label then
 			sdCardLabel = tostring(label)
 		end
