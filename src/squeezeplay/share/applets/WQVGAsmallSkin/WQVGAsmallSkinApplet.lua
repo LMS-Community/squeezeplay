@@ -2166,6 +2166,7 @@ function skin(self, s)
 	_titleButtonIcon("button_nothing", nil)
 	_titleButtonIcon("button_help", helpButton)
 	_titleButtonText("button_more_help", self:string("MORE_HELP"))
+	_titleButtonText("button_finish_operation", self:string("ENTER"))
 
 	s.button_back.padding     = { 2, 0, 0, 2 }
 	s.button_playlist.padding = { 2, 0, 0, 2 }

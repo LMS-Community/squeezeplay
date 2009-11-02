@@ -23,6 +23,9 @@ local Event         = require("jive.ui.Event")
 local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Icon          = require("jive.ui.Icon")
 local Window        = require("jive.ui.Window")
+local Button        = require("jive.ui.Button")
+local Label         = require("jive.ui.Label")
+local Group         = require("jive.ui.Group")
 
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("squeezeplay.ui")
@@ -52,6 +55,10 @@ function __init(self, window, submitCallback, initTime)
 		obj.initampm   = initTime.ampm
 	end
 
+	obj.window:addActionListener("finish_operation", obj, _doneAction)
+
+	replaceNowPlayingButton(obj)
+
 	addTimeInputWidgets(obj)
 
 	return obj
@@ -66,6 +73,29 @@ function _minuteString(minute)
 	end
 	return returnVal
 end
+
+
+function _doneAction(self)
+	local hour   = self.hourMenu:getItem(self.hourMenu:getMiddleIndex()).text
+	local minute = self.minuteMenu:getItem(self.minuteMenu:getMiddleIndex()).text
+	local ampm
+	if self.ampmpMenu then
+		ampm   = self.ampmMenu:getItem(self.ampmMenu:getMiddleIndex()).text
+	else
+		ampm = nil
+	end
+	self.window:hide()
+	self.submitCallback( hour, minute, ampm )
+end
+
+
+function replaceNowPlayingButton(self)
+	log:debug('replaceNowPlayingButton')
+	self.window:setButtonAction('rbutton', 'finish_operation', 'finish_operation', 'finish_operation', true)
+
+end
+
+
 function addTimeInputWidgets(self)
 
 

@@ -36,6 +36,21 @@ ENTER_SMALL
 	RU	готово
 	SV	klart
 
+ENTER
+	CS	Hotovo
+	DA	Udført
+	DE	Fertig
+	EN	Done
+	ES	Listo
+	FI	Valmis
+	FR	Terminé
+	IT	Fine
+	NL	Gereed
+	NO	Ferdig
+	PL	Gotowe
+	RU	готово
+	SV	Klart
+
 SPACEBAR_SMALL
 	CS	mezera
 	DA	mellemrum
