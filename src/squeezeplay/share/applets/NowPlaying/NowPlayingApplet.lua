@@ -133,11 +133,6 @@ function notify_playerRepeatModeChange(self, player, repeatMode)
 	self:_updateRepeat(repeatMode)
 end
 
-function _setMainTitle(self)
-	self.titleGroup:setWidgetValue("text", self:_titleText(self.mainTitle))
-
-end
-
 
 function _setTitleStatus(self, text, duration)
 	log:debug("_setTitleStatus", text)
@@ -182,11 +177,11 @@ function notify_playerPower(self, player, power)
 	-- hide this window if the player is turned off
 	if not power then
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens['off'])))
+			self.titleGroup:setWidgetValue("text", self:_titleText('off'))
 		end
 	else
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens[mode])))
+			self.titleGroup:setWidgetValue("text", self:_titleText(mode))
 		end
 	end
 end
@@ -330,10 +325,23 @@ function notify_skinSelected(self)
 end
 
 
-function _titleText(self, title)
+function _titleText(self, token)
+	local y = self.player and self.player:getPlaylistSize()
+	if token == 'play' and y > 1 then
+		local x = self.player:getPlaylistCurrentIndex()
+		if x >= 1 and y > 1 then
+			local xofy = tostring(self:string('SCREENSAVER_NOWPLAYING_OF', x, y))
+			title = tostring(self:string(modeTokens[token])) .. ' ' .. xofy
+		else
+			title = tostring(self:string(modeTokens[token]))
+		end
+	else
+		title = self:string(modeTokens[token])
+	end
 	self.mainTitle = tostring(title)
 	return self.mainTitle
 end
+
 
 function _isThisPlayer(self, player)
 
@@ -376,6 +384,7 @@ function _updateAll(self)
 			self:_updateButtons(playerStatus)
 			self:_refreshRightButton()
 			self:_updatePlaylist()
+			self:_updateMode(playerStatus.mode)
 		
 			-- preload artwork for next track
 			if playerStatus.item_loop[2] then
@@ -699,7 +708,7 @@ function _updateMode(self, mode)
 		token = 'off'
 	end
 	if self.titleGroup then
-		self.titleGroup:setWidgetValue("text", self:_titleText(self:string(modeTokens[token])))
+		self.titleGroup:setWidgetValue("text", self:_titleText(token))
 	end
 	if self.controlsGroup then
 		local playIcon = self.controlsGroup:getWidget('play')
@@ -795,7 +804,7 @@ function _createTitleGroup(self, window, buttonStyle)
 	local titleGroup = Group('title', {
 		lbutton = window:createDefaultLeftButton(),
 
-		text = Label("text", self:_titleText(self.mainTitle)),
+		text = Label("text", self.mainTitle),
 
 		rbutton = Button(
 				Group(buttonStyle, { Icon("icon") }), 
@@ -838,7 +847,7 @@ function _createUI(self)
 		end
 	end
 
-	self.mainTitle = self:string("SCREENSAVER_NOWPLAYING")
+	self.mainTitle = self:_titleText('play')
 
 	self.titleGroup = self:_createTitleGroup(window, 'button_playlist')
 	self.titleGroupOneTrackPlaylist = self:_createTitleGroup(window, 'button_more')
