@@ -49,6 +49,7 @@ function settingsShow(self)
 		"     Matt Cuson",
 		"     Kevin Deane-Freeman",
 		"     Julius Dauz",
+		"     Ryan Davidson",
 		"     Remco Derksen",
 		"     Noah DiJulio",
 		"     Mike Dilley",
