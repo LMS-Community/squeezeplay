@@ -441,7 +441,7 @@ function skin(self, s)
 	local ITEM_ICON_ALIGN   = 'center'
 	local ITEM_LEFT_PADDING = 12
 	local THREE_ITEM_HEIGHT = 72
-	local FIVE_ITEM_HEIGHT = 45
+	local FIVE_ITEM_HEIGHT = 43
 	local TITLE_BUTTON_WIDTH = 76
 
 	local smallSpinny = {
@@ -819,9 +819,12 @@ function skin(self, s)
 	local _timeFirstColumnX12h = 130
 	local _timeFirstColumnX24h = 98
 
+	local TIMEINPUT_TOP_PADDING = 57
+	local TIMEINPUT_ITEM_PADDING = { 0, 10, 16, 0 }
+	local TIMEINPUT_AMPM_PADDING = { 0, 12, 14, 0 }
+
 	s.time_input_background_12h = {
 		w = WH_FILL,
-		h = 60,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_3c_10ft.png"),
 		x = 0,
@@ -830,7 +833,6 @@ function skin(self, s)
 
 	s.time_input_background_24h = {
 		w = WH_FILL,
-		h = 60,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_2c_10ft.png"),
 		x = 0,
@@ -839,20 +841,21 @@ function skin(self, s)
 
 	-- time input window
 	s.input_time_12h = _uses(s.window)
+
 	s.input_time_12h.hour = _uses(s.menu, {
 		w = 75,
-		h = screenHeight - 60,
-		itemHeight = 45,
+		h = screenHeight - 47,
+		itemHeight = FIVE_ITEM_HEIGHT,
 		position = LAYOUT_WEST,
 		padding = 0,
-		border = { _timeFirstColumnX12h, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h, TIMEINPUT_TOP_PADDING, 0, 0 },
 		item = {
 			bgImg = false,
 			order = { 'text' },
 			text = {
 				align = 'right',
 				font = _boldfont(30),
-				padding = { 2, 0, 12, 0 },
+				padding = TIMEINPUT_ITEM_PADDING,
 				fg = { 0xb3, 0xb3, 0xb3 },
 				sh = { },
 			},
@@ -866,7 +869,7 @@ function skin(self, s)
 					fg = { 0xe6, 0xe6, 0xe6 },
 					sh = { },
 					align = 'right',
-					padding = { 2, 0, 12, 0 },
+					padding = TIMEINPUT_ITEM_PADDING,
 				},
 			},
 		},
@@ -879,19 +882,19 @@ function skin(self, s)
 					fg = { 0xe6, 0xe6, 0xe6 },
 					sh = { },
 					align = 'right',
-					padding = { 2, 0, 12, 0 },
+					padding = TIMEINPUT_ITEM_PADDING,
 				},
 			},
 		},
 	})
 	s.input_time_12h.minute = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 75, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75, TIMEINPUT_TOP_PADDING, 0, 0 },
 	})
 	s.input_time_12h.ampm = _uses(s.input_time_12h.hour, {
-		border = { _timeFirstColumnX12h + 75 + 75, TITLE_HEIGHT, 0, 0 },
+		border = { _timeFirstColumnX12h + 75 + 75, TIMEINPUT_TOP_PADDING, 0, 0 },
 		item = {
 			text = {
-				padding = { 0, 0, 8, 0 },
+				padding = TIMEINPUT_AMPM_PADDING,
 				font = _boldfont(26),
 			},
 		},
@@ -899,7 +902,7 @@ function skin(self, s)
 			item = {
 				img = _loadImage(self, "Multi_Character_Entry/menu_box_fixed_72.png"),
 				text = {
-					padding = { 0, 0, 8, 0 },
+					padding = TIMEINPUT_AMPM_PADDING,
 					font = _boldfont(26),
 				},
 			},
@@ -907,45 +910,44 @@ function skin(self, s)
 		pressed = {
 			item = {
 				text = {
-					padding = { 0, 0, 8, 0 },
+					padding = TIMEINPUT_AMPM_PADDING,
 					font = _boldfont(26),
 				},
 			},
 		},
 	})
-	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, {
+
+	local unselectedParamTable = {
 		item = {
 			text = {
 				fg = { 0x66, 0x66, 0x66 },
-				padding = { 0, 0, 8, 0 },
 			},
 		},
 		selected = {
 			item = {
-				img = false,
+				bgImg = false,
 				text = {
 					fg = { 0x66, 0x66, 0x66 },
-					padding = { 0, 0, 8, 0 },
 				},
 			},
 		},
-	})
-
-	s.input_time_12h.minuteUnselected = s.input_time_12h.minute
-	s.input_time_12h.ampmUnselected = s.input_time_12h.ampm
+	}
+	s.input_time_12h.hourUnselected = _uses(s.input_time_12h.hour, unselectedParamTable)
+	s.input_time_12h.minuteUnselected = _uses(s.input_time_12h.minute, unselectedParamTable)
+	s.input_time_12h.ampmUnselected = _uses(s.input_time_12h.ampm, unselectedParamTable)
 
 	s.input_time_24h = _uses(s.input_time_12h, {
 		hour = {
-			border = { _timeFirstColumnX24h, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		minute = {
-			border = { _timeFirstColumnX24h + 65, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h + 65, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		hourUnselected = {
-			border = { _timeFirstColumnX24h, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		minuteUnselected = {
-			border = { _timeFirstColumnX24h + 65, TITLE_HEIGHT, 0, 0 },
+			border = { _timeFirstColumnX24h + 65, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 	})
 	-- one set for buttons, one for spacers
