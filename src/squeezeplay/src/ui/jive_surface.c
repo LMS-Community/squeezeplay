@@ -322,21 +322,11 @@ int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {
 }
 
 void jive_surface_get_offset(JiveSurface *srf, Sint16 *x, Sint16 *y) {
-	if (!srf->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
-		*x = 0;
-		*y = 0;
-		return;
-	}
 	*x = srf->offset_x;
 	*y = srf->offset_y;
 }
 
 void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {
-	if (!srf->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
-		return;
-	}
 	srf->offset_x = x;
 	srf->offset_y = y;
 }
@@ -464,12 +454,6 @@ void jive_surface_flip(JiveSurface *srf) {
 
 /* this function must only be used for blitting tiles */
 void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, Sint16 *y) {
-	if (!srf->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
-		*x = 0;
-		*y = 0;
-		return;
-	}
 	*sdl = srf->sdl;
 	*x = srf->offset_x;
 	*y = srf->offset_y;
@@ -482,14 +466,6 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
-	if (!src->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for source already freed, possibly with release()");
-		return;
-	}
-	if (!dst->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for destination already freed, possibly with release()");
-		return;
-	}
 	dr.x = dx + dst->offset_x;
 	dr.y = dy + dst->offset_y;
 
@@ -509,14 +485,6 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect sr, dr;
-	if (!src->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for source already freed, possibly with release()");
-		return;
-	}
-	if (!dst->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for destination already freed, possibly with release()");
-		return;
-	}
 	sr.x = sx; sr.y = sy; sr.w = sw; sr.h = sh;
 	dr.x = dx + dst->offset_x; dr.y = dy + dst->offset_y;
 
@@ -535,14 +503,6 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 #endif //JIVE_PROFILE_BLIT
 
 	SDL_Rect dr;
-	if (!src->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for source already freed, possibly with release()");
-		return;
-	}
-	if (!dst->sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface for destination already freed, possibly with release()");
-		return;
-	}
 	dr.x = dx + dst->offset_x;
 	dr.y = dy + dst->offset_y;
 
