@@ -176,9 +176,12 @@ static spectrum_defaults_t defaults[NUM_DEFAULTS] = {
 static spectrum_defaults_t channel_defaults[2][NUM_CHANNEL_DEFAULTS] = {
   {
     { &channel_position[0],  24 },
-    { &channel_width[0], 128 },
+//    { &channel_width[0], 128 },
+    { &channel_width[0], 70 },
     { &channel_flipped[0], FALSE },
-    { &bar_width[0], 1 },
+//    { &bar_width[0], 1 },
+//    { &bar_spacing[0], 0 },
+    { &bar_width[0], 2 },
     { &bar_spacing[0], 0 },
     { &clip_subbands[0], FALSE },
     { &bar_grey_level[0], 1 },
@@ -186,9 +189,12 @@ static spectrum_defaults_t channel_defaults[2][NUM_CHANNEL_DEFAULTS] = {
   },
   {
     { &channel_position[1],  168 },
-    { &channel_width[1], 128 },
+//    { &channel_width[1], 128 },
+    { &channel_width[1], 70 },
     { &channel_flipped[1], TRUE },
-    { &bar_width[1], 1 },
+//    { &bar_width[1], 1 },
+//    { &bar_spacing[1], 0 },
+    { &bar_width[1], 2 },
     { &bar_spacing[1], 0 },
     { &clip_subbands[1], FALSE },
     { &bar_grey_level[1], 1 },
@@ -376,13 +382,21 @@ int decode_spectrum( lua_State *L) {
 
 	lua_newtable( L);
 	for( i = 0; i < num_bins; i++) {
-		lua_pushinteger( L, sample_bin_ch0[i]);
+		if( channel_flipped[0] == FALSE) {
+			lua_pushinteger( L, sample_bin_ch0[i]);
+		} else {
+			lua_pushinteger( L, sample_bin_ch0[num_bins - 1 - i]);
+		}
 		lua_rawseti( L, -2, i + 1);
 	}
 
 	lua_newtable( L);
 	for( i = 0; i < num_bins; i++) {
-		lua_pushinteger( L, sample_bin_ch1[i]);
+		if( channel_flipped[1] == FALSE) {
+			lua_pushinteger( L, sample_bin_ch1[i]);
+		} else {
+			lua_pushinteger( L, sample_bin_ch1[num_bins - 1 - i]);
+		}
 		lua_rawseti( L, -2, i + 1);
 	}
 
