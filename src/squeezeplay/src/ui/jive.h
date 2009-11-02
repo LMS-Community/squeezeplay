@@ -317,6 +317,7 @@ struct jive_perfwarn {
 
 /* logging */
 extern LOG_CATEGORY *log_ui_draw;
+extern LOG_CATEGORY *log_ui;
 
 /* extra pump function */
 extern int (*jive_sdlevent_pump)(lua_State *L);

@@ -15,6 +15,7 @@ int (*jive_sdlevent_pump)(lua_State *L);
 int (*jive_sdlfilter_pump)(const SDL_Event *event);
 
 LOG_CATEGORY *log_ui_draw;
+LOG_CATEGORY *log_ui;
 
 SDL_Rect jive_dirty_region;
 
@@ -158,6 +159,7 @@ static int jiveL_initSDL(lua_State *L) {
 
 	/* logging */
 	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
+	log_ui = LOG_CATEGORY_GET("squeezeplay.ui");
 
 	/* linux fbcon does not need a mouse */
 	SDL_putenv("SDL_NOMOUSE=1");
