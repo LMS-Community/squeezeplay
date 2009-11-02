@@ -185,7 +185,7 @@ function _selectAndHighlightItemUnderPointer(self, event)
 end
 
 function resetDragData(self)
-	self.pixelOffsetY = 0
+	self:setPixelOffsetY(0)
 	self.dragYSinceShift = 0
 end
 
@@ -244,10 +244,10 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 				else
 					--here we are not at ends, so set offset
 					if not byItemOnly then
-						self.pixelOffsetY = -1 * self.dragYSinceShift
+						self:setPixelOffsetY(-1 * self.dragYSinceShift)
 					else
 						--by item only so fix the position so that the top item is visible in the same spot each time
-						self.pixelOffsetY = 0
+						self:setPixelOffsetY(0)
 					end
 				end
 				if log:isDebug() then
@@ -272,7 +272,7 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 		else
 			--smooth scroll
 			if not byItemOnly then
-				self.pixelOffsetY = -1 * self.dragYSinceShift
+				self:setPixelOffsetY(-1 * self.dragYSinceShift)
 			end
 
 			if (self.topItem == 1 and self.currentShiftDirection == 1) or self:isAtBottom() then
@@ -622,7 +622,7 @@ local function _eventHandler(self, event)
 			_selectedItem(self):setStyleModifier(nil)
 
 			--zero out offset (scrollbar currently only moves discretely)
-			self.pixelOffsetY = 0
+			self:setPixelOffsetY(0)
 			
 			-- forward event to scrollbar
 			local r = self.scrollbar:_event(event)
@@ -1271,6 +1271,11 @@ function setSelectedIndex(self, index, coerce)
 		self.selected = index
 		self:reLayout()
 	end
+end
+
+
+function setPixelOffsetY(self, value)
+	self.pixelOffsetY = value
 end
 
 

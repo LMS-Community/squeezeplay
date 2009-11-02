@@ -684,6 +684,13 @@ function _removeHeaderItems(self)
 	end
 end
 
+function setPixelOffsetY(self, value)
+	Menu.setPixelOffsetY(self, value)
+	if self.headerWidget then
+		self.headerWidget:setPixelOffsetY(value)
+	end
+end
+
 
 --override
 function scrollBy(self, scroll, allowMultiple, isNewOperation, forceAccel)

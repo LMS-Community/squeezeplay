@@ -117,6 +117,7 @@ function __init(self, style, text)
 	obj.dragOrigin = {}
 	obj.dragYSinceShift = 0
 	obj.pixelOffsetY = 0
+	obj.pixelOffsetYHeaderWidget = 0
 	obj.currentShiftDirection = 0
 
 	obj.flick = Flick(obj)
@@ -140,6 +141,9 @@ function __init(self, style, text)
 	return obj
 end
 
+function setPixelOffsetY(self, value)
+	self.pixelOffsetY = value + self.pixelOffsetYHeaderWidget
+end
 
 --[[
 
@@ -280,7 +284,7 @@ function _eventHandler(self, event)
 			self.sliderDragInProgress = true
 
 			--zero out offset (scrollbar currently only moves discretely)
-			self.pixelOffsetY = 0
+			self:setPixelOffsetY(0)
 			return self.scrollbar:_event(event)
 		else --mouse is inside textarea body
 			if false and not self:isTouchMouseEvent(event) then
@@ -345,7 +349,7 @@ function _eventHandler(self, event)
 end
 
 function resetDragData(self)
-	self.pixelOffsetY = 0
+	self:setPixelOffsetY(0)
 	self.dragYSinceShift = 0
 end
 
@@ -363,10 +367,10 @@ function handleDrag(self, dragAmountY, byItemOnly)
 			local itemShift = math.floor(self.dragYSinceShift / self.lineHeight)
 			self.dragYSinceShift = self.dragYSinceShift % self.lineHeight
 			if not byItemOnly then
-				self.pixelOffsetY = -1 * self.dragYSinceShift
+				self:setPixelOffsetY(-1 * self.dragYSinceShift)
 			else
 				--by item only so fix the position so that the top item is visible in the same spot each time
-				self.pixelOffsetY = 0
+				self:setPixelOffsetY(0)
 			end
 			if itemShift > 0 and self.currentShiftDirection <= 0 then
 				self.currentShiftDirection = 1
@@ -384,7 +388,7 @@ function handleDrag(self, dragAmountY, byItemOnly)
 		else
 			--smooth scroll
 			if not byItemOnly then
-				self.pixelOffsetY = -1 * self.dragYSinceShift
+				self:setPixelOffsetY(-1 * self.dragYSinceShift)
 			end
 
 			if self:isAtBottom() then
@@ -462,7 +466,9 @@ function handleMenuHeaderWidgetScrollBy(self, scroll, menu)
 	end
 
 	local itemShift = menu.topItem -1
-	self.pixelOffsetY = -1 * itemShift * menu.itemHeight
+	self.pixelOffsetYHeaderWidget = -1 * itemShift * menu.itemHeight
+	--adjust temporarily to parent while shift is occurring 
+	self:setPixelOffsetY(menu.pixelOffsetY) 
 
 	self:reDraw()
 end
