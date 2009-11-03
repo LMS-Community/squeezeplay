@@ -17,8 +17,16 @@
 #include <time.h>
 
 
+
+#include <netinet/in.h>
+#include <linux/types.h>
+#include <linux/netlink.h>
+
+
 static int clearpad_event_fd = -1;
 static int ir_event_fd = -1;
+static int uevent_fd = -1;
+
 
 /* touchpad state */
 static JiveEvent clearpad_event;
@@ -358,6 +366,85 @@ static int open_input_devices(void) {
 }
 
 
+static int open_uevent_fd(void)
+{
+        struct sockaddr_nl saddr;
+        const int buffersize = 16 * 1024 * 1024;
+        int retval;
+
+        memset(&saddr, 0x00, sizeof(struct sockaddr_nl));
+        saddr.nl_family = AF_NETLINK;
+        saddr.nl_pid = getpid();
+        saddr.nl_groups = 1;
+
+        uevent_fd = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_KOBJECT_UEVENT);
+        if (uevent_fd == -1) {
+                fprintf(stderr, "error getting socket: %s", strerror(errno));
+                return -1;
+        }
+
+        /* set receive buffersize */
+        setsockopt(uevent_fd, SOL_SOCKET, SO_RCVBUFFORCE, &buffersize, sizeof(buffersize));
+
+        retval = bind(uevent_fd, (struct sockaddr *) &saddr, sizeof(struct sockaddr_nl));
+        if (retval < 0) {
+                fprintf(stderr, "bind failed: %s", strerror(errno));
+                close(uevent_fd);
+                uevent_fd = -1;
+                return -1;
+        }
+        return 0;
+}
+
+
+static void handle_uevent(lua_State *L, int sock)
+{
+        char *ptr, *end, buffer[2048];
+        ssize_t size;
+
+        size = recv(uevent_fd, &buffer, sizeof(buffer), 0);
+        if (size <  0) {
+                if (errno != EINTR)
+                        printf("unable to receive kernel netlink message: %s", strerror(errno));
+                return;
+        }
+
+	lua_getglobal(L, "ueventHandler");
+	if (lua_isnil(L, -1)) {
+		lua_pop(L, 1);
+		fprintf(stderr, "No ueventHandler\n");
+		return;
+	}
+
+	ptr = buffer;
+	end = strchr(ptr, '\0');
+
+	/* evt */
+	lua_pushlstring(L, ptr, end-ptr);
+
+	/* msg */
+	lua_newtable(L);
+	while (end + 1 < buffer + size) {
+		ptr = end + 1;
+		end = strchr(ptr, '=');
+
+		lua_pushlstring(L, ptr, end-ptr);
+
+		ptr = end + 1;
+		end = strchr(ptr, '\0');
+
+		lua_pushlstring(L, ptr, end-ptr);
+
+		lua_settable(L, -3);
+	}
+
+	if (lua_pcall(L, 2, 0, 0) != 0) {
+		fprintf(stderr, "error calling ueventHandler %s\n", lua_tostring(L, -1));
+		lua_pop(L, 1);
+	}
+}
+
+
 static int event_pump(lua_State *L) {
 	fd_set fds;
 	struct timeval timeout;
@@ -373,10 +460,17 @@ static int event_pump(lua_State *L) {
 	if (ir_event_fd != -1) {
 		FD_SET(ir_event_fd, &fds);
 	}
+	if (uevent_fd != -1) {
+		FD_SET(uevent_fd, &fds);
+	}
 
 	if (select(FD_SETSIZE, &fds, NULL, NULL, &timeout) < 0) {
 		perror("jivebsp:");
 		return -1;
+	}
+
+	if (uevent_fd != -1 && FD_ISSET(uevent_fd, &fds)) {
+		handle_uevent(L, uevent_fd);
 	}
 
 	if (clearpad_event_fd != -1 && FD_ISSET(clearpad_event_fd, &fds)) {
@@ -426,6 +520,8 @@ int luaopen_fab4_bsp(lua_State *L) {
 	if (open_input_devices()) {
 		jive_sdlevent_pump = event_pump;
 	}
+
+	open_uevent_fd();
 
 	return 1;
 }

@@ -1,5 +1,5 @@
 
-local tonumber, tostring = tonumber, tostring
+local pairs, tonumber, tostring = pairs, tonumber, tostring
 
 -- board specific driver
 local fab4_bsp               = require("fab4_bsp")
@@ -45,6 +45,13 @@ local jnt                    = jnt
 local iconbar                = iconbar
 local jiveMain               = jiveMain
 local settings	             = nil
+
+-- hack around global scope to allow bsp c code to call back to applet
+local ourUeventHandler
+ueventHandler = function(...)
+	ourUeventHandler(...)
+end
+
 
 module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
@@ -107,6 +114,22 @@ function init(self)
 
 	playSplashSound(self)
 end
+
+
+local ueventListeners = {}
+
+function addUeventListener(self, pattern, listener)
+	ueventListeners[listener] = pattern
+end
+
+function ourUeventHandler(evt, msg)
+	for listener,pattern in pairs(ueventListeners) do
+		if string.match(evt, pattern) then
+			listener(evt, msg)
+		end
+	end
+end
+
 
 -----------------------------
 -- Ambient Light Stuff Start

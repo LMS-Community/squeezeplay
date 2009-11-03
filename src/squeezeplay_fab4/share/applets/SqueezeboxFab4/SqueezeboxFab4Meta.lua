@@ -92,6 +92,7 @@ function registerApplet(meta)
 	meta:registerService("poweroff")
 	meta:registerService("reboot")
 	meta:registerService("wasLastShutdownUnclean")
+	meta:registerService("addUeventListener")
 end
 
 
