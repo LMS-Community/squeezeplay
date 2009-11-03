@@ -1064,7 +1064,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		break;
 
 	case SDL_KEYDOWN:
-		if (event->key.keysym.mod == 0) {
+		if (event->key.keysym.mod == KMOD_NONE || event->key.keysym.mod == KMOD_NUM) {
 			if (event->key.keysym.sym == SDLK_UP) {
 				jevent.type = JIVE_EVENT_SCROLL;
 				--(jevent.u.scroll.rel);
