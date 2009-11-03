@@ -137,29 +137,38 @@ end
 function _setTitleStatus(self, text, duration)
 	log:debug("_setTitleStatus", text)
 
-	local nowPlayingTitleStatusLabel = jiveMain:getSkinParam("nowPlayingTitleStatusLabel")
-	if nowPlayingTitleStatusLabel == "artist" and self.artistalbumTitle then
-		--artist and artistalbumTitle widget are used as title
-		local msgs = string.split("\n", text)
-
+	local nowPlayingTrackInfoLines = jiveMain:getSkinParam("NOWPLAYING_TRACKINFO_LINES")
+	local msgs = string.split("\n", text)
+	if nowPlayingTrackInfoLines == 2 and self.artistalbumTitle then
+		--artistalbumTitle and trackTitle widgets are used as messaging widget
+		-- two line message means use artistAlbumTitle for line 1, trackTitle for line 2
 		if #msgs > 1 then
 			self.artistalbumTitle:setValue(msgs[1], duration)
 			self.trackTitle:setValue(msgs[2], duration)
+		-- one line message means use trackTitle for line 1 and keep what is already on screen for artistalbumTitle
+		-- keeping existing artistalbumTitle text is important for multiple-showBriefly cases e.g., rebuffering messages
 		else
 			self.trackTitle:setValue(msgs[1], duration)
 			self.artistalbumTitle:setValue(self.artistalbumTitle:getValue(), duration) --keep any temporary text up for same duration to avoid flickering
 		end
-	elseif self.titleGroup then --might not exist yet if NP window hasn't yet been created
-		--use title widget
-		--only use first two lines, and slightly hackishly produce 3 lines with newline in between to get spacing right
-		local msgs = string.split("\n", text)
+	elseif nowPlayingTrackInfoLines == 3 and self.titleGroup then --might not exist yet if NP window hasn't yet been created
+		-- use title widget and track title as lines 1 and 2 of messaging
+		-- remove albumTitle and artistTitle until temp message is done
+		if #msgs == 1 then
+			log:debug('one line message')
+			self.titleGroup:setWidgetValue("text", msgs[1], duration)
+			self.trackTitle:setValue(self.trackTitle:getValue(), duration)
+			self.albumTitle:setValue('', duration)
+			self.artistTitle:setValue('', duration)
 
-		text = msgs[1]
-		if #msgs > 1 then
-			text = text .. "\n.\n" .. msgs[2]
+		elseif #msgs == 2 then
+			log:debug('two line message')
+			self.titleGroup:setWidgetValue("text", msgs[1], duration)
+			self.trackTitle:setValue(msgs[2], duration)
+			self.artistTitle:setValue('', duration) 
+			self.albumTitle:setValue('', duration) 
+
 		end
-		self.titleGroup:setWidgetValue("text", text, duration)
-
 	end
 end
 
