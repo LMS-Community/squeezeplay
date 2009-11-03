@@ -470,6 +470,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying = _uses(s.window, {
 		bgImg = Tile:fillColor(0x000000ff),
 		title = {
+			zOrder = 9,
 			h = 79,
 			text = {
 				hidden = 1,
@@ -480,6 +481,7 @@ function skin(self, s, reload, useDefaultSize)
 			order = { 'nptrack', 'xofy' },
 			border     = _tracklayout.border,
 			position   = _tracklayout.position,
+			zOrder = 10,
 			nptrack =  {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
@@ -504,6 +506,7 @@ function skin(self, s, reload, useDefaultSize)
 			},
 		},
 		npartistalbum  = {
+			zOrder = 10,
 			border     = _tracklayout.border,
 			position   = _tracklayout.position,
 			w          = _tracklayout.w,
@@ -537,24 +540,29 @@ function skin(self, s, reload, useDefaultSize)
 	
 		-- Progress bar
 		npprogress = {
+			zOrder = 10,
 			position = LAYOUT_NORTH,
 			padding = { 10, 0, 10, 0 },
 			border = { 0, 63, 0, 0 },
 			w = WH_FILL,
 			order = { 'elapsed', 'slider', 'remain' },
 			elapsed = {
+				zOrder = 10,
 				font = _boldfont(12),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
 			remain = {
+				zOrder = 10,
 				font = _boldfont(12),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
 			elapsedSmall = {
+				zOrder = 10,
 				font = _boldfont(9),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
 			remainSmall = {
+				zOrder = 10,
 				font = _boldfont(9),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
@@ -562,6 +570,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
+			zOrder = 10,
 			position = LAYOUT_NORTH,
 			padding = { 10, 0, 0, 0 },
 			border = { 0, 63, 0, 0 },

@@ -207,7 +207,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying = _uses(s.window, {
 		bgImg = Tile:fillColor(0x000000ff),
 		title = {
-			zOrder = 10,
+			zOrder = 9,
 			h = 60,
 			text = {
 				hidden = 1,
