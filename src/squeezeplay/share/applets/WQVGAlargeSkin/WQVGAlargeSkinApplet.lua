@@ -420,6 +420,9 @@ function skin(self, s)
 	local TEAL = { 0, 0xbe, 0xbe }
 	local NONE = { }
 
+	local TEXT_COLOR = WHITE
+	local TEXT_SH_COLOR = NONE
+
 	local TITLE_HEIGHT = 55
 	local CM_MENU_HEIGHT = 72
 	local TITLE_FONT_SIZE = 30
@@ -1112,8 +1115,6 @@ function skin(self, s)
 						},
 						{
 							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
---							fg = BLACK,
---							sh = NONE,
 						},
 					},
 					fg = OFFWHITE,
@@ -1302,12 +1303,23 @@ function skin(self, s)
 	}
 
 
-	-- toast_popup popup
+	-- toast_popup popup (is now text only)
+	s.toast_popup_textarea = {
+		padding = { 8, 8, 8, 8 } ,
+		align = 'left',
+		w = WH_FILL,
+		h = WH_FILL,
+		font = _boldfont(30),
+		fg = WHITE,
+		sh = { },
+        }
+
+	-- toast_popup popup with art and text
 	s.toast_popup = {
-		x = 0,
-		y = screenHeight - 93,
-		w = screenWidth,
-		h = 93,
+		x = 5,
+		y = screenHeight/2 - 126/2,
+		w = screenWidth - 10,
+		h = 126,
 		bgImg = popupBox,
 		group = {
 			padding = 10,
@@ -1318,6 +1330,7 @@ function skin(self, s)
 				w = WH_FILL,
 				h = WH_FILL,
 				font = _font(HELP_FONT_SIZE),
+				lineHeight = HELP_FONT_SIZE + 5,
 			},
 			icon = { 
 				align = 'top-left', 
@@ -1328,20 +1341,13 @@ function skin(self, s)
 			}
 		}
 	}
-
-       -- toast popup with textarea
-       s.toast_popup_text = _uses(s.toast_popup, {
-               group = {
-                       order = { 'text' },
-                       text = {
-                               w = WH_FILL,
-                               h = WH_FILL,
-                               align = 'top-left',
-                               padding = { 10, 12, 12, 12 },
-                       },
-               }
-       })
-
+	-- toast popup with textarea
+	s.toast_popup_text = _uses(s.toast_popup, {
+		group = {
+			order = { 'text' },
+			text = s.toast_popup_textarea,
+		}
+	})
 	-- toast popup with icon only
 	s.toast_popup_icon = _uses(s.toast_popup, {
                 w = 190,

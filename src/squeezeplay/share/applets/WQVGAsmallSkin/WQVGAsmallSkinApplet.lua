@@ -1796,6 +1796,16 @@ function skin(self, s)
 		}),
 	}
 
+	-- toast_popup popup (is now text only)
+	s.toast_popup_textarea = {
+		padding = { 8, 8, 8, 8 } ,
+		align = 'left',
+		w = WH_FILL,
+		h = WH_FILL,
+		font = _boldfont(21),
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+        }
 
 	-- toast_popup popup with art and text
 	s.toast_popup = {
@@ -1807,7 +1817,7 @@ function skin(self, s)
 		group = {
 			padding = 10,
 			order = { 'icon', 'text' },
-		text = { 
+			text = { 
 				padding = { 10, 12, 12, 12 } ,
 				align = 'top-left',
 				w = WH_FILL,
@@ -1833,6 +1843,8 @@ function skin(self, s)
 				h = WH_FILL,
 				align = 'top-left',
 				padding = { 10, 12, 12, 12 },
+				fg = TEXT_COLOR,
+				sh = TEXT_SH_COLOR,
 			},
 		}
 	})
