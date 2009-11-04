@@ -93,7 +93,6 @@ function param(self)
                 -- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
                 NOWPLAYING_TRACKINFO_LINES = 3,
 		nowPlayingBrowseArtworkSize = 180,
-		nowPlayingTitleStatusLabel  = "title",
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
@@ -248,6 +247,7 @@ function skin(self, s)
 
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
+	local helpTextBackground  = _loadImageTile(self, imgpath .. "Titlebar/tbar_dropdwn_bkrgd.png")
 
 	local threeItemSelectionBox   = _loadHTile(self, {
 		nil,
@@ -438,7 +438,7 @@ function skin(self, s)
 	local TEXTAREA_FONT_SIZE = 24
 	local CENTERED_TEXTAREA_FONT_SIZE = 24
 
-	local HELP_FONT_SIZE = 18
+	local HELP_FONT_SIZE = 28
 	local UPDATE_SUBTEXT_SIZE = 20
 
 	local ITEM_ICON_ALIGN   = 'center'
@@ -736,6 +736,7 @@ function skin(self, s)
 	s.item_blank = {
 		padding = {  },
 		text = {},
+		bgImg = helpTextBackground,
 	}
 
 	s.pressed.item_blank = _uses(s.item_blank)
@@ -743,9 +744,9 @@ function skin(self, s)
 
 	s.help_text = {
 		w = screenWidth - 30,
-		padding = { 18, 4, 10, 0},
-		font = _font(HELP_FONT_SIZE),
-		lineHeight = 22,
+		padding = { ITEM_LEFT_PADDING, 4, 8, 0},
+		font = _font(30),
+		lineHeight = 32,
 		fg = WHITE,
 		sh = NONE,
 		align = "top-left",
