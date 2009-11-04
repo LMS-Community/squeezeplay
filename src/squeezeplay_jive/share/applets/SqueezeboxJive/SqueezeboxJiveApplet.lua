@@ -106,7 +106,7 @@ function init(self)
 			local systemTime = os.date()
 			log:info('syncing system clock to hw clock: ', systemTime)
 			local success,err = squeezeos.hwclock2sys()
-			if not success
+			if not success then
 				log:warn("hwclock2sys() failed: ", err)
 			end
 			systemTime = os.date()
@@ -603,7 +603,7 @@ function wakeup(self, action)
 		-- the system clock drifts in sleep mode, reset it
 		if self.powerState == "sleep" or self.powerState == "suspend" then
 			local success,err = squeezeos.hwclock2sys()
-			if not success
+			if not success then
 				log:warn("hwclock2sys() failed: ", err)
 			end
 		end
