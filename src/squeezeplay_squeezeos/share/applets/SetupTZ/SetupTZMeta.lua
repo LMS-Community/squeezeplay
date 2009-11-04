@@ -6,6 +6,7 @@ local AppletMeta    = require("jive.AppletMeta")
 local appletManager = appletManager
 local jiveMain      = jiveMain
 local jnt           = jnt
+local squeezeos     = require("squeezeos_bsp")
 local RequestHttp   = require("jive.net.RequestHttp")
 local SocketHttp    = require("jive.net.SocketHttp")
 
@@ -18,30 +19,28 @@ end
 
 function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('appletSetupTZ', 'advancedSettings', "TZ_TIMEZONE", function(applet, ...) applet:settingsShow(...) end))
-	meta:registerService("setTimezone")
-	meta:registerService("getTimezone")
 
-	-- At register time, don't bother with all the subscription
-	-- magic unless the TZ is unset
-	local current_tz = appletManager:callService("getTimezone")
-	if not current_tz or current_tz == "Factory" then
+	-- At register time, subscribe to network events
+	-- if the timezone hasn't been set
+	if not squeezeos.getTimezone() then
 		jnt:subscribe(meta)
 	end
 end
 
 function notify_serverConnected(meta)
-	-- But the TZ could have been set by the user between then
-	-- and now, so recheck again anyways, and unsubcribe if
-	-- either it has become validly set somehow, or we manage
-	-- to get a setting from SN
-	local current_tz = appletManager:callService("getTimezone")
-	if not current_tz or current_tz == "Factory" then
+	-- On server connect, if the timezone still hasn't
+	-- been set, set it from SN's guess over http
+	-- and unsubscribe if this succeeds
+	if not squeezeos.getTimezone() then
 		local socket = SocketHttp(jnt, jnt:getSNHostname(), 80, "tzguess")
 		local req = RequestHttp(
 			function(data) if data then
 				log:debug("Got http data for TZ >>" .. data .. "<<")
-				if appletManager:callService("setTimezone", data) then
+				local success,err = squeezeos.setTimezone(data)
+				if success then
 					jnt:unsubscribe(meta)
+				else
+					log:warn("setTimezone() failed: ", err)
 				end
 			end end,
 			'GET', '/public/tz'

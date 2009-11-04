@@ -1,12 +1,10 @@
 
 -- stuff we use
-local pairs, tonumber = pairs, tonumber
+local pairs = pairs
 
 local oo                     = require("loop.simple")
-local io                     = require("io")
-local os                     = require("os")
 local string                 = require("string")
-local lfs                    = require("lfs")
+local squeezeos              = require("squeezeos_bsp")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -104,43 +102,8 @@ local timezones = {
 	{ strid = "TZ_PACIFIC_TONGATAPU", olson = "Pacific/Tongatapu" },
 }
 
--- Returns the current timezone as a path string
---  underneath zonedir, for example: "America/Chicago".
--- Note that the return value may not be an available
---  selection from the menu of region names, such as
---  when it is "Factory".
-
-function getTimezone(self)
-	-- Lua and Busybox both have no readlink(), and
-	--  apparently lfs.symlinkattributes doesn't exist either,
-	--  so we just assume it's a link and use busybox /bin/ls to find
-	--  the target...
-	local cmd = io.popen("/bin/ls --color=never -dl /etc/localtime")
-	local line
-	for _line in cmd:lines() do line = _line end
-	cmd:close()
-
-	if not line then return nil end
-	local _,_,tz = string.find(line, "/usr/share/zoneinfo/([^%s]+)%s*$")
-
-	return tz
-end
-
--- Sets the timezone for the machine
-function setTimezone(self, tz)
-	local mode = lfs.attributes("/usr/share/zoneinfo/" .. tz).mode
-	if mode == "file" then
-		log:info("Setting timezone to: " .. tz)
-		os.execute("/bin/ln -fs /usr/share/zoneinfo/" .. tz .. " /etc/localtime")
-		return true
-	else
-		log:warn("Attempted to set non-existent timezone: " .. tz)
-		return false
-	end
-end
-
 function settingsShow(self, menuItem)
-	local current_tz = self:getTimezone()
+	local current_tz = squeezeos.getTimezone()
 	local radio_group = RadioGroup()
 	local menu_list = {}
 	local tz_selected_index
@@ -157,7 +120,12 @@ function settingsShow(self, menuItem)
 			check = RadioButton(
 				"radio",
 				radio_group,
-				function() self:setTimezone(tzdata.olson) end,
+				function()
+					local success,err = squeezeos.setTimezone(tzdata.olson)
+					if not success then
+						log:warn("setTimezone() failed: ", err)
+					end
+				end,
 				enableme
 			)
 		}
@@ -165,7 +133,7 @@ function settingsShow(self, menuItem)
 
 
 	self.window = Window("help_list", menuItem.text, "text")
-	self.menu = SimpleMenu("menu", menu_list);
+	self.menu = SimpleMenu("menu", menu_list)
 
 	if tz_selected_index then self.menu:setSelectedIndex(tz_selected_index) end
 

@@ -10,6 +10,7 @@ local io                     = require("io")
 local string                 = require("jive.utils.string")
 local table                  = require("jive.utils.table")
 local math                   = require("math")
+local squeezeos              = require("squeezeos_bsp");
 
 local Applet                 = require("jive.Applet")
 local Decode                 = require("squeezeplay.decode")
@@ -526,9 +527,9 @@ function notify_playerCurrent(self, player)
 			log:warn(err)
 			return
 		end
-		log:debug('date sync: local: ', chunk.data.date, ' utc: ', chunk.data.date_utc)
-		if chunk.data.date_utc then
-                	self:setDate(chunk.data.date_utc)
+		log:debug('date sync epoch: ', chunk.data.date_epoch)
+		if chunk.data.date_epoch then
+                	self:setDate(chunk.data.date_epoch)
 		end
 	end
 
@@ -553,18 +554,12 @@ function notify_playerDelete(self, player)
 end
 
 
-function setDate(self, date)
-	-- matches date format 2007-09-08T20:40:42+00:00, expects UTC
-	local CCYY, MM, DD, hh, mm, ss, TZ = string.match(date, "(%d%d%d%d)%-(%d%d)%-(%d%d)T(%d%d):(%d%d):(%d%d)([-+]%d%d:%d%d)")
-
-	log:debug("CCYY=", CCYY, " MM=", MM, " DD=", DD, " hh=", hh, " mm=", mm, " ss=", ss, " TZ=", TZ)
-
-	-- set system date
-	os.execute("/bin/date -u " .. MM..DD..hh..mm..CCYY.."."..ss)
-
-	-- set RTC to system time
-	os.execute("hwclock -w -u")
-
+function setDate(self, epoch)
+	squeezeos.swclockSetEpoch(epoch);
+	local success,err = squeezeos.sys2hwclock()
+	if not success then
+		log:warn("sys2hwclock() failed: ", err)
+	end
 	iconbar:update()
 end
 
