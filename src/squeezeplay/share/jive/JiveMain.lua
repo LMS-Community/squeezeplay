@@ -273,9 +273,10 @@ end
 
 
 function _defaultContextMenuAction(self)
-	Framework:playSound("BUMP")
-	Framework.windowStack[1]:bumpLeft()
-	
+	if not Framework:isMostRecentInput("mouse") then -- don't bump on touch press hold, is visually distracting...
+		Framework:playSound("BUMP")
+		Framework.windowStack[1]:bumpLeft()
+	end
 	return EVENT_CONSUME
 end
 
