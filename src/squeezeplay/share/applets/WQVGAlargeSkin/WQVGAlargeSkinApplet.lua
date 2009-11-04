@@ -1452,6 +1452,7 @@ function skin(self, s)
 				h = CM_MENU_HEIGHT,
 				order = { "icon", "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+				bgImg = false,
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
