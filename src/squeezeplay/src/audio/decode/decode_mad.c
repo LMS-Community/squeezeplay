@@ -224,7 +224,7 @@ static void decode_mad_frame(struct decode_mad *self) {
 			 */
 			if (self->stream.next_frame) {
 				remaining = self->stream.bufend - self->stream.next_frame;
-				memcpy(self->input_buffer, self->stream.next_frame, remaining);
+				memmove(self->input_buffer, self->stream.next_frame, remaining);
 			}
 			/* Otherwise fill the input buffer */
 			else {
