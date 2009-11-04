@@ -414,6 +414,10 @@ end
 function _streamConnect(self, serverIp, serverPort)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
+	if serverIp ~= self.slimproto:getServerIp() then
+		log:info(self.header)
+	end
+
 	_setSource(self, "stream")
 
 	self.stream = Stream:connect(serverIp, serverPort)
