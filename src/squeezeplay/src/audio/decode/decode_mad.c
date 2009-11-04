@@ -234,7 +234,6 @@ static void decode_mad_frame(struct decode_mad *self) {
 			read_start = self->input_buffer + remaining;
 			read_max = INPUT_BUFFER_SIZE - remaining;
 
-
 			read_num = streambuf_read(read_start, 0, read_max, &streaming);
 
 			if (!read_num) {
