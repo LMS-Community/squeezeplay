@@ -82,6 +82,16 @@ function defaultSettings(meta)
 				["add"]  = "add_end",
 				["sleep"]  = "sleep",
 				["home"]   = "go_home",
+				["0"]  = "disabled",
+				["1"]  = "disabled",
+				["2"]  = "disabled",
+				["3"]  = "disabled",
+				["4"]  = "disabled",
+				["5"]  = "disabled",
+				["6"]  = "disabled",
+				["7"]  = "disabled",
+				["8"]  = "disabled",
+				["9"]  = "disabled",
 			} 
 		},
 
