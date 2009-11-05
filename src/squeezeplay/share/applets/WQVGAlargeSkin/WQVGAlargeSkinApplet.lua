@@ -92,7 +92,20 @@ function param(self)
                 -- 3 is for a three line track, artist, and album (e.g., SBtouch)
                 -- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
                 NOWPLAYING_TRACKINFO_LINES = 3,
-		nowPlayingBrowseArtworkSize = 180,
+		nowPlayingScreenStyles = { 
+			{ 
+				style = 'nowplaying' ,
+				artworkSize = '180x180',
+			},
+			{
+				style = 'nowplaying_art_only',
+				artworkSize = '480x180',
+			},
+			{
+				style = 'nowplaying_text_only',
+				artworkSize = '180x180',
+			},
+		},
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
@@ -1940,15 +1953,11 @@ function skin(self, s)
 		}
 	})
 
-	-- Artwork
-	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-	local artworkSize     = tostring(ARTWORK_SIZE)
-
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
 		position = LAYOUT_NONE,
-		x = ARTWORK_SIZE + 18,
-		w = screenWidth - (ARTWORK_SIZE + 18) - 10,
+		x = 198,
+		w = screenWidth - (198) - 10,
 		align = "left",
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = WHITE,
@@ -2037,7 +2046,7 @@ function skin(self, s)
 			hidden = 1,
 		},
 		npartwork = {
-			w          = ARTWORK_SIZE,
+			w          = 180,
 			border     = { 10, TITLE_HEIGHT + 4, 10, 0 },
 			position   = LAYOUT_WEST,
 			align      = "center",
@@ -2143,6 +2152,51 @@ function skin(self, s)
                 },
 	})
  
+	s.nowplaying_art_only = _uses(s.nowplaying, {
+		nptitle       = { hidden = 1 },
+		npartistgroup = { hidden = 1 },
+		npalbumgroup  = { hidden = 1 },
+		npartwork = {
+			w = 480,
+			position = LAYOUT_WEST,
+			h = 180,
+			border     = { 0, TITLE_HEIGHT + 4, 0, 0 },
+			align = "center",
+			artwork = {
+				h = 180,
+				w = 480,
+			},
+		},
+	})
+
+	s.nowplaying_text_only = _uses(s.nowplaying, {
+		nptitle = {
+			x = 10,
+			nptrack = {
+				w = screenWidth - 20,
+			},
+		},
+		npartistgroup = {
+			x = 10,
+			npartist = {
+				w = screenWidth - 20,
+			},
+
+		},
+		npalbumgroup = {
+			x = 10,
+			npalbum = {
+				w = screenWidth - 20,
+			},
+
+		},
+		npartwork = { hidden = 1 },
+	})
+
+	s.nowplaying.pressed = s.nowplaying
+	s.nowplaying_art_only.pressed = s.nowplaying_art_only
+	s.nowplaying_text_only.pressed = s.nowplaying_text_only
+
       s.npprogressB = {
                 w = WH_FILL,
                 h = 25,

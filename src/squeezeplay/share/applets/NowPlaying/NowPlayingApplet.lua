@@ -96,8 +96,7 @@ end
 local function _getIcon(self, item, icon, remote)
 	local server = self.player:getSlimServer()
 
-	-- FIXME, need to fix this for all styles of window including when NP artwork size set to 'large'
-	ARTWORK_SIZE = jiveMain:getSkinParam("nowPlayingBrowseArtworkSize")
+	local ARTWORK_SIZE = self:getSelectedStyleParam('artworkSize')
 	
 	local iconId
 	if item then
@@ -298,12 +297,17 @@ function notify_playerCurrent(self, player)
 		return
 	end
 
---	if jiveMain:getSkinParam("NOWPLAYING_MENU") and player:isConnected() then --reverted until further review 11013
 	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
 		self:addNowPlayingItem()
---        else
---		self:removeNowPlayingItem()
         end
+end
+
+function getSelectedStyleParam(self, param)
+	for i, v in pairs(self.nowPlayingScreenStyles) do
+		if v.style == self.selectedStyle then
+			return v[param]
+		end
+	end
 end
 
 
@@ -767,6 +771,7 @@ function _installListeners(self, window)
 
 	window:addActionListener("go", self, showPlaylistAction)
 	window:addActionListener("go_home", self, _goHomeAction)
+	window:addActionListener("go_now_playing", self, toggleNPScreenStyle)
 	--also, no longer listening for hold in this situation, Ben and I felt that was a bug
 	
 end
@@ -813,7 +818,12 @@ function _createTitleGroup(self, window, buttonStyle)
 	local titleGroup = Group('title', {
 		lbutton = window:createDefaultLeftButton(),
 
-		text = Label("text", self.mainTitle),
+		text = Button(Label("text", self.mainTitle), 
+			function()
+				Framework:pushAction("go_now_playing")
+				return EVENT_CONSUME
+			end
+		),
 
 		rbutton = Button(
 				Group(buttonStyle, { Icon("icon") }), 
@@ -835,6 +845,30 @@ function _createTitleGroup(self, window, buttonStyle)
 	return titleGroup
 end
 
+function toggleNPScreenStyle(self)
+
+	log:debug('change window style')
+
+	local numberOfStyles = #self.nowPlayingScreenStyles
+
+	for i, v in ipairs(self.nowPlayingScreenStyles) do
+		if self.selectedStyle == v.style then
+			if i == #self.nowPlayingScreenStyles then
+				self.selectedStyle = self.nowPlayingScreenStyles[1].style
+				break
+			else
+				self.selectedStyle = self.nowPlayingScreenStyles[i+1].style
+				break
+			end
+		end
+	end
+
+	log:debug('setting NP window style to: ', self.selectedStyle)
+	local newWindow = _createUI(self)
+	newWindow:replace(self.window, Window.transitionFadeIn)
+	self.window = newWindow
+end
+
 
 ----------------------------------------------------------------------------------------
 -- Screen Saver Display 
@@ -842,6 +876,7 @@ end
 
 function _createUI(self)
 	--local window = Window("text_list")
+	self.windowStyle = self.selectedStyle
 	if not self.windowStyle then
 		self.windowStyle = 'nowplaying'
 	end
@@ -989,9 +1024,15 @@ function _createUI(self)
 --	self.artwork = VUMeter("vumeter_analog")
 --	self.artwork = SpectrumMeter("spectrum")
 
-	self.artworkGroup = Group('npartwork', {
+	self.artworkGroup = Button(
+		Group('npartwork', {
 			artwork = self.artwork,
-	})
+		}),
+		function()
+			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+		end
+	)
 
 	local playIcon = Button(Icon('play'),
 				function() 
@@ -1138,7 +1179,6 @@ function _createUI(self)
 
 	-- install some listeners to the window
 	self:_installListeners(window)
-
 	return window
 end
 
@@ -1213,7 +1253,12 @@ end
 
 function showNowPlaying(self, transition, direct)
 
-	local windowStyle
+	self.nowPlayingScreenStyles = jiveMain:getSkinParam("nowPlayingScreenStyles")
+
+	if not self.selectedStyle then
+		self.selectedStyle = 'nowplaying'
+	end
+
 	local npWindow = self.window
 
 	local lineInActive = appletManager:callService("isLineInActive")
@@ -1231,11 +1276,7 @@ function showNowPlaying(self, transition, direct)
 			--In rare circumstances, SS might not have been deactivated yet, so we force it closed
 			log:debug("SS was active")
 			appletManager:callService("deactivateScreensaver")
-			--SS window removed, so continue with building a new window
-			windowStyle = 'nowplaying'
 		else
-			--no need to switch to SS window
-			windowStyle = 'nowplayingSS'
 			return
 		end
 	end

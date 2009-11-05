@@ -80,10 +80,16 @@ function param(self)
                 -- 3 is for a three line track, artist, and album (e.g., SBtouch)
                 -- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
                 NOWPLAYING_TRACKINFO_LINES = 2,
-		nowPlayingBrowseArtworkSize = "240x240",
-		nowPlayingSSArtworkSize     = 240,
-		nowPlayingLargeArtworkSize  = 240,
-		nowPlayingTitleStatusLabel  = "artist",
+		nowPlayingScreenStyles = { 
+			{
+				style = 'nowplaying',
+				artworkSize = '240x240',
+			 },
+			{
+				style = 'nowplaying_small_art',
+				artworkSize = '200x200',
+			},
+		},
         }
 end
 
@@ -400,10 +406,6 @@ function skin(self, s, reload, useDefaultSize)
 	local NP_ARTISTALBUM_FONT_SIZE = 15
 	local NP_TRACK_FONT_SIZE = 21
 
-	-- Artwork
-	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-	local noArtSize       = tostring(ARTWORK_SIZE)
-
 	local controlHeight   = 38
 	local controlWidth    = 45
 	local volumeBarWidth  = 150
@@ -588,6 +590,19 @@ function skin(self, s, reload, useDefaultSize)
 	
 	})
 
+	s.nowplaying_small_art = _uses(s.nowplaying, {
+		bgImg = false,
+		npartwork = {
+			position = LAYOUT_NORTH,
+			artwork = {
+				padding = { 0, 88, 0, 0 },
+			},
+		},
+	})
+
+	s.nowplaying.pressed = s.nowplaying
+	s.nowplaying_small_art.pressed = s.nowplaying_small_art
+
 	-- sliders
 	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
 	s.npprogressB = {
@@ -601,8 +616,6 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.npvolumeB = { hidden = 1 }
-	s.nowplayingSS = _uses(s.nowplaying)
-
 
 
 end

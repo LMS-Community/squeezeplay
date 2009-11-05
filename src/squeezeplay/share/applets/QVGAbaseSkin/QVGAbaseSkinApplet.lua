@@ -82,7 +82,6 @@ function param(self)
                 -- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
                 NOWPLAYING_TRACKINFO_LINES = 2,
 		nowPlayingBrowseArtworkSize = 154,
-		nowPlayingSSArtworkSize     = 186,
 		nowPlayingLargeArtworkSize  = 240,
         }
 end

@@ -91,13 +91,24 @@ function param(self)
 		-- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
 		NOWPLAYING_TRACKINFO_LINES = 3,
 		POPUP_THUMB_SIZE = 120,
-		nowPlayingBrowseArtworkSize = 180,
-		nowPlayingSSArtworkSize     = 180,
-		nowPlayingLargeArtworkSize  = 180,
-		nowPlayingTitleStatusLabel  = "title",
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
+		},
+		nowPlayingScreenStyles = { 
+			-- every skin needs to start off with a nowplaying style
+			{
+				style = 'nowplaying', 
+				artworkSize = '180x180',
+			},
+			{
+				style = 'nowplaying_art_only',
+				artworkSize = '480x272',
+			},
+			{
+				style = 'nowplaying_text_only',
+				artworkSize = '180x180',
+			},
 		},
         }
 end
@@ -2584,10 +2595,6 @@ function skin(self, s)
 	local NP_ARTISTALBUM_FONT_SIZE = 20
 	local NP_TRACK_FONT_SIZE = 24
 
-	-- Artwork
-	local ARTWORK_SIZE    = self:param().nowPlayingBrowseArtworkSize
-	local artworkSize     = tostring(ARTWORK_SIZE)
-
 	local controlHeight = 38
 	local controlWidth = 45
 	local volumeBarWidth = 163 -- screenWidth - (transport controls + volume controls + dividers + border around volume bar)
@@ -2607,7 +2614,6 @@ function skin(self, s)
 	})
 
 	s.toolbar_spacer = _uses(_transportControlButton, {
-		--w = remainingToolbarSpace,
 		w = WH_FILL,
 	})
 
@@ -2618,7 +2624,7 @@ function skin(self, s)
 		align = "left",
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = TEXT_COLOR,
-		x = ARTWORK_SIZE + 18,
+		x = 198,
 	}
 
 	s.nowplaying = _uses(s.window, {
@@ -2702,21 +2708,22 @@ function skin(self, s)
 	
 		-- cover art
 		npartwork = {
---			w = ARTWORK_SIZE,
---			border = { 8, TITLE_HEIGHT + 4, 10, 0 },
-			position = LAYOUT_WEST,
+			w = 180,
+			position = LAYOUT_NONE,
+			x = 8,
+			y = TITLE_HEIGHT + 4,
 			align = "center",
+			h = 180,
 
 			artwork = {
-				w = ARTWORK_SIZE,
-				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
+				w = 180,
 				align = "center",
 				padding = 0,
 				img = false,
 			},
 
 			vumeter = {
-				w = ARTWORK_SIZE,
+				w = 180,
 				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 				padding = { 20, 5, 20, 55 },
 				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
@@ -2734,7 +2741,7 @@ function skin(self, s)
 			},
 
 			spectrum = {
-				w = ARTWORK_SIZE,
+				w = 180,
 				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
 				padding = { 20, 5, 20, 55 },
 				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
@@ -2829,7 +2836,7 @@ function skin(self, s)
 		npprogress = {
 			position = LAYOUT_NONE,
 			x = 140,
-			y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
+			y = TITLE_HEIGHT + 180 - 50,
 			padding = { 0, 10, 0, 0 },
 			order = { "elapsed", "slider", "remain" },
 			elapsed = {
@@ -2869,10 +2876,9 @@ function skin(self, s)
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
 			position = LAYOUT_NONE,
-			--x = ARTWORK_SIZE + 18,
 			x = 0,
-			y = TITLE_HEIGHT + ARTWORK_SIZE - 50,
-			padding = { ARTWORK_SIZE + 22, 0, 0, 5 },
+			y = TITLE_HEIGHT + 180 - 50,
+			padding = { 180 + 22, 0, 0, 5 },
 			order = { "elapsed" },
 			elapsed = {
 				w = WH_FILL,
@@ -2960,9 +2966,11 @@ function skin(self, s)
 		},
 	})
 
+	s.nowplaying.pressed = s.nowplaying
 	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
 	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
+	s.nowplaying.npartwork.pressed = s.nowplaying.npartwork
 
 	s.nowplaying.npcontrols.pressed = {
 		rew     = _uses(s.nowplaying.npcontrols.rew, { bgImg = keyMiddlePressed }),
@@ -2988,7 +2996,71 @@ function skin(self, s)
 		rewDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
 	}
 	
-	s.nowplayingSS = _uses(s.nowplaying)
+	s.nowplaying_art_only = _uses(s.nowplaying, {
+
+		bgImg = Tile:fillColor(0x000000ff),
+		nptitle          = { hidden = 1 },
+		title            = { hidden = 1 },
+		npcontrols       = { hidden = 1},
+		npprogress       = { hidden = 1 },
+		npartistgroup    = { hidden = 1 },
+		npalbumgroup     = { hidden = 1 },
+		npartwork = {
+			w = 480,
+			position = LAYOUT_CENTER,
+			align = "center",
+			h = 272,
+			border = 0,
+			padding = 0,
+			artwork = {
+				w = 480,
+				border = 0,
+				padding = 0,
+				img = false,
+			},
+		},
+	})
+	s.nowplaying_art_only.pressed = s.nowplaying_art_only
+
+	s.nowplaying_text_only = _uses(s.nowplaying, {
+	
+		nptitle          = { 
+                        x          = 10,
+			h          = 35,
+			y 	   = TITLE_HEIGHT + 30,
+                        nptrack =  {
+                                w          = screenWidth - 20,
+				font       = _boldfont(26),
+                        },
+		},
+		npartistgroup    = { 
+                        x          = 10,
+			h          = 35,
+			y 	   = TITLE_HEIGHT + 70,
+                        npartist =  {
+                                w          = screenWidth - 20,
+				font       = _font(26),
+                        },
+		},
+		npalbumgroup     = { 
+                        x          = 10,
+			h          = 35,
+			y 	   = TITLE_HEIGHT + 110,
+                        npalbum =  {
+                                w          = screenWidth - 20,
+				font       = _font(26),
+                        },
+		},
+		npartwork = { hidden = 1 },
+		npprogress = {
+			x = 0,
+			y = 200,
+			elapsed = {
+				w = 50,
+			},
+		},
+	})
+	s.nowplaying_art_only.pressed = s.nowplaying_art_only
 
 
 	s.brightness_group = {
