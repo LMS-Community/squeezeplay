@@ -539,6 +539,7 @@ int decode_spectrum_init( lua_State *L) {
 
 	if( cfg) {
 		free( cfg);
+		cfg = NULL;
 	}
 
 	if( !cfg) {
