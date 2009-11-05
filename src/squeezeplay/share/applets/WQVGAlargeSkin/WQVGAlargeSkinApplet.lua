@@ -410,9 +410,7 @@ function skin(self, s)
 
 	local popupBackground  = _loadImageTile(self, imgpath .. "Alerts/popup_fullscreen_100.png")
 
-	-- FIXME: Noah needs to provide a better asset for the cursor image
-	local textinputCursor     = _loadImageTile(self, imgpath .. "UNOFFICIAL/text_bar_vert_fill.png")
-
+	local textinputCursor     = _loadImageTile(self, imgpath .. "Text_Entry/Classic_10ft/text_bar_vert_fill.png")
 	local textinputWheel      = _loadImageTile(self, imgpath .. "Text_Entry/Classic_10ft/text_bar_vert.png")
         local textinputRightArrow = _loadImageTile(self, imgpath .. "Icons/sel_right_textentry.png")
 
