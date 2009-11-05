@@ -2886,6 +2886,47 @@ function skin(self, s)
 
 	})
 
+	-- This is for the standalone beta VU Meter
+	s.vumeter = {
+		x = 0,
+		y = 0,
+		w = 480 - 2,
+		h = 272 - 2,
+		border = { 0, 0, 0, 0},
+		padding = { 0, 0, 0, 0 },
+
+		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
+		tickCap = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_bounce.png"),
+		tickOn = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_on.png"),
+		tickOff = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_off.png"),
+	}
+
+	-- This is for the standalone beta VU Meter (analog)
+	s.vumeter_analog = {
+		x = 0,
+		y = 0,
+		w = 240,
+		h = 272 - 2,
+		border = { 0, 0, 0, 0},
+		padding = { 0, 0, 0, 0 },
+		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
+	}
+
+	-- This is for the standalone beta Specturm Meter
+	s.spectrum = {
+		x = 0,
+		y = 0,
+		w = 480 - 2,
+		h = 272 - 2,
+		border = { 0, 0, 0, 0},
+		padding = { 10, 10, 10, 10 },
+		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
+
+		bar = { 0x14, 0xbc, 0xbc, 0xff },
+		cap = { 0xb4, 0x56, 0xa1, 0xff },
+	}
+
+
 	-- sliders
 	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
 	s.npprogressB = {
