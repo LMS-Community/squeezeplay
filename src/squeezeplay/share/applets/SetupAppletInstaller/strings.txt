@@ -59,19 +59,19 @@ HELP
 	SV	Välj de appletar du vill installera och välj sedan Installera
 
 DOWNLOADING
-	CS	\nStahuji aplety
-	DA	\nHenter underprogrammer
-	DE	\nApplets herunterladen
-	EN	\nDownloading Applets
-	ES	\nDescargando subprogramas
-	FI	\nLadataan sovelmia
-	FR	\nTéléchargement des applets
-	IT	\nDownload delle applet in corso
-	NL	\nApplets worden gedownload
-	NO	\nLaster ned tilleggsprogram
-	PL	\nPobieranie apletów
-	RU	\nЗагрузка Java-приложений
-	SV	\nLaddar ner appletprogram
+	CS	Stahuji aplety
+	DA	Henter underprogrammer
+	DE	Applets herunterladen
+	EN	Downloading Applets
+	ES	Descargando subprogramas
+	FI	Ladataan sovelmia
+	FR	Téléchargement des applets
+	IT	Download delle applet in corso
+	NL	Applets worden gedownload
+	NO	Laster ned tilleggsprogram
+	PL	Pobieranie apletów
+	RU	Загрузка Java-приложений
+	SV	Laddar ner appletprogram
 
 RESTART_APP
 	CS	Aby mohly být nové aplety použity, restartujte aplikaci
@@ -89,19 +89,19 @@ RESTART_APP
 	SV	Du måste starta om programmet innan du kan börja använda de nya appletprogrammen
 
 RESTART_JIVE
-	CS	\nRestartuji
-	DA	\nGenstarter
-	DE	\nNeustart
-	EN	\nRestarting
-	ES	\nReiniciando
-	FI	\nKäynnistetään uudelleen
-	FR	\nRedémarrage
-	IT	\nRiavvio
-	NL	\nBezig met opnieuw starten
-	NO	\nStarter på nytt
-	PL	\nRestartowanie
-	RU	\nПерезапуск
-	SV	\nStartar om
+	CS	Restartuji
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
 
 DESCRIPTION
 	CS	Popis
