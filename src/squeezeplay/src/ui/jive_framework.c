@@ -17,7 +17,7 @@ int (*jive_sdlfilter_pump)(const SDL_Event *event);
 LOG_CATEGORY *log_ui_draw;
 LOG_CATEGORY *log_ui;
 
-SDL_Rect jive_dirty_region;
+SDL_Rect jive_dirty_region, last_dirty_region;
 
 /* global counter used to invalidate widget skin and layout */
 Uint32 jive_origin = 0;
@@ -516,14 +516,16 @@ static int _draw_screen(lua_State *L) {
 		drawn = true;
 	}
 	else if (jive_dirty_region.w || force_redraw) {
+		SDL_Rect dirty;
+
+		/* only redraw dirty region */
+		jive_rect_union(&jive_dirty_region, &last_dirty_region, &dirty);
+		jive_surface_set_clip(srf, &dirty);
+
 #if 0
 		printf("REDRAW: %d,%d %dx%d\n", jive_dirty_region.x, jive_dirty_region.y, jive_dirty_region.w, jive_dirty_region.h);
+		printf("--> %d,%d %dx%d\n", dirty.x, dirty.y, dirty.w, dirty.h);
 #endif
-
-		// FIXME using the clip area does not work with 
-		// double buffering
-		//SDL_SetClipRect(srf, &jive_dirty_region);
-		jive_surface_set_clip(srf, NULL);
 
 		/* Draw background */
 		jive_tile_blit(jive_background, srf, 0, 0, screen_w, screen_h);
@@ -537,6 +539,8 @@ static int _draw_screen(lua_State *L) {
 			lua_pushinteger(L, JIVE_LAYER_ALL); // layer
 			lua_call(L, 3, 0);
 		}
+
+		memcpy(&last_dirty_region, &jive_dirty_region, sizeof(last_dirty_region));
 		jive_dirty_region.w = 0;
 
 		drawn = true;
