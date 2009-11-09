@@ -488,10 +488,9 @@ function _streamRead(self, networkErr)
 
 	local n = self.stream:read(self)
 	while n do
-		if n == 0 then
-			-- buffer full
-			self.jnt:t_removeRead(self.stream)
-		end
+		-- stop reading, we will be added back by the timer. this
+		-- prevents the streambuf starving the cpu
+		self.jnt:t_removeRead(self.stream)
 
 		_, networkErr = Task:yield(false)
 
