@@ -425,6 +425,41 @@ SDL_Surface *IMG_LoadJPG_RW(SDL_RWops *src)
 		cinfo.dct_method = JDCT_FASTEST;
 		cinfo.do_fancy_upsampling = FALSE;
 #endif
+
+		{
+			/* Optimization HACK for SqueezePlay:
+			 *
+			 * Scale images to fit the screen when loading.
+			 * SDL_image does not have an api to allow this to
+			 * be set, so for now use the screen/window size.
+			 * This scales to the largest edge, allowing the
+			 * image to be rotated after it has been loaded.
+			 */
+#ifndef MAX
+#define MAX(x,y) (x) > (y) ? (x) : (y)
+#endif
+
+			const SDL_VideoInfo *info;
+			int scrmax, imgmax;
+
+			info = SDL_GetVideoInfo();
+
+			scrmax = MAX(info->current_w, info->current_h);
+			imgmax = MAX(cinfo.image_width, cinfo.image_height);
+
+			cinfo.scale_num   = 1;
+			cinfo.scale_denom = 1;
+
+			if ((imgmax / cinfo.scale_denom) > scrmax) {
+				cinfo.scale_denom <<= 1;
+				while (cinfo.scale_denom <= 8 && ((imgmax / cinfo.scale_denom) > scrmax)) {
+					cinfo.scale_denom <<= 1;
+				}
+
+				cinfo.scale_denom >>= 1;
+			}
+		}
+
 		lib.jpeg_calc_output_dimensions(&cinfo);
 
 		/* Allocate an output surface to hold the image */
