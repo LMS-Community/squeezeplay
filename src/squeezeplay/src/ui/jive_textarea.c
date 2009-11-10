@@ -334,7 +334,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	TextareaWidget *peer = jive_getpeer(L, 1, &textareaPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
-	SDL_Rect old_clip, new_clip;
+	SDL_Rect pop_clip, new_clip;
 
 	if (!drawLayer || peer->num_lines == 0) {
 		return 0;
@@ -364,8 +364,6 @@ int jiveL_textarea_draw(lua_State *L) {
 	}
 
 	lua_pop(L, 1);
-
-	jive_surface_get_clip(srf, &old_clip);
 
 	new_clip.x = peer->w.bounds.x;
 	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
@@ -399,7 +397,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	lua_pop(L, 1);
 
 
-	jive_surface_set_clip(srf, &new_clip);
+	jive_surface_push_clip(srf, &new_clip, &pop_clip);
 
 
 	lua_getglobal(L, "tostring");
@@ -480,7 +478,7 @@ int jiveL_textarea_draw(lua_State *L) {
 		y += peer->line_height;
 	}
 	jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
-	jive_surface_set_clip(srf, &old_clip);
+	jive_surface_set_clip(srf, &pop_clip);
 
 	/* draw scrollbar */
 	if (peer->has_scrollbar && !peer->is_header_widget) {

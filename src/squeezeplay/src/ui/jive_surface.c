@@ -365,6 +365,17 @@ void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r) {
 	SDL_SetClipRect(srf->sdl, &tmp);
 }
 
+
+void jive_surface_push_clip(JiveSurface *srf, SDL_Rect *r, SDL_Rect *pop)
+{
+	SDL_Rect tmp;
+
+	jive_surface_get_clip(srf, pop);
+	jive_rect_intersection(r, pop, &tmp);
+	jive_surface_set_clip(srf, &tmp);
+}
+
+
 void jive_surface_set_clip_arg(JiveSurface *srf, Uint16 x, Uint16 y, Uint16 w, Uint16 h) {
 	SDL_Rect tmp;
 	if (!srf->sdl) {

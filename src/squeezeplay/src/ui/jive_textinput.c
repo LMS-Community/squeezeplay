@@ -142,7 +142,7 @@ int jiveL_textinput_draw(lua_State *L) {
 	const char *text;
 	size_t cursor, text_len;
 	int indent;
-	SDL_Rect old_clip, new_clip;
+	SDL_Rect pop_clip, new_clip;
 	Uint16 text_h, text_x, text_y, text_cy, text_w, cursor_x, cursor_w, cursor_h;
 	const char *validchars, *validchars_end;
 	unsigned int len_1, len_2, len_3;
@@ -269,14 +269,12 @@ int jiveL_textinput_draw(lua_State *L) {
 
 	//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w, peer->w.bounds.y + peer->w.bounds.h, 0xFF00007F); // XXXX
 
-	jive_surface_get_clip(srf, &old_clip);
-
 	/* background clip */
 	new_clip.x = peer->w.bounds.x;
 	new_clip.y = peer->w.bounds.y;
 	new_clip.w = peer->w.bounds.w;
 	new_clip.h = peer->w.bounds.h;
-	jive_surface_set_clip(srf, &new_clip);
+	jive_surface_push_clip(srf, &new_clip, &pop_clip);
 
 	/* draw wheel */
 	if (drawLayer && peer->wheel_tile && strlen(validchars)) {
@@ -296,13 +294,15 @@ int jiveL_textinput_draw(lua_State *L) {
 		jive_tile_blit_centered(peer->cursor_tile, srf, cursor_x + (cursor_w / 2), text_cy, cursor_w, text_h);
 	}
 
+	jive_surface_set_clip(srf, &pop_clip);
+
 
 	/* content clip */
 	new_clip.x = peer->w.bounds.x + peer->w.padding.left;
 	new_clip.y = peer->w.bounds.y + peer->w.padding.top;
 	new_clip.w = peer->w.bounds.w - peer->w.padding.left - peer->w.padding.right;
 	new_clip.h = peer->w.bounds.h - peer->w.padding.top - peer->w.padding.bottom;
-	jive_surface_set_clip(srf, &new_clip);
+	jive_surface_push_clip(srf, &new_clip, &pop_clip);
 
 	/* draw text label */
 	if (drawLayer && peer->font) {
@@ -420,7 +420,7 @@ int jiveL_textinput_draw(lua_State *L) {
 	}
 
 
-	jive_surface_set_clip(srf, &old_clip);
+	jive_surface_set_clip(srf, &pop_clip);
 
 	lua_pop(L, 4);
 

@@ -365,6 +365,7 @@ void jive_surface_get_offset(JiveSurface *src, Sint16 *x, Sint16 *y);
 void jive_surface_set_offset(JiveSurface *src, Sint16 x, Sint16 y);
 void jive_surface_get_clip(JiveSurface *srf, SDL_Rect *r);
 void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r);
+void jive_surface_push_clip(JiveSurface *srf, SDL_Rect *r, SDL_Rect *pop);
 void jive_surface_set_clip_arg(JiveSurface *srf, Uint16 x, Uint16 y, Uint16 w, Uint16 h);
 void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w, Uint16 *h);
 void jive_surface_flip(JiveSurface *srf);
