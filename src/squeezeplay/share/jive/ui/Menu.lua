@@ -924,6 +924,7 @@ local function _eventHandler(self, event)
 		for i,widget in ipairs(self.widgets) do
 			widget:_event(event)
 		end
+		self.scrollbar:_event(event)
 
 		self:reLayout()
 		return EVENT_UNUSED
