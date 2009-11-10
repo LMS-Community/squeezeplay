@@ -3,6 +3,10 @@
 #
 include ../config
 include ../config_include.${PLATFORM}
+CFLAGS ?= -O2 -Wall $(MYCFLAGS)
+
+.c.o:
+	$(CC) $(CFLAGS) $(MYCFLAGS) -c -o $@ $<
 
 #------
 # Hopefully no need to change anything below this line
