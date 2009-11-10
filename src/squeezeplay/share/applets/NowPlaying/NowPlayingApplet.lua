@@ -59,6 +59,8 @@ local shuffleModes = {
 	mode1 = 'shuffleSong',
 	mode2 = 'shuffleAlbum',
 }
+
+local SCROLL_TIMEOUT = 750
 	
 ----------------------------------------------------------------------------------------
 -- Helper Functions
@@ -120,6 +122,7 @@ function init(self)
 	jnt:subscribe(self)
 	self.player = false
 	self.lastVolumeSliderAdjustT = 0
+	self.cumulativeScrollTicks = 0
 end
 
 function notify_playerShuffleModeChange(self, player, shuffleMode)
@@ -344,7 +347,7 @@ function _titleText(self, token)
 		local x = self.player:getPlaylistCurrentIndex()
 		if x >= 1 and y > 1 then
 			local xofy = tostring(self:string('SCREENSAVER_NOWPLAYING_OF', x, y))
-			title = tostring(self:string(modeTokens[token])) .. ' ' .. xofy
+			title = tostring(self:string(modeTokens[token])) ..  ' • ' .. xofy
 		else
 			title = tostring(self:string(modeTokens[token]))
 		end
@@ -774,6 +777,49 @@ function _installListeners(self, window)
 	window:addActionListener("go_now_playing", self, toggleNPScreenStyle)
 	--also, no longer listening for hold in this situation, Ben and I felt that was a bug
 	
+	-- half a spin of the wheel on baby or controller takes you to the next NP style as well
+	-- this is the function to do that
+	window:addListener(EVENT_SCROLL,
+		function(event)
+			local scroll = event:getScroll()
+			local dir
+			if scroll > 0 then
+				dir = 1
+			else
+				dir = -1
+			end
+			local now = Framework:getTicks()
+			-- direction changed?
+			if self.lastScrollDirection ~= dir then
+				self.lastScrollDirection = dir
+				self.lastScrollTime = now
+				self.cumulativeScrollTicks = scroll
+				return EVENT_CONSUME
+			end
+
+			-- timeout reached?
+			if self.lastScrollTime + SCROLL_TIMEOUT < now then
+				-- reset cumulativeScrollTicks
+				self.cumulativeScrollTicks = 0
+			end
+
+			self.cumulativeScrollTicks = self.cumulativeScrollTicks + math.abs(scroll)
+
+			-- threshhold reached?
+			if self.cumulativeScrollTicks >= 8 then
+				Framework:pushAction('go_now_playing') 
+				self.cumulativeScrollTicks = 0
+				self.lastScrollDirection  = nil
+				self.lastScrollTime = nil
+			else
+				self.lastScrollTime = now
+				self.lastScrollDirection = dir
+			end
+
+			return EVENT_CONSUME
+
+        end
+        )
 end
 
 function _setPlayerVolume(self, value)
@@ -820,7 +866,7 @@ function _createTitleGroup(self, window, buttonStyle)
 
 		text = Button(Label("text", self.mainTitle), 
 			function()
-				Framework:pushAction("go_now_playing")
+				Framework:pushAction('go_current_track_info') 
 				return EVENT_CONSUME
 			end
 		),
@@ -907,7 +953,7 @@ function _createUI(self)
 
 	local launchContextMenu = 
 		function() 
-			Framework:pushAction('go_current_track_info') 
+			Framework:pushAction('go_now_playing') 
 			return EVENT_CONSUME 
 		end
 
