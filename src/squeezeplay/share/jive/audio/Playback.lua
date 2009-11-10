@@ -488,9 +488,12 @@ function _streamRead(self, networkErr)
 
 	local n = self.stream:read(self)
 	while n do
-		-- stop reading, we will be added back by the timer. this
-		-- prevents the streambuf starving the cpu
-		self.jnt:t_removeRead(self.stream)
+		-- stop reading if the decoder is running. the socket will
+		-- be added again by the status timer. this prevents the 
+		-- streambuf starving the cpu
+		if self.sentResumeDecoder then
+			self.jnt:t_removeRead(self.stream)
+		end
 
 		_, networkErr = Task:yield(false)
 
