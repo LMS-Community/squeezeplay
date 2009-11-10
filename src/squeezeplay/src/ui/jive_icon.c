@@ -241,7 +241,7 @@ int jiveL_icon_draw(lua_State *L) {
 	 * 2: surface
 	 * 3: layer
 	 */
-
+	SDL_Rect pop_clip, new_clip;
 	IconWidget *peer = jive_getpeer(L, 1, &iconPeerMeta);
 	JiveSurface *srf = tolua_tousertype(L, 2, 0);
 	bool drawLayer = luaL_optinteger(L, 3, JIVE_LAYER_ALL) & peer->w.layer;
@@ -253,12 +253,18 @@ int jiveL_icon_draw(lua_State *L) {
 	if (!drawLayer || !peer->img) {
 		return 0;
 	}
+	new_clip.x = peer->w.bounds.x;
+	new_clip.y = peer->w.bounds.y;
+	new_clip.w = peer->w.bounds.w;
+	new_clip.h = peer->w.bounds.h;
+	jive_surface_push_clip(srf, &new_clip, &pop_clip);
 
 	//jive_surface_boxColor(srf, peer->w.bounds.x, peer->w.bounds.y, peer->w.bounds.x + peer->w.bounds.w-1, peer->w.bounds.y + peer->w.bounds.h-1, 0xFF00007F);
 
 	jive_surface_blit_clip(peer->img, peer->image_width * peer->anim_frame, 0, peer->image_width, peer->image_height,
 			       srf, peer->w.bounds.x + peer->offset_x, peer->w.bounds.y + peer->offset_y);
 
+	jive_surface_set_clip(srf, &pop_clip);
 	return 0;
 }
 
