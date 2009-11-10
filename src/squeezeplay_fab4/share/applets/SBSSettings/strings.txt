@@ -27,18 +27,20 @@ SD_CARD_FREE
 	EN	Free:\n%s
 
 
-NETWORK_SHARING
-	EN	Network Sharing
+SHARING
+	EN	Sharing
 
 SHARING_ENABLE
-	EN	Sharing:\n%s
+	EN	Enable Sharing
 
 SHARING_ACCOUNT
-	EN	Account:\n%s
+	EN	Set Sharing Account
 
 SHARING_PASSWORD
-	EN	Password:\n%s
+	EN	Set Sharing Password
 
+SHARING_HOWTO
+	EN	Sharing allows you to transfer files from your Computer to Squeezebox Touch.\nUser: %s Password: %s
 
 
 

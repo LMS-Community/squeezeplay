@@ -18,6 +18,14 @@ function jiveVersion(meta)
 end
 
 
+function defaultSettings(meta)
+	return {
+		[ "sharingAccount" ] = "Squeezebox",
+		[ "sharingPassword" ] = "1234",
+	}
+end
+
+
 function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('sbs_settings', 'advancedSettings', "USB_SD_STORAGE", function(applet, ...) applet:SBSSettingsMenu() end))
 end

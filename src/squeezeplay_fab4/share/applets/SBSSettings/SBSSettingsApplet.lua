@@ -12,11 +12,15 @@ local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
 local Framework        = require("jive.ui.Framework")
+local Checkbox         = require("jive.ui.Checkbox")
 local Label            = require("jive.ui.Label")
+local Group            = require("jive.ui.Group")
+local Keyboard         = require("jive.ui.Keyboard")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
 local Surface          = require("jive.ui.Surface")
 local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
+local Textinput        = require("jive.ui.Textinput")
 local Window           = require("jive.ui.Window")
 
 local debug            = require("jive.utils.debug")
@@ -29,6 +33,8 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+-- ------------------------------ DEVICES ------------------------------ --
+
 local devicesTests = {
 	"USB_DISK_VOLUMENAME",
 	"USB_DISK_SIZE",
@@ -36,13 +42,6 @@ local devicesTests = {
 	"SD_CARD_VOLUMENAME",
 	"SD_CARD_SIZE",
 	"SD_CARD_FREE",
-}
-
-
-local networkSharingTests = {
-	"SHARING_ENABLE",
-	"SHARING_ACCOUNT",
-	"SHARING_PASSWORD",
 }
 
 
@@ -133,29 +132,198 @@ function showDevicesMenu(self)
 	return window
 end
 
+-- ------------------------------ SHARING ------------------------------ --
+
+function _enableSharing(self, window)
+	-- enable Samba	
+	log:info("Enabling Samba Access")
+	os.execute("echo enabled > /etc/samba/status");
+	os.execute("/etc/init.d/samba restart");
+end
+
+
+function _disableSharing(self, window)
+	-- disable Samba	
+	log:info("Disabling Samba Access")
+	os.execute("echo disabled > /etc/samba/status");
+	os.execute("/etc/init.d/samba stop");
+end
+
+
+function _fileMatch(file, pattern)
+	local fi = io.open(file, "r")
+
+	for line in fi:lines() do
+		if string.match(line, pattern) then
+			fi:close()
+			return true
+		end
+	end
+	fi:close()
+	
+	return false
+end
+
+
+function _updateSharingHelpText(self)
+	self.howto = Textarea("help_text", self:string("SHARING_HOWTO", self:getSettings()['sharingAccount'], self:getSettings()['sharingPassword']))
+	self.networkSharingMenu:setHeaderWidget(self.howto)
+end
+
+
+function _setSharingAccount(self)
+	local window = Window("input", self:string("SHARING_ACCOUNT"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	local v = Textinput.textValue(self:getSettings()['sharingAccount'], 1, 32)
+	local textinput = Textinput("textinput", v,
+				function(widget, value)
+					value = tostring(value)
+
+					if #value == 0 then
+						return false
+					end
+
+					-- Remove some special chars samba cannot handle
+					value = string.gsub(value, '\\', '')
+					value = string.gsub(value, '"', '')
+					value = string.gsub(value, "'", '')
+
+					-- Store for later reference
+					self:getSettings()['sharingAccount'] = value
+					self:storeSettings()
+
+					-- Quote to support spaces etc.
+					value = '"' .. value .. '"'
+
+					-- Set samba user alias for root
+					-- Samba daemon doesn't need to be restarted
+					os.execute("echo 'root = " .. value .. "' > /etc/samba/smbusers")
+
+					self:_updateSharingHelpText()
+
+					-- close the window
+					window:playSound("WINDOWHIDE")
+					window:hide()
+
+					return true
+				end
+			)
+
+	local backspace = Keyboard.backspace()
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
+
+        window:addWidget(group)
+	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
+        window:focusWidget(group)
+
+--	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
+
+	self:tieAndShowWindow(window)
+end
+
+
+function _setSharingPassword(self)
+
+	local window = Window("input", self:string("SHARING_PASSWORD"), 'setuptitle')
+	window:setAllowScreensaver(false)
+
+	-- Allow length to be 0 for no password
+	local v = Textinput.textValue(self:getSettings()['sharingPassword'], 0, 32)
+
+	local textinput = Textinput("textinput", v,
+				function(widget, value)
+					value = tostring(value)
+
+					-- Remove some special chars samba cannot handle
+					value = string.gsub(value, "'", "")
+
+					-- Store for later reference
+					-- Not sure we want that as it is cleartext
+					self:getSettings()['sharingPassword'] = value
+					self:storeSettings()
+
+					-- Escape some special chars
+					value = string.gsub(value, '\\', '\\\\')
+					value = string.gsub(value, '"', '\\"')
+					value = string.gsub(value, "`", "\\`")
+
+					-- Quote to support spaces etc.
+					value = '"' .. value .. '"'
+
+					-- Set samba password
+					-- Samba daemon doesn't need to be restarted
+					-- A valid smb.conf file is needed
+					os.execute("(echo " .. value .. "; echo " .. value .. ") | smbpasswd -s -a -c /etc/samba/smb.conf.dist root")
+
+					self:_updateSharingHelpText()
+
+					-- close the window
+					window:playSound("WINDOWHIDE")
+					window:hide()
+
+					return true
+				end
+			)
+
+	local backspace = Keyboard.backspace()
+	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
+
+        window:addWidget(group)
+	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
+        window:focusWidget(group)
+
+--	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
+
+	self:tieAndShowWindow(window)
+end
+
 
 function showNetworkSharingMenu(self)
-	local window = Window("text_list", self:string("NETWORK_SHARING"))
+	local window = Window("text_list", self:string("SHARING"))
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
+	local sharingEnabled = _fileMatch("/etc/samba/status", "enabled")
+
 	local menu = SimpleMenu("menu")
 
-	self.labels = {}
+	menu:addItem({
+		text = self:string("SHARING_ENABLE"),
+		style = 'item_choice',
+		check = Checkbox("checkbox",
+					function(_, isSelected)
+						if isSelected then
+							self:_enableSharing()
+						else
+							self:_disableSharing()
+						end
+					end,
+					sharingEnabled
+				)
+	})
 
-	for i,name in ipairs(networkSharingTests) do
-		self.labels[name] = {
-			text = self:string(name, ''),
-			style = 'item_info',
-		}
-		menu:addItem(self.labels[name])
-	end
+	menu:addItem({
+		text = self:string("SHARING_ACCOUNT"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			self:_setSharingAccount()
+		end
+	})
+
+	menu:addItem({
+		text = self:string("SHARING_PASSWORD"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			self:_setSharingPassword()
+		end
+	})
 
 	self.networkSharingMenu = menu
---	doNetworkSharingValues(self)
---	menu:addTimer(5000, function()
---		doNetworkSharingValues(self)
---	end)
+
+	self:_updateSharingHelpText()
 
 	window:addWidget(menu)
 
@@ -163,6 +331,7 @@ function showNetworkSharingMenu(self)
 	return window
 end
 
+-- ------------------------------ Main Menu ---------------------------- --
 
 function SBSSettingsMenu(self)
 	local window = Window("text_list", self:string("USB_SD_STORAGE"))
@@ -176,14 +345,16 @@ function SBSSettingsMenu(self)
 	menu:addItem({
 		text = self:string("DEVICES"),
 		style = 'item',
+		sound = "WINDOWSHOW",		
 		callback = function ()
 			self:showDevicesMenu()
 		end
 	})
 
 	menu:addItem({
-		text = self:string("NETWORK_SHARING"),
+		text = self:string("SHARING"),
 		style = 'item',
+		sound = "WINDOWSHOW",		
 		callback = function ()
 			self:showNetworkSharingMenu()
 		end
