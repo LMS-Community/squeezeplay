@@ -104,6 +104,7 @@ function param(self)
 			{
 				style = 'nowplaying_art_only',
 				artworkSize = '480x272',
+				suppressTitlebar = 1,
 			},
 			{
 				style = 'nowplaying_text_only',
@@ -2632,19 +2633,7 @@ function skin(self, s)
 		title = _uses(s.title, {
 			zOrder = 1,
 			text = {
-				line = {
-						{
-							font = _boldfont(TITLE_FONT_SIZE),
-							height = 16,
-						},
-						{
-							font = _font(1),
-							height = 10,
-						},
-						{
-							font = _font(TITLE_FONT_SIZE - 6),
-						},
-				},
+				font = _boldfont(TITLE_FONT_SIZE),
 			},
 			rbutton  = {
 				font    = _font(14),
@@ -2871,6 +2860,15 @@ function skin(self, s)
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
+			npprogressB = {
+				w = 193,
+				h = 25,
+				padding     = { 0, 0, 0, 18 },
+		                position = LAYOUT_SOUTH,
+				horizontal = 1,
+				bgImg = _songProgressBackground,
+				img = _songProgressBar,
+			},
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
@@ -2934,17 +2932,6 @@ function skin(self, s)
 
 
 	-- sliders
-	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
-	s.npprogressB = {
-		w = 193,
-		h = 25,
-		padding     = { 0, 0, 0, 18 },
-                position = LAYOUT_SOUTH,
-                horizontal = 1,
-                bgImg = _songProgressBackground,
-                img = _songProgressBar,
-	}
-
 	s.npvolumeB = {
 		w = volumeBarWidth,
 		border = { 5, 3, 5, 0 },
@@ -2999,10 +2986,11 @@ function skin(self, s)
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
 		bgImg = Tile:fillColor(0x000000ff),
-		nptitle          = { hidden = 1 },
 		title            = { hidden = 1 },
-		npcontrols       = { hidden = 1},
+		nptitle          = { hidden = 1 },
+		npcontrols       = { hidden = 1 },
 		npprogress       = { hidden = 1 },
+		npprogressNB     = { hidden = 1 },
 		npartistgroup    = { hidden = 1 },
 		npalbumgroup     = { hidden = 1 },
 		npartwork = {
@@ -3023,7 +3011,6 @@ function skin(self, s)
 	s.nowplaying_art_only.pressed = s.nowplaying_art_only
 
 	s.nowplaying_text_only = _uses(s.nowplaying, {
-	
 		nptitle          = { 
                         x          = 10,
 			h          = 35,
@@ -3055,13 +3042,34 @@ function skin(self, s)
 		npprogress = {
 			x = 0,
 			y = 200,
+			w = WH_FILL,
 			elapsed = {
 				w = 50,
 			},
+			remain = {
+				w = 50,
+			},
+			npprogressB = {
+				w = WH_FILL,
+				h = 25,
+				padding     = { 0, 0, 0, 18 },
+		                position = LAYOUT_SOUTH,
+				horizontal = 1,
+				bgImg = _songProgressBackground,
+				img = _songProgressBar,
+			},
+
+		},
+		npprogressNB = {
+			x = 10,
+			y = 200,
+			padding = { 0, 0, 0, 5 },
 		},
 	})
-	s.nowplaying_art_only.pressed = s.nowplaying_art_only
-
+	s.nowplaying_text_only.pressed = s.nowplaying_text_only
+	s.nowplaying_text_only.nptitle.pressed = s.nowplaying_text_only.nptitle
+	s.nowplaying_text_only.npalbumgroup.pressed = s.nowplaying_text_only.npalbumgroup
+	s.nowplaying_text_only.npartistgroup.pressed = s.nowplaying_text_only.npartistgroup
 
 	s.brightness_group = {
 		order = {  'down', 'div1', 'slider', 'div2', 'up' },

@@ -479,14 +479,18 @@ function _refreshRightButton(self)
 		return
 	end
 	if playlistSize == 1 and self.rbutton == 'playlist' then
-		log:debug('changing rbutton to + button')
-		self.window:removeWidget(self.titleGroup)
-		self.window:addWidget(self.titleGroupOneTrackPlaylist)
+		if not self.suppressTitlebar then
+			log:debug('changing rbutton to + button')
+			self.window:removeWidget(self.titleGroup)
+			self.window:addWidget(self.titleGroupOneTrackPlaylist)
+		end
 		self.rbutton = 'more'
 	elseif self.rbutton == 'more' and playlistSize > 1 then
-		log:debug('changing rbutton to playlist button')
-		self.window:removeWidget(self.titleGroupOneTrackPlaylist)
-		self.window:addWidget(self.titleGroup)
+		if not self.suppressTitlebar then
+			log:debug('changing rbutton to playlist button')
+			self.window:removeWidget(self.titleGroupOneTrackPlaylist)
+			self.window:addWidget(self.titleGroup)
+		end
 		self.rbutton = 'playlist'
 	end
 end
@@ -1207,7 +1211,11 @@ function _createUI(self)
 
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
-	window:addWidget(self.titleGroup)
+	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
+	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')
+	if not self.suppressTitlebar then
+		window:addWidget(self.titleGroup)
+	end
 	window:addWidget(self.nptrackGroup)
 	window:addWidget(self.npalbumGroup)
 	window:addWidget(self.npartistGroup)
