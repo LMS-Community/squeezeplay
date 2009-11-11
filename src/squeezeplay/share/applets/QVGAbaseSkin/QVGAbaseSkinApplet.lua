@@ -477,7 +477,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.item = {
 		order = { "icon", "text", "arrow" },
-		padding = { 10, 6, 5, 6 },
+		padding = { 10, 1, 5, 1 },
 		bgImg = s.img.pencilLineMenuDivider,
 		text = {
 			padding = { 0, 0, 0, 0 },
