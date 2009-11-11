@@ -192,7 +192,8 @@ function notify_playerPower(self, player, power)
 		end
 	else
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:_titleText(mode))
+			local titleText = self:_titleText(mode)
+			self.titleGroup:setWidgetValue("text", titleText)
 		end
 	end
 end
@@ -418,6 +419,7 @@ function _updateAll(self)
 end
 
 function _updateButtons(self, playerStatus)
+	log:warn('_updateButtons')
 	-- no sense updating the transport buttons unless
 	-- we are connected to a player and have buttons initialized
 	if not self.player and self.controlsGroup then
@@ -426,12 +428,10 @@ function _updateButtons(self, playerStatus)
 
 	local remoteMeta = playerStatus.remoteMeta
 
-	local shuffleIcon = self.controlsGroup:getWidget('shuffleMode')
-	local repeatIcon  = self.controlsGroup:getWidget('repeatMode')
-
 	local buttons = remoteMeta and remoteMeta.buttons
 	-- if we have buttons data, the remoteMeta is remapping some buttons
 	if buttons then
+		log:debug('remap buttons to whatever remoteMeta needs')
 		-- disable rew or fw as needed
 		if buttons.rew and buttons.rew == 0 then
 			self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
@@ -467,8 +467,11 @@ function _updateButtons(self, playerStatus)
 
 	-- if we don't have remoteMeta and button remapping, go back to defaults
 	else
+		log:debug('reset buttons to defaults')
 		self.controlsGroup:setWidget('rew', self.rewButton)
 		self.controlsGroup:setWidget('fwd', self.fwdButton)
+		self.controlsGroup:setWidget('shuffleMode', self.shuffleButton)
+		self.controlsGroup:setWidget('repeatMode', self.repeatButton)
 	end
 end
 
@@ -691,8 +694,7 @@ function _updateShuffle(self, mode)
 		return
 	end
 	if self.controlsGroup then
-		local shuffleIcon = self.controlsGroup:getWidget('shuffleMode')
-		shuffleIcon:setStyle(shuffleModes[token])
+		self.shuffleButton:setStyle(shuffleModes[token])
 	end
 end
 
@@ -714,8 +716,7 @@ function _updateRepeat(self, mode)
 		return
 	end
 	if self.controlsGroup then
-		local repeatIcon = self.controlsGroup:getWidget('repeatMode')
-		repeatIcon:setStyle(repeatModes[token])
+		self.repeatButton:setStyle(repeatModes[token])
 	end
 end
 
@@ -728,7 +729,8 @@ function _updateMode(self, mode)
 		token = 'off'
 	end
 	if self.titleGroup then
-		self.titleGroup:setWidgetValue("text", self:_titleText(token))
+		local titleChange = self:_titleText(token)
+		self.titleGroup:setWidgetValue("text", titleChange)
 	end
 	if self.controlsGroup then
 		local playIcon = self.controlsGroup:getWidget('play')
@@ -1099,13 +1101,13 @@ function _createUI(self)
 		playIcon:setStyle('pause')
 	end
 
-	local repeatIcon = Button(Icon('repeatMode'),
+	self.repeatButton = Button(Icon('repeatMode'),
 				function() 
 					Framework:pushAction("repeat_toggle")
 				return EVENT_CONSUME 
 			end
 			)
-	local shuffleIcon = Button(Icon('shuffleMode'),
+	self.shuffleButton = Button(Icon('shuffleMode'),
 				function() 
 					Framework:pushAction("shuffle_toggle")
 				return EVENT_CONSUME 
@@ -1188,8 +1190,8 @@ function _createUI(self)
 		  	play = playIcon,
 			fwd  = self.fwdButton,
 
-			repeatMode  = repeatIcon,
-			shuffleMode = shuffleIcon,
+			repeatMode  = self.repeatButton,
+			shuffleMode = self.shuffleButton,
 
 		  	volDown  = Button(
 				Icon('volDown'),
