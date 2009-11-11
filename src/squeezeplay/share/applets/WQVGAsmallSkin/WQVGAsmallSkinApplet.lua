@@ -2876,16 +2876,14 @@ function skin(self, s)
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
 		npprogressNB = {
-			position = LAYOUT_NONE,
-			x = 0,
-			y = TITLE_HEIGHT + 180 - 50,
-			padding = { 180 + 22, 0, 0, 5 },
 			order = { "elapsed" },
+			position = LAYOUT_NONE,
+			x = 202,
+			y = TITLE_HEIGHT + 29 + 26 + 32 + 32 + 23,
 			elapsed = {
 				w = WH_FILL,
 				align = "left",
-				padding = { 0, 0, 0, 5 },
-				font = _boldfont(18),
+				font = _boldfont(12),
 				fg = { 0xe7, 0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
