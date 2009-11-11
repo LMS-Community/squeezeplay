@@ -296,6 +296,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	--FIXME: Bug 15030, need way to cycle through NP views on Baby/Controller
 	s.nowplaying_small_art = _uses(s.nowplaying, {
+		title = {
+			h = 60,
+		},
 		bgImg = false,
 		npartwork = {
 			position = LAYOUT_NORTH,

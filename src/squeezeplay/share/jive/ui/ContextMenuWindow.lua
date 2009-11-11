@@ -70,6 +70,7 @@ function show(self)
 	local topContextMenuWindow = self:_getTopWindowContextMenu()
 	if topContextMenuWindow then
 		self._bg = topContextMenuWindow._bg
+		self:setButtonAction('lbutton', 'back')
 		Window.show(self, Window.transitionPushLeftStaticTitle)
 	else
 		Window.show(self)

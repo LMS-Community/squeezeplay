@@ -419,7 +419,7 @@ function _updateAll(self)
 end
 
 function _updateButtons(self, playerStatus)
-	log:warn('_updateButtons')
+	log:debug('_updateButtons')
 	-- no sense updating the transport buttons unless
 	-- we are connected to a player and have buttons initialized
 	if not self.player and self.controlsGroup then
