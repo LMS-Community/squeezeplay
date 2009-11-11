@@ -641,15 +641,13 @@ function screensaverSetting(self, menuItem, mode)
 
 	local window = Window("text_list", menuItem.text, 'settingstitle')
 
-	if System:getMachine() ~= 'squeezeplay' then
-		local token = 'SCREENSAVER_SELECT_PLAYING_HELP'
-		if mode == 'whenStopped' then
-			token = 'SCREENSAVER_SELECT_STOPPED_HELP'
-		elseif mode == 'whenOff' then
-			token = 'SCREENSAVER_SELECT_OFF_HELP'
-		end
-		menu:setHeaderWidget(Textarea("help_text", self:string(token)))
+	local token = 'SCREENSAVER_SELECT_PLAYING_HELP'
+	if mode == 'whenStopped' then
+		token = 'SCREENSAVER_SELECT_STOPPED_HELP'
+	elseif mode == 'whenOff' then
+		token = 'SCREENSAVER_SELECT_OFF_HELP'
 	end
+	menu:setHeaderWidget(Textarea("help_text", self:string(token)))
 	window:addWidget(menu)
 
 	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
