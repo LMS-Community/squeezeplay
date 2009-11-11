@@ -2024,7 +2024,7 @@ function skin(self, s)
 			order = { 'npalbum' },
 	                position   = _tracklayout.position,
 			x          = _tracklayout.x,
-			y          = 39 + 40 + 43 + 43,
+			y          = 39 + 40 + 43 + 41,
 			npalbum = {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
@@ -2209,6 +2209,9 @@ function skin(self, s)
 	s.nowplaying.pressed = s.nowplaying
 	s.nowplaying_art_only.pressed = s.nowplaying_art_only
 	s.nowplaying_text_only.pressed = s.nowplaying_text_only
+	s.nowplaying_text_only.nptitle.pressed = s.nowplaying_text_only.nptitle
+	s.nowplaying_text_only.npartistgroup.pressed = s.nowplaying_text_only.npartistgroup
+	s.nowplaying_text_only.npalbumgroup.pressed = s.nowplaying_text_only.npalbumgroup
 
 	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
