@@ -372,9 +372,13 @@ void decode_keepalive(int ticks) {
 
 
 static int decode_thread_execute(void *unused) {
+	int decode_debug;
+
 	LOG_DEBUG(log_audio_decode, "decode_thread_execute");
 
 	decode_watchdog = watchdog_get();
+
+	decode_debug = getenv("SQUEEZEPLAY_DECODE_DEBUG") != NULL;
 
 	while (true) {
 		mqueue_func_t handler;
@@ -397,6 +401,37 @@ static int decode_thread_execute(void *unused) {
 		if (can_decode && decoder
 		    && (current_decoder_state & DECODE_STATE_RUNNING)) {
 			decoder->callback(decoder_data);
+
+			/* Additional debugging enabled with an environment
+			 * variable, used to track decoder performance.
+			 */
+			if (decode_debug) {
+				size_t decode_size, decode_full, bytesl, bytesh;
+				size_t output_full, output_size;
+				double dbuf, obuf;
+				u64_t elapsed;
+
+				decode_audio_lock();
+				output_full = fifo_bytes_used(&decode_audio->fifo);
+				output_size = decode_audio->fifo.size;
+
+				if (decode_audio->track_sample_rate) {
+					elapsed = decode_audio->elapsed_samples;
+					elapsed = (elapsed * 1000) / decode_audio->track_sample_rate;
+				}
+				else {
+					elapsed = 0;
+				}
+				decode_audio_unlock();
+
+				streambuf_get_status(&decode_size, &decode_full, &bytesl, &bytesh);
+
+				dbuf = (decode_full * 100) / (double)decode_size;
+				obuf = (output_full * 100) / (double)output_size;
+
+
+				printf("elapsed:%lld buffers: %0.1f%%/%0.1f%%\n", elapsed, dbuf, obuf);
+			}
 		}
 
 		decode_sample_fill_buffer();
