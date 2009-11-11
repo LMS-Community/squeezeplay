@@ -211,11 +211,26 @@ flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
 
 # libmad
-libmad-0.15.1b/Makefile:
-	cd libmad-0.15.1b; ./configure --enable-fpm=default  --prefix=${PREFIX}
+LIBMAD_DIR=libmad-0.15.1b
+generated/${LIBMAD_DIR}/_patched.txt:
+	mkdir -p generated; cd generated; ftp ftp://ftp.mars.org/pub/mpeg/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
+	touch ${LIBMAD_DIR}/aclocal.m4; \
+	patch -p0 < ../libmad-0.15.1b-universal-configure.ac.patch; \
+	patch -p0 < ../libmad-0.15.1b-universal-config.h.in.patch; \
+	touch ${LIBMAD_DIR}/Makefile.am ; \
+	touch ${LIBMAD_DIR}/config.h ; \
+	touch ${LIBMAD_DIR}/Makefile.in ; \
+	patch -p0 < ../libmad-0.15.1b-universal-configure.patch; \
+	touch ${LIBMAD_DIR}/_patched.txt
 
-libmad: libmad-0.15.1b/Makefile
-	cd libmad-0.15.1b; make && make install
+		
+generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt 
+	cd generated/${LIBMAD_DIR}; ./configure  --enable-fpm=default  --prefix=${PREFIX}
+	#cd generated/${LIBMAD_DIR}; ./configure  --enable-fpm=default  --prefix=${PREFIX}
+
+libmad: generated/${LIBMAD_DIR}/_patched.txt generated/${LIBMAD_DIR}/Makefile
+	cd generated/${LIBMAD_DIR}; make --debug=a && make install
+
 
 # ogg
 Tremor/Makefile:
@@ -256,6 +271,14 @@ freefont:
 
 squeezeplay_dmg: squeezeplay/Makefile
 	cd squeezeplay; make SqueezePlay_dmg
+
+
+.PHONY: clean_generated
+clean_generated:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated
+	
 #
 # clean
 #
@@ -335,3 +358,6 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: Build dir"
 	-cd $(BASE_DIR)/build; rm -rf osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated

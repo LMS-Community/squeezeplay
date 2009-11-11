@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="."
+				AdditionalIncludeDirectories=".;&quot;..\..\generated\libmad-0.15.1b\msvc++&quot;"
 				PreprocessorDefinitions="NDEBUG;FPM_INTEL;WIN32;_LIB;HAVE_CONFIG_H;ASO_ZEROCHECK"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -171,7 +171,7 @@
 			Filter="c"
 			>
 			<File
-				RelativePath="..\bit.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\bit.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -193,7 +193,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\decoder.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\decoder.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -215,7 +215,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\fixed.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\fixed.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -237,7 +237,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\frame.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\frame.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -259,7 +259,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\huffman.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\huffman.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -281,7 +281,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\layer12.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\layer12.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -303,7 +303,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\layer3.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\layer3.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -325,7 +325,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\stream.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\stream.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -347,7 +347,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\synth.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\synth.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -369,7 +369,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\timer.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\timer.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -391,7 +391,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\version.c"
+				RelativePath="..\..\generated\libmad-0.15.1b\version.c"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -418,55 +418,55 @@
 			Filter="h"
 			>
 			<File
-				RelativePath="..\bit.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\bit.h"
 				>
 			</File>
 			<File
-				RelativePath="config.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\msvc++\config.h"
 				>
 			</File>
 			<File
-				RelativePath="..\decoder.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\decoder.h"
 				>
 			</File>
 			<File
-				RelativePath="..\fixed.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\fixed.h"
 				>
 			</File>
 			<File
-				RelativePath="..\frame.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\global.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\global.h"
 				>
 			</File>
 			<File
-				RelativePath="..\huffman.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\huffman.h"
 				>
 			</File>
 			<File
-				RelativePath="..\layer12.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\layer12.h"
 				>
 			</File>
 			<File
-				RelativePath="..\layer3.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\layer3.h"
 				>
 			</File>
 			<File
-				RelativePath="..\stream.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\stream.h"
 				>
 			</File>
 			<File
-				RelativePath="..\synth.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\synth.h"
 				>
 			</File>
 			<File
-				RelativePath="..\timer.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\timer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\version.h"
+				RelativePath="..\..\generated\libmad-0.15.1b\version.h"
 				>
 			</File>
 		</Filter>
@@ -475,23 +475,23 @@
 			Filter="dat"
 			>
 			<File
-				RelativePath="..\D.dat"
+				RelativePath="..\..\generated\libmad-0.15.1b\D.dat"
 				>
 			</File>
 			<File
-				RelativePath="..\imdct_s.dat"
+				RelativePath="..\..\generated\libmad-0.15.1b\imdct_s.dat"
 				>
 			</File>
 			<File
-				RelativePath="..\qc_table.dat"
+				RelativePath="..\..\generated\libmad-0.15.1b\qc_table.dat"
 				>
 			</File>
 			<File
-				RelativePath="..\rq_table.dat"
+				RelativePath="..\..\generated\libmad-0.15.1b\rq_table.dat"
 				>
 			</File>
 			<File
-				RelativePath="..\sf_table.dat"
+				RelativePath="..\..\generated\libmad-0.15.1b\sf_table.dat"
 				>
 			</File>
 		</Filter>
