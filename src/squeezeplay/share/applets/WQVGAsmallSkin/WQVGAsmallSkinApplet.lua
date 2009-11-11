@@ -2956,6 +2956,10 @@ function skin(self, s)
 
 	-- pressed styles
 	s.nowplaying.title.pressed = _uses(s.nowplaying.title, {
+		text = {
+			fg = { 0xB3, 0xB3, 0xB3 },
+			sh = { },
+		},
 		lbutton = {
 			bgImg = pressedTitlebarButtonBox,
 		},
@@ -2965,9 +2969,24 @@ function skin(self, s)
 	})
 
 	s.nowplaying.pressed = s.nowplaying
-	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
-	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
-	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
+	s.nowplaying.nptitle.pressed = _uses(s.nowplaying.nptitle, {
+		nptrack = {
+			fg = { 0xB3, 0xB3, 0xB3 },
+			sh = { },
+		},
+	})
+	s.nowplaying.npalbumgroup.pressed = _uses(s.nowplaying.npalbumgroup, {
+		npalbum = {
+			fg = { 0xB3, 0xB3, 0xB3 },
+			sh = { },
+		},
+	})
+	s.nowplaying.npartistgroup.pressed = _uses(s.nowplaying.npartistgroup, {
+		npartist = {
+			fg = { 0xB3, 0xB3, 0xB3 },
+			sh = { },
+		},
+	})
 	s.nowplaying.npartwork.pressed = s.nowplaying.npartwork
 
 	s.nowplaying.npcontrols.pressed = {
@@ -3075,9 +3094,24 @@ function skin(self, s)
 		},
 	})
 	s.nowplaying_text_only.pressed = s.nowplaying_text_only
-	s.nowplaying_text_only.nptitle.pressed = s.nowplaying_text_only.nptitle
-	s.nowplaying_text_only.npalbumgroup.pressed = s.nowplaying_text_only.npalbumgroup
-	s.nowplaying_text_only.npartistgroup.pressed = s.nowplaying_text_only.npartistgroup
+	s.nowplaying_text_only.nptitle.pressed = _uses(s.nowplaying_text_only.nptitle, {
+		nptrack = {
+			fg = { 0xb3, 0xb3, 0xb3 },
+			sh = { },
+		},
+	})
+	s.nowplaying_text_only.npalbumgroup.pressed = _uses(s.nowplaying_text_only.npalbumgroup, {
+		npalbum = {
+			fg = { 0xb3, 0xb3, 0xb3 },
+			sh = { },
+		},
+	})
+	s.nowplaying_text_only.npartistgroup.pressed = _uses(s.nowplaying_text_only.npartistgroup, {
+		npartist = {
+			fg = { 0xb3, 0xb3, 0xb3 },
+			sh = { },
+		},
+	})
 
 	s.brightness_group = {
 		order = {  'down', 'div1', 'slider', 'div2', 'up' },
