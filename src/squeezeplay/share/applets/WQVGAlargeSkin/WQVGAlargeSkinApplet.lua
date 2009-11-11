@@ -95,7 +95,7 @@ function param(self)
 		nowPlayingScreenStyles = { 
 			{ 
 				style = 'nowplaying' ,
-				artworkSize = '180x180',
+				artworkSize = '190x190',
 			},
 			{
 				style = 'nowplaying_art_only',
@@ -104,7 +104,7 @@ function param(self)
 			},
 			{
 				style = 'nowplaying_text_only',
-				artworkSize = '180x180',
+				artworkSize = '190x190',
 			},
 		},
 		radialClock = {
@@ -503,17 +503,16 @@ function skin(self, s)
 		imgpath .. "Alerts/alert_progress_bar_body.png",
 	})
 
-
         local _songProgressBackground = _loadHTile(self, {
-		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd_l.png",
-		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd.png",
-		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_bkgrd_r.png",
+		imgpath .. "NowPlaying/np_progressbar_bkgrd_l.png",
+		imgpath .. "NowPlaying/np_progressbar_bkgrd.png",
+		imgpath .. "NowPlaying/np_progressbar_bkgrd_r.png",
 	})
 
         local _songProgressBar = _loadHTile(self, {
 		nil,
 		nil,
-		imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_slider.png",
+		imgpath .. "NowPlaying/np_progressbar_slider_10ft.png",
         })
 
 --------- DEFAULT WIDGET STYLES ---------
@@ -1957,8 +1956,8 @@ function skin(self, s)
 	local _tracklayout = {
 		border = { 4, 0, 4, 0 },
 		position = LAYOUT_NONE,
-		x = 198,
-		w = screenWidth - (198) - 10,
+		x = 210,
+		w = screenWidth - (210) - 10,
 		align = "left",
 		lineHeight = NP_TRACK_FONT_SIZE,
 		fg = WHITE,
@@ -1984,20 +1983,11 @@ function skin(self, s)
 
 	s.nowplaying = _uses(s.window, {
 		title = _uses(s.title, {
+			h = 39,
 			text = {
-				line = {
-						{
-							font = _boldfont(TITLE_FONT_SIZE),
-							height = 34,
-						},
-						{
-							font = _font(1),
-							height = 1,
-						},
-						{
-							font = _font(TITLE_FONT_SIZE - 14),
-						},
-				},
+				padding = { 10, 18, 0, 0 },
+				font = _boldfont(18),
+				align = 'left',
 			},
 			rbutton = {
 				hidden = 1,
@@ -2007,20 +1997,20 @@ function skin(self, s)
 			order = { 'nptrack' },
 	                position   = _tracklayout.position,
 			x          = _tracklayout.x,
-			y          = TITLE_HEIGHT + 20,
+			y          = 39 + 30,
 			nptrack = {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
 				fg         = _tracklayout.fg,
 				font       = _boldfont(NP_TRACK_FONT_SIZE),
-		                h          = 45,
+				h          = 50,
 			},
 		},
 		npartistgroup = {
 			order = { 'npartist' },
 	                position   = _tracklayout.position,
 			x          = _tracklayout.x,
-			y          = TITLE_HEIGHT + 75,
+			y          = 39 + 40 + 43,
 			npartist = {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
@@ -2034,7 +2024,7 @@ function skin(self, s)
 			order = { 'npalbum' },
 	                position   = _tracklayout.position,
 			x          = _tracklayout.x,
-			y          = TITLE_HEIGHT + 120,
+			y          = 39 + 40 + 43 + 43,
 			npalbum = {
 				w          = _tracklayout.w,
 				align      = _tracklayout.align,
@@ -2047,8 +2037,8 @@ function skin(self, s)
 			hidden = 1,
 		},
 		npartwork = {
-			w          = 180,
-			border     = { 10, TITLE_HEIGHT + 4, 10, 0 },
+			w          = 190,
+			border     = { 8, 45, 12, 5 },
 			position   = LAYOUT_WEST,
 			align      = "center",
 			artwork    = {
@@ -2092,50 +2082,62 @@ function skin(self, s)
 		},
 
 		npprogress = {
+			bgImg = titleBox,
+			h = 31,
 			position = LAYOUT_SOUTH,
-			padding  = { 0, 10, 0, 5 },
+			padding  = { 0, 8, 0, 5 },
 			order    = { "elapsed", "slider", "remain" },
 			elapsed  = {
-				w = 75,
+				w = 60,
 				align = 'right',
-				padding = { 8, 0, 8, 15 },
+				padding = { 8, 8, 0, 15 },
 				font = _boldfont(18),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
 			remain = {
-				w = 75,
+				w = 60,
 				align = 'left',
-				padding = { 8, 0, 8, 15 },
+				padding = { 8, 8, 8, 15 },
 				font = _boldfont(18),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
 			elapsedSmall  = {
-				w = 75,
+				w = 60,
 				align = 'right',
-				padding = { 8, 0, 8, 15 },
+				padding = { 8, 8, 8, 15 },
 				font = _boldfont(12),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
 			remainSmall = {
-				w = 75,
+				w = 60,
 				align = 'left',
-				padding = { 8, 0, 8, 15 },
+				padding = { 8, 8, 8, 15 },
 				font = _boldfont(12),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
 			},
 			text = {
-				w       = 75,
+				w       = 60,
 				align   = 'right',
-				padding = { 8, 0, 8, 15 },
+				padding = { 8, 4, 8, 15 },
 				font    = _boldfont(18),
 				fg      = { 0xe7, 0xe7, 0xe7 },
 				sh      = { 0x37, 0x37, 0x37 },
 			},
-		},
+			npprogressB = {
+		                w          = WH_FILL,
+				h          = 31,
+				padding    = { 0, 0, 0, 18 },
+				position   = LAYOUT_SOUTH,
+				horizontal = 1,
+				bgImg      = _songProgressBackground,
+				img        = _songProgressBar,
+			}
+
+	},
 
 		npprogressNB = {
 			position = LAYOUT_SOUTH,
@@ -2207,16 +2209,6 @@ function skin(self, s)
 	s.nowplaying.pressed = s.nowplaying
 	s.nowplaying_art_only.pressed = s.nowplaying_art_only
 	s.nowplaying_text_only.pressed = s.nowplaying_text_only
-
-      s.npprogressB = {
-                w = WH_FILL,
-                h = 25,
-                padding     = { 0, 0, 0, 18 },
-                position = LAYOUT_SOUTH,
-                horizontal = 1,
-                bgImg = _songProgressBackground,
-                img = _songProgressBar,
-        }
 
 	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
