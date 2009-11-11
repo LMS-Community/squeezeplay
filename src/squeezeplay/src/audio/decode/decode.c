@@ -406,10 +406,11 @@ static int decode_thread_execute(void *unused) {
 			 * variable, used to track decoder performance.
 			 */
 			if (decode_debug) {
-				size_t decode_size, decode_full, bytesl, bytesh;
+				size_t decode_size, decode_full;
 				size_t output_full, output_size;
 				double dbuf, obuf;
 				u64_t elapsed;
+				u32_t bytesl, bytesh;
 
 				decode_audio_lock();
 				output_full = fifo_bytes_used(&decode_audio->fifo);
