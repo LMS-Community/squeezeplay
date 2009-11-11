@@ -99,7 +99,7 @@ function param(self)
 			},
 			{
 				style = 'nowplaying_art_only',
-				artworkSize = '470x265',
+				artworkSize = '470x262',
 				suppressTitlebar = 1,
 			},
 			{
@@ -257,7 +257,9 @@ function skin(self, s)
 	local backButton              = _loadImageTile(self,  imgpath .. "Icons/icon_back_button_tb.png")
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
-	local powerButton             = _loadImageTile(self,  imgpath .. "../../WQVGAsmallSkin/images/Icons/icon_power_button_tb.png")
+	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
+
+	local nocturneWallpaper = _loadImageTile(self, "applets/SetupWallpaper/wallpaper/fab4_nocturne.png")
 
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
@@ -2153,7 +2155,7 @@ function skin(self, s)
  
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
-                bgImg = Tile:fillColor(0x000000ff),
+                bgImg = nocturneWallpaper,
                 title            = { hidden = 1 },
                 nptitle          = { hidden = 1 },
                 npcontrols       = { hidden = 1 },
