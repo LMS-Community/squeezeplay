@@ -555,7 +555,7 @@ function skin(self, s)
 		padding = { 0, 0, 0, 0 },
 		itemHeight = THREE_ITEM_HEIGHT,
 		fg = {0xbb, 0xbb, 0xbb },
-		font = _boldfont(250),
+		font = _boldfont(160),
 	}
 
 	s.menu_hidden = _uses(s.menu, {

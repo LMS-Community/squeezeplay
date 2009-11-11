@@ -315,22 +315,6 @@ int jiveL_menu_draw(lua_State *L) {
 	lua_getfield(L, 1, "accelKey");
 	accelKey = lua_tostring(L, -1);
 
-	/* draw acceleration key letter */
-	if (drawLayer && accelKey) {
-		JiveSurface *txt;
-		Uint16 srf_w, srf_h, txt_w, txt_h;
-
-		txt = jive_font_draw_text(peer->font, peer->fg, accelKey);
-
-		jive_surface_get_size(srf, &srf_w, &srf_h);
-		jive_surface_get_size(txt, &txt_w, &txt_h);
-
-		jive_surface_blit(txt, srf, (srf_w - txt_w) / 2, (srf_h - txt_h) / 2);
-
-		jive_surface_free(txt);
-	}
-
-
 	/* draw widgets */
 	new_clip.x = peer->w.bounds.x;
 	new_clip.y = peer->w.bounds.y;
@@ -372,6 +356,21 @@ int jiveL_menu_draw(lua_State *L) {
 			lua_call(L, 3, 0);
 		}	
 		lua_pop(L, 1);
+	}
+
+	/* draw acceleration key letter */
+	if (drawLayer && accelKey) {
+		JiveSurface *txt;
+		Uint16 srf_w, srf_h, txt_w, txt_h;
+
+		txt = jive_font_draw_text(peer->font, peer->fg, accelKey);
+
+		jive_surface_get_size(srf, &srf_w, &srf_h);
+		jive_surface_get_size(txt, &txt_w, &txt_h);
+
+		jive_surface_blit(txt, srf, (srf_w - txt_w) / 2, (srf_h - txt_h) / 2);
+
+		jive_surface_free(txt);
 	}
 
 	/* draw header widget */

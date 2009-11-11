@@ -464,7 +464,7 @@ function skin(self, s, reload, useDefaultSize)
 		padding = 0,
 		border = { 0, 36, 0, 0 },
 		itemHeight = c.LANDSCAPE_LINE_ITEM_HEIGHT,
-		font = _boldfont(200),
+		font = _boldfont(80),
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
 	}
