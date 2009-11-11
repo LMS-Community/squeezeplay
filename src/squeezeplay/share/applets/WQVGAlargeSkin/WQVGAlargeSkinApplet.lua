@@ -99,7 +99,8 @@ function param(self)
 			},
 			{
 				style = 'nowplaying_art_only',
-				artworkSize = '480x180',
+				artworkSize = '470x265',
+				suppressTitlebar = 1,
 			},
 			{
 				style = 'nowplaying_text_only',
@@ -2151,21 +2152,31 @@ function skin(self, s)
 	})
  
 	s.nowplaying_art_only = _uses(s.nowplaying, {
-		nptitle       = { hidden = 1 },
-		npartistgroup = { hidden = 1 },
-		npalbumgroup  = { hidden = 1 },
-		npartwork = {
-			w = 480,
-			position = LAYOUT_WEST,
-			h = 180,
-			border     = { 0, TITLE_HEIGHT + 4, 0, 0 },
-			align = "center",
-			artwork = {
-				h = 180,
-				w = 480,
-			},
-		},
-	})
+
+                bgImg = Tile:fillColor(0x000000ff),
+                title            = { hidden = 1 },
+                nptitle          = { hidden = 1 },
+                npcontrols       = { hidden = 1 },
+                npprogress       = { hidden = 1 },
+                npprogressNB     = { hidden = 1 },
+                npartistgroup    = { hidden = 1 },
+                npalbumgroup     = { hidden = 1 },
+                npartwork = {
+                        w = 470,
+                        position = LAYOUT_CENTER,
+                        align = "center",
+                        h = 272,
+                        border = 0,
+                        padding = 10,
+                        artwork = {
+                                w = 480,
+                                border = 0,
+                                padding = 0,
+                                img = false,
+                        },
+                },
+        })
+        s.nowplaying_art_only.pressed = s.nowplaying_art_only
 
 	s.nowplaying_text_only = _uses(s.nowplaying, {
 		nptitle = {

@@ -103,7 +103,7 @@ function param(self)
 			},
 			{
 				style = 'nowplaying_art_only',
-				artworkSize = '480x272',
+				artworkSize = '470x262',
 				suppressTitlebar = 1,
 			},
 			{
@@ -2994,12 +2994,12 @@ function skin(self, s)
 		npartistgroup    = { hidden = 1 },
 		npalbumgroup     = { hidden = 1 },
 		npartwork = {
-			w = 480,
+			w = 470,
 			position = LAYOUT_CENTER,
 			align = "center",
 			h = 272,
 			border = 0,
-			padding = 0,
+			padding = 10,
 			artwork = {
 				w = 480,
 				border = 0,
