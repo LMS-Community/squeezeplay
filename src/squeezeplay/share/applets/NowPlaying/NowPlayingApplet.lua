@@ -917,6 +917,7 @@ function toggleNPScreenStyle(self)
 	local newWindow = _createUI(self)
 	newWindow:replace(self.window, Window.transitionFadeIn)
 	self.window = newWindow
+	self:_refreshRightButton()
 end
 
 
