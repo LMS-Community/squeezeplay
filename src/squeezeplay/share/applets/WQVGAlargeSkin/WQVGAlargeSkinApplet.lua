@@ -2098,7 +2098,7 @@ function skin(self, s)
 			remain = {
 				w = 60,
 				align = 'left',
-				padding = { 8, 8, 8, 15 },
+				padding = { 0, 8, 8, 15 },
 				font = _boldfont(18),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
@@ -2106,7 +2106,7 @@ function skin(self, s)
 			elapsedSmall  = {
 				w = 60,
 				align = 'right',
-				padding = { 8, 8, 8, 15 },
+				padding = { 8, 8, 0, 15 },
 				font = _boldfont(12),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
@@ -2114,7 +2114,7 @@ function skin(self, s)
 			remainSmall = {
 				w = 60,
 				align = 'left',
-				padding = { 8, 8, 8, 15 },
+				padding = { 0, 8, 8, 15 },
 				font = _boldfont(12),
 				fg = { 0xe7,0xe7, 0xe7 },
 				sh = { 0x37, 0x37, 0x37 },
@@ -2122,7 +2122,7 @@ function skin(self, s)
 			text = {
 				w       = 60,
 				align   = 'right',
-				padding = { 8, 4, 8, 15 },
+				padding = { 0, 4, 0, 15 },
 				font    = _boldfont(18),
 				fg      = { 0xe7, 0xe7, 0xe7 },
 				sh      = { 0x37, 0x37, 0x37 },
