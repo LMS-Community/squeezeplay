@@ -518,10 +518,11 @@ function skin(self, s, reload, useDefaultSize)
 			padding    = { 10, NP_TRACK_FONT_SIZE + 18, 10, 0 },
 			font       = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
-		npalbumgroup = { hidden = 1},
+		nptrack       = { hidden = 1},
+		npalbumgroup  = { hidden = 1},
 		npartistgroup = { hidden = 1},
-		npalbum = { hidden = 1},
-		npartist = { hidden = 1},
+		npalbum       = { hidden = 1},
+		npartist      = { hidden = 1},
 	
 		-- cover art
 		npartwork = {
