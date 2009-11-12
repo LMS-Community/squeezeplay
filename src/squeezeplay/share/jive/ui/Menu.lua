@@ -170,7 +170,7 @@ function _selectAndHighlightItemUnderPointer(self, event)
 		local selectedIndex = self.topItem + itemShift
 		if selectedIndex <= self.listSize then
 			self.usePressedStyle = true
-			self:setSelectedIndex(selectedIndex)
+			self:setSelectedIndex(selectedIndex, nil, true)
 		else
 			--outside of any menu item
 			return false
@@ -222,11 +222,11 @@ function handleDrag(self, dragAmountY, byItemOnly, forceAccel)
 			self.dragYSinceShift = self.dragYSinceShift % self.itemHeight
 			if itemShift > 0 and self.currentShiftDirection <= 0 then
 				--changing shift direction, move cursor so scroll wil occur
-				self:setSelectedIndex(self.topItem + self.numWidgets - 2)
+				self:setSelectedIndex(self.topItem + self.numWidgets - 2, nil, true)
 				self.currentShiftDirection = 1
 			elseif itemShift < 0 and self.currentShiftDirection >= 0 then
 				--changing shift direction, move cursor so scroll wil occur
-				self:setSelectedIndex(self.topItem + 1)
+				self:setSelectedIndex(self.topItem + 1, nil, true)
 				self.currentShiftDirection = -1
 			end
 
@@ -1255,7 +1255,7 @@ end
 
 --[[
 
-=head2 jive.ui.Menu:setSelectedIndex(index, coerce)
+=head2 jive.ui.Menu:setSelectedIndex(index, coerce, noReLayout)
 
 Sets I<index> as the selected menu item.
 if I<coerce> is true, index < 1 will be treat as 1 and index > listSize will be treated as listSize.
@@ -1275,7 +1275,9 @@ function setSelectedIndex(self, index, coerce)
 
 	if index >= 1 and index <= self.listSize then
 		self.selected = index
-		self:reLayout()
+		if not noReLayout then
+			self:reLayout()
+		end
 	end
 end
 

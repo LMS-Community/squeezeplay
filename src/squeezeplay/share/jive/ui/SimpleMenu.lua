@@ -758,6 +758,23 @@ function _skin(self)
 end
 
 
+function setSelectedIndex(self, index, coerce, noReLayout)
+	if self.headerWidget and not noReLayout then
+		local coercedIndex = _coerce(index + self.virtualItemCount, #self.items)
+		local currentIndex = self:getSelectedIndex() or 1
+
+		local scroll = coercedIndex - currentIndex
+		if scroll ~= 0 and self.headerWidget.handleMenuHeaderWidgetScrollBy then
+			self.headerWidget:handleMenuHeaderWidgetScrollBy(scroll, self)
+		end
+		Menu.setSelectedIndex(self, index, coerce, noReLayout)
+	else
+		--defer to standard parent handling
+		Menu.setSelectedIndex(self, index, coerce, noReLayout)
+	end
+end
+
+
 function __tostring(self)
 	return "SimpleMenu()"
 end
