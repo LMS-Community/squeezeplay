@@ -97,10 +97,10 @@ local CLEARPAD_PER_PIXEL_Y = 4248/272
 local CHIRAL_GAIN          = .4
 
 -- distance travelled from mouse origin where PRESS or HOLD event will be ignored and drag takes over (is relatively high due it being finger interface, finger may roll while waiting for hold to trigger)
-local MOUSE_QUICK_SLOPPY_PRESS_DISTANCE = 35
-local MOUSE_QUICK_DRAG_DISTANCE = 50
+local MOUSE_QUICK_SLOPPY_PRESS_DISTANCE = 24
+local MOUSE_QUICK_DRAG_DISTANCE = 35
 local MOUSE_QUICK_TOUCH_TIME_MS = 120
-local MOUSE_SLOW_DRAG_DISTANCE = 25
+local MOUSE_SLOW_DRAG_DISTANCE = 20
 
 local ITEMS_BEFORE_SCROLL_DEFAULT = 1
 local GO_AS_CANCEL_TIME = 1500 -- (Note: under high load a quick double click might still trigger ht ecancel due to using getTicks() (which would include the even tloop time_. ideally we'd be based on input time, not getTicks, but lock doesn't always have easy access to input event)
