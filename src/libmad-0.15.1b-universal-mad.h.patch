@@ -1,0 +1,8 @@
+--- libmad-0.15.1b/mad.h (original)
++++ libmad-0.15.1b/mad.h Thu Oct 23 08:40:33 2008
+@@ -24,7 +24,7 @@
+ extern "C" {
+ # endif
+
+-# define FPM_INTEL
++# define FPM_DEFAULT

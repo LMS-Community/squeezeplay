@@ -1,0 +1,49 @@
+--- libmad-0.15.1b/config.h.in (original)
++++ libmad-0.15.1b/config.h.in Wed Oct 22 20:37:42 2008
+@@ -1,4 +1,7 @@
+ /* config.h.in.  Generated from configure.ac by autoheader.  */
++
++/* Define if building universal (internal helper macro) */
++#undef AC_APPLE_UNIVERSAL_BUILD
+
+ /* Define to enable diagnostic debugging support. */
+ #undef DEBUG
+@@ -103,13 +106,13 @@
+ /* Define to the version of this package. */
+ #undef PACKAGE_VERSION
+
+-/* The size of a `int', as computed by sizeof. */
++/* The size of `int', as computed by sizeof. */
+ #undef SIZEOF_INT
+
+-/* The size of a `long', as computed by sizeof. */
++/* The size of `long', as computed by sizeof. */
+ #undef SIZEOF_LONG
+
+-/* The size of a `long long', as computed by sizeof. */
++/* The size of `long long', as computed by sizeof. */
+ #undef SIZEOF_LONG_LONG
+
+ /* Define to 1 if you have the ANSI C header files. */
+@@ -118,9 +121,17 @@
+ /* Version number of package */
+ #undef VERSION
+
+-/* Define to 1 if your processor stores words with the most significant byte
+-   first (like Motorola and SPARC, unlike Intel and VAX). */
+-#undef WORDS_BIGENDIAN
++/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
++   significant byte first (like Motorola and SPARC, unlike Intel). */
++#if defined AC_APPLE_UNIVERSAL_BUILD
++# if defined __BIG_ENDIAN__
++#  define WORDS_BIGENDIAN 1
++# endif
++#else
++# ifndef WORDS_BIGENDIAN
++#  undef WORDS_BIGENDIAN
++# endif
++#endif
+
+ /* Define to empty if `const' does not conform to ANSI C. */
+ #undef const
+
