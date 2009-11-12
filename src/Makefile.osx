@@ -229,7 +229,8 @@ generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt
 	#cd generated/${LIBMAD_DIR}; ./configure  --enable-fpm=default  --prefix=${PREFIX}
 
 libmad: generated/${LIBMAD_DIR}/_patched.txt generated/${LIBMAD_DIR}/Makefile
-	cd generated/${LIBMAD_DIR}; make --debug=a && make install
+	cd generated/${LIBMAD_DIR}; make && make install
+#	cd generated/${LIBMAD_DIR}; make --debug=a && make install
 
 
 # ogg
