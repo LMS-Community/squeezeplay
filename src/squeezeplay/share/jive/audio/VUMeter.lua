@@ -65,9 +65,9 @@ function _layout(self)
 
 	elseif self.style == "vumeter_analog" then
 		self.x1 = x
-		self.x2 = x
+		self.x2 = x + (w / 2)
 		self.y = y
-		self.w = w
+		self.w = w / 2
 		self.h = h
 	end
 end
@@ -133,9 +133,9 @@ function _drawMeter(self, surface, sampleAcc, ch, x, y, w, h)
 --		local x,y,w,h = self:getBounds()
 
 		if ch == 1 then
-			self.bgImg:blitClip(x + self.cap[ch] * 240, y, w, h, surface, 0, 0)
+			self.bgImg:blitClip(x + self.cap[ch] * w, y, w, h, surface, x, 0)
 		else
-			self.bgImg:blitClip(x + self.cap[ch] * 240, y, w, h, surface, 240, 0)
+			self.bgImg:blitClip(x + self.cap[ch] * w, y, w, h, surface, x, 0)
 		end
 	end
 end

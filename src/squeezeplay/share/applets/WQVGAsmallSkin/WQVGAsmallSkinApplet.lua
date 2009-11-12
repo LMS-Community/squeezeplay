@@ -2920,8 +2920,8 @@ function skin(self, s)
 	s.vumeter_analog = {
 		x = 0,
 		y = 0,
-		w = 240,
-		h = 272 - 2,
+		w = 480,
+		h = 272,
 		border = { 0, 0, 0, 0},
 		padding = { 0, 0, 0, 0 },
 		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
