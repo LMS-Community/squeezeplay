@@ -1539,7 +1539,7 @@ function _updateWidgets(self)
 
 	local selected = _coerce(self.selected or 1, self.listSize)
 	if #self.widgets > 0 and (selected < self.topItem
-		or selected >= self.topItem + self.numWidgets) then
+		or selected > self.topItem + self.numWidgets) then
 		-- update the list to keep the selection in view
 		_scrollList(self)
 	end
