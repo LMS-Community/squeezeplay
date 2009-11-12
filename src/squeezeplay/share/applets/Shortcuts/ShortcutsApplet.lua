@@ -160,32 +160,32 @@ function _getInputMap(self)
 					[KEY_PLAY] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "PLAY"),  weight = 31},
 				},
 			}
-		end
-		if System:hasPresetKeys() then
-			self.inputMap.keyActionMappings.press[KEY_PRESET_1] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "1"),  weight = 31} 
-			self.inputMap.keyActionMappings.press[KEY_PRESET_2] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "2"),  weight = 31} 
-			self.inputMap.keyActionMappings.press[KEY_PRESET_3] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "3"),  weight = 31} 
-			self.inputMap.keyActionMappings.press[KEY_PRESET_4] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "4"),  weight = 31} 
-			self.inputMap.keyActionMappings.press[KEY_PRESET_5] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "5"),  weight = 31} 
-			self.inputMap.keyActionMappings.press[KEY_PRESET_6] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "6"),  weight = 31} 
-
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_1] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "1"),  weight = 32} 
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_2] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "2"),  weight = 32} 
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_3] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "3"),  weight = 32} 
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_4] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "4"),  weight = 32} 
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_5] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "5"),  weight = 32} 
-			self.inputMap.keyActionMappings.hold[KEY_PRESET_6] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "6"),  weight = 32} 
-		end
-		if System:hasMuteKey() then
-			self.inputMap.keyActionMappings.press[KEY_MUTE] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESS", "MUTE"),  weight = 31}
-			self.inputMap.keyActionMappings.hold[KEY_MUTE] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "MUTE"),  weight = 32}
-		end
-		if not System:hasHomeAsPowerKey() then
-			self.inputMap.keyActionMappings.hold[KEY_HOME] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "HOME"),  weight = 32}
-		end
-		if System:hasAlarmKey() then
-			self.inputMap.keyActionMappings.press[KEY_ALARM] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESS", "ALARM"),  weight = 31}
-			self.inputMap.keyActionMappings.hold[KEY_ALARM] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "ALARM"),  weight = 32}
+			if System:hasPresetKeys() then
+				self.inputMap.keyActionMappings.press[KEY_PRESET_1] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "1"),  weight = 31} 
+				self.inputMap.keyActionMappings.press[KEY_PRESET_2] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "2"),  weight = 31} 
+				self.inputMap.keyActionMappings.press[KEY_PRESET_3] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "3"),  weight = 31} 
+				self.inputMap.keyActionMappings.press[KEY_PRESET_4] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "4"),  weight = 31} 
+				self.inputMap.keyActionMappings.press[KEY_PRESET_5] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "5"),  weight = 31} 
+				self.inputMap.keyActionMappings.press[KEY_PRESET_6] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_PRESS", "6"),  weight = 31} 
+	
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_1] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "1"),  weight = 32} 
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_2] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "2"),  weight = 32} 
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_3] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "3"),  weight = 32} 
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_4] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "4"),  weight = 32} 
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_5] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "5"),  weight = 32} 
+				self.inputMap.keyActionMappings.hold[KEY_PRESET_6] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESET_HOLD", "6"),  weight = 32} 
+			end
+			if System:hasMuteKey() then
+				self.inputMap.keyActionMappings.press[KEY_MUTE] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESS", "MUTE"),  weight = 31}
+				self.inputMap.keyActionMappings.hold[KEY_MUTE] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "MUTE"),  weight = 32}
+			end
+			if not System:hasHomeAsPowerKey() then
+				self.inputMap.keyActionMappings.hold[KEY_HOME] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "HOME"),  weight = 32}
+			end
+			if System:hasAlarmKey() then
+				self.inputMap.keyActionMappings.press[KEY_ALARM] = {text = self:string("SHORTCUTS_INPUT_KEY_PRESS", "ALARM"),  weight = 31}
+				self.inputMap.keyActionMappings.hold[KEY_ALARM] = {text = self:string("SHORTCUTS_INPUT_KEY_HOLD", "ALARM"),  weight = 32}
+			end
 		end
 	end
 

@@ -424,7 +424,12 @@ local function _eventHandler(self, event)
 		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 			self:resetDragData()
 			if self.locked == nil then
-				self:scrollBy(self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN)
+				local scrollAmount = self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN
+				if self.textMode then
+					self:dispatchNewEvent(EVENT_SCROLL, scrollAmount)
+				else
+					self:scrollBy(scrollAmount)
+				end
 				return EVENT_CONSUME
 			end
 		end
