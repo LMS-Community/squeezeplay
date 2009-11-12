@@ -82,10 +82,10 @@ local FLICK_THRESHOLD_START_SPEED = 90/1000
 local FLICK_RECENT_THRESHOLD_DISTANCE = 5
 
 --speed (pixels/ms) that per pixel afterscrolling occurs, otherwise is per item when faster.
-local FLICK_THRESHOLD_BY_PIXEL_SPEED = 400/1000
+local FLICK_THRESHOLD_BY_PIXEL_SPEED = 600/1000
 
 --speed (pixels/ms) at which flick scrolling will stop
-local FLICK_STOP_SPEED =  3/1000
+local FLICK_STOP_SPEED =  1/1000
 
 local FLICK_STOP_SPEED_WITH_SNAP =  60/1000
 
@@ -95,17 +95,18 @@ local SNAP_PIXEL_SHIFT = 1 -- todo: anything other than one will not works since
 local FLICK_FORCE_ACCEL_SPEED = 72 * 30/1000
 
 --time after flick starts that decel occurs
-local FLICK_DECEL_START_TIME = 400
+local FLICK_DECEL_START_TIME = 100
 
 --time from decel start to scroll stop (trying new linger setting, which throws this off)
-local FLICK_DECEL_TOTAL_TIME = 600
+local FLICK_DECEL_TOTAL_TIME = 400
 
---If non zero, extra afterscroll time (FLICK_SPEED_DECEL_TIME_FACTOR * flickSpeed ) is
- -- added to FLICK_DECEL_TOTAL_TIME.  flick speed maxes out at about 3.
-local FLICK_SPEED_DECEL_TIME_FACTOR = 1500
+--extra afterscroll time (FLICK_SPEED_DECEL_TIME_FACTOR / flickSpeed ) is
+ -- multiplied by FLICK_DECEL_TOTAL_TIME.  flick speed maxes out at about 3.
+local FLICK_SPEED_DECEL_TIME_FACTOR = .8
+local FLICK_SPEED_DECEL_START_TIME_FACTOR = .7
 
 -- Only the mouse points gathered for the last FLICK_STALE_TIME will be used for flick calculation
-local FLICK_STALE_TIME = 100
+local FLICK_STALE_TIME = 190
 
 -- our class
 module(..., oo.class)
@@ -143,24 +144,11 @@ function updateFlickData(self, mouseEvent)
 			return
 		end
 	end
---	log:error("y:, ", y, " ticks:", ticks, " #self.flickData.points: ", #self.flickData.points)
 
 	--use last flick data collection time as initital scroll time to avoid jerky delay when afterscroll starts 
 	self.flickInitialScrollT = Framework:getTicks()
 
 	table.insert(self.flickData.points, {y = y, ticks = ticks})
-
-	--remove stale points
-	while #self.flickData.points > 1 do
-		local time = self.flickData.points[#self.flickData.points].ticks - self.flickData.points[1].ticks
-
-		if time > 100 then
-			--only collect events that occurred in the last few ms
-			table.remove(self.flickData.points, 1)
-		else
-			break
-		end
-	end
 
 	--remove any more than 20 points
 	if #self.flickData.points >= 20 then
@@ -196,7 +184,7 @@ function getFlickSpeed(self, itemHeight, mouseUpT)
 	if mouseUpT then
 		local delayUntilUp = mouseUpT - self.flickData.points[#self.flickData.points].ticks
 		if delayUntilUp > 25 then
-			-- a long delay since last point is one indication of a finger stop
+			-- a long delay since last point is one indication of a finger stop since lower level duplicate suppression may be in effect
 			return nil
 		end
 	end
@@ -257,9 +245,10 @@ function flick(self, initialSpeed, direction, noMinimum)
 		self.flickInitialDecelerationScrollT = nil
 		self.flickPreDecelY = 0
 
-		local decelTime = FLICK_DECEL_TOTAL_TIME + math.abs(FLICK_SPEED_DECEL_TIME_FACTOR * self.flickInitialSpeed)
+		local decelTime = FLICK_DECEL_TOTAL_TIME *  (1 + math.abs(math.pow(self.flickInitialSpeed / FLICK_SPEED_DECEL_TIME_FACTOR, 3)))
 		self.flickAccelRate = -self.flickInitialSpeed / decelTime
-		log:debug("*****Starting flick - decelTime: ", decelTime )
+		self.flickDecelStartT = FLICK_DECEL_START_TIME * (1 + math.abs(math.pow(self.flickInitialSpeed/FLICK_SPEED_DECEL_START_TIME_FACTOR, 3.5)))
+		log:debug("*****Starting flick - decelTime: ", decelTime, " self.flickDecelStartT: ", self.flickDecelStartT )
 	end
 
 	--continue flick
@@ -273,10 +262,12 @@ function flick(self, initialSpeed, direction, noMinimum)
 		self.flickPreDecelY = flickCurrentY
 
 		--slow speed if past decel time
-		if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > FLICK_DECEL_START_TIME then
+		if self.flickInitialDecelerationScrollT == nil and now - self.flickInitialScrollT > self.flickDecelStartT then
 			log:debug("*****Starting flick slow down")
 			self.flickInitialDecelerationScrollT = now
 		end
+		
+		byItemOnly = math.abs(self.flickInitialSpeed) > FLICK_THRESHOLD_BY_PIXEL_SPEED and now - self.flickInitialScrollT > 100
 	end
 
 	if self.flickInitialDecelerationScrollT then	
@@ -291,15 +282,15 @@ function flick(self, initialSpeed, direction, noMinimum)
 		else
 			-- y = v0*t +.5 * a * t^2
 			flickCurrentY = self.flickPreDecelY + self.flickInitialSpeed * elapsedTime + (.5 * self.flickAccelRate * elapsedTime * elapsedTime )
+			byItemOnly = math.abs(flickCurrentSpeed) > FLICK_THRESHOLD_BY_PIXEL_SPEED
 		end
-		
-		byItemOnly = flickCurrentSpeed > FLICK_THRESHOLD_BY_PIXEL_SPEED
+
 		local stopSpeed = FLICK_STOP_SPEED
 		if self.parent.snapToItemEnabled then
 			stopSpeed = FLICK_STOP_SPEED_WITH_SNAP
 		end
 		
-		if self.snapToItemInProgress or flickCurrentSpeed <= stopSpeed then
+		if self.snapToItemInProgress or flickCurrentSpeed < stopSpeed then
 			if self.parent.snapToItemEnabled and self.parent.pixelOffsetY ~= 0 then
 				log:debug("*******Snapping Flick at slow down point. current speed:", flickCurrentSpeed, " offset", self.parent.pixelOffsetY)
 				self.snapToItemInProgress = true
