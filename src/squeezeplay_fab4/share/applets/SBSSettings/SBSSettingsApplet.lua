@@ -54,22 +54,34 @@ end
 
 
 function doDevicesValues(self)
-	local usbLabel = "none"
-	local sdCardLabel = "none"
+	local usbLabel = tostring( self:string("DEVICES_NONE"))
+	local sdCardLabel = tostring( self:string("DEVICES_NONE"))
 	local blkid = io.popen("/sbin/blkid")
 
-	-- Allow a-z, A-Z, 0-9, '_' and ' ' in volume lables => [%w_ ]
+	-- Allow a-z, A-Z, 0-9, '_' , '-' and ' ' in volume lables => [%w_%- ]
 	-- Win2k and OSX 10.6.1 do not allow '.' in volume labels
 	for line in blkid:lines() do
 
-		local label = string.match(line, "/dev/sda1:%s*LABEL=\"([%w_ ]*)\"")
+		local label = string.match(line, "/dev/sda1:%s*LABEL=\"([%w_%- ]*)\"")
 		if label then
 			usbLabel = tostring(label)
+		else
+			-- No LABEL but a UUID means it is 'untitled'
+			local uuid = string.match(line, "/dev/sda1:%s*UUID=\"(%S*)\"")
+			if uuid then
+				usbLabel = tostring( self:string("DEVICES_UNTITLED"))
+			end
 		end
 
-		label = string.match(line, "/dev/mmcblk0p1:%s*LABEL=\"([%w_ ]*)\"")
+		label = string.match(line, "/dev/mmcblk0p1:%s*LABEL=\"([%w_%- ]*)\"")
 		if label then
 			sdCardLabel = tostring(label)
+		else
+			-- No LABEL but a UUID means it is 'untitled'
+			local uuid = string.match(line, "/dev/mmcblk0p1:%s*UUID=\"(%S*)\"")
+			if uuid then
+				sdCardLabel = tostring( self:string("DEVICES_UNTITLED"))
+			end
 		end
 	end
 	blkid:close()

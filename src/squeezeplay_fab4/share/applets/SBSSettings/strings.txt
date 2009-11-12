@@ -8,6 +8,12 @@ USB_SD_STORAGE
 DEVICES
 	EN	Devices
 
+DEVICES_NONE
+	EN	none
+
+DEVICES_UNTITLED
+	EN	untitled
+
 USB_DISK_VOLUMENAME
 	EN	USB Disk:\n%s
 
@@ -25,7 +31,6 @@ SD_CARD_SIZE
 
 SD_CARD_FREE
 	EN	Free:\n%s
-
 
 SHARING
 	EN	Sharing
