@@ -501,8 +501,8 @@ function settingsMinBrightnessShow (self, menuItem)
 
 --	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_ADJUST_HELP")))
 	window:addWidget(Group('brightness_group', {
-				div6 = Icon('div6'),
-				div7 = Icon('div7'),
+				div1 = Icon('div1'),
+				div2 = Icon('div2'),
 
 
 				down  = Button(
