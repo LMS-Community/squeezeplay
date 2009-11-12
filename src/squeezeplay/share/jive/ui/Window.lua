@@ -1277,7 +1277,7 @@ function transitionBumpDown(self)
 			local y = frames * 3
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
-			surface:setOffset(0, y)
+			surface:setOffset(0, y / 2)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
@@ -1305,7 +1305,7 @@ function transitionBumpUp(self)
 			local y = frames * 3
 
 			self:draw(surface, LAYER_FRAME | LAYER_LOWER)
-			surface:setOffset(0, -y)
+			surface:setOffset(0, -y / 2)
 			self:draw(surface, LAYER_CONTENT | LAYER_CONTENT_OFF_STAGE | LAYER_CONTENT_ON_STAGE | LAYER_TITLE)
 			surface:setOffset(0, 0)
 
