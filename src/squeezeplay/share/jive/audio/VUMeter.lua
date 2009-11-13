@@ -26,7 +26,7 @@ function __init(self, style)
 
 	obj.cap = { 0, 0 }
 
-	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE / 4)
+	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE)
 
 	return obj
 end
@@ -140,4 +140,15 @@ function _drawMeter(self, surface, sampleAcc, ch, x, y, w, h)
 	end
 end
 
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2009 Logitech. All Rights Reserved.
+
+This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+=cut
+--]]
 

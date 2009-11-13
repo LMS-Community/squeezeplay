@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2008 Logitech. All Rights Reserved.
+** Copyright 2007-2009 Logitech. All Rights Reserved.
 **
 ** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
 */
@@ -62,9 +62,6 @@ static int power_map[32] = {
 
 // Rendering related state variables
 
-// The position of the channel histogram in pixels
-static int channel_position[2];
-
 // The width of the channel histogram in pixels
 static int channel_width[2];
 
@@ -87,10 +84,6 @@ static int channel_flipped[2];
 // or show all of them?
 static int clip_subbands[2];
 
-// Grey level of the bar and bar cap
-static int bar_grey_level[2];
-static int bar_cap_grey_level[2];
-
 // FFT related state variables
 
 // The number of output points of the FFT. In clipped mode, we
@@ -103,16 +96,13 @@ static int sample_window;
 // The number of sample windows that we will average across.
 static int num_windows;
 
-// Should we compute the FFT based on the full bandwidth (0 to
-// Nyquist frequency) or half of it (0 to half Nyquist frequency)?
-static int bandwidth_half;
-
 // Should we combine the channel histograms and only show a single
 // channel?
 static int is_mono;
 
 // The value to use for computing preemphasis 
-static int preemphasis_db_per_khz;
+// TODO: needed as parameter?
+//static int preemphasis_db_per_khz;
 
 /////////////////////////////////////////////////////////
 //
@@ -129,83 +119,215 @@ double filter_window[MAX_SAMPLE_WINDOW];
 // based on a db/KHz value.
 double preemphasis[MAX_SUBBANDS];
 
-//remove//// The last set of values in the visualizer
-//remove//double last_values[2*MAX_SUBBANDS];
-
 // Used in power computation across multiple sample windows.
 // For a small window size, this could be stack based.
 float avg_power[2 * MAX_SUBBANDS];
 
 kiss_fft_cfg cfg = NULL;
 
-typedef struct {
-	int *ptr;
-	int value;
-} spectrum_defaults_t;
-
-
-// Parameters for the spectrum analyzer:
-//   0 - Channels: stereo == 0, mono == 1
-//   1 - Bandwidth: 0..22050Hz == 0, 0..11025Hz == 1
-//   2 - Preemphasis in dB per KHz
+// Parameters on the lua stack for the spectrum analyzer:
+//   2 - Channels: stereo == 0, mono == 1
 // Left channel parameters:
-//   3 - Position in pixels
-//   4 - Width in pixels
-//   5 - orientation: left to right == 0, right to left == 1
-//   6 - Bar width in pixels
-//   7 - Bar spacing in pixels
-//   8 - Clipping: show all subbands == 0, clip higher subbands == 1
-//   9 - Bar intensity (greyscale): 1-3
-//   10 - Bar cap intensity (greyscale): 1-3
+//   3 - Width in pixels
+//   4 - orientation: left to right == 0, right to left == 1
+//   5 - Bar width in pixels
+//   6 - Bar spacing in pixels
+//   7 - Clipping: show all subbands == 0, clip higher subbands == 1
 // Right channel parameters (not required for mono):
-//   11-18 - same as left channel parameters
+//   8-12 - same as left channel parameters
 
-// FIXME: when below compiler issue is fixed
-#define NUM_DEFAULTS 3
+int decode_spectrum_init( lua_State *L) {
+	int bar_size;
+	int l2int = 0;
+	int shiftsubbands;
 
-static spectrum_defaults_t defaults[NUM_DEFAULTS] = {
-  { &is_mono, 0 },
-  { &bandwidth_half, 0 },
-//  { &preemphasis_db_per_khz, 0x10000 }
-  { &preemphasis_db_per_khz, ( 0x10000 >> 16) }
-};
+	is_mono = luaL_optinteger(L, 2, 0);
 
+//	printf( "* is_mono: %d\n", is_mono);
 
-#define NUM_CHANNEL_DEFAULTS 8
+	channel_width[0] = luaL_optinteger(L, 3, 192);	// Default: 192
+	channel_flipped[0] = luaL_optinteger(L, 4, 0);	// Default: false
+	bar_width[0] = luaL_optinteger(L, 5, 2);	// Default: 2
+	bar_spacing[0] = luaL_optinteger(L, 6, 4);	// Default: 4
+	clip_subbands[0] = luaL_optinteger(L, 7, 0);	// Default: false
 
-static spectrum_defaults_t channel_defaults[2][NUM_CHANNEL_DEFAULTS] = {
-  {
-    { &channel_position[0],  24 },
-//    { &channel_width[0], 128 },
-    { &channel_width[0], 70 },
-    { &channel_flipped[0], FALSE },
-//    { &bar_width[0], 1 },
-//    { &bar_spacing[0], 0 },
-    { &bar_width[0], 2 },
-    { &bar_spacing[0], 0 },
-    { &clip_subbands[0], FALSE },
-    { &bar_grey_level[0], 1 },
-    { &bar_cap_grey_level[0], 3 }
-  },
-  {
-    { &channel_position[1],  168 },
-//    { &channel_width[1], 128 },
-    { &channel_width[1], 70 },
-    { &channel_flipped[1], TRUE },
-//    { &bar_width[1], 1 },
-//    { &bar_spacing[1], 0 },
-    { &bar_width[1], 2 },
-    { &bar_spacing[1], 0 },
-    { &clip_subbands[1], FALSE },
-    { &bar_grey_level[1], 1 },
-    { &bar_cap_grey_level[1], 3 }
-  }
-};
+//	printf( "* channel_width[0]: %d\n", channel_width[0]);
+//	printf( "* channel_flipped[0]: %d\n", channel_flipped[0]);
+//	printf( "* bar_width[0]: %d\n", bar_width[0]);
+//	printf( "* bar_spacing[0]: %d\n", bar_spacing[0]);
+//	printf( "* clip_subbands[0]: %d\n", clip_subbands[0]);
 
-#define SPECTRUM_MAX_NUM_BINS 32
+	if( !is_mono) {
+		channel_width[1] = luaL_optinteger(L, 8, 192);
+		channel_flipped[1] = luaL_optinteger(L, 9, 0);
+		bar_width[1] = luaL_optinteger(L, 10, 2);
+		bar_spacing[1] = luaL_optinteger(L, 11, 4);
+		clip_subbands[1] = luaL_optinteger(L, 12, 0);
+
+//		printf( "* channel_width[1]: %d\n", channel_width[1]);
+//		printf( "* channel_flipped[1]: %d\n", channel_flipped[1]);
+//		printf( "* bar_width[1]: %d\n", bar_width[1]);
+//		printf( "* bar_spacing[1]: %d\n", bar_spacing[1]);
+//		printf( "* clip_subbands[1]: %d\n", clip_subbands[1]);
+	}
+
+	// Approximate the number of subbands we'll display based
+	// on the width available and the size of the histogram
+	// bars.
+	bar_size = bar_width[0] + bar_spacing[0];
+	num_subbands = channel_width[0] / bar_size;
+
+//	printf( "bar_width[0] %d bar_spacing[0] %d bar_size %d num_subbands %d\n", bar_width[0], bar_spacing[0], bar_size, num_subbands);
+
+	// Calculate the integer component of the log2 of the num_subbands
+	l2int = 0;
+	shiftsubbands = num_subbands;
+	while( shiftsubbands != 1) {
+		l2int++;
+		shiftsubbands >>= 1;
+	}
+
+	// The actual number of subbands is the largest power
+	// of 2 smaller than the specified width.
+	num_subbands = 1L << l2int;
+
+//	printf( "shiftsubbands %d l2int %d num_subbands %d\n", shiftsubbands, l2int, num_subbands);
+
+	// In the case where we're going to clip the higher
+	// frequency bands, we choose the next highest
+	// power of 2.
+	if( clip_subbands[0]) {
+		num_subbands <<= 1;
+	}
+
+	// The number of histogram bars we'll display is nominally
+	// the number of subbands we'll compute.
+	num_bars[0] = num_subbands;
+
+//	printf( "num_bars[0] %d num_bars[1] %d\n", num_bars[0], num_bars[1]);
+
+	// Though we may have to compute more subbands to meet
+	// a minimum and average them into the histogram bars.
+	if( num_subbands < MIN_SUBBANDS) {
+		subbands_in_bar[0] = MIN_SUBBANDS / num_subbands;
+		num_subbands = MIN_SUBBANDS;
+	} else {
+		subbands_in_bar[0] = 1;
+	}
+
+//	printf( "subbands_in_bar[0] %d subbands_in_bar[1] %d\n", subbands_in_bar[0], subbands_in_bar[1]);
+
+	// If we're clipping off the higher subbands we cut down
+	// the actual number of bars based on the width available.
+	if( clip_subbands[0]) {
+		num_bars[0] = channel_width[0] / bar_size;
+	}
+
+	// Since we now have a fixed number of subbands, we choose
+	// values for the second channel based on these.
+	if( !is_mono) {
+		bar_size = bar_width[1] + bar_spacing[1];
+		num_bars[1] = channel_width[1] / bar_size;
+		subbands_in_bar[1] = 1;
+		// If we have enough space for all the subbands, great.
+		if( num_bars[1] > num_subbands) {
+			num_bars[1] = num_subbands;
+
+		// If not, we find the largest factor of the
+		// number of subbands that we can show.
+		} else if( !clip_subbands[1]) {
+			int s = num_subbands;
+			subbands_in_bar[1] = 1;
+			while( s > num_bars[1]) {
+				s >>= 1;
+				subbands_in_bar[1]++;
+			}
+			num_bars[1] = s;
+		}
+	}
+
+//	printf( "num_bars[0] %d num_bars[1] %d\n", num_bars[0], num_bars[1]);
+//	printf( "subbands_in_bar[0] %d subbands_in_bar[1] %d\n", subbands_in_bar[0], subbands_in_bar[1]);
+
+	// Calculate the number of samples we'll need to send in as
+	// input to the FFT. If we're halving the bandwidth (by
+	// averaging adjacent samples), we're going to need twice
+	// as many.
+	sample_window = num_subbands * 2;
+
+	if( sample_window < MIN_FFT_INPUT_SAMPLES) {
+		num_windows = MIN_FFT_INPUT_SAMPLES / sample_window;
+	} else {
+		num_windows = 1;
+	}
+
+	if( cfg) {
+		free( cfg);
+		cfg = NULL;
+	}
+
+	if( !cfg) {
+		double const1;
+		double const2;
+		int w;
+
+		double subband_width;
+		double freq_sum;
+		double scale_db;
+		int s;
+
+		cfg = kiss_fft_alloc( sample_window, 0, NULL, NULL);
+
+// Still needed?
+//		mem_addr_t lvptr = (mem_addr_t) last_values->aligned;
+//		for( int ch = 0; ch < 2; ch++) {
+//			for( u32_t s = 0; s < num_subbands; s++) {
+//				paged_write_u32( last_values, lvptr, 0);
+//				lvptr += sizeof( u32_t);
+//			}
+//		}
+
+		const1 = 0.54;
+		const2 = 0.46;
+		for( w = 0; w < sample_window; w++) {
+			const double twopi = 6.283185307179586476925286766;
+			filter_window[w] = const1 - ( const2 * cos( twopi * (double) w / (double) sample_window));
+		}
+
+		// Compute the preemphasis
+		subband_width = 22.05 / num_subbands;
+		freq_sum = 0;
+		scale_db = 0;
+
+		for( s = 0; s < num_subbands; s++) {
+			while( freq_sum > 1) {
+				freq_sum -= 1;
+// TODO: needed as parameter?
+//				scale_db += preemphasis_db_per_khz;
+				scale_db += ( 0x10000 >> 16);
+
+			}
+			if( scale_db != 0) {
+				preemphasis[s] = pow( 10, ( scale_db / 10.0));
+			} else {
+				preemphasis[s] = 1;
+			}
+			freq_sum += subband_width;
+		}
+	}
+
+	// Return calculated number of bars for each channel
+	lua_newtable( L);
+	lua_pushinteger( L, num_bars[0]);
+	lua_rawseti( L, -2, 1);
+	lua_pushinteger( L, num_bars[1]);
+	lua_rawseti( L, -2, 2);
+
+	return 1;
+}
+
 
 int decode_spectrum( lua_State *L) {
-
 	int sample_bin_ch0[MAX_SUBBANDS];
 	int sample_bin_ch1[MAX_SUBBANDS];
 
@@ -213,16 +335,22 @@ int decode_spectrum( lua_State *L) {
 	int w;
 	int ch;
 
-	int num_bins = luaL_optinteger(L, 2, SPECTRUM_MAX_NUM_BINS);
+	// Shortcut if audio isn't running
+	if( !( decode_audio->state & DECODE_STATE_RUNNING)) {
 
-//	printf( "**** decode_spectrum() 1 - num_bins: %d\n", num_bins);
+		lua_newtable( L);
+		for( i = 0; i < num_bars[0]; i++) {
+			lua_pushinteger( L, 0);
+			lua_rawseti( L, -2, i + 1);
+		}
 
-	if( ( num_bins < 0) || ( num_bins > SPECTRUM_MAX_NUM_BINS)) {
-		num_bins = SPECTRUM_MAX_NUM_BINS;
+		lua_newtable( L);
+		for( i = 0; i < num_bars[1]; i++) {
+			lua_pushinteger( L, 0);
+			lua_rawseti( L, -2, i + 1);
+		}
+		return 2;
 	}
-
-//	printf( "**** decode_spectrum() 2a - num_windows: %d sample_window: %d\n", num_windows, sample_window);
-//	printf( "**** decode_spectrum() 2b - num_bars[0]: %d num_subbands: %d\n", num_bars[0], num_subbands);
 
 	// Init avg_power
 	for( i = 0; i < (2 * MAX_SUBBANDS); i++) {
@@ -243,26 +371,23 @@ int decode_spectrum( lua_State *L) {
 
 		decode_audio_lock();
 
-		if( decode_audio->state & DECODE_STATE_RUNNING) {
-			ptr = (sample_t *) (void *) ( decode_fifo_buf + decode_audio->fifo.rptr);
-			samples_until_wrap = BYTES_TO_SAMPLES( fifo_bytes_until_rptr_wrap( &decode_audio->fifo));
+		ptr = (sample_t *) (void *) ( decode_fifo_buf + decode_audio->fifo.rptr);
+		samples_until_wrap = BYTES_TO_SAMPLES( fifo_bytes_until_rptr_wrap( &decode_audio->fifo));
 
-			for( i = 0; i < sample_window; i++) {
-				sample = (*ptr++) >> 16;
-				fin_buf[i].r = (float) ( filter_window[i] * sample);
+		for( i = 0; i < sample_window; i++) {
+			sample = (*ptr++) >> 16;
+			fin_buf[i].r = (float) ( filter_window[i] * sample);
 
-				sample = (*ptr++) >> 16;
-				fin_buf[i].i = (float) ( filter_window[i] * sample);
+			sample = (*ptr++) >> 16;
+			fin_buf[i].i = (float) ( filter_window[i] * sample);
 
-				samples_until_wrap -= 2;
-				if( samples_until_wrap <= 0) {
-					ptr = (sample_t *) (void *) decode_fifo_buf;
-				}
+			samples_until_wrap -= 2;
+			if( samples_until_wrap <= 0) {
+				ptr = (sample_t *) (void *) decode_fifo_buf;
 			}
 		}
 
 		decode_audio_unlock();
-
 
 #if 0
 // Test case
@@ -381,21 +506,21 @@ int decode_spectrum( lua_State *L) {
 
 
 	lua_newtable( L);
-	for( i = 0; i < num_bins; i++) {
-		if( channel_flipped[0] == FALSE) {
+	for( i = 0; i < num_bars[0]; i++) {
+		if( channel_flipped[0] == 0) {
 			lua_pushinteger( L, sample_bin_ch0[i]);
 		} else {
-			lua_pushinteger( L, sample_bin_ch0[num_bins - 1 - i]);
+			lua_pushinteger( L, sample_bin_ch0[num_bars[0] - 1 - i]);
 		}
 		lua_rawseti( L, -2, i + 1);
 	}
 
 	lua_newtable( L);
-	for( i = 0; i < num_bins; i++) {
-		if( channel_flipped[1] == FALSE) {
+	for( i = 0; i < num_bars[1]; i++) {
+		if( channel_flipped[1] == 0) {
 			lua_pushinteger( L, sample_bin_ch1[i]);
 		} else {
-			lua_pushinteger( L, sample_bin_ch1[num_bins - 1 - i]);
+			lua_pushinteger( L, sample_bin_ch1[num_bars[1] - 1 - i]);
 		}
 		lua_rawseti( L, -2, i + 1);
 	}
@@ -403,192 +528,4 @@ int decode_spectrum( lua_State *L) {
 	return 2;
 }
 
-
-int decode_spectrum_init( lua_State *L) {
-// TODO: read params from lua
-	int *params = NULL;
-	int num_params = 0;
-
-	// Get visualizer parameters (or defaults)
-	int d, p = 0;
-
-	int bar_size;
-	int l2int = 0;
-	int shiftsubbands;
-
-	for( d = 0; d < NUM_DEFAULTS; d++) {
-		if( p < num_params) {
-			*(defaults[d].ptr) = params[p];
-		} else {
-			*(defaults[d].ptr) = defaults[d].value;
-		}
-		p++;
-	}
-
-	// Get the first channel parameters (or defaults)
-	for( d = 0; d < NUM_CHANNEL_DEFAULTS; d++) {
-		if( p < num_params) {
-			*(channel_defaults[0][d].ptr) = params[p];
-		} else {
-			*(channel_defaults[0][d].ptr) = channel_defaults[0][d].value;
-		}
-		p++;
-	}
-
-	if( !is_mono) {
-		// Get the second channel parameters (or defaults)
-		for( d = 0; d < NUM_CHANNEL_DEFAULTS; d++) {
-			if( p < num_params) {
-				*(channel_defaults[1][d].ptr) = params[p];
-			} else {
-				*(channel_defaults[1][d].ptr) = channel_defaults[1][d].value;
-			}
-			p++;
-		}
-	}
-
-	// Approximate the number of subbands we'll display based
-	// on the width available and the size of the histogram
-	// bars.
-	bar_size = bar_width[0] + bar_spacing[0];
-	num_subbands = channel_width[0] / bar_size;
-
-	printf( "bar_width[0] %d bar_spacing[0] %d bar_size %d num_subbands %d\n", bar_width[0], bar_spacing[0], bar_size, num_subbands);
-
-	// Calculate the integer component of the log2 of the num_subbands
-	l2int = 0;
-	shiftsubbands = num_subbands;
-	while( shiftsubbands != 1) {
-		l2int++;
-		shiftsubbands >>= 1;
-	}
-
-	// The actual number of subbands is the largest power
-	// of 2 smaller than the specified width.
-	num_subbands = 1L << l2int;
-
-	printf( "shiftsubbands %d l2int %d num_subbands %d\n", shiftsubbands, l2int, num_subbands);
-
-	// In the case where we're going to clip the higher
-	// frequency bands, we choose the next highest
-	// power of 2.
-	if( clip_subbands[0]) {
-		num_subbands <<= 1;
-	}
-
-	// The number of histogram bars we'll display is nominally
-	// the number of subbands we'll compute.
-	num_bars[0] = num_subbands;
-
-	printf( "num_bars[0] %d num_bars[1] %d\n", num_bars[0], num_bars[1]);
-
-	// Though we may have to compute more subbands to meet
-	// a minimum and average them into the histogram bars.
-	if( num_subbands < MIN_SUBBANDS) {
-		subbands_in_bar[0] = MIN_SUBBANDS / num_subbands;
-		num_subbands = MIN_SUBBANDS;
-	} else {
-		subbands_in_bar[0] = 1;
-	}
-
-	printf( "subbands_in_bar[0] %d subbands_in_bar[1] %d\n", subbands_in_bar[0], subbands_in_bar[1]);
-
-	// If we're clipping off the higher subbands we cut down
-	// the actual number of bars based on the width available.
-	if( clip_subbands[0]) {
-		num_bars[0] = channel_width[0] / bar_size;
-	}
-
-	// Since we now have a fixed number of subbands, we choose
-	// values for the second channel based on these.
-	if( !is_mono) {
-		bar_size = bar_width[1] + bar_spacing[1];
-		num_bars[1] = channel_width[1] / bar_size;
-		subbands_in_bar[1] = 1;
-		// If we have enough space for all the subbands, great.
-		if( num_bars[1] > num_subbands) {
-			num_bars[1] = num_subbands;
-
-		// If not, we find the largest factor of the
-		// number of subbands that we can show.
-		} else if( !clip_subbands[1]) {
-			int s = num_subbands;
-			subbands_in_bar[1] = 1;
-			while( s > num_bars[1]) {
-				s >>= 1;
-				subbands_in_bar[1]++;
-			}
-			num_bars[1] = s;
-		}
-	}
-
-	printf( "num_bars[0] %d num_bars[1] %d\n", num_bars[0], num_bars[1]);
-	printf( "subbands_in_bar[0] %d subbands_in_bar[1] %d\n", subbands_in_bar[0], subbands_in_bar[1]);
-
-	// Calculate the number of samples we'll need to send in as
-	// input to the FFT. If we're halving the bandwidth (by
-	// averaging adjacent samples), we're going to need twice
-	// as many.
-	sample_window = num_subbands * 2;
-
-	if( sample_window < MIN_FFT_INPUT_SAMPLES) {
-		num_windows = MIN_FFT_INPUT_SAMPLES / sample_window;
-	} else {
-		num_windows = 1;
-	}
-
-	if( cfg) {
-		free( cfg);
-		cfg = NULL;
-	}
-
-	if( !cfg) {
-		double const1;
-		double const2;
-		int w;
-
-		double subband_width;
-		double freq_sum;
-		double scale_db;
-		int s;
-
-		cfg = kiss_fft_alloc( sample_window, 0, NULL, NULL);
-
-// Still needed?
-//		mem_addr_t lvptr = (mem_addr_t) last_values->aligned;
-//		for( int ch = 0; ch < 2; ch++) {
-//			for( u32_t s = 0; s < num_subbands; s++) {
-//				paged_write_u32( last_values, lvptr, 0);
-//				lvptr += sizeof( u32_t);
-//			}
-//		}
-
-		const1 = 0.54;
-		const2 = 0.46;
-		for( w = 0; w < sample_window; w++) {
-			const double twopi = 6.283185307179586476925286766;
-			filter_window[w] = const1 - ( const2 * cos( twopi * (double) w / (double) sample_window));
-		}
-
-		// Compute the preemphasis
-		subband_width = 22.05 / num_subbands;
-		freq_sum = 0;
-		scale_db = 0;
-
-		for( s = 0; s < num_subbands; s++) {
-			while( freq_sum > 1) {
-				freq_sum -= 1;
-				scale_db += preemphasis_db_per_khz;
-			}
-			if( scale_db != 0) {
-				preemphasis[s] = pow( 10, ( scale_db / 10.0));
-			} else {
-				preemphasis[s] = 1;
-			}
-			freq_sum += subband_width;
-		}
-	}
-
-	return 0;
-}
 

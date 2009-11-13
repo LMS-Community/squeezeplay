@@ -2921,7 +2921,7 @@ function skin(self, s)
 		y = 0,
 		w = 480 - 2,
 		h = 272 - 2,
-		border = { 0, 0, 0, 0},
+		border = { 0, 0, 0, 0 },
 		padding = { 0, 0, 0, 0 },
 
 		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
@@ -2936,20 +2936,24 @@ function skin(self, s)
 		y = 0,
 		w = 480,
 		h = 272,
-		border = { 0, 0, 0, 0},
+		border = { 0, 0, 0, 0 },
 		padding = { 0, 0, 0, 0 },
 		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
 	}
 
 	-- This is for the standalone beta Specturm Meter
 	s.spectrum = {
+		position = LAYOUT_NONE,
 		x = 0,
 		y = 0,
-		w = 480 - 2,
-		h = 272 - 2,
-		border = { 0, 0, 0, 0},
-		padding = { 10, 10, 10, 10 },
-		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
+		w = 480,
+		h = 272,
+		border = { 0, 0, 0, 0 },
+		padding = { 10, 100, 10, 50 },
+
+-- Black background instead of image
+---		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
+		bg = { 0x00, 0x00, 0x00, 0xff },
 
 		bar = { 0x14, 0xbc, 0xbc, 0xff },
 		cap = { 0xb4, 0x56, 0xa1, 0xff },

@@ -24,9 +24,7 @@ function __init(self, style)
 
 	obj.val = { 0, 0 }
 
-	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE / 4)
-
-	decode:spectrum_init()
+	obj:addAnimation(function() obj:reDraw() end, FRAME_RATE)
 
 	return obj
 end
@@ -35,7 +33,10 @@ end
 function _skin(self)
 	Icon._skin(self)
 
-	self.bgImg = self:styleImage("bgImg")
+-- Black background instead of image
+---	self.bgImg = self:styleImage("bgImg")
+	self.bgCol = self:styleColor("bg", { 0xff, 0xff, 0xff, 0xff })
+
 	self.barCol = self:styleColor("bar", { 0xff, 0xff, 0xff, 0xff })
 	self.capCol = self:styleColor("cap", { 0xff, 0xff, 0xff, 0xff })
 end
@@ -45,65 +46,122 @@ function _layout(self)
 	local x,y,w,h = self:getBounds()
 	local l,t,r,b = self:getPadding()
 
-	self.capSize = 5
+	self.channelWidth = {}
+	self.channelFlipped = {}
+	self.barWidth = {}
+	self.barSpacing = {}
+	self.clipSubbands = {}
 
-	self.w = w - l - r
-	self.h = h - t - b - self.capSize
+	self.capSize = 4
+	self.capSpacing = 4
+	self.isMono = 0
 
-	self.x = x + l
-	self.y = y + t + self.h
+	self.channelWidth[1] = (w - l - r) / 2
+	self.channelFlipped[1] = 0
+	self.barWidth[1] = 1
+	self.barSpacing[1] = 6
+	self.clipSubbands[1] = 0
 
-	self.numBins = self.w / 3 / 2
+	self.channelWidth[2] = (w - l - r) / 2
+	self.channelFlipped[2] = 1
+	self.barWidth[2] = 1
+	self.barSpacing[2] = 6
+	self.clipSubbands[2] = 0
+
+
+	local barSize = self.barWidth[1] + self.barSpacing[1]
+
+	local numBars = {}
+
+	numBars = decode:spectrum_init(	self.isMono,
+
+					self.channelWidth[1],
+					self.channelFlipped[1],
+					self.barWidth[1],
+					self.barSpacing[1],
+					self.clipSubbands[1],
+
+					self.channelWidth[2],
+					self.channelFlipped[2],
+					self.barWidth[2],
+					self.barSpacing[2],
+					self.clipSubbands[2]
+	)
+
+	log:warn("** 1: " .. numBars[1] .. " 2: " .. numBars[2])
+
+	local barHeight = h - t - b - self.capSize - self.capSpacing
+
+	-- max bin value from C code is 31
+	self.barHeightMulti = barHeight / 31
+
+	self.x1 = x + w / 2 - numBars[1] * barSize
+	self.x2 = x + w / 2 + self.barSpacing[2]
+	self.y = y + h - b
 
 	self.cap = { {}, {} }
-	for i = 1, self.numBins do
+	for i = 1, numBars[1] do
 		self.cap[1][i] = 0
+	end
+
+	for i = 1, numBars[2] do
 		self.cap[2][i] = 0
 	end
-end
 
-
-function _randBins(num, h)
-	local bins = { {}, {} }
-
-	for i = 1, num do
-		bins[1][i] = math.random(h)
-		bins[2][i] = math.random(h)
-	end
-
-	return bins
 end
 
 
 function draw(self, surface)
-	self.bgImg:blit(surface, self:getBounds())
+-- Black background instead of image
+--	self.bgImg:blit(surface, self:getBounds())
+	local x, y, w, h = self:getBounds()
+	surface:filledRectangle(x, y, w, h, self.bgCol)
 
---	local bins = _randBins(self.numBins, self.h)
 
 	local bins = { {}, {}}
 
-	bins[1], bins[2] = decode:spectrum( self.numBins)
+	bins[1], bins[2] = decode:spectrum()
 
-	_drawBins(self, surface, bins, 1, self.x, self.y, 1)
-	_drawBins(self, surface, bins, 2, self.x + (self.numBins*3), self.y, 1)
+	_drawBins(self, surface, bins, 1, self.x1, self.y, self.barWidth[1], self.barSpacing[1], self.barHeightMulti)
+	_drawBins(self, surface, bins, 2, self.x2, self.y, self.barWidth[2], self.barSpacing[2], self.barHeightMulti)
 end
 
 
-function _drawBins(self, surface, bins, ch, x, y, w)
+function _drawBins(self, surface, bins, ch, x, y, barWidth, barSpacing, barHeightMulti)
 	local bch = bins[ch]
 	local cch = self.cap[ch]
 
 	for i = 1, #bch do
-		surface:filledRectangle(x, y, x+w, y-bch[i], self.barCol)
+		bch[i] = bch[i] * barHeightMulti
+
+		-- bar
+		surface:filledRectangle(x, y, x + barWidth - 1, y - bch[i], self.barCol)
 		
 		if bch[i] >= cch[i] then
 			cch[i] = bch[i]
 		elseif cch[i] > 0 then
-			cch[i] = cch[i] - 1
+			cch[i] = cch[i] - barHeightMulti
+			if cch[i] < 0 then
+				cch[i] = 0
+			end
 		end
 
-		surface:filledRectangle(x, y-cch[i]-self.capSize, x+w, y-cch[i], self.capCol)
+		-- cap
+		surface:filledRectangle(x, y - cch[i] - self.capSpacing, x + barWidth - 1, y - cch[i] - self.capSize - self.capSpacing, self.capCol)
 
-		x = x + w + 2
+		x = x + barWidth + barSpacing
 	end
 end
+
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2009 Logitech. All Rights Reserved.
+
+This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+=cut
+--]]
+
