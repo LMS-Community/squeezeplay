@@ -860,7 +860,7 @@ function skin(self, s)
 	}
 
 	local _timeFirstColumnX12h = 130
-	local _timeFirstColumnX24h = 98
+	local _timeFirstColumnX24h = 168
 
 	local TIMEINPUT_TOP_PADDING = 57
 	local TIMEINPUT_ITEM_PADDING = { 0, 10, 16, 0 }
@@ -872,6 +872,7 @@ function skin(self, s)
 		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_3c_10ft.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
+		h = screenHeight,
 	}
 
 	s.time_input_background_24h = {
@@ -880,6 +881,7 @@ function skin(self, s)
 		img = _loadImage(self, "Multi_Character_Entry/rem_multi_char_bkgrd_2c_10ft.png"),
 		x = 0,
 		y = TITLE_HEIGHT,
+		h = screenHeight,
 	}
 
 	-- time input window
@@ -984,13 +986,13 @@ function skin(self, s)
 			border = { _timeFirstColumnX24h, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		minute = {
-			border = { _timeFirstColumnX24h + 65, TIMEINPUT_TOP_PADDING, 0, 0 },
+			border = { _timeFirstColumnX24h + 75, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		hourUnselected = {
 			border = { _timeFirstColumnX24h, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 		minuteUnselected = {
-			border = { _timeFirstColumnX24h + 65, TIMEINPUT_TOP_PADDING, 0, 0 },
+			border = { _timeFirstColumnX24h + 75, TIMEINPUT_TOP_PADDING, 0, 0 },
 		},
 	})
 	-- one set for buttons, one for spacers
