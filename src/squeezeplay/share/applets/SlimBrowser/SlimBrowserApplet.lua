@@ -2351,10 +2351,6 @@ local function _browseInput(window, item, db, inputSpec, last, timeFormat)
 	end
 	--]]
 	
-	if inputSpec.help and inputSpec.help.text then
-		_addHelpButton(window, inputSpec.help.text, inputSpec.setupWindow)
-	end
-
 	local kbType = inputSpec._kbType or 'qwerty'
 	if kbType == 'qwertyLower' then
 		kbType = 'qwerty'
