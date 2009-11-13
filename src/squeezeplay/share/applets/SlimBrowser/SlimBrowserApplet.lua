@@ -837,7 +837,7 @@ local function _renderSlider(step, item)
 	local sliderMin = tonumber(item.min) + tonumber(item.adjust)
 	local sliderMax = tonumber(item.max) + tonumber(item.adjust)
 
-	local slider = Slider("slider", sliderMin, sliderMax, sliderInitial,
+	local slider = Slider("settings_slider", sliderMin, sliderMax, sliderInitial,
                 function(slider, value, done)
 			local jsonAction = item.actions['do']
 			local valtag = _safeDeref(item, 'actions', 'do', 'params', 'valtag')
@@ -861,21 +861,34 @@ local function _renderSlider(step, item)
 		step.window:addWidget(help)
 	end
 
-	if item.sliderIcons == 'none' then
-        	step.window:addWidget(slider)
-	elseif item.sliderIcons == 'volume' then
-		step.window:addWidget(Group("slider_group", {
-			min = Icon("button_volume_min"),
-			slider = slider,
-			max = Icon("button_volume_max")
-		}))
+	local sliderStyle
+	if item.sliderIcons == 'volume' then
+		sliderStyle = 'settings_volume_group'
 	else
-		step.window:addWidget(Group("slider_group", {
-			min = Icon("button_slider_min"),
-			slider = slider,
-			max = Icon("button_slider_max")
-		}))
+		sliderStyle = 'settings_slider_group'
 	end
+
+	step.window:addWidget(Group(sliderStyle, {
+		div1 = Icon('div1'),
+		div2 = Icon('div2'),
+		down  = Button(
+			Icon('down'),
+				function()
+					local e = Event:new(EVENT_SCROLL, -1)
+					Framework:dispatchEvent(slider, e)
+					return EVENT_CONSUME
+				end
+                               ),
+		slider = slider,
+		up  = Button(
+			Icon('up'),
+				function()
+					local e = Event:new(EVENT_SCROLL, 1)
+					Framework:dispatchEvent(slider, e)
+					return EVENT_CONSUME
+				end
+                       ),
+	}))
 
 
 

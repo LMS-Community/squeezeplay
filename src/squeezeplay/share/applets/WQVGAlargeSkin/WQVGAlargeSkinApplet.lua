@@ -258,6 +258,8 @@ function skin(self, s)
 	local helpButton              = _loadImageTile(self,  imgpath .. "Icons/icon_help_button_tb.png")
 	local nowPlayingButton        = _loadImageTile(self,  imgpath .. "Icons/icon_nplay_button_tb.png")
 	local powerButton             = _loadImageTile(self,  imgpath .. "Icons/icon_power_button_tb.png")
+	local sliderBackground        = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_lrg.png")
+        local touchToolbarKeyDivider  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_divider.png")
 
 	local nocturneWallpaper = _loadImageTile(self, "applets/SetupWallpaper/wallpaper/fab4_nocturne.png")
 
@@ -343,6 +345,18 @@ function skin(self, s)
 					imgpath .. "Buttons/button_titlebar_bl.png",
 					imgpath .. "Buttons/button_titlebar_l.png",
 				})
+
+	local sliderButtonPressed = _loadTile(self, {
+                imgpath .. "Buttons/keyboard_button_press.png",
+                nil,
+                nil,
+                imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_hort.png",
+                nil,
+                nil,
+                nil,
+                nil,
+                imgpath .. "Text_Entry/Keyboard_Touch/keyboard_divider_vert.png",
+        })
 
 	local popupBox = 
 		_loadTile(self, {
@@ -513,6 +527,18 @@ function skin(self, s)
 		nil,
 		nil,
 		imgpath .. "NowPlaying/np_progressbar_slider_10ft.png",
+        })
+
+        local _settingsSliderBackground = _loadHTile(self, {
+                imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_l.png",
+                imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd.png",
+                imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_r.png",
+        })
+
+        local _settingsSliderBar = _loadHTile(self, {
+               imgpath .. "UNOFFICIAL/tch_volumebar_fill_l.png",
+               imgpath .. "UNOFFICIAL/tch_volumebar_fill.png",
+               imgpath .. "UNOFFICIAL/tch_volumebar_fill_r.png",
         })
 
 --------- DEFAULT WIDGET STYLES ---------
@@ -2217,40 +2243,83 @@ function skin(self, s)
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
 	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
 
-	--todo: FIX! is just same as 3ft skin for now
 	s.brightness_group = {
 		order = {  'down', 'div1', 'slider', 'div2', 'up' },
 		position = LAYOUT_SOUTH,
-		h = controlHeight,
+		h = 56,
 		w = WH_FILL,
-		bgImg = touchToolbarBackground,
+		bgImg = sliderBackground,
 
 		div1 = _uses(_transportControlBorder),
 		div2 = _uses(_transportControlBorder),
 
 		down   = _uses(_transportControlButton, {
+			w = 56,
+			h = 56,
 			img = _loadImage(self, "Icons/icon_toolbar_brightness_down.png"),
 		}),
 		up   = _uses(_transportControlButton, {
+			w = 56,
+			h = 56,
 			img = _loadImage(self, "Icons/icon_toolbar_brightness_up.png"),
 		}),
 	}
-
 	s.brightness_group.pressed = {
 
-		down   = _uses(s.brightness_group.down, { bgImg = keyMiddlePressed }),
-		up   = _uses(s.brightness_group.up, { bgImg = keyMiddlePressed }),
+		down   = _uses(s.brightness_group.down, { bgImg = sliderButtonPressed }),
+		up   = _uses(s.brightness_group.up, { bgImg = sliderButtonPressed }),
 	}
 
 	s.brightness_slider = {
-		w = 380,
-		border = { 5, 3, 5, 0 },
+		w = WH_FILL,
+		border = { 5, 10, 5, 0 },
+		padding = { 6, 0, 6, 0 },
                 position = LAYOUT_SOUTH,
                 horizontal = 1,
-                bgImg = _volumeSliderBackground,
-                img = _popupSliderBar,
+		bgImg = _settingsSliderBackground,
+                img = _settingsSliderBar,
 	}
 	
+	s.settings_slider_group = _uses(s.brightness_group, {
+		down = {
+			img = _loadImage(self, "Icons/icon_toolbar_minus.png"),
+		},
+		up = {
+			img = _loadImage(self, "Icons/icon_toolbar_plus.png"),
+		},
+	})
+
+	s.settings_slider = _uses(s.brightness_slider, {
+	})
+	s.settings_slider_group.pressed = {
+		down = _uses(s.settings_slider_group.down, { 
+			bgImg = sliderButtonPressed,
+			img = _loadImage(self, "Icons/icon_toolbar_minus_dis.png"),
+		}),
+		up = _uses(s.settings_slider_group.up, { 
+			bgImg = sliderButtonPressed,
+			img = _loadImage(self, "Icons/icon_toolbar_plus_dis.png"),
+		}),
+	}
+
+	s.settings_volume_group = _uses(s.brightness_group, {
+		down = {
+			img = _loadImage(self, "Icons/icon_toolbar_vol_down.png"),
+		},
+		up = {
+			img = _loadImage(self, "Icons/icon_toolbar_vol_up.png"),
+		},
+	})
+	s.settings_volume_group.pressed = {
+		down = _uses(s.settings_volume_group.down, { 
+			bgImg = sliderButtonPressed,
+			img = _loadImage(self, "Icons/icon_toolbar_vol_down_dis.png"),
+		}),
+		up = _uses(s.settings_volume_group.up, { 
+			bgImg = sliderButtonPressed,
+			img = _loadImage(self, "Icons/icon_toolbar_vol_up_dis.png"),
+		}),
+	}
 	s.debug_canvas = {
 			zOrder = 9999
 	}

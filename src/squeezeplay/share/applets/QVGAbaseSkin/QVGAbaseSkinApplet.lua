@@ -747,6 +747,31 @@ function skin(self, s, reload, useDefaultSize)
 		order = { "slider" },
 	}
 
+	-- FIXME: bug 12402, these sliders need some work to come up to spec
+	s.settings_slider_group = {
+		bgImg = s.img.textareaBackground,
+                order = {  'slider' },
+                position = LAYOUT_NONE,
+		x = 0,
+		y = screenHeight - 24 - 56,
+                h = 56,
+                w = WH_FILL,
+        }
+
+	s.settings_slider = {
+                w = WH_FILL,
+                border = { 10, 23, 10, 0 },
+                padding = { 0, 0, 0, 0 },
+                position = LAYOUT_SOUTH,
+                horizontal = 1,
+                bgImg = s.img.volumeBackground,
+                img = s.img.volumeBar,
+        }
+
+	s.volume_slider_group = s.slider_group
+
+	s.brightness_group = s.settings_slider_group
+	s.brightness_slider = s.settings_slider
 
 --------- SPECIAL WIDGETS ---------
 
