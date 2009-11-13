@@ -188,14 +188,20 @@ function notify_playerPower(self, player, power)
 	-- hide this window if the player is turned off
 	if not power then
 		if self.titleGroup then
-			self.titleGroup:setWidgetValue("text", self:_titleText('off'))
+			self:changeTitleText(self:_titleText('off'))
 		end
 	else
 		if self.titleGroup then
 			local titleText = self:_titleText(mode)
-			self.titleGroup:setWidgetValue("text", titleText)
+			self:changeTitleText(titleText)
 		end
 	end
+end
+
+
+function changeTitleText(self, titleText)
+	self.titleGroup:setWidgetValue("text", titleText)
+	self.titleGroupOneTrackPlaylist:setWidgetValue("text", titleText)
 end
 
 
@@ -730,7 +736,7 @@ function _updateMode(self, mode)
 	end
 	if self.titleGroup then
 		local titleChange = self:_titleText(token)
-		self.titleGroup:setWidgetValue("text", titleChange)
+		self:changeTitleText(titleChange)
 	end
 	if self.controlsGroup then
 		local playIcon = self.controlsGroup:getWidget('play')
