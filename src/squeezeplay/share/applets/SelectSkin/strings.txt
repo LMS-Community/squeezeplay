@@ -31,4 +31,11 @@ FULLSCREEN_MODE
 	PL	Pełny ekran
 	RU	Во весь экран
 	SV	Helskärm
+	
+SELECT_SKIN_TOUCH_SKIN
+	EN	Touch Skin
+		
+SELECT_SKIN_REMOTE_SKIN
+	EN	Remote Skin
+		
 

@@ -38,6 +38,7 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService("getActiveSkinType")
 end
 
 

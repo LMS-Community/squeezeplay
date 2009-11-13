@@ -43,9 +43,9 @@ local RECENTLY_NEAR_TIMEOUT = 15000
 local PROX_NEAR = 1
 local PROX_FAR = 0
 
-local skinByProximity = {
-	[PROX_NEAR] = "WQVGAsmallSkin",
-	[PROX_FAR] = "WQVGAlargeSkin",
+local skinTypeByProximity = {
+	[PROX_NEAR] = "touch",
+	[PROX_FAR] = "remote",
 }
 
 module(..., Framework.constants)
@@ -59,23 +59,27 @@ function _changeDutyCycle(self, newValue)
 	f:close()
 end
 
+local USE_PROXIMITY_SENSOR = false -- disabled since proximity accuracy/responsiveness is not up to snuff.
+
+--service method
+function getActiveSkinType(self)
+	return self.mode
+end
 
 function init(self, ...)
 
 	-- skins, could be configurable via settings
-	local touchSkin = "WQVGAsmallSkin"
-	local remoteSkin = "WQVGAlargeSkin"
+	local touchSkin = "touch"
+	local remoteSkin = "remote"
 
 	-- load skins at start up, this makes switching skins faster
---	local touchSkinApplet = appletManager:loadApplet(touchSkin)
---	local remoteSkinApplet = appletManager:loadApplet(remoteSkin)
+--	local touchSkinApplet = appletManager:loadApplet(appletManager:callService("getSelectedSkinNameForType", touchSkin))
+--	local remoteSkinApplet = appletManager:loadApplet(appletManager:callService("getSelectedSkinNameForType", remoteSkin))
 
 	--trial and error suggested this result - todo: talk to maurice about this
 	--Yikes touch and ir freezeup on boot when trying to change duty cycle early - Richard looking into why
 	--commenting out for now
 --	self:_changeDutyCycle(7)
-
-	self.mode = jiveMain:getSelectedSkin()
 
 	self.proximity = PROX_NEAR
 
@@ -86,28 +90,30 @@ function init(self, ...)
 
 	local eatIREvents = false
 
-	Framework:addListener(EVENT_SWITCH,
-		function(event)
---			log:warn("switch: ", event:tostring())
-			local code, value = event:getSwitch()
-			if code == SW_TABLET_MODE  then
-				if value == 1 then
-					self.proximity = PROX_NEAR
-					self:_resetRecentlyNearTimer()
-					self:changeSkin(skinByProximity[PROX_NEAR])
-				else
---					self.proximity = PROX_FAR
-					--for now only change on IR, todo clean up, still waiting on direction
---					if not self.recentlyNearTimer then
---						self:changeSkin(skinByProximity[PROX_FAR])
---					end
+	if USE_PROXIMITY_SENSOR then
+		Framework:addListener(EVENT_SWITCH,
+			function(event)
+	--			log:warn("switch: ", event:tostring())
+				local code, value = event:getSwitch()
+				if code == SW_TABLET_MODE  then
+					if value == 1 then
+						self.proximity = PROX_NEAR
+						self:_resetRecentlyNearTimer()
+						self:changeSkin(skinTypeByProximity[PROX_NEAR])
+					else
+	--					self.proximity = PROX_FAR
+						--for now only change on IR, todo clean up, still waiting on direction
+	--					if not self.recentlyNearTimer then
+	--						self:changeSkin(skinTypeByProximity[PROX_FAR])
+	--					end
+					end
+	
 				end
-
-			end
-
-		end,
-		-100)
-		
+	
+			end,
+			-100)
+	end
+	
 	Framework:addListener(EVENT_IR_ALL,
 		function(event)
 			if self.recentlyNearTimer then
@@ -159,18 +165,20 @@ end
 -- self.recentlyNearTimer starts a timer when either touch occurs or near proximity occurs. After timeout,
 --  the skin moves to the skin associated with the current proximity 
 function _resetRecentlyNearTimer(self)
-	if not self.recentlyNearTimer then
-		self.recentlyNearTimer = Timer(
-						RECENTLY_NEAR_TIMEOUT,
-						function ()
-							log:info("timeout since last touch, shift to skin for current proximity")
-							self:changeSkin(skinByProximity[self.proximity])
-							self.recentlyNearTimer = nil
-						end
-						,true)
+	if USE_PROXIMITY_SENSOR then
+		if not self.recentlyNearTimer then
+			self.recentlyNearTimer = Timer(
+							RECENTLY_NEAR_TIMEOUT,
+							function ()
+								log:info("timeout since last touch, shift to skin for current proximity")
+								self:changeSkin(skinTypeByProximity[self.proximity])
+								self.recentlyNearTimer = nil
+							end
+							,true)
+		end
+	
+		self.recentlyNearTimer:restart()
 	end
-
-	self.recentlyNearTimer:restart()
 end
 
 
@@ -182,17 +190,21 @@ function _disableAnyScreensaver(self)
 end
 
 
-function changeSkin(self, skin)
-	if  self.mode == skin then
+function changeSkin(self, skinType)
+	if  self.mode == skinType then
 		return false
 	end
 
---	Framework:playSound("CLICK")
+	local skinName = appletManager:callService("getSelectedSkinNameForType", skinType)
+	if jiveMain:getSelectedSkin() == skinName then
+		log:debug("skin already selected, not switching: ", skinName)
+		return false
+	end
 
 	local img1 = _capture("foo")
 
-	jiveMain:setSelectedSkin(skin)
-	self.mode = skin
+	jiveMain:setSelectedSkin(skinName)
+	self.mode = skinType
 
 	local img2 = _capture("bar")
 
