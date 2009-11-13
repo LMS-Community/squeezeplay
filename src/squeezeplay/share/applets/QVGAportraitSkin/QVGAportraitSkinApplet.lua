@@ -221,7 +221,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.time_input_background_12h = {
 		w = WH_FILL,
-		h = 60,
+		h = screenHeight,
 		position = LAYOUT_NONE,
 		img = Tile:loadImage(baseImgpath .. "Multi_Character_Entry/port_multi_char_bkgrd_3c.png"),
 		x = 0,
@@ -229,7 +229,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 	s.time_input_background_24h = {
 		w = WH_FILL,
-		h = 60,
+		h = screenHeight,
 		position = LAYOUT_NONE,
 		img = Tile:loadImage(baseImgpath .. "Multi_Character_Entry/port_multi_char_bkgrd_2c.png"),
 		x = 0,

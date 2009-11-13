@@ -936,7 +936,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.time_input_background_12h = {
 		w = WH_FILL,
-		h = 60,
+		h = screenHeight,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/land_multi_char_bkgrd_3c.png"),
 		x = 0,
@@ -945,7 +945,7 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.time_input_background_24h = {
 		w = WH_FILL,
-		h = 60,
+		h = screenHeight,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/land_multi_char_bkgrd_2c.png"),
 		x = 0,
