@@ -916,10 +916,13 @@ function toggleNPScreenStyle(self)
 	end
 
 	log:debug('setting NP window style to: ', self.selectedStyle)
-	local newWindow = _createUI(self)
-	newWindow:replace(self.window, Window.transitionFadeIn)
-	self.window = newWindow
+
+	local oldWindow = self.window
+
+	self.window = _createUI(self)
 	self:_refreshRightButton()
+
+	self.window:replace(oldWindow, Window.transitionFadeIn)
 end
 
 
