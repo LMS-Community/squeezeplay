@@ -1018,6 +1018,10 @@ Add the widget I<widget> to the window.
 function addWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget), "addWidget(widget): widget is not an instance of Widget!")
 
+	if widget.parent then
+		log:error("Adding widget (", widget, ") to window, but it already has a parent (", widget.parent, ")")
+	end
+
 	_addWidget(self, widget)
 
 	-- FIXME last widget added always has focus
@@ -1045,6 +1049,10 @@ Remove the widget I<widget> from the window.
 --]]
 function removeWidget(self, widget)
 	_assert(oo.instanceof(widget, Widget))
+
+	if widget.parent ~= self then
+		log:error("Removing widget (", widget, ") from window, but is has a different parent (", widget.parent, ")")
+	end
 
 	if self:isVisible() then
 		widget:dispatchNewEvent(EVENT_HIDE)
