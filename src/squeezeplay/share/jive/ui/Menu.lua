@@ -424,11 +424,11 @@ local function _eventHandler(self, event)
 		if event:isIRCode("arrow_up") or event:isIRCode("arrow_down") then
 			self:resetDragData()
 			if self.locked == nil then
-				local scrollAmount = self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize), true, evtype == EVENT_IR_DOWN
+				local scrollAmount = self.irAccel:event(event, self.topItem, self.selected or 1, self.numWidgets, self.listSize)
 				if self.textMode then
 					self:dispatchNewEvent(EVENT_SCROLL, scrollAmount)
 				else
-					self:scrollBy(scrollAmount)
+					self:scrollBy(scrollAmount, true, evtype == EVENT_IR_DOWN)
 				end
 				return EVENT_CONSUME
 			end
@@ -1544,9 +1544,14 @@ end
 
 function _updateWidgets(self)
 
+	local jumpScrollBottom = self.topItem + self.numWidgets
+	if self.mouseState ~= MOUSE_COMPLETE then
+		--when touch activity in progress, allow one more bottom item to be selected without jump, for half onscreen items
+		jumpScrollBottom = jumpScrollBottom + 1
+	end
 	local selected = _coerce(self.selected or 1, self.listSize)
 	if #self.widgets > 0 and (selected < self.topItem
-		or selected > self.topItem + self.numWidgets) then
+		or selected >= jumpScrollBottom) then
 		-- update the list to keep the selection in view
 		_scrollList(self)
 	end
