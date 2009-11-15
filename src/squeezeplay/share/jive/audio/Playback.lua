@@ -1,5 +1,5 @@
 
-local assert, tostring, type, ipairs = assert, tostring, type, ipairs
+local assert, tostring, type, ipairs, getmetatable = assert, tostring, type, ipairs, getmetatable
 
 
 local oo                     = require("loop.base")
@@ -10,6 +10,7 @@ local table                  = require("table")
 local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
+local Rtmp                   = require("jive.audio.Rtmp")
 local SlimProto              = require("jive.net.SlimProto")
 
 local Task                   = require("jive.ui.Task")
@@ -94,6 +95,8 @@ function __init(self, jnt, slimproto)
 		spprivate:initAudio(slimproto)
 	end
 	decode:initAudio(slimproto)
+	
+	Rtmp:init(slimproto)
 
 	self.mode = 0
 	self.threshold = 0
@@ -422,6 +425,28 @@ function _streamConnect(self, serverIp, serverPort)
 
 	self.stream = Stream:connect(serverIp, serverPort)
 
+	-- The following manipluates the metatable for the stream object to allow Http and Rtmp streaming
+	-- to use different read and write methods while using a common constructor which reuses the same
+	-- C userdata for the object (and hence the same metatable)
+	local m = getmetatable(self.stream)
+
+	-- stash the location of the standard stream methods stream:read and stream:write on first use
+	if m._streamRead == nil then
+		m._streamRead  = m.read
+		m._streamWrite = m.write
+	end
+
+	-- select the appropriate methods based on whether the stream is Rtmp
+	if self.flags & 0x20 ~= 0x20 then
+		-- use standard stream methods
+		m.read  = m._streamRead
+		m.write = m._streamWrite
+	else
+		-- use Rtmp methods
+		m.read  = Rtmp.read
+		m.write = Rtmp.write
+	end 
+
 	local wtask = Task("streambufW", self, _streamWrite, nil, Task.PRIORITY_AUDIO)
 	self.jnt:t_addWrite(self.stream, wtask, STREAM_WRITE_TIMEOUT)
 	
@@ -540,7 +565,7 @@ function _strm(self, data)
 		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
 
 		-- reset stream state
-		-- XXXX flags
+		self.flags = data.flags
 		self.mode = data.mode
 		self.header = data.header
 		self.autostart = data.autostart
