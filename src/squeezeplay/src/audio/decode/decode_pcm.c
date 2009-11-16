@@ -191,7 +191,7 @@ static void decode_pcm_stop(void *data) {
 
 struct decode_module decode_pcm = {
 	'p',
-	"pcm",
+	"aif,pcm",
 	decode_pcm_start,
 	decode_pcm_stop,
 	decode_pcm_samples,
