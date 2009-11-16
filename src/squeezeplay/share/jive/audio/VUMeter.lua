@@ -133,9 +133,9 @@ function _drawMeter(self, surface, sampleAcc, ch, x, y, w, h)
 --		local x,y,w,h = self:getBounds()
 
 		if ch == 1 then
-			self.bgImg:blitClip(x + self.cap[ch] * w, y, w, h, surface, x, 0)
+			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, 0)
 		else
-			self.bgImg:blitClip(x + self.cap[ch] * w, y, w, h, surface, x, 0)
+			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, 0)
 		end
 	end
 end

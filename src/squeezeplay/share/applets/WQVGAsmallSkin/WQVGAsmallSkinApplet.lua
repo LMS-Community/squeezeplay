@@ -2938,7 +2938,7 @@ function skin(self, s)
 		h = 272,
 		border = { 0, 0, 0, 0 },
 		padding = { 0, 0, 0, 0 },
-		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
+		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_b.png"),
 	}
 
 	-- This is for the standalone beta Specturm Meter
@@ -2955,8 +2955,19 @@ function skin(self, s)
 ---		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
 		bg = { 0x00, 0x00, 0x00, 0xff },
 
-		bar = { 0x14, 0xbc, 0xbc, 0xff },
-		cap = { 0xb4, 0x56, 0xa1, 0xff },
+		barColor = { 0x14, 0xbc, 0xbc, 0xff },
+		capColor = { 0xb4, 0x56, 0xa1, 0xff },
+
+		isMono = 0,				-- 0 / 1
+
+		capHeight = { 4, 4 },			-- >= 0
+		capSpace = { 4, 4 },			-- >= 0
+		channelFlipped = { 0, 1 },		-- 0 / 1
+		barsInBin = { 2, 2 },			-- > 1
+		barWidth = { 1, 1 },			-- > 1
+		barSpace = { 3, 3 },			-- >= 0
+		binSpace = { 6, 6 },			-- >= 0
+		clipSubbands = { 1, 1 },		-- 0 / 1
 	}
 
 

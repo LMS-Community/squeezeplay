@@ -65,11 +65,8 @@ static int power_map[32] = {
 // The width of the channel histogram in pixels
 static int channel_width[2];
 
-// The width of an individual histogram bar in pixels
-static int bar_width[2];
-
-// The spacing between histogram bars in pixels
-static int bar_spacing[2];
+// The size of an individual histogram bar in pixels
+static int bar_size[2];
 
 // The number of subbands displayed by a single histogram bar
 static int subbands_in_bar[2];
@@ -130,14 +127,12 @@ kiss_fft_cfg cfg = NULL;
 // Left channel parameters:
 //   3 - Width in pixels
 //   4 - orientation: left to right == 0, right to left == 1
-//   5 - Bar width in pixels
-//   6 - Bar spacing in pixels
-//   7 - Clipping: show all subbands == 0, clip higher subbands == 1
+//   5 - Bar size in pixels
+//   6 - Clipping: show all subbands == 0, clip higher subbands == 1
 // Right channel parameters (not required for mono):
-//   8-12 - same as left channel parameters
+//   7-10 - same as left channel parameters
 
 int decode_spectrum_init( lua_State *L) {
-	int bar_size;
 	int l2int = 0;
 	int shiftsubbands;
 
@@ -147,37 +142,32 @@ int decode_spectrum_init( lua_State *L) {
 
 	channel_width[0] = luaL_optinteger(L, 3, 192);	// Default: 192
 	channel_flipped[0] = luaL_optinteger(L, 4, 0);	// Default: false
-	bar_width[0] = luaL_optinteger(L, 5, 2);	// Default: 2
-	bar_spacing[0] = luaL_optinteger(L, 6, 4);	// Default: 4
-	clip_subbands[0] = luaL_optinteger(L, 7, 0);	// Default: false
+	bar_size[0] = luaL_optinteger(L, 5, 6);		// Default: 6
+	clip_subbands[0] = luaL_optinteger(L, 6, 0);	// Default: false
 
 //	printf( "* channel_width[0]: %d\n", channel_width[0]);
 //	printf( "* channel_flipped[0]: %d\n", channel_flipped[0]);
-//	printf( "* bar_width[0]: %d\n", bar_width[0]);
-//	printf( "* bar_spacing[0]: %d\n", bar_spacing[0]);
+//	printf( "* bar_size[0]: %d\n", bar_size[0]);
 //	printf( "* clip_subbands[0]: %d\n", clip_subbands[0]);
 
 	if( !is_mono) {
-		channel_width[1] = luaL_optinteger(L, 8, 192);
-		channel_flipped[1] = luaL_optinteger(L, 9, 0);
-		bar_width[1] = luaL_optinteger(L, 10, 2);
-		bar_spacing[1] = luaL_optinteger(L, 11, 4);
-		clip_subbands[1] = luaL_optinteger(L, 12, 0);
+		channel_width[1] = luaL_optinteger(L, 7, 192);
+		channel_flipped[1] = luaL_optinteger(L, 8, 0);
+		bar_size[1] = luaL_optinteger(L, 9, 2);
+		clip_subbands[1] = luaL_optinteger(L, 10, 0);
 
 //		printf( "* channel_width[1]: %d\n", channel_width[1]);
 //		printf( "* channel_flipped[1]: %d\n", channel_flipped[1]);
-//		printf( "* bar_width[1]: %d\n", bar_width[1]);
-//		printf( "* bar_spacing[1]: %d\n", bar_spacing[1]);
+//		printf( "* bar_size[1]: %d\n", bar_size[1]);
 //		printf( "* clip_subbands[1]: %d\n", clip_subbands[1]);
 	}
 
 	// Approximate the number of subbands we'll display based
 	// on the width available and the size of the histogram
 	// bars.
-	bar_size = bar_width[0] + bar_spacing[0];
-	num_subbands = channel_width[0] / bar_size;
+	num_subbands = channel_width[0] / bar_size[0];
 
-//	printf( "bar_width[0] %d bar_spacing[0] %d bar_size %d num_subbands %d\n", bar_width[0], bar_spacing[0], bar_size, num_subbands);
+//	printf( "bar_size[0] %d num_subbands %d\n", bar_size[0], num_subbands);
 
 	// Calculate the integer component of the log2 of the num_subbands
 	l2int = 0;
@@ -220,14 +210,13 @@ int decode_spectrum_init( lua_State *L) {
 	// If we're clipping off the higher subbands we cut down
 	// the actual number of bars based on the width available.
 	if( clip_subbands[0]) {
-		num_bars[0] = channel_width[0] / bar_size;
+		num_bars[0] = channel_width[0] / bar_size[0];
 	}
 
 	// Since we now have a fixed number of subbands, we choose
 	// values for the second channel based on these.
 	if( !is_mono) {
-		bar_size = bar_width[1] + bar_spacing[1];
-		num_bars[1] = channel_width[1] / bar_size;
+		num_bars[1] = channel_width[1] / bar_size[1];
 		subbands_in_bar[1] = 1;
 		// If we have enough space for all the subbands, great.
 		if( num_bars[1] > num_subbands) {
