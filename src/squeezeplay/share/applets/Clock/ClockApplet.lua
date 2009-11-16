@@ -960,7 +960,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 	
 		local _clockDigit = {
 			position = LAYOUT_NONE,
-			w = 61,
+			w = 68,
 			y = 38,
 		}
 		local _dateDigit = {
@@ -1011,7 +1011,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			}),
 
 			alarm = _uses(_dateDigit, {
-				w = 36,
+				w = 45,
 				y = 191,
 				x = x.alarm,
 			}),
@@ -1372,7 +1372,7 @@ function Digital:getDigitalClockSkin(skinName)
                 x.dots = x.h2 + 75
                 x.m1 = x.dots + 39
                 x.m2 = x.m1 + 86 
-                x.alarm = x.m2 + 63
+                x.alarm = x.m2 + 80
 		x.ampm = x.alarm
 
 		local _clockDigit = {
@@ -1472,7 +1472,7 @@ function Digital:getDigitalClockSkin(skinName)
 			alarm = {
 				position = LAYOUT_NONE,
 				x = x.alarm,
-				y = 65,
+				y = 56,
 			},
 			ampm = {
 				position = LAYOUT_NONE,
