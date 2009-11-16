@@ -1353,7 +1353,7 @@ function getItemsBeforeScrollGap(self)
 end
 	
 function getEffectiveItemsBeforeScroll(self)
-	if Framework:isMostRecentInput("mouse") then
+	if self.mouseState ~= MOUSE_COMPLETE then
 		--if mouse then user selects item under cursor. On completion, the selection point will be moved to the middle item instead.
 		return ITEMS_BEFORE_SCROLL_DEFAULT
 	else
