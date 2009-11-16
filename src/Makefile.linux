@@ -175,12 +175,18 @@ flac-1.2.1/Makefile:
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
 
-# libmad
-libmad-0.15.1b/Makefile:
-	cd libmad-0.15.1b; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+#libmad
+LIBMAD_DIR=libmad-0.15.1b
+generated/${LIBMAD_DIR}/Makefile.am:
+	mkdir -p generated; cd generated; wget ftp://ftp.mars.org/pub/mpeg/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
 
-libmad: libmad-0.15.1b/Makefile
-	cd libmad-0.15.1b; make && make install
+		
+generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
+	cd generated/${LIBMAD_DIR}; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} 
+
+libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
+	cd generated/${LIBMAD_DIR}; make && make install
+
 
 # ogg
 Tremor/Makefile:
@@ -249,6 +255,13 @@ squeezeplay-deb: all squeezeplay-deb-make
 squeezeplay-deb-make: squeezeplay/Makefile
 	cd squeezeplay; make squeezeplay-deb
 
+.PHONY: clean_generated
+clean_generated:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated
+
+
 #
 # clean
 #
@@ -274,3 +287,4 @@ clean:
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd squeezeplay; make distclean
 	-cd squeezeplay_private; make distclean
+	-rm -rf generated
