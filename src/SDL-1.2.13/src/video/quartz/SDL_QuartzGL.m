@@ -45,7 +45,8 @@
 @implementation NSOpenGLContext (CGLContextAccess)
 - (CGLContextObj) cglContext;
 {
-    return _contextAuxiliary;
+return NULL;  // !!! FIXME
+    //return _contextAuxiliary;
 }
 @end
 

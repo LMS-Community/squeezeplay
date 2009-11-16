@@ -48,9 +48,14 @@ static void QZ_UnlockYUV (_THIS, SDL_Overlay *overlay) {
 }
 
 static int QZ_DisplayYUV (_THIS, SDL_Overlay *overlay, SDL_Rect *src, SDL_Rect *dst) {
-
+#if SDL_LEGACY_QUICKDRAW
     OSErr err;
     CodecFlags flags;
+    int h;
+    char *p_dst, *p_src;
+    PixMapHandle           hPixMap;
+    long                   theRowBytes;
+
 
     if (dst->x != 0 || dst->y != 0) {
 
@@ -81,27 +86,40 @@ static int QZ_DisplayYUV (_THIS, SDL_Overlay *overlay, SDL_Rect *src, SDL_Rect *
                                          codecFlagUseImageBuffer, &flags, nil ) != noErr ) )
     {
         SDL_SetError ("DecompressSequenceFrameS failed");
+        return TRUE;
     }
 
-    return err != noErr;
+    /* TODO: use CGContextDrawImage here too!  Create two CGContextRefs the same way we
+       create two buffers, replace current_buffer with current_context and set it
+       appropriately in QZ_FlipDoubleBuffer.  Use CTM instead of the above
+       SetIdentityMatrix thing.  */
+    hPixMap     = GetGWorldPixMap(yuv_port);
+    p_src       = GetPixBaseAddr(hPixMap);
+    theRowBytes = QTGetPixMapHandleRowBytes(hPixMap);
+    p_dst       = SDL_VideoSurface->pixels + SDL_VideoSurface->offset;
+    for (h = dst->h; h--; ) {
+        SDL_memcpy (p_dst, p_src, dst->w * 4);
+        p_src += theRowBytes;
+        p_dst += SDL_VideoSurface->pitch;
+    }
+    SDL_Flip (SDL_VideoSurface);
+#endif
+    return FALSE;
 }
 
 static void QZ_FreeHWYUV (_THIS, SDL_Overlay *overlay) {
-
+#if SDL_LEGACY_QUICKDRAW
     CDSequenceEnd (yuv_seq);
     ExitMovies();
+    DisposeGWorld(yuv_port);
 
     SDL_free (overlay->hwfuncs);
     SDL_free (overlay->pitches);
     SDL_free (overlay->pixels);
 
-    if (SDL_VideoSurface->flags & SDL_FULLSCREEN) {
-        [ qz_window close ];
-        qz_window = nil;
-    }
-
     SDL_free (yuv_matrix);
     DisposeHandle ((Handle)yuv_idh);
+#endif
 }
 
 /* check for 16 byte alignment, bail otherwise */
@@ -112,11 +130,12 @@ static void QZ_FreeHWYUV (_THIS, SDL_Overlay *overlay) {
 
 SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
                                          Uint32 format, SDL_Surface *display) {
-
+    SDL_Overlay *overlay = NULL;
+#if SDL_LEGACY_QUICKDRAW
     Uint32 codec;
     OSStatus err;
     CGrafPtr port;
-    SDL_Overlay *overlay;
+    Rect  theBounds = {0, 0};
 
     if (format == SDL_YV12_OVERLAY ||
         format == SDL_IYUV_OVERLAY) {
@@ -150,49 +169,20 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
         SDL_SetError ("Could not find QuickTime codec for format");
         return NULL;
     }
-
-    if (SDL_VideoSurface->flags & SDL_FULLSCREEN) {
-
-        /*
-          Acceleration requires a window to be present.
-          A CGrafPtr that points to the screen isn't good enough
-        */
-        NSRect content = NSMakeRect (0, 0, SDL_VideoSurface->w, SDL_VideoSurface->h);
-
-        qz_window = [ [ SDL_QuartzWindow alloc ]
-                            initWithContentRect:content
-                            styleMask:NSBorderlessWindowMask
-                            backing:NSBackingStoreBuffered defer:NO ];
-
-        if (qz_window == nil) {
-            SDL_SetError ("Could not create the Cocoa window");
-            return NULL;
-        }
-
-        [ qz_window setContentView:[ [ NSQuickDrawView alloc ] init ] ];
-        [ qz_window setReleasedWhenClosed:YES ];
-        [ qz_window center ];
-        [ qz_window setAcceptsMouseMovedEvents:YES ];
-        [ qz_window setLevel:CGShieldingWindowLevel() ];
-        [ qz_window makeKeyAndOrderFront:nil ];
-
-        port = [ [ qz_window contentView ] qdPort ];
-        SetPort (port);
-        
-        /*
-            BUG: would like to remove white flash when window kicks in
-            {
-                Rect r;
-                SetRect (&r, 0, 0, SDL_VideoSurface->w, SDL_VideoSurface->h);
-                PaintRect (&r);
-                QDFlushPortBuffer (port, nil);
-            }
-        */
+    
+    theBounds.right  = width;
+    theBounds.bottom = height;
+    yuv_port = NULL;
+    
+    err = QTNewGWorld(&yuv_port, k32ARGBPixelFormat, &theBounds,
+                      NULL, NULL, 0);
+    
+    if (err != noErr) {
+        SDL_SetError ("Could not init QuickTime world");
+        return NULL;
     }
-    else {
-        port = [ window_view qdPort ];
-        SetPort (port);
-    }
+    
+    LockPixels(GetGWorldPixMap(yuv_port));
     
     SetIdentityMatrix (yuv_matrix);
     
@@ -219,7 +209,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
                                     yuv_idh,
                                     NULL,
                                     0,
-                                    port,
+                                    yuv_port,
                                     NULL,
                                     NULL,
                                     yuv_matrix,
@@ -231,11 +221,13 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
     
     if (err != noErr) {
         SDL_SetError ("Error trying to start YUV codec.");
+        DisposeGWorld(yuv_port);
         return NULL;
     }
     
     overlay = (SDL_Overlay*) SDL_malloc (sizeof(*overlay));
     if (overlay == NULL) {
+        DisposeGWorld(yuv_port);
         SDL_OutOfMemory();
         return NULL;
     }
@@ -263,6 +255,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
             plane3 = 1; /* V plane maps to plane 2 */
         }
         else {
+            DisposeGWorld(yuv_port);
             SDL_SetError("Unsupported YUV format");
             return NULL;
         }
@@ -270,6 +263,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
         pixels = (Uint8**) SDL_malloc (sizeof(*pixels) * 3);
         pitches = (Uint16*) SDL_malloc (sizeof(*pitches) * 3);
         if (pixels == NULL || pitches == NULL) {
+            DisposeGWorld(yuv_port);
             SDL_OutOfMemory();
             return NULL;
         }
@@ -280,6 +274,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
             SDL_malloc (sizeof(PlanarPixmapInfoYUV420) +
                     (width * height * 2));
         if (yuv_pixmap == NULL) {
+            DisposeGWorld(yuv_port);
             SDL_OutOfMemory ();
             return NULL;
         }
@@ -314,6 +309,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
 
     overlay->hwfuncs = SDL_malloc (sizeof(*overlay->hwfuncs));
     if (overlay->hwfuncs == NULL) {
+		DisposeGWorld(yuv_port);
         SDL_OutOfMemory();
         return NULL;
     }
@@ -325,6 +321,7 @@ SDL_Overlay* QZ_CreateYUVOverlay (_THIS, int width, int height,
 
     yuv_width = overlay->w;
     yuv_height = overlay->h;
+#endif
     
     return overlay;
 }
