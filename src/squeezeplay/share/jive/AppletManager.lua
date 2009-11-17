@@ -267,6 +267,8 @@ local function _registerMeta(entry)
 		error("Incompatible applet " .. entry.appletName)
 	end
 
+	entry.defaultSettings = obj:defaultSettings()
+
 	if not entry.settings then
 		entry.settings = obj:defaultSettings()
 
@@ -305,6 +307,7 @@ local function _registerMeta(entry)
 	
 	obj._entry = entry
 	obj._settings = entry.settings
+	obj._defaultSettings = entry.settings
 	obj._stringsTable = entry.stringsTable
 
 	entry.metaObj = obj
@@ -491,6 +494,7 @@ local function _evalApplet(entry)
 
 	obj._entry = entry
 	obj._settings = entry.settings
+	obj._defaultSettings = entry.defaultSettings
 	obj._stringsTable = entry.stringsTable
 
 	obj:init()

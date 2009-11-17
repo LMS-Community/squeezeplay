@@ -67,6 +67,8 @@ function init(self, ...)
 	self.timer = Timer(60000, function() self:_activate() end, true)
 	self.timer:start()
 
+	self.defaultSettings = self:getDefaultSettings()
+
 	-- listener to restart screensaver timer
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
@@ -232,8 +234,11 @@ function _activate(self, the_screensaver, force)
 
 	local screensaver = self.screensavers[the_screensaver]
 	if not screensaver or not screensaver.applet then
-		-- no screensaver, do nothing
-		return
+		-- no screensaver, fallback to default
+		log:warn('The configured screensaver method ', the_screensaver, ' is not available. Falling back to default from Meta file')
+		local fallbackKey = self.defaultSettings[self:_getMode()]
+		screensaver = self.screensavers[fallbackKey]
+	--	return
 	end
 
 	-- activate the screensaver. it should register any windows with
@@ -285,22 +290,31 @@ function _getOffScreensaver(self)
 	return self:getSettings()["whenOff"] or "BlankScreen:openScreensaver" --hardcode for backward compatability
 end
 
+function _getMode(self)
+	local player = appletManager:callService("getCurrentPlayer")
+	if not self:isSoftPowerOn() and System:hasSoftPower() then
+		return 'whenOff'
+	else
+		if player and player:getPlayMode() == "play" then
+			return 'whenPlaying'
+		end
+	end
+	return 'whenStopped'
+end
 
 function _getDefaultScreensaver(self)
 	local ss
 
-	local player = appletManager:callService("getCurrentPlayer")
-	if not self:isSoftPowerOn() and System:hasSoftPower() then
+	local ssMode = self:_getMode()
+	if ssMode == 'whenOff' then
 		ss = self:_getOffScreensaver()
 		log:debug("whenOff: ", ss)
+	elseif ssMode == 'whenPlaying' then
+		ss = self:getSettings()["whenPlaying"]
+		log:debug("whenPlaying: ", ss)
 	else
-		if player and player:getPlayMode() == "play" then
-			ss = self:getSettings()["whenPlaying"]
-			log:debug("whenPlaying: ", ss)
-		else
-			ss = self:getSettings()["whenStopped"]
-			log:debug("whenStopped: ", ss)
-		end
+		ss = self:getSettings()['whenStopped']
+		log:debug("whenStopped: ", ss)
 	end
 
 	return ss

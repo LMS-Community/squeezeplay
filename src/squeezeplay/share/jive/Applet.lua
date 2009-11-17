@@ -156,6 +156,18 @@ function getSettings(self)
 	return self._settings
 end
 
+--[[
+
+=head2 jive.Applet:getDefaultSettings()
+
+Returns a table with the defaultSettings table from the applet's Meta file
+
+=cut
+--]]
+
+function getDefaultSettings(self)
+	return self._defaultSettings
+end
 
 -- storeSettings
 -- used by jive.AppletManager to persist the applet settings
