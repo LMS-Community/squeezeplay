@@ -1273,7 +1273,7 @@ function skin(self, s)
 
 	s.time_input_background_12h = {
 		w = WH_FILL,
-		h = screenHeight,
+		h = screenHeight - TITLE_HEIGHT,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/tch_multi_char_bkgrd_3c.png"),
 		x = 0,
@@ -1282,7 +1282,7 @@ function skin(self, s)
 
 	s.time_input_background_24h = {
 		w = WH_FILL,
-		h = screenHeight,
+		h = screenHeight - TITLE_HEIGHT,
 		position = LAYOUT_NONE,
 		img = _loadImage(self, "Multi_Character_Entry/tch_multi_char_bkgrd_2c.png"),
 		x = 0,
@@ -1308,7 +1308,8 @@ function skin(self, s)
 	s.input_time_12h = _uses(s.window)
 	s.input_time_12h.hour = _uses(s.menu, {
 		w = 75,
-		h = screenHeight - 60,
+		--h = screenHeight - TITLE_HEIGHT,
+		h = screenHeight,
 		itemHeight = 45,
 		position = LAYOUT_WEST,
 		padding = 0,
@@ -2845,6 +2846,12 @@ function skin(self, s)
 			}),
 			rewDisabled   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_rew_dis.png"),
+			}),
+			shuffleDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_shuffle_dis.png"),
+			}),
+			repeatDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_repeat_dis.png"),
 			}),
 		},
 	

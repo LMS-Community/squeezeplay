@@ -240,12 +240,12 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		-- for remote streams, nowPlaying = text
 		-- for local music, nowPlaying = track_id
 		self.nowPlaying = nowPlaying
-
-		--update everything
---		self:_updateAll(self) -- handled in WINDOW_ACTIVE listener
 	end
 end
 
+function notify_playerPlaylistChange(self, player)
+	self:_updateAll()
+end
 
 function _nowPlayingTrackTransition(oldWindow, newWindow)
 	_assert(oo.instanceof(oldWindow, Widget))
@@ -256,8 +256,6 @@ function _nowPlayingTrackTransition(oldWindow, newWindow)
 	local scale = 255/frames
 	local animationCount = 0
 
-
---	local bgImage = Framework:getBackground() --handled by SnapshotWindow
 	local sw, sh = Framework:getScreenSize()
 	local srf = Surface:newRGB(sw, sh)
 
@@ -473,11 +471,29 @@ function _updateButtons(self, playerStatus)
 
 	-- if we don't have remoteMeta and button remapping, go back to defaults
 	else
-		log:debug('reset buttons to defaults')
-		self.controlsGroup:setWidget('rew', self.rewButton)
-		self.controlsGroup:setWidget('fwd', self.fwdButton)
-		self.controlsGroup:setWidget('shuffleMode', self.shuffleButton)
-		self.controlsGroup:setWidget('repeatMode', self.repeatButton)
+		local playlistSize = self.player and self.player:getPlaylistSize()
+		-- bug 15085, gray out buttons under certain circumstances
+		if playlistSize == 1 then
+			log:debug('set buttons for single track playlist')
+			-- single track playlist. if this track has no duration, disable rew button
+			local elapsed, duration = self.player:getTrackElapsed()
+			if duration then
+				self.controlsGroup:setWidget('rew', self.rewButton)
+			else
+				self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
+			end
+			self:_remapButton('fwd', 'fwdDisabled', function() return EVENT_CONSUME end)
+			self:_remapButton('shuffleMode', 'shuffleDisabled', function() return EVENT_CONSUME end)
+			self.controlsGroup:setWidget('repeatMode', self.repeatButton)
+			
+			-- fwd and shuffle have little-to-no utility in single track playlists, disable them
+		else
+			log:debug('reset buttons to defaults')
+			self.controlsGroup:setWidget('rew', self.rewButton)
+			self.controlsGroup:setWidget('fwd', self.fwdButton)
+			self.controlsGroup:setWidget('shuffleMode', self.shuffleButton)
+			self.controlsGroup:setWidget('repeatMode', self.repeatButton)
+		end
 	end
 end
 
@@ -763,7 +779,7 @@ function _installListeners(self, window)
 
 	window:addListener(EVENT_WINDOW_ACTIVE,
 		function(event)
-			self:_updateAll(self)
+			self:_updateAll()
 			return EVENT_UNUSED
 		end
 	)
@@ -926,6 +942,9 @@ function toggleNPScreenStyle(self)
 	local oldWindow = self.window
 
 	self.window = _createUI(self)
+	if self.player and self.player:getPlayerStatus() then
+		self:_updateButtons(self.player:getPlayerStatus())
+	end
 	self:_refreshRightButton()
 
 	self.window:replace(oldWindow, Window.transitionFadeIn)
@@ -1429,7 +1448,7 @@ function showNowPlaying(self, transition, direct)
 
 	-- Initialize with current data from Player
 	self.window:show(transitionOn)
-	self:_updateAll(self)
+	self:_updateAll()
 
 end
 
