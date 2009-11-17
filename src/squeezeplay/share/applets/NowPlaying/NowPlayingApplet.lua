@@ -439,13 +439,13 @@ function _updateButtons(self, playerStatus)
 	if buttons then
 		log:debug('remap buttons to whatever remoteMeta needs')
 		-- disable rew or fw as needed
-		if buttons.rew and buttons.rew == 0 then
+		if buttons.rew and tonumber(buttons.rew) == 0 then
 			self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
 		else
 			self.controlsGroup:setWidget('rew', self.rewButton)
 		end
 
-		if buttons.fwd and buttons.fwd == 0 then
+		if buttons.fwd and tonumber(buttons.fwd) == 0 then
 			self:_remapButton('fwd', 'fwdDisabled', function() return EVENT_CONSUME end)
 		else
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
