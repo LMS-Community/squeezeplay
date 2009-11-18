@@ -738,6 +738,13 @@ function skin(self, s)
 			imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png"
 	})
 
+	local _vizProgressBar = _loadHTile(self, {
+			imgpath .. "UNOFFICIAL/viz_progress_fill_l.png",
+			imgpath .. "UNOFFICIAL/viz_progress_fill.png",
+			imgpath .. "UNOFFICIAL/viz_progress_fill_r.png",
+	})
+	local _vizProgressBarPill = _loadImageTile(self, imgpath .. "UNOFFICIAL/viz_progress_slider.png")
+
 	local _volumeSliderBackground = _loadHTile(self, {
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd_l.png",
 		imgpath .. "Touch_Toolbar/tch_volumebar_bkgrd.png",
@@ -3205,12 +3212,14 @@ function skin(self, s)
 				w = 50,
 			},
 			npprogressB = {
-				h = 30,
+				h = 38,
 				w = WH_FILL,
-				padding = { 0, 11, 0, 0 },
+				zOrder = 10,
+				padding = { 0, 19, 0, 15 },
 				horizontal = 1,
 				bgImg = _songProgressBackgroundEmpty,
-				img = _songProgressBar,
+				img = _vizProgressBar,
+                		pillImg = _vizProgressBarPill,
 			},
 		},
 
