@@ -106,6 +106,11 @@ function param(self)
 				style = 'nowplaying_text_only',
 				artworkSize = '190x190',
 			},
+			{
+				style = 'nowplaying_spectrum_text',
+				artworkSize = '190x190',
+				localPlayerOnly = 1,
+			},
 		},
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
@@ -2074,6 +2079,8 @@ function skin(self, s)
 			},
 		},
 
+		npvisu = { hidden = 1 },
+
 		npcontrols = {
 			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'repeatMode', 'div4', 'shuffleMode', 
 					'div5', 'volDown', 'div6', 'volSlider', 'div7', 'volUp' },
@@ -2163,7 +2170,7 @@ function skin(self, s)
 				img        = _songProgressBar,
 			}
 
-	},
+		},
 
 		npprogressNB = {
 			position = LAYOUT_SOUTH,
@@ -2191,6 +2198,9 @@ function skin(self, s)
                 npprogressNB     = { hidden = 1 },
                 npartistgroup    = { hidden = 1 },
                 npalbumgroup     = { hidden = 1 },
+
+                npvisu = { hidden = 1 },
+
                 npartwork = {
                         w = 470,
                         position = LAYOUT_CENTER,
@@ -2229,6 +2239,9 @@ function skin(self, s)
 			},
 
 		},
+
+		npvisu = { hidden = 1 },
+
 		npartwork = { hidden = 1 },
 	})
 
@@ -2242,6 +2255,91 @@ function skin(self, s)
 	s.nowplaying.npartistgroup.pressed = s.nowplaying.npartistgroup
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
 	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
+
+	s.nowplaying_spectrum_text = _uses(s.nowplaying, {
+		bgImg = nocturneWallpaper,
+
+		npartistgroup = { hidden = 1 },
+		npalbumgroup = { hidden = 1 },
+		npartwork = { hidden = 1 },
+
+		title = _uses(s.title, {
+			zOrder = 1,
+			h = TITLE_HEIGHT,
+			text = {
+				-- Hack: text needs to be there to fill the space, but is not visible
+				padding = { screenWidth, 0, 0, 0 }
+			},
+		}),
+
+		-- Drawn over regular test between buttons
+		nptitle = { 
+			zOrder = 2,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = 0,
+			w = screenWidth,
+			h = TITLE_HEIGHT,
+			border = { 0, 0 ,0, 0 },
+			padding = { 10, 5, 10, 7 },
+			nptrack = {
+				w = screenWidth - 20,
+				align = "center",
+			},
+		},
+
+		npartistalbum = {
+			hidden = 0,
+			zOrder = 2,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = TITLE_HEIGHT,
+			w = screenWidth,
+			h = 38,
+			bgImg = titleBox,
+			align = "center",
+			fg = { 0xb3, 0xb3, 0xb3 },
+			padding = { 10, 0, 10, 5 },
+			font = _font(NP_ARTISTALBUM_FONT_SIZE),
+		},
+
+		npvisu = { hidden = 0,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = 2 * TITLE_HEIGHT + 4,
+			w = 480,
+			h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+			border = { 0, 0, 0, 0 },
+			padding = { 0, 0, 0, 0 },
+
+			spectrum = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 2 * TITLE_HEIGHT + 4,
+				w = 480,
+				h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+				border = { 0, 0, 0, 0 },
+				padding = { 0, 0, 0, 0 },
+
+				bg = { 0x00, 0x00, 0x00, 0x00 },
+
+				barColor = { 0x14, 0xbc, 0xbc, 0xff },
+				capColor = { 0xb4, 0x56, 0xa1, 0xff },
+
+				isMono = 0,				-- 0 / 1
+
+				capHeight = { 4, 4 },			-- >= 0
+				capSpace = { 4, 4 },			-- >= 0
+				channelFlipped = { 0, 1 },		-- 0 / 1
+				barsInBin = { 2, 2 },			-- > 1
+				barWidth = { 1, 1 },			-- > 1
+				barSpace = { 3, 3 },			-- >= 0
+				binSpace = { 6, 6 },			-- >= 0
+				clipSubbands = { 1, 1 },		-- 0 / 1
+			}
+		},
+	})
+	s.nowplaying_spectrum_text.pressed = s.nowplaying_spectrum_text
 
 	s.brightness_group = {
 		order = {  'down', 'div1', 'slider', 'div2', 'up' },

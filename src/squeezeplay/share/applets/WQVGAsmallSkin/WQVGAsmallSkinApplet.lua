@@ -110,6 +110,11 @@ function param(self)
 				style = 'nowplaying_text_only',
 				artworkSize = '180x180',
 			},
+			{
+				style = 'nowplaying_spectrum_text',
+				artworkSize = '180x180',
+				localPlayerOnly = 1,
+			},
 		},
         }
 end
@@ -2736,35 +2741,9 @@ function skin(self, s)
 				padding = 0,
 				img = false,
 			},
-
-			vumeter = {
-				w = 180,
-				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
-				padding = { 20, 5, 20, 55 },
-				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
-
-				tickCap = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_bounce.png"),
-				tickOn = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_on.png"),
-				tickOff = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_off.png"),
-			},
-
-			vumeter_analog = {
-				w = 480,
-				border = { 0, 20, 0, 0},
-				padding = { 0, 0, 0, 100 },
-				bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_w.png"),
-			},
-
-			spectrum = {
-				w = 180,
-				border = { 8, TITLE_HEIGHT + 4, 10, 0 },
-				padding = { 20, 5, 20, 55 },
-				bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
-
-				bar = { 0x14, 0xbc, 0xbc, 0xff },
-				cap = { 0xb4, 0x56, 0xa1, 0xff },
-			},
 		},
+
+		npvisu = { hidden = 1 },
 	
 		--transport controls
 		npcontrols = {
@@ -3071,6 +3050,9 @@ function skin(self, s)
 				img = false,
 			},
 		},
+
+		npvisu = { hidden = 1 },
+
 	})
 	s.nowplaying_art_only.pressed = s.nowplaying_art_only
 
@@ -3094,6 +3076,9 @@ function skin(self, s)
                         },
 		},
 		npartwork = { hidden = 1 },
+
+		npvisu = { hidden = 1 },
+
 		npprogress = {
 			x = 10,
 			y = 200,
@@ -3144,6 +3129,140 @@ function skin(self, s)
 		npartist = {
 			fg = { 0xb3, 0xb3, 0xb3 },
 			sh = { },
+		},
+	})
+
+	-- Define empty progress background
+	local _songProgressBackgroundEmpty = _loadHTile(self, {
+               nil,
+               nil,
+               nil,
+	})
+
+	s.nowplaying_spectrum_text = _uses(s.nowplaying, {
+		bgImg = nocturneWallpaper,
+
+		npartistgroup = { hidden = 1 },
+		npalbumgroup = { hidden = 1 },
+		npartwork = { hidden = 1 },
+
+		title = _uses(s.title, {
+			zOrder = 1,
+			h = TITLE_HEIGHT,
+			text = {
+				-- Hack: text needs to be there to fill the space, but is not visible
+				padding = { screenWidth, 0, 0, 0 }
+			},
+		}),
+
+		-- Drawn over regular test between buttons
+		nptitle = { 
+			zOrder = 2,
+			position = LAYOUT_NONE,
+			x = 80,
+			y = 0,
+			w = screenWidth - 160,
+			h = TITLE_HEIGHT,
+			border = { 0, 0 ,0, 0 },
+			padding = { 20, 14, 5, 5 },
+			nptrack = {
+				align = "center",
+			},
+		},
+
+		npartistalbum = {
+			hidden = 0,
+			zOrder = 2,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = TITLE_HEIGHT,
+			w = screenWidth,
+			h = 38,
+			bgImg = titleBox,
+			align = "center",
+			fg = { 0xb3, 0xb3, 0xb3 },
+			padding = { 50, 0, 50, 5 },
+			font = _font(NP_ARTISTALBUM_FONT_SIZE),
+		},
+
+		npprogress = {
+			zOrder = 3,
+			position = LAYOUT_NONE,
+			x = 10,
+			y = TITLE_HEIGHT,
+			h = 38,
+			w = screenWidth - 20,
+			elapsed = {
+				w = 50,
+			},
+			remain = {
+				w = 50,
+			},
+			elapsedSmall = {
+				w = 50,
+			},
+			remainSmall = {
+				w = 50,
+			},
+			npprogressB = {
+				h = 30,
+				w = WH_FILL,
+				padding = { 0, 11, 0, 0 },
+				horizontal = 1,
+				bgImg = _songProgressBackgroundEmpty,
+				img = _songProgressBar,
+			},
+		},
+
+		npprogressNB = {
+			x = screenWidth - 40,
+			y = TITLE_HEIGHT,
+			h = 38,
+			padding = { 0, 15, 0, 0 },
+		},
+
+		npvisu = { hidden = 0,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = 2 * TITLE_HEIGHT + 4,
+			w = 480,
+			h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+			border = { 0, 0, 0, 0 },
+			padding = { 0, 0, 0, 0 },
+
+			spectrum = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = 2 * TITLE_HEIGHT + 4,
+				w = 480,
+				h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+				border = { 0, 0, 0, 0 },
+				padding = { 0, 0, 0, 0 },
+
+				bg = { 0x00, 0x00, 0x00, 0x00 },
+
+				barColor = { 0x14, 0xbc, 0xbc, 0xff },
+				capColor = { 0xb4, 0x56, 0xa1, 0xff },
+
+				isMono = 0,				-- 0 / 1
+
+				capHeight = { 4, 4 },			-- >= 0
+				capSpace = { 4, 4 },			-- >= 0
+				channelFlipped = { 0, 1 },		-- 0 / 1
+				barsInBin = { 2, 2 },			-- > 1
+				barWidth = { 1, 1 },			-- > 1
+				barSpace = { 3, 3 },			-- >= 0
+				binSpace = { 6, 6 },			-- >= 0
+				clipSubbands = { 1, 1 },		-- 0 / 1
+			}
+		},
+	})
+	s.nowplaying_spectrum_text.pressed = s.nowplaying_spectrum_text
+
+	s.nowplaying_spectrum_text.title.pressed = _uses(s.nowplaying_spectrum_text.title, {
+		text = {
+			-- Hack: text needs to be there to fill the space, not visible
+			padding = { screenWidth, 0, 0, 0 }
 		},
 	})
 

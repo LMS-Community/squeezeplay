@@ -1099,13 +1099,22 @@ function _createUI(self)
 	end
 
 	self.artwork = Icon("artwork")
---	self.artwork = VUMeter("vumeter")
---	self.artwork = VUMeter("vumeter_analog")
---	self.artwork = SpectrumMeter("spectrum")
 
 	self.artworkGroup = Button(
 		Group('npartwork', {
 			artwork = self.artwork,
+		}),
+		function()
+			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+		end
+	)
+
+	self.visu = SpectrumMeter("spectrum")
+
+	self.visuGroup = Button(
+		Group('npvisu', {
+			visu = self.visu,
 		}),
 		function()
 			Framework:pushAction("go_now_playing")
@@ -1250,6 +1259,7 @@ function _createUI(self)
 	window:addWidget(self.npartistGroup)
 	window:addWidget(self.artistalbumTitle)
 	window:addWidget(self.artworkGroup)
+	window:addWidget(self.visuGroup)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 
