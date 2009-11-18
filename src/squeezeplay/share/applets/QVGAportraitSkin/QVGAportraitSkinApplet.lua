@@ -523,6 +523,7 @@ function skin(self, s, reload, useDefaultSize)
 		npartistgroup = { hidden = 1},
 		npalbum       = { hidden = 1},
 		npartist      = { hidden = 1},
+		npvisu        = { hidden = 1},
 	
 		-- cover art
 		npartwork = {
