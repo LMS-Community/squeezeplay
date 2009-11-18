@@ -923,8 +923,6 @@ function toggleNPScreenStyle(self)
 
 	log:debug('change window style')
 
-	local numberOfStyles = #self.nowPlayingScreenStyles
-
 	for i, v in ipairs(self.nowPlayingScreenStyles) do
 		if self.selectedStyle == v.style then
 			if i == #self.nowPlayingScreenStyles then
@@ -1338,7 +1336,30 @@ end
 
 function showNowPlaying(self, transition, direct)
 
-	self.nowPlayingScreenStyles = jiveMain:getSkinParam("nowPlayingScreenStyles")
+	local npSkinStyles = jiveMain:getSkinParam("nowPlayingScreenStyles")
+
+	-- visualizers are not available in non-local players, so do not include them
+	local auditedNPStyles = {}
+	if self.player and not self.player:isLocal() then
+		log:debug('the current player is not local', self.player)
+		for i, v in pairs(npSkinStyles) do
+			if v.localPlayerOnly then
+				log:debug('the style ', v.style , ' is not for non-local players. Removing...')
+				if v.style == self.selectedStyle then
+					self.selectedStyle = nil
+				end
+			else
+				log:debug('style ', v.style, ' okay for this player')
+				table.insert(auditedNPStyles, v)
+			end
+		end
+	else
+		log:debug('this player is local, all styles are okay')
+		auditedNPStyles = npSkinStyles
+	end
+
+	-- now we're ready to save the style table to self
+	self.nowPlayingScreenStyles = auditedNPStyles
 
 	if not self.selectedStyle then
 		self.selectedStyle = 'nowplaying'
