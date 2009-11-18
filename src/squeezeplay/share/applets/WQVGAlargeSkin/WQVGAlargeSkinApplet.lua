@@ -1059,33 +1059,32 @@ function skin(self, s)
 	s.multiline_text_list = s.text_list
 
 	-- popup "spinny" window
-	s.waiting_popup = _uses(s.popup)
-
-	s.waiting_popup.text = {
-		w = WH_FILL,
-		h = (POPUP_TEXT_SIZE_1 + 2 ) * 2,
-		position = LAYOUT_NORTH,
-		border = { 0, 18, 0, 0 },
-		padding = { 15, 0, 15, 0 },
-		align = "center",
-		font = _font(POPUP_TEXT_SIZE_1),
-		lineHeight = POPUP_TEXT_SIZE_1 + 8,
-		fg = WHITE,
-		sh = NONE,
-	}
-
-	s.waiting_popup.subtext = {
-		w = WH_FILL,
-		h = 47,
-		position = LAYOUT_SOUTH,
-		border = 0,
-		padding = { 15, 0, 15, 0 },
-		--padding = { 0, 0, 0, 26 },
-		align = "top",
-		font = _boldfont(POPUP_TEXT_SIZE_2),
-		fg = WHITE,
-		sh = NONE,
-	}
+	s.waiting_popup = _uses(s.popup, {
+		text = {
+			w = WH_FILL,
+			h = (POPUP_TEXT_SIZE_1 + 8 ),
+			position = LAYOUT_NORTH,
+			border = { 0, 34, 0, 14 },
+			padding = { 15, 0, 15, 0 },
+			align = "center",
+			font = _font(POPUP_TEXT_SIZE_1),
+			lineHeight = POPUP_TEXT_SIZE_1 + 8,
+			fg = WHITE,
+			sh = NONE,
+		},
+		subtext = {
+			w = WH_FILL,
+			h = 47,
+			position = LAYOUT_SOUTH,
+			border = 0,
+			padding = { 15, 0, 15, 0 },
+			--padding = { 0, 0, 0, 26 },
+			align = "top",
+			font = _boldfont(POPUP_TEXT_SIZE_2),
+			fg = WHITE,
+			sh = NONE,
+		},
+	})
 
 	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
 		fg = TEAL,
