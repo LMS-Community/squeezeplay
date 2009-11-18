@@ -29,9 +29,9 @@ my $resize = {
 my @iconConvertList = get_icon_list();
 
 my $special = {
-"icon_firmware_update.png"	=>	{ touch	=> 100,	remote	=> 100 },
-"icon_verify.png"		=>	{ touch	=> 100,	remote	=> 100 },
-"icon_restart.png"		=>	{ touch	=> 100,	remote	=> 100 },
+"icon_firmware_update.png"	=>	{ touch	=> 120,	remote	=> 120 },
+"icon_verify.png"		=>	{ touch	=> 120,	remote	=> 120 },
+"icon_restart.png"		=>	{ touch	=> 120,	remote	=> 120 },
 };
 
 my $existingImages = get_assets($resizedIconDir);

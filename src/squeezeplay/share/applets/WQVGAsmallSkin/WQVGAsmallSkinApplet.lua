@@ -1529,41 +1529,40 @@ function skin(self, s)
 	})
 
 	-- update window
-	s.update_popup = _uses(s.popup)
+	s.update_popup = _uses(s.popup, {
+		text = {
+			w = WH_FILL,
+			h = (POPUP_TEXT_SIZE_1 + 8 ),
+			position = LAYOUT_NORTH,
+			border = { 0, 34, 0, 2 },
+			padding = { 10, 0, 10, 0 },
+			align = "center",
+			font = _font(POPUP_TEXT_SIZE_1),
+			lineHeight = POPUP_TEXT_SIZE_1 + 8,
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,		
+		},
+		subtext = {
+			w = WH_FILL,
+			-- note this is a hack as the height and padding push
+			-- the content out of the widget bounding box.
+			h = 30,
+			padding = { 0, 0, 0, 28 },
+			font = _boldfont(UPDATE_SUBTEXT_SIZE),
+			fg = TEXT_COLOR,
+			sh = TEXT_SH_COLOR,
+			align = "bottom",
+			position = LAYOUT_SOUTH,
+		},
 
-	s.update_popup.text = {
-		w = WH_FILL,
-		h = (POPUP_TEXT_SIZE_1 + 8 ) * 2,
-		position = LAYOUT_NORTH,
-		border = { 0, 20, 0, 4 },
-		padding = { 15, 0, 15, 0 },
-		align = "center",
-		font = _font(POPUP_TEXT_SIZE_1),
-		lineHeight = POPUP_TEXT_SIZE_1 + 8,
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
-	}
-
-	s.update_popup.subtext = {
-		w = WH_FILL,
-		-- note this is a hack as the height and padding push
-		-- the content out of the widget bounding box.
-		h = 30,
-		padding = { 0, 0, 0, 30 },
-		font = _boldfont(UPDATE_SUBTEXT_SIZE),
-		fg = TEXT_COLOR,
-		sh = TEXT_SH_COLOR,
-		align = "bottom",
-		position = LAYOUT_SOUTH,
-	}
-
-	s.update_popup.progress = {
-		border = { 24, 7, 24, 7 },
-		position = LAYOUT_SOUTH,
-		horizontal = 1,
-		bgImg = _progressBackground,
-		img = _progressBar,
-	}
+		progress = {
+			border = { 15, 7, 15, 17 },
+			position = LAYOUT_SOUTH,
+			horizontal = 1,
+			bgImg = _progressBackground,
+			img = _progressBar,
+		},
+	})
 
 	s.home_menu = _uses(s.text_list, {
 		menu = {
