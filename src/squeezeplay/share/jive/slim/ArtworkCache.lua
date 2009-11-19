@@ -19,8 +19,8 @@ local log         = require("jive.utils.log").logger("squeezebox.server.cache")
 module(..., oo.class)
 
 
--- Limit artwork cache to 15 Mbytes
-local ARTWORK_LIMIT = 15 * 1024 * 1024
+-- Limit artwork cache to 8 Mbytes
+local ARTWORK_LIMIT = 8 * 1024 * 1024
 
 
 function __init(self)
