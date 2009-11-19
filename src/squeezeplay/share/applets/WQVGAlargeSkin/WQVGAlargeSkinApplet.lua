@@ -2080,6 +2080,7 @@ function skin(self, s)
 		},
 
 		npvisu = { hidden = 1 },
+		npvumeter = { hidden = 1 },
 
 		npcontrols = {
 			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'repeatMode', 'div4', 'shuffleMode', 
@@ -2200,6 +2201,7 @@ function skin(self, s)
                 npalbumgroup     = { hidden = 1 },
 
                 npvisu = { hidden = 1 },
+                npvumeter = { hidden = 1 },
 
                 npartwork = {
                         w = 470,
@@ -2241,6 +2243,7 @@ function skin(self, s)
 		},
 
 		npvisu = { hidden = 1 },
+		npvumeter = { hidden = 1 },
 
 		npartwork = { hidden = 1 },
 	})
@@ -2338,6 +2341,7 @@ function skin(self, s)
 				clipSubbands = { 1, 1 },		-- 0 / 1
 			}
 		},
+		npvumeter = { hidden = 1 },
 	})
 	s.nowplaying_spectrum_text.pressed = s.nowplaying_spectrum_text
 

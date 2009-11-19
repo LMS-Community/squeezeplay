@@ -1117,10 +1117,25 @@ function _createUI(self)
 			visu = self.visu,
 		}),
 		function()
+			log:warn('Spectrum Analyzer callback function called')
 			Framework:pushAction("go_now_playing")
 			return EVENT_CONSUME
 		end
 	)
+
+	self.vumeter = VUMeter('vumeter_analog')
+
+	self.vuGroup = Button(
+		Group('npvumeter', {
+			vumeter = self.vumeter,
+		}),
+		function()
+			log:warn('VUMeter callback function called')
+			Framework:pushAction("go_now_playing")
+			return EVENT_CONSUME
+		end
+	)
+
 
 	local playIcon = Button(Icon('play'),
 				function() 
@@ -1260,6 +1275,7 @@ function _createUI(self)
 	window:addWidget(self.artistalbumTitle)
 	window:addWidget(self.artworkGroup)
 	window:addWidget(self.visuGroup)
+	window:addWidget(self.vuGroup)
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 

@@ -261,6 +261,7 @@ function skin(self, s, reload, useDefaultSize)
 		npalbum       = { hidden = 1},
 		npartist      = { hidden = 1},
 		npvisu        = { hidden = 1},
+		npvumeter     = { hidden = 1},
 	
 		-- cover art
 		npartwork = {
