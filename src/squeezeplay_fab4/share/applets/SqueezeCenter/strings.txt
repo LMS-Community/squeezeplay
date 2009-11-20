@@ -167,3 +167,320 @@ STATUS_NOTHING
 	RU	Squeezebox Server и сканер не выполняются
 	SV	Varken Squeezebox Server eller sökningen körs
 
+SCANNER_NO_STATUS
+	EN	The scanner is running but no status is currently available
+
+SCANNER_PROGRESS
+	CS	Detaily hledání hudby
+	DA	Detaljer om musikindeksering
+	DE	Details zum Musik-Scan
+	EN	Music Scan Details
+	ES	Detalles de examen de música
+	FI	Musiikkihaun tiedot
+	FR	Détails de l'analyse de la musique
+	IT	Dettagli analisi musica
+	NL	Details van muziekscan
+	NO	Detaljer om søk etter musikk
+	PL	Szczegóły przeszukiwania muzyki
+	RU	Сведения о сканировании музыки
+	SV	Information om musiksökning
+
+FAILURE_PROGRESS
+	CS	Prohledávání hudby neočekávaně ukončeno (%s)
+	DA	Musiksøgningen blev afsluttet uventet (%s)
+	DE	Durchsuchen der Musiksammlung unerwartet abgebrochen (%s)
+	EN	Music scan terminated unexpectedly (%s)
+	ES	El examen de música terminó inesperadamente (%s)
+	FI	Musiikkihaku lopetettiin odottamatta (%s)
+	FR	L'analyse de la musique s'est terminée de façon inattendue (%s)
+	IT	Analisi della musica interrotta in modo imprevisto (%s)
+	NL	Muziekscan onverwacht beëindigd (%s)
+	NO	Musikksøket stoppet plutselig (%s)
+	PL	Przeszukiwanie muzyki zostało przerwane nieoczekiwanie (%s)
+	RU	Сканирование музыки было неожиданно прервано (%s)
+	SV	Musiksökningen avslutades oväntat (%s)
+
+SCAN_ABORTED_PROGRESS
+	CS	Prohledávání bylo manuálně přerušeno uživatelem
+	DA	Søgningen blev afbrudt manuelt af brugeren
+	DE	Vorgang wurde vom Benutzer manuell abgebrochen.
+	EN	Scan was manually aborted by the user
+	ES	El usuario anuló manualmente el examen
+	FI	Käyttäjä keskeytti tarkistuksen manuaalisesti
+	FR	L'utilisateur a interrompu manuellement l'analyse
+	IT	Analisi annullata manualmente dall'utente
+	NL	De gebruiker heeft de scan handmatig afgebroken
+	NO	Søket ble manuelt avbrutt av brukeren
+	PL	Przeszukiwanie zostało ręcznie przerwane przez użytkownika
+	RU	Сканирование было прервано пользователем
+	SV	Sökningen avbröts manuellt av användaren
+
+DIRECTORY_PROGRESS
+	CS	Prohledávání adresáře
+	DA	Indeksering af mapper
+	DE	Durchsuche Musik-Verzeichnis
+	EN	Directory Scan
+	ES	Examen de directorios
+	FI	Hakemistohaku
+	FR	Analyse du répertoire
+	IT	Analisi delle directory
+	NL	Directory scannen
+	NO	Katalogsøk
+	PL	Przeszukiwanie katalogu
+	RU	Сканирование каталога
+	SV	Mappsökning
+
+DIRECTORY_DELETED_PROGRESS
+	CS	Odebrat smazané soubory
+	DA	Fjern slettede filer
+	DE	Gelöschte Dateien entfernen
+	EN	Remove deleted files
+	ES	Quitar archivos eliminados
+	FI	Poista poistetut tiedostot
+	FR	Enlever les fichiers supprimés
+	IT	Rimuovi file eliminati
+	NL	Verwijderde bestanden weghalen
+	NO	Fjern slettede filer
+	PL	Kasuj usunięte pliki
+	RU	Убрать удаленные файлы
+	SV	Ta bort borttagna filer
+
+DIRECTORY_NEW_PROGRESS
+	CS	Prohledat nové soubory
+	DA	Søg efter nye filer
+	DE	Neue Dateien durchsuchen
+	EN	Scan new files
+	ES	Examinar archivos nuevos
+	FI	Tarkista uudet tiedostot
+	FR	Analyse des nouveaux fichiers
+	IT	Analizza i nuovi file
+	NL	Nieuwe bestanden scannen
+	NO	Søk i nye filer
+	PL	Przeszukuj nowe pliki
+	RU	Сканировать новые файлы
+	SV	Sök igenom nya filer
+
+DIRECTORY_CHANGED_PROGRESS
+	CS	Skenování změněných souborů
+	DA	Tjekker ændrede filer
+	DE	Geänderte Dateien werden durchsucht
+	EN	Scanning changed files
+	ES	Examinando archivos modificados
+	FI	Tarkistaa muutettuja tiedostoja
+	FR	Analyse des fichiers modifiés
+	IT	Analisi file modificati in corso
+	NL	Gewijzigde bestanden worden gescand
+	NO	Søker i endrede filer
+	PL	Przeszukiwanie zmienionych plików
+	RU	Сканирование измененных файлов
+	SV	Söker igenom ändrade filer
+
+PLAYLIST_DELETED_PROGRESS
+	CS	Odebrat smazané seznamy skladeb
+	DA	Fjern slettede afspilningslister
+	DE	Gelöschte Wiedergabelisten entfernen
+	EN	Remove deleted playlists
+	ES	Quitar listas de reproducción eliminadas
+	FI	Poista poistetut soittoluettelot
+	FR	Enlever les listes de lecture supprimées
+	IT	Rimuovi elenchi di riproduzione eliminati
+	NL	Verwijderde playlists weghalen
+	NO	Fjern slettede spillelister
+	PL	Kasuj usunięte listy odtwarzania
+	RU	Убрать удаленные плей-листы
+	SV	Ta bort borttagna spellistor
+
+PLAYLIST_NEW_PROGRESS
+	CS	Prohledat nové seznamy skladeb
+	DA	Søg efter nye afspilningslister
+	DE	Neue Wiedergabelisten durchsuchen
+	EN	Scan new playlists
+	ES	Examinar listas de reproducción nuevas
+	FI	Tarkista uudet soittoluettelot
+	FR	Analyser les nouvelles listes de lecture
+	IT	Analizza nuovi elenchi di riproduzione
+	NL	Nieuwe playlists scannen
+	NO	Søk i nye spillelister
+	PL	Przeszukuj nowe listy odtwarzania
+	RU	Сканировать новые плей-листы
+	SV	Sök igenom nya spellistor
+
+PLAYLIST_CHANGED_PROGRESS
+	CS	Skenování změněných seznamů skladeb
+	DA	Søger efter ændrede afspilningslister
+	DE	Geänderte Wiedergabelisten werden durchsucht
+	EN	Scanning changed playlists
+	ES	Examinando listas de reproducción modificadas
+	FI	Tarkistaa muutettuja soittoluetteloita
+	FR	Analyse des listes de lecture modifiées
+	IT	Analisi elenchi di riproduzione modificati in corso
+	NL	Gewijzigde playlists worden gescand
+	NO	Søker i endrede spillelister
+	PL	Przeszukiwanie zmienionych list odtwarzania
+	RU	Сканирование измененных плей-листов
+	SV	Söker igenom ändrade spellistor
+
+PLAYLIST_PROGRESS
+	CS	Prohledání seznamu skladeb
+	DA	Søgning efter afspilningslister
+	DE	Suche Wiedergabelisten
+	EN	Playlist Scan
+	ES	Examen de listas de reproducción
+	FI	Soittoluetteloiden haku
+	FR	Analyse de liste de lecture
+	IT	Analisi elenchi di riproduzione
+	NL	Scannen van playlists
+	NO	Søk etter spilleliste
+	PL	Przeszukiwanie listy odtwarzania
+	RU	Сканирование плей-листа
+	SV	Sökning i spellista
+
+MERGEVA_PROGRESS
+	CS	Sloučit více interpretů
+	DA	Flet Diverse kunstnere
+	DE	Gruppiere "Diverse Artisten"
+	EN	Merge Various Artists
+	ES	Fusionar varios artistas
+	FI	Yhdistä useita artisteja
+	FR	Fusionner les artistes divers
+	IT	Raggruppamento Artisti vari
+	NL	Diverse artiesten samenvoegen
+	NO	Slå sammen diverse artister
+	PL	Połącz różnych wykonawców
+	RU	Объединить неск. исполнителей
+	SV	Slå ihop Blandade artister
+
+ARTWORK_PROGRESS
+	CS	Hledání obalů alb
+	DA	Søg efter covere
+	DE	Suche Plattenhüllen
+	EN	Artwork Scan
+	ES	Examen de carátula de álbum
+	FI	Kansitaiteen haku
+	FR	Analyse de pochettes
+	IT	Analisi copertine
+	NL	Hoesafbeeldingen scannen
+	NO	Søk etter albumomslag
+	PL	Przeszukiwanie okładek
+	RU	Сканирование обложек
+	SV	Sökning efter albumomslag
+
+CLEANUP1_PROGRESS
+	CS	Čištění databáze č.1
+	DA	Oprydning i database nr. 1
+	DE	Datenbankbereinigung 1. Durchgang
+	EN	Database Cleanup #1
+	ES	Limpieza 1 de base de datos
+	FI	Tietokannan puhdistus #1
+	FR	Nettoyage de base de données 1
+	IT	Pulizia del database n. 1
+	NL	Opschonen van database 1
+	NO	Databaseopprydding #1
+	PL	Czyszczenie bazy danych nr 1
+	RU	Очистка базы данных №1
+	SV	Databasrensning nr 1
+
+CLEANUP2_PROGRESS
+	CS	Vyčištění databáze č. 2
+	DA	Oprydning i database nr. 2
+	DE	Datenbankbereinigung 2. Durchgang
+	EN	Database Cleanup #2
+	ES	Limpieza 2 de base de datos
+	FI	Tietokannan puhdistus #2
+	FR	Nettoyage de base de données 2
+	IT	Pulizia del database n. 2
+	NL	Opschonen van database 2
+	NO	Databaseopprydding #2
+	PL	Czyszczenie bazy danych nr 2
+	RU	Очистка базы данных №2
+	SV	Databasrensning #2
+
+DBOPTIMIZE_PROGRESS
+	CS	Optimalizovat databázi
+	DA	Optimering af database
+	DE	Datenbank Optimierung
+	EN	Database Optimize
+	ES	Optimización de base de datos
+	FI	Tietokannan optimointi
+	FR	Optimisation de base de données
+	IT	Ottimizzazione database
+	NL	Database optimaliseren
+	NO	Databaseoptimalisering
+	PL	Optymalizacja bazy danych
+	RU	Оптимизация базы данных
+	SV	Optimering av databas
+
+IMPORTER_PROGRESS
+	CS	Průběh prohledávání
+	DA	Status for gennemsøgning
+	DE	Fortschritt der Musik-Suche
+	EN	Scanning Progress
+	ES	Progreso de examen
+	FI	Tarkistuksen eteneminen
+	FR	Progression de l'analyse
+	IT	Avanzamento analisi
+	NL	Scanvoortgang
+	NO	Framdrift for søk
+	PL	Postęp przeszukiwania
+	RU	Ход сканирования
+	SV	Sökningsförlopp
+
+RUNNING
+	CS	Spuštěno
+	DA	Kører
+	DE	Läuft
+	EN	Running
+	ES	En ejecución
+	FI	Käynnistetty
+	FR	En cours d'exécution
+	IT	In esecuzione
+	NL	Actief
+	NO	Kjører
+	PL	Uruchomiony
+	RU	Выполняется
+	SV	Körs
+
+COMPLETE
+	CS	Dokončit
+	DA	Fuldstændig
+	DE	Beendet
+	EN	Complete
+	ES	Completado
+	FI	Valmis
+	FR	Terminé
+	IT	Completo
+	NL	Voltooien
+	NO	Fullført
+	PL	Gotowe
+	RU	Завершено
+	SV	Fullständig
+
+PROGRESS_IMPORTER_COMPLETE_DESC
+	CS	Server ukončil prohledávání vaší sbírky hudby.
+	DA	Serveren er færdig med at gennemsøge din musiksamling.
+	DE	Der Server hat das Durchsuchen Ihrer Musiksammlung abgeschlossen.
+	EN	The server has finished scanning your music collection.
+	ES	El servidor ha finalizado el examen de su colección de música.
+	FI	Palvelin on nyt lopettanut musiikkikokoelmasi tarkistuksen.
+	FR	Le serveur a terminé d'analyser la collection musicale.
+	IT	Il server ha completato l'analisi della raccolta musicale.
+	NL	De server heeft je muziekcollectie gescand.
+	NO	Serveren har nå søkt gjennom musikksamlingen din.
+	PL	Serwer zakończył przeszukiwanie kolekcji muzyki.
+	RU	Сервер завершил сканирование музыкальной коллекции.
+	SV	Sökningen av musikbiblioteket har slutförts.
+
+TOTAL_TIME
+	CS	Celkem doba:
+	DA	Samlet spilletid:
+	DE	Laufzeit:
+	EN	Total Time:
+	ES	Tiempo total:
+	FI	Kokonaisaika:
+	FR	Durée totale:
+	IT	Tempo totale:
+	NL	Totale tijd:
+	NO	Samlet tid:
+	PL	Całkowity czas:
+	RU	Общее время:
+	SV	Total tid:
