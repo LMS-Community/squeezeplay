@@ -101,19 +101,6 @@ function param(self)
 				style = 'nowplaying', 
 				artworkSize = '180x180',
 			},
-			-- for quicker debug add the viz right after first NP view
-			--[[
-			{
-				style = 'nowplaying_spectrum_text',
-				artworkSize = '180x180',
-				localPlayerOnly = 1,
-			},
-			{
-				style = 'nowplaying_vumeter_text',
-				artworkSize = '180x180',
-				localPlayerOnly = 1,
-			},
-			--]]
 			{
 				style = 'nowplaying_art_only',
 				artworkSize = '470x262',
@@ -128,7 +115,11 @@ function param(self)
 				artworkSize = '180x180',
 				localPlayerOnly = 1,
 			},
-			
+			{
+				style = 'nowplaying_vuanalog_text',
+				artworkSize = '180x180',
+				localPlayerOnly = 1,
+			},
 		},
         }
 end
@@ -2681,6 +2672,7 @@ function skin(self, s)
 	s.nowplaying = _uses(s.window, {
 		--title bar
 		title = _uses(s.title, {
+			zOrder = 1,
 			text = {
 				font = _boldfont(TITLE_FONT_SIZE),
 			},
@@ -2764,7 +2756,6 @@ function skin(self, s)
 		},
 
 		npvisu = { hidden = 1 },
-		npvumeter = { hidden = 1 },
 	
 		--transport controls
 		npcontrols = {
@@ -2774,7 +2765,6 @@ function skin(self, s)
 			h = controlHeight,
 			w = WH_FILL,
 			bgImg = touchToolbarBackground,
-			zOrder = 10,
 
 			div1 = _uses(_transportControlBorder),
 			div2 = _uses(_transportControlBorder),
@@ -3073,6 +3063,7 @@ function skin(self, s)
 			},
 		},
 
+		npvisu = { hidden = 1 },
 
 	})
 	s.nowplaying_art_only.pressed = s.nowplaying_art_only
@@ -3097,6 +3088,8 @@ function skin(self, s)
                         },
 		},
 		npartwork = { hidden = 1 },
+
+		npvisu = { hidden = 1 },
 
 		npprogress = {
 			x = 10,
@@ -3158,7 +3151,9 @@ function skin(self, s)
                nil,
 	})
 
-	s.nowplaying_spectrum_text = _uses(s.nowplaying, {
+	-- Visualizer: Container with titlebar, progressbar and controls.
+	--  The space between title and controls is used for the visualizer.
+	s.nowplaying_visualizer_common = _uses(s.nowplaying, {
 		bgImg = nocturneWallpaper,
 
 		npartistgroup = { hidden = 1 },
@@ -3241,8 +3236,12 @@ function skin(self, s)
 			h = 38,
 			padding = { 0, 15, 0, 0 },
 		},
+	})
 
-		npvisu = { hidden = 0,
+	-- Visualizer: Spectrum Visualizer
+	s.nowplaying_spectrum_text = _uses(s.nowplaying_visualizer_common, {
+		npvisu = {
+			hidden = 0,
 			position = LAYOUT_NONE,
 			x = 0,
 			y = 2 * TITLE_HEIGHT + 4,
@@ -3287,38 +3286,36 @@ function skin(self, s)
 		},
 	})
 
-	s.nowplaying_vumeter_text = _uses(s.nowplaying_spectrum_text, {
-		title = {
-			zOrder = 10,
-			button_back = {
-				zOrder = 10,
-			},
-		},
-		nptitle = {
-			zOrder = 11,
-		},
+	-- Visualizer: Analog VU Meter
+	s.nowplaying_vuanalog_text = _uses(s.nowplaying_visualizer_common, {
 		npvisu = {
-			hidden = 1,
-		},
-		npvumeter = {
-			-- vumeter is fullscreen and goes behind everything else
-			zOrder = 1,
 			hidden = 0,
-			order = { 'vumeter' },
 			position = LAYOUT_NONE,
 			x = 0,
-			y = 0,
+			y = TITLE_HEIGHT + 38,
 			w = 480,
-			h = 272,
-			vumeter = {
-				zOrder = 1,
+			h = 272 - (TITLE_HEIGHT + 38 + 38),
+			border = { 0, 0, 0, 0 },
+			padding = { 0, 0, 0, 0 },
+
+			vumeter_analog = {
 				position = LAYOUT_NONE,
 				x = 0,
-				y = 0,
+				y = TITLE_HEIGHT + 38,
 				w = 480,
-				h = 272,
+				h = 272 - (TITLE_HEIGHT + 38 + 38),
+				border = { 0, 0, 0, 0 },
+				padding = { 0, 0, 0, 0 },
 				bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_b.png"),
-			},
+			}
+		},
+	})
+	s.nowplaying_vuanalog_text.pressed = s.nowplaying_vuanalog_text
+
+	s.nowplaying_vuanalog_text.title.pressed = _uses(s.nowplaying_vuanalog_text.title, {
+		text = {
+			-- Hack: text needs to be there to fill the space, not visible
+			padding = { screenWidth, 0, 0, 0 }
 		},
 	})
 

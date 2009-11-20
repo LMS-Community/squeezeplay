@@ -51,6 +51,11 @@ function _layout(self)
 	local x,y,w,h = self:getBounds()
 	local l,t,r,b = self:getPadding()
 
+	-- When used in NP screen _layout gets called with strange values
+	if (w <= 0 or w > 480) and (h <= 0 or h > 272) then
+		return
+	end
+
 	if self.style == "vumeter" then
 		self.w = w - l - r
 		self.h = h - t - b
@@ -133,9 +138,9 @@ function _drawMeter(self, surface, sampleAcc, ch, x, y, w, h)
 --		local x,y,w,h = self:getBounds()
 
 		if ch == 1 then
-			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, 0)
+			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, y)
 		else
-			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, 0)
+			self.bgImg:blitClip(self.cap[ch] * w, y, w, h, surface, x, y)
 		end
 	end
 end

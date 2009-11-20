@@ -1110,32 +1110,31 @@ function _createUI(self)
 		end
 	)
 
-	self.visu = SpectrumMeter("spectrum")
+	-- Visualizer: Spectrum Visualizer - only load if needed
+	if self.windowStyle == "nowplaying_spectrum_text" then
+		self.visuGroup = Button(
+			Group('npvisu', {
+				visu = SpectrumMeter("spectrum"),
+			}),
+			function()
+				Framework:pushAction("go_now_playing")
+				return EVENT_CONSUME
+			end
+		)
+	end
 
-	self.visuGroup = Button(
-		Group('npvisu', {
-			visu = self.visu,
-		}),
-		function()
-			log:warn('Spectrum Analyzer callback function called')
-			Framework:pushAction("go_now_playing")
-			return EVENT_CONSUME
-		end
-	)
-
-	self.vumeter = VUMeter('vumeter_analog')
-
-	self.vuGroup = Button(
-		Group('npvumeter', {
-			vumeter = self.vumeter,
-		}),
-		function()
-			log:warn('VUMeter callback function called')
-			Framework:pushAction("go_now_playing")
-			return EVENT_CONSUME
-		end
-	)
-
+	-- Visualizer: Analog VU Meter - only load if needed
+	if self.windowStyle == "nowplaying_vuanalog_text" then
+		self.visuGroup = Button(
+			Group('npvisu', {
+				visu = VUMeter("vumeter_analog"),
+			}),
+			function()
+				Framework:pushAction("go_now_playing")
+				return EVENT_CONSUME
+			end
+		)
+	end
 
 	local playIcon = Button(Icon('play'),
 				function() 
@@ -1274,8 +1273,11 @@ function _createUI(self)
 	window:addWidget(self.npartistGroup)
 	window:addWidget(self.artistalbumTitle)
 	window:addWidget(self.artworkGroup)
-	window:addWidget(self.visuGroup)
-	window:addWidget(self.vuGroup)
+	-- Visualizer: Only load if needed
+	if (self.windowStyle == "nowplaying_spectrum_text") or (self.windowStyle == "nowplaying_vuanalog_text") then
+		window:addWidget(self.visuGroup)
+	end
+
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
 

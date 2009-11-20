@@ -111,6 +111,11 @@ function param(self)
 				artworkSize = '190x190',
 				localPlayerOnly = 1,
 			},
+			{
+				style = 'nowplaying_vuanalog_text',
+				artworkSize = '190x190',
+				localPlayerOnly = 1,
+			},
 		},
 		radialClock = {
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
@@ -2080,7 +2085,6 @@ function skin(self, s)
 		},
 
 		npvisu = { hidden = 1 },
-		npvumeter = { hidden = 1 },
 
 		npcontrols = {
 			order = { 'rew', 'div1', 'play', 'div2', 'fwd', 'div3', 'repeatMode', 'div4', 'shuffleMode', 
@@ -2201,7 +2205,6 @@ function skin(self, s)
                 npalbumgroup     = { hidden = 1 },
 
                 npvisu = { hidden = 1 },
-                npvumeter = { hidden = 1 },
 
                 npartwork = {
                         w = 470,
@@ -2243,7 +2246,6 @@ function skin(self, s)
 		},
 
 		npvisu = { hidden = 1 },
-		npvumeter = { hidden = 1 },
 
 		npartwork = { hidden = 1 },
 	})
@@ -2259,7 +2261,9 @@ function skin(self, s)
 	s.nowplaying.npalbumgroup.pressed = s.nowplaying.npalbumgroup
 	s.nowplaying.nptitle.pressed = s.nowplaying.nptitle
 
-	s.nowplaying_spectrum_text = _uses(s.nowplaying, {
+	-- Visualizer: Container with titlebar, progressbar and controls.
+	--  The space between title and controls is used for the visualizer.
+	s.nowplaying_visualizer_common = _uses(s.nowplaying, {
 		bgImg = nocturneWallpaper,
 
 		npartistgroup = { hidden = 1 },
@@ -2305,22 +2309,26 @@ function skin(self, s)
 			padding = { 10, 0, 10, 5 },
 			font = _font(NP_ARTISTALBUM_FONT_SIZE),
 		},
+	})
 
-		npvisu = { hidden = 0,
+	-- Visualizer: Spectrum Visualizer
+	s.nowplaying_spectrum_text = _uses(s.nowplaying_visualizer_common, {
+		npvisu = {
+			hidden = 0,
 			position = LAYOUT_NONE,
 			x = 0,
-			y = 2 * TITLE_HEIGHT + 4,
+			y = 2 * TITLE_HEIGHT,
 			w = 480,
-			h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+			h = 272 - (2 * TITLE_HEIGHT + 4 + 33),
 			border = { 0, 0, 0, 0 },
 			padding = { 0, 0, 0, 0 },
 
 			spectrum = {
 				position = LAYOUT_NONE,
 				x = 0,
-				y = 2 * TITLE_HEIGHT + 4,
+				y = 2 * TITLE_HEIGHT,
 				w = 480,
-				h = 272 - (2 * TITLE_HEIGHT + 4 + 45),
+				h = 272 - (2 * TITLE_HEIGHT + 4 + 33),
 				border = { 0, 0, 0, 0 },
 				padding = { 0, 0, 0, 0 },
 
@@ -2341,9 +2349,34 @@ function skin(self, s)
 				clipSubbands = { 1, 1 },		-- 0 / 1
 			}
 		},
-		npvumeter = { hidden = 1 },
 	})
 	s.nowplaying_spectrum_text.pressed = s.nowplaying_spectrum_text
+
+	-- Visualizer: Analog VU Meter
+	s.nowplaying_vuanalog_text = _uses(s.nowplaying_visualizer_common, {
+		npvisu = {
+			hidden = 0,
+			position = LAYOUT_NONE,
+			x = 0,
+			y = TITLE_HEIGHT + 38,
+			w = 480,
+			h = 272 - (TITLE_HEIGHT + 34 + 38),
+			border = { 0, 0, 0, 0 },
+			padding = { 0, 0, 0, 0 },
+
+			vumeter_analog = {
+				position = LAYOUT_NONE,
+				x = 0,
+				y = TITLE_HEIGHT + 38,
+				w = 480,
+				h = 272 - (TITLE_HEIGHT + 34 + 38),
+				border = { 0, 0, 0, 0 },
+				padding = { 0, 0, 0, 0 },
+				bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_b.png"),
+			}
+		},
+	})
+	s.nowplaying_vuanalog_text.pressed = s.nowplaying_vuanalog_text
 
 	s.brightness_group = {
 		order = {  'down', 'div1', 'slider', 'div2', 'up' },
