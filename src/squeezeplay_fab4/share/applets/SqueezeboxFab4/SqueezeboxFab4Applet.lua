@@ -58,6 +58,42 @@ module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
 
 
+
+-----------------------------
+-- Ambient Light Init Stuff
+-----------------------------
+-- Default/Start Values
+local MAX_BRIGHTNESS_LEVEL = 100
+local MIN_BRIGHTNESS_LEVEL = 1
+local TOUCHBRIGHTNESS_INCREASE = 10
+
+-- Timer values
+local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
+local BRIGHTNESS_OVERRIDE = math.floor( 3001 / BRIGHTNESS_REFRESH_RATE)		-- was 6
+
+-- Lux Value Smoothing
+local MAX_SMOOTHING_VALUES = math.floor( 4001 / BRIGHTNESS_REFRESH_RATE)	-- was 8
+local luxSmooth = {}
+
+-- Maximum number of brightness levels up/down per run of the timer
+local AMBIENT_RAMPSTEPS = 7
+
+-- Ambient SysFS Path
+local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
+
+-- 3500 Is about the value I've seen in my room during full daylight
+-- so set it somewhere below that
+local STATIC_LUX_MAX = 2000
+
+local brightCur = MAX_BRIGHTNESS_LEVEL
+local brightTarget = MAX_BRIGHTNESS_LEVEL
+local brightMin = MIN_BRIGHTNESS_LEVEL + 25;
+
+local brightOverride = 0
+local brightSettings = 0;
+
+
+
 function init(self)
 	settings = self:getSettings()
 
@@ -83,13 +119,12 @@ function init(self)
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 
-	settings.brightness = settings.brightness or 100
-	settings.brightnessMinimal = settings.brightnessMinimal or 1
-	settings.ambient = settings.ambient or 0
-	settings.brightnessControl = settings.brightnessControl or "manual"
+	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
+	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL + 25)
+	settings.brightnessControl = settings.brightnessControl or "automatic"
 
 	self:initBrightness()
-	local brightnessTimer = Timer( 500,
+	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
 			if settings.brightnessControl == "manual" then
 				self:doManualBrightnessTimer()
@@ -131,36 +166,9 @@ function ourUeventHandler(evt, msg)
 	end
 end
 
-
 -----------------------------
 -- Ambient Light Stuff Start
 -----------------------------
--- Ambient SysFS Path
-local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
-
--- 3500 Is about the value I've seen in my room during full daylight
--- so set it somewhere below that
-local STATIC_LUX_MAX = 2000
-
--- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = 8
-local luxSmooth = {}
-
--- Default/Start Values
-local TOUCHBRIGHTNESS_INCREASE = 10
-local MAX_BRIGHTNESS_LEVEL = 100
-local MIN_BRIGHTNESS_LEVEL = 1
-
-local brightCur = 100
-local brightTarget = 100
-local brightSettings = 0;
-local brightMin = 1;
-local brightOverride = 0
-
-
--- Maximum number of brightness levels up/down per run of the timer
-local AMBIENT_RAMPSTEPS = 7
-
 -- Initialize Brightness Stuff (Factor)
 function initBrightness(self)
 	self.brightPrev = self:getBrightness()
@@ -169,10 +177,15 @@ function initBrightness(self)
 		self.brightPrev = 50
 	end
 	
-	-- Initialize the Ambient Sensor with a factor of 30
-	local f = io.open(AMBIENT_SYSPATH .. "factor", "w")
-	f:write("30")
-	f:close()
+	-- Enable gain in Ambient Light Sensor
+	local f1 = io.open(AMBIENT_SYSPATH .. "gain", "w")
+	f1:write("1")
+	f1:close()
+
+	-- Set factor in Ambient Sensor
+	local f2 = io.open(AMBIENT_SYSPATH .. "factor", "w")
+	f2:write("40")
+	f2:close()
 		
 	-- Set Initial Settings Brightness
 	if not settings.brightness then
@@ -204,7 +217,7 @@ function initBrightness(self)
 				self:setBrightness( math.floor(b) )
 			end
 			
-			brightOverride = 6	
+			brightOverride = BRIGHTNESS_OVERRIDE	
 			return EVENT_UNUSED
 		end
 		,true)		
@@ -289,14 +302,6 @@ end
 
 function doAutomaticBrightnessTimer(self)
 
-	-- As long as the user is touching the screen don't do anything more
-	if brightOverride > 0 then
-		-- count down once per cycle
-		brightOverride = brightOverride - 1
-		return
-	end
-	
-	-- Now continue with the real ambient code 
 	local f = io.open(AMBIENT_SYSPATH .. "lux")
 	local lux = f:read("*all")
 	f:close()
@@ -314,8 +319,8 @@ function doAutomaticBrightnessTimer(self)
 		table.remove(luxSmooth, 1)
 	end
 	
-	ambient = self:getSmoothedLux(luxSmooth)	
-	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_LUX_MAX) * ambient
+	local ambient = self:getSmoothedLux(luxSmooth)	
+	brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_LUX_MAX) * ambient
 
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -331,11 +336,17 @@ function doAutomaticBrightnessTimer(self)
 		brightCur = brightMin
 	end
 
+	-- As long as the user is touching the screen don't do anything more
+	if brightOverride > 0 then
+		-- count down once per cycle
+		brightOverride = brightOverride - 1
+		return
+	end
+
 	-- Set Brightness
 	self:setBrightness( brightCur )
 
 	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
-	
 end
 
 -- Valid Brightness goes from 1 - 100, 0 = display off
@@ -486,9 +497,21 @@ function settingsMinBrightnessShow (self, menuItem)
 
 	local slider = Slider('brightness_slider', 1, 75, level,
 				function(slider, value, done)
-										
-					log:info("Value: " .. value)
+--					log:info("Value: " .. value)
+
+					-- Set to automatic when changing minimal brightness
+					settings.brightnessControl = "automatic"
+					-- Prepare setting to store later
 					settings.brightnessMinimal = value
+					-- Update min value for timer loop
+					brightMin = value
+					-- Make sure preview min brightness does
+					--  not go below actual brightness
+					if value > brightTarget then
+						self:setBrightness( value)
+					else
+						self:setBrightness( brightTarget)
+					end
 					
 					-- done is true for 'go' and 'play' but we do not want to leave
 					if done then
@@ -551,7 +574,7 @@ function settingsMinBrightnessShow (self, menuItem)
 end
 
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("text_list", self:string("BSP_BRIGHTNESS"), squeezeboxjiveTitleStyle)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MANUAL"), squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
@@ -559,25 +582,16 @@ function settingsBrightnessShow (self, menuItem)
 	local slider = Slider('brightness_slider', 1, 100, level,
 				function(slider, value, done)
 					
-					if settings.brightnessControl != "manual" then
-						settings.brightnessControl = "manual"
-					end
+					settings.brightnessControl = "manual"
 					
 					settings.brightness = value
 
-					local bright = settings.brightness + settings.ambient
+					local bright = settings.brightness
 					if bright > 100 then
 						bright = 100
 					end
 
-					if settings.brightnessControl == "manual" then
-						self:setBrightness( bright)
-					end
-					--
-					-- Quick fix to avoid error
-					if settings.ambient == nil then
-						settings.ambient = 0
-					end
+					self:setBrightness( bright)
 
 					-- done is true for 'go' and 'play' but we do not want to leave
 					if done then
