@@ -431,7 +431,7 @@ static int decode_thread_execute(void *unused) {
 				obuf = (output_full * 100) / (double)output_size;
 
 
-				printf("elapsed:%lld buffers: %0.1f%%/%0.1f%%\n", elapsed, dbuf, obuf);
+				printf("elapsed:%llu buffers: %0.1f%%/%0.1f%%\n", elapsed, dbuf, obuf);
 			}
 		}
 
