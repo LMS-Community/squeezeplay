@@ -500,3 +500,95 @@ TOTAL_TIME
 	PL	Całkowity czas:
 	RU	Общее время:
 	SV	Total tid:
+
+FAILED_TO_START
+	EN	Squeezebox Server failed to start
+
+INTERNAL_ERROR
+	EN	Internal Error
+
+UNSUPPORTED_DISK_FORMAT
+	EN	Unsupported Disk Format
+
+UNSUPPORTED_DISK_FORMAT_INFO
+	EN	This USB/SD device is using an unsupported disk format. Supported formats are %s.
+
+CANT_COMPLETE_SCAN
+	EN	Can't Complete Scan
+
+CANT_COMPLETE_SCAN_INFO
+	EN	%s of free space is needed on this USB/SD device in order for Squeezebox Touch to perform a library scan.
+
+EJECT_WARNING
+	EN	IMPORTANT NOTICE
+
+EJECT_WARNING_INFO
+	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the My Music menu. Failure to do so may cause serious damage to the data.
+
+NEW_STORAGE_MEDIA
+	EN	New Storage Media
+
+NEW_STORAGE_MEDIA_INFO
+	EN	A new device has been added to "My Music" and is being scanned
+
+GO_TO_MY_MUSIC
+	EN	Go to My Music
+
+EXIT
+	EN	Exit
+
+OK
+	EN	OK
+
+SCANNING_LIBRARY
+	EN	Scanning Library: %s
+
+EJECT_DRIVE
+	EN	EJECT %s
+
+EJECT_REMOVABLE_MEDIA
+	EN	EJECT Removable Media
+
+EJECT_USB_DRIVE
+	EN	EJECT USB Drive
+
+EJECT_SD_CARD
+	EN	EJECT SD Card
+
+DEVICE_REMOVAL_WARNING
+	EN	Warning!
+
+DEVICE_REMOVAL_WARNING_INFO
+	EN	WARNING: The device %s was removed improperly. Data on this device my have been lost or damaged.
+
+EJECT_CONFIRM
+	EN	Eject Removable Device?
+
+EJECT_CONFIRM_INFO
+	EN	Are you sure you want to eject the device %s?
+
+EJECT_CONFIRM_ITEM
+	EN	Eject removable device
+
+
+CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+DEVICE_EJECTED
+	EN	Device Ejected
+
+DEVICE_EJECTED_ITEM
+	EN	It is now safe to remove your device.
+
