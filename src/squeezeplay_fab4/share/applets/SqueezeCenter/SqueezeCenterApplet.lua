@@ -1,5 +1,12 @@
+local load, ipairs, type, tostring, tonumber  = load, ipairs, type, tostring, tonumber
 
 -- stuff we use
+local math             = require("math")
+local json             = require("json")
+local table            = require("jive.utils.table")
+local string           = require("jive.utils.string")
+local debug            = require("jive.utils.debug")
+
 local oo                     = require("loop.simple")
 local io                     = require("io")
 local os                     = require("os")
@@ -25,9 +32,8 @@ oo.class(_M, Applet)
 function settingsShow(self, menuItem)
 	local window = Window("text_list", menuItem.text, 'settingstitle')
 	
-	local statusText = self:string(_getStatus())
-	self.status = Textarea("help_text", statusText)
-	
+	-- XXX: first attempt at showing scan process running
+	self.status = Textarea("help_text", self:_getStatusText() )
 
 	local menu = SimpleMenu("menu", {
 					{
@@ -91,29 +97,60 @@ function _action(self, icon, text, subtext, time, action)
 
 end
 
+function _getStatusText(self)
+	-- XXX: first attempt at showing scan process running
+	local statusText
+	if self:scannerRunning() then
+		self.scannerStatus = self:_scanStatus()
+		statusText = self:_scanProgressText()
+		log:debug(statusText)
+	else
+		statusText = self:string( self:_getStatus() )
+	end
+	return statusText
+end
+
+
 function _updateStatus(self)
-	local statusText = self:string(_getStatus())
-	self.status:setValue(statusText)
+	self.status:setValue( self:_getStatusText() )
 end
 
-function _getStatus()
-	
+
+function serverRunning(self)
 	local sc = _pidfor('slimserver.pl')
-	local scanner = _pidfor('scanner.pl')
-	
-	if (sc ~= nil) then return "STATUS_SQUEEZECENTER_RUNNING" end
-	if (scanner ~= nil) then return "STATUS_SCANNER_RUNNING" end
-	
-	return "STATUS_NOTHING"
-
+	if (sc ~= nil) then
+		return true
+	end
+	return false
 end
+
+
+function scannerRunning(self)
+	local scanner = _pidfor('scanner.pl')
+	if (scanner ~= nil) then
+		return true
+	end
+	return false
+end
+
+
+function _getStatus(self)
+	if self:serverRunning() then
+		return "STATUS_SQUEEZECENTER_RUNNING"
+	elseif self:scannerRunning() then
+		return "STATUS_SCANNER_RUNNING"
+	else
+		return "STATUS_NOTHING"
+	end
+end
+
 
 function _pidfor(process)
 	local pid
 
 	local pattern = "%s*(%d+).*" .. process
 
-	log:warn("pattern is ", pattern)
+	log:debug("pattern is ", pattern)
 
 	local cmd = io.popen("/bin/ps -o pid,command")
 	for line in cmd:lines() do
@@ -123,6 +160,100 @@ function _pidfor(process)
 	cmd:close()
 
 	return pid
+end
+
+
+function _scanStatus(self)
+
+	log:debug("_scanStatus()")
+	local scanStatus = {}
+
+	local file = "/etc/squeezecenter/scan.json"
+	local fh = io.open(file, "r")
+
+        if fh == nil then
+		-- no scan file present
+		return false
+        end
+
+	local jsonData = fh:read("*all")
+	fh:close()
+
+	scanStatus = json.decode(jsonData)
+	return scanStatus
+end
+
+
+-- uses self.scannerStatus table and returns a formatted text block for informational display
+function _scanProgressText(self)
+
+	local runningText   = self:string('RUNNING')
+	local completedText = self:string('COMPLETE')
+	local hasData       = false
+
+	if self.scannerStatus then
+		local progressReport = {}
+		-- self.scannerStatus is an array of scanner steps
+		for i, step in ipairs(self.scannerStatus) do
+			-- without a step.name, don't report anything
+			if step.name then
+				hasData = true
+				local token = string.upper(step.name) .. '_PROGRESS'
+				local nameString = self:string(token)
+
+				-- first line is the name of the step and the status of it (completed or running)
+				if step.finish and type(step.finish) == 'number' and step.finish > 0 then
+					local completed = tostring(nameString) .. ": " .. tostring(completedText)
+					table.insert(progressReport, completed)
+				else
+					local running = tostring(nameString) .. ": " .. tostring(runningText)
+					table.insert(progressReport, running)
+				end
+				
+				--- second line is detailed info on the step
+				local secondLineTable = {}
+				if step.done and step.total then
+					local percentageDone = tostring(math.floor( 100 * tonumber(step.done)/tonumber(step.total)))
+					local percentageString = tostring(completedText) .. ": " .. percentageDone .. "%"
+					local xofy = "(" .. tostring(step.done) .. '/' .. tostring(step.total) .. ")"
+
+					log:debug(percentageString)
+					log:debug(xofy)
+
+					table.insert(secondLineTable, percentageString)
+					table.insert(secondLineTable, xofy)
+				end
+				-- XXX: do something with time here
+
+				-- put the secondLineTable together as one string
+				local secondLine = table.concat(secondLineTable, ' ')
+				-- add the second line to the report
+				table.insert(progressReport, secondLine)
+			end
+		end
+		if hasData then
+			return table.concat(progressReport, "\n") 
+		else
+			-- no data
+			return self:string('SCANNER_NO_STATUS')
+		end
+	else
+		-- no data
+		return self:string('SCANNER_NO_STATUS')
+	end
+end
+
+
+function _secondsToString(seconds)
+	local hrs = math.floor(seconds / 3600)
+	local min = math.floor((seconds / 60) - (hrs*60))
+	local sec = math.floor( seconds - (hrs*3600) - (min*60) )
+
+	if hrs > 0 then
+		return string.format("%d:%02d:%02d", hrs, min, sec)
+	else
+		return string.format("%d:%02d", min, sec)
+	end
 end
 
 --[[
