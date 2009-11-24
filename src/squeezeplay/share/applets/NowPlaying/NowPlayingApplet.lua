@@ -690,11 +690,13 @@ function _updateVolume(self)
 	end
 
 	local volume       = tonumber(self.player:getVolume())
-	local sliderVolume = self.volSlider:getValue()
-	if sliderVolume ~= volume then
-		log:debug("new volume from player: ", volume)
-		self.volumeOld = volume
-		self.volSlider:setValue(volume)
+	if self.volSlider then
+		local sliderVolume = self.volSlider:getValue()
+		if sliderVolume ~= volume then
+			log:debug("new volume from player: ", volume)
+			self.volumeOld = volume
+			self.volSlider:setValue(volume)
+		end
 	end
 end
 
