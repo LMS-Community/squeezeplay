@@ -273,7 +273,15 @@ local opcodes = {
 			fixedDigital = fixedDigital,
 			preampAtten = preampAtten,
 			sequenceNumber = sequenceNumber,
-		}	end,
+		}
+	end,
+
+	setd = function(self, packet)
+		return {
+			command = unpackNumber(packet, 5, 1),
+			packet  = packet
+		}
+	end,
 
 	strm = function(self, packet)
 		return {

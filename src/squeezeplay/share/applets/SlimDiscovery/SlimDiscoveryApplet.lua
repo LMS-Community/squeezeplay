@@ -574,6 +574,22 @@ function notify_playerCurrent(self, player)
 
 end
 
+-- store the new player name if the local player's name has been changed
+function notify_playerNewName(self, player, playerName)
+	if Player:getCurrentPlayer() ~= player then
+		return
+	end
+	
+	log:debug("playerNewName: setting new name for the local player")
+
+	local settings = self:getSettings()
+	settings.playerInit = {
+		name  = playerName,
+		model = settings.playerInit.model
+	}
+	self:storeSettings()
+end
+
 
 --todo:uses serverName but should use uuid when that comes online
 --service method

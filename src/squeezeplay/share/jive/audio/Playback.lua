@@ -12,6 +12,7 @@ local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
 local Rtmp                   = require("jive.audio.Rtmp")
 local SlimProto              = require("jive.net.SlimProto")
+local Player                 = require("jive.slim.Player")
 
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
@@ -86,6 +87,10 @@ function __init(self, jnt, slimproto)
 		return obj:_aude(data)
 	end)
 
+	obj.slimproto:subscribe("setd", function(_, data)
+		return obj:_setd(data)
+	end)
+	
 	obj.timer = Timer(100, function()
 		obj:_timerCallback()
 	end)
@@ -679,6 +684,24 @@ function _aude(self, data)
 	 decode:audioEnable(data.enable)
 end
 
+function _setd(self, data)
+ 
+	-- only send response if we're queried (no additional data)
+	if data.command == 0 and #data.packet <= 5 then
+
+		-- get playername
+		local player = Player:getLocalPlayer()
+
+		self.slimproto:send({
+			opcode = 'SETD',
+			data = table.concat({
+				string.sub(data.packet, 5, 5),
+				player:getName()
+			})
+		})
+
+	end
+end
 
 
 function incrementSequenceNumber(self)
