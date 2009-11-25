@@ -592,3 +592,6 @@ DEVICE_EJECTED
 DEVICE_EJECTED_ITEM
 	EN	It is now safe to remove your device.
 
+ATTACHING_DRIVE
+	EN	Attaching Drive...
+

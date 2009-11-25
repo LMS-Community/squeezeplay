@@ -18,8 +18,17 @@ end
 
 function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
+	meta:registerService("udevEventHandler")
 end
 
+function configureApplet(meta)
+	appletManager:callService("addUeventListener", "", 
+		function(evt, msg)
+			appletManager:callService("udevEventHandler", evt, msg)
+	        end
+	)
+
+end
 
 --[[
 

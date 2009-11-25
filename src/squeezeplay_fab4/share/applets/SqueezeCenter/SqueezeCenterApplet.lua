@@ -1,4 +1,4 @@
-local load, ipairs, type, tostring, tonumber  = load, ipairs, type, tostring, tonumber
+local load, ipairs, pairs, type, tostring, tonumber  = load, ipairs, pairs, type, tostring, tonumber
 
 -- stuff we use
 local math             = require("math")
@@ -115,6 +115,47 @@ function _updateStatus(self)
 	self.status:setValue( self:_getStatusText() )
 end
 
+
+-- udevHandler takes events on udev and decides whether and when to kick off the scanner
+function udevEventHandler(self, evt, msg)
+
+	log:warn('udevEventHandler()', msg)
+
+	-- work in progress: useful for viewing what's in the msg table
+	for k, val in pairs(msg) do
+		log:warn('key: ', k, ' val: ', val)
+	end
+
+	-- if the ACTION in the msg is add
+	-- 	bring up a spinny "Checking Drive..."
+	--	we should start polling mount to see if a drive gets mounted rw
+	--	if it does, hide the popup, start the scanner (/etc/init.d/squeezecenter rescan), and push to the SqueezeCenter menu
+	--	if it doesn't, popup an appropriate error
+	if msg and msg.ACTION == 'add' then
+		-- ...not ready yet
+		-- self:_mountingDrive()
+	end
+
+end
+
+
+-- _inputInProgress
+-- full screen popup that appears until action from text input is complete
+local function _mountingDrive(self)
+	log:warn('popup during drive mount')
+	if self.popupWaiting then
+		return
+	end
+
+        local popup = Popup("waiting_popup")
+        local icon  = Icon("icon_connecting")
+        popup:addWidget(icon)
+	local label = Label("text", self:string('ATTACHING_DRIVE'))
+	popup:addWidget(label)
+	self.popupWaiting = popup
+        popup:show()
+
+end
 
 function serverRunning(self)
 	local sc = _pidfor('slimserver.pl')
