@@ -179,7 +179,7 @@ function init(self)
 	self.powerTimer = Timer(settings.initTimeout,
 		function() sleep(self) end)
 
-	self:initBrightness(settings)
+	self:initBrightness()
 
 	-- Needs stuff from brightness
 	-- Needs to be after initBrightness()
