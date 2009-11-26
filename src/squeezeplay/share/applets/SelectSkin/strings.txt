@@ -33,9 +33,11 @@ FULLSCREEN_MODE
 	SV	Helskärm
 	
 SELECT_SKIN_TOUCH_SKIN
+# SLT: name of the skin being used when using the touch UI with your fingers
 	EN	Touch Skin
 		
 SELECT_SKIN_REMOTE_SKIN
+# SLT: name of the skin being used when using the IR remote control
 	EN	Remote Skin
 		
 

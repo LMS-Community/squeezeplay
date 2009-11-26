@@ -21,6 +21,7 @@ USB_DISK_SIZE
 	EN	Size:\n%s
 
 USB_DISK_FREE
+# SLT: free disk space
 	EN	Free:\n%s
 
 SD_CARD_VOLUMENAME
@@ -30,9 +31,11 @@ SD_CARD_SIZE
 	EN	Size:\n%s
 
 SD_CARD_FREE
+# SLT: free disk space
 	EN	Free:\n%s
 
 SHARING
+# SLT: menu item to configure file sharing
 	EN	Sharing
 
 SHARING_ENABLE
