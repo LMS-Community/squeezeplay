@@ -10,7 +10,7 @@ local io                     = require("io")
 local string                 = require("jive.utils.string")
 local table                  = require("jive.utils.table")
 local math                   = require("math")
-local squeezeos              = require("squeezeos_bsp");
+local squeezeos              = require("squeezeos_bsp")
 
 local Applet                 = require("jive.Applet")
 local Decode                 = require("squeezeplay.decode")
@@ -49,6 +49,7 @@ local iconbar                = iconbar
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 
+local settings               = nil
 local brightnessTable        = {}
 
 
@@ -94,10 +95,33 @@ SLEEP -> HIBERNATE
 
 
 
-local brightnessTimer = nil
+-----------------------------
+-- Ambient Light Init Stuff
+----------------------------- 
+
+-- Maximum brightness will be initialized when the brightnessTable is calculated
+local MAX_BRIGHTNESS_LEVEL = -1
+-- Minium Brightness is 11 because IDLE powerstate subtracts 10 form the value passed to setBrightness
+local MIN_BRIGHTNESS_LEVEL = 1 + 10
+
+local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
+
+-- Lux Value Smoothing
+local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- was 8
+local luxSmooth = {}
+
+-- Maximum number of brightness levels up/down per run of the timer
+local AMBIENT_RAMPSTEPS = 4
+
+local STATIC_AMBIENT_MIN = 90000
+
+local brightCur = -1
+local brightTarget = -1
+local brightMin = MIN_BRIGHTNESS_LEVEL + 9
+
 
 function init(self)
-	local settings = self:getSettings()
+	settings = self:getSettings()
 
 	self.isLowBattery = false
 
@@ -155,20 +179,13 @@ function init(self)
 	self.powerTimer = Timer(settings.initTimeout,
 		function() sleep(self) end)
 
-	-- initial power settings
-	self:_initBrightnessTable()
-	if settings.brightness > #brightnessTable then
-		settings.brightness = #brightnessTable
-		self:storeSettings()
-	end
+	self:initBrightness(settings)
 
-	self.lcdBrightness = settings.brightness
-
-	self:initBrightness()
-
+	-- Needs stuff from brightness
+	-- Needs to be after initBrightness()
 	self:setPowerState("ACTIVE")
 
-	brightnessTimer = Timer( 500,
+	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
 			if settings.brightnessControl != "manual" then
 				if not self:isScreenOff() then
@@ -258,44 +275,54 @@ function isLineInConnected(self)
 	return bsp:getMixer("Line In Switch")
 end
 
-
-local MAX_BRIGHTNESS_LEVEL = -1
--- Minium Brightness is 11 because IDLE powerstate subtracts 10 form the value passed to setBrightness
-
-local MIN_BRIGHTNESS_LEVEL = 11
-local STATIC_AMBIENT_MIN = -1
-
--- Maximum number of brightness levels up/down per run of the timer
-local AMBIENT_RAMPSTEPS = -1
-
--- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = 8
-local luxSmooth = {}
-
-local wasDimmed = false
-local brightCur = -1
-local lastAmbient = -1
+-----------------------------
+-- Ambient Light Stuff Start
+-----------------------------
 
 function initBrightness(self)
+	-- Do not change sequence
+	-- - _initBrightnessTable()
+	-- - set MAX_BRIGHTNESS_LEVEL
+	-- - set settings.brightness
+	-- - check settings.brightness max value
+
+	-- Setup nonlinear brightness table
+	self:_initBrightnessTable()
+
 	-- Static Variables
 	MAX_BRIGHTNESS_LEVEL = #brightnessTable
-	STATIC_AMBIENT_MIN = 90000
-	AMBIENT_RAMPSTEPS = 4
+
+	-- Value of manual brightness slider
+	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
+	-- Value of minimal brightness (auto) slider
+	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL + 9)
+	-- Value of brightness control
+	settings.brightnessControl = settings.brightnessControl or "automatic"
+
+	-- Make sure brightness is not set higher than we have table entries
+	if settings.brightness > MAX_BRIGHTNESS_LEVEL then
+		settings.brightness = MAX_BRIGHTNESS_LEVEL
+		self:storeSettings()
+	end
+
+	-- Value of current LCD brightness
+	self.lcdBrightness = settings.brightness
 
 	-- Init some values to a default value
 	brightCur = MAX_BRIGHTNESS_LEVEL
+	brightTarget = MAX_BRIGHTNESS_LEVEL
+	brightMin = settings.brightnessMinimal
 
 	self.brightPrev = self:getBrightness()
 	if self.brightPrev and self.brightPrev == 0 then
 		--don't ever fallback to off
-		self.brightPrev = 70
+		self.brightPrev = MAX_BRIGHTNESS_LEVEL
 	end
 
-end
+	-- Set Brightness after reboot
+	self:setBrightness(settings.brightness)
 
-
-function isScreenOff(self)
-	return self:getBrightness() == 0
+	self:storeSettings()
 end
 
 
@@ -324,20 +351,20 @@ function doBrightnessRamping(self, target)
 	elseif brightCur < MIN_BRIGHTNESS_LEVEL then
 		brightCur = MIN_BRIGHTNESS_LEVEL
 	end
-
 end
 
-function getSmoothedLux() 
+
+function getSmoothedLux()
 	local sum = 0.0
-	
+
 	-- First Pass, Average
 	for i = 1, #luxSmooth do
 		--log:info("#" .. i .. " " .. luxSmooth[i])
 		sum = sum + luxSmooth[i]
-	end	
-	local avg = sum / #luxSmooth;	
+	end
+	local avg = sum / #luxSmooth;
 	log:debug("AVG: " .. avg)
-	
+
 	-- Second Pass, Standard Deviation
 	sum = 0.0
 	for i = 1, #luxSmooth do
@@ -345,56 +372,44 @@ function getSmoothedLux()
 		sum = sum + (variation * variation)
 	end
 	local sdev = math.sqrt(sum / #luxSmooth)
-	--log:info("SDEV: " .. sdev);	
-	
+	--log:info("SDEV: " .. sdev);
+
 	-- If not deviation, return average
-	if sdev == 0 then 
+	if sdev == 0 then
 		return avg
 	end
-	
+
 	-- Third Pass, Filter out values > Standard Deviation
 	sum = 0.0;
 	local values = 0;
 	local high = avg + sdev;
 	local low  = avg - sdev
 	for i = 1, #luxSmooth do
-		if luxSmooth[i] > low and luxSmooth[i] < high then 
+		if luxSmooth[i] > low and luxSmooth[i] < high then
 			--log:info("##" .. i .. " " .. luxSmooth[i])
 			values = values + 1
 			sum = sum + luxSmooth[i]
 		end
 	end
-	
-	if values >= 1 then 	
+
+	if values >= 1 then
 		avg = sum / values;
 		log:debug("AVG2: " .. avg)
 	end
-	
-	return avg
 
+	return avg
 end
 
+
 function doAutomaticBrightnessTimer(self)
-
-	local settings = self:getSettings()
-
-	-- Now continue with the real ambient code
 	local ambient = sysReadNumber(self, "ambient")
-	
-	-- Ignore spurious 65535 values
-	if ambient == 65535 and lastAmbient < 65535 then
-		lastAmbient = ambient
-		return
-	else
-		lastAmbient = ambient
-	end
 
 	-- Use the table to smooth out ambient value spikes
-	table.insert(luxSmooth, ambient)	
+	table.insert(luxSmooth, ambient)
 	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
 		table.remove(luxSmooth, 1)
 	end
-	
+
 	ambient = self:getSmoothedLux(luxSmooth)
 
 	--[[
@@ -403,15 +418,14 @@ function doAutomaticBrightnessTimer(self)
 	log:info("Brightness:   " .. tostring(settings.brightness))
 	]]--
 
-	-- switch around ambient value
+	-- switch around ambient value (darker is higher)
 	ambient = STATIC_AMBIENT_MIN - ambient
 	if ambient < 0 then
 		ambient = 0
 	end
 	--log:info("AmbientFixed: " .. tostring(ambient))
 
-
-	local brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
+	brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
 
 	self:doBrightnessRamping(brightTarget);
 
@@ -420,12 +434,127 @@ function doAutomaticBrightnessTimer(self)
 		return
 	end
 
+	-- Make sure bright Cur stays above minimum
+	if brightMin > brightCur then
+		brightCur = brightMin
+	end
+
 	-- Set Brightness
 	self:setBrightness( brightCur )
 
 	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
-
 end
+
+
+function isScreenOff(self)
+	return self:getBrightness() == 0
+end
+
+
+function getBrightness (self)
+	return self.lcdBrightness
+end
+
+
+function setBrightness (self, level)
+	-- FIXME a quick hack to prevent the display from dimming
+	if level == "off" then
+		level = 0
+	elseif level == "on" then
+		level = self.brightPrev
+	elseif level == nil then
+		return
+	else
+		self.brightPrev = level
+	end
+
+	_setBrightness(self, level)
+end
+
+
+function _setBrightness(self, level)
+	if level == nil then
+		return
+	end
+
+	log:debug("_setBrightness: ", level)
+
+	self.lcdBrightness = level
+
+	level = level + 1 -- adjust 0 based to one based for the brightnessTable
+
+	if level > MAX_BRIGHTNESS_LEVEL  then
+		level = MAX_BRIGHTNESS_LEVEL
+	end
+
+	-- 60% brightness in idle power mode
+	if self.powerState == "IDLE" then
+		if level > 11 then
+			level = level - 10
+		else
+			level = 2 --(lowest visible setting)
+		end
+	end
+
+	brightness = brightnessTable[level][2]
+	bl_power   = brightnessTable[level][1]
+
+	sysWrite(self, "brightness", brightness)
+	sysWrite(self, "bl_power",   bl_power)
+end
+
+
+function _initBrightnessTable( self)
+	local pwm_steps = 256
+	local brightness_step_percent = 10
+	local k = 1
+
+	--first value is "off" value
+	brightnessTable[k] = {0, 0}
+	k = k + 1
+
+	if self._revision >= 3 then
+		-- Brightness table for PB3 and newer
+		-- First parameter can be 1 to achieve very low brightness
+		brightnessTable[k] = {1, 1}
+		for step = 1, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {1, step}
+			end
+		end
+		k = k + 1
+		brightnessTable[k] = {0, 33}
+		for step = 33, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {0, step}
+			end
+		end
+	else
+		-- Brightness table for PB1 and PB2
+		-- First parameter need to be 0 at all times, else brightness is really dark
+		brightnessTable[k] = {0, 1}
+		for step = 1, pwm_steps, 1 do
+			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
+				k = k + 1
+				brightnessTable[k] = {0, step}
+			end
+		end
+	end
+
+-- Debug
+--	local a
+--	for k = 1, #brightnessTable, 1 do
+--		a = brightnessTable[k][1]
+--		a = brightnessTable[k][2]
+--	end
+end
+
+---
+-- END BRIGHTNESS
+---
+
 
 --service method
 function performHalfDuplexBugTest(self)
@@ -760,8 +889,6 @@ end
 
 
 function setPowerState(self, state)
-	local settings = self:getSettings()
-
 	local poweroff = false
 
 	if state == "ACTIVE" then
@@ -798,85 +925,6 @@ function setPowerState(self, state)
 end
 
 
-function _initBrightnessTable( self)
-	local pwm_steps = 256
-	local brightness_step_percent = 10
-	local k = 1
-
-	--first value is "off" value
-	brightnessTable[k] = {0, 0}
-	k = k + 1
-
-	if self._revision >= 3 then
-		-- Brightness table for PB3 and newer
-		-- First parameter can be 1 to achieve very low brightness
-		brightnessTable[k] = {1, 1}
-		for step = 1, pwm_steps, 1 do
-			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
-				k = k + 1
-				brightnessTable[k] = {1, step}
-			end
-		end
-		k = k + 1
-		brightnessTable[k] = {0, 33}
-		for step = 33, pwm_steps, 1 do
-			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
-				k = k + 1
-				brightnessTable[k] = {0, step}
-			end
-		end
-	else
-		-- Brightness table for PB1 and PB2
-		-- First parameter need to be 0 at all times, else brightness is really dark
-		brightnessTable[k] = {0, 1}
-		for step = 1, pwm_steps, 1 do
-			if 100 * ( step - brightnessTable[k][2]) / brightnessTable[k][2] >= brightness_step_percent then
-				k = k + 1
-				brightnessTable[k] = {0, step}
-			end
-		end
-	end
-
--- This is debugging stuff, Caleb, isn't it?
---	local a
---	for k = 1, #brightnessTable, 1 do
---		a = brightnessTable[k][1]
---		a = brightnessTable[k][2]
---	end
-end
-
-
-function _setBrightness(self, level)
-	log:debug("_setBrightness: ", level)
-
-	self.lcdBrightness = level
-
-	level = level + 1 -- adjust 0 based to one based for the brightnessTable
-
-	if level > MAX_BRIGHTNESS_LEVEL  then
-		level = MAX_BRIGHTNESS_LEVEL
-	end
-
-	-- 60% brightness in idle power mode
-	if self.powerState == "IDLE" then
-		if level > 11 then
-			level = level - 10
-		else
-			level = 2 --(lowest visible setting)
-		end
-	end
-
-	brightness = brightnessTable[level][2]
-	bl_power   = brightnessTable[level][1]
-
-	sysWrite(self, "brightness", brightness)
-	sysWrite(self, "bl_power",   bl_power)
-end
-
-
-function getBrightness (self)
-	return self.lcdBrightness
-end
 
 
 function getWakeupAlarm(self)
@@ -901,25 +949,71 @@ function setWakeupAlarm (self, epochsecs)
 	sysWrite(self, "alarm_time", wakeup)
 end
 
+-- Minimal brightness slider (Auto)
+function settingsMinBrightnessShow (self, menuItem)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MIN"), squeezeboxjiveTitleStyle)
 
-function setBrightness (self, level)
-	-- FIXME a quick hack to prevent the display from dimming
-	if level == "off" then
-		level = 0
-	elseif level == "on" then
-		level = self.brightPrev
-	elseif level == nil then
-		return
-	else
-		self.brightPrev = level
-	end
+	local settings = self:getSettings()
+	local level = settings.brightnessMinimal
 
-	_setBrightness(self, level)
+	local slider = Slider("slider", 1, #brightnessTable, level,
+		function(slider, value, done)
+--			log:info("Value: " .. value)
+
+			-- Set to automatic when changing minimal brightness
+			settings.brightnessControl = "automatic"
+
+			if value < MIN_BRIGHTNESS_LEVEL then
+				value = MIN_BRIGHTNESS_LEVEL
+			end
+
+			-- Prepare setting to store later
+			settings.brightnessMinimal = value
+			-- Update min value for timer loop
+			brightMin = value
+			-- Make sure preview min brightness does
+			-- not go below actual brightness
+			if value > brightTarget then
+				self:setBrightness( value)
+			else
+				self:setBrightness( brightTarget)
+			end
+
+			-- done is true for 'go' and 'play' but we do not want to leave
+			if done then
+				window:playSound("BUMP")
+				window:bumpRight()
+			end
+	end)
+
+	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_MIN_ADJUST_HELP")))
+	window:addWidget(Group("sliderGroup", {
+		min = Icon("button_slider_min"),
+		slider = slider,
+		max = Icon("button_slider_max"),
+	}))
+
+	-- If we are here already, eat this event to avoid piling up this screen over and over
+	window:addActionListener("go_brightness", self,
+				function()
+					return EVENT_CONSUME
+				end)
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			brightMin = settings.brightnessMinimal
+			self:storeSettings()
+		end
+	)
+
+	window:show()
+	return window
 end
 
 
+-- Manual brightness slider
 function settingsBrightnessShow (self, menuItem)
-	local window = Window("text_list", self:string("BSP_BRIGHTNESS"), squeezeboxjiveTitleStyle)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MANUAL"), squeezeboxjiveTitleStyle)
 
 	local settings = self:getSettings()
 	local level = settings.brightness
@@ -928,7 +1022,7 @@ function settingsBrightnessShow (self, menuItem)
 		function(slider, value, done)
 			settings.brightness = value
 
-			-- If the user modifies the slider - automatically switch to manaul brightness
+			-- If user modifies manual brightness - switch to manaul brightness
 			settings.brightnessControl = "manual"
 
 			local bright = value
@@ -965,6 +1059,8 @@ function settingsBrightnessShow (self, menuItem)
 	return window
 end
 
+
+-- Manual / auto brightness selection
 function settingsBrightnessControlShow(self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
 	local settings = self:getSettings()

@@ -123,6 +123,14 @@ BSP_BRIGHTNESS_MANUAL
 	RU	Ручная настройка яркости
 	SV	Manuell ljusstyrka
 
+BSP_BRIGHTNESS_MIN
+	DE	Minimale Helligkeit (Auto)
+	EN	Minimal Brightness (Auto)
+
+BSP_BRIGHTNESS_MIN_ADJUST_HELP
+	DE	Sie können die minimale Helligkeit mit dem Rad anpassen.
+	EN	Use the wheel to adjust the minimal brightness.
+
 GOODBYE
 	CS	Nashledanou
 	DA	Farvel

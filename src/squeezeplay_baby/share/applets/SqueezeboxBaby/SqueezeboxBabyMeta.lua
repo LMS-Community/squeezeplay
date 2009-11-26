@@ -26,8 +26,6 @@ end
 
 function defaultSettings(meta)
 	return {
-		brightness = 61,		-- max
-		brightnessControl = "automatic", -- Automatic Brightness
 		initTimeout = 60000,		-- 60 seconds
 		idleTimeout = 30000,		-- 30 seconds
 		sleepTimeout = 10 * 60000,	-- 10 minutes
@@ -44,11 +42,6 @@ end
 
 
 function upgradeSettings(meta, settings)
-	-- fix broken settings
-	if not settings.brightness or settings.brightness > 61 then
-		settings.brightness = 61	-- max
-	end
-
 	-- fill in any blanks
 	local defaults = defaultSettings(meta)
 	for k, v in pairs(defaults) do
@@ -89,7 +82,8 @@ function registerApplet(meta)
 	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 
 	-- settings
-	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS", function(applet, ...) applet:settingsBrightnessShow(...) end, _, _, "hm_settingsBrightness"))
+	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MANUAL", function(applet, ...) applet:settingsBrightnessShow(...) end, _, _, "hm_settingsBrightness"))
+	jiveMain:addItem(meta:menuItem('minBrightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MIN", function(applet, ...) applet:settingsMinBrightnessShow(...) end)) 
 	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'settingsBrightness', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessControlShow(...) end, _, _, "hm_settingsBrightness"))
 
 	-- services
