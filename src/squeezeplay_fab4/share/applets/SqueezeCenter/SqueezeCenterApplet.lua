@@ -10,7 +10,6 @@ local debug            = require("jive.utils.debug")
 local oo                     = require("loop.simple")
 local io                     = require("io")
 local os                     = require("os")
-local string                 = require("string")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
@@ -19,10 +18,14 @@ local Label                  = require("jive.ui.Label")
 local Popup                  = require("jive.ui.Popup")
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 local Textarea               = require("jive.ui.Textarea")
+local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local appletManager          = appletManager
+
+
+local MOUNTING_DRIVE_TIMEOUT = 30
 
 
 module(..., Framework.constants)
@@ -126,36 +129,101 @@ function udevEventHandler(self, evt, msg)
 		log:warn('key: ', k, ' val: ', val)
 	end
 
-	-- if the ACTION in the msg is add
+	-- if the ACTION in the msg is add and DEVTYPE is partition
 	-- 	bring up a spinny "Checking Drive..."
 	--	we should start polling mount to see if a drive gets mounted rw
 	--	if it does, hide the popup, start the scanner (/etc/init.d/squeezecenter rescan), and push to the SqueezeCenter menu
 	--	if it doesn't, popup an appropriate error
-	if msg and msg.ACTION == 'add' then
-		-- ...not ready yet
-		-- self:_mountingDrive()
-	end
+	if msg and msg.ACTION == 'add' and msg.DEVTYPE == 'partition' then
+		local devPath = msg.DEVPATH
+		-- Extract device name (last element)
+		local pathElements = string.split('/', devPath)
+		local devName = pathElements[#pathElements]
 
+		log:debug("Device name: ", devName)
+
+		self:_mountingDrive(devName)
+	end
 end
 
 
--- _inputInProgress
--- full screen popup that appears until action from text input is complete
-local function _mountingDrive(self)
-	log:warn('popup during drive mount')
+-- _mountingDrive
+-- full screen popup that appears until mounting is complete or failed
+---function _mountingDrive(self)
+function _mountingDrive(self, devName)
+	log:warn('**** popup during drive mount')
 	if self.popupWaiting then
 		return
 	end
 
         local popup = Popup("waiting_popup")
         local icon  = Icon("icon_connecting")
+
+	self.mountingDriveTimeout = 0
+
+	icon:addTimer(1000,
+		function()
+			_mountingDriveTimer(self, devName)
+		end)
+
         popup:addWidget(icon)
 	local label = Label("text", self:string('ATTACHING_DRIVE'))
 	popup:addWidget(label)
 	self.popupWaiting = popup
-        popup:show()
-
+	self:tieAndShowWindow(popup)
 end
+
+
+function _mountingDriveTimer(self, devName)
+	local mounted = false
+
+	Task("mountingDrive", self, function()
+		log:warn("mountingDriveTimeout=", self.mountingDriveTimeout)
+
+		mounted = self:_checkDriveMounted(devName)
+
+		if mounted then
+			-- success
+			log:warn("*** Device mounted sucessfully.")
+
+		else
+			-- Not yet mounted
+			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
+			if self.mountingDriveTimeout <= MOUNTING_DRIVE_TIMEOUT then
+				return
+			end
+
+			-- fail
+			log:warn("*** Device failed to mount.")
+		end
+
+		self.popupWaiting:hide()
+		self.popupWaiting = nil
+
+	end):addTask()
+end
+
+
+function _checkDriveMounted(self, devName)
+	local format = nil
+	local mount = io.popen("/bin/mount")
+
+	for line in mount:lines() do
+		local dummy = string.match(line, "/dev/" .. devName)
+		if dummy then
+			format = string.match(line, "type (%w*)")
+		end
+	end
+	mount:close()
+
+	if format then
+		log:warn("New device: /dev/", devName, " formatted with: ", format)
+		return true
+	end
+
+	return false
+end
+
 
 function serverRunning(self)
 	local sc = _pidfor('slimserver.pl')
