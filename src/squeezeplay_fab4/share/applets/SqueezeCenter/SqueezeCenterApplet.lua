@@ -142,7 +142,7 @@ function udevEventHandler(self, evt, msg)
 
 		log:debug("Device name: ", devName)
 
-		self:_mountingDrive(devName)
+--		self:_mountingDrive(devName)
 	end
 end
 
