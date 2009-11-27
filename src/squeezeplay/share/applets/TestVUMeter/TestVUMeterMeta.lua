@@ -2,6 +2,7 @@
 local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
+local System        = require("jive.System")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
@@ -10,6 +11,10 @@ local jiveMain      = jiveMain
 module(...)
 oo.class(_M, AppletMeta)
 
+local _supportedMachines = {
+	["fab4"] = 1,
+	["squeezeplay"] = 1,
+}
 
 function jiveVersion(meta)
 	return 1, 1
@@ -17,7 +22,9 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('VUMeterTest', 'advancedSettingsBetaFeatures', "TEST_VUMETER", function(applet, ...) applet:VUMeterTest(...) end, _, { noCustom = 1 }))
+	if _supportedMachines[System:getMachine()] then
+		jiveMain:addItem(meta:menuItem('VUMeterTest', 'advancedSettingsBetaFeatures', "TEST_VUMETER", function(applet, ...) applet:VUMeterTest(...) end, _, { noCustom = 1 }))
+	end
 end
 
 
