@@ -69,10 +69,10 @@ local TOUCHBRIGHTNESS_INCREASE = 10
 
 -- Timer values
 local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
-local BRIGHTNESS_OVERRIDE = math.floor( 3001 / BRIGHTNESS_REFRESH_RATE)		-- was 6
+local BRIGHTNESS_OVERRIDE = math.floor( 3000 / BRIGHTNESS_REFRESH_RATE)		-- was 6
 
 -- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = math.floor( 4001 / BRIGHTNESS_REFRESH_RATE)	-- was 8
+local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- was 8
 local luxSmooth = {}
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -90,8 +90,6 @@ local brightTarget = MAX_BRIGHTNESS_LEVEL
 local brightMin = MIN_BRIGHTNESS_LEVEL + 25;
 
 local brightOverride = 0
-local brightSettings = 0;
-
 
 
 function init(self)
@@ -119,17 +117,13 @@ function init(self)
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 
-	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
-	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL + 25)
-	settings.brightnessControl = settings.brightnessControl or "automatic"
-
 	self:initBrightness()
 	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
-			if settings.brightnessControl == "manual" then
-				self:doManualBrightnessTimer()
-			else
-				self:doAutomaticBrightnessTimer()
+			if settings.brightnessControl != "manual" then
+				if not self:isScreenOff() then
+					self:doAutomaticBrightnessTimer()
+				end
 			end
 		end)
 	brightnessTimer:start()
@@ -169,14 +163,14 @@ end
 -----------------------------
 -- Ambient Light Stuff Start
 -----------------------------
--- Initialize Brightness Stuff (Factor)
 function initBrightness(self)
-	self.brightPrev = self:getBrightness()
-	if self.brightPrev and self.brightPrev == 0 then
-		--don't ever fallback to off
-		self.brightPrev = 50
-	end
-	
+	-- Value of manual brightness slider
+	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
+	-- Value of minimal brightness (auto) slider
+	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL + 25)
+	-- Value of brightness control
+	settings.brightnessControl = settings.brightnessControl or "automatic"
+
 	-- Enable gain in Ambient Light Sensor
 	local f1 = io.open(AMBIENT_SYSPATH .. "gain", "w")
 	f1:write("1")
@@ -186,20 +180,24 @@ function initBrightness(self)
 	local f2 = io.open(AMBIENT_SYSPATH .. "factor", "w")
 	f2:write("40")
 	f2:close()
-		
-	-- Set Initial Settings Brightness
-	if not settings.brightness then
-		settings.brightness = MAX_BRIGHTNESS_LEVEL
+
+	-- Value of current LCD brightness
+	self.lcdBrightness = settings.brightness
+
+	-- Init some values to a default value
+	brightCur = MAX_BRIGHTNESS_LEVEL
+	brightTarget = MAX_BRIGHTNESS_LEVEL
+	brightMin = settings.brightnessMinimal
+
+	self.brightPrev = self:getBrightness()
+	if self.brightPrev and self.brightPrev == 0 then
+		--don't ever fallback to off
+		self.brightPrev = MAX_BRIGHTNESS_LEVEL
 	end
 
-	-- Set Initial minimal brightness
-	brightMin = settings.brightnessMinimal
-	
 	-- Set Brightness after reboot
-	self:setBrightness(settings.brightness)	
+	self:setBrightness(settings.brightness)
 	
-	brightSettings = settings.brightness
-		
 	-- Create a global listener to set 
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
@@ -221,7 +219,10 @@ function initBrightness(self)
 			return EVENT_UNUSED
 		end
 		,true)		
+
+	self:storeSettings()
 end
+
 
 function doBrightnessRamping(self, target)
 	local diff = 0
@@ -251,6 +252,7 @@ function doBrightnessRamping(self, target)
 	
 	--log:info("Cur: " .. brightCur)
 end
+
 
 function getSmoothedLux() 
 	local sum = 0.0
@@ -296,12 +298,10 @@ function getSmoothedLux()
 	end
 	
 	return avg
-
 end
 
 
 function doAutomaticBrightnessTimer(self)
-
 	local f = io.open(AMBIENT_SYSPATH .. "lux")
 	local lux = f:read("*all")
 	f:close()
@@ -331,6 +331,11 @@ function doAutomaticBrightnessTimer(self)
 	
 	self:doBrightnessRamping(brightTarget);
 	
+	-- Bug: 14040 - Fix race condition with blank screensaver
+	if self:isScreenOff() then
+		return
+	end
+
 	-- Make sure bright Cur stays above minimum
 	if brightMin > brightCur then
 		brightCur = brightMin
@@ -349,15 +354,63 @@ function doAutomaticBrightnessTimer(self)
 	--log:info("CurTarMax:    " .. tostring(brightCur) .. " - ".. tostring(brightTarget))
 end
 
--- Valid Brightness goes from 1 - 100, 0 = display off
-function doManualBrightnessTimer(self)
-	-- First Check if it is automatic or manual brightness control
-	if settings.brightnessControl == "manual" then
-		if settings.brightness != brightSettings then
-			self:setBrightness(settings.brightness)
-			brightSettings = settings.brightness
-		end
+
+function isScreenOff(self)
+	return self:getBrightness() == 0
+end
+
+
+function getBrightness (self)
+	--[[ Avoid reading value from filesystem every time and use locally stored value
+	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "r")
+	local level = f:read("*a")
+	f:close()
+
+	--opposite of setBrigtness translation
+	return math.floor(100 * math.pow(tonumber(level)/255, 1/1.38)) -- gives 0 to 100
+	--]]
+
+	return self.lcdBrightness
+end
+
+
+function setBrightness (self, level)
+	if level == "off" or level == 0 then
+		level = 0
+	elseif level == "on" then
+		level = self.brightPrev
+	elseif level == nil then
 		return
+	else
+		self.brightPrev = level
+	end
+
+	_setBrightness(self, level)
+end
+
+
+function _setBrightness(self, level)
+	if level == nil then
+		return
+	end
+
+	log:debug("_setBrightness: ", level)
+
+	-- Store LCD level so we do not have to query it all the time in getBrightness()
+	self.lcdBrightness = level
+
+	--ceil((percentage_bright)^(1.58)*255)
+	local deviceLevel = math.ceil(math.pow((level/100.0), 1.38) * 255) -- gives 1 to 1 for first 6, and 255 for max (100)
+	if deviceLevel > 255 then -- make sure we don't exceed
+		deviceLevel = 255 --max
+	end
+
+
+	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
+	f:write(tostring(deviceLevel))
+	f:close()
+	if log:isDebug() then
+		log:debug(" level: ", level, " deviceLevel:", deviceLevel, " getBrightness: ", self:getBrightness())
 	end
 end
 
@@ -455,40 +508,7 @@ function _updateTask(self)
 end
 
 
-function getBrightness (self)
-	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "r")
-	local level = f:read("*a")
-	f:close()
-
-	--opposite of setBrigtness translation
-	return math.floor(100 * math.pow(tonumber(level)/255, 1/1.38)) -- gives 0 to 100
-end
-
-
-function setBrightness (self, level)
-	if level == "off" or level == 0 then
-		level = 0
-	elseif level == "on" then
-		level = self.brightPrev
-	else
-		self.brightPrev = level
-	end
-
-	--ceil((percentage_bright)^(1.58)*255)
-	local deviceLevel = math.ceil(math.pow((level/100.0), 1.38) * 255) -- gives 1 to 1 for first 6, and 255 for max (100)
-	if deviceLevel > 255 then -- make sure we don't exceed
-		deviceLevel = 255 --max
-	end
-
-
-	local f = io.open("/sys/class/backlight/mxc_ipu_bl.0/brightness", "w")
-	f:write(tostring(deviceLevel))
-	f:close()
-	if log:isDebug() then
-		log:debug(" level: ", level, " deviceLevel:", deviceLevel, " getBrightness: ", self:getBrightness())
-	end
-end
-
+-- Minimal brightness slider (auto)
 function settingsMinBrightnessShow (self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MIN"), squeezeboxjiveTitleStyle)
 
@@ -573,6 +593,8 @@ function settingsMinBrightnessShow (self, menuItem)
 	return window
 end
 
+
+-- Manual brightness slider
 function settingsBrightnessShow (self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_MANUAL"), squeezeboxjiveTitleStyle)
 
@@ -659,6 +681,8 @@ function settingsBrightnessShow (self, menuItem)
 	return window
 end
 
+
+-- Brightness control slider - automatic / manual
 function settingsBrightnessControlShow(self, menuItem)
 	local window = Window("text_list", self:string("BSP_BRIGHTNESS_CTRL"), squeezeboxjiveTitleStyle)
 	local settings = self:getSettings()
