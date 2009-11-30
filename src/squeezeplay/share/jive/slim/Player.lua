@@ -1027,12 +1027,7 @@ function onStage(self)
 	self.popupIcon.window:setAllowScreensaver(true)
 	self.popupIcon.window:setAlwaysOnTop(true)
 	self.popupIcon.icon = Icon("icon")
-
-	local group = Group("group", {
-			icon = self.popupIcon.icon
-	      })
-
-	self.popupIcon.window:addWidget(group)
+	self.popupIcon.window:addWidget(self.popupIcon.icon)
 
 	local popups = { self.mixedPopup.window, self.popupInfo.window, self.popupIcon.window }
 
