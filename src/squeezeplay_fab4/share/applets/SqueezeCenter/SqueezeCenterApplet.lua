@@ -23,6 +23,7 @@ local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
 
 local appletManager          = appletManager
+local jiveMain               = jiveMain
 
 
 local MOUNTING_DRIVE_TIMEOUT = 30
@@ -32,9 +33,9 @@ local _supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-
-function settingsShow(self, menuItem)
-	local window = Window("text_list", menuItem.text, 'settingstitle')
+function settingsShow(self)
+	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
+	local window = Window("text_list", 'Squeezebox Server', 'settingstitle')
 	
 	-- XXX: first attempt at showing scan process running
 	self.status = Textarea("help_text", self:_getStatusText() )
@@ -58,14 +59,13 @@ function settingsShow(self, menuItem)
 						text = self:string("STOP_RESCAN_START"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_action("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 10000, "rescan")
+								   self:_startScan()
 							   end
 					},
 				})
 
 	menu:setHeaderWidget(self.status)
 	window:addWidget(menu)
-
 	self:tieAndShowWindow(window)
 	
 	window:addTimer(5000, function() _updateStatus(self) end)
@@ -116,19 +116,23 @@ end
 
 
 function _updateStatus(self)
-	self.status:setValue( self:_getStatusText() )
+	if self.status then
+		self.status:setValue( self:_getStatusText() )
+	end
 end
 
 
 -- udevHandler takes events on udev and decides whether and when to kick off the scanner
 function udevEventHandler(self, evt, msg)
 
-	log:warn('udevEventHandler()', msg)
+	log:warn('udevEventHandler()')
 
 	-- work in progress: useful for viewing what's in the msg table
+	--[[
 	for k, val in pairs(msg) do
 		log:warn('key: ', k, ' val: ', val)
 	end
+	--]]
 
 	-- if the ACTION in the msg is add and DEVTYPE is partition
 	-- 	bring up a spinny "Checking Drive..."
@@ -140,10 +144,13 @@ function udevEventHandler(self, evt, msg)
 		-- Extract device name (last element)
 		local pathElements = string.split('/', devPath)
 		local devName = pathElements[#pathElements]
-
+		-- devName that begins with mmc* is an SD card
+		-- devName that starts with sda* is a USB device
 		log:debug("Device name: ", devName)
 
---		self:_mountingDrive(devName)
+		-- media-watcher.pl needs to be disabled before this can be uncommented in firmware builds
+		-- for development, kill <media-watcher.pl pid> and uncomment this line 
+		--self:_mountingDrive(devName)
 	end
 end
 
@@ -160,6 +167,12 @@ function _mountingDrive(self, devName)
         local popup = Popup("waiting_popup")
         local icon  = Icon("icon_connecting")
 
+	-- set self.devType var based on devName during the _mountingDrive method
+	if string.match(devName, "^sd") then
+		self.devType = 'USB'
+	elseif string.match(devName, "^mmc") then
+		self.devType = 'SD'
+	end
 	self.mountingDriveTimeout = 0
 
 	icon:addTimer(1000,
@@ -168,12 +181,20 @@ function _mountingDrive(self, devName)
 		end)
 
         popup:addWidget(icon)
-	local label = Label("text", self:string('ATTACHING_DRIVE'))
+
+	local label = Label("text", self:string('ATTACHING') )
 	popup:addWidget(label)
+
+	local token = 'DRIVE'
+	if self.devType then
+		token = self.devType
+	end
+	local sublabel = Label("subtext", self:string(token) )
+	popup:addWidget(sublabel)
+
 	self.popupWaiting = popup
 	self:tieAndShowWindow(popup)
 end
-
 
 function _mountingDriveTimer(self, devName)
 	local mounted = false
@@ -188,6 +209,20 @@ function _mountingDriveTimer(self, devName)
 			log:debug("*** Device mounted sucessfully.")
 
 			self:_ejectWarning()
+
+			-- store device in self.mountedDevices
+			-- work in progress: needed for "Eject USB Drive" and/or "Eject SD Card" menu items in My Music
+			if not self.mountedDevices then
+				self.mountedDevices = {}
+			end
+			local deviceInfo = {
+				devName    = devName,
+				deviceName = "/dev/"   .. devName,
+				mountPath  = "/media/" .. devName,
+				devType    = self.devType,
+			}
+			self.mountedDevices[devName] = deviceInfo
+			self:_addEjectDeviceItem(deviceInfo)
 		else
 			-- Not yet mounted
 			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
@@ -196,7 +231,7 @@ function _mountingDriveTimer(self, devName)
 			end
 
 			-- failure
-			log:debug("*** Device failed to mount.")
+			log:warn("*** Device failed to mount.")
 
 			self:_unsupportedDiskFormat()
 		end
@@ -205,6 +240,38 @@ function _mountingDriveTimer(self, devName)
 		self.popupWaiting = nil
 
 	end):addTask()
+end
+
+
+function _addEjectDeviceItem(self, item)
+
+	log:warn('_addEjectDeviceItem()')
+
+	local token = 'EJECT_CONFIRM_ITEM'
+	if item.devType then
+		token = 'EJECT_' .. item.devType
+	end
+
+	jiveMain:addItem({
+                id = item.devName,
+                node = "_myMusic",
+                text = self:string(token),
+                iconStyle = 'hm_eject',
+                weight = 1,
+                --weight = 1000,
+		-- TODO: add a method to eject the device (that works!)
+		callback = function()
+			log:warn('Eject Device!')
+		end,
+        })
+end
+
+function _startScan(self)
+
+	if not self:scannerRunning() then
+		log:warn('Starting scanner')
+		self:_action("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 10000, "rescan")
+	end
 end
 
 
@@ -246,13 +313,13 @@ function _unsupportedDiskFormat(self)
 		end
 	})
 
-	local formats = ""
-	for i = 1, (#_supportedFormats - 1) do
-		formats = formats .. _supportedFormats[i] .. ", "
-	end
-	formats = formats .. _supportedFormats[#_supportedFormats]
+	local formatsString = table.concat(_supportedFormats, ", ")
 
-	menu:setHeaderWidget(Textarea("help_text", self:string("UNSUPPORTED_DISK_FORMAT_INFO", formats)))
+	local token = 'UNSUPPORTED_DISK_FORMAT_INFO'
+	if self.devType then
+		token = 'UNSUPPORTED_DISK_FORMAT_INFO_' .. self.devType
+	end
+	menu:setHeaderWidget( Textarea("help_text", self:string(token, formatsString) ) )
 
 	window:addWidget(menu)
 
@@ -269,13 +336,16 @@ function _ejectWarning(self)
 
 	local menu = SimpleMenu("menu")
 
+	-- start the scanner
+	self:_startScan()
+
 	menu:addItem({
 		text = self:string("OK"),
 		style = 'item',
 		sound = "WINDOWSHOW",		
 		callback = function ()
--- TODO: continue in the flow
 			window:hide()
+			self:settingsShow()
 		end
 	})
 

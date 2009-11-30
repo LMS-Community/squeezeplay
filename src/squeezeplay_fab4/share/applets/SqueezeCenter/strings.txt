@@ -619,3 +619,9 @@ SD
 ATTACHING
 	EN	Attaching
 
+EJECT_USB
+	EN	Eject USB Drive
+
+EJECT_SD
+	EN	Eject SD Card
+
