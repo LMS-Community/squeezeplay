@@ -607,3 +607,15 @@ ATTACHING_DRIVE_USB
 ATTACHING_DRIVE_SD
 	EN	Attaching SD Card...
 
+DRIVE
+	EN	Drive
+
+USB
+	EN	USB Drive
+
+SD
+	EN	SD Card
+
+ATTACHING
+	EN	Attaching
+
