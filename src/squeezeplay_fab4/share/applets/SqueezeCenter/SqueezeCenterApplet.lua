@@ -27,6 +27,7 @@ local appletManager          = appletManager
 
 local MOUNTING_DRIVE_TIMEOUT = 30
 
+local SUPPORTED_FILE_FORMATS = "FAT16, FAT32, NTFS, ext2 and ext3"
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -178,14 +179,15 @@ function _mountingDriveTimer(self, devName)
 	local mounted = false
 
 	Task("mountingDrive", self, function()
-		log:warn("mountingDriveTimeout=", self.mountingDriveTimeout)
+		log:debug("mountingDriveTimeout=", self.mountingDriveTimeout)
 
 		mounted = self:_checkDriveMounted(devName)
 
 		if mounted then
 			-- success
-			log:warn("*** Device mounted sucessfully.")
+			log:debug("*** Device mounted sucessfully.")
 
+			self:_ejectWarning()
 		else
 			-- Not yet mounted
 			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
@@ -193,8 +195,10 @@ function _mountingDriveTimer(self, devName)
 				return
 			end
 
-			-- fail
-			log:warn("*** Device failed to mount.")
+			-- failure
+			log:debug("*** Device failed to mount.")
+
+			self:_unsupportedDiskFormat()
 		end
 
 		self.popupWaiting:hide()
@@ -222,6 +226,59 @@ function _checkDriveMounted(self, devName)
 	end
 
 	return false
+end
+
+
+-- Not supported disk format error message
+function _unsupportedDiskFormat(self)
+	local window = Window("text_list", self:string("UNSUPPORTED_DISK_FORMAT"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("OK"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			window:hide()
+		end
+	})
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("UNSUPPORTED_DISK_FORMAT_INFO", SUPPORTED_FILE_FORMATS)))
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+-- Ejection Warning for new USB/SD drives
+function _ejectWarning(self)
+	local window = Window("text_list", self:string("EJECT_WARNING"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("OK"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+-- TODO: continue in the flow
+			window:hide()
+		end
+	})
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
 end
 
 
