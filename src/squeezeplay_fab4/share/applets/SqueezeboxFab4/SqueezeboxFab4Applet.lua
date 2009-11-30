@@ -81,9 +81,9 @@ local AMBIENT_RAMPSTEPS = 7
 -- Ambient SysFS Path
 local AMBIENT_SYSPATH = "/sys/bus/i2c/devices/0-0039/"
 
--- 3500 Is about the value I've seen in my room during full daylight
--- so set it somewhere below that
-local STATIC_LUX_MAX = 2000
+-- This value determinds sensibility - smaller values = more sensible
+--  brightness = (MAX_BRIGHTNESS_LEVEL / STATIC_LUX_MAX) * <sensorvalue>
+local STATIC_LUX_MAX = 500
 
 local brightCur = MAX_BRIGHTNESS_LEVEL
 local brightTarget = MAX_BRIGHTNESS_LEVEL
