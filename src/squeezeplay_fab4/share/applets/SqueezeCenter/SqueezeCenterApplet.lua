@@ -27,7 +27,7 @@ local appletManager          = appletManager
 
 local MOUNTING_DRIVE_TIMEOUT = 30
 
-local SUPPORTED_FILE_FORMATS = "FAT16, FAT32, NTFS, ext2 and ext3"
+local _supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -246,7 +246,13 @@ function _unsupportedDiskFormat(self)
 		end
 	})
 
-	menu:setHeaderWidget(Textarea("help_text", self:string("UNSUPPORTED_DISK_FORMAT_INFO", SUPPORTED_FILE_FORMATS)))
+	local formats = ""
+	for i = 1, (#_supportedFormats - 1) do
+		formats = formats .. _supportedFormats[i] .. ", "
+	end
+	formats = formats .. _supportedFormats[#_supportedFormats]
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("UNSUPPORTED_DISK_FORMAT_INFO", formats)))
 
 	window:addWidget(menu)
 
