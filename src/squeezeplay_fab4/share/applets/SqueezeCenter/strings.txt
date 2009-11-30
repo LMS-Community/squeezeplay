@@ -513,6 +513,12 @@ UNSUPPORTED_DISK_FORMAT
 UNSUPPORTED_DISK_FORMAT_INFO
 	EN	This USB/SD device is using an unsupported disk format. Supported formats are %s.
 
+UNSUPPORTED_DISK_FORMAT_INFO_USB
+	EN	This USB device is using an unsupported format. Supported formats are %s.
+
+UNSUPPORTED_DISK_FORMAT_INFO_SD
+	EN	This SD card is using an unsupported format. Supported formats are %s.
+
 CANT_COMPLETE_SCAN
 	EN	Can't Complete Scan
 
@@ -549,10 +555,10 @@ EJECT_DRIVE
 EJECT_REMOVABLE_MEDIA
 	EN	EJECT Removable Media
 
-EJECT_USB_DRIVE
+EJECT_DRIVE_USB
 	EN	EJECT USB Drive
 
-EJECT_SD_CARD
+EJECT_DRIVE_SD
 	EN	EJECT SD Card
 
 DEVICE_REMOVAL_WARNING
@@ -594,4 +600,10 @@ DEVICE_EJECTED_ITEM
 
 ATTACHING_DRIVE
 	EN	Attaching Drive...
+
+ATTACHING_DRIVE_USB
+	EN	Attaching USB Drive...
+
+ATTACHING_DRIVE_SD
+	EN	Attaching SD Card...
 
