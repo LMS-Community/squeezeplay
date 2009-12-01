@@ -1416,7 +1416,14 @@ function _goNowPlayingAction()
 end
 
 function _goSearchAction()
-	_goMenuTableItem("myMusicSearch")
+	local player = appletManager:callService("getCurrentPlayer")
+
+	if player and player:getSlimServer() and not player:getSlimServer():isSqueezeNetwork() then
+		_goMenuTableItem("opmlsearch")
+	else
+		_goMenuTableItem("myMusicSearch")
+	end                                            
+
 	return EVENT_CONSUME
 end
 
