@@ -573,6 +573,12 @@ EJECT_CONFIRM
 EJECT_CONFIRM_INFO
 	EN	Are you sure you want to eject the device %s?
 
+EJECT_CONFIRM_INFO_SD
+	EN	Are you sure you want to eject the SD card?
+
+EJECT_CONFIRM_INFO_USB
+	EN	Are you sure you want to eject this USB drive?
+
 EJECT_CONFIRM_ITEM
 	EN	Eject removable device
 
