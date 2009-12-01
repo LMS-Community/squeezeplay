@@ -2558,6 +2558,7 @@ function skin(self, s)
 	s.hm_myMusicSearchPlaylists = _uses(s.hm_myMusicSearch)
 	s.hm_myMusicSearchRecent    = _uses(s.hm_myMusicSearch)
 	s.hm_homeSearchRecent       = _uses(s.hm_myMusicSearch)
+	s.hm_globalSearch           = _uses(s.hm_myMusicSearch)
 
 	s.hm_myMusicMusicFolder = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_folder" .. skinSuffix),
