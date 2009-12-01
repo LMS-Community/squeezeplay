@@ -550,16 +550,16 @@ SCANNING_LIBRARY
 	EN	Scanning Library: %s
 
 EJECT_DRIVE
-	EN	EJECT %s
+	EN	Eject %s
 
 EJECT_REMOVABLE_MEDIA
-	EN	EJECT Removable Media
+	EN	Eject Removable Media
 
 EJECT_DRIVE_USB
-	EN	EJECT USB Drive
+	EN	Eject USB Drive
 
 EJECT_DRIVE_SD
-	EN	EJECT SD Card
+	EN	Eject SD Card
 
 DEVICE_REMOVAL_WARNING
 	EN	Warning!
