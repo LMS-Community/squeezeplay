@@ -67,3 +67,4 @@ icon_my_apps.png
 icon_tutorial.png
 icon_baby.png
 icon_iradio_noart.png
+icon_eject.png

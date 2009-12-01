@@ -2476,6 +2476,9 @@ function skin(self, s)
 	s.hm_appletImageViewer = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
 	})
+	s.hm_eject = _uses(_buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_eject" .. skinSuffix),
+	})
 	s.hm_appletNowPlaying = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
