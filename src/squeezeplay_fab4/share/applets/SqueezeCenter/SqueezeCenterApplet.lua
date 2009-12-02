@@ -27,6 +27,7 @@ local jiveMain               = jiveMain
 
 
 local MOUNTING_DRIVE_TIMEOUT = 30
+local UNMOUNTING_DRIVE_TIMEOUT = 30
 
 local _supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 
@@ -35,7 +36,7 @@ oo.class(_M, Applet)
 
 function settingsShow(self)
 	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
-	local window = Window("text_list", 'Squeezebox Server', 'settingstitle')
+	local window = Window("text_list", 'Squeezebox Server')
 	
 	-- XXX: first attempt at showing scan process running
 	self.status = Textarea("help_text", self:_getStatusText() )
@@ -45,14 +46,14 @@ function settingsShow(self)
 						text = self:string("START"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_action("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
+								   self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
 							   end
 					},
 					{
 						text = self:string("STOP"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_action("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop")
+								   self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop")
 							   end
 					},
 					{
@@ -73,29 +74,33 @@ function settingsShow(self)
 	return window
 end
 
-function _action(self, icon, text, subtext, time, action)
+
+function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 	-- Check validity of action
-	if (action == 'start' and (_pidfor('slimserver.pl') or _pidfor('scanner.pl'))
-		or action == 'stop' and not _pidfor('slimserver.pl')
-		or action == 'rescan' and _pidfor('scanner.pl'))
+	if (
+		action == 'start' and ( self:serverRunning() or self:scannerRunning() )
+		or action == 'stop' and not self:serverRunning() 
+		or action == 'rescan' and self:scannerRunning() )
 	then
 		return EVENT_UNUSED
 	end
 
-	local popup = Popup("waiting_popup")
-	popup:addWidget(Icon(icon))
-	popup:addWidget(Label("text", self:string(text)))
-	
-	if (subtext ~= nil) then popup:addWidget(Textarea("subtext", self:string(subtext))) end
-	
-	popup:showBriefly(time,
-		function()
-			_updateStatus(self)
-		end,
-		Window.transitionPushPopupUp,
-		Window.transitionPushPopupDown
-	)
+	if not silent then
+		local popup = Popup("waiting_popup")
+		popup:addWidget(Icon(icon))
+		popup:addWidget(Label("text", self:string(text)))
+		
+		if (subtext ~= nil) then popup:addWidget(Textarea("subtext", self:string(subtext))) end
+		
+		popup:showBriefly(time,
+			function()
+				_updateStatus(self)
+			end,
+			Window.transitionPushPopupUp,
+			Window.transitionPushPopupDown
+		)
+	end
 
 	os.execute("/etc/init.d/squeezecenter " .. action);
 
@@ -125,7 +130,7 @@ end
 -- udevHandler takes events on udev and decides whether and when to kick off the scanner
 function udevEventHandler(self, evt, msg)
 
-	log:warn('udevEventHandler()')
+	log:debug('udevEventHandler()')
 
 	-- work in progress: useful for viewing what's in the msg table
 	--[[
@@ -139,18 +144,23 @@ function udevEventHandler(self, evt, msg)
 	--	we should start polling mount to see if a drive gets mounted rw
 	--	if it does, hide the popup, start the scanner (/etc/init.d/squeezecenter rescan), and push to the SqueezeCenter menu
 	--	if it doesn't, popup an appropriate error
-	if msg and msg.ACTION == 'add' and msg.DEVTYPE == 'partition' then
+	if msg and ( msg.ACTION == 'add' or msg.ACTION == 'remove' ) and msg.DEVTYPE == 'partition' then
 		local devPath = msg.DEVPATH
 		-- Extract device name (last element)
 		local pathElements = string.split('/', devPath)
 		local devName = pathElements[#pathElements]
 		-- devName that begins with mmc* is an SD card
 		-- devName that starts with sda* is a USB device
-		log:debug("Device name: ", devName)
+		if msg.ACTION == 'add' then
+			log:debug("Attaching Device: ", devName)
 
-		-- media-watcher.pl needs to be disabled before this can be uncommented in firmware builds
-		-- for development, kill <media-watcher.pl pid> and uncomment this line 
-		--self:_mountingDrive(devName)
+			-- media-watcher.pl needs to be disabled before this can be uncommented in firmware builds
+			-- for development, kill <media-watcher.pl pid> and uncomment this line 
+		--	self:_mountingDrive(devName)
+		else
+			-- TODO: if we hit this spot, this is where we check if the device was properly unmounted
+			log:warn('Device Removal Detected: ', devName)
+		end
 	end
 end
 
@@ -159,8 +169,8 @@ end
 -- full screen popup that appears until mounting is complete or failed
 ---function _mountingDrive(self)
 function _mountingDrive(self, devName)
-	log:warn('**** popup during drive mount')
-	if self.popupWaiting then
+	log:debug('**** popup during drive mount')
+	if self.popupMountWaiting then
 		return
 	end
 
@@ -185,16 +195,96 @@ function _mountingDrive(self, devName)
 	local label = Label("text", self:string('ATTACHING') )
 	popup:addWidget(label)
 
-	local token = 'DRIVE'
+	local token = 'DEVICE'
 	if self.devType then
 		token = self.devType
 	end
 	local sublabel = Label("subtext", self:string(token) )
 	popup:addWidget(sublabel)
 
-	self.popupWaiting = popup
+	self.popupMountWaiting = popup
 	self:tieAndShowWindow(popup)
 end
+
+function _unmountActions(self, devName, silent)
+
+	self:_stopScanner(silent)
+	self:_stopServer(silent)
+	os.execute("umount /media/" .. devName)
+
+end
+
+function _stopScanner(self, silent)
+	if self:scannerRunning() then
+		-- attempt to stop scanner
+		log:debug('STOPPING SCANNER')
+		self:_squeezecenterAction("icon_connecting", "STOPPING_SCANNER", nil, 2000, "stopscan", silent)
+	end
+end
+
+
+function _stopServer(self, silent)
+	if self:serverRunning() then
+		-- attempt to stop tinySC
+		log:debug('STOP SERVER')
+		self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop", silent)
+	end
+
+end
+
+-- _unmountingDrive
+-- full screen popup that appears until unmounting is complete or failed
+function _unmountDrive(self, devName)
+	
+	log:warn('_unmountDrive()')
+
+	local item = self:_getItemFromDevName(devName)
+
+
+	-- require that we have an item.devPath to eject
+	if not item.mountPath then
+		log:warn("no mountPath to eject item")
+		return EVENT_UNUSED
+	end
+
+	self:_unmountActions(devName)
+
+	if self.popupUnmountWaiting then
+		return
+	end
+
+        local popup = Popup("waiting_popup")
+        local icon  = Icon("icon_connecting")
+
+	-- set self.devType var based on devName during the _mountingDrive method
+	if string.match(devName, "^sd") then
+		self.devType = 'USB'
+	elseif string.match(devName, "^mmc") then
+		self.devType = 'SD'
+	end
+	self.mountingDriveTimeout = 0
+
+	icon:addTimer(1000,
+		function()
+			_unmountingDriveTimer(self, devName)
+		end)
+
+        popup:addWidget(icon)
+
+	local label = Label("text", self:string('EJECTING') )
+	popup:addWidget(label)
+
+	local token = 'DEVICE'
+	if self.devType then
+		token = self.devType
+	end
+	local sublabel = Label("subtext", self:string(token) )
+	popup:addWidget(sublabel)
+
+	self.popupUnmountWaiting = popup
+	self:tieAndShowWindow(popup)
+end
+
 
 function _mountingDriveTimer(self, devName)
 	local mounted = false
@@ -222,7 +312,7 @@ function _mountingDriveTimer(self, devName)
 				devType    = self.devType,
 			}
 			self.mountedDevices[devName] = deviceInfo
-			self:_addEjectDeviceItem(deviceInfo)
+			self:_addEjectDeviceItem(devName)
 		else
 			-- Not yet mounted
 			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
@@ -236,23 +326,147 @@ function _mountingDriveTimer(self, devName)
 			self:_unsupportedDiskFormat()
 		end
 
-		self.popupWaiting:hide()
-		self.popupWaiting = nil
+		self.popupMountWaiting:hide()
+		self.popupMountWaiting = nil
 
 	end):addTask()
 end
 
 
-function _addEjectDeviceItem(self, item)
+function _unmountingDriveTimer(self, devName)
+	local unmounted = false
+	self.unmountingDriveTimeout = 0
 
-	log:warn('_addEjectDeviceItem()')
+	Task("unmountingDrive", self, function()
+		log:debug("unmountingDriveTimeout=", self.mountingDriveTimeout)
+
+		unmounted = self:_checkDriveUnmounted(devName)
+
+		if unmounted then
+			-- success
+			log:debug("*** Device ", devName, " unmounted sucessfully.")
+
+			self:_removeEjectDeviceItem(devName)
+
+			-- rmdir cleanup of /media/devName, as stale dirs appear to be a problem after umount
+			if self:_mediaDirExists(devName) then
+				os.execute("rmdir /media/" .. devName)
+			end
+
+			self:_unmountSuccess(devName)
+
+
+		else
+			-- Not yet unmounted
+			self.unmountingDriveTimeout = self.unmountingDriveTimeout + 1
+			if self.unmountingDriveTimeout <= UNMOUNTING_DRIVE_TIMEOUT then
+				-- try again
+				self:_unmountActions(devName, true)
+				return
+			end
+
+			-- failure
+			log:warn("*** Device failed to unmount.")
+
+			self:_unmountFailure(devName)
+		end
+
+		self.popupUnmountWaiting:hide()
+		self.popupUnmountWaiting = nil
+
+	end):addTask()
+end
+
+function _unmountSuccess(self, devName)
+	log:debug('_unmountSuccess()')
+	local item = self:_getItemFromDevName(devName)
+	local token = 'DEVICE_EJECTED_INFO'
+	if item.devType then
+		token = token .. "_" .. item.devType
+	end
+
+	if self.confirmEjectWindow then
+		self.confirmEjectWindow:hide()
+		self.confirmEjectWindow = nil
+	end
+
+
+	-- clear device from self.mountedDevices
+	if self.mountedDevices and self.mountedDevices[devName] then
+		self.mountedDevices[devName] = nil
+	end
+
+
+	local window = Window("text_list", self:string("DEVICE_EJECTED"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	-- XXX: This is a currently necessary hack. 
+	-- If the scanner is running when the unmount occurs, stopscan will trigger the server to start, 
+	-- because the /etc/init.d/squeezecenter script will go to the next interpreted line after the scanner stops, which is to start the server.
+	-- Sometimes when this occurs the server does not start until _after_ the server stop command is issued by this applet and the drive is unmounted, which causes BAD THINGS. 
+	-- Add a one time 3 second timer to stop the server one more time and forcefully remove the /media/<devName> folder. 
+	-- Ouch.
+	window:addTimer(
+		3000, 
+		function()
+			log:warn('making sure server is killed and /media/' .. devName .. ' is deleted from filesystem')
+			self:_stopServer(true)
+			if self:_mediaDirExists(devName) then -- let's be careful with the rm -rf shall we?
+				log:warn('forcefully remove /media/', devName)
+				os.execute("rm -rf /media/" .. devName)
+			end
+		end,
+		true
+	)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("OK"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			window:hide()
+		end
+	})
+
+	menu:setHeaderWidget( Textarea("help_text", self:string(token) ) )
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function _unmountFailure(self, devName)
+	log:warn('_unmountFailure()')
+end
+
+function _removeEjectDeviceItem(self, devName)
+	log:debug('_removeEjectDeviceItem()')
+	local item = self:_getItemFromDevName(devName)
+	if item and item.menuItem then
+		log:debug('removing menu item for ', item.devType)
+		jiveMain:removeItem(item.menuItem)
+	else
+		log:warn('no menu item found for ', devName)
+	end
+end
+
+
+function _addEjectDeviceItem(self, devName)
+
+	log:debug('_addEjectDeviceItem()')
+
+	local item = self.mountedDevices and self.mountedDevices[devName]
 
 	local token = 'EJECT_CONFIRM_ITEM'
 	if item.devType then
 		token = 'EJECT_' .. item.devType
 	end
 
-	jiveMain:addItem({
+	self.mountedDevices[devName].menuItem = {
                 id = item.devName,
                 node = "_myMusic",
                 text = self:string(token),
@@ -261,16 +475,63 @@ function _addEjectDeviceItem(self, item)
                 --weight = 1000,
 		-- TODO: add a method to eject the device (that works!)
 		callback = function()
-			log:warn('Eject Device!')
+			self:_confirmEject(devName)
 		end,
-        })
+        }
+	jiveMain:addItem(self.mountedDevices[devName].menuItem)
 end
+
+
+function _confirmEject(self, devName)
+	log:debug('confirmEject()')
+	local item = self:_getItemFromDevName(devName)
+
+	local titleToken   = 'EJECT_CONFIRM'
+	local confirmToken = 'EJECT_CONFIRM_INFO'
+	local ejectToken   = 'EJECT_REMOVABLE_MEDIA'
+
+	if item.devType then
+		titleToken   = 'EJECT_CONFIRM_' .. item.devType
+		confirmToken = 'EJECT_CONFIRM_INFO_' .. item.devType
+		ejectToken   = 'EJECT_DRIVE_' .. item.devType
+	end
+	local window = Window("text_list", self:string(titleToken) )
+	local menu = SimpleMenu("menu", {
+			{
+				text = self:string("CANCEL"),
+				sound = "WINDOWHIDE",
+				callback = function() 
+					window:hide()
+				end
+			},
+			{
+				text = self:string(ejectToken, item.devName),
+				sound = "WINDOWSHOW",
+				callback = function() 
+					-- eject drive
+					self:_unmountDrive(devName)
+				end
+			},
+	})
+
+	menu:setHeaderWidget( Textarea("help_text", self:string(confirmToken, item.devName) ) )
+	window:addWidget(menu)
+	self.confirmEjectWindow = window
+	self:tieAndShowWindow(window)
+end
+
+
+function _getItemFromDevName(self, devName)
+	return self.mountedDevices and 
+		self.mountedDevices[devName]
+end
+
 
 function _startScan(self)
 
 	if not self:scannerRunning() then
 		log:warn('Starting scanner')
-		self:_action("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 10000, "rescan")
+		self:_squeezecenterAction("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 5000, "rescan")
 	end
 end
 
@@ -288,11 +549,55 @@ function _checkDriveMounted(self, devName)
 	mount:close()
 
 	if format then
-		log:warn("New device: /dev/", devName, " formatted with: ", format)
+		log:debug("New device: /dev/", devName, " formatted with: ", format)
 		return true
 	end
 
 	return false
+end
+
+
+function _mediaDirExists(self, devName)
+	local dirExists = nil
+	local mount = io.popen("/bin/ls /media")
+
+	log:debug('--- ', devName)
+	for line in mount:lines() do
+		local stringMatch = string.match(line, devName)
+		if stringMatch then
+			dirExists = true
+		end
+	end
+	mount:close()
+
+	if dirExists then
+		return true
+	end
+
+	return false
+end
+
+
+function _checkDriveUnmounted(self, devName)
+	local devMount = nil
+	local mount = io.popen("/bin/mount")
+
+	log:debug('--- ', devName)
+	for line in mount:lines() do
+		local stringMatch = string.match(line, "/dev/" .. devName)
+		log:debug('--- ', line, '--- ', devMount)
+		if stringMatch then
+			devMount = string.match(line, "type (%w*)")
+		end
+	end
+	mount:close()
+
+	if devMount then
+		log:warn("Device: /dev/", devName, " is still in the mount table")
+		return false
+	end
+
+	return true
 end
 
 
@@ -336,24 +641,24 @@ function _ejectWarning(self)
 
 	local menu = SimpleMenu("menu")
 
-	-- start the scanner
-	self:_startScan()
-
 	menu:addItem({
 		text = self:string("OK"),
 		style = 'item',
 		sound = "WINDOWSHOW",		
 		callback = function ()
-			window:hide()
 			self:settingsShow()
+			window:hide()
 		end
 	})
 
 	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
 
 	window:addWidget(menu)
-
 	self:tieAndShowWindow(window)
+
+	-- start the scanner
+	self:_startScan()
+
 	return window
 end
 
@@ -370,6 +675,15 @@ end
 function scannerRunning(self)
 	local scanner = _pidfor('scanner.pl')
 	if (scanner ~= nil) then
+		return true
+	end
+	return false
+end
+
+
+function processRunning(self, process)
+	local pid = _pidfor(process)
+	if (pid ~= nil) then
 		return true
 	end
 	return false

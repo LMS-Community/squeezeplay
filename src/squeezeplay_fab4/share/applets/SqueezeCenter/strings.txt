@@ -108,19 +108,7 @@ RESCAN_SQUEEZECENTER
 	SV	En ny sökning påbörjas
 
 RESCAN_SQUEEZECENTER_TEXT
-	CS	Bude to pravděpodobně trvat několik minut.
-	DA	Det vil nok tage et par minutter.
-	DE	Dieser Vorgang kann mehrere Minuten dauern.
-	EN	This will probably take several minutes.
-	ES	Es probable que tarde varios minutos.
-	FI	Tämä vie todennäköisesti useita minuutteja.
-	FR	Cela peut prendre plusieurs minutes.
-	IT	L'operazione richiede alcuni minuti.
-	NL	Dit neemt mogelijk enkele minuten in beslag.
-	NO	Dette kan ta flere minutter.
-	PL	To potrwa kilka minut.
-	RU	Вероятно, это займет несколько минут.
-	SV	Detta kan ta flera minuter.
+	EN	This can take several minutes.
 
 STATUS_SQUEEZECENTER_RUNNING
 	CS	Squeezebox Server se spouští nebo již běží
@@ -570,6 +558,12 @@ DEVICE_REMOVAL_WARNING_INFO
 EJECT_CONFIRM
 	EN	Eject Removable Device?
 
+EJECT_CONFIRM_SD
+	EN	Eject SD Card?
+
+EJECT_CONFIRM_USB
+	EN	Eject USB Device?
+
 EJECT_CONFIRM_INFO
 	EN	Are you sure you want to eject the device %s?
 
@@ -601,8 +595,14 @@ CANCEL
 DEVICE_EJECTED
 	EN	Device Ejected
 
-DEVICE_EJECTED_ITEM
+DEVICE_EJECTED_INFO
 	EN	It is now safe to remove your device.
+
+DEVICE_EJECTED_INFO_SD
+	EN	It is now safe to remove your SD Card.
+
+DEVICE_EJECTED_INFO_USB
+	EN	It is now safe to remove your USB storage device.
 
 ATTACHING_DRIVE
 	EN	Attaching Drive...
@@ -613,8 +613,8 @@ ATTACHING_DRIVE_USB
 ATTACHING_DRIVE_SD
 	EN	Attaching SD Card...
 
-DRIVE
-	EN	Drive
+DEVICE
+	EN	Device
 
 USB
 	EN	USB Drive
@@ -630,4 +630,7 @@ EJECT_USB
 
 EJECT_SD
 	EN	Eject SD Card
+
+EJECTING
+	EN	Ejecting
 
