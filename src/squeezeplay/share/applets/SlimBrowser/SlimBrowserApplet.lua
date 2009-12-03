@@ -1418,9 +1418,10 @@ end
 function _goSearchAction()
 	local player = appletManager:callService("getCurrentPlayer")
 
-	if player and player:getSlimServer() and not player:getSlimServer():isSqueezeNetwork() then
+	if false and player and player:getSlimServer() and not player:getSlimServer():isSqueezeNetwork() then
 		_goMenuTableItem("opmlsearch")
 	else
+--		_goMenuTableItem("globalSearch")
 		_goMenuTableItem("myMusicSearch")
 	end                                            
 
