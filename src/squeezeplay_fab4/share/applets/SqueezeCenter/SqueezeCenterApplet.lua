@@ -26,13 +26,107 @@ local appletManager          = appletManager
 local jiveMain               = jiveMain
 
 
-local MOUNTING_DRIVE_TIMEOUT = 30
-local UNMOUNTING_DRIVE_TIMEOUT = 30
-
-local _supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
-
 module(..., Framework.constants)
 oo.class(_M, Applet)
+
+function init(self)
+	self.mountedDevices = {}
+	self.MOUNTING_DRIVE_TIMEOUT = 30
+	self.UNMOUNTING_DRIVE_TIMEOUT = 30
+	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
+	self.prefsFile = "/etc/squeezecenter/prefs.json"
+end
+
+
+-- do the right thing on jive startup
+function squeezecenterStartupCheck(self)
+
+	local mountedDrives       = self:mountedDriveCheck()
+	local usbDrives           = {}
+	local sdDrives            = {}
+	local mountedDrivePresent = false
+	local usbDrivePresent     = false
+
+	for k, v in pairs(mountedDrives) do
+		mountedDrivePresent = true
+		if self:mediaType(k) == 'USB' then
+			usbDrivePresent = true
+			usbDrives[k] = v
+		else
+			sdDrives[k] = v
+		end
+	end
+
+	-- mounted drive present
+	if mountedDrivePresent then
+		local prefs = self:readSCPrefsFile()
+		-- prefs.json present
+		if prefs and prefs.audiodir then
+			local devName = string.match(prefs.audiodir, "/media/(%w*)")
+			-- audiodir represents a mounted drive
+			if mountedDrives[devName] then 
+                        	-- store device in self.mountedDevices
+				self:addMountedDevice(devName, true)
+			-- audiodir represents an umounted drive
+			else
+				local scDrive
+				if usbDrivePresent then
+					scDrive = self:_firstTableElement(usbDrives)
+				else
+					scDrive = self:_firstTableElement(mountedDrives)
+				end
+				-- write prefs.json
+				self:_writeSCPrefsFile(scDrive)
+				self:addMountedDevice(scDrive, true)
+
+			end
+				
+		-- prefs.json not present
+		else
+			local scDrive
+			if usbDrivePresent then
+				scDrive = self:_firstTableElement(usbDrives)
+			else
+				scDrive = self:_firstTableElement(mountedDrives)
+			end
+			-- write prefs.json
+			self:_writeSCPrefsFile(scDrive)
+			self:addMountedDevice(scDrive, true)
+		end
+
+		--- start scanner 
+		self:startScan()
+
+		-- populate non-SC mounted drives to self.mountedDevices
+		-- create menu items for each
+		for k, v in pairs(mountedDrives) do
+			if not self.mountedDevices[k] then
+				self:addMountedDevice(k, false)
+			end
+			self:_addEjectDeviceItem(devName)
+		end
+	end
+
+end
+
+
+function _firstTableElement(self, t)
+	for k, v in pairs(t) do
+		return k, v 
+	end
+end
+
+
+function addMountedDevice(self, devName, isSCDrive)
+	self.mountedDevices[devName] = {
+		devName    = devName,
+		deviceName = "/dev/"   .. devName,
+		mountPath  = "/media/" .. devName,
+		devType    = self:mediaType(devName),
+		SCDrive    = isSCDrive,
+	}
+	return true
+end
 
 function settingsShow(self)
 	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
@@ -60,7 +154,7 @@ function settingsShow(self)
 						text = self:string("STOP_RESCAN_START"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_startScan()
+								   self:startScan()
 							   end
 					},
 				})
@@ -106,6 +200,7 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 end
 
+
 function _getStatusText(self)
 	-- XXX: first attempt at showing scan process running
 	local statusText
@@ -150,18 +245,27 @@ function udevEventHandler(self, evt, msg)
 		local pathElements = string.split('/', devPath)
 		local devName = pathElements[#pathElements]
 		-- devName that begins with mmc* is an SD card
-		-- devName that starts with sda* is a USB device
+		-- devName that starts with sd* is a USB device
 		if msg.ACTION == 'add' then
 			log:debug("Attaching Device: ", devName)
 
 			-- media-watcher.pl needs to be disabled before this can be uncommented in firmware builds
 			-- for development, kill <media-watcher.pl pid> and uncomment this line 
-		--	self:_mountingDrive(devName)
+			--self:_mountingDrive(devName)
 		else
 			-- TODO: if we hit this spot, this is where we check if the device was properly unmounted
 			log:warn('Device Removal Detected: ', devName)
 		end
 	end
+end
+
+function mediaType(self, devName)
+	if string.match(devName, "^sd") then
+		return 'USB'
+	elseif string.match(devName, "^mmc") then
+		return 'SD'
+	end
+	return false
 end
 
 
@@ -178,11 +282,7 @@ function _mountingDrive(self, devName)
         local icon  = Icon("icon_connecting")
 
 	-- set self.devType var based on devName during the _mountingDrive method
-	if string.match(devName, "^sd") then
-		self.devType = 'USB'
-	elseif string.match(devName, "^mmc") then
-		self.devType = 'SD'
-	end
+	self.devType = self:mediaType(devName)
 	self.mountingDriveTimeout = 0
 
 	icon:addTimer(1000,
@@ -208,8 +308,13 @@ end
 
 function _unmountActions(self, devName, silent)
 
-	self:_stopScanner(silent)
-	self:_stopServer(silent)
+	local item = self:_getItemFromDevName(devName)
+	if item.SCDrive then
+		self:_stopScanner(silent)
+		self:_stopServer(silent)
+	else
+		log:warn('!! This is not the SCDrive')
+	end
 	os.execute("umount /media/" .. devName)
 
 end
@@ -225,7 +330,7 @@ end
 
 function _stopServer(self, silent)
 	if self:serverRunning() then
-		-- attempt to stop tinySC
+		-- attempt to stop SC
 		log:debug('STOP SERVER')
 		self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop", silent)
 	end
@@ -257,11 +362,7 @@ function _unmountDrive(self, devName)
         local icon  = Icon("icon_connecting")
 
 	-- set self.devType var based on devName during the _mountingDrive method
-	if string.match(devName, "^sd") then
-		self.devType = 'USB'
-	elseif string.match(devName, "^mmc") then
-		self.devType = 'SD'
-	end
+	self.devType = self:mediaType(devName)
 	self.mountingDriveTimeout = 0
 
 	icon:addTimer(1000,
@@ -292,31 +393,30 @@ function _mountingDriveTimer(self, devName)
 	Task("mountingDrive", self, function()
 		log:debug("mountingDriveTimeout=", self.mountingDriveTimeout)
 
-		mounted = self:_checkDriveMounted(devName)
+		mounted = self:checkDriveMounted(devName)
 
 		if mounted then
 			-- success
 			log:debug("*** Device mounted sucessfully.")
 
-			self:_ejectWarning()
 
 			-- store device in self.mountedDevices
-			-- work in progress: needed for "Eject USB Drive" and/or "Eject SD Card" menu items in My Music
-			if not self.mountedDevices then
-				self.mountedDevices = {}
+			local isScDrive = true
+			for k, v in pairs (self.mountedDevices) do
+				if v.SCDrive then
+					isScDrive = false
+				end
 			end
-			local deviceInfo = {
-				devName    = devName,
-				deviceName = "/dev/"   .. devName,
-				mountPath  = "/media/" .. devName,
-				devType    = self.devType,
-			}
-			self.mountedDevices[devName] = deviceInfo
+
+			self:addMountedDevice(devName, isScDrive)
+			debug.dump(self.mountedDevices)
+
+			self:_ejectWarning(devName)
 			self:_addEjectDeviceItem(devName)
 		else
 			-- Not yet mounted
 			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
-			if self.mountingDriveTimeout <= MOUNTING_DRIVE_TIMEOUT then
+			if self.mountingDriveTimeout <= self.MOUNTING_DRIVE_TIMEOUT then
 				return
 			end
 
@@ -359,7 +459,7 @@ function _unmountingDriveTimer(self, devName)
 		else
 			-- Not yet unmounted
 			self.unmountingDriveTimeout = self.unmountingDriveTimeout + 1
-			if self.unmountingDriveTimeout <= UNMOUNTING_DRIVE_TIMEOUT then
+			if self.unmountingDriveTimeout <= self.UNMOUNTING_DRIVE_TIMEOUT then
 				-- try again
 				self:_unmountActions(devName, true)
 				return
@@ -376,6 +476,7 @@ function _unmountingDriveTimer(self, devName)
 
 	end):addTask()
 end
+
 
 function _unmountSuccess(self, devName)
 	log:debug('_unmountSuccess()')
@@ -412,9 +513,13 @@ function _unmountSuccess(self, devName)
 		function()
 			log:warn('making sure server is killed and /media/' .. devName .. ' is deleted from filesystem')
 			self:_stopServer(true)
-			if self:_mediaDirExists(devName) then -- let's be careful with the rm -rf shall we?
+			if self:_mediaDirExists(devName) then 
 				log:warn('forcefully remove /media/', devName)
-				os.execute("rm -rf /media/" .. devName)
+				-- we need an rm -rf here because a .Squeezebox dir may have been created, but let's be careful with the rm -rf shall we?
+				-- make sure devName is there, otherwise this command is rm -rf /media
+				if devName and devName ~= '' then
+					os.execute("rm -rf /media/" .. devName)
+				end
 			end
 		end,
 		true
@@ -527,7 +632,7 @@ function _getItemFromDevName(self, devName)
 end
 
 
-function _startScan(self)
+function startScan(self)
 
 	if not self:scannerRunning() then
 		log:warn('Starting scanner')
@@ -536,7 +641,28 @@ function _startScan(self)
 end
 
 
-function _checkDriveMounted(self, devName)
+-- returns table of devNames for mounted devices
+function mountedDriveCheck(self)
+        local mount = io.popen("/bin/mount")
+
+	local mountedDrives = {}
+
+	local foundOne = nil
+        for line in mount:lines() do
+                local stringMatch = string.match(line, "/media/(%w*)")
+		if stringMatch then
+			log:warn('Mounted drive found at /media/', stringMatch)
+			mountedDrives[stringMatch] = "/media/" .. stringMatch
+		end
+        end
+        mount:close()
+
+        return mountedDrives
+end
+
+
+-- will return true if /media/<devName> is listed in the output of the mount command
+function checkDriveMounted(self, devName)
 	local format = nil
 	local mount = io.popen("/bin/mount")
 
@@ -618,7 +744,7 @@ function _unsupportedDiskFormat(self)
 		end
 	})
 
-	local formatsString = table.concat(_supportedFormats, ", ")
+	local formatsString = table.concat(self.supportedFormats, ", ")
 
 	local token = 'UNSUPPORTED_DISK_FORMAT_INFO'
 	if self.devType then
@@ -634,7 +760,10 @@ end
 
 
 -- Ejection Warning for new USB/SD drives
-function _ejectWarning(self)
+function _ejectWarning(self, devName)
+
+	local item = self:_getItemFromDevName(devName)
+
 	local window = Window("text_list", self:string("EJECT_WARNING"))
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
@@ -657,9 +786,48 @@ function _ejectWarning(self)
 	self:tieAndShowWindow(window)
 
 	-- start the scanner
-	self:_startScan()
+	if item.SCDrive then
+		self:_writeSCPrefsFile(devName)
+		self:startScan()
+	else
+		log:warn('!! This is not the SCDrive')
+	end
 
 	return window
+end
+
+function _writeSCPrefsFile(self, devName)
+	local item = self:_getItemFromDevName(devName)
+	if item.mountPath then
+		local exportTable = {
+			audiodir = item.mountPath
+		}
+		local forExport = json.encode(exportTable)
+		
+		local fh = io.open(self.prefsFile, "w")
+
+		if fh == nil then
+			return false
+		end
+
+		fh:write(forExport)
+		fh:close()
+	end
+end
+
+
+function readSCPrefsFile(self)
+	local fh = io.open(self.prefsFile, "r")
+	if fh == nil then
+		return false
+	end
+
+	local jsonData = fh:read("*all")
+	fh:close()
+
+	local prefsData = json.decode(jsonData)
+	return prefsData
+
 end
 
 
