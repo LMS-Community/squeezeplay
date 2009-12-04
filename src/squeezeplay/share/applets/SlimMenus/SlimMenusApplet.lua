@@ -318,7 +318,7 @@ end
 
 --register remote ss only if it doesn't exist. Only current server responses may replace existing items.
 function  _registerRemoteScreensaver(self, serverData)
-	if  not _playerMenus[serverData.id] then
+	if  not _playerScreensaverRegistrations[serverData.id] then
 		 _playerScreensaverRegistrations[serverData.id] = serverData
 		appletManager:callService("registerRemoteScreensaver", serverData)
 	else
