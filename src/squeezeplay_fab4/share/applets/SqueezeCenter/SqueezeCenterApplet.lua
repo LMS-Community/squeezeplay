@@ -50,50 +50,64 @@ function squeezecenterStartupCheck(self)
 	for k, v in pairs(mountedDrives) do
 		mountedDrivePresent = true
 		if self:mediaType(k) == 'USB' then
+			log:debug('STARTUP| USB drive detected in mounted drives: ', v)
 			usbDrivePresent = true
 			usbDrives[k] = v
 		else
+			log:debug('STARTUP| SD drive detected in mounted drives: ', v)
 			sdDrives[k] = v
 		end
 	end
 
 	-- mounted drive present
 	if mountedDrivePresent then
+		log:debug('STARTUP (1) | Mounted Drive Detected')
 		local prefs = self:readSCPrefsFile()
 		-- prefs.json present
 		if prefs and prefs.audiodir then
+			log:debug('STARTUP (2A)| prefs.json detected')
 			local devName = string.match(prefs.audiodir, "/media/(%w*)")
 			-- audiodir represents a mounted drive
 			if mountedDrives[devName] then 
+				log:debug('STARTUP (3A)| prefs.json audiodir represents a mounted drive')
                         	-- store device in self.mountedDevices
 				self:addMountedDevice(devName, true)
 			-- audiodir represents an umounted drive
 			else
+				log:debug('STARTUP (3B)| prefs.json audiodir is not a mounted drive')
 				local scDrive
 				if usbDrivePresent then
+				log:debug('STARTUP (4A)| USB drive present')
 					scDrive = self:_firstTableElement(usbDrives)
 				else
+				log:debug('STARTUP (4B)| SD drive present')
 					scDrive = self:_firstTableElement(mountedDrives)
 				end
 				-- write prefs.json
-				self:_writeSCPrefsFile(scDrive)
+				log:debug('STARTUP (5)| Write prefs.json file')
 				self:addMountedDevice(scDrive, true)
+				self:_writeSCPrefsFile(scDrive)
 
 			end
 				
 		-- prefs.json not present
 		else
+			log:debug('STARTUP (2B)| No prefs.json file found')
 			local scDrive
 			if usbDrivePresent then
+				log:debug('STARTUP (4A)| USB drive will be the tinySC Drive')
 				scDrive = self:_firstTableElement(usbDrives)
 			else
+				log:debug('STARTUP (4B)| SD drive will be the tinySC Drive')
 				scDrive = self:_firstTableElement(mountedDrives)
 			end
 			-- write prefs.json
-			self:_writeSCPrefsFile(scDrive)
+			log:debug('STARTUP (5)| Write prefs.json file')
 			self:addMountedDevice(scDrive, true)
+			self:_writeSCPrefsFile(scDrive)
 		end
 
+		log:debug('STARTUP (6)| Start Scanner')
 		--- start scanner 
 		self:startScan()
 
@@ -103,7 +117,8 @@ function squeezecenterStartupCheck(self)
 			if not self.mountedDevices[k] then
 				self:addMountedDevice(k, false)
 			end
-			self:_addEjectDeviceItem(devName)
+			log:debug('STARTUP (7)| Create eject item for ', k)
+			self:_addEjectDeviceItem(k)
 		end
 	end
 
@@ -249,9 +264,7 @@ function udevEventHandler(self, evt, msg)
 		if msg.ACTION == 'add' then
 			log:debug("Attaching Device: ", devName)
 
-			-- media-watcher.pl needs to be disabled before this can be uncommented in firmware builds
-			-- for development, kill <media-watcher.pl pid> and uncomment this line 
-			--self:_mountingDrive(devName)
+			self:_mountingDrive(devName)
 		else
 			-- TODO: if we hit this spot, this is where we check if the device was properly unmounted
 			log:warn('Device Removal Detected: ', devName)
@@ -798,6 +811,10 @@ end
 
 function _writeSCPrefsFile(self, devName)
 	local item = self:_getItemFromDevName(devName)
+	if not item then
+		self:addMountedDevice(devName, true)
+		item = self:_getItemFromDevName(devName)
+	end
 	if item.mountPath then
 		local exportTable = {
 			audiodir = item.mountPath
