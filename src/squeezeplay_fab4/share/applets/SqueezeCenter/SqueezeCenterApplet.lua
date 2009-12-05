@@ -64,17 +64,17 @@ function squeezecenterStartupCheck(self)
 		log:debug('STARTUP (1) | Mounted Drive Detected')
 		local prefs = self:readSCPrefsFile()
 		-- prefs.json present
-		if prefs and prefs.audiodir then
+		if prefs and prefs.mountpath then
 			log:debug('STARTUP (2A)| prefs.json detected')
-			local devName = string.match(prefs.audiodir, "/media/(%w*)")
-			-- audiodir represents a mounted drive
+			local devName = string.match(prefs.mountpath, "/media/(%w*)")
+			-- mountpath represents a mounted drive
 			if mountedDrives[devName] then 
-				log:debug('STARTUP (3A)| prefs.json audiodir represents a mounted drive')
+				log:debug('STARTUP (3A)| prefs.json mountpath represents a mounted drive')
                         	-- store device in self.mountedDevices
 				self:addMountedDevice(devName, true)
-			-- audiodir represents an umounted drive
+			-- mountpath represents an umounted drive
 			else
-				log:debug('STARTUP (3B)| prefs.json audiodir is not a mounted drive')
+				log:debug('STARTUP (3B)| prefs.json mountpath is not a mounted drive')
 				local scDrive
 				if usbDrivePresent then
 				log:debug('STARTUP (4A)| USB drive present')
