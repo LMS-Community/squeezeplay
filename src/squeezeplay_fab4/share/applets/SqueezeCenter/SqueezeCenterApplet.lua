@@ -817,7 +817,8 @@ function _writeSCPrefsFile(self, devName)
 	end
 	if item.mountPath then
 		local exportTable = {
-			audiodir = item.mountPath
+			audiodir = item.mountPath, -- audiodir could be changed in the future to a user-configured subdir of the mounted drive
+			mountpath = item.mountPath
 		}
 		local forExport = json.encode(exportTable)
 		
