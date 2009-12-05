@@ -213,7 +213,7 @@ local rtmpHandlers = {
 			   local limit  = unpackNumber(rtmp["body"], 5, 1)
 
 			   log:info("message type 5 - set peer BW: ", window, " limit type ", limit, " - sending response")
-			   ackWindow = window
+			   ackWindow = window / 2
 			   sendRtmp(stream, 
 						string.char(0x02,                       -- chan 2, format 0
 									0x00, 0x00, 0x00,           -- timestamp (not implemented)
@@ -267,6 +267,15 @@ local rtmpHandlers = {
 				   --log:debug("message type 8 - MP3 audiodata, len:", rtmp["length"])
 
 				   outBuf = outBuf .. string.sub(rtmp["body"], 2)
+			   end
+
+			   if state ~= "Playing" then
+				   -- don't start playing live streams immediately as it causes stutter
+				   if rtmpMessages["subscribe"] and rtmp["timestamp"] < 4500 then
+					   return 0
+				   else
+					   changeState("Playing")
+				   end
 			   end
 
 			   local n = stream:feedFromLua(outBuf)
@@ -411,7 +420,7 @@ function read(stream)
 					info = {
 						chunkChan = chan,
 						type      = string.byte(inBuf, 8),
-						--timestamp = unpackNumber(inBuf, 2, 3),
+						timestamp = unpackNumber(inBuf, 2, 3),
 						length    = t0len,
 						streamId  = unpackNumber(inBuf, 9, 4, true)
 					}
@@ -444,10 +453,10 @@ function read(stream)
 
 					info = inCache["info"]
 					info["type"] = string.byte(inBuf, 8)
-					--info["timestamp"] = info["timestamp"] + delta
+					info["timestamp"] = info["timestamp"] + delta
 					info["length"] = t1len
 					-- streamId is cached
-					--info["delta"] = delta
+					info["delta"] = delta
 
 					local frag = string.sub(inBuf, 9, read)
 					inBuf = string.sub(inBuf, read + 1)
@@ -469,12 +478,12 @@ function read(stream)
 
 				if len >= read then
 
-					--local delta = unpackNumber(inBuf, 2, 3)
+					local delta = unpackNumber(inBuf, 2, 3)
 
 					info = inCache["info"]
-					--info["timestamp"] = info["timestamp"] + delta
+					info["timestamp"] = info["timestamp"] + delta
 					-- type, length, streamId is cached
-					--info["delta"] = delta
+					info["delta"] = delta
 
 					local frag = string.sub(inBuf, 5, read)
 					inBuf = string.sub(inBuf, read + 1)
@@ -517,7 +526,7 @@ function read(stream)
 				if len >= read then
 				
 					info = inCache["info"]
-					--info["timestamp"] = info["timestamp"] + info["delta"]
+					info["timestamp"] = info["timestamp"] + info["delta"]
 					-- type, length, streamId is cached
 
 					local frag = string.sub(inBuf, 2, read)
