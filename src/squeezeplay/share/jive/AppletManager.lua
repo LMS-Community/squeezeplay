@@ -438,7 +438,8 @@ local function _loadApplet(entry)
 	end
 	local f, err = loadfile(entry.basename .. "Applet.lua")
 	if not f then
-		error (string.format ("error loading applet `%s' (%s)", entry.appletName, err))
+		--error (string.format ("error loading applet `%s' (%s)\n", entry.appletName, err))
+		error (string.format ("%s|%s", entry.appletName, err))
 	end
 
 	-- load applet resources
@@ -785,6 +786,9 @@ end
 function registerService(self, appletName, service)
 	log:debug("registerService appletName=", appletName, " service=", service)
 
+	if _services[service] then
+		log:warn('WARNING: registerService called an already existing service name: ', service)
+	end
 	_services[service] = appletName
 
 end
