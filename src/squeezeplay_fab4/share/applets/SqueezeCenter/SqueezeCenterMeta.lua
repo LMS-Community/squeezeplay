@@ -20,6 +20,7 @@ function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
 	meta:registerService("udevEventHandler")
 	meta:registerService("squeezecenterStartupCheck")
+	meta:registerService("isBuiltInSCRunning")
 end
 
 function configureApplet(meta)

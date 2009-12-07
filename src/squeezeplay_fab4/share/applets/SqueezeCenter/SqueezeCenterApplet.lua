@@ -849,6 +849,12 @@ function readSCPrefsFile(self)
 end
 
 
+-- Make running status about built in SC available as service
+function isBuiltInSCRunning(self)
+	return serverRunning(self)
+end
+
+
 function serverRunning(self)
 	local sc = _pidfor('slimserver.pl')
 	if (sc ~= nil) then
