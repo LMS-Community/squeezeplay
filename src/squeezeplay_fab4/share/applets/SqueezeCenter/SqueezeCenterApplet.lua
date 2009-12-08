@@ -567,29 +567,6 @@ function _unmountSuccess(self, devName)
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 
-	-- XXX: This is a currently necessary hack. 
-	-- If the scanner is running when the unmount occurs, stopscan will trigger the server to start, 
-	-- because the /etc/init.d/squeezecenter script will go to the next interpreted line after the scanner stops, which is to start the server.
-	-- Sometimes when this occurs the server does not start until _after_ the server stop command is issued by this applet and the drive is unmounted, which causes BAD THINGS. 
-	-- Add a one time 3 second timer to stop the server one more time and forcefully remove the /media/<devName> folder. 
-	-- Ouch.
-	window:addTimer(
-		3000, 
-		function()
-			log:warn('making sure server is killed and /media/' .. devName .. ' is deleted from filesystem')
-			self:_stopServer(true)
-			if self:_mediaDirExists(devName) then 
-				log:warn('forcefully remove /media/', devName)
-				-- we need an rm -rf here because a .Squeezebox dir may have been created, but let's be careful with the rm -rf shall we?
-				-- make sure devName is there, otherwise this command is rm -rf /media
-				if devName and devName ~= '' then
-					os.execute("rm -rf /media/" .. devName)
-				end
-			end
-		end,
-		true
-	)
-
 	local menu = SimpleMenu("menu")
 
 	menu:addItem({
@@ -836,14 +813,22 @@ function _ejectWarning(self, devName)
 
 	local menu = SimpleMenu("menu")
 
+	local itemCallback
+	if item.SCDrive then
+		itemCallback = function()
+			self:settingsShow()
+			window:hide()
+		end
+	else
+		itemCallback = function()
+			window:hide()
+		end
+	end
 	menu:addItem({
 		text = self:string("OK"),
 		style = 'item',
 		sound = "WINDOWSHOW",		
-		callback = function ()
-			self:settingsShow()
-			window:hide()
-		end
+		callback = itemCallback,
 	})
 
 	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
@@ -853,10 +838,9 @@ function _ejectWarning(self, devName)
 
 	-- start the scanner
 	if item.SCDrive then
+		log:warn('!! Writing prefs.json file and starting scan')
 		self:_writeSCPrefsFile(devName)
 		self:startScan()
-	else
-		log:warn('!! This is not the SCDrive')
 	end
 
 	return window
