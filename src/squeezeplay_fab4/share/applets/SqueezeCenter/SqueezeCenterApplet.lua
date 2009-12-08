@@ -30,7 +30,8 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function init(self)
-	self.mountedDevices = {}
+	self.mountedDevices = self:getSettings()['mountedDevices']
+	self.ejectItems     = {}
 	self.MOUNTING_DRIVE_TIMEOUT = 30
 	self.UNMOUNTING_DRIVE_TIMEOUT = 30
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
@@ -140,6 +141,8 @@ function addMountedDevice(self, devName, isSCDrive)
 		devType    = self:mediaType(devName),
 		SCDrive    = isSCDrive,
 	}
+	self:getSettings()['mountedDevices'] = self.mountedDevices
+	self:storeSettings()
 	return true
 end
 
@@ -176,10 +179,10 @@ function settingsShow(self)
 
 	menu:setHeaderWidget(self.status)
 	window:addWidget(menu)
-	self:tieAndShowWindow(window)
 	
 	window:addTimer(5000, function() _updateStatus(self) end)
 	
+	self:tieAndShowWindow(window)
 	return window
 end
 
@@ -268,6 +271,7 @@ function udevEventHandler(self, evt, msg)
 		else
 			-- TODO: if we hit this spot, this is where we check if the device was properly unmounted
 			log:warn('Device Removal Detected: ', devName)
+			self:_deviceRemoval(devName)
 		end
 	end
 end
@@ -280,7 +284,6 @@ function mediaType(self, devName)
 	end
 	return false
 end
-
 
 -- _mountingDrive
 -- full screen popup that appears until mounting is complete or failed
@@ -317,7 +320,56 @@ function _mountingDrive(self, devName)
 
 	self.popupMountWaiting = popup
 	self:tieAndShowWindow(popup)
+	return popup
 end
+
+
+-- _deviceRemoval
+-- kicked off when udev listener detects a device removal
+-- checks if device is still in mount table, 
+-- if so push on the DON'T DO THAT window, stop SC if drive was attached to SC
+---function _mountingDrive(self)
+function _deviceRemoval(self, devName)
+
+	-- if devName is still in the self.mountedDevices table, consider this an unsafe eject
+	if self.mountedDevices and self.mountedDevices[devName] then
+		
+		log:warn('!!! Drive ', self.mountedDevices[devName].deviceName, ' was unsafely ejected.')
+		local window = Window("text_list", self:string("DEVICE_REMOVAL_WARNING"))
+		window:setAllowScreensaver(false)
+		local menu = SimpleMenu("menu")
+		menu:addItem({
+			text = self:string("OK"),
+			style = 'item',
+			sound = "WINDOWSHOW",		
+			callback = function ()
+				window:hide()
+			end
+		})
+
+		local token = 'DEVICE_REMOVAL_WARNING_INFO'
+		if self.mountedDevices[devName].devType then
+			token = token .. '_' .. self.mountedDevices[devName].devType
+		end
+	
+		menu:setHeaderWidget( Textarea("help_text", self:string(token) ) )
+		window:addWidget(menu)
+
+		if self.mountedDevices[devName].SCDrive then
+			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
+			self:_stopScanner(silent)
+			self:_stopServer(silent)
+		end
+		self.mountedDevices[devName] = nil
+		self:getSettings()['mountedDevices'] = self.mountedDevices
+		self:storeSettings()
+		
+		self:tieAndShowWindow(window)
+		return window
+	end
+
+end
+
 
 function _unmountActions(self, devName, silent)
 
@@ -397,6 +449,7 @@ function _unmountDrive(self, devName)
 
 	self.popupUnmountWaiting = popup
 	self:tieAndShowWindow(popup)
+	return popup
 end
 
 
@@ -422,7 +475,6 @@ function _mountingDriveTimer(self, devName)
 			end
 
 			self:addMountedDevice(devName, isScDrive)
-			debug.dump(self.mountedDevices)
 
 			self:_ejectWarning(devName)
 			self:_addEjectDeviceItem(devName)
@@ -563,10 +615,10 @@ end
 
 function _removeEjectDeviceItem(self, devName)
 	log:debug('_removeEjectDeviceItem()')
-	local item = self:_getItemFromDevName(devName)
-	if item and item.menuItem then
-		log:debug('removing menu item for ', item.devType)
-		jiveMain:removeItem(item.menuItem)
+	if self.ejectItems and self.ejectItems[devName] then
+		log:debug('removing menu item for ', devName)
+		jiveMain:removeItem(self.ejectItems[devName])
+		self.ejectItems[devName] = nil
 	else
 		log:warn('no menu item found for ', devName)
 	end
@@ -584,7 +636,7 @@ function _addEjectDeviceItem(self, devName)
 		token = 'EJECT_' .. item.devType
 	end
 
-	self.mountedDevices[devName].menuItem = {
+	self.ejectItems[devName] = {
                 id = item.devName,
                 node = "_myMusic",
                 text = self:string(token),
@@ -596,7 +648,7 @@ function _addEjectDeviceItem(self, devName)
 			self:_confirmEject(devName)
 		end,
         }
-	jiveMain:addItem(self.mountedDevices[devName].menuItem)
+	jiveMain:addItem(self.ejectItems[devName])
 end
 
 
@@ -636,6 +688,7 @@ function _confirmEject(self, devName)
 	window:addWidget(menu)
 	self.confirmEjectWindow = window
 	self:tieAndShowWindow(window)
+	return window
 end
 
 

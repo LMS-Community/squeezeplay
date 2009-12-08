@@ -553,7 +553,13 @@ DEVICE_REMOVAL_WARNING
 	EN	Warning!
 
 DEVICE_REMOVAL_WARNING_INFO
-	EN	WARNING: The device %s was removed improperly. Data on this device my have been lost or damaged.
+	EN	WARNING: The device was removed improperly. Data on this device my have been lost or damaged.
+
+DEVICE_REMOVAL_WARNING_INFO_USB
+	EN	WARNING: The USB drive was removed improperly. Data on this device my have been lost or damaged.
+
+DEVICE_REMOVAL_WARNING_INFO_SD
+	EN	WARNING: The SD card was removed improperly. Data on this device my have been lost or damaged.
 
 EJECT_CONFIRM
 	EN	Eject Removable Device?

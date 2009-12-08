@@ -16,6 +16,13 @@ function jiveVersion(meta)
 end
 
 
+function defaultSettings(meta)
+	return {
+		mountedDevices = {},
+	}
+end
+
+
 function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
 	meta:registerService("udevEventHandler")
@@ -33,6 +40,7 @@ function configureApplet(meta)
 			appletManager:callService("udevEventHandler", evt, msg)
 		end
 	)
+
 end
 
 --[[
