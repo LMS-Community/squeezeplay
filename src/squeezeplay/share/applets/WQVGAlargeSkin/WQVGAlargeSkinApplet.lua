@@ -394,6 +394,7 @@ function skin(self, s)
 					imgpath .. "Popup_Menu/cm_popup_box_l.png",
 				})
 
+
 	local scrollBackground = 
 		_loadVTile(self, {
 					imgpath .. "Scroll_Bar/scrollbar_bkgrd_t.png",
@@ -1469,7 +1470,7 @@ function skin(self, s)
 		x = 8,
 		y = 16,
 		w = screenWidth - 16,
-		h = screenHeight - 32,
+		h = screenHeight - 42,
 		bgImg = contextMenuBox,
 		layer = LAYER_TITLE,
 
@@ -1491,11 +1492,11 @@ function skin(self, s)
                         },
                 },
 		menu = {
-			border = { 7, 8, 0, 0 },
+			border = { 7, 7, 0, 0 },
 			padding = { 0, 0, 0, 100 },
 			scrollbar = { 
-				h = CM_MENU_HEIGHT * 3, 
-				border = { 0, 4, 2, 0 },
+				h = CM_MENU_HEIGHT * 3 - 8, 
+				border = { 0, 4, 2, 4 },
 			},
 			item = {
 				h = CM_MENU_HEIGHT,
@@ -1529,9 +1530,7 @@ function skin(self, s)
 			},
 			selected = {
 				item = {
-					--FIXME: change to different selection box when asset for 14966 is delivered
-					--bgImg = threeItemCMSelectionBox,
-					bgImg = threeItemSelectionBox,
+					bgImg = threeItemCMSelectionBox,
 					order = { "icon", "text", "arrow" },
 					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
 					text = {
