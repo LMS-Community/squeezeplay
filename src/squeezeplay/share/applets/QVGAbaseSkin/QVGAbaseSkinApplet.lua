@@ -2006,6 +2006,15 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_appletNowPlaying = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_nowplaying" .. skinSuffix),
 	})
+	s.hm_eject = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_eject" .. skinSuffix),
+	})
+	s.hm_usbdrive = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_device_USB" .. skinSuffix),
+	})
+	s.hm_sdcard = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_device_sdcard" .. skinSuffix),
+	})
 	s.hm_settings = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
 	})

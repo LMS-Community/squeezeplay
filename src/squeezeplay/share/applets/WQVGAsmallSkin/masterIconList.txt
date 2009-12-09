@@ -68,3 +68,5 @@ icon_tutorial.png
 icon_baby.png
 icon_iradio_noart.png
 icon_eject.png
+icon_device_USB.png
+icon_device_SDcard.png
