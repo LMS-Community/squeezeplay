@@ -1492,16 +1492,16 @@ function skin(self, s)
                         },
                 },
 		menu = {
-			border = { 7, 7, 0, 0 },
+			border = { 7, 7, 7, 0 },
 			padding = { 0, 0, 0, 100 },
-			scrollbar = { 
+			scrollbar = {
 				h = CM_MENU_HEIGHT * 3 - 8, 
 				border = { 0, 4, 2, 4 },
 			},
 			item = {
 				h = CM_MENU_HEIGHT,
 				order = { "icon", "text", "arrow" },
-				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 				bgImg = false,
 				text = {
 					w = WH_FILL,
@@ -1532,7 +1532,7 @@ function skin(self, s)
 				item = {
 					bgImg = threeItemCMSelectionBox,
 					order = { "icon", "text", "arrow" },
-					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
 						w = WH_FILL,
 						h = WH_FILL,
@@ -1570,9 +1570,6 @@ function skin(self, s)
 	})
 	
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
-		--FIXME: change to different selection box when asset for 14966 is delivered
-		--bgImg = threeItemCMPressedBox,
-		bgImg = threeItemPressedBox,
 	})
 
 	-- slider popup (volume)

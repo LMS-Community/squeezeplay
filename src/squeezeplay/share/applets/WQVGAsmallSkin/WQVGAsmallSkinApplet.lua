@@ -2023,7 +2023,7 @@ function skin(self, s)
 			item = {
 				h = CM_MENU_HEIGHT,
 				order = { "icon", "text", "arrow" },
-				padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
@@ -2052,7 +2052,7 @@ function skin(self, s)
 				item = {
 					order = { "icon", "text", "arrow" },
 					bgImg = fiveItemBox,
-					padding = { ITEM_LEFT_PADDING, 0, 0, 0 },
+					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
 						w = WH_FILL,
 						h = WH_FILL,
