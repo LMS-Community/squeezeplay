@@ -19,8 +19,9 @@ ScreenSaversApplet overrides the following methods:
 
 
 -- stuff we use
-local ipairs, pairs, tostring = ipairs, pairs, tostring
+local ipairs, pairs, tostring, tonumber = ipairs, pairs, tostring, tonumber
 
+local os               = require("os")
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
@@ -232,8 +233,10 @@ function _activate(self, the_screensaver, force)
 		the_screensaver = self:_getDefaultScreensaver()
 	end
 
+	local year = os.date("%Y")
 	local screensaver = self.screensavers[the_screensaver]
-	if not screensaver or not screensaver.applet then
+	if not screensaver or not screensaver.applet or
+		( tonumber(year) < 2009 and not force and self:_getMode() == 'whenOff' ) then -- fallback to blank screensaver on whenOff and no clock
 		-- no screensaver, fallback to default
 		log:warn('The configured screensaver method ', the_screensaver, ' is not available. Falling back to default from Meta file')
 		local fallbackKey = self.defaultSettings[self:_getMode()]
