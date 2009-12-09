@@ -1468,7 +1468,7 @@ function skin(self, s)
 
 	s.context_menu = {
 		x = 8,
-		y = 16,
+		y = 21,
 		w = screenWidth - 16,
 		h = screenHeight - 42,
 		bgImg = contextMenuBox,
