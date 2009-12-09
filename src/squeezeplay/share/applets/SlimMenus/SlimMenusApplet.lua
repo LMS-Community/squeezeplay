@@ -1239,7 +1239,6 @@ end
 
 function free(self)
 
-log:warn('free bird!')
 	self.serverHomeMenuItems = {}
 
 	self.waitingForPlayerMenuStatus = true
@@ -1252,7 +1251,6 @@ log:warn('free bird!')
 	-- remove player menus
 	jiveMain:setTitle(nil)
 	for id, v in pairs(_playerMenus) do
-log:warn('remove!', id)
 		jiveMain:removeItem(v)
 	end
 	_playerMenus = {}
