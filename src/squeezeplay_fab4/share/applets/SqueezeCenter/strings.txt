@@ -32,6 +32,9 @@ STOP
 	RU	Остановить Squeezebox Server
 	SV	Stoppa Squeezebox Server
 
+STOP_INFO
+	EN	Are you sure you want to stop Squeezebox Server?
+
 STOP_RESCAN_START
 	CS	Zastavit-Znovu prohledat-Znovu spustit
 	DA	Stop-Gennemsøg igen-Genstart
@@ -46,6 +49,9 @@ STOP_RESCAN_START
 	PL	Zatrzymaj-Przeszukaj ponownie-Uruchom ponownie
 	RU	Остановить-Пересканировать-Перезапустить
 	SV	Stoppa-Sök igen-Starta om
+
+STOP_RESCAN_START_INFO
+	EN	Are you sure you want to restart Squeezebox Server?
 
 STARTING_SQUEEZECENTER
 	CS	Spouštění Squeezebox Server
@@ -110,20 +116,17 @@ RESCAN_SQUEEZECENTER
 RESCAN_SQUEEZECENTER_TEXT
 	EN	This can take several minutes.
 
+RESTART_SQUEEZECENTER
+	EN	Restart Squeezebox Server
+
+RESTARTING_SQUEEZECENTER
+	EN	Restarting Squeezebox Server
+
+PLEASE_WAIT
+	EN	Please wait...
+
 STATUS_SQUEEZECENTER_RUNNING
-	CS	Squeezebox Server se spouští nebo již běží
-	DA	Squeezebox Server er ved at starte eller kører
-	DE	Squeezebox Server wird gestartet oder ausgeführt
-	EN	Squeezebox Server is starting or running
-	ES	Squeezebox Server está iniciando o en ejecución
-	FI	Squeezebox Server on käynnistymässä tai jo käynnissä
-	FR	Squeezebox Server est en cours de démarrage ou d'exécution
-	IT	Squeezebox Server si sta avviando o è in esecuzione
-	NL	Squeezebox Server wordt gestart of uitgevoerd
-	NO	Squeezebox Server starter opp eller kjører
-	PL	Trwa uruchamianie programu Squeezebox Server lub program jest uruchomiony
-	RU	Squeezebox Server запускается или выполняется
-	SV	Squeezebox Server startar eller körs
+	EN	Squeezebox Server is running
 
 STATUS_SCANNER_RUNNING
 	CS	Scanner běží
@@ -544,7 +547,7 @@ EJECT_REMOVABLE_MEDIA
 	EN	Eject Removable Media
 
 EJECT_DRIVE_USB
-	EN	Eject USB Drive
+	EN	Eject USB Device
 
 EJECT_DRIVE_SD
 	EN	Eject SD Card
@@ -556,7 +559,7 @@ DEVICE_REMOVAL_WARNING_INFO
 	EN	WARNING: The device was removed improperly. Data on this device my have been lost or damaged.
 
 DEVICE_REMOVAL_WARNING_INFO_USB
-	EN	WARNING: The USB drive was removed improperly. Data on this device my have been lost or damaged.
+	EN	WARNING: The USB device was removed improperly. Data on this device my have been lost or damaged.
 
 DEVICE_REMOVAL_WARNING_INFO_SD
 	EN	WARNING: The SD card was removed improperly. Data on this device my have been lost or damaged.
@@ -577,7 +580,7 @@ EJECT_CONFIRM_INFO_SD
 	EN	Are you sure you want to eject the SD card?
 
 EJECT_CONFIRM_INFO_USB
-	EN	Are you sure you want to eject this USB drive?
+	EN	Are you sure you want to eject this USB device?
 
 EJECT_CONFIRM_ITEM
 	EN	Eject removable device
@@ -611,10 +614,10 @@ DEVICE_EJECTED_INFO_USB
 	EN	It is now safe to remove your USB storage device.
 
 ATTACHING_DRIVE
-	EN	Attaching Drive...
+	EN	Attaching Device...
 
 ATTACHING_DRIVE_USB
-	EN	Attaching USB Drive...
+	EN	Attaching USB Device...
 
 ATTACHING_DRIVE_SD
 	EN	Attaching SD Card...
@@ -623,7 +626,7 @@ DEVICE
 	EN	Device
 
 USB
-	EN	USB Drive
+	EN	USB Device
 
 SD
 	EN	SD Card
@@ -632,11 +635,32 @@ ATTACHING
 	EN	Attaching
 
 EJECT_USB
-	EN	Eject USB Drive
+	EN	Eject USB Device
 
 EJECT_SD
 	EN	Eject SD Card
 
 EJECTING
 	EN	Ejecting
+
+NO_DRIVES_DETECTED
+	EN	No Devices Detected
+
+NO_DRIVES_DETECTED_INFO
+	EN	Squeezebox Touch detects no attached storage device. Please attach either a USB device or SD card and try again.
+
+USE_DRIVE_SD
+	EN	Use SD Card
+
+USE_DRIVE_USB_NAMED
+	EN	Use USB Device %s
+
+USE_DRIVE_USB
+	EN	Use USB Device
+
+MULTIPLE_DRIVES_DETECTED
+	EN	Choose Squeezebox Server Device
+
+MULTIPLE_DRIVES_DETECTED_INFO
+	EN	Multiple storage devices are attached to your Squeezebox Touch. Please select one device for use with Squeezebox Server.
 

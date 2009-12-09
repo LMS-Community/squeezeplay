@@ -36,11 +36,38 @@ function init(self)
 	self.UNMOUNTING_DRIVE_TIMEOUT = 30
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 	self.prefsFile = "/etc/squeezecenter/prefs.json"
-end
 
+	self.settingsMenuItems = {
+		startServer = {
+			text = self:string("START"),
+			sound = "WINDOWSHOW",
+			callback = function()
+					self:_startServerWindow()
+				   end
+		},
+		stopServer = {
+			text = self:string("STOP"),
+			sound = "WINDOWSHOW",
+			callback = function()
+					self:_confirmStopServer()
+				   end
+		},
+		restartServer = {
+			text = self:string("STOP_RESCAN_START"),
+			sound = "WINDOWSHOW",
+			callback = function()
+					self:_confirmRestartServer()
+				   end
+		}
+	}
+	
+end
 
 -- do the right thing on jive startup
 function squeezecenterStartupCheck(self)
+
+	-- the startup check is re-initializing which drives are mounted, so whatever is pulled from settings in init() needs clearing here first
+	self.mountedDevices = {}
 
 	local mountedDrives       = self:mountedDriveCheck()
 	local usbDrives           = {}
@@ -108,9 +135,8 @@ function squeezecenterStartupCheck(self)
 			self:_writeSCPrefsFile(scDrive)
 		end
 
-		log:debug('STARTUP (6)| Start Scanner')
-		--- start scanner 
-		self:startScan()
+		log:debug('STARTUP (6)| Restart Server')
+		self:restartServer()
 
 		-- populate non-SC mounted drives to self.mountedDevices
 		-- create menu items for each
@@ -134,6 +160,7 @@ end
 
 
 function addMountedDevice(self, devName, isSCDrive)
+	log:error('addMountedDevice')
 	self.mountedDevices[devName] = {
 		devName    = devName,
 		deviceName = "/dev/"   .. devName,
@@ -143,6 +170,7 @@ function addMountedDevice(self, devName, isSCDrive)
 	}
 	self:getSettings()['mountedDevices'] = self.mountedDevices
 	self:storeSettings()
+	--debug.dump(self.mountedDevices)
 	return true
 end
 
@@ -150,42 +178,58 @@ function settingsShow(self)
 	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
 	local window = Window("text_list", 'Squeezebox Server')
 	
+	window:setAllowScreensaver(false)
 	-- XXX: first attempt at showing scan process running
 	self.status = Textarea("help_text", self:_getStatusText() )
 
-	local menu = SimpleMenu("menu", {
-					{
-						text = self:string("START"),
-						sound = "WINDOWSHOW",
-						callback = function()
-								   self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
-							   end
-					},
-					{
-						text = self:string("STOP"),
-						sound = "WINDOWSHOW",
-						callback = function()
-								   self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop")
-							   end
-					},
-					{
-						text = self:string("STOP_RESCAN_START"),
-						sound = "WINDOWSHOW",
-						callback = function()
-								   self:startScan()
-							   end
-					},
-				})
+	self.settingsMenu = SimpleMenu("menu")
 
-	menu:setHeaderWidget(self.status)
-	window:addWidget(menu)
+	self:_updateSettingsMenu()
+
+	self.settingsMenu:setHeaderWidget(self.status)
+	window:addWidget(self.settingsMenu)
 	
-	window:addTimer(5000, function() _updateStatus(self) end)
+	window:addTimer(5000, 
+		function() 
+			_updateStatus(self) 
+			_updateSettingsMenu(self)
+		end)
 	
 	self:tieAndShowWindow(window)
 	return window
 end
 
+
+function _updateSettingsMenu(self)
+	log:debug('_updateSettingsMenu()')
+	if self:serverRunning() then
+		log:debug('server is running')
+		if not self.settingsMenu:getIndex(self.settingsMenuItems.stopServer) then
+			self.settingsMenu:addItem(self.settingsMenuItems.stopServer)
+		end
+		if not self.settingsMenu:getIndex(self.settingsMenuItems.restartServer) then
+			self.settingsMenu:addItem(self.settingsMenuItems.restartServer)
+		end
+		if self.settingsMenu:getIndex(self.settingsMenuItems.startServer) then
+			self.settingsMenu:removeItem(self.settingsMenuItems.startServer)
+		end
+	else
+		log:debug('server is not running')
+		if not self.settingsMenu:getIndex(self.settingsMenuItems.startServer) then
+			log:debug('add start item')
+			self.settingsMenu:addItem(self.settingsMenuItems.startServer)
+		end
+		if self.settingsMenu:getIndex(self.settingsMenuItems.stopServer) then
+			log:debug('remove stop item')
+			self.settingsMenu:removeItem(self.settingsMenuItems.stopServer)
+		end
+		if self.settingsMenu:getIndex(self.settingsMenuItems.restartServer) then
+			log:debug('remove restart item')
+			self.settingsMenu:removeItem(self.settingsMenuItems.restartServer)
+		end
+	end
+
+end
 
 function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
@@ -221,14 +265,16 @@ end
 
 function _getStatusText(self)
 	-- XXX: first attempt at showing scan process running
+	local statusFile = self:_scanStatus()
 	local statusText
-	if self:scannerRunning() then
+	if statusFile then
 		self.scannerStatus = self:_scanStatus()
 		statusText = self:_scanProgressText()
 		log:debug(statusText)
 	else
 		statusText = self:string( self:_getStatus() )
 	end
+	log:debug('statusText: ', statusText)
 	return statusText
 end
 
@@ -269,8 +315,7 @@ function udevEventHandler(self, evt, msg)
 
 			self:_mountingDrive(devName)
 		else
-			-- TODO: if we hit this spot, this is where we check if the device was properly unmounted
-			log:warn('Device Removal Detected: ', devName)
+			log:debug('Device Removal Detected: ', devName)
 			self:_deviceRemoval(devName)
 		end
 	end
@@ -357,6 +402,8 @@ function _deviceRemoval(self, devName)
 
 		if self.mountedDevices[devName].SCDrive then
 			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
+			-- XXX: _stopScanner() can probably be removed after we're sure that there is not a separate scanner process
+			-- it does no harm keeping it here though
 			self:_stopScanner(silent)
 			self:_stopServer(silent)
 		end
@@ -378,7 +425,7 @@ function _unmountActions(self, devName, silent)
 		self:_stopScanner(silent)
 		self:_stopServer(silent)
 	else
-		log:warn('!! This is not the SCDrive')
+		log:debug('This is not the SCDrive, so ')
 	end
 	os.execute("umount /media/" .. devName)
 
@@ -406,7 +453,7 @@ end
 -- full screen popup that appears until unmounting is complete or failed
 function _unmountDrive(self, devName)
 	
-	log:warn('_unmountDrive()')
+	log:warn('_unmountDrive() ', devName)
 
 	local item = self:_getItemFromDevName(devName)
 
@@ -586,6 +633,7 @@ function _unmountSuccess(self, devName)
 	return window
 end
 
+-- TODO
 function _unmountFailure(self, devName)
 	log:warn('_unmountFailure()')
 end
@@ -615,7 +663,7 @@ function _addEjectDeviceItem(self, devName)
 
 	self.ejectItems[devName] = {
                 id = item.devName,
-                node = "_myMusic",
+                node = "home",
                 text = self:string(token),
                 iconStyle = 'hm_eject',
                 weight = 1,
@@ -626,6 +674,125 @@ function _addEjectDeviceItem(self, devName)
 		end,
         }
 	jiveMain:addItem(self.ejectItems[devName])
+end
+
+
+function _confirmStopServer(self)
+	log:debug('confirmStopServer()')
+	local callbackFunction = function() 
+		appletManager:callService('goHome')
+		self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop")
+	end
+	
+	return self:_confirmWindow('STOP', 'STOP_INFO', callbackFunction)
+end
+
+
+function _confirmRestartServer(self)
+	log:debug('confirmRestartServer()')
+	local callbackFunction = function() 
+		appletManager:callService('goHome')
+		self:_squeezecenterAction("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 5000, "rescan")
+	end
+	
+	return self:_confirmWindow('STOP_RESCAN_START', 'STOP_RESCAN_START_INFO', callbackFunction)
+end
+
+
+function _startServerWindow(self)
+
+	local mountedDrives = 0
+	for k, v in pairs(self.mountedDevices) do
+		mountedDrives = mountedDrives + 1
+	end
+
+	local window, menu
+
+	log:debug(mountedDrives, ' mounted drive(s) found')
+	if mountedDrives == 0 then
+		log:debug('No drives detected')
+		window = Window("text_list", self:string('NO_DRIVES_DETECTED') )
+		menu = SimpleMenu("menu", {
+			{
+				text = self:string("OK"),
+				style = 'item',
+				sound = "WINDOWSHOW",		
+				callback = function ()
+					window:hide()
+				end
+			}
+		})
+		menu:setHeaderWidget( Textarea("help_text", self:string('NO_DRIVES_DETECTED_INFO')))
+
+	elseif mountedDrives == 1 then
+		self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
+		return EVENT_CONSUMED
+
+	else
+		window = Window("text_list", self:string('MULTIPLE_DRIVES_DETECTED') )
+		menu = SimpleMenu("menu", {
+			{
+				text = self:string("CANCEL"),
+				sound = "WINDOWHIDE",
+				callback = function() 
+					window:hide()
+				end
+			},
+		})
+
+		for devName, item in pairs(self.mountedDevices) do
+			local iconStyle = 'hm_usbdrive'
+			local menuItemToken = 'USE_DRIVE_USB'
+			if self:mediaType(devName) == 'SD' then
+				iconStyle = 'hm_sdcard'
+				menuItemToken = 'USE_DRIVE_SD'
+			end
+			menu:addItem({
+				text = self:string(menuItemToken),
+	                	iconStyle = iconStyle,
+				sound = 'WINDOWSHOW',
+				callback = function()
+					log:debug('write prefs.json file to use ', devName)
+					self:_writeSCPrefsFile(devName)
+					self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
+					self:settingsShow()
+					window:hide()
+				end
+			})
+		end
+		menu:setHeaderWidget( Textarea("help_text", self:string('MULTIPLE_DRIVES_DETECTED_INFO')))
+
+	end
+
+	window:setAllowScreensaver(false)
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+	return window
+
+end
+
+function _confirmWindow(self, titleToken, helpTextToken, callbackFunction)
+
+	local window = Window("text_list", self:string(titleToken) )
+	local menu = SimpleMenu("menu", {
+			{
+				text = self:string("CANCEL"),
+				sound = "WINDOWHIDE",
+				callback = function() 
+					window:hide()
+				end
+			},
+			{
+				text = self:string(self:string(titleToken)),
+				sound = "WINDOWSHOW",
+				callback = callbackFunction,
+			},
+	})
+
+	menu:setHeaderWidget( Textarea("help_text", self:string(helpTextToken) ) )
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
+	return window
 end
 
 
@@ -675,12 +842,10 @@ function _getItemFromDevName(self, devName)
 end
 
 
-function startScan(self)
+function restartServer(self)
+	log:warn('Restarting squeezebox server')
+	self:_squeezecenterAction("icon_connected", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart")
 
-	if not self:scannerRunning() then
-		log:warn('Starting scanner')
-		self:_squeezecenterAction("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 5000, "rescan")
-	end
 end
 
 
@@ -694,7 +859,7 @@ function mountedDriveCheck(self)
         for line in mount:lines() do
                 local stringMatch = string.match(line, "/media/(%w*)")
 		if stringMatch then
-			log:warn('Mounted drive found at /media/', stringMatch)
+			log:debug('Mounted drive found at /media/', stringMatch)
 			mountedDrives[stringMatch] = "/media/" .. stringMatch
 		end
         end
@@ -836,11 +1001,11 @@ function _ejectWarning(self, devName)
 	window:addWidget(menu)
 	self:tieAndShowWindow(window)
 
-	-- start the scanner
+	-- restart the server
 	if item.SCDrive then
 		log:warn('!! Writing prefs.json file and starting scan')
 		self:_writeSCPrefsFile(devName)
-		self:startScan()
+		self:restartServer()
 	end
 
 	return window
