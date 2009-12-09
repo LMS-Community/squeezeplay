@@ -1034,7 +1034,10 @@ function notify_playerCurrent(self, player)
 				log:debug("player and server didn't change , not changing menus: ", player)
 				return
 			else
-				log:error("server changed - todo here we should switch out server specific items like Choice, turn on/off")
+				-- server changed, ergo playerMenus may also be different. Remove the existing ones
+				for id, v in pairs(_playerMenus) do
+					jiveMain:removeItem(v)
+				end
 
 				_server = player:getSlimServer()
 
@@ -1236,6 +1239,7 @@ end
 
 function free(self)
 
+log:warn('free bird!')
 	self.serverHomeMenuItems = {}
 
 	self.waitingForPlayerMenuStatus = true
@@ -1248,6 +1252,7 @@ function free(self)
 	-- remove player menus
 	jiveMain:setTitle(nil)
 	for id, v in pairs(_playerMenus) do
+log:warn('remove!', id)
 		jiveMain:removeItem(v)
 	end
 	_playerMenus = {}
