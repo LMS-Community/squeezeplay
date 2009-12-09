@@ -79,7 +79,7 @@ function _doneAction(self)
 	local hour   = self.hourMenu:getItem(self.hourMenu:getMiddleIndex()).text
 	local minute = self.minuteMenu:getItem(self.minuteMenu:getMiddleIndex()).text
 	local ampm
-	if self.ampmpMenu then
+	if self.ampmMenu then
 		ampm   = self.ampmMenu:getItem(self.ampmMenu:getMiddleIndex()).text
 	else
 		ampm = nil
