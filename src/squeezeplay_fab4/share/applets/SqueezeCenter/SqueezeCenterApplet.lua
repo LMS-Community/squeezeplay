@@ -51,13 +51,6 @@ function init(self)
 			callback = function()
 					self:_confirmStopServer()
 				   end
-		},
-		restartServer = {
-			text = self:string("STOP_RESCAN_START"),
-			sound = "WINDOWSHOW",
-			callback = function()
-					self:_confirmRestartServer()
-				   end
 		}
 	}
 	
@@ -212,9 +205,6 @@ function _updateSettingsMenu(self)
 		if not self.settingsMenu:getIndex(self.settingsMenuItems.stopServer) then
 			self.settingsMenu:addItem(self.settingsMenuItems.stopServer)
 		end
-		if not self.settingsMenu:getIndex(self.settingsMenuItems.restartServer) then
-			self.settingsMenu:addItem(self.settingsMenuItems.restartServer)
-		end
 		if self.settingsMenu:getIndex(self.settingsMenuItems.startServer) then
 			self.settingsMenu:removeItem(self.settingsMenuItems.startServer)
 		end
@@ -227,10 +217,6 @@ function _updateSettingsMenu(self)
 		if self.settingsMenu:getIndex(self.settingsMenuItems.stopServer) then
 			log:debug('remove stop item')
 			self.settingsMenu:removeItem(self.settingsMenuItems.stopServer)
-		end
-		if self.settingsMenu:getIndex(self.settingsMenuItems.restartServer) then
-			log:debug('remove restart item')
-			self.settingsMenu:removeItem(self.settingsMenuItems.restartServer)
 		end
 	end
 
