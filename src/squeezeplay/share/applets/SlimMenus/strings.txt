@@ -137,6 +137,9 @@ MENUS_TRY_AGAIN
 	RU	Повторите попытку
 	SV	Försök igen
 
+MENUS_CONTINUE_WITHOUT_NETWORK
+	EN	Continue without network
+
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren

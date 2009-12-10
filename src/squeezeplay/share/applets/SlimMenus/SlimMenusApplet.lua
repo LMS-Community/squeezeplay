@@ -726,13 +726,13 @@ function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
 					-- wireless strength
 					local quality = iface:getLinkQuality()
 					if not quality or quality == 0 then
-						return failureCallback(self:_networkFailureWindow(false))
+						return failureCallback(self:_networkFailureWindow(false, successCallback))
 					end
 				else
 					-- wired
 					local status = iface:status()
 					if not status.link then
-						return failureCallback(self:_networkFailureWindow(true))
+						return failureCallback(self:_networkFailureWindow(true, successCallback))
 					end
 				end
 			end
@@ -742,7 +742,7 @@ function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
 end
 
 
-function _networkFailureWindow(self, isWired)
+function _networkFailureWindow(self, isWired, successCallback)
 	local window = Window("error", self:string("MENUS_CONNECTION_ERROR"))
 	window:setAllowScreensaver(false)
 
@@ -763,6 +763,18 @@ function _networkFailureWindow(self, isWired)
 							   end
 					},
 				})
+
+	-- Fab4 only - If built in SC (TinySC) is running allow to continue without a network
+	if (System:getMachine() == "fab4") and appletManager:callService("isBuiltInSCRunning") then
+		menu:addItem({
+			text = self:string("MENUS_CONTINUE_WITHOUT_NETWORK"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				window:hide()
+				successCallback()
+			end
+		})
+	end
 
 	local helpText
 	if isWired then
