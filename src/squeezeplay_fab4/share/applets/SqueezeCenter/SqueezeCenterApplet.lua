@@ -69,6 +69,7 @@ function squeezecenterStartupCheck(self)
 	-- the startup check is re-initializing which drives are mounted, so whatever is pulled from settings in init() needs clearing here first
 	self.mountedDevices = {}
 
+
 	local mountedDrives       = self:mountedDriveCheck()
 	local usbDrives           = {}
 	local sdDrives            = {}
@@ -147,6 +148,10 @@ function squeezecenterStartupCheck(self)
 			log:debug('STARTUP (7)| Create eject item for ', k)
 			self:_addEjectDeviceItem(k)
 		end
+	else
+		-- remove mounted devices from settings since we don't have any
+		self:getSettings()['mountedDevices'] = self.mountedDevices
+		self:storeSettings()
 	end
 
 end
@@ -160,7 +165,7 @@ end
 
 
 function addMountedDevice(self, devName, isSCDrive)
-	log:error('addMountedDevice')
+	log:error('addMountedDevice', devName)
 	self.mountedDevices[devName] = {
 		devName    = devName,
 		deviceName = "/dev/"   .. devName,
@@ -264,16 +269,31 @@ end
 
 
 function _getStatusText(self)
-	-- XXX: first attempt at showing scan process running
-	local statusFile = self:_scanStatus()
+
 	local statusText
-	if statusFile then
-		self.scannerStatus = self:_scanStatus()
-		statusText = self:_scanProgressText()
-		log:debug(statusText)
+
+	-- server is not running
+	if not self:serverRunning() then
+		return self:string('STATUS_NOTHING')
+
+	-- server is running
 	else
-		statusText = self:string( self:_getStatus() )
+		-- server running string
+		--return self:string("STATUS_SQUEEZECENTER_RUNNING")
+
+		-- server is running, check scan.json file
+		local scanData = self:_scanStatus()
+
+		-- scan.json file exists
+		if scanData then
+			statusText = self:_parseScanData(scanData)
+
+		-- server is running but no scan.json. PUNT!
+		else
+			statusText = self:string('SCANNER_NO_STATUS')
+		end
 	end
+
 	log:debug('statusText: ', statusText)
 	return statusText
 end
@@ -1084,17 +1104,6 @@ function processRunning(self, process)
 end
 
 
-function _getStatus(self)
-	if self:serverRunning() then
-		return "STATUS_SQUEEZECENTER_RUNNING"
-	elseif self:scannerRunning() then
-		return "STATUS_SCANNER_RUNNING"
-	else
-		return "STATUS_NOTHING"
-	end
-end
-
-
 function _pidfor(process)
 	local pid
 
@@ -1134,63 +1143,74 @@ function _scanStatus(self)
 end
 
 
--- uses self.scannerStatus table and returns a formatted text block for informational display
-function _scanProgressText(self)
+-- uses table decoded from scan.json and returns a formatted text block for informational display
+function _parseScanData(self, scanData)
 
 	local runningText   = self:string('RUNNING')
 	local completedText = self:string('COMPLETE')
 	local hasData       = false
 
-	if self.scannerStatus then
-		local progressReport = {}
-		-- self.scannerStatus is an array of scanner steps
-		for i, step in ipairs(self.scannerStatus) do
-			-- without a step.name, don't report anything
-			if step.name then
-				hasData = true
-				local token = string.upper(step.name) .. '_PROGRESS'
-				local nameString = self:string(token)
+	local progressReport = {}
+	-- scanData is an array of scanner steps
 
-				-- first line is the name of the step and the status of it (completed or running)
-				if step.finish and type(step.finish) == 'number' and step.finish > 0 then
-					local completed = tostring(nameString) .. ": " .. tostring(completedText)
-					table.insert(progressReport, completed)
-				else
-					local running = tostring(nameString) .. ": " .. tostring(runningText)
-					table.insert(progressReport, running)
+	-- if every step has an eta of 0, the assumption is that the scan is complete
+	local scanComplete = true
+	for i, step in ipairs(scanData) do
+		if step.eta > 0 then			
+			log:debug('scan not done')
+			scanComplete = false
+		end
+	end
+
+
+	if scanComplete then
+		log:debug('scan done')
+		return self:string("STATUS_SQUEEZECENTER_RUNNING")
+	end
+
+	for i, step in ipairs(scanData) do
+		-- without a step.name, don't report anything
+		if step.name then
+			hasData = true
+			local token = string.upper(step.name) .. '_PROGRESS'
+			local nameString = self:string(token)
+
+			-- first line is the name of the step and the status of it (completed or running)
+			if step.finish and type(step.finish) == 'number' and step.finish > 0 then
+				local completed = tostring(nameString) .. ": " .. tostring(completedText)
+				table.insert(progressReport, completed)
+			else
+				table.insert(progressReport, tostring(nameString))
+			
+				local eta = step.eta and tonumber(step.eta)
+				if eta and eta > 0 then
+					local timeLeftString = self:string('TIME_LEFT')
+					local timeLeft = '        ' .. tostring(timeLeftString) .. ": " .. _secondsToString(eta)
+					table.insert(progressReport, timeLeft)
 				end
-				
-				--- second line is detailed info on the step
-				local secondLineTable = {}
+
+				local percentCompleteTable = {}
 				if step.done and step.total then
+					local percentDoneString = self:string('PERCENT_DONE')
 					local percentageDone = tostring(math.floor( 100 * tonumber(step.done)/tonumber(step.total)))
-					local percentageString = tostring(completedText) .. ": " .. percentageDone .. "%"
+					local percentageString = percentageDone .. "%"
 					local xofy = "(" .. tostring(step.done) .. '/' .. tostring(step.total) .. ")"
 
-					log:debug(percentageString)
-					log:debug(xofy)
-
-					table.insert(secondLineTable, percentageString)
-					table.insert(secondLineTable, xofy)
+					local percentDone = '        ' .. tostring(percentDoneString) .. ": " .. percentageString .. ' ' .. xofy
+					table.insert(progressReport, percentDone)
 				end
-				-- XXX: do something with time here
-
-				-- put the secondLineTable together as one string
-				local secondLine = table.concat(secondLineTable, ' ')
-				-- add the second line to the report
-				table.insert(progressReport, secondLine)
 			end
 		end
-		if hasData then
-			return table.concat(progressReport, "\n") 
-		else
-			-- no data
-			return self:string('SCANNER_NO_STATUS')
-		end
+	end
+
+	if hasData then
+		return table.concat(progressReport, "\n") 
 	else
-		-- no data
+		-- no data (this should never happen, but is here as a failsafe)
+		log:warn('Warning: no usable data in scan.json found')
 		return self:string('SCANNER_NO_STATUS')
 	end
+
 end
 
 

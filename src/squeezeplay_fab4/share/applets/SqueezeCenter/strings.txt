@@ -206,7 +206,7 @@ SCAN_ABORTED_PROGRESS
 	RU	Сканирование было прервано пользователем
 	SV	Sökningen avbröts manuellt av användaren
 
-DIRECTORY_PROGRESS
+DISCOVERING_FILES_PROGRESS
 	CS	Prohledávání adresáře
 	DA	Indeksering af mapper
 	DE	Durchsuche Musik-Verzeichnis
@@ -663,4 +663,10 @@ MULTIPLE_DRIVES_DETECTED
 
 MULTIPLE_DRIVES_DETECTED_INFO
 	EN	Multiple storage devices are attached to your Squeezebox Touch. Please select one device for use with Squeezebox Server.
+
+TIME_LEFT
+	EN	Time left
+
+PERCENT_DONE
+	EN	Percent done
 
