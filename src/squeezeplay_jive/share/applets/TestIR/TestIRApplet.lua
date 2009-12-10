@@ -53,19 +53,16 @@ oo.class(_M, Applet)
 
 
 function drawKeypad(self)
-	local w, h = Framework:getScreenSize()
-	local srf  = Surface:newRGB(w, h)
-
-	self.background:blit(srf, 0, 0)
-	self.icon:setValue(srf)
+	self.background:blit(self.srf, 0, 0)
+	self.icon:setValue(self.srf)
 
 	-- Remove last indicator	
 	for i,k in ipairs(keymap) do
 		if wheel_index_last == i then
 			if k.dy == 0 then
-				srf:circle(k.x, k.y, k.dx, 0x000000FF) 
+				self.srf:circle(k.x, k.y, k.dx, 0x000000FF) 
 			else
-				srf:rectangle(k.x, k.y, k.dx, k.dy, 0x000000FF)
+				self.srf:rectangle(k.x, k.y, k.dx, k.dy, 0x000000FF)
 			end
 		end
 	end
@@ -73,9 +70,9 @@ function drawKeypad(self)
 	for i,k in ipairs(keymap) do
 		if wheel_index == i then
 			if k.dy == 0 then 
-				srf:circle(k.x, k.y, k.dx, 0x00FF00FF)
+				self.srf:circle(k.x, k.y, k.dx, 0x00FF00FF)
 			else
-				srf:rectangle(k.x, k.y, k.dx, k.dy, 0x00FF00FF)
+				self.srf:rectangle(k.x, k.y, k.dx, k.dy, 0x00FF00FF)
 			end
 		end
 	end
@@ -83,13 +80,18 @@ end
 
 
 function IRTest(self)
+	local w, h = Framework:getScreenSize()
 	local window = Window("text_list")
 	self.window = window
+
+	self.srf  = Surface:newRGB(w, h)
 
 	self.background = Surface:loadImage("applets/TestIR/TestIR.png")
 
 	self.icon = Icon("icon")
 	window:addWidget(self.icon)
+
+	window:setShowFrameworkWidgets(false)
 
 	self:drawKeypad()
 
