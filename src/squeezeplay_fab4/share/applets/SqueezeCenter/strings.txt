@@ -120,7 +120,7 @@ RESTART_SQUEEZECENTER
 	EN	Restart Squeezebox Server
 
 RESTARTING_SQUEEZECENTER
-	EN	Restarting Squeezebox Server
+	EN	Starting Squeezebox Server
 
 PLEASE_WAIT
 	EN	Please wait...
