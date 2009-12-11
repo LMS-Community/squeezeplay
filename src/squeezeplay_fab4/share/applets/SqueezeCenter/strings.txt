@@ -670,3 +670,24 @@ TIME_LEFT
 PERCENT_DONE
 	EN	Percent done
 
+EJECT_FAILURE
+	EN	Eject Failure
+
+EJECT_FAILURE_INFO
+	EN	WARNING: The device failed to eject properly. This is may be due to one or more programs on the system accessing it.
+
+EJECT_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+

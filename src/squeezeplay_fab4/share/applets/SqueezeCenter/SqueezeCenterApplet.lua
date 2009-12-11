@@ -33,7 +33,7 @@ function init(self)
 	self.mountedDevices = self:getSettings()['mountedDevices']
 	self.ejectItems     = {}
 	self.MOUNTING_DRIVE_TIMEOUT = 30
-	self.UNMOUNTING_DRIVE_TIMEOUT = 30
+	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 	self.prefsFile = "/etc/squeezecenter/prefs.json"
 
@@ -158,7 +158,7 @@ end
 
 
 function addMountedDevice(self, devName, isSCDrive)
-	log:error('addMountedDevice', devName)
+	log:warn('addMountedDevice: ', devName)
 	self.mountedDevices[devName] = {
 		devName    = devName,
 		deviceName = "/dev/"   .. devName,
@@ -424,7 +424,7 @@ function _deviceRemoval(self, devName)
 end
 
 
-function _unmountActions(self, devName, silent)
+function _unmountActions(self, devName, silent, force)
 
 	local item = self:_getItemFromDevName(devName)
 	if item.SCDrive then
@@ -433,7 +433,11 @@ function _unmountActions(self, devName, silent)
 	else
 		log:debug('This is not the SCDrive, so ')
 	end
-	os.execute("umount /media/" .. devName)
+	if force then
+		os.execute("umount -l /media/" .. devName)
+	else
+		os.execute("umount /media/" .. devName)
+	end
 
 end
 
@@ -457,7 +461,7 @@ end
 
 -- _unmountingDrive
 -- full screen popup that appears until unmounting is complete or failed
-function _unmountDrive(self, devName)
+function _unmountDrive(self, devName, force)
 	
 	log:warn('_unmountDrive() ', devName)
 
@@ -470,7 +474,7 @@ function _unmountDrive(self, devName)
 		return EVENT_UNUSED
 	end
 
-	self:_unmountActions(devName)
+	self:_unmountActions(devName, _, force)
 
 	if self.popupUnmountWaiting then
 		return
@@ -481,7 +485,7 @@ function _unmountDrive(self, devName)
 
 	-- set self.devType var based on devName during the _mountingDrive method
 	self.devType = self:mediaType(devName)
-	self.mountingDriveTimeout = 0
+	self.unmountingDriveTimeout = 0
 
 	icon:addTimer(1000,
 		function()
@@ -553,16 +557,15 @@ end
 
 function _unmountingDriveTimer(self, devName)
 	local unmounted = false
-	self.unmountingDriveTimeout = 0
 
 	Task("unmountingDrive", self, function()
-		log:debug("unmountingDriveTimeout=", self.mountingDriveTimeout)
+		log:debug("unmountingDriveTimeout=", self.unmountingDriveTimeout)
 
 		unmounted = self:_checkDriveUnmounted(devName)
 
 		if unmounted then
 			-- success
-			log:debug("*** Device ", devName, " unmounted sucessfully.")
+			log:warn("*** Device ", devName, " unmounted sucessfully.")
 
 			self:_removeEjectDeviceItem(devName)
 
@@ -578,6 +581,9 @@ function _unmountingDriveTimer(self, devName)
 			-- Not yet unmounted
 			self.unmountingDriveTimeout = self.unmountingDriveTimeout + 1
 			if self.unmountingDriveTimeout <= self.UNMOUNTING_DRIVE_TIMEOUT then
+				log:warn("*** Device failed to unmount. try again")
+				log:warn("*** self.unmountingDriveTimeout: ", self.unmountingDriveTimeout)
+				log:warn("*** self.UNMOUNTING_DRIVE_TIMEOUT: ", self.UNMOUNTING_DRIVE_TIMEOUT)
 				-- try again
 				self:_unmountActions(devName, true)
 				return
@@ -639,10 +645,45 @@ function _unmountSuccess(self, devName)
 	return window
 end
 
+
 -- TODO
 function _unmountFailure(self, devName)
 	log:warn('_unmountFailure()')
+
+	local window = Window("text_list", self:string("EJECT_FAILURE"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("OK"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			window:hide()
+		end
+	})
+	menu:addItem({
+		text = self:string("EJECT_TRY_AGAIN"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			-- force the umount with -l
+			window:hide()
+			self:_unmountDrive(devName, true)
+		end
+	})
+
+
+	menu:setHeaderWidget( Textarea("help_text", self:string('EJECT_FAILURE_INFO') ) )
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
 end
+
 
 function _removeEjectDeviceItem(self, devName)
 	log:debug('_removeEjectDeviceItem()')
@@ -673,6 +714,7 @@ function _addEjectDeviceItem(self, devName)
                 text = self:string(token),
                 iconStyle = 'hm_eject',
                 weight = 1,
+		sound = "WINDOWSHOW",		
                 --weight = 1000,
 		-- TODO: add a method to eject the device (that works!)
 		callback = function()
