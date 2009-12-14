@@ -713,7 +713,7 @@ function _addEjectDeviceItem(self, devName)
                 node = "home",
                 text = self:string(token),
                 iconStyle = 'hm_eject',
-                weight = 1,
+                weight = 5,
 		sound = "WINDOWSHOW",		
                 --weight = 1000,
 		-- TODO: add a method to eject the device (that works!)
