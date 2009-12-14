@@ -1857,8 +1857,9 @@ function skin(self, s, reload, useDefaultSize)
 	})
 	s.icon_popup_sleep_15 = _uses(s._popupIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
-		h = 80,
-		w = 80,
+		h = WH_FILL,
+		w = WH_FILL,
+		padding = { 0, 8, 0, 0 },
 	})
 	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),

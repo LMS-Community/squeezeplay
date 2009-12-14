@@ -2393,8 +2393,9 @@ function skin(self, s)
 
 	s.icon_popup_sleep_15 = {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
-		h = 134,
-		w = 146,
+		h = WH_FILL,
+		w = WH_FILL,
+		padding = { 24, 24, 0, 0 },
 	}
 	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
@@ -2410,7 +2411,7 @@ function skin(self, s)
 	})
 	s.icon_popup_sleep_cancel = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
-		padding = { 0, 10, 0, 0 },
+		padding = { 24, 34, 0, 0 },
 	})
 
 	s.icon_power = _uses(_icon, {
