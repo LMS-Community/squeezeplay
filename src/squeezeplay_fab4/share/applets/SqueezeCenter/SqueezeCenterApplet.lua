@@ -1184,7 +1184,8 @@ function _parseScanData(self, scanData)
 	-- if every step has an eta of 0, the assumption is that the scan is complete
 	local scanComplete = true
 	for i, step in ipairs(scanData) do
-		if step.eta > 0 then			
+		-- step.eta < 0 is when no eta is known but the step is running, as in discovering_files
+		if step.eta ~= 0 then 
 			log:debug('scan not done')
 			scanComplete = false
 		end
@@ -1208,17 +1209,22 @@ function _parseScanData(self, scanData)
 				local completed = tostring(nameString) .. ": " .. tostring(completedText)
 				table.insert(progressReport, completed)
 			else
-				table.insert(progressReport, tostring(nameString))
 			
 				local eta = step.eta and tonumber(step.eta)
 				if eta and eta > 0 then
+					table.insert(progressReport, tostring(nameString))
+
 					local timeLeftString = self:string('TIME_LEFT')
 					local timeLeft = '        ' .. tostring(timeLeftString) .. ": " .. _secondsToString(eta)
 					table.insert(progressReport, timeLeft)
+				-- if eta is not > 0, then we must be running
+				else
+					local running = tostring(nameString) .. ": " .. tostring(runningText)
+					table.insert(progressReport, running)
 				end
 
 				local percentCompleteTable = {}
-				if step.done and step.total then
+				if step.done and step.total and type(step.total) == 'number' and step.total > 0 then
 					local percentDoneString = self:string('PERCENT_DONE')
 					local percentageDone = tostring(math.floor( 100 * tonumber(step.done)/tonumber(step.total)))
 					local percentageString = percentageDone .. "%"
