@@ -45,7 +45,7 @@ function _getOutputActionMap(self)
 		self.outputActionMap = {
 			["back"]               = {text = self:string("SHORTCUTS_OUTPUT_BACK"), offerOn = {"touch", "touchPrimary", "ir", "keys"} , weight = 10},
 			["go_home"]            = {text = self:string("SHORTCUTS_OUTPUT_GO_HOME"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 20},
-			["go_now_playing"]     = {text = self:string("SHORTCUTS_OUTPUT_GO_NOW_PLAYING"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 30},
+			["go_now_playing_or_playlist"]     = {text = self:string("SHORTCUTS_OUTPUT_GO_NOW_PLAYING"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 30},
 			["go_playlist"]        = {text = self:string("SHORTCUTS_OUTPUT_GO_PLAYLIST"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 40},
 			["disabled"]           = {text = self:string("SHORTCUTS_OUTPUT_DISABLED"), offerOn = {"touch", "touchPrimary", "ir", "keys"}, weight = 200},
 			["go_alarms"]       = {text = self:string("SHORTCUTS_OUTPUT_GO_ALARMS"), offerOn = {"touch", "ir", "keys"}, weight = 50},

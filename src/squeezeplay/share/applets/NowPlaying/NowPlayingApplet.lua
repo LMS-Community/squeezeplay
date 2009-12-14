@@ -805,6 +805,8 @@ function _installListeners(self, window)
 	window:addActionListener("go", self, showPlaylistAction)
 	window:addActionListener("go_home", self, _goHomeAction)
 	window:addActionListener("go_now_playing", self, toggleNPScreenStyle)
+	window:addActionListener("go_now_playing_or_playlist", self, showPlaylistAction)
+
 	--also, no longer listening for hold in this situation, Ben and I felt that was a bug
 	
 	-- half a spin of the wheel on baby or controller takes you to the next NP style as well

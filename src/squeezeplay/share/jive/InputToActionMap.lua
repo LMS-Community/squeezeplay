@@ -107,7 +107,7 @@ keyActionMappings.press = {
 
 gestureActionMappings = {
 	[GESTURE_L_R] = "go_home", --will be reset by ShortcutsMeta defaults
-	[GESTURE_R_L] = "go_now_playing", --will be reset by ShortcutsMeta defaults
+	[GESTURE_R_L] = "go_now_playing_or_playlist", --will be reset by ShortcutsMeta defaults
 }
 
 keyActionMappings.hold = {

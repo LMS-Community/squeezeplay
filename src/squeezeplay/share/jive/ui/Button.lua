@@ -106,6 +106,11 @@ function __init(self, widget, action, holdAction, longHoldAction)
 			end
 
 			if type == EVENT_MOUSE_UP then
+				local delta = 0
+				local x, y = event:getMouse()
+				if widget.mouseDownX then
+					delta = math.abs(widget.mouseDownX - x)
+				end
 				if widget.mouseState ~= MOUSE_DOWN then
 				        --not a press
 					widget:setStyleModifier(nil)
@@ -118,8 +123,12 @@ function __init(self, widget, action, holdAction, longHoldAction)
 				widget:setStyleModifier(nil)
 				widget:reDraw()
 
+
+				-- compare x to self.mouseDownX. if the pixel delta is past a threshhold, don't return the action
+				-- XXX: delta currently hardcoded to 100px. seems to work well for SB Touch, but it's fairly platform specific to be hardcoding that number.
 				finishMouseSequence(widget)
-				if mouseInsidePressDistance(widget, event) and action then
+
+				if mouseInsidePressDistance(widget, event) and action and delta < 100 then
 					--press
 					return action()
 				end

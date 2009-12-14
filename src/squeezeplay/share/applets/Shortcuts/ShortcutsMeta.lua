@@ -41,7 +41,7 @@ function defaultSettings(meta)
 		},
 		gestureActionMappings = {
 			[GESTURE_L_R] = "go_home",
-			[GESTURE_R_L] = "go_now_playing",
+			[GESTURE_R_L] = "go_now_playing_or_playlist",
 		},
 		keyActionMappings = {
 			press = {

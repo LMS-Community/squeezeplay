@@ -1524,6 +1524,7 @@ end
 local _globalActionsNEW = {
 
 	["go_now_playing"] = _goNowPlayingAction,
+	["go_now_playing_or_playlist"] = _goNowPlayingAction,
 	["go_playlist"] = _goPlaylistAction,
 	["go_search"] = _goSearchAction,
 	["go_favorites"] = _goFavoritesAction,
