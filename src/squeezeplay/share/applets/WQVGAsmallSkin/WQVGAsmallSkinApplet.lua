@@ -2711,6 +2711,7 @@ function skin(self, s)
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
 				font       = _boldfont(NP_TRACK_FONT_SIZE), 
+				sh = TEXT_SH_COLOR,
 			},
 		},
 		npartistgroup = {
@@ -2727,6 +2728,7 @@ function skin(self, s)
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
 				font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+				sh = TEXT_SH_COLOR,
 			},
 		},
 		npalbumgroup = {
@@ -2743,6 +2745,7 @@ function skin(self, s)
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
 				font       = _font(NP_ARTISTALBUM_FONT_SIZE),
+				sh = TEXT_SH_COLOR,
 			},
 		},
 		npartistalbum = {
