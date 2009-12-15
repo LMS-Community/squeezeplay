@@ -215,6 +215,14 @@ end
 function _activate(self, the_screensaver, force)
 	log:debug("Screensaver activate")
 
+	-- In some situations the timer restart below tries to activate an SS when one is already running.
+	-- Example: Blank SS for soft power off while in Diagnostics (i.e. an applet not allowing SS).
+	-- This causes the backlight to turn on again after 10 seconds. #14986
+	if self:isScreensaverActive() then
+		log:warn("A screensaver is already active - ignoring activate request.")
+		return
+	end
+
 	-- check if the top window will allow screensavers, if not then
 	-- set the screensaver to activate 10 seconds after the window
 	-- is closed, assuming we still don't have any activity
