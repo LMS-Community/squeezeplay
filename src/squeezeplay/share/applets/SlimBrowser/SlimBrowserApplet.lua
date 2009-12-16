@@ -1895,7 +1895,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
-				elseif actionName == 'go' then
+				elseif actionName == 'go' or actionName == 'play-hold' then
 					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
