@@ -1618,6 +1618,13 @@ function skin(self, s, reload, useDefaultSize)
 
 		},
 	}
+	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
+	})
+
+	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
 	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
 		order = { 'text' },
 	})

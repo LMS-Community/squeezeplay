@@ -2025,6 +2025,7 @@ function skin(self, s)
 				order = { "icon", "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 				text = {
+					padding = { 0, 4, 0, 0 },
 					w = WH_FILL,
 					h = WH_FILL,
 					align = 'left',
@@ -2054,6 +2055,7 @@ function skin(self, s)
 					bgImg = fiveItemBox,
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
+						padding = { 0, 4, 0, 0 },
 						w = WH_FILL,
 						h = WH_FILL,
 						align = 'left',
@@ -2082,6 +2084,13 @@ function skin(self, s)
 		},
 	}
 	
+	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
+	})
+	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
+
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
 		item = {
 			bgImg = contextMenuPressedBox,
