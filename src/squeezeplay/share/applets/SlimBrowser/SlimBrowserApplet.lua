@@ -815,6 +815,7 @@ end
 -- special case when SlimBrowse item is configured for a slider widget
 local function _renderSlider(step, item)
 
+	log:debug('_renderSlider()')
 	if not step and step.window then
 		return
 	end
@@ -1157,7 +1158,7 @@ local function _browseSink(step, chunk, err)
 				step.window:setTitle(_string("SLIMBROWSER_PROBLEM_CONNECTING"), 'settingstitle')
 				step.window:addWidget(textArea)
 			end
-		elseif step.menu and data and data.count and data.count == 1 and data.item_loop and data.item_loop[1].slider then
+		elseif data and data.count and tonumber(data.count) == 1 and data.item_loop and data.item_loop[1].slider then
 			-- no menus here, thankyouverymuch
 			if step.menu then
 				step.window:removeWidget(step.menu)
