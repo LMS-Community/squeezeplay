@@ -113,7 +113,6 @@ function settingsShow(self)
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	
 	local screenWidth, screenHeight = Framework:getScreenSize()
-	log:warn(screenWidth, '|', screenHeight)
 
 	-- read all files in the wallpaper/ directory and into self.wallpapers
 	-- this step is done first so images aren't read twice, 
@@ -154,7 +153,7 @@ function settingsShow(self)
 	end
 
 	for name, details in pairs(self.wallpapers) do
-		log:warn(name, "|", details.token)
+		log:debug(name, "|", details.token)
 			self.menu:addItem({
 				-- anything local goes to the top 
 				-- (i.e., higher precendence than SC-delivered custom wallpaper)
