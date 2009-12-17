@@ -130,7 +130,7 @@ function squeezecenterStartupCheck(self)
 		end
 
 		log:debug('STARTUP (6)| Restart Server')
-		self:restartServer()
+		self:restartServer(true)
 
 		-- populate non-SC mounted drives to self.mountedDevices
 		-- create menu items for each
@@ -890,9 +890,9 @@ function _getItemFromDevName(self, devName)
 end
 
 
-function restartServer(self)
+function restartServer(self, silent)
 	log:warn('Restarting squeezebox server')
-	self:_squeezecenterAction("icon_connected", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart")
+	self:_squeezecenterAction("icon_connected", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart", silent)
 
 end
 
