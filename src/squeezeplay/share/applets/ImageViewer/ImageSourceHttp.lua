@@ -106,7 +106,7 @@ function nextImage(self, ordering)
 		self.currentImage = math.random(#self.imgFiles)
 	else
 		self.currentImage = self.currentImage + 1
-		if self.currentImage > #imgFiles then
+		if self.currentImage > #self.imgFiles then
 			self.currentImage = 1
 		end
 	end
@@ -119,7 +119,7 @@ function previousImage(self, ordering)
 		return
 	end
 	if ordering == "random" then
-		self.currentImage = math.random(#imgFiles)
+		self.currentImage = math.random(#self.imgFiles)
 	else
 		self.currentImage = self.currentImage - 1
 		if self.currentImage < 1 then
