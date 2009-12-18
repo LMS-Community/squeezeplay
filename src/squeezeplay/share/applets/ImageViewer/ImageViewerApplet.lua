@@ -81,6 +81,13 @@ function initImageSource(self, imgSourceOverride)
 	self.listCheckCount = 0
 	self.initialized = false
 
+	self:setImageSource(imgSourceOverride)
+
+	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, 
+		Window.transitionFadeIn, Window.transitionPushLeft, Window.transitionPushRight }
+end
+
+function setImageSource(self, imgSourceOverride)
 	if imgSourceOverride then
 		self.imgSource = imgSourceOverride
 	else
@@ -94,11 +101,7 @@ function initImageSource(self, imgSourceOverride)
 			self.imgSource = ImageSourceFlickr(self)
 		end
 	end
-
-	self.transitions = { transitionBoxOut, transitionTopDown, transitionBottomUp, transitionLeftRight, transitionRightLeft, 
-		Window.transitionFadeIn, Window.transitionPushLeft, Window.transitionPushRight }
 end
-
 
 function openImageViewer(self)
 	-- two item menu that shows start slideshow and settings
@@ -553,7 +556,7 @@ end
 function openSettings(self)
 	log:info("image viewer settings")
 	self:initImageSource()
-
+	
 	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
 	window:addWidget(SimpleMenu("menu",
 		{
@@ -1079,6 +1082,7 @@ end
 function setSource(self, source)
 	self:getSettings()["source"] = source
 	self:storeSettings()
+	self:setImageSource()
 end
 
 
