@@ -773,7 +773,7 @@ function _startServerWindow(self)
 		menu:setHeaderWidget( Textarea("help_text", self:string('NO_DRIVES_DETECTED_INFO')))
 
 	elseif mountedDrives == 1 then
-		self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
+		self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", nil, 5000, "start")
 		return EVENT_CONSUMED
 
 	else
@@ -802,7 +802,7 @@ function _startServerWindow(self)
 				callback = function()
 					log:debug('write prefs.json file to use ', devName)
 					self:_writeSCPrefsFile(devName)
-					self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
+					self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", nil, 5000, "start")
 					self:settingsShow()
 					window:hide()
 				end
@@ -1217,9 +1217,12 @@ function _parseScanData(self, scanData)
 					local timeLeftString = self:string('TIME_LEFT')
 					local timeLeft = '        ' .. tostring(timeLeftString) .. ": " .. _secondsToString(eta)
 					table.insert(progressReport, timeLeft)
-				-- if eta is not > 0, then we must be running
+				-- if eta is not > 0, then we must be running but with no final estimate
 				else
 					local running = tostring(nameString) .. ": " .. tostring(runningText)
+					if step.done then
+						running = running .. " (" .. tostring(step.done) .. ")"
+					end
 					table.insert(progressReport, running)
 				end
 

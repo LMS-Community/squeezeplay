@@ -206,7 +206,7 @@ SCAN_ABORTED_PROGRESS
 	RU	Сканирование было прервано пользователем
 	SV	Sökningen avbröts manuellt av användaren
 
-DISCOVERING_FILES_PROGRESS
+DIRECTORY_SCAN_PROGRESS
 	CS	Prohledávání adresáře
 	DA	Indeksering af mapper
 	DE	Durchsuche Musik-Verzeichnis
@@ -220,6 +220,9 @@ DISCOVERING_FILES_PROGRESS
 	PL	Przeszukiwanie katalogu
 	RU	Сканирование каталога
 	SV	Mappsökning
+
+DISCOVERING_FILES_PROGRESS
+	EN	Discovering Files
 
 DIRECTORY_DELETED_PROGRESS
 	CS	Odebrat smazané soubory
