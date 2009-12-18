@@ -71,9 +71,9 @@ function scanFolder(self, folder)
 			end
 		elseif lfs.attributes(fullpath, "mode") == "file" then
 			-- check for supported file type
-			if string.find(fullpath, "%pjpe*g")
-					or string.find(fullpath, "%ppng") 
-					or string.find(fullpath, "%pgif") then
+			if string.find(string.lower(fullpath), "%pjpe*g")
+					or string.find(string.lower(fullpath), "%ppng") 
+					or string.find(string.lower(fullpath), "%pgif") then
 				-- log:info(fullpath)
 				table.insert(self.imgFiles, fullpath)
 			end
