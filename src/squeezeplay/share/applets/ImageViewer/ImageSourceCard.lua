@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs, locale = setmetatable, tonumber, tostring, ipairs, locale
+local setmetatable, tonumber, tostring, ipairs, locale, pairs = setmetatable, tonumber, tostring, ipairs, locale, pairs
 
 local Applet		= require("jive.Applet")
 local appletManager	= require("jive.AppletManager")
@@ -47,7 +47,7 @@ module(...)
 oo.class(_M, ImageSource)
 
 function __init(self, applet)
-	log:info("initialize ImageSourceCard")
+	log:info("initialize ImageSourceCard!!!!")
 	obj = oo.rawnew(self, ImageSource(applet))
 
 	obj.imgFiles = {}
@@ -61,22 +61,41 @@ function listNotReadyError(self)
 end
 
 function scanFolder(self, folder)
-	for f in lfs.dir(folder) do
-		local fullpath = folder.."/"..f
-		if lfs.attributes(fullpath, "mode") == "directory" then
-			-- scan this directory recusivly
-			-- exclude "." and ".."
-			if f != "." and f != ".." then
-				self:scanFolder(fullpath)
+	
+	local dirstoscan = {}
+	
+	dirstoscan[folder] = false
+
+	for nextfolder, done in pairs(dirstoscan) do
+		
+		if not done then
+		
+			for f in lfs.dir(nextfolder) do
+			
+				local fullpath = nextfolder .. "/" .. f
+	
+				if lfs.attributes(fullpath, "mode") == "directory" then
+
+					-- push this directory on our list to be scanned
+					-- exclude "." and ".."
+					if f != "." and f != ".." then
+						dirstoscan[fullpath] = false
+					end
+
+				elseif lfs.attributes(fullpath, "mode") == "file" then
+					-- check for supported file type
+					if string.find(string.lower(fullpath), "%pjpe*g")
+							or string.find(string.lower(fullpath), "%ppng") 
+							or string.find(string.lower(fullpath), "%pgif") then
+						-- log:info(fullpath)
+						table.insert(self.imgFiles, fullpath)
+					end
+				end
+			
 			end
-		elseif lfs.attributes(fullpath, "mode") == "file" then
-			-- check for supported file type
-			if string.find(string.lower(fullpath), "%pjpe*g")
-					or string.find(string.lower(fullpath), "%ppng") 
-					or string.find(string.lower(fullpath), "%pgif") then
-				-- log:info(fullpath)
-				table.insert(self.imgFiles, fullpath)
-			end
+			
+			-- don't scan this folder twice - just in case
+			table[nextfolder] = true
 		end
 	end
 end
