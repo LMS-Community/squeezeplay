@@ -221,12 +221,21 @@ function openAlarmWindow(self)
 		return EVENT_CONSUME
 	end
 
+	local offAction = function()
+		window:playSound("WINDOWHIDE")
+		window:hide()
+		self.alarmWindow = nil
+		return EVENT_UNUSED
+	end
+
+
 	local snoozeAction = function()
 		self:_alarmSnooze()
 		return EVENT_CONSUME
 	end
 
 	menu:addActionListener("back", self, cancelAction)
+	menu:addActionListener("power", self, offAction)
 	menu:setHeaderWidget(headerGroup)
 
 	menu:addActionListener("mute", self, snoozeAction)
