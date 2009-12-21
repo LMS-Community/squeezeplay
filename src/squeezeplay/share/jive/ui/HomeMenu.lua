@@ -430,8 +430,10 @@ function removeItemFromNode(self, item, node)
 	assert(node)
 	if node == 'home' and self.customMenuTable[item.id] then
 		local myIdx = self.nodeTable[node].menu:getIdIndex(item.id)
-		local myItem = self.nodeTable[node].menu:getItem(myIdx)
-		self.nodeTable[node].menu:removeItem(myItem)
+		if myIdx ~= nil then
+			local myItem = self.nodeTable[node].menu:getItem(myIdx)
+			self.nodeTable[node].menu:removeItem(myItem)
+		end
 	end
 
 	if self.nodeTable[node] then
