@@ -976,7 +976,7 @@ static int decode_alsa_shared_mem_attach(void)
 	int shmid;
 
 	/* attach to shared memory */
-	shmid = shmget(1234, 0, 0600 | IPC_CREAT);
+	shmid = shmget(56833, 0, 0600 | IPC_CREAT);
 	// XXXX errors
 
 	decode_audio = shmat(shmid, 0, 0);

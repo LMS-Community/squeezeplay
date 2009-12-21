@@ -201,12 +201,12 @@ static int decode_alsa_init(lua_State *L) {
 	/* allocate memory */
 
 	// XXXX use shared memory
-	shmid = shmget(1234, 0, 0600 | IPC_CREAT);
+	shmid = shmget(56833, 0, 0600 | IPC_CREAT);
 	if (shmid != -1) {
 		shmctl(shmid, IPC_RMID, NULL);
 	}
 
-	shmid = shmget(1234, DECODE_AUDIO_BUFFER_SIZE, 0600 | IPC_CREAT);
+	shmid = shmget(56833, DECODE_AUDIO_BUFFER_SIZE, 0600 | IPC_CREAT);
 	if (shmid == -1) {
 		// XXXX errors
 		LOG_ERROR(log_audio_codec, "shmget error %s", strerror(errno));
