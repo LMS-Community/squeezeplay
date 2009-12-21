@@ -56,7 +56,7 @@ function init(self, ...)
 			function ()
 				log:warn("RTC ALARM FIRING")
 				appletManager:callService("deactivateScreensaver")
-				self:openAlarmWindow(true)
+				self:openAlarmWindow()
 			end,
 			true
 	)
@@ -66,20 +66,6 @@ function init(self, ...)
 	end
 
 	return self
-end
-
-function notify_serverDisconnected(self, server)
-	if server == self.server then
-		self:_startTimer()
-	end
-end
-
-
-function notify_serverConnected(self, server)
-	if server == self.server then
-		self.RTCalarmOff = false
-		self:_stopTimer()
-	end
 end
 
 
@@ -96,8 +82,6 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 	                self:getSettings()['alarmNext'] = alarmNext
 			self:storeSettings()
 			self:_setWakeupTime()
-			self:_stopTimer()
-			self.RTCAlarmTimer:setInterval(self:_timerToAlarm())
 			self:_startTimer()
 		end
 
@@ -111,8 +95,6 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 				self.alarmWindow:hide()
 				self.alarmWindow = nil
 			end
-
-			self:_stopTimer()
 
 			appletManager:callService("deactivateScreensaver")
 			log:info('open alarm window')
@@ -134,7 +116,6 @@ function notify_playerConnected(self, player)
 	if player:isLocal() then
 		self.player = player
 		self.server = self.player:getSlimServer()
-		self:_stopTimer()
 
 		if self.fallbackRunning then
 			log:warn('stop the audio on currently running RTC alarm')
@@ -171,7 +152,9 @@ function _setWakeupTime(self, setting)
 end
 
 
-function openAlarmWindow(self, fallback)
+function openAlarmWindow(self)
+
+	log:warn('openAlarmWindow()')
 
 	-- this method is called when the alarm time is hit
 	-- when the alarm time is it, unset the wakeup mcu time
@@ -190,7 +173,7 @@ function openAlarmWindow(self, fallback)
 
 	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
 
-	if not self.player:isConnected() or fallback then
+	if not self.player:isConnected() then
 		log:info('activate RTC alarm')
 		self.player:playFileInLoop(self.alarmTone)
 		decode:audioGain(4096, 4096)
@@ -265,7 +248,6 @@ function _alarmOff(self)
 		self.player:stopAlarm()
 	else
 		decode:stop()
-		self.RTCalarmOff = true
 		iconbar:setAlarm('OFF')
 	end
 	self:_stopTimer()
@@ -277,7 +259,7 @@ end
 
 function _stopTimer(self)
 	if self.RTCAlarmTimer:isRunning() then
-		log:warn('stopping RTC fallback alarm timer')
+		log:error('stopping RTC fallback alarm timer')
 		self.RTCAlarmTimer:stop()
 	end
 end
@@ -301,20 +283,17 @@ function _startTimer(self, interval)
 	if not self.alarmNext then
 		return
 	end
-	if self.RTCalarmOff then
-		return
+
+	local timerTime = self:_timerToAlarm()
+	log:warn('starting RTC fallback alarm timer', timerTime)
+	if interval then
+		self.RTCAlarmTimer:setInterval(interval)
+	else
+		self.RTCAlarmTimer:setInterval(self:_timerToAlarm())
 	end
-	-- never start this timer when connected
-	if not self.player or not self.player:isConnected() then
-		if not self.RTCAlarmTimer:isRunning() then
-			log:warn('starting RTC fallback alarm timer')
-			if interval then
-				self.RTCAlarmTimer:setInterval(interval)
-			else
-				self.RTCAlarmTimer:setInterval(self:_timerToAlarm())
-			end
-			self.RTCAlarmTimer:start()
-		end
+
+	if not self.RTCAlarmTimer:isRunning() then
+		self.RTCAlarmTimer:start()
 	end
 end
 
