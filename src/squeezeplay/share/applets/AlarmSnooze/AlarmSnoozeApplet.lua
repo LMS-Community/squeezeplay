@@ -70,7 +70,11 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
 	if player:isLocal() then
 
-		log:warn(alarmState)
+		log:warn('local player alarm state has changed to: ', alarmState)
+		-- if we're getting a playerAlarmState notification, that inidicates a change in state
+		-- therefore, if there are any existing alarmWindows on screen, get rid of them first
+		self:_hideAlarmWindow()
+
 		-- store alarmNext data as epoch seconds
 		if alarmNext and alarmNext > 0 then
 			self.alarmNext = alarmNext
@@ -82,11 +86,6 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		end
 
 		if alarmState == 'active' then
-			if self.alarmWindow then
-				self.alarmWindow:hide()
-				self.alarmWindow = nil
-			end
-
 			log:info('open alarm window')
 			self:openAlarmWindow()
 
@@ -122,6 +121,13 @@ function notify_playerConnected(self, player)
 	end
 end
 
+
+function _hideAlarmWindow(self)
+	if self.alarmWindow then
+		self.alarmWindow:hide()
+		self.alarmWindow = nil
+	end
+end
 
 -- returns milliseconds before the stored alarm from settings, stored in epoch secs
 function _timerToAlarm(self)
@@ -270,8 +276,7 @@ function _alarmOff(self)
 	end
 	self:_stopTimer()
 	self.alarmWindow:playSound("WINDOWHIDE")
-	self.alarmWindow:hide()
-	self.alarmWindow = nil
+	self:_hideAlarmWindow()
 end
 
 
@@ -329,8 +334,7 @@ function _alarmSnooze(self)
 	end
 
 	self.alarmWindow:playSound("WINDOWHIDE")
-	self.alarmWindow:hide()
-	self.alarmWindow = nil
+	self:_hideAlarmWindow()
 
 end
 
