@@ -1422,8 +1422,13 @@ function unpause(self)
 end
 
 function stopAlarm(self)
-	-- currently synonymous with pause
-	self:pause()
+	if not self.state then return end
+
+	if self.alarmState == 'active' then
+		self.alarmState = 'none'
+		self:call({'jivealarm', 'stop:1'})
+	end
+	self:updateIconbar()
 
 end
 

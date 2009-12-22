@@ -221,19 +221,15 @@ function openAlarmWindow(self)
 	menu:setSelectedIndex(1)
 
 	local cancelAction = function()
-		window:playSound("WINDOWHIDE")
-		window:hide()
-		self.alarmWindow = nil
-		return EVENT_CONSUME
+			window:playSound("WINDOWHIDE")
+			self:_alarmOff()
+			return EVENT_CONSUME
 	end
 
 	local offAction = function()
-		window:playSound("WINDOWHIDE")
-		window:hide()
-		self.alarmWindow = nil
+		self:_alarmOff()
 		return EVENT_UNUSED
 	end
-
 
 	local snoozeAction = function()
 		self:_alarmSnooze()
@@ -275,7 +271,6 @@ function _alarmOff(self)
 		iconbar:setAlarm('OFF')
 	end
 	self:_stopTimer()
-	self.alarmWindow:playSound("WINDOWHIDE")
 	self:_hideAlarmWindow()
 end
 
