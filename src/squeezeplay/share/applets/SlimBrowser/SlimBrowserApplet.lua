@@ -2401,10 +2401,6 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 			titleWidgetComplete = _browseInput(window, item, db, inputSpec, true, timeFormat)
 		end
 
-	-- special case for sending over textArea
-	elseif item and item['textArea'] then
-		local textArea = Textarea("text", item['textArea'])
-		window:addWidget(textArea)
 	else
 	
 		-- create a cozy place for our items...
