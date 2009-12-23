@@ -682,7 +682,7 @@ end
 
 function setPixelOffsetY(self, value)
 	Menu.setPixelOffsetY(self, value)
-	if self.headerWidget then
+	if self.headerWidget and self.headerWidget.setPixelOffsetY then
 		self.headerWidget:setPixelOffsetY(value)
 	end
 end
