@@ -1260,6 +1260,11 @@ function skin(self, s)
 	s.image_popup = _uses(s.popup, {
 		image = {
 			align = "center",
+                        w = screenWidth,
+                        position = LAYOUT_CENTER,
+                        align = "center",
+                        h = screenHeight,
+                        border = 0,
 		},
 	})
 
