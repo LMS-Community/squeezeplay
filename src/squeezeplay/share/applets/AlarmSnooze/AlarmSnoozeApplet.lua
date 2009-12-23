@@ -186,14 +186,17 @@ function openAlarmWindow(self)
 		return
 	end
 
-	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
-
-	if not self.localPlayer:isConnected() then
+	-- if we're connected, first drop the now playing window underneath the alarm window
+	if self.localPlayer:isConnected() then
+	        appletManager:callService('goNowPlaying', Window.transitionPushLeft)
+	else
 		log:info('activate RTC alarm')
 		self.localPlayer:playFileInLoop(self.alarmTone)
 		decode:audioGain(4096, 4096)
 		self.fallbackRunning = true
 	end
+
+	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
 
 	self.time = datetime:getCurrentTime()
 	local icon = Icon('icon_alarm')
@@ -242,7 +245,8 @@ function openAlarmWindow(self)
 
 	menu:addActionListener("mute", self, snoozeAction)
 
-        window:addTimer(1000, function() self:_updateTime() end)
+	-- the alarm notification window should not endure forever; drop back to NP window after 59 seconds
+        window:addTimer(59000, function() self:_hideAlarmWindow() end)
 
 	window:addWidget(menu)
 	window:setShowFrameworkWidgets(false)
@@ -250,18 +254,8 @@ function openAlarmWindow(self)
 	window:show(Window.transitionFadeIn)
 
 	self.alarmWindow = window
-	self.timeWidget  = label
 end
 
-
-function _updateTime(self)
-	local time = datetime:getCurrentTime()
-	if time ~= self.time then
-		log:debug('updating time in alarm window')
-		self.time = time
-		self.timeWidget:setValue(time)
-	end
-end
 
 function _alarmOff(self)
 	if self.localPlayer:isConnected() then
