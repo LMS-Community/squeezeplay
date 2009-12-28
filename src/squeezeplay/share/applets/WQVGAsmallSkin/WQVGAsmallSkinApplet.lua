@@ -3081,7 +3081,7 @@ function skin(self, s)
 			align = "center",
 			h = 272,
 			border = 0,
-			padding = 10,
+			padding = 5,
 			artwork = {
 				w = 480,
 				border = 0,
