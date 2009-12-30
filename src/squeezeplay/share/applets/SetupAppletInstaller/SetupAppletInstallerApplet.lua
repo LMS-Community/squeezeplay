@@ -14,13 +14,12 @@ into the applet directory.
 
 Assumptions:
 - applet name returned by SC is used as the foldername for the applet
-- the zip file downloaded contains files but not directories - all files are extracted into the applet directory
 - the name of the applet returned by SC should match the files contained in the zip file, i.e. <name>Applet.lua and <name>Meta.lua
 
 =cut
 --]]
 
-local next, pairs, type, package, string, tostring = next, pairs, type, package, string, tostring
+local next, pairs, type, package, string, tostring, pcall = next, pairs, type, package, string, tostring, pcall
 
 local oo               = require("loop.simple")
 local debug            = require("jive.utils.debug")
@@ -30,6 +29,7 @@ local io               = require("io")
 local zip              = require("zipfilter")
 local ltn12            = require("ltn12")
 local lfs              = require("lfs")
+local sha1             = require("sha1")
 
 local Applet           = require("jive.Applet")
 local SlimServer       = require("jive.slim.SlimServer")
@@ -41,17 +41,12 @@ local SocketHttp       = require("jive.net.SocketHttp")
 
 local Window           = require("jive.ui.Window")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
-local Checkbox         = require("jive.ui.Checkbox")
-local RadioButton      = require("jive.ui.RadioButton")
-local RadioGroup       = require("jive.ui.RadioGroup")
 local Label            = require("jive.ui.Label")
 local Popup            = require("jive.ui.Popup")
 local Icon             = require("jive.ui.Icon")
 local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
 local Task             = require("jive.ui.Task")
-
-local debug            = require("jive.utils.debug")
 
 local appletManager    = appletManager
 local jiveMain         = jiveMain
@@ -63,14 +58,6 @@ local EVENT_SHOW       = jive.ui.EVENT_SHOW
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
-
-function count(tab)
-	local i = 0
-	for _, _ in pairs(tab) do
-		i = i + 1
-	end
-	return i
-end
 
 function menu(self, menuItem)
 
@@ -87,63 +74,45 @@ function menu(self, menuItem)
 		end
 	end
 
-	-- find a server
-	local player = appletManager:callService("getCurrentPlayer")
-	if player then
-		self.server = player:getSlimServer()
-	else
-		for _, server in appletManager:callService("iterateSqueezeCenters") do
-			self.server = server
-			break
+	-- query all non SN servers (TinySC will respond too..)
+	self.waitingfor = 0
+	for id, server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isConnected() and not server:isSqueezeNetwork() then
+			log:info("sending query to " .. tostring(server))
+			server:userRequest(
+				function(chunk, err)
+					if err then
+						log:debug(err)
+					elseif chunk then
+						self:menuSink(server, chunk.data)
+					end
+				end,
+				false,
+				{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
+			)
+			self.waitingfor = self.waitingfor + 1
 		end
 	end
 
-	-- ask about its applets
-	if self.server then
-		self.server:userRequest(
-			function(chunk, err)
-				if err then
-					log:debug(err)
-				elseif chunk then
-					self:menuSink(chunk.data)
-				end
-			end,
-			false,
-			{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
-		)
-	end
+	-- create animiation to show while we get data from the servers
+	self.popup = Popup("waiting_popup")
+	self.popup:addWidget(Icon("icon_connecting"))
+	self.popup:addWidget(Label("text", self:string("APPLET_FETCHING")))
+	self:tieAndShowWindow(self.popup)
 
-	-- create animiation to show while we get data from the server
-	local popup = Popup("waiting_popup")
-	local icon  = Icon("icon_connecting")
-	local label = Label("text", self:string("APPLET_FETCHING"))
-	popup:addWidget(icon)
-	popup:addWidget(label)
-	self:tieAndShowWindow(popup)
-
-	self.popup = popup
+	-- state to update as responses come back
+	self.menu = SimpleMenu("menu")
+	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	self.toremove = {}
+	self.todownload = {}
+	self.inrepos = {}
 end
 
 
-function menuSink(self, data)
-
-	self:tieWindow(self.window)
-	self.popup:hide()
-	self.window:show()
-
-	self.help = Textarea("help_text", self:string("HELP"))
-	self.menu = SimpleMenu("menu")
-	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-	self.menu:setHeaderWidget(self.help)
-	self.window:addWidget(self.menu)
-
-	self.toremove = {}
-	self.todownload = {}
+function menuSink(self, server, data)
 
 	local installed = self:getSettings()
-	local ip, port = self.server:getIpPort()
-
-	local inrepos = {}
+	local ip, port = server:getIpPort()
 
 	if data.item_loop then
 
@@ -153,19 +122,22 @@ function menuSink(self, data)
 				entry.url = 'http://' .. ip .. ':' .. port .. entry.relurl
 			end
 
-			inrepos[entry.name] = 1
-
+			self.inrepos[entry.name] = 1
+			
+			local status
 			if installed[entry.name] then
 				if not appletManager:hasApplet(entry.name) then
-					self.todownload[entry.name] = { url = entry.url, ver = entry.version }
+					self.reinstall = self.reinstall or {}
+					self.reinstall[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
 				end
+				status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
 			end
 
 			self.menu:addItem({
-				text = entry.title,
+				text = entry.title .. (status and (" (" .. tostring(status) .. ")") or ""),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:_repoEntry(menuItem, entry)
+					self.appletwindow = self:_repoEntry(menuItem, entry)
 				end,
 				weight = 2
 			})				  
@@ -173,43 +145,43 @@ function menuSink(self, data)
 
 	end
 
-	for name, _ in pairs(installed) do
+	-- wait until all responses received
+	self.waitingfor = self.waitingfor - 1
+	if self.waitingfor > 0 then
+		return
+	end
 
-		if appletManager:hasApplet(name) and not inrepos[name] then
+	self.window:addWidget(self.menu)
+	self.popup:hide()
+	self:tieAndShowWindow(self.window)
+
+	if self.reinstall then
+		self.menu:addItem({
+			text = self:string("REINSTALL"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self.toremove = self.reinstall 
+				self.todownload = self.reinstall
+				self:action()
+			end,
+			weight = 1
+		})
+	end
+
+	for name, ver in pairs(installed) do
+		if appletManager:hasApplet(name) and not self.inrepos[name] then
 			self.menu:addItem({
 				text = name,
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:_nonRepoEntry(menuItem, name)
+					self.appletwindow = self:_nonRepoEntry(menuItem, name, ver)
 				end,
 				weight = 2
 			})
 		end
-
 	end
 
-	if self.menu:numItems() > 0 then
-		local item = {
-			text = tostring(self:string("INSTALLREMOVE")) .. " (" .. count(self.todownload) .. "/" .. count(self.toremove) .. ")",
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-						   if next(self.todownload) or next(self.toremove) then
-							   self:action()
-						   else
-							   self.window:bumpRight()
-						   end
-					   end,
-			weight = 6
-		}
-		self.menu:addItem(item) 
-		self.menu:addListener(EVENT_SHOW, 
-			function(event)
-				self.menu:setText(item, 
-					tostring(self:string("INSTALLREMOVE")) .. " (" .. count(self.todownload) .. "/" .. count(self.toremove) .. ")")
-			end
-		)
-
-	else
+	if self.menu:numItems() == 0 then
 		self.menu:addItem( {
 			text = self:string("NONE_FOUND"), 
 			iconStyle = 'item_no_arrow',
@@ -225,73 +197,51 @@ function _repoEntry(self, menuItem, entry)
 	window:addWidget(menu)
 
 	local items = {}
-	local group = RadioGroup()
 
-	if entry.desc then
-		items[#items+1] = { 
-			text = self:string("DESCRIPTION"),
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-						   local window = Window("text_list", entry.name)
-						   window:addWidget(Textarea("text", entry.desc or ""))
-						   self:tieAndShowWindow(window)
-					   end
-		}
-	end
+	local desc = entry.desc or entry.title
 
 	if entry.creator or entry.email then
-		local text = tostring(self:string("AUTHOR")) .. " :"
 		if entry.creator and entry.email then
-			text = text .. entry.creator .. " (" .. entry.email .. ")"
+			desc = desc .. "\n" .. entry.creator .. " (" .. entry.email .. ")"
 		else
-			text = text .. (entry.creator or entry.email)
+			desc = desc .. "\n" .. (entry.creator or entry.email)
 		end
-		items[#items+1] = { 
-			text  = text,
-			style = "item_no_arrow"
-		}
 	end
 
-	items[#items+1] = {
-		text  = tostring(self:string("CURRENT")) .. " (" .. (self:getSettings()[entry.name] or " ") .. ")",
-		style = 'item_choice',
-		check = RadioButton(
-			"radio", 
-			group, 
-			function()
-				self.todownload[entry.name] = nil
-				self.toremove[entry.name] = nil
-			end,
-			self.todownload[entry.name] == nil
-		),
-	}
+	menu:setHeaderWidget(Textarea("help_text", desc))
 
-	items[#items+1] = {
-		text  = tostring(self:string("INSTALL")) .. " (" .. entry.version .. ")",
-		style = 'item_choice',
-		check = RadioButton(
-			"radio", 
-			group, 
-			function()
-				self.todownload[entry.name] = { url = entry.url, ver = entry.version }
-				self.toremove[entry.name] = nil
-			end,
-			self.todownload[entry.name] ~= nil
-		),
-	}
+	local current = self:getSettings()[entry.name]
 
-	if self:getSettings()[entry.name] then
+	if current then
 		items[#items+1] = {
-			text = self:string("REMOVE"),
-			style = 'item_choice',
-			check = RadioButton(
-				"radio", 
-				group, 
-				function()
-					self.todownload[entry.name] = nil
-					self.toremove[entry.name] = 1
-				end
-			),
+			text  = tostring(self:string("REMOVE")) .. " : " .. current,
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+						   self.toremove[entry.name] = 1
+						   self:action()
+					   end,
+		}
+		if current ~= entry.version then
+			items[#items+1] = {
+				text  = tostring(self:string("UPDATE")) .. " : " .. entry.version,
+				sound = "WINDOWSHOW",
+				callback = function(event, menuItem)
+							   self.toremove[entry.name] = 1
+							   self.todownload[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+							   self:action()
+						   end,
+				
+			}
+		end
+	else
+		items[#items+1] = {
+			text  = tostring(self:string("INSTALL")) .. " : " .. entry.version,
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+						   self.toremove[entry.name] = 1
+						   self.todownload[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+						   self:action()
+					   end,
 		}
 	end
 
@@ -301,21 +251,18 @@ function _repoEntry(self, menuItem, entry)
 end
 
 
-function _nonRepoEntry(self, menuItem, name)
+function _nonRepoEntry(self, menuItem, name, ver)
 	local window = Window("text_list", menuItem.text)
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
 
 	menu:addItem({
-		text = self:string("REMOVE"), 
-		style = 'item_choice',
-		check = Checkbox(
-			"checkbox",
-			function(object, isSelected)
-				self.toremove[name] = isSelected
-			end,
-			false
-		)
+		text = tostring(self:string("REMOVE")) .. " : " .. ver, 
+		sound = "WINDOWSHOW",
+		callback = function(event, menuItem)
+					   self.toremove[entry.name] = 1
+					   self:action()
+				   end,
 	})
 
 	self:tieAndShowWindow(window)
@@ -327,10 +274,10 @@ end
 function action(self)
 	-- generate animated downloading screen
 	local icon = Icon("icon_connecting")
-	local label = Label("text", self:string("DOWNLOADING"))
+	self.animatelabel = Label("text", self:string("DOWNLOADING"))
 	self.animatewindow = Popup("waiting_popup")
 	self.animatewindow:addWidget(icon)
-	self.animatewindow:addWidget(label)
+	self.animatewindow:addWidget(self.animatelabel)
 	self.animatewindow:show()
 
 	self.task = Task("applet download", self, function()
@@ -345,19 +292,31 @@ end
 
 -- remove applets
 function _remove(self)
+	for applet, _ in pairs(self.toremove) do
+		local dir = self.appletdir .. "/" .. applet
+		_removedir(dir)
+	end
+end
 
-	for applet, appletdata in pairs(self.toremove) do
-		local dir = self.appletdir .. "/" .. applet .. "/"
 
-		log:info("removing: ", dir)
-
+function _removedir(dir)
+	local attr = lfs.attributes(dir)
+	if attr and attr.mode == "directory" then
 		for file in lfs.dir(dir) do
 			if file ~= "." and file ~= ".." then
-				os.remove(dir .. "/" .. file)
+				local path = dir .. "/" .. file
+				if lfs.attributes(path).mode == "directory" then
+					_removedir(path)
+				else
+					pcall(os.remove, path)
+				end
 			end
 		end
 
-		lfs.rmdir(dir)
+		log:info("removing: ", dir)
+		pcall(lfs.rmdir, dir)
+	else
+		log:info("ignoring non directory: ", dir)
 	end
 end
 
@@ -367,20 +326,45 @@ function _download(self)
 
 	for applet, appletdata in pairs(self.todownload) do
 		local dir = self.appletdir .. "/" .. applet .. "/"
-		local sink = ltn12.sink.chain(zip.filter(), self:_zipSink(dir))
 
-		log:info("downloading: ", appletdata.url, " to: ", dir)
+		log:info("downloading: ", appletdata.url, " to: ", dir, " sha1: ", appletdata.sha)
 
 		if lfs.attributes(dir) == nil then
 			lfs.mkdir(dir)
 		end
 
-		self.fetched = false
+		-- fetch each zip twice: 
 
-		local req = RequestHttp(sink, 'GET', appletdata.url, { stream = true })
+		-- 1) to verify sha1
+		self.fetched = false
+		self.fetchedsha = nil
+
+		local req = RequestHttp(self:_sha1Sink(), 'GET', appletdata.url, { stream = true })
 		local uri = req:getURI()
 
 		local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
+		http:fetch(req)
+
+		while not self.fetched do
+			self.task:yield()
+		end
+
+		if appletdata.sha == nil or self.fetchedsha == nill or appletdata.sha ~= self.fetchedsha then
+			log:warn("sha1 missmatch expected: ", (appletdata.sha or "nil"), " got: ", (self.fetchedsha or "nil"))
+			break
+		else
+			log:info("sha1 verified")
+		end
+
+		-- 2) to extract the file
+		self.fetched = false
+
+		local sink = ltn12.sink.chain(zip.filter(), self:_zipSink(dir))
+
+		req = RequestHttp(sink, 'GET', appletdata.url, { stream = true })
+		uri = req:getURI()
+
+		http = SocketHttp(jnt, uri.host, uri.port, uri.host)
 		http:fetch(req)
 
 		while not self.fetched do
@@ -393,7 +377,7 @@ end
 -- called when download / removal is complete
 function _finished(self, label)
 	-- save new version numbers
-	for applet, appletdata in pairs(self.toremove) do
+	for applet, _ in pairs(self.toremove) do
 		self:getSettings()[applet] = nil
 	end
 	for applet, appletdata in pairs(self.todownload) do
@@ -401,10 +385,8 @@ function _finished(self, label)
 	end
 	self:storeSettings()
 
-	-- FIXME: ideally we do something here to reload all applets or restart the app itself rather than rebooting
-
 	if lfs.attributes("/bin/busybox") ~= nil then
-		label:setValue(self:string("RESTART_JIVE"))
+		self.animatelabel:setValue(self:string("RESTART_JIVE"))
 		-- two second delay
 		local t = Framework:getTicks()
 		while (t + 2000) > Framework:getTicks() do
@@ -414,8 +396,10 @@ function _finished(self, label)
 		appletManager:callService("reboot")
 	else
 		self.animatewindow:hide()
+		if self.appletwindow then
+			self.appletwindow:hide()
+		end
 		self.window:removeWidget(self.menu)
-		self.window:removeWidget(self.help)
 		self.window:addWidget(Textarea("help_text", self:string("RESTART_APP")))
 	end
 end
@@ -428,32 +412,51 @@ function _zipSink(self, dir)
 	return function(chunk)
 
 		if chunk == nil then
-			if fh then
+			if fh and fh ~= DIR then
 				fh:close()
 				fh = nil
 				self.fetched = true
+				return nil
 			end
 
 		elseif type(chunk) == "table" then
-			if fh then
-				fh:close()
-				fh = nil
-			end
 
 			local filename = dir .. chunk.filename
-			log:info("extracting file: " .. filename)
 
-			fh = io.open(filename, "wb")
+			if string.sub(filename, -1) == "/" then
+				log:info("creating directory: " .. filename)
+				lfs.mkdir(filename)
+				fh = 'DIR'
+			else
+				log:info("extracting file: " .. filename)
+				fh = io.open(filename, "w")
+			end
 
 		else
 			if fh == nil then
 				return nil
 			end
 
-			fh:write(chunk)
+			if fh ~= 'DIR' then
+				fh:write(chunk)
+			end
 		end
 
 		return 1
 	end
 end
 
+
+-- sink for calculating sha1 of downloaded file
+function _sha1Sink(self)
+	local sha1 = sha1:new()
+
+	return function(chunk)
+		if chunk == nil then
+			self.fetched = true
+			self.fetchedsha = sha1:digest()
+			return nil
+		end
+		sha1:update(chunk)
+	end
+end
