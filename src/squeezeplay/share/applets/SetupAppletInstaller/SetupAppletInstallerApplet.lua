@@ -327,33 +327,35 @@ function _download(self)
 	for applet, appletdata in pairs(self.todownload) do
 		local dir = self.appletdir .. "/" .. applet .. "/"
 
-		log:info("downloading: ", appletdata.url, " to: ", dir, " sha1: ", appletdata.sha)
+		log:info("downloading: ", appletdata.url, " to: ", dir, " sha1: ", appletdata.sha or "")
 
 		if lfs.attributes(dir) == nil then
 			lfs.mkdir(dir)
 		end
 
-		-- fetch each zip twice: 
-
+		-- fetch each zip twice if sha present: 
 		-- 1) to verify sha1
-		self.fetched = false
-		self.fetchedsha = nil
+		if appletdata.sha then
 
-		local req = RequestHttp(self:_sha1Sink(), 'GET', appletdata.url, { stream = true })
-		local uri = req:getURI()
+			self.fetched = false
+			self.fetchedsha = nil
+			
+			local req = RequestHttp(self:_sha1Sink(), 'GET', appletdata.url, { stream = true })
+			local uri = req:getURI()
 
-		local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
-		http:fetch(req)
-
-		while not self.fetched do
-			self.task:yield()
-		end
-
-		if appletdata.sha == nil or self.fetchedsha == nill or appletdata.sha ~= self.fetchedsha then
-			log:warn("sha1 missmatch expected: ", (appletdata.sha or "nil"), " got: ", (self.fetchedsha or "nil"))
-			break
-		else
-			log:info("sha1 verified")
+			local http = SocketHttp(jnt, uri.host, uri.port, uri.host)
+			http:fetch(req)
+			
+			while not self.fetched do
+				self.task:yield()
+			end
+			
+			if self.fetchedsha == nil or appletdata.sha ~= self.fetchedsha then
+				log:warn("sha1 missmatch expected: ", appletdata.sha, " got: ", self.fetchedsha or "nil")
+				break
+			else
+				log:info("sha1 verified")
+			end
 		end
 
 		-- 2) to extract the file
@@ -420,6 +422,11 @@ function _zipSink(self, dir)
 			end
 
 		elseif type(chunk) == "table" then
+
+			if fh then
+				fh:close()
+				fh = nil
+			end
 
 			local filename = dir .. chunk.filename
 
