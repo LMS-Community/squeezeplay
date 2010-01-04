@@ -96,6 +96,7 @@ static void l_json_encode_value(lua_State *L, int pos, luaL_Buffer *B) {
 
 	case LUA_TTABLE: {
 		int type = 0;
+		int arrayidx = 0;
 
 		lua_pushnil(L); /* first key */
 		while (lua_next(L, pos) != 0) {
@@ -122,7 +123,19 @@ static void l_json_encode_value(lua_State *L, int pos, luaL_Buffer *B) {
 				l_json_encode_value(L, 1, B);
 				luaL_addstring(B, ":");
 			}
-
+			else {
+				/* Bug 15329, there must be a bug in the Lua API, we don't seem to get nil array values via
+				   lua_next. This hack checks for missing array indices which we assume are nil values. The
+				   while loop is necessary in case 2 nil values are sequential.
+				   TODO: handle when final array value is nil
+				*/
+				arrayidx++;
+				while (lua_tonumber(L, 1) != arrayidx) {
+					luaL_addstring(B, "null,");
+					arrayidx++;
+				}
+			}
+			
 			/* output value */
 			l_json_encode_value(L, 2, B);
 

@@ -24,6 +24,7 @@ local AppletMeta    = require("jive.AppletMeta")
 local appletManager = appletManager
 local jnt           = jnt
 
+
 module(...)
 oo.class(_M, AppletMeta)
 
@@ -43,14 +44,22 @@ function registerApplet(self)
 	jiveMain:addItem(self.menu)
 end
 
-function notify_playerDelete(self, player)
-	jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
+function notify_serverConnected(self, server)
+	self:_checkServer()
 end
 
-function notify_playerCurrent(self, player)
-	if player == nil or ( player:getSlimServer() and player:getSlimServer():isSqueezeNetwork() ) then
-		jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
-	else
-		jiveMain:setCustomNode('appletSetupAppletInstaller', 'advancedSettings')
+function notify_serverDisconnected(self, server)
+	self:_checkServer()
+end
+
+function _checkServer(self)
+	for _, server in appletManager:callService("iterateSqueezeCenters") do
+		if server:isConnected() and not server:isSqueezeNetwork() then
+			-- found a local server - show menu entry
+			jiveMain:setCustomNode('appletSetupAppletInstaller', 'advancedSettings')
+			return
+		end
 	end
+	-- hide menu entry
+	jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
 end

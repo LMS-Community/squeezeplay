@@ -2938,62 +2938,6 @@ function skin(self, s)
 
 	})
 
-	-- This is for the standalone beta VU Meter
-	s.vumeter = {
-		x = 0,
-		y = 0,
-		w = 480 - 2,
-		h = 272 - 2,
-		border = { 0, 0, 0, 0 },
-		padding = { 0, 0, 0, 0 },
-
-		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
-		tickCap = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_bounce.png"),
-		tickOn = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_on.png"),
-		tickOff = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/VU_tick_off.png"),
-	}
-
-	-- This is for the standalone beta VU Meter (analog)
-	s.vumeter_analog = {
-		x = 0,
-		y = 0,
-		w = 480,
-		h = 272,
-		border = { 0, 0, 0, 0 },
-		padding = { 0, 0, 0, 0 },
-		bgImg = _loadImage(self, "UNOFFICIAL/VUMeter/vu_analog_25seq_b.png"),
-	}
-
-	-- This is for the standalone beta Specturm Meter
-	s.spectrum = {
-		position = LAYOUT_NONE,
-		x = 0,
-		y = 0,
-		w = 480,
-		h = 272,
-		border = { 0, 0, 0, 0 },
-		padding = { 10, 100, 10, 50 },
-
--- Black background instead of image
----		bgImg = _loadImageTile(self, imgpath .. "UNOFFICIAL/VUMeter/visualizer_bkgrd_album.png"),
-		bg = { 0x00, 0x00, 0x00, 0xff },
-
-		barColor = { 0x14, 0xbc, 0xbc, 0xff },
-		capColor = { 0xb4, 0x56, 0xa1, 0xff },
-
-		isMono = 0,				-- 0 / 1
-
-		capHeight = { 4, 4 },			-- >= 0
-		capSpace = { 4, 4 },			-- >= 0
-		channelFlipped = { 0, 1 },		-- 0 / 1
-		barsInBin = { 2, 2 },			-- > 1
-		barWidth = { 1, 1 },			-- > 1
-		barSpace = { 3, 3 },			-- >= 0
-		binSpace = { 6, 6 },			-- >= 0
-		clipSubbands = { 1, 1 },		-- 0 / 1
-	}
-
-
 	-- sliders
 	s.npvolumeB = {
 		w = volumeBarWidth,
@@ -3081,7 +3025,7 @@ function skin(self, s)
 			align = "center",
 			h = 272,
 			border = 0,
-			padding = 10,
+			padding = 5,
 			artwork = {
 				w = 480,
 				border = 0,

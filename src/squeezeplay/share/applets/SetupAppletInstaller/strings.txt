@@ -43,21 +43,6 @@ NONE_FOUND
 	RU	Java-приложения не найдены
 	SV	Det gick inte att hitta några appletprogram
 
-HELP
-	CS	Vyberte aplety, které chcete nainstalovat, a poté zvolte Instalovat
-	DA	Vælg det underprogram som skal installeres, og vælg derefter Installer
-	DE	Wählen Sie die zu installierenden Applets und anschließend 'Installieren'.
-	EN	Choose applets to be installed and then select Install
-	ES	Elija los subprogramas que instalar y seleccione Instalar
-	FI	Valitse asennettavat sovelmat ja sitten Asenna
-	FR	Sélectionnez les applets à installer, puis sélectionnez Installer.
-	IT	Scegliere le applet da installare, quindi selezionare Installa
-	NL	Kies applets om te installeren, en selecteer dan 'Installeren'
-	NO	Velg tilleggsprogrammene som skal installeres, og velg så Installer
-	PL	Wybierz aplety do zainstalowania, a następnie wybierz opcję Instaluj
-	RU	Выберите Java-приложения для и нажмите кнопку "Установить"
-	SV	Välj de appletar du vill installera och välj sedan Installera
-
 DOWNLOADING
 	CS	Stahuji aplety
 	DA	Henter underprogrammer
@@ -103,48 +88,6 @@ RESTART_JIVE
 	RU	Перезапуск
 	SV	Startar om
 
-DESCRIPTION
-	CS	Popis
-	DA	Beskrivelse
-	DE	Beschreibung
-	EN	Description
-	ES	Descripción
-	FI	Kuvaus
-	FR	Description
-	IT	Descrizione
-	NL	Beschrijving
-	NO	Beskrivelse
-	PL	Opis
-	RU	Описание
-	SV	Beskrivning
-
-CURRENT
-	DA	Nu
-	DE	Aktuell
-	EN	Current
-	ES	Actual
-	FI	Nykyinen
-	FR	Actuellement
-	IT	Attualmente
-	NL	Het is nu
-	NO	Nåværende
-	SV	Aktuell
-
-AUTHOR
-	CS	Autor
-	DA	Lavet af
-	DE	Autor
-	EN	Author
-	ES	Autor
-	FI	Tekijä
-	FR	Auteur
-	IT	Autore
-	NL	Auteur
-	NO	Forfatter
-	PL	Autor
-	RU	Автор
-	SV	Upphovsman
-
 INSTALL
 	CS	Instalovat
 	DA	Installer
@@ -175,17 +118,14 @@ REMOVE
 	RU	Удалить
 	SV	Ta bort
 
-INSTALLREMOVE
-	CS	Instalovat/Odebrat
-	DA	Installer/Fjern
-	DE	Installieren/Entfernen
-	EN	Install/Remove
-	ES	Instalar/Quitar
-	FI	Asenna/Poista
-	FR	Installer/Supprimer
-	IT	Installa/Rimuovi
-	NL	Installeren/Verwijderen
-	NO	Installer/Fjern
-	PL	Zainstaluj/Usuń
-	RU	Установить/Удалить
-	SV	Installera/Ta bort
+UPDATE
+	EN	Update
+
+INSTALLED
+	EN	Installed
+
+UPDATES
+	EN	Updates
+
+REINSTALL
+	EN	Reinstall All
