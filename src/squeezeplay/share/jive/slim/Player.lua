@@ -1424,6 +1424,9 @@ end
 function stopAlarm(self)
 	if not self.state then return end
 
+	-- stopAlarm pauses audio
+	self:pause()
+
 	if self.alarmState == 'active' then
 		self.alarmState = 'none'
 		self:call({'jivealarm', 'stop:1'})
