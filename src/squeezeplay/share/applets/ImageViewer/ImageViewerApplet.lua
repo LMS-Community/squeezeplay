@@ -421,8 +421,13 @@ function displaySlide(self)
 	local deviceLandscape = ((screenWidth/screenHeight) > 1)
 
 	local image = self.imgSource:getImage()
+	local w, h;
+	
 	if image != nil then
-		local w, h = image:getSize()
+		w, h = image:getSize()
+	end
+
+	if image != nil and w > 0 and h > 0 then
 		if self.imgSource:useAutoZoom() then
 			local imageLandscape = ((w/h) > 1)
 
@@ -536,7 +541,7 @@ function displaySlide(self)
 		--no iconbar
 		self.window:setShowFrameworkWidgets(false)
 
-		-- start timer for next photo in 'delay' seconds
+		-- start timer for next photo in 'delay' milliseconds
 		local delay = self:getSettings()["delay"]
 		self.nextSlideTimer = self.window:addTimer(delay,
 			function()
@@ -544,9 +549,18 @@ function displaySlide(self)
 				self:displaySlide()
 			end)
 	else
-		log:info(self.imgSource)
+		file = self.imgSource:getCurrentImagePath()
+		log:info("Invalid image object found: " .. file)
 
-		self.imgSource:popupMessage("error", "invalid image object found!")
+		self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), file)
+		
+		self.nextSlideTimer = Timer(self:getSettings()["delay"] / 2,
+			function()
+				self.imgSource:nextImage(self:getSettings()["ordering"])
+				self:displaySlide()
+			end)
+
+		self.nextSlideTimer:restart()
 	end
 end
 

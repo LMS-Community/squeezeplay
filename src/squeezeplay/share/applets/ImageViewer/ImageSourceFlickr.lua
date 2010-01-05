@@ -59,6 +59,7 @@ function __init(self, applet)
 	obj.imgFiles = {}
 	obj:readImageList()
 	obj.photo = nil
+	obj.url = ""
 
 	return obj
 end
@@ -164,7 +165,9 @@ function requestImage(self)
 	photo = table.remove(self.imgFiles, self.currentImage)
 	
 	local host, port, path = self:_getPhotoUrl(photo)
-	log:info("photo URL: ", host, ":", port, path)
+	self.url = "http://" .. host .. ":" .. port .. path
+
+	log:info("photo URL: ", self.url)
 
 	-- request photo
 	-- create a HTTP socket (see L<jive.net.SocketHttp>)
@@ -185,6 +188,10 @@ end
 
 function getText(self)
 	return photo.owner,"",photo.title
+end
+
+function getCurrentImagePath(self)
+	return self.url
 end
 
 
