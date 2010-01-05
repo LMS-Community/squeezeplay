@@ -72,26 +72,27 @@ function scanFolder(self, folder)
 		
 			for f in lfs.dir(nextfolder) do
 			
-				local fullpath = nextfolder .. "/" .. f
-	
-				if lfs.attributes(fullpath, "mode") == "directory" then
-
-					-- push this directory on our list to be scanned
-					-- exclude "." and ".."
-					if f != "." and f != ".." then
-						dirstoscan[fullpath] = false
-					end
-
-				elseif lfs.attributes(fullpath, "mode") == "file" then
-					-- check for supported file type
-					if string.find(string.lower(fullpath), "%pjpe*g")
-							or string.find(string.lower(fullpath), "%ppng") 
-							or string.find(string.lower(fullpath), "%pgif") then
-						-- log:info(fullpath)
-						table.insert(self.imgFiles, fullpath)
-					end
-				end
+				-- exclude any dot file (hidden files/directories)
+				if (string.sub(f, 1, 1) ~= ".") then
 			
+					local fullpath = nextfolder .. "/" .. f
+		
+					if lfs.attributes(fullpath, "mode") == "directory" then
+	
+						-- push this directory on our list to be scanned
+						dirstoscan[fullpath] = false
+	
+					elseif lfs.attributes(fullpath, "mode") == "file" then
+						-- check for supported file type
+						if string.find(string.lower(fullpath), "%pjpe*g")
+								or string.find(string.lower(fullpath), "%ppng") 
+								or string.find(string.lower(fullpath), "%pgif") then
+							-- log:info(fullpath)
+							table.insert(self.imgFiles, fullpath)
+						end
+					end
+				
+				end
 			end
 			
 			-- don't scan this folder twice - just in case
