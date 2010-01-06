@@ -141,6 +141,13 @@ function isSequenceNumberInSync(self, serverSequenceNumber)
 	return self.playback:isSequenceNumberInSync(serverSequenceNumber)
 end
 
+function isStreaming(self)
+	if self.playback and self.playback.stream then
+		return true
+	else
+		return false
+	end
+end
 
 --resend local values to server, but only update seq number on last call, so that the next player status comes back with a single increase 
 function refreshLocallyMaintainedParameters(self)
@@ -310,14 +317,20 @@ function pause(self, useBackgroundRequest)
 end
 
 
-function stop(self)
+function stop(self, skipDelay)
 	local active = self.playback:isLocalPauseOrStopTimeoutActive()
 	if not active then
-		self.playback:startLocalStopTimeout()
-		self.mode = "stop"
-		self:updateIconbar()
-
-		Player.stop(self)
+		if skipDelay then
+			self.playback:stopInternal()
+		else
+			self.playback:startLocalStopTimeout()
+		end
+		if self:isConnected() then
+			self.mode = "stop"
+			self:updateIconbar()
+	
+			Player.stop(self)
+		end
 	else
 		log:debug("discarding stop while timeout active")
 	end

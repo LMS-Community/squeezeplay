@@ -591,7 +591,7 @@ function _strm(self, data)
 		-- quit
 		-- XXXX check against ip3k
 		self:_stopPauseAndStopTimers()
-		self:_stopInternal()
+		self:stopInternal()
 
 	elseif data.command == 'f' then
 		-- flush
@@ -632,7 +632,7 @@ function _strm(self, data)
 end
 
 
-function _stopInternal(self)
+function stopInternal(self)
 	if self.source ~= "capture" then
 		-- don't call stop when using capture mode
 		decode:stop()
@@ -891,7 +891,7 @@ function startLocalStopTimeout(self)
 		self.localStopTimer = Timer(    LOCAL_PAUSE_STOP_TIMEOUT,
 						function ()
 							log:debug("Local stop since remote stop timed out")
-							self:_stopInternal()
+							self:stopInternal()
 						end,
 						true)
 	end
