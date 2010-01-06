@@ -317,14 +317,20 @@ function pause(self, useBackgroundRequest)
 end
 
 
-function stop(self)
+function stop(self, skipDelay)
 	local active = self.playback:isLocalPauseOrStopTimeoutActive()
 	if not active then
-		self.playback:startLocalStopTimeout()
-		self.mode = "stop"
-		self:updateIconbar()
-
-		Player.stop(self)
+		if skipDelay then
+			self.playback:stopInternal()
+		else
+			self.playback:startLocalStopTimeout()
+		end
+		if self:isConnected() then
+			self.mode = "stop"
+			self:updateIconbar()
+	
+			Player.stop(self)
+		end
 	else
 		log:debug("discarding stop while timeout active")
 	end
