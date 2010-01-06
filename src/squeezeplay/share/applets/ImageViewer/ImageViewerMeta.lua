@@ -70,7 +70,7 @@ function defaultSettings(self)
 	defaultSetting["textinfo"] = false
 
 	defaultSetting["card.path"] = "/media"
-	defaultSetting["http.path"] = "http://www.web4free.ch/test.txt"
+	defaultSetting["http.path"] = "http://www.herger.net/sbtouch.lst"
 	return defaultSetting
 end
 

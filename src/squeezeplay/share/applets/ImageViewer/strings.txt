@@ -957,3 +957,6 @@ IMAGE_VIEWER_START_SLIDESHOW
 	RU	Запустить слайд-шоу
 	SV	Påbörja bildspel
 
+IMAGE_VIEWER_INVALID_IMAGE
+	DE	Ungültige Bilddatei gefunden
+	EN	Invalid image object found

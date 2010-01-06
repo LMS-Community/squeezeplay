@@ -139,4 +139,6 @@ function getMultilineText(self)
 	return self:getText()
 end
 
-
+function getCurrentImagePath(self)
+	return self.imgFiles[self.currentImage]
+end
