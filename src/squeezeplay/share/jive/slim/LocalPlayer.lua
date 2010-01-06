@@ -141,6 +141,13 @@ function isSequenceNumberInSync(self, serverSequenceNumber)
 	return self.playback:isSequenceNumberInSync(serverSequenceNumber)
 end
 
+function isStreaming(self)
+	if self.playback and self.playback.stream then
+		return true
+	else
+		return false
+	end
+end
 
 --resend local values to server, but only update seq number on last call, so that the next player status comes back with a single increase 
 function refreshLocallyMaintainedParameters(self)
