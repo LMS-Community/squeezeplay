@@ -181,6 +181,7 @@ function settings(self, window)
 
 			log:debug("Input " .. value)
 			self.applet:getSettings()["http.path"] = value
+			self.applet:storeSettings()
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
@@ -189,13 +190,13 @@ function settings(self, window)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-    window:addWidget(group)
+	window:addWidget(group)
 	window:addWidget(Keyboard('keyboard', 'qwerty', textinput))
 	window:focusWidget(group)
 
 	self:_helpAction(window, "IMAGE_VIEWER_HTTP_PATH", "IMAGE_VIEWER_HTTP_PATH_HELP")
 
-    return window
+	return window
 end
 
 --[[
