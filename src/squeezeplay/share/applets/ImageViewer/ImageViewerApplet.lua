@@ -649,43 +649,6 @@ function openSettings(self)
 end
 
 
-function openMinimalSettings(self)
-	log:info("image viewer settings 2")
-	self:initImageSource()
-
-	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
-	window:addWidget(SimpleMenu("menu",
-		{
-			{
-				text = self:string("IMAGE_VIEWER_DELAY"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineDelay(menuItem)
-					return EVENT_CONSUME
-			end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TRANSITION"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTransition(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TEXTINFO"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTextInfo(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-		}))
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
 function sourceSpecificSettings(self, menuItem)
 	local window = Window("window", menuItem.text)
 
@@ -861,60 +824,52 @@ function defineSource(self, menuItem)
 
 	local source = self:getSettings()["source"]
 	
-	local window = Window("text_list", menuItem.text, 'settingstitle')
-	window:addWidget(SimpleMenu("menu",
+	local sourceMenu = {
 		{
-            {
-                text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
-				style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setSource("card")
-                    end,
-                    source == "card"
-	            ),
-            },
-            {
-                text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
-				style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setSource("http")
-                    end,
-                    source == "http"
-                ),
-            },
-            --[[
-			{
-                text = self:string("IMAGE_VIEWER_SOURCE_SC"),
-				style = 'item_choice',
-           	    check = RadioButton(
-					"radio",
-    	            group,
-    	            function()
-    	                self:setSource("sc")
-    	            end,
-    	            source == "sc"
-	            ),
-            },           
-			--]]
- 			{
-				text = self:string("IMAGE_VIEWER_SOURCE_FLICKR"), 
-				style = 'item_choice',
+			text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
+			style = 'item_choice',
 				check = RadioButton(
-				   "radio", 
-				   group, 
-				   function() 
-                        self:setSource("flickr")
-				   end,
-				   source == "flickr"
+					 "radio",
+					 group,
+					 function()
+						self:setSource("http")
+					 end,
+					 source == "http"
 				),
-			},
-		}))
+		},
+
+		{
+			text = self:string("IMAGE_VIEWER_SOURCE_FLICKR"), 
+			style = 'item_choice',
+			check = RadioButton(
+				"radio", 
+				group, 
+				function() 
+					self:setSource("flickr")
+				end,
+				source == "flickr"
+			),
+		},
+	}
+	
+	-- add support for local media if available
+	if System:getMachine() ~= "baby" then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("card")
+				end,
+				source == "card"
+			)
+		})
+	end
+
+	local window = Window("text_list", menuItem.text, 'settingstitle')
+	window:addWidget(SimpleMenu("menu", sourceMenu))
 
 	self:tieAndShowWindow(window)
 	return window

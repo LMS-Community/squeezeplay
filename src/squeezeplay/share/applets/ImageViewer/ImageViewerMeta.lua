@@ -18,7 +18,7 @@ See L<jive.AppletMeta> for a description of standard applet meta functions.
 
 local oo            = require("loop.simple")
 
-local System           = require("jive.System")
+local System        = require("jive.System")
 local AppletMeta    = require("jive.AppletMeta")
 local lfs           = require("lfs")
 
@@ -36,14 +36,8 @@ end
 
 
 function registerApplet(meta)
-	if System:getMachine() ~= "baby" and System:getMachine() ~= "jive" then
-		jiveMain:addItem(meta:menuItem('appletImageViewer', 'settings', "IMAGE_VIEWER", 
-			function(applet, ...) applet:openImageViewer(...) end, 58, nil, "hm_appletImageViewer"))
-	else
-		jiveMain:addItem(meta:menuItem('appletImageViewer', 'screenSettings', "IMAGE_VIEWER_SETTINGS",
-			function(applet, ...) applet:openMinimalSettings(...) end, 105, nil, "hm_appletImageViewer"))
-
-	end
+	jiveMain:addItem(meta:menuItem('appletImageViewer', 'settings', "IMAGE_VIEWER", 
+		function(applet, ...) applet:openImageViewer(...) end, 58, nil, "hm_appletImageViewer"))
 	
 	meta:registerService("registerRemoteScreensaver")
 	meta:registerService("unregisterRemoteScreensaver")
@@ -52,25 +46,34 @@ end
 
 
 function configureApplet(self)
-	if System:getMachine() ~= "baby" and System:getMachine() ~= "jive" then
-		appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
-			"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
-	end
+	appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
+		"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
 end
 
 
 function defaultSettings(self)
 	local defaultSetting = {}
 	defaultSetting["delay"] = 10000
-	defaultSetting["source"] = "card"
 	defaultSetting["rotation" ] = "auto"
 	defaultSetting["fullscreen"] = false
 	defaultSetting["transition"] = "fade"
 	defaultSetting["ordering"] = "random"
 	defaultSetting["textinfo"] = false
 
+	defaultSetting["source"] = "card"
 	defaultSetting["card.path"] = "/media"
-	defaultSetting["http.path"] = "http://www.herger.net/sbtouch.lst"
+	defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbtouch.lst"
+
+	if System:getMachine() == "baby" then
+		defaultSetting["source"] = "http"
+		defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbradio.lst"
+	end
+
+	if System:getMachine() == "jive" then
+		defaultSetting["source"] = "http"
+		defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbcontroller.lst"
+	end
+
 	return defaultSetting
 end
 
