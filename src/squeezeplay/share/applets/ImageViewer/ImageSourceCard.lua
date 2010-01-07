@@ -30,6 +30,7 @@ local string		= require("jive.utils.string")
 local lfs			= require('lfs')
 local Group			= require("jive.ui.Group")
 local Keyboard		= require("jive.ui.Keyboard")
+local Task          = require("jive.ui.Task")
 local Textarea		= require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Window        = require("jive.ui.Window")
@@ -51,7 +52,7 @@ function __init(self, applet)
 	obj = oo.rawnew(self, ImageSource(applet))
 
 	obj.imgFiles = {}
-	obj:readImageList()
+	obj.scanning = false
 
 	return obj
 end
@@ -61,44 +62,62 @@ function listNotReadyError(self)
 end
 
 function scanFolder(self, folder)
-	
-	local dirstoscan = {}
-	
-	dirstoscan[folder] = false
 
-	for nextfolder, done in pairs(dirstoscan) do
-		
-		if not done then
-		
-			for f in lfs.dir(nextfolder) do
-			
-				-- exclude any dot file (hidden files/directories)
-				if (string.sub(f, 1, 1) ~= ".") then
-			
-					local fullpath = nextfolder .. "/" .. f
-		
-					if lfs.attributes(fullpath, "mode") == "directory" then
-	
-						-- push this directory on our list to be scanned
-						dirstoscan[fullpath] = false
-	
-					elseif lfs.attributes(fullpath, "mode") == "file" then
-						-- check for supported file type
-						if string.find(string.lower(fullpath), "%pjpe*g")
-								or string.find(string.lower(fullpath), "%ppng") 
-								or string.find(string.lower(fullpath), "%pgif") then
-							-- log:info(fullpath)
-							table.insert(self.imgFiles, fullpath)
-						end
-					end
-				
-				end
-			end
-			
-			-- don't scan this folder twice - just in case
-			table[nextfolder] = true
-		end
+	if self.scanning then
+		return
 	end
+	
+	self.scanning = true
+	
+	self.task = Task("scanImageFolder", self, function()
+		local dirstoscan = { folder }
+		local dirsscanned= {}
+	
+		for i, nextfolder in pairs(dirstoscan) do
+	
+			if not dirsscanned[nextfolder] then
+			
+				for f in lfs.dir(nextfolder) do
+				
+					-- exclude any dot file (hidden files/directories)
+					if (string.sub(f, 1, 1) ~= ".") then
+				
+						local fullpath = nextfolder .. "/" .. f
+			
+						if lfs.attributes(fullpath, "mode") == "directory" then
+		
+							-- push this directory on our list to be scanned
+							table.insert(dirstoscan, fullpath)
+		
+						elseif lfs.attributes(fullpath, "mode") == "file" then
+							-- check for supported file type
+							if string.find(string.lower(fullpath), "%pjpe*g")
+									or string.find(string.lower(fullpath), "%ppng") 
+									or string.find(string.lower(fullpath), "%pgif") then
+								-- log:info(fullpath)
+								table.insert(self.imgFiles, fullpath)
+							end
+						end
+					
+					end
+				end
+				
+				-- don't scan this folder twice - just in case
+				dirsscanned[nextfolder] = true
+			end
+
+			if #self.imgFiles > 1000 then
+				log:warn("we're not going to show more than 1000 pictures - stop here")
+				break
+			end
+
+			self.task:yield()
+		end
+
+		self.scanning = false
+	end)
+	
+	self.task:addTask()
 end
 
 
@@ -108,9 +127,6 @@ function readImageList(self)
 
 	if lfs.attributes(imgpath, "mode") == "directory" then
 		self:scanFolder(imgpath)
-		self.lstReady = true
-	else
-		self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_NOT_DIRECTORY"))
 	end
 end
 
@@ -154,7 +170,17 @@ function previousImage(self, ordering)
 end
 
 function getText(self)
-	return "",self.imgFiles[self.currentImage],""
+	return "", self.imgFiles[self.currentImage], ""
+end
+
+function listReady(self)
+
+	if #self.imgFiles > 0 then
+		return true
+	end
+
+	obj:readImageList()
+	return false
 end
 
 
@@ -170,9 +196,16 @@ function settings(self, window)
 
 			log:debug("Input " .. value)
 			self.applet:getSettings()["card.path"] = value
-
+			self.applet:storeSettings()
+			
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
+
+			if lfs.attributes(value, "mode") ~= "directory" then
+				log:warn("Invalid folder name: " .. value)
+				self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_CARD_NOT_DIRECTORY"))
+			end
+
 			return true
 		end)
 	local backspace = Keyboard.backspace()
@@ -185,6 +218,12 @@ function settings(self, window)
 	self:_helpAction(window, "IMAGE_VIEWER_CARD_PATH", "IMAGE_VIEWER_CARD_PATH_HELP")
 
     return window
+end
+
+function free(self)
+	if self.task then
+		self.task:removeTask()
+	end
 end
 
 --[[

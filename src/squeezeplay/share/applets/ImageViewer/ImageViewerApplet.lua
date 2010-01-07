@@ -348,6 +348,10 @@ function free(self)
 		self.checkFotoTimer:stop()
 	end
 
+	if self.imgSource ~= nil then
+		self.imgSource:free()
+	end
+
 	return true
 end
 

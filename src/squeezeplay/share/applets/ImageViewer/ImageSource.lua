@@ -142,3 +142,6 @@ end
 function getCurrentImagePath(self)
 	return self.imgFiles[self.currentImage]
 end
+
+function free(self)
+end
