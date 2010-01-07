@@ -65,7 +65,6 @@ oo.class(_M, SqueezeboxApplet)
 -- Default/Start Values
 local MAX_BRIGHTNESS_LEVEL = 100
 local MIN_BRIGHTNESS_LEVEL = 1
-local TOUCHBRIGHTNESS_INCREASE = 10
 
 -- Timer values
 local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
@@ -89,6 +88,8 @@ local brightCur = MAX_BRIGHTNESS_LEVEL
 local brightTarget = MAX_BRIGHTNESS_LEVEL
 local brightMin = MIN_BRIGHTNESS_LEVEL + 25;
 
+-- brightOverride == 0 -> IDLE
+-- brightOverride > 0  -> ACTIVE (Someone is touching the screen or using a remote)
 local brightOverride = 0
 
 
@@ -120,8 +121,17 @@ function init(self)
 	self:initBrightness()
 	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
-			if settings.brightnessControl != "manual" then
-				if not self:isScreenOff() then
+			if not self:isScreenOff() then
+				if settings.brightnessControl == "manual" then
+					-- Still ACTIVE, don't do anything
+					if brightOverride > 0 then
+						-- Count down once per cycle
+						brightOverride = brightOverride - 1
+						return
+					end
+					-- IDLE: Reduce brightness
+					self:setBrightness( self:getBrightness())
+				else
 					self:doAutomaticBrightnessTimer()
 				end
 			end
@@ -201,21 +211,10 @@ function initBrightness(self)
 	-- Create a global listener to set 
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
-			if settings.brightnessControl == "manual" then 
-				return
-			end
-					
-			-- if this is a new 'touch' event set brightness to max
-			if brightOverride == 0 then
-				b = brightCur + TOUCHBRIGHTNESS_INCREASE;
-				if  b > MAX_BRIGHTNESS_LEVEL then
-					b = MAX_BRIGHTNESS_LEVEL
-				end
-				
-				self:setBrightness( math.floor(b) )
-			end
-			
-			brightOverride = BRIGHTNESS_OVERRIDE	
+			-- Set to >0 means we're ACTIVE
+			brightOverride = BRIGHTNESS_OVERRIDE
+			-- ACTIVE: Increase brightness
+			self:setBrightness( self:getBrightness())
 			return EVENT_UNUSED
 		end
 		,true)		
@@ -341,6 +340,7 @@ function doAutomaticBrightnessTimer(self)
 		brightCur = brightMin
 	end
 
+	-- ACTIVE mode
 	-- As long as the user is touching the screen don't do anything more
 	if brightOverride > 0 then
 		-- count down once per cycle
@@ -398,6 +398,14 @@ function _setBrightness(self, level)
 
 	-- Store LCD level so we do not have to query it all the time in getBrightness()
 	self.lcdBrightness = level
+
+	-- Gradually reduce LCD brightness when IDLE and level is over half of maximum brightness
+	--  to increase lifetime of LCD backlight
+	if brightOverride == 0 then
+		if level > (MAX_BRIGHTNESS_LEVEL / 2) then
+			level = level - math.floor(40 * (level - (MAX_BRIGHTNESS_LEVEL / 2)) / (MAX_BRIGHTNESS_LEVEL / 2))
+		end
+	end
 
 	--ceil((percentage_bright)^(1.58)*255)
 	local deviceLevel = math.ceil(math.pow((level/100.0), 1.38) * 255) -- gives 1 to 1 for first 6, and 255 for max (100)
