@@ -101,9 +101,12 @@ SLEEP -> HIBERNATE
 
 -- Maximum brightness will be initialized when the brightnessTable is calculated
 local MAX_BRIGHTNESS_LEVEL = -1
--- Minium Brightness is 11 because IDLE powerstate subtracts 10 form the value passed to setBrightness
-local MIN_BRIGHTNESS_LEVEL = 1 + 10
+-- Minium Brightness (as dark as it gets)
+local MIN_BRIGHTNESS_LEVEL = 1
+-- Minium Brightness after factory reset
+local MIN_BRIGHTNESS_LEVEL_INIT = 20
 
+-- Automatic brightness timer rate
 local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
 
 -- Lux Value Smoothing
@@ -117,7 +120,7 @@ local STATIC_AMBIENT_MIN = 90000
 
 local brightCur = -1
 local brightTarget = -1
-local brightMin = MIN_BRIGHTNESS_LEVEL + 9
+local brightMin = MIN_BRIGHTNESS_LEVEL_INIT
 
 
 function init(self)
@@ -295,7 +298,7 @@ function initBrightness(self)
 	-- Value of manual brightness slider
 	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
 	-- Value of minimal brightness (auto) slider
-	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL + 9)
+	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL_INIT)
 	-- Value of brightness control
 	settings.brightnessControl = settings.brightnessControl or "automatic"
 
@@ -487,12 +490,10 @@ function _setBrightness(self, level)
 		level = MAX_BRIGHTNESS_LEVEL
 	end
 
-	-- 60% brightness in idle power mode
+	-- Gradually reduce display brightness in IDLE mode when over half brightness
 	if self.powerState == "IDLE" then
-		if level > 11 then
-			level = level - 10
-		else
-			level = 2 --(lowest visible setting)
+		if level > (MAX_BRIGHTNESS_LEVEL / 2) then
+			level = level - math.floor(10 * (level - (MAX_BRIGHTNESS_LEVEL / 2)) / (MAX_BRIGHTNESS_LEVEL / 2))
 		end
 	end
 
