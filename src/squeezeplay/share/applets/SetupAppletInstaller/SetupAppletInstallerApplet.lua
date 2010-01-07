@@ -74,11 +74,21 @@ function menu(self, menuItem)
 		end
 	end
 
-	-- query all non SN servers (TinySC will respond too..)
+	-- query all servers
 	self.waitingfor = 0
 	for id, server in appletManager:callService("iterateSqueezeCenters") do
-		if server:isConnected() and not server:isSqueezeNetwork() then
+		if server:isConnected() then
+			-- need a player for SN query otherwise skip SN, don't need a player for SBS
+			local player
+			if server:isSqueezeNetwork() then
+				_, player = pcall(server:allPlayers())
+				if player == nil then
+					break
+				end
+			end
+
 			log:info("sending query to " .. tostring(server))
+
 			server:userRequest(
 				function(chunk, err)
 					if err then
@@ -87,29 +97,47 @@ function menu(self, menuItem)
 						self:menuSink(server, chunk.data)
 					end
 				end,
-				false,
+				player,
 				{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
 			)
 			self.waitingfor = self.waitingfor + 1
 		end
 	end
 
+	self.responses = {}
+
 	-- create animiation to show while we get data from the servers
 	self.popup = Popup("waiting_popup")
 	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("APPLET_FETCHING")))
 	self:tieAndShowWindow(self.popup)
-
-	-- state to update as responses come back
-	self.menu = SimpleMenu("menu")
-	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-	self.toremove = {}
-	self.todownload = {}
-	self.inrepos = {}
 end
 
 
 function menuSink(self, server, data)
+	-- stash response & wait until all responses received
+	self.responses[#self.responses+1] = data
+
+	self.waitingfor = self.waitingfor - 1
+	if self.waitingfor > 0 then
+		return
+	end
+
+	-- use the response with the most entries
+	data = nil
+	for _, response in pairs(self.responses) do
+		if data == nil or data.count < response.count then
+			data = response
+		end
+	end
+
+	self.menu = SimpleMenu("menu")
+	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	self.window:addWidget(self.menu)
+
+	self.toremove = {}
+	self.todownload = {}
+	self.inrepos = {}
 
 	local installed = self:getSettings()
 	local ip, port = server:getIpPort()
@@ -145,13 +173,6 @@ function menuSink(self, server, data)
 
 	end
 
-	-- wait until all responses received
-	self.waitingfor = self.waitingfor - 1
-	if self.waitingfor > 0 then
-		return
-	end
-
-	self.window:addWidget(self.menu)
 	self.popup:hide()
 	self:tieAndShowWindow(self.window)
 
