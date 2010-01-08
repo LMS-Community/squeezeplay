@@ -47,6 +47,7 @@ local Icon             = require("jive.ui.Icon")
 local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
 local Task             = require("jive.ui.Task")
+local Timer            = require("jive.ui.Timer")
 
 local appletManager    = appletManager
 local jiveMain         = jiveMain
@@ -81,30 +82,42 @@ function menu(self, menuItem)
 			-- need a player for SN query otherwise skip SN, don't need a player for SBS
 			local player
 			if server:isSqueezeNetwork() then
-				_, player = pcall(server:allPlayers())
-				if player == nil then
-					break
+				for p in server:allPlayers() do
+					if p ~= nil and tostring(p) ~= "ff:ff:ff:ff:ff:ff" then
+						player = p
+						break
+					end
 				end
 			end
 
-			log:info("sending query to " .. tostring(server))
-
-			server:userRequest(
-				function(chunk, err)
-					if err then
-						log:debug(err)
-					elseif chunk then
-						self:menuSink(server, chunk.data)
-					end
-				end,
-				player,
-				{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
-			)
-			self.waitingfor = self.waitingfor + 1
+			if not server:isSqueezeNetwork() or player ~= nil then
+				log:info("sending query to ", tostring(server), " player ", tostring(player))
+				server:userRequest(
+					function(chunk, err)
+						if err then
+							log:debug(err)
+						elseif chunk then
+							self:menuSink(server, chunk.data)
+						end
+					end,
+					player,
+					{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
+				)
+				self.waitingfor = self.waitingfor + 1
+			end
 		end
 	end
 
 	self.responses = {}
+
+	-- start a timer which will fire if one or more servers does not respond
+	-- needs to be long enough for async fetch of repo by the server before it responds
+	self.timer = Timer(10000,
+					   function()
+						   menuSink(self, nil)
+					   end,
+					   true)
+	self.timer:start()
 
 	-- create animiation to show while we get data from the servers
 	self.popup = Popup("waiting_popup")
@@ -115,19 +128,31 @@ end
 
 
 function menuSink(self, server, data)
-	-- stash response & wait until all responses received
-	self.responses[#self.responses+1] = data
 
-	self.waitingfor = self.waitingfor - 1
-	if self.waitingfor > 0 then
+	if server ~= nil then
+		-- stash response & wait until all responses received
+		log:info("reponse received from ", tostring(server));
+		self.responses[#self.responses+1] = { server = server, data = data }
+		self.waitingfor = self.waitingfor - 1
+	else
+		-- timer called sink, give up waiting for more
+		log:info("timeout waiting for response")
+		self.waitingfor = 0
+	end
+		
+	if self.waitingfor ~= 0 then
 		return
 	end
 
+	-- kill the timer 
+	self.timer:stop()
+
 	-- use the response with the most entries
-	data = nil
+	data, server = nil, nil
 	for _, response in pairs(self.responses) do
-		if data == nil or data.count < response.count then
-			data = response
+		if data == nil or data.count < response.data.count then
+			data = response.data
+			server = response.server
 		end
 	end
 
@@ -140,13 +165,13 @@ function menuSink(self, server, data)
 	self.inrepos = {}
 
 	local installed = self:getSettings()
-	local ip, port = server:getIpPort()
 
-	if data.item_loop then
+	if data and data.item_loop then
 
 		for _,entry in pairs(data.item_loop) do
 
 			if entry.relurl then
+				local ip, port = server:getIpPort()
 				entry.url = 'http://' .. ip .. ':' .. port .. entry.relurl
 			end
 
