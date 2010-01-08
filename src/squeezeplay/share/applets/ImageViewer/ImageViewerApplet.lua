@@ -885,6 +885,11 @@ function defineDelay(self, menuItem)
 	window:addWidget(SimpleMenu("menu",
 		{
 			{
+				text = self:string("IMAGE_VIEWER_DELAY_5_SEC"),
+				style = 'item_choice',
+				check = RadioButton("radio", group, function() self:setDelay(5000) end, delay == 5000),
+			},
+			{
 				text = self:string("IMAGE_VIEWER_DELAY_10_SEC"),
 				style = 'item_choice',
 				check = RadioButton("radio", group, function() self:setDelay(10000) end, delay == 10000),

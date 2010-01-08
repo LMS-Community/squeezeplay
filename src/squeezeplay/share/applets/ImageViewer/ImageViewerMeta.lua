@@ -57,7 +57,7 @@ function defaultSettings(self)
 	defaultSetting["rotation" ] = "auto"
 	defaultSetting["fullscreen"] = false
 	defaultSetting["transition"] = "fade"
-	defaultSetting["ordering"] = "random"
+	defaultSetting["ordering"] = "sequential"
 	defaultSetting["textinfo"] = false
 
 	defaultSetting["source"] = "card"

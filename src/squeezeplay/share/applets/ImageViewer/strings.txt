@@ -182,6 +182,21 @@ IMAGE_VIEWER_DELAY
 	RU	Задержка
 	SV	Fördröjning
 
+IMAGE_VIEWER_DELAY_5_SEC
+	CS	5 s
+	DA	5 sek.
+	DE	5 Sek.
+	EN	5 sec
+	ES	5 s
+	FI	5 s
+	FR	5 sec
+	IT	5 sec
+	NL	5 sec
+	NO	5 sek
+	PL	5 s
+	RU	5 с
+	SV	5 sek
+
 IMAGE_VIEWER_DELAY_10_SEC
 	CS	10 s
 	DA	10 sek.
