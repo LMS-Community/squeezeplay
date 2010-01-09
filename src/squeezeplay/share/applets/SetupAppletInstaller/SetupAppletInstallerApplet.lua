@@ -48,22 +48,24 @@ local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
 local Task             = require("jive.ui.Task")
 local Timer            = require("jive.ui.Timer")
+local Checkbox         = require("jive.ui.Checkbox")
 
 local appletManager    = appletManager
 local jiveMain         = jiveMain
 local jnt              = jnt
 
 local JIVE_VERSION     = jive.JIVE_VERSION
-local EVENT_SHOW       = jive.ui.EVENT_SHOW
+
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function menu(self, menuItem)
+function appletInstallerMenu(self, menuItem, action)
 
 	self.window = Window("text_list", menuItem.text)
 	self.title = menuItem.text
+	self.auto = action and action == 'auto'
 
 	-- find the applet directory
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
@@ -76,35 +78,38 @@ function menu(self, menuItem)
 	end
 
 	-- query all servers
+	local opt = not self:getSettings()["_RECONLY"]
 	self.waitingfor = 0
 	for id, server in appletManager:callService("iterateSqueezeCenters") do
-		if server:isConnected() then
-			-- need a player for SN query otherwise skip SN, don't need a player for SBS
-			local player
-			if server:isSqueezeNetwork() then
-				for p in server:allPlayers() do
-					if p ~= nil and tostring(p) ~= "ff:ff:ff:ff:ff:ff" then
-						player = p
-						break
-					end
+		-- need a player for SN query otherwise skip SN, don't need a player for SBS
+		local player
+		if server:isSqueezeNetwork() and server:isConnected() then
+			for p in server:allPlayers() do
+				if p ~= nil and tostring(p) ~= "ff:ff:ff:ff:ff:ff" then
+					player = p
+					break
 				end
 			end
-
-			if not server:isSqueezeNetwork() or player ~= nil then
-				log:info("sending query to ", tostring(server), " player ", tostring(player))
-				server:userRequest(
-					function(chunk, err)
-						if err then
-							log:debug(err)
-						elseif chunk then
-							self:menuSink(server, chunk.data)
-						end
-					end,
-					player,
-					{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
-				)
-				self.waitingfor = self.waitingfor + 1
-			end
+		end
+		
+		if not server:isSqueezeNetwork() or player ~= nil then
+			log:info("sending query to ", tostring(server), " player ", tostring(player))
+			server:userRequest(
+				function(chunk, err)
+					if err then
+						log:debug(err)
+					elseif chunk then
+						self:menuSink(server, chunk.data)
+					end
+				end,
+				player,
+				{ "jiveapplets", 
+				  "target:" .. System:getMachine(), 
+				  "version:" .. string.match(JIVE_VERSION, "(%d%.%d)"),
+				  opt and "optstr:other|user" or "optstr:none",
+			  }
+			)
+			self.waitingfor = self.waitingfor + 1
 		end
 	end
 
@@ -158,6 +163,7 @@ function menuSink(self, server, data)
 
 	self.menu = SimpleMenu("menu")
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	self.menu:setHeaderWidget(Textarea("help_text", self:string("APPLET_WARN")))
 	self.window:addWidget(self.menu)
 
 	self.toremove = {}
@@ -199,6 +205,17 @@ function menuSink(self, server, data)
 	end
 
 	self.popup:hide()
+
+	-- if called from meta at restart then reinstall or quit
+	if self.auto then
+		if self.reinstall then
+			self.toremove = self.reinstall 
+			self.todownload = self.reinstall
+			self:action()
+		end
+		return
+	end
+
 	self:tieAndShowWindow(self.window)
 
 	if self.reinstall then
@@ -234,6 +251,34 @@ function menuSink(self, server, data)
 			weight = 2
 		})
 	end
+
+	self.menu:addItem({
+		text = self:string("APPLET_RECONLY"),
+		style = 'item_choice',
+		check = Checkbox("checkbox",
+			function(object, isSelected)
+				self:getSettings()["_RECONLY"] = isSelected
+				self:storeSettings()
+			end,
+			self:getSettings()["_RECONLY"]
+		),
+		weight = 3
+	})
+
+	-- FIXME - make this happen all the time rather than an option?
+	self.menu:addItem({
+		text = self:string("APPLET_AUTOUP"),
+		style = 'item_choice',
+		check = Checkbox("checkbox",
+			function(object, isSelected)
+				self:getSettings()["_AUTOUP"] = isSelected
+				self:storeSettings()
+			end,
+			self:getSettings()["_AUTOUP"]
+		),
+		weight = 4
+	})
+	  
 end
 
 
