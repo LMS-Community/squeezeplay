@@ -35,7 +35,7 @@ function jiveVersion(self)
 end
 
 function defaultSettings(self)
-	return {}
+	return { _RECONLY = true, _AUTOUP = false }
 end
 
 function registerApplet(self)
@@ -48,6 +48,15 @@ function configureApplet(self)
 	-- open the applet installer menu after an upgrade if setting selected
 	-- use a timer to hope to reconnect to servers first
 	local settings = self:getSettings()
+
+	-- default new settings since defaultSettings doesn't allow additions to be made...
+	if settings._RECONLY == nil then
+		settings._RECONLY = true
+	end
+	if settings._AUTOUP == nil then
+		settings._AUTOUP = false
+	end
+
 	if settings._AUTOUP and settings._LASTVER and settings._LASTVER ~= JIVE_VERSION then
 		Timer(
 			5000, 
@@ -55,6 +64,8 @@ function configureApplet(self)
 			true
 		):start()
 	end
+
 	settings._LASTVER = JIVE_VERSION
+
 	self:storeSettings()
 end
