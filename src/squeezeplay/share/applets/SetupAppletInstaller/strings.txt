@@ -128,6 +128,9 @@ UPDATES
 	EN	Updates
 
 REINSTALL
+	EN	Reinstall	
+
+REINSTALL_ALL
 	EN	Reinstall All
 
 APPLET_WARN

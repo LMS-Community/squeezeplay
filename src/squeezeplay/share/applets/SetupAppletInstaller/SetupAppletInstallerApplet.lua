@@ -188,8 +188,10 @@ function menuSink(self, server, data)
 				if not appletManager:hasApplet(entry.name) then
 					self.reinstall = self.reinstall or {}
 					self.reinstall[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+					status = self:string("REINSTALL")
+				else
+					status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
 				end
-				status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
 			end
 
 			self.menu:addItem({
@@ -220,7 +222,7 @@ function menuSink(self, server, data)
 
 	if self.reinstall then
 		self.menu:addItem({
-			text = self:string("REINSTALL"),
+			text = self:string("REINSTALL_ALL"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 				self.toremove = self.reinstall 
