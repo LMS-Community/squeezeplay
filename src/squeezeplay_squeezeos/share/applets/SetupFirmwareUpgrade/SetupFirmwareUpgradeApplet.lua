@@ -472,6 +472,12 @@ end
 function _t_upgrade(self)
 	Task:yield(true)
 
+	-- stop memory hungry services before upgrading
+	os.execute("/etc/init.d/squeezecenter stop");
+	os.execute("/etc/init.d/samba stop");
+
+	Task:yield(true)
+
 	local upgrade = Upgrade()
 	local t, err = upgrade:start(self.url,
 		function(...)
