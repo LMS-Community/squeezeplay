@@ -6,7 +6,7 @@ applets.LineIn.LineInMeta
 
 =head1 DESCRIPTION
 
-See L<applets.SetupWelcome.LineInApplet>.
+See L<applets.LineIn.LineInApplet>.
 
 =head1 FUNCTIONS
 
