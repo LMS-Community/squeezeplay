@@ -53,7 +53,7 @@ local debug			= require("jive.utils.debug")
 local ImageSource		= require("applets.ImageViewer.ImageSource")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
 local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
-local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
+-- local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
 local ImageSourceServer	= require("applets.ImageViewer.ImageSourceServer")
 
 local FRAME_RATE       = jive.ui.FRAME_RATE
@@ -95,10 +95,12 @@ function setImageSource(self, imgSourceOverride)
 
 		if src == "card" then
 			self.imgSource = ImageSourceCard(self)
-		elseif src == "http" then
+--		elseif src == "flickr" then
+--			self.imgSource = ImageSourceFlickr(self)
+--		elseif src == "http" then
+		-- default to web list - it's available on all players
+		else
 			self.imgSource = ImageSourceHttp(self)
-		elseif src == "flickr" then
-			self.imgSource = ImageSourceFlickr(self)
 		end
 	end
 end
@@ -348,6 +350,10 @@ function free(self)
 		self.checkFotoTimer:stop()
 	end
 
+	if self.imgSource ~= nil then
+		self.imgSource:free()
+	end
+
 	return true
 end
 
@@ -572,115 +578,84 @@ function openSettings(self)
 	self:initImageSource()
 	
 	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
-	window:addWidget(SimpleMenu("menu",
+
+	local settingsMenu = {
 		{
-			{
-				text = self:string("IMAGE_VIEWER_SOURCE"), 
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineSource(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_SOURCE_SETTINGS"), 
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:sourceSpecificSettings(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_DELAY"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineDelay(menuItem)
-					return EVENT_CONSUME
+			text = self:string("IMAGE_VIEWER_SOURCE_SETTINGS"), 
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:sourceSpecificSettings(menuItem)
+				return EVENT_CONSUME
 			end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_ORDERING"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineOrdering(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TRANSITION"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTransition(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_ROTATION"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineRotation(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_ZOOM"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineFullScreen(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TEXTINFO"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTextInfo(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-		}))
+		},
+		{
+			text = self:string("IMAGE_VIEWER_DELAY"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineDelay(menuItem)
+				return EVENT_CONSUME
+		end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_ORDERING"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineOrdering(menuItem)
+				return EVENT_CONSUME
+			end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_TRANSITION"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineTransition(menuItem)
+				return EVENT_CONSUME
+			end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_ROTATION"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineRotation(menuItem)
+				return EVENT_CONSUME
+			end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_ZOOM"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineFullScreen(menuItem)
+				return EVENT_CONSUME
+			end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_TEXTINFO"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineTextInfo(menuItem)
+				return EVENT_CONSUME
+			end
+		},
+	}
+	
+	-- no need for a source setting on baby - we don't have any choice
+	if System:getMachine() ~= "baby" then
+		table.insert(settingsMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE"), 
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineSource(menuItem)
+				return EVENT_CONSUME
+			end
+		})
+	end
+	
+	window:addWidget(SimpleMenu("menu", settingsMenu))
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
-
-function openMinimalSettings(self)
-	log:info("image viewer settings 2")
-	self:initImageSource()
-
-	local window = Window("text_list", self:string("IMAGE_VIEWER_SETTINGS"), 'settingstitle')
-	window:addWidget(SimpleMenu("menu",
-		{
-			{
-				text = self:string("IMAGE_VIEWER_DELAY"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineDelay(menuItem)
-					return EVENT_CONSUME
-			end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TRANSITION"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTransition(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_TEXTINFO"),
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:defineTextInfo(menuItem)
-					return EVENT_CONSUME
-				end
-			},
-		}))
-
-	self:tieAndShowWindow(window)
-	return window
-end
 
 function sourceSpecificSettings(self, menuItem)
 	local window = Window("window", menuItem.text)
@@ -857,60 +832,54 @@ function defineSource(self, menuItem)
 
 	local source = self:getSettings()["source"]
 	
-	local window = Window("text_list", menuItem.text, 'settingstitle')
-	window:addWidget(SimpleMenu("menu",
+	local sourceMenu = {
 		{
-            {
-                text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
-				style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setSource("card")
-                    end,
-                    source == "card"
-	            ),
-            },
-            {
-                text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
-				style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setSource("http")
-                    end,
-                    source == "http"
-                ),
-            },
-            --[[
-			{
-                text = self:string("IMAGE_VIEWER_SOURCE_SC"),
-				style = 'item_choice',
-           	    check = RadioButton(
-					"radio",
-    	            group,
-    	            function()
-    	                self:setSource("sc")
-    	            end,
-    	            source == "sc"
-	            ),
-            },           
-			--]]
- 			{
-				text = self:string("IMAGE_VIEWER_SOURCE_FLICKR"), 
-				style = 'item_choice',
+			text = self:string("IMAGE_VIEWER_SOURCE_HTTP"),
+			style = 'item_choice',
 				check = RadioButton(
-				   "radio", 
-				   group, 
-				   function() 
-                        self:setSource("flickr")
-				   end,
-				   source == "flickr"
+					 "radio",
+					 group,
+					 function()
+						self:setSource("http")
+					 end,
+					 source == "http"
 				),
-			},
-		}))
+		},
+
+--[[
+		{
+			text = self:string("IMAGE_VIEWER_SOURCE_FLICKR"), 
+			style = 'item_choice',
+			check = RadioButton(
+				"radio", 
+				group, 
+				function() 
+					self:setSource("flickr")
+				end,
+				source == "flickr"
+			),
+		},
+--]]
+	}
+	
+	-- add support for local media if available
+	if System:getMachine() ~= "baby" then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("card")
+				end,
+				source == "card"
+			)
+		})
+	end
+
+	local window = Window("text_list", menuItem.text, 'settingstitle')
+	window:addWidget(SimpleMenu("menu", sourceMenu))
 
 	self:tieAndShowWindow(window)
 	return window
@@ -925,6 +894,11 @@ function defineDelay(self, menuItem)
 	local window = Window("text_list", menuItem.text, 'settingstitle')
 	window:addWidget(SimpleMenu("menu",
 		{
+			{
+				text = self:string("IMAGE_VIEWER_DELAY_5_SEC"),
+				style = 'item_choice',
+				check = RadioButton("radio", group, function() self:setDelay(5000) end, delay == 5000),
+			},
 			{
 				text = self:string("IMAGE_VIEWER_DELAY_10_SEC"),
 				style = 'item_choice',

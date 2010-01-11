@@ -20,10 +20,11 @@ local oo            = require("loop.simple")
 
 local jiveMain      = jiveMain
 local AppletMeta    = require("jive.AppletMeta")
+local Timer         = require("jive.ui.Timer")
 
 local appletManager = appletManager
 local jnt           = jnt
-
+local JIVE_VERSION  = jive.JIVE_VERSION
 
 module(...)
 oo.class(_M, AppletMeta)
@@ -34,32 +35,37 @@ function jiveVersion(self)
 end
 
 function defaultSettings(self)
-	return {}
+	return { _RECONLY = true, _AUTOUP = false }
 end
 
 function registerApplet(self)
-	jnt:subscribe(self)
-	self.menu = self:menuItem('appletSetupAppletInstaller', 'hidden', self:string("APPLET_INSTALLER"), function(applet, ...) applet:menu(...) end)
-	-- to begin with, we place this in the 'hidden' node
+	self.menu = self:menuItem('appletSetupAppletInstaller', 'advancedSettings', self:string("APPLET_INSTALLER"), function(applet, ...) applet:appletInstallerMenu(...) end)
 	jiveMain:addItem(self.menu)
+	self:registerService("appletInstallerMenu")
 end
 
-function notify_serverConnected(self, server)
-	self:_checkServer()
-end
+function configureApplet(self)
+	-- open the applet installer menu after an upgrade if setting selected
+	-- use a timer to hope to reconnect to servers first
+	local settings = self:getSettings()
 
-function notify_serverDisconnected(self, server)
-	self:_checkServer()
-end
-
-function _checkServer(self)
-	for _, server in appletManager:callService("iterateSqueezeCenters") do
-		if server:isConnected() and not server:isSqueezeNetwork() then
-			-- found a local server - show menu entry
-			jiveMain:setCustomNode('appletSetupAppletInstaller', 'advancedSettings')
-			return
-		end
+	-- default new settings since defaultSettings doesn't allow additions to be made...
+	if settings._RECONLY == nil then
+		settings._RECONLY = true
 	end
-	-- hide menu entry
-	jiveMain:removeItemFromNode(self.menu, 'advancedSettings')
+	if settings._AUTOUP == nil then
+		settings._AUTOUP = false
+	end
+
+	if settings._AUTOUP and settings._LASTVER and settings._LASTVER ~= JIVE_VERSION then
+		Timer(
+			5000, 
+			function() appletManager:callService("appletInstallerMenu", { text = self:string("APPLET_INSTALLER") }, 'auto') end,
+			true
+		):start()
+	end
+
+	settings._LASTVER = JIVE_VERSION
+
+	self:storeSettings()
 end

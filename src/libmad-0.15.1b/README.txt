@@ -11,6 +11,9 @@ ftp://ftp.mars.org/pub/mpeg/libmad-0.15.1b.tar.gz
 Unzip it under squeezeplay/src/generated, so that you have the following:
 squeezeplay/src/generated/libmad-0.15.1b/
 
+Copy squeezeplay\src\generated\libmad-0.15.1b\msvc++\config.h to
+squeezeplay\src\generated\libmad-0.15.1b\config.h
+
 Then the Visual Studio build should work successfully.
 
 

@@ -128,4 +128,16 @@ UPDATES
 	EN	Updates
 
 REINSTALL
+	EN	Reinstall	
+
+REINSTALL_ALL
 	EN	Reinstall All
+
+APPLET_WARN
+	EN	3rd party applets are unsupported and should be installed at your own risk.  Please check you trust the author of an applet before installing it.
+
+APPLET_RECONLY
+	EN	Recommended Applets Only
+
+APPLET_AUTOUP
+	EN	Reinstall after Firmware Update (Test)

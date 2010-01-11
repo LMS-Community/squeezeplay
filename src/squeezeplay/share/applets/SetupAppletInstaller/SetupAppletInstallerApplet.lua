@@ -47,22 +47,25 @@ local Icon             = require("jive.ui.Icon")
 local Textarea         = require("jive.ui.Textarea")
 local Framework        = require("jive.ui.Framework")
 local Task             = require("jive.ui.Task")
+local Timer            = require("jive.ui.Timer")
+local Checkbox         = require("jive.ui.Checkbox")
 
 local appletManager    = appletManager
 local jiveMain         = jiveMain
 local jnt              = jnt
 
 local JIVE_VERSION     = jive.JIVE_VERSION
-local EVENT_SHOW       = jive.ui.EVENT_SHOW
+
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function menu(self, menuItem)
+function appletInstallerMenu(self, menuItem, action)
 
 	self.window = Window("text_list", menuItem.text)
 	self.title = menuItem.text
+	self.auto = action and action == 'auto'
 
 	-- find the applet directory
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
@@ -74,11 +77,23 @@ function menu(self, menuItem)
 		end
 	end
 
-	-- query all non SN servers (TinySC will respond too..)
+	-- query all servers
+	local opt = not self:getSettings()["_RECONLY"]
 	self.waitingfor = 0
 	for id, server in appletManager:callService("iterateSqueezeCenters") do
-		if server:isConnected() and not server:isSqueezeNetwork() then
-			log:info("sending query to " .. tostring(server))
+		-- need a player for SN query otherwise skip SN, don't need a player for SBS
+		local player
+		if server:isSqueezeNetwork() and server:isConnected() then
+			for p in server:allPlayers() do
+				if p ~= nil and tostring(p) ~= "ff:ff:ff:ff:ff:ff" then
+					player = p
+					break
+				end
+			end
+		end
+		
+		if not server:isSqueezeNetwork() or player ~= nil then
+			log:info("sending query to ", tostring(server), " player ", tostring(player))
 			server:userRequest(
 				function(chunk, err)
 					if err then
@@ -87,38 +102,82 @@ function menu(self, menuItem)
 						self:menuSink(server, chunk.data)
 					end
 				end,
-				false,
-				{ "jiveapplets", "target:" .. System:getMachine(), "version:" .. string.match(JIVE_VERSION, "(%d%.%d)") }
+				player,
+				{ "jiveapplets", 
+				  "target:" .. System:getMachine(), 
+				  "version:" .. string.match(JIVE_VERSION, "(%d%.%d)"),
+				  opt and "optstr:other|user" or "optstr:none",
+			  }
 			)
 			self.waitingfor = self.waitingfor + 1
 		end
 	end
+
+	self.responses = {}
+
+	-- start a timer which will fire if one or more servers does not respond
+	-- needs to be long enough for async fetch of repo by the server before it responds
+	self.timer = Timer(10000,
+					   function()
+						   menuSink(self, nil)
+					   end,
+					   true)
+	self.timer:start()
 
 	-- create animiation to show while we get data from the servers
 	self.popup = Popup("waiting_popup")
 	self.popup:addWidget(Icon("icon_connecting"))
 	self.popup:addWidget(Label("text", self:string("APPLET_FETCHING")))
 	self:tieAndShowWindow(self.popup)
-
-	-- state to update as responses come back
-	self.menu = SimpleMenu("menu")
-	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
-	self.toremove = {}
-	self.todownload = {}
-	self.inrepos = {}
 end
 
 
 function menuSink(self, server, data)
 
-	local installed = self:getSettings()
-	local ip, port = server:getIpPort()
+	if server ~= nil then
+		-- stash response & wait until all responses received
+		log:info("reponse received from ", tostring(server));
+		self.responses[#self.responses+1] = { server = server, data = data }
+		self.waitingfor = self.waitingfor - 1
+	else
+		-- timer called sink, give up waiting for more
+		log:info("timeout waiting for response")
+		self.waitingfor = 0
+	end
+		
+	if self.waitingfor ~= 0 then
+		return
+	end
 
-	if data.item_loop then
+	-- kill the timer 
+	self.timer:stop()
+
+	-- use the response with the most entries
+	data, server = nil, nil
+	for _, response in pairs(self.responses) do
+		if data == nil or data.count < response.data.count then
+			data = response.data
+			server = response.server
+		end
+	end
+
+	self.menu = SimpleMenu("menu")
+	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	self.menu:setHeaderWidget(Textarea("help_text", self:string("APPLET_WARN")))
+	self.window:addWidget(self.menu)
+
+	self.toremove = {}
+	self.todownload = {}
+	self.inrepos = {}
+
+	local installed = self:getSettings()
+
+	if data and data.item_loop then
 
 		for _,entry in pairs(data.item_loop) do
 
 			if entry.relurl then
+				local ip, port = server:getIpPort()
 				entry.url = 'http://' .. ip .. ':' .. port .. entry.relurl
 			end
 
@@ -129,8 +188,10 @@ function menuSink(self, server, data)
 				if not appletManager:hasApplet(entry.name) then
 					self.reinstall = self.reinstall or {}
 					self.reinstall[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+					status = self:string("REINSTALL")
+				else
+					status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
 				end
-				status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
 			end
 
 			self.menu:addItem({
@@ -145,19 +206,23 @@ function menuSink(self, server, data)
 
 	end
 
-	-- wait until all responses received
-	self.waitingfor = self.waitingfor - 1
-	if self.waitingfor > 0 then
+	self.popup:hide()
+
+	-- if called from meta at restart then reinstall or quit
+	if self.auto then
+		if self.reinstall then
+			self.toremove = self.reinstall 
+			self.todownload = self.reinstall
+			self:action()
+		end
 		return
 	end
 
-	self.window:addWidget(self.menu)
-	self.popup:hide()
 	self:tieAndShowWindow(self.window)
 
 	if self.reinstall then
 		self.menu:addItem({
-			text = self:string("REINSTALL"),
+			text = self:string("REINSTALL_ALL"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 				self.toremove = self.reinstall 
@@ -188,6 +253,34 @@ function menuSink(self, server, data)
 			weight = 2
 		})
 	end
+
+	self.menu:addItem({
+		text = self:string("APPLET_RECONLY"),
+		style = 'item_choice',
+		check = Checkbox("checkbox",
+			function(object, isSelected)
+				self:getSettings()["_RECONLY"] = isSelected
+				self:storeSettings()
+			end,
+			self:getSettings()["_RECONLY"]
+		),
+		weight = 3
+	})
+
+	-- FIXME - make this happen all the time rather than an option?
+	self.menu:addItem({
+		text = self:string("APPLET_AUTOUP"),
+		style = 'item_choice',
+		check = Checkbox("checkbox",
+			function(object, isSelected)
+				self:getSettings()["_AUTOUP"] = isSelected
+				self:storeSettings()
+			end,
+			self:getSettings()["_AUTOUP"]
+		),
+		weight = 4
+	})
+	  
 end
 
 

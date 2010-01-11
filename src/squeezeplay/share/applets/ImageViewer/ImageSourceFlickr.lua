@@ -1,3 +1,4 @@
+--[[ !!!!!! PLEASE NOTE: This module is obsolete - it's been replace with a mysb.com based app. !!!!!!! ]]--
 
 --[[
 =head1 NAME
