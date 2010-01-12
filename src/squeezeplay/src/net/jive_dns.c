@@ -23,7 +23,22 @@ typedef int socket_t;
 
 #endif
 
-#define RESOLV_TIMEOUT (2 * 60 * 1000) /* 2 minutes */
+/* fm - 01/12/2010
+Userland DNS resolve requests are queued into a pipe in jiveL_dns_write(), then
+dns_resolver_thread() reads the pipe and calls gethostbyaddr() or gethostbyname().
+Both of these functions are blocking and can take a couple of seconds to return,
+especially if the network is down.
+To allow the pipe to empty if a lot of DNS requests are issued while the network
+is down a 'shortcut' is taken as long as the following timeout is active. The
+shortcut path doesn't call the blocking functions but just reads from the pipe
+and returns the last error code again.
+The timeout was set to 2 minutes which I found in my tests on Jive, Baby and
+Touch not to be necessary to make sure the pipe gets emptied. 10 seconds seem
+to be enough.
+The 10 seconds timeout also makes reconnecting a lot quicker when the network is
+re-established. 
+*/
+#define RESOLV_TIMEOUT (10 * 1000) /* 10 seconds (was 2 minutes) */
 
 
 /*
@@ -208,6 +223,7 @@ static int dns_resolver_thread(void *p) {
 			
 			if (now - failed_timeout < RESOLV_TIMEOUT) {
 				write_str(fd, failed_error);
+				free(buf);
 				continue;
 			}
 		}

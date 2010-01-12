@@ -143,5 +143,9 @@ function getCurrentImagePath(self)
 	return self.imgFiles[self.currentImage]
 end
 
+function getImageCount(self)
+	return #self.imgFiles
+end
+
 function free(self)
 end
