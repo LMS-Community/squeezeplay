@@ -547,13 +547,16 @@ function displaySlide(self)
 		--no iconbar
 		self.window:setShowFrameworkWidgets(false)
 
-		-- start timer for next photo in 'delay' milliseconds
-		local delay = self:getSettings()["delay"]
-		self.nextSlideTimer = self.window:addTimer(delay,
-			function()
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
-			end)
+		-- if we have more than one picture, start slideshow
+		if self.imgSource:getImageCount() > 1 then
+			-- start timer for next photo in 'delay' milliseconds
+			local delay = self:getSettings()["delay"]
+			self.nextSlideTimer = self.window:addTimer(delay,
+				function()
+					self.imgSource:nextImage(self:getSettings()["ordering"])
+					self:displaySlide()
+				end)
+		end
 	else
 		file = self.imgSource:getCurrentImagePath() or 'unknown'
 		log:info("Invalid image object found: " .. file)
