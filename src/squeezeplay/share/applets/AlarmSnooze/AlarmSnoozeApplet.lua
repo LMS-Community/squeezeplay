@@ -70,14 +70,6 @@ function init(self, ...)
 			end,
 			true
 	)
-	self.streamSuccessChecker = Timer(20000,
-			function ()
-				if self.alarmInProgress == 'server' and not self.localPlayer:isStreaming() then
-					self:soundFallbackAlarm()
-				end
-			end,
-			true
-	)
 	
 	if startTimer then
 		self:_startTimer()
@@ -193,14 +185,15 @@ function _alarm_sledgehammerRearm(self, caller)
 	if self.alarmInProgress == 'server' then
 		local status = decode:status()
 		-- just informational
-		log:warn('alarm_sledgehammerRearm(', caller,'): SERVER alarm in progress - decodeState is ', status.decodeState, ' and streaming is ', self.localPlayer:isStreaming())
+		log:warn('alarm_sledgehammerRearm(', caller,'): SERVER alarm in progress - audioState is ', status.audioState)
 		
-		if not self.localPlayer:isStreaming() then
+		if not status.audioState == 1 then
 			log:warn('alarm_sledgehammerRearm(', caller,'): SERVER alarm in progress, but stream is nil - firing fallback alarm')
 			hammer = true
 		end
 	-- restart audio on any state transition from SqueezeOS, but not on local polls	
-	elseif self.alarmInProgress == 'rtc' and caller ~= '_pollDecodeState' then
+	--elseif self.alarmInProgress == 'rtc' and caller ~= '_pollDecodeState' then
+	elseif self.alarmInProgress == 'rtc' then
 		log:warn('alarm_sledgehammerRearm(', caller,'): RTC alarm already in progress - restarting alarm audio asynchronously')
 		hammer = true
 	end
@@ -249,7 +242,7 @@ end
 function notify_playerModeChange(self, player, mode)
 	log:warn('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
 	local status = decode:status()
-	log:warn('notify_playerModeChange: - decodeState is ', status.decodeState,' and streaming is ', self.localPlayer:isStreaming())
+	log:warn('notify_playerModeChange: - audioState is ', status.audioState)
 end
 
 
@@ -346,9 +339,9 @@ end
 function _pollDecodeState(self)
 	local status = decode:status()
 	if self.localPlayer:isConnected() then
-		log:warn('_pollDecodeState(',self.alarmInProgress,'): decodeState is ', status.decodeState, ' and streaming is ', self.localPlayer:isStreaming())
+		log:warn('_pollDecodeState(',self.alarmInProgress,'): audioState is ', status.audioState)
 	else
-		log:warn('_pollDecodeState(',self.alarmInProgress,'): decodeState is ', status.decodeState, ' and no current player')
+		log:warn('_pollDecodeState(',self.alarmInProgress,'): audioState is ', status.audioState)
 	end
 
 	self:_alarm_sledgehammerRearm('_pollDecodeState')	
@@ -401,7 +394,7 @@ function openAlarmWindow(self, caller)
 		-- just informational stuff for now
 		local status = decode:status()
 		-- just informational
-		log:warn('openAlarmWindow: called with `server` - decodeState is ', status.decodeState, ' and streaming is ', self.localPlayer:isStreaming())
+		log:warn('openAlarmWindow: called with `server` - audioState is ', status.audioState)
 
 		if self.alarmInProgress == 'rtc' then
 			log:warn('openAlarmWindow: called with `server` while `rtc` alarm in progress!')
@@ -413,13 +406,6 @@ function openAlarmWindow(self, caller)
 			self.decodeStatePoller:restart()
 		else
 			self.decodeStatePoller:start()
-		end
-
-		if not self.localPlayer:isStreaming() then
-			-- check in 20 secs if we are streaming anything, and if not, fire fallback alarm
-			-- this used to be done server-side, but that has been removed
-			log:info('openAlarmWindow: starting stream success check timer. in 20 seconds if alarm is still active and stream has failed, client-side fallback alarm will be fired')
-			self.streamSuccessChecker:start()
 		end
 
 
