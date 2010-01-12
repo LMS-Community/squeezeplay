@@ -83,7 +83,6 @@ function init(self, ...)
 		self:_startTimer()
 	end
 
-	self.debugDecodeState = true
 	self.decodeStatePoller = Timer(10000, 
 		function ()
 			self:_pollDecodeState()
@@ -96,6 +95,7 @@ end
 
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
+	log:warn('notify_playerAlarmState received for ', player, ' with alarmState of ', alarmState)
 	if player:isLocal() then
 		log:warn('**************************** notify_playerAlarmState received: ', alarmState, ' ', alarmNext)
 		if alarmState == 'active' then
@@ -226,8 +226,8 @@ end
 -- polling would eventually manifest the transition anyway...
 
 function notify_playerLoaded(self, player)
+	log:info("notify_playerLoaded(", player, ")")
 	if player == self.localPlayer then
-		log:info("notify_playerLoaded(", player, ")")
 --		self:_alarm_sledgehammerRearm('notify_playerLoaded')
 		-- check for pending server alarm in case that one is pending instead, since we may have changed players to force 
 		--       local control during a previous call to openAlarmWindow()
@@ -239,33 +239,31 @@ end
 
 
 function notify_playerCurrent(self, player)
+	log:info("notify_playerCurrent(", player, ")")
 	if player == self.localPlayer then
-		log:info("notify_playerCurrent(", player, ")")
 --		self:_alarm_sledgehammerRearm('notify_playerCurrent')
 	end
 end
 
 
 function notify_playerModeChange(self, player, mode)
-	if player == self.localPlayer then
-		log:warn('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
-		local status = decode:status()
-		log:warn('notify_playerModeChange: - decodeState is ', status.decodeState,' and streaming is ', self.localPlayer:isStreaming())
-	end
+	log:warn('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
+	local status = decode:status()
+	log:warn('notify_playerModeChange: - decodeState is ', status.decodeState,' and streaming is ', self.localPlayer:isStreaming())
 end
 
 
 function notify_playerConnected(self, player)
+	log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
 	if player == self.localPlayer then
-		log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
 --		self:_alarm_sledgehammerRearm('notify_playerConnected')
 	end
 end
 
 
 function notify_playerDisconnected(self, player)
+	log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
 	if player == self.localPlayer then
-		log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
 	end
 end
 
@@ -411,12 +409,10 @@ function openAlarmWindow(self, caller)
 			log:error('CALL STACK TRAP: ')
 		end
 		
-		if self.debugDecodeState then
-			if self.decodeStatePoller:isRunning() then
-				self.decodeStatePoller:restart()
-			else
-				self.decodeStatePoller:start()
-			end
+		if self.decodeStatePoller:isRunning() then
+			self.decodeStatePoller:restart()
+		else
+			self.decodeStatePoller:start()
 		end
 
 		if not self.localPlayer:isStreaming() then
@@ -504,9 +500,6 @@ function openAlarmWindow(self, caller)
 	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute' }, hideWindowAction)
 
 	menu:setHeaderWidget(headerGroup)
-
-        -- the alarm notification window should not endure forever; hide after 59 seconds
-        window:addTimer(59000, function() self:_hideAlarmWindow() end)
 
 	window:addWidget(menu)
 	window:setShowFrameworkWidgets(false)
