@@ -27,8 +27,8 @@ local oo			= require("loop.simple")
 local math			= require("math")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
-local json              = require("json")
-local debug                  = require("jive.utils.debug")
+local json          = require("json")
+local debug         = require("jive.utils.debug")
 local lfs			= require('lfs')
 local Group			= require("jive.ui.Group")
 local Keyboard		= require("jive.ui.Keyboard")
@@ -36,11 +36,11 @@ local Textarea		= require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Window        = require("jive.ui.Window")
 local SocketHttp	= require("jive.net.SocketHttp")
+local SlimServer    = require("jive.slim.SlimServer")
 local RequestHttp	= require("jive.net.RequestHttp")
 local URL       	= require("socket.url")
 local Surface		= require("jive.ui.Surface")
 local Process		= require("jive.net.Process")
-local Player             = require("jive.slim.Player")
 local Framework		= require("jive.ui.Framework")
 
 local jnt = jnt
@@ -60,7 +60,6 @@ function __init(self, applet, serverData)
 	obj.imgFiles = {}
 
 	obj.serverData = serverData
-
 
 	obj.imageDataHistory = {}
 	obj.imageDataHistoryMax = 30
@@ -180,6 +179,18 @@ function requestImage(self, imageData)
 		string.find(urlString, "^http://10%.")
 	) then
 		-- use raw urlString
+	
+	elseif not string.find(urlString, "^http://") then
+		-- url on current server
+		local server = SlimServer:getCurrentServer()
+		
+		if server then
+			local ip, port = server:getIpPort()
+			if ip and port then
+				urlString = "http://" .. ip .. ":" .. port .. "/" .. urlString
+			end
+		end
+		
 	else
 		--use SN image proxy for resizing
 		urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)

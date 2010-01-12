@@ -555,7 +555,7 @@ function displaySlide(self)
 				self:displaySlide()
 			end)
 	else
-		file = self.imgSource:getCurrentImagePath()
+		file = self.imgSource:getCurrentImagePath() or 'unknown'
 		log:info("Invalid image object found: " .. file)
 
 		self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), file)
