@@ -182,32 +182,18 @@ end
 function _alarm_sledgehammerRearm(self, caller)
 	local hammer = false
 	
-	if self.alarmInProgress == 'server' then
-		local status = decode:status()
-		-- just informational
-		log:warn('alarm_sledgehammerRearm(', caller,'): SERVER alarm in progress - audioState is ', status.audioState)
-		
-		if not status.audioState == 1 then
-			log:warn('alarm_sledgehammerRearm(', caller,'): SERVER alarm in progress, but stream is nil - firing fallback alarm')
-			hammer = true
-		end
-	-- restart audio on any state transition from SqueezeOS, but not on local polls	
-	--elseif self.alarmInProgress == 'rtc' and caller ~= '_pollDecodeState' then
-	elseif self.alarmInProgress == 'rtc' then
-		log:warn('alarm_sledgehammerRearm(', caller,'): RTC alarm already in progress - restarting alarm audio asynchronously')
+	local status = decode:status()
+	--debug.dump(status)
+
+	log:warn('alarm_sledgehammerRearm(', caller,'): ', self.alarmInProgress, ' alarm in progress - audioState is ', status.audioState)
+	if status.audioState ~= 1 then
 		hammer = true
 	end
-       
-	if hammer then 
-		-- immediately set volume back where it was
-		log:warn('alarm_sledgehammerRearm: local volume is ', self.localPlayer:getVolume())
-		--localPlayer:volumeLocal(43);
-		
-		-- let some time pass so whatever is messing with the player settings underneath finishes (last request to play wins!)
-		-- self:openAlarmWindow('rtc')
 
+	if hammer then 
 		self:_stopTimer()
 		-- kickstart audio output again, asynchronously, so whatever else is messing with the audio settings is hopefully finished
+		log:warn('alarm_sledgehammerRearm: audio not in good shape while alarm is firing. restart timer asynchronously at 1.5secs')
 		self:_startTimer(1500)
 	end
 end
@@ -282,9 +268,10 @@ function notify_serverConnected(self, server)
 	-- don't want to cause error if no connection
 	if self.localPlayer and self.localPlayer:isConnected() then
 		log:info('                      local player->server is ', self.localPlayer:getSlimServer())
+		if self.localPlayer:getSlimServer() == server then
+			self:_alarm_sledgehammerRearm('notify_serverConnected')
+		end
 	end
-    
---	self:_alarm_sledgehammerRearm('notify_serverConnected')
 end
 
 
