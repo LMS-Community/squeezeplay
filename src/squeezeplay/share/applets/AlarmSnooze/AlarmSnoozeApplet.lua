@@ -268,9 +268,10 @@ function notify_serverConnected(self, server)
 	-- don't want to cause error if no connection
 	if self.localPlayer and self.localPlayer:isConnected() then
 		log:info('                      local player->server is ', self.localPlayer:getSlimServer())
+		if self.localPlayer:getSlimServer() == server then
+			self:_alarm_sledgehammerRearm('notify_serverConnected')
+		end
 	end
-    
---	self:_alarm_sledgehammerRearm('notify_serverConnected')
 end
 
 
