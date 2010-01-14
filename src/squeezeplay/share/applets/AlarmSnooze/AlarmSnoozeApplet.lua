@@ -439,25 +439,25 @@ function openAlarmWindow(self, caller)
 		text = self:string("ALARM_SNOOZE_TURN_OFF_ALARM"),
 		sound = "WINDOWHIDE",
 		callback = function()
-			self:_alarmOff()
+			self:_alarmOff(true)
 			end,
 	})	
 	menu:setSelectedIndex(1)
 
 	local cancelAction = function()
 		window:playSound("WINDOWHIDE")
-		self:_hideAlarmWindow()
+		self:_alarmOff(false)
 		return EVENT_CONSUME
 	end
 
 	local hideWindowAction = function()
 		window:playSound("WINDOWHIDE")
-		self:_alarmOff()
+		self:_alarmOff(true)
 		return EVENT_UNUSED
 	end
 
 	local offAction = function()
-		self:_alarmOff()
+		self:_alarmOff(true)
 		return EVENT_UNUSED
 	end
 	
@@ -499,7 +499,7 @@ function openAlarmWindow(self, caller)
 end
 
 
-function _alarmOff(self)
+function _alarmOff(self, stopStream)
 	if self.alarmInProgress == 'rtc' then
 		self.localPlayer:stop(true)
 		iconbar:setAlarm('OFF')
@@ -521,7 +521,7 @@ function _alarmOff(self)
 		self.decodeStatePoller:stop()
 	end
 
-	if self.localPlayer:isConnected() then
+	if self.localPlayer:isConnected() and stopStream then
 		self.localPlayer:stopAlarm()
 	end
 end
