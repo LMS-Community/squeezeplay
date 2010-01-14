@@ -318,6 +318,13 @@ static void decode_song_ended_handler(void) {
 
 	decode_output_song_ended();
 
+	if (decoder) {
+		decoder->stop(decoder_data);
+
+		decoder = NULL;
+		decoder_data = NULL;
+	}
+
 	decode_audio_unlock();
 }
 
@@ -431,7 +438,7 @@ static int decode_thread_execute(void *unused) {
 				obuf = (output_full * 100) / (double)output_size;
 
 
-				printf("elapsed:%llu buffers: %0.1f%%/%0.1f%%\n", elapsed, dbuf, obuf);
+				printf("elapsed:%llu buffers: %0.1f%%/%0.1f%%\n", (long long unsigned int)elapsed, dbuf, obuf);
 			}
 		}
 
