@@ -258,8 +258,9 @@ IMAGE_VIEWER_DELAY_1_MIN
 	SV	1 min
 
 IMAGE_VIEWER_ORDERING
+# SLT: This is the sort order, not ordering some goods in a shop
 	CS	Objednávání
-	DA	Bestilling
+	DA	Rækkefølge
 	DE	Reihenfolge
 	EN	Ordering
 	ES	Orden
