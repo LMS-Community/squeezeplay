@@ -90,6 +90,12 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 	log:warn('notify_playerAlarmState received for ', player, ' with alarmState of ', alarmState)
 	if player:isLocal() then
 		log:warn('**************************** notify_playerAlarmState received: ', alarmState, ' ', alarmNext)
+		-- if there's an existing alarm window on the screen and the rtc alarm isn't firing, 
+		-- we're going to hide it in the event of this notification. if alarmState is 'active', we bring up a new one
+		if self.alarmInProgress ~= 'rtc' then
+			self:_hideAlarmWindow()
+		end
+
 		if alarmState == 'active' then
 			if player ~= Player:getCurrentPlayer() then
 				log:warn('alarm has fired locally, switching to local player')
@@ -109,7 +115,6 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			self.alarmInProgress = 'server'
 
 			self:_stopTimer()			
-			self:_hideAlarmWindow()
 			
 			self:openAlarmWindow('server')
 
