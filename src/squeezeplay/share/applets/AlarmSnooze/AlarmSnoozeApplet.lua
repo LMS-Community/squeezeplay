@@ -38,7 +38,7 @@ function init(self, ...)
 	jnt:subscribe(self)
 	self.alarmTone = "applets/AlarmSnooze/alarm.mp3"
 	
-	self.alarmInProgress = 'none';
+	self.alarmInProgress = nil
 
 	local timeToAlarm
 	local startTimer = false
@@ -127,7 +127,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 				self:getSettings()['alarmNext'] = false
 				self:storeSettings()
 				self:_setWakeupTime('none')
-				self.alarmInProgress = 'none'
+				self.alarmInProgress = nil
 		                -- might want to qualify whether or not to stop this timer dependent upon whether it's already running.
 				-- for now just log the information
 				if self.RTCAlarmTimer:isRunning() then
@@ -186,7 +186,7 @@ function _alarm_sledgehammerRearm(self, caller)
 	--debug.dump(status)
 
 	log:warn('alarm_sledgehammerRearm(', caller,'): ', self.alarmInProgress, ' alarm in progress - audioState is ', status.audioState)
-	if status.audioState ~= 1 then
+	if self.alarmInProgress and status.audioState ~= 1 then
 		hammer = true
 	end
 
@@ -279,7 +279,7 @@ function notify_serverDisconnected(self, server)
 	log:info('notify_serverDisconnected: ', server, ' is now disconnected')
 
 	-- blindly check state here irrespective of which server caused this notification
-	if self.alarmInProgress ~= 'none' and self.alarmInProgress ~= 'rtc' then
+	if self.alarmInProgress and self.alarmInProgress ~= 'rtc' then
 		if not self.localPlayer:isConnected() then
 			log:warn('notify_serverDisconnected: ', server, ' - while server alarm in progress! state ', self.alarmInProgress, ' triggering fallback alarm!')
 			self:openAlarmWindow('rtc')
@@ -490,7 +490,7 @@ function openAlarmWindow(self, caller)
 			if self.decodeStatePoller:isRunning() then
 				self.decodeStatePoller:stop()
 			end
-                        self.alarmInProgress = 'none'
+                        self.alarmInProgress = nil
 			self.alarmWindow = nil
                 end
         )
@@ -512,7 +512,7 @@ function _alarmOff(self)
 		end
 	end
 	
-	self.alarmInProgress = 'none'
+	self.alarmInProgress = nil
 	self:_stopTimer()
 	self.alarmWindow:playSound("WINDOWHIDE")
 	self:_hideAlarmWindow()
