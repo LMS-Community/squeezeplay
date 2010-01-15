@@ -17,30 +17,18 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs, locale, type, pairs = setmetatable, tonumber, tostring, ipairs, locale, type, pairs
+local ipairs = ipairs
 
-local Applet		= require("jive.Applet")
-local appletManager	= require("jive.AppletManager")
-local Event			= require("jive.ui.Event")
-local io			= require("io")
 local oo			= require("loop.simple")
-local math			= require("math")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 local json          = require("json")
 local debug         = require("jive.utils.debug")
-local lfs			= require('lfs')
-local Group			= require("jive.ui.Group")
-local Keyboard		= require("jive.ui.Keyboard")
-local Textarea		= require("jive.ui.Textarea")
-local Textinput     = require("jive.ui.Textinput")
-local Window        = require("jive.ui.Window")
 local SocketHttp	= require("jive.net.SocketHttp")
 local SlimServer    = require("jive.slim.SlimServer")
 local RequestHttp	= require("jive.net.RequestHttp")
 local URL       	= require("socket.url")
 local Surface		= require("jive.ui.Surface")
-local Process		= require("jive.net.Process")
 local Framework		= require("jive.ui.Framework")
 
 local jnt = jnt
@@ -81,10 +69,6 @@ function readImageList(self)
 		playerId,
 		cmd
 	)
-end
-
-function getImage(self)
-	return self.image
 end
 
 function imgFilesSink(self)
@@ -277,9 +261,9 @@ end
 
 =head1 LICENSE
 
-Copyright 2008 Logitech. All Rights Reserved.
+Copyright 2010 Logitech. All Rights Reserved.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]

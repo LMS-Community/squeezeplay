@@ -15,19 +15,16 @@ Base class for all Image sources. Please derive from this class when extending I
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs, locale, assert = setmetatable, tonumber, tostring, ipairs, locale, assert
-local require = require
-local Event			= require("jive.ui.Event")
-local io			= require("io")
-local oo			= require("loop.simple")
-local math			= require("math")
-local table			= require("jive.utils.table")
-local string		= require("jive.utils.string")
-local Textarea		= require("jive.ui.Textarea")
+local assert        = assert
+local require       = require
+local oo            = require("loop.simple")
+local math          = require("math")
+local debug         = require("jive.utils.debug")
+local string        = require("jive.utils.string")
+local Textarea      = require("jive.ui.Textarea")
 local Window        = require("jive.ui.Window")
-local Framework		= require("jive.ui.Framework")
-local log 			= require("jive.utils.log").logger("applet.ImageViewer")
-local jiveMain         = jiveMain
+local log           = require("jive.utils.log").logger("applet.ImageViewer")
+local jiveMain      = jiveMain
 
 local EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 local EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS
@@ -66,16 +63,6 @@ function _helpAction(self, window, titleText, bodyText, menu)
 		local helpAction =      function()
 						local window = Window("help_info", self.applet:string(titleText), "helptitle")
 						window:setAllowScreensaver(false)
-
-						-- no more help menu yet
-						--[[
-						window:setButtonAction("rbutton", "more_help")
-						window:addActionListener("more_help", self, function()
-							window:playSound("WINDOWSHOW")
-
-							appletManager:callService("supportMenu")
-						end)
-						--]]
 
 						local textarea = Textarea("text", self.applet:string(bodyText))
 						window:addWidget(textarea)
@@ -120,19 +107,42 @@ function updateLoadingIcon(self, icon)
 end
 
 function nextImage(self, ordering)
-	assert(false, "please implement in derived class")
+	if #self.imgFiles == 0 then
+		self:emptyListError()
+		return
+	end
+	if ordering == "random" then
+		self.currentImage = math.random(#self.imgFiles)
+	else
+		self.currentImage = self.currentImage + 1
+		if self.currentImage > #self.imgFiles then
+			self.currentImage = 1
+		end
+	end
 end
 
 function previousImage(self, ordering)
-	assert(false, "please implement in derived class")
+	if #self.imgFiles == 0 then
+		self:emptyListError()
+		return
+	end
+	if ordering == "random" then
+		self.currentImage = math.random(#self.imgFiles)
+	else
+		self.currentImage = self.currentImage - 1
+		if self.currentImage < 1 then
+			self.currentImage = #self.imgFiles
+		end
+	end
 end
 
+
 function getImage(self)
-	assert(false, "please implement in derived class")
+	return self.image
 end
 
 function getText(self)
-	assert(false, "please implement in derived class")
+	return "", self.imgFiles[self.currentImage], ""
 end
 
 function getMultilineText(self)
@@ -149,3 +159,16 @@ end
 
 function free(self)
 end
+
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2010 Logitech. All Rights Reserved.
+
+This file is licensed under BSD. Please see the LICENSE file for details.
+
+=cut
+--]]
+
