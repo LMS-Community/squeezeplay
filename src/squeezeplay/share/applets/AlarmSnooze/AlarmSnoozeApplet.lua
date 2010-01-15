@@ -624,3 +624,14 @@ function free(self)
 	self.alarmWindow = nil
 	return false
 end
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2010 Logitech. All Rights Reserved.
+
+This file is licensed under BSD. Please see the LICENSE file for details.
+
+=cut
+--]]
