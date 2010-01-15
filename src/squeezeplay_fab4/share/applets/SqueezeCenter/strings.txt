@@ -523,7 +523,7 @@ EJECT_WARNING
 	EN	IMPORTANT NOTICE
 
 EJECT_WARNING_INFO
-	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the My Music menu. Failure to do so may cause serious damage to the data.
+	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the Home menu. Failure to do so may cause serious damage to the data.
 
 NEW_STORAGE_MEDIA
 	EN	New Storage Media
