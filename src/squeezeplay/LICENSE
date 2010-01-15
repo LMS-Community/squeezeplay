@@ -1,79 +1,25 @@
-LOGITECH PUBLIC SOURCE LICENSE 
-Version 1.0 - March 5, 2007
+Copyright 2010, Logitech, inc.
+All rights reserved.
 
-This Agreement governs use of Original Code (defined below) which Logitech Europe S.A. ("Logitech") makes publicly available and which contains a notice placed by Logitech identifying such code as subject to the terms of this Logitech Public Source License version 1.0.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Logitech nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
 
-Please read the following terms and conditions (this "Agreement") carefully before downloading, installing, or using the Original Code.  By downloading, installing, or using the Original Code, you have indicated that you understand this Agreement and accept all of its terms.  If you do not or cannot accept all of the terms of this Agreement, then you cannot download, install, or use the Original Code.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL LOGITECH, INC BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-1. Definitions.  As used in this Agreement:
-
-1.1. "Applicable Patent Rights" mean: (a) in the case where Logitech is the grantor of rights, (i) claims of patents that are now or hereafter acquired, owned by or assigned to Logitech and (ii) that cover subject matter contained in the Original Code, but only to the extent necessary to use, reproduce, and distribute the Original Code without infringement; and (b) in the case where You are the grantor of rights, (i) claims of patents that are now or hereafter acquired, owned by or assigned to You and (ii) that cover subject matter in Your Modifications, taken alone or in combination with Original Code.
-
-1.2. "Covered Code" means the Original Code, Modifications, the combination of Original Code and any Modifications, and any respective portions thereof.
-
-1.3. "Modifications" mean any addition to, deletion from, or change to, the substance or structure of the Original Code, the combination of Original Code and any previous Modifications, and any respective portions thereof.  When code is released as a series of files, a Modification is: (a) any addition to or deletion from the contents of a file containing Covered Code; and (b) any new file or other representation of computer program statements that contains any part of Covered Code.
-
-1.4. "Original Code" means (a) the Source Code of a computer program as originally made available by Logitech under this Agreement, including the Source Code to any updates or upgrades to such programs made available by Logitech under this Agreement, and that has been expressly identified by Logitech as such in the header file(s) of such programs; and (b) the object code compiled from such Source Code and originally made available by Logitech under this Agreement.
-
-1.5. "Source Code" means the human readable form of a program or other work that is suitable for making modifications to it, including all modules it contains, plus any associated interface definition files, and scripts used to control compilation and installation of object code.
-
-1.6. "You" or "Your" means an individual or a legal entity exercising rights under this Agreement.  For legal entities, "You" or "Your" includes any entity which controls, is controlled by, or is under common control with You, where "control" means (a) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (b) ownership of fifty percent (50%) or more of the outstanding shares or beneficial ownership of such entity.
-
-2. Logitech's License Grant to You.  Subject to the terms and conditions of this Agreement, Logitech hereby grants You, effective on the date You accept this Agreement and download the Original Code, a worldwide, royalty-free, non-exclusive license, to the extent of Logitech's Applicable Patent Rights and copyrights covering the Original Code, to use, reproduce, modify, and prepare derivative works based on the Original Code, solely for personal use only, whether commercial or non-commercial.
-
-3. License Restrictions.  You acknowledge that the Original Code constitutes and contains trade secrets of Logitech and its licensors and that You have no right to transfer, sublicense, or otherwise distribute the Original Code to any third party.  Except as expressly authorized in this Agreement, You will not copy or modify the Original Code, in whole or in part, or otherwise make the functionality of the Original Code available to third parties.  Except as expressly stated in Section 2, no other patent rights, express or implied, are granted by Logitech herein.  
-
-4. Limited Rights.  Your rights in the Original Code will be limited to those expressly granted in this Agreement.  Logitech reserves all rights and licenses in and to the Original Code not expressly granted to You under this Agreement.
-
-5. Ownership.  You expressly acknowledge that, as between Logitech and You, Logitech owns all worldwide right, title, and interest in and to the Original Code, including all worldwide intellectual property rights therein.  You must retain and reproduce in all copies of Original Code the copyright and other proprietary notices and disclaimers of Logitech as they appear in the Original Code, and keep intact all notices in the Original Code that refer to this Agreement.  To the extent it does not already exist in each Source Code file comprising Your Modifications, You must duplicate the notice in Exhibit A in each Source Code file comprising all of Your Modifications, and cause the modified files to carry prominent notices stating that You changed the files and the date of any change.
-
-6. Your License Grant to Logitech.  In consideration of, and as a condition to, the licenses granted to You under this Agreement, You hereby grant to Logitech a non-exclusive, royalty-free, perpetual, irrevocable license, under Your Applicable Patent Rights, any copyrights owned or controlled by You, and any other intellectual property owned or controlled by You, to use, reproduce, display, perform, modify, and distribute Your Modifications, and to sublicense each of the foregoing rights.  You will supply Logitech with the source code to the most recent version of Your Modifications upon Logitech's request.
-
-7. Versions of the Agreement. Logitech may publish revised versions of this Agreement from time to time.  Each new version will be given a distinguishing version number. Once Original Code has been published under a particular version of this Agreement, You may continue to use it under the terms of that version. You may also choose to use such Original Code under the terms of any subsequent version of this Agreement published by Logitech.  No one other than Logitech has the right to modify the terms of this Agreement.
-
-8. NO WARRANTIES OR SUPPORT.  The Covered Code may contain in whole or in part pre-release, untested, or not fully tested software.  Logitech does not warrant that the Covered Code will meet Your requirements, that the Covered Code will operate in the combinations that You may select for use, that the operation of the Covered Code will be error-free or uninterrupted or that all errors in the Covered Code will be corrected.  You expressly acknowledge and agree that use of the Covered Code, or any portion thereof, is at Your sole and entire risk. THE ORIGINAL CODE IS PROVIDED "AS IS" AND WITHOUT WARRANTY, UPGRADES, OR SUPPORT OF ANY KIND AND LOGITECH AND LOGITECH'S LICENSOR(S) EXPRESSLY DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT, AND ANY WARRANTIES ARISING OUT OF COURSE OF DEALING, USAGE, OR TRADE.  NO ORAL OR WRITTEN INFORMATION OR ADVICE GIVEN BY LOGITECH OR A LOGITECH AUTHORIZED REPRESENTATIVE WILL CREATE A WARRANTY HEREUNDER.  You acknowledge that the Covered Code is not intended for use in the operation of nuclear facilities, aircraft navigation, communication systems, or air traffic control machines.
-
-9. Confidentiality.  You acknowledge that You will acquire information and materials from Logitech and knowledge about Logitech's business, products, customers, clients, and suppliers and that all such knowledge, information, and materials acquired are and will be Logitech's trade secrets and confidential and proprietary information (collectively "Confidential Information").  Confidential Information will not include, however, any information that (i) is received by You from a third party without restriction on use or disclosure, (ii) Logitech gives to third parties without restriction on use or disclosure, or (iii) is previously known to You or independently developed by You.  For a period of five (5) years following the receipt of any Confidential Information hereunder You agree to use reasonable efforts to hold all such Confidential Information in confidence, and not to disclose it to others or use it except as necessary for the performance of this Agreement.
-
-10. LIMITATION OF LIABILITY. TO THE EXTENT NOT PROHIBITED BY LAW, IN NO EVENT WILL LOGITECH BE LIABLE FOR ANY INCIDENTAL, SPECIAL, PUNITIVE, OR CONSEQUENTIAL DAMAGES ARISING OUT OF OR RELATING TO THIS LICENSE OR YOUR USE OR INABILITY TO USE THE COVERED CODE, OR ANY PORTION THEREOF, WHETHER UNDER A THEORY OF CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY, OR OTHERWISE, EVEN IF LOGITECH HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND NOTWITHSTANDING THE FAILURE OF ESSENTIAL PURPOSE OF ANY REMEDY.  Some jurisdictions do not allow the limitation of liability of incidental or consequential damages, so this limitation may not apply to You.  In no event will Logitech's total liability to You for all damages (other than as may be required by applicable law) under this Agreement exceed the amount of fifty dollars ($50.00).
-
-11. Trademarks. This Agreement does not grant any rights to use the trademarks or trade names "Logitech," "Jive," "Squeezebox," "Transporter," or any other trademarks, service marks, logos, or trade names belonging to Logitech (collectively "Logitech Marks"). You agree not to use any Logitech Marks in or as part of the name of products derived from the Original Code or to endorse or promote products derived from the Original Code other than as expressly permitted by and in strict compliance at all times with Logitech's third party trademark usage guidelines. 
-
-12. Termination.
-12.1. Termination. This Agreement and the rights granted hereunder will terminate:
-
-(a) automatically without notice from Logitech if You fail to comply with any term(s) of this Agreement and fail to cure such breach within thirty (30) days of becoming aware of such breach;
-
-(b) immediately in the event of the circumstances described in Section 13.6; or
-
-(c) automatically without notice from Logitech if You, at any time during the term of this Agreement, commence an action for patent infringement against Logitech; provided that Logitech did not first commence an action for patent infringement against You in that instance.
-
-12.2. Effect of Termination. Upon termination, You agree to immediately stop any further use, reproduction, modification, and preparation of derivative works of the Covered Code.  Provisions which, by their nature, should remain in effect beyond the termination of this Agreement will survive, including but not limited to Sections 3, 4, 5, 8, 9, 10, 11 and 13.2. Any sublicenses granted by Logitech under Section 6 prior to termination will survive any termination of this Agreement.  No party will be liable to any other for compensation, indemnity, or damages of any sort solely as a result of terminating this Agreement in accordance with its terms, and termination of this Agreement will be without prejudice to any other right or remedy of any party.
-
-13. Miscellaneous.
-
-13.1. Assignment.  You will have no right to assign this Agreement, in whole or in part, by operation of law or otherwise, without Logitech's express prior written consent.  Any attempt to assign this Agreement, without such consent, will be null and of no effect.  Subject to the foregoing, this Agreement will bind and inure to the benefit of each party's successors and permitted assigns.
-
-13.2. Government End Users.  The Original Code is "commercial computer software" as such term is used in FAR 12.212.  Any use, duplication, or disclosure of the Original Code by or on behalf of the U.S. Government is subject to restrictions as set forth in this Agreement.  Manufacturer is Logitech Europe S.A.
-
-13.3. Relationship of Parties. The parties to this Agreement are independent contractors and this Agreement will not establish any relationship of partnership, joint venture, employment, franchise, or agency between the parties.  Neither party will have the power to bind the other or incur obligations on the other's behalf without the other's prior written consent.
-
-13.4. Independent Development. Nothing in this Agreement will impair Logitech's right to acquire, license, develop, have others develop for it, market, or distribute technology or products that perform the same or similar functions as, or otherwise compete with, Modifications, Covered Code, technology, or products that You may develop, produce, market, or distribute.
-
-13.5. Waiver; Construction. Failure by Logitech or any Contributor to enforce any provision of this Agreement will not be deemed a waiver of future enforcement of that or any other provision. Any law or regulation which provides that the language of a contract will be construed against the drafter will not apply to this Agreement.
-
-13.6. Severability.  If for any reason a court of competent jurisdiction finds any provision of this Agreement invalid or unenforceable, that provision of the Agreement will be enforced to the maximum extent permissible and the other provisions of this Agreement will remain in full force and effect.  Notwithstanding the foregoing, if applicable law prohibits or restricts You from fully complying with Sections 2 and 6, or prevents the enforceability of either of those Sections, this Agreement will immediately terminate and You must immediately discontinue any use of the Original Code and destroy all copies of it that are in Your possession or control.
-
-13.7. Dispute Resolution. Any litigation or other dispute resolution between You and Logitech relating to this Agreement will take place in the Northern District of California, and You and Logitech hereby consent to the personal jurisdiction of, and venue in, the state and federal courts within that district with respect to this Agreement. The application of the United Nations Convention on Contracts for the International Sale of Goods is expressly excluded.
-
-13.8. Entire Agreement; Governing Law. This Agreement constitutes the entire agreement between the parties with respect to the subject matter hereof. This Agreement will be governed by the laws of the United States and the State of California, except that body of California law concerning conflicts of law. 
-
-
-EXHIBIT A.
-
-Portions Copyright (c) 2007 Logitech. All Rights Reserved.
-
-This file contains Original Code and/or Modifications of Original Code as defined in and that are subject to the Logitech Public Source License Version 1.0 (the "License"). You may not use this file except in compliance with the License.  You should obtain a copy of the License at http://www.logitech.com/ and read it before using this file.  Note that the License is not an "open source" license, as that term is defined in the Open Source Definition, http://opensource.org/docs/definition.php.  The terms of the License do not permit distribution of source code.
-
-The Original Code and all software distributed under the License are distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, AND LOGITECH HEREBY DISCLAIMS ALL SUCH WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  Please see the License for the specific language governing rights and limitations under the License.
- 

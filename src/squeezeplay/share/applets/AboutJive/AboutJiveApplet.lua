@@ -112,9 +112,9 @@ end
 
 =head1 LICENSE
 
-Copyright 2007 Logitech.
+Copyright 2010 Logitech.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENSE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]
