@@ -1,7 +1,7 @@
 /*
 ** Copyright 2007-2008 Logitech. All Rights Reserved.
 **
-** This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+** This file is licensed under BSD. Please see the LICENSE file for details.
 */
 
 #include "common.h"

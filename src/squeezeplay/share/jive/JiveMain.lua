@@ -1,25 +1,4 @@
 --[[
-
-Copyright 2007 Logitech. All Rights Reserved.
-
-This file contains Original Code and/or Modifications of Original Code
-as defined in and that are subject to the Logitech Public Source License 
-Version 1.0 (the "License"). You may not use this file except in
-compliance with the License.  You should obtain a copy of the License at 
-http://www.logitech.com/ and read it before using this file.  Note that
-the License is not an "open source" license, as that term is defined in
-the Open Source Definition, http://opensource.org/docs/definition.php.
-The terms of the License do not permit distribution of source code.
-
-The Original Code and all software distributed under the License are 
-distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER 
-EXPRESS OR IMPLIED, AND LOGITECH HEREBY DISCLAIMS ALL SUCH WARRANTIES, 
-INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  Please see the License for
-the specific language governing rights and limitations under the License.  
---]]
-
---[[
 =head1 NAME
 
 jive.JiveMain - Main Jive application.
@@ -662,9 +641,9 @@ JiveMain()
 
 =head1 LICENSE
 
-Copyright 2007 Logitech. All Rights Reserved.
+Copyright 2010 Logitech. All Rights Reserved.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]
