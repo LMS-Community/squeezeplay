@@ -1227,7 +1227,7 @@ function _parseScanData(self, scanData)
 				end
 
 				local percentCompleteTable = {}
-				if step.done and step.total and type(step.total) == 'number' and step.total > 0 then
+				if step.done and step.total and tonumber(step.total) > 0 then
 					local percentDoneString = self:string('PERCENT_DONE')
 					local percentageDone = tostring(math.floor( 100 * tonumber(step.done)/tonumber(step.total)))
 					local percentageString = percentageDone .. "%"
