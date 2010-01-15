@@ -168,6 +168,9 @@ function requestImage(self, imageData)
 		-- url on current server
 		local server = SlimServer:getCurrentServer()
 		
+		-- if an image url has the {resizeParams} placeholder, add Squeezebox server resizing parameters
+		urlString = string.gsub(urlString, "{resizeParams}", "_" .. screenWidth .. "x" .. screenHeight)
+		
 		if server then
 			local ip, port = server:getIpPort()
 			if ip and port then
