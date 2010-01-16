@@ -475,7 +475,7 @@ function openAlarmWindow(self, caller)
 	menu:addActionListener("power", self, offAction)
 	menu:addActionListener("mute", self, snoozeAction)
 
-	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute' }, hideWindowAction)
+	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute', 'volume_up', 'volume_down' }, hideWindowAction)
 
 	menu:setHeaderWidget(headerGroup)
 
