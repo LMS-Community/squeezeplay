@@ -1026,23 +1026,65 @@ function _ejectWarning(self, devName)
 
 	local menu = SimpleMenu("menu")
 
-	local itemCallback
+
 	if item.SCDrive then
-		itemCallback = function()
-			self:settingsShow()
-			window:hide()
+
+
+		-- Server status
+		menu:addItem({
+			text = self:string("SERVER_STATUS"),
+			iconStyle = 'hm_advancedSettings',
+			sound = "WINDOWSHOW",		
+			callback = function()
+				self:settingsShow()
+				window:hide()
+			end,
+		})
+
+		-- My Music
+		--[[ FIXME: does not provide a positive user experience yet. Going to My Music when scan is just starting yields not good behavior
+		menu:addItem({
+			text = self:string("MY_MUSIC"),
+			iconStyle = 'hm_appletCustomizeHome',
+			sound = "WINDOWSHOW",		
+			callback = function()
+				--Framework:pushAction("go_music_library")
+				--window:hide()
+				log:warn('my music!')
+			        if jiveMain:getMenuTable()['_myMusic'] then
+	                 	       Framework:playSound("JUMP")
+					debug.dump(jiveMain:getMenuTable()['_myMusic'])
+					jiveMain:getMenuTable()['_myMusic'].callback(nil, nil, true)
+				else
+					log:warn('_myMusic not found')
+				end
+			end
+		})
+		--]]
+
+		-- Eject item
+		local ejectToken = 'EJECT_CONFIRM_ITEM'
+		if item.devType then
+			ejectToken = 'EJECT_' .. item.devType
 		end
+		menu:addItem({
+			text = self:string(ejectToken),
+			iconStyle = 'hm_eject',
+			sound = "WINDOWSHOW",		
+			callback = function()
+				self:_confirmEject(devName)
+			end,
+		})
 	else
-		itemCallback = function()
-			window:hide()
-		end
+		menu:addItem({
+			text = self:string("OK"),
+			style = 'item',
+			sound = "WINDOWSHOW",		
+			callback = function()
+				window:hide()
+			end,
+		})
 	end
-	menu:addItem({
-		text = self:string("OK"),
-		style = 'item',
-		sound = "WINDOWSHOW",		
-		callback = itemCallback,
-	})
 
 	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
 
@@ -1227,7 +1269,7 @@ function _parseScanData(self, scanData)
 				end
 
 				local percentCompleteTable = {}
-				if step.done and step.total and type(step.total) == 'number' and step.total > 0 then
+				if step.done and step.total and tonumber(step.total) > 0 then
 					local percentDoneString = self:string('PERCENT_DONE')
 					local percentageDone = tostring(math.floor( 100 * tonumber(step.done)/tonumber(step.total)))
 					local percentageString = percentageDone .. "%"

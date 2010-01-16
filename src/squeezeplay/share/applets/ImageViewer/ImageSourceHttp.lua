@@ -16,27 +16,17 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs, locale, type, pairs = setmetatable, tonumber, tostring, ipairs, locale, type, pairs
-
-local Applet		= require("jive.Applet")
-local appletManager	= require("jive.AppletManager")
-local Event			= require("jive.ui.Event")
-local io			= require("io")
 local oo			= require("loop.simple")
 local math			= require("math")
-local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
-local lfs			= require('lfs')
 local Group			= require("jive.ui.Group")
 local Keyboard		= require("jive.ui.Keyboard")
-local Textarea		= require("jive.ui.Textarea")
 local Textinput     = require("jive.ui.Textinput")
 local Window        = require("jive.ui.Window")
 local SocketHttp	= require("jive.net.SocketHttp")
 local RequestHttp	= require("jive.net.RequestHttp")
 local URL       	= require("socket.url")
 local Surface		= require("jive.ui.Surface")
-local Process		= require("jive.net.Process")
 
 local jnt = jnt
 
@@ -45,7 +35,7 @@ local require = require
 local ImageSource	= require("applets.ImageViewer.ImageSource")
 
 module(...)
-oo.class(_M, ImageSource)
+ImageSourceHttp = oo.class(_M, ImageSource)
 
 function __init(self, applet)
 	log:info("initialize ImageSourceHttp")
@@ -93,39 +83,13 @@ function readImageList(self)
 	 http:fetch(req)
 end
 
-function getImage(self)
-	return self.image
-end
-
 function nextImage(self, ordering)
-	if #self.imgFiles == 0 then
-		self:emptyListError()
-		return
-	end
-	if ordering == "random" then
-		self.currentImage = math.random(#self.imgFiles)
-	else
-		self.currentImage = self.currentImage + 1
-		if self.currentImage > #self.imgFiles then
-			self.currentImage = 1
-		end
-	end
+	oo.superclass(ImageSourceHttp).nextImage(self, ordering)
 	self:requestImage()
 end
 
 function previousImage(self, ordering)
-	if #self.imgFiles == 0 then
-		self:emptyListError()
-		return
-	end
-	if ordering == "random" then
-		self.currentImage = math.random(#self.imgFiles)
-	else
-		self.currentImage = self.currentImage - 1
-		if self.currentImage < 1 then
-			self.currentImage = #self.imgFiles
-		end
-	end
+	oo.superclass(ImageSourceHttp).previousImage(self, ordering)
 	self:requestImage()
 end
 
@@ -164,10 +128,6 @@ function requestImage(self)
 	http:fetch(req)
 end
 
-function getText(self)
-	return "",self.imgFiles[self.currentImage],""
-end
-
 
 function settings(self, window)
 
@@ -203,9 +163,10 @@ end
 
 =head1 LICENSE
 
-Copyright 2008 Logitech. All Rights Reserved.
+Copyright 2010 Logitech. All Rights Reserved.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
+
 
 =cut
 --]]

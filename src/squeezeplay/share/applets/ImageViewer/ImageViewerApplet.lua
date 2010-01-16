@@ -17,36 +17,26 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local setmetatable, tonumber, tostring, ipairs = setmetatable, tonumber, tostring, ipairs
+local tostring = tostring
 
-local io			= require("io")
 local oo			= require("loop.simple")
 local math			= require("math")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
-local lfs			= require('lfs')
 
 local Applet		= require("jive.Applet")
 local appletManager	= require("jive.AppletManager")
-local Checkbox		= require("jive.ui.Checkbox")
-local Event			= require("jive.ui.Event")
 local Framework		= require("jive.ui.Framework")
 local Font			= require("jive.ui.Font")
 local Icon			= require("jive.ui.Icon")
 local Label			= require("jive.ui.Label")
-local Group			= require("jive.ui.Group")
-local Popup			= require("jive.ui.Popup")
 local RadioButton	= require("jive.ui.RadioButton")
 local RadioGroup	= require("jive.ui.RadioGroup")
 local Surface		= require("jive.ui.Surface")
 local Window		= require("jive.ui.Window")
 local SimpleMenu	= require("jive.ui.SimpleMenu")
-local Task			= require("jive.ui.Task")
 local Timer			= require("jive.ui.Timer")
-local Process		= require("jive.net.Process")
-local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
-local Textarea               = require("jive.ui.Textarea")
-local System           = require("jive.System")
+local System        = require("jive.System")
 
 local debug			= require("jive.utils.debug")
 
@@ -60,8 +50,7 @@ local FRAME_RATE       = jive.ui.FRAME_RATE
 local LAYER_FRAME      = jive.ui.LAYER_FRAME
 local LAYER_CONTENT    = jive.ui.LAYER_CONTENT
 
-local jnt = jnt
-local jiveMain = jiveMain
+--local jiveMain = jiveMain
 
 local MIN_SCROLL_INTERVAL = 750
 
@@ -95,9 +84,8 @@ function setImageSource(self, imgSourceOverride)
 
 		if src == "card" then
 			self.imgSource = ImageSourceCard(self)
---		elseif src == "flickr" then
---			self.imgSource = ImageSourceFlickr(self)
---		elseif src == "http" then
+-- 		elseif src == "flickr" then
+-- 			self.imgSource = ImageSourceFlickr(self)
 		-- default to web list - it's available on all players
 		else
 			self.imgSource = ImageSourceHttp(self)
@@ -155,13 +143,13 @@ function showInitWindow(self)
 
 	local label = Label("text", "")
 	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
-	local icon = Icon("") -- blank for now until we get a proper default loading image
+--	local icon = Icon("") -- blank for now until we get a proper default loading image
 
 	--ran out of time for 7.4
 --	self.imgSource:updateLoadingIcon(icon)
 	
 	popup:addWidget(label)
-	popup:addWidget(icon)
+--	popup:addWidget(icon)
 	popup:addWidget(sublabel)
 	popup:focusWidget(sublabel)
 
@@ -214,6 +202,7 @@ function startSlideshowWhenReady(self)
 	self:displaySlide()
 end
 
+--[[
 function showTextWindow(self)
 	local window = ContextMenuWindow(nil, nil, true)
 	local text = Textarea("multiline_text", self.imgSource:getMultilineText())
@@ -231,6 +220,7 @@ function showTextWindow(self)
 
 	window:show() 
 end
+--]]
 
 
 function setupEventHandlers(self, window)
@@ -250,6 +240,7 @@ function setupEventHandlers(self, window)
 		return EVENT_CONSUME
 	end
 
+--[[
 	local showTextWindowAction = function (self)
 		if self.imgSource:getText() then
 			self:showTextWindow()
@@ -259,6 +250,7 @@ function setupEventHandlers(self, window)
 
 	--todo add takes user to meta data page
 	window:addActionListener("add", self, showTextWindowAction)
+--]]
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)
@@ -267,7 +259,6 @@ function setupEventHandlers(self, window)
 	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
 		function(event)
 			local type = event:getType()
-			local keyPress
 
 			-- next slide on touch 
 			if type == EVENT_MOUSE_DOWN then
@@ -1246,9 +1237,9 @@ end
 
 =head1 LICENSE
 
-Copyright 2008 Logitech. All Rights Reserved.
+Copyright 2010 Logitech. All Rights Reserved.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]

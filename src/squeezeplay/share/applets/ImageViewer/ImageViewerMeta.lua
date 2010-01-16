@@ -20,8 +20,6 @@ local oo            = require("loop.simple")
 
 local System        = require("jive.System")
 local AppletMeta    = require("jive.AppletMeta")
-local lfs           = require("lfs")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -81,9 +79,9 @@ end
 
 =head1 LICENSE
 
-Copyright 2009 Logitech. All Rights Reserved.
+Copyright 2010 Logitech. All Rights Reserved.
 
-This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]

@@ -475,7 +475,7 @@ function openAlarmWindow(self, caller)
 	menu:addActionListener("power", self, offAction)
 	menu:addActionListener("mute", self, snoozeAction)
 
-	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute' }, hideWindowAction)
+	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute', 'volume_up', 'volume_down' }, hideWindowAction)
 
 	menu:setHeaderWidget(headerGroup)
 
@@ -624,3 +624,14 @@ function free(self)
 	self.alarmWindow = nil
 	return false
 end
+
+--[[
+
+=head1 LICENSE
+
+Copyright 2010 Logitech. All Rights Reserved.
+
+This file is licensed under BSD. Please see the LICENSE file for details.
+
+=cut
+--]]

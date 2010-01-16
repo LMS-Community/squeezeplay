@@ -523,7 +523,7 @@ EJECT_WARNING
 	EN	IMPORTANT NOTICE
 
 EJECT_WARNING_INFO
-	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the My Music menu. Failure to do so may cause serious damage to the data.
+	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the Home menu. Failure to do so may cause serious damage to the data.
 
 NEW_STORAGE_MEDIA
 	EN	New Storage Media
@@ -694,3 +694,32 @@ EJECT_TRY_AGAIN
 	RU	Повторите попытку
 	SV	Försök igen
 
+SERVER_STATUS
+	CS	Stav Squeezebox Server
+	DA	Status for Squeezebox Server
+	DE	Squeezebox Server-Status
+	EN	Squeezebox Server Status
+	ES	Estado de Squeezebox Server
+	FI	Squeezebox Serverin tila
+	FR	Etat du Squeezebox Server
+	IT	Stato di Squeezebox Server
+	NL	Status van Squeezebox Server
+	NO	Status for Squeezebox Server
+	PL	Stan programu Squeezebox Server
+	RU	Статус Squeezebox Server
+	SV	Squeezebox Server-status
+
+MY_MUSIC
+	CS	Hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Omat musiikkitiedostot
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
