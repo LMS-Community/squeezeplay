@@ -140,4 +140,4 @@ APPLET_RECONLY
 	EN	Recommended Applets Only
 
 APPLET_AUTOUP
-	EN	Reinstall after Firmware Update (Test)
+	EN	Reinstall after Firmware Update

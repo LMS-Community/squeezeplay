@@ -63,8 +63,8 @@ oo.class(_M, Applet)
 
 function appletInstallerMenu(self, menuItem, action)
 
-	self.window = Window("text_list", menuItem.text)
-	self.title = menuItem.text
+	self.title = self.title or menuItem.text
+	self.window = self.window or Window("text_list", self.title)
 	self.auto = action and action == 'auto'
 
 	-- find the applet directory
@@ -161,6 +161,9 @@ function menuSink(self, server, data)
 		end
 	end
 
+	if self.menu then
+		self.window:removeWidget(self.menu)
+	end
 	self.menu = SimpleMenu("menu")
 	self.menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 	self.menu:setHeaderWidget(Textarea("help_text", self:string("APPLET_WARN")))
@@ -188,17 +191,17 @@ function menuSink(self, server, data)
 				if not appletManager:hasApplet(entry.name) then
 					self.reinstall = self.reinstall or {}
 					self.reinstall[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
-					status = self:string("REINSTALL")
+					status = "REINSTALL"
 				else
-					status = entry.version == installed[entry.name] and self:string("INSTALLED") or self:string("UPDATES")
+					status = entry.version == installed[entry.name] and "INSTALLED" or "UPDATES"
 				end
 			end
 
 			self.menu:addItem({
-				text = entry.title .. (status and (" (" .. tostring(status) .. ")") or ""),
+				text = entry.title .. (status and (" (" .. tostring(self:string(status)) .. ")") or ""),
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self.appletwindow = self:_repoEntry(menuItem, entry)
+					self.appletwindow = self:_repoEntry(menuItem, entry, status or "INSTALL")
 				end,
 				weight = 2
 			})				  
@@ -206,6 +209,7 @@ function menuSink(self, server, data)
 
 	end
 
+	self:tieAndShowWindow(self.window)
 	self.popup:hide()
 
 	-- if called from meta at restart then reinstall or quit
@@ -217,8 +221,6 @@ function menuSink(self, server, data)
 		end
 		return
 	end
-
-	self:tieAndShowWindow(self.window)
 
 	if self.reinstall then
 		self.menu:addItem({
@@ -261,6 +263,8 @@ function menuSink(self, server, data)
 			function(object, isSelected)
 				self:getSettings()["_RECONLY"] = isSelected
 				self:storeSettings()
+				-- restart main menu so we refetch applet details with new setting
+				self:appletInstallerMenu()
 			end,
 			self:getSettings()["_RECONLY"]
 		),
@@ -284,7 +288,7 @@ function menuSink(self, server, data)
 end
 
 
-function _repoEntry(self, menuItem, entry)
+function _repoEntry(self, menuItem, entry, status)
 	local window = Window("text_list", menuItem.text)
 	local menu = SimpleMenu("menu")
 	window:addWidget(menu)
@@ -303,9 +307,9 @@ function _repoEntry(self, menuItem, entry)
 
 	menu:setHeaderWidget(Textarea("help_text", desc))
 
-	local current = self:getSettings()[entry.name]
-
-	if current then
+	-- status may be INSTALL, INSTALLED, REINSTALL, UPDATES
+	if status == "INSTALLED" or status == "UPDATES" then
+		local current = self:getSettings()[entry.name]
 		items[#items+1] = {
 			text  = tostring(self:string("REMOVE")) .. " : " .. current,
 			sound = "WINDOWSHOW",
@@ -314,21 +318,22 @@ function _repoEntry(self, menuItem, entry)
 						   self:action()
 					   end,
 		}
-		if current ~= entry.version then
-			items[#items+1] = {
-				text  = tostring(self:string("UPDATE")) .. " : " .. entry.version,
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-							   self.toremove[entry.name] = 1
-							   self.todownload[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
-							   self:action()
-						   end,
-				
-			}
-		end
-	else
+	end
+	if status == "UPDATES" then
 		items[#items+1] = {
-			text  = tostring(self:string("INSTALL")) .. " : " .. entry.version,
+			text  = tostring(self:string("UPDATE")) .. " : " .. entry.version,
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+						   self.toremove[entry.name] = 1
+						   self.todownload[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+						   self:action()
+					   end,
+			
+		}
+	end
+	if status == "INSTALL" or status == "REINSTALL" then
+		items[#items+1] = {
+			text  = tostring(self:string(status)) .. " : " .. entry.version,
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
 						   self.toremove[entry.name] = 1
@@ -560,3 +565,4 @@ function _sha1Sink(self)
 		sha1:update(chunk)
 	end
 end
+
