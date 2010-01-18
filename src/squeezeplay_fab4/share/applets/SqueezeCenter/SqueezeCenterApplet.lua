@@ -34,6 +34,7 @@ function init(self)
 	self.ejectItems     = {}
 	self.MOUNTING_DRIVE_TIMEOUT = 30
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
+	self.WIPE_TIMEOUT = 15
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 	self.prefsFile = "/etc/squeezecenter/prefs.json"
 
@@ -43,6 +44,13 @@ function init(self)
 			sound = "WINDOWSHOW",
 			callback = function()
 					self:_startServerWindow()
+				   end
+		},
+		wipeRescan = {
+			text = self:string("WIPE_AND_RESTART"),
+			sound = "WINDOWSHOW",
+			callback = function()
+					self:_confirmWipeRescan()
 				   end
 		},
 		stopServer = {
@@ -208,11 +216,18 @@ function _updateSettingsMenu(self)
 		if self.settingsMenu:getIndex(self.settingsMenuItems.startServer) then
 			self.settingsMenu:removeItem(self.settingsMenuItems.startServer)
 		end
+		if self.settingsMenu:getIndex(self.settingsMenuItems.wipeRescan) then
+			self.settingsMenu:removeItem(self.settingsMenuItems.wipeRescan)
+		end
 	else
 		log:debug('server is not running')
 		if not self.settingsMenu:getIndex(self.settingsMenuItems.startServer) then
 			log:debug('add start item')
 			self.settingsMenu:addItem(self.settingsMenuItems.startServer)
+		end
+		if not self.settingsMenu:getIndex(self.settingsMenuItems.wipeRescan) then
+			log:debug('add rescan item')
+			self.settingsMenu:addItem(self.settingsMenuItems.wipeRescan)
 		end
 		if self.settingsMenu:getIndex(self.settingsMenuItems.stopServer) then
 			log:debug('remove stop item')
@@ -408,9 +423,6 @@ function _deviceRemoval(self, devName)
 
 		if self.mountedDevices[devName].SCDrive then
 			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
-			-- XXX: _stopScanner() can probably be removed after we're sure that there is not a separate scanner process
-			-- it does no harm keeping it here though
-			self:_stopScanner(silent)
 			self:_stopServer(silent)
 		end
 		self.mountedDevices[devName] = nil
@@ -428,7 +440,6 @@ function _unmountActions(self, devName, silent, force)
 
 	local item = self:_getItemFromDevName(devName)
 	if item.SCDrive then
-		self:_stopScanner(silent)
 		self:_stopServer(silent)
 	else
 		log:debug('This is not the SCDrive, so ')
@@ -439,14 +450,6 @@ function _unmountActions(self, devName, silent, force)
 		os.execute("umount /media/" .. devName)
 	end
 
-end
-
-function _stopScanner(self, silent)
-	if self:scannerRunning() then
-		-- attempt to stop scanner
-		log:debug('STOPPING SCANNER')
-		self:_squeezecenterAction("icon_connecting", "STOPPING_SCANNER", nil, 2000, "stopscan", silent)
-	end
 end
 
 
@@ -725,6 +728,17 @@ function _addEjectDeviceItem(self, devName)
 end
 
 
+function _confirmWipeRescan(self)
+	log:debug('confirmWipeRescan()')
+	local callbackFunction = function() 
+		self:_wipeRescan()
+		self.confirmWindow:hide()
+	end
+	
+	return self:_confirmWindow('WIPE_AND_RESTART', 'WIPE_AND_RESTART_INFO', callbackFunction)
+end
+
+
 function _confirmStopServer(self)
 	log:debug('confirmStopServer()')
 	local callbackFunction = function() 
@@ -736,14 +750,71 @@ function _confirmStopServer(self)
 end
 
 
-function _confirmRestartServer(self)
-	log:debug('confirmRestartServer()')
-	local callbackFunction = function() 
-		appletManager:callService('goHome')
-		self:_squeezecenterAction("icon_connected", "RESCAN_SQUEEZECENTER", "RESCAN_SQUEEZECENTER_TEXT", 5000, "rescan")
+function _wipeRescan(self)
+
+	log:debug('**** popup during wipe of .Squeezebox dir')
+	if self.popupRescanWaiting then
+		return
 	end
+
+        local popup = Popup("waiting_popup")
+        local icon  = Icon("icon_connecting")
+
+	local scDrive = self:_scDrive()
+	if not scDrive then
+		self:_startServerWindow()
+	end
+
+	-- wipe the .Squeezebox directory forcefully through linux
+	local command = "rm -rf " .. scDrive .. "/.Squeezebox"
+	os.execute(command)
+
+	self.wipeTimeout = 0
+
+	icon:addTimer(1000,
+		function()
+			_wipeTimer(self, scDrive)
+		end)
+
+        popup:addWidget(icon)
+
+	local label = Label("text", self:string('REMOVING_DATABASE') )
+	popup:addWidget(label)
+
+	self.popupRescanWaiting = popup
+	self:tieAndShowWindow(popup)
 	
-	return self:_confirmWindow('STOP_RESCAN_START', 'STOP_RESCAN_START_INFO', callbackFunction)
+end
+
+
+function _wipeTimer(self, scDrive)
+
+	local present = false
+
+	Task("wipeRescan", self, function()
+		log:debug("wipeRescan=", self.wipeTimeout)
+
+		present = self:squeezeboxDirPresent(scDrive)
+
+		if present then
+			-- Not yet wiped
+			self.wipeTimeout = self.wipeTimeout + 1
+			if self.wipeTimeout <= self.WIPE_TIMEOUT then
+				return
+			end
+
+			-- failure
+			log:warn("*** .Squeezebox dir failed to be successfully removed from ", scDrive)
+		else
+			-- success
+			log:debug("*** ", scDrive, ", /.Squeezebox area of sucessfully removed.")
+
+		end
+
+		self.popupRescanWaiting:hide()
+		self.popupRescanWaiting = nil
+		self:_startServerWindow()
+	end):addTask()
 end
 
 
@@ -821,13 +892,14 @@ end
 
 function _confirmWindow(self, titleToken, helpTextToken, callbackFunction)
 
-	local window = Window("text_list", self:string(titleToken) )
+	self.confirmWindow = Window("text_list", self:string(titleToken) )
 	local menu = SimpleMenu("menu", {
 			{
 				text = self:string("CANCEL"),
 				sound = "WINDOWHIDE",
 				callback = function() 
-					window:hide()
+					self.confirmWindow:hide()
+					self.confirmWindow = nil
 				end
 			},
 			{
@@ -838,9 +910,9 @@ function _confirmWindow(self, titleToken, helpTextToken, callbackFunction)
 	})
 
 	menu:setHeaderWidget( Textarea("help_text", self:string(helpTextToken) ) )
-	window:addWidget(menu)
-	self:tieAndShowWindow(window)
-	return window
+	self.confirmWindow:addWidget(menu)
+	self:tieAndShowWindow(self.confirmWindow)
+	return self.confirmWindow
 end
 
 
@@ -914,6 +986,36 @@ function mountedDriveCheck(self)
         mount:close()
 
         return mountedDrives
+end
+
+
+-- will return true if .Squeezebox is listed in the output of the ls command for scDrive
+function squeezeboxDirPresent(self, scDrive)
+	local present = false
+	local command = "/bin/ls -A " .. scDrive
+	local ls = io.popen(command)
+
+	for line in ls:lines() do
+		local match = string.match(line, "^\.") -- we can quit after going through . files
+		if match then
+			present = string.match(line, "^\.Squeezebox")
+			if present then
+				log:warn("squeezeboxDirPresent(), found it: ", present)
+				break
+			end
+		else
+			break
+		end
+	end
+	ls:close()
+
+	log:warn(scDrive, "/.Squeezebox present: ", present)
+
+	if present then
+		return true
+	end
+
+	return false
 end
 
 
@@ -1122,6 +1224,16 @@ function _writeSCPrefsFile(self, devName)
 
 		fh:write(forExport)
 		fh:close()
+	end
+end
+
+
+function _scDrive(self)
+	local prefsData = self:readSCPrefsFile()
+	if prefsData.mountpath then
+		return prefsData.mountpath
+	else
+		return false
 	end
 end
 

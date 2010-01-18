@@ -35,6 +35,15 @@ STOP
 STOP_INFO
 	EN	Are you sure you want to stop Squeezebox Server?
 
+WIPE_AND_RESTART
+	EN	Wipe and rescan
+
+REMOVING_DATABASE
+	EN	Removing existing database
+
+WIPE_AND_RESTART_INFO
+	EN	Are you sure you want to wipe your existing Squeezebox Server database and start over scanning your files?
+
 STOP_RESCAN_START
 	CS	Zastavit-Znovu prohledat-Znovu spustit
 	DA	Stop-Gennemsøg igen-Genstart
