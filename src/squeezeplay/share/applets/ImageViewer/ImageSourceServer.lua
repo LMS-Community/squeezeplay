@@ -129,7 +129,7 @@ function previousImage(self, ordering)
 		return
 	end
 
-	--remove from history, similar to brwoser back history, except forward always move to next fetched image.
+	--remove from history, similar to browser back history, except forward always move to next fetched image.
 	table.remove(self.imageDataHistory, #self.imageDataHistory) -- remove current
 	local imageData = table.remove(self.imageDataHistory, #self.imageDataHistory) -- get previous
 
@@ -169,7 +169,13 @@ function requestImage(self, imageData)
 		local server = SlimServer:getCurrentServer()
 		
 		-- if an image url has the {resizeParams} placeholder, add Squeezebox server resizing parameters
-		urlString = string.gsub(urlString, "{resizeParams}", "_" .. screenWidth .. "x" .. screenHeight)
+		local resizeParams = "_" .. screenWidth .. "x" .. screenHeight
+
+		if self.applet:getSettings()["fullscreen"] then
+			resizeParams = resizeParams .. "_c"
+		end
+		
+		urlString = string.gsub(urlString, "{resizeParams}", resizeParams)
 		
 		if server then
 			local ip, port = server:getIpPort()
