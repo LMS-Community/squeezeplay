@@ -121,8 +121,8 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		elseif alarmState == 'snooze' then
 		    
 			log:warn('snooze state received')
-			-- just leave state as in progress for now
-			-- self.alarmInProgress = alarmState
+			self.alarmInProgress = alarmState
+			log:warn('self.alarmInProgress set to: ', self.alarmInProgress)
 			
 		elseif alarmState == 'none' then
 		
@@ -284,7 +284,9 @@ function notify_serverDisconnected(self, server)
 	log:info('notify_serverDisconnected: ', server, ' is now disconnected')
 
 	-- blindly check state here irrespective of which server caused this notification
-	if self.alarmInProgress and self.alarmInProgress ~= 'rtc' then
+	if self.alarmInProgress == 'snooze' or self.alarmInProgress == 'rtc' then
+		log:warn('notify_serverDisconnected: ', server, ' - disconnected, but no server alarm in progress : ', self.alarmInProgress)
+	elseif self.alarmInProgress == 'server' then
 		if not self.localPlayer:isConnected() then
 			log:warn('notify_serverDisconnected: ', server, ' - while server alarm in progress! state ', self.alarmInProgress, ' triggering fallback alarm!')
 			self:openAlarmWindow('rtc')
@@ -377,6 +379,12 @@ function openAlarmWindow(self, caller)
 	-- when the alarm time is hit, unset the wakeup mcu time
 	self:_setWakeupTime('none')
 
+	if self.decodeStatePoller:isRunning() then
+		self.decodeStatePoller:restart()
+	else
+		self.decodeStatePoller:start()
+	end
+
 	if caller == 'server' then
 		-- if we're connected, first drop the now playing window underneath the alarm window
 		if self.localPlayer:isConnected() then
@@ -393,13 +401,6 @@ function openAlarmWindow(self, caller)
 			-- where did we come from?
 			log:error('CALL STACK TRAP: ')
 		end
-		
-		if self.decodeStatePoller:isRunning() then
-			self.decodeStatePoller:restart()
-		else
-			self.decodeStatePoller:start()
-		end
-
 
 	elseif caller == 'rtc' then
 		if self.alarmInProgress ~= 'rtc' then
@@ -497,6 +498,7 @@ function openAlarmWindow(self, caller)
 			end
                         self.alarmInProgress = nil
 			self.alarmWindow = nil
+			log:warn('self.alarmInProgress set to: ', self.alarmInProgress)
                 end
         )
 
@@ -527,6 +529,7 @@ function _alarmOff(self, stopStream)
 	end
 
 	if self.localPlayer:isConnected() and stopStream then
+		log:warn('_alarmOff: send stopAlarm to connected server')
 		self.localPlayer:stopAlarm()
 	end
 end
@@ -596,27 +599,27 @@ end
 function _alarmSnooze(self)
 	
 	log:warn('_alarmSnooze: alarmInProgress is ', self.alarmInProgress, ' : connection status is ', self.localPlayer:isConnected())
+
+	log:warn('_alarmSnooze: fallback alarm snoozing for hardwired 9 minutes')
+	self:_stopTimer()
+	-- start another hardwired timer for 9 minutes
+	self:_startTimer(540000)
+	--self:_startTimer(20000)	
 	
 	if self.alarmInProgress == 'rtc' then
+		log:warn('_alarmSnooze: stopping fallback alarm audio')
 		-- stop playback
 		self.localPlayer:stop(true)
-		log:warn('_alarmSnooze: fallback alarm snoozing for hardwired 9 minutes')
-		self:_stopTimer()
-		-- start another hardwired timer for 9 minutes
-		--self:_startTimer(60000)	
-		self:_startTimer(540000)
-	else
-		if self.localPlayer:isConnected() then
-			self.localPlayer:snooze()
-		else
-			-- playerDisconnect event should be hit first, but for completeness... 
-			log:warn('_alarmSnooze: lost connection after server alarm notification!  triggering fallback alarm')
-			self:openAlarmWindow('rtc')
-		end
+	end
+
+	if self.localPlayer:isConnected() then
+		log:warn('_alarmSnooze: sending snooze command to connected server for connected player ', self.localPlayer)
+		self.localPlayer:snooze()
 	end
 
 	self.alarmWindow:playSound("WINDOWHIDE")
 	self:_hideAlarmWindow()
+	self.alarmInProgress = 'snooze'
 end
 
 
