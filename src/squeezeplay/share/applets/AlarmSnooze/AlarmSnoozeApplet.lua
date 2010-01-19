@@ -377,6 +377,12 @@ function openAlarmWindow(self, caller)
 	-- when the alarm time is hit, unset the wakeup mcu time
 	self:_setWakeupTime('none')
 
+	if self.decodeStatePoller:isRunning() then
+		self.decodeStatePoller:restart()
+	else
+		self.decodeStatePoller:start()
+	end
+
 	if caller == 'server' then
 		-- if we're connected, first drop the now playing window underneath the alarm window
 		if self.localPlayer:isConnected() then
@@ -393,13 +399,6 @@ function openAlarmWindow(self, caller)
 			-- where did we come from?
 			log:error('CALL STACK TRAP: ')
 		end
-		
-		if self.decodeStatePoller:isRunning() then
-			self.decodeStatePoller:restart()
-		else
-			self.decodeStatePoller:start()
-		end
-
 
 	elseif caller == 'rtc' then
 		if self.alarmInProgress ~= 'rtc' then
