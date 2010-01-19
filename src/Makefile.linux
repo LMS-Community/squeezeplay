@@ -15,8 +15,7 @@ export BUILD_TOP=$(BASE_DIR)/build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-m32 -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -g
-export CXXFLAGS=-m32
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -g
 export LDFLAGS=-L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -56,35 +55,35 @@ generated:
 
 # freetype
 freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure --enable-shared ${ENABLE_PROFILING} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd freetype-2.1.10; ./configure --enable-shared ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
 
 # sdl
 SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 sdl: SDL-1.2.13/Makefile
 	cd SDL-1.2.13; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif  --host=${TARGET} --target=${TARGET} ${ENABLE_PROFILING} --prefix=${PREFIX} ${LIBPNG} ${LIBJPEG}
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif  --host=${HOST} --target=${TARGET} ${ENABLE_PROFILING} --prefix=${PREFIX} ${LIBPNG} ${LIBJPEG}
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
 
 sdl-ttf: SDL_ttf-2.0.8/Makefile
 	cd SDL_ttf-2.0.8; make && make install
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make && make install
@@ -110,13 +109,13 @@ slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
 
 luajson/Makefile:
-	cd luajson; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd luajson; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 luajson: luajson/Makefile
 	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
 
 luazipfilter/Makefile:
-	cd luazipfilter; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd luazipfilter; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
@@ -164,14 +163,14 @@ app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_d
 
 # portaudio
 portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -183,7 +182,7 @@ generated/${LIBMAD_DIR}/Makefile.am:
 
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
-	cd generated/${LIBMAD_DIR}; ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} 
+	cd generated/${LIBMAD_DIR}; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} 
 
 libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
@@ -191,7 +190,7 @@ libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
@@ -212,13 +211,13 @@ axtls: ${AXTLS_DIR}/Makefile
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
 
 squeezeplay_desktop/Makefile:
-	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
@@ -229,7 +228,7 @@ squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
 squeezeplay_private/Makefile:
-	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} --enable-wma --enable-aac
+	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-wma --enable-aac
 
 squeezeplay_private: squeezeplay_private/Makefile
 	cd squeezeplay_private; make PREFIX=${PREFIX} install
