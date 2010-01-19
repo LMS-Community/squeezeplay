@@ -15,7 +15,8 @@ export BUILD_TOP=$(BASE_DIR)/build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=${CFLAGS} -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -g
+export CFLAGS=-m32 -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -g
+export CXXFLAGS=-m32
 export LDFLAGS=-L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
