@@ -1427,10 +1427,8 @@ function stopAlarm(self)
 	-- stopAlarm pauses audio
 	self:pause()
 
-	if self.alarmState == 'active' then
-		self.alarmState = 'none'
-		self:call({'jivealarm', 'stop:1'})
-	end
+	self.alarmState = 'none'
+	self:call({'jivealarm', 'stop:1'})
 	self:updateIconbar()
 
 end
