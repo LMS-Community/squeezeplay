@@ -1267,11 +1267,6 @@ function _createUI(self)
 
 	self.preartwork = Icon("artwork") -- not disabled, used for preloading
 
-	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
-	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')
-	if not self.suppressTitlebar then
-		window:addWidget(self.titleGroup)
-	end
 	window:addWidget(self.nptrackGroup)
 	window:addWidget(self.npalbumGroup)
 	window:addWidget(self.npartistGroup)
@@ -1284,6 +1279,13 @@ function _createUI(self)
 
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
+
+	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
+	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')
+	if not self.suppressTitlebar then
+		window:addWidget(self.titleGroup)
+	end
+
 
 	window:focusWidget(self.nptrackGroup)
 	-- register window as a screensaver, unless we are explicitly not in that mode
