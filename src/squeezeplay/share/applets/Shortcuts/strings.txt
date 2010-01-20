@@ -193,21 +193,27 @@ SHORTCUTS_INPUT_GESTURE_R_L
 	SV	Svep åt vänster
 
 SHORTCUTS_INPUT_IR_HOLD
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	IR Hold %s
 
 SHORTCUTS_INPUT_IR_PRESS
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	IR Press %s
 
 SHORTCUTS_INPUT_KEY_HOLD
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	Key Hold %s
 
 SHORTCUTS_INPUT_KEY_PRESS
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	Key Press %s
 
 SHORTCUTS_INPUT_KEY_PRESET_PRESS
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	Preset Key Press %s
 
 SHORTCUTS_INPUT_KEY_PRESET_HOLD
+# SLT: placeholder stands for a button which is to be pressed/held
 	EN	Preset Key Hold %s
 
 SHORTCUTS_OUTPUT_BACK
