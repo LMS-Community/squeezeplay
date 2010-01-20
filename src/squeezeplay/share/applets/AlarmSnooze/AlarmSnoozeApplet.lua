@@ -502,7 +502,25 @@ function openAlarmWindow(self, caller)
                 end
         )
 
+	window:addTimer(1000, 
+			function() 
+				self:_updateTime() 
+			end
+	)
+
 	self.alarmWindow = window
+	self.timeWidget  = label
+
+end
+
+
+function _updateTime(self) 	 
+	local time = datetime:getCurrentTime() 	 
+	if time ~= self.time then 	 
+		log:debug('updating time in alarm window') 	 
+		self.time = time 	 
+		self.timeWidget:setValue(time) 	 
+	end 	 
 end
 
 
