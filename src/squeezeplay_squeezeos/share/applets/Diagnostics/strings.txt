@@ -631,9 +631,11 @@ BATTERY_VOLTAGE
 	EN	Battery voltage\n%s
 
 BATTERY_VMON1
+# SLT: no need to translate vmon1
 	EN	Battery vmon1\n%s
 
 BATTERY_VMON2
+# SLT: no need to translate vmon2
 	EN	Battery vmon2\n%s
 
 WALL_VOLTAGE
@@ -643,6 +645,7 @@ BATTERY_TEMPERATURE
 	EN	Battery temperature\n%s
 
 POWER_MODE
+# SLT: power mode refers to either AC or battery 
 	EN	Power mode\n%s
 
 POWER_ON_AC
@@ -660,8 +663,8 @@ BATT_IDLE
 BATT_DISCHARGING
 	EN	Battery discharging
 
-BATT_DISCHARGING_WANRING
-	EN	Battery discharging battery is low
+BATT_DISCHARGING_WARNING
+	EN	Battery discharging.  Battery is low
 
 BATT_CHARGING
 	EN	Battery charging
