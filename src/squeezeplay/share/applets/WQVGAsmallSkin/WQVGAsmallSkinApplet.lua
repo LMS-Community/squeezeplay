@@ -2103,7 +2103,85 @@ function skin(self, s)
 		},
 	})
 
+	-- alarm popup
+	s.alarm_header = {
+			w = screenWidth,
+			--padding = { 50, 0, 50, 0 },
+			--order = { 'icon', 'time' },
+			order = { 'time' },
+	}
 
+	s.alarm_time = {
+		w = screenWidth - 20,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		align = "center",
+		font = _boldfont(62),
+	}
+
+	-- alarm menu window
+	s.alarm_popup = {
+		x = 10,
+		y = 10,
+		w = screenWidth - 20,
+		h = screenHeight - 17,
+		border = 0,
+		padding = 0,
+		bgImg = contextMenuBox,
+		layer = LAYER_TITLE,
+
+     		title = {
+			layer = LAYER_TITLE,
+			w = WH_FILL,
+			h = 52,
+			--padding = { 0, 10, 0, 0 },
+			padding = { 10, 10, 10, 5 },
+			bgImg = false,
+		},
+
+		menu = {
+			h = CM_MENU_HEIGHT * 5,
+			w = screenWidth - 34,
+			x = 7,
+			y = 65,
+			border = 0,
+			itemHeight = CM_MENU_HEIGHT,
+			position = LAYOUT_NORTH,
+			scrollbar = { 
+				h = CM_MENU_HEIGHT * 5 - 8,
+				border = {0,4,0,0},
+			},
+			item = {
+				h = CM_MENU_HEIGHT,
+				order = { "text", "arrow" },
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					align = 'left',
+					font = _boldfont(TEXTMENU_FONT_SIZE),
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				arrow = _uses(s.item.arrow),
+			},
+			selected = {
+				item = {
+					bgImg = fiveItemSelectionBox,
+					order = { "text", "arrow" },
+					text = {
+						w = WH_FILL,
+						h = WH_FILL,
+						align = 'left',
+						font = _boldfont(TEXTMENU_FONT_SIZE),
+						fg = TEXT_COLOR,
+						sh = TEXT_SH_COLOR,
+					},
+					arrow = _uses(s.item.arrow),
+				},
+			},
+
+		},
+	}
 	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
@@ -2436,10 +2514,9 @@ function skin(self, s)
 --		img = _loadImage(self, "Alerts/popup_locked_icon.png"),
 	})
 
-	s.icon_alarm = _uses(_icon, {
--- FIXME no asset for this (needed?)
---		img = _loadImage(self, "Alerts/popup_alarm_icon.png"),
-	})
+	s.icon_alarm = {
+		img = _loadImage(self, "Icons/icon_alarm.png"),
+	}
 
         s.icon_art = _uses(_icon, {
                 padding = 0,
