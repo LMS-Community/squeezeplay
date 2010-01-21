@@ -2052,7 +2052,7 @@ function skin(self, s)
 			selected = {
 				item = {
 					order = { "icon", "text", "arrow" },
-					bgImg = fiveItemBox,
+					bgImg = fiveItemSelectionBox,
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
 						padding = { 0, 4, 0, 0 },
