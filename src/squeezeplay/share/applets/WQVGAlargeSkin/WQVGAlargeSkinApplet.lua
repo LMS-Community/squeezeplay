@@ -1571,6 +1571,108 @@ function skin(self, s)
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
 	})
 
+	-- alarm popup
+	s.alarm_header = {
+		w = screenWidth - 16,
+		align = 'center',
+		layer = LAYER_TITLE,
+		order = { 'time' },
+	}
+
+	s.alarm_time = {
+		w = WH_FILL,
+		fg = TEXT_COLOR,
+		sh = TEXT_SH_COLOR,
+		layer = LAYER_TITLE,
+		align = "center",
+		font = _boldfont(62),
+		border = { 0, 14, 0, 0 },
+	}
+
+	-- alarm menu window
+	s.alarm_popup = {
+		x = 8,
+		y = 21,
+		w = screenWidth - 16,
+		h = screenHeight - 42,
+		bgImg = contextMenuBox,
+		layer = LAYER_TITLE,
+
+		title = {
+			hidden = 1,
+		},
+
+		menu = {
+			border = { 7, 7, 7, 0 },
+			padding = { 0, 0, 0, 100 },
+			scrollbar = {
+				h = CM_MENU_HEIGHT * 3 - 8, 
+				border = { 0, 4, 2, 4 },
+			},
+			item = {
+				h = CM_MENU_HEIGHT,
+				order = { "icon", "text", "arrow" },
+				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
+				bgImg = false,
+				text = {
+					w = WH_FILL,
+					h = WH_FILL,
+					padding = { 0, 0, 0, 8 },
+					align = 'left',
+					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+					line = {
+						{
+							font = _boldfont(ALBUMMENU_FONT_SIZE),
+						},
+						{
+							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
+						},
+					},
+					fg = TEXT_COLOR,
+					sh = TEXT_SH_COLOR,
+				},
+				icon = {
+					h = THUMB_SIZE,
+					padding = MENU_ITEM_ICON_PADDING,
+					align = 'center',
+				},
+				arrow = _uses(s.item.arrow),
+			},
+			selected = {
+				item = {
+					bgImg = threeItemCMSelectionBox,
+					order = { "icon", "text", "arrow" },
+					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
+					text = {
+						w = WH_FILL,
+						h = WH_FILL,
+						align = 'left',
+						padding = { 0, 0, 0, 12 },
+						font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
+						line = {
+							{
+								font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
+							},
+							{
+								font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
+							},
+						},
+						fg = TEXT_COLOR,
+						sh = TEXT_SH_COLOR,
+					},
+					icon = {
+						h = THUMB_SIZE,
+						padding = MENU_ITEM_ICON_PADDING,
+						align = 'center',
+					},
+					arrow = _uses(s.item.arrow, {
+			      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
+					}),
+				},
+			},
+		}
+	}
+	
 	-- slider popup (volume)
 	s.slider_popup = {
 		x = 50,
