@@ -604,7 +604,7 @@ function skin(self, s)
 		padding = { ITEM_LEFT_PADDING, 0, 5, 0 },
 		bgImg = threeItemBox,
 		text = {
-			padding = { 0, 0, 2, 0 },
+			padding = { 0, 10, 2, 0 },
 			align = "left",
 			w = WH_FILL,
 			h = WH_FILL,
@@ -701,6 +701,7 @@ function skin(self, s)
 		fg = WHITE,
 		sh = NONE,
 		font = _boldfont(TEXTMENU_SELECTED_FONT_SIZE),
+		padding = { 0, 0, 2, 0 },
 	}
 	local itemInfoSelectedTextBlock = _uses(s.item_info.text, {
 		font = _font(40),
