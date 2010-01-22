@@ -1513,7 +1513,6 @@ function skin(self, s)
 					line = {
 						{
 							font = _boldfont(ALBUMMENU_FONT_SIZE),
-							height = 22,
 						},
 						{
 							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
@@ -1543,7 +1542,6 @@ function skin(self, s)
 						line = {
 							{
 								font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
-								height = 22,
 							},
 							{
 								font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
