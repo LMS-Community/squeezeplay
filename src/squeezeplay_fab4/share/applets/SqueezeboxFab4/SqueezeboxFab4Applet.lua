@@ -67,11 +67,11 @@ local MAX_BRIGHTNESS_LEVEL = 100
 local MIN_BRIGHTNESS_LEVEL = 1
 
 -- Timer values
-local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
-local BRIGHTNESS_OVERRIDE = math.floor( 3000 / BRIGHTNESS_REFRESH_RATE)		-- was 6
+local BRIGHTNESS_REFRESH_RATE = 100						-- 100ms (was 500ms)
+local BRIGHTNESS_OVERRIDE = math.floor( 10 * 1000 / BRIGHTNESS_REFRESH_RATE)	-- 10s (was 6 * 500ms = 3s)
 
 -- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- was 8
+local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- 40 (was 8)
 local luxSmooth = {}
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -305,9 +305,19 @@ function doAutomaticBrightnessTimer(self)
 	local lux = f:read("*all")
 	f:close()
 	
+	f = io.open(AMBIENT_SYSPATH .. "adc")
+	local adc = f:read("*all")
+	f:close()
+
 	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 	
-	if luxvalue > STATIC_LUX_MAX then
+	local s, e = string.find(adc, ",")
+	local valCh0 = tonumber(string.sub(adc, 0, s-1))
+
+	-- If channel 0 (visible and ir light) is at maximum
+	--  the calculated lux value isn't correct anymore
+	--  and goes down again. Use max lux value in this case.
+	if (luxvalue > STATIC_LUX_MAX) or (valCh0 == 65535) then
 		-- Fix calculation for very high lux values
 		luxvalue = STATIC_LUX_MAX
 	end
