@@ -81,7 +81,7 @@ CONNECTING_TO_SN
 # SLT: please keep this short
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung wird hergestellt zu
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen

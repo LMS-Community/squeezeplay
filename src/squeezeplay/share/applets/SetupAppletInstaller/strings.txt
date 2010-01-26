@@ -51,12 +51,12 @@ DOWNLOADING
 	ES	Descargando subprogramas
 	FI	Ladataan sovelmia
 	FR	Téléchargement des applets
-	IT	Download delle applet in corso
+	IT	Download delle applet
 	NL	Applets worden gedownload
-	NO	Laster ned tilleggsprogram
+	NO	Laster ned tilleggsprogrammer
 	PL	Pobieranie apletów
 	RU	Загрузка Java-приложений
-	SV	Laddar ner appletprogram
+	SV	Laddar ner appletar
 
 RESTART_APP
 	CS	Aby mohly být nové aplety použity, restartujte aplikaci
@@ -119,25 +119,122 @@ REMOVE
 	SV	Ta bort
 
 UPDATE
+	CS	Aktualizovat
+	DA	Opdater
+	DE	Aktualisieren
 	EN	Update
+	ES	Actualizar
+	FI	Päivitä
+	FR	Mettre à jour
+	IT	Aggiorna
+	NL	Update
+	NO	Oppdater
+	PL	Aktualizuj
+	RU	Обновить
+	SV	Uppdatering
 
 INSTALLED
+	CS	Instalováno
+	DA	Installeret
+	DE	Installiert
 	EN	Installed
+	ES	Instalada
+	FI	Asennettu
+	FR	Installé
+	IT	Installato
+	NL	Geïnstalleerd
+	NO	Installert
+	PL	Zainstalowane
+	RU	Установлено
+	SV	Installerad
 
 UPDATES
+	CS	Aktualizace
+	DA	Opdateringer
+	DE	Updates
 	EN	Updates
+	ES	Actualizaciones
+	FI	Päivitykset
+	FR	Mises à jour
+	IT	Aggiornamenti
+	NL	Updates
+	NO	Oppdateringer
+	PL	Aktualizacje
+	RU	Обновления
+	SV	Uppgraderingar
 
 REINSTALL
-	EN	Reinstall	
+	CS	Přeinstalovat
+	DA	Geninstaller
+	DE	Neu installieren
+	EN	Reinstall
+	ES	Volver a instalar
+	FI	Asenna uudelleen
+	FR	Réinstaller
+	IT	Reinstalla
+	NL	Opnieuw installeren
+	NO	Installer på nytt
+	PL	Zainstaluj ponownie
+	RU	Переустановить
+	SV	Installera om
 
 REINSTALL_ALL
+	CS	Přeinstalovat vše
+	DA	Geninstaller alt
+	DE	Alle neu installieren
 	EN	Reinstall All
+	ES	Volver a instalar todo
+	FI	Asenna kaikki uudelleen
+	FR	Réinstaller tout
+	IT	Reinstalla tutto
+	NL	Alles opnieuw installeren
+	NO	Installer alt på nytt
+	PL	Zainstaluj ponownie wszystko
+	RU	Переустановить все
+	SV	Installera om alla
 
 APPLET_WARN
+	CS	Aplety třetích stran nejsou podporovány a měly by být instalovány na vlastní riziko. Před instalací se ujistěte se, že důvěřujete autorovi apletu.
+	DA	Underprogrammer fra tredjepart understøttes ikke, og installationen sker på eget ansvar. Du skal sikre dig at du kan stole på udgiveren, inden du installerer underprogrammet.
+	DE	Plugins anderer Hersteller werden nicht unterstützt. Die Installation dieser Plugins erfolgt auf eigene Gefahr. Vergewissern Sie sich vor der Installation, dass Sie dem Hersteller des Applets vertrauen können.
 	EN	3rd party applets are unsupported and should be installed at your own risk.  Please check you trust the author of an applet before installing it.
+	ES	Los subprogramas de terceros no son compatibles y usted los instala por su cuenta y riesgo. Compruebe si el autor del subprograma es de confianza antes de la instalación.
+	FI	Muiden valmistajien sovelmia ei tueta, ja ne asennetaan omalla riskillä.  Varmista, että luotat sovelman tekijään, ennen kuin asennat sovelman.
+	FR	Les applets tiers ne sont pas pris en charge et leur installation s'effectue à vos propres risques. Vérifiez l'auteur de l'applet avant de commencer l'installation.
+	IT	Le applet di terzi non sono supportate e vengono installate a rischio dell'utente. Verificare che l'autore dell'applet sia affidabile prima di installarla.
+	NL	Applets van derden worden niet ondersteund en worden op eigen risico geïnstalleerd.  Kijk of je de auteur van een applet vertrouwt, voordat je het installeert.
+	NO	Tredjeparts tilleggsprogrammer støttes ikke, og du installerer dem på egen risiko. Kontroller at du stoler på den som har laget tilleggsprogrammet, før du installerer det.
+	PL	Aplety innych firm nie są obsługiwane i należy instalować je na własne ryzyko. Przed zainstalowaniem apletu należy upewnić się, że jego autorowi można zaufać.
+	RU	Java-приложения сторонних изготовителей не поддерживаются и должны устанавливаться под вашу ответственность. Перед установкой убедитесь, что вы доверяете автору Java-приложения.
+	SV	Det saknas stöd för appletar från tredje part. Sådana installeras på egen risk. Kontrollera vem som har skapat den och bestäm om du vill lita på den personen eller det företaget.
 
 APPLET_RECONLY
+	CS	Pouze doporučené aplety
+	DA	Kun anbefalede underprogrammer
+	DE	Nur empfohlene Applets
 	EN	Recommended Applets Only
+	ES	Sólo subprogramas recomendados
+	FI	Vain suositellut sovelmat
+	FR	Applets recommandés uniquement
+	IT	Solo applet consigliate
+	NL	Alleen aanbevolen applets
+	NO	Kun anbefalte tilleggsprogrammer
+	PL	Tylko zalecane aplety
+	RU	Только рекомендованные Java-приложения
+	SV	Endast rekommenderade appletar
 
 APPLET_AUTOUP
+	CS	Přeinstalovat po aktualizaci firmware
+	DA	Geninstaller efter firmwareopdatering
+	DE	Nach Firmware-Update neu installieren
 	EN	Reinstall after Firmware Update
+	ES	Volver a instalar después de actualizar el firmware
+	FI	Asenna uudelleen laitteisto-ohjelmistopäivityksen jälkeen
+	FR	Réinstaller après la mise à jour du micrologiciel
+	IT	Reinstalla dopo aggiornamento firmware
+	NL	Opnieuw installeren na firmware-update
+	NO	Installer på nytt etter fastvareoppgradering
+	PL	Zainstaluj ponownie po aktualizacji oprogramowania układowego
+	RU	Переустановить после обновления микропрограмм
+	SV	Installera om när den inbyggda programvaran har uppdaterats
+

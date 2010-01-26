@@ -138,7 +138,19 @@ MENUS_TRY_AGAIN
 	SV	Försök igen
 
 MENUS_CONTINUE_WITHOUT_NETWORK
+	CS	Pokračovat bez sítě
+	DA	Fortsæt uden netværk
+	DE	Ohne Netzwerk fortfahren
 	EN	Continue without network
+	ES	Continuar sin red
+	FI	Jatka ilman verkkoyhteyttä
+	FR	Continuer sans réseau
+	IT	Continua senza la rete
+	NL	Doorgaan zonder netwerk
+	NO	Fortsett uten nettverk
+	PL	Kontynuuj bez sieci
+	RU	Продолжить без сети
+	SV	Fortsätt utan nätverk
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu

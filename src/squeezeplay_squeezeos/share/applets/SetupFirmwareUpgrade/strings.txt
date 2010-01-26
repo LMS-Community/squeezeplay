@@ -273,18 +273,30 @@ UPDATE_BATTERY
 	SV	Ladda batteriet
 
 UPDATE_BATTERY_HELP
+	CS	Vaše baterie je vybitá. Připojte AC napájení (nabíječku nebo kabel), aby mohla pokračovat aktualizace tohoto softwaru.
+	DA	Batteriet er næsten fladt. Tilslut lysnetadapteren eller opladerkablet inden du fortsætter med firmwareopdateringen.
+	DE	Der Akku ist schwach. Schließen Sie das Gerät an eine Steckdose oder ein Ladegerät an, um mit der Software-Aktualisierung fortzufahren.
 	EN	Your battery is very low.  Please attach AC power (charger or cable) to continue with this software upgrade.
+	ES	Queda poca batería. Conecte una fuente de CA (cargador o cable) para continuar con la actualización del software.
+	FI	Akun lataus on alhainen.  Kytke laite verkkovirtaan (laturilla tai johdolla), jotta voit jatkaa ohjelmiston päivitystä.
+	FR	La batterie est très faible. Connectez le dispositif à une source d'alimentation (chargeur ou câble) pour continuer la mise à niveau du logiciel.
+	IT	La batteria è quasi scarica. Per continuare l'aggiornamento del software, collegare il cavo dell'alimentazione elettrica (caricatore o cavo).
+	NL	Het batterijvermogen is erg laag. Sluit de netvoeding aan (oplader of draad) om deze software-upgrade voort te zetten.
+	NO	Svært lavt batteri. Kople til stikkontakt for å fortsette med programvareoppgraderingen.
+	PL	Bardzo niski poziom naładowania baterii. Podłącz zasilanie (ładowarkę lub kabel), aby kontynuować aktualizację oprogramowania.
+	RU	Аккумулятор разряжен. Чтобы продолжить обновление программного обеспечения, присоедините источник переменного тока (устройство зарядки или кабель).
+	SV	Batteriet är svagt. Sätt fjärrkontrollen i laddaren om du vill fortsätta med programuppdateringen.
 
 UPDATE_BATTERY_HELP_JIVE
 	CS	Vložte ovládání do nabíječky, aby mohl pokračovat upgrade softwaru.
-	DA	Du skal anbringe fjernbetjeningen i opladeren for at fortsætte med opdateringen af firmwaren.
+	DA	Pladser venligst denne fjernbetjening i opladeren for at fortsætte med opdateringen af programmel.
 	DE	Stellen Sie die Fernbedienung in die Ladestation, um die Software-Aktualisierung fortzusetzen.
 	EN	Please put this remote in the charger to continue with the software upgrade.
 	ES	Coloque este mando en el cargador para continuar con la actualización del software.
 	FI	Laita kaukosäädin latautumaan, jotta voit jatkaa ohjelmiston päivittämistä.
-	FR	Placez la télécommande sur le chargeur pour effectuer la mise à niveau.
+	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
 	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
-	NL	Plaats deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
+	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
 	NO	Plasser denne fjernkontrollen i laderen for å fortsette med programvareoppgraderingen.
 	PL	Umieść pilota zdalnego sterowania w ładowarce, aby kontynuować aktualizację oprogramowania.
 	RU	Чтобы продолжить обновление ПО, установите пульт в устройство зарядки.

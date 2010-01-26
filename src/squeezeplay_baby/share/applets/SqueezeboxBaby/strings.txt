@@ -124,12 +124,34 @@ BSP_BRIGHTNESS_MANUAL
 	SV	Manuell ljusstyrka
 
 BSP_BRIGHTNESS_MIN
-	DE	Minimale Helligkeit (Auto)
+	CS	Minimální jas (Auto)
+	DA	Mindste lysstyrke (automatisk)
+	DE	Minimale Helligkeit (automatisch)
 	EN	Minimal Brightness (Auto)
+	ES	Brillo mínimo (automático)
+	FI	Vähimmäiskirkkaus (autom.)
+	FR	Luminosité minimale (Auto)
+	IT	Luminosità minima (auto)
+	NL	Minimale helderheid (automatisch)
+	NO	Minimal lysstyrke (Automatisk)
+	PL	Minimalna jasność (automatycznie)
+	RU	Минимальная яркость (Авто)
+	SV	Minsta ljusstyrka (auto)
 
 BSP_BRIGHTNESS_MIN_ADJUST_HELP
+	CS	K nastavení minimálního jasu použijte kolečko.
+	DA	Brug hjulet til at justere lysstyrken.
 	DE	Sie können die minimale Helligkeit mit dem Rad anpassen.
 	EN	Use the wheel to adjust the minimal brightness.
+	ES	Use la rueda para ajustar el brillo al mínimo.
+	FI	Voit säätää kirkkautta kiekolla.
+	FR	Utilisez la molette pour ajuster la luminosité.
+	IT	Usare la rotellina per regolare la luminosità minima.
+	NL	Gebruik het wiel om de minimale helderheid aan te passen.
+	NO	Bruk hjulet til å justere minimal lysstyrke.
+	PL	Użyj pokrętła, aby ustawić minimalną jasność.
+	RU	Используйте колесико для регулировки яркости.
+	SV	Justera ljusstyrkan med rullningshjulet.
 
 GOODBYE
 	CS	Nashledanou
@@ -176,12 +198,48 @@ BATTERY_LOW_2
 	RU	Зарядите батарею
 	SV	Ladda mig
 
-
 BETA_HARDWARE_TITLE
+	CS	Beta Hardware
+	DA	Beta-hardware
+	DE	Beta-Hardware
 	EN	Beta Hardware
+	ES	Hardware beta
+	FI	Beeta-laitteisto
+	FR	Matériel Beta
+	IT	Hardware in versione beta
+	NL	Bèta-hardware
+	NO	Testmaskinvare
+	PL	Sprzęt w wersji beta
+	RU	Бета-версия оборудования
+	SV	Betamaskinvara
 
 BETA_HARDWARE_TEXT
+	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nNěkteré vlastnosti nemusí být funkční.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nNogle funktioner virker muligvis ikke.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nEinige Funktionen funktionieren möglicherweise nicht.
 	EN	This is a pre-production unit, hardware revision %s.\n\nSome features may not work.
+	ES	Esta es una unidad de pre-producción, revisión de hardware %s.\n\nPuede que algunas características no funcionen.
+	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nKaikki ominaisuudet eivät välttämättä toimi.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCertaines fonctionnalités risquent de ne pas fonctionner.
+	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nAlcune funzioni potrebbero non funzionare.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nSommige functies werken mogelijk niet.
+	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nIkke alle funksjoner fungerer nødvendigvis.
+	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nNiektóre funkcje mogą nie działać.
+	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nНекоторые функции могут не работать.
+	SV	Det här är en prototyp av maskinvaran med versionsbeteckning %s.\n\nDet kan hända att vissa funktioner inte fungerar.
 
 BETA_HARDWARE_EUTHANIZE
+	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nTato jednotka již není podporována, vraťte laskavě Logitech.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere. Send den tilbage til Logitech.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt. Bitte geben Sie es an Logitech zurück.
 	EN	This is a pre-production unit, hardware revision %s.\n\nThis unit is no longer supported, please return to Logitech.
+	ES	Ésta es una unidad de pre-producción, revisión de hardware %s.\n\nEsta unidad ya no es compatible, devuélvala a Logitech.
+	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nYksikköä ei enää tueta, palauta yksikkö Logitechille.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge. Veuillez la renvoyer à Logitech.
+	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nQuesta unità non è più supportata. Restituirla a Logitech.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund. Gelieve deze aan Logitech te retourneren.
+	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nDenne enheten støttes ikke lenger, returner den til Logitech.
+	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nTo urządzenie nie jest już obsługiwane, prosimy zwrócić je do firmy Logitech.
+	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nЭто устройство больше не поддерживается, верните его в Logitech.
+	SV	Det här är en prototyp av maskinvaran med versionsbeteckning %s.\n\nEnheten stöds inte längre och ska återlämnas till Logitech.
+

@@ -192,7 +192,7 @@ IMAGE_VIEWER_DELAY_5_SEC
 	FR	5 sec
 	IT	5 sec
 	NL	5 sec
-	NO	5 sek
+	NO	5 sek.
 	PL	5 s
 	RU	5 с
 	SV	5 sek
@@ -974,5 +974,17 @@ IMAGE_VIEWER_START_SLIDESHOW
 	SV	Påbörja bildspel
 
 IMAGE_VIEWER_INVALID_IMAGE
-	DE	Ungültige Bilddatei gefunden
+	CS	Nalezen neplatný obrazový objekt
+	DA	Der blev fundet et ugyldigt billedobjekt
+	DE	Ungültiges Bildobjekt gefunden
 	EN	Invalid image object found
+	ES	Se ha encontrado un objeto de imagen no válido
+	FI	Löytyi virheellinen kuvaobjekti
+	FR	Détection d'un objet image non valide
+	IT	Trovato oggetto immagine non valido
+	NL	Ongeldig beeldobject gevonden
+	NO	Fant ugyldig bildeobjekt
+	PL	Znaleziono nieprawidłowy obiekt obrazu
+	RU	Найден недопустимый объект изображения
+	SV	Felaktig bildfil hittades.
+

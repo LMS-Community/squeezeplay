@@ -19,5 +19,17 @@ WQVGA_LARGE_SKIN
 	SV	WQVGA-skal med stor text
 
 WQVGA_LARGE_SKIN_FAB4
+	CS	Skin s velkým textem
+	DA	Tema med stor tekst
+	DE	Skin: große Schrift
 	EN	Large Text Skin
+	ES	Máscara con texto grande
+	FI	Suuren tekstin olemus
+	FR	Habillage à grands caractères
+	IT	Skin testo grande
+	NL	Skin Grote tekst
+	NO	Skall for stor tekst
+	PL	Karnacja Duży tekst
+	RU	Обложка с крупным текстом
+	SV	Skal med stor text
 

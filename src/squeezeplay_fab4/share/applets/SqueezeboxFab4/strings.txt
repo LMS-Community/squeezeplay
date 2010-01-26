@@ -169,8 +169,19 @@ BSP_BRIGHTNESS_MANUAL
 	SV	Manuell ljusstyrka
 
 BSP_BRIGHTNESS_MIN
-	DE	Minimale Helligkeit (Auto)
+	CS	Minimální jas (Auto)
+	DA	Mindste lysstyrke (automatisk)
+	DE	Minimale Helligkeit (automatisch)
 	EN	Minimal Brightness (Auto)
+	ES	Brillo mínimo (automático)
+	FI	Vähimmäiskirkkaus (autom.)
+	FR	Luminosité minimale (Auto)
+	IT	Luminosità minima (auto)
+	NL	Minimale helderheid (automatisch)
+	NO	Minimal lysstyrke (Automatisk)
+	PL	Minimalna jasność (automatycznie)
+	RU	Минимальная яркость (Авто)
+	SV	Minsta ljusstyrka (auto)
 
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.

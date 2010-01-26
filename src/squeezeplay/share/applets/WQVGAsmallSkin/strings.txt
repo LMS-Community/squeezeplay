@@ -19,7 +19,19 @@ WQVGA_SMALL_SKIN
 	SV	WQVGA-skal med liten text
 
 WQVGA_SMALL_SKIN_FAB4
+	CS	Skin s malým textem
+	DA	Tema med lille tekst
+	DE	Skin: kleine Schrift
 	EN	Small Text Skin
+	ES	Máscara con texto pequeño
+	FI	Pienen tekstin olemus
+	FR	Habillage à petits caractères
+	IT	Skin testo piccolo
+	NL	Skin Kleine tekst
+	NO	Skall for liten tekst
+	PL	Karnacja Mały tekst
+	RU	Обложка с мелким текстом
+	SV	Skal med liten text
 
 ENTER_SMALL
 	CS	hotovo
@@ -38,18 +50,18 @@ ENTER_SMALL
 
 ENTER
 	CS	Hotovo
-	DA	Udført
+	DA	OK
 	DE	Fertig
 	EN	Done
 	ES	Listo
 	FI	Valmis
 	FR	Terminé
-	IT	Fine
-	NL	Gereed
-	NO	Ferdig
+	IT	Fatto
+	NL	Klaar
+	NO	Fullført
 	PL	Gotowe
-	RU	готово
-	SV	Klart
+	RU	Готово
+	SV	Klar
 
 SPACEBAR_SMALL
 	CS	mezera
@@ -67,7 +79,7 @@ SPACEBAR_SMALL
 	SV	mellanslag
 
 HELP
-	CS	Vyberte aplety, které chcete nainstalovat, a poté zvolte Instalovat
+	CS	Nápověda
 	DA	Hjælp
 	DE	Hilfe
 	EN	Help
@@ -77,7 +89,7 @@ HELP
 	IT	Guida
 	NL	Help
 	NO	Hjelp
-	PL	Wybierz aplety do zainstalowania, a następnie wybierz opcję Instaluj
+	PL	Pomoc
 	RU	Справка
 	SV	Hjälp
 
