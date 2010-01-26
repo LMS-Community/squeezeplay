@@ -275,6 +275,9 @@ local rtmpHandlers = {
 					   return 0
 				   else
 					   changeState("Playing")
+					   if rtmpMessages["meta"] ~= nil then
+						   slimproto:send({ opcode = "RESP", headers = "" })
+					   end
 				   end
 			   end
 
@@ -288,13 +291,18 @@ local rtmpHandlers = {
 
 	[18] = function(stream, rtmp)
 			   log:info("message type 18 - metadata")
-			   slimproto:send({ opcode = "META", data = rtmp["body"] })
+
+			   if rtmpMessages["meta"] == nil or rtmpMessages["meta"] == "send" then
+				   slimproto:send({ opcode = "META", data = rtmp["body"] })
+			   end
 		   end,
 
 	[20] = function(stream, rtmp)
 			   log:info("message type 20")
 
-			   slimproto:send({ opcode = "META", data = rtmp["body"] })
+			   if rtmpMessages["meta"] == nil or rtmpMessages["meta"] == "send" then
+				   slimproto:send({ opcode = "META", data = rtmp["body"] })
+			   end
 
 			   if string.match(rtmp["body"], "_result") then
 
