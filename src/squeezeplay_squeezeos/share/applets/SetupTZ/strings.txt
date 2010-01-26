@@ -899,7 +899,7 @@ TZ_ASIA_HONG_KONG
 	NL	(GMT+08:00) Peking, Tsjoengking, Hongkong, Ürümqi
 	NO	(GMT + 08.00) Beijing, Chongqing, Hongkong, Ürümqi
 	PL	(GMT+08:00) Pekin, Chongqing, Hongkong, Urumqi
-	RU	(GMT+08:00) – Пекин, Чунцин , Гонконг, Урумчи
+	RU	(GMT+08:00) – Пекин, Чунцин, Гонконг, Урумчи
 	SV	(GMT + 8:00) Beijing, Chongqing, Hong Kong, Urumqi
 
 TZ_ASIA_IRKUTSK
@@ -1141,3 +1141,4 @@ TZ_PACIFIC_TONGATAPU
 	PL	(GMT+13:00) Nuku'alofa
 	RU	(GMT+13:00) – Нукуалофа
 	SV	(GMT + 13:00) Nukualofa
+

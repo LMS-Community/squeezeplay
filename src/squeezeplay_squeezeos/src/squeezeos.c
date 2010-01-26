@@ -156,8 +156,8 @@ static int squeezeos_get_timezone(lua_State *L)
 		if(tzptr) {
 			tzptr += 9;
 			if(strcmp(tzptr, "Factory")) {
-				free(buf);
 				lua_pushstring(L, tzptr);
+				free(buf);
 				return 1;
 			}
 		}

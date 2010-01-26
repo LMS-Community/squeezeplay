@@ -1,5 +1,5 @@
 
-local assert, tostring, type, ipairs, getmetatable = assert, tostring, type, ipairs, getmetatable
+local assert, tostring, type, pairs, ipairs, getmetatable = assert, tostring, type, pairs, ipairs, getmetatable
 
 
 local oo                     = require("loop.base")
@@ -47,6 +47,10 @@ local STREAM_READ_TIMEOUT = 0
 local STREAM_WRITE_TIMEOUT = 5
 
 local LOCAL_PAUSE_STOP_TIMEOUT = 400
+
+-- Handlers to allow applets to extend playback capabilties via spdr:// urls
+local streamHandlers = {}
+
 
 function __init(self, jnt, slimproto)
 	assert(slimproto)
@@ -100,7 +104,16 @@ function __init(self, jnt, slimproto)
 		spprivate:initAudio(slimproto)
 	end
 	decode:initAudio(slimproto)
-	
+
+	local cap
+	for handler, _ in pairs(streamHandlers) do
+		cap = (cap and (cap .. "|") or "") .. handler
+	end
+	if cap then
+		slimproto:capability("spdr")
+		slimproto:capability("Spdirect", cap)
+	end
+
 	Rtmp:init(slimproto)
 
 	self.mode = 0
@@ -419,7 +432,7 @@ function _ipstring(ip)
 end
 
 
-function _streamConnect(self, serverIp, serverPort)
+function _streamConnect(self, serverIp, serverPort, reader, writer)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
 	if serverIp ~= self.slimproto:getServerIp() then
@@ -430,7 +443,7 @@ function _streamConnect(self, serverIp, serverPort)
 
 	self.stream = Stream:connect(serverIp, serverPort)
 
-	-- The following manipluates the metatable for the stream object to allow Http and Rtmp streaming
+	-- The following manipluates the metatable for the stream object to allow Http and other streaming
 	-- to use different read and write methods while using a common constructor which reuses the same
 	-- C userdata for the object (and hence the same metatable)
 	local m = getmetatable(self.stream)
@@ -441,15 +454,18 @@ function _streamConnect(self, serverIp, serverPort)
 		m._streamWrite = m.write
 	end
 
-	-- select the appropriate methods based on whether the stream is Rtmp
-	if self.flags & 0x20 ~= 0x20 then
-		-- use standard stream methods
-		m.read  = m._streamRead
-		m.write = m._streamWrite
-	else
+	if reader and writer then
+		-- use given stream methods
+		m.read  = reader
+		m.write = writer
+	elseif self.flags & 0x20 == 0x20 then
 		-- use Rtmp methods
 		m.read  = Rtmp.read
 		m.write = Rtmp.write
+	else
+		-- use standard stream methods
+		m.read  = m._streamRead
+		m.write = m._streamWrite
 	end 
 
 	local wtask = Task("streambufW", self, _streamWrite, nil, Task.PRIORITY_AUDIO)
@@ -555,20 +571,6 @@ function _strm(self, data)
 		-- over, flush out whatever's left.
 		self:_streamDisconnect(nil, true)
 
-		decode:start(string.byte(data.mode),
-			     string.byte(data.transitionType),
-			     data.transitionPeriod,
-			     data.replayGain,
-			     data.outputThreshold,
-			     data.flags & 0x03,
-			     string.byte(data.pcmSampleSize),
-			     string.byte(data.pcmSampleRate),
-			     string.byte(data.pcmChannels),
-			     string.byte(data.pcmEndianness)
-		     )
-
-		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
-
 		-- reset stream state
 		self.flags = data.flags
 		self.mode = data.mode
@@ -584,8 +586,32 @@ function _strm(self, data)
 		self.sentAudioUnderrunEvent = false
 		self.isLooping = false
 
-		-- connect to server
-		self:_streamConnect(serverIp, data.serverPort)
+		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
+
+		if self.flags == 0x10 then
+			-- custom handler 
+			local handlerId = string.match(self.header, "spdr://(%w-)%?")
+			if streamHandlers[handlerId] then
+				log:info("using custom handler ", handlerId)
+				streamHandlers[handlerId](self, data, decode)
+			else
+				log:warn("bad custom handler ", handlerId)
+			end
+		else
+			-- standard stream - start the decoder and connect
+			decode:start(string.byte(data.mode),
+			     string.byte(data.transitionType),
+			     data.transitionPeriod,
+			     data.replayGain,
+			     data.outputThreshold,
+			     data.flags & 0x03,
+			     string.byte(data.pcmSampleSize),
+			     string.byte(data.pcmSampleRate),
+			     string.byte(data.pcmChannels),
+			     string.byte(data.pcmEndianness)
+		    )
+			self:_streamConnect(serverIp, data.serverPort)
+		end
 
 	elseif data.command == 'q' then
 		-- quit
@@ -897,6 +923,12 @@ function startLocalStopTimeout(self)
 	end
 
 	self.localStopTimer:restart()
+end
+
+
+function registerHandler(self, id, handler)
+	log:info("registering handler ", id)
+	streamHandlers[id] = handler
 end
 
 

@@ -32,10 +32,22 @@ SHORTCUTS_RESTORE_DEFAULTS
 	PL	Przywróć domyślne
 	RU	Восстановить настройки по умолчанию
 	SV	Återställ standardinställningar
-	
+
 SHORTCUTS_RESTORE_DEFAULTS_HELP
+	CS	Zvolte "Pokračovat" k obnovení výchozího nastavení všech uživatelských zkratek
+	DA	Vælg Fortsæt hvis du vil gendanne standardværdierne for alle tilpassede genveje
+	DE	Wählen Sie 'Weiter', um die Standardwerte für alle benutzerdefinierten Shortcuts wiederherzustellen.
 	EN	Select "Continue" to restore all custom shortcuts to their default value
-	
+	ES	Seleccione "Continuar" para restaurar los métodos abreviados a sus valores predeterminados
+	FI	Palauta kaikki mukautetut pikakuvakkeet oletuksiin valitsemalla Jatka.
+	FR	Sélectionnez "Continuer" pour réinitialiser les valeurs par défaut de tous les raccourcis personnalisés
+	IT	Selezionare Continua per ripristinare il valore predefinito di tutte le scorciatoie personalizzate
+	NL	Selecteer 'Doorgaan' om de standaardwaarden van alle aangepaste snelkoppelingen te herstellen
+	NO	Velg Fortsett for å gjenopprette alle egendefinerte snarveier til standardinnstillinger
+	PL	Kliknij przycisk Kontynuuj, aby przywrócić domyślne wartości wszystkich skrótów niestandardowych
+	RU	Нажмите кнопку "Продолжить", чтобы восстановить значения по умолчанию для сочетаний клавиш
+	SV	Välj Fortsätt om du vill återställa alla anpassade genvägar till standardgenvägarna.
+
 SHORTCUTS_CANCEL
 	CS	Storno
 	DA	Annuller
@@ -45,7 +57,7 @@ SHORTCUTS_CANCEL
 	FI	Peruuta
 	FR	Annuler
 	IT	Annulla
-	NL	Annuleren
+	NL	Annuleer
 	NO	Avbryt
 	PL	Anuluj
 	RU	Отмена
@@ -65,17 +77,41 @@ SHORTCUTS_CONTINUE
 	PL	Kontynuuj
 	RU	Продолжить
 	SV	Fortsätt
-	
+
 SHORTCUTS_MODIFIED
+	CS	(uživatelské)
+	DA	(brugerdefineret)
+	DE	(benutzerdefiniert)
 	EN	(custom)
+	ES	(personalizado)
+	FI	(mukautettu)
+	FR	(personnalisé)
+	IT	(personalizzata)
+	NL	(aangepast)
+	NO	(tilpasset)
+	PL	(niestandardowy)
+	RU	(настраиваемый)
+	SV	(anpassat)
 
 SHORTCUTS_DEFAULT
+	CS	(výchozí)
+	DA	(standard)
+	DE	(Standardeinstellung)
 	EN	(default)
+	ES	(valor predeterminado)
+	FI	(oletus)
+	FR	(par défaut)
+	IT	(impostazione predefinita)
+	NL	(standaard)
+	NO	(standard)
+	PL	(domyślny)
+	RU	(по умолчанию)
+	SV	(standard)
 
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
 	CS	Stisknutí levého tlačítka
 	DA	Tryk på venstre knap
-	DE	Auf linke Taste tippen
+	DE	Tippen auf Links-Taste
 	EN	Left Button Touch
 	ES	Botón izquierdo Tocar
 	FI	Vasemman painikkeen painaminen
@@ -90,7 +126,7 @@ SHORTCUTS_INPUT_TITLE_TITLE_LEFT_PRESS
 SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
 	CS	Přidržení levého tlačítka
 	DA	Hold venstre knap nede
-	DE	Linke Taste halten
+	DE	Halten der Links-Taste
 	EN	Left Button Hold
 	ES	Botón izquierdo Mantener
 	FI	Vasemman painikkeen pito
@@ -105,7 +141,7 @@ SHORTCUTS_INPUT_TITLE_TITLE_LEFT_HOLD
 SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
 	CS	Stisknutí pravého tlačítka
 	DA	Tryk på højre knap
-	DE	Auf rechte Taste tippen
+	DE	Tippen auf Rechts-Taste
 	EN	Right Button Touch
 	ES	Botón derecho Tocar
 	FI	Oikean painikkeen painaminen
@@ -120,7 +156,7 @@ SHORTCUTS_INPUT_TITLE_RIGHT_PRESS
 SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
 	CS	Přidržení pravého tlačítka
 	DA	Hold højre knap nede
-	DE	Rechte Taste halten
+	DE	Halten der Rechts-Taste
 	EN	Right Button Hold
 	ES	Botón derecho Mantener
 	FI	Oikean painikkeen pito
@@ -135,7 +171,7 @@ SHORTCUTS_INPUT_TITLE_RIGHT_HOLD
 SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
 	CS	Home Stisknutí levého tlačítka
 	DA	Startside: tryk på venstre knap
-	DE	Haupt - Linke Taste tippen
+	DE	Startmenü - Tippen auf Links-Taste
 	EN	Home Left Button Touch
 	ES	Inicio Botón izquierdo Tocar
 	FI	Vasemman painikkeen painaminen kotivalikossa
@@ -150,7 +186,7 @@ SHORTCUTS_INPUT_HOME_TITLE_LEFT_PRESS
 SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
 	CS	Home Přidržení levého tlačítka
 	DA	Startside: hold venstre knap nede
-	DE	Haupt - Linke Taste halten
+	DE	Startmenü - Halten der Links-Taste
 	EN	Home Left Button Hold
 	ES	Inicio Botón izquierdo Mantener
 	FI	Vasemman painikkeen pito kotivalikossa
@@ -165,7 +201,7 @@ SHORTCUTS_INPUT_HOME_TITLE_LEFT_HOLD
 SHORTCUTS_INPUT_GESTURE_L_R
 	CS	Pravá páčka
 	DA	Træk til højre
-	DE	Nach rechts schieben
+	DE	Ziehen nach rechts
 	EN	Right Swipe
 	ES	Derecha Pasar
 	FI	Pyyhkäisy oikealle
@@ -180,7 +216,7 @@ SHORTCUTS_INPUT_GESTURE_L_R
 SHORTCUTS_INPUT_GESTURE_R_L
 	CS	Levá páčka
 	DA	Træk til venstre
-	DE	Nach links schieben
+	DE	Ziehen nach links
 	EN	Left Swipe
 	ES	Izquierda Pasar
 	FI	Pyyhkäisy vasemmalle
@@ -194,27 +230,99 @@ SHORTCUTS_INPUT_GESTURE_R_L
 
 SHORTCUTS_INPUT_IR_HOLD
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Přidržení IR %s
+	DA	Hold %s nede på fjernbetjeningen
+	DE	Halten der Fernbedienungstaste %s
 	EN	IR Hold %s
+	ES	IR Mantener %s
+	FI	Kaukosäädinpainikkeen %s pito
+	FR	Commande infrarouge enfoncée %s
+	IT	Infrarosso %s tenuto premuto
+	NL	IR %s vasthouden
+	NO	Hold inne IR-knappen %s
+	PL	Przytrzymanie przycisku pilota %s
+	RU	Удержание ИК %s
+	SV	Håll ner %s på fjärrkontrollen
 
 SHORTCUTS_INPUT_IR_PRESS
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Stisknutí IR %s
+	DA	Hold %s nede på fjernbetjeningen
+	DE	Drücken der Fernbedienungstaste %s
 	EN	IR Press %s
+	ES	IR Pulsar %s
+	FI	Kaukosäädinpainikkeen %s painallus
+	FR	Commande infrarouge activée %s
+	IT	Pressione infrarosso %s
+	NL	IR %s indrukken
+	NO	Trykk på IR-knappen %s
+	PL	Naciśnięcie przycisku pilota %s
+	RU	Нажатие ИК %s
+	SV	Tryck på %s på fjärrkontrollen
 
 SHORTCUTS_INPUT_KEY_HOLD
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Přidržení klávesy %s
+	DA	Hold knappen %s nede
+	DE	Halten der Taste %s
 	EN	Key Hold %s
+	ES	Tecla Mantener %s
+	FI	Laitteen painikkeen %s pito
+	FR	Touche enfoncée %s
+	IT	Tasto %s tenuto premuto
+	NL	Toets %s vasthouden
+	NO	Hold inne knappen %s
+	PL	Przytrzymanie przycisku %s
+	RU	Удержание клавиши %s
+	SV	Håll ner %s
 
 SHORTCUTS_INPUT_KEY_PRESS
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Stisknutí klávesy %s
+	DA	Tryk på knappen %s
+	DE	Drücken der Taste %s
 	EN	Key Press %s
+	ES	Tecla de activación %s
+	FI	Näppäimen %s painallus
+	FR	Touche activée %s
+	IT	Pressione tasto %s
+	NL	Toets %s indrukken
+	NO	Trykk på %s
+	PL	Naciśnięcie przycisku %s
+	RU	Нажатие клавиши %s
+	SV	Tryck på %s
 
 SHORTCUTS_INPUT_KEY_PRESET_PRESS
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Stisknutí klávesy předvolby %s
+	DA	Tryk på genvejsknappen %s
+	DE	Drücken der Voreinstellungstaste %s
 	EN	Preset Key Press %s
+	ES	Memorizar tecla de activación %s
+	FI	Esiasetuksen %s painallus
+	FR	Touche de présélection activée %s
+	IT	Pressione tasto preimpostazione %s
+	NL	Vooringestelde toets %s indrukken
+	NO	Trykk på forhåndsinnstillingsknappen %s
+	PL	Naciśnięcie przycisku wstępnie zdefiniowanej stacji radiowej %s
+	RU	Нажатие клавиши предустановки %s
+	SV	Tryck på förinställning %s
 
 SHORTCUTS_INPUT_KEY_PRESET_HOLD
 # SLT: placeholder stands for a button which is to be pressed/held
+	CS	Přidržení klávesy předvolby %s
+	DA	Hold genvejsknappen %s nede
+	DE	Halten der Voreinstellungstaste %s
 	EN	Preset Key Hold %s
+	ES	Tecla de activación Mantener %s
+	FI	Esiasetuspainikkeen %s pito
+	FR	Touche de présélection enfoncée %s
+	IT	Tasto preimpostazione %s tenuto premuto
+	NL	Vooringestelde toets %s vasthouden
+	NO	Hold inne forhåndsinnstillingsknappen %s
+	PL	Przytrzymanie przycisku wstępnie zdefiniowanej stacji radiowej %s
+	RU	Удержание клавиши предустановки %s
+	SV	Håll ner förinställning %s
 
 SHORTCUTS_OUTPUT_BACK
 	CS	Zpět
@@ -232,12 +340,24 @@ SHORTCUTS_OUTPUT_BACK
 	SV	Bakåt
 
 SHORTCUTS_OUTPUT_TEXT_MODE
+	CS	Textový režim
+	DA	Tekst
+	DE	Textmodus
 	EN	Text Mode
-	
+	ES	Modo texto
+	FI	Tekstitila
+	FR	Mode Texte
+	IT	Modalità testo
+	NL	Tekstmodus
+	NO	Tekstmodus
+	PL	Tryb tekstowy
+	RU	Текстовый режим
+	SV	Textläge
+
 SHORTCUTS_OUTPUT_GO_HOME
 	CS	Přejít Domů
 	DA	Til startside
-	DE	Zurück zum Start
+	DE	Zurück zum Hauptmenü
 	EN	Go Home
 	ES	Go Home (Ir a casa)
 	FI	Alkuun
@@ -370,29 +490,137 @@ SHORTCUTS_OUTPUT_PAUSE
 	SV	Paus
 
 SHORTCUTS_OUTPUT_GO_ALARMS
+	CS	Budíky
+	DA	Vækkeure
+	DE	Wecker
 	EN	Alarms
+	ES	Alarmas
+	FI	Hälytykset
+	FR	Alarmes
+	IT	Sveglie
+	NL	Weksignalen
+	NO	Alarmer
+	PL	Alarmy
+	RU	Звуковые сигналы будильника
+	SV	Larm
 
 SHORTCUTS_OUTPUT_GO_BRIGHTNESS
+	CS	Jas
+	DA	Lysstyrke
+	DE	Helligkeit
 	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
+	SV	Ljusstyrka
 
 SHORTCUTS_OUTPUT_STOP
+	CS	Zastavit
+	DA	Stop
+	DE	Stopp
 	EN	Stop
+	ES	Detener
+	FI	Pysäytä
+	FR	Arrêt
+	IT	Arresta
+	NL	Stoppen
+	NO	Stopp
+	PL	Zatrzymaj
+	RU	Стоп
+	SV	Stopp
 
 SHORTCUTS_OUTPUT_SLEEP
+	CS	Sleep (Režim spánku)
+	DA	Slumre
+	DE	Schlafmodus
 	EN	Sleep
+	ES	Suspender
+	FI	Lepotila
+	FR	Veille
+	IT	Sospendi
+	NL	Sluimermodus
+	NO	Hvilemodus
+	PL	Uśpienie
+	RU	Спящий режим
+	SV	Viloläge
 
 SHORTCUTS_OUTPUT_MORE
+	CS	Další
+	DA	Mere...
+	DE	Mehr
 	EN	More
+	ES	Más
+	FI	Lisää
+	FR	Plus
+	IT	Altro
+	NL	Meer
+	NO	Mer
+	PL	Więcej
+	RU	Дополнительно
+	SV	Mer
 
 SHORTCUTS_OUTPUT_CREATE_MIX
+	CS	Uživatelský mix
+	DA	Eget miks
+	DE	Benutzerdefinierter Musik-Mix
 	EN	Custom Mix
+	ES	Mezcla personalizada
+	FI	Mukautettu miksaus
+	FR	Mix personnalisé
+	IT	Raccolta personalizzata
+	NL	Aangepaste mix
+	NO	Egen blanding
+	PL	Własna składanka
+	RU	Настраиваемая смесь
+	SV	Anpassad blandning
 
 SHORTCUTS_OUTPUT_ADD_END
+	CS	Přidat na konec
+	DA	Føj til i slutningen
+	DE	Am Ende hinzufügen
 	EN	Add to End
+	ES	Agregar al final
+	FI	Lisää loppuun
+	FR	Ajouter à la fin
+	IT	Aggiungi alla fine
+	NL	Aan eind toevoegen
+	NO	Legg til på slutten
+	PL	Dodaj na końcu
+	RU	Добавить в конец
+	SV	Lägg till i slutet
 
 SHORTCUTS_OUTPUT_PLAY_PRESET
+	CS	Přehrávat zadané %s
+	DA	Afspil fast station %s
+	DE	Voreinstellung %s abspielen
 	EN	Play preset %s
+	ES	Reproducir memoria %s
+	FI	Toista esiasetus %s
+	FR	Lire la présélection %s
+	IT	Riproduci preimpostazione %s
+	NL	Voorinstelling %s afspelen
+	NO	Spill av forhåndsinnstilling %s
+	PL	Odtwórz wstępnie zdefiniowaną stację radiową %s
+	RU	Запустить предустановку %s
+	SV	Spela upp förinställning %s
 
 SHORTCUTS_OUTPUT_SET_PRESET
+	CS	Nastavená předvolba %s
+	DA	Indstil genvejsknap %s
+	DE	Voreinstellung %s festlegen
 	EN	Set preset %s
+	ES	Establecer memoria %s
+	FI	Määritä esiasetus %s
+	FR	Définir la présélection %s
+	IT	Imposta preimpostazione %s
+	NL	Voorinstelling %s instellen
+	NO	Angi forhåndsinnstilling %s
+	PL	Ustaw wstępnie zdefiniowaną stację radiową %s
+	RU	Задать предустановку %s
+	SV	Ställ in förinställning %s
 

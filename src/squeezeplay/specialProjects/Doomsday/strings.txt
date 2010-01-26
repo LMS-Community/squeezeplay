@@ -3,7 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 DOOMSDAY
-	CS	Doomsday
+	CS	Soudný den
 	DA	Dommedag
 	DE	Doomsday
 	EN	Doomsday
@@ -18,7 +18,7 @@ DOOMSDAY
 	SV	Doomsday
 
 DOOMSDAY_OPTION1
-	CS	Dire Warning 1
+	CS	Krajní varování 1
 	DA	Advarsel 1
 	DE	Dire Warning 1
 	EN	Dire Warning 1
@@ -33,7 +33,7 @@ DOOMSDAY_OPTION1
 	SV	Dire Warning 1
 
 DOOMSDAY_OPTION2
-	CS	Dire Warning 2
+	CS	Krajní varování 2
 	DA	Advarsel 2
 	DE	Dire Warning 2
 	EN	Dire Warning 2
@@ -48,7 +48,7 @@ DOOMSDAY_OPTION2
 	SV	Dire Warning 2
 
 DOOMSDAY_OPTION3
-	CS	Dire Warning 3
+	CS	Krajní varování 3
 	DA	Advarsel 3
 	DE	Dire Warning 3
 	EN	Dire Warning 3
@@ -63,7 +63,7 @@ DOOMSDAY_OPTION3
 	SV	Dire Warning 3
 
 DOOMSDAY_OPTION4
-	CS	Dire Warning 4
+	CS	Krajní varování 4
 	DA	Advarsel 4
 	DE	Dire Warning 4
 	EN	Dire Warning 4
@@ -78,7 +78,7 @@ DOOMSDAY_OPTION4
 	SV	Dire Warning 4
 
 DOOMSDAY_MESSAGE0
-	CS	Fear is in the air!
+	CS	Ve vzduchu visí strach!
 	DA	Der er frygt i luften.
 	DE	Fear is in the air!
 	EN	Fear is in the air!
@@ -93,7 +93,7 @@ DOOMSDAY_MESSAGE0
 	SV	Fear is in the air!
 
 DOOMSDAY_MESSAGE1
-	CS	The End is Nigh!
+	CS	Konec je blízko!
 	DA	Enden er nær!
 	DE	The End is Nigh!
 	EN	The End is Nigh!
@@ -108,7 +108,7 @@ DOOMSDAY_MESSAGE1
 	SV	The End is Nigh!
 
 DOOMSDAY_MESSAGE2
-	CS	Run for the hills!
+	CS	Utíkej o život!
 	DA	Run for the hills!
 	DE	Run for the hills!
 	EN	Run for the hills!
@@ -123,7 +123,7 @@ DOOMSDAY_MESSAGE2
 	SV	Run for the hills!
 
 DOOMSDAY_MESSAGE3
-	CS	Get your affairs in order!
+	CS	Dej si věci do pořádku!
 	DA	Se at få styr på det!
 	DE	Get your affairs in order!
 	EN	Get your affairs in order!
@@ -138,7 +138,7 @@ DOOMSDAY_MESSAGE3
 	SV	Get your affairs in order!
 
 DOOMSDAY_MESSAGE4
-	CS	DUCK!
+	CS	PŘIKRČIT SE!
 	DA	Duk dig!
 	DE	DUCK!
 	EN	DUCK!

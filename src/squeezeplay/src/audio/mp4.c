@@ -53,8 +53,8 @@ struct mp4_track {
 
 	/* stream state */
 	u32_t sample_num;		/* current sample */
-	u32_t chunk_num;		/* current chunk */
-	u32_t chunk_idx;		/* index into chunk_offset */
+	u32_t chunk_num;		/* current chunk, index into chunk_offset */
+	u32_t chunk_idx;		/* index into sample_to_chunk */
 	u32_t chunk_sample_num;		/* current sample in chunk */
 	size_t chunk_sample_offset;	/* offset into chunk */
 
@@ -632,7 +632,9 @@ static inline void next_packet(struct mp4_track *track)
 		track->chunk_sample_num = 0;
 		track->chunk_sample_offset = 0;
 
-		if (track->chunk_idx < track->chunk_offset_count && track->sample_to_chunk[track->chunk_idx + 1].first_chunk == track->chunk_num) {
+		if (track->chunk_idx < track->chunk_offset_count
+				&& track->sample_to_chunk[track->chunk_idx + 1].first_chunk == track->chunk_num + 1) // first_chunk starts at 1
+		{
 			track->chunk_idx++;
 		}
 	}

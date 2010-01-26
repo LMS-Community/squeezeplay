@@ -1,54 +1,244 @@
 
 SBS_SETTINGS
+	CS	Nastavení Squeezebox Server
+	DA	Indstillinger for Squeezebox Server
+	DE	Squeezebox Server-Einstellungen
 	EN	Squeezebox Server Settings
+	ES	Configuración de Squeezebox Server
+	FI	Squeezebox Serverin asetukset
+	FR	Réglages du Squeezebox Server
+	IT	Impostazioni di Squeezebox Server
+	NL	Instellingen van Squeezebox Server
+	NO	Innstillinger for Squeezebox Server
+	PL	Ustawienia programu Squeezebox Server
+	RU	Настройки Squeezebox Server
+	SV	Squeezebox Server-inställningar
 
 USB_SD_STORAGE
+	CS	USB & SD ukládání
+	DA	USB- og SD-lagerenheder
+	DE	USB- & SD-Speicherung
 	EN	USB & SD Storage
+	ES	Almacenamiento USB y SD
+	FI	USB- ja SD-tallennus
+	FR	Stockage USB et SD
+	IT	Memorizzazione USB ed SD
+	NL	USB- en SD-opslag
+	NO	Usb- og SD-lagring
+	PL	Pamięć masowa USB i SD
+	RU	USB- и SD-накопитель
+	SV	USB- och SD-minnen
 
 DEVICES
+	CS	Zařízení
+	DA	Enheder
+	DE	Geräte
 	EN	Devices
+	ES	Controladores
+	FI	Laitteisto
+	FR	Dispositifs
+	IT	Dispositivi
+	NL	Apparaten
+	NO	Enheter
+	PL	Urządzenia
+	RU	Кнопка Devices
+	SV	enheter
 
 DEVICES_NONE
+	CS	žádné
+	DA	ingen
+	DE	Keine
 	EN	none
+	ES	ninguno
+	FI	ei mitään
+	FR	aucun
+	IT	nessuna
+	NL	geen
+	NO	ingen
+	PL	brak
+	RU	none
+	SV	inget
 
 DEVICES_UNTITLED
+	CS	bez názvu
+	DA	unavngivet
+	DE	Ohne Titel
 	EN	untitled
+	ES	sin título
+	FI	nimetön
+	FR	sans titre
+	IT	senza titolo
+	NL	naamloos
+	NO	uten navn
+	PL	bez nazwy
+	RU	без названия
+	SV	namnlöst
 
 USB_DISK_VOLUMENAME
+	CS	USB Disk:\n%s
+	DA	USB-disk:\n%s
+	DE	USB-Datenträger:\n%s
 	EN	USB Disk:\n%s
+	ES	Disco USB:\n%s
+	FI	USB-levy:\n%s
+	FR	Disque USB:\n%s
+	IT	Disco USB:\n%s
+	NL	USB-schijf:\n%s
+	NO	Usb-disk:\n%s
+	PL	Dysk USB:\n%s
+	RU	USB-диск:\n%s
+	SV	USB-enhet:\n%s
 
 USB_DISK_SIZE
+	CS	Velikost:\n%s
+	DA	Størrelse:\n%s
+	DE	Größe:\n%s
 	EN	Size:\n%s
+	ES	Tamaño:\n%s
+	FI	Koko:\n%s
+	FR	Taille:\n%s
+	IT	Dimensione:\n%s
+	NL	Grootte:\n%s
+	NO	Størrelse:\n%s
+	PL	Wielkość:\n%s
+	RU	Размер:\n%s
+	SV	Storlek:\n%s
 
 USB_DISK_FREE
 # SLT: free disk space
+	CS	Volné místo:\n%s
+	DA	Ledig:\n%s
+	DE	Frei:\n%s
 	EN	Free:\n%s
+	ES	Libre:\n%s
+	FI	Vapaana:\n%s
+	FR	Disponible:\n%s
+	IT	Libero:\n%s
+	NL	Vrij:\n%s
+	NO	Ledig:\n%s
+	PL	Wolne:\n%s
+	RU	Свободно:\n%s
+	SV	Ledigt:\n%s
 
 SD_CARD_VOLUMENAME
+	CS	SD karta:\n%s
+	DA	SD-kort:\n%s
+	DE	SD-Karte:\n%s
 	EN	SD Card:\n%s
+	ES	Tarjeta SD:\n%s
+	FI	SD-kortti:\n%s
+	FR	Carte SD:\n%s
+	IT	Scheda SD:\n%s
+	NL	SD-kaart:\n%s
+	NO	SD-kort:\n%s
+	PL	Karta SD:\n%s
+	RU	SD-карта:\n%s
+	SV	SD-kort:\n%s
 
 SD_CARD_SIZE
+	CS	Velikost:\n%s
+	DA	Størrelse:\n%s
+	DE	Größe:\n%s
 	EN	Size:\n%s
+	ES	Tamaño:\n%s
+	FI	Koko:\n%s
+	FR	Taille:\n%s
+	IT	Dimensione:\n%s
+	NL	Grootte:\n%s
+	NO	Størrelse:\n%s
+	PL	Wielkość:\n%s
+	RU	Размер:\n%s
+	SV	Storlek:\n%s
 
 SD_CARD_FREE
 # SLT: free disk space
+	CS	Volné místo:\n%s
+	DA	Ledig:\n%s
+	DE	Frei:\n%s
 	EN	Free:\n%s
+	ES	Libre:\n%s
+	FI	Vapaana:\n%s
+	FR	Disponible:\n%s
+	IT	Libero:\n%s
+	NL	Vrij:\n%s
+	NO	Ledig:\n%s
+	PL	Wolne:\n%s
+	RU	Свободно:\n%s
+	SV	Ledigt:\n%s
 
 SHARING
 # SLT: menu item to configure file sharing
+	CS	Sdílení
+	DA	Deling
+	DE	Freigabe
 	EN	Sharing
+	ES	Compartir
+	FI	Jakaminen
+	FR	Partage
+	IT	Condivisione
+	NL	Delen
+	NO	Deling
+	PL	Udostępnianie
+	RU	Общий доступ
+	SV	Delning
 
 SHARING_ENABLE
+	CS	Povolit sdílení
+	DA	Aktiver deling
+	DE	Freigabe aktivieren
 	EN	Enable Sharing
+	ES	Activar Compartir
+	FI	Ota jakaminen käyttöön
+	FR	Activer le partage
+	IT	Attiva condivisione
+	NL	Delen inschakelen
+	NO	Aktiver deling
+	PL	Włącz udostępnianie
+	RU	Включить общий доступ
+	SV	Aktivera delning
 
 SHARING_ACCOUNT
+	CS	Nastavit účet pro sdílení
+	DA	Angiv konto til deling
+	DE	Freigabe-Konto einrichten
 	EN	Set Sharing Account
+	ES	Establecer cuenta de Compartir
+	FI	Määritä jakamistili
+	FR	Définir le compte de partage
+	IT	Imposta account di condivisione
+	NL	Account voor delen instellen
+	NO	Angi konto for deling
+	PL	Ustaw konto udostępniania
+	RU	Задать учетную запись общего доступа
+	SV	Ange konto för delning
 
 SHARING_PASSWORD
+	CS	Nastavit heslo pro sdílení
+	DA	Angiv adgangskode til deling
+	DE	Kennwort für die Freigabe einrichten
 	EN	Set Sharing Password
+	ES	Establecer contraseña de Compartir
+	FI	Aseta jakamisen salasana
+	FR	Définir le mot de passe de partage
+	IT	Imposta password di condivisione
+	NL	Wachtwoord voor delen instellen
+	NO	Angi passord for deling
+	PL	Ustaw hasło udostępniania
+	RU	Задать пароль общего доступа
+	SV	Ställ in lösenord för delning
 
 SHARING_HOWTO
+	CS	Sdílení vám umožňuje přesun souborů z vašeho počítače do Squeezebox Touch.\nUživatel: %s Heslo: %s
+	DA	Du kan bruge delingsfunktionen til at overføre filer fra din computer til Squeezebox Touch.\nBruger: %s Adgangskode: %s
+	DE	Durch Freigabe können Sie Dateien vom Computer auf die Squeezebox Touch übertragen.\nBenutzer: %s Kennwort: %s
 	EN	Sharing allows you to transfer files from your Computer to Squeezebox Touch.\nUser: %s Password: %s
-
-
+	ES	La función Compartir le permite transferir archivos entre su ordenador y Squeezebox Touch.
+	FI	Jakaminen mahdollistaa tiedostojen siirtämisen tietokoneelta Squeezebox Touchiin.\nKäyttäjä: %s Salasana: %s
+	FR	Le partage permet de transférer des fichiers depuis votre ordinateur vers Squeezebox Touch.\Utilisateur: %s Mot de passe: %s
+	IT	La condivisione consente di trasferire file dal computer a Squeezebox Touch.\nUtente: %s Password: %s
+	NL	Door te delen kun je bestanden van je computer naar Squeezebox Touch overdragen.\nGebruiker: %s Wachtwoord: %s
+	NO	Ved å bruke deling kan du overføre filer fra datamaskinen til Squeezebox Touch.\nBruker: %s Passord: %s
+	PL	Udostępnianie umożliwia przesyłanie plików z komputera na urządzenie Squeezebox Touch.\nUżytkownika: %s Hasło: %s
+	RU	Общий доступ позволяет переносить файлы с компьютера на устройство Squeezebox Touch.\nПользователь: %s Пароль: %s
+	SV	Delning innebär att du kan överföra filer från datorn till din Squeezebox Touch.\nAnvändare: %s Lösenord: %s
 

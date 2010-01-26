@@ -4,16 +4,17 @@
 
 
 LINE_IN
-	CS	Vstupn� linka
+	CS	Vstupní linka
 	DA	Linjeindgang
 	DE	Line-In
 	EN	Line In
-	ES	Entrada de l�nea
+	ES	Entrada de línea
 	FI	Linjatulo
-	FR	Entr�e ligne
+	FR	Entrée ligne
 	IT	Ingresso
 	NL	Lijningang
 	NO	Lydinngang
-	PL	Wej?cie liniowe
-	RU	???????? ????
-	SV	Ljuding�ng
+	PL	Wejście liniowe
+	RU	Линейный вход
+	SV	Ljudingång
+

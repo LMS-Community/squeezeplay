@@ -93,6 +93,7 @@ SWITCH_PASSWORD_WRONG_BODY
 	SV	Det användarnamn eller lösenord du angav är inte giltigt.
 
 SWITCH_BUTTON
+#SLT: please keep this message short
 	CS	Přepnout na knihovnu: %s
 	DA	Skift til biblioteket: %s
 	DE	Auf '%s' umschalten
@@ -243,6 +244,7 @@ SLIMSERVER_HELP
 	SV	Ange IP-adressen till datorn där Squeezebox Server körs
 
 SLIMSERVER_CONNECTING_TO
+#SLT: please keep this message as short as possible
 	CS	Připojování k
 	DA	Etablerer forbindelse til
 	DE	Verbindung mit
@@ -261,7 +263,7 @@ SQUEEZEBOX_PROBLEM
 	CS	Problém s připojováním
 	DA	Problem med forbindelsen
 	DE	Verbindungsproblem
-	EN	Can't Connect to Library
+	EN	Problem Connecting
 	ES	Problema de conexión
 	FI	Yhteyttä ei voi muodostaa
 	FR	Problème de connexion

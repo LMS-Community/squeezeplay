@@ -113,26 +113,26 @@ PLAYER_TYPE
 	EN	Player Type\n%s
 	ES	Tipo de reproductor\n%s
 	FI	Soittimen tyyppi\n%s
-	FR	Type platine\n%s
+	FR	Type de platine\n%s
 	IT	Tipo lettore\n%s
 	NL	Type muzieksysteem\n%s
 	NO	Spillertype\n%s
 	PL	Typ odtwarzacza\n%s
 	RU	Тип плеера\n%s
-	SV	Spelartyp\n%s
+	SV	Typ av spelare\n%s
 
 CURRENT_PLAYER
-	CS	Aktuální přehrávač\n%s
+	CS	Stávající přehrávač\n%s
 	DA	Nuværende afspiller\n%s
 	DE	Aktueller Player\n%s
 	EN	Current player\n%s
 	ES	Reproductor actual\n%s
-	FI	Käytössä oleva soitin\n%s
-	FR	Platine en cours\n%s
-	IT	Lettore in uso\n%s
+	FI	Nykyinen soitin\n%s
+	FR	Platine actuelle\n%s
+	IT	Lettore corrente\n%s
 	NL	Huidig muzieksysteem\n%s
-	NO	Gjeldende spiller\n%s
-	PL	Aktualny odtwarzacz\n%s
+	NO	Aktiv spiller\n%s
+	PL	Bieżący odtwarzacz\n%s
 	PT	Cliente Actual\n%s
 	RU	Текущий плеер\n%s
 	SV	Aktuell spelare\n%s
@@ -145,12 +145,12 @@ DIAGNOSTICS_NONE
 	ES	Ninguno
 	FI	Ei mitään
 	FR	Aucun
-	IT	Nessuno
+	IT	Nessuna
 	NL	Geen
 	NO	Ingen
 	PL	Brak
 	RU	Нет
-	SV	Ingen
+	SV	Inget
 
 DIAGNOSTICS_REMOTE
 	CS	Dálkové ovládání
@@ -168,16 +168,64 @@ DIAGNOSTICS_REMOTE
 	SV	Fjärr
 
 DIAGNOSTICS_LOCAL
+	CS	Místní
+	DA	Lokale
+	DE	Lokal
 	EN	Local
+	ES	Local
+	FI	Paikallinen
+	FR	Local
+	IT	Locale
+	NL	Lokaal
+	NO	Lokal
+	PL	Lokalnie
+	RU	Местные
+	SV	Lokal
 
 SN_REG
+	CS	registrace mysqueezebox.com\n%s
+	DA	registrering på mysqueezebox.com\n%s
+	DE	mysqueezebox.com-Registrierung\n%s
 	EN	mysqueezebox.com registration\n%s
+	ES	Registro en mysqueezebox.com\n%s
+	FI	mysqueezebox.com-rekisteröinti\n%s
+	FR	Enregistrement à mysqueezebox.com\n%s
+	IT	Registrazione mysqueezebox.com\n%s
+	NL	Registratie bij mysqueezebox.com\n%s
+	NO	mysqueezebox.com-registrering\n%s
+	PL	Rejestracja w witrynie mysqueezebox.com\n%s
+	RU	Регистрация mysqueezebox.com\n%s
+	SV	registrering av mysqueezebox.com\n%s
 
 SN_REG_YES
+	CS	Registrován
+	DA	Registreret
+	DE	Registriert
 	EN	Registered
+	ES	Registrado
+	FI	Rekisteröity
+	FR	Enregistré
+	IT	Registrato
+	NL	Geregistreerd
+	NO	Registrert
+	PL	Zarejestrowany
+	RU	Зарегистрировано
+	SV	Registrerad
 
 SN_REG_NO
+	CS	Není registrace
+	DA	Ikke registreret
+	DE	Nicht registriert
 	EN	Not Registered
+	ES	Sin registrar
+	FI	Ei rekisteröity
+	FR	Non enregistré
+	IT	Non registrato
+	NL	Niet geregistreerd
+	NO	Ikke registrert
+	PL	Niezarejestrowany
+	RU	Не зарегистрировано
+	SV	Inte registrerad
 
 ETH_FULL_DUPLEX
 	CS	%sMb/s
@@ -331,7 +379,7 @@ SUBNET_MASK
 
 GATEWAY
 # SLT: please keep these messages as short as possible, max. like EN
-	CS	IP brána\n%s
+	CS	IP brána:\n%s
 	DA	Gatewayens IP-adresse\n%s
 	DE	IP-Gateway\n%s
 	EN	IP Gateway\n%s
@@ -571,6 +619,7 @@ HARDWARE_VERSION
 	SV	Maskinvaruversion\n%s
 
 UPTIME
+	CS	Rozběh\n%s
 	DA	Oppetid\n%s
 	DE	Zeit aktiv\n%s
 	EN	Uptime\n%s
@@ -578,11 +627,14 @@ UPTIME
 	FI	Toiminta-aika\n%s
 	FR	Temps d'utilisation\n%s
 	IT	Tempo di attività\n%s
-	NL	Actieve tijdsduur\n%s
+	NL	Tijd actief\n%s
 	NO	Oppetid\n%s
-	SV	Aktiv tid\n%s
+	PL	Czas pracy\n%s
+	RU	Время работы\n%s
+	SV	Har körts i\n%s
 
 UPTIME_DAYS
+	CS	%s dnů
 	DA	%s dage
 	DE	%s Tage
 	EN	%s days
@@ -592,9 +644,12 @@ UPTIME_DAYS
 	IT	%s giorni
 	NL	%s dagen
 	NO	%s dager
+	PL	%s dni
+	RU	%s дн.
 	SV	%s dagar
 
 UPTIME_HOURS
+	CS	%s hodiny
 	DA	%s timer
 	DE	%s Stunden
 	EN	%s hours
@@ -604,9 +659,12 @@ UPTIME_HOURS
 	IT	%s ore
 	NL	%s uren
 	NO	%s timer
+	PL	%s godz.
+	RU	%s ч
 	SV	%s timmar
 
 UPTIME_MINUTES
+	CS	%s minut
 	DA	%s minutter
 	DE	%s Minuten
 	EN	%s minutes
@@ -616,64 +674,283 @@ UPTIME_MINUTES
 	IT	%s minuti
 	NL	%s minuten
 	NO	%s minutter
+	PL	%s min
+	RU	%s мин
 	SV	%s minuter
 
 MEMORY
+	CS	Použitá paměť\n%s
+	DA	Anvendt hukommelse\n%s
+	DE	Belegter Speicher\n%s
 	EN	Memory used\n%s
+	ES	Memoria utilizada\n%s
+	FI	Käytetty muisti\n%s
+	FR	Mémoire utilisée\n%s
+	IT	Memoria utilizzata\n%s
+	NL	Gebruik geheugen\n%s
+	NO	Brukt minne\n%s
+	PL	Wykorzystana pamięć\n%s
+	RU	Использованная память\n%s
+	SV	Minne som används\n%s
 
 POWER
+	CS	Napájení
+	DA	Tænd/sluk
+	DE	Ein/Aus
 	EN	Power
+	ES	Encendido
+	FI	Virta
+	FR	Mise sous tension
+	IT	Accensione
+	NL	Voeding
+	NO	Av/på
+	PL	Zasilanie
+	RU	Питание
+	SV	Av/på
 
 MSP_VERSION
+	CS	MSP verze\n%s
+	DA	MSP-version\n%s
+	DE	MSP-Version\n%s
 	EN	MSP version\n%s
+	ES	Versión MSP\n%s
+	FI	MSP-versio\n%s
+	FR	Version MSP\n%s
+	IT	Versione MSP\n%s
+	NL	MSP-versie\n%s
+	NO	MSP-versjon\n%s
+	PL	Wersja MSP\n%s
+	RU	Версия MSP\n%s
+	SV	MSP-version\n%s
 
 BATTERY_VOLTAGE
+	CS	Napětí baterie\n%s
+	DA	Batteriets spænding\n%s
+	DE	Akkuspannung\n%s
 	EN	Battery voltage\n%s
+	ES	Voltaje de la batería\n%s
+	FI	Akun jännite\n%s
+	FR	Tension de la batterie\n%s
+	IT	Voltaggio batteria\n%s
+	NL	Batterijvoltage\n%s
+	NO	Batterispenning\n%s
+	PL	Napięcie baterii\n%s
+	RU	Напряжение аккумулятора\n%s
+	SV	Batterispänning\n%s
 
 BATTERY_VMON1
 # SLT: no need to translate vmon1
+	CS	Baterie vmon1\n%s
+	DA	Batteri vmon1\n%s
+	DE	Akku vmon1\n%s
 	EN	Battery vmon1\n%s
+	ES	Batería vmon1\n%s
+	FI	Akku vmon1\n%s
+	FR	Batterie (vmon1)\n%s
+	IT	vmon1 batteria\n%s
+	NL	Batterij vmon1\n%s
+	NO	Batteri vmon1\n%s
+	PL	Bateria — vmon1\n%s
+	RU	vmon1 аккумулятора\n%s
+	SV	Batteri: vmon1\n%s
 
 BATTERY_VMON2
 # SLT: no need to translate vmon2
+	CS	Baterie vmon2\n%s
+	DA	Batteri vmon2\n%s
+	DE	Akku vmon2\n%s
 	EN	Battery vmon2\n%s
+	ES	Batería vmon2\n%s
+	FI	Akku vmon2\n%s
+	FR	Batterie (vmon2)\n%s
+	IT	vmon2 batteria\n%s
+	NL	Batterij vmon2\n%s
+	NO	Batteri vmon2\n%s
+	PL	Bateria — vmon2\n%s
+	RU	vmon2 аккумулятора\n%s
+	SV	Batteri: vmon2\n%s
 
 WALL_VOLTAGE
+	CS	Napětí v zásuvce\n%s
+	DA	Tilsluttet lysnettet\n%s
+	DE	Netzspannung\n%s
 	EN	Wall voltage\n%s
+	ES	Voltaje de la toma\n%s
+	FI	Pistorasian jännite\n%s
+	FR	Tension du secteur\n%s
+	IT	Voltaggio corrente\n%s
+	NL	Voltage stopcontact\n%s
+	NO	Spenning fra stikkontakt\n%s
+	PL	Napięcie w gniazdku\n%s
+	RU	Сеть питания\n%s
+	SV	Spänning för nätdrift\n%s
 
 BATTERY_TEMPERATURE
+	CS	Teplota baterie\n%s
+	DA	Batteriets temperatur\n%s
+	DE	Akkutemperatur\n%s
 	EN	Battery temperature\n%s
+	ES	Temperatura de la batería\n%s
+	FI	Akun lämpötila\n%s
+	FR	Température de la batterie\n%s
+	IT	Temperatura batteria\n%s
+	NL	Temperatuur van batterij\n%s
+	NO	Batteritemperatur\n%s
+	PL	Temperatura baterii\n%s
+	RU	Температура аккумулятора\n%s
+	SV	Batteritemperatur\n%s
 
 POWER_MODE
 # SLT: power mode refers to either AC or battery 
+	CS	Režim napájení\n%s
+	DA	Strømforsyning\n%s
+	DE	Stromversorgungsmodus\n%s
 	EN	Power mode\n%s
+	ES	Modo de energía\n%s
+	FI	Virtatila\n%s
+	FR	Mode d'alimentation\n%s
+	IT	Modalità alimentazione\n%s
+	NL	Energiemodus\n%s
+	NO	Strømmodus\n%s
+	PL	Tryb zasilania\n%s
+	RU	Режим питания\n%s
+	SV	Energiläge\n%s
 
 POWER_ON_AC
+	CS	Napájení ze zásuvky
+	DA	Tilsluttet lysnettet
+	DE	Netzbetrieb
 	EN	Wall power
+	ES	Toma de corriente
+	FI	Pistorasiavirta
+	FR	Alimentation secteur
+	IT	Alimentazione a corrente
+	NL	Netvoeding
+	NO	Strømstyrke fra stikkontakt
+	PL	Zasilanie z gniazdka
+	RU	Питание от сети
+	SV	Nätdrift
 
 POWER_ON_BATT
+	CS	Napájení z baterie
+	DA	Kører på batteri
+	DE	Akkubetrieb
 	EN	Battery power
+	ES	Batería
+	FI	Akkuvirta
+	FR	Charge de la batterie
+	IT	Alimentazione a batteria
+	NL	Batterijvermogen
+	NO	Batteristyrke
+	PL	Poziom naładowania baterii
+	RU	Питание от аккумулятора
+	SV	Batteridrift
 
 BATT_NONE
+	CS	Není baterie
+	DA	Ingen batteri
+	DE	Akku leer
 	EN	No Battery
+	ES	Sin batería
+	FI	Ei akkua
+	FR	Pas de batterie
+	IT	Batteria non presente
+	NL	Geen batterij
+	NO	Tomt batteri
+	PL	Brak baterii
+	RU	Нет аккумулятора
+	SV	Inget batteri
 
 BATT_IDLE
+	CS	Baterie se nedobíjí
+	DA	Batteriet oplades ikke
+	DE	Akku wird nicht geladen
 	EN	Battery not charging
+	ES	La batería no está cargando
+	FI	Akku ei lataudu
+	FR	La batterie n'est pas en cours de chargement.
+	IT	La batteria non si sta ricaricando
+	NL	Batterij wordt niet opgeladen
+	NO	Batteriet lader ikke
+	PL	Bateria nie ładuje się
+	RU	Аккумулятор не заряжается
+	SV	Batteriet laddas inte
 
 BATT_DISCHARGING
+	CS	Vybíjení baterie
+	DA	Batteriet aflades
+	DE	Akku wird entladen
 	EN	Battery discharging
+	ES	Descarga de la batería
+	FI	Akun latausta puretaan
+	FR	Déchargement de la batterie
+	IT	La batteria si sta scaricando
+	NL	Batterij ontlaadt zich
+	NO	Batteriet lader ut
+	PL	Rozładowywanie baterii
+	RU	Аккумулятор разряжается
+	SV	Batteriet laddar ur
 
 BATT_DISCHARGING_WARNING
 	EN	Battery discharging.  Battery is low
 
 BATT_CHARGING
+	CS	Nabíjení baterie
+	DA	Batteriet oplades
+	DE	Batterie wird geladen
 	EN	Battery charging
+	ES	Carga de pila en curso
+	FI	Akku latautuu...
+	FR	Chargement de la batterie
+	IT	Carica della batteria in corso
+	NL	Batterij wordt opgeladen
+	NO	Batteriet lades
+	PL	Ładowanie baterii
+	RU	Зарядка аккумулятора
+	SV	Batteriet laddas
 
 BATT_CHARGING_PAUSED
+	CS	Nabíjení baterie přerušeno. Chlazení
+	DA	Opladningen af batteriet afbrudt midlertidigt. Enheden køler af.
+	DE	Ladevorgang des Akkus wurde angehalten. Abkühlen
 	EN	Battery charging paused.  Cooling down
+	ES	Carga de la batería en pausa. Periodo de enfriamiento
+	FI	Akun lataus keskeytetty.  Jäähtyy.
+	FR	Interruption du chargement de la batterie. Refroidissement en cours
+	IT	Ricarica batteria sospesa. Raffreddamento in corso.
+	NL	Opladen batterij gepauzeerd. Koelt af
+	NO	Batterilading midlertidig stanset. Kjøler ned.
+	PL	Wstrzymano łądowanie baterii. Chłodzenie
+	RU	Зарядка аккумулятора приостановлена. Охлаждение
+	SV	Batteriladdningen har pausats. Nedkylning pågår.
 
 POWER_ON_AC_AND_BATT
+	CS	Napájení ze zásuvky & baterie
+	DA	Kører på batteri og er tilsluttet lysnettet
+	DE	Netz- und Akkubetrieb
 	EN	Wall & battery power
+	ES	Toma de corriente y batería
+	FI	Pistorasia- ja akkuvirta
+	FR	Alimentation secteur et batterie
+	IT	Alimentazione a batteria e a corrente
+	NL	Netvoeding en batterijvermogen
+	NO	Stikkontakt- og batteristyrke
+	PL	Zasilanie z gniazdka i baterii
+	RU	Питание от сети и аккумулятора
+	SV	Nät- och batteridrift
 
 CHARGE_STATE
+	CS	Stav nabíječky\n%s
+	DA	Opladerens status\n%s
+	DE	Ladestatus\n%s
 	EN	Charger state\n%s
+	ES	Estado del cargador\n%s
+	FI	Laturin tila\n%s
+	FR	Etat du chargeur\n%s
+	IT	Stato caricatore\n%s
+	NL	Opladerstatus\n%s
+	NO	Ladestatus\n%s
+	PL	Stan ładowarki\n%s
+	RU	Состояние устройства зарядки\n%s
+	SV	Laddningsstatus\n%s
+

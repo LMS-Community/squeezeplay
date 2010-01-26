@@ -166,8 +166,8 @@ static size_t decode_alac_samples(void *data) {
 
 // FIXME alac does not work fully yet, see Bug 12421
 struct decode_module decode_alac = {
-	'-', //'l',
-	"---", //"alc",
+	'l',
+	"alc",
 	decode_alac_start,
 	decode_alac_stop,
 	decode_alac_samples,

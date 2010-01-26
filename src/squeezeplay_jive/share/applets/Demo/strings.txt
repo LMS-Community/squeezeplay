@@ -213,24 +213,24 @@ SLIDE_06
 	SV	Tryck på en knapp och musiken strömmar från en outsinlig källa.
 
 SLIDE_07
-	CS	Neuvěřitelná kvalita zvuku. Plná, cele digitální hudba ve vaší stereosoustavě.
-	DA	Fantastisk lydkvalitet. Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
-	DE	Unglaubliche Klangqualität. Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
+	CS	Plná, cele digitální hudba přes vaši stereo soustavu.
+	DA	Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
+	DE	Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
 	EN	Rich, full digital music through your stereo system.
-	ES	Calidad de sonido increíble. Música de calidad y totalmente digital a través de su sistema estéreo.
-	FI	Upea äänenlaatu. Täyteläistä ja rikasta digitaalimusiikkia stereojärjestelmästäsi.
-	FR	Une qualité sonore optimale. Son numérique pur et riche via votre système stéréo
-	IT	Qualità audio superiore e musica digitale ricca e avvolgente tramite l'impianto stereo esistente.
-	NL	Ongelofelijke geluidskwaliteit. Rijke, volle digitale muziek via je stereosysteem.
-	NO	Utrolig god lydkvalitet. Fyldig digitalmusikk fra stereoanlegget.
-	PL	Niesamowita jakość dźwięku. Wspaniale brzmiąca, w pełni cyfrowa muzyka odtwarzana przez system stereo.
-	RU	Невероятное качество звука. Богатый, насыщенный цифровой звук на вашей стереосистеме.
-	SV	Häpnadsväckande ljudkvalitet. Du får fylligt och rikt ljud via din stereoanläggning.
+	ES	Música de calidad y totalmente digital a través de su sistema estéreo.
+	FI	Täyteläistä ja rikasta digitaalimusiikkia stereojärjestelmän kautta.
+	FR	Son numérique pur et riche via votre système stéréo.
+	IT	Musica digitale ricca e avvolgente tramite l'impianto stereo esistente.
+	NL	Rijke, volle digitale muziek via je stereosysteem.
+	NO	Fyldig digitalmusikk fra stereoanlegget.
+	PL	Wspaniale brzmiąca, w pełni cyfrowa muzyka odtwarzana przez system stereo.
+	RU	Богатый, насыщенный цифровой звук на вашей стереосистеме.
+	SV	Fylligt och rikt ljud via din stereoanläggning.
 
 SLIDE_08
-	CS	Prohlédněte si obal alba a dokonce i vlastní fotky na 2.4 palcovém barevném displeji
+	CS	Prohlédněte si obaly alb a dokonce vlastní fotky na 2,4" barevném displeji
 	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
-	DE	CD-Cover und eigene Fotos auf dem 6-cm-Farbdisplay anzeigen
+	DE	Zeigen Sie Cover und sogar eigene Fotos auf dem 6-cm-Farbdisplay an.
 	EN	View album art and even your own photos on the 2.4-inch color display
 	ES	Vea carátulas de álbumes y hasta sus propias fotos en la pantalla en color de 6 cm.
 	FI	Nauti kansitaiteesta ja jopa omista valokuvistasi 2,4 tuuman värinäytöllä
@@ -245,47 +245,47 @@ SLIDE_08
 SLIDE_09
 	CS	Snadné nastavení. Plně se integruje do vaší stávající domácí sítě.
 	DA	Hurtig installation uden bøvl. Perfekt integration i dit nuværende hjemmenetværk.
-	DE	Problemlose Einrichtung. Einfach in Ihr Heimnetzwerk zu integrieren.
+	DE	Einfaches Einrichten. Problemlos in Ihr Heimnetzwerk zu integrieren.
 	EN	Simple setup. Integrates easily with your existing home network.
-	ES	Instalación sin complicaciones. Se integra a la perfección con la red doméstica existente.
-	FI	Asennus sujuu vaivattomasti. Yhdistyy saumattomasti nykyiseen kotiverkkoon.
-	FR	Configuration simple. S'intègre parfaitement à votre réseau domestique existant.
-	IT	Configurazione semplificata: si integra perfettamente con la rete domestica esistente.
-	NL	Probleemloze set-up. Naadloos te integreren in je bestaande thuisnetwerk.
+	ES	Instalación sencilla. Fácil integración con la red doméstica existente.
+	FI	Yksinkertainen asentaa. Helposti yhdistettävissä nykyiseen kotiverkkoon.
+	FR	Configuration simple. S'intègre facilement à votre réseau domestique existant.
+	IT	Configurazione semplificata: si integra facilmente con la rete domestica esistente.
+	NL	Eenvoudige set-up. Kan gemakkelijk in je bestaande thuisnetwerk geïntegreerd worden.
 	NO	Enkelt oppsett. Smidig integrering med det eksisterende hjemmenettverket.
-	PL	Bardzo prosta instalacja. Bezproblemowa integracja z istniejącą siecią domową.
-	RU	Установка без проблем. Беспрепятственная интеграция с  домашней сетью.
+	PL	Łatwa instalacja. Prosta integracja z istniejącą siecią domową.
+	RU	Удобная установка. Простая интеграция с  домашней сетью.
 	SV	Snabb och smidig installation. Det är bara att ansluta spelaren till ditt hemnätverk.
 
 SLIDE_10
-	CS	Přidejte více přijímačů Squeezebox nebo další přehrávače Squeezebox a vytvořte si vícepokojový systém.
-	DA	Tilføj flere Squeezebox-modtagere eller Squeezebox-afspillere hvis du vil have et system der dækker flere rum.
-	DE	Fügen Sie weitere Squeezebox Receiver oder andere Squeezebox-Player hinzu und richten Sie so ein Musiksystem für mehrere Räume ein.
+	CS	Přidejte přehrávače Squeezebox nebo Přijímače a vytvořte si vícepokojový systém.
+	DA	Tilføj flere Squeezebox-modtagere eller -afspillere hvis du vil have et system der dækker flere rum.
+	DE	Fügen Sie Squeezebox-Player oder -Receiver hinzu und richten Sie so ein Musiksystem in mehreren Räumen ein.
 	EN	Add Squeezebox players or Receivers to create a multi-room system.
-	ES	Agregue más receptores Squeezebox u otros reproductores Squeezebox para crear un sistema para varias habitaciones.
-	FI	Lisää Squeezebox-vastaanottimia tai muita Squeezebox-soittimia ja toista musiikkia eri huoneissa.
-	FR	Ajoutez d'autres récepteurs ou platines Squeezebox pour créer un système multipièce.
-	IT	Aggiungi altri ricevitori Squeezebox o altri lettori Squeezebox per creare un sistema per più locali.
-	NL	Voeg meer Squeezebox Receivers of andere Squeezebox-spelers toe om een systeem voor meerdere kamers te maken.
-	NO	Du kan legge til flere Squeezebox-mottakere eller andre Squeezebox-spillere for å spre musikken rundt i hele huset.
-	PL	Dodaj więcej odbiorników Squeezebox lub innych odtwarzaczy Squeezebox, aby stworzyć system obejmujący wiele pomieszczeń.
-	RU	Вы сможете создать многокомнатную аудиосистему, добавляя другие приемники Squeezebox или плееры Squeezebox.
-	SV	Du kan lägga till fler mottagare och spelare från Squeezebox-sortimentet och förvandla hela hemmet till en musikanläggning.
+	ES	Agregue más reproductores o receptores Squeezebox para crear un sistema para varias habitaciones.
+	FI	Lisäämällä Squeezebox-soittimia tai -vastaanottimia voit kuunnella musiikkia useissa huoneissa.
+	FR	Ajoutez des platines ou des récepteurs Squeezebox pour créer un système multipièce.
+	IT	Aggiungere altri lettori o ricevitori Squeezebox per creare un sistema per più locali.
+	NL	Voeg meer Squeezebox-spelers of Squeezebox Receivers toe om een systeem voor meerdere kamers te maken.
+	NO	Du kan legge til flere Squeezebox-mottakere eller -spillere for å spre musikken rundt i hele huset.
+	PL	Dodaj więcej odtwarzaczy lub odbiorników Squeezebox, aby stworzyć system obejmujący wiele pomieszczeń.
+	RU	Вы сможете создать многокомнатную аудиосистему, добавляя приемники или плееры Squeezebox.
+	SV	Du kan lägga till fler mottagare och spelare och förvandla hela din bostad till en musikanläggning.
 
 SLIDE_11
-	CS	Bezdrátový ovladač Squeezebox vám umožňuje ovládat celou rodinu produktů Squeezebox.
-	DA	Med den trådløse Squeezebox Controller kan du styre alle afspillerne i Squeezebox-familien.
-	DE	Mit dem kabellosen Squeezebox Controller steuern Sie alle Geräte aus der Squeezebox-Produktreihe.
+	CS	Bezdrátový ovladač funguje s celou rodinu produktů Squeezebox.
+	DA	Squeezebox Controller fungerer med alle afspillerne i Squeezebox-familien.
+	DE	Der kabellose Controller funktioniert mit allen Squeezebox-Produkten.
 	EN	The wireless Controller works with the entire Squeezebox family.
-	ES	Squeezebox Controller inalámbrico ofrece la libertad de controlar toda la familia de productos Squeezebox.
-	FI	Langattomalla Squeezeboxin ohjaimella hallitset kaikkia Squeezebox-perheen tuotteita.
-	FR	Le Squeezebox Controller sans fil vous offre la liberté de contrôler l'ensemble de la gamme de produits Squeezebox.
-	IT	Il Controller Squeezebox senza fili consente di controllare in tutta libertà l'intera famiglia di prodotti Squeezebox.
-	NL	De draadloze Squeezebox-controller geeft je de vrijheid om alle producten van de Squeezebox-reeks te bedienen.
-	NO	Den trådløse Squeezebox-fjernkontrollen gir deg friheten til å styre alle produktene i Squeezebox-serien.
-	PL	Bezprzewodowy kontroler Squeezebox umożliwia wygodne sterowanie całą rodziną produktów Squeezebox.
-	RU	Беспроводной контроллер Squeezebox предоставляет вам свободу управления всем семейством продуктов Squeezebox.
-	SV	Med Squeezebox-fjärrkontrollen kan du styra alla produkter i Squeezebox-sortimentet.
+	ES	El Controller inalámbrico funciona con toda la familia de productos Squeezebox.
+	FI	Langaton kaukosäädin toimii kaikkien Squeezebox-tuotteiden kanssa.
+	FR	Le contrôleur sans fil est compatible avec l'ensemble de la gamme de produits Squeezebox.
+	IT	Il Controller senza fili funziona con tutta la famiglia di prodotti Squeezebox.
+	NL	De draadloze Controller werkt met de hele Squeezebox-reeks.
+	NO	Den trådløse fjernkontrollen kan brukes til å styre alle produktene i Squeezebox-serien.
+	PL	Bezprzewodowy kontroler działa z całą rodziną produktów Squeezebox.
+	RU	Беспроводной контроллер Squeezebox работает со всем семейством Squeezebox.
+	SV	Med fjärrkontrollen kan du styra alla produkter i Squeezebox-sortimentet.
 
 SLIDE_12
 	CS	Otoč. Klepni. Vychutnej.
