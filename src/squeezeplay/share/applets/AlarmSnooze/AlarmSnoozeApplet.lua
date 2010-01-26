@@ -54,6 +54,7 @@ function init(self, ...)
 		-- as it will be set again whenever it is invoked by an self.alarmNext param
 		timeToAlarm = 86400000
 	end
+	self.debugRTCTime = timeToAlarm
 	self.RTCAlarmTimer = Timer(timeToAlarm,
 			function ()
 				log:warn("RTC ALARM FIRING")
@@ -70,7 +71,29 @@ function init(self, ...)
 			end,
 			true
 	)
-	
+
+	self.statusPoller = Timer(1000, 
+		function ()
+			local status = decode:status()
+			log:warn('----------------------------------')
+			log:warn('**** self.alarmInProgress:        ', self.alarmInProgress)
+			log:warn('**** status.audioState:           ', status.audioState)
+			log:warn('**** self.localPlayer.alarmState: ', self.localPlayer:getAlarmState())
+			log:warn('**** RTC fallback running?:       ', self.RTCAlarmTimer:isRunning())
+			if self.RTCAlarmTimer:isRunning() and self.debugRTCTime and self.debugRTCTime > 0 then
+				local timeToAlarm = self.debugRTCTime / 1000
+				log:warn('**** RTC time:       ', timeToAlarm)
+				if self.debugRTCTime > 0 then	
+					self.debugRTCTime = self.debugRTCTime - 1000
+				end
+			end
+		end,
+	false)
+
+	-- this timer is for debug purposes only, to log state information every second for tracking purposes
+	-- very useful when needed...
+	-- self.statusPoller:start()
+
 	if startTimer then
 		self:_startTimer()
 	end
@@ -138,9 +161,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 				if self.RTCAlarmTimer:isRunning() then
 					log:warn('clear alarm directive received while RTC timer is running!  Stopping.  Careful now...')
 				end
-				if self.decodeStatePoller:isRunning() then
-					self.decodeStatePoller:stop()
-				end
+				self:_stopDecodeStatePoller()
 				self:_stopTimer()
 			else
 				log:warn('clear alarm directive received while fallback alarm in progress!  ignoring')
@@ -149,9 +170,7 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		elseif alarmState == 'set' then
 			
 			log:warn('an upcoming alarm is set, but none is currently active')
-			if self.decodeStatePoller:isRunning() then
-				self.decodeStatePoller:stop()
-			end
+			self:_stopDecodeStatePoller()
 		end
 		
 		-- store alarmNext data as epoch seconds
@@ -172,8 +191,10 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			
 			self:storeSettings()
 			self:_setWakeupTime()
-			self:_stopTimer()
-			self:_startTimer()
+			if self.alarmInProgress ~= 'rtc' then
+				self:_stopTimer()
+				self:_startTimer()
+			end
 		end
 	end
 end
@@ -191,7 +212,7 @@ function _alarm_sledgehammerRearm(self, caller)
 	--debug.dump(status)
 
 	log:warn('alarm_sledgehammerRearm(', caller,'): ', self.alarmInProgress, ' alarm in progress - audioState is ', status.audioState)
-	if self.alarmInProgress and status.audioState ~= 1 then
+	if self.alarmInProgress and self.alarmInProgress ~= 'snooze' and status.audioState ~= 1 then
 		hammer = true
 	end
 
@@ -379,11 +400,7 @@ function openAlarmWindow(self, caller)
 	-- when the alarm time is hit, unset the wakeup mcu time
 	self:_setWakeupTime('none')
 
-	if self.decodeStatePoller:isRunning() then
-		self.decodeStatePoller:restart()
-	else
-		self.decodeStatePoller:start()
-	end
+	self:_startDecodeStatePoller()
 
 	if caller == 'server' then
 		-- if we're connected, first drop the now playing window underneath the alarm window
@@ -456,10 +473,11 @@ function openAlarmWindow(self, caller)
 		return EVENT_CONSUME
 	end
 
-	local hideWindowAction = function()
-		window:playSound("WINDOWHIDE")
-		self:_alarmOff(true)
-		return EVENT_UNUSED
+	local consumeAction = function()
+		log:warn('Consuming this action')
+		Framework:playSound("BUMP")
+		window:bumpLeft()
+		return EVENT_CONSUME
 	end
 
 	local offAction = function()
@@ -476,7 +494,12 @@ function openAlarmWindow(self, caller)
 	menu:addActionListener("power", self, offAction)
 	menu:addActionListener("mute", self, snoozeAction)
 
-	window:ignoreAllInputExcept({ 'go', 'back', 'power', 'mute', 'volume_up', 'volume_down' }, hideWindowAction)
+	window:ignoreAllInputExcept(
+		--these actions are not ignored
+		{ 'go', 'back', 'power', 'mute', 'volume_up', 'volume_down', 'pause' }, 
+		-- consumeAction is the callback issued for all "ignored" input
+		consumeAction 
+	)
 
 	menu:setHeaderWidget(headerGroup)
 
@@ -485,29 +508,13 @@ function openAlarmWindow(self, caller)
 	window:setAllowScreensaver(false)
 	window:show(Window.transitionFadeIn)
 
-	-- If the window leaves the screen through any means, self.alarmInProgress gets set to none, fallback alarm audio gets stopped, decodeStatePoller gets stopped
-        window:addListener(EVENT_WINDOW_POP,
-                function()
-			if self.alarmInProgress == 'rtc' then
-				self.localPlayer:stop(true)
-				iconbar:setAlarm('OFF')
-				log:warn('_alarmOff: RTC alarm canceled')
-			end
-			if self.decodeStatePoller:isRunning() then
-				self.decodeStatePoller:stop()
-			end
-                        self.alarmInProgress = nil
-			self.alarmWindow = nil
-			log:warn('self.alarmInProgress set to: ', self.alarmInProgress)
-                end
-        )
-
 	window:addTimer(1000, 
 			function() 
 				self:_updateTime() 
 			end
 	)
 
+	window:setAlwaysOnTop(true)
 	self.alarmWindow = window
 	self.timeWidget  = label
 
@@ -542,9 +549,7 @@ function _alarmOff(self, stopStream)
 	self.alarmWindow:playSound("WINDOWHIDE")
 	self:_hideAlarmWindow()
 	
-	if self.decodeStatePoller:isRunning() then
-		self.decodeStatePoller:stop()
-	end
+	self:_stopDecodeStatePoller()
 
 	if self.localPlayer:isConnected() and stopStream then
 		log:warn('_alarmOff: send stopAlarm to connected server')
@@ -557,10 +562,28 @@ function _stopTimer(self)
 	if self.RTCAlarmTimer:isRunning() then
 		log:warn('_stopTimer: stopping RTC fallback alarm timer')
 		self.RTCAlarmTimer:stop()
+		self.debugRTCTime = 0
 	end
 	if self.wakeOnLanTimer:isRunning() then
 		log:warn('_stopTimer: stopping WOL timer')
 		self.wakeOnLanTimer:stop()
+	end
+end
+
+
+function _stopDecodeStatePoller(self)
+	if self.decodeStatePoller:isRunning() then
+		log:warn('stopping decodeStatePoller')
+		self.decodeStatePoller:stop()
+	end
+end
+
+
+function _startDecodeStatePoller(self)
+	if self.decodeStatePoller:isRunning() then
+		self.decodeStatePoller:restart()
+	else
+		self.decodeStatePoller:start()
 	end
 end
 
@@ -587,18 +610,21 @@ function _startTimer(self, interval)
 
 	if self.RTCAlarmTimer:isRunning() then
 		self.RTCAlarmTimer:stop()
+		self.debugRTCTime = 0
 		log:warn('_startTimer: stopping RTC fallback alarm timer')
 	end
 	
 	if interval then
 		log:warn('starting RTC fallback alarm timer for interval ', interval)
 		self.RTCAlarmTimer:setInterval(interval)
+		self.debugRTCTime = interval
 	else
 		-- get msecs between now and requested alarm
 		-- add 10 secs for fallback timer to bias alarm toward server wakeup
 		local sleepMsecs = self:_deltaMsecs(self.alarmNext + 10);
 		log:warn('_startTimer: starting RTC fallback alarm timer (', sleepMsecs, ')')
 		self.RTCAlarmTimer:setInterval(sleepMsecs)
+		self.debugRTCTime = sleepMsecs
 
 		-- WOL timer is set when sleepMsecs is more than 11 minutes away (660,000 msecs)
 		if sleepMsecs > 660000 then
@@ -618,26 +644,28 @@ function _alarmSnooze(self)
 	
 	log:warn('_alarmSnooze: alarmInProgress is ', self.alarmInProgress, ' : connection status is ', self.localPlayer:isConnected())
 
-	log:warn('_alarmSnooze: fallback alarm snoozing for hardwired 9 minutes')
 	self:_stopTimer()
-	-- start another hardwired timer for 9 minutes
-	self:_startTimer(540000)
-	--self:_startTimer(20000)	
+
+	local alarmSnoozeSeconds = self.localPlayer:getAlarmSnoozeSeconds()
+	log:warn('_alarmSnooze: fallback alarm snoozing for ', alarmSnoozeSeconds,'  + 20 seconds')
+	self:_startTimer(alarmSnoozeSeconds * 1000 + 20000 )
 	
 	if self.alarmInProgress == 'rtc' then
 		log:warn('_alarmSnooze: stopping fallback alarm audio')
 		-- stop playback
 		self.localPlayer:stop(true)
+	else
+		self.alarmInProgress = 'snooze'
 	end
 
 	if self.localPlayer:isConnected() then
 		log:warn('_alarmSnooze: sending snooze command to connected server for connected player ', self.localPlayer)
 		self.localPlayer:snooze()
 	end
+	self:_stopDecodeStatePoller()
 
 	self.alarmWindow:playSound("WINDOWHIDE")
 	self:_hideAlarmWindow()
-	self.alarmInProgress = 'snooze'
 end
 
 
