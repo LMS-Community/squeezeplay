@@ -1183,7 +1183,6 @@ function _process_status(self, event)
 		-- ignore player status sent with an error
 		return
 	end
-
 	-- update our state in one go
 	local oldState = self.state
 	self.state = event.data
@@ -1198,6 +1197,8 @@ function _process_status(self, event)
 	-- add 1 to playlist_cur_index to get 1-based place in playlist
 	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
 	self.definedPresets = event.data.preset_loop
+	-- alarm snooze seconds for player, defaults to 540
+	self.alarmSnoozeSeconds = event.data.alarm_snooze_seconds
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -1850,6 +1851,9 @@ function getLastSeen(self)
 	return self.lastSeen
 end
 
+function getAlarmSnoozeSeconds(self)
+	return self.alarmSnoozeSeconds or 540
+end
 
 function isConnected(self)
 	return self.slimServer and self.slimServer:isConnected() and self.info.connected
