@@ -34,7 +34,7 @@ function init(self)
 	self.ejectItems     = {}
 	self.MOUNTING_DRIVE_TIMEOUT = 30
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
-	self.WIPE_TIMEOUT = 15
+	self.WIPE_TIMEOUT = 60
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 	self.prefsFile = "/etc/squeezecenter/prefs.json"
 
@@ -766,7 +766,7 @@ function _wipeRescan(self)
 	end
 
 	-- wipe the .Squeezebox directory forcefully through linux
-	local command = "rm -rf " .. scDrive .. "/.Squeezebox"
+	local command = "rm -rf " .. scDrive .. "/.Squeezebox &"
 	os.execute(command)
 
 	self.wipeTimeout = 0
