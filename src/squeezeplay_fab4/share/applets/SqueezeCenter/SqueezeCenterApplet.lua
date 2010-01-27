@@ -275,28 +275,29 @@ function stopSqueezeCenter(self)
 
 	-- try harder if this didn't work
 	if self:serverRunning() then
-		-- stop scanner
-		local pid = _pidfor('scanner.pl')
-		if pid then
-			squeezeos.kill(pid, 3)
-		end
+
+		-- stop server
+		self:_killByPidFile("/var/run/squeezecenter.pid")
 		
 		-- stop resize helper daemon
-		local pid = _pidfor('gdresized.pl')
-		if pid then
-			squeezeos.kill(pid, 3)
-		end
-		
-		-- stop server
-		pid = _pidfor('slimserver.pl')
-		if pid then
-			squeezeos.kill(pid, 3)
-		end
-		
-		os.remove("/var/run/squeezecenter.pid")
+		self:_killByPidFile("/var/run/gdresized.pid")
+
+		-- stop scanner
+--		local pid = _pidfor('scanner.pl')
+--		if pid then
+--			squeezeos.kill(pid, 15)
+--		end
 	end
 end
 
+function _killByPidFile(self, file)
+	local pid = _readPidFile(file)
+
+	if pid then
+		squeezeos.kill(pid, 15)
+	end
+	os.remove(file)
+end
 
 function _getStatusText(self)
 
@@ -1289,20 +1290,15 @@ end
 
 
 function serverRunning(self)
-	local sc = _pidfor('slimserver.pl')
-	if (sc ~= nil) then
+	if _pidfor("squeezecenter") then
 		return true
 	end
-	return false
+	return self:processRunning('slimserver.pl')
 end
 
 
 function scannerRunning(self)
-	local scanner = _pidfor('scanner.pl')
-	if (scanner ~= nil) then
-		return true
-	end
-	return false
+	return self:processRunning('scanner.pl')
 end
 
 
@@ -1316,8 +1312,12 @@ end
 
 
 function _pidfor(process)
-	local pid
+	local pid = _readPidFile("/var/run/" .. process .. ".pid")
 
+	if pid and squeezeos.kill(pid, 0) == 0 then
+		return pid
+	end
+	
 	local pattern = "%s*(%d+).*" .. process
 
 	log:debug("pattern is ", pattern)
@@ -1334,6 +1334,21 @@ function _pidfor(process)
 	end
 	cmd:close()
 
+	return pid
+end
+
+function _readPidFile(file)
+	local fh = io.open(file, "r")
+
+	if fh == nil then
+		return
+	end
+
+	local pid = fh:read("*all")
+	fh:close()
+
+	log:debug("found pid " .. pid .. " reading " .. file)
+	
 	return pid
 end
 
