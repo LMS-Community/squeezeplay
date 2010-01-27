@@ -21,6 +21,7 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local squeezeos              = require("squeezeos_bsp")
 
 local appletManager          = appletManager
 local jiveMain               = jiveMain
@@ -266,6 +267,28 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 	os.execute("/etc/init.d/squeezecenter " .. action);
 
+end
+
+function stopSqueezeCenter(self)
+	-- first try the regular way
+	self:_stopServer(true)
+
+	-- try harder if this didn't work
+	if self:serverRunning() then
+		-- stop scanner
+		local pid = _pidfor('scanner.pl')
+		if pid then
+			squeezeos.kill(pid, 3)
+		end
+		
+		-- stop server
+		pid = _pidfor('slimserver.pl')
+		if pid then
+			squeezeos.kill(pid, 3)
+		end
+		
+		os.remove("/var/run/squeezecenter.pid")
+	end
 end
 
 

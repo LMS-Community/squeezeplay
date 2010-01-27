@@ -28,6 +28,7 @@ function registerApplet(meta)
 	meta:registerService("udevEventHandler")
 	meta:registerService("squeezecenterStartupCheck")
 	meta:registerService("isBuiltInSCRunning")
+	meta:registerService("stopSqueezeCenter")
 end
 
 function configureApplet(meta)

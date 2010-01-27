@@ -541,6 +541,11 @@ function _upgrade(self, url)
 	-- interrupted during the firmware upgrade.
 	appletManager:callService("disconnectPlayer")
 
+	-- stop memory hungry services before upgrading
+	if (System:getMachine() == "fab4") then
+		appletManager:callService("stopSqueezeCenter")
+	end	
+
 	-- start the upgrade
 	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
 
