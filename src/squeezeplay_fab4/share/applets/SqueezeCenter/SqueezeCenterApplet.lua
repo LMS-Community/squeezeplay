@@ -281,6 +281,12 @@ function stopSqueezeCenter(self)
 			squeezeos.kill(pid, 3)
 		end
 		
+		-- stop resize helper daemon
+		local pid = _pidfor('gdresized.pl')
+		if pid then
+			squeezeos.kill(pid, 3)
+		end
+		
 		-- stop server
 		pid = _pidfor('slimserver.pl')
 		if pid then
