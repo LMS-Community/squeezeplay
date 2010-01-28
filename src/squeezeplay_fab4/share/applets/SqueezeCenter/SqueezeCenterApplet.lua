@@ -21,6 +21,7 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local squeezeos              = require("squeezeos_bsp")
 
 local appletManager          = appletManager
 local jiveMain               = jiveMain
@@ -268,6 +269,35 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 end
 
+function stopSqueezeCenter(self)
+	-- first try the regular way
+	self:_stopServer(true)
+
+	-- try harder if this didn't work
+	if self:serverRunning() then
+
+		-- stop server
+		self:_killByPidFile("/var/run/squeezecenter.pid")
+		
+		-- stop resize helper daemon
+		self:_killByPidFile("/var/run/gdresized.pid")
+
+		-- stop scanner
+--		local pid = _pidfor('scanner.pl')
+--		if pid then
+--			squeezeos.kill(pid, 15)
+--		end
+	end
+end
+
+function _killByPidFile(self, file)
+	local pid = _readPidFile(file)
+
+	if pid then
+		squeezeos.kill(pid, 15)
+	end
+	os.remove(file)
+end
 
 function _getStatusText(self)
 
@@ -1260,20 +1290,15 @@ end
 
 
 function serverRunning(self)
-	local sc = _pidfor('slimserver.pl')
-	if (sc ~= nil) then
+	if _pidfor("squeezecenter") then
 		return true
 	end
-	return false
+	return self:processRunning('slimserver.pl')
 end
 
 
 function scannerRunning(self)
-	local scanner = _pidfor('scanner.pl')
-	if (scanner ~= nil) then
-		return true
-	end
-	return false
+	return self:processRunning('scanner.pl')
 end
 
 
@@ -1287,8 +1312,12 @@ end
 
 
 function _pidfor(process)
-	local pid
+	local pid = _readPidFile("/var/run/" .. process .. ".pid")
 
+	if pid and squeezeos.kill(pid, 0) == 0 then
+		return pid
+	end
+	
 	local pattern = "%s*(%d+).*" .. process
 
 	log:debug("pattern is ", pattern)
@@ -1305,6 +1334,21 @@ function _pidfor(process)
 	end
 	cmd:close()
 
+	return pid
+end
+
+function _readPidFile(file)
+	local fh = io.open(file, "r")
+
+	if fh == nil then
+		return
+	end
+
+	local pid = fh:read("*all")
+	fh:close()
+
+	log:debug("found pid " .. pid .. " reading " .. file)
+	
 	return pid
 end
 

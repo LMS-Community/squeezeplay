@@ -207,6 +207,22 @@ static int squeezeos_set_timezone(lua_State *L)
 	return 1;
 }
 
+/* kill - Send a signal to a process
+ *  pid, signal (both integers)
+ */
+static int squeezeos_kill(lua_State *L)
+{
+	const int pid = lua_tointeger(L, 1);
+	const int signal = lua_tointeger(L, 2);
+	const int ret = kill(pid, signal);
+	if (ret < 0) {
+		lua_pushinteger(L, errno);
+		return 1;
+	} else {
+		lua_pushinteger(L, 0);
+		return 1;
+	}
+}
 
 static const struct luaL_Reg squeezeos_bsp_lib[] = {
 	{ "reboot", squeezeos_reboot },
@@ -216,6 +232,7 @@ static const struct luaL_Reg squeezeos_bsp_lib[] = {
 	{ "hwclock2sys", squeezeos_hwclock_hc2sys },
 	{ "getTimezone", squeezeos_get_timezone },
 	{ "setTimezone", squeezeos_set_timezone },
+	{ "kill", squeezeos_kill },
 	{ NULL, NULL }
 };
 

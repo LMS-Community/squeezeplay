@@ -503,6 +503,9 @@ function openAlarmWindow(self, caller)
 
 	menu:setHeaderWidget(headerGroup)
 
+	window:setButtonAction('rbutton', 'cancel')
+        window:setButtonAction('lbutton', nil, nil)
+
 	window:addWidget(menu)
 	window:setShowFrameworkWidgets(false)
 	window:setAllowScreensaver(false)
