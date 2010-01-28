@@ -356,6 +356,15 @@ local function _popStep()
 end
 
 
+local function _getGrandparentStep()
+	if #_stepStack < 3 then
+		return nil
+	end
+
+	return _stepStack[#_stepStack - 2]
+end
+
+
 local function _getParentStep()
 	if #_stepStack < 2 then
 		return nil
@@ -969,6 +978,18 @@ local function _refreshMe()
 	end
 
 end
+
+local function _refreshGrandparent()
+	local step = _getGrandparentStep()
+	if step then
+		local timer = Timer(100,
+			function()
+				_refreshJSONAction(step)
+			end, true)
+		timer:start()
+	end
+end
+
 
 local function _refreshOrigin()
 	local step = _getParentStep()
@@ -1691,6 +1712,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		local iNextWindow
 		--nextWindow on the action
 		local aNextWindow
+
+		-- onClick handler, for allowing refreshes of this window when using a checkbox/radio/choice item (or 1 above, or 2 steps above)
+		local iOnClick
+		local bOnClick
 		
 		-- we handle no action in the case of an item telling us not to
 		if item['action'] == 'none' then
@@ -1700,6 +1725,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		-- dissect base and item for nextWindow params
 		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
 		iNextWindow = item['nextWindow']
+		
+		bOnClick = _safeDeref(chunk, 'base', 'onClick')
+		iOnClick = item['onClick']
+		local onClick = iOnClick or bOnClick -- item onClick wins over base onClick
 
 		local useNextWindow
 		local actionHandlersExist = _safeDeref(item, 'actions') or _safeDeref(chunk, 'base', 'actions')
@@ -1882,9 +1911,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					else
 						_hideMeAndMyDad()
 					end
-				elseif nextWindow == 'refreshOrigin' then
+				elseif onClick == 'refreshGrandparent' then
+					_refreshGrandparent()
+				elseif nextWindow == 'refreshOrigin' or onClick == 'refreshOrigin' then
 					_refreshOrigin()
-				elseif nextWindow == 'refresh' then
+				elseif nextWindow == 'refresh' or onClick == 'refreshMe' then
 					_refreshMe()
 				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
 				elseif nextWindow then
