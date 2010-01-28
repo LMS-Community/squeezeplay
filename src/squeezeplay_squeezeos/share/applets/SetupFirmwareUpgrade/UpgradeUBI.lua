@@ -303,6 +303,11 @@ function upgradeSink(self)
 			self.downloadBytes = self.downloadBytes + #chunk
 
 			if _action == "store" then
+				if not _fhsink then
+					log:error("_fhsink not defined")
+					return nil, "Something went wrong... _fhsink not defined"
+				end
+			
 				-- write content to fhsink
 				local t, err = _fhsink(chunk)
 				if not t then
