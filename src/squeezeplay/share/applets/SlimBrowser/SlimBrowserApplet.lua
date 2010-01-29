@@ -1958,7 +1958,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_refreshMe(setSelectedIndex)
 				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
 				elseif nextWindow then
-					_hideToX(nextWindow)
+					_hideToX(nextWindow, setSelectedIndex)
 				elseif itemType == "slideshow" or (item and item["slideshow"]) then
 					from, qty = 0, 200
 					
