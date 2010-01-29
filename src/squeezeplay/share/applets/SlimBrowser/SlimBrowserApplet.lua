@@ -967,36 +967,48 @@ local function _bigArtworkPopup(chunk, err)
 end
 
 
-local function _refreshMe()
+local function _refreshMe(setSelectedIndex)
 	local step = _getCurrentStep()
 	if step then
 		local timer = Timer(100,
 			function()
 				_refreshJSONAction(step)
+				if step.menu and setSelectedIndex then
+					step.menu:setSelectedIndex(setSelectedIndex)
+					step.lastBrowseIndexUsed = setSelectedIndex
+				end
 			end, true)
 		timer:start()
 	end
 
 end
 
-local function _refreshGrandparent()
+local function _refreshGrandparent(setSelectedIndex)
 	local step = _getGrandparentStep()
 	if step then
 		local timer = Timer(100,
 			function()
 				_refreshJSONAction(step)
+				if step.menu and setSelectedIndex then
+					step.menu:setSelectedIndex(setSelectedIndex)
+					step.lastBrowseIndexUsed = setSelectedIndex
+				end
 			end, true)
 		timer:start()
 	end
 end
 
 
-local function _refreshOrigin()
+local function _refreshOrigin(setSelectedIndex)
 	local step = _getParentStep()
 	if step then
 		local timer = Timer(100,
 			function()
 				_refreshJSONAction(step)
+				if step.menu and setSelectedIndex then
+					step.menu:setSelectedIndex(setSelectedIndex)
+					step.lastBrowseIndexUsed = setSelectedIndex
+				end
 			end, true)
 		timer:start()
 	end
@@ -1005,7 +1017,7 @@ end
 
 -- _hideMe
 -- hides the top window and refreshes the parent window, via a new request. Optionally, noRefresh can be set to true and the parent window will not be refreshed
-local function _hideMe(noRefresh, silent)
+local function _hideMe(noRefresh, silent, setSelectedIndex)
 
 	if not silent then
 		Framework:playSound("WINDOWHIDE")
@@ -1019,6 +1031,10 @@ local function _hideMe(noRefresh, silent)
 		local timer = Timer(1000,
 			function()
 				_refreshJSONAction(currentStep)
+				if currentStep.menu and setSelectedIndex then
+					currentStep.menu:setSelectedIndex(setSelectedIndex)
+					currentStep.lastBrowseIndexUsed = setSelectedIndex
+				end
 			end, true)
 		timer:start()
 	end
@@ -1026,7 +1042,7 @@ end
 
 -- _hideToX
 -- hides all windows back to window named X, or top of stack, whichever comes first
-local function _hideToX(windowId)
+local function _hideToX(windowId, setSelectedIndex)
 	log:debug("_hideToX, x=", windowId)
 
 	while _getCurrentStep() and _getCurrentStep().window and _getCurrentStep().window:getWindowId() ~= windowId do
@@ -1038,7 +1054,12 @@ local function _hideToX(windowId)
 		log:info('refreshing window: ', windowId)
 		local timer = Timer(1000,
 			function()
-				_refreshJSONAction(_getCurrentStep())
+				local currentStep = _getCurrentStep()
+				_refreshJSONAction(currentStep)
+				if _getCurrentStep().menu and setSelectedIndex then
+					_getCurrentStep().menu:setSelectedIndex(setSelectedIndex)
+					_getCurrentStep().lastBrowseIndexUsed = setSelectedIndex
+				end
 			end, true)
 		timer:start()
 	end
@@ -1048,11 +1069,11 @@ end
 
 -- _hideMeAndMyDad
 -- hides the top window and the parent below it, refreshing the 'grandparent' window via a new request
-local function _hideMeAndMyDad()
+local function _hideMeAndMyDad(setSelectedIndex)
 	log:debug("_hideMeAndMyDad")
 
 	_hideMe(true)
-	_hideMe()
+	_hideMe(_, _, setSelectedIndex)
 end
 
 -- _goNowPlaying
@@ -1713,6 +1734,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		--nextWindow on the action
 		local aNextWindow
 
+		-- setSelectedIndex will set the selected index of a menu. To be used in concert with nextWindow
+		local iSetSelectedIndex
+		local bSetSelectedIndex
+		local aSetSelectedIndex
+
 		-- onClick handler, for allowing refreshes of this window when using a checkbox/radio/choice item (or 1 above, or 2 steps above)
 		local iOnClick
 		local bOnClick
@@ -1725,6 +1751,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		-- dissect base and item for nextWindow params
 		bNextWindow = _safeDeref(chunk, 'base', 'nextWindow')
 		iNextWindow = item['nextWindow']
+
+		-- same for setSelectedIndex
+		bSetSelectedIndex = _safeDeref(chunk, 'base', 'setSelectedIndex')
+		iSetSelectedIndex = item['setSelectedIndex']
 		
 		bOnClick = _safeDeref(chunk, 'base', 'onClick')
 		iOnClick = item['onClick']
@@ -1797,9 +1827,18 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 
 		-- is there a nextWindow on the action
 		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow')
+		aSetSelectedIndex = _safeDeref(item, 'actions', actionName, 'setSelectedIndex') or _safeDeref(chunk, 'base', 'actions', actionName, 'setSelectedIndex')
 
 		-- actions take precedence over items/base, item takes precendence over base
 		nextWindow = aNextWindow or iNextWindow or bNextWindow
+
+		setSelectedIndex = aSetSelectedIndex or iSetSelectedIndex or bSetSelectedIndex
+		setSelectedIndex = tonumber(setSelectedIndex)
+
+		-- in the presence of a setSelectedIndex directive default to nextWindow = 'refresh' if nothing is set
+		if setSelectedIndex and not nextWindow then 
+			nextWindow = 'refresh'
+		end
 
 		-- XXX: After an input box is used, chunk is nil, so base can't be used
 	
@@ -1901,22 +1940,22 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					end
 					
 				elseif nextWindow == 'parentNoRefresh' then
-					_hideMe(true)
+					_hideMe(true, _, setSelectedIndex)
 				elseif nextWindow == 'parent' then
-					_hideMe()
+					_hideMe(_, _, setSelectedIndex)
 				elseif nextWindow == 'grandparent' then
 					local currentStep = _getCurrentStep()
 					if currentStep and currentStep.window and currentStep.window:isContextMenu() then
 						Window:hideContextMenus()
 					else
-						_hideMeAndMyDad()
+						_hideMeAndMyDad(setSelectedIndex)
 					end
 				elseif onClick == 'refreshGrandparent' then
-					_refreshGrandparent()
+					_refreshGrandparent(setSelectedIndex)
 				elseif nextWindow == 'refreshOrigin' or onClick == 'refreshOrigin' then
-					_refreshOrigin()
+					_refreshOrigin(setSelectedIndex)
 				elseif nextWindow == 'refresh' or onClick == 'refreshMe' then
-					_refreshMe()
+					_refreshMe(setSelectedIndex)
 				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
 				elseif nextWindow then
 					_hideToX(nextWindow)
