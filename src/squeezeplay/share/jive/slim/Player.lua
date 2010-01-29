@@ -417,7 +417,7 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 	end
 
 	-- Check have we changed SqueezeCenter
-        if self.serverRefreshInProgress or self.slimServer ~= slimServer then
+	if self.serverRefreshInProgress or self.slimServer ~= slimServer then
  		if self.slimServer == slimServer and self.serverRefreshInProgress then
  		        log:info("Same server but serverRefreshInProgress in progress: ", slimServer)
  		end
@@ -615,7 +615,7 @@ function free(self, slimServer, serverDeleteOnly)
 
 	if self == currentPlayer then
 		self.jnt:notify('playerDisconnected', self)
-
+		self.info.connected = false
 		-- dont' delete state if this is the current player
 		return
 	end
