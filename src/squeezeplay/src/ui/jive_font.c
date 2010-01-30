@@ -245,6 +245,10 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 
 	srf = TTF_RenderUTF8_Blended(font->ttf, str, clr);
 
+	if (!srf) {
+		LOG_ERROR(log_ui_draw, "render returned error: %s for string: %s\n", TTF_GetError(), str);
+	}
+
 #if 0
 	// draw text bounding box for debugging
 	if (srf) {
