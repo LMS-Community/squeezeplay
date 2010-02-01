@@ -7,6 +7,7 @@ local os               = require("os")
 local io               = require("io")
 local math             = require("math")
 local string           = require("string")
+local squeezeos        = require("jive.utils.squeezeos")
 local table            = require("jive.utils.table")
 local lfs              = require("lfs")
 
@@ -22,7 +23,6 @@ local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
 local Textinput        = require("jive.ui.Textinput")
 local Window           = require("jive.ui.Window")
-local squeezeos        = require("squeezeos_bsp")
 
 local debug            = require("jive.utils.debug")
 
@@ -163,34 +163,9 @@ function _disableSharing(self, window)
 end
 
 function stopFileSharing(self)
-	self:_killByPidFile("/var/run/nmbd.pid")
-	self:_killByPidFile("/var/run/smbd.pid")
+	squeezeos:kill("nmbd")
+	squeezeos:kill("smbd")
 end
-
-function _killByPidFile(self, file)
-	local pid = _readPidFile(file)
-
-	if pid then
-		squeezeos.kill(pid, 15)
-	end
-	os.remove(file)
-end
-
-function _readPidFile(file)
-	local fh = io.open(file, "r")
-
-	if fh == nil then
-		return
-	end
-
-	local pid = fh:read("*all")
-	fh:close()
-
-	log:debug("found pid " .. pid .. " reading " .. file)
-	
-	return pid
-end
-
 
 function _fileMatch(file, pattern)
 	local fi = io.open(file, "r")

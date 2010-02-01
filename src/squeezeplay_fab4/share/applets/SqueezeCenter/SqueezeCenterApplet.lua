@@ -5,6 +5,7 @@ local math             = require("math")
 local json             = require("json")
 local table            = require("jive.utils.table")
 local string           = require("jive.utils.string")
+local squeezeos        = require("jive.utils.squeezeos")
 local debug            = require("jive.utils.debug")
 
 local oo                     = require("loop.simple")
@@ -21,7 +22,6 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
-local squeezeos              = require("squeezeos_bsp")
 
 local appletManager          = appletManager
 local jiveMain               = jiveMain
@@ -270,10 +270,10 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 		if self:serverRunning() then
 
 			-- stop server
-			self:_killByPidFile("/var/run/squeezecenter.pid")
+			squeezeos:killByPidFile("/var/run/squeezecenter.pid")
 			
 			-- stop resize helper daemon
-			self:_killByPidFile("/var/run/gdresized.pid")
+			squeezeos:killByPidFile("/var/run/gdresized.pid")
 	
 			-- stop scanner
 	--		local pid = _pidfor('scanner.pl')
@@ -285,15 +285,6 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 	else
 		os.execute("/etc/init.d/squeezecenter " .. action);
 	end
-end
-
-function _killByPidFile(self, file)
-	local pid = _readPidFile(file)
-
-	if pid then
-		squeezeos.kill(pid, 15)
-	end
-	os.remove(file)
 end
 
 function _getStatusText(self)
@@ -1292,66 +1283,15 @@ end
 
 
 function serverRunning(self)
-	if _pidfor("squeezecenter") then
+	if squeezeos:pidfor("squeezecenter") then
 		return true
 	end
-	return self:processRunning('slimserver.pl')
+	return squeezeos:processRunning('slimserver.pl')
 end
 
 
 function scannerRunning(self)
-	return self:processRunning('scanner.pl')
-end
-
-
-function processRunning(self, process)
-	local pid = _pidfor(process)
-	if (pid ~= nil) then
-		return true
-	end
-	return false
-end
-
-
-function _pidfor(process)
-	local pid = _readPidFile("/var/run/" .. process .. ".pid")
-
-	if pid and squeezeos.kill(pid, 0) == 0 then
-		return pid
-	end
-	
-	local pattern = "%s*(%d+).*" .. process
-
-	log:debug("pattern is ", pattern)
-
-	local cmd = io.popen("/bin/ps -o pid,command")
-
-	if not cmd then
-		return nil
-	end
-
-	for line in cmd:lines() do
-		pid = string.match(line, pattern)
-		if pid then break end
-	end
-	cmd:close()
-
-	return pid
-end
-
-function _readPidFile(file)
-	local fh = io.open(file, "r")
-
-	if fh == nil then
-		return
-	end
-
-	local pid = fh:read("*all")
-	fh:close()
-
-	log:debug("found pid " .. pid .. " reading " .. file)
-	
-	return pid
+	return squeezeos:processRunning('scanner.pl')
 end
 
 
