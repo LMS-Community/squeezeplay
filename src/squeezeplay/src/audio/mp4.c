@@ -83,6 +83,7 @@ static struct mp4_parser mp4_parsers[] = {
 	{ "co64", &mp4_parse_chunk_large_offset_box, },
 	{ "mp4a", &mp4_parse_mp4a_box, },
 	{ "esds", &mp4_parse_esds_box, },
+	{ "m4ae", &mp4_parse_mp4a_box, },	// same as mp4a
 	{ "mdat", &mp4_parse_mdat_box, },
 	{ "alac", &mp4_parse_alac_box, },
 	{ NULL, NULL }

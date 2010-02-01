@@ -530,8 +530,10 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
-		*w = 0;
-		*h = 0;
+		if (w)
+			*w = 0;
+		if (h)
+			*h = 0;
 		return;
 	}
 	if (w) {

@@ -120,13 +120,14 @@ static void decode_resume_decoder_handler(void) {
 
 
 static void decode_resume_audio_handler(void) {
-	int start_interval;
+	int start_interval = 0;
+	Uint32 start_jiffies;
 
-	start_interval = mqueue_read_u32(&decode_mqueue) - jive_jiffies();
+	start_jiffies = mqueue_read_u32(&decode_mqueue);
 	mqueue_read_complete(&decode_mqueue);
 	
-	if (start_interval < 0) {
-		start_interval = 0;
+	if (start_jiffies) {
+		start_interval = start_jiffies - jive_jiffies();
 	}
 	
 	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_interval=%d", start_interval);
