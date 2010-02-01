@@ -265,28 +265,25 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 		)
 	end
 
-	os.execute("/etc/init.d/squeezecenter " .. action);
+	if action == 'stop' then
+		-- don't use shell script, we might be out of memory
+		if self:serverRunning() then
 
-end
+			-- stop server
+			self:_killByPidFile("/var/run/squeezecenter.pid")
+			
+			-- stop resize helper daemon
+			self:_killByPidFile("/var/run/gdresized.pid")
+	
+			-- stop scanner
+	--		local pid = _pidfor('scanner.pl')
+	--		if pid then
+	--			squeezeos.kill(pid, 15)
+	--		end
+		end
 
-function stopSqueezeCenter(self)
-	-- first try the regular way
-	self:_stopServer(true)
-
-	-- try harder if this didn't work
-	if self:serverRunning() then
-
-		-- stop server
-		self:_killByPidFile("/var/run/squeezecenter.pid")
-		
-		-- stop resize helper daemon
-		self:_killByPidFile("/var/run/gdresized.pid")
-
-		-- stop scanner
---		local pid = _pidfor('scanner.pl')
---		if pid then
---			squeezeos.kill(pid, 15)
---		end
+	else
+		os.execute("/etc/init.d/squeezecenter " .. action);
 	end
 end
 
@@ -487,10 +484,15 @@ function _stopServer(self, silent)
 	if self:serverRunning() then
 		-- attempt to stop SC
 		log:debug('STOP SERVER')
-		self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 2000, "stop", silent)
+		self:_squeezecenterAction("icon_connecting", "STOPPING_SQUEEZECENTER", nil, 3000, "stop", silent)
 	end
 
 end
+
+function stopSqueezeCenter(self)
+	self:_stopServer(true)
+end
+
 
 -- _unmountingDrive
 -- full screen popup that appears until unmounting is complete or failed

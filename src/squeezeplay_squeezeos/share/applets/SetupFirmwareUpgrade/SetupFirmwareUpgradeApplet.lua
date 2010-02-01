@@ -56,6 +56,8 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 
 local MEDIA_PATH = "/media/"
+local STOP_SERVER_TIMEOUT = 10
+
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
@@ -472,12 +474,6 @@ end
 function _t_upgrade(self)
 	Task:yield(true)
 
-	-- stop memory hungry services before upgrading
-	os.execute("/etc/init.d/squeezecenter stop");
-	os.execute("/etc/init.d/samba stop");
-
-	Task:yield(true)
-
 	local upgrade = Upgrade()
 	local t, err = upgrade:start(self.url,
 		function(...)
@@ -543,11 +539,27 @@ function _upgrade(self, url)
 
 	-- stop memory hungry services before upgrading
 	if (System:getMachine() == "fab4") then
-		appletManager:callService("stopSqueezeCenter")
-	end	
 
-	-- start the upgrade
-	Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
+		appletManager:callService("stopSqueezeCenter")
+		os.execute("/etc/init.d/samba stop");
+
+		-- start the upgrade once SBS is shut down or timed out
+		local timeout = 0
+		self.serverStopTimer = self.popup:addTimer(1000, function()
+
+			timeout = timeout + 1
+			
+			if timeout <= STOP_SERVER_TIMEOUT and appletManager:callService("isBuiltInSCRunning") then
+				return
+			end
+
+			Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
+			
+			self.popup:removeTimer(self.serverStopTimer)
+		end)
+	else
+		Task("upgrade", self, _t_upgrade, _upgradeFailed):addTask()
+	end
 
 	self:tieAndShowWindow(self.popup)
 	return window
