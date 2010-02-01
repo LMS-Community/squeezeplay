@@ -305,14 +305,16 @@ function upgradeSink(self)
 			if _action == "store" then
 				if not _fhsink then
 					log:error("_fhsink not defined")
-					return nil, "Something went wrong... _fhsink not defined"
+					self.sinkErr = "Something went wrong... _fhsink not defined"
+					return nil
 				end
 			
 				-- write content to fhsink
 				local t, err = _fhsink(chunk)
 				if not t then
 					log:error("FLASH err=", err)
-					return nil, err
+					self.sinkErr = "FLASH err=" .. err
+					return nil
 				end
 
 			elseif _action == "checksum" then
@@ -343,7 +345,7 @@ function upgradeSink(self)
 			local filename = chunk.filename
 
 			if string.match(filename, "^zImage") or
-			   string.match(filename, "^Image") then
+				string.match(filename, "^Image") then
 				if not self:verifyPlatformRevision() then
 					self.sinkErr = "Incompatible firmware"
 					return nil
@@ -352,7 +354,8 @@ function upgradeSink(self)
 				_action = "store"
 				_fhsink, err = self:updatevol("kernel_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
-					return nil, err
+					self.sinkErr = err
+					return nil
 				end
 
 			elseif filename == "root.cramfs" then
@@ -364,7 +367,8 @@ function upgradeSink(self)
 				_action = "store"
 				_fhsink = self:updatevol("cramfs_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
-					return nil, err
+					self.sinkErr = err
+					return nil
 				end
 
 			elseif filename == "upgrade.md5" then
