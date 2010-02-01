@@ -22,6 +22,7 @@ local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
 local Textinput        = require("jive.ui.Textinput")
 local Window           = require("jive.ui.Window")
+local squeezeos        = require("squeezeos_bsp")
 
 local debug            = require("jive.utils.debug")
 
@@ -159,6 +160,36 @@ function _disableSharing(self, window)
 	log:info("Disabling Samba Access")
 	os.execute("echo disabled > /etc/samba/status");
 	os.execute("/etc/init.d/samba stop");
+end
+
+function stopFileSharing(self)
+	self:_killByPidFile("/var/run/nmbd.pid")
+	self:_killByPidFile("/var/run/smbd.pid")
+end
+
+function _killByPidFile(self, file)
+	local pid = _readPidFile(file)
+
+log:warn("got PiD " .. pid)
+	if pid then
+		squeezeos.kill(pid, 15)
+	end
+	os.remove(file)
+end
+
+function _readPidFile(file)
+	local fh = io.open(file, "r")
+
+	if fh == nil then
+		return
+	end
+
+	local pid = fh:read("*all")
+	fh:close()
+
+	log:debug("found pid " .. pid .. " reading " .. file)
+	
+	return pid
 end
 
 

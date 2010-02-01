@@ -28,6 +28,7 @@ end
 
 function registerApplet(meta)
 	jiveMain:addItem(meta:menuItem('sbs_settings', 'advancedSettings', "USB_SD_STORAGE", function(applet, ...) applet:SBSSettingsMenu() end))
+	meta:registerService("stopFileSharing")
 end
 
 

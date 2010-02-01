@@ -541,7 +541,7 @@ function _upgrade(self, url)
 	if (System:getMachine() == "fab4") then
 
 		appletManager:callService("stopSqueezeCenter")
-		os.execute("/etc/init.d/samba stop");
+		appletManager:callService("stopFileSharing")
 
 		-- start the upgrade once SBS is shut down or timed out
 		local timeout = 0
