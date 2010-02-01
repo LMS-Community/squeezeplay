@@ -170,7 +170,6 @@ end
 function _killByPidFile(self, file)
 	local pid = _readPidFile(file)
 
-log:warn("got PiD " .. pid)
 	if pid then
 		squeezeos.kill(pid, 15)
 	end
