@@ -376,7 +376,7 @@ end
 
 -- ------------------------------ Main Menu ---------------------------- --
 
-function SBSSettingsMenu(self)
+function StorageSettingsMenu(self)
 	local window = Window("text_list", self:string("USB_SD_STORAGE"))
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
