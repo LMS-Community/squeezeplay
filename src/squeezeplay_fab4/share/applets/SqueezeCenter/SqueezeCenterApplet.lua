@@ -1018,19 +1018,23 @@ function squeezeboxDirPresent(self, scDrive)
 	local command = "/bin/ls -A " .. scDrive
 	local ls = io.popen(command)
 
-	for line in ls:lines() do
-		local match = string.match(line, "^\.") -- we can quit after going through . files
-		if match then
-			present = string.match(line, "^\.Squeezebox")
-			if present then
-				log:warn("squeezeboxDirPresent(), found it: ", present)
+	if ls ~= nil then
+
+		for line in ls:lines() do
+			local match = string.match(line, "^\.") -- we can quit after going through . files
+			if match then
+				present = string.match(line, "^\.Squeezebox")
+				if present then
+					log:warn("squeezeboxDirPresent(), found it: ", present)
+					break
+				end
+			else
 				break
 			end
-		else
-			break
 		end
+		ls:close()
+
 	end
-	ls:close()
 
 	log:warn(scDrive, "/.Squeezebox present: ", present)
 
@@ -1047,13 +1051,17 @@ function checkDriveMounted(self, devName)
 	local format = nil
 	local mount = io.popen("/bin/mount")
 
-	for line in mount:lines() do
-		local dummy = string.match(line, "/dev/" .. devName)
-		if dummy then
-			format = string.match(line, "type (%w*)")
+	if mount ~= nil then
+
+		for line in mount:lines() do
+			local dummy = string.match(line, "/dev/" .. devName)
+			if dummy then
+				format = string.match(line, "type (%w*)")
+			end
 		end
+		mount:close()
+
 	end
-	mount:close()
 
 	if format then
 		log:debug("New device: /dev/", devName, " formatted with: ", format)
