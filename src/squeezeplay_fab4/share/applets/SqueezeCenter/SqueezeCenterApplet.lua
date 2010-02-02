@@ -11,6 +11,7 @@ local debug            = require("jive.utils.debug")
 local oo                     = require("loop.simple")
 local io                     = require("io")
 local os                     = require("os")
+local lfs                    = require("lfs")
 
 local Applet                 = require("jive.Applet")
 local Framework              = require("jive.ui.Framework")
@@ -587,7 +588,7 @@ function _unmountingDriveTimer(self, devName)
 	Task("unmountingDrive", self, function()
 		log:debug("unmountingDriveTimeout=", self.unmountingDriveTimeout)
 
-		unmounted = self:_checkDriveUnmounted(devName)
+		unmounted = not self:checkDriveMounted(devName)
 
 		if unmounted then
 			-- success
@@ -597,11 +598,10 @@ function _unmountingDriveTimer(self, devName)
 
 			-- rmdir cleanup of /media/devName, as stale dirs appear to be a problem after umount
 			if self:_mediaDirExists(devName) then
-				os.execute("rmdir /media/" .. devName)
+				lfs.rmdir("/media/" .. devName)
 			end
 
 			self:_unmountSuccess(devName)
-
 
 		else
 			-- Not yet unmounted
@@ -947,7 +947,7 @@ function _confirmEject(self, devName)
 	local confirmToken = 'EJECT_CONFIRM_INFO'
 	local ejectToken   = 'EJECT_REMOVABLE_MEDIA'
 
-	if item.devType then
+	if item and item.devType then
 		titleToken   = 'EJECT_CONFIRM_' .. item.devType
 		confirmToken = 'EJECT_CONFIRM_INFO_' .. item.devType
 		ejectToken   = 'EJECT_DRIVE_' .. item.devType
@@ -994,46 +994,38 @@ end
 
 -- returns table of devNames for mounted devices
 function mountedDriveCheck(self)
-        local mount = io.popen("/bin/mount")
-
 	local mountedDrives = {}
 
-	local foundOne = nil
-        for line in mount:lines() do
-                local stringMatch = string.match(line, "/media/(%w*)")
-		if stringMatch then
-			log:debug('Mounted drive found at /media/', stringMatch)
-			mountedDrives[stringMatch] = "/media/" .. stringMatch
-		end
-        end
-        mount:close()
+	local mounts = io.open("/proc/mounts", "r")
+	
+	if mounts == nil then
+		log:error("/proc/mounts could not be opened")
+		return mountedDrives
+	end
 
-        return mountedDrives
+	for line in mounts:lines() do
+		local mountPoint = string.match(line, "/media/(%w*)")
+		if mountPoint then
+			log:debug('Mounted drive found at /media/', mountPoint)
+			mountedDrives[mountPoint] = "/media/" .. mountPoint
+		end
+	end
+	mounts:close()
+
+	return mountedDrives
 end
 
 
 -- will return true if .Squeezebox is listed in the output of the ls command for scDrive
 function squeezeboxDirPresent(self, scDrive)
 	local present = false
-	local command = "/bin/ls -A " .. scDrive
-	local ls = io.popen(command)
-
-	if ls ~= nil then
-
-		for line in ls:lines() do
-			local match = string.match(line, "^\.") -- we can quit after going through . files
-			if match then
-				present = string.match(line, "^\.Squeezebox")
-				if present then
-					log:warn("squeezeboxDirPresent(), found it: ", present)
-					break
-				end
-			else
-				break
-			end
+	
+	for f in lfs.dir(scDrive) do
+		present = string.match(f, "^\.Squeezebox")
+		if present then
+			log:warn("squeezeboxDirPresent(), found it: ", present)
+			break
 		end
-		ls:close()
-
 	end
 
 	log:warn(scDrive, "/.Squeezebox present: ", present)
@@ -1048,71 +1040,27 @@ end
 
 -- will return true if /media/<devName> is listed in the output of the mount command
 function checkDriveMounted(self, devName)
-	local format = nil
-	local mount = io.popen("/bin/mount")
-
-	if mount ~= nil then
-
-		for line in mount:lines() do
-			local dummy = string.match(line, "/dev/" .. devName)
-			if dummy then
-				format = string.match(line, "type (%w*)")
-			end
-		end
-		mount:close()
-
-	end
-
-	if format then
-		log:debug("New device: /dev/", devName, " formatted with: ", format)
+	local mountedDrives = self:mountedDriveCheck()
+	
+	if mountedDrives[devName] then
 		return true
 	end
-
+	
 	return false
 end
-
 
 function _mediaDirExists(self, devName)
 	local dirExists = nil
-	local mount = io.popen("/bin/ls /media")
-
-	log:debug('--- ', devName)
-	for line in mount:lines() do
-		local stringMatch = string.match(line, devName)
-		if stringMatch then
-			dirExists = true
+	
+	for file in lfs.dir("/media") do
+		local dummy = string.match(file, devName)
+		if dummy then
+			log:warn("media dir found: ", dummy)
+			return true
 		end
-	end
-	mount:close()
-
-	if dirExists then
-		return true
 	end
 
 	return false
-end
-
-
-function _checkDriveUnmounted(self, devName)
-	local devMount = nil
-	local mount = io.popen("/bin/mount")
-
-	log:debug('--- ', devName)
-	for line in mount:lines() do
-		local stringMatch = string.match(line, "/dev/" .. devName)
-		log:debug('--- ', line, '--- ', devMount)
-		if stringMatch then
-			devMount = string.match(line, "type (%w*)")
-		end
-	end
-	mount:close()
-
-	if devMount then
-		log:warn("Device: /dev/", devName, " is still in the mount table")
-		return false
-	end
-
-	return true
 end
 
 
