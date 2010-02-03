@@ -438,13 +438,16 @@ function _updateButtons(self, playerStatus)
 		log:debug('remap buttons to whatever remoteMeta needs')
 		-- disable rew or fw as needed
 		if buttons.rew and tonumber(buttons.rew) == 0 then
-			self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
+			self:_remapButton('rew', 'rewDisabled', nil)
 		else
 			self.controlsGroup:setWidget('rew', self.rewButton)
 		end
 
 		if buttons.fwd and tonumber(buttons.fwd) == 0 then
-			self:_remapButton('fwd', 'fwdDisabled', function() return EVENT_CONSUME end)
+			-- Bug 15336: in order for a skip limit showBriefly to be generated, we still need to
+			-- allow the jump_fwd action to be sent for the disabled button
+			-- this could have implications for services that expect a disabled button to not send the action
+			self:_remapButton('fwd', 'fwdDisabled', nil)
 		else
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
 		end
@@ -526,8 +529,10 @@ function _remapButton(self, key, newStyle, newCallback)
 		return
 	end
 	-- set callback
-	local newWidget = Button(Icon(key), newCallback)
-	self.controlsGroup:setWidget(key, newWidget)
+	if newCallback then
+		local newWidget = Button(Icon(key), newCallback)
+		self.controlsGroup:setWidget(key, newWidget)
+	end
 	-- set style
 	local widget = self.controlsGroup:getWidget(key)
 	if newStyle then
@@ -652,7 +657,7 @@ function _updatePosition(self)
 	if elapsed then
 		strElapsed = _secondsToString(elapsed)
 	end
-	if duration and duration > 0 then
+	if elapsed and elapsed >= 0 and duration and duration > 0 then
 		strRemain = "-" .. _secondsToString(duration - elapsed)
 	end
 
