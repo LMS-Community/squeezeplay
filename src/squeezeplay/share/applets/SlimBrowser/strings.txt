@@ -18,7 +18,7 @@ SN_SIGNUP
 	SV	Registrering för mysqueezebox.com
 
 SLIMBROWSER_PLAYLIST
-	CS	Aktuální seznam skladeb
+	CS	Aktuální seznam
 	DA	Nuværende afspilningsliste
 	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
@@ -291,7 +291,7 @@ SLIMBROWSER_ADD_NEXT_1
 SLIMBROWSER_ADD_NEXT_2
 	CS	Přidat další
 	DA	Tilføj næste
-	DE	Als nächstes hinzufügen
+	DE	Nächstes hinzufügen
 	EN	Add Next
 	ES	Agregar a continuación
 	FI	Lisää seuraava

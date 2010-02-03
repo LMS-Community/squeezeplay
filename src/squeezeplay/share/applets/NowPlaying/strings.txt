@@ -18,7 +18,7 @@ SCREENSAVER_NOWPLAYING
 	SV	Nu spelas
 
 SCREENSAVER_STOPPED
-	CS	Zastaveno
+	CS	Při zastavení
 	DA	Stoppet
 	DE	Angehalten
 	EN	Stopped

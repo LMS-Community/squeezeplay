@@ -609,7 +609,7 @@ IMAGE_VIEWER_TEXTINFO_NO
 IMAGE_VIEWER_CARD_PATH
 	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
 	DA	Definerer søgestien til billeder. Du kan bruge * som pladsholder
-	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden
+	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden.
 	EN	Defines the search path for images. You can use a '*' as placeholder
 	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
 	FI	Määrittää kuvien hakupolun. Voit käyttää merkkiä * paikkamerkkinä
