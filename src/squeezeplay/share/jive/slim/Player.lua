@@ -379,6 +379,8 @@ Updates the player with fresh data from SS.
 --]]
 function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
+	log:debug(self, "@", slimServer, ":updatePlayerInfo connected=", playerInfo.connected);
+	
 	-- ignore updates from a different server if the player
 	-- is not connected to it
 	if self.slimServer ~= slimServer 
@@ -427,6 +429,9 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 		-- delete from old server
 		if self.slimServer then
 			self:free(self.slimServer)
+			
+			-- refresh understanding of connected state because free() may have changed it
+			self.info.connected = tonumber(playerInfo.connected) == 1
 		end
 
 		-- modify the old state, as the player was not connected

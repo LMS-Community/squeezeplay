@@ -184,20 +184,33 @@ end
 
 
 function connectToServer(self, server)
-	-- close any previous connection
-	self.slimproto:disconnect()
+
+	if not server then
+		log:error("No server passed to connectToServer() method")
+		return false
+	end
 
 	-- make sure the server we are connecting to is awake
 	server:wakeOnLan()
 
-	log:debug("connectToServer: ", server)
-	if server then
-		server:addLocallyRequestedServer(server)
-	
-		self.slimproto:connect(server)
-	end
-end
+	if self:needsMusicSource() then
+		log:info('connectToServer(): connecting localPlayer to server', server, ' via slimproto')
 
+		-- close any previous connection
+		self.slimproto:disconnect()
+
+		server:addLocallyRequestedServer(server)
+		self.slimproto:connect(server)
+	else
+		log:info('connectToServer(): switching localPlayer to server', server)
+		local ip, port = server:getIpPort()
+
+		server:addLocallyRequestedServer(server)
+		self:send({'connect', ip}, true)
+	end
+	return true
+
+end
 
 function connectIp(self, serverip, slimserverip)
 	self.slimproto:disconnect()
