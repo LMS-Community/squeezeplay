@@ -694,19 +694,10 @@ MEMORY
 	SV	Minne som används\n%s
 
 POWER
-	CS	Napájení
-	DA	Tænd/sluk
-	DE	Ein/Aus
+#SLT: This is "power" as in "power supply"
+	DE	Stromversorgung
 	EN	Power
-	ES	Encendido
-	FI	Virta
 	FR	Mise sous tension
-	IT	Accensione
-	NL	Voeding
-	NO	Av/på
-	PL	Zasilanie
-	RU	Питание
-	SV	Av/på
 
 MSP_VERSION
 	CS	MSP verze\n%s
