@@ -710,6 +710,10 @@ void mp4_track_conf(struct decode_mp4 *mp4, int track, u8_t **conf, size_t *size
 	*size = mp4->track[track].conf_size;
 }
 
+int mp4_track_is_type(struct decode_mp4 *mp4, int track, const char *type) {
+	return strncmp(mp4->track[track].data_format, type, sizeof (mp4->track[track].data_format)) == 0;
+}
+
 
 void mp4_free(struct decode_mp4 *mp4)
 {
