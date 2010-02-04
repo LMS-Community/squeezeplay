@@ -39,6 +39,7 @@ local Textarea            = require("jive.ui.Textarea")
 local Textinput           = require("jive.ui.Textinput")
 local Timeinput           = require("jive.ui.Timeinput")
 local Window              = require("jive.ui.Window")
+local datetime            = require("jive.utils.datetime")
 local jiveMain            = jiveMain
 
 local debug               = require("jive.utils.debug")
@@ -446,6 +447,46 @@ end
 
 
 --[[
+Window:   "alarm_menu"
+Menu:     "menu"
+Item:     "item"
+--]]
+function window_alarm_popup(self, item)
+	local data = _itemData(item)
+
+	local window = Window("alarm_popup", _itemName(item), "Alarm Menu")
+	_windowActions(self, item, window)
+
+	local time = datetime:getCurrentTime()
+	local icon = Icon('icon_alarm')
+        local label = Label('alarm_time', time)
+        local headerGroup = Group('alarm_header', {
+                icon = icon,
+                time = label,
+        })
+	local menu = SimpleMenu("menu")
+	for i, text in ipairs(data[1]) do
+		menu:addItem({
+			text = text,
+			style = 'item',
+			sound = "WINDOWSHOW",
+			callback = function()
+				window:hide()
+			end
+		})
+	end
+
+	menu:setHeaderWidget(headerGroup)
+	window:setButtonAction('rbutton', 'cancel')
+	window:setButtonAction('lbutton', nil, nil)
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
+
+--[[
 Window:   "context_menu"
 Menu:     "menu"
 Item:     "item_play", "item_add", "item", (styles: selected, pressed, locked)
@@ -484,6 +525,39 @@ function window_context_menu(self, item)
 				menu:updatedItem(item)
 
 				selected = item
+			end
+		})
+	end
+
+	window:setButtonAction('rbutton', 'cancel')
+	window:setButtonAction('lbutton', nil, nil)
+	window:addWidget(menu)
+
+	self:tieWindow(window)
+	return window
+end
+
+--[[
+Window:   "multiline_text_list"
+Menu:     "menu"
+Item:     "item"
+--]]
+function setup_multiline_text(self, item)
+	local data = _itemData(item)
+
+	log:warn(_itemName(item))
+	local window = Window("multiline_text_list", _itemName(item))
+	_windowActions(self, item, window)
+
+	local menu = SimpleMenu("menu")
+
+	for i, textarea in ipairs(data[1]) do
+		menu:addItem({
+			textarea = textarea,
+			style = 'item_no_arrow',
+			sound = "WINDOWSHOW",
+			callback = function()
+				return EVENT_CONSUME
 			end
 		})
 	end
@@ -893,6 +967,8 @@ end
 
 -- the reference windows, and test data
 windows = {
+	{ "multiline_text", "Multiline Text List", setup_multiline_text, },
+	{ "alarm_popup", "Alarm Menu", window_alarm_popup, },
 	{ "power_down", "Power Down", setup_waiting_popup, },
 	{ "input_time", "Time Input", input_time, },
 	{ "update_popup", "Software Update", setup_update_popup, },
@@ -942,11 +1018,24 @@ testData = {
 	input_time = {
 		{ },
 	},
+	alarm_popup = {
+		{ "Snooze", "Turn Off Alarm" },
+	},
 	context_menu = {
 		{ "Play", "Add", "Create MusicIP Mix", "Add to Favorites", "Biography", "Album Review" },
 	},
 	text_list = {
 		{ "Now Playing", "Music Library", "Internet Radio", "Music Services", "Favorites", "Extras", "Settings", "Choose Player", "Turn Off Player" }
+	},
+	multiline_text = {
+		{ 
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+			"This is a long bunch of text for the multiline text window that should wrap to three lines to fully test this style. Multiline text windows employ textareas rather than labels for allowing word wrap on menu items. They are used for Facebook but could have applications elsewhere.",
+		}
 	},
 	help_list_one_oneline = {
 		"Is text allowed?",
