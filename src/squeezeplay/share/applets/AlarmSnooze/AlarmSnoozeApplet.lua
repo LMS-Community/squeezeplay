@@ -169,8 +169,11 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			end
 		elseif alarmState == 'set' then
 			
-			log:warn('an upcoming alarm is set, but none is currently active')
 			self:_stopDecodeStatePoller()
+			if self.alarmInProgress ~= 'rtc' then
+				self.alarmInProgress = nil
+			end
+
 		end
 		
 		-- store alarmNext data as epoch seconds
