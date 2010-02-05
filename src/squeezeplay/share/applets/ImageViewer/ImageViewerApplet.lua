@@ -69,6 +69,8 @@ function initImageSource(self, imgSourceOverride)
 	self.imgSource = nil
 	self.listCheckCount = 0
 	self.initialized = false
+	self.dragStart = -1
+	self.dragOffset = 0
 
 	self:setImageSource(imgSourceOverride)
 
@@ -256,16 +258,40 @@ function setupEventHandlers(self, window)
 	window:addActionListener("down", self, previousSlideAction)
 	window:addActionListener("back", self, function () return EVENT_UNUSED end)
 
-	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
+	window:addListener(EVENT_MOUSE_PRESS | EVENT_MOUSE_DRAG | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
 		function(event)
 			local type = event:getType()
 
 			-- next slide on touch 
-			if type == EVENT_MOUSE_DOWN then
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
+			if type == EVENT_MOUSE_DRAG then
+				
+				if self.dragStart < 0 then
+					local x, y = event:getMouse()
+					self.dragStart = y
+				end
+
+				self.dragOffset = self.dragOffset + 1
 				return EVENT_CONSUME
+
+			elseif type == EVENT_MOUSE_PRESS and self.dragOffset > 10 then
+			
+				local x, y = event:getMouse()
+				local offset = y - self.dragStart
+				
+				log:debug("drag offset: ", offset)
+				if offset > 10 then
+					previousSlideAction(self)
+				elseif offset < -10 then
+					nextSlideAction(self)
+				end				
+
+				self.dragStart = -1
+				self.dragOffset = 0
+			
+				return EVENT_CONSUME
+
 			elseif type == EVENT_SCROLL then
+			
 				local scroll = event:getScroll()
 
 				local dir
@@ -358,7 +384,7 @@ function applyScreensaverWindow(self, window)
 			end)
 	end
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
+	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"}, true)
 end
 
 
