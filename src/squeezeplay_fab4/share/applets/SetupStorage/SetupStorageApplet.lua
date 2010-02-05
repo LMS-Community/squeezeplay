@@ -150,7 +150,7 @@ end
 function _enableSharing(self, window)
 	-- enable Samba	
 	log:info("Enabling Samba Access")
-	self:_setStatus("enabled")
+	self:_setConfig("/etc/samba/status", "enabled")
 
 	local success = os.execute("/etc/init.d/samba restart")
 	if success ~= 0 then
@@ -182,17 +182,17 @@ function _disableSharing(self, window)
 	-- disable Samba	
 	log:info("Disabling Samba Access")
 	self:stopFileSharing()
-	self:_setStatus("disabled")
+	self:_setConfig("/etc/samba/status", "disabled")
 end
 
-function _setStatus(self, status)
-	local fi = io.open("/etc/samba/status", "w")
+function _setConfig(self, file, value)
+	local fi = io.open(file, "w")
 	
-	if fi == nil then
+	if fi == nil or value == nil then
 		return false
 	end
 	
-	fi:write(status)
+	fi:write(value)
 	fi:close()
 	
 	return true
@@ -251,7 +251,7 @@ function _setSharingAccount(self)
 
 					-- Set samba user alias for root
 					-- Samba daemon doesn't need to be restarted
-					os.execute("echo 'root = " .. value .. "' > /etc/samba/smbusers")
+					self:_setConfig("/etc/samba/smbusers", "root = " ..value)
 
 					self:_updateSharingHelpText()
 
@@ -266,9 +266,9 @@ function _setSharingAccount(self)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-        window:addWidget(group)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
-        window:focusWidget(group)
+	window:focusWidget(group)
 
 --	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 
@@ -308,6 +308,8 @@ function _setSharingPassword(self)
 					-- Samba daemon doesn't need to be restarted
 					-- A valid smb.conf file is needed
 					os.execute("(echo " .. value .. "; echo " .. value .. ") | smbpasswd -s -a -c /etc/samba/smb.conf.dist root")
+					
+					-- TODO: might want to show some error message to the user if the above call fails
 
 					self:_updateSharingHelpText()
 
@@ -322,9 +324,9 @@ function _setSharingPassword(self)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-        window:addWidget(group)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
-        window:focusWidget(group)
+	window:focusWidget(group)
 
 --	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 
