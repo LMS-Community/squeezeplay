@@ -242,3 +242,25 @@ SHARING_HOWTO
 	RU	Общий доступ позволяет переносить файлы с компьютера на устройство Squeezebox Touch.\nПользователь: %s Пароль: %s
 	SV	Delning innebär att du kan överföra filer från datorn till din Squeezebox Touch.\nAnvändare: %s Lösenord: %s
 
+SHARING_START_FAILURE
+	DE	Fehler bei Freigabe
+	EN	Sharing Failure
+
+SHARING_START_FAILURE_INFO
+	DE	Warnung: Die Freigabe konnte nicht ordnungsgemäß gestartet werden. Möglicherweise steht nicht genügend Speicher zur Verfügung.
+	EN	WARNING: The file sharing failed to start properly. This might be due to a low memory situation.
+
+SHARING_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen

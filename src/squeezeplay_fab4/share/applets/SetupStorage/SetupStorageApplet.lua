@@ -150,16 +150,52 @@ end
 function _enableSharing(self, window)
 	-- enable Samba	
 	log:info("Enabling Samba Access")
-	os.execute("echo enabled > /etc/samba/status");
-	os.execute("/etc/init.d/samba restart");
-end
+	self:_setStatus("enabled")
 
+	local success = os.execute("/etc/init.d/samba restart")
+	if success ~= 0 then
+		log:warn("There was a problem starting filesharing (samba): ", success)
+	
+		local window = Window("text_list", self:string("SHARING_START_FAILURE"))
+		window:setAllowScreensaver(false)
+		window:setButtonAction("rbutton", nil)
+	
+		local menu = SimpleMenu("menu")
+	
+		menu:addItem({
+			text = self:string("SHARING_TRY_AGAIN"),
+			style = 'item',
+			sound = "WINDOWSHOW",		
+			callback = function ()
+				window:hide()
+			end
+		})
+	
+		menu:setHeaderWidget( Textarea("help_text", self:string('SHARING_START_FAILURE_INFO') ) )
+		window:addWidget(menu)
+	
+		self:tieAndShowWindow(window)
+	end
+end
 
 function _disableSharing(self, window)
 	-- disable Samba	
 	log:info("Disabling Samba Access")
-	os.execute("echo disabled > /etc/samba/status");
-	os.execute("/etc/init.d/samba stop");
+	self:stopFileSharing()
+	self:_setStatus("disabled")
+end
+
+function _setStatus(self, status)
+	local fi = io.open("/etc/samba/status", "w")
+	
+	if fi == nil then
+		return false
+	end
+	
+	fi:write(status)
+	fi:close()
+	
+	return true
 end
 
 function stopFileSharing(self)
