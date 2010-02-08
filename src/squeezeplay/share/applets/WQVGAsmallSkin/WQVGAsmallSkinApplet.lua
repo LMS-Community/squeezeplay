@@ -2928,6 +2928,12 @@ function skin(self, s)
 			thumbsDown   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_thumbdown.png"),
 			}),
+			thumbsUpDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbup_dis.png"),
+			}),
+			thumbsDownDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbdown_dis.png"),
+			}),
 			love   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_fav.png"),
 			}),
@@ -3080,6 +3086,8 @@ function skin(self, s)
 
 		thumbsUp    = _uses(s.nowplaying.npcontrols.thumbsUp, { bgImg = keyMiddlePressed }),
 		thumbsDown  = _uses(s.nowplaying.npcontrols.thumbsDown, { bgImg = keyMiddlePressed }),
+		thumbsUpDisabled    = s.nowplaying.npcontrols.thumbsUpDisabled,
+		thumbsDownDisabled  = s.nowplaying.npcontrols.thumbsDownDisabled,
 		love        = _uses(s.nowplaying.npcontrols.love, { bgImg = keyMiddlePressed }),
 		hate        = _uses(s.nowplaying.npcontrols.hate, { bgImg = keyMiddlePressed }),
 		fwdDisabled = _uses(s.nowplaying.npcontrols.fwdDisabled),
