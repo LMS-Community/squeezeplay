@@ -289,6 +289,11 @@ function setupEventHandlers(self, window)
 				self.dragOffset = 0
 			
 				return EVENT_CONSUME
+				
+			elseif type == EVENT_MOUSE_PRESS then
+			
+				-- on simple tapping the screen we'll wake up
+				self:closeRemoteScreensaver()
 
 			elseif type == EVENT_SCROLL then
 			
