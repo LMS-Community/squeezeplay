@@ -1455,7 +1455,7 @@ EJECT_FAILURE_INFO
 	CS	VAROVÁNÍ: Toto zařízení se nevysunulo správně. Může to být způsobeno přístupem jednoho nebo více programů do zařízení.
 	DA	ADVARSEL: Forbindelsen til enheden kunne ikke afbrydes. Den er muligvis i brug i et eller flere programmer.
 	DE	Warnung: Das Gerät konnte nicht ordnungsgemäß entfernt werden. Möglicherweise wird es von einem oder mehreren Programmen auf dem System verwendet.
-	EN	WARNING: The device failed to eject properly. This is may be due to one or more programs on the system accessing it.
+	EN	WARNING: The device failed to eject properly. This may be due to one or more programs on the system accessing it.
 	ES	ADVERTENCIA: No se ha podido extraer el dispositivo de forma correcta. Puede deberse a que hay uno o más programas en el sistema que están intentando acceder a él.
 	FI	VAROITUS: Laitteen poisto epäonnistui. Tämä voi johtua siitä, että yksi tai useampi tietokoneen ohjelma käyttää laitetta.
 	FR	AVERTISSEMENT: impossible d'éjecter correctement le dispositif. Il se peut qu'il soit en cours d'utilisation par un ou plusieurs programmes exécutés sur le système.
