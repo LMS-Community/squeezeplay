@@ -432,12 +432,6 @@ function getId(self)
 end
 
 
--- Return true if connected to server
-function isConnected(self)
-	return self.state == CONNECTED
-end
-
-
 -- Open the slimproto connetion to Ip.
 -- Called by slimproto 'serv' and udap
 function connectIp(self, serverip, slimserverip)
