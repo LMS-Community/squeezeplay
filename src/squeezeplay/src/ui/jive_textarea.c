@@ -324,6 +324,7 @@ int jiveL_textarea_draw(lua_State *L) {
 	int i, top_line, visible_lines, bottom_line, num_lines;
 	Sint16 old_pixel_offset_x, old_pixel_offset_y, new_pixel_offset_y;
 	int y_offset = 0;
+	bool is_menu_child = false;
 
 	/* stack is:
 	 * 1: widget
@@ -373,6 +374,11 @@ int jiveL_textarea_draw(lua_State *L) {
 	//Otherwise, for the extra hidden menu item for smooth scrolling, the textarea will draw into iconbar
 	lua_getfield(L, 1, "isMenuChild");
 	if (lua_toboolean(L, -1)) {
+		is_menu_child = true;
+	}
+	lua_pop(L, 1);
+/*
+	if (lua_toboolean(L, -1)) {
 		lua_getfield(L, 1, "parent"); //group
 		lua_getfield(L, -1, "parent"); //menu
 		if (jive_getmethod(L, -1, "getBounds")) {
@@ -395,8 +401,7 @@ int jiveL_textarea_draw(lua_State *L) {
 		lua_pop(L, 1);
 	}
 	lua_pop(L, 1);
-
-
+*/
 	jive_surface_push_clip(srf, &new_clip, &pop_clip);
 
 
@@ -429,7 +434,9 @@ int jiveL_textarea_draw(lua_State *L) {
 	lua_pop(L, 1);
 
 	jive_surface_get_offset(srf, &old_pixel_offset_x, &old_pixel_offset_y);
-	jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y);
+	if (!is_menu_child) {
+		jive_surface_set_offset(srf, old_pixel_offset_x, new_pixel_offset_y);
+	}
 
 	bottom_line = top_line + visible_lines;
 
@@ -477,7 +484,9 @@ int jiveL_textarea_draw(lua_State *L) {
 
 		y += peer->line_height;
 	}
-	jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
+	if (!is_menu_child) {
+		jive_surface_set_offset(srf, old_pixel_offset_x, old_pixel_offset_y);
+	}
 	jive_surface_set_clip(srf, &pop_clip);
 
 	/* draw scrollbar */
