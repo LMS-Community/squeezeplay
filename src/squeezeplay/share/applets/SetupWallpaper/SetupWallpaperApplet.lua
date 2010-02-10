@@ -27,6 +27,7 @@ local oo                     = require("loop.simple")
 local io                     = require("io")
 local table                  = require("jive.utils.table")
 local string                 = require("jive.utils.string")
+local lfs                    = require("lfs")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
@@ -118,73 +119,50 @@ function settingsShow(self)
 	-- this step is done first so images aren't read twice, 
 	-- once from source area and once from build area
 	for img in self:readdir("wallpaper") do
-		-- split the fullpath into a table on /
-		local fullpath = string.split('/', img)
-		-- the filename is the last element in the fullpath table
-		local name = fullpath[#fullpath]
-		-- split on the period to get filename and filesuffix
-		local parts = string.split("%.", name)
+		self:_readFile(img, screenWidth, screenHeight)
+	end
 
-		-- if the suffix represents an image format (see _isImg() method), translate and add to the menu
-		if self:_isImg(parts[2]) then
-			-- token is represented by uppercase of the filename
-			local splitFurther = string.split("_", parts[1])
-			local stringToken = string.upper(splitFurther[#splitFurther])
-			local patternMatch = string.upper(parts[1])
-
-			-- limit self.wallpapers when screenWidth and screenHeight are certain parameters
-			local pattern = nil
-			if screenWidth == 320 and screenHeight == 240 then
-				pattern = 'BB_'
-			elseif screenWidth == 240 and screenHeight == 320 then
-				pattern = 'JIVE_'
-			elseif screenWidth == 480 and screenHeight == 272 then
-				pattern = 'FAB4_'
-			end
-
-			if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
-				self.wallpapers[name] = {
-					token    = stringToken,
-					suffix   = parts[2],
-					fullpath = fullpath,
-				}
-			end
-		end
+	-- read files in the userpath too
+	local userdir = System.getUserDir()
+	for img in lfs.dir(userdir) do
+		self:_readFile(userdir .. "/" .. img, screenWidth, screenHeight)
 	end
 
 	for name, details in pairs(self.wallpapers) do
 		log:debug(name, "|", details.token)
-			self.menu:addItem({
-				-- anything local goes to the top 
-				-- (i.e., higher precendence than SC-delivered custom wallpaper)
-				weight = 1,
-				text = self:string(details.token), 
-				style = 'item_choice',
-				sound = "WINDOWSHOW",
-				check = RadioButton("radio", 
-						   self.group, 
-						   function()
-							   self:setBackground(name, self.currentPlayerId)
-						   end,
-						   wallpaper == name
-					   ),
-				focusGained = function(event)
-						  self:showBackground(name, self.currentPlayerId)
-					  end
-			})
-
-			if wallpaper == name then
-				self.menu:setSelectedIndex(self.menu:numItems())
-			end
-
+		
+		local title = self:string(details.token)
+		if title == details.token then
+			title = details.name
 		end
+		
+		self.menu:addItem({
+			-- anything local goes to the top 
+			-- (i.e., higher precendence than SC-delivered custom wallpaper)
+			weight = 1,
+			text = title, 
+			style = 'item_choice',
+			sound = "WINDOWSHOW",
+			check = RadioButton("radio", 
+				self.group, 
+				function()
+					self:setBackground(details.fullpath, self.currentPlayerId)
+				end,
+				wallpaper == details.fullpath or wallpaper == name
+			),
+			focusGained = function(event)
+				self:showBackground(details.fullpath, self.currentPlayerId)
+			end
+		})
 
-	local x, y = Framework:getScreenSize()
-	local screen = x .. "x" .. y
+	end
+	
+	
+
+	local screen = screenWidth .. "x" .. screenHeight
 	if screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" then
 		screen = nil
 	end
-
 
 	-- get list of downloadable wallpapers from the server
 	if self.server then
@@ -204,6 +182,14 @@ function settingsShow(self)
 		)
 	end
 
+	-- jump to selected item
+	for x, item in ipairs(self.menu:getItems()) do
+		if item.check:isSelected() then
+			self.menu:setSelectedIndex(x)
+			break
+		end
+	end
+
 	-- Store the applet settings when the window is closed
 	window:addListener(EVENT_WINDOW_POP,
 		function()
@@ -217,9 +203,45 @@ function settingsShow(self)
 	return window
 end
 
+function _readFile(self, img, screenWidth, screenHeight)
+	-- split the fullpath into a table on /
+	local fullpath = string.split('/', img)
+	-- the filename is the last element in the fullpath table
+	local name = fullpath[#fullpath]
+	-- split on the period to get filename and filesuffix
+	local parts = string.split("%.", name)
+
+	-- if the suffix represents an image format (see _isImg() method), translate and add to the menu
+	if self:_isImg(parts[2]) then
+		-- token is represented by uppercase of the filename
+		local splitFurther = string.split("_", parts[1])
+		local stringToken = string.upper(splitFurther[#splitFurther])
+		local patternMatch = string.upper(parts[1])
+
+		-- limit self.wallpapers when screenWidth and screenHeight are certain parameters
+		local pattern = nil
+		if screenWidth == 320 and screenHeight == 240 then
+			pattern = 'BB_'
+		elseif screenWidth == 240 and screenHeight == 320 then
+			pattern = 'JIVE_'
+		elseif screenWidth == 480 and screenHeight == 272 then
+			pattern = 'FAB4_'
+		end
+
+		if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
+			self.wallpapers[name] = {
+				token    = stringToken,
+				name     = splitFurther[#splitFurther],
+				suffix   = parts[2],
+				fullpath = img,
+			}
+		end
+	end
+end
+
 -- returns true if suffix string is for an image format file extention
 function _isImg(self, suffix)
-	if suffix == 'png' or suffix == 'jpg' or suffix == 'gif' then
+	if suffix == 'png' or suffix == 'jpg' or suffix == 'gif' or suffix == 'bmp' then
 		return true
 	end
 
@@ -366,6 +388,9 @@ function showBackground(self, wallpaper, playerId)
 	elseif wallpaper and string.match(wallpaper, "http://(.*)") then
 		-- saved remote image for this player
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
+	elseif wallpaper and string.match(wallpaper, "/") then
+		-- saved image from imageviewer
+		srf = Tile:loadImage(wallpaper)
 	elseif wallpaper then
 		-- try firmware wallpaper
 		srf = Tile:loadImage(firmwarePrefix .. wallpaper)
