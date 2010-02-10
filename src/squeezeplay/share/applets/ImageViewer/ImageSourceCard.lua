@@ -123,7 +123,9 @@ end
 
 function getImage(self)
 	if self.imgFiles[self.currentImage] != nil then
-		local image = Surface:loadImage(self.imgFiles[self.currentImage])
+		local file = self.imgFiles[self.currentImage]
+		log:info("Next image in queue: ", file)
+		local image = Surface:loadImage(file)
 		return image
 	end
 end
