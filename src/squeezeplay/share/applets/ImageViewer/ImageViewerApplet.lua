@@ -86,6 +86,7 @@ function setImageSource(self, imgSourceOverride)
 
 		if src == "card" then
 			self.imgSource = ImageSourceCard(self)
+-- Flickr is now being served by mysb.com, disable standalone applet
 -- 		elseif src == "flickr" then
 -- 			self.imgSource = ImageSourceFlickr(self)
 		-- default to web list - it's available on all players
@@ -105,7 +106,7 @@ function openImageViewer(self)
 				text = self:string("IMAGE_VIEWER_START_SLIDESHOW"), 
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:startSlideshow(menuItem, false)
+					self:startSlideshow(false)
 					return EVENT_CONSUME
 				end
 			},
@@ -124,14 +125,18 @@ function openImageViewer(self)
 	return window
 end
 
+function startScreensaver(self)
+	log:info("start standard image viewer screensaver")
+	self:startSlideshow(true)
+end
 
-function startSlideshow(self, menuItem, isScreensaver, imgSourceOverride)
+function startSlideshow(self, isScreensaver, imgSourceOverride)
 	log:info("start image viewer")
 
 	-- initialize the chosen image source
 	self:initImageSource(imgSourceOverride)
 	self.initialized = true
-	self.isScreensaver = isScreensaver
+	self.isScreensaver = isScreensaver and true or false
 	self:showInitWindow()
 	self:startSlideshowWhenReady()
 end
@@ -157,11 +162,16 @@ function showInitWindow(self)
 
 	self:applyScreensaverWindow(popup)
 	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
-			  function()
+			function()
 				popup:playSound("WINDOWHIDE")
 				popup:hide()
-			  end)
+			end)
 
+	popup:addListener(EVENT_WINDOW_PUSH | EVENT_WINDOW_POP,
+			function(event)
+				return EVENT_CONSUME
+			end)
+			
 	self:tieAndShowWindow(popup, Window.transitionFadeIn)
 
 end
@@ -197,7 +207,6 @@ function startSlideshowWhenReady(self)
 		self.nextSlideTimer:restart()		
 		return
 	end
-
 
 	-- image list is ready
 	self.imgSource:nextImage(self:getSettings()["ordering"])
@@ -307,9 +316,9 @@ function setupEventHandlers(self, window)
 				end
 				local now = Framework:getTicks()
 				if not self.lastScrollT or
-				  self.lastScrollT + MIN_SCROLL_INTERVAL < now or
-				  self.lastScrollDir ~= dir then
-				        --scrolling a lot or a little only moves by one, since image fetching is relatively slow
+					self.lastScrollT + MIN_SCROLL_INTERVAL < now or
+					self.lastScrollDir ~= dir then
+					--scrolling a lot or a little only moves by one, since image fetching is relatively slow
 					self.lastScrollT = now
 					self.lastScrollDir = dir
 					if scroll > 0 then
@@ -330,6 +339,8 @@ end
 
 --service method
 function registerRemoteScreensaver(self, serverData)
+	serverData.isScreensaver = true
+	
 	appletManager:callService("addScreenSaver",
 			serverData.text,
 			"ImageViewer",
@@ -348,10 +359,10 @@ end
 
 
 function openRemoteScreensaver(self, force, serverData)
-	self:startSlideshow(_, true, ImageSourceServer(self, serverData))
+	self:startSlideshow(serverData.isScreensaver, ImageSourceServer(self, serverData))
 end
 
-function closeRemoteScreensaver(self, force, serverData)
+function closeRemoteScreensaver(self)
 	if self.window then
 		self.window:hide()
 	end
@@ -389,7 +400,7 @@ function applyScreensaverWindow(self, window)
 			end)
 	end
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"}, true)
+	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
 end
 
 
@@ -412,8 +423,7 @@ function displaySlide(self)
 	if not self.imgSource:imageReady() then
 		-- try again in a few moments
 		log:debug("image not ready, try again...")
---		self.checkFotoTimer = Timer(1000, --hmm, this seems to enforce a second wait even if response is fast.... todo have image sink trigger this instead
-		--todo: also, might this run continuously on a failure even if the applet is complete.
+
 		if not self.checkFotoTimer then
 			self.checkFotoTimer = Timer(200, --hmm, this seems to enforce a second wait even if response is fast....
 				function()
@@ -541,9 +551,9 @@ function displaySlide(self)
 
 		if self.isScreensaver then
 			self:applyScreensaverWindow(window)
+		else
+			self:setupEventHandlers(window)
 		end
-
-		self:setupEventHandlers(window)
 
 		-- replace the window if it's already there
 		if self.window then
@@ -569,16 +579,13 @@ function displaySlide(self)
 		--no iconbar
 		self.window:setShowFrameworkWidgets(false)
 
-		-- if we have more than one picture, start slideshow
-		if self.imgSource:getImageCount() > 1 then
-			-- start timer for next photo in 'delay' milliseconds
-			local delay = self:getSettings()["delay"]
-			self.nextSlideTimer = self.window:addTimer(delay,
-				function()
-					self.imgSource:nextImage(self:getSettings()["ordering"])
-					self:displaySlide()
-				end)
-		end
+		-- start timer for next photo in 'delay' milliseconds
+		local delay = self:getSettings()["delay"]
+		self.nextSlideTimer = self.window:addTimer(delay,
+			function()
+				self.imgSource:nextImage(self:getSettings()["ordering"])
+				self:displaySlide()
+			end)
 	else
 		file = self.imgSource:getCurrentImagePath() or 'unknown'
 		log:info("Invalid image object found: " .. file)

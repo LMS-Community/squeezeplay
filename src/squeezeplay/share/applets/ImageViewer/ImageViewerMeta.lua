@@ -45,7 +45,7 @@ end
 
 function configureApplet(self)
 	appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
-		"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
+		"startScreensaver", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90, "closeRemoteScreensaver")
 end
 
 
