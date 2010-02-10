@@ -146,19 +146,9 @@ function showInitWindow(self)
 	local popup = Window("black_popup", "")
 
 	popup:setAutoHide(true)
-	popup:setShowFrameworkWidgets(false)
 
-	local label = Label("text", "")
 	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
---	local icon = Icon("") -- blank for now until we get a proper default loading image
-
-	--ran out of time for 7.4
---	self.imgSource:updateLoadingIcon(icon)
-	
-	popup:addWidget(label)
---	popup:addWidget(icon)
 	popup:addWidget(sublabel)
-	popup:focusWidget(sublabel)
 
 	self:applyScreensaverWindow(popup)
 	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
