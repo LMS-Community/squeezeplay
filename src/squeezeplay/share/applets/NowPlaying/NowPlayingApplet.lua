@@ -476,7 +476,9 @@ function _updateButtons(self, playerStatus)
 	else
 		local playlistSize = self.player and self.player:getPlaylistSize()
 		-- bug 15085, gray out buttons under certain circumstances
-		if playlistSize == 1 then
+		-- bug 15164, don't remove rew and fwd for remote tracks, because a single track playlist 
+		-- is not an indication that fwd and rwd are invalid actions
+		if playlistSize == 1 and not self.player:isRemote() then
 			log:debug('set buttons for single track playlist')
 			-- single track playlist. if this track has no duration, disable rew button
 			local elapsed, duration = self.player:getTrackElapsed()
