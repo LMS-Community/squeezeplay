@@ -40,7 +40,7 @@ local ContextMenuWindow= require("jive.ui.ContextMenuWindow")
 local Timer			= require("jive.ui.Timer")
 local System        = require("jive.System")
 
-local debug			= require("jive.utils.debug")
+--local debug			= require("jive.utils.debug")
 
 local ImageSource		= require("applets.ImageViewer.ImageSource")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
@@ -316,23 +316,9 @@ function setupEventHandlers(self, window)
 	window:addActionListener("down", self, previousSlideAction)
 	window:addActionListener("back", self, function () return EVENT_UNUSED end)
 
-	window:addListener(EVENT_MOUSE_PRESS | EVENT_MOUSE_DRAG | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
+	window:addListener(EVENT_MOUSE_PRESS,
 		function(event)
-			local type = event:getType()
-
-			-- next slide on touch 
-			if type == EVENT_MOUSE_DRAG then
-				
-				if self.dragStart < 0 then
-					local x, y = event:getMouse()
-					self.dragStart = y
-				end
-
-				self.dragOffset = self.dragOffset + 1
-				return EVENT_CONSUME
-
-			elseif type == EVENT_MOUSE_PRESS and self.dragOffset > 10 then
-			
+			if self.dragOffset > 10 then
 				local x, y = event:getMouse()
 				local offset = y - self.dragStart
 				
@@ -345,43 +331,62 @@ function setupEventHandlers(self, window)
 
 				self.dragStart = -1
 				self.dragOffset = 0
-			
+
 				return EVENT_CONSUME
 				
-			elseif type == EVENT_MOUSE_PRESS then
-			
+			else
 				-- on simple tapping the screen we'll wake up
 				self:closeRemoteScreensaver()
-
-			elseif type == EVENT_SCROLL then
-			
-				local scroll = event:getScroll()
-
-				local dir
-				if scroll > 0 then
-					dir = 1
-				else
-					dir = -1
-				end
-				local now = Framework:getTicks()
-				if not self.lastScrollT or
-					self.lastScrollT + MIN_SCROLL_INTERVAL < now or
-					self.lastScrollDir ~= dir then
-					--scrolling a lot or a little only moves by one, since image fetching is relatively slow
-					self.lastScrollT = now
-					self.lastScrollDir = dir
-					if scroll > 0 then
-						return nextSlideAction(self)
-					else
-						return previousSlideAction(self)
-					end
-				end
-				return EVENT_CONSUME
-
 			end
 
 			return EVENT_UNUSED
-        end
+		end
+	)
+	
+	window:addListener(EVENT_MOUSE_HOLD,
+		function(event)
+			showTextWindowAction(self)
+			return EVENT_CONSUME
+		end
+	)
+	
+	window:addListener(EVENT_MOUSE_DRAG,
+		function(event)
+			if self.dragStart < 0 then
+				local x, y = event:getMouse()
+				self.dragStart = y
+			end
+
+			self.dragOffset = self.dragOffset + 1
+			return EVENT_CONSUME
+		end
+	)
+	
+	window:addListener(EVENT_SCROLL,
+		function(event)
+			local scroll = event:getScroll()
+
+			local dir
+			if scroll > 0 then
+				dir = 1
+			else
+				dir = -1
+			end
+			local now = Framework:getTicks()
+			if not self.lastScrollT or
+				self.lastScrollT + MIN_SCROLL_INTERVAL < now or
+				self.lastScrollDir ~= dir then
+				--scrolling a lot or a little only moves by one, since image fetching is relatively slow
+				self.lastScrollT = now
+				self.lastScrollDir = dir
+				if scroll > 0 then
+					return nextSlideAction(self)
+				else
+					return previousSlideAction(self)
+				end
+			end
+			return EVENT_CONSUME
+		end
 	)
 end
 
