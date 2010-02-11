@@ -1894,7 +1894,7 @@ function skin(self, s)
 	})
 
 	s.icon_photo_loading = _uses(_icon, {
-		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
 	})
 
 	s.icon_software_update = _uses(_icon, {

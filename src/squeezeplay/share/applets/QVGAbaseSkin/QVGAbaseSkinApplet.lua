@@ -1813,8 +1813,8 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.icon_photo_loading = _uses(s._icon, {
-		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
-		padding = { 5, 55, 0, 5 }
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
+		padding = { 5, 40, 0, 5 }
 	})
 
 	s.icon_software_update = _uses(s._icon, {

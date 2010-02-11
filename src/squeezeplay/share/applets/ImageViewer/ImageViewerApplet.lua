@@ -148,6 +148,12 @@ function showInitWindow(self)
 	local popup = Window("black_popup", "")
 
 	popup:setAutoHide(true)
+	popup:setShowFrameworkWidgets(false)
+	
+	local icon = self.imgSource:updateLoadingIcon()
+	if icon then
+		popup:addWidget(icon)
+	end
 
 	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
 	popup:addWidget(sublabel)

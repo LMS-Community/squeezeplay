@@ -325,6 +325,11 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.npvolumeB = { hidden = 1 }
 
+	s.icon_photo_loading = _uses(s._icon, {
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
+		padding = { 5, 5, 0, 5 }
+	})
+
 end
 
 
