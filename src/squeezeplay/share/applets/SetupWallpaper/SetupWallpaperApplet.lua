@@ -359,7 +359,7 @@ function _fetchFile(self, url, callback)
 end
 
 
-function showBackground(self, wallpaper, playerId)
+function showBackground(self, wallpaper, playerId, force)
 
 	-- default is different based on skin
 	local skinName = jiveMain:getSelectedSkin()
@@ -371,7 +371,9 @@ function showBackground(self, wallpaper, playerId)
 			wallpaper = self:getSettings()[skinName]
 		end
 	end
-	if self.currentWallpaper == wallpaper then
+	
+	-- always refresh if forced
+	if self.currentWallpaper == wallpaper and not force then
 		-- no change
 		return
 	end
@@ -400,7 +402,7 @@ function showBackground(self, wallpaper, playerId)
 end
 
 
-function setBackground(self, wallpaper, playerId)
+function setBackground(self, wallpaper, playerId, force)
 	if not playerId then 
 		-- default is different based on skin
 		playerId = jiveMain:getSelectedSkin()
@@ -430,7 +432,7 @@ function setBackground(self, wallpaper, playerId)
 		self:getSettings()[playerId] = wallpaper
 	end
 
-	self:showBackground(wallpaper, playerId)
+	self:showBackground(wallpaper, playerId, force)
 end
 
 
