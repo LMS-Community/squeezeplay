@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local tostring = tostring
+local ipairs, tostring = ipairs, tostring
 
 local oo			= require("loop.simple")
 local math			= require("math")
@@ -35,6 +35,8 @@ local RadioGroup	= require("jive.ui.RadioGroup")
 local Surface		= require("jive.ui.Surface")
 local Window		= require("jive.ui.Window")
 local SimpleMenu	= require("jive.ui.SimpleMenu")
+local Popup 		= require("jive.ui.Popup")
+local ContextMenuWindow= require("jive.ui.ContextMenuWindow")
 local Timer			= require("jive.ui.Timer")
 local System        = require("jive.System")
 
@@ -203,26 +205,87 @@ function startSlideshowWhenReady(self)
 	self:displaySlide()
 end
 
---[[
 function showTextWindow(self)
-	local window = ContextMenuWindow(nil, nil, true)
-	local text = Textarea("multiline_text", self.imgSource:getMultilineText())
-	window:addWidget(text)
-	window:setShowFrameworkWidgets(false)
+	local window = ContextMenuWindow(self:string("IMAGE_VIEWER"))
 
-	if self.isScreensaver then
-		self:applyScreensaverWindow(window)
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("IMAGE_VIEWER_SAVE_WALLPAPER"),
+			sound = "CLICK",
+			callback = function()
+				self:_setWallpaper(window)
+				return EVENT_CONSUME
+			end
+		},
+	})
+	
+	local info = self.imgSource:getMultilineText()
+	for x, line in ipairs(string.split("\n", info)) do
+		if line > "" then
+			menu:addItem({
+				text = line,
+				style = "item_no_arrow",
+			})
+		end
 	end
 
-	window:addActionListener("back", self,  function ()
-							window:hide()
-							return EVENT_CONSUME
-						end)
+	window:addWidget(menu)
+
+	window:addActionListener("back", self, 
+		function ()
+			window:hide()
+			return EVENT_CONSUME
+		end)
 
 	window:show() 
 end
---]]
 
+function _setWallpaper(self, window)
+	window:hide()
+
+	local screenWidth, screenHeight = Framework:getScreenSize()
+	local prefix
+	if screenWidth == 320 and screenHeight == 240 then
+		prefix = 'bb_'
+	elseif screenWidth == 240 and screenHeight == 320 then
+		prefix = 'jive_'
+	elseif screenWidth == 480 and screenHeight == 272 then
+		prefix = 'fab4_'
+	else
+		prefix = System:getMachine() .. '_'
+	end
+	
+	local path  = System.getUserDir().. "/wallpapers/"
+	local file  = prefix .. self:string("IMAGE_VIEWER_SAVED_SLIDE").str .. ".bmp"
+
+	log:info("Taking screenshot: " .. path .. file)
+
+	-- take screenshot
+	local sw, sh = Framework:getScreenSize()
+
+	local w   = Framework.windowStack[1]
+	local bg  = Framework.getBackground()
+	local srf = Surface:newRGB(sw, sh)
+
+	bg:blit(srf, 0, 0, sw, sh)
+	w:draw(srf, JIVE_LAYER_ALL)
+	srf:saveBMP(path .. file)
+
+	local popup = Popup("toast_popup")
+	popup:addWidget(Label("text", self:string("IMAGE_VIEWER_WALLPAPER_SET", file)))
+
+	popup:addTimer(2000, function()
+		popup:hide()
+	end)
+	self:tieAndShowWindow(popup)
+
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		player = player:getId()
+	end
+
+	appletManager:callService("setBackground", path .. file, player, true)
+end
 
 function setupEventHandlers(self, window)
 
@@ -241,17 +304,13 @@ function setupEventHandlers(self, window)
 		return EVENT_CONSUME
 	end
 
---[[
 	local showTextWindowAction = function (self)
-		if self.imgSource:getText() then
-			self:showTextWindow()
-		end
+		self:showTextWindow()
 		return EVENT_CONSUME
 	end
 
 	--todo add takes user to meta data page
 	window:addActionListener("add", self, showTextWindowAction)
---]]
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)

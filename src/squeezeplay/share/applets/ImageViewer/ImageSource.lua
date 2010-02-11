@@ -142,7 +142,7 @@ function getImage(self)
 end
 
 function getText(self)
-	return "", self.imgFiles[self.currentImage], ""
+	return self.imgFiles[self.currentImage]
 end
 
 function getMultilineText(self)

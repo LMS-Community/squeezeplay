@@ -988,3 +988,11 @@ IMAGE_VIEWER_INVALID_IMAGE
 	RU	Найден недопустимый объект изображения
 	SV	Felaktig bildfil hittades.
 
+IMAGE_VIEWER_SAVE_WALLPAPER
+	EN	Use as wallpaper
+	
+IMAGE_VIEWER_WALLPAPER_SET
+	EN	Wallpaper saved as\n%s
+
+IMAGE_VIEWER_SAVED_SLIDE
+	EN	Saved Slide
