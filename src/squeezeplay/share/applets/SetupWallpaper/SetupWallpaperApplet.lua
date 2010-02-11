@@ -123,9 +123,8 @@ function settingsShow(self)
 	end
 
 	-- read files in the userpath too
-	local userdir = System.getUserDir() .. "/wallpapers/"
-	for img in lfs.dir(userdir) do
-		self:_readFile(userdir .. "/" .. img, screenWidth, screenHeight)
+	for img in lfs.dir(downloadPrefix) do
+		self:_readFile(downloadPrefix .. img, screenWidth, screenHeight)
 	end
 
 	for name, details in pairs(self.wallpapers) do
