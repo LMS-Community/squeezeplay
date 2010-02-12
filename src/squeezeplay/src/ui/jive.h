@@ -214,13 +214,6 @@ struct jive_widget {
 	bool hidden;
 };
 
-struct jive_surface {
-	Uint32 refcount;
-	
-	SDL_Surface *sdl;
-	Sint16 offset_x, offset_y;	
-};
-
 struct jive_scroll_event {
 	int rel;
 };
@@ -414,6 +407,7 @@ void jive_tile_set_alpha(JiveTile *tile, Uint32 flags);
 void jive_tile_free(JiveTile *tile);
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
 void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
+SDL_Surface *jive_tile_get_image_surface(JiveTile *tile);
 
 
 /* Font functions */
