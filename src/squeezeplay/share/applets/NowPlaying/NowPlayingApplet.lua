@@ -498,6 +498,9 @@ function _updateButtons(self, playerStatus)
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
 			self.controlsGroup:setWidget('shuffleMode', self.shuffleButton)
 			self.controlsGroup:setWidget('repeatMode', self.repeatButton)
+			-- bug 15618: explicitly set style of rew and fwd here, since setWidget doesn't appear to be doing the job
+			self.controlsGroup:getWidget('rew'):setStyle('rew')
+			self.controlsGroup:getWidget('fwd'):setStyle('fwd')
 		end
 	end
 end
