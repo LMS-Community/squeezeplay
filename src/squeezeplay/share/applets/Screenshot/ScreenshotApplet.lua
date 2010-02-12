@@ -24,6 +24,7 @@ local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
 local Framework        = require("jive.ui.Framework")
+local Group            = require("jive.ui.Group")
 local Label            = require("jive.ui.Label")
 local Popup            = require("jive.ui.Popup")
 local Surface          = require("jive.ui.Surface")
@@ -73,9 +74,12 @@ local function _takeScreenshotAction(self)
 	srf:saveBMP(file)
 
 	local popup = Popup("toast_popup")
-	popup:addWidget(Label("text", self:string("SCREENSHOT_TAKEN", file)))
+	local group = Group("group", {
+                text = Label("text", self:string("SCREENSHOT_TAKEN", file))
+        })
+        popup:addWidget(group)
 
-	popup:addTimer(2000, function()
+	popup:addTimer(5000, function()
 		popup:hide()
 	end)
 	self:tieAndShowWindow(popup)
