@@ -17,6 +17,8 @@
 #define SCROLL_PAD_LEFT   -200
 #define SCROLL_PAD_START  -100
 
+#define MAX_CHARS 1000  // max number or characters before spliting text in a label
+                        // this gets round SDLs limitation on max surface width
 
 typedef struct label_line {
 	JiveSurface *text_sh;
@@ -179,12 +181,15 @@ static void prepare(lua_State *L) {
 		Uint32 fg, sh;
 		bool is_sh;
 		size_t len;
+		unsigned count;
 
-		/* find line ending */
+		/* find line ending and split very long words*/
+		count = 0;
 		c = utf8_get_char(ptr, &nptr);
-		while (c != '\0' && c != '\n' && c != '\r') {
+		while (c != '\0' && c != '\n' && c != '\r' && count < MAX_CHARS) {
 			ptr = nptr;
 			c = utf8_get_char(ptr, &nptr);
+			count++;
 		}
 		len = nptr - str - 1;
 
