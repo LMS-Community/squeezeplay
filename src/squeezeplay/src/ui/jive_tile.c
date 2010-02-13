@@ -383,8 +383,10 @@ static void _get_tile_surfaces(JiveTile *tile, SDL_Surface *srf[9], bool load) {
 }
 
 SDL_Surface *jive_tile_get_image_surface(JiveTile *tile) {
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return NULL;
+	}
 
 	_load_tile_images(tile);
 	if (!images[tile->image[0]].loaded)
@@ -524,6 +526,7 @@ JiveTile *jive_tile_ref(JiveTile *tile) {
 	if (tile) {
 		if (!tile->is_tile)
 			LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+			// we can continue here as refcount is in the same place for JiveTile and JiveSurface
 
 		tile->refcount++;
 	}
@@ -532,8 +535,10 @@ JiveTile *jive_tile_ref(JiveTile *tile) {
 
 void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h) {
 
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return;
+	}
 
 	_init_tile_sizes(tile);
 
@@ -549,8 +554,10 @@ void jive_tile_set_alpha(JiveTile *tile, Uint32 flags) {
 	SDL_Surface *srf[9];
 	int i;
 
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return;
+	}
 
 	tile->alpha_flags = flags;
 	tile->flags |= TILE_FLAG_ALPHA;
@@ -570,8 +577,10 @@ void jive_tile_free(JiveTile *tile) {
 		return;
 	}
 
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return;
+	}
 
 	for (i=0; i<9; i++) {
 		struct image *image;
@@ -709,8 +718,10 @@ void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return;
+	}
 
 	if (!dw || !dh) {
 		jive_tile_get_min_size(tile, &mw, &mh);
@@ -737,8 +748,10 @@ void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16
 #endif //JIVE_PROFILE_BLIT
 	Uint16 mw, mh;
 
-	if (!tile->is_tile)
+	if (!tile->is_tile) {
 		LOG_ERROR(log_ui_draw, "jive_tile_*() called with JiveSurface");
+		return;
+	}
 
 	jive_tile_get_min_size(tile, &mw, &mh);
 	if (dw < mw) {
