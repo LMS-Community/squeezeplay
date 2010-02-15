@@ -307,7 +307,9 @@ function notify_playerCurrent(self, player)
 
 	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
 		self:addNowPlayingItem()
-        end
+	else
+		self:removeNowPlayingItem()
+	end
 end
 
 function getSelectedStyleParam(self, param)
