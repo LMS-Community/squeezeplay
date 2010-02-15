@@ -53,8 +53,8 @@ function init(self, ...)
 
 		-- see jive.irMap_default for defined buttons
 		for x, button in ipairs({
-		--	"arrow_up",
-		--	"arrow_down",
+			"arrow_up",
+			"arrow_down",
 		--	"arrow_left",
 			"arrow_right",
 			"play",
