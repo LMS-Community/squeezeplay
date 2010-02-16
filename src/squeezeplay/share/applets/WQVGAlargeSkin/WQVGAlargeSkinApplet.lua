@@ -2309,7 +2309,7 @@ function skin(self, s)
                 npvisu = { hidden = 1 },
 
                 npartwork = {
-                        w = 470,
+                        w = 480,
                         position = LAYOUT_CENTER,
                         align = "center",
                         h = 272,
