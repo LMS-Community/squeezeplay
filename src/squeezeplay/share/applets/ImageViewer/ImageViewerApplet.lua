@@ -463,6 +463,9 @@ function applyScreensaverWindow(self, window)
 				return EVENT_CONSUME
 			end)
 	end
+
+	window:setAllowScreensaver(false)
+
 	local manager = appletManager:getAppletInstance("ScreenSavers")
 	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
 end
@@ -651,7 +654,7 @@ function displaySlide(self)
 				self:displaySlide()
 			end)
 	else
-		file = self.imgSource:getCurrentImagePath() or 'unknown'
+		local file = self.imgSource:getCurrentImagePath() or 'unknown'
 		log:info("Invalid image object found: " .. file)
 
 		self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), file)
