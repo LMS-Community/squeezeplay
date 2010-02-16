@@ -342,7 +342,8 @@ static bool_t decode_timer_interval(u32_t *delay) {
 	}
 
 	/* Small delay if the stream empty but still streaming? */
-	if (streambuf_would_wait_for(512)) {
+	/* special case for flac as it has a minimum number of bytes before the decoder processes anything */
+	if (streambuf_would_wait_for(decoder == &decode_flac ? DECODE_MINIMUM_BYTES_FLAC : DECODE_MINIMUM_BYTES_OTHER)) {
 		*delay = DECODE_WAIT_INTERVAL;
 		
 		return false;

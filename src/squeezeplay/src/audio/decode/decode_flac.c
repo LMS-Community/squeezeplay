@@ -159,7 +159,7 @@ static bool_t decode_flac_callback(void *data) {
 	 * FLAC frame is too large to use that, so we pick a value that will work most
 	 * of the time.
 	 */
-	if (streambuf_would_wait_for(25000)) {
+	if (streambuf_would_wait_for(DECODE_MINIMUM_BYTES_FLAC)) {
 		return FALSE;
 	}
 
