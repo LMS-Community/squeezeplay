@@ -96,14 +96,10 @@ end
 
 function _getIPAddress()
 	local ipaddr
+	local ifObj = Networking:activeInterface()
 
-	local interfaces = Networking:interfaces(jnt)
-
-	for interface, ifObj in pairs(interfaces) do
+	if ifObj then
 		ipaddr = Networking:getIP(ifObj)
-		if ipaddr then
-			break
-		end
 	end
 
 	return ipaddr or "?.?.?.?"
