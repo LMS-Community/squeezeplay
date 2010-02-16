@@ -65,7 +65,7 @@ function readImageList(self)
 		function(chunk, err)
 			if err then
 				self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_HTTP_ERROR"))
-				log:debug("error!: " .. err)
+				log:warn("error!: " .. err)
 			elseif chunk then
 				for l in string.gmatch(chunk, "[^\r\n]*\r*\n*") do
 					l = string.gsub(l, "\n*", "")
@@ -121,7 +121,7 @@ function requestImage(self)
 				log:debug("image ready")
 			elseif err then
 				self.image = nil
-				log:debug("error loading picture")
+				log:warn("error loading picture")
 			end
 			self.imgReady = true
 		end,

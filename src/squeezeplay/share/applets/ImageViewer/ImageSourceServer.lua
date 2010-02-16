@@ -235,7 +235,7 @@ function requestImage(self, imageData)
 				self:_updateImageDataHistory(imageData)
 			elseif err then
 				self.image = nil
-				log:debug("error loading picture")
+				log:warn("error loading picture")
 			end
 			self.imgReady = true
 		end,

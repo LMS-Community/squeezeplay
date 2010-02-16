@@ -159,7 +159,7 @@ function requestImage(self)
 				self.image = image
 				log:debug("image ready")
 			elseif err then
-				log:debug("error loading picture")
+				log:warn("error loading picture")
 			end
 			self.imgReady = true
 		end,
