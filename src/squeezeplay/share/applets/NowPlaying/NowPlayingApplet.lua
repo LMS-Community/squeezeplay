@@ -126,12 +126,18 @@ function init(self)
 end
 
 function notify_playerShuffleModeChange(self, player, shuffleMode)
-	log:debug("shuffle mode change notification")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerShuffleModeChange(): ", shuffleMode)
 	self:_updateShuffle(shuffleMode)
 end
 
 function notify_playerRepeatModeChange(self, player, repeatMode)
-	log:debug("repeat mode change notification")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
 	self:_updateRepeat(repeatMode)
 end
 
@@ -177,6 +183,10 @@ function _setTitleStatus(self, text, duration)
 end
 
 function notify_playerTitleStatus(self, player, text, duration)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerTitleStatus(): ", text)
 	self:_setTitleStatus(text, duration)
 end
 
@@ -184,6 +194,7 @@ function notify_playerPower(self, player, power)
 	if player ~= self.player then
 		return
 	end
+	log:debug("notify_playerPower(): ", power)
 
 	local mode = self.player:getPlayMode()
 
@@ -203,12 +214,14 @@ end
 
 function changeTitleText(self, titleText)
 	self.titleGroup:setWidgetValue("text", titleText)
-	self.titleGroupOneTrackPlaylist:setWidgetValue("text", titleText)
 end
 
 
 function notify_playerTrackChange(self, player, nowPlaying)
-	log:debug("Notification received that track has changed")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerTrackChange(): ", nowPlaying)
 
 	local thisPlayer = _isThisPlayer(self, player)
 	if not thisPlayer then return end
@@ -243,9 +256,15 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		-- for local music, nowPlaying = track_id
 		self.nowPlaying = nowPlaying
 	end
+
+	self:replaceNPWindow()
 end
 
 function notify_playerPlaylistChange(self, player)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerPlaylistChange()")
 	self:_updateAll()
 end
 
@@ -282,7 +301,7 @@ function notify_playerModeChange(self, player, mode)
 		return
 	end
 
-	log:debug("Player mode has been changed to: ", mode)
+	log:debug("notify_playerModeChange(): Player mode has been changed to: ", mode)
 	self:_updateMode(mode)
 end
 
@@ -291,6 +310,7 @@ function notify_playerDelete(self, player)
 	if player ~= self.player then
 		return
 	end
+	log:debug("notify_playerDelete():", player)
 
 	self:freeAndClear()
 end
@@ -301,6 +321,7 @@ function notify_playerCurrent(self, player)
 	if self.player ~= player then
 		self:freeAndClear()
 	end
+	log:debug("notify_playerCurrent(): ", player)
 
 	self.player = player
 	if not self.player then
@@ -518,15 +539,13 @@ function _refreshRightButton(self)
 	if playlistSize == 1 and self.rbutton == 'playlist' then
 		if not self.suppressTitlebar then
 			log:debug('changing rbutton to + button')
-			self.window:removeWidget(self.titleGroup)
-			self.window:addWidget(self.titleGroupOneTrackPlaylist)
+			self.titleGroup:getWidget('rbutton'):setStyle('button_more')
 		end
 		self.rbutton = 'more'
 	elseif self.rbutton == 'more' and playlistSize > 1 then
 		if not self.suppressTitlebar then
 			log:debug('changing rbutton to playlist button')
-			self.window:removeWidget(self.titleGroupOneTrackPlaylist)
-			self.window:addWidget(self.titleGroup)
+			self.titleGroup:getWidget('rbutton'):setStyle('button_playlist')
 		end
 		self.rbutton = 'playlist'
 	end
@@ -955,6 +974,12 @@ function toggleNPScreenStyle(self)
 
 	log:debug('setting NP window style to: ', self.selectedStyle)
 
+	self:replaceNPWindow()
+end
+
+
+function replaceNPWindow(self)
+	log:debug("REPLACING NP WINDOW")
 	local oldWindow = self.window
 
 	self.window = _createUI(self)
@@ -962,7 +987,6 @@ function toggleNPScreenStyle(self)
 		self:_updateButtons(self.player:getPlayerStatus())
 	end
 	self:_refreshRightButton()
-
 	self.window:replace(oldWindow, Window.transitionFadeIn)
 end
 
@@ -991,7 +1015,6 @@ function _createUI(self)
 	self.mainTitle = self:_titleText('play')
 
 	self.titleGroup = self:_createTitleGroup(window, 'button_playlist')
-	self.titleGroupOneTrackPlaylist = self:_createTitleGroup(window, 'button_more')
 
 	self.rbutton = 'playlist'
 	
@@ -1026,7 +1049,6 @@ function _createUI(self)
 	if not self.scrollSwitchTimer then
 		self.scrollSwitchTimer = Timer(3000,
 					function()
-						log:debug("in scrollSwitchTimer timer")
 						self.trackTitle:animate(true)
 						self.artistalbumTitle:animate(false)
 						self.artistTitle:animate(false)
@@ -1038,7 +1060,6 @@ function _createUI(self)
 	self.trackTitle.textStopCallback = 
 		function(label) 
 			if not self.scrollSwitchTimer:isRunning() then
-				log:debug("in scrollSwitchTimer callback: ", label)
 				self.artistalbumTitle:animate(true)
 				self.artistTitle:animate(true)
 				self.trackTitle:animate(false)
@@ -1053,7 +1074,6 @@ function _createUI(self)
 				self.artistalbumTitle:animate(false)
 				self.trackTitle:animate(false)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
 					self.scrollSwitchTimer:restart()
 				end
 			end
@@ -1062,7 +1082,6 @@ function _createUI(self)
 		self.artistTitle.textStopCallback =
 			function(label)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback: ", label)
 					self.trackTitle:animate(false)
 					self.artistTitle:animate(false)
 					self.albumTitle:animate(true)
@@ -1075,7 +1094,6 @@ function _createUI(self)
 				self.albumTitle:animate(false)
 				self.trackTitle:animate(false)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
 					self.scrollSwitchTimer:restart()
 				end
 			end
