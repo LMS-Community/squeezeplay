@@ -963,7 +963,7 @@ DEVICE_REMOVAL_WARNING_INFO_SD
 	EN	WARNING: The SD card was removed improperly. Data on this card may have been lost or damaged.
 	ES	ADVERTENCIA: La tarjeta SD se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
 	FI	VAROITUS: SD-kortti poistettiin väärin. Kortin tiedot ovat saattaneet kadota tai vioittua.
-	FR	AVERTISSEMENT: la carte USB a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
+	FR	AVERTISSEMENT: la carte SD a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
 	IT	ATTENZIONE: la scheda SD non è stata rimossa correttamente. I dati sulla scheda potrebbero essere stati danneggiati o persi.
 	NL	WAARSCHUWING: De SD-kaart is onjuist verwijderd. Mogelijk zijn er gegevens op deze kaart verloren gegaan of beschadigd geraakt.
 	NO	ADVARSEL: SD-kortet ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
