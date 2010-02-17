@@ -224,6 +224,7 @@ function menuSink(self, server, data)
 			self.todownload = self.reinstall
 			self:action()
 		end
+		self.window:hide()
 		return
 	end
 
