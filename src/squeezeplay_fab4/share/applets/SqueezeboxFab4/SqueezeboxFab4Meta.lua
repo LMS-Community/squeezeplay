@@ -62,7 +62,7 @@ function registerApplet(meta)
 	LocalPlayer:setDeviceType("fab4", "Squeezebox Touch")
 
 	-- Set the minimum support server version
-	SlimServer:setMinimumVersion("7.4")
+	SlimServer:setMinimumVersion("7.5")
 
 	-- System sound effects attenuation
 	Sample:setEffectAttenuation(Sample.MAXVOLUME)
