@@ -3012,6 +3012,18 @@ function _problemConnectingInternal(self, server)
 		})
 	end
 
+	if _anyCompatibleSqueezeCenterFound() then
+		menu:addItem({
+				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
+				     callback = function()
+							self.inSetup = false
+							self:_removeRequestAndUnlock(server)
+							appletManager:callService("selectCompatibleMusicSource")
+						end,
+				     sound = "WINDOWSHOW",
+			     })
+	end
+	
 	if not self.inSetup then
 		--bug 12843 - offer "go home" (rather than try to autoswitch) since it is difficult/impossible to autoswitch to the desired item.
 		menu:addItem({
@@ -3021,6 +3033,7 @@ function _problemConnectingInternal(self, server)
 					goHome()
 				end,
 			})
+
 
 			-- change player, only if multiple players
 			-- NOTE also only display this if we have a player selected, this is
@@ -3050,17 +3063,7 @@ function _problemConnectingInternal(self, server)
 		window:setAllowScreensaver(false)
 		--Offer local SC's in setup if they exist
 		if Player:getCurrentPlayer() then
-			if _anyCompatibleSqueezeCenterFound() then
-				menu:addItem({
-						     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
-						     callback = function()
-									self.inSetup = false
-									self:_removeRequestAndUnlock(server)
-									appletManager:callService("selectCompatibleMusicSource")
-								end,
-						     sound = "WINDOWSHOW",
-					     })
-			end
+			-- don't offer choose player if the current player can be selected
 		else
 			menu:addItem({
 					     text = self:string("SLIMBROWSER_CHOOSE_PLAYER"),
@@ -3079,22 +3082,6 @@ function _problemConnectingInternal(self, server)
 			        sound = "WINDOWSHOW",
 			})
 	end
-	-- change music source, only for udap players
---	if player and player:canUdap() and appletManager:hasApplet("SetupSqueezebox") then
---		menu:addItem({
---				     text = self:string("SLIMBROWSER_CHOOSE_MUSIC_SOURCE"),
---				     callback = function()
---				                        self:_removeRequestAndUnlock(server)
---							appletManager:callService("selectMusicSource")
---
---							--todo autoswitch - test Receiver setup
-----							appletManager:callService("setCurrentPlayer", nil)
-----							appletManager:callService('startSqueezeboxSetup', player:getMacAddress(), nil)
---						end,
---				     sound = "WINDOWSHOW",
---			     })
---	end
-
 
 	local cancelAction =    function ()
 					self:_removeRequestAndUnlock(server)

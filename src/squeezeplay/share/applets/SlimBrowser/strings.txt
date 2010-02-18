@@ -153,19 +153,19 @@ SLIMBROWSER_TRY_AGAIN
 	SV	Försök igen
 
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
-	CS	Zvolit zdroj hudby
-	DA	Vælg musikkilde
-	DE	Musikquelle wählen
-	EN	Choose Music Source
-	ES	Elija origen de música
-	FI	Valitse musiikkilähde
-	FR	Sélection d'une source musicale
-	IT	Scegliere la sorgente musicale
-	NL	Muziekbron kiezen
-	NO	Velg musikkilde
-	PL	Wybierz źródło muzyki
-	RU	Выберите источник музыки
-	SV	Välj musikkälla
+	CS	Přepnout knihovnu
+	DA	Skift bibliotek
+	DE	Bibliothek umschalten
+	EN	Switch Library
+	ES	Cambiar biblioteca
+	FI	Vaihda kirjastoa
+	FR	Changer de collection
+	IT	Cambia libreria
+	NL	Bibliotheek veranderen
+	NO	Bytt bibliotek
+	PL	Przełącz bibliotekę
+	RU	Сменить медиатеку
+	SV	Byt bibliotek
 
 SLIMBROWSER_CHOOSE_PLAYER
 	CS	Zvolit přehrávač
