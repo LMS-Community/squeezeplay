@@ -1909,24 +1909,28 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
 	})
 
-	s.icon_popup_pause = {
+	s._popupTransportIcon = {
+		padding = { 26, 26, 0, 0, },
+	}
+
+	s.icon_popup_pause = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
-	}
-	s.icon_popup_play = {
+	})
+	s.icon_popup_play = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
-	}
-	s.icon_popup_fwd = {
+	})
+	s.icon_popup_fwd = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_fwd.png"),
-	}
-	s.icon_popup_rew = {
+	})
+	s.icon_popup_rew = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_rew.png"),
-	}
-	s.icon_popup_stop = {
+	})
+	s.icon_popup_stop = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_stop.png"),
-	}
-	s.icon_popup_lineIn = {
+	})
+	s.icon_popup_lineIn = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "IconsResized/icon_linein_80.png"),
-	}
+	})
 
 	s.presetPointer3 = {
 		w = WH_FILL,
