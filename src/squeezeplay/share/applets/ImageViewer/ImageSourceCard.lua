@@ -84,6 +84,7 @@ function scanFolder(self, folder)
 							-- check for supported file type
 							if string.find(string.lower(fullpath), "%pjpe*g")
 									or string.find(string.lower(fullpath), "%ppng") 
+									or string.find(string.lower(fullpath), "%pbmp") 
 									or string.find(string.lower(fullpath), "%pgif") then
 								-- log:info(fullpath)
 								table.insert(self.imgFiles, fullpath)
