@@ -211,6 +211,12 @@ function initBrightness(self)
 	-- Create a global listener to set 
 	Framework:addListener(ACTION | EVENT_SCROLL | EVENT_MOUSE_ALL | EVENT_MOTION | EVENT_IR_ALL,
 		function(event)
+			-- Prevent non Squeezebox IR remotes from increasing brightness
+			if (event:getType() & EVENT_IR_ALL) > 0 then
+				if (not Framework:isValidIRCode(event)) then
+					return EVENT_UNUSED
+				end
+			end
 			-- Set to >0 means we're ACTIVE
 			brightOverride = BRIGHTNESS_OVERRIDE
 			-- ACTIVE: Increase brightness
