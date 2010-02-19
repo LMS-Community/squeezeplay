@@ -65,6 +65,7 @@ bool_t decode_check_start_point(void) {
 	decode_audio->check_start_point = FALSE;
 	decode_audio->num_tracks_started++;
 	decode_audio->elapsed_samples = BYTES_TO_SAMPLES(track_start_offset);
+	decode_audio->sync_elapsed_timestamp = 0; /* bug 15344: don't send previous-track data */
 
 	return true;
 }

@@ -328,7 +328,7 @@ function _timerCallback(self)
 		and status.audioState & DECODE_STOPPING == 0
 		and (self.tracksStarted < status.tracksStarted) then
 
-		log:debug("status TRACK STARTED")
+		log:debug("status TRACK STARTED (elapsed: ", status.elapsed, ")")
 		self:sendStatus(status, "STMs")
 
 		self.tracksStarted = status.tracksStarted
