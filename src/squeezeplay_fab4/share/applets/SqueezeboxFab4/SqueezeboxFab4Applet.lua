@@ -110,6 +110,8 @@ function init(self)
 		["ir"] = 1,
 		["audioByDefault"] = 1,
 		["wiredNetworking"] = 1,
+		["usb"] = 1,
+		["sdcard"] = 1,
 	})
 
 	--account for fab4 touchpad hardware issue: the bottom pixels aren't reported correctly 

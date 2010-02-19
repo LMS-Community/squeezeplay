@@ -95,6 +95,7 @@ function init(self)
 		["coreKeys"] = 1,
 		["homeAsPowerKey"] = 1,
 		["deviceRotation"] = 1,
+		["sdcard"] = 1,
 	})
 	
 	-- warn if uuid or mac are invalid

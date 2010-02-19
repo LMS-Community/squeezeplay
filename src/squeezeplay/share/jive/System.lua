@@ -140,6 +140,18 @@ function setTouchpadBottomCorrection(self, value)
 	_touchpadBottomCorrection = value
 end
 
+function hasUSB(self)
+	return _capabilities["usb"] ~= nil
+end
+
+function hasSDCard(self)
+	return _capabilities["sdcard"] ~= nil
+end
+
+function hasLocalStorage(self)
+	return self:hasUSB() or self:hasSDCard() or not self:isHardware()
+end
+
 -- rest is C implementation
 
 
