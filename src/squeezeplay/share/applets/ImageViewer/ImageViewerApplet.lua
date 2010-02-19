@@ -45,7 +45,9 @@ local System        = require("jive.System")
 --local debug			= require("jive.utils.debug")
 
 local ImageSource		= require("applets.ImageViewer.ImageSource")
+local ImageSourceLocalStorage = require("applets.ImageViewer.ImageSourceLocalStorage")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
+local ImageSourceUSB	= require("applets.ImageViewer.ImageSourceUSB")
 local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
 -- local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
 local ImageSourceServer	= require("applets.ImageViewer.ImageSourceServer")
@@ -91,7 +93,11 @@ function setImageSource(self, imgSourceOverride)
 	else
 		local src = self:getSettings()["source"]
 
-		if src == "card" then
+		if src == "storage" then
+			self.imgSource = ImageSourceLocalStorage(self)
+		elseif src == "usb" then
+			self.imgSource = ImageSourceUSB(self)
+		elseif src == "card" then
 			self.imgSource = ImageSourceCard(self)
 -- Flickr is now being served by mysb.com, disable standalone applet
 -- 		elseif src == "flickr" then
@@ -740,7 +746,7 @@ function openSettings(self)
 			callback = function(event, menuItem)
 				self:defineDelay(menuItem)
 				return EVENT_CONSUME
-		end
+			end
 		},
 		{
 			text = self:string("IMAGE_VIEWER_ORDERING"),
@@ -785,7 +791,7 @@ function openSettings(self)
 	}
 	
 	-- no need for a source setting on baby - we don't have any choice
-	if System:getMachine() ~= "baby" then
+	if System:hasLocalStorage() then
 		table.insert(settingsMenu, 1, {
 			text = self:string("IMAGE_VIEWER_SOURCE"), 
 			sound = "WINDOWSHOW",
@@ -1009,7 +1015,7 @@ function defineSource(self, menuItem)
 	}
 	
 	-- add support for local media if available
-	if System:getMachine() ~= "baby" then
+	if System:hasSDCard() then
 		table.insert(sourceMenu, 1, {
 			text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
 			style = 'item_choice',
@@ -1020,6 +1026,36 @@ function defineSource(self, menuItem)
 					self:setSource("card")
 				end,
 				source == "card"
+			)
+		})
+	end
+
+	if System:hasUSB() then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_USB"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("usb")
+				end,
+				source == "usb"
+			)
+		})
+	end
+
+	if System:hasLocalStorage() then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_LOCAL_STORAGE"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("storage")
+				end,
+				source == "storage"
 			)
 		})
 	end
