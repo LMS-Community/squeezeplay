@@ -39,6 +39,7 @@ local SimpleMenu	= require("jive.ui.SimpleMenu")
 local Popup 		= require("jive.ui.Popup")
 local ContextMenuWindow= require("jive.ui.ContextMenuWindow")
 local Timer			= require("jive.ui.Timer")
+local Task          = require("jive.ui.Task")
 local System        = require("jive.System")
 
 --local debug			= require("jive.utils.debug")
@@ -72,6 +73,7 @@ function initImageSource(self, imgSourceOverride)
 	self.imgSource = nil
 	self.listCheckCount = 0
 	self.initialized = false
+	self.isRendering = false
 	self.dragStart = -1
 	self.dragOffset = 0
 
@@ -300,17 +302,25 @@ end
 function setupEventHandlers(self, window)
 
 	local nextSlideAction = function (self)
-		log:debug("request next slide")
-		self.imgSource:nextImage(self:getSettings()["ordering"])
-		self:displaySlide()
+		if self.imgSource:imageReady() and not self.isRendering then
+			log:debug("request next slide")
+			self.imgSource:nextImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		else
+			log:warn("don't show next image - current image isn't even ready yet")
+		end
 		return EVENT_CONSUME
 	end
 
 	local previousSlideAction = function (self, window)
-		log:debug("request prev slide")
-		self.useFastTransition = true
-		self.imgSource:previousImage(self:getSettings()["ordering"])
-		self:displaySlide()
+		if self.imgSource:imageReady() and not self.isRendering then
+			log:debug("request prev slide")
+			self.useFastTransition = true
+			self.imgSource:previousImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		else
+			log:warn("don't show next image - current image isn't even ready yet")
+		end
 		return EVENT_CONSUME
 	end
 
@@ -435,6 +445,10 @@ end
 
 function free(self)
 	log:info("destructor of image viewer")
+	if self.task then
+		self.task:removeTask()
+	end
+
 	if self.window then
 		self.window:setAllowScreensaver(true)
 	end
@@ -503,12 +517,18 @@ function displaySlide(self)
 	end
 
 	log:debug("image rendering")
+	self.isRendering = true
 
 	--stop next slider Timer since a) we have a good image and, b) this call to displaySlide may have been manually triggered
 	if self.nextSlideTimer then
 		self.nextSlideTimer:stop()
 	end
 
+	self.task = Task("renderImage", self, function() self:_renderImage() end)
+	self.task:addTask()
+end
+
+function _renderImage(self)
 	-- get device orientation and features
 	local screenWidth, screenHeight = Framework:getScreenSize()
 	local deviceCanRotate = false
@@ -532,6 +552,9 @@ function displaySlide(self)
 		w, h = image:getSize()
 	end
 
+	-- give SP some time to breath...	
+	self.task:yield()
+
 	if image != nil and w > 0 and h > 0 then
 		if self.imgSource:useAutoZoom() then
 			local imageLandscape = ((w/h) > 1)
@@ -543,6 +566,9 @@ function displaySlide(self)
 					-- rotation needed, so let's do it
 					image = image:rotozoom(-90, 1, 1)
 					w, h = image:getSize()
+
+					-- rotating the image is exhausting...	
+					self.task:yield()
 				end
 			end
 
@@ -570,6 +596,9 @@ function displaySlide(self)
 			-- scale image
 			image = image:rotozoom(0, zoom, 1)
 			w, h = image:getSize()
+
+			-- zooming is hard work!	
+			self.task:yield()
 		end
 
 		-- place scaled image centered to empty picture
@@ -615,6 +644,9 @@ function displaySlide(self)
 
 		local window = Window('window')
 		window:addWidget(Icon("icon", image))
+
+		-- give SP some time to breath...	
+		self.task:yield()
 
 		if self.isScreensaver then
 			self:applyScreensaverWindow(window)
@@ -667,6 +699,10 @@ function displaySlide(self)
 
 		self.nextSlideTimer:restart()
 	end
+	
+	log:debug("image rendering done")
+	self.isRendering = false
+	self.task:removeTask()
 end
 
 
