@@ -1309,6 +1309,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	-rm $(DMG_TMP_IMAGE_FILENAME)
 	mkdir -p $(DMG_TEMP_DIR)
 	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	-umount -f /Volumes/$(DMG_IMAGE_DIR)*
 	-rm -rf "/Volumes/$(DMG_IMAGE_DIR)"
 	hdiutil create -fs HFS+ -layout SPUD -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
 	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
