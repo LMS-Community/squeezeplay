@@ -110,8 +110,8 @@ IMAGE_VIEWER_SOURCE_SETTINGS
 IMAGE_VIEWER_SOURCE_CARD
 	CS	Paměťová karta
 	DA	Hukommelseskort
-	DE	Speicherkarte
-	EN	Memory card
+	DE	Lokales Speichermedium (SD Karte/USB Disk)
+	EN	Local storage media (SD card/USB disk)
 	ES	Tarjeta de memoria
 	FI	Muistikortti
 	FR	Carte mémoire
