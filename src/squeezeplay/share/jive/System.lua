@@ -62,6 +62,8 @@ local allCapabilities = {
 	["wiredNetworking"] = 1,
 	["deviceRotation"] = 1,
 	["coreKeys"] = 1,
+	["sdcard"] = 1,
+	["usb"] = 1,
 }
 
 local _capabilities = {} -- of form string, 1 so
