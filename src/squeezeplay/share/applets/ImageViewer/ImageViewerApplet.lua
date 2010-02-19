@@ -72,10 +72,12 @@ function initImageSource(self, imgSourceOverride)
 
 	self.imgSource = nil
 	self.listCheckCount = 0
+	self.imageCheckCount = 0
 	self.initialized = false
 	self.isRendering = false
 	self.dragStart = -1
 	self.dragOffset = 0
+	self.imageError = nil
 
 	self:setImageSource(imgSourceOverride)
 
@@ -501,7 +503,9 @@ function displaySlide(self)
 		self.nextSlideTimer:restart()
 	end
 
-	if not self.imgSource:imageReady() then
+	if not self.imgSource:imageReady() and self.imageCheckCount < 50 then
+		self.imageCheckCount = self.imageCheckCount + 1
+		
 		-- try again in a few moments
 		log:debug("image not ready, try again...")
 
@@ -515,6 +519,8 @@ function displaySlide(self)
 		self.checkFotoTimer:restart()
 		return
 	end
+	
+	self.imageCheckCount = 0
 
 	log:debug("image rendering")
 	self.isRendering = true
@@ -556,6 +562,9 @@ function _renderImage(self)
 	self.task:yield()
 
 	if image != nil and w > 0 and h > 0 then
+	
+		self.imageError = nil
+	
 		if self.imgSource:useAutoZoom() then
 			local imageLandscape = ((w/h) > 1)
 
@@ -686,12 +695,14 @@ function _renderImage(self)
 				self:displaySlide()
 			end)
 	else
-		local file = self.imgSource:getCurrentImagePath() or 'unknown'
-		log:info("Invalid image object found: " .. file)
+		if self.imageError == nil then
+			self.imageError = tostring(self.imgSource:getErrorMessage())
+			log:info("Invalid image object found: " .. self.imageError)
 
-		self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), file)
+			self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), self.imageError)
+		end
 		
-		self.nextSlideTimer = Timer(self:getSettings()["delay"] / 2,
+		self.nextSlideTimer = Timer(self:getSettings()["delay"],
 			function()
 				self.imgSource:nextImage(self:getSettings()["ordering"])
 				self:displaySlide()

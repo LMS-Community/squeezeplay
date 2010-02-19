@@ -54,6 +54,8 @@ function __init(self, applet, serverData)
 	obj.imageDataHistoryMax = 30
 	
 	obj:readImageList()
+	
+	obj.error = nil
 
 	return obj
 end
@@ -232,9 +234,11 @@ function requestImage(self, imageData)
 				local image = Surface:loadImageData(chunk, #chunk)
 				self.image = image
 				log:debug("image ready")
+				self.error = nil
 				self:_updateImageDataHistory(imageData)
 			elseif err then
 				self.image = nil
+				self.error = self.applet:string("IMAGE_VIEWER_HTTP_ERROR_IMAGE") 
 				log:warn("error loading picture")
 			end
 			self.imgReady = true
@@ -272,6 +276,10 @@ end
 
 function useAutoZoom(self)
 	return false
+end
+
+function getErrorMessage(self)
+	return self.error or oo.superclass(ImageSourceServer).getErrorMessage(self)
 end
 
 

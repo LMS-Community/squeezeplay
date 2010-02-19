@@ -159,6 +159,10 @@ function getImageCount(self)
 	return #self.imgFiles
 end
 
+function getErrorMessage(self)
+	return "unknown"
+end
+
 function free(self)
 end
 

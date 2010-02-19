@@ -151,6 +151,10 @@ function listReady(self)
 	return false
 end
 
+function getErrorMessage(self)
+	return self:getCurrentImagePath()
+end
+
 
 function settings(self, window)
 

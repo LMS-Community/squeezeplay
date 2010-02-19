@@ -714,6 +714,9 @@ IMAGE_VIEWER_HTTP_ERROR
 	RU	Не удалось получить список URL-адресов. Убедитесь, что задан правильный URL-адрес.
 	SV	Det gick inte att hämta webbadresslistan. Kontrollera att den angivna webbadressen är korrekt.
 
+IMAGE_VIEWER_HTTP_ERROR_IMAGE
+	EN	Could not retrieve image file. Please check the player's network connectivity.
+
 #
 # Strings for Flickr Source
 #
