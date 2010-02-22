@@ -206,13 +206,11 @@ function startSlideshowWhenReady(self)
 
 		-- try again in a few moments
 		log:debug("image list not ready yet...")
-		if not self.nextSlideTimer then
-			self.nextSlideTimer = Timer(200,
-				function()
-					self:startSlideshowWhenReady()
-				end,
-				true)
-		end
+		self.nextSlideTimer = Timer(200,
+			function()
+				self:startSlideshowWhenReady()
+			end,
+			true)
 		self.nextSlideTimer:restart()		
 		return
 	end
@@ -445,6 +443,7 @@ function openRemoteScreensaver(self, force, serverData)
 end
 
 function closeRemoteScreensaver(self)
+	self:_stopTimers()
 	if self.window then
 		self.window:hide()
 	end
@@ -461,13 +460,7 @@ function free(self)
 		self.window:setAllowScreensaver(true)
 	end
 
-	--stop timers
-	if self.nextSlideTimer then
-		self.nextSlideTimer:stop()
-	end
-	if self.checkFotoTimer then
-		self.checkFotoTimer:stop()
-	end
+	self:_stopTimers()
 
 	if self.imgSource ~= nil then
 		self.imgSource:free()
@@ -476,6 +469,14 @@ function free(self)
 	return true
 end
 
+function _stopTimers(self)
+	if self.nextSlideTimer then
+		self.nextSlideTimer:stop()
+	end
+	if self.checkFotoTimer then
+		self.checkFotoTimer:stop()
+	end
+end
 
 function applyScreensaverWindow(self, window)
 	if self.serverData and not self.serverData.allowMotion then
