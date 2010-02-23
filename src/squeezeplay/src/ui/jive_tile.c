@@ -416,7 +416,8 @@ JiveTile *jive_tile_load_image(const char *path) {
 	paths[0] = (char *)path;
 
 	tile = jive_tile_load_tiles(paths);
-	tile->flags |= TILE_FLAG_IMAGE;
+	if (tile)
+		tile->flags |= TILE_FLAG_IMAGE;
 
 	return tile;
 }
@@ -474,6 +475,7 @@ JiveTile *jive_tile_load_tiles(char *path[9]) {
 	JiveTile *tile;
 	char *fullpath;
 	int i;
+	int found = 0;
 
 	tile = calloc(sizeof(JiveTile), 1);
 	tile->refcount = 1;
@@ -492,9 +494,16 @@ JiveTile *jive_tile_load_tiles(char *path[9]) {
 		}
 
 		tile->image[i] = _new_image(fullpath);
+		found++;
 	}
 
 	free(fullpath);
+
+	if (!found) {
+		LOG_ERROR(log_ui_draw, "No images found - no tile created");
+		free(tile);
+		return NULL;
+	}
 
 	return tile;
 }
