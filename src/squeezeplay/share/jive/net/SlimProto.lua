@@ -475,7 +475,7 @@ function connect(self, server)
 		end
 	end
 
-	_connectToAddr(self, serverip, nil)
+	_connectToAddr(self, serverip)
 end
 
 
@@ -509,6 +509,9 @@ function connectTask(self, serverip)
 		if opcode == 'test' then
 			return
 		end
+
+		-- We got a packet so we must be connected
+		self.state = CONNECTED
 
 		log:debug("read opcode=", opcode, " #", #data)
 
@@ -595,7 +598,6 @@ function connectTask(self, serverip)
 
 	-- connect
 	self.socket:t_connect()
-	self.state = CONNECTED
 	self.txqueue = {}
 
 	-- SC and SN ping the player every 5 and 30 seconds respectively.
@@ -610,7 +612,7 @@ function connectTask(self, serverip)
 		(status.isStreaming or status.isLooping)
 
 	-- send helo packet
-	self:send(self.heloPacket)
+	self:send(self.heloPacket, true)
 end
 
 
@@ -700,8 +702,8 @@ end
 
 -- Sent packet. Returns false is the connection is disconnected and the
 -- packet can't be sent, otherwise it returns true.
-function send(self, packet)
-	if self.state ~= CONNECTED then
+function send(self, packet, force)
+	if not force and self.state ~= CONNECTED then
 		return false
 	end
 

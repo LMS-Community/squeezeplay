@@ -193,8 +193,10 @@ function connectToServer(self, server)
 	-- make sure the server we are connecting to is awake
 	server:wakeOnLan()
 
-	if self:needsMusicSource() then
-		log:info('connectToServer(): connecting localPlayer to server', server, ' via slimproto')
+	-- Needs to be fully connected, both SlimProto and Comet connection before we can use server connection
+	-- Otherwise, just do it locally
+	if not self:isConnected() then
+		log:info('connectToServer(): connecting localPlayer to server', server, ' via internal call')
 
 		-- close any previous connection
 		self.slimproto:disconnect()
@@ -230,8 +232,19 @@ function getLastSeen(self)
 end
 
 
+-- Alan Young, 20100223 - I do not understand why the local player's 
+-- isConnected method only took into account the state of the Slimproto
+-- connection and ignored whether any server that we know about has reported that the
+-- player is connected.
+--
+-- If, however, someone comes back to this and decides that should be like that after all,
+-- then connectToServer() needs to be changed to use 
+-- "Player.isConnected(self) and self.slimproto:isConnected()", 
+-- instead of self:isConnected() as the test to determine whether or not the server
+-- can be used to tell the player to switch servers.
+
 function isConnected(self)
-	return self.slimproto:isConnected()
+	return self.slimproto:isConnected() and Player.isConnected(self)
 end
 
 
