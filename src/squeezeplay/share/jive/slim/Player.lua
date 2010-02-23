@@ -1291,7 +1291,11 @@ function _process_status(self, event)
 					--When muted, server sends a 0 vol, ignore it
 					self.state["mixer volume"] = oldState["mixer volume"] 
 				else
-					self:volumeLocal(serverVolume)
+					-- only persist the state here - the actual volume is changed with audg
+					-- (we are effectively casting a Player to a LocalPlayer here, on the basis of useSequenceNumber;
+					-- knowing this, we could just do: self.playback:setVolume(vol, stateOnly) but that would
+					-- be breaking the encapsulation even more)
+					self:volumeLocal(serverVolume, false, true)
 				end
 			end
 		else

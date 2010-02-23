@@ -290,12 +290,12 @@ function _volumeNoIncrement(self, vol, send)
 	return Player.volume(self, vol, send)
 end
 
-function volumeLocal(self, vol, updateSequenceNumber)
+function volumeLocal(self, vol, updateSequenceNumber, stateOnly)
 	--sometime we want to update the sequence number directly, like when there is no server connection and volume is changed
 	if updateSequenceNumber then
 		self:incrementSequenceNumber()
 	end
-	self.playback:setVolume(vol)
+	self.playback:setVolume(vol, stateOnly)
 end
 
 
