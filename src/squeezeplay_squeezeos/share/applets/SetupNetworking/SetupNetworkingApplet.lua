@@ -895,6 +895,11 @@ function _chooseWPS(self, iface, ssid)
 		end,
 	})
 
+--[[
+	-- Bug: 12229 - disable WPS pin method
+	-- WPS pin method is more secure than PBC method, but it is also very confusing
+	--  as the pin needs to be entered into the router (and not into our device).
+	-- WPS pin method is only mandatory if we want WiFi (WPS) logo certification
 	menu:addItem({
 		text = (self:string("NETWORK_WPS_METHOD_PIN")),
 		sound = "WINDOWSHOW",
@@ -902,6 +907,7 @@ function _chooseWPS(self, iface, ssid)
 			_chooseWPSPin(self, iface, ssid)
 		end,
 	})
+--]]
 
 	menu:addItem({
 		text = (self:string("NETWORK_WPS_METHOD_PSK")),
@@ -921,6 +927,12 @@ function _chooseWPS(self, iface, ssid)
 	self:tieAndShowWindow(window)
 end
 
+
+--[[
+	-- Bug: 12229 - disable WPS pin method
+	-- WPS pin method is more secure than PBC method, but it is also very confusing
+	--  as the pin needs to be entered into the router (and not into our device).
+	-- WPS pin method is only mandatory if we want WiFi (WPS) logo certification
 
 function _chooseWPSPin(self, iface, ssid)
 	local wpspin = iface:generateWPSPin()
@@ -946,6 +958,7 @@ function _chooseWPSPin(self, iface, ssid)
 
 	self:tieAndShowWindow(window)		
 end
+--]]
 
 
 function _chooseWPSPbc(self, iface, ssid)
