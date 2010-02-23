@@ -380,22 +380,33 @@ function showBackground(self, wallpaper, playerId, force)
 	self.currentWallpaper = wallpaper
 
 	local srf
+	
 	if wallpaper and self.download[wallpaper] then
 		-- image in download cache
 		if self.download[wallpaper] ~= "fetch" and self.download[url] ~= "fetchset" then
 			local data = self.download[wallpaper]
 			srf = Tile:loadImageData(data, #data)
 		end
+
 	elseif wallpaper and string.match(wallpaper, "http://(.*)") then
 		-- saved remote image for this player
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
-	elseif wallpaper and string.match(wallpaper, "/") then
-		-- saved image from imageviewer
-		srf = Tile:loadImage(wallpaper)
+		
+
 	elseif wallpaper then
-		-- try firmware wallpaper
-		srf = Tile:loadImage(firmwarePrefix .. wallpaper)
+		if not string.match(wallpaper, "/") then
+			-- try firmware wallpaper
+			wallpaper = firmwarePrefix .. wallpaper
+		end
+
+		-- get the absolute file path for whatever we have
+		wallpaper = System:findFile(wallpaper)
+		if wallpaper ~= nil then 
+			-- saved image from imageviewer
+			srf = Tile:loadImage(wallpaper)
+		end
 	end
+
 	if srf ~= nil then
 		Framework:setBackground(srf)
 	end
