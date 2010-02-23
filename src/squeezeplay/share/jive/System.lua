@@ -29,7 +29,7 @@ Return the machine (e.g. squeezeplay, jive, etc).
 
 Return the user-specific path that holds settings, 3rd-party applets, wallpaper, etc. The path is part of the overall Lua path.
 
-=head2 System.findFile(path)
+=head2 System:findFile(path)
 
 Find a file on the lua path. Returns the full path of the file, or nil if it was not found.
 
