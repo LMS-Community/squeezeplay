@@ -63,12 +63,20 @@ function scanFolder(self, folder)
 	self.task = Task("scanImageFolder", self, function()
 		local dirstoscan = { folder }
 		local dirsscanned= {}
+		local x = 0
 	
 		for i, nextfolder in pairs(dirstoscan) do
 
 			if not dirsscanned[nextfolder] then
 			
 				for f in lfs.dir(nextfolder) do
+
+					-- idle this task after every 100 items				
+					x = x+1
+					if x > 100 then
+						x = 0
+						self.task:yield()
+					end
 				
 					-- exclude any dot file (hidden files/directories)
 					if (string.sub(f, 1, 1) ~= ".") then
@@ -91,6 +99,11 @@ function scanFolder(self, folder)
 							end
 						end
 					
+					end
+
+					-- 1000 images should be enough...
+					if #self.imgFiles > 1000 then
+						break
 					end
 				end
 				
