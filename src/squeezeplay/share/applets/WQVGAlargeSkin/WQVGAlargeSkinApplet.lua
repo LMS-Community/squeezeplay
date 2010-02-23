@@ -587,6 +587,23 @@ function skin(self, s)
 		}
 	}
 
+
+	s.text_block_black = {
+		bgImg = Tile:fillColor(0x000000ff),
+		position = LAYOUT_NORTH,
+		h = 100,
+		order = { 'text' },
+		text = {
+			w = WH_FILL,
+			h = 100,
+			padding = { 10, 120, 10, 0 },
+			align = "center",
+			font = _font(100),
+			fg = WHITE,
+			sh = NONE,
+		},
+	}
+
 	s.menu = {
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 0 },

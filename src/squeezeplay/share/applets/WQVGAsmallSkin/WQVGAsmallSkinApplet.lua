@@ -813,6 +813,22 @@ function skin(self, s)
 		}
 	}
 
+	s.text_block_black = {
+		bgImg = Tile:fillColor(0x000000ff),
+		position = LAYOUT_NORTH,
+		h = 100,
+		order = { 'text' },
+		text = {
+			w = WH_FILL,
+			h = 100,
+                        padding = { 10, 160, 10, 0 },
+                        align = "center",
+                        font = _font(100),
+                        fg = TEXT_COLOR,
+                        sh = TEXT_SH_COLOR,
+                },
+	}
+
 	s.menu = {
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 0 },
@@ -1011,7 +1027,7 @@ function skin(self, s)
 
 	s.help_text = {
 		w = screenWidth - 30,
-		padding = { 18, 18, 10, 0},
+		padding = { 18, 18, 12, 0},
 		font = _font(HELP_FONT_SIZE),
 		lineHeight = 23,
 		fg = TEXT_COLOR,
@@ -2776,6 +2792,7 @@ function skin(self, s)
 			zOrder = 1,
 			text = {
 				font = _boldfont(TITLE_FONT_SIZE),
+				bgImg   = titlebarButtonBox,
 			},
 			rbutton  = {
 				font    = _font(14),
@@ -3038,6 +3055,7 @@ function skin(self, s)
 		text = {
 			fg = { 0xB3, 0xB3, 0xB3 },
 			sh = { },
+			bgImg = pressedTitlebarButtonBox,
 		},
 		lbutton = {
 			bgImg = pressedTitlebarButtonBox,

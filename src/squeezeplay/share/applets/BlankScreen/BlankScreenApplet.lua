@@ -26,7 +26,10 @@ local Window           = require("jive.ui.Window")
 local Timer            = require("jive.ui.Timer")
 local Surface          = require("jive.ui.Surface")
 local Icon             = require("jive.ui.Icon")
+local Group            = require("jive.ui.Group")
+local Label            = require("jive.ui.Label")
 local debug            = require("jive.utils.debug")
+local datetime         = require("jive.utils.datetime")
 local System           = require("jive.System")
 local Applet        = require("jive.Applet")
 
@@ -89,10 +92,27 @@ end
 --called when an overlay window (such as the power on window) will be shown, allows SS to do actoins at that time, such as turning on the brightess
 function onOverlayWindowShown(self)
 	self:_setBrightness("on")
+
+	local time = datetime:getCurrentTime()
+
+	if time then
+		self.timeLabel = Group("text_block_black", {
+			text = Label("text", time)
+		})
+		self.window:addWidget(self.timeLabel)
+	else
+		self.timeLabel = nil
+	end
+
 end
+
 
 function onOverlayWindowHidden(self)
 	self:_setBrightness("off")
+	if self.timeLabel then
+		self.window:removeWidget(self.timeLabel)
+		self.timeLabel = nil
+	end
 end
 
 

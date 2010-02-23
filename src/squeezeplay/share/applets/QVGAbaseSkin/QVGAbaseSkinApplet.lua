@@ -458,6 +458,10 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	}
 
+	s.text_block_black = {
+		hidden = 1,
+	}
+
 	s.menu = {
 		h = screenHeight - 60,
 		position = LAYOUT_NORTH,
