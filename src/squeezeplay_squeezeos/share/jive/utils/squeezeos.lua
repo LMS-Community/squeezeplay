@@ -48,7 +48,7 @@ function pidfor(self, process)
 		return nil
 	end
 
-	local pattern = "%s*(%d+).*" .. process
+	local pattern = "%s*(%d+).*" .. process .. "$"
 
 	for line in cmd:lines() do
 		pid = string.match(line, pattern)
