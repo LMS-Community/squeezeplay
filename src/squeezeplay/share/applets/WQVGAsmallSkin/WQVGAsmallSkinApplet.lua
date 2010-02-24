@@ -2070,7 +2070,6 @@ function skin(self, s)
 					order = { "icon", "text", "arrow" },
 					bgImg = fiveItemSelectionBox,
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
-					border = { 0, 0, 50, 0 },
 					text = {
 						padding = { 0, 4, 0, 0 },
 						w = WH_FILL,
