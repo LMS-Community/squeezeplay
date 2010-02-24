@@ -2031,7 +2031,7 @@ function skin(self, s)
 		},
 		menu = {
 			h = CM_MENU_HEIGHT * 4,
-			border = { 7, 0, 0, 0 },
+			border = { 7, 0, 7, 0 },
 			padding = { 0, 0, 0, 100 },
 			scrollbar = { 
 				h = CM_MENU_HEIGHT * 4,
@@ -2070,6 +2070,7 @@ function skin(self, s)
 					order = { "icon", "text", "arrow" },
 					bgImg = fiveItemSelectionBox,
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
+					border = { 0, 0, 50, 0 },
 					text = {
 						padding = { 0, 4, 0, 0 },
 						w = WH_FILL,

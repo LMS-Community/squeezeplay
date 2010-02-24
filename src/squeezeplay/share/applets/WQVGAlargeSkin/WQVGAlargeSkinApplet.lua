@@ -1584,7 +1584,10 @@ function skin(self, s)
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
 		order = { 'icon', 'text' },
 	})
-	
+	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
+		arrow = addArrow,
+	})
+
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
 	})
 
