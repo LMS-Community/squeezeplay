@@ -626,8 +626,8 @@ function _showConnectToServer(self, player, server)
 					-- with notify_playerNew
 
 					timeout = timeout + 1
-					if timeout > CONNECT_TIMEOUT then
-						log:warn("Timeout passed, current count: ", timeout)
+					if timeout > CONNECT_TIMEOUT or player:hasConnectionFailed() then
+						log:warn("Connection failure or Timeout, current count: ", timeout)
 						cancelAction()
 					end
 				end)

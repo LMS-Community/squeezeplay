@@ -28,6 +28,7 @@ local SocketHttp	= require("jive.net.SocketHttp")
 local SlimServer    = require("jive.slim.SlimServer")
 local RequestHttp	= require("jive.net.RequestHttp")
 local URL       	= require("socket.url")
+local Icon  		= require("jive.ui.Icon")
 local Surface		= require("jive.ui.Surface")
 local Framework		= require("jive.ui.Framework")
 
@@ -53,6 +54,8 @@ function __init(self, applet, serverData)
 	obj.imageDataHistoryMax = 30
 	
 	obj:readImageList()
+	
+	obj.error = nil
 
 	return obj
 end
@@ -64,6 +67,8 @@ function readImageList(self)
 	local server = self.serverData.server
 	log:debug("readImageList: server:", server, " id: ", self.serverData.id, " playerId: ", playerId)
 
+	self.lstReady = false
+	
 	server:request(
 		imgFilesSink(self),
 		playerId,
@@ -73,7 +78,7 @@ end
 
 function imgFilesSink(self)
 	return function(chunk, err)
-	       	if err then
+		if err then
 			log:warn("err in sink ", err)
 
 		elseif chunk then
@@ -107,6 +112,7 @@ end
 
 function nextImage(self)
 	if #self.imgFiles == 0 then
+		self:readImageList()
 		self:emptyListError()
 		return
 	end
@@ -230,12 +236,15 @@ function requestImage(self, imageData)
 			if chunk then
 				local image = Surface:loadImageData(chunk, #chunk)
 				self.image = image
-				self.imgReady = true
 				log:debug("image ready")
+				self.error = nil
 				self:_updateImageDataHistory(imageData)
 			elseif err then
-				log:debug("error loading picture")
+				self.image = nil
+				self.error = self.applet:string("IMAGE_VIEWER_HTTP_ERROR_IMAGE") 
+				log:warn("error loading picture")
 			end
+			self.imgReady = true
 		end,
 		'GET', urlString)
 	http:fetch(req)
@@ -252,17 +261,28 @@ end
 
 
 function settings(self, window)
-    return window
+	return window
 end
 
-function updateLoadingIcon(self, icon)
-	if self.serverData.appParameters and self.serverData.appParameters.iconId then
-		self.serverData.server:fetchArtwork(self.serverData.appParameters.iconId, icon, jiveMain:getSkinParam('THUMB_SIZE'), 'png')
+function updateLoadingIcon(self)
+	local icon = Icon("icon_photo_loading")
+
+	if self.serverData.appParameters and self.serverData.appParameters.iconId 
+		and not string.match(self.serverData.appParameters.iconId, "MyApps") then
+
+		-- don't display the My Apps icon in case we're browsing flickr/facebook through the My Apps menu
+		self.serverData.server:fetchArtwork(self.serverData.appParameters.iconId, icon, jiveMain:getSkinParam('POPUP_THUMB_SIZE'), 'png')
 	end
+	
+	return icon
 end
 
 function useAutoZoom(self)
 	return false
+end
+
+function getErrorMessage(self)
+	return self.error or oo.superclass(ImageSourceServer).getErrorMessage(self)
 end
 
 

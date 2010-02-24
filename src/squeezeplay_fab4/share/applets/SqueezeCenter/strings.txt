@@ -963,7 +963,7 @@ DEVICE_REMOVAL_WARNING_INFO_SD
 	EN	WARNING: The SD card was removed improperly. Data on this card may have been lost or damaged.
 	ES	ADVERTENCIA: La tarjeta SD se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
 	FI	VAROITUS: SD-kortti poistettiin väärin. Kortin tiedot ovat saattaneet kadota tai vioittua.
-	FR	AVERTISSEMENT: la carte USB a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
+	FR	AVERTISSEMENT: la carte SD a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
 	IT	ATTENZIONE: la scheda SD non è stata rimossa correttamente. I dati sulla scheda potrebbero essere stati danneggiati o persi.
 	NL	WAARSCHUWING: De SD-kaart is onjuist verwijderd. Mogelijk zijn er gegevens op deze kaart verloren gegaan of beschadigd geraakt.
 	NO	ADVARSEL: SD-kortet ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
@@ -1455,7 +1455,7 @@ EJECT_FAILURE_INFO
 	CS	VAROVÁNÍ: Toto zařízení se nevysunulo správně. Může to být způsobeno přístupem jednoho nebo více programů do zařízení.
 	DA	ADVARSEL: Forbindelsen til enheden kunne ikke afbrydes. Den er muligvis i brug i et eller flere programmer.
 	DE	Warnung: Das Gerät konnte nicht ordnungsgemäß entfernt werden. Möglicherweise wird es von einem oder mehreren Programmen auf dem System verwendet.
-	EN	WARNING: The device failed to eject properly. This is may be due to one or more programs on the system accessing it.
+	EN	WARNING: The device failed to eject properly. This may be due to one or more programs on the system accessing it.
 	ES	ADVERTENCIA: No se ha podido extraer el dispositivo de forma correcta. Puede deberse a que hay uno o más programas en el sistema que están intentando acceder a él.
 	FI	VAROITUS: Laitteen poisto epäonnistui. Tämä voi johtua siitä, että yksi tai useampi tietokoneen ohjelma käyttää laitetta.
 	FR	AVERTISSEMENT: impossible d'éjecter correctement le dispositif. Il se peut qu'il soit en cours d'utilisation par un ou plusieurs programmes exécutés sur le système.
@@ -1510,3 +1510,10 @@ MY_MUSIC
 	PL	Moja muzyka
 	RU	Моя музыка
 	SV	Min musik
+
+SERVER_HAS_BEEN_STOPPED
+	EN	Local music service stopped
+
+SERVER_HAS_BEEN_STOPPED_INFO
+	EN	Local music service has been stopped due to a problem.
+

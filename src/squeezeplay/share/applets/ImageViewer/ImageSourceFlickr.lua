@@ -157,11 +157,11 @@ function requestImage(self)
 			if chunk then
 				local image = Surface:loadImageData(chunk, #chunk)
 				self.image = image
-				self.imgReady = true
 				log:debug("image ready")
 			elseif err then
-				log:debug("error loading picture")
+				log:warn("error loading picture")
 			end
+			self.imgReady = true
 		end,
 		'GET', path)
 	http:fetch(req)

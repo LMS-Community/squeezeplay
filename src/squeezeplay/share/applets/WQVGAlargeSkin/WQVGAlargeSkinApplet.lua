@@ -587,6 +587,23 @@ function skin(self, s)
 		}
 	}
 
+
+	s.text_block_black = {
+		bgImg = Tile:fillColor(0x000000ff),
+		position = LAYOUT_NORTH,
+		h = 100,
+		order = { 'text' },
+		text = {
+			w = WH_FILL,
+			h = 100,
+			padding = { 10, 120, 10, 0 },
+			align = "center",
+			font = _font(100),
+			fg = WHITE,
+			sh = NONE,
+		},
+	}
+
 	s.menu = {
 		position = LAYOUT_CENTER,
 		padding = { 0, 0, 0, 0 },
@@ -1567,7 +1584,10 @@ function skin(self, s)
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
 		order = { 'icon', 'text' },
 	})
-	
+	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
+		arrow = addArrow,
+	})
+
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {
 	})
 
@@ -1894,7 +1914,7 @@ function skin(self, s)
 	})
 
 	s.icon_photo_loading = _uses(_icon, {
-		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
 	})
 
 	s.icon_software_update = _uses(_icon, {
@@ -1964,8 +1984,9 @@ function skin(self, s)
 
 	s.icon_popup_sleep_15 = {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_15.png"),
-		h = 134,
-		w = 146,
+		h = WH_FILL,
+		w = WH_FILL,
+		padding = { 24, 24, 0, 0 },
 	}
 	s.icon_popup_sleep_30 = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_30.png"),
@@ -1981,7 +2002,6 @@ function skin(self, s)
 	})
 	s.icon_popup_sleep_cancel = _uses(s.icon_popup_sleep_15, {
 		img = _loadImage(self, "Icons/icon_popup_box_sleep_off.png"),
-		padding = { 0, 10, 0, 0 },
 	})
 	s.icon_power = _uses(_icon, {
 		img = _loadImage(self, "IconsResized/icon_restart" .. skinSuffix),
@@ -2295,6 +2315,8 @@ function skin(self, s)
                 },
 	})
  
+	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
+
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
                 bgImg = nocturneWallpaper,
@@ -2309,7 +2331,7 @@ function skin(self, s)
                 npvisu = { hidden = 1 },
 
                 npartwork = {
-                        w = 470,
+                        w = 480,
                         position = LAYOUT_CENTER,
                         align = "center",
                         h = 272,

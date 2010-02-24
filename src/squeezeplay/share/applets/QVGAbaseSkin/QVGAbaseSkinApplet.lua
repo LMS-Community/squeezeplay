@@ -458,6 +458,10 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	}
 
+	s.text_block_black = {
+		hidden = 1,
+	}
+
 	s.menu = {
 		h = screenHeight - 60,
 		position = LAYOUT_NORTH,
@@ -1813,8 +1817,8 @@ function skin(self, s, reload, useDefaultSize)
 	})
 
 	s.icon_photo_loading = _uses(s._icon, {
-		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
-		padding = { 5, 55, 0, 5 }
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
+		padding = { 5, 40, 0, 5 }
 	})
 
 	s.icon_software_update = _uses(s._icon, {
@@ -1909,24 +1913,28 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_popup_box_repeat.png"),
 	})
 
-	s.icon_popup_pause = {
+	s._popupTransportIcon = {
+		padding = { 26, 26, 0, 0, },
+	}
+
+	s.icon_popup_pause = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_pause.png"),
-	}
-	s.icon_popup_play = {
+	})
+	s.icon_popup_play = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_play.png"),
-	}
-	s.icon_popup_fwd = {
+	})
+	s.icon_popup_fwd = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_fwd.png"),
-	}
-	s.icon_popup_rew = {
+	})
+	s.icon_popup_rew = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_rew.png"),
-	}
-	s.icon_popup_stop = {
+	})
+	s.icon_popup_stop = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "Icons/icon_popup_box_stop.png"),
-	}
-	s.icon_popup_lineIn = {
+	})
+	s.icon_popup_lineIn = _uses(s._popupTransportIcon, {
 		img = _loadImage(self, "IconsResized/icon_linein_80.png"),
-	}
+	})
 
 	s.presetPointer3 = {
 		w = WH_FILL,

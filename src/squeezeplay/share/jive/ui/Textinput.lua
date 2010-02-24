@@ -986,7 +986,7 @@ function hexValue(default, min, max)
 
 		__index = {
 			setValue = function(obj, str)
-				if #str > max then
+				if max and #str > max then
 					return false
 				end
 

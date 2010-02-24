@@ -55,8 +55,6 @@ static bool_t decode_alac_callback(void *data) {
 	}
 
 	if (!self->init) {
-		self->init = TRUE;
-
 		if (!mp4_open(&self->mp4)) {
 			current_decoder_state |= DECODE_STATE_UNDERRUN;
 			return FALSE;
@@ -76,6 +74,7 @@ static bool_t decode_alac_callback(void *data) {
 		self->alacdec.extradata_size = conf_size - 28;
 
 		alac_decode_init(&self->alacdec);
+		self->init = TRUE;
 	}
 
 	avpkt.data = (void *)mp4_read(&self->mp4, 0, &len, &streaming);

@@ -184,20 +184,35 @@ end
 
 
 function connectToServer(self, server)
-	-- close any previous connection
-	self.slimproto:disconnect()
+
+	if not server then
+		log:error("No server passed to connectToServer() method")
+		return false
+	end
 
 	-- make sure the server we are connecting to is awake
 	server:wakeOnLan()
 
-	log:debug("connectToServer: ", server)
-	if server then
-		server:addLocallyRequestedServer(server)
-	
-		self.slimproto:connect(server)
-	end
-end
+	-- Needs to be fully connected, both SlimProto and Comet connection before we can use server connection
+	-- Otherwise, just do it locally
+	if not self:isConnected() then
+		log:info('connectToServer(): connecting localPlayer to server', server, ' via internal call')
 
+		-- close any previous connection
+		self.slimproto:disconnect()
+
+		server:addLocallyRequestedServer(server)
+		self.slimproto:connect(server)
+	else
+		log:info('connectToServer(): switching localPlayer to server', server)
+		local ip, port = server:getIpPort()
+
+		server:addLocallyRequestedServer(server)
+		self:send({'connect', ip}, true)
+	end
+	return true
+
+end
 
 function connectIp(self, serverip, slimserverip)
 	self.slimproto:disconnect()
@@ -217,9 +232,26 @@ function getLastSeen(self)
 end
 
 
+-- Alan Young, 20100223 - I do not understand why the local player's 
+-- isConnected method only took into account the state of the Slimproto
+-- connection and ignored whether any server that we know about has reported that the
+-- player is connected.
+--
+-- If, however, someone comes back to this and decides that should be like that after all,
+-- then connectToServer() needs to be changed to use 
+-- "Player.isConnected(self) and self.slimproto:isConnected()", 
+-- instead of self:isConnected() as the test to determine whether or not the server
+-- can be used to tell the player to switch servers.
+
 function isConnected(self)
-	return self.slimproto:isConnected()
+	return self.slimproto:isConnected() and Player.isConnected(self)
 end
+
+-- Has the connection attempt actually failed
+function hasConnectionFailed(self)
+	return self.slimproto:hasConnectionFailed()
+end
+
 
 
 function setSignalStrength(self, signalStrength)
@@ -277,12 +309,12 @@ function _volumeNoIncrement(self, vol, send)
 	return Player.volume(self, vol, send)
 end
 
-function volumeLocal(self, vol, updateSequenceNumber)
+function volumeLocal(self, vol, updateSequenceNumber, stateOnly)
 	--sometime we want to update the sequence number directly, like when there is no server connection and volume is changed
 	if updateSequenceNumber then
 		self:incrementSequenceNumber()
 	end
-	self.playback:setVolume(vol)
+	self.playback:setVolume(vol, stateOnly)
 end
 
 

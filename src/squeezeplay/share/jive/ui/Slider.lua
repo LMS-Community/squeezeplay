@@ -93,7 +93,7 @@ function __init(self, style, min, max, value, closure, dragDoneClosure)
 	obj.value = 1
 	obj.closure = closure
 	obj.dragDoneClosure = dragDoneClosure
-
+	obj.sliderEnabled = true
         obj.irAccel = IRMenuAccel("arrow_up", "arrow_down")
 	
 --	obj.dragThreshold = 25
@@ -177,6 +177,23 @@ function setValue(self, value)
 	self:reDraw()
 end
 
+--[[
+
+=head2 jive.ui.Slider:setEnabled(value)
+
+Toggles the slider as an enabled or disabled widget
+For use in consuming events when the slider is intended to be non-interactive
+
+=cut
+--]]
+function setEnabled(self, enable)
+	if enable then
+		self.sliderEnabled = true
+	else
+		self.sliderEnabled = false
+	end
+end
+
 
 --[[
 
@@ -229,6 +246,11 @@ end
 
 function _eventHandler(self, event)
 	local type = event:getType()
+
+	-- consume events if the slider is disabled
+	if not self.sliderEnabled then
+		return EVENT_CONSUME
+	end
 
 	if type == EVENT_SCROLL then
 		self:_moveSlider(event:getScroll())

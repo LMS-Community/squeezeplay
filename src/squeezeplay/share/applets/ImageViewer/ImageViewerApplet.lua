@@ -17,10 +17,12 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local tostring = tostring
+local ipairs, tostring = ipairs, tostring
 
+local os			= require("os")
 local oo			= require("loop.simple")
 local math			= require("math")
+local lfs			= require("lfs")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 
@@ -30,18 +32,24 @@ local Framework		= require("jive.ui.Framework")
 local Font			= require("jive.ui.Font")
 local Icon			= require("jive.ui.Icon")
 local Label			= require("jive.ui.Label")
+local Group			= require("jive.ui.Group")
 local RadioButton	= require("jive.ui.RadioButton")
 local RadioGroup	= require("jive.ui.RadioGroup")
 local Surface		= require("jive.ui.Surface")
 local Window		= require("jive.ui.Window")
 local SimpleMenu	= require("jive.ui.SimpleMenu")
+local Popup 		= require("jive.ui.Popup")
+local ContextMenuWindow= require("jive.ui.ContextMenuWindow")
 local Timer			= require("jive.ui.Timer")
+local Task          = require("jive.ui.Task")
 local System        = require("jive.System")
 
-local debug			= require("jive.utils.debug")
+--local debug			= require("jive.utils.debug")
 
 local ImageSource		= require("applets.ImageViewer.ImageSource")
+local ImageSourceLocalStorage = require("applets.ImageViewer.ImageSourceLocalStorage")
 local ImageSourceCard	= require("applets.ImageViewer.ImageSourceCard")
+local ImageSourceUSB	= require("applets.ImageViewer.ImageSourceUSB")
 local ImageSourceHttp	= require("applets.ImageViewer.ImageSourceHttp")
 -- local ImageSourceFlickr	= require("applets.ImageViewer.ImageSourceFlickr")
 local ImageSourceServer	= require("applets.ImageViewer.ImageSourceServer")
@@ -68,7 +76,12 @@ function initImageSource(self, imgSourceOverride)
 
 	self.imgSource = nil
 	self.listCheckCount = 0
+	self.imageCheckCount = 0
 	self.initialized = false
+	self.isRendering = false
+	self.dragStart = -1
+	self.dragOffset = 0
+	self.imageError = nil
 
 	self:setImageSource(imgSourceOverride)
 
@@ -82,8 +95,13 @@ function setImageSource(self, imgSourceOverride)
 	else
 		local src = self:getSettings()["source"]
 
-		if src == "card" then
+		if src == "storage" then
+			self.imgSource = ImageSourceLocalStorage(self)
+		elseif src == "usb" then
+			self.imgSource = ImageSourceUSB(self)
+		elseif src == "card" then
 			self.imgSource = ImageSourceCard(self)
+-- Flickr is now being served by mysb.com, disable standalone applet
 -- 		elseif src == "flickr" then
 -- 			self.imgSource = ImageSourceFlickr(self)
 		-- default to web list - it's available on all players
@@ -103,7 +121,7 @@ function openImageViewer(self)
 				text = self:string("IMAGE_VIEWER_START_SLIDESHOW"), 
 				sound = "WINDOWSHOW",
 				callback = function(event, menuItem)
-					self:startSlideshow(menuItem, false)
+					self:startSlideshow(false)
 					return EVENT_CONSUME
 				end
 			},
@@ -122,14 +140,18 @@ function openImageViewer(self)
 	return window
 end
 
+function startScreensaver(self)
+	log:info("start standard image viewer screensaver")
+	self:startSlideshow(true)
+end
 
-function startSlideshow(self, menuItem, isScreensaver, imgSourceOverride)
+function startSlideshow(self, isScreensaver, imgSourceOverride)
 	log:info("start image viewer")
 
 	-- initialize the chosen image source
 	self:initImageSource(imgSourceOverride)
 	self.initialized = true
-	self.isScreensaver = isScreensaver
+	self.isScreensaver = isScreensaver and true or false
 	self:showInitWindow()
 	self:startSlideshowWhenReady()
 end
@@ -140,26 +162,27 @@ function showInitWindow(self)
 
 	popup:setAutoHide(true)
 	popup:setShowFrameworkWidgets(false)
-
-	local label = Label("text", "")
-	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
---	local icon = Icon("") -- blank for now until we get a proper default loading image
-
-	--ran out of time for 7.4
---	self.imgSource:updateLoadingIcon(icon)
 	
-	popup:addWidget(label)
---	popup:addWidget(icon)
+	local icon = self.imgSource:updateLoadingIcon()
+	if icon then
+		popup:addWidget(icon)
+	end
+
+	local sublabel = Label("subtext", self:string("IMAGE_VIEWER_LOADING"))
 	popup:addWidget(sublabel)
-	popup:focusWidget(sublabel)
 
 	self:applyScreensaverWindow(popup)
 	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
-			  function()
+			function()
 				popup:playSound("WINDOWHIDE")
 				popup:hide()
-			  end)
+			end)
 
+	popup:addListener(EVENT_WINDOW_PUSH | EVENT_WINDOW_POP,
+			function(event)
+				return EVENT_CONSUME
+			end)
+			
 	self:tieAndShowWindow(popup, Window.transitionFadeIn)
 
 end
@@ -185,120 +208,230 @@ function startSlideshowWhenReady(self)
 
 		-- try again in a few moments
 		log:debug("image list not ready yet...")
-		if not self.nextSlideTimer then
-			self.nextSlideTimer = Timer(200,
-				function()
-					self:startSlideshowWhenReady()
-				end,
-				true)
-		end
+		self.nextSlideTimer = Timer(200,
+			function()
+				self:startSlideshowWhenReady()
+			end,
+			true)
 		self.nextSlideTimer:restart()		
 		return
 	end
-
 
 	-- image list is ready
 	self.imgSource:nextImage(self:getSettings()["ordering"])
 	self:displaySlide()
 end
 
---[[
 function showTextWindow(self)
-	local window = ContextMenuWindow(nil, nil, true)
-	local text = Textarea("multiline_text", self.imgSource:getMultilineText())
-	window:addWidget(text)
-	window:setShowFrameworkWidgets(false)
+	local window = ContextMenuWindow(self:string("IMAGE_VIEWER"))
 
-	if self.isScreensaver then
-		self:applyScreensaverWindow(window)
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("IMAGE_VIEWER_SAVE_WALLPAPER"),
+			sound = "CLICK",
+			callback = function()
+				self:_setWallpaper(window)
+				return EVENT_CONSUME
+			end
+		},
+	})
+	
+	local info = self.imgSource:getMultilineText()
+	for x, line in ipairs(string.split("\n", info)) do
+		if line > "" then
+			menu:addItem({
+				text = line,
+				style = "item_no_arrow",
+			})
+		end
 	end
 
-	window:addActionListener("back", self,  function ()
-							window:hide()
-							return EVENT_CONSUME
-						end)
+	window:addWidget(menu)
+
+	window:addActionListener("back", self, 
+		function ()
+			window:hide()
+			return EVENT_CONSUME
+		end)
 
 	window:show() 
 end
---]]
 
+function _setWallpaper(self, window)
+	window:hide()
+
+	local screenWidth, screenHeight = Framework:getScreenSize()
+	local prefix
+	if screenWidth == 320 and screenHeight == 240 then
+		prefix = 'bb_'
+	elseif screenWidth == 240 and screenHeight == 320 then
+		prefix = 'jive_'
+	elseif screenWidth == 480 and screenHeight == 272 then
+		prefix = 'fab4_'
+	else
+		prefix = System:getMachine() .. '_'
+	end
+	
+	prefix = prefix .. tostring(self:string("IMAGE_VIEWER_SAVED_SLIDE"))
+	
+	local path  = System.getUserDir().. "/wallpapers/"
+	local file  = prefix .. " " .. tostring(os.date('%Y%m%d%H%M%S')) .. ".bmp"
+
+	log:info("Taking screenshot: " .. path .. file)
+
+	-- take screenshot
+	local sw, sh = Framework:getScreenSize()
+	local srf = Surface:newRGB(sw, sh)
+	self.window:draw(srf, LAYER_ALL)
+	srf:saveBMP(path .. file)
+
+--[[ disable popup for now, as something's broken - it wouldn't be shown at all
+	local popup = Popup("toast_popup")
+	local group = Group("group", {
+		text = Label("text", self:string("IMAGE_VIEWER_WALLPAPER_SET", file))
+	})
+	popup:addWidget(group)
+
+	popup:addTimer(3000, function()
+		popup:hide()
+	end)
+	self:tieAndShowWindow(popup)
+]]--
+
+	local player = appletManager:callService("getCurrentPlayer")
+	if player then
+		player = player:getId()
+	end
+
+	appletManager:callService("setBackground", path .. file, player, true)
+
+	-- remove old screenshots, only keep one to make sure we don't run out of disk space
+	-- XXX enable more wallpaper files once we have a way to remove them without using ssh...
+	local pattern = string.lower(prefix) .. ".*\.bmp"
+	for img in lfs.dir(path) do
+		if string.find(string.lower(img), pattern) and string.lower(img) ~= string.lower(file) then
+			log:warn("removing old saved wallpaper: ", img)
+			os.remove(path .. img)
+		end 
+	end
+end
 
 function setupEventHandlers(self, window)
 
 	local nextSlideAction = function (self)
-		log:debug("request next slide")
-		self.imgSource:nextImage(self:getSettings()["ordering"])
-		self:displaySlide()
+		if self.imgSource:imageReady() and not self.isRendering then
+			log:debug("request next slide")
+			self.imgSource:nextImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		else
+			log:warn("don't show next image - current image isn't even ready yet")
+		end
 		return EVENT_CONSUME
 	end
 
 	local previousSlideAction = function (self, window)
-		log:debug("request prev slide")
-		self.useFastTransition = true
-		self.imgSource:previousImage(self:getSettings()["ordering"])
-		self:displaySlide()
+		if self.imgSource:imageReady() and not self.isRendering then
+			log:debug("request prev slide")
+			self.useFastTransition = true
+			self.imgSource:previousImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		else
+			log:warn("don't show next image - current image isn't even ready yet")
+		end
 		return EVENT_CONSUME
 	end
 
---[[
 	local showTextWindowAction = function (self)
-		if self.imgSource:getText() then
-			self:showTextWindow()
-		end
+		self:showTextWindow()
 		return EVENT_CONSUME
 	end
 
 	--todo add takes user to meta data page
 	window:addActionListener("add", self, showTextWindowAction)
---]]
 	window:addActionListener("go", self, nextSlideAction)
 	window:addActionListener("up", self, nextSlideAction)
 	window:addActionListener("down", self, previousSlideAction)
 	window:addActionListener("back", self, function () return EVENT_UNUSED end)
 
-	window:addListener(EVENT_MOUSE_DOWN | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_IR_PRESS | EVENT_SCROLL,
+	window:addListener(EVENT_MOUSE_PRESS,
 		function(event)
-			local type = event:getType()
+			if self.dragOffset > 10 then
+				local x, y = event:getMouse()
+				local offset = y - self.dragStart
+				
+				log:debug("drag offset: ", offset)
+				if offset > 10 then
+					previousSlideAction(self)
+				elseif offset < -10 then
+					nextSlideAction(self)
+				end				
 
-			-- next slide on touch 
-			if type == EVENT_MOUSE_DOWN then
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
+				self.dragStart = -1
+				self.dragOffset = 0
+
 				return EVENT_CONSUME
-			elseif type == EVENT_SCROLL then
-				local scroll = event:getScroll()
-
-				local dir
-				if scroll > 0 then
-					dir = 1
-				else
-					dir = -1
-				end
-				local now = Framework:getTicks()
-				if not self.lastScrollT or
-				  self.lastScrollT + MIN_SCROLL_INTERVAL < now or
-				  self.lastScrollDir ~= dir then
-				        --scrolling a lot or a little only moves by one, since image fetching is relatively slow
-					self.lastScrollT = now
-					self.lastScrollDir = dir
-					if scroll > 0 then
-						return nextSlideAction(self)
-					else
-						return previousSlideAction(self)
-					end
-				end
-				return EVENT_CONSUME
-
+				
+			else
+				-- on simple tapping the screen we'll wake up
+				self:closeRemoteScreensaver()
 			end
 
 			return EVENT_UNUSED
-        end
+		end
+	)
+	
+	window:addListener(EVENT_MOUSE_HOLD,
+		function(event)
+			showTextWindowAction(self)
+			return EVENT_CONSUME
+		end
+	)
+	
+	window:addListener(EVENT_MOUSE_DRAG,
+		function(event)
+			if self.dragStart < 0 then
+				local x, y = event:getMouse()
+				self.dragStart = y
+			end
+
+			self.dragOffset = self.dragOffset + 1
+			return EVENT_CONSUME
+		end
+	)
+	
+	window:addListener(EVENT_SCROLL,
+		function(event)
+			local scroll = event:getScroll()
+
+			local dir
+			if scroll > 0 then
+				dir = 1
+			else
+				dir = -1
+			end
+			local now = Framework:getTicks()
+			if not self.lastScrollT or
+				self.lastScrollT + MIN_SCROLL_INTERVAL < now or
+				self.lastScrollDir ~= dir then
+				--scrolling a lot or a little only moves by one, since image fetching is relatively slow
+				self.lastScrollT = now
+				self.lastScrollDir = dir
+				if scroll > 0 then
+					return nextSlideAction(self)
+				else
+					return previousSlideAction(self)
+				end
+			end
+			return EVENT_CONSUME
+		end
 	)
 end
 
 
 --service method
 function registerRemoteScreensaver(self, serverData)
+	serverData.isScreensaver = true
+	
 	appletManager:callService("addScreenSaver",
 			serverData.text,
 			"ImageViewer",
@@ -317,10 +450,11 @@ end
 
 
 function openRemoteScreensaver(self, force, serverData)
-	self:startSlideshow(_, true, ImageSourceServer(self, serverData))
+	self:startSlideshow(serverData.isScreensaver, ImageSourceServer(self, serverData))
 end
 
-function closeRemoteScreensaver(self, force, serverData)
+function closeRemoteScreensaver(self)
+	self:_stopTimers()
 	if self.window then
 		self.window:hide()
 	end
@@ -329,17 +463,15 @@ end
 
 function free(self)
 	log:info("destructor of image viewer")
+	if self.task then
+		self.task:removeTask()
+	end
+
 	if self.window then
 		self.window:setAllowScreensaver(true)
 	end
 
-	--stop timers
-	if self.nextSlideTimer then
-		self.nextSlideTimer:stop()
-	end
-	if self.checkFotoTimer then
-		self.checkFotoTimer:stop()
-	end
+	self:_stopTimers()
 
 	if self.imgSource ~= nil then
 		self.imgSource:free()
@@ -348,6 +480,14 @@ function free(self)
 	return true
 end
 
+function _stopTimers(self)
+	if self.nextSlideTimer then
+		self.nextSlideTimer:stop()
+	end
+	if self.checkFotoTimer then
+		self.checkFotoTimer:stop()
+	end
+end
 
 function applyScreensaverWindow(self, window)
 	if self.serverData and not self.serverData.allowMotion then
@@ -357,6 +497,9 @@ function applyScreensaverWindow(self, window)
 				return EVENT_CONSUME
 			end)
 	end
+
+	window:setAllowScreensaver(false)
+
 	local manager = appletManager:getAppletInstance("ScreenSavers")
 	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
 end
@@ -378,11 +521,12 @@ function displaySlide(self)
 		self.nextSlideTimer:restart()
 	end
 
-	if not self.imgSource:imageReady() then
+	if not self.imgSource:imageReady() and self.imageCheckCount < 50 then
+		self.imageCheckCount = self.imageCheckCount + 1
+		
 		-- try again in a few moments
 		log:debug("image not ready, try again...")
---		self.checkFotoTimer = Timer(1000, --hmm, this seems to enforce a second wait even if response is fast.... todo have image sink trigger this instead
-		--todo: also, might this run continuously on a failure even if the applet is complete.
+
 		if not self.checkFotoTimer then
 			self.checkFotoTimer = Timer(200, --hmm, this seems to enforce a second wait even if response is fast....
 				function()
@@ -393,14 +537,22 @@ function displaySlide(self)
 		self.checkFotoTimer:restart()
 		return
 	end
+	
+	self.imageCheckCount = 0
 
 	log:debug("image rendering")
+	self.isRendering = true
 
 	--stop next slider Timer since a) we have a good image and, b) this call to displaySlide may have been manually triggered
 	if self.nextSlideTimer then
 		self.nextSlideTimer:stop()
 	end
 
+	self.task = Task("renderImage", self, function() self:_renderImage() end)
+	self.task:addTask()
+end
+
+function _renderImage(self)
 	-- get device orientation and features
 	local screenWidth, screenHeight = Framework:getScreenSize()
 	local deviceCanRotate = false
@@ -424,7 +576,13 @@ function displaySlide(self)
 		w, h = image:getSize()
 	end
 
+	-- give SP some time to breath...	
+	self.task:yield()
+
 	if image != nil and w > 0 and h > 0 then
+	
+		self.imageError = nil
+	
 		if self.imgSource:useAutoZoom() then
 			local imageLandscape = ((w/h) > 1)
 
@@ -435,6 +593,9 @@ function displaySlide(self)
 					-- rotation needed, so let's do it
 					image = image:rotozoom(-90, 1, 1)
 					w, h = image:getSize()
+
+					-- rotating the image is exhausting...	
+					self.task:yield()
 				end
 			end
 
@@ -462,6 +623,9 @@ function displaySlide(self)
 			-- scale image
 			image = image:rotozoom(0, zoom, 1)
 			w, h = image:getSize()
+
+			-- zooming is hard work!	
+			self.task:yield()
 		end
 
 		-- place scaled image centered to empty picture
@@ -508,11 +672,14 @@ function displaySlide(self)
 		local window = Window('window')
 		window:addWidget(Icon("icon", image))
 
+		-- give SP some time to breath...	
+		self.task:yield()
+
 		if self.isScreensaver then
 			self:applyScreensaverWindow(window)
+		else
+			self:setupEventHandlers(window)
 		end
-
-		self:setupEventHandlers(window)
 
 		-- replace the window if it's already there
 		if self.window then
@@ -538,30 +705,27 @@ function displaySlide(self)
 		--no iconbar
 		self.window:setShowFrameworkWidgets(false)
 
-		-- if we have more than one picture, start slideshow
-		if self.imgSource:getImageCount() > 1 then
-			-- start timer for next photo in 'delay' milliseconds
-			local delay = self:getSettings()["delay"]
-			self.nextSlideTimer = self.window:addTimer(delay,
-				function()
-					self.imgSource:nextImage(self:getSettings()["ordering"])
-					self:displaySlide()
-				end)
-		end
 	else
-		file = self.imgSource:getCurrentImagePath() or 'unknown'
-		log:info("Invalid image object found: " .. file)
+		if self.imageError == nil then
+			self.imageError = tostring(self.imgSource:getErrorMessage())
+			log:error("Invalid image object found: " .. self.imageError)
 
-		self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), file)
-		
-		self.nextSlideTimer = Timer(self:getSettings()["delay"] / 2,
-			function()
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
-			end)
-
-		self.nextSlideTimer:restart()
+			self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), self.imageError)
+		end
 	end
+
+	-- start timer for next photo in 'delay' milliseconds
+	local delay = self:getSettings()["delay"]
+	self.nextSlideTimer = self.window:addTimer(delay,
+		function()
+			self.imgSource:nextImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		end
+	)
+	
+	log:debug("image rendering done")
+	self.isRendering = false
+	self.task:removeTask()
 end
 
 
@@ -588,7 +752,7 @@ function openSettings(self)
 			callback = function(event, menuItem)
 				self:defineDelay(menuItem)
 				return EVENT_CONSUME
-		end
+			end
 		},
 		{
 			text = self:string("IMAGE_VIEWER_ORDERING"),
@@ -633,7 +797,7 @@ function openSettings(self)
 	}
 	
 	-- no need for a source setting on baby - we don't have any choice
-	if System:getMachine() ~= "baby" then
+	if System:hasLocalStorage() then
 		table.insert(settingsMenu, 1, {
 			text = self:string("IMAGE_VIEWER_SOURCE"), 
 			sound = "WINDOWSHOW",
@@ -857,7 +1021,7 @@ function defineSource(self, menuItem)
 	}
 	
 	-- add support for local media if available
-	if System:getMachine() ~= "baby" then
+	if System:hasSDCard() then
 		table.insert(sourceMenu, 1, {
 			text = self:string("IMAGE_VIEWER_SOURCE_CARD"),
 			style = 'item_choice',
@@ -868,6 +1032,36 @@ function defineSource(self, menuItem)
 					self:setSource("card")
 				end,
 				source == "card"
+			)
+		})
+	end
+
+	if System:hasUSB() then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_USB"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("usb")
+				end,
+				source == "usb"
+			)
+		})
+	end
+
+	if System:hasLocalStorage() then
+		table.insert(sourceMenu, 1, {
+			text = self:string("IMAGE_VIEWER_SOURCE_LOCAL_STORAGE"),
+			style = 'item_choice',
+			check = RadioButton(
+				"radio",
+				group,
+				function()
+					self:setSource("storage")
+				end,
+				source == "storage"
 			)
 		})
 	end

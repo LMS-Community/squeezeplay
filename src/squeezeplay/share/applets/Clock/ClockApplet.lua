@@ -1063,7 +1063,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				w = 61,
 				h = 134,
 				img = _loadImage(self, fileName),
-				border = { 6, 0, 6, 0 },
 				align = 'bottom',
 			}
 		end
@@ -1075,7 +1074,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				h = 43,
 				img = _loadImage(self, fileName),
 				align = 'bottom',
-				border = { 1, 0, 1, 0 },
 			}
 		end
 	
@@ -1119,7 +1117,6 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			align = 'bottom',
 			img = _loadImage(self, "Clocks/Dot_Matrix/dotmatrix_alarm_on.png"),
 			w   = 36,
-			border = { 0, 0, 13, 0 },
 		}
 	
 		s.icon_alarm_off = _uses(s.icon_alarm_on, {
@@ -1138,7 +1135,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 		}
 
 		local x = {}
-		x.h1 = -7
+		x.h1 = 0
 		x.h2 = x.h1 + 72
 		x.dots = x.h2 + 74
 		x.m1 = x.dots + 28
@@ -1229,19 +1226,7 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 				w = 61,
 				h = 134,
 				img = _loadImage(self, fileName),
-				border = { 6, 0, 6, 0 },
 				align = 'bottom',
-			}
-		end
-	
-		local _dotMatrixDate = function(self, digit)
-			local fileName = "Clocks/Dot_Matrix/dotmatrix_date_" .. tostring(digit) .. ".png"
-			return {
-				w = 27,
-				h = 43,
-				img = _loadImage(self, fileName),
-				align = 'bottom',
-				border = { 1, 0, 1, 0 },
 			}
 		end
 	
@@ -1297,8 +1282,8 @@ function DotMatrix:getDotMatrixClockSkin(skinName)
 			w = 61,
 		}
 
-		local leftDigit = 53
-		local rightDigit = 126
+		local leftDigit = 59
+		local rightDigit = 132
 		local topDigit = 22
 		local bottomDigit = 160
 

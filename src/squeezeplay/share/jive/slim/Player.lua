@@ -379,6 +379,8 @@ Updates the player with fresh data from SS.
 --]]
 function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
+	log:debug(self, "@", slimServer, ":updatePlayerInfo connected=", playerInfo.connected);
+	
 	-- ignore updates from a different server if the player
 	-- is not connected to it
 	if self.slimServer ~= slimServer 
@@ -427,6 +429,9 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 		-- delete from old server
 		if self.slimServer then
 			self:free(self.slimServer)
+			
+			-- refresh understanding of connected state because free() may have changed it
+			self.info.connected = tonumber(playerInfo.connected) == 1
 		end
 
 		-- modify the old state, as the player was not connected
@@ -490,7 +495,7 @@ function updateUdap(self, udap)
 	else
 		self.info.name = tostring(udap.ucp.name)
 	end
-	self.info.model = DEVICE_IDS[tonumber(udap.ucp.device_id, 16)]
+	self.info.model = udap.ucp.type or DEVICE_IDS[tonumber(udap.ucp.device_id, 16)]
 	self.info.connected = false
 
 	self.lastSeen = Framework:getTicks()
@@ -1286,7 +1291,11 @@ function _process_status(self, event)
 					--When muted, server sends a 0 vol, ignore it
 					self.state["mixer volume"] = oldState["mixer volume"] 
 				else
-					self:volumeLocal(serverVolume)
+					-- only persist the state here - the actual volume is changed with audg
+					-- (we are effectively casting a Player to a LocalPlayer here, on the basis of useSequenceNumber;
+					-- knowing this, we could just do: self.playback:setVolume(vol, stateOnly) but that would
+					-- be breaking the encapsulation even more)
+					self:volumeLocal(serverVolume, false, true)
 				end
 			end
 		else
@@ -1854,6 +1863,11 @@ function isConnected(self)
 	return self.slimServer and self.slimServer:isConnected() and self.info.connected
 end
 
+-- Has the connection attempt actually failed
+-- stub that can be overridden in subclass
+function hasConnectionFailed(self)
+	return false
+end
 
 -- return true if the player is available, that is when it is connected
 -- to SqueezeCenter, or in configuration mode (udap or wlan adhoc)

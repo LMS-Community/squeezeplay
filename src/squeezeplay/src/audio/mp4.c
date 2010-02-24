@@ -600,7 +600,7 @@ size_t mp4_open(struct decode_mp4 *mp4)
 
 static inline void packet_size(struct mp4_track *track, size_t *pos, size_t *len)
 {
-	if (track->sample_count < track->sample_num) {
+	if (track->sample_count <= track->sample_num) {
 		*pos = 0;
 		*len = 0;
 		return;
@@ -708,6 +708,10 @@ void mp4_track_conf(struct decode_mp4 *mp4, int track, u8_t **conf, size_t *size
 
 	*conf = mp4->track[track].conf;
 	*size = mp4->track[track].conf_size;
+}
+
+int mp4_track_is_type(struct decode_mp4 *mp4, int track, const char *type) {
+	return strncmp(mp4->track[track].data_format, type, sizeof (mp4->track[track].data_format)) == 0;
 }
 
 

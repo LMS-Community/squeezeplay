@@ -845,8 +845,8 @@ static void *audio_thread_execute(void *data) {
 					/* sync accurate playpoint */
 					if (size == ( snd_pcm_uframes_t) state->period_size) {
 						/* only first time around loop, before calling playback_callback(),
-						 * because the this should be just after the ALSA DMA interrupt has fired
-						 * which with have actualised the delay validity */
+						 * because then this should be just after the ALSA DMA interrupt has fired
+						 * which will have actualised the delay validity */
 
 						decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
 						delay = snd_pcm_status_get_delay(status);
@@ -854,6 +854,17 @@ static void *audio_thread_execute(void *data) {
 						if (decode_audio->sync_elapsed_samples > delay) {
 							decode_audio->sync_elapsed_samples -= delay;
 						}
+						
+						/* have not reached start of track yet */
+						else {
+							/* This value - '0' - will usually be an over-estimate;
+							 * The STMs (track-start) can then be sent prematurely by up to 20ms
+							 * (or more if non-default ALSA parameters are being used)
+							 * but this is rather unlikely in practice.
+							 */
+							decode_audio->sync_elapsed_samples = 0;
+						}
+					
 						decode_audio->sync_elapsed_timestamp = jive_jiffies();
 					}
 

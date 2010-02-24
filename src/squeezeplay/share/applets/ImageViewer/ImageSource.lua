@@ -23,6 +23,7 @@ local debug         = require("jive.utils.debug")
 local string        = require("jive.utils.string")
 local Textarea      = require("jive.ui.Textarea")
 local Window        = require("jive.ui.Window")
+local Icon          = require("jive.ui.Icon")
 local log           = require("jive.utils.log").logger("applet.ImageViewer")
 local jiveMain      = jiveMain
 
@@ -104,6 +105,7 @@ end
 
 --optionally, image sources can modify the icon that appears on the loading page, to, for instance, show a Flickr icon instead
 function updateLoadingIcon(self, icon)
+	return Icon("icon_photo_loading")
 end
 
 function nextImage(self, ordering)
@@ -142,7 +144,7 @@ function getImage(self)
 end
 
 function getText(self)
-	return "", self.imgFiles[self.currentImage], ""
+	return self.imgFiles[self.currentImage]
 end
 
 function getMultilineText(self)
@@ -155,6 +157,10 @@ end
 
 function getImageCount(self)
 	return #self.imgFiles
+end
+
+function getErrorMessage(self)
+	return "unknown"
 end
 
 function free(self)

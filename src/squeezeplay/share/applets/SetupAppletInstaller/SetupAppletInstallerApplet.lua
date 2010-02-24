@@ -19,7 +19,7 @@ Assumptions:
 =cut
 --]]
 
-local next, pairs, type, package, string, tostring, pcall = next, pairs, type, package, string, tostring, pcall
+local next, pairs, type, package, string, tostring, tonumber, pcall = next, pairs, type, package, string, tostring, tonumber, pcall
 
 local oo               = require("loop.simple")
 local debug            = require("jive.utils.debug")
@@ -159,8 +159,9 @@ function menuSink(self, server, data)
 	-- use the response with the most entries
 	data, server = nil, nil
 	for _, response in pairs(self.responses) do
-		if data == nil or data.count < response.data.count then
+		if data == nil or data.count < tonumber(response.data.count) then
 			data = response.data
+			data.count = tonumber(data.count)
 			server = response.server
 		end
 	end
@@ -223,6 +224,7 @@ function menuSink(self, server, data)
 			self.todownload = self.reinstall
 			self:action()
 		end
+		self.window:hide()
 		return
 	end
 

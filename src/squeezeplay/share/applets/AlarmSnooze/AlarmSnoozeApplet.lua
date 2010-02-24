@@ -1,5 +1,6 @@
 local _assert, pairs = _assert, pairs
 local os	       = require("os")	
+local io               = require("io")
 local table            = require("jive.utils.table")
 local string	       = require("jive.utils.string")
 local debug	       = require("jive.utils.debug")
@@ -8,6 +9,7 @@ local datetime         = require("jive.utils.datetime")
 local oo               = require("loop.simple")
 
 local Applet           = require("jive.Applet")
+local System           = require("jive.System")
 local Framework        = require("jive.ui.Framework")
 local Group            = require("jive.ui.Group")
 local Icon             = require("jive.ui.Icon")
@@ -169,8 +171,11 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			end
 		elseif alarmState == 'set' then
 			
-			log:warn('an upcoming alarm is set, but none is currently active')
 			self:_stopDecodeStatePoller()
+			if self.alarmInProgress ~= 'rtc' then
+				self.alarmInProgress = nil
+			end
+
 		end
 		
 		-- store alarmNext data as epoch seconds
@@ -347,6 +352,7 @@ function _hideAlarmWindow(self)
 	if self.alarmWindow then
 		self.alarmWindow:hide()
 		self.alarmWindow = nil
+		self:_babyRevertHeadphones()
 	end
 end
 
@@ -374,6 +380,8 @@ end
 function openAlarmWindow(self, caller)
 
 	log:warn('openAlarmWindow()', caller, ' ', self.localPlayer:isConnected())
+
+	self:_babyAlarmThroughSpeakers()
 
 	-- if radio is controlling a different player, switch to the local player
 	-- if notify_playerLoaded needs invocation prior to player change taking effect then refire openAlarmWindow() at that time
@@ -675,6 +683,35 @@ end
 function free(self)
 	self.alarmWindow = nil
 	return false
+end
+
+-- On Radio guarantee that alarm audio comes through speakers even even Headphones are plugged in
+function _babyAlarmThroughSpeakers(self)
+	if System:getMachine()=='baby' then 
+		-- if headphones are (un)plugged while alarm is playing mixer gets reverted automatically 
+		os.execute("amixer -q sset Endpoint Speaker")
+	end
+end
+
+-- On Radio alarm was routed through the speaker. When alarm is turned off we need to 
+-- revert the audio to the headphone out (if headphones are plugged in)
+--
+-- note: this method is called from the _hideAlarmWindow() method, so if at some future date
+-- there are options added to allow a user to have an alarm with no notification window, 
+-- where the revert method is called  needs rethinking
+function _babyRevertHeadphones(self)
+	if System:getMachine()=='baby' then
+		-- check if headphones are plugged in 
+		-- (code taken from TestAudioRoutingApplet who can show the Headphones status in the factory test)
+		local fh = _assert(io.popen("amixer cget name=\"Headphone Switch\"  | grep : | sed 's/^.*=\\([^,]*\\).*$/\\1/'"))
+		local state = fh:read("*a")
+		fh:close()
+		
+		-- revert to headphones if needed
+		if state and state:sub(1,1) == "1" then
+			os.execute("amixer -q sset Endpoint Headphone")
+		end 
+	end
 end
 
 --[[

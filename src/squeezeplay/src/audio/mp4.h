@@ -34,3 +34,5 @@ size_t mp4_open(struct decode_mp4 *mp4);
 u8_t *mp4_read(struct decode_mp4 *mp4, int track, size_t *len, bool_t *streaming);
 void mp4_track_conf(struct decode_mp4 *mp4, int track, u8_t **conf, size_t *size);
 void mp4_free(struct decode_mp4 *mp4);
+int mp4_track_is_type(struct decode_mp4 *mp4, int track, const char *type);
+

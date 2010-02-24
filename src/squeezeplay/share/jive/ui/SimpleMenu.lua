@@ -138,15 +138,31 @@ local function _itemRenderer(menu, list, widgetList, indexList, size)
 			end
 
 			if widgetList[i] == nil then
-				widgetList[i] = Group(item.style or "item", {
-					text  = Label("text", item.text),
-					check = check,
-					icon  = icon,
-					arrow = arrow,
-				})
+				if item.textarea then
+					local textarea = Textarea('multiline_text', item.textarea)
+					textarea:setHideScrollbar(true)
+					textarea:setIsMenuChild(true)
+					widgetList[i] = Group(item.style or "item", {
+						text  = textarea,
+						check     = check,
+						icon      = icon,
+						arrow     = arrow,
+					})
+				else
+					widgetList[i] = Group(item.style or "item", {
+						text  = Label("text", item.text),
+						check = check,
+						icon  = icon,
+						arrow = arrow,
+					})
+				end
 			else
 				widgetList[i]:setStyle(item.style or "item")
-				widgetList[i]:setWidgetValue("text", item.text)
+				if item.textarea then
+					widgetList[i]:setWidgetValue("text", item.textarea)
+				else
+					widgetList[i]:setWidgetValue("text", item.text)
+				end
 				widgetList[i]:setWidget("icon", icon)
 				widgetList[i]:setWidget("check", check)
 				widgetList[i]:setWidget("arrow", arrow)

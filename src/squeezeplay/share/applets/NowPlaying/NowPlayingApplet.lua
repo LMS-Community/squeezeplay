@@ -126,12 +126,18 @@ function init(self)
 end
 
 function notify_playerShuffleModeChange(self, player, shuffleMode)
-	log:debug("shuffle mode change notification")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerShuffleModeChange(): ", shuffleMode)
 	self:_updateShuffle(shuffleMode)
 end
 
 function notify_playerRepeatModeChange(self, player, repeatMode)
-	log:debug("repeat mode change notification")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
 	self:_updateRepeat(repeatMode)
 end
 
@@ -175,6 +181,10 @@ function _setTitleStatus(self, text, duration)
 end
 
 function notify_playerTitleStatus(self, player, text, duration)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerTitleStatus(): ", text)
 	self:_setTitleStatus(text, duration)
 end
 
@@ -182,6 +192,7 @@ function notify_playerPower(self, player, power)
 	if player ~= self.player then
 		return
 	end
+	log:debug("notify_playerPower(): ", power)
 
 	local mode = self.player:getPlayMode()
 
@@ -201,12 +212,14 @@ end
 
 function changeTitleText(self, titleText)
 	self.titleGroup:setWidgetValue("text", titleText)
-	self.titleGroupOneTrackPlaylist:setWidgetValue("text", titleText)
 end
 
 
 function notify_playerTrackChange(self, player, nowPlaying)
-	log:debug("Notification received that track has changed")
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerTrackChange(): ", nowPlaying)
 
 	local thisPlayer = _isThisPlayer(self, player)
 	if not thisPlayer then return end
@@ -241,9 +254,15 @@ function notify_playerTrackChange(self, player, nowPlaying)
 		-- for local music, nowPlaying = track_id
 		self.nowPlaying = nowPlaying
 	end
+
+	self:replaceNPWindow()
 end
 
 function notify_playerPlaylistChange(self, player)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerPlaylistChange()")
 	self:_updateAll()
 end
 
@@ -280,7 +299,7 @@ function notify_playerModeChange(self, player, mode)
 		return
 	end
 
-	log:debug("Player mode has been changed to: ", mode)
+	log:debug("notify_playerModeChange(): Player mode has been changed to: ", mode)
 	self:_updateMode(mode)
 end
 
@@ -289,6 +308,7 @@ function notify_playerDelete(self, player)
 	if player ~= self.player then
 		return
 	end
+	log:debug("notify_playerDelete():", player)
 
 	self:freeAndClear()
 end
@@ -299,6 +319,7 @@ function notify_playerCurrent(self, player)
 	if self.player ~= player then
 		self:freeAndClear()
 	end
+	log:debug("notify_playerCurrent(): ", player)
 
 	self.player = player
 	if not self.player then
@@ -307,7 +328,9 @@ function notify_playerCurrent(self, player)
 
 	if jiveMain:getSkinParam("NOWPLAYING_MENU") then
 		self:addNowPlayingItem()
-        end
+	else
+		self:removeNowPlayingItem()
+	end
 end
 
 function getSelectedStyleParam(self, param)
@@ -438,13 +461,16 @@ function _updateButtons(self, playerStatus)
 		log:debug('remap buttons to whatever remoteMeta needs')
 		-- disable rew or fw as needed
 		if buttons.rew and tonumber(buttons.rew) == 0 then
-			self:_remapButton('rew', 'rewDisabled', function() return EVENT_CONSUME end)
+			self:_remapButton('rew', 'rewDisabled', nil)
 		else
 			self.controlsGroup:setWidget('rew', self.rewButton)
 		end
 
 		if buttons.fwd and tonumber(buttons.fwd) == 0 then
-			self:_remapButton('fwd', 'fwdDisabled', function() return EVENT_CONSUME end)
+			-- Bug 15336: in order for a skip limit showBriefly to be generated, we still need to
+			-- allow the jump_fwd action to be sent for the disabled button
+			-- this could have implications for services that expect a disabled button to not send the action
+			self:_remapButton('fwd', 'fwdDisabled', nil)
 		else
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
 		end
@@ -473,7 +499,9 @@ function _updateButtons(self, playerStatus)
 	else
 		local playlistSize = self.player and self.player:getPlaylistSize()
 		-- bug 15085, gray out buttons under certain circumstances
-		if playlistSize == 1 then
+		-- bug 15164, don't remove rew and fwd for remote tracks, because a single track playlist 
+		-- is not an indication that fwd and rwd are invalid actions
+		if playlistSize == 1 and not self.player:isRemote() then
 			log:debug('set buttons for single track playlist')
 			-- single track playlist. if this track has no duration, disable rew button
 			local elapsed, duration = self.player:getTrackElapsed()
@@ -493,6 +521,9 @@ function _updateButtons(self, playerStatus)
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
 			self.controlsGroup:setWidget('shuffleMode', self.shuffleButton)
 			self.controlsGroup:setWidget('repeatMode', self.repeatButton)
+			-- bug 15618: explicitly set style of rew and fwd here, since setWidget doesn't appear to be doing the job
+			self.controlsGroup:getWidget('rew'):setStyle('rew')
+			self.controlsGroup:getWidget('fwd'):setStyle('fwd')
 		end
 	end
 end
@@ -506,15 +537,13 @@ function _refreshRightButton(self)
 	if playlistSize == 1 and self.rbutton == 'playlist' then
 		if not self.suppressTitlebar then
 			log:debug('changing rbutton to + button')
-			self.window:removeWidget(self.titleGroup)
-			self.window:addWidget(self.titleGroupOneTrackPlaylist)
+			self.titleGroup:getWidget('rbutton'):setStyle('button_more')
 		end
 		self.rbutton = 'more'
 	elseif self.rbutton == 'more' and playlistSize > 1 then
 		if not self.suppressTitlebar then
 			log:debug('changing rbutton to playlist button')
-			self.window:removeWidget(self.titleGroupOneTrackPlaylist)
-			self.window:addWidget(self.titleGroup)
+			self.titleGroup:getWidget('rbutton'):setStyle('button_playlist')
 		end
 		self.rbutton = 'playlist'
 	end
@@ -526,8 +555,10 @@ function _remapButton(self, key, newStyle, newCallback)
 		return
 	end
 	-- set callback
-	local newWidget = Button(Icon(key), newCallback)
-	self.controlsGroup:setWidget(key, newWidget)
+	if newCallback then
+		local newWidget = Button(Icon(key), newCallback)
+		self.controlsGroup:setWidget(key, newWidget)
+	end
 	-- set style
 	local widget = self.controlsGroup:getWidget(key)
 	if newStyle then
@@ -634,6 +665,22 @@ function _updateProgress(self, data)
 		showProgressBar = false
 	end
 
+	-- if we're shoing a progress bar, make sure the state of the slider reflects the ability to seek
+	-- and is disabled when canSeek is false
+	if showProgressBar then
+		local canSeek = self.player:isTrackSeekable()
+		log:debug('canSeek: ', canSeek)
+
+		if canSeek then
+			-- allow events to the slider
+			self.progressSlider:setEnabled(true)
+			self.progressSlider:setStyle('npprogressB')
+		else
+			-- consume all touches to this slider
+			self.progressSlider:setEnabled(false)
+			self.progressSlider:setStyle('npprogressB_disabled')
+		end
+	end
 	_updatePosition(self)
 
 end
@@ -652,7 +699,7 @@ function _updatePosition(self)
 	if elapsed then
 		strElapsed = _secondsToString(elapsed)
 	end
-	if duration and duration > 0 then
+	if elapsed and elapsed >= 0 and duration and duration > 0 then
 		strRemain = "-" .. _secondsToString(duration - elapsed)
 	end
 
@@ -941,6 +988,12 @@ function toggleNPScreenStyle(self)
 
 	log:debug('setting NP window style to: ', self.selectedStyle)
 
+	self:replaceNPWindow()
+end
+
+
+function replaceNPWindow(self)
+	log:debug("REPLACING NP WINDOW")
 	local oldWindow = self.window
 
 	self.window = _createUI(self)
@@ -948,7 +1001,6 @@ function toggleNPScreenStyle(self)
 		self:_updateButtons(self.player:getPlayerStatus())
 	end
 	self:_refreshRightButton()
-
 	self.window:replace(oldWindow, Window.transitionFadeIn)
 end
 
@@ -977,7 +1029,6 @@ function _createUI(self)
 	self.mainTitle = self:_titleText('play')
 
 	self.titleGroup = self:_createTitleGroup(window, 'button_playlist')
-	self.titleGroupOneTrackPlaylist = self:_createTitleGroup(window, 'button_more')
 
 	self.rbutton = 'playlist'
 	
@@ -1012,7 +1063,6 @@ function _createUI(self)
 	if not self.scrollSwitchTimer then
 		self.scrollSwitchTimer = Timer(3000,
 					function()
-						log:debug("in scrollSwitchTimer timer")
 						self.trackTitle:animate(true)
 						self.artistalbumTitle:animate(false)
 						self.artistTitle:animate(false)
@@ -1024,7 +1074,6 @@ function _createUI(self)
 	self.trackTitle.textStopCallback = 
 		function(label) 
 			if not self.scrollSwitchTimer:isRunning() then
-				log:debug("in scrollSwitchTimer callback: ", label)
 				self.artistalbumTitle:animate(true)
 				self.artistTitle:animate(true)
 				self.trackTitle:animate(false)
@@ -1039,7 +1088,6 @@ function _createUI(self)
 				self.artistalbumTitle:animate(false)
 				self.trackTitle:animate(false)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
 					self.scrollSwitchTimer:restart()
 				end
 			end
@@ -1048,7 +1096,6 @@ function _createUI(self)
 		self.artistTitle.textStopCallback =
 			function(label)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback: ", label)
 					self.trackTitle:animate(false)
 					self.artistTitle:animate(false)
 					self.albumTitle:animate(true)
@@ -1061,7 +1108,6 @@ function _createUI(self)
 				self.albumTitle:animate(false)
 				self.trackTitle:animate(false)
 				if not self.scrollSwitchTimer:isRunning() then
-					log:debug("in scrollSwitchTimer callback, setting timer: ", label)
 					self.scrollSwitchTimer:restart()
 				end
 			end
@@ -1083,7 +1129,6 @@ function _createUI(self)
 			self.gotoElapsed = value
 			self.gotoTimer:restart()
 		end)
-
 	self.progressBarGroup = Group('npprogress', {
 			      elapsed = Label("elapsed", ""),
 			      slider = self.progressSlider,

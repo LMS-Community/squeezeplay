@@ -743,6 +743,12 @@ function skin(self, s)
 			imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png"
 	})
 
+	local _songProgressBarDisabled = _loadHTile(self, {
+			nil,
+			nil,
+			imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_slider.png"
+	})
+
 	local _vizProgressBar = _loadHTile(self, {
 			imgpath .. "UNOFFICIAL/viz_progress_fill_l.png",
 			imgpath .. "UNOFFICIAL/viz_progress_fill.png",
@@ -811,6 +817,22 @@ function skin(self, s)
 			font = _boldfont(TITLE_FONT_SIZE),
 			fg = TEXT_COLOR,
 		}
+	}
+
+	s.text_block_black = {
+		bgImg = Tile:fillColor(0x000000ff),
+		position = LAYOUT_NORTH,
+		h = 100,
+		order = { 'text' },
+		text = {
+			w = WH_FILL,
+			h = 100,
+                        padding = { 10, 160, 10, 0 },
+                        align = "center",
+                        font = _font(100),
+                        fg = TEXT_COLOR,
+                        sh = TEXT_SH_COLOR,
+                },
 	}
 
 	s.menu = {
@@ -1011,7 +1033,7 @@ function skin(self, s)
 
 	s.help_text = {
 		w = screenWidth - 30,
-		padding = { 18, 18, 10, 0},
+		padding = { 18, 18, 12, 0},
 		font = _font(HELP_FONT_SIZE),
 		lineHeight = 23,
 		fg = TEXT_COLOR,
@@ -2015,7 +2037,7 @@ function skin(self, s)
 		},
 		menu = {
 			h = CM_MENU_HEIGHT * 4,
-			border = { 7, 0, 0, 0 },
+			border = { 7, 0, 7, 0 },
 			padding = { 0, 0, 0, 100 },
 			scrollbar = { 
 				h = CM_MENU_HEIGHT * 4,
@@ -2413,7 +2435,7 @@ function skin(self, s)
 	})
 
 	s.icon_photo_loading = _uses(_icon, {
-		img = _loadImage(self, "IconsResized/icon_image_viewer" .. skinSuffix),
+		img = _loadImage(self, "Icons/image_viewer_loading.png"),
 	})
 
 	s.icon_software_update = _uses(_icon, {
@@ -2776,6 +2798,7 @@ function skin(self, s)
 			zOrder = 1,
 			text = {
 				font = _boldfont(TITLE_FONT_SIZE),
+				bgImg   = titlebarButtonBox,
 			},
 			rbutton  = {
 				font    = _font(14),
@@ -2928,6 +2951,12 @@ function skin(self, s)
 			thumbsDown   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_thumbdown.png"),
 			}),
+			thumbsUpDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbup_dis.png"),
+			}),
+			thumbsDownDisabled   = _uses(_transportControlButton, {
+				img = _loadImage(self, "Icons/icon_toolbar_thumbdown_dis.png"),
+			}),
 			love   = _uses(_transportControlButton, {
 				img = _loadImage(self, "Icons/icon_toolbar_fav.png"),
 			}),
@@ -3016,6 +3045,10 @@ function skin(self, s)
 	})
 
 	-- sliders
+	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB, {
+		img = _songProgressBarDisabled,
+	})
+
 	s.npvolumeB = {
 		w = volumeBarWidth,
 		border = { 5, 3, 5, 0 },
@@ -3032,6 +3065,7 @@ function skin(self, s)
 		text = {
 			fg = { 0xB3, 0xB3, 0xB3 },
 			sh = { },
+			bgImg = pressedTitlebarButtonBox,
 		},
 		lbutton = {
 			bgImg = pressedTitlebarButtonBox,
@@ -3080,6 +3114,8 @@ function skin(self, s)
 
 		thumbsUp    = _uses(s.nowplaying.npcontrols.thumbsUp, { bgImg = keyMiddlePressed }),
 		thumbsDown  = _uses(s.nowplaying.npcontrols.thumbsDown, { bgImg = keyMiddlePressed }),
+		thumbsUpDisabled    = s.nowplaying.npcontrols.thumbsUpDisabled,
+		thumbsDownDisabled  = s.nowplaying.npcontrols.thumbsDownDisabled,
 		love        = _uses(s.nowplaying.npcontrols.love, { bgImg = keyMiddlePressed }),
 		hate        = _uses(s.nowplaying.npcontrols.hate, { bgImg = keyMiddlePressed }),
 		fwdDisabled = _uses(s.nowplaying.npcontrols.fwdDisabled),
@@ -3097,7 +3133,7 @@ function skin(self, s)
 		npartistgroup    = { hidden = 1 },
 		npalbumgroup     = { hidden = 1 },
 		npartwork = {
-			w = 470,
+			w = 480,
 			position = LAYOUT_CENTER,
 			align = "center",
 			h = 272,

@@ -122,6 +122,14 @@ IMAGE_VIEWER_SOURCE_CARD
 	RU	Карта памяти
 	SV	Minneskort
 
+IMAGE_VIEWER_SOURCE_USB
+	DE	USB Disk
+	EN	USB disk
+
+IMAGE_VIEWER_SOURCE_LOCAL_STORAGE
+	DE	Lokales Speichermedium
+	EN	Local storage media
+
 IMAGE_VIEWER_SOURCE_SC
 	CS	Squeezebox Server
 	DA	Squeezebox Server
@@ -606,35 +614,20 @@ IMAGE_VIEWER_TEXTINFO_NO
 #
 # Strings for Card Source
 #
-IMAGE_VIEWER_CARD_PATH
-	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
-	DA	Definerer søgestien til billeder. Du kan bruge * som pladsholder
-	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden
-	EN	Defines the search path for images. You can use a '*' as placeholder
-	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
-	FI	Määrittää kuvien hakupolun. Voit käyttää merkkiä * paikkamerkkinä
-	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
-	IT	Specifica il percorso di ricerca delle immagini. È possibile utilizzare un asterisco (*) come segnaposto.
-	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
-	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
-	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
-	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
-	SV	Anger sökvägen för bilder. Du kan använda en * (asterisk) som platshållare
-
 IMAGE_VIEWER_CARD_PATH_HELP
-	CS	Definuje cestu pro hledání obrázků. Můžete použít '*' jako zástupný znak
-	DA	Definerer søgestien til billeder. Du kan bruge * som pladsholder
-	DE	Definiert den Suchpfad für Bilder. Sie können ein '*' als Platzhalter verwenden.
-	EN	Defines the search path for images. You can use a '*' as placeholder
-	ES	Define la ruta de búsqueda de imágenes. Puede usar un '*' como marcador de posición
-	FI	Määrittää kuvien hakupolun. Voit käyttää merkkiä * paikkamerkkinä
-	FR	Définit le chemin d'accès dans lequel rechercher les images. Vous pouvez utiliser le caractère * (astérisque) comme paramètre substituable.
-	IT	Specifica il percorso di ricerca delle immagini. È possibile utilizzare un asterisco (*) come segnaposto.
-	NL	Definieert het zoekpad voor afbeeldingen. Je kunt een sterretje (*) als tijdelijke aanduiding gebruiken
-	NO	Angir søkebane for bilder. Du kan bruke * som plassholder
-	PL	Zdefiniuj ścieżkę wyszukiwania obrazów. Możesz użyć znaku „*” jako symbolu zastępczego
-	RU	Задает путь поиска изображений. В качестве заполнителя можно использовать звездочку ('*')
-	SV	Anger sökvägen för bilder. Du kan använda en * (asterisk) som platshållare
+	CS	Definuje cestu pro hledání obrázků.
+	DA	Definerer søgestien til billeder.
+	DE	Definiert den Suchpfad für Bilder.
+	EN	Defines the search path for images.
+	ES	Define la ruta de búsqueda de imágenes.
+	FI	Määrittää kuvien hakupolun.
+	FR	Définit le chemin d'accès dans lequel rechercher les images.
+	IT	Specifica il percorso di ricerca delle immagini.
+	NL	Definieert het zoekpad voor afbeeldingen.
+	NO	Angir søkebane for bilder.
+	PL	Zdefiniuj ścieżkę wyszukiwania obrazów.
+	RU	Задает путь поиска изображений.
+	SV	Anger sökvägen för bilder.
 
 IMAGE_VIEWER_CARD_ERROR
 	CS	Nenalezeny žádné obrázky. Ujistěte se laskavě, že obrázky jsou umístěny ve správném umístění a v podporovaném formátu.
@@ -713,6 +706,9 @@ IMAGE_VIEWER_HTTP_ERROR
 	PL	Nie można pobrać listy adresów URL. Sprawdź, czy zdefiniowany adres URL jest prawidłowy.
 	RU	Не удалось получить список URL-адресов. Убедитесь, что задан правильный URL-адрес.
 	SV	Det gick inte att hämta webbadresslistan. Kontrollera att den angivna webbadressen är korrekt.
+
+IMAGE_VIEWER_HTTP_ERROR_IMAGE
+	EN	Could not retrieve image file. Please check the player's network connectivity.
 
 #
 # Strings for Flickr Source
@@ -988,3 +984,11 @@ IMAGE_VIEWER_INVALID_IMAGE
 	RU	Найден недопустимый объект изображения
 	SV	Felaktig bildfil hittades.
 
+IMAGE_VIEWER_SAVE_WALLPAPER
+	EN	Use picture as wallpaper
+	
+IMAGE_VIEWER_WALLPAPER_SET
+	EN	Wallpaper saved as\n%s
+
+IMAGE_VIEWER_SAVED_SLIDE
+	EN	Saved Slide

@@ -208,7 +208,7 @@ local rtmpHandlers = {
 				   log:info("message type 4 - user control message ", event, ": Stream Begin")
 			   elseif event == 1 then
 				   log:info("message type 4 - user control message ", event, ": EOF - exiting")
-				   return "EOF"
+				   return false, true
 			   elseif event == 2 then
 				   log:info("message type 4 - user control message ", event, ": Stream Dry")
 			   elseif event == 4 then
@@ -590,7 +590,7 @@ function read(stream)
 				if handler then
 					local ret, error = handler(stream, rtmp)
 					if error then
-						return
+						return ret
 					end
 					if ret then
 						n = n + ret

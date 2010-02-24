@@ -985,18 +985,21 @@ function myMusicSelector(self)
 		end
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
+						self:_updateMyMusicTitle(_server and _server.name or nil)
 						jiveMain:openNodeById('_myMusic', true)
 					end,
 					connectServer)
 	elseif not _server then
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
+						self:_updateMyMusicTitle(_server and _server.name or nil)
 						jiveMain:openNodeById('_myMusic', true)
 					end)
 
 	elseif _server:isSqueezeNetwork() then
 		--offer switch back to SC
 		self:_selectMusicSource(function()
+						self:_updateMyMusicTitle(_server and _server.name or nil)
 						jiveMain:openNodeById('_myMusic', true)
 					end,
 					_player:getLastSqueezeCenter(), nil, true)
@@ -1010,14 +1013,17 @@ function myMusicSelector(self)
 
 					appletManager:callService("showConnectToServer",
 								function()
+									self:_updateMyMusicTitle(_server and _server.name or nil)
 									jiveMain:openNodeById('_myMusic', true)
 								end,
 								_server)
 				else
+					self:_updateMyMusicTitle(_server and _server.name or nil)
 					jiveMain:openNodeById('_myMusic')
 				end
 			else
 				self:_selectMusicSource(function()
+								self:_updateMyMusicTitle(_server and _server.name or nil)
 								jiveMain:openNodeById('_myMusic', true)
 							end,
 							_server)
@@ -1029,6 +1035,7 @@ end
 function otherLibrarySelector(self)
 	self:_selectMusicSource(function()
 					jiveMain:goHome()
+					self:_updateMyMusicTitle(_server and _server.name or nil)
 					jiveMain:openNodeById('_myMusic', true)
 				end, false)
 end

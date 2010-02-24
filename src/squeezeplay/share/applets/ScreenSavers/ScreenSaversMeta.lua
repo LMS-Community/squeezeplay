@@ -37,7 +37,7 @@ function defaultSettings(self)
 	return {
 		whenStopped = "Clock:openDetailedClock",
 		whenPlaying = "NowPlaying:openScreensaver",
-		whenOff = "BlankScreen:openScreensaver",
+		whenOff = "false:false",
 		timeout = 30000,
 	}
 end

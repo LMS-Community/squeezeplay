@@ -29,7 +29,7 @@ Return the machine (e.g. squeezeplay, jive, etc).
 
 Return the user-specific path that holds settings, 3rd-party applets, wallpaper, etc. The path is part of the overall Lua path.
 
-=head2 System.findFile(path)
+=head2 System:findFile(path)
 
 Find a file on the lua path. Returns the full path of the file, or nil if it was not found.
 
@@ -62,6 +62,8 @@ local allCapabilities = {
 	["wiredNetworking"] = 1,
 	["deviceRotation"] = 1,
 	["coreKeys"] = 1,
+	["sdcard"] = 1,
+	["usb"] = 1,
 }
 
 local _capabilities = {} -- of form string, 1 so
@@ -138,6 +140,18 @@ end
 
 function setTouchpadBottomCorrection(self, value)
 	_touchpadBottomCorrection = value
+end
+
+function hasUSB(self)
+	return _capabilities["usb"] ~= nil
+end
+
+function hasSDCard(self)
+	return _capabilities["sdcard"] ~= nil
+end
+
+function hasLocalStorage(self)
+	return self:hasUSB() or self:hasSDCard() or not self:isHardware()
 end
 
 -- rest is C implementation

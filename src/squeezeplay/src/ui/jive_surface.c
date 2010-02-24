@@ -7,11 +7,25 @@
 #include "common.h"
 #include "jive.h"
 
+struct jive_surface {
+	Uint32 refcount;
+
+	bool is_tile; /* so we can tell if this is supposed to be a Tile or a Surface: they get mixed up */
+	SDL_Surface *sdl;
+	Sint16 offset_x, offset_y;
+};
+
 
 #ifdef SCREEN_ROTATION_ENABLED
 static SDL_Surface *real_sdl = NULL;
 #endif
 
+static SDL_Surface * _resolve_SDL_surface(JiveSurface *srf) {
+	if (srf->is_tile)
+		return jive_tile_get_image_surface((JiveTile *)srf);
+	else
+		return srf->sdl;
+}
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
@@ -164,6 +178,11 @@ JiveSurface *jive_surface_ref(JiveSurface *srf) {
 static JiveSurface *jive_surface_display_format(JiveSurface *srf) {
 	SDL_Surface *sdl;
 
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui_draw, "jive_surface_display_format called with JiveTile");
+		return srf;
+	}
+
 	if (srf->sdl == NULL || SDL_GetVideoSurface() == NULL) {
 		return srf;
 	}
@@ -182,33 +201,9 @@ static JiveSurface *jive_surface_display_format(JiveSurface *srf) {
 
 
 JiveSurface *jive_surface_load_image(const char *path) {
-	char *fullpath;
-	JiveSurface *srf;
-	SDL_Surface *sdl;
 
-	if (!path) {
-		return NULL;
-	}
-
-	fullpath = malloc(PATH_MAX);
-	if (!squeezeplay_find_file(path, fullpath)) {
-		LOG_ERROR(log_ui_draw, "Can't find image %s\n", path);
-		free(fullpath);
-		return NULL;
-	}
-
-	sdl = IMG_Load(fullpath);
-	if (!sdl) {
-		LOG_WARN(log_ui_draw, "Error loading surface: %s\n", IMG_GetError());
-	}
-
-	free(fullpath);
-
-	srf = calloc(sizeof(JiveSurface), 1);
-	srf->refcount = 1;
-	srf->sdl = sdl;
-
-	return jive_surface_display_format(srf);
+	/* delegate to JiveTile to get image LRU cache */
+	return (JiveSurface*)jive_tile_load_image(path);
 }
 
 
@@ -225,12 +220,16 @@ JiveSurface *jive_surface_load_image_data(const char *data, size_t len) {
 
 
 int jive_surface_set_wm_icon(JiveSurface *srf) {
-	SDL_WM_SetIcon(srf->sdl, NULL);
+	SDL_WM_SetIcon(_resolve_SDL_surface(srf), NULL);
 	return 1;
 }
 
 
 int jive_surface_save_bmp(JiveSurface *srf, const char *file) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return 0;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return 0;
@@ -278,8 +277,8 @@ static int _getPixel(SDL_Surface *s, Uint16 x, Uint16 y) {
 
 
 int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {
-	SDL_Surface *sa = a->sdl;
-	SDL_Surface *sb = b->sdl;
+	SDL_Surface *sa = _resolve_SDL_surface(a);
+	SDL_Surface *sb = _resolve_SDL_surface(b);
 	Uint32 pa, pb;
 	int x, y;
 	int count=0, equal=0;
@@ -344,6 +343,10 @@ void jive_surface_get_clip(JiveSurface *srf, SDL_Rect *r) {
 
 void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r) {
 	SDL_Rect tmp;
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -378,6 +381,10 @@ void jive_surface_push_clip(JiveSurface *srf, SDL_Rect *r, SDL_Rect *pop)
 
 void jive_surface_set_clip_arg(JiveSurface *srf, Uint16 x, Uint16 y, Uint16 w, Uint16 h) {
 	SDL_Rect tmp;
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -393,6 +400,10 @@ void jive_surface_set_clip_arg(JiveSurface *srf, Uint16 x, Uint16 y, Uint16 w, U
 
 void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w, Uint16 *h) {
 	SDL_Rect tmp;
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		*x = 0;
@@ -465,7 +476,7 @@ void jive_surface_flip(JiveSurface *srf) {
 
 /* this function must only be used for blitting tiles */
 void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, Sint16 *y) {
-	*sdl = srf->sdl;
+	*sdl = _resolve_SDL_surface(srf);
 	*x = srf->offset_x;
 	*y = srf->offset_y;
 }
@@ -480,7 +491,7 @@ void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy)
 	dr.x = dx + dst->offset_x;
 	dr.y = dy + dst->offset_y;
 
-	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
+	SDL_BlitSurface(_resolve_SDL_surface(src), 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
 	t1 = jive_jiffies();
@@ -499,7 +510,7 @@ void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, U
 	sr.x = sx; sr.y = sy; sr.w = sw; sr.h = sh;
 	dr.x = dx + dst->offset_x; dr.y = dy + dst->offset_y;
 
-	SDL_BlitSurface(src->sdl, &sr, dst->sdl, &dr);
+	SDL_BlitSurface(_resolve_SDL_surface(src), &sr, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
 	t1 = jive_jiffies();
@@ -517,8 +528,8 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 	dr.x = dx + dst->offset_x;
 	dr.y = dy + dst->offset_y;
 
-	SDL_SetAlpha(src->sdl, SDL_SRCALPHA, alpha);
-	SDL_BlitSurface(src->sdl, 0, dst->sdl, &dr);
+	SDL_SetAlpha(_resolve_SDL_surface(src), SDL_SRCALPHA, alpha);
+	SDL_BlitSurface(_resolve_SDL_surface(src), 0, dst->sdl, &dr);
 
 #ifdef JIVE_PROFILE_BLIT
 	t1 = jive_jiffies();
@@ -528,6 +539,11 @@ void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint
 
 
 void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
+	if (srf->is_tile) {
+		jive_tile_get_min_size((JiveTile*)srf, w, h);
+		return;
+	}
+
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		if (w)
@@ -537,16 +553,21 @@ void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
 		return;
 	}
 	if (w) {
-		*w = (srf->sdl) ? srf->sdl->w : 0;
+		*w = srf->sdl->w;
 	}
 	if (h) {
-		*h = (srf->sdl) ? srf->sdl->h : 0;
+		*h = srf->sdl->h;
 	}
 }
 
 
 int jive_surface_get_bytes(JiveSurface *srf) {
 	SDL_PixelFormat *format;
+
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_get_bytes called for JiveTile");
+		return 0;
+	}
 
 	if (!srf->sdl) {
 		return 0;
@@ -558,6 +579,11 @@ int jive_surface_get_bytes(JiveSurface *srf) {
 
 
 void jive_surface_free(JiveSurface *srf) {
+	if (srf->is_tile) {
+		jive_tile_free((JiveTile*)srf);
+		return;
+	}
+
 	if (--srf->refcount > 0) {
 		return;
 	}
@@ -570,6 +596,11 @@ void jive_surface_free(JiveSurface *srf) {
 }
 
 void jive_surface_release(JiveSurface *srf) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_release called for JiveTile");
+		return;
+	}
+
 	if (srf->sdl) {
 		SDL_FreeSurface (srf->sdl);
 		srf->sdl = NULL;
@@ -578,49 +609,65 @@ void jive_surface_release(JiveSurface *srf) {
 
 /* SDL_gfx encapsulated functions */
 JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double zoom, int smooth){
+	SDL_Surface *srf1_sdl;
 	JiveSurface *srf2;
-	if (!srf->sdl) {
+
+	srf1_sdl = _resolve_SDL_surface(srf);
+
+	if (!srf1_sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return NULL;
 	}
 
 	srf2 = calloc(sizeof(JiveSurface), 1);
 	srf2->refcount = 1;
-	srf2->sdl = rotozoomSurface(srf->sdl, angle, zoom, smooth);
+	srf2->sdl = rotozoomSurface(srf1_sdl, angle, zoom, smooth);
 
 	return srf2;
 }
 
 JiveSurface *jive_surface_zoomSurface(JiveSurface *srf, double zoomx, double zoomy, int smooth) {
+	SDL_Surface *srf1_sdl;
 	JiveSurface *srf2;
-	if (!srf->sdl) {
+
+	srf1_sdl = _resolve_SDL_surface(srf);
+
+	if (!srf1_sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return NULL;
 	}
 
 	srf2 = calloc(sizeof(JiveSurface), 1);
 	srf2->refcount = 1;
-	srf2->sdl = zoomSurface(srf->sdl, zoomx, zoomy, smooth);
+	srf2->sdl = zoomSurface(srf1_sdl, zoomx, zoomy, smooth);
 
 	return srf2;
 }
 
 JiveSurface *jive_surface_shrinkSurface(JiveSurface *srf, int factorx, int factory) {
+	SDL_Surface *srf1_sdl;
 	JiveSurface *srf2;
-	if (!srf->sdl) {
+
+	srf1_sdl = _resolve_SDL_surface(srf);
+
+	if (!srf1_sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return NULL;
 	}
 
 	srf2 = calloc(sizeof(JiveSurface), 1);
 	srf2->refcount = 1;
-	srf2->sdl = shrinkSurface(srf->sdl, factorx, factory);
+	srf2->sdl = shrinkSurface(srf1_sdl, factorx, factory);
 
 	return srf2;
 }
 
 
 void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 color) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -632,6 +679,10 @@ void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 color)
 }
 
 void jive_surface_hlineColor(JiveSurface *srf, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -644,6 +695,10 @@ void jive_surface_hlineColor(JiveSurface *srf, Sint16 x1, Sint16 x2, Sint16 y, U
 }
 
 void jive_surface_vlineColor(JiveSurface *srf, Sint16 x, Sint16 y1, Sint16 y2, Uint32 color) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -656,6 +711,10 @@ void jive_surface_vlineColor(JiveSurface *srf, Sint16 x, Sint16 y1, Sint16 y2, U
 }
 
 void jive_surface_rectangleColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -669,6 +728,10 @@ void jive_surface_rectangleColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 
 }
 
 void jive_surface_boxColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -682,6 +745,10 @@ void jive_surface_boxColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Si
 }
 
 void jive_surface_lineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -695,6 +762,10 @@ void jive_surface_lineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, S
 }
 
 void jive_surface_aalineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -708,6 +779,10 @@ void jive_surface_aalineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2,
 }
 
 void jive_surface_circleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -720,6 +795,10 @@ void jive_surface_circleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Ui
 }
 
 void jive_surface_aacircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -732,6 +811,10 @@ void jive_surface_aacircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, 
 }
 
 void jive_surface_filledCircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -744,6 +827,10 @@ void jive_surface_filledCircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16
 }
 
 void jive_surface_ellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -757,6 +844,10 @@ void jive_surface_ellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, 
 }
 
 void jive_surface_aaellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -770,6 +861,10 @@ void jive_surface_aaellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx
 }
 
 void jive_surface_filledEllipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -783,6 +878,10 @@ void jive_surface_filledEllipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint1
 }
 
 void jive_surface_pieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -797,6 +896,10 @@ void jive_surface_pieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rad, Sin
 }
 
 void jive_surface_filledPieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -811,6 +914,10 @@ void jive_surface_filledPieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 ra
 }
 
 void jive_surface_trigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -826,6 +933,10 @@ void jive_surface_trigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2,
 }
 
 void jive_surface_aatrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;
@@ -841,6 +952,10 @@ void jive_surface_aatrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x
 }
 
 void jive_surface_filledTrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {
+	if (srf->is_tile) {
+		LOG_ERROR(log_ui, "jive_surface_*() called for JiveTile");
+		return;
+	}
 	if (!srf->sdl) {
 		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
 		return;

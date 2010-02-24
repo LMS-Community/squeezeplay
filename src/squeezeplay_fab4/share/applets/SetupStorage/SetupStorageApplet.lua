@@ -7,6 +7,7 @@ local os               = require("os")
 local io               = require("io")
 local math             = require("math")
 local string           = require("string")
+local squeezeos        = require("jive.utils.squeezeos")
 local table            = require("jive.utils.table")
 local lfs              = require("lfs")
 
@@ -22,7 +23,6 @@ local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
 local Textinput        = require("jive.ui.Textinput")
 local Window           = require("jive.ui.Window")
-local squeezeos        = require("squeezeos_bsp")
 
 local debug            = require("jive.utils.debug")
 
@@ -150,47 +150,58 @@ end
 function _enableSharing(self, window)
 	-- enable Samba	
 	log:info("Enabling Samba Access")
-	os.execute("echo enabled > /etc/samba/status");
-	os.execute("/etc/init.d/samba restart");
-end
+	self:_setConfig("/etc/samba/status", "enabled")
 
+	local success = os.execute("/etc/init.d/samba restart")
+	if success ~= 0 then
+		log:warn("There was a problem starting filesharing (samba): ", success)
+	
+		local window = Window("text_list", self:string("SHARING_START_FAILURE"))
+		window:setAllowScreensaver(false)
+		window:setButtonAction("rbutton", nil)
+	
+		local menu = SimpleMenu("menu")
+	
+		menu:addItem({
+			text = self:string("SHARING_TRY_AGAIN"),
+			style = 'item',
+			sound = "WINDOWSHOW",		
+			callback = function ()
+				window:hide()
+			end
+		})
+	
+		menu:setHeaderWidget( Textarea("help_text", self:string('SHARING_START_FAILURE_INFO') ) )
+		window:addWidget(menu)
+	
+		self:tieAndShowWindow(window)
+	end
+end
 
 function _disableSharing(self, window)
 	-- disable Samba	
 	log:info("Disabling Samba Access")
-	os.execute("echo disabled > /etc/samba/status");
-	os.execute("/etc/init.d/samba stop");
+	self:stopFileSharing()
+	self:_setConfig("/etc/samba/status", "disabled")
+end
+
+function _setConfig(self, file, value)
+	local fi = io.open(file, "w")
+	
+	if fi == nil or value == nil then
+		return false
+	end
+	
+	fi:write(value)
+	fi:close()
+	
+	return true
 end
 
 function stopFileSharing(self)
-	self:_killByPidFile("/var/run/nmbd.pid")
-	self:_killByPidFile("/var/run/smbd.pid")
+	squeezeos:kill("nmbd")
+	squeezeos:kill("smbd")
 end
-
-function _killByPidFile(self, file)
-	local pid = _readPidFile(file)
-
-	if pid then
-		squeezeos.kill(pid, 15)
-	end
-	os.remove(file)
-end
-
-function _readPidFile(file)
-	local fh = io.open(file, "r")
-
-	if fh == nil then
-		return
-	end
-
-	local pid = fh:read("*all")
-	fh:close()
-
-	log:debug("found pid " .. pid .. " reading " .. file)
-	
-	return pid
-end
-
 
 function _fileMatch(file, pattern)
 	local fi = io.open(file, "r")
@@ -240,7 +251,7 @@ function _setSharingAccount(self)
 
 					-- Set samba user alias for root
 					-- Samba daemon doesn't need to be restarted
-					os.execute("echo 'root = " .. value .. "' > /etc/samba/smbusers")
+					self:_setConfig("/etc/samba/smbusers", "root = " ..value)
 
 					self:_updateSharingHelpText()
 
@@ -255,9 +266,9 @@ function _setSharingAccount(self)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-        window:addWidget(group)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
-        window:focusWidget(group)
+	window:focusWidget(group)
 
 --	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 
@@ -297,6 +308,8 @@ function _setSharingPassword(self)
 					-- Samba daemon doesn't need to be restarted
 					-- A valid smb.conf file is needed
 					os.execute("(echo " .. value .. "; echo " .. value .. ") | smbpasswd -s -a -c /etc/samba/smb.conf.dist root")
+					
+					-- TODO: might want to show some error message to the user if the above call fails
 
 					self:_updateSharingHelpText()
 
@@ -311,9 +324,9 @@ function _setSharingPassword(self)
 	local backspace = Keyboard.backspace()
 	local group = Group('keyboard_textinput', { textinput = textinput, backspace = backspace } )
 
-        window:addWidget(group)
+	window:addWidget(group)
 	window:addWidget(Keyboard("keyboard", 'qwerty', textinput))
-        window:focusWidget(group)
+	window:focusWidget(group)
 
 --	_helpAction(self, window, 'NETWORK_NETWORK_NAME_HELP', 'NETWORK_NETWORK_NAME_HELP_BODY', menu)
 

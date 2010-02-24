@@ -416,7 +416,7 @@ static int _draw_screen(lua_State *L) {
 	JiveSurface *srf;
 	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 	clock_t c0 = 0, c1 = 0;
-	bool_t force_redraw, drawn = false;
+	bool_t standalone_draw, drawn = false;
 
 
 	JIVEL_STACK_CHECK_BEGIN(L);
@@ -424,11 +424,11 @@ static int _draw_screen(lua_State *L) {
 	/* stack is:
 	 * 1: framework
 	 * 2: surface (in screen format)
-	 * 3: force_redraw
+	 * 3: standalone_draw (used to draw screen to a new surface)
 	 */
 
 	srf = tolua_tousertype(L, 2, 0);
-	force_redraw = lua_toboolean(L, 3);
+	standalone_draw = lua_toboolean(L, 3);
 
 	/* Exit if we have no windows, nothing to draw */
 	lua_getfield(L, 1, "windowStack");
@@ -460,40 +460,42 @@ static int _draw_screen(lua_State *L) {
 
 	if (perfwarn.screen) t1 = jive_jiffies();
  
-	/* Widget animations */
-	lua_getfield(L, 1, "animations");
-	lua_pushnil(L);
-	while (lua_next(L, -2) != 0) {
-		lua_getfield(L, -1, "animations");
+	/* Widget animations - don't update in a standalone draw as its not the main screen update */
+	if (!standalone_draw) {
+		lua_getfield(L, 1, "animations");
 		lua_pushnil(L);
 		while (lua_next(L, -2) != 0) {
-			int frame;
-
-			/* stack is:
-			 * -2: key
-			 * -1: table
-			 */
-			lua_rawgeti(L, -1, 2);
-			frame = lua_tointeger(L, -1) - 1;
-
-			if (frame == 0) {
-				lua_rawgeti(L, -2, 1); // function
-				lua_pushvalue(L, -6); // widget
-				lua_call(L, 1, 0);
-				// function is poped by lua_call
+			lua_getfield(L, -1, "animations");
+			lua_pushnil(L);
+			while (lua_next(L, -2) != 0) {
+				int frame;
 				
-				lua_rawgeti(L, -2, 3);
-				lua_rawseti(L, -3, 2);
-			}
-			else {
-				lua_pushinteger(L, frame);
-				lua_rawseti(L, -3, 2);
+				/* stack is:
+				 * -2: key
+				 * -1: table
+				 */
+				lua_rawgeti(L, -1, 2);
+				frame = lua_tointeger(L, -1) - 1;
+				
+				if (frame == 0) {
+					lua_rawgeti(L, -2, 1); // function
+					lua_pushvalue(L, -6); // widget
+					lua_call(L, 1, 0);
+					// function is poped by lua_call
+					
+					lua_rawgeti(L, -2, 3);
+					lua_rawseti(L, -3, 2);
+				}
+				else {
+				  lua_pushinteger(L, frame);
+				  lua_rawseti(L, -3, 2);
+				}
+				lua_pop(L, 2);
 			}
 			lua_pop(L, 2);
 		}
-		lua_pop(L, 2);
+		lua_pop(L, 1);
 	}
-	lua_pop(L, 1);
 
 	if (perfwarn.screen) t2 = jive_jiffies();
 
@@ -515,12 +517,14 @@ static int _draw_screen(lua_State *L) {
 
 		drawn = true;
 	}
-	else if (jive_dirty_region.w || force_redraw) {
+	else if (jive_dirty_region.w || standalone_draw) {
 		SDL_Rect dirty;
 
-		/* only redraw dirty region */
-		jive_rect_union(&jive_dirty_region, &last_dirty_region, &dirty);
-		jive_surface_set_clip(srf, &dirty);
+		/* only redraw dirty region for non standalone draws */
+		if (!standalone_draw) {
+			jive_rect_union(&jive_dirty_region, &last_dirty_region, &dirty);
+			jive_surface_set_clip(srf, &dirty);
+		}
 
 #if 0
 		printf("REDRAW: %d,%d %dx%d\n", jive_dirty_region.x, jive_dirty_region.y, jive_dirty_region.w, jive_dirty_region.h);
@@ -540,8 +544,11 @@ static int _draw_screen(lua_State *L) {
 			lua_call(L, 3, 0);
 		}
 
-		memcpy(&last_dirty_region, &jive_dirty_region, sizeof(last_dirty_region));
-		jive_dirty_region.w = 0;
+		/* clear the dirty region for non standalone draws */
+		if (!standalone_draw) {
+			memcpy(&last_dirty_region, &jive_dirty_region, sizeof(last_dirty_region));
+			jive_dirty_region.w = 0;
+		}
 
 		drawn = true;
 	}
@@ -578,7 +585,7 @@ int jiveL_draw(lua_State *L) {
 	lua_pushcfunction(L, _draw_screen);
 	lua_pushvalue(L, 1);
 	lua_pushvalue(L, 2);
-	lua_pushboolean(L, 1);
+	lua_pushboolean(L, 1);                 /* draw complete screen without updating animation or dirty regions */ 
 
 	if (lua_pcall(L, 3, 0, 3) != 0) {
 		LOG_WARN(log_ui_draw, "error in draw_screen:\n\t%s\n", lua_tostring(L, -1));

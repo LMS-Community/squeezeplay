@@ -16,50 +16,21 @@ AutoSkinApplet overrides the following methods:
 =cut
 --]]
 
+local ipairs, pairs = ipairs, pairs
 
--- stuff we use
-local pairs, type, tostring = pairs, type, tostring
-
-local table           = require("table")
-
-local io                     = require("io")
 local oo              = require("loop.simple")
-
 local Applet          = require("jive.Applet")
 
-local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
 local Surface         = require("jive.ui.Surface")
-local Timer                  = require("jive.ui.Timer")
 
 local jiveMain        = jiveMain
 local appletManager   = appletManager
 
-local SW_TABLET_MODE	     = 1
-local SYSPATH = "/sys/bus/i2c/devices/0-0047/"
-
-local RECENTLY_NEAR_TIMEOUT = 15000
-
-local PROX_NEAR = 1
-local PROX_FAR = 0
-
-local skinTypeByProximity = {
-	[PROX_NEAR] = "touch",
-	[PROX_FAR] = "remote",
-}
+local debug           = require("jive.utils.debug")
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
-
-
-function _changeDutyCycle(self, newValue)
-	-- Send The Command
-	local f = io.open(SYSPATH .. "proximity_duty_cycle", "w")
-	f:write(tostring(newValue))
-	f:close()
-end
-
-local USE_PROXIMITY_SENSOR = false -- disabled since proximity accuracy/responsiveness is not up to snuff.
 
 --service method
 function getActiveSkinType(self)
@@ -72,122 +43,74 @@ function init(self, ...)
 	local touchSkin = "touch"
 	local remoteSkin = "remote"
 
-	-- load skins at start up, this makes switching skins faster
---	local touchSkinApplet = appletManager:loadApplet(appletManager:callService("getSelectedSkinNameForType", touchSkin))
---	local remoteSkinApplet = appletManager:loadApplet(appletManager:callService("getSelectedSkinNameForType", remoteSkin))
-
-	--trial and error suggested this result - todo: talk to maurice about this
-	--Yikes touch and ir freezeup on boot when trying to change duty cycle early - Richard looking into why
-	--commenting out for now
---	self:_changeDutyCycle(7)
-
-	self.proximity = PROX_NEAR
-
 	--temp workaround, until it is resolved how to avoid self.mode being null on startup
 	if not self.mode then
 		self.mode = touchSkin
 	end
+	
+	if not self.irBlacklist then
+		self.irBlacklist = {}
+
+		-- see jive.irMap_default for defined buttons
+		for x, button in ipairs({
+			"arrow_up",
+			"arrow_down",
+		--	"arrow_left",
+			"arrow_right",
+			"play",
+		--	"add",
+		--	"now_playing",
+		}) do
+			local irCodes = Framework:getIRCodes(button)
+			
+			for name, irCode in pairs(irCodes) do
+				self.irBlacklist[irCode] = button
+			end
+		end
+
+	end
 
 	local eatIREvents = false
-
-	if USE_PROXIMITY_SENSOR then
-		Framework:addListener(EVENT_SWITCH,
-			function(event)
-	--			log:warn("switch: ", event:tostring())
-				local code, value = event:getSwitch()
-				if code == SW_TABLET_MODE  then
-					if value == 1 then
-						self.proximity = PROX_NEAR
-						self:_resetRecentlyNearTimer()
-						self:changeSkin(skinTypeByProximity[PROX_NEAR])
-					else
-	--					self.proximity = PROX_FAR
-						--for now only change on IR, todo clean up, still waiting on direction
-	--					if not self.recentlyNearTimer then
-	--						self:changeSkin(skinTypeByProximity[PROX_FAR])
-	--					end
-					end
-	
-				end
-	
-			end,
-			-100)
-	end
-	
+		
 	Framework:addListener(EVENT_IR_ALL,
 		function(event)
-			if self.recentlyNearTimer then
-				--when recently near (via prox or touch), stay on near mode
-				self.proximity = PROX_FAR
-				return EVENT_UNUSED
-			end
+			-- ignore initial keypress after switching from touch to IR control
 			if eatIREvents then
-				local type = event:getType()
-				if type == EVENT_IR_UP then
+
+				if event:getType() == EVENT_IR_UP then
 					eatIREvents = false
-					self:_disableAnyScreensaver()
 				end
 				return EVENT_CONSUME
-			elseif self:changeSkin(remoteSkin) then
+
+			elseif self:changeSkin(remoteSkin) and self.irBlacklist[event:getIRCode()] ~= nil then
+
+				log:warn("ignore me - key " .. self.irBlacklist[event:getIRCode()] .. " is context sensitive")
 				eatIREvents = true
 				return EVENT_CONSUME
-			else
-				return EVENT_UNUSED
+
 			end
+
+			return EVENT_UNUSED
 		end,
 		-100)
 
-	local eatTouchEvents = false
 	Framework:addListener(EVENT_MOUSE_ALL,
 		function(event)
-			self.proximity = PROX_NEAR
-			self:_resetRecentlyNearTimer()
-			if eatTouchEvents then
-				local type = event:getType()
-				if type == EVENT_MOUSE_UP then
-					eatTouchEvents = false
-					self:_disableAnyScreensaver()
-				end
+
+			-- ignore event when switching from remote to touch: we don't know what we're touching
+			-- wake up if in screensaver mode - this is a non critical action
+			if self:changeSkin(touchSkin) and not appletManager:callService("isScreensaverActive") then
+				log:warn("ignore me - I don't know what I'm touching!")
 				return EVENT_CONSUME
-			elseif self:changeSkin(touchSkin) then
-				eatTouchEvents = true
-				return EVENT_CONSUME
-			else
-				return EVENT_UNUSED
 			end
+
+			return EVENT_UNUSED
 		end,
 		-100)
 
 	return self
 end
 
-
--- self.recentlyNearTimer starts a timer when either touch occurs or near proximity occurs. After timeout,
---  the skin moves to the skin associated with the current proximity 
-function _resetRecentlyNearTimer(self)
-	if USE_PROXIMITY_SENSOR then
-		if not self.recentlyNearTimer then
-			self.recentlyNearTimer = Timer(
-							RECENTLY_NEAR_TIMEOUT,
-							function ()
-								log:info("timeout since last touch, shift to skin for current proximity")
-								self:changeSkin(skinTypeByProximity[self.proximity])
-								self.recentlyNearTimer = nil
-							end
-							,true)
-		end
-	
-		self.recentlyNearTimer:restart()
-	end
-end
-
-
-function _disableAnyScreensaver(self)
-	if appletManager:callService("isScreensaverActive") then
-		appletManager:callService("deactivateScreensaver")
-		appletManager:callService("restartScreenSaverTimer")
-	end
-end
 
 
 function changeSkin(self, skinType)
@@ -203,8 +126,8 @@ function changeSkin(self, skinType)
 
 	local img1 = _capture("foo")
 
-	jiveMain:setSelectedSkin(skinName)
 	self.mode = skinType
+	jiveMain:setSelectedSkin(skinName)
 
 	local img2 = _capture("bar")
 

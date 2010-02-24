@@ -45,7 +45,7 @@ end
 
 function configureApplet(self)
 	appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
-		"startSlideshow", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90)
+		"startScreensaver", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90, "closeRemoteScreensaver")
 end
 
 
@@ -58,11 +58,11 @@ function defaultSettings(self)
 	defaultSetting["ordering"] = "sequential"
 	defaultSetting["textinfo"] = false
 
-	defaultSetting["source"] = "card"
+	defaultSetting["source"] = "storage"
 	defaultSetting["card.path"] = "/media"
 	defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbtouch.lst"
 
-	if System:getMachine() == "baby" then
+	if not System:hasLocalStorage() then
 		defaultSetting["source"] = "http"
 		defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbradio.lst"
 	end

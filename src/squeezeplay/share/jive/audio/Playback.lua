@@ -328,7 +328,7 @@ function _timerCallback(self)
 		and status.audioState & DECODE_STOPPING == 0
 		and (self.tracksStarted < status.tracksStarted) then
 
-		log:debug("status TRACK STARTED")
+		log:debug("status TRACK STARTED (elapsed: ", status.elapsed, ")")
 		self:sendStatus(status, "STMs")
 
 		self.tracksStarted = status.tracksStarted
@@ -765,11 +765,13 @@ function overrideDefaultVolumeToGain(self, value)
 	_defaultVolumeToGain = value
 end
 
-function setVolume(self, volume)
+function setVolume(self, volume, stateOnly)
 	log:debug("setVolume: ", volume)
 
 	self.volume = volume
-	self:_setGain(self:_getGainFromVolume(volume))
+	if (not stateOnly) then
+		self:_setGain(self:_getGainFromVolume(volume))
+	end
 end
 
 
@@ -803,13 +805,13 @@ function _audg(self, data, isLocal)
 		end
 
 		self:_stopPauseAndStopTimers()
-	----NOTE: not using server value for self.volume, because fades come in through the audg mechanism. Instead, wait for the player status before
-	---- setting the locally held self.volume. This could cause a case where remote ui changes volume and the local volume isn't seen as right until playerstatus completes 
---		--for now only using the translated volume value, not converting gain to a local value
---		if self.volume ~= volume then
---			log:warn("new volume set from server: ", volume)
---			self.volume = volume
---		end
+		
+		-- NOTE: not using server value for self.volume, because fades come in through the audg mechanism.
+		-- Instead, wait for the player status before setting the locally held self.volume.
+		-- This could cause a case where a remote UI changes volume and
+		-- the local volume isn't seen as right until playerstatus completes.
+		-- Also, during a fade, the displayed volume will be the eventual volume for fade-in
+		-- and the initial volume for fade-out. 
 	end
 
 	log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)

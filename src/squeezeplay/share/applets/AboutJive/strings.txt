@@ -19,19 +19,19 @@ ABOUT_JIVE
 	SV	Om
 
 ABOUT_COPYRIGHT
-	CS	Copyright 2007-2009, Logitech.
-	DA	Copyright 2007-2009, Logitech.
-	DE	Copyright 2007-2009, Logitech.
-	EN	Copyright 2007-2009, Logitech.
-	ES	Copyright 2007-2009, Logitech.
-	FI	Copyright 2007-2009, Logitech.
-	FR	Copyright 2007-2009, Logitech.
-	IT	Copyright 2007-2009, Logitech.
-	NL	Copyright 2007-2009, Logitech.
-	NO	Opphavsrett 2007–2009, Logitech.
-	PL	Copyright 2007-2009, Logitech.
-	RU	© Logitech, 2007-2009.
-	SV	© 2007–2009 Logitech.
+	CS	Copyright 2007-2010, Logitech.
+	DA	Copyright 2007-2010, Logitech.
+	DE	Copyright 2007-2010, Logitech.
+	EN	Copyright 2007-2010, Logitech.
+	ES	Copyright 2007-2010, Logitech.
+	FI	Copyright 2007-2010, Logitech.
+	FR	Copyright 2007-2010, Logitech.
+	IT	Copyright 2007-2010, Logitech.
+	NL	Copyright 2007-2010, Logitech.
+	NO	Opphavsrett 2007–2010, Logitech.
+	PL	Copyright 2007-2010, Logitech.
+	RU	© Logitech, 2007-2010.
+	SV	© 2007–2010 Logitech.
 
 ABOUT_MAC_ADDRESS
 	CS	Adresa MAC: %s

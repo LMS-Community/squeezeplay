@@ -65,7 +65,7 @@ function readImageList(self)
 		function(chunk, err)
 			if err then
 				self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_HTTP_ERROR"))
-				log:debug("error!: " .. err)
+				log:warn("error!: " .. err)
 			elseif chunk then
 				for l in string.gmatch(chunk, "[^\r\n]*\r*\n*") do
 					l = string.gsub(l, "\n*", "")
@@ -118,11 +118,12 @@ function requestImage(self)
 			if chunk then
 				local image = Surface:loadImageData(chunk, #chunk)
 				self.image = image
-				self.imgReady = true
 				log:debug("image ready")
 			elseif err then
-				log:debug("error loading picture")
+				self.image = nil
+				log:warn("error loading picture")
 			end
+			self.imgReady = true
 		end,
 		'GET', urlString)
 	http:fetch(req)

@@ -363,9 +363,10 @@ function __init(self, jnt, heloPacket)
 	local obj = oo.rawnew(self, {})
 
 	-- connection state UNCONNECTED / CONNECTED
-	obj.state          = UNCONNECTED
-	obj.capabilities  = {}
-	obj.txqueue  = {}
+	obj.state            = UNCONNECTED
+	obj.connectionFailed = false
+	obj.capabilities     = {}
+	obj.txqueue          = {}
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
@@ -432,12 +433,6 @@ function getId(self)
 end
 
 
--- Return true if connected to server
-function isConnected(self)
-	return self.state == CONNECTED
-end
-
-
 -- Open the slimproto connetion to Ip.
 -- Called by slimproto 'serv' and udap
 function connectIp(self, serverip, slimserverip)
@@ -464,6 +459,7 @@ function connectIp(self, serverip, slimserverip)
 
 	log:info("server told us to connect to ", serverip)
 
+	self.connectionFailed = false
 	_connectToAddr(self, serverip)
 end
 
@@ -481,7 +477,8 @@ function connect(self, server)
 		end
 	end
 
-	_connectToAddr(self, serverip, nil)
+	self.connectionFailed = false
+	_connectToAddr(self, serverip)
 end
 
 
@@ -515,6 +512,10 @@ function connectTask(self, serverip)
 		if opcode == 'test' then
 			return
 		end
+
+		-- We got a packet so we must be connected
+		self.state = CONNECTED
+		self.connectionFailed = false
 
 		log:debug("read opcode=", opcode, " #", #data)
 
@@ -601,7 +602,6 @@ function connectTask(self, serverip)
 
 	-- connect
 	self.socket:t_connect()
-	self.state = CONNECTED
 	self.txqueue = {}
 
 	-- SC and SN ping the player every 5 and 30 seconds respectively.
@@ -616,7 +616,7 @@ function connectTask(self, serverip)
 		(status.isStreaming or status.isLooping)
 
 	-- send helo packet
-	self:send(self.heloPacket)
+	self:send(self.heloPacket, true)
 end
 
 
@@ -667,6 +667,10 @@ function isConnected(self)
 	 return self.state == CONNECTED
 end
 
+-- Has the connection attempt actually failed
+function hasConnectionFailed(self)
+	return self.connectionFailed
+end
 
 -- Set the callback to get a status packet
 function statusPacketCallback(self, callback)
@@ -706,8 +710,8 @@ end
 
 -- Sent packet. Returns false is the connection is disconnected and the
 -- packet can't be sent, otherwise it returns true.
-function send(self, packet)
-	if self.state ~= CONNECTED then
+function send(self, packet, force)
+	if not force and self.state ~= CONNECTED then
 		return false
 	end
 
@@ -771,6 +775,7 @@ function _handleDisconnect(self, reason)
 	self:disconnect()
 
 	self.state = CONNECTING
+	self.connectionFailed = true
 	self.reconnectTimer:restart(interval)
 end
 
@@ -781,7 +786,7 @@ function _handleTimer(self)
 		return
 	end
 
-	self:connect()
+	self:_connectToAddr(self.serverip)
 end
 
 

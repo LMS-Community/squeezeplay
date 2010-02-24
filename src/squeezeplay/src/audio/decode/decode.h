@@ -35,4 +35,9 @@
 #define TESTTONES_SINE40_192000 			14
 
 
+/* Minimum bytes in streambuf before we start decoding */
+#define DECODE_MINIMUM_BYTES_FLAC			25000
+#define DECODE_MINIMUM_BYTES_OTHER			512
+
+
 extern int luaopen_decode(lua_State *L);
