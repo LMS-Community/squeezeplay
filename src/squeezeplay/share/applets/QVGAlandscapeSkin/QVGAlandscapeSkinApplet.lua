@@ -286,6 +286,15 @@ function skin(self, s, reload, useDefaultSize)
 			border = { 0, 59, 0, 0 },
 			w = WH_FILL,
 			order = { "slider" },
+			npprogressB = {
+				w = screenWidth,
+				align = 'center',
+				horizontal = 1,
+				bgImg = s.img.songProgressBackground,
+				img = s.img.songProgressBar,
+				h = 15,
+				padding = { 0, 0, 0, 15 },
+			}
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
@@ -294,6 +303,8 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	
 	})
+
+        s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
 
 	--FIXME: Bug 15030, need way to cycle through NP views on Baby/Controller
 	s.nowplaying_small_art = _uses(s.nowplaying, {
@@ -312,17 +323,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying_small_art.pressed = s.nowplaying_small_art
 
 	-- sliders
-	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
-	s.npprogressB = {
-		w = screenWidth,
-		align = 'center',
-                horizontal = 1,
-                bgImg = s.img.songProgressBackground,
-                img = s.img.songProgressBar,
-		h = 15,
-		padding = { 0, 0, 0, 15 },
-	}
-
 	s.npvolumeB = { hidden = 1 }
 
 	s.icon_photo_loading = _uses(s._icon, {

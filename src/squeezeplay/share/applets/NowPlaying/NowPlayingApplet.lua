@@ -665,6 +665,22 @@ function _updateProgress(self, data)
 		showProgressBar = false
 	end
 
+	-- if we're shoing a progress bar, make sure the state of the slider reflects the ability to seek
+	-- and is disabled when canSeek is false
+	if showProgressBar then
+		local canSeek = self.player:isTrackSeekable()
+		log:debug('canSeek: ', canSeek)
+
+		if canSeek then
+			-- allow events to the slider
+			self.progressSlider:setEnabled(true)
+			self.progressSlider:setStyle('npprogressB')
+		else
+			-- consume all touches to this slider
+			self.progressSlider:setEnabled(false)
+			self.progressSlider:setStyle('npprogressB_disabled')
+		end
+	end
 	_updatePosition(self)
 
 end
@@ -1113,7 +1129,6 @@ function _createUI(self)
 			self.gotoElapsed = value
 			self.gotoTimer:restart()
 		end)
-
 	self.progressBarGroup = Group('npprogress', {
 			      elapsed = Label("elapsed", ""),
 			      slider = self.progressSlider,

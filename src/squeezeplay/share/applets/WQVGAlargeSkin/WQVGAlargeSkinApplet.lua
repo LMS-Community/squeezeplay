@@ -2315,6 +2315,8 @@ function skin(self, s)
                 },
 	})
  
+	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
+
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
                 bgImg = nocturneWallpaper,

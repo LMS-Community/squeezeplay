@@ -743,6 +743,12 @@ function skin(self, s)
 			imgpath .. "Song_Progress_Bar/SP_Bar_Touch/tch_progressbar_slider.png"
 	})
 
+	local _songProgressBarDisabled = _loadHTile(self, {
+			nil,
+			nil,
+			imgpath .. "Song_Progress_Bar/SP_Bar_Remote/rem_progressbar_slider.png"
+	})
+
 	local _vizProgressBar = _loadHTile(self, {
 			imgpath .. "UNOFFICIAL/viz_progress_fill_l.png",
 			imgpath .. "UNOFFICIAL/viz_progress_fill.png",
@@ -3039,6 +3045,10 @@ function skin(self, s)
 	})
 
 	-- sliders
+	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB, {
+		img = _songProgressBarDisabled,
+	})
+
 	s.npvolumeB = {
 		w = volumeBarWidth,
 		border = { 5, 3, 5, 0 },

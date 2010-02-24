@@ -570,6 +570,15 @@ function skin(self, s, reload, useDefaultSize)
 				font = _boldfont(9),
 				fg = { 0xb3, 0xb3, 0xb3 },
 			},
+			npprogressB = {
+				w = WH_FILL,
+				align = 'center',
+				border = { 10, 0, 10, 0 },
+				horizontal = 1,
+				bgImg = s.img.songProgressBackground,
+				img = s.img.songProgressBar,
+				h = 15,
+			},
 		},
 	
 		-- special style for when there shouldn't be a progress bar (e.g., internet radio streams)
@@ -606,16 +615,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying_small_art.pressed = s.nowplaying_small_art
 
 	-- sliders
-	-- FIXME: I'd much rather describe slider style within the s.nowplaying window table above, otherwise describing alternative window styles for NP will be problematic
-	s.npprogressB = {
-		w = WH_FILL,
-		align = 'center',
-		border = { 10, 0, 10, 0 },
-                horizontal = 1,
-                bgImg = s.img.songProgressBackground,
-                img = s.img.songProgressBar,
-		h = 15,
-	}
+        s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
 
 	s.npvolumeB = { hidden = 1 }
 
