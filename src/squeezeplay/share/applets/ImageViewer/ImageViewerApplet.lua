@@ -19,8 +19,10 @@ Applet related methods are described in L<jive.Applet>.
 -- stuff we use
 local ipairs, tostring = ipairs, tostring
 
+local os			= require("os")
 local oo			= require("loop.simple")
 local math			= require("math")
+local lfs			= require("lfs")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 
@@ -270,22 +272,20 @@ function _setWallpaper(self, window)
 		prefix = System:getMachine() .. '_'
 	end
 	
+	prefix = prefix .. tostring(self:string("IMAGE_VIEWER_SAVED_SLIDE"))
+	
 	local path  = System.getUserDir().. "/wallpapers/"
-	local file  = prefix .. self:string("IMAGE_VIEWER_SAVED_SLIDE").str .. ".bmp"
+	local file  = prefix .. " " .. tostring(os.date('%Y%m%d%H%M%S')) .. ".bmp"
 
 	log:info("Taking screenshot: " .. path .. file)
 
 	-- take screenshot
 	local sw, sh = Framework:getScreenSize()
-
-	local w   = Framework.windowStack[1]
-	local bg  = Framework.getBackground()
 	local srf = Surface:newRGB(sw, sh)
-
-	bg:blit(srf, 0, 0, sw, sh)
-	w:draw(srf, JIVE_LAYER_ALL)
+	self.window:draw(srf, LAYER_ALL)
 	srf:saveBMP(path .. file)
 
+--[[ disable popup for now, as something's broken - it wouldn't be shown at all
 	local popup = Popup("toast_popup")
 	local group = Group("group", {
 		text = Label("text", self:string("IMAGE_VIEWER_WALLPAPER_SET", file))
@@ -296,6 +296,7 @@ function _setWallpaper(self, window)
 		popup:hide()
 	end)
 	self:tieAndShowWindow(popup)
+]]--
 
 	local player = appletManager:callService("getCurrentPlayer")
 	if player then
@@ -303,6 +304,16 @@ function _setWallpaper(self, window)
 	end
 
 	appletManager:callService("setBackground", path .. file, player, true)
+
+	-- remove old screenshots, only keep one to make sure we don't run out of disk space
+	-- XXX enable more wallpaper files once we have a way to remove them without using ssh...
+	local pattern = string.lower(prefix) .. ".*\.bmp"
+	for img in lfs.dir(path) do
+		if string.find(string.lower(img), pattern) and string.lower(img) ~= string.lower(file) then
+			log:warn("removing old saved wallpaper: ", img)
+			os.remove(path .. img)
+		end 
+	end
 end
 
 function setupEventHandlers(self, window)
