@@ -18,7 +18,6 @@ Applet related methods are described in L<jive.Applet>.
 
 -- stuff we use
 local ipairs, pairs, io, string, tostring = ipairs, pairs, io, string, tostring
-local os = os
 
 local oo               = require("loop.simple")
 
@@ -146,17 +145,8 @@ function shortDateFormatSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {})
 
 	for k,v in pairs(datetime:getAllShortDateFormats()) do
-		local _text = os.date(v)
-		if string.match(v, '%%d') or string.match(v, '%%m') then
-			local _help = _getDateHelpString(v)
-			_text = _text .. " (" .. _help .. ")"
-		end
---[[		if tostring(v) == '%D' then
-			_text = _text .. " (mm/dd/yy)"
-		end
---]]
 		menu:addItem({
-				text = _text,
+				text = datetime:getCurrentDate(v),
 				style = 'item_choice',
 				check = RadioButton("radio", group, function(event, menuItem)
 						self:setShortDateFormat(v)
@@ -181,17 +171,8 @@ function dateFormatSetting(self, menuItem)
 	local menu = SimpleMenu("menu", {})
 
 	for k,v in pairs(datetime:getAllDateFormats()) do
-		local _text = os.date(v)
-		if string.match(v, '%%d') or string.match(v, '%%m') then
-			local _help = _getDateHelpString(v)
-			_text = _text .. " (" .. _help .. ")"
-		end
---[[		if tostring(v) == '%D' then
-			_text = _text .. " (mm/dd/yy)"
-		end
---]]
 		menu:addItem({
-				text = _text,
+				text = datetime:getCurrentDate(v),
 				style = 'item_choice',
 				check = RadioButton("radio", group, function(event, menuItem)
 						self:setDateFormat(v)
@@ -204,18 +185,6 @@ function dateFormatSetting(self, menuItem)
 
 	self:tieAndShowWindow(window)
 	return window
-end
-
-function _getDateHelpString(dateString)
-	dateString = string.gsub(dateString, '%%d', 'DD')
-	dateString = string.gsub(dateString, '%%m', 'MM')
-	dateString = string.gsub(dateString, '%%Y', 'YYYY')
-	dateString = string.gsub(dateString, '%%y', 'YY')
-	dateString = string.gsub(dateString, '%%a', 'WWW')
-	dateString = string.gsub(dateString, '%%A', 'WWWW')
-	dateString = string.gsub(dateString, '%%b', 'MMM')
-	dateString = string.gsub(dateString, '%%B', 'MMMM')
-	return dateString
 end
 
 function weekstartSetting(self, menuItem)

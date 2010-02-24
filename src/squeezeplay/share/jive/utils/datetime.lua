@@ -36,6 +36,7 @@ local string, type, tonumber, tostring = string, type, tonumber, tostring
 
 local os               = require("os")
 local math             = require("math")
+local locale           = require("jive.utils.locale")
 
 local log              = require("jive.utils.log").logger("squeezeplay")
 
@@ -48,6 +49,8 @@ local globalDateFormat = "%a, %B %d %Y"
 local globalShortDateFormat = "%d.%m.%Y"
 local globalHours = "12"
 local globalTimeZone = "GMT"
+
+local _globalStrings
 
 local timeSet = false
 
@@ -207,14 +210,32 @@ function getDateFormat(self)
 end
 
 --[[
-=head2 getCurrentTime(self)
+=head2 getCurrentDate(self)
 
 Returns a date string using the set date format.
 
 =cut
 --]]
-function getCurrentTime(self)
-	return os.date(globalDateFormat)
+function getCurrentDate(self, format)
+	local formattedDate = format or globalDateFormat
+	local date = os.date("*t")
+
+	-- now we're going to try to localise the date string...
+	if _globalStrings == nil then
+		_globalStrings = locale:readGlobalStringsFile()
+	end
+	
+	-- long day format
+	formattedDate = string.gsub(formattedDate, "%%A", tostring(_globalStrings:str("DAY_" .. date.wday)))
+	-- short day format
+	formattedDate = string.gsub(formattedDate, "%%a", tostring(_globalStrings:str("DAYSHORT_" .. date.wday)))
+	-- long month format
+	formattedDate = string.gsub(formattedDate, "%%B", tostring(_globalStrings:str("MONTH_" .. date.month)))
+	-- short month format
+	formattedDate = string.gsub(formattedDate, "%%b", tostring(_globalStrings:str("MONTHSHORT_" .. date.month)))
+
+	-- fill in the remaining items
+	return os.date(formattedDate)
 end
 
 --[[

@@ -392,3 +392,382 @@ KEYBOARD_DONE
 	RU	готово
 	SV	klart
 
+MONTH_1
+	CS	Leden
+	DA	Januar
+	DE	Januar
+	EN	January
+	ES	Enero
+	FI	Tammikuu
+	FR	Janvier
+	IT	Gennaio
+	NL	januari
+	NO	januar
+	PL	Styczeń
+	RU	Январь
+	SV	januari
+
+MONTH_2
+	CS	Únor
+	DA	Februar
+	DE	Februar
+	EN	February
+	ES	Febrero
+	FI	Helmikuu
+	FR	Février
+	IT	Febbraio
+	NL	februari
+	NO	februar
+	PL	Luty
+	RU	Февраль
+	SV	februari
+
+MONTH_3
+	CS	Březen
+	DA	Marts
+	DE	März
+	EN	March
+	ES	Marzo
+	FI	Maaliskuu
+	FR	Mars
+	IT	Marzo
+	NL	maart
+	NO	mars
+	PL	Marzec
+	RU	Март
+	SV	mars
+
+MONTH_4
+	CS	Duben
+	DA	april
+	DE	April
+	EN	April
+	ES	Abril
+	FI	Huhtikuu
+	FR	Avril
+	IT	Aprile
+	NL	april
+	NO	april
+	PL	Kwiecień
+	RU	Апрель
+	SV	april
+
+MONTH_5
+	CS	Květen
+	DA	maj
+	DE	Mai
+	EN	May
+	ES	Mayo
+	FI	Toukokuu
+	FR	Mai
+	IT	Maggio
+	NL	mei
+	NO	mai
+	PL	Maj
+	RU	Май
+	SV	maj
+
+MONTH_6
+	CS	Červen
+	DA	Juni
+	DE	Juni
+	EN	June
+	ES	Junio
+	FI	Kesäkuu
+	FR	Juin
+	IT	Giugno
+	NL	juni
+	NO	juni
+	PL	Czerwiec
+	RU	Июнь
+	SV	juni
+
+MONTH_7
+	CS	Červenec
+	DA	Juli
+	DE	Juli
+	EN	July
+	ES	Julio
+	FI	Heinäkuu
+	FR	Juillet
+	IT	Luglio
+	NL	juli
+	NO	juli
+	PL	Lipiec
+	RU	Июль
+	SV	juli
+
+MONTH_8
+	CS	Říjen
+	DA	august
+	DE	August
+	EN	August
+	ES	Agosto
+	FI	Elokuu
+	FR	Août
+	IT	Agosto
+	NL	augustus
+	NO	august
+	PL	Sierpień
+	RU	Август
+	SV	augusti
+
+MONTH_9
+	CS	Září
+	DA	september
+	DE	September
+	EN	September
+	ES	Septiembre
+	FI	Syyskuu
+	FR	Septembre
+	IT	Settembre
+	NL	september
+	NO	september
+	PL	Wrzesień
+	RU	Сентябрь
+	SV	september
+
+MONTH_10
+	CS	Říjen
+	DA	Oktober
+	DE	Oktober
+	EN	October
+	ES	Octubre
+	FI	Lokakuu
+	FR	Octobre
+	IT	Ottobre
+	NL	oktober
+	NO	oktober
+	PL	Październik
+	RU	Октябрь
+	SV	oktober
+
+MONTH_11
+	CS	Listopad
+	DA	november
+	DE	November
+	EN	November
+	ES	Noviembre
+	FI	Marraskuu
+	FR	Novembre
+	IT	Novembre
+	NL	november
+	NO	november
+	PL	Listopad
+	RU	Ноябрь
+	SV	november
+
+MONTH_12
+	CS	Prosinec
+	DA	december
+	DE	Dezember
+	EN	December
+	ES	Diciembre
+	FI	Joulukuu
+	FR	Décembre
+	IT	Dicembre
+	NL	december
+	NO	desember
+	PL	Grudzień
+	RU	Декабрь
+	SV	december
+
+MONTHSHORT_1
+# SLT - please use three character short version of the month January
+	DE	Jan
+	EN	Jan
+
+MONTHSHORT_2
+# SLT - please use three character short version of the month February
+	DE	Feb
+	EN	Feb
+
+MONTHSHORT_3
+# SLT - please use three character short version of the month March
+	DE	Mär
+	EN	Mar
+
+MONTHSHORT_4
+# SLT - please use three character short version of the month April
+	DE	Apr
+	EN	Apr
+
+MONTHSHORT_5
+# SLT - please use three character short version of the month May
+	DE	Mai
+	EN	May
+
+MONTHSHORT_6
+# SLT - please use three character short version of the month June
+	DE	Jun
+	EN	Jun
+
+MONTHSHORT_7
+# SLT - please use three character short version of the month July
+	DE	Jul
+	EN	Jul
+
+MONTHSHORT_8
+# SLT - please use three character short version of the month August
+	DE	Aug
+	EN	Aug
+
+MONTHSHORT_9
+# SLT - please use three character short version of the month September
+	DE	Sep
+	EN	Sep
+
+MONTHSHORT_10
+# SLT - please use three character short version of the month October
+	DE	Okt
+	EN	Oct
+
+MONTHSHORT_11
+# SLT - please use three character short version of the month November
+	DE	Nov
+	EN	Nov
+
+MONTHSHORT_12
+# SLT - please use three character short version of the month December
+	DE	Dez
+	EN	Dec
+
+DAY_1
+	CS	Neděle
+	DA	Søndag
+	DE	Sonntag
+	EN	Sunday
+	ES	Domingo
+	FI	sunnuntai
+	FR	Dimanche
+	IT	Domenica
+	NL	Zondag
+	NO	søndag
+	PL	Niedziela
+	RU	Воскресенье
+	SV	Söndag
+
+DAY_2
+	CS	Pondělí
+	DA	Mandag
+	DE	Montag
+	EN	Monday
+	ES	Lunes
+	FI	maanantai
+	FR	Lundi
+	IT	Lunedì
+	NL	Maandag
+	NO	Mandag
+	PL	Poniedziałek
+	RU	Понедельник
+	SV	Måndag
+
+DAY_3
+	CS	Úterý
+	DA	Tirsdag
+	DE	Dienstag
+	EN	Tuesday
+	ES	Martes
+	FI	tiistai
+	FR	Mardi
+	IT	Martedì
+	NL	Dinsdag
+	NO	Tirsdag
+	PL	Wtorek
+	RU	Вторник
+	SV	Tisdag
+
+DAY_4
+	CS	Středa
+	DA	Onsdag
+	DE	Mittwoch
+	EN	Wednesday
+	ES	Miércoles
+	FI	Keskiviikko
+	FR	Mercredi
+	IT	Mercoledì
+	NL	Woensdag
+	NO	Onsdag
+	PL	Środa
+	RU	Среда
+	SV	Onsdag
+
+DAY_5
+	CS	Čtvrtek
+	DA	Torsdag
+	DE	Donnerstag
+	EN	Thursday
+	ES	Jueves
+	FI	torstai
+	FR	Jeudi
+	IT	Giovedì
+	NL	Donderdag
+	NO	torsdag
+	PL	Czwartek
+	RU	Четверг
+	SV	Torsdag
+
+DAY_6
+	CS	Pátek
+	DA	Fredag
+	DE	Freitag
+	EN	Friday
+	ES	Viernes
+	FI	perjantai
+	FR	Vendredi
+	IT	Venerdì
+	NL	Vrijdag
+	NO	Fredag
+	PL	Piątek
+	RU	Пятница
+	SV	Fredag
+
+DAY_7
+	CS	Sobota
+	DA	Lørdag
+	DE	Samstag
+	EN	Saturday
+	ES	Sábado
+	FI	lauantai
+	FR	Samedi
+	IT	Sabato
+	NL	Zaterdag
+	NO	Lørdag
+	PL	Sobota
+	RU	Суббота
+	SV	Lördag
+
+DAYSHORT_1
+# SLT - please use three character short version of Sunday
+	DE	Son
+	EN	Sun
+	
+DAYSHORT_2
+# SLT - please use three character short version of Monday
+	DE	Mon
+	EN	Mon
+
+DAYSHORT_3
+# SLT - please use three character short version of Tuesday
+	DE	Die
+	EN	Tue
+
+DAYSHORT_4
+# SLT - please use three character short version of Wednesday
+	DE	Mit
+	EN	Wed
+
+DAYSHORT_5
+# SLT - please use three character short version of Thursday
+	DE	Don
+	EN	Thu
+
+DAYSHORT_6
+# SLT - please use three character short version of Friday
+	DE	Fre
+	EN	Fri
+
+DAYSHORT_7
+# SLT - please use three character short version of Saturday
+	DE	Sam
+	EN	Sat
