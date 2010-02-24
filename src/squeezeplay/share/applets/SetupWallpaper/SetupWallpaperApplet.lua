@@ -402,7 +402,6 @@ function showBackground(self, wallpaper, playerId, force)
 		-- get the absolute file path for whatever we have
 		wallpaper = System:findFile(wallpaper)
 		if wallpaper ~= nil then 
-			-- saved image from imageviewer
 			srf = Tile:loadImage(wallpaper)
 		end
 	end
@@ -441,6 +440,7 @@ function setBackground(self, wallpaper, playerId, force)
 		end
 
 		self:getSettings()[playerId] = wallpaper
+		self:storeSettings()
 	end
 
 	self:showBackground(wallpaper, playerId, force)
