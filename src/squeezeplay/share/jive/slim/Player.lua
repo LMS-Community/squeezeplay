@@ -1863,6 +1863,11 @@ function isConnected(self)
 	return self.slimServer and self.slimServer:isConnected() and self.info.connected
 end
 
+-- Has the connection attempt actually failed
+-- stub that can be overridden in subclass
+function hasConnectionFailed(self)
+	return false
+end
 
 -- return true if the player is available, that is when it is connected
 -- to SqueezeCenter, or in configuration mode (udap or wlan adhoc)

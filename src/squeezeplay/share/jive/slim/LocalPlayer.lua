@@ -247,6 +247,12 @@ function isConnected(self)
 	return self.slimproto:isConnected() and Player.isConnected(self)
 end
 
+-- Has the connection attempt actually failed
+function hasConnectionFailed(self)
+	return self.slimproto:hasConnectionFailed()
+end
+
+
 
 function setSignalStrength(self, signalStrength)
 	self.playback:setSignalStrength(signalStrength)

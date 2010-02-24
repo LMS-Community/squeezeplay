@@ -363,9 +363,10 @@ function __init(self, jnt, heloPacket)
 	local obj = oo.rawnew(self, {})
 
 	-- connection state UNCONNECTED / CONNECTED
-	obj.state          = UNCONNECTED
-	obj.capabilities  = {}
-	obj.txqueue  = {}
+	obj.state            = UNCONNECTED
+	obj.connectionFailed = false
+	obj.capabilities     = {}
+	obj.txqueue          = {}
 
 	-- helo packet sent on connection
 	obj.heloPacket     = heloPacket
@@ -458,6 +459,7 @@ function connectIp(self, serverip, slimserverip)
 
 	log:info("server told us to connect to ", serverip)
 
+	self.connectionFailed = false
 	_connectToAddr(self, serverip)
 end
 
@@ -475,6 +477,7 @@ function connect(self, server)
 		end
 	end
 
+	self.connectionFailed = false
 	_connectToAddr(self, serverip)
 end
 
@@ -512,6 +515,7 @@ function connectTask(self, serverip)
 
 		-- We got a packet so we must be connected
 		self.state = CONNECTED
+		self.connectionFailed = false
 
 		log:debug("read opcode=", opcode, " #", #data)
 
@@ -663,6 +667,10 @@ function isConnected(self)
 	 return self.state == CONNECTED
 end
 
+-- Has the connection attempt actually failed
+function hasConnectionFailed(self)
+	return self.connectionFailed
+end
 
 -- Set the callback to get a status packet
 function statusPacketCallback(self, callback)
@@ -767,6 +775,7 @@ function _handleDisconnect(self, reason)
 	self:disconnect()
 
 	self.state = CONNECTING
+	self.connectionFailed = true
 	self.reconnectTimer:restart(interval)
 end
 
@@ -777,7 +786,7 @@ function _handleTimer(self)
 		return
 	end
 
-	self:connect()
+	self:_connectToAddr(self.serverip)
 end
 
 
