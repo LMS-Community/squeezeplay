@@ -67,6 +67,8 @@ function readImageList(self)
 	local server = self.serverData.server
 	log:debug("readImageList: server:", server, " id: ", self.serverData.id, " playerId: ", playerId)
 
+	self.lstReady = false
+	
 	server:request(
 		imgFilesSink(self),
 		playerId,
@@ -76,7 +78,7 @@ end
 
 function imgFilesSink(self)
 	return function(chunk, err)
-	       	if err then
+		if err then
 			log:warn("err in sink ", err)
 
 		elseif chunk then
@@ -110,6 +112,7 @@ end
 
 function nextImage(self)
 	if #self.imgFiles == 0 then
+		self:readImageList()
 		self:emptyListError()
 		return
 	end

@@ -694,29 +694,23 @@ function _renderImage(self)
 		--no iconbar
 		self.window:setShowFrameworkWidgets(false)
 
-		-- start timer for next photo in 'delay' milliseconds
-		local delay = self:getSettings()["delay"]
-		self.nextSlideTimer = self.window:addTimer(delay,
-			function()
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
-			end)
 	else
 		if self.imageError == nil then
 			self.imageError = tostring(self.imgSource:getErrorMessage())
-			log:info("Invalid image object found: " .. self.imageError)
+			log:error("Invalid image object found: " .. self.imageError)
 
 			self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), self.imageError)
 		end
-		
-		self.nextSlideTimer = Timer(self:getSettings()["delay"],
-			function()
-				self.imgSource:nextImage(self:getSettings()["ordering"])
-				self:displaySlide()
-			end)
-
-		self.nextSlideTimer:restart()
 	end
+
+	-- start timer for next photo in 'delay' milliseconds
+	local delay = self:getSettings()["delay"]
+	self.nextSlideTimer = self.window:addTimer(delay,
+		function()
+			self.imgSource:nextImage(self:getSettings()["ordering"])
+			self:displaySlide()
+		end
+	)
 	
 	log:debug("image rendering done")
 	self.isRendering = false
