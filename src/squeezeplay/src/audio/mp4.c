@@ -600,7 +600,7 @@ size_t mp4_open(struct decode_mp4 *mp4)
 
 static inline void packet_size(struct mp4_track *track, size_t *pos, size_t *len)
 {
-	if (track->sample_count < track->sample_num) {
+	if (track->sample_count <= track->sample_num) {
 		*pos = 0;
 		*len = 0;
 		return;
