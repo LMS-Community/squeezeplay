@@ -3290,7 +3290,7 @@ end
 
 function showCurrentTrack()
 	local currentIndex = _player:getPlaylistCurrentIndex()
-	showTrack(currentIndex)
+	showTrack(currentIndex, true)
 end
 
 function setPresetCurrentTrack(self, preset)
@@ -3313,7 +3313,7 @@ function setPresetCurrentTrack(self, preset)
 end
 
 
-function showTrack(index)
+function showTrack(index, currentTrack)
 	local serverIndex = index - 1
 	local jsonAction = {
 		cmd = { 'contextmenu' },
@@ -3328,6 +3328,9 @@ function showTrack(index)
 			context = 'playlist',
 		},
 	}
+	if currentTrack then
+		jsonAction.params.currentTrack = 1
+	end
 	-- determine style
 	local newWindowSpec = {
 		['isContextMenu']    = true,
