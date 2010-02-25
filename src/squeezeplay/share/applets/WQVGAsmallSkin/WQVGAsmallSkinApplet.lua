@@ -3228,13 +3228,6 @@ function skin(self, s)
 		},
 	})
 
-	-- Define empty progress background
-	local _songProgressBackgroundEmpty = _loadHTile(self, {
-               nil,
-               nil,
-               nil,
-	})
-
 	-- Visualizer: Container with titlebar, progressbar and controls.
 	--  The space between title and controls is used for the visualizer.
 	s.nowplaying_visualizer_common = _uses(s.nowplaying, {
@@ -3308,7 +3301,7 @@ function skin(self, s)
 				zOrder = 10,
 				padding = { 0, 19, 0, 15 },
 				horizontal = 1,
-				bgImg = _songProgressBackgroundEmpty,
+				bgImg = false,
 				img = _vizProgressBar,
                 		pillImg = _vizProgressBarPill,
 			},
