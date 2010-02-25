@@ -183,8 +183,9 @@ function showInitWindow(self)
 				return EVENT_CONSUME
 			end)
 			
+	self.initWindow = popup
+			
 	self:tieAndShowWindow(popup, Window.transitionFadeIn)
-
 end
 
 function startSlideshowWhenReady(self)
@@ -455,10 +456,16 @@ end
 
 function closeRemoteScreensaver(self)
 	self:_stopTimers()
+	
+	if self.initWindow then
+		self.initWindow:hide()
+		self.initWindow = nil
+	end
+
 	if self.window then
 		self.window:hide()
+		self.window = nil
 	end
-	self.window = nil
 end
 
 function free(self)

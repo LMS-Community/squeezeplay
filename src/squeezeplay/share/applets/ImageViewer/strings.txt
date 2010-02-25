@@ -62,6 +62,21 @@ IMAGE_VIEWER_LIST_NOT_READY
 	RU	Попытки чтения / создания списка изображений оказались неудачными. Проверьте настройки средства просмотра изображений.
 	SV	Flera försök att läsa/skapa bildlistan misslyckades. Kontrollera inställningarna för Bildvisaren.
 
+IMAGE_VIEWER_LIST_NOT_READY_SERVER
+	CS	Několik pokusů o čtení / vytvoření seznamu obrázků selhalo.
+	DA	Forsøgene på at læse/oprette billedlisten mislykkedes.
+	DE	Mehrere Versuche, die Bilderliste zu öffnen / zu erstellen, sind fehlgeschlagen.  Überprüfen Sie die Netzwerkverbindung.
+	EN	Several attempts at reading / creating the image list failed.  Please check the network connection.
+	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes.
+	FI	Yritykset lukea tai luoda kuvaluettelo epäonnistuivat.
+	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué.
+	IT	Numerosi tentativi di leggere/creare l'immagine non sono riusciti.
+	NL	Lezen/aanmaken van de beeldenlijst is meermaals mislukt.
+	NO	Flere forsøk på å lese/opprette bildelisten, mislyktes.
+	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.
+	RU	Попытки чтения / создания списка изображений оказались неудачными.
+	SV	Flera försök att läsa/skapa bildlistan misslyckades.
+
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
 	DA	Indstillinger for billedfremviser
