@@ -257,13 +257,28 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 		
 		if (subtext ~= nil) then popup:addWidget(Textarea("subtext", self:string(subtext))) end
 		
-		popup:showBriefly(time,
-			function()
-				_updateStatus(self)
-			end,
-			Window.transitionPushPopupUp,
-			Window.transitionPushPopupDown
-		)
+		-- don't hide starting SC popup until scan.json file is detected
+		if action == 'start' or action == 'restart' then
+			local count = 0
+			popup:addTimer(1000,
+		                function()
+					count = count + 1
+					local scanData = self:_scanStatus()
+		                        if count > 5 and ( scanData or count == 60) then
+						popup:hide()
+					end
+				end
+			)
+			popup:show()
+                else
+			popup:showBriefly(time,
+				function()
+					_updateStatus(self)
+				end,
+				Window.transitionPushPopupUp,
+				Window.transitionPushPopupDown
+			)
+		end
 	end
 
 	if action == 'stop' then
