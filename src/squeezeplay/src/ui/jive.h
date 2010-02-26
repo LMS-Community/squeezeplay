@@ -376,7 +376,6 @@ JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double
 JiveSurface *jive_surface_zoomSurface(JiveSurface *srf, double zoomx, double zoomy, int smooth);
 JiveSurface *jive_surface_shrinkSurface(JiveSurface *srf, int factorx, int factory);
 void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 col);
-int jive_surface_getPixelColor(JiveSurface *srf, Sint16 x, Sint16 y);
 void jive_surface_hlineColor(JiveSurface *srf, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color);
 void jive_surface_vlineColor(JiveSurface *srf, Sint16 x, Sint16 y1, Sint16 y2, Uint32 color);
 void jive_surface_rectangleColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col);
