@@ -127,6 +127,9 @@ static struct jive_keyir irmap[] = {
 	{ SDLK_UNKNOWN,	 0x0        },
 };
 
+// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+//  dirty areas of labels with scrolling text are not always correct.
+static int pixel_offset_y = 0;
 
 static int process_event(lua_State *L, SDL_Event *event);
 static void process_timers(lua_State *L);
@@ -417,6 +420,9 @@ static int _draw_screen(lua_State *L) {
 	Uint32 t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 	clock_t c0 = 0, c1 = 0;
 	bool_t standalone_draw, drawn = false;
+	// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+	//  dirty areas of labels with scrolling text are not always correct.
+	int item_h = 0;
 
 
 	JIVEL_STACK_CHECK_BEGIN(L);
@@ -438,7 +444,7 @@ static int _draw_screen(lua_State *L) {
 		JIVEL_STACK_CHECK_ASSERT(L);
 		return 0;
 	}
-	lua_rawgeti(L, -1, 1);
+	lua_rawgeti(L, -1, 1);	// topwindow
 
 	if (perfwarn.screen) {
 		t0 = jive_jiffies();
@@ -478,6 +484,33 @@ static int _draw_screen(lua_State *L) {
 				frame = lua_tointeger(L, -1) - 1;
 				
 				if (frame == 0) {
+
+					// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+					//  dirty areas of labels with scrolling text are not always correct.
+					// Find parent of parent of widget to test if it's a menu to get item height
+					lua_getfield(L, -5, "parent");
+					if (lua_isnil(L, -1)) {
+						lua_pop(L, 1);
+					} else {
+						lua_getfield(L, -1, "parent");
+						if (lua_isnil(L, -1)) {
+							lua_pop(L, 2);
+						} else {
+							lua_getglobal(L, "tostring");
+							lua_pushvalue(L, -2);
+							lua_call(L, 1, 1);
+							if( (strncmp(lua_tostring(L, -1), "Menu(", 5) == 0)
+							 || (strncmp(lua_tostring(L, -1), "SimpleMenu(", 11) == 0)
+							) {
+								lua_getfield(L, -2, "itemHeight");
+								item_h = lua_tointeger(L, -1);
+								lua_pop(L, 1);
+							}
+							lua_pop(L, 1);
+							lua_pop(L, 2);
+						}
+					}
+
 					lua_rawgeti(L, -2, 1); // function
 					lua_pushvalue(L, -6); // widget
 					lua_call(L, 1, 0);
@@ -522,6 +555,23 @@ static int _draw_screen(lua_State *L) {
 
 		/* only redraw dirty region for non standalone draws */
 		if (!standalone_draw) {
+			// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+			//  dirty areas of labels with scrolling text are not always correct.
+			// My efforts to fix the dirty area failed on Fab4 (ok on Desktop) due to
+			//  double buffering. So right now, when this situation occurs then redraw
+			//  the complete screen to make sure everything gets redrawn properly.
+			// FIXME: Only redraw necessary areas, i.e. calculate dirty area correctly
+			// Redraw complete screen when:
+			// - item_h is bigger than 0 - most likely a SimpleMenu or Menu item
+			// - item_h has the same hight as dirty_region.h
+			// - pixel_offser_y is not 0 - menu items not snapped to grid
+			if ((item_h > 0) && (jive_dirty_region.h == item_h) && (pixel_offset_y != 0)) {
+				last_dirty_region.x = 0;
+				last_dirty_region.y = 0;
+				last_dirty_region.w = screen_w;
+				last_dirty_region.h = screen_h;
+			}
+
 			jive_rect_union(&jive_dirty_region, &last_dirty_region, &dirty);
 			jive_surface_set_clip(srf, &dirty);
 		}
@@ -673,6 +723,21 @@ int jiveL_redraw(lua_State *L) {
 	lua_pop(L, 1);
 
 	jive_redraw(&r);
+
+	return 0;
+}
+
+
+// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+//  dirty areas of labels with scrolling text are not always correct.
+int jiveL_set_pixel_offset_y(lua_State *L) {
+	/* stack is:
+	 * 1: framework
+	 * 2: pixel offset y
+	 */
+
+	pixel_offset_y = lua_tointeger(L, -1);
+	lua_pop(L, 1);
 
 	return 0;
 }
@@ -1475,6 +1540,9 @@ static const struct luaL_Reg core_methods[] = {
 	{ "draw", jiveL_draw },
 	{ "updateScreen", jiveL_update_screen },
 	{ "reDraw", jiveL_redraw },
+	// Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+	//  dirty areas of labels with scrolling text are not always correct.
+	{ "setPixelOffsetY", jiveL_set_pixel_offset_y },
 	{ "pushEvent", jiveL_push_event },
 	{ "dispatchEvent", jiveL_dispatch_event },
 	{ "getTicks", jiveL_get_ticks },
