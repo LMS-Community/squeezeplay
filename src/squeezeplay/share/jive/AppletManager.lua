@@ -369,7 +369,6 @@ local function _evalMetas()
 				entry.metaRegistered = false
 				entry.metaLoaded = false
 				log:error("Error configuring meta for ", entry.appletName, ":", resOrErr)
-				return nil
 			end
 		end
 	end
