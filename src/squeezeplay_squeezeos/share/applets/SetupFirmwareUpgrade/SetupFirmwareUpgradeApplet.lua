@@ -320,7 +320,7 @@ end
 function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
 	
 	if self.updating then
-		log:warn("Update is already running... please don't disturb!")
+		log:info("Update is already running... please don't disturb!")
 		return
 	end
 
