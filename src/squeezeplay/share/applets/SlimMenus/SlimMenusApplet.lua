@@ -318,7 +318,17 @@ end
 
 --register remote ss only if it doesn't exist. Only current server responses may replace existing items.
 function  _registerRemoteScreensaver(self, serverData)
-	if  not _playerScreensaverRegistrations[serverData.id] then
+
+	-- when switching music sources, re-register screensavers as the old server might go away
+	if _playerScreensaverRegistrations[serverData.id] and _playerScreensaverRegistrations[serverData.id].server ~= serverData.server then
+		log:debug("ss already registered, but from different server: ", serverData.id, 
+		          " - new: ", serverData.server, 
+		          " - old: ", _playerScreensaverRegistrations[serverData.id].server)
+		appletManager:callService("unregisterRemoteScreensaver", serverData.id)
+		_playerScreensaverRegistrations[serverData.id] = nil
+	end
+
+	if not _playerScreensaverRegistrations[serverData.id] then 
 		 _playerScreensaverRegistrations[serverData.id] = serverData
 		appletManager:callService("registerRemoteScreensaver", serverData)
 	else
