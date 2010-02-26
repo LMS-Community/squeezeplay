@@ -2010,8 +2010,6 @@ function skin(self, s)
 			h = 52,
 			padding = {10,10,10,5},
 			bgImg = false,
-			--[[ XXX: 43 pixel wide cancel button looked odd with full width back button added (Bug 14968)
-			-- leaving this code here for now in case there's a desire to bring it back
 			button_cancel  = {
 				layer = LAYER_TITLE,
 				w       = 43,
@@ -2024,7 +2022,6 @@ function skin(self, s)
 					w       = 43,
 				},
 			},
-			--]]
 			text = {
 				layer = LAYER_TITLE,
 				w = WH_FILL,
