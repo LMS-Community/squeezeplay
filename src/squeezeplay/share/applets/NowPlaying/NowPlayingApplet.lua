@@ -123,7 +123,81 @@ function init(self)
 	self.player = false
 	self.lastVolumeSliderAdjustT = 0
 	self.cumulativeScrollTicks = 0
+
+	local settings      = self:getSettings()
+	self.scrollText     = settings["scrollText"]
+	self.scrollTextOnce = settings["scrollTextOnce"]
+
 end
+
+
+function settingsShow(self)
+	local window = Window("text_list", self:string('SCREENSAVER_SCROLLMODE') )
+	local group = RadioGroup()
+
+	local menu = SimpleMenu("menu", {
+		{
+			text = self:string("SCREENSAVER_SCROLLMODE_DEFAULT"),
+			style = 'item_choice',
+			check = RadioButton("radio", 
+				group, 
+				function(event)
+					self:setScrollBehavior("always")
+				end,
+				self.scrollText and not self.scrollTextOnce
+			)
+		},
+		{
+			text = self:string("SCREENSAVER_SCROLLMODE_SCROLLONCE"),
+			style = 'item_choice',
+			check = RadioButton("radio", 
+				group, 
+				function(event)
+					self:setScrollBehavior("once")
+				end,
+				self.scrollText and self.scrollTextOnce
+			)
+		},
+		{
+			text = self:string("SCREENSAVER_SCROLLMODE_NOSCROLL"),
+			style = 'item_choice',
+			check = RadioButton("radio", 
+				group, 
+				function(event)
+					self:setScrollBehavior("never")
+				end,
+				not self.scrollText
+			)
+		},
+	})
+
+	window:addWidget(menu)
+	window:show()
+end
+
+
+function setScrollBehavior(self, setting)
+	if setting == 'once' then
+		self.scrollText     = true
+		self.scrollTextOnce = true
+		self:_addScrollSwitchTimer()	
+	elseif setting == 'never' then
+		self.scrollText     = false
+		self.scrollTextOnce = false
+		self.scrollSwitchTimer = nil
+	else
+		self.scrollText     = true
+		self.scrollTextOnce = false
+		self:_addScrollSwitchTimer()	
+	end
+
+	local settings = self:getSettings()
+
+	settings["scrollText"]     = self.scrollText
+	settings["scrollTextOnce"] = self.scrollTextOnce
+	self:storeSettings()
+end
+
 
 function notify_playerShuffleModeChange(self, player, shuffleMode)
 	if player ~= self.player then
@@ -132,6 +206,7 @@ function notify_playerShuffleModeChange(self, player, shuffleMode)
 	log:debug("notify_playerShuffleModeChange(): ", shuffleMode)
 	self:_updateShuffle(shuffleMode)
 end
+
 
 function notify_playerRepeatModeChange(self, player, repeatMode)
 	if player ~= self.player then
@@ -614,7 +689,7 @@ function _updateTrack(self, trackinfo, pos, length)
 			artistalbum = album
 		end
 
-		if self.scrollSwitchTimer:isRunning() then
+		if self.scrollSwitchTimer and self.scrollSwitchTimer:isRunning() then
 			self.scrollSwitchTimer:stop()
 		end
 		
@@ -622,7 +697,11 @@ function _updateTrack(self, trackinfo, pos, length)
 		self.albumTitle:setValue(album)
 		self.artistTitle:setValue(artist)
 		self.artistalbumTitle:setValue(artistalbum)
-		self.trackTitle:animate(true)
+		if self.scrollText then
+			self.trackTitle:animate(true)
+		else
+			self.trackTitle:animate(false)
+		end
 		self.artistTitle:animate(false)
 		self.albumTitle:animate(false)
 		self.artistalbumTitle:animate(false)
@@ -1060,7 +1139,8 @@ function _createUI(self)
 		npalbum = self.albumTitleButton,
 	})
 
-	if not self.scrollSwitchTimer then
+	if not self.scrollSwitchTimer and self.scrollText then
+		self:_addScrollSwitchTimer()
 		self.scrollSwitchTimer = Timer(3000,
 					function()
 						self.trackTitle:animate(true)
@@ -1073,7 +1153,8 @@ function _createUI(self)
 
 	self.trackTitle.textStopCallback = 
 		function(label) 
-			if not self.scrollSwitchTimer:isRunning() then
+			if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() then
+				log:debug('trackTitle animation done, animate artistalbum/artistTitle')
 				self.artistalbumTitle:animate(true)
 				self.artistTitle:animate(true)
 				self.trackTitle:animate(false)
@@ -1087,15 +1168,18 @@ function _createUI(self)
 			function(label)
 				self.artistalbumTitle:animate(false)
 				self.trackTitle:animate(false)
-				if not self.scrollSwitchTimer:isRunning() then
-					self.scrollSwitchTimer:restart()
+				if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() and 
+					not self.scrollTextOnce then
+						log:debug('artistAlbum animation done, restarting timer')
+						self.scrollSwitchTimer:restart()
 				end
 			end
 
 	else
 		self.artistTitle.textStopCallback =
 			function(label)
-				if not self.scrollSwitchTimer:isRunning() then
+				if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() then
+					log:debug('artist animation done, animate album text')
 					self.trackTitle:animate(false)
 					self.artistTitle:animate(false)
 					self.albumTitle:animate(true)
@@ -1104,11 +1188,14 @@ function _createUI(self)
 	
 		self.albumTitle.textStopCallback =
 			function(label)
+				log:warn('in albumTitle textStop callback')
 				self.artistTitle:animate(false)
 				self.albumTitle:animate(false)
 				self.trackTitle:animate(false)
-				if not self.scrollSwitchTimer:isRunning() then
-					self.scrollSwitchTimer:restart()
+				if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() and 
+					not self.scrollTextOnce then
+						log:debug('album animation done, restarting timer')
+						self.scrollSwitchTimer:restart()
 				end
 			end
 	end
@@ -1552,6 +1639,24 @@ function showNowPlaying(self, transition, direct)
 
 end
 
+
+function _addScrollSwitchTimer(self)
+	if not self.scrollSwitchTimer then
+		log:debug('Adding scrollSwitchTimer for scrolling text, self.scrollText: ', self.scrollText, ' self.scrollTextOnce: ', self.scrollTextOnce)
+		self.scrollSwitchTimer = Timer(3000,
+			function()
+				self.trackTitle:animate(true)
+				self.artistalbumTitle:animate(false)
+				self.artistTitle:animate(false)
+				self.albumTitle:animate(false)
+			end, 
+			true
+		)
+	else
+		log:debug('_addScrollSwitchTimer() called but Timer object already exists: ', self.scrollSwitchTimer)
+	end
+end
+	
 
 -- internal method to decide if track information is from the 'text' field or from 'track', 'artist', and 'album'
 -- if it has the three fields, return a table

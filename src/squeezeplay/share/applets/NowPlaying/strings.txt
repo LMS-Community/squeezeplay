@@ -137,3 +137,51 @@ SCREENSAVER_ARTWORK_LARGE
 	RU	Крупный
 	SV	Stor
 
+SCREENSAVER_SCROLLMODE
+	EN	Now Playing Text Scrolling
+
+SCREENSAVER_SCROLLMODE_DEFAULT
+	CS	Standardní rolování
+	DA	Standardrulning
+	DE	Standardlaufschrift
+	EN	Standard scrolling
+	ES	Desplazamiento estándar
+	FI	Normaali vieritys
+	FR	Mode de défilement par défaut
+	IT	Scorrimento normale
+	NL	Tekst laten lopen
+	NO	Vanlig rulling
+	PL	Przewijanie standardowe
+	RU	Стандартная прокрутка
+	SV	Standardrullning
+
+SCREENSAVER_SCROLLMODE_SCROLLONCE
+	CS	Rolovat jednou a zastavit
+	DA	Rul én gang og stop
+	DE	Einmal Laufschrift, dann anhalten
+	EN	Scroll once and stop
+	ES	Desplazar una vez y detener
+	FI	Vieritä kerran ja pysähdy
+	FR	Défiler une fois seulement
+	IT	Scorri solo una volta
+	NL	Tekst één keer laten lopen, dan stoppen
+	NO	Rull én gang og stans
+	PL	Przewiń raz i zatrzymaj
+	RU	Прокрутить и остановить
+	SV	Rulla en gång och stanna
+
+SCREENSAVER_SCROLLMODE_NOSCROLL
+	CS	Nerolovat
+	DA	Rul ikke
+	DE	Keine Laufschrift
+	EN	Do not scroll
+	ES	No desplazar
+	FI	Älä vieritä
+	FR	Pas de défilement
+	IT	Non scorrere
+	NL	Tekst niet laten lopen
+	NO	Ikke rull
+	PL	Nie przewijaj
+	RU	Без прокрутки
+	SV	Rulla inte
+
