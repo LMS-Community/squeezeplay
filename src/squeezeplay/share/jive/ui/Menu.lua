@@ -38,6 +38,7 @@ local debug                = require("jive.utils.debug")
                            
 local table                = require("jive.utils.table")
 local Framework            = require("jive.ui.Framework")
+local System               = require("jive.System")
 local Event                = require("jive.ui.Event")
 local Widget               = require("jive.ui.Widget")
 local Label                = require("jive.ui.Label")
@@ -1284,6 +1285,11 @@ end
 
 function setPixelOffsetY(self, value)
 	self.pixelOffsetY = value
+	-- Bug: 15557 - If objects are not snapped to grid (smooth scroll on Fab4)
+	--  dirty areas of labels with scrolling text are not always correct.
+	if System:getMachine() == "fab4" then
+		Framework:setPixelOffsetY( value)
+	end
 end
 
 
