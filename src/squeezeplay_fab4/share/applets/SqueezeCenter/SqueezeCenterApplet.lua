@@ -1002,7 +1002,7 @@ end
 
 function restartServer(self, silent)
 	log:warn('Restarting squeezebox server')
-	self:_squeezecenterAction("icon_connected", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart", silent)
+	self:_squeezecenterAction("icon_connecting", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart", silent)
 
 end
 
