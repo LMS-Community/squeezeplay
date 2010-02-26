@@ -79,7 +79,12 @@ function readImageList(self)
 	else
 		self.imgReady = false
 		log:warn("readImageList: server ", server, " is not available - exiting screensaver")
-		self:listNotReadyError()
+
+		local popup = self:listNotReadyError()
+		popup:addTimer(self.applet:getSettings()["delay"], function()
+			popup:hide()
+			popup = nil
+		end)
 	end
 end
 
@@ -293,7 +298,7 @@ function getErrorMessage(self)
 end
 
 function listNotReadyError(self)
-	self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_LIST_NOT_READY_SERVER"))
+	return self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_LIST_NOT_READY_SERVER"))
 end
 
 --[[
