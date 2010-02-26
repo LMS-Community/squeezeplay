@@ -318,6 +318,12 @@ end
 
 --service method
 function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
+	
+	if self.updating then
+		log:warn("Update is already running... please don't disturb!")
+		return
+	end
+
 	local upgrades, force, disallowScreensaver
 	if not server then
 		-- in "SC Discovery Mode"
@@ -500,6 +506,8 @@ function _upgrade(self, url)
 	if not _checkBattery() then
 		return self:_chargeBattery()
 	end
+	
+	self.updating = true
 
 	self.popup = Popup("update_popup")
 
@@ -570,6 +578,7 @@ function _upgradeFailed(self)
 	-- unblock keys
 	Framework:removeListener(self.upgradeListener)
 	self.upgradeListener = nil
+	self.updating = false
 
 	-- reconnect to server
 	appletManager:callService("connectPlayer")
@@ -605,6 +614,10 @@ function _upgradeFailed(self)
 	self:tieAndShowWindow(window)
 end
 
+function free(self)
+	self.updating = false
+	return true
+end
 
 --[[
 
