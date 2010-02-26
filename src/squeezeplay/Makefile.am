@@ -69,6 +69,7 @@ TGZ_VERSION_TEXT = $(shell cat ../squeezeplay.version)-$(shell svnversion -n .. 
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
+DMG_IMAGE_DIR_MOUNTPOINT = $(DMG_TEMP_DIR)-$(VERSION_TEXT)
 DMG_TMP_IMAGE_FILENAME = $(DMG_TEMP_DIR).dmg
 DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
@@ -121,11 +122,12 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	rm -rf $(DMG_TEMP_DIR)
 	-rm $(DMG_TMP_IMAGE_FILENAME)
 	mkdir -p $(DMG_TEMP_DIR)
-	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
-	hdiutil create -fs HFS+ -layout SPUD -volname "$(DMG_IMAGE_DIR)" -size 100m "$(DMG_TEMP_DIR)"
+	-hdiutil detach "/Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)"
+	-rm -rf "/Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)"
+	hdiutil create -fs HFS+ -layout SPUD -volname "$(DMG_IMAGE_DIR_MOUNTPOINT)" -size 100m "$(DMG_TEMP_DIR)"
 	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
-	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR)
-	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR)"
+	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)
+	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)"
 	hdiutil convert -ov -format UDZO "$(DMG_TMP_IMAGE_FILENAME)" -o "$(DMG_IMAGE_FILENAME)"
 	rm -rf $(DMG_IMAGE_DIR)
 	rm -rf $(DMG_TEMP_DIR)
