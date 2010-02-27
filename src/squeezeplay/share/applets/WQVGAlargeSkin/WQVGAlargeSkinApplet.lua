@@ -586,7 +586,9 @@ function skin(self, s)
 			sh = NONE,
 		}
 	}
-
+	s.title.textButton = _uses(s.title.text, {
+		text = s.title.text
+	})
 
 	s.text_block_black = {
 		bgImg = Tile:fillColor(0x000000ff),
@@ -642,6 +644,7 @@ function skin(self, s)
 	}
 
 	s.item_play = _uses(s.item, { 
+		order = { 'icon', 'text' },
 		arrow = { img = false },
 	})
 	s.item_add = _uses(s.item, { 
@@ -788,6 +791,7 @@ function skin(self, s)
 			arrow = smallSpinny
 		}),
 		item_play = _uses(s.pressed.item_play, {
+			order = { 'icon', 'text', 'arrow' },
 			arrow = smallSpinny
 		}),
 		item_add = _uses(s.pressed.item_add, {
@@ -1048,6 +1052,9 @@ function skin(self, s)
 			},
 		},
 	})
+	s.text_list.title.textButton = _uses(s.text_list.title.text, {
+		text = s.text_list.title.text,
+	})
 
 	-- choose player window. identical to text_list on all windows except WQVGAlarge, which needs to show the icon
 	s.choose_player = _uses(s.text_list, {
@@ -1208,6 +1215,7 @@ function skin(self, s)
 		},
 	})
 	s.icon_list.menu.item_play = _uses(s.icon_list.menu.item, { 
+		order = { 'icon', 'text' },
 		arrow = { img = false },
 	})
 	s.icon_list.menu.albumcurrent = _uses(s.icon_list.menu.item_play, {

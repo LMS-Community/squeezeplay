@@ -819,6 +819,18 @@ function skin(self, s)
 		}
 	}
 
+	s.title.textButton = _uses(s.title.text, {
+		bgImg = titlebarButtonBox,
+		text = _uses(s.title.text, { 
+			padding = { 4, 15, 4, 15 },
+		}),
+	})
+
+	s.title.pressed = {}
+	s.title.pressed.textButton = _uses(s.title.textButton, {
+		bgImg = pressedTitlebarButtonBox,
+	})
+
 	s.text_block_black = {
 		bgImg = Tile:fillColor(0x000000ff),
 		position = LAYOUT_NORTH,
@@ -1471,7 +1483,7 @@ function skin(self, s)
 			line = {
 				{
 					font = _boldfont(18),
-					height = 21,
+					height = 18,
 				},
 				{
 					font = _font(14),
@@ -1479,6 +1491,18 @@ function skin(self, s)
 				},
 			},
                 },
+	})
+
+	s.text_list.title.textButton = _uses(s.text_list.title.text, {
+		bgImg = titlebarButtonBox,
+		text = _uses(s.text_list.title.text, { 
+			padding = { 4, 15, 4, 15 },
+		}),
+	})
+	s.text_list.title.pressed = {}
+	s.text_list.title.pressed.textButton = _uses(s.text_list.title.text, {
+		bgImg = pressedTitlebarButtonBox,
+		text = _uses(s.text_list.title.text, { h = WH_FILL }),
 	})
 
 	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge
@@ -1658,7 +1682,6 @@ function skin(self, s)
 			},
 		},
 	})
-
 
 	s.icon_list.menu.item_checked = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
