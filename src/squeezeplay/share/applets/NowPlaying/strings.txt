@@ -138,7 +138,19 @@ SCREENSAVER_ARTWORK_LARGE
 	SV	Stor
 
 SCREENSAVER_SCROLLMODE
-	EN	Now Playing Text Scrolling
+	CS	Režim rolování
+	DA	Rullefunktion
+	DE	Laufschriftmodus
+	EN	Scroll Mode
+	ES	Modo de desplazamiento
+	FI	Vieritystila
+	FR	Mode de défilement
+	IT	Modalità scorrimento
+	NL	Tekstloopmodus
+	NO	Rullemodus
+	PL	Tryb przewijania
+	RU	Режим прокрутки
+	SV	Rullningsläge
 
 SCREENSAVER_SCROLLMODE_DEFAULT
 	CS	Standardní rolování

@@ -26,7 +26,7 @@ function registerApplet(self)
 	jiveMain:addItem(
 		self:menuItem(
 			'appletNowPlayingScrollMode', 
-			'screenSettings', 
+			'screenSettingsNowPlaying', 
 			'SCREENSAVER_SCROLLMODE', 
 			function(applet, ...) 
 				applet:settingsShow(...) 
