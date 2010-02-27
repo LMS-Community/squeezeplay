@@ -2524,7 +2524,7 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 			window:setTitleWidget(titleWidget)
 			--FIXME: the animation in the textButton widget yields a broken UI
 			-- Possibly part of Bug 15557
-			--titleText:animate(false)
+			titleText:animate(false)
 			titleWidgetComplete = true
 		end
 	end
