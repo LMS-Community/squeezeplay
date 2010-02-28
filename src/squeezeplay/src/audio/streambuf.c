@@ -782,6 +782,17 @@ static int stream_readtoL(lua_State *L) {
 }
 
 
+static int stream_setstreamingL(lua_State *L) {
+	/*
+	 * 1: Stream (self)
+	 * 1: Boolean steaming state, used by lua protocol handlers to set streaming state
+	 */
+	streambuf_streaming = lua_toboolean(L, 2);
+
+	return 0;
+}
+
+
 static int stream_mark_loopL(lua_State *L) {
 	fifo_lock(&streambuf_fifo);
 
@@ -829,6 +840,7 @@ static const struct luaL_Reg stream_m[] = {
 	{ "write", stream_writeL },
 	{ "feedFromLua", stream_feedfromL },
 	{ "readToLua", stream_readtoL },
+	{ "setStreaming", stream_setstreamingL },
 	{ NULL, NULL }
 };
 
