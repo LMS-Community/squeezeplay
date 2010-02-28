@@ -294,7 +294,7 @@ function useAutoZoom(self)
 end
 
 function getErrorMessage(self)
-	return self.error or oo.superclass(ImageSourceServer).getErrorMessage(self)
+	return self.error or oo.superclass(ImageSourceServer):getErrorMessage(self)
 end
 
 function listNotReadyError(self)
