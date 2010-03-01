@@ -287,8 +287,8 @@ function systemStatus(self)
 		time = string.match(time, "(%d+)")
 	
 		uptime = {}
-		uptime.days = math.floor(time / 216000)
-		time = math.fmod(time, 216000)
+		uptime.days = math.floor(time / 86400)
+		time = math.fmod(time, 86400)
 		uptime.hours = math.floor(time / 3600)
 		time = math.fmod(time, 3600)
 		uptime.minutes = math.floor(time / 60)
