@@ -69,7 +69,7 @@ TGZ_VERSION_TEXT = $(shell cat ../squeezeplay.version)-$(shell svnversion -n .. 
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
-DMG_IMAGE_DIR_MOUNTPOINT = $(DMG_TEMP_DIR)-$(VERSION_TEXT)
+DMG_IMAGE_DIR_MOUNTPOINT = $(DMG_IMAGE_DIR)-$(VERSION_TEXT)
 DMG_TMP_IMAGE_FILENAME = $(DMG_TEMP_DIR).dmg
 DMG_IMAGE_FILENAME = SqueezePlay.dmg
 
