@@ -127,7 +127,6 @@ static struct jive_keyir irmap[] = {
 	{ SDLK_UNKNOWN,	 0x0        },
 };
 
-
 static int process_event(lua_State *L, SDL_Event *event);
 static void process_timers(lua_State *L);
 static int filter_events(const SDL_Event *event);
@@ -543,6 +542,12 @@ static int _draw_screen(lua_State *L) {
 			lua_pushinteger(L, JIVE_LAYER_ALL); // layer
 			lua_call(L, 3, 0);
 		}
+
+#if 0
+		// show the dirty region for debug purposes:
+		jive_surface_rectangleColor(srf, jive_dirty_region.x, jive_dirty_region.y,
+			jive_dirty_region.x + jive_dirty_region.w, jive_dirty_region.y + jive_dirty_region.h, 0xFFFFFFFF);
+#endif	
 
 		/* clear the dirty region for non standalone draws */
 		if (!standalone_draw) {

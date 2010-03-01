@@ -231,6 +231,13 @@ function __tostring(self)
 	return table.concat(str)
 end
 
+
+function setSmoothScrollingMenu(self, val)
+	for _,widget in pairs (self.widgets) do
+		widget:setSmoothScrollingMenu(val)
+	end
+end
+
 --[[
 
 =head1 LICENSE
