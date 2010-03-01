@@ -1188,7 +1188,7 @@ function _createUI(self)
 	
 		self.albumTitle.textStopCallback =
 			function(label)
-				log:warn('in albumTitle textStop callback')
+				log:debug('in albumTitle textStop callback')
 				self.artistTitle:animate(false)
 				self.albumTitle:animate(false)
 				self.trackTitle:animate(false)
