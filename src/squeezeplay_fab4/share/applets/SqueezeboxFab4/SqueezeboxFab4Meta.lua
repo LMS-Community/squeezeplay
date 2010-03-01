@@ -93,6 +93,7 @@ function registerApplet(meta)
 	meta:registerService("reboot")
 	meta:registerService("wasLastShutdownUnclean")
 	meta:registerService("addUeventListener")
+	meta:registerService("SCGuardianTimer")
 end
 
 

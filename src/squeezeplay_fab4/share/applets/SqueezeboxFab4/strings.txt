@@ -198,3 +198,10 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
 
+SERVER_HAS_BEEN_STOPPED
+	EN	Local music service stopped
+
+SERVER_HAS_BEEN_STOPPED_INFO
+	EN	Local music service has been stopped due to a problem.
+
+

@@ -282,6 +282,10 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 	end
 
 	if action == 'stop' then
+
+		-- Guardian timer is in Fab4 applet to be resident
+		appletManager:callService("SCGuardianTimer", action)
+
 		-- don't use shell script, we might be out of memory
 		if self:serverRunning() then
 
@@ -300,6 +304,9 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 	else
 		os.execute("/etc/init.d/squeezecenter " .. action);
+
+		-- Guardian timer is in Fab4 applet to be resident
+		appletManager:callService("SCGuardianTimer", action)
 	end
 end
 

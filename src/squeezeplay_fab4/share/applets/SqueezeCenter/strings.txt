@@ -1511,9 +1511,3 @@ MY_MUSIC
 	RU	Моя музыка
 	SV	Min musik
 
-SERVER_HAS_BEEN_STOPPED
-	EN	Local music service stopped
-
-SERVER_HAS_BEEN_STOPPED_INFO
-	EN	Local music service has been stopped due to a problem.
-

@@ -42,9 +42,12 @@ local SqueezeboxApplet       = require("applets.Squeezebox.SqueezeboxApplet")
 local EVENT_IR_DOWN          = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT        = jive.ui.EVENT_IR_REPEAT
 
+local EVENT_WINDOW_INACTIVE  = jive.ui.EVENT_WINDOW_INACTIVE
+
 local jnt                    = jnt
 local iconbar                = iconbar
 local jiveMain               = jiveMain
+local appletManager          = appletManager
 local settings	             = nil
 
 -- hack around global scope to allow bsp c code to call back to applet
@@ -744,6 +747,83 @@ function settingsBrightnessControlShow(self, menuItem)
 	window:addWidget(menu)
 	window:show()
 
+end
+
+
+-- Moved here from SqueezeCenter applet since SC applet is not resident
+--  but we need scGuardTimer to survive
+function SCGuardianTimer(self, action)
+
+	if (action == 'start') or (action == 'restart') then
+		log:debug("SC guard timer - start")
+
+		if self.scGuardTimer then
+			self.scGuardTimer:stop()
+			self.scGuardTimer = nil
+		end
+
+		self.scGuardTimer = Timer( 5000,	-- Check every 5 seconds if still running
+			function()
+				-- don't use shell script, we might be out of memory
+				local running = appletManager:callService("isBuiltInSCRunning")
+
+				log:debug("SC guard timer - check SC running: ", running)
+
+				if not running then
+					log:warn("SC guard timer - SC got killed!!!")
+					self.scGuardTimer:stop()
+					self.scGuardTimer = nil
+					self:_showSCHasBeenStoppedMessage()
+				end
+			end,
+			false
+		)
+		self.scGuardTimer:start()
+
+	elseif (action == 'stop') or (action == 'rescan') then
+		log:debug("SC guard timer - stop")
+
+		if self.scGuardTimer then
+			self.scGuardTimer:stop()
+			self.scGuardTimer = nil
+		end
+	end
+end
+
+
+-- Moved here from SqueezeCenter applet since SC applet is not resident
+--  but we need scGuardTimer to survive
+function _showSCHasBeenStoppedMessage(self)
+	local window = Window("text_list", self:string("SERVER_HAS_BEEN_STOPPED"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("OK"),
+		style = 'item',
+		sound = "WINDOWSHOW",		
+		callback = function ()
+			window:hide()
+		end
+	})
+
+	menu:setHeaderWidget( Textarea("help_text", self:string("SERVER_HAS_BEEN_STOPPED_INFO")))
+
+	window:addWidget(menu)
+
+	-- Remove ourselfs if we are not on top anymore, i.e. another window gets activated
+	window:addListener( EVENT_WINDOW_INACTIVE,
+		function()
+			log:debug("Message window removed as we aren't active anymore.")
+			window:hide()
+			return EVENT_UNUSED
+		end
+	)
+
+	window:show()
+	return window
 end
 
 
