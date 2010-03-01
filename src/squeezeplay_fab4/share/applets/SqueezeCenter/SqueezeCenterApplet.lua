@@ -441,6 +441,9 @@ function _deviceRemoval(self, devName)
 	-- if devName is still in the self.mountedDevices table, consider this an unsafe eject
 	if self.mountedDevices and self.mountedDevices[devName] then
 		
+		--Bug 15793, remove eject item from menu after bad eject
+		self:_removeEjectDeviceItem(devName)
+
 		log:warn('!!! Drive ', self.mountedDevices[devName].deviceName, ' was unsafely ejected.')
 		local window = Window("text_list", self:string("DEVICE_REMOVAL_WARNING"))
 		window:setAllowScreensaver(false)
@@ -466,6 +469,7 @@ function _deviceRemoval(self, devName)
 			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
 			self:_stopServer(silent)
 		end
+
 		self.mountedDevices[devName] = nil
 		self:getSettings()['mountedDevices'] = self.mountedDevices
 		self:storeSettings()
@@ -740,14 +744,16 @@ function _removeEjectDeviceItem(self, devName)
 		jiveMain:removeItem(self.ejectItems[devName])
 		self.ejectItems[devName] = nil
 	else
-		log:warn('no menu item found for ', devName)
+		-- bug 15739: since self.ejectItems can be freed from memory, try to remove the item by the home menu id, which is devName
+		log:warn('attempt to remove item by id: ', devName)
+		jiveMain:removeItemById(devName)
 	end
 end
 
 
 function _addEjectDeviceItem(self, devName)
 
-	log:debug('_addEjectDeviceItem()')
+	log:debug('_addEjectDeviceItem(): ', devName)
 
 	local item = self.mountedDevices and self.mountedDevices[devName]
 
