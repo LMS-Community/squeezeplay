@@ -379,13 +379,13 @@ local function _stepSetMenuItems(step, data)
 end
 
 
-local function _stepLockHandler(step, loadedCallback)
+local function _stepLockHandler(step, loadedCallback, skipMenuLock)
 	if not step then
 		return
 	end
 
 	local currentStep = _getCurrentStep()
-	if currentStep and currentStep.menu then
+	if currentStep and currentStep.menu and not skipMenuLock then
 		currentStep.menu:lock(
 			function()
 				step.cancelled = true
@@ -410,11 +410,17 @@ local function _stepLockHandler(step, loadedCallback)
 end
 
 
-local function _pushToNewWindow(step)
-	_stepLockHandler(step,  function()
-					_pushStep(step)
-					step.window:show()
-				end)
+-- skipMenuLock is given as true when no lock treatment is needed on the menu 
+-- (e.g., for when _pushToWindow is being used outside a menu like in titlebar CM touch button)
+local function _pushToNewWindow(step, skipMenuLock)
+	_stepLockHandler(
+		step,  
+		function()
+			_pushStep(step)
+			step.window:show()
+		end, 
+		skipMenuLock
+	)
 end
 
 
@@ -2512,7 +2518,7 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 							if step.menu then
 								from, qty = _decideFirstChunk(step, containerContextMenu)
 							end
-							_pushToNewWindow(step)
+							_pushToNewWindow(step, true)
 							_performJSONAction(containerContextMenu, from, qty, step, sink, _)
 	                                        end
 					),
