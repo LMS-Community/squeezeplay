@@ -813,7 +813,7 @@ local function _eventHandler(self, event)
 		if (self.accel or self.accelKey) then
 			self.accel = false
 			self.accelKey = nil
-			self:reDraw()
+			self:reLayout()
 		end
 
 		if self.sliderDragInProgress then
