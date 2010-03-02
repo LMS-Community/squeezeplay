@@ -515,7 +515,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- Checkbox
         s.checkbox = { 
 		h = WH_FILL, 
-		padding = { 0, 6, 3, 6 },
+		padding = { 0, 12, 3, 0 },
 	}
         s.checkbox.img_on = _loadImage(self, "Icons/checkbox_on.png")
         s.checkbox.img_off = _loadImage(self, "Icons/checkbox_off.png")
@@ -524,7 +524,7 @@ function skin(self, s, reload, useDefaultSize)
         -- Radio button
         s.radio = { 
 		h = WH_FILL, 
-		padding = { 0, 6, 3, 6 },
+		padding = { 0, 12, 3, 0 },
 	}
         s.radio.img_on = _loadImage(self, "Icons/radiobutton_on.png")
         s.radio.img_off = _loadImage(self, "Icons/radiobutton_off.png")
@@ -623,12 +623,12 @@ function skin(self, s, reload, useDefaultSize)
 		radio = {
         		img_on = _loadImage(self, "Icons/radiobutton_on_sel.png"),
 			img_off = _loadImage(self, "Icons/radiobutton_off_sel.png"),
-			padding = { 0, 4, 0, 4 },
+			padding = { 0, 10, 0, 0 },
 		},
 		checkbox = {
         		img_on = _loadImage(self, "Icons/checkbox_on_sel.png"),
 			img_off = _loadImage(self, "Icons/checkbox_off_sel.png"),
-			padding = { 0, 4, 0, 4 },
+			padding = { 0, 10, 0, 0 },
 		},
 	})
 
