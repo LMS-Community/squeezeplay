@@ -1229,6 +1229,18 @@ local function _browseSink(step, chunk, err)
 				step.window:addWidget(textArea)
 			end
 		elseif step.menu then
+			if step._isNpChildWindow and data.item_loop then
+				for i, item in ipairs(data.item_loop) do
+					if item.actions and item.actions.go then
+						if not item.actions.go.params then
+							item.actions.go.params = {}
+						end
+						item.actions.go.params.currentTrack = 1
+						item.actions.go.params.context      = 'playlist'
+					end
+				end
+			end
+
 			_stepSetMenuItems(step, data)
 			if _player then
 				local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
@@ -1835,7 +1847,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- okay to call on or off this, as they are just special cases of 'do'
 			actionName = 'do'
 		end
-
 		-- is there a nextWindow on the action
 		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow')
 		aSetSelectedIndex = _safeDeref(item, 'actions', actionName, 'setSelectedIndex') or _safeDeref(chunk, 'base', 'actions', actionName, 'setSelectedIndex')
@@ -3413,7 +3424,6 @@ function showTrack(index, currentTrack)
 	_pushStep(step)
 
 	-- send the command
-	local from, qty
 	_performJSONAction(jsonAction, 0, 200, step, sink)
 end
 
