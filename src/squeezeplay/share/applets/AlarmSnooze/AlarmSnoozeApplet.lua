@@ -512,6 +512,11 @@ function openAlarmWindow(self, caller)
 	menu:setHeaderWidget(headerGroup)
 
 	window:setButtonAction('rbutton', 'cancel')
+        window:addActionListener("cancel", self, 
+		function() 	
+			window:hide(Window.transitionNone)
+		end 
+	)
         window:setButtonAction('lbutton', nil, nil)
 
 	window:addWidget(menu)
