@@ -10,20 +10,20 @@
 #include "audio/mp4.h"
 
 
-static void mp4_parse_container_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_track_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_track_header_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_sample_table_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_sample_size2_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_chunk_large_offset_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_mp4a_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_parse_alac_box(struct decode_mp4 *mp4, size_t r);
-static void mp4_skip_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_container_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_track_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_track_header_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_sample_table_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_sample_size2_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_chunk_large_offset_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_mp4a_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_parse_alac_box(struct decode_mp4 *mp4, size_t r);
+static int mp4_skip_box(struct decode_mp4 *mp4, size_t r);
 
 
 struct mp4_sample_to_chunk {
@@ -170,15 +170,40 @@ static inline u64_t mp4_get_u64(struct decode_mp4 *mp4)
 	return v;
 }
 
+static inline u8_t mp4_get_u8(struct decode_mp4 *mp4)
+{
+	mp4->ptr += 1;
+	mp4->off += 1;
+	return mp4->ptr[-1];
+}
 
-static inline void mp4_skip(struct decode_mp4 *mp4, size_t n)
+static u32_t mp4_get_descr_len(struct decode_mp4 *mp4)
+{
+	u8_t b;
+	u8_t numBytes = 0;
+	u32_t length = 0;
+
+    do
+    {
+        b = mp4_get_u8(mp4);
+        numBytes++;
+        length = (length << 7) | (b & 0x7F);
+    } while ((b & 0x80) && numBytes < 4);
+
+	mp4->box_size -= numBytes;
+
+    return length;
+}
+
+static inline int mp4_skip(struct decode_mp4 *mp4, size_t n)
 {
 	mp4->ptr += n;
 	mp4->off += n;
+	return 1;
 }
 
 
-static void mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 {
 	static struct mp4_parser *parser;
 	int i;
@@ -186,7 +211,7 @@ static void mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 	/* mp4 box */
 	if (r < 8) {
 		mp4->box_size = 8;
-		return;
+		return 1;
 	}
 			
 	mp4->box_size = mp4_get_u32(mp4);
@@ -223,27 +248,29 @@ static void mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 	else {
 		mp4->f = mp4_skip_box;
 	}
+
+	return 1;
 }
 
 
-static void mp4_parse_track_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_track_box(struct decode_mp4 *mp4, size_t r)
 {
 	mp4->track_idx = mp4->track_count++;
 
 	mp4->track = realloc(mp4->track, sizeof(struct mp4_track) * mp4->track_count);
 	memset(&mp4->track[mp4->track_idx], 0, sizeof(struct mp4_track));
 
-	mp4_parse_container_box(mp4 , r);
+	return mp4_parse_container_box(mp4 , r);
 }
 
 
-static void mp4_parse_track_header_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_track_header_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 	int version;
 
 	if (r < 24) {
-		return;
+		return 1;
 	}
 
 	mp4_get_fullbox(mp4, &version, NULL);
@@ -267,16 +294,18 @@ static void mp4_parse_track_header_box(struct decode_mp4 *mp4, size_t r)
 		mp4->box_size -= 16;
 	}
 	mp4->f = mp4_skip_box;
+
+	return 1;
 }
 
 
-static void mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 
 	if (!track->sample_to_chunk) {
 		if (r < 8) {
-			return;
+			return 1;
 		}
 
 		/* skip version, flags */
@@ -292,7 +321,7 @@ static void mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r)
 
 	while (track->chunk_num < track->sample_to_chunk_count) {
 		if ((mp4->end - mp4->ptr) < 12) {
-			return;
+			return 1;
 		}
 
 		track->sample_to_chunk[track->chunk_num].first_chunk = mp4_get_u32(mp4);
@@ -308,16 +337,18 @@ static void mp4_parse_sample_to_chunk_box(struct decode_mp4 *mp4, size_t r)
 
 	/* skip rest of box */
 	mp4->f = mp4_skip_box;
+
+	return 1;
 }
 
 
-static void mp4_parse_sample_table_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_sample_table_box(struct decode_mp4 *mp4, size_t r)
 {
 	int entries;
 
 	if (r < 8) {
 		mp4->box_size = 8;
-		return;
+		return 1;
 	}
 
 	/* skip version, flags */
@@ -325,16 +356,18 @@ static void mp4_parse_sample_table_box(struct decode_mp4 *mp4, size_t r)
 	entries = mp4_get_u32(mp4);
 
 	mp4->f = &mp4_parse_container_box;
+
+	return 1;
 }
 
 
-static void mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 
 	if (!track->sample_count) {
 		if (r < 12) {
-			return;
+			return 1;
 		}
 
 		/* skip version, flags */
@@ -357,7 +390,7 @@ static void mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r)
 	if (track->fixed_sample_size == 0) {
 		while (track->sample_num < track->sample_count) {
 			if ((mp4->end - mp4->ptr) < 4) {
-				return;
+				return 1;
 			}
 
 			track->sample_size[track->sample_num++] = mp4_get_u32(mp4);
@@ -369,23 +402,25 @@ static void mp4_parse_sample_size_box(struct decode_mp4 *mp4, size_t r)
 		/* skip rest of box */
 		mp4->f = mp4_skip_box;
 	}
+
+	return 1;
 }
 
 
-static void mp4_parse_sample_size2_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_sample_size2_box(struct decode_mp4 *mp4, size_t r)
 {
 	LOG_ERROR(log_audio_codec, "need to implement stz2");
-	exit(-1);
+	return 0;
 }
 
 
-static void mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 
 	if (!track->chunk_offset_count) {
 		if (r < 8) {
-			return;
+			return 1;
 		}
 
 		/* skip version, flags */
@@ -401,7 +436,7 @@ static void mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r)
 
 	while (track->sample_num < track->chunk_offset_count) {
 		if ((mp4->end - mp4->ptr) < 4) {
-			return;
+			return 1;
 		}
 
 		track->chunk_offset[track->sample_num++] = mp4_get_u32(mp4);
@@ -412,19 +447,25 @@ static void mp4_parse_chunk_offset_box(struct decode_mp4 *mp4, size_t r)
 
 	/* skip rest of box */
 	mp4->f = mp4_skip_box;
+
+	return 1;
 }
 
 
-static void mp4_parse_chunk_large_offset_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_chunk_large_offset_box(struct decode_mp4 *mp4, size_t r)
 {
 	LOG_ERROR(log_audio_codec, "need to implement co64");
-	exit(-1);
+	return 0;
 }
 
 
-static void mp4_parse_mp4a_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_mp4a_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
+
+	if (r < 28) {
+		return 1;
+	}
 
 	memcpy(track->data_format, mp4->box_type, sizeof(track->data_format));
 
@@ -440,14 +481,69 @@ static void mp4_parse_mp4a_box(struct decode_mp4 *mp4, size_t r)
 	mp4_skip(mp4, 4); // sample rate
 
 	mp4->f = mp4_parse_container_box;
+	return 1;
 }
 
 
-static void mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 
-	// FIXME parse this correctly
+	if (r < mp4->box_size) {
+		return 1;
+	}
+
+	/* skip version, flags */
+	mp4_skip(mp4, 4);
+	mp4->box_size -= 4;
+
+    /* get and verify ES_DescrTag */
+    if (mp4_get_u8(mp4) == 0x03)
+    {
+        /* read length */
+        if (mp4_get_descr_len(mp4) < 5 + 15) {
+        	LOG_ERROR(log_audio_codec, "esds 0x03 tag-length too small");
+        	return 0;
+        }
+
+        /* skip 3 bytes */
+        mp4_skip(mp4, 3);
+    	mp4->box_size -= 4;
+    } else {
+        /* skip 2 bytes */
+    	mp4_skip(mp4, 2);
+    	mp4->box_size -= 3;
+    }
+
+    /* get and verify DecoderConfigDescrTab */
+    if (mp4_get_u8(mp4) != 0x04) {
+       	LOG_ERROR(log_audio_codec, "esds 0x04 tag expected");
+    	return 0;
+    }
+
+    /* read length */
+    if (mp4_get_descr_len(mp4) < 13) {
+       	LOG_ERROR(log_audio_codec, "esds 0x04 tag-length too small");
+    	return 0;
+    }
+
+    mp4_skip(mp4, 1);	// Audio type
+    mp4_skip(mp4, 4);	// 0x15000414 ????
+    mp4_skip(mp4, 4);	// max bitrate
+    mp4_skip(mp4, 4);	// avg bitrate
+	mp4->box_size -= 14;
+
+    /* get and verify DecSpecificInfoTag */
+    if (mp4_get_u8(mp4) != 0x05) {
+       	LOG_ERROR(log_audio_codec, "esds 0x05 tag expected");
+    	return 0;
+    };
+	mp4->box_size -= 1;
+
+    /* read length */
+    track->conf_size = mp4_get_descr_len(mp4);
+	track->conf = malloc(track->conf_size);
+	memcpy(track->conf, mp4->ptr, track->conf_size);
 
 #if 0
 	{
@@ -458,15 +554,19 @@ static void mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r)
 		}
 		printf("\n");
 	}
-#endif
 
 	track->conf_size = 10;
 	track->conf = malloc(track->conf_size);
 	memcpy(track->conf, mp4->ptr+35, track->conf_size);
+#endif
 
+	/* ignore the rest */
 	mp4->f = mp4_skip_box;
 
+	return 1;
+
 #if 0
+	// The tag-length sequences 80 80 80 nn, might only be nn depending upon the encoder
 	00 . 00 . 00 . 00 . // 4 bytes version/flags = 8-bit hex version + 24-bit hex flags
 	03 . // 1 byte ES descriptor type tag = 8-bit hex value 0x03
 	80 . 80 . 80 . // 3 bytes extended descriptor type tag string = 3 * 8-bit hex value
@@ -494,13 +594,13 @@ static void mp4_parse_esds_box(struct decode_mp4 *mp4, size_t r)
 }
 
 
-static void mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r)
 {
 	int i;
 
 	if (r < 12) {
 		mp4->box_size = 16;
-		return;
+		return 1;
 	}
 
 	/* skip any wide atom */
@@ -521,15 +621,17 @@ static void mp4_parse_mdat_box(struct decode_mp4 *mp4, size_t r)
 	/* start streaming content */
 	mp4->track_idx = 0;
 	mp4->f = NULL;
+
+	return 1;
 }
 
 
-static void mp4_parse_alac_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_parse_alac_box(struct decode_mp4 *mp4, size_t r)
 {
 	struct mp4_track *track = &mp4->track[mp4->track_idx];
 
 	if (r < mp4->box_size) {
-		return;
+		return 1;
 	}
 
 #if 0
@@ -549,10 +651,12 @@ static void mp4_parse_alac_box(struct decode_mp4 *mp4, size_t r)
 
 	/* skip rest of box */
 	mp4->f = mp4_skip_box;
+
+	return 1;
 }
 
 
-static void mp4_skip_box(struct decode_mp4 *mp4, size_t r)
+static int mp4_skip_box(struct decode_mp4 *mp4, size_t r)
 {
 	size_t n;
 
@@ -563,6 +667,8 @@ static void mp4_skip_box(struct decode_mp4 *mp4, size_t r)
 	if (mp4->box_size == 0) {
 		mp4->f = mp4_parse_container_box;
 	}
+
+	return 1;
 }
 
 
@@ -586,11 +692,13 @@ size_t mp4_open(struct decode_mp4 *mp4)
 
 		r = mp4_fill_buffer(mp4, &streaming);
 		if (r < 0) {
+			LOG_ERROR(log_audio_codec, "premature end of stream");
 			return 0;
 		}
 
 		/* parse box */
-		mp4->f(mp4, r);
+		if (!mp4->f(mp4, r))
+			return 0;
 	}
 
 	/* headers parsed, found mdat */

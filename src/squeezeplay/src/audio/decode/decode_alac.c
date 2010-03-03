@@ -56,7 +56,7 @@ static bool_t decode_alac_callback(void *data) {
 
 	if (!self->init) {
 		if (!mp4_open(&self->mp4)) {
-			current_decoder_state |= DECODE_STATE_UNDERRUN;
+			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
 
