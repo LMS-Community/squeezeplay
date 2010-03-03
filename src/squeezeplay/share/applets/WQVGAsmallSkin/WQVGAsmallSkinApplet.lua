@@ -821,9 +821,7 @@ function skin(self, s)
 
 	s.title.textButton = _uses(s.title.text, {
 		bgImg = titlebarButtonBox,
-		text = _uses(s.title.text, { 
-			padding = { 4, 15, 4, 15 },
-		}),
+		padding = { 4, 15, 4, 15 },
 	})
 
 	s.title.pressed = {}
@@ -1495,14 +1493,12 @@ function skin(self, s)
 
 	s.text_list.title.textButton = _uses(s.text_list.title.text, {
 		bgImg = titlebarButtonBox,
-		text = _uses(s.text_list.title.text, { 
-			padding = { 4, 15, 4, 15 },
-		}),
+		padding = { 4, 15, 4, 15 },
 	})
 	s.text_list.title.pressed = {}
 	s.text_list.title.pressed.textButton = _uses(s.text_list.title.text, {
 		bgImg = pressedTitlebarButtonBox,
-		text = _uses(s.text_list.title.text, { h = WH_FILL }),
+		padding = { 4, 15, 4, 15 },
 	})
 
 	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge

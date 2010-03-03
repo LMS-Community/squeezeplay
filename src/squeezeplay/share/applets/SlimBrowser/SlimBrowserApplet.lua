@@ -2519,10 +2519,9 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 		-- it will turn the title text into a button in unwanted spots along XMLBrowse trees
 		if containerContextMenu and containerContextMenu.cmd and containerContextMenu.cmd[1] == 'contextmenu' then
 			log:debug('Turn the title text into a button')
-			local titleText = Label("text", windowSpec.text)
 			local titleWidget = Group('title', { 
 					text = Button( 
-						Group( "textButton", { titleText } ),
+						Label("textButton", windowSpec.text),
 						function()
 							local step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, true), _browseSink, containerContextMenu)
 							local from, qty
@@ -2539,9 +2538,6 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 					rbutton = _nowPlayingButton(),
 			})
 			window:setTitleWidget(titleWidget)
-			--FIXME: the animation in the textButton widget yields a broken UI
-			-- Possibly part of Bug 15557
-			titleText:animate(false)
 			titleWidgetComplete = true
 		end
 	end
