@@ -139,6 +139,7 @@ function menu(self)
 			sound = "WINDOWSHOW",
 			callback = function()
 				item[3](self, item):show()
+				self:showStack()
 			end,
 		})
 	end
@@ -478,6 +479,7 @@ function window_alarm_popup(self, item)
 
 	menu:setHeaderWidget(headerGroup)
 	window:setButtonAction('rbutton', 'cancel')
+        window:addActionListener("cancel", self, function() window:hide(Window.transitionNone) end )
 	window:setButtonAction('lbutton', nil, nil)
 	window:addWidget(menu)
 
@@ -862,6 +864,7 @@ function window_toast_popup(self, item)
 
 	local group = Group("group", {
 		text = Textarea("toast_popup_textarea", data[1])
+		--text = Label("text", data[1])
 	})
 
 	popup:addWidget(group)
@@ -870,6 +873,13 @@ function window_toast_popup(self, item)
 	return popup
 end
 
+function showStack(self)
+	local stack = Framework.windowStack
+	for i in ipairs(stack) do
+		log:warn(stack[i])
+	end
+end
+	
 --[[
 Popup:   "toast_popup"
 Group:	 "group"
@@ -1209,7 +1219,8 @@ testData = {
 		{ "3121\nPrince - Some Very Long Album Title That Goes off Screen" },
 	},
 	toast_popup = {
-		"Your toast_popup is done",
+		"Your toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information\nYour toast_popup is done\nline 2 has more information",
+		--"Your toast_popup is done\nline 2 has more information",
 	},
 	toast_popup_withicon = {
 		"United States. A country of central and northwest North America with coastlines on the Atlantic and Pacific oceans.",
