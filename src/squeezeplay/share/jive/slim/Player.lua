@@ -1199,6 +1199,8 @@ function _process_status(self, event)
 	self.definedPresets = event.data.preset_loop
 	-- alarm snooze seconds for player, defaults to 540
 	self.alarmSnoozeSeconds = event.data.alarm_snooze_seconds
+	-- Bug 15814: flag for when the audio hasn't started streaming yet but mode is play
+	self.waitingToPlay = event.data.waitingToPlay or false
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -1470,6 +1472,11 @@ function isPresetDefined(self, preset)
 	else
 		return true
 	end
+end
+
+
+function isWaitingToPlay(self)
+	return self.waitingToPlay
 end
 
 

@@ -773,6 +773,11 @@ function _updatePosition(self)
 	local strRemain = ""
 	local pos = 0
 
+	-- Bug 15814: do not update position if track isn't actually playing
+	if self.player:isWaitingToPlay() then
+		log:debug('track is waiting to play, do not update progress bar')
+		return
+	end
 	local elapsed, duration = self.player:getTrackElapsed()
 
 	if elapsed then
