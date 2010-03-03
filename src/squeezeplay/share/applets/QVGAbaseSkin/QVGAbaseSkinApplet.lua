@@ -1409,14 +1409,17 @@ function skin(self, s, reload, useDefaultSize)
 
 	-- toast_popup popup (is now text only)
 	s.toast_popup_textarea = {
-		padding = { 6, 10, 8, 8 } ,
+		padding = { 6, 6, 8, 8 } ,
 		align = 'left',
 		w = WH_FILL,
-		h = WH_FILL,
+		h = 135,
 		font = _boldfont(18),
 		lineHeight = 21,
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
+		scrollbar = {
+			h = 115,
+		},
 	}
 
 	s.toast_popup = {
