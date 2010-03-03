@@ -174,6 +174,17 @@ function notify_serverConnected(self, server)
 	if (server:isSqueezeNetwork() or server == lastSc) and server ~= _server then
 		self:_fetchServerMenu(server)
 	end
+	
+	-- Bug 15633: if the server has just connected and we do not have our menus
+	-- yet then the request must have been lost in a transient connection interruption,
+	-- so reissue the request. 
+	if self.waitingForPlayerMenuStatus 
+		and _server and server == _server 
+		and _player and _player:isConnected()
+	then
+		--Get initial menus from connected server.
+		_server:userRequest(_sinkSetServerMenuChunk(self, server, true) , _player:getId(), { 'menu', 0, 100, "direct:1" })
+	end
 end
 
 
@@ -318,7 +329,17 @@ end
 
 --register remote ss only if it doesn't exist. Only current server responses may replace existing items.
 function  _registerRemoteScreensaver(self, serverData)
-	if  not _playerScreensaverRegistrations[serverData.id] then
+
+	-- when switching music sources, re-register screensavers as the old server might go away
+	if _playerScreensaverRegistrations[serverData.id] and _playerScreensaverRegistrations[serverData.id].server ~= serverData.server then
+		log:debug("ss already registered, but from different server: ", serverData.id, 
+		          " - new: ", serverData.server, 
+		          " - old: ", _playerScreensaverRegistrations[serverData.id].server)
+		appletManager:callService("unregisterRemoteScreensaver", serverData.id)
+		_playerScreensaverRegistrations[serverData.id] = nil
+	end
+
+	if not _playerScreensaverRegistrations[serverData.id] then 
 		 _playerScreensaverRegistrations[serverData.id] = serverData
 		appletManager:callService("registerRemoteScreensaver", serverData)
 	else

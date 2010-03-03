@@ -1199,6 +1199,8 @@ function _process_status(self, event)
 	self.definedPresets = event.data.preset_loop
 	-- alarm snooze seconds for player, defaults to 540
 	self.alarmSnoozeSeconds = event.data.alarm_snooze_seconds
+	-- Bug 15814: flag for when the audio hasn't started streaming yet but mode is play
+	self.waitingToPlay = event.data.waitingToPlay or false
 
 	-- update our player state, and send notifications
 	-- create a playerInfo table, to allow code reuse
@@ -1344,7 +1346,13 @@ function _process_displaystatus(self, event)
 			s.icon:setStyle(style)	
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
-			duration = tonumber(display['duration'] or 1500)
+			
+			-- Bug 15815: We use a long default duration to try to ensure
+			-- that this is still up when the new-track playerstatus eventually arrives
+			-- so that we do not flip-flop between old and new track title.
+			-- See also the delays programmed in Slim::Control::Queries::statusQuery_filter()
+			duration = tonumber(display['duration'] or 3000)
+			
 			-- icon-based showBrieflies only appear for IR
 			if not usingIR then
 				showMe = false
@@ -1464,6 +1472,11 @@ function isPresetDefined(self, preset)
 	else
 		return true
 	end
+end
+
+
+function isWaitingToPlay(self)
+	return self.waitingToPlay
 end
 
 

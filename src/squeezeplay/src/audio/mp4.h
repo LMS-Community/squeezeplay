@@ -9,7 +9,7 @@
 
 struct decode_mp4;
 
-typedef void (*mp4_read_box_t)(struct decode_mp4 *mp4, size_t r);
+typedef int (*mp4_read_box_t)(struct decode_mp4 *mp4, size_t r);
 
 struct decode_mp4 {
 	/* parser state */

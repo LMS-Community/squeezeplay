@@ -48,6 +48,7 @@ local IRMenuAccel          = require("jive.ui.IRMenuAccel")
 local NumberLetterAccel    = require("jive.ui.NumberLetterAccel")
 local Flick                = require("jive.ui.Flick")
 local Timer                = require("jive.ui.Timer")
+local System               = require("jive.System")
 
 local log                  = require("jive.utils.log").logger("squeezeplay.ui")
 
@@ -112,6 +113,9 @@ local MOUSE_DOWN = 1
 local MOUSE_SELECTED = 2
 local MOUSE_DRAG = 3
 local MOUSE_CHIRAL = 4
+
+-- touch hardware supports smooth scrolling and requires additional state to be maintained
+local TOUCH = System:hasTouch() or not System:isHardware()
 
 -- our class
 module(...)
@@ -809,7 +813,7 @@ local function _eventHandler(self, event)
 		if (self.accel or self.accelKey) then
 			self.accel = false
 			self.accelKey = nil
-			self:reDraw()
+			self:reLayout()
 		end
 
 		if self.sliderDragInProgress then
@@ -1611,6 +1615,9 @@ function _updateWidgets(self)
 		if widget then
 			if widget.parent ~= self then
 				widget.parent = self
+				if TOUCH then
+					widget:setSmoothScrollingMenu(self)
+				end
 				widget:dispatchNewEvent(EVENT_SHOW)
 			end
 
@@ -1622,6 +1629,9 @@ function _updateWidgets(self)
 	for widget,i in pairs(lastWidgets) do
 		widget:dispatchNewEvent(EVENT_HIDE)
 		widget.parent = nil
+		if TOUCH then
+			widget:setSmoothScrollingMenu(nil)
+		end
 	end
 
 	self.lastWidgets = nextWidgets

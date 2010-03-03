@@ -51,12 +51,14 @@ function popupMessage(self, title, msg)
 	popup:addWidget(text)
 	self.applet:applyScreensaverWindow(popup)
 	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS,
-			  function()
+			function()
 				popup:playSound("WINDOWHIDE")
 				popup:hide()
-			  end)
+			end)
 
 	self.applet:tieAndShowWindow(popup)
+	
+	return popup
 end
 
 function _helpAction(self, window, titleText, bodyText, menu)

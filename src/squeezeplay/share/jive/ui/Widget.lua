@@ -692,6 +692,11 @@ function shortWidgetToString(self)
 end
 
 
+function setSmoothScrollingMenu(self, val)
+	self.smoothscroll = val
+end
+
+
 --[[
 
 =head1 LICENSE

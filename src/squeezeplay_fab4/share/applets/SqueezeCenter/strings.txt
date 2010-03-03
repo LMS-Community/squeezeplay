@@ -255,7 +255,7 @@ SCANNER_NO_STATUS
 	CS	Prohledávač je spuštěn, ale v současnosti není stav k dispozici
 	DA	Der søges efter filer, men der kan ikke aflæses nogen status
 	DE	Die Durchsuchung wird ausgeführt, es ist jedoch noch kein Status verfügbar.
-	EN	The scanner is running but no status is currently available
+	EN	Scanning media for music files, please wait...
 	ES	El examinador se está ejecutando pero no hay información de estado disponible
 	FI	Skanneri on käynnissä, mutta sen tila ei ole tällä hetkellä nähtävissä.
 	FR	L'analyseur est en cours d'exécution, mais aucun état n'est disponible pour l'instant.
@@ -1510,10 +1510,4 @@ MY_MUSIC
 	PL	Moja muzyka
 	RU	Моя музыка
 	SV	Min musik
-
-SERVER_HAS_BEEN_STOPPED
-	EN	Local music service stopped
-
-SERVER_HAS_BEEN_STOPPED_INFO
-	EN	Local music service has been stopped due to a problem.
 

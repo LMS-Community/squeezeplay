@@ -379,13 +379,13 @@ local function _stepSetMenuItems(step, data)
 end
 
 
-local function _stepLockHandler(step, loadedCallback)
+local function _stepLockHandler(step, loadedCallback, skipMenuLock)
 	if not step then
 		return
 	end
 
 	local currentStep = _getCurrentStep()
-	if currentStep and currentStep.menu then
+	if currentStep and currentStep.menu and not skipMenuLock then
 		currentStep.menu:lock(
 			function()
 				step.cancelled = true
@@ -410,11 +410,17 @@ local function _stepLockHandler(step, loadedCallback)
 end
 
 
-local function _pushToNewWindow(step)
-	_stepLockHandler(step,  function()
-					_pushStep(step)
-					step.window:show()
-				end)
+-- skipMenuLock is given as true when no lock treatment is needed on the menu 
+-- (e.g., for when _pushToWindow is being used outside a menu like in titlebar CM touch button)
+local function _pushToNewWindow(step, skipMenuLock)
+	_stepLockHandler(
+		step,  
+		function()
+			_pushStep(step)
+			step.window:show()
+		end, 
+		skipMenuLock
+	)
 end
 
 
@@ -578,12 +584,11 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		useTextArea = true
 	end
 
---	debug.dump(item, 8)
 	if not group then
 
 		if labelStyle == 'title' then
 			group = Group(labelStyle, { 
-				text = Label("text", ""), 
+				text = Label("text", ""),
 				icon = Icon("icon"), 
 				lbutton = _backButton(),
 				rbutton = _nowPlayingButton(),
@@ -1224,6 +1229,18 @@ local function _browseSink(step, chunk, err)
 				step.window:addWidget(textArea)
 			end
 		elseif step.menu then
+			if step._isNpChildWindow and data.item_loop then
+				for i, item in ipairs(data.item_loop) do
+					if item.actions and item.actions.go then
+						if not item.actions.go.params then
+							item.actions.go.params = {}
+						end
+						item.actions.go.params.currentTrack = 1
+						item.actions.go.params.context      = 'playlist'
+					end
+				end
+			end
+
 			_stepSetMenuItems(step, data)
 			if _player then
 				local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
@@ -1734,6 +1751,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		--nextWindow on the action
 		local aNextWindow
 
+		-- cache context menu actions for next window
+		local bActionContextMenu
+		local iActionContextMenu
+		
 		-- setSelectedIndex will set the selected index of a menu. To be used in concert with nextWindow
 		local iSetSelectedIndex
 		local bSetSelectedIndex
@@ -1803,7 +1824,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- check for a 'do' action (overrides a straight 'go')
 			-- actionName is corrected below!!
 			bAction = _safeDeref(chunk, 'base', 'actions', 'do')
+			bActionContextMenu = _safeDeref(chunk, 'base', 'actions', 'more')
 			iAction = _safeDeref(item, 'actions', 'do')
+			iActionContextMenu = _safeDeref(item, 'actions', 'more')
 			onAction = _safeDeref(item, 'actions', 'on')
 			offAction = _safeDeref(item, 'actions', 'off')
 		end
@@ -1824,7 +1847,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			-- okay to call on or off this, as they are just special cases of 'do'
 			actionName = 'do'
 		end
-
 		-- is there a nextWindow on the action
 		aNextWindow = _safeDeref(item, 'actions', actionName, 'nextWindow') or _safeDeref(chunk, 'base', 'actions', actionName, 'nextWindow')
 		aSetSelectedIndex = _safeDeref(item, 'actions', actionName, 'setSelectedIndex') or _safeDeref(chunk, 'base', 'actions', actionName, 'setSelectedIndex')
@@ -1845,7 +1867,31 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		if iAction or bAction or choiceAction or nextWindow then
 			-- the resulting action, if any
 			local jsonAction
+			local jsonActionContextMenu
 	
+			-- this block is solely for caching the callback for the more command for use in the next window
+			if iActionContextMenu then
+				if type(iActionContextMenu) == 'table' then
+					jsonActionContextMenu = iActionContextMenu
+				end
+			elseif bActionContextMenu then
+				jsonActionContextMenu = bActionContextMenu
+				local paramName = jsonActionContextMenu["itemsParams"]
+				local iParams = item[paramName]
+				if iParams then
+					-- found 'em!
+					-- add them to the command
+					-- make sure the base has a params item!
+					local params = jsonActionContextMenu["params"]
+					if not params then
+						params = {}
+						jsonActionContextMenu["params"] = params
+					end
+					for k,v in pairs(iParams) do
+						params[k] = v
+					end
+				end
+			end
 			-- special case, handling a choice item action
 			if choiceAction and selectedIndex then
 				jsonAction = _safeDeref(item, 'actions', actionName, 'choices', selectedIndex)
@@ -1909,6 +1955,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 			end -- elseif bAction
 	
+--debug.dump(jsonAction, 8)
 			-- now we may have found a command
 			if jsonAction or useNextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
@@ -1967,7 +2014,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' or actionName == 'play-hold' then
-					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction)
+					step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, isContextMenu), _browseSink, jsonAction, jsonActionContextMenu)
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
@@ -1977,7 +2024,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					-- using addAction is temporary to ensure backwards compatibility 
 					-- until all 'add' commands are removed in SC in favor of 'more'
 					_safeDeref(chunk, 'base', 'addAction') == 'more') then
-
 					log:debug('Context Menu')
 					-- Bug 14061: send command flag to have XMLBrowser fork CM response off to get playback controls
 					if jsonAction.params then
@@ -2137,7 +2183,6 @@ local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
 		log:debug("_browseMenuListener: ACTION")
 		local action = event:getAction()
 		local actionName = _actionToActionName[action]
-
 		if actionName then
 			return _actionHandler(menu, menuItem, db, dbIndex, event, actionName, item)
 		end
@@ -2454,7 +2499,8 @@ end
 --  the destination can be retrieved (i.e. reunite data and window)
 -- data is generic data that is stored in the step; it is used f.e. to keep the json action between the
 --  first incantation and the subsequent ones needed to capture all data (see _browseSink).
-_newDestination = function(origin, item, windowSpec, sink, data)
+-- containerContextMenu is the json action of the more command (if any) from the previous menu item
+_newDestination = function(origin, item, windowSpec, sink, data, containerContextMenu)
 	log:debug("_newDestination():")
 	log:debug(windowSpec)
 
@@ -2462,13 +2508,44 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	local db = DB(windowSpec)
 
 	local window
+	local titleWidgetComplete = false
+
 	if windowSpec.isContextMenu then
 		window = ContextMenuWindow("", windowSpec.windowId) -- todo localize or decide what title text should be
 	else
 		window = Window(windowSpec.windowStyle or 'text_list', _, _, windowSpec.windowId)
+		-- XXX: the command in containerContextMenu needs to be 'contextmenu' or else do not do this
+		-- eventually it would be good to have this functionality for XMLBrowse items, but without this
+		-- it will turn the title text into a button in unwanted spots along XMLBrowse trees
+		if containerContextMenu and containerContextMenu.cmd and containerContextMenu.cmd[1] == 'contextmenu' then
+			log:debug('Turn the title text into a button')
+			local titleText = Label("text", windowSpec.text)
+			local titleWidget = Group('title', { 
+					text = Button( 
+						Group( "textButton", { titleText } ),
+						function()
+							local step, sink = _newDestination(_getCurrentStep(), item, _newWindowSpec(db, item, true), _browseSink, containerContextMenu)
+							local from, qty
+							if step.menu then
+								from, qty = _decideFirstChunk(step, containerContextMenu)
+							end
+							_pushToNewWindow(step, true)
+							_performJSONAction(containerContextMenu, from, qty, step, sink, _)
+	                                        end
+					),
+
+					icon = Icon("icon"), 
+					lbutton = _backButton(),
+					rbutton = _nowPlayingButton(),
+			})
+			window:setTitleWidget(titleWidget)
+			--FIXME: the animation in the textButton widget yields a broken UI
+			-- Possibly part of Bug 15557
+			titleText:animate(false)
+			titleWidgetComplete = true
+		end
 	end
 
-	local titleWidgetComplete = false
 	local timeFormat = nil
 	local menu
 	-- if the item has an input field or fields, we must ask for it
@@ -2538,9 +2615,11 @@ _newDestination = function(origin, item, windowSpec, sink, data)
 	
 	log:debug("new step: " , step)
 
+
 	if not windowSpec.isContextMenu and not titleWidgetComplete then
 		window:setTitleWidget(_decoratedLabel(nil, 'title', windowSpec, step, false))
 	end
+
 
 	if step.menu then
 		if windowSpec.isContextMenu then
@@ -3290,7 +3369,7 @@ end
 
 function showCurrentTrack()
 	local currentIndex = _player:getPlaylistCurrentIndex()
-	showTrack(currentIndex)
+	showTrack(currentIndex, true)
 end
 
 function setPresetCurrentTrack(self, preset)
@@ -3313,7 +3392,7 @@ function setPresetCurrentTrack(self, preset)
 end
 
 
-function showTrack(index)
+function showTrack(index, currentTrack)
 	local serverIndex = index - 1
 	local jsonAction = {
 		cmd = { 'contextmenu' },
@@ -3328,6 +3407,9 @@ function showTrack(index)
 			context = 'playlist',
 		},
 	}
+	if currentTrack then
+		jsonAction.params.currentTrack = 1
+	end
 	-- determine style
 	local newWindowSpec = {
 		['isContextMenu']    = true,
@@ -3342,7 +3424,6 @@ function showTrack(index)
 	_pushStep(step)
 
 	-- send the command
-	local from, qty
 	_performJSONAction(jsonAction, 0, 200, step, sink)
 end
 

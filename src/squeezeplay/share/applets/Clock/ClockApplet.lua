@@ -1948,28 +1948,25 @@ function Analog:getAnalogClockSkin(skinName)
 
 	local s = {}
 
-	local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/bb_wallpaper_clock_analog.png")
+	local analogClockBackground
 	
 	if skinName == 'QVGAlandscapeSkin' then
-		s.Clock = {
-			bgImg = analogClockBackground,
-		}
+		analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/bb_wallpaper_clock_analog.png")
+
 	elseif skinName == 'WQVGAsmallSkin' then
-		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
-		s.Clock = {
-			bgImg = analogClockBackground,
-		}
+		analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
+
 	elseif skinName == 'WQVGAsmallSkin' then
-		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
-		s.Clock = {
-			bgImg = analogClockBackground,
-		}
+		analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/wallpaper_clock_analog.png")
+
 	elseif skinName == 'QVGAportraitSkin' then
-		local analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/jive_wallpaper_clock_analog.png")
-		s.Clock = {
-			bgImg = analogClockBackground,
-		}
+		analogClockBackground = Tile:loadImage(self.imgpath .. "Clocks/Analog/jive_wallpaper_clock_analog.png")
+
 	end
+
+	s.Clock = {
+		bgImg = analogClockBackground,
+	}
 
 	return s
 

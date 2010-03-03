@@ -257,16 +257,35 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 		
 		if (subtext ~= nil) then popup:addWidget(Textarea("subtext", self:string(subtext))) end
 		
-		popup:showBriefly(time,
-			function()
-				_updateStatus(self)
-			end,
-			Window.transitionPushPopupUp,
-			Window.transitionPushPopupDown
-		)
+		-- don't hide starting SC popup until scan.json file is detected
+		if action == 'start' or action == 'restart' then
+			local count = 0
+			popup:addTimer(1000,
+		                function()
+					count = count + 1
+					local scanData = self:_scanStatus()
+		                        if count > 5 and ( scanData or count == 60) then
+						popup:hide()
+					end
+				end
+			)
+			popup:show()
+                else
+			popup:showBriefly(time,
+				function()
+					_updateStatus(self)
+				end,
+				Window.transitionPushPopupUp,
+				Window.transitionPushPopupDown
+			)
+		end
 	end
 
 	if action == 'stop' then
+
+		-- Guardian timer is in Fab4 applet to be resident
+		appletManager:callService("SCGuardianTimer", action)
+
 		-- don't use shell script, we might be out of memory
 		if self:serverRunning() then
 
@@ -285,6 +304,9 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 
 	else
 		os.execute("/etc/init.d/squeezecenter " .. action);
+
+		-- Guardian timer is in Fab4 applet to be resident
+		appletManager:callService("SCGuardianTimer", action)
 	end
 end
 
@@ -419,6 +441,9 @@ function _deviceRemoval(self, devName)
 	-- if devName is still in the self.mountedDevices table, consider this an unsafe eject
 	if self.mountedDevices and self.mountedDevices[devName] then
 		
+		--Bug 15793, remove eject item from menu after bad eject
+		self:_removeEjectDeviceItem(devName)
+
 		log:warn('!!! Drive ', self.mountedDevices[devName].deviceName, ' was unsafely ejected.')
 		local window = Window("text_list", self:string("DEVICE_REMOVAL_WARNING"))
 		window:setAllowScreensaver(false)
@@ -444,6 +469,7 @@ function _deviceRemoval(self, devName)
 			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
 			self:_stopServer(silent)
 		end
+
 		self.mountedDevices[devName] = nil
 		self:getSettings()['mountedDevices'] = self.mountedDevices
 		self:storeSettings()
@@ -718,14 +744,16 @@ function _removeEjectDeviceItem(self, devName)
 		jiveMain:removeItem(self.ejectItems[devName])
 		self.ejectItems[devName] = nil
 	else
-		log:warn('no menu item found for ', devName)
+		-- bug 15739: since self.ejectItems can be freed from memory, try to remove the item by the home menu id, which is devName
+		log:warn('attempt to remove item by id: ', devName)
+		jiveMain:removeItemById(devName)
 	end
 end
 
 
 function _addEjectDeviceItem(self, devName)
 
-	log:debug('_addEjectDeviceItem()')
+	log:debug('_addEjectDeviceItem(): ', devName)
 
 	local item = self.mountedDevices and self.mountedDevices[devName]
 
@@ -987,7 +1015,7 @@ end
 
 function restartServer(self, silent)
 	log:warn('Restarting squeezebox server')
-	self:_squeezecenterAction("icon_connected", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart", silent)
+	self:_squeezecenterAction("icon_connecting", "RESTARTING_SQUEEZECENTER", "PLEASE_WAIT", 5000, "restart", silent)
 
 end
 

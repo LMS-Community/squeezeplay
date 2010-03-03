@@ -354,6 +354,7 @@ int jiveL_widget_relayout(lua_State *L) {
 
 int jiveL_widget_redraw(lua_State *L) {
 	JiveWidget *peer;
+	int offset = 0;
 
 	/* stack is:
 	 * 1: widget
@@ -365,7 +366,25 @@ int jiveL_widget_redraw(lua_State *L) {
 		peer = lua_touserdata(L, -1);
 
 		if (peer) {
-			jive_redraw(&peer->bounds);
+			/* if the widget is inside a menu using smooth scrolling, find the offset
+			 * and use it to adjust the dirty region reported by the widget */
+			lua_getfield(L, 1, "smoothscroll");
+			if (lua_istable(L, -1)) {
+				lua_getfield(L, -1, "pixelOffsetY");
+				offset = lua_tointeger(L, -1);
+				lua_pop(L, 2);
+			} else {
+				lua_pop(L, 1);
+			}
+			
+			if (!offset) {
+				jive_redraw(&peer->bounds);
+			} else {
+				SDL_Rect r;
+				memcpy(&r, &peer->bounds, sizeof(r));
+				r.y += offset;
+				jive_redraw(&r);
+			}
 		}
 
 		lua_pop(L, 1);

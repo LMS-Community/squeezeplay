@@ -65,15 +65,28 @@ function readImageList(self)
 	local cmd = self.serverData.cmd
 	local playerId = self.serverData.playerId
 	local server = self.serverData.server
-	log:debug("readImageList: server:", server, " id: ", self.serverData.id, " playerId: ", playerId)
 
 	self.lstReady = false
 	
-	server:request(
-		imgFilesSink(self),
-		playerId,
-		cmd
-	)
+	if server and server:isConnected() then
+		log:debug("readImageList: server:", server, " id: ", self.serverData.id, " playerId: ", playerId)
+	
+		server:request(
+			imgFilesSink(self),
+			playerId,
+			cmd
+		)
+	else
+		self.imgReady = false
+		log:warn("readImageList: server ", server, " is not available")
+		self.error = self.applet:string("IMAGE_VIEWER_LIST_NOT_READY_SERVER")
+
+		local popup = self:listNotReadyError()
+		popup:addTimer(self.applet:getSettings()["delay"], function()
+			popup:hide()
+			popup = nil
+		end)
+	end
 end
 
 function imgFilesSink(self)
@@ -124,7 +137,7 @@ function nextImage(self)
 	end
 	--else might exceed if connection is down, if so don't try to reload another pic, just keep retrying until success
 
-	if self.currentImageIndex == #self.imgFiles then
+	if self.currentImageIndex >= #self.imgFiles then
 		--queue up next list
 		self:readImageList()
 	end
@@ -282,9 +295,12 @@ function useAutoZoom(self)
 end
 
 function getErrorMessage(self)
-	return self.error or oo.superclass(ImageSourceServer).getErrorMessage(self)
+	return self.error or self.applet:string("IMAGE_VIEWER_HTTP_ERROR_IMAGE")
 end
 
+function listNotReadyError(self)
+	return self:popupMessage(self.applet:string("IMAGE_VIEWER_ERROR"), self.applet:string("IMAGE_VIEWER_LIST_NOT_READY_SERVER"))
+end
 
 --[[
 

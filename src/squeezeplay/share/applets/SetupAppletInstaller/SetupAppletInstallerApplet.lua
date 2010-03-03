@@ -314,17 +314,6 @@ function _repoEntry(self, menuItem, entry, status)
 	menu:setHeaderWidget(Textarea("help_text", desc))
 
 	-- status may be INSTALL, INSTALLED, REINSTALL, UPDATES
-	if status == "INSTALLED" or status == "UPDATES" then
-		local current = self:getSettings()[entry.name]
-		items[#items+1] = {
-			text  = tostring(self:string("REMOVE")) .. " : " .. current,
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-						   self.toremove[entry.name] = 1
-						   self:action()
-					   end,
-		}
-	end
 	if status == "UPDATES" then
 		items[#items+1] = {
 			text  = tostring(self:string("UPDATE")) .. " : " .. entry.version,
@@ -335,6 +324,17 @@ function _repoEntry(self, menuItem, entry, status)
 						   self:action()
 					   end,
 			
+		}
+	end
+	if status == "INSTALLED" or status == "UPDATES" then
+		local current = self:getSettings()[entry.name]
+		items[#items+1] = {
+			text  = tostring(self:string("REMOVE")) .. " : " .. current,
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+						   self.toremove[entry.name] = 1
+						   self:action()
+					   end,
 		}
 	end
 	if status == "INSTALL" or status == "REINSTALL" then

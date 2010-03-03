@@ -396,6 +396,8 @@ function read(stream)
 
 		local new, error = stream:readToLua()
 		if error then
+			stream:setStreaming(false)
+			stream:disconnect()
 			return
 		end
 		if new then
@@ -420,6 +422,8 @@ function read(stream)
 
 				local newstate = handler(stream, packet)
 				if not newstate then
+					stream:setStreaming(false)
+					stream:disconnect()
 					return
 				end
 
@@ -444,6 +448,8 @@ function read(stream)
 
 			if (chan == 0 or chan == 1) then
 				log:error("rtmp chan > 63 - not supported")
+				stream:setStreaming(false)
+				stream:disconnect()
 				return
 			end
 
@@ -590,6 +596,8 @@ function read(stream)
 				if handler then
 					local ret, error = handler(stream, rtmp)
 					if error then
+						stream:setStreaming(false)
+						stream:disconnect()
 						return ret
 					end
 					if ret then

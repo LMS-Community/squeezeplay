@@ -16,12 +16,23 @@ end
 
 function defaultSettings(self)
 	return {
-    		screensaverArtworkSize = "ss"
+		scrollText = true,
+		scrollTextOnce = false,
 	}
 end
 
 function registerApplet(self)
 
+	jiveMain:addItem(
+		self:menuItem(
+			'appletNowPlayingScrollMode', 
+			'screenSettingsNowPlaying', 
+			'SCREENSAVER_SCROLLMODE', 
+			function(applet, ...) 
+				applet:settingsShow(...) 
+			end
+		)
+	)
 	self:registerService('goNowPlaying')
 	self:registerService("hideNowPlaying")
 

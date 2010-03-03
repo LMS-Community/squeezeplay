@@ -819,6 +819,18 @@ function skin(self, s)
 		}
 	}
 
+	s.title.textButton = _uses(s.title.text, {
+		bgImg = titlebarButtonBox,
+		text = _uses(s.title.text, { 
+			padding = { 4, 15, 4, 15 },
+		}),
+	})
+
+	s.title.pressed = {}
+	s.title.pressed.textButton = _uses(s.title.textButton, {
+		bgImg = pressedTitlebarButtonBox,
+	})
+
 	s.text_block_black = {
 		bgImg = Tile:fillColor(0x000000ff),
 		position = LAYOUT_NORTH,
@@ -1471,7 +1483,7 @@ function skin(self, s)
 			line = {
 				{
 					font = _boldfont(18),
-					height = 21,
+					height = 18,
 				},
 				{
 					font = _font(14),
@@ -1479,6 +1491,18 @@ function skin(self, s)
 				},
 			},
                 },
+	})
+
+	s.text_list.title.textButton = _uses(s.text_list.title.text, {
+		bgImg = titlebarButtonBox,
+		text = _uses(s.text_list.title.text, { 
+			padding = { 4, 15, 4, 15 },
+		}),
+	})
+	s.text_list.title.pressed = {}
+	s.text_list.title.pressed.textButton = _uses(s.text_list.title.text, {
+		bgImg = pressedTitlebarButtonBox,
+		text = _uses(s.text_list.title.text, { h = WH_FILL }),
 	})
 
 	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge
@@ -1658,7 +1682,6 @@ function skin(self, s)
 			},
 		},
 	})
-
 
 	s.icon_list.menu.item_checked = _uses(s.icon_list.menu.item, {
 		order = { 'icon', 'text', 'check', 'arrow' },
@@ -2010,8 +2033,6 @@ function skin(self, s)
 			h = 52,
 			padding = {10,10,10,5},
 			bgImg = false,
-			--[[ XXX: 43 pixel wide cancel button looked odd with full width back button added (Bug 14968)
-			-- leaving this code here for now in case there's a desire to bring it back
 			button_cancel  = {
 				layer = LAYER_TITLE,
 				w       = 43,
@@ -2024,7 +2045,6 @@ function skin(self, s)
 					w       = 43,
 				},
 			},
-			--]]
 			text = {
 				layer = LAYER_TITLE,
 				w = WH_FILL,
@@ -3228,13 +3248,6 @@ function skin(self, s)
 		},
 	})
 
-	-- Define empty progress background
-	local _songProgressBackgroundEmpty = _loadHTile(self, {
-               nil,
-               nil,
-               nil,
-	})
-
 	-- Visualizer: Container with titlebar, progressbar and controls.
 	--  The space between title and controls is used for the visualizer.
 	s.nowplaying_visualizer_common = _uses(s.nowplaying, {
@@ -3308,7 +3321,7 @@ function skin(self, s)
 				zOrder = 10,
 				padding = { 0, 19, 0, 15 },
 				horizontal = 1,
-				bgImg = _songProgressBackgroundEmpty,
+				bgImg = false,
 				img = _vizProgressBar,
                 		pillImg = _vizProgressBarPill,
 			},
