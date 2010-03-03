@@ -717,7 +717,11 @@ function _renderImage(self)
 			self.imageError = tostring(self.imgSource:getErrorMessage())
 			log:error("Invalid image object found: " .. self.imageError)
 
-			self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), self.imageError)
+			local popup = self.imgSource:popupMessage(self:string("IMAGE_VIEWER_INVALID_IMAGE"), self.imageError)
+			popup:addTimer(self:getSettings()["delay"], function()
+				popup:hide()
+				popup = nil
+			end)
 		end
 	end
 

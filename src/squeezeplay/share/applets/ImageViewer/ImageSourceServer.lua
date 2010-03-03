@@ -78,7 +78,8 @@ function readImageList(self)
 		)
 	else
 		self.imgReady = false
-		log:warn("readImageList: server ", server, " is not available - exiting screensaver")
+		log:warn("readImageList: server ", server, " is not available")
+		self.error = self.applet:string("IMAGE_VIEWER_LIST_NOT_READY_SERVER")
 
 		local popup = self:listNotReadyError()
 		popup:addTimer(self.applet:getSettings()["delay"], function()
@@ -294,7 +295,7 @@ function useAutoZoom(self)
 end
 
 function getErrorMessage(self)
-	return self.error or oo.superclass(ImageSourceServer):getErrorMessage(self)
+	return self.error or self.applet:string("IMAGE_VIEWER_HTTP_ERROR_IMAGE")
 end
 
 function listNotReadyError(self)
