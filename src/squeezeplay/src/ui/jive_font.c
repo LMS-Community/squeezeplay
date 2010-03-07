@@ -239,6 +239,11 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 	SDL_Color clr;
 	SDL_Surface *srf;
 
+	// don't call render for null strings as it produces an error which we want to hide
+	if (*str == '\0') {
+		return NULL;
+	}
+
 	clr.r = (color >> 24) & 0xFF;
 	clr.g = (color >> 16) & 0xFF;
 	clr.b = (color >> 8) & 0xFF;
