@@ -195,13 +195,22 @@ end
 -- removes old servers
 local function _squeezeCenterCleanup(self)
 	local now = Framework:getTicks()
+	local settings = self:getSettings()
 
 	for i, server in SlimServer.iterate() do
 		if not server:isConnected() and
 			now - server:getLastSeen() > DISCOVERY_TIMEOUT then
-		
-			log:debug("Removing server ", server)
-			server:free()
+
+			-- Bug 14972: Do not remove last known remote SC from music source list.
+			--  This allows to select it as music source and send wake on lan.
+			if (server.id == settings.serverUuid) and
+			   (server.name == settings.serverName) and
+			   (server.mac ~= nil) then
+				log:debug("SC cleanup: Leave last known remote SC in list: ", server)
+			else
+				log:debug("SC cleanup: Removing server ", server)
+				server:free()
+			end
 		end
 	end
 end
