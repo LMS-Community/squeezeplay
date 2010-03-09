@@ -58,18 +58,8 @@ local function _imgpath(self)
 	return "applets/" .. self.skinName .. "/images/"
 end
 
--- reuse images instead of loading them twice
--- FIXME can be removed after Bug 10001 is fixed
 function _loadImage(self, file)
-	if not self.images then
-		self.images = {}
-	end
-	local now = Framework:getTicks()
-	if not self.images[file] then
-		self.images[file] = Surface:loadImage(self.imgpath .. file)
-	end
-
-	return self.images[file]
+	return Surface:loadImage(self.imgpath .. file)
 end
 
 -- define a local function that makes it easier to set fonts

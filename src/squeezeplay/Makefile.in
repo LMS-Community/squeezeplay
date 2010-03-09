@@ -85,7 +85,7 @@ am_libui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
 	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
 	platform_osx.lo platform_linux.lo jive_slider.lo jive_style.lo \
 	jive_surface.lo system.lo jive_textarea.lo jive_textinput.lo \
-	jive_tile.lo jive_utils.lo jive_widget.lo jive_window.lo \
+	jive_utils.lo jive_widget.lo jive_window.lo \
 	lua_jiveui.lo
 libui_la_OBJECTS = $(am_libui_la_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
@@ -306,7 +306,6 @@ libui_la_SOURCES = \
 	src/ui/system.c \
 	src/ui/jive_textarea.c \
 	src/ui/jive_textinput.c \
-	src/ui/jive_tile.c \
 	src/ui/jive_utils.c \
 	src/ui/jive_widget.c \
 	src/ui/jive_window.c \
@@ -534,7 +533,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_surface.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_textarea.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_textinput.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_tile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_utils.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_widget.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_window.Plo@am__quote@
@@ -834,13 +832,6 @@ jive_textinput.lo: src/ui/jive_textinput.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_textinput.c' object='jive_textinput.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_textinput.lo `test -f 'src/ui/jive_textinput.c' || echo '$(srcdir)/'`src/ui/jive_textinput.c
-
-jive_tile.lo: src/ui/jive_tile.c
-@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_tile.lo -MD -MP -MF "$(DEPDIR)/jive_tile.Tpo" -c -o jive_tile.lo `test -f 'src/ui/jive_tile.c' || echo '$(srcdir)/'`src/ui/jive_tile.c; \
-@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/jive_tile.Tpo" "$(DEPDIR)/jive_tile.Plo"; else rm -f "$(DEPDIR)/jive_tile.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/jive_tile.c' object='jive_tile.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_tile.lo `test -f 'src/ui/jive_tile.c' || echo '$(srcdir)/'`src/ui/jive_tile.c
 
 jive_utils.lo: src/ui/jive_utils.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_utils.lo -MD -MP -MF "$(DEPDIR)/jive_utils.Tpo" -c -o jive_utils.lo `test -f 'src/ui/jive_utils.c' || echo '$(srcdir)/'`src/ui/jive_utils.c; \

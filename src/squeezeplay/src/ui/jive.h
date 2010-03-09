@@ -183,7 +183,7 @@ typedef struct jive_widget JiveWidget;
 
 typedef struct jive_surface JiveSurface;
 
-typedef struct jive_tile JiveTile;
+typedef JiveSurface JiveTile; // Bug 10001 refactoring
 
 typedef struct jive_event JiveEvent;
 

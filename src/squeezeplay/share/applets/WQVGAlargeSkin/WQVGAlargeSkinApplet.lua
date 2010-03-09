@@ -84,7 +84,7 @@ end
 
 
 function param(self)
-        return {
+	return {
 		THUMB_SIZE = 64,
 		POPUP_THUMB_SIZE = 120,
 		NOWPLAYING_MENU = true,
@@ -121,17 +121,11 @@ function param(self)
 			hourTickPath     = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
 			minuteTickPath   = 'applets/WQVGAsmallSkin/images/Clocks/Radial/radial_ticks_min_on.png',
 		},
-        }
+	}
 end
 
--- reuse images instead of loading them twice
--- FIXME can be removed after Bug 10001 is fixed
 local function _loadImage(self, file)
-	if not self.images[file] then
-		self.images[file] = Surface:loadImage(imgpath .. file)
-	end
-
-	return self.images[file]
+	return Surface:loadImage(imgpath .. file)
 end
 
 
@@ -196,13 +190,7 @@ local function _loadImageTile(self, file)
 		return nil
 	end
 
-	local key = file
-
-	if not self.imageTiles[key] then
-		self.imageTiles[key] = Tile:loadImage(file)
-	end
-
-	return self.imageTiles[key]
+	return Tile:loadImage(file)
 end
 
 

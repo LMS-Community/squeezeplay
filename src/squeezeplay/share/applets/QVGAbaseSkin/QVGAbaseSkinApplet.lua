@@ -87,14 +87,8 @@ function param(self)
 end
 
 
--- reuse images instead of loading them twice
--- FIXME can be removed after Bug 10001 is fixed
 function _loadImage(self, file)
-	if not self.images[file] then
-		self.images[file] = Surface:loadImage(imgpath .. file)
-	end
-
-	return self.images[file]
+	return Surface:loadImage(imgpath .. file)
 end
 
 

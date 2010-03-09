@@ -176,7 +176,6 @@ libui_la_SOURCES = \
 	src/ui/system.c \
 	src/ui/jive_textarea.c \
 	src/ui/jive_textinput.c \
-	src/ui/jive_tile.c \
 	src/ui/jive_utils.c \
 	src/ui/jive_widget.c \
 	src/ui/jive_window.c \
