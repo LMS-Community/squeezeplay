@@ -454,8 +454,9 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.title.textButton = _uses(s.title.text, {
 		padding = 0,
-		text = s.title.text,
 	})
+	s.title.pressed = {}
+	s.title.pressed.textButton = s.title.textButton
 
 	s.text_block_black = {
 		hidden = 1,
@@ -866,8 +867,10 @@ function skin(self, s, reload, useDefaultSize)
 	s.text_list.title.textButton = _uses(s.text_list.title.text, {
 		padding = 0,
 		border = 0,
-		text = s.text_list.title.text,
 	})
+	s.text_list.title.pressed = {}
+	s.text_list.title.pressed.textButton = s.text_list.title.textButton
+
 	-- popup "spinny" window
 	s.waiting_popup = _uses(s.popup)
 

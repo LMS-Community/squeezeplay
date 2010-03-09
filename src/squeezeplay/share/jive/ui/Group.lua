@@ -236,6 +236,7 @@ function setSmoothScrollingMenu(self, val)
 	for _,widget in pairs (self.widgets) do
 		widget:setSmoothScrollingMenu(val)
 	end
+	self.smoothscroll = val
 end
 
 --[[

@@ -25,10 +25,14 @@ local SimpleMenu    = require("jive.ui.SimpleMenu")
 local Window        = require("jive.ui.Window")
 local Textarea      = require("jive.ui.Textarea")
 local Label         = require("jive.ui.Label")
+local Button        = require("jive.ui.Button")
+local RadioButton   = require("jive.ui.RadioButton")
+local RadioGroup    = require("jive.ui.RadioGroup")
 local Surface       = require("jive.ui.Surface")
 local Icon          = require("jive.ui.Icon")
 local Popup         = require("jive.ui.Popup")
 local Timer         = require("jive.ui.Timer")
+local ContextMenuWindow = require("jive.ui.ContextMenuWindow")
 
 local debug         = require("jive.utils.debug")
 
@@ -75,6 +79,8 @@ function open(self, menuItem)
 		}
 	})
 
+	local title = Button(Label("textButton", self:string('SETUPNETTEST_TESTING')), function() self:showContextMenu() end)
+	self.window:setIconWidget("text", title)
 	self:tieAndShowWindow(self.window)
 
 	local timer = Timer(1000, function() self.window:addWidget(Textarea("text", self:string('SETUPNETTEST_NOSERVER'))) end, true)
@@ -108,7 +114,7 @@ function showMainWindow(self)
 	self.window:focusWidget(nil)
 	self.window:addActionListener("add", self, _event_handler)
 	self.window:addActionListener("go", self, _event_handler)
-	self.window:addListener(EVENT_SCROLL,
+	self.window:addListener(EVENT_SCROLL | EVENT_IR_ALL,
 		function(event)
 			return _event_handler(self, event)
 		end
@@ -127,11 +133,12 @@ function _event_handler(self, event)
 
 	local type = event:getType()
 
-	if type == EVENT_SCROLL then
+	if type == EVENT_SCROLL or 
+		(type == EVENT_IR_DOWN and (event:isIRCode("arrow_up") or event:isIRCode("arrow_down"))) then
 		local rate = self.rate or 0
 		local index = self.index[rate] or 1
 
-		if event:getScroll() > 0 then
+		if (type == EVENT_SCROLL and event:getScroll() > 0) or (type == EVENT_IR_DOWN and event:isIRCode("arrow_down")) then
 			if index < #self.rates then index = index + 1 end
 		else
 			if index > 1 then index = index - 1 end
@@ -155,6 +162,11 @@ function _event_handler(self, event)
 		return EVENT_CONSUME
 	end
 
+	if type == EVENT_IR_DOWN and event:isIRCode("arrow_right") then
+		self:showHelpWindow()
+		return EVENT_CONSUME
+	end
+
 	return EVENT_UNUSED
 end
 
@@ -168,6 +180,37 @@ function showHelpWindow(self)
 	self:tieAndShowWindow(window)
 
 	return window
+end
+
+
+function showContextMenu(self)
+	local window = ContextMenuWindow(self:string('SETUPNETTEST_TESTING'))
+	local menu = SimpleMenu("menu")
+	local group = RadioGroup()
+	
+	for index, rate in ipairs(self.rates) do
+		menu:addItem({ 
+			text  = rate .. " kbps",
+			style = 'item_choice',
+			check = RadioButton("radio",
+								group,
+								function(_, isSelected)
+									self:startTest(rate)
+								end,
+								rate == self.rate
+					)
+		})
+	end
+
+	menu:addItem({
+		text = self:string('SETUPNETTEST_INFO'),
+		callback = function()
+					   self:showHelpWindow()
+				   end
+	})
+
+	window:addWidget(menu)
+	self:tieAndShowWindow(window)
 end
 
 

@@ -214,9 +214,6 @@ function menuSink(self, server, data)
 
 	end
 
-	self:tieAndShowWindow(self.window)
-	self.popup:hide()
-
 	-- if called from meta at restart then reinstall or quit
 	if self.auto then
 		if self.reinstall then
@@ -224,9 +221,12 @@ function menuSink(self, server, data)
 			self.todownload = self.reinstall
 			self:action()
 		end
-		self.window:hide()
+		self.popup:hide()
 		return
 	end
+
+	self:tieAndShowWindow(self.window)
+	self.popup:hide()
 
 	if self.reinstall then
 		self.menu:addItem({

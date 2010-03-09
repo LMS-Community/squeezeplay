@@ -574,9 +574,9 @@ function skin(self, s)
 			sh = NONE,
 		}
 	}
-	s.title.textButton = _uses(s.title.text, {
-		text = s.title.text
-	})
+	s.title.textButton = s.title.text
+	s.title.pressed = {}
+	s.title.pressed.textButton = s.title.textButton
 
 	s.text_block_black = {
 		bgImg = Tile:fillColor(0x000000ff),
@@ -1040,9 +1040,10 @@ function skin(self, s)
 			},
 		},
 	})
-	s.text_list.title.textButton = _uses(s.text_list.title.text, {
-		text = s.text_list.title.text,
-	})
+	s.text_list.title.textButton = s.text_list.title.text
+
+	s.text_list.title.pressed = {}
+	s.text_list.title.pressed.textButton = s.text_list.title.textButton
 
 	-- choose player window. identical to text_list on all windows except WQVGAlarge, which needs to show the icon
 	s.choose_player = _uses(s.text_list, {

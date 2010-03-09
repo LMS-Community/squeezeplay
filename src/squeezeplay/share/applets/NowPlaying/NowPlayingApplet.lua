@@ -833,6 +833,7 @@ end
 
 
 function _updateShuffle(self, mode)
+	log:debug("_updateShuffle(): ", mode)
 	-- don't update this if SC/SN has remapped shuffle button
 	if self.player then
 		local playerStatus = self.player:getPlayerStatus()
@@ -849,12 +850,14 @@ function _updateShuffle(self, mode)
 		return
 	end
 	if self.controlsGroup then
+		log:warn("shuffle button style changed to: ", shuffleModes[token])
 		self.shuffleButton:setStyle(shuffleModes[token])
 	end
 end
 
 
 function _updateRepeat(self, mode)
+	log:debug("_updateRepeat(): ", mode)
 	-- don't update this if SC/SN has remapped repeat button
 	if self.player then
 		local playerStatus = self.player:getPlayerStatus()
@@ -871,6 +874,7 @@ function _updateRepeat(self, mode)
 		return
 	end
 	if self.controlsGroup then
+		log:warn("repeat button style changed to: ", repeatModes[token])
 		self.repeatButton:setStyle(repeatModes[token])
 	end
 end
@@ -1083,9 +1087,13 @@ function replaceNPWindow(self)
 	self.window = _createUI(self)
 	if self.player and self.player:getPlayerStatus() then
 		self:_updateButtons(self.player:getPlayerStatus())
+		self:_updateRepeat(self.player:getPlayerStatus()['playlist repeat'])
+		self:_updateShuffle(self.player:getPlayerStatus()['playlist shuffle'])
 	end
 	self:_refreshRightButton()
 	self.window:replace(oldWindow, Window.transitionFadeIn)
+
+
 end
 
 
