@@ -2607,6 +2607,7 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 		sink            = false,    -- sink closure embedding this step
 		data            = data,     -- data (generic)
 		actionModifier  = false,    -- modifier
+		_isNpChildWindow = origin and origin._isNpChildWindow, --children of NP children are also NP children
 	}
 	
 	log:debug("new step: " , step)
