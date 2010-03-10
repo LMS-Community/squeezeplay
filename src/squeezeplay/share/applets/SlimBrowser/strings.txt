@@ -25,7 +25,7 @@ SLIMBROWSER_PLAYLIST
 	ES	Lista de reproducción actual
 	FI	Nykyinen soittoluettelo
 	FR	Liste de lecture en cours
-	IT	El. di riproduz. corrente
+	IT	Playlist corrente
 	NL	Huidige playlist
 	NO	Gjeldende spilleliste
 	PL	Aktualna lista odtwarzania
@@ -155,13 +155,13 @@ SLIMBROWSER_TRY_AGAIN
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	CS	Přepnout knihovnu
 	DA	Skift bibliotek
-	DE	Bibliothek umschalten
+	DE	Musiksammlung umschalten
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
 	FR	Changer de collection
 	IT	Cambia libreria
-	NL	Bibliotheek veranderen
+	NL	Collectie wisselen
 	NO	Bytt bibliotek
 	PL	Przełącz bibliotekę
 	RU	Сменить медиатеку

@@ -21,7 +21,7 @@ WALLPAPER
 	NL	Achtergrond
 	NO	Bakgrunn
 	PL	Tapeta
-	RU	Заставка
+	RU	Фоновый рисунок
 	SV	Tapet
 
 WALLPAPER_HELP_PLAYER

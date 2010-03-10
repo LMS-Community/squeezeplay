@@ -1229,19 +1229,19 @@ NETWORK_WPS_HELP
 	SV	Hjälp om WPS
 
 NETWORK_WPS_HELP_BODY
-	CS	Tato síť využívá chráněné nastavení Wi-Fi (WPS). Pro připojení přes WPS konzultujte manuál výrobce routeru nebo zvolte "Vložit heslo pro bezdrátovou síť" k přeskočení WPS a vložte obvyklé heslo.
-	DA	Dette trådløse netværk er beskyttet med WPS. I brugervejledningen til routeren kan du læse hvordan man slutter enheder til et trådløst netværk som er sikret på denne måde. Alternativt kan du vælge Indtast adgangskoden til det trådløse netværk og indtaste en almindelig adgangskode.
-	DE	Zur Implementierung dieses Netzwerks wird WPS (Wi-Fi Protected Setup) verwendet. Folgen Sie den Anweisungen des Router-Herstellers, um eine Verbindung über WPS herzustellen. Wählen Sie alternativ 'Netzwerkkennwort eingeben', um WPS zu umgehen und geben Sie ein normales Kennwort ein.
+	CS	Tato síť využívá chráněné nastavení Wi-Fi (WPS). Pro připojení přes WPS konzultujte manuál výrobce routeru nebo zvolte "Vložit bezdrátové heslo" k přeskočení WPS a vložte obvyklé heslo.
+	DA	Dette trådløse netværk er beskyttet med WPS. I brugervejledningen til routeren kan du læse hvordan man slutter enheder til et trådløst netværk som er sikret på denne måde. Alternativt kan du vælge Angiv adgangskode til trådløst netværk og indtaste en almindelig adgangskode.
+	DE	Zur Implementierung dieses Netzwerks wird WPS (Wi-Fi Protected Setup) verwendet. Folgen Sie den Anweisungen des Router-Herstellers, um eine Verbindung über WPS herzustellen. Wählen Sie alternativ 'Netzwerkkennwort eingeben', um WPS zu umgehen, und geben Sie ein normales Kennwort ein.
 	EN	This network uses Wi-Fi Protected Setup (WPS). Please consult the router manufacturer's instructions for connecting via WPS, or select "Enter Wireless Password" to bypass WPS and enter a regular password.
 	ES	Esta red utiliza una configuración protegida Wi-Fi (WPS). Consulte las instrucciones del enrutador para averiguar cómo conectarse por medio de WPS o seleccione "Introducir contraseña para red inalámbrica" para omitir la configuración WPS e introducir una contraseña normal.
-	FI	Tämä verkko käyttää Wi-Fi-suojattua asetusta (WPS). Katso reitittimen valmistajan ohjeista miten muodostat yhteyden WPS:n kautta tai ohita WPS valitsemalla  "Anna langattoman verkon salasana" ja näppäile tavallinen salasana.
-	FR	Ce réseau utilise WPS (Wi-Fi Protected Setup).Reportez-vous aux instructions fournies par le fabricant du routeur pour vous connecter via WPS, ou sélectionnez l'option "Entrer le mot de passe sans fil" pour ignorer WPS et saisir un mot de passe standard.
-	IT	Questa rete utilizza Wi-Fi Protected Setup (WPS). Consultare il manuale d'uso del router per effettuare la connessione tramite WPS o selezionare Immettere password rete senza fili per ignorare WPS e immettere una password normale.
-	NL	Dit netwerk maakt gebruik van WPS (Wi-Fi Protected Setup). Raadpleeg de instructies van de fabrikant van de router voor verbinding via WPS, of selecteer 'Wachtwoord voor draadloos invoeren' om WPS te omzeilen en een regulier wachtwoord in te voeren.
+	FI	Tämä verkko käyttää suojattua Wi-Fi-yhteyden määritystä (WPS). Katso reitittimen valmistajan ohjeista, miten yhteys muodostetaan WPS:n kautta, tai ohita WPS valitsemalla Anna langattoman verkon salasana. Näppäile sitten tavallinen salasana.
+	FR	Ce réseau utilise WPS (Wi-Fi Protected Setup). Reportez-vous aux instructions fournies par le fabricant du routeur pour vous connecter via WPS, ou sélectionnez l'option "Entrer un mot de passe Wi-Fi" pour ignorer WPS et saisir un mot de passe standard.
+	IT	Questa rete utilizza Wi-Fi Protected Setup (WPS). Consultare il manuale d'utilizzo del router per effettuare la connessione tramite WPS o selezionare "Immettere password rete senza fili" per ignorare WPS e immettere una password normale.
+	NL	Dit netwerk maakt gebruik van WPS (Wi-Fi Protected Setup). Raadpleeg de instructies van de fabrikant van de router voor verbinding via WPS, of selecteer 'Draadloos wachtwoord invoeren' om WPS te omzeilen en een regulier wachtwoord in te voeren.
 	NO	Dette nettverket bruker WPS (Wi-Fi Protected Setup). Du kan kontakte produsenten av ruteren for å finne ut hvordan du kopler til via WPS, eller du kan velge Angi trådløst passord for å omgå WPS og angi et vanlig passord.
 	PL	Ta sieć używa protokołu Wi-Fi Protected Setup (WPS). Zapoznaj się z instrukcjami producenta routera na temat łączenia się przy użyciu protokołu WPS lub wybierz opcję „Wprowadź hasło sieci bezprzewodowej”, aby pominąć WPS i wprowadzić zwykłe hasło.
-	RU	Эта сеть использует функцию WPS (Wi-Fi Protected Setup). Ознакомьтесь с инструкциями изготовителя маршрутизатора для связи через WPS или выберите параметр "Введите пароль беспроводной сети", чтобы ввести обычный пароль в обход WPS.
-	SV	I det trådlösa nätverket används WPS-skydd. Läs igenom bruksanvisningen för routern för information om hur du ansluter via WPS. Du kan också välja Ange lösenord för trådlöst och ange ett vanligt lösenord.
+	RU	В этой сети используется функция WPS (Wi-Fi Protected Setup). Сведения о том, как установить соединение с помощью WPS, можно найти в инструкциях, предоставленных изготовителем маршрутизатора. Чтобы не использовать WPS и ввести стандартный пароль, выберите параметр "Ввести беспроводной пароль".
+	SV	I det trådlösa nätverket används WPS-skydd (Wi-Fi Protected Setup). Läs igenom anvisningarna i routerns bruksanvisning för hur du ansluter via WPS. Du kan också välja Ange lösenord för trådlöst nätverk och ange ett vanligt lösenord.
 
 NETWORK_ENTER_PIN
 	CS	Zadejte PIN

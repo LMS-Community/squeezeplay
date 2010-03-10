@@ -47,14 +47,65 @@ STOP_INFO
 	RU	Остановить Squeezebox Server?
 	SV	Vill du stoppa Squeezebox Server?
 
+SQUEEZEBOX_SERVER
+	CS	Squeezebox Server
+	DA	Squeezebox Server
+	DE	Squeezebox Server
+	EN	Squeezebox Server
+	ES	Squeezebox Server
+	FI	Squeezebox Server
+	FR	Squeezebox Server
+	IT	Squeezebox Server
+	NL	Squeezebox Server
+	NO	Squeezebox Server
+	PL	Squeezebox Server
+	RU	Squeezebox Server
+	SV	Squeezebox Server
+
 WIPE_AND_RESTART
+	CS	Smazat a znovu prohledat
+	DA	Slet, og gennemsøg igen
+	DE	Löschen und neu durchsuchen
 	EN	Wipe and rescan
+	ES	Borrar y volver a examinar
+	FI	Pyyhi ja tarkista uudelleen
+	FR	Supprimer et analyser
+	IT	Elimina e ripeti analisi
+	NL	Wissen en opnieuw scannen
+	NO	Tøm og søk på nytt
+	PL	Usuń i przeszukaj ponownie
+	RU	Стереть и повторить сканирование
+	SV	Rensa och läsa in igen
 
 REMOVING_DATABASE
+	CS	Odstraňování existující databáze
+	DA	Fjerner eksisterende database
+	DE	Bestehende Datenbank wird gelöscht
 	EN	Removing existing database
+	ES	Quitando base de datos existente
+	FI	Poistetaan vanhaa tietokantaa
+	FR	Suppression de la base de données existante
+	IT	Rimozione database esistente
+	NL	Bestaande database verwijderen
+	NO	Fjerner eksisterende database
+	PL	Usuwanie istniejącej bazy danych
+	RU	Удаление существующей базы данных
+	SV	Tar bort befintlig databas
 
 WIPE_AND_RESTART_INFO
+	CS	Jste si jistí, že chcete smazat stávající databázi Squeezebox Server database a začít prohledávat vaše soubory znovu?
+	DA	Er du sikker på at du vil slette den eksisterende Squeezebox Server-database og registrere alle dine filer igen?
+	DE	Wollen Sie Ihre bestehende Squeezebox Server-Datenbank wirklich löschen und Ihre Dateien neu durchsuchen?
 	EN	Are you sure you want to wipe your existing Squeezebox Server database and start over scanning your files?
+	ES	¿Confirma que desea borrar la base de datos de Squeezebox Server existente y volver a examinar los archivos?
+	FI	Haluatko varmasti pyyhkiä vanhan Squeezebox Server -tietokannan ja aloittaa tiedostojen tarkistuksen alusta?
+	FR	Etes-vous sûr de vouloir supprimer la base de données Squeezebox Server existante et de vouloir redémarrer l'analyse de vos fichiers?
+	IT	Eliminare il database Squeezebox Server esistente e ripetere l'analisi dei file?
+	NL	Weet je zeker dat je je bestaande Squeezebox Server-database wilt wissen en je bestanden opnieuw wilt scannen?
+	NO	Er du sikker på at du vil tømme den eksisterende Squeezebox Server-databasen og starte søk i filene dine på nytt?
+	PL	Czy na pewno chcesz usunąć istniejącą bazę danych programu Squeezebox Server i ponownie rozpocząć wyszukiwanie plików?
+	RU	Стереть существующую базу данных Squeezebox Server и запустить сканирование файлов?
+	SV	Vill du rensa din befintliga Squeezebox Server-databas och börja om från början med att läsa in filer?
 
 STOP_RESCAN_START
 	CS	Zastavit-Znovu prohledat-Znovu spustit
@@ -252,19 +303,19 @@ STATUS_NOTHING
 	SV	Varken Squeezebox Server eller sökningen körs
 
 SCANNER_NO_STATUS
-	CS	Prohledávač je spuštěn, ale v současnosti není stav k dispozici
-	DA	Der søges efter filer, men der kan ikke aflæses nogen status
-	DE	Die Durchsuchung wird ausgeführt, es ist jedoch noch kein Status verfügbar.
+	CS	Vyhledávání hudebních souborů v médiích, prosím, vyčkejte ...
+	DA	Der søges efter musikfiler på mediet. Vent lidt...
+	DE	Medien werden nach Musikdateien durchsucht. Bitte warten...
 	EN	Scanning media for music files, please wait...
-	ES	El examinador se está ejecutando pero no hay información de estado disponible
-	FI	Skanneri on käynnissä, mutta sen tila ei ole tällä hetkellä nähtävissä.
-	FR	L'analyseur est en cours d'exécution, mais aucun état n'est disponible pour l'instant.
-	IT	L'analisi è in corso ma al momento non è disponibile lo stato
-	NL	De scanner is actief, maar er is momenteel geen status beschikbaar.
-	NO	Søket kjører, men ingen status er tilgjengelig
-	PL	Skaner działa, ale obecnie nie są dostępne żadne informacje o stanie
-	RU	Сканер работает, но состояние сейчас недоступно
-	SV	Genomsökningen körs, men det finns ingen status som kan visas.
+	ES	Buscando archivos de música en medios, espere...
+	FI	Etsitään musiikkitiedostoja tietovälineestä. Odota...
+	FR	Analyse de vos fichiers musicaux en cours. Veuillez patienter...
+	IT	Ricerca multimediale in corso, attendere...
+	NL	Media worden op muziekbestanden gescand, een ogenblik geduld...
+	NO	Søker etter musikkfiler, vent litt ...
+	PL	Czekaj, trwa wyszukiwanie plików muzycznych na nośnikach...
+	RU	Выполняется поиск музыкальных файлов на носителях; подождите, пожалуйста...
+	SV	Genomsökning görs efter musikfiler. Det kan ta en stund.
 
 SCANNER_PROGRESS
 	CS	Detaily hledání hudby
@@ -394,7 +445,7 @@ PLAYLIST_DELETED_PROGRESS
 	ES	Quitar listas de reproducción eliminadas
 	FI	Poista poistetut soittoluettelot
 	FR	Enlever les listes de lecture supprimées
-	IT	Rimuovi elenchi di riproduzione eliminati
+	IT	Rimuovi playlist eliminate
 	NL	Verwijderde playlists weghalen
 	NO	Fjern slettede spillelister
 	PL	Kasuj usunięte listy odtwarzania
@@ -409,7 +460,7 @@ PLAYLIST_NEW_PROGRESS
 	ES	Examinar listas de reproducción nuevas
 	FI	Tarkista uudet soittoluettelot
 	FR	Analyser les nouvelles listes de lecture
-	IT	Analizza nuovi elenchi di riproduzione
+	IT	Analizza nuove playlist
 	NL	Nieuwe playlists scannen
 	NO	Søk i nye spillelister
 	PL	Przeszukuj nowe listy odtwarzania
@@ -424,7 +475,7 @@ PLAYLIST_CHANGED_PROGRESS
 	ES	Examinando listas de reproducción modificadas
 	FI	Tarkistaa muutettuja soittoluetteloita
 	FR	Analyse des listes de lecture modifiées
-	IT	Analisi elenchi di riproduzione modificati in corso
+	IT	Analisi playlist modificate in corso
 	NL	Gewijzigde playlists worden gescand
 	NO	Søker i endrede spillelister
 	PL	Przeszukiwanie zmienionych list odtwarzania
@@ -439,7 +490,7 @@ PLAYLIST_PROGRESS
 	ES	Examen de listas de reproducción
 	FI	Soittoluetteloiden haku
 	FR	Analyse de liste de lecture
-	IT	Analisi elenchi di riproduzione
+	IT	Analisi playlist
 	NL	Scannen van playlists
 	NO	Søk etter spilleliste
 	PL	Przeszukiwanie listy odtwarzania
@@ -747,18 +798,18 @@ EJECT_WARNING
 	SV	VIKTIG INFORMATION
 
 EJECT_WARNING_INFO
-	CS	Před vyjmutím USB nebo SD zařízení ho PROSÍM vždy vysuňte pomocí volby "vysunout" v menu Moje hudba. Pokud to neuděláte, může to vést k vážnému poškození dat.
-	DA	Inden du fjerner en USB- eller SD-lagerenhed, skal du huske at afbryde forbindelsen til enheden via menuen Musik. Hvis du ikke gør det, kan filerne blive ødelagt.
-	DE	Bevor Sie ein USB- oder SD-Gerät entfernen, werfen Sie dieses zunächst mithilfe der entsprechenden Option im Menü 'Eigene Musik' aus. Wenn Sie das Gerät nicht zuerst auswerfen, können die Daten beschädigt werden.
+	CS	Před vyjmutím USB nebo SD zařízení ho PROSÍM vždy vysuňte pomocí volby "vysunout" v menu Domovská stránka. Pokud to neuděláte, může to vést k vážnému poškození dat.
+	DA	Inden du fjerner en USB- eller SD-lagerenhed, skal du huske at afbryde forbindelsen til enheden via hovedmenuen. Hvis du ikke gør det, kan filerne blive ødelagt.
+	DE	Bevor Sie ein USB- oder SD-Gerät entfernen, werfen Sie dieses zunächst mithilfe der entsprechenden Option im Hauptmenü aus. Wenn Sie dies nicht tun, können die Daten beschädigt werden.
 	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the Home menu. Failure to do so may cause serious damage to the data.
-	ES	Antes de retirar un dispositivo USB o SD, asegúrese de que lo extrae seleccionando la opción "extraer" desde el menú "Mi música". Si no lo hace, puede provocar daños graves en la información.
-	FI	Ennen kuin poistat USB- tai SD-laitteen, muista napsauttaa Poista-painiketta Oma musiikki -valikossa. Jos tämä jätetään tekemättä, tiedot saattavat vaurioitua vakavasti.
-	FR	Avant de retirer un dispositif USB ou SD, veillez à l'éjecter en sélectionnant l'option correspondante dans le menu Ma musique. Cette opération permet d'éviter le risque d'endommagement permanent de vos données.
-	IT	Prima di rimuovere un dispositivo USB o SD, ESPELLERLO selezionando l'opzione Espelli dal menu Musica. Non facendolo si rischia di danneggiare gravemente i dati.
-	NL	Voordat je een USB- of SD-apparaat verwijdert, MOET je het vrijgeven door de toepasselijke optie te selecteren in het menu Mijn muziek. Als je dit niet doet, kunnen de gegevens ernstig beschadigd raken.
-	NO	Før du fjerner en usb- eller SD-enhet, MÅ du løse den ut ved å velge alternativet for dette i menyen Min musikk. Hvis du ikke gjør dette, kan det føre til dataskader.
-	PL	Przed odłączeniem urządzenia USB lub SD NALEŻY wysunąć je, wybierając opcję Usuń w menu Moja muzyka. W przeciwnym razie dane mogą zostać poważnie uszkodzone.
-	RU	Перед удалением USB- или SD-устройства НЕОБХОДИМО извлечь его, выбрав пункт "Извлечь" в меню "Моя музыка". Иначе возможно серьезное повреждение данных.
+	ES	Antes de retirar un dispositivo USB o SD, asegúrese de que lo extrae seleccionando la opción "extraer" desde el menú Inicio. Si no lo hace, puede provocar daños graves en la información.
+	FI	Ennen kuin poistat USB- tai SD-laitteen, muista napsauttaa Poista-painiketta Koti-valikossa. Jos tämä jätetään tekemättä, tiedot saattavat vaurioitua vakavasti.
+	FR	Avant de retirer un dispositif USB ou SD, veillez à l'éjecter en sélectionnant l'option correspondante dans le menu Accueil. Cette opération permet d'éviter le risque de dommages permanents pour vos données.
+	IT	Prima di rimuovere un dispositivo USB o SD, ESPELLERLO selezionando l'opzione Espelli dal menu Pagina iniziale. Non facendolo si rischia di danneggiare gravemente i dati.
+	NL	Voordat je een USB- of SD-apparaat verwijdert, MOET je het vrijgeven door de toepasselijke optie te selecteren in het hoofdmenu. Als je dit niet doet, kunnen de gegevens ernstig beschadigd raken.
+	NO	Før du fjerner en usb- eller SD-enhet, MÅ du løse den ut ved å velge alternativet for dette i hovedmenyen. Hvis du ikke gjør dette, kan det føre til dataskader.
+	PL	Przed odłączeniem urządzenia USB lub SD NALEŻY wysunąć je, wybierając opcję Usuń z menu głównego. W przeciwnym razie dane mogą zostać poważnie uszkodzone.
+	RU	Перед удалением USB- или SD-устройства НЕОБХОДИМО правильно извлечь его, выбрав пункт "Извлечь" в главном меню. В противном случае можно повредить данные.
 	SV	Tänk på att alltid välja Mata ut på menyn Min musik innan du tar bort en USB-enhet eller ett SD-kort. Annars kan filerna skadas.
 
 NEW_STORAGE_MEDIA
@@ -963,7 +1014,7 @@ DEVICE_REMOVAL_WARNING_INFO_SD
 	EN	WARNING: The SD card was removed improperly. Data on this card may have been lost or damaged.
 	ES	ADVERTENCIA: La tarjeta SD se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
 	FI	VAROITUS: SD-kortti poistettiin väärin. Kortin tiedot ovat saattaneet kadota tai vioittua.
-	FR	AVERTISSEMENT: la carte SD a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
+	FR	AVERTISSEMENT: la carte USB a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
 	IT	ATTENZIONE: la scheda SD non è stata rimossa correttamente. I dati sulla scheda potrebbero essere stati danneggiati o persi.
 	NL	WAARSCHUWING: De SD-kaart is onjuist verwijderd. Mogelijk zijn er gegevens op deze kaart verloren gegaan of beschadigd geraakt.
 	NO	ADVARSEL: SD-kortet ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
@@ -1452,18 +1503,18 @@ EJECT_FAILURE
 	SV	Utmatningsfel
 
 EJECT_FAILURE_INFO
-	CS	VAROVÁNÍ: Toto zařízení se nevysunulo správně. Může to být způsobeno přístupem jednoho nebo více programů do zařízení.
+	CS	VAROVÁNÍ: Toto zařízení se nevysunulo správně. Může to být způsobeno přístupem jednoho nebo více programů do systému.
 	DA	ADVARSEL: Forbindelsen til enheden kunne ikke afbrydes. Den er muligvis i brug i et eller flere programmer.
 	DE	Warnung: Das Gerät konnte nicht ordnungsgemäß entfernt werden. Möglicherweise wird es von einem oder mehreren Programmen auf dem System verwendet.
 	EN	WARNING: The device failed to eject properly. This may be due to one or more programs on the system accessing it.
 	ES	ADVERTENCIA: No se ha podido extraer el dispositivo de forma correcta. Puede deberse a que hay uno o más programas en el sistema que están intentando acceder a él.
-	FI	VAROITUS: Laitteen poisto epäonnistui. Tämä voi johtua siitä, että yksi tai useampi tietokoneen ohjelma käyttää laitetta.
+	FI	VAROITUS: Laitteen poisto epäonnistui. Tämä voi johtua siitä, että yksi tai useampi ohjelma käyttää laitetta.
 	FR	AVERTISSEMENT: impossible d'éjecter correctement le dispositif. Il se peut qu'il soit en cours d'utilisation par un ou plusieurs programmes exécutés sur le système.
 	IT	ATTENZIONE: il dispositivo non è stato espulso correttamente. Il motivo può essere dovuto al fatto che uno o più programmi del sistema stanno accedendo ad esso.
 	NL	WAARSCHUWING: Het apparaat is niet goed vrijgegeven. Dit kan zijn omdat het gebruikt wordt door een of meer programma's.
 	NO	ADVARSEL: Enheten ble ikke løst ut på riktig måte. Dette kan skyldes at ett eller flere programmer bruker den.
 	PL	OSTRZEŻENIE: To urządzenie nie zostało prawidłowo wysunięte. Może to być spowodowane tym, że co najmniej jeden program w systemie uzyskuje dostęp do tego urządzenia.
-	RU	Предупреждение. Не удалось правильно извлечь устройство. Возможно, к нему имеют доступ одна или несколько программ.
+	RU	ПРЕДУПРЕЖДЕНИЕ. Не удалось правильно извлечь устройство. Возможно, с ним работают одна или несколько программ.
 	SV	VARNING! Enheten matades inte ut på rätt sätt. Det kan bero på att det finns program som läser från eller skriver till den.
 
 EJECT_TRY_AGAIN
@@ -1497,7 +1548,7 @@ SERVER_STATUS
 	SV	Squeezebox Server-status
 
 MY_MUSIC
-	CS	Hudba
+	CS	Moje hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
@@ -1511,3 +1562,47 @@ MY_MUSIC
 	RU	Моя музыка
 	SV	Min musik
 
+UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+
+SKIP
+	CS	Přeskočit
+	DA	Spring over
+	DE	Überspringen
+	EN	Skip
+	ES	Omitir
+	FI	Ohita
+	FR	Ignorer
+	IT	Salta
+	NL	Overslaan
+	NO	Hopp over
+	PL	Pomiń
+	RU	Пропустить
+	SV	Hoppa över
+
+START_SLIDESHOW
+	CS	Spustit Slideshow
+	DA	Start diasshow
+	DE	Diashow starten
+	EN	Start Slideshow
+	ES	Iniciar presentación
+	FI	Käynnistä diaesitys
+	FR	Lancer le diaporama
+	IT	Avvia presentazione
+	NL	Diavoorstelling starten
+	NO	Start lysbildefremvisning
+	PL	Uruchom pokaz slajdów
+	RU	Запустить слайд-шоу
+	SV	Påbörja bildspel

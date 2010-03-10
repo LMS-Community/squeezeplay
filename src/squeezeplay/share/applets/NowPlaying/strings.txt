@@ -43,7 +43,7 @@ SCREENSAVER_PAUSED
 	IT	In pausa
 	NL	Gepauzeerd
 	NO	Pause
-	PL	Wstrzymane
+	PL	Wstrzymano
 	RU	Пауза
 	SV	Pausad
 
@@ -188,7 +188,7 @@ SCREENSAVER_SCROLLMODE_NOSCROLL
 	DE	Keine Laufschrift
 	EN	Do not scroll
 	ES	No desplazar
-	FI	Älä vieritä
+	FI	Ei vieritystä
 	FR	Pas de défilement
 	IT	Non scorrere
 	NL	Tekst niet laten lopen

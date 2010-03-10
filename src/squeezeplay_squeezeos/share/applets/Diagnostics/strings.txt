@@ -695,9 +695,19 @@ MEMORY
 
 POWER
 #SLT: This is "power" as in "power supply"
-	DE	Stromversorgung
+	CS	Napájení
+	DA	Tænd/sluk
+	DE	Ein/Aus
 	EN	Power
+	ES	Encendido
+	FI	Virta
 	FR	Mise sous tension
+	IT	Accensione
+	NL	Voeding
+	NO	Av/på
+	PL	Zasilanie
+	RU	Питание
+	SV	Av/på
 
 MSP_VERSION
 	CS	MSP verze\n%s
@@ -883,7 +893,19 @@ BATT_DISCHARGING
 	SV	Batteriet laddar ur
 
 BATT_DISCHARGING_WARNING
+	CS	Vybíjení baterie. Stav baterie je nízký
+	DA	Batteriet aflades: Det er næsten fladt
+	DE	Akku wird entladen. Akku ist schwach.
 	EN	Battery discharging.  Battery is low
+	ES	Descarga de la batería, nivel bajo de batería
+	FI	Akun latausta puretaan. Akun lataus on alhainen.
+	FR	Déchargement de la batterie: batterie faible
+	IT	La batteria si sta scaricando. Livello di carica basso
+	NL	Batterij ontlaadt zich: laag batterijvermogen
+	NO	Batteriet lader ut. Lavt batteri.
+	PL	Rozładowywanie baterii. Niski poziom naładowania baterii
+	RU	Аккумулятор разряжается. Низкий заряд батареи.
+	SV	Batteriet laddar ur och batterinivån är låg
 
 BATT_CHARGING
 	CS	Nabíjení baterie
