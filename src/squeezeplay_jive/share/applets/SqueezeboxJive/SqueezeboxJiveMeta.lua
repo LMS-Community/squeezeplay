@@ -49,7 +49,8 @@ function upgradeSettings(meta, settings)
 	-- fill in any blanks
 	local defaults = defaultSettings(meta)
 	for k, v in pairs(defaults) do
-		if not settings[k] then
+		-- Bug 15566: Check if setting is missing and not whether its value is false
+		if settings[k] == nil then
 			settings[k] = v
 		end
 	end
