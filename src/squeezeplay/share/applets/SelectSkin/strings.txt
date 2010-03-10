@@ -52,7 +52,7 @@ SELECT_SKIN_REMOTE_SKIN
 # SLT: name of the skin being used when using the IR remote control
 	CS	Skin pro dálkové ovládání
 	DA	Tema til fjernbetjening
-	DE	Remote-Skin
+	DE	Fernbedienungs-Skin
 	EN	Remote Skin
 	ES	Máscara de mando
 	FI	Kaukosäätimen olemus
