@@ -289,9 +289,10 @@ SLIMBROWSER_ADD_NEXT_1
 	SV	Spela härnäst
 
 SLIMBROWSER_ADD_NEXT_2
+# SLT: this is short for "Add this item as the next track", not "Add next item"
 	CS	Přidat další
 	DA	Tilføj næste
-	DE	Nächstes hinzufügen
+	DE	Als nächstes hinzufügen
 	EN	Add Next
 	ES	Agregar a continuación
 	FI	Lisää seuraava
