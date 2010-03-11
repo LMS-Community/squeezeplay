@@ -1229,18 +1229,6 @@ local function _browseSink(step, chunk, err)
 				step.window:addWidget(textArea)
 			end
 		elseif step.menu then
-			if step._isNpChildWindow and data.item_loop then
-				for i, item in ipairs(data.item_loop) do
-					if item.actions and item.actions.go then
-						if not item.actions.go.params then
-							item.actions.go.params = {}
-						end
-						item.actions.go.params.currentTrack = 1
-						item.actions.go.params.context      = 'playlist'
-					end
-				end
-			end
-
 			_stepSetMenuItems(step, data)
 			if _player then
 				local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
@@ -2607,7 +2595,6 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 		sink            = false,    -- sink closure embedding this step
 		data            = data,     -- data (generic)
 		actionModifier  = false,    -- modifier
-		_isNpChildWindow = origin and origin._isNpChildWindow, --children of NP children are also NP children
 	}
 	
 	log:debug("new step: " , step)
@@ -3366,7 +3353,7 @@ end
 
 function showCurrentTrack()
 	local currentIndex = _player:getPlaylistCurrentIndex()
-	showTrack(currentIndex, true)
+	showTrack(currentIndex)
 end
 
 function setPresetCurrentTrack(self, preset)
@@ -3389,7 +3376,7 @@ function setPresetCurrentTrack(self, preset)
 end
 
 
-function showTrack(index, currentTrack)
+function showTrack(index)
 	local serverIndex = index - 1
 	local jsonAction = {
 		cmd = { 'contextmenu' },
@@ -3404,9 +3391,6 @@ function showTrack(index, currentTrack)
 			context = 'playlist',
 		},
 	}
-	if currentTrack then
-		jsonAction.params.currentTrack = 1
-	end
 	-- determine style
 	local newWindowSpec = {
 		['isContextMenu']    = true,
