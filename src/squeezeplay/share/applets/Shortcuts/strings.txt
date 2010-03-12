@@ -357,7 +357,7 @@ SHORTCUTS_OUTPUT_TEXT_MODE
 SHORTCUTS_OUTPUT_GO_HOME
 	CS	Přejít Domů
 	DA	Til startside
-	DE	Zurück zum Hauptmenü
+	DE	Zurück zum Startmenü
 	EN	Go Home
 	ES	Go Home (Ir a casa)
 	FI	Alkuun
@@ -385,14 +385,14 @@ SHORTCUTS_OUTPUT_GO_NOW_PLAYING
 	SV	Nu spelas
 
 SHORTCUTS_OUTPUT_GO_PLAYLIST
-	CS	Aktuální seznam skladeb
+	CS	Aktuální seznam
 	DA	Nuværende afspilningsliste
 	DE	Aktuelle Wiedergabeliste
 	EN	Current Playlist
 	ES	Lista de reproducción actual
 	FI	Nykyinen soittoluettelo
 	FR	Liste de lecture en cours
-	IT	El. di riproduz. corrente
+	IT	Playlist corrente
 	NL	Huidige playlist
 	NO	Gjeldende spilleliste
 	PL	Aktualna lista odtwarzania
@@ -431,10 +431,18 @@ SHORTCUTS_OUTPUT_GO_FAVORITES
 
 SHORTCUTS_OUTPUT_POWER
 #SLT: This is "power" as in the "Power on/off" button
+	CS	Napájení
 	DA	Tænd/sluk
 	DE	Ein/Aus
 	EN	Power
+	ES	Encendido
+	FI	Virta
+	FR	Mise sous tension
+	IT	Accensione
+	NL	Voeding
 	NO	Av/på
+	PL	Zasilanie
+	RU	Питание
 	SV	Av/på
 
 SHORTCUTS_OUTPUT_SETTINGS

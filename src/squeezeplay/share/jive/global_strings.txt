@@ -58,7 +58,7 @@ NOW_PLAYING
 	IT	Riproduzione in corso
 	NL	Speelt nu
 	NO	Spilles nå
-	PL	Odtwarzanie
+	PL	Teraz odtwarzane
 	RU	Воспроизводится
 	SV	Nu spelas
 
@@ -413,7 +413,7 @@ MONTH_1
 	DE	Januar
 	EN	January
 	ES	Enero
-	FI	Tammikuu
+	FI	tammikuu
 	FR	Janvier
 	IT	Gennaio
 	NL	januari
@@ -428,7 +428,7 @@ MONTH_2
 	DE	Februar
 	EN	February
 	ES	Febrero
-	FI	Helmikuu
+	FI	helmikuu
 	FR	Février
 	IT	Febbraio
 	NL	februari
@@ -443,7 +443,7 @@ MONTH_3
 	DE	März
 	EN	March
 	ES	Marzo
-	FI	Maaliskuu
+	FI	maaliskuu
 	FR	Mars
 	IT	Marzo
 	NL	maart
@@ -454,11 +454,11 @@ MONTH_3
 
 MONTH_4
 	CS	Duben
-	DA	april
+	DA	April
 	DE	April
 	EN	April
 	ES	Abril
-	FI	Huhtikuu
+	FI	huhtikuu
 	FR	Avril
 	IT	Aprile
 	NL	april
@@ -469,11 +469,11 @@ MONTH_4
 
 MONTH_5
 	CS	Květen
-	DA	maj
+	DA	Maj
 	DE	Mai
 	EN	May
 	ES	Mayo
-	FI	Toukokuu
+	FI	toukokuu
 	FR	Mai
 	IT	Maggio
 	NL	mei
@@ -488,7 +488,7 @@ MONTH_6
 	DE	Juni
 	EN	June
 	ES	Junio
-	FI	Kesäkuu
+	FI	kesäkuu
 	FR	Juin
 	IT	Giugno
 	NL	juni
@@ -503,7 +503,7 @@ MONTH_7
 	DE	Juli
 	EN	July
 	ES	Julio
-	FI	Heinäkuu
+	FI	heinäkuu
 	FR	Juillet
 	IT	Luglio
 	NL	juli
@@ -513,12 +513,12 @@ MONTH_7
 	SV	juli
 
 MONTH_8
-	CS	Říjen
-	DA	august
+	CS	Srpen
+	DA	August
 	DE	August
 	EN	August
 	ES	Agosto
-	FI	Elokuu
+	FI	elokuu
 	FR	Août
 	IT	Agosto
 	NL	augustus
@@ -529,11 +529,11 @@ MONTH_8
 
 MONTH_9
 	CS	Září
-	DA	september
+	DA	September
 	DE	September
 	EN	September
 	ES	Septiembre
-	FI	Syyskuu
+	FI	syyskuu
 	FR	Septembre
 	IT	Settembre
 	NL	september
@@ -548,7 +548,7 @@ MONTH_10
 	DE	Oktober
 	EN	October
 	ES	Octubre
-	FI	Lokakuu
+	FI	lokakuu
 	FR	Octobre
 	IT	Ottobre
 	NL	oktober
@@ -559,11 +559,11 @@ MONTH_10
 
 MONTH_11
 	CS	Listopad
-	DA	november
+	DA	November
 	DE	November
 	EN	November
 	ES	Noviembre
-	FI	Marraskuu
+	FI	marraskuu
 	FR	Novembre
 	IT	Novembre
 	NL	november
@@ -574,11 +574,11 @@ MONTH_11
 
 MONTH_12
 	CS	Prosinec
-	DA	december
+	DA	December
 	DE	Dezember
 	EN	December
 	ES	Diciembre
-	FI	Joulukuu
+	FI	joulukuu
 	FR	Décembre
 	IT	Dicembre
 	NL	december
@@ -589,63 +589,195 @@ MONTH_12
 
 MONTHSHORT_1
 # SLT - please use three character short version of the month January
+	CS	Led
+	DA	Jan
 	DE	Jan
 	EN	Jan
+	ES	Ene
+	FI	tam
+	FR	Jan
+	IT	Gen
+	NL	jan
+	NO	jan
+	PL	Sty
+	RU	Янв
+	SV	jan
 
 MONTHSHORT_2
 # SLT - please use three character short version of the month February
+	CS	Úno
+	DA	Feb
 	DE	Feb
 	EN	Feb
+	ES	Feb
+	FI	hel
+	FR	Fév
+	IT	Feb
+	NL	feb
+	NO	feb
+	PL	Lut
+	RU	Фев
+	SV	feb
 
 MONTHSHORT_3
 # SLT - please use three character short version of the month March
-	DE	Mär
+	CS	Bře
+	DA	Mar
+	DE	Mrz
 	EN	Mar
+	ES	Mar
+	FI	maa
+	FR	Mar
+	IT	Mar
+	NL	mrt
+	NO	mar
+	PL	Mar
+	RU	Мар
+	SV	mar
 
 MONTHSHORT_4
 # SLT - please use three character short version of the month April
+	CS	Dub
+	DA	Apr
 	DE	Apr
 	EN	Apr
+	ES	Abr
+	FI	huh
+	FR	Avr
+	IT	Apr
+	NL	apr
+	NO	apr
+	PL	Kwi
+	RU	Апр
+	SV	apr
 
 MONTHSHORT_5
 # SLT - please use three character short version of the month May
+	CS	Květen
+	DA	Maj
 	DE	Mai
 	EN	May
+	ES	May
+	FI	tou
+	FR	Mai
+	IT	Maggio
+	NL	mei
+	NO	mai
+	PL	Maj
+	RU	Май
+	SV	maj
 
 MONTHSHORT_6
 # SLT - please use three character short version of the month June
+	CS	Čer
+	DA	Jun
 	DE	Jun
 	EN	Jun
+	ES	Jun
+	FI	kes
+	FR	Jan
+	IT	Giu
+	NL	jun
+	NO	jun
+	PL	Cze
+	RU	Июн
+	SV	jun
 
 MONTHSHORT_7
 # SLT - please use three character short version of the month July
+	CS	Čec
+	DA	Jul
 	DE	Jul
 	EN	Jul
+	ES	Jul
+	FI	hei
+	FR	Jui
+	IT	Lug
+	NL	jul
+	NO	jul
+	PL	Lip
+	RU	Июл
+	SV	jul
 
 MONTHSHORT_8
 # SLT - please use three character short version of the month August
+	CS	Srp
+	DA	Aug
 	DE	Aug
 	EN	Aug
+	ES	Ago
+	FI	elo
+	FR	Aoû
+	IT	Ago
+	NL	aug
+	NO	aug
+	PL	Sie
+	RU	Авг
+	SV	aug
 
 MONTHSHORT_9
 # SLT - please use three character short version of the month September
+	CS	Zář
+	DA	Sep
 	DE	Sep
 	EN	Sep
+	ES	Sep
+	FI	syy
+	FR	Sep
+	IT	Set
+	NL	sep
+	NO	sept
+	PL	Wrz
+	RU	Сен
+	SV	sep
 
 MONTHSHORT_10
 # SLT - please use three character short version of the month October
+	CS	Říj
+	DA	Okt
 	DE	Okt
 	EN	Oct
+	ES	Oct
+	FI	lok
+	FR	Oct
+	IT	Ott
+	NL	okt
+	NO	okt
+	PL	Paź
+	RU	Окт
+	SV	okt
 
 MONTHSHORT_11
 # SLT - please use three character short version of the month November
+	CS	Lis
+	DA	Nov
 	DE	Nov
 	EN	Nov
+	ES	Nov
+	FI	mar
+	FR	Nov
+	IT	Nov
+	NL	nov
+	NO	nov
+	PL	Lis
+	RU	Ноя
+	SV	nov
 
 MONTHSHORT_12
 # SLT - please use three character short version of the month December
+	CS	Pro
+	DA	Dec
 	DE	Dez
 	EN	Dec
+	ES	Dic
+	FI	jou
+	FR	Déc
+	IT	Dic
+	NL	dec
+	NO	des
+	PL	Gru
+	RU	Дек
+	SV	dec
 
 DAY_1
 	CS	Neděle
@@ -656,11 +788,11 @@ DAY_1
 	FI	sunnuntai
 	FR	Dimanche
 	IT	Domenica
-	NL	Zondag
+	NL	zondag
 	NO	søndag
 	PL	Niedziela
 	RU	Воскресенье
-	SV	Söndag
+	SV	söndag
 
 DAY_2
 	CS	Pondělí
@@ -671,11 +803,11 @@ DAY_2
 	FI	maanantai
 	FR	Lundi
 	IT	Lunedì
-	NL	Maandag
-	NO	Mandag
+	NL	maandag
+	NO	mandag
 	PL	Poniedziałek
 	RU	Понедельник
-	SV	Måndag
+	SV	måndag
 
 DAY_3
 	CS	Úterý
@@ -686,11 +818,11 @@ DAY_3
 	FI	tiistai
 	FR	Mardi
 	IT	Martedì
-	NL	Dinsdag
-	NO	Tirsdag
+	NL	dinsdag
+	NO	tirsdag
 	PL	Wtorek
 	RU	Вторник
-	SV	Tisdag
+	SV	tisdag
 
 DAY_4
 	CS	Středa
@@ -698,14 +830,14 @@ DAY_4
 	DE	Mittwoch
 	EN	Wednesday
 	ES	Miércoles
-	FI	Keskiviikko
+	FI	keskiviikko
 	FR	Mercredi
 	IT	Mercoledì
-	NL	Woensdag
-	NO	Onsdag
+	NL	woensdag
+	NO	onsdag
 	PL	Środa
 	RU	Среда
-	SV	Onsdag
+	SV	onsdag
 
 DAY_5
 	CS	Čtvrtek
@@ -716,11 +848,11 @@ DAY_5
 	FI	torstai
 	FR	Jeudi
 	IT	Giovedì
-	NL	Donderdag
+	NL	donderdag
 	NO	torsdag
 	PL	Czwartek
 	RU	Четверг
-	SV	Torsdag
+	SV	torsdag
 
 DAY_6
 	CS	Pátek
@@ -731,11 +863,11 @@ DAY_6
 	FI	perjantai
 	FR	Vendredi
 	IT	Venerdì
-	NL	Vrijdag
-	NO	Fredag
+	NL	vrijdag
+	NO	fredag
 	PL	Piątek
 	RU	Пятница
-	SV	Fredag
+	SV	fredag
 
 DAY_7
 	CS	Sobota
@@ -746,43 +878,121 @@ DAY_7
 	FI	lauantai
 	FR	Samedi
 	IT	Sabato
-	NL	Zaterdag
-	NO	Lørdag
+	NL	zaterdag
+	NO	lørdag
 	PL	Sobota
 	RU	Суббота
-	SV	Lördag
+	SV	lördag
 
 DAYSHORT_1
 # SLT - please use three character short version of Sunday
-	DE	Son
+	CS	Ned
+	DA	Søn
+	DE	So
 	EN	Sun
-	
+	ES	Dom
+	FI	su
+	FR	Dim
+	IT	Dom
+	NL	zo
+	NO	søn
+	PL	Nie
+	RU	Вос
+	SV	sön
+
 DAYSHORT_2
 # SLT - please use three character short version of Monday
-	DE	Mon
+	CS	Pon
+	DA	Man
+	DE	Mo
 	EN	Mon
+	ES	Lun
+	FI	ma
+	FR	Lun
+	IT	Lun
+	NL	ma
+	NO	man
+	PL	Pon
+	RU	Пон
+	SV	mån
 
 DAYSHORT_3
 # SLT - please use three character short version of Tuesday
-	DE	Die
+	CS	Úte
+	DA	Tir
+	DE	Di
 	EN	Tue
+	ES	Mar
+	FI	ti
+	FR	Mar
+	IT	Mar
+	NL	di
+	NO	tirs
+	PL	Wto
+	RU	Вто
+	SV	tis
 
 DAYSHORT_4
 # SLT - please use three character short version of Wednesday
-	DE	Mit
+	CS	Stř
+	DA	Ons
+	DE	Mi
 	EN	Wed
+	ES	Mié
+	FI	ke
+	FR	Mer
+	IT	Mer
+	NL	wo
+	NO	ons
+	PL	Śro
+	RU	Сре
+	SV	ons
 
 DAYSHORT_5
 # SLT - please use three character short version of Thursday
-	DE	Don
+	CS	Čtv
+	DA	Tor
+	DE	Do
 	EN	Thu
+	ES	Jue
+	FI	to
+	FR	Jeu
+	IT	Gio
+	NL	do
+	NO	tor
+	PL	Czw
+	RU	Чет
+	SV	tor
 
 DAYSHORT_6
 # SLT - please use three character short version of Friday
-	DE	Fre
+	CS	Pát
+	DA	Fre
+	DE	Fr
 	EN	Fri
+	ES	Vie
+	FI	pe
+	FR	Ven
+	IT	Ven
+	NL	vr
+	NO	fre
+	PL	Pią
+	RU	Пят
+	SV	fre
 
 DAYSHORT_7
 # SLT - please use three character short version of Saturday
-	DE	Sam
+	CS	Sob
+	DA	Lør
+	DE	Sa
 	EN	Sat
+	ES	Sáb
+	FI	la
+	FR	Sam
+	IT	Sab
+	NL	za
+	NO	lør
+	PL	Sob
+	RU	Суб
+	SV	lör
+

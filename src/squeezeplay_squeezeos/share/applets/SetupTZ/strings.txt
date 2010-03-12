@@ -539,7 +539,7 @@ TZ_EUROPE_HELSINKI
 	NL	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
 	NO	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
 	PL	(GMT+02:00) Helsinki, Kijów, Ryga, Sofia, Talin, Wilno
-	RU	(GMT+02:00) – Хельсинки, Киев, Рига, София, Таллинн, Вильнюс
+	RU	(GMT+02:00) – Хельсинки, Киев, Рига, София, Таллин, Вильнюс
 	SV	(GMT + 2:00) Helsingfors, Kiev, Riga, Sofia, Tallinn, Vilnius
 
 TZ_AFRICA_CAIRO

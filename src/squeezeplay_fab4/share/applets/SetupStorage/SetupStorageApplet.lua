@@ -38,11 +38,11 @@ oo.class(_M, Applet)
 
 local devicesTests = {
 	"USB_DISK_VOLUMENAME",
-	"USB_DISK_SIZE",
-	"USB_DISK_FREE",
+--	"USB_DISK_SIZE",
+--	"USB_DISK_FREE",
 	"SD_CARD_VOLUMENAME",
-	"SD_CARD_SIZE",
-	"SD_CARD_FREE",
+--	"SD_CARD_SIZE",
+--	"SD_CARD_FREE",
 }
 
 
@@ -89,6 +89,10 @@ function doDevicesValues(self)
 	self:setValue(self.devicesMenu, "USB_DISK_VOLUMENAME", usbLabel)
 	self:setValue(self.devicesMenu, "SD_CARD_VOLUMENAME", sdCardLabel)
 
+--[[
+	-- Calling 'df' is blocking and if it's taking too long it can trigger the watchdog
+	-- Disabling size information until we find a better solution
+
 	local usbSize = "-"
 	local usbFree = "-"
 	local sdCardSize = "-"
@@ -113,6 +117,7 @@ function doDevicesValues(self)
 	self:setValue(self.devicesMenu, "USB_DISK_FREE", usbFree)
 	self:setValue(self.devicesMenu, "SD_CARD_SIZE", sdCardSize)
 	self:setValue(self.devicesMenu, "SD_CARD_FREE", sdCardFree)
+--]]
 end
 
 

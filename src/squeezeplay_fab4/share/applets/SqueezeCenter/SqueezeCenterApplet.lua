@@ -34,7 +34,7 @@ oo.class(_M, Applet)
 function init(self)
 	self.mountedDevices = self:getSettings()['mountedDevices']
 	self.ejectItems     = {}
-	self.MOUNTING_DRIVE_TIMEOUT = 30
+	self.MOUNTING_DRIVE_TIMEOUT = 20
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.WIPE_TIMEOUT = 60
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
@@ -425,6 +425,13 @@ function _mountingDrive(self, devName)
 	local sublabel = Label("subtext", self:string(token) )
 	popup:addWidget(sublabel)
 
+        --make sure this popup remains on screen
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:setTransparent(false)
+	popup:ignoreAllInputExcept()
+
 	self.popupMountWaiting = popup
 	self:tieAndShowWindow(popup)
 	return popup
@@ -586,8 +593,8 @@ function _mountingDriveTimer(self, devName)
 
 			self:addMountedDevice(devName, isScDrive)
 
-			self:_ejectWarning(devName)
 			self:_addEjectDeviceItem(devName)
+			self:_ejectWarning(devName)
 		else
 			-- Not yet mounted
 			self.mountingDriveTimeout = self.mountingDriveTimeout + 1

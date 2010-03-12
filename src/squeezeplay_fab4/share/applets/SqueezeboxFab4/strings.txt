@@ -199,9 +199,32 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	SV	Justera ljusstyrkan med rullningshjulet.
 
 SERVER_HAS_BEEN_STOPPED
+	CS	Místní hudební služba byla zastavena
+	DA	Den lokale musiktjeneste er stoppet
+	DE	Lokaler Musikdienst wurde beendet
 	EN	Local music service stopped
+	ES	Servicio de música local detenido
+	FI	Paikallinen musiikkipalvelu keskeytetty
+	FR	Le service de musique local s'est arrêté
+	IT	Servizio locale di musica interrotto
+	NL	Lokale muziekservice gestopt
+	NO	Den lokale musikktjenesten stoppet
+	PL	Lokalna usługa muzyczna została zatrzymana
+	RU	Локальная музыкальная служба остановлена
+	SV	Lokal musiktjänst stoppades
 
 SERVER_HAS_BEEN_STOPPED_INFO
+	CS	Místní hudební služba byla zastavena kvůli problému.
+	DA	Den lokale musiktjeneste er stoppet pga. et problem.
+	DE	Lokaler Musikdienst wurde aufgrund eines Problems beendet.
 	EN	Local music service has been stopped due to a problem.
-
+	ES	El servicio de música local se ha detenido debido a un problema.
+	FI	Paikallinen musiikkipalvelu on keskeytetty ongelman takia.
+	FR	Le service de musique local a été arrêté en raison d'un problème.
+	IT	Il servizio locale di musica è stato interrotto a causa di un problema.
+	NL	Lokale muziekservice is vanwege een probleem gestopt.
+	NO	Den lokale musikktjenesten ble stoppet pga. et problem.
+	PL	Lokalna usługa muzyczna została zatrzymana ze względu na problem.
+	RU	Локальная музыкальная служба остановлена из-за неполадок.
+	SV	Lokal musiktjänst har stoppats på grund av problem.
 

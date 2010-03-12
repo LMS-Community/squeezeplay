@@ -63,19 +63,19 @@ IMAGE_VIEWER_LIST_NOT_READY
 	SV	Flera försök att läsa/skapa bildlistan misslyckades. Kontrollera inställningarna för Bildvisaren.
 
 IMAGE_VIEWER_LIST_NOT_READY_SERVER
-	CS	Několik pokusů o čtení / vytvoření seznamu obrázků selhalo.
-	DA	Forsøgene på at læse/oprette billedlisten mislykkedes.
-	DE	Mehrere Versuche, die Bilderliste zu öffnen / zu erstellen, sind fehlgeschlagen.  Überprüfen Sie die Netzwerkverbindung.
+	CS	Selhalo několik pokusů o načtení / vytvoření souboru obrázků. Zkontrolujte, prosím, síťové připojení.
+	DA	Forsøgene på at læse/oprette billedlisten mislykkedes. Kontroller netværksforbindelsen.
+	DE	Mehrere Versuche, die Bilderliste zu öffnen/zu erstellen, sind fehlgeschlagen. Überprüfen Sie die Netzwerkverbindung.
 	EN	Several attempts at reading / creating the image list failed.  Please check the network connection.
-	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes.
-	FI	Yritykset lukea tai luoda kuvaluettelo epäonnistuivat.
-	FR	Plusieurs tentatives de lecture/création de la liste d'images ont échoué.
-	IT	Numerosi tentativi di leggere/creare l'immagine non sono riusciti.
-	NL	Lezen/aanmaken van de beeldenlijst is meermaals mislukt.
-	NO	Flere forsøk på å lese/opprette bildelisten, mislyktes.
-	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.
-	RU	Попытки чтения / создания списка изображений оказались неудачными.
-	SV	Flera försök att läsa/skapa bildlistan misslyckades.
+	ES	Tras varios intentos, no se ha podido leer/crear la lista de imágenes. Compruebe la conexión de red.
+	FI	Useat yritykset lukea tai luoda kuvaluottelo epäonnistuivat.  Tarkista verkkoyhteys.
+	FR	Plusieurs tentatives de lecture / création de la liste d'images ont échoué. Vérifiez votre connexion réseau.
+	IT	Numerosi tentativi di leggere/creare l'elenco delle immagini non sono riusciti. Verificare la connessione di rete.
+	NL	Het lezen/maken van de lijst met afbeeldingen is meerdere keren mislukt. Controleer de netwerkverbinding.
+	NO	Flere forsøk på å lese/opprette bildelisten mislyktes. Kontroller nettverkstilkoplingen.
+	PL	Nie powiodło się kilka kolejnych prób odczytu/utworzenia listy obrazów.  Sprawdź połączenie sieciowe.
+	RU	Попытки чтения или создания списка изображений завершились неудачей. Проверьте подключение к сети.
+	SV	Det gick inte att läsa/skapa bildlistan trots flera försök. Kontrollera nätverksanslutningen.
 
 IMAGE_VIEWER_SETTINGS
 	CS	Nastavení prohlížeče obrázků
@@ -138,12 +138,34 @@ IMAGE_VIEWER_SOURCE_CARD
 	SV	Minneskort
 
 IMAGE_VIEWER_SOURCE_USB
-	DE	USB Disk
+	CS	USB disk
+	DA	USB-disk
+	DE	USB-Datenträger
 	EN	USB disk
+	ES	Disco USB
+	FI	USB-asema
+	FR	Disque USB
+	IT	Disco USB
+	NL	USB-schijf
+	NO	Usb-stasjon
+	PL	Dysk USB
+	RU	USB-диск
+	SV	USB-enhet
 
 IMAGE_VIEWER_SOURCE_LOCAL_STORAGE
+	CS	Místní ukládací média
+	DA	Lokalt lagermedie
 	DE	Lokales Speichermedium
 	EN	Local storage media
+	ES	Medio de almacenamiento local
+	FI	Paikallinen tallennustietoväline
+	FR	Support de stockage local
+	IT	Memorizzazione locale multimediale
+	NL	Lokale opslagmedia
+	NO	Lokalt lagringsmedium
+	PL	Lokalny nośnik pamięci masowej
+	RU	Локальный носитель данных
+	SV	Lokalt lagringsmedium
 
 IMAGE_VIEWER_SOURCE_SC
 	CS	Squeezebox Server
@@ -641,7 +663,7 @@ IMAGE_VIEWER_CARD_PATH_HELP
 	NL	Definieert het zoekpad voor afbeeldingen.
 	NO	Angir søkebane for bilder.
 	PL	Zdefiniuj ścieżkę wyszukiwania obrazów.
-	RU	Задает путь поиска изображений.
+	RU	Задает путь для поиска изображений.
 	SV	Anger sökvägen för bilder.
 
 IMAGE_VIEWER_CARD_ERROR
@@ -667,7 +689,7 @@ IMAGE_VIEWER_CARD_NOT_DIRECTORY
 	ES	La ruta de búsqueda definida no es un directorio. Proporcione un nombre de ruta de directorio válido.
 	FI	Määritetty hakupolku ei ole hakemisto. Anna kelvollinen hakemistopolun nimi.
 	FR	Le chemin d'accès défini n'est pas un répertoire. Veuillez indiquer un nom de chemin de répertoire valide.
-	IT	Il percorso di ricerca indicato non è una directory. Fornire un percorso di directory valido.
+	IT	Il percorso di ricerca indicato non è una directory. Fornire un percorso valido.
 	NL	Het opgegeven zoekpad is geen directory. Geef een geldige naam voor het directorypad op.
 	NO	Den angitte søkebanen er ikke en katalog. Oppgi en gyldig bane til en katalog.
 	PL	Zdefiniowana ścieżka wyszukiwania nie jest katalogiem. Podaj prawidłową ścieżkę do katalogu.
@@ -723,7 +745,19 @@ IMAGE_VIEWER_HTTP_ERROR
 	SV	Det gick inte att hämta webbadresslistan. Kontrollera att den angivna webbadressen är korrekt.
 
 IMAGE_VIEWER_HTTP_ERROR_IMAGE
+	CS	Není možné získat obrazový soubor. Zkontrolujte, prosím, konektivitu sítě přehrávače.
+	DA	Billedfilen blev ikke hentet. Kontroller afspillerens netværksforbindelse.
+	DE	Bilddatei konnte nicht geladen werden. Überprüfen Sie die Netzwerkverbindung des Players.
 	EN	Could not retrieve image file. Please check the player's network connectivity.
+	ES	No se ha podido obtener el archivo de imagen. Compruebe la conexión de red del reproductor.
+	FI	Kuvatiedostoa ei voi noutaa. Tarkista soittimen verkkoyhteys.
+	FR	Impossible de récupérer le fichier image. Vérifiez la connexion réseau de la platine.
+	IT	Impossibile recuperare il file di immagini. Verificare la connessione di rete del lettore.
+	NL	Afbeeldingsbestand kan niet worden opgehaald. Controleer de netwerkverbinding van de muziekspeler.
+	NO	Kan ikke hente bildefil. Kontroller at spilleren er koplet til nettverket.
+	PL	Nie można pobrać pliku obrazu. Sprawdź połączenie sieciowe odtwarzacza.
+	RU	Не удалось извлечь файл изображения. Проверьте, подключен ли плеер к сети.
+	SV	Det gick inte att hämta bildfilen. Kontrollera spelarens nätverksanslutning.
 
 #
 # Strings for Flickr Source
@@ -1000,10 +1034,47 @@ IMAGE_VIEWER_INVALID_IMAGE
 	SV	Felaktig bildfil hittades.
 
 IMAGE_VIEWER_SAVE_WALLPAPER
+	CS	Použít obrázek jako tapetu
+	DA	Brug billede som tapet
+	DE	Bild als Hintergrund verwenden
 	EN	Use picture as wallpaper
-	
+	ES	Usar imagen como papel tapiz
+	FI	Käytä kuvaa taustakuvana
+	FR	Utiliser l'image en arrière-plan
+	IT	Usa immagine come sfondo
+	NL	Afbeelding als achtergrond gebruiken
+	NO	Bruk bilde som skrivebordsbakgrunn
+	PL	Użyj obrazu jako tapety
+	RU	Использовать рисунок как фоновый
+	SV	Använd bild som skrivbordsunderlägg
+
 IMAGE_VIEWER_WALLPAPER_SET
+	CS	Tapeta uložena jako\n%s
+	DA	Tapetet er gemt som\n%s
+	DE	Hintergrundbild gespeichert unter\n%s
 	EN	Wallpaper saved as\n%s
+	ES	Papel tapiz guardado como\n%s
+	FI	Taustakuva tallennettiin nimellä\n%s
+	FR	Arrière-plan enregistré sous\n%s
+	IT	Sfondo salvato con nome\n%s
+	NL	Achtergrond opslaan als\n%s
+	NO	Skrivebordsbakgrunn lagret som\n%s
+	PL	Tapeta została zapisana jako\n%s
+	RU	Фоновый рисунок сохранен как\n%s
+	SV	Skrivbordsunderlägg sparades som\n%s
 
 IMAGE_VIEWER_SAVED_SLIDE
+	CS	Uložený slide
+	DA	Gemt dias
+	DE	Gespeichertes Dia
 	EN	Saved Slide
+	ES	Diapositiva guardada
+	FI	Dia tallennettiin
+	FR	Diapositive enregistrée
+	IT	Diapositiva salvata
+	NL	Dia opgeslagen
+	NO	Lagret lysbilde
+	PL	Zapisany slajd
+	RU	Сохраненный слайд
+	SV	Sparad bild
+
