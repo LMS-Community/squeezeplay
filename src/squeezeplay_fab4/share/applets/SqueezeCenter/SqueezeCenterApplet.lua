@@ -564,6 +564,15 @@ function _unmountDrive(self, devName, force)
 	local sublabel = Label("subtext", self:string(token) )
 	popup:addWidget(sublabel)
 
+	-- Bug: 15741 - Media ejection SD and USB unreliable
+	-- Make sure this popup remains on screen until drive
+	-- is successfully ejected or a timeout occurs.
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:setTransparent(false)
+	popup:ignoreAllInputExcept()
+
 	self.popupUnmountWaiting = popup
 	self:tieAndShowWindow(popup)
 	return popup
