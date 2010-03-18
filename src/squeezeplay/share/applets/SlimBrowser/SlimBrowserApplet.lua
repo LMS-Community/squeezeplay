@@ -3008,7 +3008,7 @@ function _problemConnectingPopupInternal(self, server)
 	popup:addTimer(1000,
 		function()
 			count = count + 1
-			if count == 20 then
+			if count == 20 or _player:hasConnectionFailed() then
 				self:_problemConnecting(server)
 			end
 		end)
