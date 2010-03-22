@@ -89,6 +89,9 @@ static int callback(const void *inputBuffer,
 		add_silence_ms -= (BYTES_TO_SAMPLES(add_bytes) * 1000) / stream_sample_rate;
 		if (add_silence_ms < 2)
 			add_silence_ms = 0;
+
+		decode_audio->add_silence_ms = add_silence_ms;
+
 		if (!len) {
 			goto mixin_effects;
 		}
