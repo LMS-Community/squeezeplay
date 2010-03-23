@@ -34,7 +34,7 @@ oo.class(_M, Applet)
 function init(self)
 	self.mountedDevices = self:getSettings()['mountedDevices']
 	self.ejectItems     = {}
-	self.MOUNTING_DRIVE_TIMEOUT = 20
+	self.MOUNTING_DRIVE_TIMEOUT = 30
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.WIPE_TIMEOUT = 60
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
