@@ -627,9 +627,11 @@ function _renderImage(self)
 				zoom = math.min(zoomX, zoomY)
 			end
 
-			-- scale image
-			image = image:rotozoom(0, zoom, 1)
-			w, h = image:getSize()
+			-- scale image if needed
+			if zoom ~= 1 then
+				image = image:rotozoom(0, zoom, 1)
+				w, h = image:getSize()
+			end
 
 			-- zooming is hard work!	
 			self.task:yield()
