@@ -460,6 +460,10 @@ function _deviceRemoval(self, devName)
 			style = 'item',
 			sound = "WINDOWSHOW",		
 			callback = function ()
+				if self.ejectWarningWindow then
+					self.ejectWarningWindow:hide()
+					self.ejectWarningWindow = nil
+				end
 				window:hide()
 			end
 		})
@@ -701,6 +705,10 @@ function _unmountSuccess(self, devName)
 		style = 'item',
 		sound = "WINDOWSHOW",		
 		callback = function ()
+			if self.ejectWarningWindow then
+				self.ejectWarningWindow:hide()
+				self.ejectWarningWindow = nil
+			end
 			window:hide()
 		end
 	})
@@ -1214,6 +1222,7 @@ function _ejectWarning(self, devName)
 	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
 
 	window:addWidget(menu)
+	self.ejectWarningWindow = window
 	self:tieAndShowWindow(window)
 
 	-- restart the server
