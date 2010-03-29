@@ -784,14 +784,6 @@ function openSettings(self)
 			end
 		},
 		{
-			text = self:string("IMAGE_VIEWER_ROTATION"),
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-				self:defineRotation(menuItem)
-				return EVENT_CONSUME
-			end
-		},
-		{
 			text = self:string("IMAGE_VIEWER_ZOOM"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
@@ -808,6 +800,17 @@ function openSettings(self)
 			end
 		},
 	}
+	
+	if System:hasDeviceRotation() then
+		table.insert(settingsMenu, 5, {
+			text = self:string("IMAGE_VIEWER_ROTATION"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineRotation(menuItem)
+				return EVENT_CONSUME
+			end
+		})
+	end
 	
 	-- no need for a source setting on baby - we don't have any choice
 	if System:hasLocalStorage() then
