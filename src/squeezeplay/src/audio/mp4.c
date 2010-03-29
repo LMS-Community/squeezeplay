@@ -692,8 +692,13 @@ size_t mp4_open(struct decode_mp4 *mp4)
 
 		r = mp4_fill_buffer(mp4, &streaming);
 		if (r < 0) {
-			LOG_ERROR(log_audio_codec, "premature end of stream");
-			return 0;
+			if (streaming) {
+				LOG_DEBUG(log_audio_codec, "waiting for more stream");
+				return 2;
+			} else {
+				LOG_ERROR(log_audio_codec, "premature end of stream");
+				return 0;
+			}
 		}
 
 		/* parse box */
