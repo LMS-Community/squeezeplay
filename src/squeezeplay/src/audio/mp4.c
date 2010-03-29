@@ -129,8 +129,8 @@ static void mp4_get_fullbox(struct decode_mp4 *mp4, int *version, int *flags)
 	}
 	if (flags) {
 		*flags  = mp4->ptr[1] << 16;
-		*flags |= mp4->ptr[1] << 8;
-		*flags |= mp4->ptr[1];
+		*flags |= mp4->ptr[2] << 8;
+		*flags |= mp4->ptr[3];
 	}
 	mp4->ptr += 4;
 	mp4->off += 4;
@@ -216,21 +216,22 @@ static int mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 			
 	mp4->box_size = mp4_get_u32(mp4);
 
+	memcpy(mp4->box_type, mp4->ptr, 4);
+	mp4_skip(mp4, 4);
+
+	mp4->box_size -= 8;
+
 	if (mp4->box_size == 1) {
 		/* extended box size */
 		mp4->box_size = mp4_get_u64(mp4);
+		mp4->box_size -= 8;
 	}
 	else if (mp4->box_size == 0) {
 		/* box extends to end of file */
 		mp4->box_size = ULONG_MAX;
 	}
 
-	memcpy(mp4->box_type, mp4->ptr, 4);
-	mp4_skip(mp4, 4);
-
-	LOG_DEBUG(log_audio_codec, "box %.4s %d (%x)", mp4->box_type, mp4->box_size, mp4->box_size);
-
-	mp4->box_size -= 8;
+	LOG_DEBUG(log_audio_codec, "box %.4s, size without header %d (%x)", mp4->box_type, mp4->box_size, mp4->box_size);
 
 	/* find box parser */
 	i=0;
