@@ -352,10 +352,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ui\jive_tile.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\ui\jive_utils.c"
 				>
 			</File>
