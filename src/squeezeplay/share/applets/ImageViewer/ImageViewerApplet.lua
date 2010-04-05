@@ -627,9 +627,11 @@ function _renderImage(self)
 				zoom = math.min(zoomX, zoomY)
 			end
 
-			-- scale image
-			image = image:rotozoom(0, zoom, 1)
-			w, h = image:getSize()
+			-- scale image if needed
+			if zoom ~= 1 then
+				image = image:rotozoom(0, zoom, 1)
+				w, h = image:getSize()
+			end
 
 			-- zooming is hard work!	
 			self.task:yield()
@@ -782,14 +784,6 @@ function openSettings(self)
 			end
 		},
 		{
-			text = self:string("IMAGE_VIEWER_ROTATION"),
-			sound = "WINDOWSHOW",
-			callback = function(event, menuItem)
-				self:defineRotation(menuItem)
-				return EVENT_CONSUME
-			end
-		},
-		{
 			text = self:string("IMAGE_VIEWER_ZOOM"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
@@ -806,6 +800,17 @@ function openSettings(self)
 			end
 		},
 	}
+	
+	if System:hasDeviceRotation() then
+		table.insert(settingsMenu, 5, {
+			text = self:string("IMAGE_VIEWER_ROTATION"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:defineRotation(menuItem)
+				return EVENT_CONSUME
+			end
+		})
+	end
 	
 	-- no need for a source setting on baby - we don't have any choice
 	if System:hasLocalStorage() then

@@ -248,8 +248,11 @@ function _addServerItem(self, server, address)
 		log:debug("Exclude SN")
 		return
 	end
-
-	if self.offerCompatibleSourcesOnly and not server:isCompatible() then
+	
+	-- Bug 15860: need to test if we know the server name:
+	-- not knowing it probably means we do not know if it is compatible,
+	-- so we need to offer it just in case.
+	if self.offerCompatibleSourcesOnly and server and not server:isCompatible() then
 		log:info("Exclude non-compatible source: ", server)
 		return
 	end

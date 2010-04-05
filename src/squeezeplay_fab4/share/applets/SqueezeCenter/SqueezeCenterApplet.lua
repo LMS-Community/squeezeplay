@@ -34,7 +34,7 @@ oo.class(_M, Applet)
 function init(self)
 	self.mountedDevices = self:getSettings()['mountedDevices']
 	self.ejectItems     = {}
-	self.MOUNTING_DRIVE_TIMEOUT = 20
+	self.MOUNTING_DRIVE_TIMEOUT = 60
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.WIPE_TIMEOUT = 60
 	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
@@ -460,6 +460,10 @@ function _deviceRemoval(self, devName)
 			style = 'item',
 			sound = "WINDOWSHOW",		
 			callback = function ()
+				if self.ejectWarningWindow then
+					self.ejectWarningWindow:hide()
+					self.ejectWarningWindow = nil
+				end
 				window:hide()
 			end
 		})
@@ -563,6 +567,15 @@ function _unmountDrive(self, devName, force)
 	end
 	local sublabel = Label("subtext", self:string(token) )
 	popup:addWidget(sublabel)
+
+	-- Bug: 15741 - Media ejection SD and USB unreliable
+	-- Make sure this popup remains on screen until drive
+	-- is successfully ejected or a timeout occurs.
+	popup:setAllowScreensaver(false)
+	popup:setAlwaysOnTop(true)
+	popup:setAutoHide(false)
+	popup:setTransparent(false)
+	popup:ignoreAllInputExcept()
 
 	self.popupUnmountWaiting = popup
 	self:tieAndShowWindow(popup)
@@ -692,6 +705,10 @@ function _unmountSuccess(self, devName)
 		style = 'item',
 		sound = "WINDOWSHOW",		
 		callback = function ()
+			if self.ejectWarningWindow then
+				self.ejectWarningWindow:hide()
+				self.ejectWarningWindow = nil
+			end
 			window:hide()
 		end
 	})
@@ -1205,6 +1222,7 @@ function _ejectWarning(self, devName)
 	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
 
 	window:addWidget(menu)
+	self.ejectWarningWindow = window
 	self:tieAndShowWindow(window)
 
 	-- restart the server

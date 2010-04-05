@@ -58,18 +58,16 @@ function defaultSettings(self)
 	defaultSetting["ordering"] = "sequential"
 	defaultSetting["textinfo"] = false
 
-	defaultSetting["source"] = "storage"
+	defaultSetting["source"] = "http"
 	defaultSetting["card.path"] = "/media"
-	defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbtouch.lst"
+	defaultSetting["http.path"] = "http://www.mysqueezebox.com/static/images/imageviewer/sbtouch.lst"
 
-	if not System:hasLocalStorage() then
-		defaultSetting["source"] = "http"
-		defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbradio.lst"
+	if System:getMachine() == "baby" then
+		defaultSetting["http.path"] = "http://www.mysqueezebox.com/static/images/imageviewer/sbradio.lst"
 	end
 
 	if System:getMachine() == "jive" then
-		defaultSetting["source"] = "http"
-		defaultSetting["http.path"] = "http://www.herger.net/sbimages/sbcontroller.lst"
+		defaultSetting["http.path"] = "http://www.mysqueezebox.com/static/images/imageviewer/sbcontroller.lst"
 	end
 
 	return defaultSetting

@@ -771,6 +771,7 @@ function SCGuardianTimer(self, action)
 
 				if not running then
 					log:warn("SC guard timer - SC got killed!!!")
+					appletManager:callService("deactivateScreensaver")
 					self.scGuardTimer:stop()
 					self.scGuardTimer = nil
 					self:_showSCHasBeenStoppedMessage()
