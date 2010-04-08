@@ -556,7 +556,7 @@ end
 
 function _addDemoListener(self)
 	log:warn('ADD DEMO LISTENER')
-	self.window:addActionListener("go_now_playing", self, _jumpToDemo)
+	self.window:addActionListener("go_now_playing_or_playlist", self, _jumpToDemo)
 end
 
 
