@@ -791,6 +791,9 @@ function _updatePower(self)
 	-- wake up on ac power changes
 	if batteryState ~= self.batteryState then
 		self:wakeup()
+                if batteryState == "ac" then                                                                            
+                        iconbar.iconBattery:playSound("DOCKING")                            
+                end                                                                                       
 	end
 	self.batteryState = batteryState
 
