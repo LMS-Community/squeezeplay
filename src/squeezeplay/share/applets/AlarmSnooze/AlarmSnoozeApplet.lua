@@ -65,24 +65,15 @@ function init(self, ...)
 			true
 	)
 
-	local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
-	-- Bug 15663: send wol packet well before alarm time
-	-- if timeToAlarm is less than wolLeadTime, send the wakeOnLan packet immediately as a best effort
-	if self.server and timeToAlarm and timeToAlarm < wolLeadTime then
-		self.server:wakeOnLan()
-	-- if startTimer is true and timeToAlarm >= wolLeadTime, send a wol packet wolLeadTime in front of timeToAlarm
-	elseif startTimer then
-		local wakeUp = timeToAlarm - wolLeadTime
-		self.wakeOnLanTimer = Timer(wakeUp,
-				function()
-					if self.server then
-						log:warn('WOL packet being sent to ', self.server)
-						self.server:wakeOnLan()
-					end
-				end,
-				true
-		)
-	end
+	self.wakeOnLanTimer = Timer(86400000, -- arbitrary countdown, as timer interval will be set by _startTimer(), not here
+			function()
+				if self.server then
+					log:warn('WOL packet being sent to ', self.server)
+					self.server:wakeOnLan()
+				end
+			end,
+			true
+	)
 
 	self.statusPoller = Timer(1000, 
 		function ()
@@ -675,14 +666,18 @@ function _startTimer(self, interval)
 		self.RTCAlarmTimer:setInterval(sleepMsecs)
 		self.debugRTCTime = sleepMsecs
 
-		-- WOL timer is set when sleepMsecs is more than 11 minutes away (660,000 msecs)
-		if sleepMsecs > 660000 then
-			self.wakeOnLanTimer:setInterval(sleepMsecs - 600000)
+		-- WOL timer is set when sleepMsecs is more than 5:00 away
+		local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
+		if sleepMsecs > wolLeadTime then
+			self.wakeOnLanTimer:setInterval(sleepMsecs - 5100)
 			if self.wakeOnLanTimer:isRunning() then
 				self.wakeOnLanTimer:restart()
 			else
 				self.wakeOnLanTimer:start()
 			end
+		-- if it's withing 5 minutes, send a WOL packet as a best effort
+		elseif self.server then
+			self.server:wakeOnLan()
 		end
 	end
 	self.RTCAlarmTimer:start()
