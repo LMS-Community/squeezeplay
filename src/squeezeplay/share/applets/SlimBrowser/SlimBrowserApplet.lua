@@ -1982,6 +1982,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					local currentStep = _getCurrentStep()
 					if currentStep and currentStep.window and currentStep.window:isContextMenu() then
 						Window:hideContextMenus()
+						--bug 15824: also refresh the underlying window from the CM
+						_refreshMe(setSelectedIndex)
 					else
 						_hideMeAndMyDad(setSelectedIndex)
 					end
