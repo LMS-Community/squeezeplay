@@ -100,25 +100,30 @@ function param(self)
 			{
 				style = 'nowplaying', 
 				artworkSize = '180x180',
+				text = self:string("ART_AND_TEXT"),
 			},
 			{
 				style = 'nowplaying_art_only',
 				artworkSize = '470x262',
 				suppressTitlebar = 1,
+				text = self:string("ART_ONLY"),
 			},
 			{
 				style = 'nowplaying_text_only',
 				artworkSize = '180x180',
+				text = self:string("TEXT_ONLY"),
 			},
 			{
 				style = 'nowplaying_spectrum_text',
 				artworkSize = '180x180',
 				localPlayerOnly = 1,
+				text = self:string("SPECTRUM_ANALYZER"),
 			},
 			{
 				style = 'nowplaying_vuanalog_text',
 				artworkSize = '180x180',
 				localPlayerOnly = 1,
+				text = self:string("ANALOG_VU_METER"),
 			},
 		},
         }
@@ -3092,24 +3097,9 @@ function skin(self, s)
 	})
 
 	s.nowplaying.pressed = s.nowplaying
-	s.nowplaying.nptitle.pressed = _uses(s.nowplaying.nptitle, {
-		nptrack = {
-			fg = { 0xB3, 0xB3, 0xB3 },
-			sh = { },
-		},
-	})
-	s.nowplaying.npalbumgroup.pressed = _uses(s.nowplaying.npalbumgroup, {
-		npalbum = {
-			fg = { 0xB3, 0xB3, 0xB3 },
-			sh = { },
-		},
-	})
-	s.nowplaying.npartistgroup.pressed = _uses(s.nowplaying.npartistgroup, {
-		npartist = {
-			fg = { 0xB3, 0xB3, 0xB3 },
-			sh = { },
-		},
-	})
+	s.nowplaying.nptitle.pressed = _uses(s.nowplaying.nptitle)
+	s.nowplaying.npalbumgroup.pressed = _uses(s.nowplaying.npalbumgroup)
+	s.nowplaying.npartistgroup.pressed = _uses(s.nowplaying.npartistgroup)
 	s.nowplaying.npartwork.pressed = s.nowplaying.npartwork
 
 	s.nowplaying.npcontrols.pressed = {
@@ -3225,24 +3215,9 @@ function skin(self, s)
 		},
 	})
 	s.nowplaying_text_only.pressed = s.nowplaying_text_only
-	s.nowplaying_text_only.nptitle.pressed = _uses(s.nowplaying_text_only.nptitle, {
-		nptrack = {
-			fg = { 0xb3, 0xb3, 0xb3 },
-			sh = { },
-		},
-	})
-	s.nowplaying_text_only.npalbumgroup.pressed = _uses(s.nowplaying_text_only.npalbumgroup, {
-		npalbum = {
-			fg = { 0xb3, 0xb3, 0xb3 },
-			sh = { },
-		},
-	})
-	s.nowplaying_text_only.npartistgroup.pressed = _uses(s.nowplaying_text_only.npartistgroup, {
-		npartist = {
-			fg = { 0xb3, 0xb3, 0xb3 },
-			sh = { },
-		},
-	})
+	s.nowplaying_text_only.nptitle.pressed = _uses(s.nowplaying_text_only.nptitle)
+	s.nowplaying_text_only.npalbumgroup.pressed = _uses(s.nowplaying_text_only.npalbumgroup)
+	s.nowplaying_text_only.npartistgroup.pressed = _uses(s.nowplaying_text_only.npartistgroup)
 
 	-- Visualizer: Container with titlebar, progressbar and controls.
 	--  The space between title and controls is used for the visualizer.

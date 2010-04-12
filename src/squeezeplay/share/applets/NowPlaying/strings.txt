@@ -197,3 +197,9 @@ SCREENSAVER_SCROLLMODE_NOSCROLL
 	RU	Без прокрутки
 	SV	Rulla inte
 
+NOW_PLAYING_VIEWS
+	EN	Now Playing Views
+
+NOW_PLAYING_VIEWS_HELP
+	EN	The Now Playing screen has a number of different window configurations or "views" that can be toggled through. Select the views you'd like for this player here.
+

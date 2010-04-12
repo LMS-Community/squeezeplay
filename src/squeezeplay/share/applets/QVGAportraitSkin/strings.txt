@@ -18,3 +18,8 @@ QVGAPORTRAIT_SKIN
 	RU	Обложка: QVGA, книжная ориентация
 	SV	QVGA-skal i stående format
 
+SMALL_ART
+	EN	Small artwork
+
+LARGE_ART
+	EN	Large artwork
