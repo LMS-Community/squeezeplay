@@ -56,7 +56,18 @@ local _globalSsAllowedActions = {
 function init(self, ...)
 	self.screensavers = {}
 	self.screensaverSettings = {}
-	self:addScreenSaver(self:string("SCREENSAVER_NONE"), false, false, _, _, 100, nil, nil, nil, {"whenOff"})
+	self:addScreenSaver(
+		self:string("SCREENSAVER_NONE"),  -- display name
+		false,	-- applet for this screensaver 
+		false,	-- method from the applet to call
+		_,	--settingsName
+		_,	--settings
+		100,	--weight for settings menu
+		nil,	-- closeMethod
+		nil,	-- methodParam
+		nil,	-- additionalKey
+		{"whenOff"} -- "none" is not an acceptable option for an off screensaver, so exclude it from the settings menu for that mode
+	) 
 
 	self.timeout = self:getSettings()["timeout"]
 
@@ -243,8 +254,15 @@ function _activate(self, the_screensaver, force)
 
 	local year = os.date("%Y")
 	local screensaver = self.screensavers[the_screensaver]
-	if not screensaver or not screensaver.applet or
-		( tonumber(year) < 2009 and not force and self:_getMode() == 'whenOff' ) then -- fallback to blank screensaver on whenOff and no clock
+
+	-- the "none" choice is false:false, for which the proper course is to do nothing
+	if the_screensaver == 'false:false' then
+		log:warn('"none" is the configured screensaver for ', self:_getMode(), ', so do nothing')
+		return
+	end
+
+	if not screensaver or not screensaver.applet -- fallback to default if screensaver.applet doesn't exist
+		or ( tonumber(year) < 2009 and not force and self:_getMode() == 'whenOff' ) then -- fallback to blank screensaver on whenOff and no clock
 		-- no screensaver, fallback to default
 		log:warn('The configured screensaver method ', the_screensaver, ' is not available. Falling back to default from Meta file')
 		local fallbackKey = self.defaultSettings[self:_getMode()]
