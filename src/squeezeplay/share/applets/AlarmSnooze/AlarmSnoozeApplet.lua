@@ -669,7 +669,7 @@ function _startTimer(self, interval)
 		-- WOL timer is set when sleepMsecs is more than 5:00 away
 		local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
 		if sleepMsecs > wolLeadTime then
-			self.wakeOnLanTimer:setInterval(sleepMsecs - 5100)
+			self.wakeOnLanTimer:setInterval(sleepMsecs - wolLeadTime)
 			if self.wakeOnLanTimer:isRunning() then
 				self.wakeOnLanTimer:restart()
 			else
