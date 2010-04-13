@@ -82,16 +82,12 @@ function param(self)
 			{ 
 				style = 'nowplaying',
 				artworkSize = '320x320',
-				--FIXME: self:string() does not work here
-				--text = self:string('LARGE_ART'),
-				text = 'Large artwork',
+				text = self:string('LARGE_ART'),
 			 },
 			{
 				style = 'nowplaying_small_art',
 				artworkSize = '143x143',
-				--FIXME: self:string() does not work here
-				--text = self:string('SMALL_ART'),
-				text = 'Small artwork',
+				text = self:string('SMALL_ART'),
 			},
 		},
         }

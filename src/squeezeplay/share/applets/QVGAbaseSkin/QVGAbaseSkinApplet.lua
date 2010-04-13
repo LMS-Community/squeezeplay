@@ -58,7 +58,7 @@ local appletManager          = appletManager
 
 
 module(..., Framework.constants)
-oo.class(_M, QVGAbaseSkinApplet)
+oo.class(_M, Applet)
 
 
 -- Define useful variables for this skin
