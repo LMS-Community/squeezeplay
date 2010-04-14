@@ -191,15 +191,12 @@ function requestImage(self, imageData)
 		
 		-- if an image url has the {resizeParams} placeholder, add Squeezebox server resizing parameters
 		local resizeParams = "_" .. screenWidth .. "x" .. screenHeight
-		local rotation = self.applet:getSettings()["rotation"]
 
 		if self.applet:getSettings()["fullscreen"] then
 			resizeParams = resizeParams .. "_c"
 
 		-- if the device can rotate (Jive) make sure we get whatever is the bigger ratio
-		elseif ( rotation == "yes" or (rotation == "auto" and System:hasDeviceRotation()) )
-			and (screenWidth < screenHeight) then
-
+		elseif self.applet:getSettings()["rotation"] and (screenWidth < screenHeight) then
 			resizeParams = "_" .. screenHeight .. "x" .. (math.floor(screenHeight * screenHeight / screenWidth)) .. "_f"
 		end
 		

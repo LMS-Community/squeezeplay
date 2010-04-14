@@ -501,8 +501,8 @@ IMAGE_VIEWER_TRANSITION_PUSH_LEFT
 IMAGE_VIEWER_ROTATION
 	CS	Automatické otáčení
 	DA	Automatisk rotation
-	DE	Automatisch drehen
-	EN	Auto-rotate
+	DE	Bilder drehen
+	EN	Image rotation
 	ES	Autogirar
 	FI	Käännä automaattisesti
 	FR	Rotation automatique
@@ -516,8 +516,8 @@ IMAGE_VIEWER_ROTATION
 IMAGE_VIEWER_ROTATION_YES
 	CS	Vždy otáčet
 	DA	Rotér altid
-	DE	Immer drehen
-	EN	Always rotate
+	DE	Bilder drehen
+	EN	Rotate images
 	ES	Girar siempre
 	FI	Käännä aina
 	FR	Toujours faire pivoter
@@ -527,21 +527,6 @@ IMAGE_VIEWER_ROTATION_YES
 	PL	Zawsze obracaj
 	RU	Всегда поворачивать
 	SV	Rotera alltid
-
-IMAGE_VIEWER_ROTATION_AUTO
-	CS	Otáčení pouze u mobilních zařízení
-	DA	Rotation kun på mobilenheder
-	DE	Drehung nur auf Mobilgeräten
-	EN	Rotation on mobile devices only
-	ES	Giro sólo en dispositivos móviles
-	FI	Kääntäminen ainoastaan mobiililaitteissa
-	FR	Rotation uniquement sur les dispositifs mobiles
-	IT	Rotazione solo sui dispositivi portatili
-	NL	Alleen rotatie op mobiele apparaten
-	NO	Rotering kun på bærbare enheter
-	PL	Obracanie tylko na urządzeniach mobilnych
-	RU	Поворот только на мобильных устройствах
-	SV	Rotation endast på mobila enheter
 
 IMAGE_VIEWER_ROTATION_NO
 	CS	Bez otáčení

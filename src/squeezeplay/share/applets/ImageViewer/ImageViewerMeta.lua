@@ -52,7 +52,7 @@ end
 function defaultSettings(self)
 	local defaultSetting = {}
 	defaultSetting["delay"] = 10000
-	defaultSetting["rotation" ] = "auto"
+	defaultSetting["rotation"] = System:hasDeviceRotation()
 	defaultSetting["fullscreen"] = false
 	defaultSetting["transition"] = "fade"
 	defaultSetting["ordering"] = "sequential"

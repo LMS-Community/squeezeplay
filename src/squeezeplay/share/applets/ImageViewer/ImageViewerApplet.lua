@@ -71,6 +71,14 @@ local transitionBottomUp
 local transitionLeftRight
 local transitionRightLeft
 
+function init(self)
+	-- migrate old <7.5.1 rotation value (yes|no|auto) to boolean
+	-- set to true if device can rotate and pref is set to auto or yes
+	local rotation = tostring(self:getSettings()["rotation"])
+	local deviceCanRotate = System:hasDeviceRotation()
+	self:setRotation(deviceCanRotate and (rotation == "true" or rotation == "yes" or rotation == "auto"))
+end
+
 function initImageSource(self, imgSourceOverride)
 	log:info("init image viewer")
 
@@ -562,13 +570,7 @@ end
 function _renderImage(self)
 	-- get device orientation and features
 	local screenWidth, screenHeight = Framework:getScreenSize()
-	local deviceCanRotate = false
 	
-	-- FIXME: better detection for device type
-	if System:hasDeviceRotation() then
-		-- Jive device
-		deviceCanRotate = true
-	end
 	local rotation = self:getSettings()["rotation"]
 	local fullScreen = self:getSettings()["fullscreen"]
 	local ordering = self:getSettings()["ordering"]
@@ -594,7 +596,7 @@ function _renderImage(self)
 			local imageLandscape = ((w/h) > 1)
 
 			-- determine whether to rotate
-			if (rotation == "yes") or (rotation == "auto" and deviceCanRotate) then
+			if rotation then
 				-- rotation allowed
 				if deviceLandscape != imageLandscape then
 					-- rotation needed, so let's do it
@@ -1184,23 +1186,11 @@ function defineRotation(self, menuItem)
                     "radio",
                     group,
                     function()
-                        self:setRotation("yes")
+                        self:setRotation(true)
                     end,
-                    rotation == "yes"
+                    rotation
 	            ),
             },
-            {
-                text = self:string("IMAGE_VIEWER_ROTATION_AUTO"),
-		style = 'item_choice',
-                check = RadioButton(
-                    "radio",
-                    group,
-                    function()
-                        self:setRotation("auto")
-                    end,
-                    rotation == "auto"
-	            ),
-            },           
             {
                 text = self:string("IMAGE_VIEWER_ROTATION_NO"),
 		style = 'item_choice',
@@ -1208,9 +1198,9 @@ function defineRotation(self, menuItem)
                     "radio",
                     group,
                     function()
-                        self:setRotation("no")
+                        self:setRotation(false)
                     end,
-                    rotation == "no"
+                    not rotation
 	            ),
             },           
 		}))
