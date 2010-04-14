@@ -1995,6 +1995,13 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					_refreshMe(setSelectedIndex)
 				-- if we have a nextWindow but none of those reserved words above, hide back to that named window
 				elseif nextWindow then
+					-- Bug 15960 - Fix app install when returning to App Gallery
+					-- 'from' and 'qty' need to be defined (i.e. not nil) else the returned list
+					--  does _not_ contain the just added app when returning to the App Gallery window.
+					-- If that patch causes issues in other cases another solution would be to
+					--  return to the Home Menu instead of returning to the App Gallery.
+					from, qty = 0, 200
+
 					_hideToX(nextWindow, setSelectedIndex)
 				elseif itemType == "slideshow" or (item and item["slideshow"]) then
 					from, qty = 0, 200
