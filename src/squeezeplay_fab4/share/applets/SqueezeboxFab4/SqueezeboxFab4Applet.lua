@@ -471,8 +471,8 @@ function notify_playerCurrent(self, player)
 			log:warn(err)
 			return
 		end
+		if chunk and chunk.data and chunk.data.date_epoch then
 		log:debug('date sync epoch: ', chunk.data.date_epoch)
-		if chunk.data.date_epoch then
                 	self:setDate(chunk.data.date_epoch)
 		end
  	end
