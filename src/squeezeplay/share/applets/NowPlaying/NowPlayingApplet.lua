@@ -147,7 +147,7 @@ function getNPStyles(self)
 		local settings = self:getSettings()
 		local playerId = self.player:getId()
 		for i, v in pairs(npSkinStyles) do
-			if settings.views[v.style] == false then
+			if settings and settings.views and settings.views[v.style] == false then
 				v.enabled = false
 			else
 				v.enabled = true
@@ -228,6 +228,10 @@ function npviewsSettingsShow(self)
 	local settings = self:getSettings()
 	local playerId = self.player:getId()
 	local savedSettings = true
+
+	if not settings.views then
+		settings.views = {}
+	end
 
 	if #settings.views == 0 then
 		for i, v in ipairs(npscreenViews) do
