@@ -29,14 +29,6 @@ local ImageSourceLocalStorage = require("applets.ImageViewer.ImageSourceLocalSto
 module(...)
 ImageSourceCard = oo.class(_M, ImageSourceLocalStorage)
 
-function readImageList(self)
-	local imgpath = self:getFolder()
-	
-	if imgpath and lfs.attributes(imgpath, "mode") == "directory" then
-		self:scanFolder(imgpath)
-	end
-end
-
 function getFolder(self)
 	return self:_getFolder("(/media/mmc%w*)")
 end

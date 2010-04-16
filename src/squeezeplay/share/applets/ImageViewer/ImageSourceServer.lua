@@ -23,6 +23,7 @@ local oo			= require("loop.simple")
 local table			= require("jive.utils.table")
 local string		= require("jive.utils.string")
 local json          = require("json")
+local math			= require("math")
 local debug         = require("jive.utils.debug")
 local SocketHttp	= require("jive.net.SocketHttp")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -31,6 +32,7 @@ local URL       	= require("socket.url")
 local Icon  		= require("jive.ui.Icon")
 local Surface		= require("jive.ui.Surface")
 local Framework		= require("jive.ui.Framework")
+local System        = require("jive.System")
 
 local jnt = jnt
 local jiveMain = jiveMain
@@ -192,6 +194,10 @@ function requestImage(self, imageData)
 
 		if self.applet:getSettings()["fullscreen"] then
 			resizeParams = resizeParams .. "_c"
+
+		-- if the device can rotate (Jive) make sure we get whatever is the bigger ratio
+		elseif self.applet:getSettings()["rotation"] and (screenWidth < screenHeight) then
+			resizeParams = "_" .. screenHeight .. "x" .. (math.floor(screenHeight * screenHeight / screenWidth)) .. "_f"
 		end
 		
 		urlString = string.gsub(urlString, "{resizeParams}", resizeParams)
@@ -288,10 +294,6 @@ function updateLoadingIcon(self)
 	end
 	
 	return icon
-end
-
-function useAutoZoom(self)
-	return false
 end
 
 function getErrorMessage(self)

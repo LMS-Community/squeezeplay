@@ -14,8 +14,10 @@ local Icon             = require("jive.ui.Icon")
 local Button           = require("jive.ui.Button")
 local Choice           = require("jive.ui.Choice")
 local Label            = require("jive.ui.Label")
+local Textarea         = require("jive.ui.Textarea")
 local Group            = require("jive.ui.Group")
 local Slider	       = require("jive.ui.Slider")
+local Checkbox         = require("jive.ui.Checkbox")
 local RadioButton      = require("jive.ui.RadioButton")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local SimpleMenu       = require("jive.ui.SimpleMenu")
@@ -130,8 +132,184 @@ function init(self)
 
 end
 
+-- style names are grabbed from the skin
+-- this list is compared against the settings.views table (if any), and certain views are disabled as specified
+-- further, if the player is not local and the view is local only, don't allow that in the returned table
+function getNPStyles(self)
+	local npSkinStyles = jiveMain:getSkinParam("nowPlayingScreenStyles")
 
-function settingsShow(self)
+	-- visualizers are only available for connected local players, so only include them in that case
+	local auditedNPStyles = {}
+	if not self.player then
+		-- don't give any options if not connected to a player
+
+	else
+		local settings = self:getSettings()
+		local playerId = self.player:getId()
+		for i, v in pairs(npSkinStyles) do
+			if settings and settings.views and settings.views[v.style] == false then
+				v.enabled = false
+			else
+				v.enabled = true
+			end
+			if not self.player:isLocal() and v.localPlayerOnly then
+				log:debug('the style ', v.style , ' is not for non-local players. Removing...')
+				-- if we purge this style, by definition it cannot be selected
+				if v.style == self.selectedStyle then
+					self.selectedStyle = nil
+				end
+			else
+				log:debug('style ', v.style, ' okay for this player')
+				table.insert(auditedNPStyles, v)
+				if not self.selectedStyle and v.enabled then
+					self.selectedStyle = v.style
+				elseif self.selectedStyle == v.style and not v.enabled then
+					self.selectedStyle = false
+				end
+			end
+		end
+		-- corner case: auditedNPStyles is an empty set or nothing in it is enabled.
+		-- That may happen if the only configured styles are visualizers and this player is non local
+		-- or it may happen if the skin has changed and the list of styles is non-overlapping to the configured settings from the old skin
+		-- In this case, go through again and enable everything possible
+		local oneEnabledStyle = false
+		for i, v in pairs(auditedNPStyles) do
+			if v.enabled then
+				oneEnabledStyle = true
+				break
+			end
+		end
+		if not oneEnabledStyle then
+			log:warn('No enabled view styles found, enabling all possible styles ')
+			auditedNPStyles = {}
+			for i, v in pairs(npSkinStyles) do
+				v.enabled = true
+				if not self.player:isLocal() and v.localPlayerOnly then
+					-- never enable localPlayerOnly styles for non local players (e.g., visualizers)
+					log:debug('np view ', v.style, ' left out of available views because this player is not local')
+				else
+					table.insert(auditedNPStyles, v)
+				end
+			end
+		end
+
+		-- use the first style if nothing is already selected
+		if not self.selectedStyle then
+			self.selectedStyle = auditedNPStyles[1] and auditedNPStyles[1].style
+		end
+		
+	end
+
+	if self.window and self.window:getStyle() then
+		if self.window:getStyle() ~= self.selectedStyle then
+			-- remove self.window if the style of the window does not match with self.selectedStyle
+			self.window = nil
+		end
+	end
+
+	-- for debug
+	--debug.dump(auditedNPStyles)
+
+	return auditedNPStyles
+end
+
+
+function npviewsSettingsShow(self)
+	local window = Window("text_list", self:string('NOW_PLAYING_VIEWS') )
+	local group = RadioGroup()
+
+	local menu = SimpleMenu("menu")
+
+	-- go through each NP screen view and add an item for each
+	local npscreenViews = self:getNPStyles()
+
+	-- if settings[playerId] isn't present, go ahead and create and save the settings for this player
+	-- this gets around dealing with logical insanity with initial conditions and the checkbox menu callbacks
+	local settings = self:getSettings()
+	local playerId = self.player:getId()
+	local savedSettings = true
+
+	if not settings.views then
+		settings.views = {}
+	end
+
+	if #settings.views == 0 then
+		for i, v in ipairs(npscreenViews) do
+			settings.views[v.style] = true
+			npscreenViews[i].enabled = true
+		end
+		self:storeSettings()
+	end
+	
+	-- if we've switched to a local player and there are localPlayerOnly styles, they may not be saved in settings.views
+	-- add them here
+	for i, v in pairs(npscreenViews) do
+		if settings.views[v.style] or settings.views[v.style] == false then
+			-- style is stored in table, even if value is false
+		else
+			log:warn('add v.style')
+			settings.views[v.style] = true
+		end
+	end
+
+
+	for i, v in ipairs(npscreenViews) do
+		local selected = true
+		if v.enabled == false then
+			selected = false
+		end
+		
+		menu:addItem( {
+			text = v.text,
+			style = 'item_choice',
+			check = Checkbox("checkbox", 
+				function(object, isSelected)
+					local settings = self:getSettings()
+					local playerId = self.player:getId()
+
+					if isSelected then
+						-- turn it on
+						settings.views[v.style] = true 
+					else
+						-- turn it off
+						-- there needs to be at least one style turned on
+						local enabledViews = 0
+						for k, v in pairs(settings.views) do
+							if v then
+								enabledViews = enabledViews + 1
+							end
+						end
+						if enabledViews > 1 or not savedSettings then
+							-- if we're turning off the selected style, 
+							-- dump self.window as well so it gets redrawn
+							if self.selectedStyle == v.style then
+								self.selectedStyle = nil
+								self.window = nil
+							end
+							settings.views[v.style] = false 
+						else
+							log:warn('A minimum of one selected NP view per player is required')
+							-- we need at least one enabled Now Playing view. Don't allow this.
+							Framework:playSound("BUMP")
+							window:bumpLeft()
+							object:setSelected(true)
+						end
+					end
+					self:storeSettings()
+				end,
+			selected),
+		} )
+	end
+
+	--XXX: not sure whether the text is necessary or even helpful here
+	--menu:setHeaderWidget(Textarea("help_text", self:string("NOW_PLAYING_VIEWS_HELP")))
+
+	window:addWidget(menu)
+	window:show()
+end
+
+
+function scrollSettingsShow(self)
 	local window = Window("text_list", self:string('SCREENSAVER_SCROLLMODE') )
 	local group = RadioGroup()
 
@@ -850,7 +1028,7 @@ function _updateShuffle(self, mode)
 		return
 	end
 	if self.controlsGroup then
-		log:warn("shuffle button style changed to: ", shuffleModes[token])
+		log:debug("shuffle button style changed to: ", shuffleModes[token])
 		self.shuffleButton:setStyle(shuffleModes[token])
 	end
 end
@@ -874,7 +1052,7 @@ function _updateRepeat(self, mode)
 		return
 	end
 	if self.controlsGroup then
-		log:warn("repeat button style changed to: ", repeatModes[token])
+		log:debug("repeat button style changed to: ", repeatModes[token])
 		self.repeatButton:setStyle(repeatModes[token])
 	end
 end
@@ -1058,17 +1236,24 @@ function _createTitleGroup(self, window, buttonStyle)
 	return titleGroup
 end
 
+
 function toggleNPScreenStyle(self)
 
 	log:debug('change window style')
-
+	local enabledNPScreenStyles = {}
 	for i, v in ipairs(self.nowPlayingScreenStyles) do
-		if self.selectedStyle == v.style then
-			if i == #self.nowPlayingScreenStyles then
-				self.selectedStyle = self.nowPlayingScreenStyles[1].style
+		if v.enabled then
+			table.insert(enabledNPScreenStyles, v)
+		end
+	end
+	
+	for i, v in ipairs(enabledNPScreenStyles) do
+		if self.selectedStyle == v.style and v.enabled then
+			if i == #enabledNPScreenStyles then
+				self.selectedStyle = enabledNPScreenStyles[1].style
 				break
 			else
-				self.selectedStyle = self.nowPlayingScreenStyles[i+1].style
+				self.selectedStyle = enabledNPScreenStyles[i+1].style
 				break
 			end
 		end
@@ -1076,7 +1261,12 @@ function toggleNPScreenStyle(self)
 
 	log:debug('setting NP window style to: ', self.selectedStyle)
 
-	self:replaceNPWindow()
+	if self.window and self.window:getStyle() == self.selectedStyle then
+		-- no need to replace this window with the same style
+		log:debug('the style of self.window matches self.selectedStyle. No need to do anything')
+	else
+		self:replaceNPWindow()
+	end
 end
 
 
@@ -1513,37 +1703,15 @@ function openScreensaver(self)
 	return false
 end
 
+
 function showNowPlaying(self, transition, direct)
 
-	local npSkinStyles = jiveMain:getSkinParam("nowPlayingScreenStyles")
-
-	-- visualizers are not available in non-local players, so do not include them
-	local auditedNPStyles = {}
-	if self.player and not self.player:isLocal() then
-		log:debug('the current player is not local', self.player)
-		for i, v in pairs(npSkinStyles) do
-			if v.localPlayerOnly then
-				log:debug('the style ', v.style , ' is not for non-local players. Removing...')
-				if v.style == self.selectedStyle then
-					self.selectedStyle = nil
-				end
-			else
-				log:debug('style ', v.style, ' okay for this player')
-				table.insert(auditedNPStyles, v)
-			end
-		end
-	else
-		log:debug('this player is local, all styles are okay')
-		auditedNPStyles = npSkinStyles
-	end
-
 	-- now we're ready to save the style table to self
-	self.nowPlayingScreenStyles = auditedNPStyles
+	self.nowPlayingScreenStyles = self:getNPStyles()
 
 	if not self.selectedStyle then
 		self.selectedStyle = 'nowplaying'
 	end
-
 	local npWindow = self.window
 
 	local lineInActive = appletManager:callService("isLineInActive")

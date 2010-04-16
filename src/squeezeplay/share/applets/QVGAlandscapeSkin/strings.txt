@@ -18,3 +18,9 @@ QVGALANDSCAPE_SKIN
 	RU	Обложка: QVGA, альбомная ориентация
 	SV	QVGA-skal i liggande format
 
+SMALL_ART
+	EN	Small artwork
+
+LARGE_ART
+	EN	Large artwork
+

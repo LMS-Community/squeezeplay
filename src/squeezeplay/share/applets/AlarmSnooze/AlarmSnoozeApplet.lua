@@ -64,7 +64,8 @@ function init(self, ...)
 			end,
 			true
 	)
-	self.wakeOnLanTimer = Timer(timeToAlarm,
+
+	self.wakeOnLanTimer = Timer(86400000, -- arbitrary countdown, as timer interval will be set by _startTimer(), not here
 			function()
 				if self.server then
 					log:warn('WOL packet being sent to ', self.server)
@@ -94,7 +95,7 @@ function init(self, ...)
 
 	-- this timer is for debug purposes only, to log state information every second for tracking purposes
 	-- very useful when needed...
-	-- self.statusPoller:start()
+	--self.statusPoller:start()
 
 	if startTimer then
 		self:_startTimer()
@@ -245,6 +246,22 @@ function notify_playerLoaded(self, player)
 			log:warn("notify_playerLoaded: called while `server` alarm in progress")
 		end
 	end
+end
+
+
+function notify_playerPower(self, player, power)
+        if player ~= self.player then
+                return
+        end
+        log:debug("notify_playerPower(): ", power)
+
+        -- turning power off while alarm is in progress always means alarm should be cancelled
+        if not power then
+		if self.alarmInProgress then
+			log:warn('Power turned off while alarm in progress. By design, turn the alarm off')
+			self:_alarmOff(true)
+		end
+        end
 end
 
 
@@ -481,6 +498,12 @@ function openAlarmWindow(self, caller)
 		return EVENT_CONSUME
 	end
 
+	local pauseAction = function()
+		window:playSound("WINDOWHIDE")
+		self:_alarmOff(true)
+		return EVENT_UNUSED
+	end
+
 	local consumeAction = function()
 		log:warn('Consuming this action')
 		Framework:playSound("BUMP")
@@ -501,6 +524,7 @@ function openAlarmWindow(self, caller)
 	menu:addActionListener("back", self, cancelAction)
 	menu:addActionListener("power", self, offAction)
 	menu:addActionListener("mute", self, snoozeAction)
+	menu:addActionListener("pause", self, pauseAction)
 
 	window:ignoreAllInputExcept(
 		--these actions are not ignored
@@ -642,14 +666,18 @@ function _startTimer(self, interval)
 		self.RTCAlarmTimer:setInterval(sleepMsecs)
 		self.debugRTCTime = sleepMsecs
 
-		-- WOL timer is set when sleepMsecs is more than 11 minutes away (660,000 msecs)
-		if sleepMsecs > 660000 then
-			self.wakeOnLanTimer:setInterval(sleepMsecs - 600000)
+		-- WOL timer is set when sleepMsecs is more than 5:00 away
+		local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
+		if sleepMsecs > wolLeadTime then
+			self.wakeOnLanTimer:setInterval(sleepMsecs - wolLeadTime)
 			if self.wakeOnLanTimer:isRunning() then
 				self.wakeOnLanTimer:restart()
 			else
 				self.wakeOnLanTimer:start()
 			end
+		-- if it's withing 5 minutes, send a WOL packet as a best effort
+		elseif self.server then
+			self.server:wakeOnLan()
 		end
 	end
 	self.RTCAlarmTimer:start()

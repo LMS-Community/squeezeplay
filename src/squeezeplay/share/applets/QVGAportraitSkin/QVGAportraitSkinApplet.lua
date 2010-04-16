@@ -84,10 +84,12 @@ function param(self)
 			{
 				style = 'nowplaying',
 				artworkSize = '240x240',
+				text = self:string('LARGE_ART'),
 			 },
 			{
 				style = 'nowplaying_small_art',
 				artworkSize = '200x200',
+				text = self:string('SMALL_ART'),
 			},
 		},
         }

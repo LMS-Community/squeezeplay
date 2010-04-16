@@ -188,6 +188,10 @@ function _addListeners(self)
 		Player:getLocalPlayer():setCapturePlayMode("pause")
 		return EVENT_CONSUME
 	end
+	local playAction = function(self)
+		Player:getLocalPlayer():setCapturePlayMode("play")
+		return EVENT_CONSUME
+	end
 	local nothingAction = function(self)
 		return EVENT_CONSUME
 	end
@@ -201,6 +205,7 @@ function _addListeners(self)
 	table.insert(self.listenerHandles, Framework:addActionListener("mute", self, pauseAction, .5))
 	table.insert(self.listenerHandles, Framework:addActionListener("pause", self, pauseAction, .5))
 	table.insert(self.listenerHandles, Framework:addActionListener("stop", self, stopAction, .5))
+	table.insert(self.listenerHandles, Framework:addActionListener("play", self, playAction, .5))
 	table.insert(self.listenerHandles, Framework:addActionListener("jump_rew", self, nothingAction, .5))
 	table.insert(self.listenerHandles, Framework:addActionListener("jump_fwd", self, nothingAction, .5))
 	table.insert(self.listenerHandles, Framework:addActionListener("scanner_rew", self, nothingAction, .5))

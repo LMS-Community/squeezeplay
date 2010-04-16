@@ -96,25 +96,30 @@ function param(self)
 			{ 
 				style = 'nowplaying' ,
 				artworkSize = '190x190',
+				text = self:string("ART_AND_TEXT"),
 			},
 			{
 				style = 'nowplaying_art_only',
 				artworkSize = '470x262',
 				suppressTitlebar = 1,
+				text = self:string("ART_ONLY"),
 			},
 			{
 				style = 'nowplaying_text_only',
 				artworkSize = '190x190',
+				text = self:string("TEXT_ONLY"),
 			},
 			{
 				style = 'nowplaying_spectrum_text',
 				artworkSize = '190x190',
 				localPlayerOnly = 1,
+				text = self:string("SPECTRUM_ANALYZER"),
 			},
 			{
 				style = 'nowplaying_vuanalog_text',
 				artworkSize = '190x190',
 				localPlayerOnly = 1,
+				text = self:string("ANALOG_VU_METER"),
 			},
 		},
 		radialClock = {

@@ -464,6 +464,9 @@ end
 
 function _t_setText(self, done, msg, count)
 	if type(count) == "number" then
+		if count >= 100 then
+			count = 100
+		end
 		self.counter:setValue(count .. "%")
 		self.progress:setRange(1, 100, count)
 	else

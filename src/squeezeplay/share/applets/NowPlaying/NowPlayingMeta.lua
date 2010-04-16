@@ -18,6 +18,7 @@ function defaultSettings(self)
 	return {
 		scrollText = true,
 		scrollTextOnce = false,
+		views = {},
 	}
 end
 
@@ -29,7 +30,17 @@ function registerApplet(self)
 			'screenSettingsNowPlaying', 
 			'SCREENSAVER_SCROLLMODE', 
 			function(applet, ...) 
-				applet:settingsShow(...) 
+				applet:scrollSettingsShow(...) 
+			end
+		)
+	)
+	jiveMain:addItem(
+		self:menuItem(
+			'appletNowPlayingViewsSettings', 
+			'screenSettingsNowPlaying', 
+			'NOW_PLAYING_VIEWS', 
+			function(applet, ...) 
+				applet:npviewsSettingsShow(...) 
 			end
 		)
 	)

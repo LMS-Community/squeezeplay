@@ -1,5 +1,5 @@
 
-local ipairs, tostring = ipairs, tostring, tonumber
+local ipairs, tostring, tonumber = ipairs, tostring, tonumber
 
 -- stuff we use
 local oo               = require("loop.simple")
@@ -91,11 +91,17 @@ local chargerState = {
 	  ["24"] = "BATT_CHARGING_PAUSED",
 }
 
-function setValue(self, key, value)
+function setValue(self, key, value, customLabel)
 	if not value then
 		value = '-'
 	end
-	self.diagMenu:setText(self.labels[key], self:string(key, value))
+
+	-- if we have customLabelArgs, we want to insert those first to the string args
+	if customLabel then
+		self.diagMenu:setText(self.labels[key], self:string(key, tostring(customLabel), value))
+	else
+		self.diagMenu:setText(self.labels[key], self:string(key, value))
+	end
 end
 
 
@@ -107,7 +113,8 @@ function setPowerValue(self, key, value)
 end
 
 
-function serverPort(self, server, port, key)
+function serverPort(self, server, port, key, customLabel)
+
 	if not server then
 		self:setValue(key, self.notConnected)
 		return
@@ -126,7 +133,7 @@ function serverPort(self, server, port, key)
 		end
 
 		if ip == nil then
-			self:setValue(key, portFail)
+			self:setValue(key, portFail, customLabel)
 			return
 		end
 
@@ -137,9 +144,9 @@ function serverPort(self, server, port, key)
 			local res, err = tcp.t_sock:send(" ")
 
 			if err then
-				self:setValue(key, portFail)
+				self:setValue(key, portFail, customLabel)
 			else
-				self:setValue(key, portOk)
+				self:setValue(key, portOk, customLabel)
 			end
 
 			tcp:close()
@@ -388,12 +395,13 @@ function dovalues(self, menu)
 		self:setValue("SC_ADDRESS", self.notConnected)
 		self:setValue("SC_PING", self.notConnected)
 		self:setValue("SC_PORT_3483", self.notConnected)
-		self:setValue("SC_PORT_9000", self.notConnected)
+		self:setValue("SC_PORT_9000", self.notConnected, "9000") -- guess at 9000 here 
 	else
 		self:setValue("SC_NAME", sc:getName())
 		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
 		self:serverPort(sc, 3483, "SC_PORT_3483")
-		self:serverPort(sc, 9000, "SC_PORT_9000")
+		local ip, port = sc:getIpPort()
+		self:serverPort(sc, port, "SC_PORT_9000", port)
 	end
 
 
@@ -471,8 +479,15 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	for i,name in ipairs(tests) do
 		if name ~= 'ETH_CONNECTION' or System:getMachine() ~= 'jive' then
+			local label
+			if name == 'SC_PORT_9000' then
+				label = self:string(name, '9000', '-')
+			else
+				label = self:string(name, '-')
+			end
+		
 			self.labels[name] = {
-				text = self:string(name, ''),
+				text = label,
 				style = 'item_info',
 			}
 			menu:addItem(self.labels[name])
