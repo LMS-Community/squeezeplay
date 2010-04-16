@@ -38,12 +38,18 @@ local ImageSource	= require("applets.ImageViewer.ImageSource")
 module(...)
 ImageSourceLocalStorage = oo.class(_M, ImageSource)
 
-function __init(self, applet)
+function __init(self, applet, paramOverride)
 	log:debug("initialize ImageSourceLocalStorage")
 	obj = oo.rawnew(self, ImageSource(applet))
 
 	obj.imgFiles = {}
 	obj.scanning = false
+	
+	-- caller can force a path
+	if paramOverride and paramOverride.path then
+		log:debug("overriding configured image path: ", paramOverride.path)
+		obj.pathOverride = paramOverride.path
+	end
 
 	return obj
 end
@@ -128,15 +134,19 @@ end
 
 function readImageList(self)
 
-	local imgpath = self.applet:getSettings()["card.path"]
+	local imgpath = self:getFolder()
 
 	if lfs.attributes(imgpath, "mode") == "directory" then
 		self:scanFolder(imgpath)
 	end
 end
 
+function getFolder(self)
+	return self.pathOverride or self.applet:getSettings()["card.path"]
+end
+
 function getImage(self)
-	if self.imgFiles[self.currentImage] != nil then
+	if self.imgFiles[self.currentImage] ~= nil then
 		local file = self.imgFiles[self.currentImage]
 		log:info("Next image in queue: ", file)
 		local image = Surface:loadImage(file)
