@@ -40,12 +40,25 @@ function registerApplet(meta)
 	meta:registerService("registerRemoteScreensaver")
 	meta:registerService("unregisterRemoteScreensaver")
 	meta:registerService("openRemoteScreensaver")
+	meta:registerService("mmImageViewerMenu")
 end
 
 
 function configureApplet(self)
-	appletManager:callService("addScreenSaver", self:string("IMAGE_VIEWER"), "ImageViewer",
-		"startScreensaver", self:string("IMAGE_VIEWER_SETTINGS"), "openSettings", 90, "closeRemoteScreensaver")
+	appletManager:callService("addScreenSaver",
+		self:string("IMAGE_VIEWER"),
+		"ImageViewer",
+		"startScreensaver",
+		self:string("IMAGE_VIEWER_SETTINGS"),
+		"openSettings",
+		90,
+		"closeRemoteScreensaver"
+	)
+
+	appletManager:callService("mmRegisterMenuItem", {
+		serviceMethod = "mmImageViewerMenu",
+		menuText      = self:string('IMAGE_VIEWER_START_SLIDESHOW')
+	})
 end
 
 

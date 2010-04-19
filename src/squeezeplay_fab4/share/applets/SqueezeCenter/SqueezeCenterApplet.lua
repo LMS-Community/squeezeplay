@@ -23,6 +23,7 @@ local Textarea               = require("jive.ui.Textarea")
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Window                 = require("jive.ui.Window")
+local SlimServer             = require("jive.slim.SlimServer")
 
 local appletManager          = appletManager
 local jiveMain               = jiveMain
@@ -32,12 +33,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function init(self)
-	self.mountedDevices = self:getSettings()['mountedDevices']
-	self.ejectItems     = {}
-	self.MOUNTING_DRIVE_TIMEOUT = 60
-	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.WIPE_TIMEOUT = 60
-	self.supportedFormats = {"FAT16","FAT32","NTFS","ext2","ext3"}
 	self.prefsFile = "/etc/squeezecenter/prefs.json"
 
 	self.settingsMenuItems = {
@@ -69,10 +65,6 @@ end
 -- do the right thing on jive startup
 function squeezecenterStartupCheck(self)
 
-	-- the startup check is re-initializing which drives are mounted, so whatever is pulled from settings in init() needs clearing here first
-	self.mountedDevices = {}
-
-
 	local mountedDrives       = self:mountedDriveCheck()
 	local usbDrives           = {}
 	local sdDrives            = {}
@@ -102,8 +94,6 @@ function squeezecenterStartupCheck(self)
 			-- mountpath represents a mounted drive
 			if mountedDrives[devName] then 
 				log:debug('STARTUP (3A)| prefs.json mountpath represents a mounted drive')
-                        	-- store device in self.mountedDevices
-				self:addMountedDevice(devName, true)
 			-- mountpath represents an umounted drive
 			else
 				log:debug('STARTUP (3B)| prefs.json mountpath is not a mounted drive')
@@ -117,7 +107,6 @@ function squeezecenterStartupCheck(self)
 				end
 				-- write prefs.json
 				log:debug('STARTUP (5)| Write prefs.json file')
-				self:addMountedDevice(scDrive, true)
 				self:_writeSCPrefsFile(scDrive)
 
 			end
@@ -135,26 +124,14 @@ function squeezecenterStartupCheck(self)
 			end
 			-- write prefs.json
 			log:debug('STARTUP (5)| Write prefs.json file')
-			self:addMountedDevice(scDrive, true)
 			self:_writeSCPrefsFile(scDrive)
 		end
 
 		log:debug('STARTUP (6)| Restart Server')
 		self:restartServer(true)
 
-		-- populate non-SC mounted drives to self.mountedDevices
-		-- create menu items for each
-		for k, v in pairs(mountedDrives) do
-			if not self.mountedDevices[k] then
-				self:addMountedDevice(k, false)
-			end
-			log:debug('STARTUP (7)| Create eject item for ', k)
-			self:_addEjectDeviceItem(k)
-		end
 	else
-		-- remove mounted devices from settings since we don't have any
-		self:getSettings()['mountedDevices'] = self.mountedDevices
-		self:storeSettings()
+		-- nothing right now
 	end
 
 end
@@ -167,20 +144,75 @@ function _firstTableElement(self, t)
 end
 
 
-function addMountedDevice(self, devName, isSCDrive)
-	log:warn('addMountedDevice: ', devName)
-	self.mountedDevices[devName] = {
-		devName    = devName,
-		deviceName = "/dev/"   .. devName,
-		mountPath  = "/media/" .. devName,
-		devType    = self:mediaType(devName),
-		SCDrive    = isSCDrive,
-	}
-	self:getSettings()['mountedDevices'] = self.mountedDevices
-	self:storeSettings()
-	--debug.dump(self.mountedDevices)
-	return true
+function mmSqueezeCenterMenu(self, devName)
+
+	log:info('mmSqueezeCenterMenu: ', devName)
+	-- we decide which menu to present based on whether this drive is the SC drive and whether SBS is running
+
+	-- server is running
+	if self:serverRunning() then
+		-- and pointed to this devName
+		if self:_scDrive() == devName then
+			log:info('SBS running and pointed to this device')
+			-- deliver status menu
+			self:settingsShow()
+		-- but not pointed to this devName
+		else
+			log:info('SBS running but not pointed to this device: ')
+			self:switchServerToDifferentMedia(devName)
+		end
+	else
+		-- present option to start it
+		log:info('SBS not running')
+		self:settingsShow()
+
+	end
 end
+
+
+function switchServerToDifferentMedia(self, devName)
+
+	self.devName = devName
+
+	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
+	local window = Window("text_list", 'Squeezebox Server')
+	
+	window:setAllowScreensaver(false)
+	local menu = SimpleMenu("menu")
+
+	menu:setHeaderWidget( Textarea("help_text", self:string('SWITCH_MEDIA_HELP')))
+
+	menu:addItem({
+		text = self:string( 'SWITCH_MEDIA', self:mediaType(devName) ),
+		sound = "WINDOWSHOW",
+		callback = function()
+			self:_writeSCPrefsFile(self.devName)
+			
+--[[ we should be able to just change the audiodir pref - don't know why it doesn't work...
+			local server = SlimServer:getCurrentServer()
+			server:request(function(chunk, err)
+				debug.dump(chunk.data)
+				log:debug(err)
+			end, nil, {'pref', 'audiodir', '/media/' .. devName})
+			window:hide()
+--]]
+			self:restartServer()
+		end,
+	})
+	menu:addItem({
+		text = self:string("CANCEL"),
+		sound = "WINDOWHIDE",
+		callback = function() 
+			window:hide()
+		end
+	})
+
+	window:addWidget(menu)
+	
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 function settingsShow(self)
 	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
@@ -266,6 +298,7 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 					local scanData = self:_scanStatus()
 		                        if count > 5 and ( scanData or count == 60) then
 						popup:hide()
+						Framework:pushAction("go_home")
 					end
 				end
 			)
@@ -392,118 +425,14 @@ function mediaType(self, devName)
 	return false
 end
 
--- _mountingDrive
--- full screen popup that appears until mounting is complete or failed
----function _mountingDrive(self)
-function _mountingDrive(self, devName)
-	log:debug('**** popup during drive mount')
-	if self.popupMountWaiting then
-		return
-	end
 
-        local popup = Popup("waiting_popup")
-        local icon  = Icon("icon_connecting")
+function mmStopSqueezeCenter(self, devName)
 
-	-- set self.devType var based on devName during the _mountingDrive method
-	self.devType = self:mediaType(devName)
-	self.mountingDriveTimeout = 0
-
-	icon:addTimer(1000,
-		function()
-			_mountingDriveTimer(self, devName)
-		end)
-
-        popup:addWidget(icon)
-
-	local label = Label("text", self:string('ATTACHING') )
-	popup:addWidget(label)
-
-	local token = 'DEVICE'
-	if self.devType then
-		token = self.devType
-	end
-	local sublabel = Label("subtext", self:string(token) )
-	popup:addWidget(sublabel)
-
-        --make sure this popup remains on screen
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-	popup:setTransparent(false)
-	popup:ignoreAllInputExcept()
-
-	self.popupMountWaiting = popup
-	self:tieAndShowWindow(popup)
-	return popup
-end
-
-
--- _deviceRemoval
--- kicked off when udev listener detects a device removal
--- checks if device is still in mount table, 
--- if so push on the DON'T DO THAT window, stop SC if drive was attached to SC
----function _mountingDrive(self)
-function _deviceRemoval(self, devName)
-
-	-- if devName is still in the self.mountedDevices table, consider this an unsafe eject
-	if self.mountedDevices and self.mountedDevices[devName] then
-		
-		--Bug 15793, remove eject item from menu after bad eject
-		self:_removeEjectDeviceItem(devName)
-
-		log:warn('!!! Drive ', self.mountedDevices[devName].deviceName, ' was unsafely ejected.')
-		local window = Window("text_list", self:string("DEVICE_REMOVAL_WARNING"))
-		window:setAllowScreensaver(false)
-		local menu = SimpleMenu("menu")
-		menu:addItem({
-			text = self:string("OK"),
-			style = 'item',
-			sound = "WINDOWSHOW",		
-			callback = function ()
-				if self.ejectWarningWindow then
-					self.ejectWarningWindow:hide()
-					self.ejectWarningWindow = nil
-				end
-				window:hide()
-			end
-		})
-
-		local token = 'DEVICE_REMOVAL_WARNING_INFO'
-		if self.mountedDevices[devName].devType then
-			token = token .. '_' .. self.mountedDevices[devName].devType
-		end
-	
-		menu:setHeaderWidget( Textarea("help_text", self:string(token) ) )
-		window:addWidget(menu)
-
-		if self.mountedDevices[devName].SCDrive then
-			log:warn('SqueezeCenter drive was improperly ejected. Stopping SqueezeCenter')
-			self:_stopServer(silent)
-		end
-
-		self.mountedDevices[devName] = nil
-		self:getSettings()['mountedDevices'] = self.mountedDevices
-		self:storeSettings()
-		
-		self:tieAndShowWindow(window)
-		return window
-	end
-
-end
-
-
-function _unmountActions(self, devName, silent, force)
-
-	local item = self:_getItemFromDevName(devName)
-	if item.SCDrive then
-		self:_stopServer(silent)
+	if devName == self:_scDrive() then
+		log:warn('stopping server pointed to ', devName)
+		self:_stopServer()
 	else
-		log:debug('This is not the SCDrive, so ')
-	end
-	if force then
-		os.execute("umount -l /media/" .. devName)
-	else
-		os.execute("umount /media/" .. devName)
+		log:warn('devName ', devName, ' does not equal ', self.SCDrive)
 	end
 
 end
@@ -523,285 +452,9 @@ function stopSqueezeCenter(self)
 end
 
 
--- _unmountingDrive
--- full screen popup that appears until unmounting is complete or failed
-function _unmountDrive(self, devName, force)
-	
-	log:warn('_unmountDrive() ', devName)
-
-	local item = self:_getItemFromDevName(devName)
-
-
-	-- require that we have an item.devPath to eject
-	if not item.mountPath then
-		log:warn("no mountPath to eject item")
-		return EVENT_UNUSED
-	end
-
-	self:_unmountActions(devName, _, force)
-
-	if self.popupUnmountWaiting then
-		return
-	end
-
-        local popup = Popup("waiting_popup")
-        local icon  = Icon("icon_connecting")
-
-	-- set self.devType var based on devName during the _mountingDrive method
-	self.devType = self:mediaType(devName)
-	self.unmountingDriveTimeout = 0
-
-	icon:addTimer(1000,
-		function()
-			_unmountingDriveTimer(self, devName)
-		end)
-
-        popup:addWidget(icon)
-
-	local label = Label("text", self:string('EJECTING') )
-	popup:addWidget(label)
-
-	local token = 'DEVICE'
-	if self.devType then
-		token = self.devType
-	end
-	local sublabel = Label("subtext", self:string(token) )
-	popup:addWidget(sublabel)
-
-	-- Bug: 15741 - Media ejection SD and USB unreliable
-	-- Make sure this popup remains on screen until drive
-	-- is successfully ejected or a timeout occurs.
-	popup:setAllowScreensaver(false)
-	popup:setAlwaysOnTop(true)
-	popup:setAutoHide(false)
-	popup:setTransparent(false)
-	popup:ignoreAllInputExcept()
-
-	self.popupUnmountWaiting = popup
-	self:tieAndShowWindow(popup)
-	return popup
+function startSqueezeCenter(self)
+	self:_startServerWindow()
 end
-
-
-function _mountingDriveTimer(self, devName)
-	local mounted = false
-
-	Task("mountingDrive", self, function()
-		log:debug("mountingDriveTimeout=", self.mountingDriveTimeout)
-
-		mounted = self:checkDriveMounted(devName)
-
-		if mounted then
-			-- success
-			log:debug("*** Device mounted sucessfully.")
-
-
-			-- store device in self.mountedDevices
-			local isScDrive = true
-			for k, v in pairs (self.mountedDevices) do
-				if v.SCDrive then
-					isScDrive = false
-				end
-			end
-
-			self:addMountedDevice(devName, isScDrive)
-
-			self:_addEjectDeviceItem(devName)
-			self:_ejectWarning(devName)
-		else
-			-- Not yet mounted
-			self.mountingDriveTimeout = self.mountingDriveTimeout + 1
-			if self.mountingDriveTimeout <= self.MOUNTING_DRIVE_TIMEOUT then
-				return
-			end
-
-			-- failure
-			log:warn("*** Device failed to mount.")
-
-			self:_unsupportedDiskFormat()
-		end
-
-		self.popupMountWaiting:hide()
-		self.popupMountWaiting = nil
-
-	end):addTask()
-end
-
-
-function _unmountingDriveTimer(self, devName)
-	local unmounted = false
-
-	Task("unmountingDrive", self, function()
-		log:debug("unmountingDriveTimeout=", self.unmountingDriveTimeout)
-
-		unmounted = not self:checkDriveMounted(devName)
-
-		if unmounted then
-			-- success
-			log:warn("*** Device ", devName, " unmounted sucessfully.")
-
-			self:_removeEjectDeviceItem(devName)
-
-			-- rmdir cleanup of /media/devName, as stale dirs appear to be a problem after umount
-			if self:_mediaDirExists(devName) then
-				lfs.rmdir("/media/" .. devName)
-			end
-
-			self:_unmountSuccess(devName)
-
-		else
-			-- Not yet unmounted
-			self.unmountingDriveTimeout = self.unmountingDriveTimeout + 1
-			if self.unmountingDriveTimeout <= self.UNMOUNTING_DRIVE_TIMEOUT then
-				log:warn("*** Device failed to unmount. try again")
-				log:warn("*** self.unmountingDriveTimeout: ", self.unmountingDriveTimeout)
-				log:warn("*** self.UNMOUNTING_DRIVE_TIMEOUT: ", self.UNMOUNTING_DRIVE_TIMEOUT)
-				-- try again
-				self:_unmountActions(devName, true)
-				return
-			end
-
-			-- failure
-			log:warn("*** Device failed to unmount.")
-
-			self:_unmountFailure(devName)
-		end
-
-		self.popupUnmountWaiting:hide()
-		self.popupUnmountWaiting = nil
-
-	end):addTask()
-end
-
-
-function _unmountSuccess(self, devName)
-	log:debug('_unmountSuccess()')
-	local item = self:_getItemFromDevName(devName)
-	local token = 'DEVICE_EJECTED_INFO'
-	if item.devType then
-		token = token .. "_" .. item.devType
-	end
-
-	if self.confirmEjectWindow then
-		self.confirmEjectWindow:hide()
-		self.confirmEjectWindow = nil
-	end
-
-
-	-- clear device from self.mountedDevices
-	if self.mountedDevices and self.mountedDevices[devName] then
-		self.mountedDevices[devName] = nil
-	end
-
-
-	local window = Window("text_list", self:string("DEVICE_EJECTED"))
-	window:setAllowScreensaver(false)
-	window:setButtonAction("rbutton", nil)
-
-	local menu = SimpleMenu("menu")
-
-	menu:addItem({
-		text = self:string("OK"),
-		style = 'item',
-		sound = "WINDOWSHOW",		
-		callback = function ()
-			if self.ejectWarningWindow then
-				self.ejectWarningWindow:hide()
-				self.ejectWarningWindow = nil
-			end
-			window:hide()
-		end
-	})
-
-	menu:setHeaderWidget( Textarea("help_text", self:string(token) ) )
-
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
--- TODO
-function _unmountFailure(self, devName)
-	log:warn('_unmountFailure()')
-
-	local window = Window("text_list", self:string("EJECT_FAILURE"))
-	window:setAllowScreensaver(false)
-	window:setButtonAction("rbutton", nil)
-
-	local menu = SimpleMenu("menu")
-
-	menu:addItem({
-		text = self:string("OK"),
-		style = 'item',
-		sound = "WINDOWSHOW",		
-		callback = function ()
-			window:hide()
-		end
-	})
-	menu:addItem({
-		text = self:string("EJECT_TRY_AGAIN"),
-		style = 'item',
-		sound = "WINDOWSHOW",		
-		callback = function ()
-			-- force the umount with -l
-			window:hide()
-			self:_unmountDrive(devName, true)
-		end
-	})
-
-
-	menu:setHeaderWidget( Textarea("help_text", self:string('EJECT_FAILURE_INFO') ) )
-
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
-function _removeEjectDeviceItem(self, devName)
-	log:debug('_removeEjectDeviceItem()')
-	if self.ejectItems and self.ejectItems[devName] then
-		log:debug('removing menu item for ', devName)
-		jiveMain:removeItem(self.ejectItems[devName])
-		self.ejectItems[devName] = nil
-	else
-		-- bug 15739: since self.ejectItems can be freed from memory, try to remove the item by the home menu id, which is devName
-		log:warn('attempt to remove item by id: ', devName)
-		jiveMain:removeItemById(devName)
-	end
-end
-
-
-function _addEjectDeviceItem(self, devName)
-
-	log:debug('_addEjectDeviceItem(): ', devName)
-
-	local item = self.mountedDevices and self.mountedDevices[devName]
-
-	local token = 'EJECT_CONFIRM_ITEM'
-	if item.devType then
-		token = 'EJECT_' .. item.devType
-	end
-
-	self.ejectItems[devName] = {
-                id = item.devName,
-                node = "home",
-                text = self:string(token),
-                iconStyle = 'hm_eject',
-                weight = 5,
-		sound = "WINDOWSHOW",		
-                --weight = 1000,
-		-- TODO: add a method to eject the device (that works!)
-		callback = function()
-			self:_confirmEject(devName)
-		end,
-        }
-	jiveMain:addItem(self.ejectItems[devName])
-end
-
 
 function _confirmWipeRescan(self)
 	log:debug('confirmWipeRescan()')
@@ -896,7 +549,8 @@ end
 function _startServerWindow(self)
 
 	local mountedDrives = 0
-	for k, v in pairs(self.mountedDevices) do
+	local mountedDevices = appletManager:callService("mmGetMountedDevices")
+	for k, v in pairs(mountedDevices) do
 		mountedDrives = mountedDrives + 1
 	end
 
@@ -919,6 +573,11 @@ function _startServerWindow(self)
 		menu:setHeaderWidget( Textarea("help_text", self:string('NO_DRIVES_DETECTED_INFO')))
 
 	elseif mountedDrives == 1 then
+		for devName, item in pairs(mountedDevices) do
+			log:warn('writing ', devName, ' to SC prefs file')
+			self:_writeSCPrefsFile(devName)
+			break --table is 1 element long, but breaking here can't hurt
+		end
 		self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", nil, 5000, "start")
 		return EVENT_CONSUMED
 
@@ -934,7 +593,7 @@ function _startServerWindow(self)
 			},
 		})
 
-		for devName, item in pairs(self.mountedDevices) do
+		for devName, item in pairs(mountedDevices) do
 			local iconStyle = 'hm_usbdrive'
 			local menuItemToken = 'USE_DRIVE_USB'
 			if self:mediaType(devName) == 'SD' then
@@ -991,49 +650,10 @@ function _confirmWindow(self, titleToken, helpTextToken, callbackFunction)
 end
 
 
-function _confirmEject(self, devName)
-	log:debug('confirmEject()')
-	local item = self:_getItemFromDevName(devName)
-
-	local titleToken   = 'EJECT_CONFIRM'
-	local confirmToken = 'EJECT_CONFIRM_INFO'
-	local ejectToken   = 'EJECT_REMOVABLE_MEDIA'
-
-	if item and item.devType then
-		titleToken   = 'EJECT_CONFIRM_' .. item.devType
-		confirmToken = 'EJECT_CONFIRM_INFO_' .. item.devType
-		ejectToken   = 'EJECT_DRIVE_' .. item.devType
-	end
-	local window = Window("text_list", self:string(titleToken) )
-	local menu = SimpleMenu("menu", {
-			{
-				text = self:string("CANCEL"),
-				sound = "WINDOWHIDE",
-				callback = function() 
-					window:hide()
-				end
-			},
-			{
-				text = self:string(ejectToken, item.devName),
-				sound = "WINDOWSHOW",
-				callback = function() 
-					-- eject drive
-					self:_unmountDrive(devName)
-				end
-			},
-	})
-
-	menu:setHeaderWidget( Textarea("help_text", self:string(confirmToken, item.devName) ) )
-	window:addWidget(menu)
-	self.confirmEjectWindow = window
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
 function _getItemFromDevName(self, devName)
-	return self.mountedDevices and 
-		self.mountedDevices[devName]
+	local mountedDevices = appletManager:callService("mmGetMountedDevices")
+	return mountedDevices and 
+		mountedDevices[devName]
 end
 
 
@@ -1075,12 +695,12 @@ function squeezeboxDirPresent(self, scDrive)
 	for f in lfs.dir(scDrive) do
 		present = string.match(f, "^\.Squeezebox")
 		if present then
-			log:warn("squeezeboxDirPresent(), found it: ", present)
+			log:info("squeezeboxDirPresent(), found it: ", present)
 			break
 		end
 	end
 
-	log:warn(scDrive, "/.Squeezebox present: ", present)
+	log:info(scDrive, "/.Squeezebox present: ", present)
 
 	if present then
 		return true
@@ -1107,7 +727,7 @@ function _mediaDirExists(self, devName)
 	for file in lfs.dir("/media") do
 		local dummy = string.match(file, devName)
 		if dummy then
-			log:warn("media dir found: ", dummy)
+			log:info("media dir found: ", dummy)
 			return true
 		end
 	end
@@ -1116,53 +736,8 @@ function _mediaDirExists(self, devName)
 end
 
 
--- Not supported disk format error message
-function _unsupportedDiskFormat(self)
-	local window = Window("text_list", self:string("UNSUPPORTED_DISK_FORMAT"))
-	window:setAllowScreensaver(false)
-	window:setButtonAction("rbutton", nil)
 
-	local menu = SimpleMenu("menu")
-
-	menu:addItem({
-		text = self:string("OK"),
-		style = 'item',
-		sound = "WINDOWSHOW",		
-		callback = function ()
-			window:hide()
-		end
-	})
-
-	local formatsString = table.concat(self.supportedFormats, ", ")
-
-	local token = 'UNSUPPORTED_DISK_FORMAT_INFO'
-	if self.devType then
-		token = 'UNSUPPORTED_DISK_FORMAT_INFO_' .. self.devType
-	end
-	menu:setHeaderWidget( Textarea("help_text", self:string(token, formatsString) ) )
-
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
--- Ejection Warning for new USB/SD drives
-function _ejectWarning(self, devName)
-
-	local item = self:_getItemFromDevName(devName)
-
-	local window = Window("text_list", self:string("EJECT_WARNING"))
-	window:setAllowScreensaver(false)
-	window:setButtonAction("rbutton", nil)
-
-	local menu = SimpleMenu("menu")
-
-
-	if item.SCDrive then
-
-
+--[[
 		-- Server status
 		menu:addItem({
 			text = self:string("SERVER_STATUS"),
@@ -1173,6 +748,7 @@ function _ejectWarning(self, devName)
 				window:hide()
 			end,
 		})
+--]]
 
 		-- My Music
 		--[[ FIXME: does not provide a positive user experience yet. Going to My Music when scan is just starting yields not good behavior
@@ -1195,75 +771,45 @@ function _ejectWarning(self, devName)
 		})
 		--]]
 
-		-- Eject item
-		local ejectToken = 'EJECT_CONFIRM_ITEM'
-		if item.devType then
-			ejectToken = 'EJECT_' .. item.devType
-		end
-		menu:addItem({
-			text = self:string(ejectToken),
-			iconStyle = 'hm_eject',
-			sound = "WINDOWSHOW",		
-			callback = function()
-				self:_confirmEject(devName)
-			end,
-		})
-	else
-		menu:addItem({
-			text = self:string("OK"),
-			style = 'item',
-			sound = "WINDOWSHOW",		
-			callback = function()
-				window:hide()
-			end,
-		})
-	end
 
-	menu:setHeaderWidget(Textarea("help_text", self:string("EJECT_WARNING_INFO")))
-
-	window:addWidget(menu)
-	self.ejectWarningWindow = window
-	self:tieAndShowWindow(window)
-
+--[[
 	-- restart the server
 	if item.SCDrive then
 		log:warn('!! Writing prefs.json file and starting scan')
 		self:_writeSCPrefsFile(devName)
 		self:restartServer()
 	end
-
-	return window
-end
+--]]
 
 function _writeSCPrefsFile(self, devName)
-	local item = self:_getItemFromDevName(devName)
-	if not item then
-		self:addMountedDevice(devName, true)
-		item = self:_getItemFromDevName(devName)
-	end
-	if item.mountPath then
-		local exportTable = {
-			audiodir = item.mountPath, -- audiodir could be changed in the future to a user-configured subdir of the mounted drive
-			mountpath = item.mountPath
-		}
-		local forExport = json.encode(exportTable)
-		
-		local fh = io.open(self.prefsFile, "w")
 
-		if fh == nil then
-			return false
-		end
-
-		fh:write(forExport)
-		fh:close()
+	if not devName then
+		log:error('_writeSCPrefsFile requires devName ', devName)
+		return
 	end
+
+	local exportTable = {
+		audiodir = "/media/" .. devName, -- audiodir could be changed in the future to a user-configured subdir of the mounted drive
+		mountpath = "/media/" .. devName,
+		devName   = devName 
+	}
+	local forExport = json.encode(exportTable)
+	
+	local fh = io.open(self.prefsFile, "w")
+
+	if fh == nil then
+		return false
+	end
+
+	fh:write(forExport)
+	fh:close()
 end
 
 
 function _scDrive(self)
 	local prefsData = self:readSCPrefsFile()
-	if prefsData.mountpath then
-		return prefsData.mountpath
+	if prefsData.devName then
+		return prefsData.devName
 	else
 		return false
 	end

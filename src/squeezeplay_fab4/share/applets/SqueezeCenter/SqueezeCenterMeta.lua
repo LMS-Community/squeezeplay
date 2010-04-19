@@ -24,23 +24,40 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
-	meta:registerService("udevEventHandler")
+	meta:registerService("mmSqueezeCenterMenu")
 	meta:registerService("squeezecenterStartupCheck")
 	meta:registerService("isBuiltInSCRunning")
 	meta:registerService("stopSqueezeCenter")
+	meta:registerService("startSqueezeCenter")
+	meta:registerService("mmStopSqueezeCenter")
+	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
+
 end
 
 function configureApplet(meta)
 
-	appletManager:callService("squeezecenterStartupCheck")
-
-	-- listen for attached drives after boot
-	appletManager:callService("addUeventListener", "", 
-		function(evt, msg)
-			appletManager:callService("udevEventHandler", evt, msg)
-		end
+	appletManager:callService("mmRegisterMenuItem", 
+		{
+		serviceMethod = "mmSqueezeCenterMenu",
+		menuText      = meta:string('SQUEEZEBOX_SERVER'),
+		onlyIfTrue    = "isBuiltInSCRunning",
+		weight        = 20,
+		}
 	)
+	appletManager:callService("mmRegisterMenuItem", 
+		{
+		serviceMethod = "startSqueezeCenter",
+		menuText      = meta:string('START'),
+		onlyIfFalse   = "isBuiltInSCRunning",
+		weight        = 20,
+		}
+	)
+	appletManager:callService("mmRegisterOnEjectHandler", 
+		{
+		serviceMethod =	"mmStopSqueezeCenter"
+		}
+	)
+	appletManager:callService("squeezecenterStartupCheck")
 
 end
 

@@ -29,11 +29,12 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function init(self)
-	self.mountedDevices           = self:getSettings()['mountedDevices']
 	self.MOUNTING_DRIVE_TIMEOUT   = 60
 	self.UNMOUNTING_DRIVE_TIMEOUT = 10
 	self.WIPE_TIMEOUT             = 60
 	self.supportedFormats         = {"FAT16","FAT32","NTFS","ext2","ext3"}
+	self.mmOnEjectHandlers        = {}
+	self.mmOnMountHandlers        = {}
 	self.mmMenuItems              = {}
 end
 
@@ -61,28 +62,22 @@ function mmStartupCheck(self)
 			log:debug('STARTUP | Create main menu item for ', k)
 			self:addMountedDevice(k, false)
 		end
-	else
-		-- remove mounted devices from settings since we don't have any
-		self:getSettings()['mountedDevices'] = self.mountedDevices
-		self:storeSettings()
 	end
 
 end
 
 
 function addMountedDevice(self, devName)
-	log:warn('addMountedDevice: ', devName)
+	log:info('addMountedDevice: ', devName)
 	self.mountedDevices[devName] = {
 		devName    = devName,
 		deviceName = "/dev/"   .. devName,
 		mountPath  = "/media/" .. devName,
 		devType    = self:mediaType(devName),
 	}
-	self:getSettings()['mountedDevices'] = self.mountedDevices
-	self:storeSettings()
 
 	-- add menu item for this device
-	log:warn('addDeviceMenuItem(): ', devName)
+	log:info('addDeviceMenuItem(): ', devName)
 
 	local iconStyle
 	if self.mountedDevices[devName].devType == 'SD' then
@@ -114,34 +109,48 @@ end
 -- create and display a window that shows the items in the menu for devName
 function showMediaManagerWindow(self, devName)
 
-	log:warn('showMediaManagerWindow(): ', devName)
+	log:info('showMediaManagerWindow(): ', devName)
 	local token = self:mediaType(devName)
 	local window = Window('text_list', self:string(token))
 	local menu = SimpleMenu("menu")
 
 	-- go through mmMenuItems and add items to the menu
 	for k, v in pairs(self.mmMenuItems) do
-		log:warn('adding menu item for ', k)
+		log:info('adding menu item for ', k)
 
-		local callback = function() appletManager:callService(v.serviceMethod, devName, v.serviceMethodParams) end
-		local text
-		if v.menuToken then
-			if v.devNameAsTokenArg then
-				text = self:string(v.menuToken, self:mediaType(devName))
-			else
-				text = self:string(v.menuToken)
+		local addThisItem = true
+		if v.onlyIfTrue or v.onlyIfFalse then
+			if v.onlyIfTrue then
+				log:info('onlyIfTrue method needs to return true to add this menu item')
+				addThisItem = appletManager:callService(v.onlyIfTrue, devName)
+			elseif v.onlyIfFalse then
+				log:info('onlyIfFalse method needs to return false to add this menu item')
+				addThisItem = not appletManager:callService(v.onlyIfFalse, devName)
 			end
-		else
-			text = v.menuText
+			log:info('---> addThisItem is now ', addThisItem)
 		end
 
-		menu:addItem({
-			text     = text,
-			style    = v.itemStyle or 'item',
-			weight   = v.weight or 50,
-			sound    = "WINDOWSHOW",		
-			callback = callback,
-		})
+		if addThisItem then
+			local callback = function() appletManager:callService(v.serviceMethod, devName, v.serviceMethodParams) end
+			local text
+			if v.menuToken then
+				if v.devNameAsTokenArg then
+					text = self:string(v.menuToken, self:mediaType(devName))
+				else
+					text = self:string(v.menuToken)
+				end
+			else
+				text = v.menuText
+			end
+
+			menu:addItem({
+				text     = text,
+				style    = v.itemStyle or 'item',
+				weight   = v.weight or 50,
+				sound    = "WINDOWSHOW",		
+				callback = callback,
+			})
+		end
 	end
 	window:addWidget(menu)
 	self:tieAndShowWindow(window)
@@ -187,9 +196,11 @@ end
 
 
 function mmGetMountedDevices(self)
+	log:info('mmGetMountedDevices()')
 	if self.mountedDevices then
 		return self.mountedDevices
 	end
+	log:warn('no mounted devices found, returning false')
 	return false
 end
 
@@ -237,10 +248,41 @@ function mmRegisterMenuItem(self, options)
 
 	-- if there's an options.key, use that. otherwise, use options.serviceMethod
 	local key = options.key or options.serviceMethod
-	log:warn('key for this item is set to: ', key)
+	log:info('key for this item is set to: ', key)
         self.mmMenuItems[key] = options
 
 	return true
+end
+
+
+-- mmRegisterOnEjectHandler
+-- service method for registering service methods to be called at the time of a device eject
+-- by design, these methods are run before the device is unmounted
+function mmRegisterOnEjectHandler(self, options)
+	if not options.serviceMethod then
+		log:error('mmRegisterOnEjectHandler() called without a service method')
+		return false
+	end
+
+	local key = options.key or options.serviceMethod
+	log:info('adding an onEject handler for ', key)
+	self.mmOnEjectHandlers[key] = options
+
+end
+
+
+--mmRegisterOnMountHandler
+-- service method for registering service methods to be called at the time of a device eject
+-- by design, these methods are run before the device is unmounted
+function mmRegisterOnMountHandler(self, options)
+	if not options.serviceMethod then
+		log:error('mmRegisterOnMountHandler() called without a service method')
+		return false
+	end
+
+	local key = options.key or options.serviceMethod
+	self.mmOnMountHandlers[key] = options
+
 end
 
 
@@ -307,6 +349,10 @@ function _deviceRemoval(self, devName)
 	if self.mountedDevices and self.mountedDevices[devName] then
 		
 		log:warn('!!! Drive ', self.mountedDevices[devName].deviceName, ' was unsafely ejected.')
+
+		-- perform registered on eject methods first
+		self:_runOnEjectHandlers(devName)
+
 		local window = Window("text_list", self:string("DEVICE_REMOVAL_WARNING"))
 		window:setAllowScreensaver(false)
 		local menu = SimpleMenu("menu")
@@ -333,9 +379,6 @@ function _deviceRemoval(self, devName)
 
 		--Bug 15793, remove eject item from menu after bad eject
 		self:removeMountedDevice(devName)
-
-		self:getSettings()['mountedDevices'] = self.mountedDevices
-		self:storeSettings()
 		
 		self:tieAndShowWindow(window)
 		return window
@@ -356,11 +399,21 @@ function _unmountActions(self, devName, silent, force)
 end
 
 
+function _runOnEjectHandlers(self, devName)
+
+	log:info('running registered on eject handlers')
+	for k, v in pairs(self.mmOnEjectHandlers) do
+		log:info('calling handler for ', k)
+		appletManager:callService(v.serviceMethod, devName, v.serviceMethodParams)
+	end
+end
+
+
 -- _unmountingDrive
 -- full screen popup that appears until unmounting is complete or failed
 function _unmountDrive(self, devName, force)
 	
-	log:warn('_unmountDrive() ', devName)
+	log:info('_unmountDrive() ', devName)
 
 	local item = self:_getItemFromDevName(devName)
 
@@ -370,6 +423,9 @@ function _unmountDrive(self, devName, force)
 		log:warn("no mountPath to eject item")
 		return EVENT_UNUSED
 	end
+
+	-- run the service handlers first
+	self:_runOnEjectHandlers(devName)
 
 	self:_unmountActions(devName, _, force)
 
@@ -688,7 +744,7 @@ function _mediaDirExists(self, devName)
 	for file in lfs.dir("/media") do
 		local dummy = string.match(file, devName)
 		if dummy then
-			log:warn("media dir found: ", dummy)
+			log:info("media dir found: ", dummy)
 			return true
 		end
 	end
@@ -759,6 +815,10 @@ function _ejectWarning(self, devName)
 	self:tieAndShowWindow(window)
 
 	return window
+end
+
+function free(self)
+	return false
 end
 
 --[[
