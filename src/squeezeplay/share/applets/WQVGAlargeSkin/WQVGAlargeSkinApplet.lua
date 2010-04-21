@@ -1622,6 +1622,9 @@ function skin(self, s)
 		font = _boldfont(62),
 		border = { 0, 14, 0, 0 },
 	}
+	s.preview_text = _uses(s.alarm_time, {
+		font = _boldfont(TITLE_FONT_SIZE),
+	})
 
 	-- alarm menu window
 	s.alarm_popup = {

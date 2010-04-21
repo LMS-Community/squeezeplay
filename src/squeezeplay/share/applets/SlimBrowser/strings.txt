@@ -364,3 +364,9 @@ SLIMBROWSER_CONNECTING_TO
 	RU	Подключение к
 	SV	Ansluts till
 
+SLIMBROWSER_ALARM_PREVIEW
+	EN	Alarm Preview
+
+SLIMBROWSER_DONE
+	EN	Done
+

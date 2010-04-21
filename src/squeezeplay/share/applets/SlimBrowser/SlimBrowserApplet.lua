@@ -773,7 +773,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	--debug.dump(request)
+	-- debug.dump(request)
 
 	-- send the command
 	_server:userRequest(sink, playerid, request)
@@ -1719,7 +1719,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 	log:debug("_actionHandler(", actionName, ")")
 
 	if log:isDebug() then
-		debug.dump(item, 4)
+--		debug.dump(item, 4)
 	end
 
 	local choiceAction
@@ -1817,6 +1817,11 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 			iActionContextMenu = _safeDeref(item, 'actions', 'more')
 			onAction = _safeDeref(item, 'actions', 'on')
 			offAction = _safeDeref(item, 'actions', 'off')
+
+		-- preview is a special action handler for previewing alarm sounds
+		elseif actionName == 'preview' then
+			bAction = _safeDeref(chunk, 'base', 'actions', 'preview')
+			iAction = _safeDeref(item, 'actions', 'preview')
 		end
 
 		local isContextMenu = _safeDeref(item, 'actions', actionName, 'params', 'isContextMenu')
@@ -1830,6 +1835,9 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		if not (iAction or bAction or onAction or offAction or choiceAction) then
 			bAction = _safeDeref(chunk, 'base', 'actions', actionName)
 			iAction = _safeDeref(item, 'actions', actionName)
+		elseif actionName == 'preview' then
+			-- allow actionName of preview to stay that way
+
 		else
 			-- if we reach here, it's a DO action...
 			-- okay to call on or off this, as they are just special cases of 'do'
@@ -1943,7 +1951,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				end
 			end -- elseif bAction
 	
---debug.dump(jsonAction, 8)
 			-- now we may have found a command
 			if jsonAction or useNextWindow then
 				log:debug("_actionHandler(", actionName, "): json action")
@@ -2046,6 +2053,10 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					end
 				end
 			
+				if actionName == 'preview' then
+					return _alarmPreviewWindow(iAction and iAction.title)
+				end
+
 				return EVENT_CONSUME
 			end
 		end
@@ -2075,6 +2086,56 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 	return EVENT_UNUSED
 end
 
+function _alarmPreviewWindow(title)
+
+	-- popup
+	local window = Window("alarm_popup", _string('SLIMBROWSER_ALARM_PREVIEW'))
+        local icon = Icon('icon_alarm')
+        local label = Label('preview_text', title )
+        local headerGroup = Group('alarm_header', {
+                icon = icon,
+                time = label,
+        })
+
+	local hideAction = function()
+		log:warn('hide alarm preview')
+		window:hide(Window.transitionNone)
+		return EVENT_CONSUME
+	end
+
+	local windowPopAction = function()
+		log:warn('window goes pop!')
+		_player:pause()
+		return EVENT_CONSUME
+	end
+
+        local menu = SimpleMenu('menu')
+        menu:addItem({
+                text = _string("SLIMBROWSER_DONE"),
+                sound = "WINDOWHIDE",
+                callback = hideAction,
+        })
+
+	window:ignoreAllInputExcept({"back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
+
+	window:addListener(EVENT_WINDOW_POP,
+		windowPopAction
+	)
+
+	menu:setHeaderWidget(headerGroup)
+
+	window:setButtonAction('rbutton', 'cancel')
+	window:addActionListener("cancel", window, hideAction)
+
+        window:setButtonAction('lbutton', nil, nil)
+
+        window:addWidget(menu)
+        window:setShowFrameworkWidgets(false)
+        window:setAllowScreensaver(false)
+        window:show(Window.transitionFadeIn)
+	return EVENT_CONSUME
+
+end
 
 
 -- map from a key to an actionName
@@ -2155,6 +2216,17 @@ local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
 	-- further, we want the event to propagate to the active widget, so return EVENT_UNUSED
 	local item = db:item(dbIndex)
 	if item and item["_jive_button"] then
+		-- special case: an action of "preview", which is used to preview alarm sounds before listening
+		if item and item.actions and item.actions.preview then
+			if evtType == ACTION then
+				log:warn('--->Trapped what Squeezeplay thinks is an attempt to preview an alarm sound')
+				local action = event:getAction()
+				local actionName = _actionToActionName[action]
+				if actionName == 'play' or actionName == 'more' then
+					return _actionHandler(menu, menuItem, db, dbIndex, event, 'preview', item)
+				end
+			end
+		end
 		return EVENT_UNUSED
 	end
 
@@ -2335,7 +2407,6 @@ local function _browseInput(window, item, db, inputSpec, last, timeFormat)
 		rbutton = nowPlayingButton,
 	})	
 	window:setTitleWidget(newTitleWidget)
-	
 	
 	-- make sure it's a number for the comparison below
 	-- Lua insists on checking type while Perl couldn't care less :(
