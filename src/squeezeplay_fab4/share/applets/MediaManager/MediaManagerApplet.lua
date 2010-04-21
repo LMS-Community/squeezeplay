@@ -59,8 +59,12 @@ function mmStartupCheck(self)
 	if mountedDrivePresent then
 		-- create menu items for each
 		for k, v in pairs(mountedDrives) do
-			log:debug('STARTUP | Create main menu item for ', k)
-			self:addMountedDevice(k, false)
+			-- check whether the mount point is ending in a partition number
+			-- ignore disks without partition like eg. sdb (virtual CD drive)
+			if string.match(k, "[123456789]$") then
+				log:debug('STARTUP | Create main menu item for ', k)
+				self:addMountedDevice(k, false)
+			end
 		end
 	end
 
@@ -120,7 +124,10 @@ function showMediaManagerWindow(self, devName)
 
 		local addThisItem = true
 		if v.onlyIfTrue or v.onlyIfFalse then
-			if v.onlyIfTrue then
+			if v.onlyIfTrue and v.onlyIfFalse then
+				log:info('needs to return true for onlyIfTrue and false for onlyIfFalse to add this menu item')
+				addThisItem = appletManager:callService(v.onlyIfTrue, devName) and not appletManager:callService(v.onlyIfFalse, devName)
+			elseif v.onlyIfTrue then
 				log:info('onlyIfTrue method needs to return true to add this menu item')
 				addThisItem = appletManager:callService(v.onlyIfTrue, devName)
 			elseif v.onlyIfFalse then
@@ -737,6 +744,38 @@ function _checkDriveMounted(self, devName)
 	
 	return false
 end
+
+
+function isReadOnlyMedia(self, devName)
+	local mounts = io.open("/proc/mounts", "r")
+	local isReadOnly = false
+	
+	if mounts == nil then
+		log:error("/proc/mounts could not be opened")
+		return nil
+	end
+
+	for line in mounts:lines() do
+		if string.match(line, "/media/" .. devName) then
+			if string.match(line, "[^%d%a]ro[^%d%a]") then
+				log:debug('/media/', devName, ' is read-only')
+				isReadOnly = true
+				break
+			else
+				log:debug('/media/', devName, ' is NOT read-only')
+				break
+			end
+		end
+	end
+	mounts:close()
+
+	return isReadOnly
+end
+
+function isWriteableMedia(self, ...)
+	return not self:isReadOnlyMedia(...)
+end
+
 
 function _mediaDirExists(self, devName)
 	local dirExists = nil

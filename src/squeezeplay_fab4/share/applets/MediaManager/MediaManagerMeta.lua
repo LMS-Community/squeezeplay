@@ -30,6 +30,8 @@ function registerApplet(meta)
 	meta:registerService("udevEventHandler")
 	meta:registerService("mmConfirmEject")
 	meta:registerService("mmGetMountedDevices")
+	meta:registerService("isReadOnlyMedia")
+	meta:registerService("isWriteableMedia")
 end
 
 function configureApplet(meta)

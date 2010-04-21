@@ -41,6 +41,7 @@ function configureApplet(meta)
 		serviceMethod = "mmSqueezeCenterMenu",
 		menuText      = meta:string('SQUEEZEBOX_SERVER'),
 		onlyIfTrue    = "isBuiltInSCRunning",
+		onlyIfFalse   = "isReadOnlyMedia",
 		weight        = 20,
 		}
 	)
