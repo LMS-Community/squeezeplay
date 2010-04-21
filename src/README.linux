@@ -21,4 +21,5 @@ You will need to install the following packages using apt-get (for example "sudo
 * libexpat1-dev
 * libreadline5-dev
 * xorg-dev
+* libasound2-dev
 
