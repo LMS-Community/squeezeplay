@@ -3601,7 +3601,7 @@ function notify_playerDelete(self, player)
 	-- if this concerns our player
 	if _player == player then
 		-- panic!
-		log:info("Player gone while browsing it ! -- packing home!")
+		log:error("Player gone while browsing it ! -- packing home!")
 		self:free()
 	end
 end
