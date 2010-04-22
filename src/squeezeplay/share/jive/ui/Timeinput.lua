@@ -146,9 +146,9 @@ function addTimeInputWidgets(self)
 
 		local hourCopies = 50
 		for i = 1, hourCopies do
-			for j = 1, 24 do
+			for j = 0, 23 do
 				local value = tostring(j)
-				if (i == 1 and j < 3) or (i == hourCopies and j > 22) then
+				if (i == 0 and j < 2) or (i == hourCopies and j > 21) then
 				        value = ""
 				end
 			        table.insert(hours, value)  
