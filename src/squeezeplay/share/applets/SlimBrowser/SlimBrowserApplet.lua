@@ -2116,7 +2116,7 @@ function _alarmPreviewWindow(title)
                 callback = hideAction,
         })
 
-	window:ignoreAllInputExcept({"back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
+	window:ignoreAllInputExcept({"go", "back", "go_home", "go_home_or_now_playing", "volume_up", "volume_down", "stop", "pause", "power"})
 
 	window:addListener(EVENT_WINDOW_POP,
 		windowPopAction
