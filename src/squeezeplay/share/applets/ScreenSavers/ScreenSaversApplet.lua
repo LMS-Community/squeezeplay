@@ -226,13 +226,20 @@ end
 function _activate(self, the_screensaver, force)
 	log:debug("Screensaver activate")
 
-	-- In some situations the timer restart below tries to activate a SS when the same one is already running.
-	-- Example: Blank SS for soft power off while in Diagnostics (i.e. an applet not allowing SS).
+	-- what screensaver, check the playmode of the current player
+	if the_screensaver == nil then
+		the_screensaver = self:_getDefaultScreensaver()
+	end
+	local screensaver = self.screensavers[the_screensaver]
+
+	-- In some situations the timer restart below tries to activate a SS when one is already running.
+	-- We don't want to do this for BlankScreen when BlankScreen is already active
 	-- This causes the backlight to turn on again after 10 seconds. #14986
-	local currentScreensaver = self.active and self.active[1]
-	if self:isScreensaverActive() and the_screensaver == currentScreensaver then
-		log:warn("This screensaver is already active - ignoring activate request.")
+	if self:isScreensaverActive() and self.current == 'BlankScreen' then
+		log:warn("BlankScreen SS is currently active and we're trying to reactivate it. Nothing to activate then, so return")
 		return
+	else
+		log:debug('DEBUG: self:isScreensaverActive()', self:isScreensaverActive(), ' self.current: ', self.current)
 	end
 
 	-- check if the top window will allow screensavers, if not then
@@ -248,13 +255,7 @@ function _activate(self, the_screensaver, force)
 		return
 	end
 
-	-- what screensaver, check the playmode of the current player
-	if the_screensaver == nil then
-		the_screensaver = self:_getDefaultScreensaver()
-	end
-
 	local year = os.date("%Y")
-	local screensaver = self.screensavers[the_screensaver]
 
 	-- the "none" choice is false:false, for which the proper course is to do nothing
 	if the_screensaver == 'false:false' then
@@ -506,10 +507,15 @@ the boolean I<scrollAllowed> and boolean I<mouseAllowed> and string table I<ssAl
 
 If I<ssAllowedActions> is nil, no actions will be passed on. If an empty table is sent, all actions will be passed on.
 
+If I<ssName> is not nil, use the ssName to store a name for the screensaver in self.current. If nil, it gets a default name of 'unnamedScreenSaver'
+
 =cut
 --]]
-function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed)
+function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseAllowed, ssName)
 
+	if not ssName then
+		ssName = 'unnamedScreenSaver'
+	end
 	window:setIsScreensaver(true)
 
 	self:_setSSAllowedActions(scrollAllowed, ssAllowedActions, mouseAllowed)
@@ -520,6 +526,7 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 				   log:debug("screensaver opened ", #self.active)
 
 				   table.insert(self.active, window)
+				   self.current = ssName
 				   self.timer:stop()
 				   return EVENT_UNUSED
 			   end)
@@ -528,6 +535,7 @@ function screensaverWindow(self, window, scrollAllowed, ssAllowedActions, mouseA
 	window:addListener(EVENT_WINDOW_POP,
 			   function(event)
 				   table.delete(self.active, window)
+				   self.current = nil
 				   if #self.active == 0 then
 					   log:debug("screensaver inactive")
 					   self.timer:start()

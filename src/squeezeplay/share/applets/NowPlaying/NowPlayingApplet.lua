@@ -1626,7 +1626,7 @@ function _createUI(self)
 	-- register window as a screensaver, unless we are explicitly not in that mode
 	if self.isScreensaver then
 		local manager = appletManager:getAppletInstance("ScreenSavers")
-		manager:screensaverWindow(window)
+		manager:screensaverWindow(window, _, _, _, 'NowPlaying')
 	end
 
 	-- install some listeners to the window

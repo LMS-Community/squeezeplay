@@ -148,7 +148,7 @@ function Clock:__init(skin, windowStyle)
 
 	-- register window as a screensaver
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(obj.window)
+	manager:screensaverWindow(obj.window, _, _, _, 'Clock')
 
 	return obj
 end
@@ -820,7 +820,7 @@ function _tick(self)
 	if not self.snapshot then
 		self.snapshot = SnapshotWindow()
 		local manager = appletManager:getAppletInstance("ScreenSavers")
-		manager:screensaverWindow(self.snapshot)
+		manager:screensaverWindow(self.snapshot, _, _, _, 'Clock')
 	else
 		self.snapshot:refresh()
 	end

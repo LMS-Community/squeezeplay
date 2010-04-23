@@ -522,7 +522,7 @@ function applyScreensaverWindow(self, window)
 	window:setAllowScreensaver(false)
 
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
+	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"}, _, 'ImageViewer')
 end
 
 
