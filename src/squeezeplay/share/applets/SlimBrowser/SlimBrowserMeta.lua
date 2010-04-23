@@ -46,6 +46,7 @@ function registerApplet(self)
 
 	self:registerService('browserJsonRequest')
 	self:registerService('browserActionRequest')
+	self:registerService('showCachedTrack')
 	self:registerService('browserCancel')
 	self:registerService('getAudioVolumeManager')
 

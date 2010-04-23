@@ -694,11 +694,17 @@ end
 
 -- _performJSONAction
 -- performs the JSON action...
-local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
+local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, cachedResponse)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
 
-	local cmdArray = jsonAction["cmd"]
+	local useCachedResponse = false
+	if cachedResponse and type(cachedResponse) == 'table' then
+	        log:warn("using cachedResponse: ", cachedResponse)
+		useCachedResponse = true
+	end
 	
+
+	local cmdArray = jsonAction["cmd"]
 	-- sanity check
 	if not cmdArray or type(cmdArray) != 'table' then
 		log:error("JSON action for ", actionName, " has no cmd or not of type table")
@@ -775,8 +781,13 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType)
 	-- it's very helpful at times to dump the request table here to see what command is being issued
 	-- debug.dump(request)
 
-	-- send the command
-	_server:userRequest(sink, playerid, request)
+	if not useCachedResponse then
+		-- send the command
+		_server:userRequest(sink, playerid, request)
+	else
+                log:info("using cachedResponse")
+		sink(cachedResponse)
+	end
 end
 
 
@@ -3043,7 +3054,9 @@ function _removeRequestAndUnlock(self, server)
 							end
 							local currentStep = _getCurrentStep()
 							if currentStep then
-								currentStep.menu:unlock()
+								if currentStep.menu then
+									currentStep.menu:unlock()
+								end
 							end
 
 end
@@ -3458,7 +3471,13 @@ function setPresetCurrentTrack(self, preset)
 end
 
 
-function showTrack(index)
+function showTrack(index, cachedResponse)
+
+	local useCachedResponse = false
+	if cachedResponse and type(cachedResponse) == 'table' then
+		useCachedResponse = true
+	end
+
 	local serverIndex = index - 1
 	local jsonAction = {
 		cmd = { 'contextmenu' },
@@ -3481,13 +3500,21 @@ function showTrack(index)
 	}		
 
 	local step, sink = _newDestination(nil, nil, newWindowSpec, _browseSink)
-	step.window:addActionListener("back", step, _goNowPlayingAction)
+	if not useCachedResponse then
+		step.window:addActionListener("back", step, _goNowPlayingAction)
+		step._isNpChildWindow = true
+	end
 	step.window:show()
-	step._isNpChildWindow = true
 	_pushStep(step)
 
 	-- send the command
-	_performJSONAction(jsonAction, 0, 200, step, sink)
+	_performJSONAction(jsonAction, 0, 200, step, sink, nil, cachedResponse)
+end
+
+
+--serviceMethod
+function showCachedTrack(self, cachedResponse)
+	showTrack(-1, cachedResponse)
 end
 
 
