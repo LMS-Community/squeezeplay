@@ -2211,22 +2211,24 @@ local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
 		return EVENT_UNUSED
 	end
 	
+	local item = db:item(dbIndex)
+
+	-- special case: an action of "preview", which is used to preview alarm sounds before listening
+	if item and item.actions and item.actions.preview then
+		if evtType == ACTION then
+			log:warn('--->Trapped what Squeezeplay thinks is an attempt to preview an alarm sound')
+			local action = event:getAction()
+			local actionName = _actionToActionName[action]
+			if actionName == 'play' or actionName == 'more' then
+				return _actionHandler(menu, menuItem, db, dbIndex, event, 'preview', item)
+			end
+		end
+	end
+
 	-- we don't want to do anything if this menu item involves an active decoration
 	-- like a radio, checkbox, or set of choices
 	-- further, we want the event to propagate to the active widget, so return EVENT_UNUSED
-	local item = db:item(dbIndex)
 	if item and item["_jive_button"] then
-		-- special case: an action of "preview", which is used to preview alarm sounds before listening
-		if item and item.actions and item.actions.preview then
-			if evtType == ACTION then
-				log:warn('--->Trapped what Squeezeplay thinks is an attempt to preview an alarm sound')
-				local action = event:getAction()
-				local actionName = _actionToActionName[action]
-				if actionName == 'play' or actionName == 'more' then
-					return _actionHandler(menu, menuItem, db, dbIndex, event, 'preview', item)
-				end
-			end
-		end
 		return EVENT_UNUSED
 	end
 
