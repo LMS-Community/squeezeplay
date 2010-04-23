@@ -451,7 +451,6 @@ function registerRemoteScreensaver(self, serverData)
 		)
 end
 
-
 --service method
 function unregisterRemoteScreensaver(self, id)
 	appletManager:callService("removeScreenSaver", "ImageViewer", "openRemoteScreensaver", _, id)
@@ -475,6 +474,13 @@ function closeRemoteScreensaver(self)
 		self.window = nil
 	end
 end
+
+-- callback called from media manager
+function mmImageViewerMenu(self, devName)
+	log:info('mmImageViewerMenu: ', devName)
+	self:startSlideshow(false, ImageSourceLocalStorage(self, { path = '/media/' .. devName }))
+end
+
 
 function free(self)
 	log:info("destructor of image viewer")
@@ -516,7 +522,7 @@ function applyScreensaverWindow(self, window)
 	window:setAllowScreensaver(false)
 
 	local manager = appletManager:getAppletInstance("ScreenSavers")
-	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"})
+	manager:screensaverWindow(window, true, {"add", "go", "up", "down", "back"}, _, 'ImageViewer')
 end
 
 

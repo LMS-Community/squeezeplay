@@ -1606,3 +1606,9 @@ START_SLIDESHOW
 	PL	Uruchom pokaz slajdów
 	RU	Запустить слайд-шоу
 	SV	Påbörja bildspel
+
+SWITCH_MEDIA_HELP
+	EN	Squeezebox Server is running but is currently configured to serve music from a different device. From this menu you can choose to point to a different drive.
+
+SWITCH_MEDIA
+	EN	Use %s for Squeezebox Server 

@@ -2150,6 +2150,10 @@ function skin(self, s)
 		font = _boldfont(62),
 	}
 
+	s.preview_text = _uses(s.alarm_time, {
+		font = _boldfont(TITLE_FONT_SIZE),
+	})
+	
 	-- alarm menu window
 	s.alarm_popup = {
 		x = 10,
@@ -3202,6 +3206,9 @@ function skin(self, s)
 			padding = { 0, 0, 0, 5 },
 		},
 	})
+	s.nowplaying_text_only.npprogress.npprogressB_disabled = _uses(s.nowplaying_text_only.npprogress.npprogressB, {
+		img = _songProgressBarDisabled,
+	})
 	s.nowplaying_text_only.pressed = s.nowplaying_text_only
 	s.nowplaying_text_only.nptitle.pressed = _uses(s.nowplaying_text_only.nptitle)
 	s.nowplaying_text_only.npalbumgroup.pressed = _uses(s.nowplaying_text_only.npalbumgroup)
@@ -3293,6 +3300,7 @@ function skin(self, s)
 			padding = { 0, 15, 0, 0 },
 		},
 	})
+	s.nowplaying_visualizer_common.npprogress.npprogressB_disabled = s.nowplaying_visualizer_common.npprogress.npprogressB
 
 	-- Visualizer: Spectrum Visualizer
 	s.nowplaying_spectrum_text = _uses(s.nowplaying_visualizer_common, {

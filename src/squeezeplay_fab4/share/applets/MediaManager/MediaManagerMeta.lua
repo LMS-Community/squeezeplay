@@ -1,8 +1,7 @@
-
 local oo            = require("loop.simple")
 
+local System        = require("jive.System")
 local AppletMeta    = require("jive.AppletMeta")
-
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -16,7 +15,7 @@ function jiveVersion(meta)
 end
 
 
-function defaultSettings(meta)
+function defaultSettings(self)
 	return {
 		mountedDevices = {},
 	}
@@ -24,24 +23,27 @@ end
 
 
 function registerApplet(meta)
---[[ disabled in subversion until ready to go live
 	meta:registerService("mmRegisterMenuItem")
+	meta:registerService("mmRegisterOnEjectHandler")
+	meta:registerService("mmRegisterOnMountHandler")
 	meta:registerService("mmStartupCheck")
 	meta:registerService("udevEventHandler")
 	meta:registerService("mmConfirmEject")
 	meta:registerService("mmGetMountedDevices")
---]]
+	meta:registerService("isReadOnlyMedia")
+	meta:registerService("isWriteableMedia")
 end
 
 function configureApplet(meta)
+	meta:registerService("mmRegisterMenuItem")
 
---[[ disabled in subversion until ready to go live
         -- add an eject item to the submenu
         appletManager:callService("mmRegisterMenuItem", 
                 {
                         serviceMethod     = "mmConfirmEject",
                         menuToken         = "EJECT_DRIVE",
                         devNameAsTokenArg = true,
+			weight            = 10, -- default is 50, so this will put it at/near the top
                 }
         )
 
@@ -53,7 +55,6 @@ function configureApplet(meta)
 			appletManager:callService("udevEventHandler", evt, msg)
 		end
 	)
---]]
 
 end
 

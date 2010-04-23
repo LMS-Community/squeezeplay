@@ -1646,7 +1646,7 @@ function skin(self, s, reload, useDefaultSize)
 	
 	s.alarm_header = {
 			w = screenWidth,
-			padding = { 50, 0, 0, 0 },
+			padding = { 50, 0, 50, 0 },
 			order = { 'icon', 'time' },
 			icon = {
 				h = WH_FILL,
@@ -1665,6 +1665,9 @@ function skin(self, s, reload, useDefaultSize)
 		align = "left",
 		font = _font(32),
 	}
+	s.preview_text = _uses(s.alarm_time, {
+		font = _boldfont(c.TITLE_FONT_SIZE),
+	})
 
 	-- alarm menu window
 	s.alarm_popup = {
@@ -1863,7 +1866,6 @@ function skin(self, s, reload, useDefaultSize)
 		align = "center",
 		padding = { 0, 66, 0, 0 },
 	})
-
 
 	s.icon_alarm = {
 		img = _loadImage(self, "Icons/icon_alarm.png")

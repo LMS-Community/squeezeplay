@@ -589,8 +589,14 @@ function _strm(self, data)
 		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
 
 		if self.flags == 0x10 then
-			-- custom handler 
+			-- custom handler
 			local handlerId = string.match(self.header, "spdr://(%w-)%?")
+
+			-- Also support URLs of the format <protocol>://...
+			if not handlerId then
+				handlerId = string.match(self.header, "^(%w-)://")
+			end
+
 			if streamHandlers[handlerId] then
 				log:info("using custom handler ", handlerId)
 				streamHandlers[handlerId](self, data, decode)
