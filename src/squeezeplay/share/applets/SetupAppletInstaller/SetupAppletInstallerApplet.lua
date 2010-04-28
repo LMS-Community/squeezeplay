@@ -68,8 +68,8 @@ function appletInstallerMenu(self, menuItem, action)
 	self.auto = action and action == 'auto'
 
 	local v1, v2, v3, v4 = string.match(JIVE_VERSION, "(%d+)%.(%d+)%.(%d+)%sr(%d+)")
-	local version = v1 .. "." .. v2 .. "." .. v3 .. "." .. v4
-	log:info("requesting applets for version: ", version)
+	self.version = v1 .. "." .. v2 .. "." .. v3 .. "." .. v4
+	log:info("requesting applets for version: ", self.version)
 
 	-- find the applet directory
 	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
@@ -81,43 +81,18 @@ function appletInstallerMenu(self, menuItem, action)
 		end
 	end
 
-	-- query all servers
-	local opt = not self:getSettings()["_RECONLY"]
+	-- query all non Squeezenetwork servers (will try SN later if no useful response from these)
 	self.waitingfor = 0
+	self.best = {}
+	self.sn = nil
 	for id, server in appletManager:callService("iterateSqueezeCenters") do
-		-- need a player for SN query otherwise skip SN, don't need a player for SBS
-		local player
-		if server:isSqueezeNetwork() and server:isConnected() then
-			for p in server:allPlayers() do
-				if p ~= nil and tostring(p) ~= "ff:ff:ff:ff:ff:ff" then
-					player = p
-					break
-				end
-			end
-		end
-		
-		if not server:isSqueezeNetwork() or player ~= nil then
-			log:info("sending query to ", tostring(server), " player ", tostring(player))
-			server:userRequest(
-				function(chunk, err)
-					if err then
-						log:debug(err)
-					elseif chunk then
-						self:menuSink(server, chunk.data)
-					end
-				end,
-				player,
-				{ "jiveapplets", 
-				  "target:" .. System:getMachine(), 
-				  "version:" .. version,
-				  opt and "optstr:other|user" or "optstr:none",
-			  }
-			)
+		if server:isSqueezeNetwork() then
+			self.sn = server
+		else
+			self:sendRequest(server)
 			self.waitingfor = self.waitingfor + 1
 		end
 	end
-
-	self.responses = {}
 
 	-- start a timer which will fire if one or more servers does not respond
 	-- needs to be long enough for async fetch of repo by the server before it responds
@@ -136,12 +111,36 @@ function appletInstallerMenu(self, menuItem, action)
 end
 
 
+function sendRequest(self, server)
+	log:info("sending query to ", tostring(server))
+	local opt = not self:getSettings()["_RECONLY"]
+	server:userRequest(
+		function(chunk, err)
+			if err then
+				log:debug(err)
+			elseif chunk then
+				self:menuSink(server, chunk.data)
+			end
+		end,
+		nil,
+		{ "jiveapplets",
+		  "target:" .. System:getMachine(), 
+		  "version:" .. self.version,
+		  opt and "optstr:other|user" or "optstr:none",
+	  }
+	)
+end
+
+
 function menuSink(self, server, data)
 
 	if server ~= nil then
-		-- stash response & wait until all responses received
-		log:info("reponse received from ", tostring(server));
-		self.responses[#self.responses+1] = { server = server, data = data }
+		-- stash response if best so far (most entries)
+		data.count = tonumber(data.count)
+		log:info("reponse received from ", tostring(server), " with ", data.count, " entries");
+		if self.best.count == nil or self.best.count < data.count then
+			self.best = { server = server, count = data.count, data = data }
+		end
 		self.waitingfor = self.waitingfor - 1
 	else
 		-- timer called sink, give up waiting for more
@@ -153,18 +152,22 @@ function menuSink(self, server, data)
 		return
 	end
 
+	-- if we got no entries in all responses, try squeezenetwork if not already tried
+	if (self.best.count == nil or self.best.count == 0) and self.sn then
+		log:info("no entries - sending query to squeezenetwork");
+		sendRequest(self, self.sn)
+		self.sn = nil
+		self.waitingfor = 1
+		self.timer:restart()
+		return
+	end
+
+	-- at this point have the best response we are going to get...
+	data, server = self.best.data, self.best.server
+	log:info("best received from ", tostring(server), " with ", data and data.count or 0, " entries");
+
 	-- kill the timer 
 	self.timer:stop()
-
-	-- use the response with the most entries
-	data, server = nil, nil
-	for _, response in pairs(self.responses) do
-		if data == nil or data.count < tonumber(response.data.count) then
-			data = response.data
-			data.count = tonumber(data.count)
-			server = response.server
-		end
-	end
 
 	if self.menu then
 		self.window:removeWidget(self.menu)
@@ -364,7 +367,7 @@ function _nonRepoEntry(self, menuItem, name, ver)
 		text = tostring(self:string("REMOVE")) .. " : " .. ver, 
 		sound = "WINDOWSHOW",
 		callback = function(event, menuItem)
-					   self.toremove[entry.name] = 1
+					   self.toremove[name] = 1
 					   self:action()
 				   end,
 	})
