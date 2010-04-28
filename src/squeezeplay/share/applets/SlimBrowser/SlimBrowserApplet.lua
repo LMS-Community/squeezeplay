@@ -2116,7 +2116,7 @@ function _alarmPreviewWindow(title)
 
 	local windowPopAction = function()
 		log:warn('window goes pop!')
-		_player:pause()
+		_player:stopPreview()
 		return EVENT_CONSUME
 	end
 
