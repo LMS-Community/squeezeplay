@@ -19,8 +19,32 @@ QVGALANDSCAPE_SKIN
 	SV	QVGA-skal i liggande format
 
 SMALL_ART
-	EN	Small artwork
+	CS	Malý obal alba
+	DA	Små coverbilleder
+	DE	Kleine Plattenhüllen
+	EN	Small Artwork
+	ES	Carátula de álbum pequeña
+	FI	Pieni kansikuva
+	FR	Petites pochettes
+	IT	Copertina piccola
+	NL	Kleine hoesafbeeldingen
+	NO	Små albumomslag
+	PL	Mała okładka
+	RU	Маленькая обложка
+	SV	Små albumomslag
 
 LARGE_ART
-	EN	Large artwork
+	CS	Velký obal alba
+	DA	Store albumcovere
+	DE	Grosse Plattenhüllen
+	EN	Large Artwork
+	ES	Carátula de álbum grande
+	FI	Suuri kuva
+	FR	Grandes pochettes
+	IT	Copertina grande
+	NL	Grote hoesafbeeldingen
+	NO	Stort albumomslag
+	PL	Duża okładka
+	RU	Большая обложка
+	SV	Stora albumomslag
 

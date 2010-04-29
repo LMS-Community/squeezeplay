@@ -1385,7 +1385,11 @@ function _process_displaystatus(self, event)
 			s.textarea:setValue(textValue)
 		end
 		if showMe then
-			s.window:showBriefly(duration, nil, transitionOn, transitionOff)
+			if tonumber(duration) == -1 then
+				s.window:show()
+			else
+				s.window:showBriefly(duration, nil, transitionOn, transitionOff)
+			end
 		end
 	end
 end
@@ -1405,6 +1409,14 @@ function togglePause(self)
 	elseif paused == 'play' then
 		self:pause()
 	end
+end
+
+
+function stopPreview(self)
+	if not self.state then return end
+	self:call({'playlist', 'preview', 'cmd:stop' })
+	self:updateIconbar()
+
 end
 
 
