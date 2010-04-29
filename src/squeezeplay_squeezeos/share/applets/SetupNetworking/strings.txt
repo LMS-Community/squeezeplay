@@ -829,15 +829,6 @@ NETWORK_ADDRESS_HELP
 	RU	Ошибка при получении DHCP-адреса сети.
 	SV	Det gick inte att erhålla en DHCP-adress på nätverket.
 
-NETWORK_IP_ADDRESS
-	DA	IP adresse
-	DE	IP-Adresse:
-	EN	IP Address
-	ES	Dirección IP:
-	FR	Adresse IP:
-	IT	Indirizzo IP:
-	NL	IP-adres:
-
 NETWORK_IP_ADDRESS_HELP
 	CS	Nápověda IP adresy
 	DA	Hjælp til at finde IP-adresse
