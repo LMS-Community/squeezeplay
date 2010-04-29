@@ -1350,7 +1350,7 @@ local function _browseSink(step, chunk, err)
 				end
 
 				-- textarea data for the window
-				if useSimpleMenuOverlay then
+				if data.window and ( data.window.textarea or data.window.textareaToken ) then
 
 					if data.window.textareaToken then
 						data.window.textarea = _string(data.window.textareaToken)
