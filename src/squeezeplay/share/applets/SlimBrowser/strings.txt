@@ -370,3 +370,15 @@ SLIMBROWSER_ALARM_PREVIEW
 SLIMBROWSER_DONE
 	EN	Done
 
+SLIMBROWSER_ALARM_SOUND_HELP
+	EN	In these menus, select an item for an alarm sound or press play to preview.
+
+SLIMBROWSER_ALARM_SOUND_HELP_FAB4
+	EN	In these menus, touch to select an alarm sound, touch-hold to preview.
+
+SLIMBROWSER_ALARM_SOUND_HELP_BABY
+	EN	In these menus, press the knob to select an alarm sound, press play to preview.
+
+SLIMBROWSER_ALARM_SOUND_HELP_JIVE
+	EN	In these menus, press the center button to select an alarm sound, press play to preview.
+

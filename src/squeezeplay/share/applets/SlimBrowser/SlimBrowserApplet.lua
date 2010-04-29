@@ -1342,9 +1342,15 @@ local function _browseSink(step, chunk, err)
 				elseif data.title then
 					step.window:setTitle(data.title)
 				end
+
 				-- textarea data for the window
-				if data.window and data.window.textarea then
-					local text = string.gsub(data.window.textarea, '\\n', "\n")
+				if data.window and (data.window.textarea or data.window.textareaToken) then
+
+					if data.window.textareaToken then
+						data.window.textarea = _string(data.window.textareaToken)
+					end
+
+					local text = string.gsub(tostring(data.window.textarea), '\\n', "\n")
 					local textarea = Textarea('help_text', text)
 					if step.menu then
 						local item_loop = _safeDeref(step.menu, 'list', 'db', 'last_chunk', "item_loop")
