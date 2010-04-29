@@ -1202,6 +1202,11 @@ local function _browseSink(step, chunk, err)
 			_goNow(data.goNow)
 		end
 
+		local useSimpleMenuOverlay = false
+		if _safeDeref(data, 'window', 'textarea') or _safeDeref(data, 'window', 'textareaToken') then
+			useSimpleMenuOverlay = true
+		end
+
 		local setupWindow = _safeDeref(data, 'base', 'window', 'setupWindow')
 		if step.window and setupWindow then
 			step.window:setAllowScreensaver(false)
@@ -1243,7 +1248,8 @@ local function _browseSink(step, chunk, err)
 			_stepSetMenuItems(step, data)
 			if _player then
 				local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
-				if lastBrowseIndex and not step.lastBrowseIndexUsed then
+				-- we don't do browse history callback when we're using a simple menu overlay so the help text doesn't get lost
+				if lastBrowseIndex and not step.lastBrowseIndexUsed and not useSimpleMenuOverlay then
 					log:debug("Selecting  lastBrowseIndex: ", lastBrowseIndex)
 					step.menu:setSelectedIndex(lastBrowseIndex)
 					step.lastBrowseIndexUsed = true
@@ -1344,7 +1350,7 @@ local function _browseSink(step, chunk, err)
 				end
 
 				-- textarea data for the window
-				if data.window and (data.window.textarea or data.window.textareaToken) then
+				if useSimpleMenuOverlay then
 
 					if data.window.textareaToken then
 						data.window.textarea = _string(data.window.textareaToken)
@@ -1987,6 +1993,12 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					step, sink = _emptyDestination(step)
 					_stepLockHandler(step, function () _goNowPlaying(nil, true, true ) end)
 
+				elseif actionName == 'preview' then
+					skipNewWindowPush = true
+
+					step, sink = _emptyDestination(step)
+					_stepLockHandler(step, function () _alarmPreviewWindow(iAction and iAction.title) end )
+
 				elseif nextWindow == 'playlist' then
 					_goPlaylist(true)
 				elseif nextWindow == 'home' then
@@ -2070,10 +2082,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					end
 				end
 			
-				if actionName == 'preview' then
-					return _alarmPreviewWindow(iAction and iAction.title)
-				end
-
 				return EVENT_CONSUME
 			end
 		end
