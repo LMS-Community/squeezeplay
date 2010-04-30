@@ -43,7 +43,7 @@ function configureApplet(meta)
                         serviceMethod     = "mmConfirmEject",
                         menuToken         = "EJECT_DRIVE",
                         devNameAsTokenArg = true,
-			weight            = 10, -- default is 50, so this will put it at/near the top
+			weight            = 1000, -- default is 50, so this will put it at/near the bottom
                 }
         )
 

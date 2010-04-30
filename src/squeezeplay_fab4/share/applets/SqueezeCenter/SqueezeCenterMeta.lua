@@ -55,7 +55,9 @@ function configureApplet(meta)
 	)
 	appletManager:callService("mmRegisterOnEjectHandler", 
 		{
-		serviceMethod =	"mmStopSqueezeCenter"
+		serviceMethod =	"mmStopSqueezeCenter",
+		ejectWarningText = meta:string('SQUEEZEBOX_SERVER_DISK_EJECT_WARNING'),
+		ejectWarningTextOnlyIfTrue = "isBuiltInSCRunning",
 		}
 	)
 	appletManager:callService("squeezecenterStartupCheck")
