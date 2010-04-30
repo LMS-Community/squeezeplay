@@ -51,6 +51,16 @@ function __init(self, applet, paramOverride)
 		obj.pathOverride = paramOverride.path
 	end
 
+	if paramOverride and paramOverride.startImage then
+		log:debug("start slideshow with image: ", paramOverride.startImage)
+		obj.startImage = paramOverride.startImage
+	end
+
+	if paramOverride and paramOverride.noRecursion then
+		log:debug("don't search subfolders")
+		obj.noRecursion = true
+	end
+
 	return obj
 end
 
@@ -89,7 +99,7 @@ function scanFolder(self, folder)
 				
 						local fullpath = nextfolder .. "/" .. f
 			
-						if lfs.attributes(fullpath, "mode") == "directory" then
+						if (not self.norecursion) and lfs.attributes(fullpath, "mode") == "directory" then
 		
 							-- push this directory on our list to be scanned
 							table.insert(dirstoscan, fullpath)
@@ -100,8 +110,13 @@ function scanFolder(self, folder)
 									or string.find(string.lower(fullpath), "%ppng") 
 									or string.find(string.lower(fullpath), "%pbmp") 
 									or string.find(string.lower(fullpath), "%pgif") then
+								
 								-- log:info(fullpath)
 								table.insert(self.imgFiles, fullpath)
+								
+								if self.startImage and self.startImage == f then
+									self.currentImage = #self.imgFiles - 1
+								end
 							end
 						end
 					

@@ -31,6 +31,7 @@ local appletManager	= require("jive.AppletManager")
 local Framework		= require("jive.ui.Framework")
 local Font			= require("jive.ui.Font")
 local Icon			= require("jive.ui.Icon")
+local Textarea      = require("jive.ui.Textarea")
 local Label			= require("jive.ui.Label")
 local Group			= require("jive.ui.Group")
 local RadioButton	= require("jive.ui.RadioButton")
@@ -120,33 +121,151 @@ function setImageSource(self, imgSourceOverride)
 end
 
 function openImageViewer(self)
-	-- two item menu that shows start slideshow and settings
 	local window = Window("text_list", self:string('IMAGE_VIEWER'))
-	window:addWidget(
-		SimpleMenu("menu",
+	
+	local menu = SimpleMenu("menu", {
 		{
-			{
-				text = self:string("IMAGE_VIEWER_START_SLIDESHOW"), 
-				sound = "WINDOWSHOW",
-				callback = function(event, menuItem)
-					self:startSlideshow(false)
-					return EVENT_CONSUME
-				end
-			},
-			{
-				text = self:string("IMAGE_VIEWER_SETTINGS"), 
-				sound = "WINDOWSHOW",
-				callback = function()
-					self:openSettings()
-					return EVENT_CONSUME
-				end
-			},
-		}
-		)
-	)
+			text = self:string("IMAGE_VIEWER_START_SLIDESHOW"), 
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:startSlideshow(false)
+				return EVENT_CONSUME
+			end
+		},
+		{
+			text = self:string("IMAGE_VIEWER_SETTINGS"), 
+			sound = "WINDOWSHOW",
+			callback = function()
+				self:openSettings()
+				return EVENT_CONSUME
+			end
+		},
+	})
+	
+	if System:hasLocalStorage() then
+		menu:insertItem({
+			text = self:string("IMAGE_VIEWER_BROWSE_MEDIA"), 
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:browseFolder("/media")
+				return EVENT_CONSUME
+			end
+		}, 1)
+	end
+	
+	window:addWidget(menu)
 	self:tieAndShowWindow(window)
 	return window
 end
+
+function browseFolder(self, folder, title)
+	local window = Window("text_list", title or folder)
+
+	log:info("Browse folder for images: " .. folder)
+
+	-- verify validity of the directory
+	if lfs.attributes(folder, "mode") ~= 'directory' then
+		local text = Textarea("text", tostring(self:string("IMAGE_VIEWER_INVALID_FOLDER")) .. "\n" .. folder)
+	
+		window:addWidget(text)
+		self:tieAndShowWindow(window)
+		return window
+	end	
+
+	local menu = SimpleMenu("menu")
+
+	for f in lfs.dir(folder) do
+		-- exclude any dot file (hidden files/directories)
+		if (string.sub(f, 1, 1) ~= ".") then
+	
+			local fullpath = folder .. "/" .. f
+
+			if lfs.attributes(fullpath, "mode") == "directory" then
+				menu:addItem({
+					text = f,
+					sound = "WINDOWSHOW",
+--					icon = "icon_folder",
+					callback = function()
+						self:browseFolder(fullpath, f)
+					end
+				})
+
+			elseif lfs.attributes(fullpath, "mode") == "file" then
+				-- check for supported file type
+				if string.find(string.lower(fullpath), "%pjpe*g")
+						or string.find(string.lower(fullpath), "%ppng") 
+						or string.find(string.lower(fullpath), "%pbmp") 
+						or string.find(string.lower(fullpath), "%pgif") then
+					-- log:info(fullpath)
+					menu:addItem({
+						text = f,
+						sound = "WINDOWSHOW",
+						style = "item_no_arrow",
+						callback = function()
+							self:startSlideshow(false, ImageSourceLocalStorage(self, {
+								path = folder,
+								startImage = f,
+								noRecursion = true
+							}))
+						end
+					})
+				end
+			end
+		
+		end
+	end
+
+	if menu:numItems() > 0 then
+		-- allow setting the path for the screensaver mode from a folder context menu
+		window:addActionListener("add", menu, function (menu)
+			local item = menu:getSelectedItem()
+			local path = folder
+			
+			if item:getWidgetValue('text') then
+				path = path .. '/' .. item:getWidgetValue('text')
+
+				-- if current item is a file, use its folder
+				if lfs.attributes(path, "mode") == "file" then
+					path = folder
+				end
+			end
+			
+			if item and path and lfs.attributes(path, "mode") == "directory" then
+				local window = ContextMenuWindow(self:string("IMAGE_VIEWER"))
+		
+				local menu = SimpleMenu("menu", {
+					{
+						text = tostring(self:string("IMAGE_VIEWER_CURRENT_FOLDER")) .. "\n" .. path,
+						style = "item_info"
+					},
+					{
+						text = self:string("IMAGE_VIEWER_USE_FOLDER"),
+						sound = "CLICK",
+						callback = function()
+							self:getSettings()["card.path"] = path
+							self:getSettings()["source"] = "storage"
+							self:storeSettings()
+							window:hide()
+							return EVENT_CONSUME
+						end
+					},
+				})
+				
+				window:addWidget(menu)
+				window:show()
+			end 
+
+			return EVENT_CONSUME
+		end)
+		window:addWidget(menu)
+	else
+		window:addWidget(Textarea("text", self:string("IMAGE_VIEWER_EMPTY_LIST")))
+	end
+	
+	self:tieAndShowWindow(window)
+	return window
+end
+
 
 function startScreensaver(self)
 	log:info("start standard image viewer screensaver")
@@ -475,12 +594,16 @@ function closeRemoteScreensaver(self)
 	end
 end
 
--- callback called from media manager
+-- callbacks called from media manager
 function mmImageViewerMenu(self, devName)
 	log:info('mmImageViewerMenu: ', devName)
 	self:startSlideshow(false, ImageSourceLocalStorage(self, { path = '/media/' .. devName }))
 end
 
+function mmImageViewerBrowse(self, devName)
+	log:info('mmImageViewerBrowse: ', devName)
+	self:browseFolder('/media/' .. devName)
+end
 
 function free(self)
 	log:info("destructor of image viewer")
