@@ -159,6 +159,8 @@ function showMediaManagerWindow(self, devName)
 			})
 		end
 	end
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+
 	window:addWidget(menu)
 	self:tieAndShowWindow(window)
 	return window
@@ -666,6 +668,7 @@ end
 
 function mmConfirmEject(self, devName)
 	log:info('mmConfirmEject(): ', devName)
+
 	local item = self:_getItemFromDevName(devName)
 
 	local titleToken   = 'EJECT_CONFIRM'
@@ -696,11 +699,60 @@ function mmConfirmEject(self, devName)
 			},
 	})
 
-	menu:setHeaderWidget( Textarea("help_text", self:string(confirmToken, item and item.devName) ) )
+	local headerTextStrings = {
+		tostring(self:string(confirmToken, devName))
+	}
+	local extraHeaderText = _getExtraHeaderText(self, devName)
+	for k, v in pairs(extraHeaderText) do
+		table.insert(headerTextStrings, v)
+	end
+	local headerText = table.concat(headerTextStrings, "\n")
+	menu:setHeaderWidget( Textarea("help_text", headerText ) )
+	
 	window:addWidget(menu)
 	self.confirmEjectWindow = window
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+function _getExtraHeaderText(self, devName)
+	log:info('compiling ejectWarningText table')
+	local returnTable = {}
+	for k, v in pairs(self.mmOnEjectHandlers) do
+		local insertIt = true
+		if v.ejectWarningText then
+			if v.ejectWarningTextOnlyIfTrue and v.ejectWarningTextOnlyIfFalse then
+				log:info('needs to return true for ejectWarningTextOnlyIfTrue and false for ejectWarningTextOnlyIfFalse to add this warning text')
+				insertIt = appletManager:callService(v.ejectWarningTextOnlyIfTrue, devName) 
+						and not appletManager:callService(v.ejectWarningTextOnlyIfFalse, devName)
+
+			elseif v.ejectWarningTextOnlyIfTrue then
+				log:info('ejectWarningTextOnlyIfTrue method needs to return true to add this warning text')
+				insertIt = appletManager:callService(v.ejectWarningTextOnlyIfTrue, devName)
+
+			elseif v.ejectWarningTextOnlyIfFalse then
+				log:info('ejectTextOnlyIfFalse method needs to return false to add this menu item')
+				insertIt = not appletManager:callService(v.ejectTextOnlyIfFalse, devName)
+
+			else
+				log:info('no conditional on this eject warning text, so add it: ', v.ejectWarningText)
+			end
+
+			if insertIt then
+				log:info('---> add warning text ', v.ejectWarningText)
+				table.insert(returnTable, tostring(v.ejectWarningText))
+
+			else
+				log:info('---> insertIt says false, so do not add ', v.ejectWarningText)
+
+			end
+
+		end
+
+	end
+	return returnTable
+
 end
 
 

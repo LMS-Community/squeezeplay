@@ -287,10 +287,13 @@ function _squeezecenterAction(self, icon, text, subtext, time, action, silent)
 		popup:addWidget(Icon(icon))
 		popup:addWidget(Label("text", self:string(text)))
 		
-		if (subtext ~= nil) then popup:addWidget(Textarea("subtext", self:string(subtext))) end
+		if (subtext ~= nil) then 
+			popup:addWidget(Textarea("subtext", self:string(subtext))) 
+		end
 		
 		-- don't hide starting SC popup until scan.json file is detected
 		if action == 'start' or action == 'restart' then
+
 			local count = 0
 			popup:addTimer(1000,
 		                function()
@@ -431,6 +434,7 @@ function mmStopSqueezeCenter(self, devName)
 	if devName == self:_scDrive() then
 		log:warn('stopping server pointed to ', devName)
 		self:_stopServer()
+
 	else
 		log:warn('devName ', devName, ' does not equal ', self.SCDrive)
 	end
@@ -578,6 +582,8 @@ function _startServerWindow(self)
 			self:_writeSCPrefsFile(devName)
 			break --table is 1 element long, but breaking here can't hurt
 		end
+		-- XXX re-enable subtext after bug 16157 is fixed
+		--self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
 		self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", nil, 5000, "start")
 		return EVENT_CONSUMED
 
@@ -607,6 +613,8 @@ function _startServerWindow(self)
 				callback = function()
 					log:debug('write prefs.json file to use ', devName)
 					self:_writeSCPrefsFile(devName)
+					-- XXX re-enable subtext after bug 16157 is fixed
+					--self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", "STARTING_SQUEEZECENTER_TEXT", 5000, "start")
 					self:_squeezecenterAction("icon_connecting", "STARTING_SQUEEZECENTER", nil, 5000, "start")
 					self:settingsShow()
 					window:hide()
@@ -808,7 +816,7 @@ end
 
 function _scDrive(self)
 	local prefsData = self:readSCPrefsFile()
-	if prefsData.devName then
+	if prefsData and prefsData.devName then
 		return prefsData.devName
 	else
 		return false

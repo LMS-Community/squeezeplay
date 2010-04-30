@@ -1027,3 +1027,7 @@ SWITCH_MEDIA_HELP
 
 SWITCH_MEDIA
 	EN	Use %s for Squeezebox Server 
+
+SQUEEZEBOX_SERVER_DISK_EJECT_WARNING
+	EN	Warning: This device is currently running Squeezebox Server. All playback from this Squeezebox Server will cease when this drive is ejected.
+

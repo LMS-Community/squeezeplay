@@ -636,6 +636,12 @@ IMAGE_VIEWER_TEXTINFO_NO
 #
 # Strings for Card Source
 #
+IMAGE_VIEWER_CURRENT_FOLDER
+	EN	Current folder:
+
+IMAGE_VIEWER_USE_FOLDER
+	EN	Use folder as ImageViewer source
+
 IMAGE_VIEWER_CARD_PATH_HELP
 	CS	Definuje cestu pro hledání obrázků.
 	DA	Definerer søgestien til billeder.
@@ -1063,3 +1069,11 @@ IMAGE_VIEWER_SAVED_SLIDE
 	RU	Сохраненный слайд
 	SV	Sparad bild
 
+IMAGE_VIEWER_BROWSE_MEDIA
+	EN	Browse Media
+
+IMAGE_VIEWER_BROWSE_IMAGES
+	EN	Browse for Images
+
+IMAGE_VIEWER_INVALID_FOLDER
+	EN	Cannot open folder:
