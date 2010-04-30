@@ -1076,4 +1076,4 @@ IMAGE_VIEWER_BROWSE_IMAGES
 	EN	Browse for Images
 
 IMAGE_VIEWER_INVALID_FOLDER
-	EN	Can not open folder:
+	EN	Cannot open folder:
