@@ -275,7 +275,6 @@ static void decode_start_handler(void) {
 	LOG_INFO(log_audio_decode, "init decoder %s", decoder->name);
 
 	decode_first_buffer = TRUE;
-	// XXXX decode_set_output_threshold(output_threshold);
 	decode_output_set_transition(transition_type, transition_period);
 	decode_output_set_track_gain(replay_gain);
 	decode_set_track_polarity_inversion(polarity_inversion);
@@ -283,6 +282,7 @@ static void decode_start_handler(void) {
 	decoder_data = decoder->start(params, num_params);
 
 	decode_audio_lock();
+	decode_audio->output_threshold = output_threshold;
 	decode_output_begin();
 	decode_audio_unlock();
 }
