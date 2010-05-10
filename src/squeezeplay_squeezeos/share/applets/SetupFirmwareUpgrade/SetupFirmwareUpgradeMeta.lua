@@ -28,6 +28,7 @@ function registerApplet(meta)
 	meta:registerService("firmwareUpgrade")
 	meta:registerService("showFirmwareUpgradeMenu")
 	meta:registerService("wasFirmwareUpgraded")
+	meta:registerService("mmFindFirmware")
 
 	-- check for firmware upgrades when we connect to a new player
 	-- we don't want the firmware upgrade applets always loaded so
@@ -38,6 +39,15 @@ end
 
 function configureApplet(meta)
 	appletManager:callService("wasFirmwareUpgraded")
+       -- software update should be a media manager menu item when applicable
+        appletManager:callService("mmRegisterMenuItem",
+                {
+                        serviceMethod     = "showFirmwareUpgradeMenu",
+                        menuText          = meta:string("UPDATE"),
+			onlyIfTrue        = "mmFindFirmware",
+                        weight            = 100, -- default is 50, so this will put it at/near the bottom
+                }
+        )
 end
 
 
