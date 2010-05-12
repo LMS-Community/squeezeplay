@@ -20,6 +20,7 @@ Applet related methods are described in L<jive.Applet>.
 local ipairs, pairs, io, string, tostring = ipairs, pairs, io, string, tostring
 
 local oo               = require("loop.simple")
+local squeezeos        = require("squeezeos_bsp")
 
 local Applet           = require("jive.Applet")
 local Choice	       = require("jive.ui.Choice")
@@ -242,6 +243,39 @@ end
 -- wrapper method to allow other applets to get these settings through service API
 function setupDateTimeSettings(self)
 	return self:getSettings()
+end
+
+-- service callback to allow other applets to set default formats depending on language and time zone
+function setDateTimeDefaultFormats(self)
+	local tz = tostring(squeezeos.getTimezone())
+	local lang = locale:getLocale()
+	log:debug("Using language (", lang, ") and time zone (", tz, ") to determine date/time default formats")
+	
+	-- default to 12h display for some select countries (EN speaking in some countries)
+	-- see http://en.wikipedia.org/wiki/12-hour_clock#Use_by_country & SetupTZApplet.lua
+	if tostring(lang) == 'EN' and ( 
+		string.match(tz, "^America") 
+		or string.match(tz, "^Australia")
+		or string.match(tz, "^Pacific")			-- New Zealand
+--		or string.match(tz, "^Asia/Calcutta")	-- India/Pakistan
+--		or string.match(tz, "^Asia/Kabul")
+	) then
+		self:setHours("12")
+	else
+		self:setHours("24")
+	end
+	
+	self:setDateFormat(tostring(self:string("DATETIME_LONGDATEFORMAT_DEFAULT")) or "%a %d %b %Y")
+	self:setShortDateFormat(tostring(self:string("DATETIME_SHORTDATEFORMAT_DEFAULT")) or "%m.%d.%Y")
+
+	-- make US customers use Monday as the week start
+	if tostring(lang) == 'EN' and string.match(tz, "^America") then
+		self:setWeekStart("Monday")
+	else
+		self:setWeekStart("Sunday")
+	end
+
+	self:storeSettings()
 end
 
 --[[

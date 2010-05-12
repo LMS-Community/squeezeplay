@@ -599,6 +599,7 @@ end
 
 
 function free(self)
+	appletManager:callService("setDateTimeDefaultFormats")
 	return not self.locked
 end
 

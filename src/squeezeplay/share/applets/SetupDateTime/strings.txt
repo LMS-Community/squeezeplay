@@ -136,3 +136,34 @@ DATETIME_SUNDAY
 	RU	Воскресенье
 	SV	Söndag
 
+DATETIME_LONGDATEFORMAT_DEFAULT
+# SLT: a long date format description, eg. "Montag, 22. Oktober 2009" ([[http://www.opengroup.org/onlinepubs/009695399/functions/strptime.html]])
+	CS	%d. %B %Y
+	DA	%d. %B %Y
+	DE	%a, %d. %b, %Y
+	EN	%a %d %b %Y
+	ES	%a, %d %b, %Y
+	FI	%d. %B %Y
+	FR	%a %d %b %Y
+	IT	%a %d %b %Y
+	NL	%a %d %b %Y
+	NO	%d. %B %Y
+	PL	%d %B %Y
+	RU	%d %B %Y
+	SV	%d %B %Y
+
+DATETIME_SHORTDATEFORMAT_DEFAULT
+# SLT: a short date format description, eg. 22.10.2009 ([[http://www.opengroup.org/onlinepubs/009695399/functions/strptime.html]])
+	CS	%d.%m.%Y
+	DA	%d.%m.%Y
+	DE	%d.%m.%Y
+	EN	%m.%d.%Y
+	ES	%d.%m.%Y
+	FI	%d.%m.%Y
+	FR	%d.%m.%Y
+	IT	%d.%m.%Y
+	NL	%d.%m.%Y
+	NO	%d.%m.%Y
+	PL	%d.%m.%Y
+	RU	%d.%m.%Y
+	SV	%d.%m.%Y

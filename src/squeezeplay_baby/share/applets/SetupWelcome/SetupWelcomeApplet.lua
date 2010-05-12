@@ -436,7 +436,7 @@ function step8(self, squeezenetwork)
 	log:info("squeezenetwork pin=", pin, " url=", url)
 
 	if force then
-      		log:info("firmware upgrade from SN")
+		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
 	else
 		self:_registerRequest(squeezenetwork)
@@ -590,6 +590,7 @@ end
 
 
 function free(self)
+	appletManager:callService("setDateTimeDefaultFormats")
 	return not self.locked
 end
 
