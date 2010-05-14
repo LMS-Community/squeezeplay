@@ -119,6 +119,8 @@ struct decode_audio {
 	s32_t capture_lgain, capture_rgain;
 	u32_t set_sample_rate;
 
+	u32_t output_threshold; /* tenths of a second */
+
 	u32_t sync_elapsed_samples;
 	u32_t sync_elapsed_timestamp;
 

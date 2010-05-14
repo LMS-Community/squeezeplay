@@ -57,7 +57,11 @@ static int callback(const void *inputBuffer,
 	bytes_used = fifo_bytes_used(&decode_audio->fifo);
 
 	/* Should we start the audio now based on having enough decoded data? */
-	if (decode_audio->state & DECODE_STATE_AUTOSTART && bytes_used >=  len)	{
+	if (decode_audio->state & DECODE_STATE_AUTOSTART
+			&& bytes_used >=  len
+			&& bytes_used >= SAMPLES_TO_BYTES((u32_t)((decode_audio->output_threshold * stream_sample_rate) / 10))
+		)
+	{
 		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
 		decode_audio->state |= DECODE_STATE_RUNNING;
 	}

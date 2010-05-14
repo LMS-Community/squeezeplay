@@ -157,6 +157,29 @@ function _findUpgrades(self, url, urlHelp, server)
 end
 
 
+function mmFindFirmware(self, devName)
+	local upgradePresent = false
+	local path = MEDIA_PATH .. devName .. "/"
+	local machine = System:getMachine()
+
+	local attrs = lfs.attributes(path)
+	if attrs and attrs.mode == "directory" then
+		for entry in lfs.dir(path) do
+			local url = "file:" .. path .. entry
+			local version = self:_firmwareVersion(url)
+
+			if version or entry == machine .. ".bin" then
+				log:info('Firmware update detected on ', path)
+				upgradePresent = true
+				break
+			end
+		end
+	end
+
+	return upgradePresent
+end
+
+
 function _helpString(self, upgrade)
 	local helpString = upgrade.help
 	if not helpString then

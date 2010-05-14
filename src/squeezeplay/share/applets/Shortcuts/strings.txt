@@ -625,3 +625,18 @@ SHORTCUTS_OUTPUT_SET_PRESET
 	RU	Задать предустановку %s
 	SV	Ställ in förinställning %s
 
+SHORTCUTS_OUTPUT_SEARCH
+	CS	Vyhledat
+	DA	Søg
+	DE	Suchen
+	EN	Search
+	ES	Buscar
+	FI	Etsi
+	FR	Recherche
+	IT	Ricerca
+	NL	Zoeken
+	NO	Søk
+	PL	Szukaj
+	RU	Поиск
+	SV	Sök
+
