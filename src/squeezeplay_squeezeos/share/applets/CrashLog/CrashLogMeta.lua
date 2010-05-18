@@ -81,8 +81,8 @@ function notify_playerNew(meta, player)
 		log:info("crash log stopping player")
 		player:stop()
 		
-		# Bug 16170: after initial stop we do not want to do this again
-		# after any Comet reconnect 
+		-- Bug 16170: after initial stop we do not want to do this again
+		-- after any Comet reconnect 
 		jnt:unsubscribe(meta)
 	end
 end
