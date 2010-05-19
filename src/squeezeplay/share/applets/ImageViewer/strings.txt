@@ -160,7 +160,7 @@ IMAGE_VIEWER_SOURCE_LOCAL_STORAGE
 	ES	Medio de almacenamiento local
 	FI	Paikallinen tallennustietoväline
 	FR	Support de stockage local
-	IT	Memorizzazione locale multimediale
+	IT	Supporto memorizzazione locale
 	NL	Lokale opslagmedia
 	NO	Lokalt lagringsmedium
 	PL	Lokalny nośnik pamięci masowej
@@ -499,34 +499,34 @@ IMAGE_VIEWER_TRANSITION_PUSH_LEFT
 	SV	tryck till vänster
 
 IMAGE_VIEWER_ROTATION
-	CS	Automatické otáčení
-	DA	Automatisk rotation
-	DE	Bilder drehen
+	CS	Otočení obrázku
+	DA	Billedrotation
+	DE	Bild drehen
 	EN	Image rotation
-	ES	Autogirar
-	FI	Käännä automaattisesti
-	FR	Rotation automatique
-	IT	Rotazione automatica
-	NL	Autom. roteren
-	NO	Automatisk rotering
-	PL	Autoobracanie
-	RU	Автоповорот
-	SV	Rotera automatiskt
+	ES	Giro de imagen
+	FI	Kuvan kääntäminen
+	FR	Rotation de l'image
+	IT	Rotazione immagini
+	NL	Rotatie van afbeelding
+	NO	Bilderotering
+	PL	Obracanie obrazu
+	RU	Поворот изображения
+	SV	Rotera bilden
 
 IMAGE_VIEWER_ROTATION_YES
-	CS	Vždy otáčet
-	DA	Rotér altid
+	CS	Otáčení obrázků
+	DA	Rotér billeder
 	DE	Bilder drehen
 	EN	Rotate images
-	ES	Girar siempre
-	FI	Käännä aina
-	FR	Toujours faire pivoter
-	IT	Ruota sempre
-	NL	Altijd roteren
-	NO	Alltid roter
-	PL	Zawsze obracaj
-	RU	Всегда поворачивать
-	SV	Rotera alltid
+	ES	Girar imágenes
+	FI	Käännä kuvia
+	FR	Faire pivoter les images
+	IT	Ruota immagini
+	NL	Afbeeldingen roteren
+	NO	Roter bilder
+	PL	Obracaj obrazy
+	RU	Поворачивать изображения
+	SV	Rotera bilder
 
 IMAGE_VIEWER_ROTATION_NO
 	CS	Bez otáčení
@@ -637,10 +637,34 @@ IMAGE_VIEWER_TEXTINFO_NO
 # Strings for Card Source
 #
 IMAGE_VIEWER_CURRENT_FOLDER
+	CS	Aktuální složka:
+	DA	Nuværende mappe:
+	DE	Aktueller Ordner:
 	EN	Current folder:
+	ES	Carpeta actual:
+	FI	Nykyinen kansio:
+	FR	Dossier en cours:
+	IT	Cartella corrente:
+	NL	Huidige map:
+	NO	Gjeldende mappe:
+	PL	Bieżący folder:
+	RU	Текущая папка:
+	SV	Aktuell mapp:
 
 IMAGE_VIEWER_USE_FOLDER
+	CS	Použít složku jako zdrojovou pro prohlížeč obrázků
+	DA	Brug mappen som kilde for Billedfremviser
+	DE	Ordner als Quelle für ImageViewer verwenden
 	EN	Use folder as ImageViewer source
+	ES	Usar carpeta como origen de ImageViewer
+	FI	Käytä kansiota ImageViewerin lähteenä
+	FR	Sélectionner ce dossier pour la source de l'afficheur d'images
+	IT	Usa cartella come origine di Visualizzatore immagini
+	NL	Map als Image Viewer-bron gebruiken
+	NO	Bruk mappen som ImageViewer-kilde
+	PL	Użyj folder jako źródło programu ImageViewer
+	RU	Использовать эту папку в качестве источника для ImageViewer
+	SV	Använd mappen som källa för bildvisaren
 
 IMAGE_VIEWER_CARD_PATH_HELP
 	CS	Definuje cestu pro hledání obrázků.
@@ -1070,10 +1094,47 @@ IMAGE_VIEWER_SAVED_SLIDE
 	SV	Sparad bild
 
 IMAGE_VIEWER_BROWSE_MEDIA
+	CS	Procházení médií
+	DA	Gennemse medie
+	DE	Medien durchsuchen
 	EN	Browse Media
+	ES	Examinar medios
+	FI	Selaa mediaa
+	FR	Parcourir le support
+	IT	Sfoglia supporto
+	NL	Media doorzoeken
+	NO	Bla i medium
+	PL	Przeglądaj multimedia
+	RU	Обзор носителя
+	SV	Visa innehåll på externt lagringsmedium
 
 IMAGE_VIEWER_BROWSE_IMAGES
+	CS	Procházení obrázků
+	DA	Søg efter billeder
+	DE	Nach Bildern suchen
 	EN	Browse for Images
+	ES	Examinar imágenes
+	FI	Selaa kuvia
+	FR	Parcourir les images
+	IT	Cerca immagini
+	NL	Bladeren naar afbeeldingen
+	NO	Bla etter bilder
+	PL	Przeglądaj w poszukiwaniu obrazów
+	RU	Обзор изображений
+	SV	Sök efter bilder
 
 IMAGE_VIEWER_INVALID_FOLDER
+	CS	Nelze otevřít složku:
+	DA	Kan ikke åbne mappen:
+	DE	Dieser Ordner kann nicht geöffnet werden:
 	EN	Cannot open folder:
+	ES	No se puede abrir carpeta:
+	FI	Ei voi avata kansiota:
+	FR	Impossible d'ouvrir le dossier:
+	IT	Impossibile aprire cartella:
+	NL	Kan map niet openen:
+	NO	Kan ikke åpne mappe:
+	PL	Nie można otworzyć folderu:
+	RU	Не удается открыть папку:
+	SV	Det går inte att öppna mappen:
+

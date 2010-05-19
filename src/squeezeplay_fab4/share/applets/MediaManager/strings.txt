@@ -94,13 +94,13 @@ EJECT_WARNING
 
 EJECT_WARNING_INFO
 	CS	Před vyjmutím USB nebo SD zařízení ho PROSÍM vždy vysuňte pomocí volby "vysunout" v menu Domovská stránka. Pokud to neuděláte, může to vést k vážnému poškození dat.
-	DA	Inden du fjerner en USB- eller SD-lagerenhed, skal du huske at afbryde forbindelsen til enheden via hovedmenuen. Hvis du ikke gør det, kan filerne blive ødelagt.
-	DE	Bevor Sie ein USB- oder SD-Gerät entfernen, werfen Sie dieses zunächst mithilfe der entsprechenden Option im Hauptmenü aus. Wenn Sie dies nicht tun, können die Daten beschädigt werden.
+	DA	Inden du fjerner en USB-nøgle eller et SD-kort, skal du huske at afbryde forbindelsen til den/det via hovedmenuen. Hvis du ikke gør det, kan filerne blive ødelagt.
+	DE	Bevor Sie ein USB- oder SD-Gerät entfernen, werfen Sie es zunächst mithilfe der entsprechenden Option im Hauptmenü aus. Wenn Sie dies nicht tun, können die Daten beschädigt werden.
 	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the Home menu. Failure to do so may cause serious damage to the data.
 	ES	Antes de retirar un dispositivo USB o SD, asegúrese de que lo extrae seleccionando la opción "extraer" desde el menú Inicio. Si no lo hace, puede provocar daños graves en la información.
 	FI	Ennen kuin poistat USB- tai SD-laitteen, muista napsauttaa Poista-painiketta Koti-valikossa. Jos tämä jätetään tekemättä, tiedot saattavat vaurioitua vakavasti.
 	FR	Avant de retirer un dispositif USB ou SD, veillez à l'éjecter en sélectionnant l'option correspondante dans le menu Accueil. Cette opération permet d'éviter le risque de dommages permanents pour vos données.
-	IT	Prima di rimuovere un dispositivo USB o SD, ESPELLERLO selezionando l'opzione Espelli dal menu Pagina iniziale. Non facendolo si rischia di danneggiare gravemente i dati.
+	IT	Prima di rimuovere un dispositivo USB o SD, ESPELLERLO selezionando l'opzione Espelli dal menu iniziale. Non facendolo si rischia di danneggiare gravemente i dati.
 	NL	Voordat je een USB- of SD-apparaat verwijdert, MOET je het vrijgeven door de toepasselijke optie te selecteren in het hoofdmenu. Als je dit niet doet, kunnen de gegevens ernstig beschadigd raken.
 	NO	Før du fjerner en usb- eller SD-enhet, MÅ du løse den ut ved å velge alternativet for dette i hovedmenyen. Hvis du ikke gjør dette, kan det føre til dataskader.
 	PL	Przed odłączeniem urządzenia USB lub SD NALEŻY wysunąć je, wybierając opcję Usuń z menu głównego. W przeciwnym razie dane mogą zostać poważnie uszkodzone.
@@ -124,18 +124,18 @@ NEW_STORAGE_MEDIA
 
 NEW_STORAGE_MEDIA_INFO
 	CS	Do "Moje hudba" bylo přidáno nové zařízení a probíhá prohledávání
-	DA	Der er føjet en ny enhed til Musik, og enheden gennemsøges i øjeblikket.
-	DE	Ein neues Gerät wurde unter 'Eigene Musik' hinzugefügt und wird nun durchsucht.
+	DA	Der er føjet en ny enhed til Musik, og enheden gennemsøges i øjeblikket
+	DE	Ein neues Gerät wurde unter "Eigene Musik" hinzugefügt und wird nun durchsucht
 	EN	A new device has been added to "My Music" and is being scanned
 	ES	Se ha agregado un nuevo dispositivo a "Mi música" y se está examinando
 	FI	Oma musiikki -kohtaan on lisätty uusi laite, jota tarkistetaan
 	FR	Un nouveau dispositif a été ajouté à "Ma musique". Analyse en cours...
 	IT	È stato aggiunto un nuovo dispositivo a Musica e in questo momento viene analizzato
-	NL	Er is een nieuw apparaat aan 'Mijn muziek' toegevoegd. Het wordt momenteel gescand.
+	NL	Er is een nieuw apparaat aan 'Mijn muziek' toegevoegd. Het wordt momenteel gescand
 	NO	En ny enhet er lagt til i Min musikk, og blir for øyeblikket gjennomsøkt
 	PL	Nowe urządzenie zostało dodane do kategorii Moja muzyka i trwa jego przeszukiwanie
 	RU	Новое устройство добавлено в список "Моя музыка" и просматривается
-	SV	En ny enhet har lagts till i Min musik och söks nu igenom.
+	SV	En ny enhet har lagts till i Min musik och söks nu igenom
 
 EXIT
 	CS	Ukončit
@@ -235,7 +235,7 @@ DEVICE_REMOVAL_WARNING
 	ES	¡Advertencia!
 	FI	Varoitus!
 	FR	Attention!
-	IT	Attenzione
+	IT	Attenzione!
 	NL	Waarschuwing!
 	NO	Advarsel!
 	PL	Uwaga!
@@ -477,7 +477,7 @@ ATTACHING_DRIVE
 	FR	Connexion du dispositif...
 	IT	Collegamento dispositivo in corso...
 	NL	Apparaat wordt gekoppeld...
-	NO	Legger til enhet ...
+	NO	Legger til enhet...
 	PL	Przyłączanie urządzenia...
 	RU	Присоединение устройства...
 	SV	Enheten ansluts...
@@ -492,7 +492,7 @@ ATTACHING_DRIVE_USB
 	FR	Connexion du dispositif USB...
 	IT	Collegamento dispositivo USB in corso...
 	NL	USB-apparaat wordt gekoppeld...
-	NO	Legger til usb-enhet ...
+	NO	Legger til usb-enhet...
 	PL	Przyłączanie urządzenia USB...
 	RU	Присоединение USB-устройства...
 	SV	USB-enheten ansluts...
@@ -507,7 +507,7 @@ ATTACHING_DRIVE_SD
 	FR	Connexion de la carte SD...
 	IT	Collegamento scheda SD in corso...
 	NL	SD-kaart wordt gekoppeld...
-	NO	Legger til SD-kort ...
+	NO	Legger til SD-kort...
 	PL	Przyłączanie karty SD...
 	RU	Присоединение SD-карты...
 	SV	SD-kortet ansluts...
@@ -729,10 +729,11 @@ EJECT_TRY_AGAIN
 	EN	Try again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Veuillez réessayer
+	FR	Réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen
 	PL	Spróbuj ponownie
 	RU	Повторите попытку
 	SV	Försök igen
+

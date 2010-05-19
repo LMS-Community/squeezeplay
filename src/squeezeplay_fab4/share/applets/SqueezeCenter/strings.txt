@@ -310,7 +310,7 @@ SCANNER_NO_STATUS
 	ES	Buscando archivos de música en medios, espere...
 	FI	Etsitään musiikkitiedostoja tietovälineestä. Odota...
 	FR	Analyse de vos fichiers musicaux en cours. Veuillez patienter...
-	IT	Ricerca multimediale in corso, attendere...
+	IT	Ricerca file di musica sul supporto. Attendere...
 	NL	Media worden op muziekbestanden gescand, een ogenblik geduld...
 	NO	Søker etter musikkfiler, vent litt ...
 	PL	Czekaj, trwa wyszukiwanie plików muzycznych na nośnikach...
@@ -995,7 +995,7 @@ MY_MUSIC
 UPDATE
 	CS	Aktualizace softwaru
 	DA	Softwareopdatering
-	DE	Software-Update
+	DE	Software-Aktualisierung
 	EN	Software Update
 	ES	Actualización de software
 	FI	Ohjelmiston päivitys
@@ -1005,7 +1005,7 @@ UPDATE
 	NO	Programvareoppdatering
 	PL	Aktualizacja oprogramowania
 	RU	Обновление ПО
-	SV	Programvaruuppdatering
+	SV	Programuppdatering
 
 SKIP
 	CS	Přeskočit
@@ -1023,11 +1023,47 @@ SKIP
 	SV	Hoppa över
 
 SWITCH_MEDIA_HELP
+	CS	Squeezebox Server je spuštěn, ale momentálně je nakonfigurován, aby přehrával hudbu z jiného zařízení. Z této nabídky můžete nastavit cestu na jinou jednotku.
+	DA	Squeezebox Server kører, men er konfigureret til at transmittere musik fra en anden enhed. Du kan pege på et andet drev fra denne menu.
+	DE	Squeezebox Server wird ausgeführt, ist aber für die Musikwiedergabe von einem anderen Gerät konfiguriert. In diesem Menü können Sie eine Auswahl für ein anderes Gerät treffen.
 	EN	Squeezebox Server is running but is currently configured to serve music from a different device. From this menu you can choose to point to a different drive.
+	ES	Squeezebox Server está en ejecución, pero se ha configurado para ofrecer música de un dispositivo diferente. Desde este menú se puede apuntar a otra unidad.
+	FI	Squeezebox Server on käytössä, mutta se on nyt määritetty syöttämään musiikkia toiselta laitteelta. Tällä valikolla voit valita sen osoittamaan toiseen asemaan.
+	FR	Squeezebox Server est en cours d'exécution mais est paramétré pour lire de la musique à partir d'un autre dispositif. Dans ce menu, vous pouvez modifier le lecteur source.
+	IT	Squeezebox Server è in esecuzione ma è configurato per inviare musica da un dispositivo differente. Da questo menu è possibile puntare a un'unità diversa.
+	NL	Squeezebox Server is actief maar wordt momenteel geconfigureerd om muziek van een ander apparaat af te spelen. Via dit menu kun je een ander station toewijzen.
+	NO	Squeezebox Server kjører, men er konfigurert til å spille av musikk fra en annen enhet. Du kan velge en annen stasjon fra denne menyen.
+	PL	Program Squeezebox Server jest uruchomiony, ale jego obecna konfiguracja dotyczy odtwarzania muzyki z innego urządzenia. W tym menu można wskazać inny napęd.
+	RU	Squeezebox Server запущен, но настроен на воспроизведение музыки с другого устройства. В этом меню можно выбрать другой диск.
+	SV	Squeezebox Server körs men är konfigurerad för att spela musik från en annan enhet. Du kan välja en annan enhet från den här menyn.
 
 SWITCH_MEDIA
-	EN	Use %s for Squeezebox Server 
+	CS	Použít %s pro Squeezebox Server
+	DA	Brug %s til Squeezebox Server
+	DE	Verwenden Sie %s für Squeezebox Server
+	EN	Use %s for Squeezebox Server
+	ES	Use % para Squeezebox Server
+	FI	Käytä kohdetta %s  Squeezebox Serveriin.
+	FR	Utiliser %s pour Squeezebox Server
+	IT	Usa %s per Squeezebox Server
+	NL	%s voor Squeezebox Server gebruiken
+	NO	Bruk %s for Squeezebox Server
+	PL	Użyj elementu %s w programie Squeezebox Server
+	RU	Использовать %s для Squeezebox Server
+	SV	Använd %s för Squeezebox Server
 
 SQUEEZEBOX_SERVER_DISK_EJECT_WARNING
+	CS	Výstraha: V tomto zařízení je právě spuštěn Squeezebox Server. Přehrávání z tohoto Squeezebox Server bude přerušeno, pokud tuto jednotku vysunete.
+	DA	Advarsel: Squeezebox Server kører på denne enhed. Al afspilning fra denne Squeezebox Server ophører når drevet fjernes.
+	DE	Warnung: Auf diesem Gerät wird aktuell Squeezebox Server ausgeführt. Die Wiedergabe von diesem Squeezebox Server wird beendet, sobald der Datenträger ausgeworfen wird.
 	EN	Warning: This device is currently running Squeezebox Server. All playback from this Squeezebox Server will cease when this drive is ejected.
+	ES	Advertencia: este dispositivo está ejecutando Squeezebox Server en este momento. Toda reproducción desde este Squeezebox Server se detendrá al expulsar la unidad.
+	FI	Varoitus: Tämä laite käyttää parhaillaan Squeezebox Serveriä. Kaikki äänentoisto tältä Squeezebox Serveriltä lakkaa, kun tämä asema irrotetaan.
+	FR	Attention: ce dispositif fonctionne actuellement avec SqueezeBox Server. Toutes les lectures depuis Squeezebox Server seront arrêtées quand vous éjecterez ce lecteur.
+	IT	Attenzione: in questo dispositivo è in esecuzione Squeezebox Server. Quando questa unità verrà espulsa, la riproduzione proveniente da questo Squeezebox Server terminerà.
+	NL	Waarschuwing: Squeezebox Server is momenteel actief op dit apparaat. Het afspelen via deze Squeezebox Server wordt gestopt als dit station wordt vrijgegeven.
+	NO	Advarsel: Denne enheten kjører for øyeblikket Squeezebox Server. All avspilling fra Squeezebox Server stanser når du løser ut denne stasjonen.
+	PL	Ostrzeżenie: Na tym urządzeniu jest obecnie uruchomiony program Squeezebox Server. Po odłączeniu tego napędu odtwarzanie wszystkich elementów używanych w programie Squeezebox Server zostanie zatrzymane.
+	RU	Предупреждение. На этом устройстве сейчас запущен Squeezebox Server. При извлечении диска воспроизведение с помощью Squeezebox Server будет остановлено.
+	SV	Varning: Squeezebox Server körs för närvarande på den här enheten. Alla uppspelningar från Squeezebox Server upphör när enheten matas ut.
 

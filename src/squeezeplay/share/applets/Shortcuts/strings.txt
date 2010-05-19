@@ -631,12 +631,12 @@ SHORTCUTS_OUTPUT_SEARCH
 	DE	Suchen
 	EN	Search
 	ES	Buscar
-	FI	Etsi
+	FI	Haku
 	FR	Recherche
-	IT	Ricerca
+	IT	Cerca
 	NL	Zoeken
 	NO	Søk
-	PL	Szukaj
+	PL	Wyszukaj
 	RU	Поиск
 	SV	Sök
 
