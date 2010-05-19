@@ -124,7 +124,7 @@ DEMO_VOLUME_MUTED
 
 SLIDE_01
 	CS	Hudební přehrávač Squeezebox™ Touch\nWi-Fi
-	DA	Squeezebox™ Touch\nWi-Fi-musikafspiller
+	DA	Squeezebox™ Touch\nTrådløs musikafspiller
 	DE	Squeezebox™ Touch\nWLAN-Musikplayer
 	EN	Squeezebox™ Touch\nWi-Fi Music Player
 	ES	Squeezebox™ Touch\nReproductor de música Wi-Fi
@@ -132,8 +132,8 @@ SLIDE_01
 	FR	Lecteur de musique sans fil Squeezebox™ Touch
 	IT	Lettore musicale Wi-Fi\nSqueezebox™ Touch
 	NL	Squeezebox™ Touch\nWi-Fi-muzieksysteem
-	NO	Squeezebox™ Touch\nWi-Fi Music Player
-	PL	Odtwarzacz muzyczny Squeezebox™ Touch\nWi-Fi
+	NO	Squeezebox™ Touch\nTrådløs musikkspiller
+	PL	Odtwarzacz muzyczny Squeezebox™  Touch\nWi-Fi
 	RU	Музыкальный плеер Wi-Fi\nSqueezebox™ Touch
 	SV	Squeezebox™ Touch\nWi-Fi-spelare
 

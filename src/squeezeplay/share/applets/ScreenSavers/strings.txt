@@ -95,7 +95,7 @@ SCREENSAVER_SELECT_HELP
 SCREENSAVER_SELECT_PLAYING_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že tento Squeezebox přehrává. K prohlédnutí spořiče stiskněte přehrávání.
 	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Squeezebox spiller. Tryk på afspil for at se et eksempel på en pauseskærm.
-	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt. Drücken Sie 'Play', um eine Vorschau des Bildschirmschoners anzuzeigen.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Squeezebox erfolgt. Drücken Sie "Play", um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is playing. Press play to preview a screensaver.
 	ES	Pulse el botón central para seleccionar un protector de pantalla que aparecerá cuando este Squeezebox esté reproduciendo música. Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FI	Valitse keskipainikkeella näytönsäästäjä, joka näkyy, kun tämä Squeezebox toistaa ääntä. Esikatsele näytönsäästäjä painamalla Toisto-painiketta.
@@ -125,7 +125,7 @@ SCREENSAVER_SELECT_STOPPED_HELP
 SCREENSAVER_SELECT_OFF_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že je tento Squeezebox vypnut. K prohlédnutí spořiče stiskněte přehrávání.
 	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Squeezebox er slukket. Tryk på afspil for at se et eksempel på en pauseskærm.
-	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll. Drücken Sie 'Play', um eine Vorschau des Bildschirmschoners anzuzeigen.
+	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Squeezebox angezeigt werden soll. Drücken Sie "Play", um eine Vorschau des Bildschirmschoners anzuzeigen.
 	EN	Press the center button to select a screensaver to be shown when this Squeezebox is off. Press play to preview a screensaver.
 	ES	Pulse el botón central para seleccionar un protector de pantalla que aparecerá cuando este Squeezebox esté apagado. Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FI	Valitse keskipainikkeella näytönsäästäjä, joka näkyy, kun Squeezebox ei ole käytössä. Esikatsele näytönsäästäjä painamalla Toisto-painiketta.

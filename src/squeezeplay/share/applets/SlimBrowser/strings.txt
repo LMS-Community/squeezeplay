@@ -365,7 +365,19 @@ SLIMBROWSER_CONNECTING_TO
 	SV	Ansluts till
 
 SLIMBROWSER_ALARM_PREVIEW
+	CS	Ukázka zvuku budíku
+	DA	Eksempel på vækkelyd
+	DE	Alarmvorschau
 	EN	Alarm Preview
+	ES	Vista previa de alarma
+	FI	Hälytyksen esikuuntelu
+	FR	Ecoute du réveil
+	IT	Anteprima sveglia
+	NL	Voorbeeld van weksignaal
+	NO	Alarmavspilling
+	PL	Podgląd alarmu
+	RU	Предварительное прослушивание сигнала
+	SV	Förhandsgranskning av varningssignal
 
 SLIMBROWSER_DONE
 	CS	Hotovo
@@ -376,21 +388,69 @@ SLIMBROWSER_DONE
 	FI	Valmis
 	FR	Terminé
 	IT	Fatto
-	NL	Klaar
+	NL	Gereed
 	NO	Fullført
 	PL	Gotowe
 	RU	Готово
 	SV	Klar
 
 SLIMBROWSER_ALARM_SOUND_HELP
+	CS	V těchto nabídkách vyberte položku jako zvuk budíku nebo stiskem play přehrajte ukázku zvuku.
+	DA	I disse menuer skal du vælge en lyd til vækkeuret og trykke på Afspil for at høre et eksempel.
+	DE	Wählen Sie in diesen Menüs ein Element für einen Alarmton aus.  Drücken Sie 'Play', um eine Vorschau anzuzeigen.
 	EN	In these menus, select an item for an alarm sound or press play to preview.
+	ES	En estos menús, seleccione un elemento para un sonido de alarma o pulse el botón de reproducción para obtener una vista previa.
+	FI	Näissä valikoissa valitset kohteen hälytysäänelle tai esikuuntelet painamalla soita.
+	FR	Dans ces menus, choisissez un son pour le réveil, ou appuyez sur le bouton Play pour lancer la lecture.
+	IT	In questi menu, selezionare un elemento per il suono della sveglia. Premere il tasto di riproduzione per generarne l'anteprima.
+	NL	In deze menu's selecteer je een item als weksignaal of druk je op PLAY voor een voorbeeld.
+	NO	I disse menyene velger du et element du vil bruke som alarmlyd, eller trykker på avspillingsknappen for å høre lyden.
+	PL	W tych menu można wybrać element odpowiadający dźwiękowi alarmu i nacisnąć opcję odtwarzania, aby włączyć podgląd.
+	RU	В этом меню для выбора сигнала будильника следует указать соответствующий элемент, для предварительного прослушивания — нажать клавишу воспроизведения.
+	SV	I de här menyerna väljer du ett objekt för ett varningsljud eller trycker på play-knappen för att förhandsgranska.
 
 SLIMBROWSER_ALARM_SOUND_HELP_FAB4
+	CS	V těchto nabídkách můžete dotykem zvolit zvuk budíku a dotykem a podržením přehrát ukázku zvuku.
+	DA	I disse menuer skal du trykke for at vælge en lyd til vækkeuret og holde for at høre et eksempel.
+	DE	Wählen Sie in diesen Menüs einen Alarmton durch Berühren aus. Durch Berühren und Halten können Sie eine Vorschau anzeigen.
 	EN	In these menus, touch to select an alarm sound, touch-hold to preview.
+	ES	En estos menús, toque para seleccionar un sonido de alarma y mantenga la pulsación para obtener una vista previa.
+	FI	Näissä valikoissa valitset hälytysäänen koskettamalla, esikuuntelet koskettamalla pitkään.
+	FR	Dans ces menus, appuyez pour sélectionner un son de réveil et laissez la touche enfoncée pour écouter le son.
+	IT	In questi menu, toccare per selezionare il suono della sveglia. Toccare a lungo per riprodurlo.
+	NL	In deze menu's kun je een weksignaal selecteren door middel van een aanraking, en houd je deze ingedrukt voor een voorbeeld.
+	NO	I disse menyene berører du en alarm for å velge den, og holder fingeren presset mot den for å høre den.
+	PL	W tych menu można wybrać dźwięk alarmu przez dotknięcie oraz włączyć podgląd, dotykając i przytrzymując opcję.
+	RU	В этом меню для выбора сигнала будильника следует коснуться его, для предварительного прослушивания — коснуться и удерживать.
+	SV	I de här menyerna pekar du för att välja ett varningsljud och pekar och håller ned för att förhandsgranska.
 
 SLIMBROWSER_ALARM_SOUND_HELP_BABY
+	CS	V těchto nabídkách můžete stiskem ovladače zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
+	DA	I disse menuer kan du trykke på drejeknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
+	DE	Drücken Sie in diesen Menüs den Knopf zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
 	EN	In these menus, press the knob to select an alarm sound, press play to preview.
+	ES	En estos menús, pulse el control para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
+	FI	Näissä valikoissa valitset hälytysäänen painamalla nuppia, esikuuntelet painamalla soita.
+	FR	Dans ces menus, appuyez sur le bouton de commande pour sélectionner un son de réveil et appuyez sur le bouton Play pour l'écouter.
+	IT	In questi menu, premere la manopola per selezionare il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
+	NL	In deze menu's druk je op de regelaar om een weksignaal te selecteren, en druk je op PLAY voor een voorbeeld.
+	NO	I disse menyene trykker du på knappen for å velge en alarmlyd, og avspillingsknappen for å høre den.
+	PL	W tych menu można nacisnąć pokrętło, aby wybrać dźwięk alarmu, lub nacisnąć przycisk odtwarzania w celu włączenia podglądu.
+	RU	В этом меню для выбора сигнала будильника используется центральная кнопка, для предварительного прослушивания — клавиша воспроизведения.
+	SV	I de här menyerna trycker du på vridknappen för att välja ett varningsljud och på play-knappen för att förhandsgranska.
 
 SLIMBROWSER_ALARM_SOUND_HELP_JIVE
+	CS	V těchto nabídkách můžete stiskem středového tlačítka zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
+	DA	I disse menuer kan du trykke på midterknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
+	DE	Drücken Sie in diesen Menüs die mittlere Taste zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
 	EN	In these menus, press the center button to select an alarm sound, press play to preview.
+	ES	En estos menús, pulse el botón central para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
+	FI	Näissä valikoissa valitset hälytysäänen painamalla keskipainiketta, esikuuntelet painamalla soita.
+	FR	Dans ces menus, appuyez sur le bouton central pour sélectionner un son de réveil, puis appuyez sur le bouton Play pour l'écouter.
+	IT	In questi menu, premere il pulsante centrale per selezionare il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
+	NL	In deze menu's druk je op de middelste knop om een weksignaal te selecteren, en druk je op PLAY voor een voorbeeld.
+	NO	I disse menyene trykker du på midtknappen for å velge en alarmlyd, og avspillingsknappen for å høre den.
+	PL	W tych menu można nacisnąć środkowy przycisk, aby wybrać dźwięk alarmu, i nacisnąć opcję odtwarzania w celu włączenia podglądu.
+	RU	В этом меню для выбора сигнала будильника используется центральная кнопка, для предварительного прослушивания — клавиша воспроизведения.
+	SV	I de här menyerna trycker du på den mittersta knappen för att välja ett varningsljud och på play-knappen för att förhandsgranska.
 
