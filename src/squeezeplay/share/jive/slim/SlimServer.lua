@@ -603,10 +603,11 @@ end
 
 function wakeOnLan(self)
 	if not self.mac or self:isSqueezeNetwork() then
+		log:warn('wakeOnLan(): SKIPPING WOL, self.mac: ', self.mac, ', self:isSqueezeNetwork(): ', self:isSqueezeNetwork())
 		return
 	end
 
-	log:debug("Sending WOL to ", self.mac)
+	log:info("wakeOnLan(): Sending WOL to ", self.mac)
 
 	-- send WOL packet to SqueezeCenter
 	local wol = WakeOnLan(self.jnt)
@@ -700,6 +701,7 @@ function notify_cometConnected(self, comet)
 		if err then
 			log:debug("arp: " .. err)
 		else
+			log:info('self.mac being set to---->', self.mac)
 			self.mac = chunk
 		end
 	end)
