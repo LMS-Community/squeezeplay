@@ -10,42 +10,7 @@ This class implements a TCP socket running in a L<jive.net.NetworkThread>.
 
 =head1 SYNOPSIS
 
- -- create a Comet socket to communicate with http://192.168.1.1:9000/
- local comet = jive.net.Comet(jnt, "192.168.1.1", 9000, "/cometd", "slimserver")
 
- -- subscribe to an event
- -- will callback to func whenever there is an event
- -- playerid may be nil
- comet:subscribe('/slim/serverstatus', func, playerid, {'serverstatus', 0, 50, 'subscribe:60'})
-
- -- unsubscribe from an event
- comet:unsubscribe('/slim/serverstatus', func)
-
- -- or unsubscribe all callbacks
- comet:unsubscribe('/slim/serverstatus')
-
- -- send a non-subscription request
- -- playerid may be nil
- -- request is a table (array) containing the raw request to pass to SlimServer
- comet:request(func, playerid, request)
-
- -- add a callback function for an already-subscribed event
- comet:addCallback('/slim/serverstatus', func)
-
- -- remove a callback function
- comet:removeCallback('/slim/serverstatus', func)
-
- -- start!
- comet:connect()
-
- -- disconnect
- comet:disconnect()
-
- -- batch a set of calls together into one request
-  comet:startBatch()
-  comet:subscribe(...)
-  comet:request(...)
-  comet:endBatch()
 
 =head1 FUNCTIONS
 
@@ -166,6 +131,8 @@ local opcodes = {
 				break
 			end
 		end
+		
+		log:info("Send HELO: reconnect-bit=", data.reconnect or 0, " bytesReceived(H,L)=", data.bytesReceivedH, ",", data.bytesReceivedL)
 
 		return {
 			packNumber(data.deviceID or DEVICEID, 1),
@@ -173,7 +140,8 @@ local opcodes = {
 			table.concat(macp),
 			table.concat(uuidp),
 			packNumber(wlanList, 2),
-			packNumber(0, 8), -- XXXX bytes received
+			packNumber(data.bytesReceivedH or 0, 4),
+			packNumber(data.bytesReceivedL or 0, 4),
 			"EN", -- XXXX language
 			capabilities			
 		}
@@ -515,6 +483,16 @@ function connectTask(self, serverip)
 
 		-- We got a packet so we must be connected
 		self.state = CONNECTED
+		
+		if self.connectionFailed then
+			local subscriptions = self.subscriptions["reconnect"]
+			if subscriptions then
+				for i, subscription in ipairs(subscriptions) do
+					subscription(self, nil)
+				end
+			end
+		end
+		
 		self.connectionFailed = false
 
 		log:debug("read opcode=", opcode, " #", #data)
@@ -579,10 +557,10 @@ function connectTask(self, serverip)
 
 	-- update connection state
 	self.state = CONNECTING
-	self.serverip = serverip
 
-	if serverip then
+	if serverip and serverip ~= self.serverip then
 		self.reconnect = false
+		self.serverip = serverip
 	end
 
 	local ip = self.serverip
@@ -614,6 +592,9 @@ function connectTask(self, serverip)
 	self.heloPacket.reconnect =
 		self.reconnect and
 		(status.isStreaming or status.isLooping)
+	
+	self.heloPacket.bytesReceivedH = status.bytesReceivedH;
+	self.heloPacket.bytesReceivedL = status.bytesReceivedL;
 
 	-- send helo packet
 	self:send(self.heloPacket, true)

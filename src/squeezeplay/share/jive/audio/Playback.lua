@@ -95,6 +95,10 @@ function __init(self, jnt, slimproto)
 		return obj:_setd(data)
 	end)
 	
+	obj.slimproto:subscribe("reconnect", function(_)
+		return obj:_reconnect()
+	end)
+	
 	obj.timer = Timer(100, function()
 		obj:_timerCallback()
 	end)
@@ -311,7 +315,7 @@ function _timerCallback(self)
 		elseif not self.sentOutputUnderrunEvent and
 			self.stream then
 
-			log:info("output underrun")
+			log:info("OUTPUT UNDERRUN")
 			decode:pauseAudio(0) -- auto-pause to prevent glitches
 			self:sendStatus(status, "STMo")
 
@@ -500,7 +504,7 @@ function _streamDisconnect(self, reason, flush)
 	if (flush) then
 		Stream:flush()
 		self.slimproto:sendStatus('STMf')
-	else
+	elseif reason then
 		self.slimproto:send({
 			opcode = "DSCO",
 			reason = reason,
@@ -558,6 +562,25 @@ function _streamHttpHeaders(self, headers)
 	})
 end
 
+-- Bug 16170
+-- After a successful reconnect,
+-- try to resend any important status messages which may have been lost
+function _reconnect(self)
+	local status = decode:status()
+
+	if self.sentDecoderFullEvent and not self.sentResume then
+		self:sendStatus(status, "STMl")
+	end
+
+	if self.sentDecoderUnderrunEvent or self.sentAudioUnderrunEvent then
+		self:sendStatus(status, "STMd")
+	end
+	if self.sentAudioUnderrunEvent then
+		self:sendStatus(status, "STMu")
+	elseif self.sentOutputUnderrunEvent then
+		self:sendStatus(status, "STMo")
+	end
+end
 
 function _strm(self, data)
 	if data.command ~= 't' then
@@ -566,7 +589,33 @@ function _strm(self, data)
 
 	if data.command == 's' then
 		-- start
-
+		
+		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
+		
+		-- Is this a reconnect (bit 0x40)?
+		if (data.flags & 0x40 ~= 0 and data.flags & 0x10 == 0) then
+		
+			-- FIXME - do not know how to handle reconnect for custom stream handlers
+			
+			-- If we have already (tried to) send STMd/STMo then too late to reconnect
+			if (not self.sentDecoderUnderrunEvent and not self.sentAudioUnderrunEvent) then
+				
+				log:info("reconnect")
+			
+				-- We should not need to disconnect the stream 
+				-- because if our HELO has said it was still connected
+				-- then we should not get called with the reconnect bit set
+				-- but just in case ...
+				self:_streamDisconnect(nil, false)
+			
+				-- Just reconnect the stream and send STMc
+				self.header = data.header
+				self:_streamConnect(serverIp, data.serverPort)
+				
+				return true;
+			end
+		end
+		
 		-- if we aborted the stream early, or there's any junk left 
 		-- over, flush out whatever's left.
 		self:_streamDisconnect(nil, true)
@@ -586,9 +635,7 @@ function _strm(self, data)
 		self.sentAudioUnderrunEvent = false
 		self.isLooping = false
 
-		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
-
-		if self.flags == 0x10 then
+		if self.flags & 0x10 ~= 0 then
 			-- custom handler
 			local handlerId = string.match(self.header, "spdr://(%w-)%?")
 
@@ -597,11 +644,13 @@ function _strm(self, data)
 				handlerId = string.match(self.header, "^(%w-)://")
 			end
 
-			if streamHandlers[handlerId] then
+			if handlerId and streamHandlers[handlerId] then
 				log:info("using custom handler ", handlerId)
 				streamHandlers[handlerId](self, data, decode)
 			else
-				log:warn("bad custom handler ", handlerId)
+				log:warn("bad custom handler ", handlerId or "nil")
+				self.slimproto:sendStatus('STMc')
+				self.slimproto:sendStatus('STMn')
 			end
 		else
 			-- standard stream - start the decoder and connect
