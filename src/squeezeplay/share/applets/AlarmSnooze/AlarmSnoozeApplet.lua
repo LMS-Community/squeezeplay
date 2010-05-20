@@ -57,6 +57,7 @@ function init(self, ...)
 		timeToAlarm = 86400000
 	end
 	self.debugRTCTime = timeToAlarm
+	self.debugWOLTime = 0
 	self.RTCAlarmTimer = Timer(timeToAlarm,
 			function ()
 				log:warn("RTC ALARM FIRING")
@@ -70,6 +71,8 @@ function init(self, ...)
 				if self.server then
 					log:warn('WOL packet being sent to ', self.server)
 					self.server:wakeOnLan()
+				else
+					log:warn('WOL timer has been hit, but no self.server is available to send to')
 				end
 			end,
 			true
@@ -83,11 +86,29 @@ function init(self, ...)
 			log:warn('**** status.audioState:           ', status.audioState)
 			log:warn('**** self.localPlayer.alarmState: ', self.localPlayer:getAlarmState())
 			log:warn('**** RTC fallback running?:       ', self.RTCAlarmTimer:isRunning())
+			log:warn('**** self.server:                 ', self.server)
+			if self.server then
+				log:warn('**** self.server.mac:                 ', self.server.mac)
+			end
 			if self.RTCAlarmTimer:isRunning() and self.debugRTCTime and self.debugRTCTime > 0 then
 				local timeToAlarm = self.debugRTCTime / 1000
 				log:warn('**** RTC time:       ', timeToAlarm)
 				if self.debugRTCTime > 0 then	
 					self.debugRTCTime = self.debugRTCTime - 1000
+				end
+			end
+			if self.RTCAlarmTimer:isRunning() and self.debugRTCTime and self.debugRTCTime > 0 then
+				local timeToAlarm = self.debugRTCTime / 1000
+				log:warn('**** RTC time:       ', timeToAlarm)
+				if self.debugRTCTime > 0 then	
+					self.debugRTCTime = self.debugRTCTime - 1000
+				end
+			end
+			if self.wakeOnLanTimer:isRunning() and self.debugWOLTime and self.debugWOLTime > 0 then
+				local timeToWOL = self.debugWOLTime / 1000
+				log:warn('**** WOL timer:       ', timeToWOL)
+				if self.debugWOLTime > 0 then	
+					self.debugWOLTime = self.debugWOLTime - 1000
 				end
 			end
 		end,
@@ -250,7 +271,7 @@ end
 
 
 function notify_playerPower(self, player, power)
-        if player ~= self.player then
+        if player ~= self.localPlayer then
                 return
         end
         log:debug("notify_playerPower(): ", power)
@@ -267,9 +288,6 @@ end
 
 function notify_playerCurrent(self, player)
 	log:info("notify_playerCurrent(", player, ")")
-	if player == self.localPlayer then
---		self:_alarm_sledgehammerRearm('notify_playerCurrent')
-	end
 end
 
 
@@ -284,6 +302,10 @@ function notify_playerConnected(self, player)
 	log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
 	if player == self.localPlayer then
 --		self:_alarm_sledgehammerRearm('notify_playerConnected')
+		self.server = player:getSlimServer()
+		log:warn("notify_playerConnected(): setting self.server to: ", self.server)
+	else
+		log:info('notify_playerConnected(): this notification player: ', player, ' not for local player: ', self.localPlayer)
 	end
 end
 
@@ -303,9 +325,6 @@ function notify_serverConnected(self, server)
 	self.localPlayer = Player:getLocalPlayer()
 
 	log:info('notify_serverConnected: ', server, ' is now connected')
-
-	-- self.server is used for WOL purposes
-	self.server = server
 
 	if self.localPlayer then
 		log:info('local player connection status is ', self.localPlayer:isConnected())
@@ -670,13 +689,15 @@ function _startTimer(self, interval)
 		local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
 		if sleepMsecs > wolLeadTime then
 			self.wakeOnLanTimer:setInterval(sleepMsecs - wolLeadTime)
+			self.debugWOLTime = sleepMsecs - wolLeadTime
 			if self.wakeOnLanTimer:isRunning() then
 				self.wakeOnLanTimer:restart()
 			else
 				self.wakeOnLanTimer:start()
 			end
-		-- if it's withing 5 minutes, send a WOL packet as a best effort
+		-- if it's within 5 minutes, send a WOL packet as a best effort
 		elseif self.server then
+			log:warn('SEND WOL NOW')
 			self.server:wakeOnLan()
 		end
 	end
