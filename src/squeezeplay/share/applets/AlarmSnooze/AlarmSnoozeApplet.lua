@@ -97,13 +97,6 @@ function init(self, ...)
 					self.debugRTCTime = self.debugRTCTime - 1000
 				end
 			end
-			if self.RTCAlarmTimer:isRunning() and self.debugRTCTime and self.debugRTCTime > 0 then
-				local timeToAlarm = self.debugRTCTime / 1000
-				log:warn('**** RTC time:       ', timeToAlarm)
-				if self.debugRTCTime > 0 then	
-					self.debugRTCTime = self.debugRTCTime - 1000
-				end
-			end
 			if self.wakeOnLanTimer:isRunning() and self.debugWOLTime and self.debugWOLTime > 0 then
 				local timeToWOL = self.debugWOLTime / 1000
 				log:warn('**** WOL timer:       ', timeToWOL)
@@ -631,7 +624,7 @@ end
 
 
 function _stopDecodeStatePoller(self)
-	if self.decodeStatePoller:isRunning() then
+	if self.decodeStatePoller and self.decodeStatePoller:isRunning() then
 		log:warn('stopping decodeStatePoller')
 		self.decodeStatePoller:stop()
 	end
@@ -639,10 +632,12 @@ end
 
 
 function _startDecodeStatePoller(self)
-	if self.decodeStatePoller:isRunning() then
-		self.decodeStatePoller:restart()
-	else
-		self.decodeStatePoller:start()
+	if self.decodeStatePoller then
+		if self.decodeStatePoller:isRunning() then
+			self.decodeStatePoller:restart()
+		else
+			self.decodeStatePoller:start()
+		end
 	end
 end
 
@@ -679,29 +674,40 @@ function _startTimer(self, interval)
 		self.debugRTCTime = interval
 	else
 		-- get msecs between now and requested alarm
-		-- add 10 secs for fallback timer to bias alarm toward server wakeup
-		local sleepMsecs = self:_deltaMsecs(self.alarmNext + 10);
-		log:warn('_startTimer: starting RTC fallback alarm timer (', sleepMsecs, ')')
-		self.RTCAlarmTimer:setInterval(sleepMsecs)
-		self.debugRTCTime = sleepMsecs
+		interval = self:_deltaMsecs(self.alarmNext)
 
-		-- WOL timer is set when sleepMsecs is more than 5:00 away
-		local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
-		if sleepMsecs > wolLeadTime then
-			self.wakeOnLanTimer:setInterval(sleepMsecs - wolLeadTime)
-			self.debugWOLTime = sleepMsecs - wolLeadTime
-			if self.wakeOnLanTimer:isRunning() then
-				self.wakeOnLanTimer:restart()
-			else
-				self.wakeOnLanTimer:start()
-			end
-		-- if it's within 5 minutes, send a WOL packet as a best effort
-		elseif self.server then
-			log:warn('SEND WOL NOW')
-			self.server:wakeOnLan()
-		end
+		-- add 20 secs for fallback timer to bias alarm toward server wakeup
+		local rtcSleepMsecs = interval + 20000
+
+		log:warn('_startTimer: starting RTC fallback alarm timer (', rtcSleepMsecs, ')')
+		self.RTCAlarmTimer:setInterval(rtcSleepMsecs)
+		self.debugRTCTime = rtcSleepMsecs
+
+		-- restart the WOL timer for 5 minutes, or immediately send WOL if alarm is within 5 mins
+		self:_wolTimerRestart(interval)
+
 	end
+
 	self.RTCAlarmTimer:start()
+end
+
+
+function _wolTimerRestart(self, msecsToAlarm)
+	local wolLeadTime = 1000 * 60 * 5 -- 5 minutes
+	if msecsToAlarm > wolLeadTime then
+		self.wakeOnLanTimer:setInterval(msecsToAlarm - wolLeadTime)
+		self.debugWOLTime = msecsToAlarm - wolLeadTime
+		if self.wakeOnLanTimer:isRunning() then
+			self.wakeOnLanTimer:restart()
+		else
+			self.wakeOnLanTimer:start()
+		end
+	-- if it's within 5 minutes, send a WOL packet as a best effort
+	elseif self.server then
+		log:warn('SEND WOL NOW')
+		self.debugWOLTime = 0
+		self.server:wakeOnLan()
+	end	
 end
 
 
@@ -711,9 +717,13 @@ function _alarmSnooze(self)
 
 	self:_stopTimer()
 
-	local alarmSnoozeSeconds = self.localPlayer:getAlarmSnoozeSeconds()
 	log:warn('_alarmSnooze: fallback alarm snoozing for ', alarmSnoozeSeconds,'  + 20 seconds')
-	self:_startTimer(alarmSnoozeSeconds * 1000 + 20000 )
+	local alarmSnoozeSeconds = self.localPlayer:getAlarmSnoozeSeconds()
+	local fallbackAlarmMsecs = alarmSnoozeSeconds * 1000 + 20000 
+	self.debugRTCTime = fallbackAlarmMsecs
+
+	self:_startTimer(fallbackAlarmMsecs)
+	self:_wolTimerRestart(alarmSnoozeSeconds * 1000)
 	
 	if self.alarmInProgress == 'rtc' then
 		log:warn('_alarmSnooze: stopping fallback alarm audio')
