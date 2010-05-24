@@ -45,8 +45,8 @@ function init(self, ...)
 	local timeToAlarm
 	local startTimer = false
 	if self.alarmNext then
-		if self:_inFuture() then
-			timeToAlarm = self.alarmNext
+		timeToAlarm = self:_inFuture()
+		if timeToAlarm then
 			startTimer  = true
 		else
 			timeToAlarm = 86400000
@@ -56,6 +56,7 @@ function init(self, ...)
 		-- as it will be set again whenever it is invoked by an self.alarmNext param
 		timeToAlarm = 86400000
 	end
+
 	self.debugRTCTime = timeToAlarm
 	self.debugWOLTime = 0
 	self.RTCAlarmTimer = Timer(timeToAlarm,
@@ -649,7 +650,7 @@ function _inFuture(self)
 
 	local now = os.time()
 	if self.alarmNext - now > 0 then
-		return true
+		return self.alarmNext - now
 	end
 	return false
 end
