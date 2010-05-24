@@ -202,6 +202,10 @@ function menuSink(self, server, data)
 					status = "REINSTALL"
 				else
 					status = entry.version == installed[entry.name] and "INSTALLED" or "UPDATES"
+					if status == "UPDATES" then
+						self.updateall = self.updateall or {}
+						self.updateall[entry.name] = { url = entry.url, ver = entry.version, sha = entry.sha }
+					end
 				end
 			end
 
@@ -238,6 +242,21 @@ function menuSink(self, server, data)
 			callback = function(event, menuItem)
 				self.toremove = self.reinstall 
 				self.todownload = self.reinstall
+				self:action()
+			end,
+			weight = 1
+		})
+	end
+
+	if self.updateall then
+		local count = 0
+		for _, _ in pairs(self.updateall) do count = count + 1 end
+		self.menu:addItem({
+			text = tostring(self:string("UPDATE_ALL")) .. " (" .. count .. ")",
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self.toremove = self.updateall 
+				self.todownload = self.updateall
 				self:action()
 			end,
 			weight = 1

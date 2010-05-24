@@ -193,6 +193,9 @@ REINSTALL_ALL
 	RU	Переустановить все
 	SV	Installera om alla
 
+UPDATE_ALL
+	EN	Update All
+
 APPLET_WARN
 	CS	Aplety třetích stran nejsou podporovány a měly by být instalovány na vlastní riziko. Před instalací se ujistěte se, že důvěřujete autorovi apletu.
 	DA	Underprogrammer fra tredjepart understøttes ikke, og installationen sker på eget ansvar. Du skal sikre dig at du kan stole på udgiveren, inden du installerer underprogrammet.
