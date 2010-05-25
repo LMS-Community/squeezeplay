@@ -43,6 +43,7 @@ static int callback(const void *inputBuffer,
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 	u32_t delay;
+	int ret = paContinue;
 
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
 		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
@@ -177,7 +178,9 @@ static int callback(const void *inputBuffer,
 
 	reached_start_point = decode_check_start_point();
 	if (reached_start_point && decode_audio->track_sample_rate != stream_sample_rate) {
+		LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
 		decode_audio->set_sample_rate = decode_audio->track_sample_rate;
+		ret = paComplete; // will trigger the finished callback to change the samplerate
 	}
 
  mixin_effects:
@@ -186,7 +189,7 @@ static int callback(const void *inputBuffer,
 
 	decode_audio_unlock();
 
-	return paContinue;
+	return ret;
 }
 
 
