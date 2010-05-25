@@ -752,8 +752,8 @@ static void *audio_thread_execute(void *data) {
 			struct timeval now, diff, tstamp;
 			gettimeofday(&now, 0);
 			snd_pcm_status_get_trigger_tstamp(status, &tstamp);
-			timersub(&now, &tstamp, &diff);
-			LOG_WARN("underrun!!! (at least %.3f ms long)", diff.tv_sec * 1000 + diff.tv_usec / 1000.0);
+			timersub(&tstamp, &now, &diff);
+			LOG_WARN("underrun!!! (at least %.3f ms long)", diff.tv_sec * 1000.0 + diff.tv_usec / 1000.0);
 
 			if ((err = snd_pcm_recover(state->pcm, -EPIPE, 1)) < 0) {
 				LOG_ERROR("XRUN recovery failed: %s", snd_strerror(err));
