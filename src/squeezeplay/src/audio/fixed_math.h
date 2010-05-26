@@ -53,10 +53,25 @@ static inline fft_fixed double_to_fixed(double x) {
 	return ((fft_fixed) ((x) * (double) (1L << 16) + 0.5));
 }
 
+#if defined(__GNUC__) && defined (__arm__)
+static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
+	register s32_t __hi, __lo, __result;
+	asm(
+		"smull %0, %1, %3, %4\n\t"
+		"movs %0, %0, lsr #16\n\t"
+		"adc %2, %0, %1, lsl #16"
+		: "=&r" (__lo), "=&r" (__hi), "=r" (__result)
+		: "%r" (x), "r" (y)
+		: "cc"
+	);
+	return __result;
+}:
+#else
 static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 	s64_t z = (s64_t)x * (s64_t)y;
 	return (s32_t) (z >> 16);
 }
+#endif
 
 static inline fft_fixed fixed_div(fft_fixed x, fft_fixed y) {
 	s64_t z = ((s64_t)x << 32);
