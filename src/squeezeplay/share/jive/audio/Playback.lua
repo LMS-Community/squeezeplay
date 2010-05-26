@@ -591,14 +591,19 @@ function _strm(self, data)
 		-- start
 		
 		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
-		
+		self.flags = data.flags
+		self.mode = data.mode
+		self.header = data.header
+		self.autostart = data.autostart
+		self.threshold = data.threshold * 1024
+
 		-- Is this a reconnect (bit 0x40)?
-		if (data.flags & 0x40 ~= 0 and data.flags & 0x10 == 0) then
+		if (self.flags & 0x40 ~= 0 and self.flags & 0x10 == 0) then
 		
 			-- FIXME - do not know how to handle reconnect for custom stream handlers
 			
 			-- If we have already (tried to) send STMd/STMo then too late to reconnect
-			if (not self.sentDecoderUnderrunEvent and not self.sentAudioUnderrunEvent) then
+			if (self.sentResumeDecoder and not self.sentDecoderUnderrunEvent and not self.sentAudioUnderrunEvent) then
 				
 				log:info("reconnect")
 			
@@ -609,7 +614,6 @@ function _strm(self, data)
 				self:_streamDisconnect(nil, false)
 			
 				-- Just reconnect the stream and send STMc
-				self.header = data.header
 				self:_streamConnect(serverIp, data.serverPort)
 				
 				return true;
@@ -621,12 +625,6 @@ function _strm(self, data)
 		self:_streamDisconnect(nil, true)
 
 		-- reset stream state
-		self.flags = data.flags
-		self.mode = data.mode
-		self.header = data.header
-		self.autostart = data.autostart
-		self.threshold = data.threshold * 1024
-
 		self.sentResume = false
 		self.sentResumeDecoder = false
 		self.sentDecoderFullEvent = false
