@@ -249,7 +249,7 @@ function _eventHandler(self, event)
 
 	-- consume events if the slider is disabled
 	if not self.sliderEnabled then
-		return EVENT_CONSUME
+		return EVENT_UNUSED
 	end
 
 	if type == EVENT_SCROLL then
