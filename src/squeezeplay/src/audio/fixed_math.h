@@ -57,7 +57,6 @@ static inline fft_fixed double_to_fixed(double x) {
 static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 	register s32_t __hi, __lo, __result;
 	asm(
-		".arm\n\t"
 		"smull %0, %1, %3, %4\n\t"
 		"movs %0, %0, lsr #16\n\t"
 		"adc %2, %0, %1, lsl #16"
