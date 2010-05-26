@@ -65,7 +65,7 @@ static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 		: "cc"
 	);
 	return __result;
-}:
+}
 #else
 static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 	s64_t z = (s64_t)x * (s64_t)y;
