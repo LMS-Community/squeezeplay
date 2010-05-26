@@ -54,6 +54,7 @@ static inline fft_fixed double_to_fixed(double x) {
 }
 
 #if defined(__GNUC__) && defined (__arm__)
+/* This is about 50% faster than the C version */
 static inline fft_fixed fixed_mul(fft_fixed x, fft_fixed y) {
 	register s32_t __hi, __lo, __result;
 	asm(
