@@ -169,7 +169,6 @@ static int callback(const void *inputBuffer,
 		if (decode_audio->samples_to_fade) {
 			if (decode_audio->samples_until_fade > samples_write) {
 				decode_audio->samples_until_fade -= samples_write;
-				LOG_DEBUG(log_audio_output, "samples_until_fade %d", decode_audio->samples_until_fade);
 			}
 			else {
 				decode_audio->samples_until_fade = 0;
@@ -193,7 +192,6 @@ static int callback(const void *inputBuffer,
 				}
 				
 				/* Apply transition gain to left/right gain values */
-				LOG_DEBUG(log_audio_output, "transition_gain %d", decode_audio->transition_gain);
 				lgain = fixed_mul(lgain, decode_audio->transition_gain);
 				rgain = fixed_mul(rgain, decode_audio->transition_gain);
 				

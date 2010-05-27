@@ -195,9 +195,6 @@ extern int decode_vumeter(lua_State *L);
 extern int decode_spectrum(lua_State *L);
 extern int decode_spectrum_init(lua_State *L);
 
-/* Transitions */
-extern fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes);
-
 /* Internal state */
 
 #define SAMPLES_TO_BYTES(n)  (2 * (n) * sizeof(sample_t))
@@ -219,5 +216,41 @@ extern u8_t *effect_fifo_buf;
 /* Decode message queue */
 extern struct mqueue decode_mqueue;
 
+/* This is here because it's needed in decode_alsa_backend.
+ * Determine whether we have enough audio in the output buffer to do
+ * a transition. Start at the requested transition interval and go
+ * down till we find an interval that we have enough audio for.
+ */
+static fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes) {
+	size_t bytes_used, sample_step_bytes;
+	fft_fixed interval, interval_step;
+	u32_t transition_sample_step;
+
+	ASSERT_AUDIO_LOCKED();
+
+	if (sample_rate != decode_audio->track_sample_rate) {
+		return 0;
+	}
+
+	bytes_used = fifo_bytes_used(&decode_audio->fifo);
+	*nbytes = SAMPLES_TO_BYTES(TRANSITION_MINIMUM_SECONDS * sample_rate);
+	if (bytes_used < *nbytes) {
+		return 0;
+	}
+
+	*nbytes = SAMPLES_TO_BYTES(transition_period * sample_rate);
+	transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
+	sample_step_bytes = SAMPLES_TO_BYTES(transition_sample_step);
+
+	interval = s32_to_fixed(transition_period);
+	interval_step = fixed_div(FIXED_ONE, TRANSITION_STEPS_PER_SECOND);
+
+	while (bytes_used < (*nbytes + sample_step_bytes)) {
+		*nbytes -= sample_step_bytes;
+		interval -= interval_step;
+	}
+
+	return interval;
+}
 
 #endif // AUDIO_DECODE_PRIV

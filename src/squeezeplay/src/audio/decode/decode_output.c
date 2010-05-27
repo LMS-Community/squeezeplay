@@ -199,43 +199,6 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
 	}
 }
 
-
-/* Determine whether we have enough audio in the output buffer to do
- * a transition. Start at the requested transition interval and go
- * down till we find an interval that we have enough audio for.
- */
-fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes) {
-	size_t bytes_used, sample_step_bytes;
-	fft_fixed interval, interval_step;
-
-	ASSERT_AUDIO_LOCKED();
-
-	if (sample_rate != decode_audio->track_sample_rate) {
-		LOG_DEBUG(log_audio_decode, "Can't CROSSFADE different sample rates %d != %d", sample_rate, decode_audio->track_sample_rate);
-		return 0;
-	}
-
-	bytes_used = fifo_bytes_used(&decode_audio->fifo);
-	*nbytes = SAMPLES_TO_BYTES(TRANSITION_MINIMUM_SECONDS * sample_rate);
-	if (bytes_used < *nbytes) {
-		return 0;
-	}
-
-	*nbytes = SAMPLES_TO_BYTES(transition_period * sample_rate);
-	transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
-	sample_step_bytes = SAMPLES_TO_BYTES(transition_sample_step);
-
-	interval = s32_to_fixed(transition_period);
-	interval_step = fixed_div(FIXED_ONE, TRANSITION_STEPS_PER_SECOND);
-
-	while (bytes_used < (*nbytes + sample_step_bytes)) {
-		*nbytes -= sample_step_bytes;
-		interval -= interval_step;
-	}
-
-	return interval;
-}
-
 /* How many bytes till we're done with the transition.
  */
 static inline size_t decode_transition_bytes_remaining(size_t ptr) {

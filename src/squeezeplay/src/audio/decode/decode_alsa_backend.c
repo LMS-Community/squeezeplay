@@ -209,7 +209,6 @@ static void generate_noise(void *outputBuffer,
 	}
 }
 
-
 static void decode_alsa_copyright(struct decode_alsa *state,
 				  bool_t copyright)
 {
@@ -363,6 +362,10 @@ static void playback_callback(struct decode_alsa *state,
 
 	while (decode_frames) {
 		size_t wrap_frames, frames_write, frames_cnt;
+		s32_t lgain, rgain;
+		
+		lgain = decode_audio->lgain;
+		rgain = decode_audio->rgain;
 
 		wrap_frames = BYTES_TO_SAMPLES(fifo_bytes_until_rptr_wrap(&decode_audio->fifo));
 
@@ -372,6 +375,45 @@ static void playback_callback(struct decode_alsa *state,
 		}
 
 		frames_cnt = frames_write;
+		
+		/* Handle fading and delayed fading */
+		if (decode_audio->samples_to_fade) {
+			if (decode_audio->samples_until_fade > frames_write) {
+				decode_audio->samples_until_fade -= frames_write;
+			}
+			else {
+				decode_audio->samples_until_fade = 0;
+			
+				/* initialize transition parameters */
+				if (!decode_audio->transition_gain_step) {
+					size_t nbytes;
+					fft_fixed interval;
+				
+					interval = determine_transition_interval(decode_audio->transition_sample_rate, (u32_t)(decode_audio->samples_to_fade / decode_audio->transition_sample_rate), &nbytes);
+					if (!interval)
+						interval = 1;
+					
+					decode_audio->transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
+					decode_audio->transition_gain = FIXED_ONE;
+					decode_audio->transition_sample_step = decode_audio->transition_sample_rate / TRANSITION_STEPS_PER_SECOND;
+					decode_audio->transition_samples_in_step = 0;
+				
+					LOG_DEBUG("Starting FADEOUT over %d seconds, transition_gain_step %d, transition_sample_step %d",
+						fixed_to_s32(interval), decode_audio->transition_gain_step, decode_audio->transition_sample_step);	
+				}
+				
+				/* Apply transition gain to left/right gain values */
+				lgain = fixed_mul(lgain, decode_audio->transition_gain);
+				rgain = fixed_mul(rgain, decode_audio->transition_gain);
+				
+				/* Reduce transition gain when we've processed enough samples */
+				decode_audio->transition_samples_in_step += frames_write;
+				while (decode_audio->transition_gain && decode_audio->transition_samples_in_step >= decode_audio->transition_sample_step) {
+					decode_audio->transition_samples_in_step -= decode_audio->transition_sample_step;
+					decode_audio->transition_gain -= decode_audio->transition_gain_step;
+				}
+			}
+		}
 
 		if (PCM_SAMPLE_WIDTH() == 24) {
 			sample_t *decode_ptr;
@@ -380,8 +422,8 @@ static void playback_callback(struct decode_alsa *state,
 			output_ptr = (Sint32 *)(void *)output_buffer;
 			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 			while (frames_cnt--) {
-				*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 8;
-				*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 8;
+				*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 8;
+				*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 8;
 			}
 		}
 		else {
@@ -391,8 +433,8 @@ static void playback_callback(struct decode_alsa *state,
 			output_ptr = (Sint16 *)(void *)output_buffer;
 			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 			while (frames_cnt--) {
-				*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++)) >> 16;
-				*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++)) >> 16;
+				*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 16;
+				*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 16;
 			}
 		}
 
@@ -405,6 +447,9 @@ static void playback_callback(struct decode_alsa *state,
 
 	reached_start_point = decode_check_start_point();
 	if (reached_start_point) {
+		decode_audio->samples_to_fade = 0;
+		decode_audio->transition_gain_step = 0;
+		
 		if (decode_audio->track_sample_rate != state->pcm_sample_rate) {
 			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 		}
