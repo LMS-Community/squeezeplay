@@ -36,7 +36,9 @@ struct decode_mad {
 	u32_t packets;
 	u32_t encoder_delay;
 	u32_t encoder_padding;
-	u64_t frame_cnt;
+	u64_t lame_samples;
+	u64_t lame_samples_remain;
+	u64_t decoded_samples;
 
 	enum {
 		MAD_STATE_OK = 0,
@@ -89,15 +91,19 @@ static void xing_parse(struct decode_mad *self) {
 
 	// skip traditional xing vbr tag data
 	if (flags & XING_FRAMES) {
-		LOG_DEBUG(log_audio_codec, "reading xing frames");
 		if (bitlen < 32) {
 			return;
 		}
 		frames = mad_bit_read(&ptr, 32);
 		bitlen -= 32;
+		LOG_DEBUG(log_audio_codec, "xing frames: %d", frames);
 	}
+	else {
+		LOG_DEBUG(log_audio_codec, "no xing frames available");
+		return;
+	}
+	
 	if (flags & XING_BYTES) {
-		LOG_DEBUG(log_audio_codec, "reading xing bytes");
 		if (bitlen < 32) {
 			return;
 		}
@@ -105,7 +111,6 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 32;
 	}
 	if (flags & XING_TOC) {
-		LOG_DEBUG(log_audio_codec, "reading xing toc");
 		if (bitlen < 800) {
 			return;
 		}
@@ -113,7 +118,6 @@ static void xing_parse(struct decode_mad *self) {
 		bitlen -= 800;
 	}
 	if (flags & XING_SCALE) {
-		LOG_DEBUG(log_audio_codec, "reading xing scale");
 		if (bitlen < 32) {
 			return;
 		}
@@ -151,11 +155,12 @@ static void xing_parse(struct decode_mad *self) {
 	else {
 		self->encoder_padding = 0;
 	}
-
-	self->frame_cnt = (frames * 1152UL) - self->encoder_delay - self->encoder_padding;
+	
+	self->lame_samples        = frames * 1152UL;
+	self->lame_samples_remain = self->lame_samples - self->encoder_delay - self->encoder_padding;
 
 	LOG_DEBUG(log_audio_codec, "encoder delay=%d padding=%d", self->encoder_delay, self->encoder_padding);
-	LOG_DEBUG(log_audio_codec, "total frames %ld", self->frame_cnt);
+	LOG_DEBUG(log_audio_codec, "total LAME samples %ld", self->lame_samples);
 }
 
 
@@ -383,16 +388,27 @@ static void decode_mad_output(struct decode_mad *self) {
 		left += offset;
 		right += offset;
 	}
-
+	
+	/* Track the total number of samples we have decoded */
+	self->decoded_samples += pcm->length;
+	
 	/* Remove encoder padding. Only do this if we are streaming a file,
 	 * some radio stations seem to incorrectly include a xing header in 
 	 * the stream.
 	 */
 	if (self->encoder_padding && !streambuf_is_icy()) {
-		if (pcm->length > self->frame_cnt ) {
-			LOG_DEBUG(log_audio_codec, "Remove encoder padding=%d frames=%ld", self->encoder_padding, self->frame_cnt);
+		if (pcm->length > self->lame_samples_remain) {
+			LOG_DEBUG(log_audio_codec, "Removing encoder padding, lame_samples_remain=%ld", self->lame_samples_remain);
 
-			pcm->length = self->frame_cnt;
+			pcm->length = self->lame_samples_remain;
+		}
+
+		/* Bug 16233, if total decoded samples gets beyond lame_samples + 1152, assume we were given
+		 * an invalid Xing header and should stop treating samples as encoder padding
+		 */
+		if (self->decoded_samples > self->lame_samples + 1152) {
+			LOG_DEBUG(log_audio_codec, "Decoded more samples (%ld) than expected (%ld), assuming invalid LAME header and ignoring padding", self->decoded_samples, self->lame_samples);
+			self->encoder_padding = 0;
 		}
 	}
 
@@ -403,7 +419,9 @@ static void decode_mad_output(struct decode_mad *self) {
 		if (buf == buf_end) {
 			nsamples = (buf - self->output_buffer) / 2;
 			decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
-			self->frame_cnt -= nsamples;
+			
+			if (self->encoder_padding)
+				self->lame_samples_remain -= nsamples;
 
 			buf = self->output_buffer;
 		}
@@ -412,7 +430,9 @@ static void decode_mad_output(struct decode_mad *self) {
 	nsamples = (buf - self->output_buffer) / 2;
 	if (nsamples) {
 		decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
-		self->frame_cnt -= (buf - self->output_buffer) / 2;
+		
+		if (self->encoder_padding)
+			self->lame_samples_remain -= nsamples;
 	}
 
 	/* If we've come to the guard pointer, we're done */
