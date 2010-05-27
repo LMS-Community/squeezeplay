@@ -189,8 +189,6 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
 		return;
 	}
 
-	LOG_DEBUG(log_audio_output, "Applying track gain %d for %d samples\n", track_gain, nsamples);
-
 	for (s = 0; s < nsamples; s++) {
 		*buffer = track_inversion[0] * volume_mul(*buffer, track_gain, track_clip_range);
 		buffer++;
