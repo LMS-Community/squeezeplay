@@ -535,7 +535,12 @@ void decode_output_song_ended(void) {
 	if (decode_transition_type & TRANSITION_FADE_OUT 
 	    && decode_transition_period
 	    && decode_audio->state & DECODE_STATE_RUNNING) {
+		/*
+		XXX Bug 16256, fade-out can take too long and stall the audio,
+		disabling this until a proper fix is implemented.
+		
 		decode_fade_out();
+		*/
 	}
 }
 
