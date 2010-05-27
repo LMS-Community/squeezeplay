@@ -24,7 +24,6 @@ static PaStream *stream;
 /* Stream sample rate */
 static u32_t stream_sample_rate;
 
-
 static void decode_portaudio_openstream(void);
 
 
@@ -152,6 +151,10 @@ static int callback(const void *inputBuffer,
 	while (bytes_used) {
 		size_t wrap, bytes_write, samples_write;
 		sample_t *output_ptr, *decode_ptr;
+		s32_t lgain, rgain;
+		
+		lgain = decode_audio->lgain;
+		rgain = decode_audio->rgain;
 
 		wrap = fifo_bytes_until_rptr_wrap(&decode_audio->fifo);
 
@@ -161,12 +164,53 @@ static int callback(const void *inputBuffer,
 		}
 
 		samples_write = BYTES_TO_SAMPLES(bytes_write);
+		
+		/* Handle fading and delayed fading */
+		if (decode_audio->samples_to_fade) {
+			if (decode_audio->samples_until_fade > samples_write) {
+				decode_audio->samples_until_fade -= samples_write;
+				LOG_DEBUG(log_audio_output, "samples_until_fade %d", decode_audio->samples_until_fade);
+			}
+			else {
+				decode_audio->samples_until_fade = 0;
+			
+				/* initialize transition parameters */
+				if (!decode_audio->transition_gain_step) {
+					size_t nbytes;
+					fft_fixed interval;
+				
+					interval = determine_transition_interval(decode_audio->transition_sample_rate, (u32_t)(decode_audio->samples_to_fade / decode_audio->transition_sample_rate), &nbytes);
+					if (!interval)
+						interval = 1;
+					
+					decode_audio->transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
+					decode_audio->transition_gain = FIXED_ONE;
+					decode_audio->transition_sample_step = decode_audio->transition_sample_rate / TRANSITION_STEPS_PER_SECOND;
+					decode_audio->transition_samples_in_step = 0;
+				
+					LOG_DEBUG(log_audio_output, "Starting FADEOUT over %d seconds, transition_gain_step %d, transition_sample_step %d",
+						fixed_to_s32(interval), decode_audio->transition_gain_step, decode_audio->transition_sample_step);	
+				}
+				
+				/* Apply transition gain to left/right gain values */
+				LOG_DEBUG(log_audio_output, "transition_gain %d", decode_audio->transition_gain);
+				lgain = fixed_mul(lgain, decode_audio->transition_gain);
+				rgain = fixed_mul(rgain, decode_audio->transition_gain);
+				
+				/* Reduce transition gain when we've processed enough samples */
+				decode_audio->transition_samples_in_step += samples_write;
+				while (decode_audio->transition_gain && decode_audio->transition_samples_in_step >= decode_audio->transition_sample_step) {
+					decode_audio->transition_samples_in_step -= decode_audio->transition_sample_step;
+					decode_audio->transition_gain -= decode_audio->transition_gain_step;
+				}
+			}
+		}
 
 		output_ptr = (sample_t *)outputArray;
 		decode_ptr = (sample_t *)(decode_fifo_buf + decode_audio->fifo.rptr);
 		while (samples_write--) {
-			*(output_ptr++) = fixed_mul(decode_audio->lgain, *(decode_ptr++));
-			*(output_ptr++) = fixed_mul(decode_audio->rgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
+			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));
 		}
 
 		fifo_rptr_incby(&decode_audio->fifo, bytes_write);
@@ -177,10 +221,15 @@ static int callback(const void *inputBuffer,
 	}
 
 	reached_start_point = decode_check_start_point();
-	if (reached_start_point && decode_audio->track_sample_rate != stream_sample_rate) {
-		LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
-		decode_audio->set_sample_rate = decode_audio->track_sample_rate;
-		ret = paComplete; // will trigger the finished callback to change the samplerate
+	if (reached_start_point) {
+		decode_audio->samples_to_fade = 0;
+		decode_audio->transition_gain_step = 0;
+		
+		if (decode_audio->track_sample_rate != stream_sample_rate) {
+			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
+			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
+			ret = paComplete; // will trigger the finished callback to change the samplerate
+		}
 	}
 
  mixin_effects:
@@ -245,6 +294,8 @@ static void decode_portaudio_stop(void) {
 	ASSERT_AUDIO_LOCKED();
 
 	decode_audio->set_sample_rate = 44100;
+	decode_audio->samples_to_fade = 0;
+	decode_audio->transition_gain_step = 0;
 
 	decode_portaudio_openstream();
 }

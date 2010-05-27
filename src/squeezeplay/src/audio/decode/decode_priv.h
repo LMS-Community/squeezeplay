@@ -16,6 +16,17 @@ extern LOG_CATEGORY *log_audio_decode;
 extern LOG_CATEGORY *log_audio_codec;
 extern LOG_CATEGORY *log_audio_output;
 
+#define TRANSITION_NONE         0x0
+#define TRANSITION_CROSSFADE    0x1
+#define TRANSITION_FADE_IN      0x2
+#define TRANSITION_FADE_OUT     0x4
+
+/* Transition steps per second should be a common factor
+ * of all supported sample rates.
+ */
+#define TRANSITION_STEPS_PER_SECOND 10
+#define TRANSITION_MINIMUM_SECONDS 1
+#define TRANSITION_MAXIMUM_SECONDS 10
 
 /* Audio sample, 32-bits. */
 typedef s32_t sample_t;
@@ -142,6 +153,15 @@ struct decode_audio {
 
 	/* device info */
 	u32_t max_rate;
+	
+	/* fading state */
+	u32_t samples_until_fade;
+	u32_t samples_to_fade;
+	u32_t transition_sample_rate;
+	fft_fixed transition_gain;
+	fft_fixed transition_gain_step;
+	u32_t transition_sample_step;
+	u32_t transition_samples_in_step;
 };
 
 extern struct decode_audio *decode_audio;
@@ -175,6 +195,8 @@ extern int decode_vumeter(lua_State *L);
 extern int decode_spectrum(lua_State *L);
 extern int decode_spectrum_init(lua_State *L);
 
+/* Transitions */
+extern fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes);
 
 /* Internal state */
 

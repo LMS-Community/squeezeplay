@@ -28,18 +28,6 @@ static u32_t transition_sample_step;
 static u32_t transition_samples_in_step;
 
 
-#define TRANSITION_NONE         0x0
-#define TRANSITION_CROSSFADE    0x1
-#define TRANSITION_FADE_IN      0x2
-#define TRANSITION_FADE_OUT     0x4
-
-/* Transition steps per second should be a common factor
- * of all supported sample rates.
- */
-#define TRANSITION_STEPS_PER_SECOND 10
-#define TRANSITION_MINIMUM_SECONDS 1
-
-
 /* Per-track gain (ReplayGain) */
 static fft_fixed track_gain = FIXED_ONE;
 static sample_t track_clip_range[2] = { SAMPLE_MAX, SAMPLE_MIN };
@@ -201,6 +189,8 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
 		return;
 	}
 
+	LOG_DEBUG(log_audio_output, "Applying track gain %d for %d samples\n", track_gain, nsamples);
+
 	for (s = 0; s < nsamples; s++) {
 		*buffer = track_inversion[0] * volume_mul(*buffer, track_gain, track_clip_range);
 		buffer++;
@@ -214,7 +204,7 @@ static void decode_apply_track_gain(sample_t *buffer, int nsamples) {
  * a transition. Start at the requested transition interval and go
  * down till we find an interval that we have enough audio for.
  */
-static fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes) {
+fft_fixed determine_transition_interval(u32_t sample_rate, u32_t transition_period, size_t *nbytes) {
 	size_t bytes_used, sample_step_bytes;
 	fft_fixed interval, interval_step;
 
@@ -253,67 +243,6 @@ static inline size_t decode_transition_bytes_remaining(size_t ptr) {
 
 	return (ptr >= decode_audio->fifo.wptr) ? (ptr - decode_audio->fifo.wptr) : (decode_audio->fifo.wptr - ptr + decode_audio->fifo.size);
 }
-
-
-/* Called to fade out the already decoded track. Depending on how
- * much of the track is left, we apply gain in place.
- */
-static void decode_fade_out(void) {
-	size_t nbytes, ptr;
-	fft_fixed interval;
-
-	ASSERT_AUDIO_LOCKED();
-
-	interval = determine_transition_interval(decode_audio->track_sample_rate, decode_transition_period, &nbytes);
-
-	LOG_DEBUG(log_audio_decode, "Starting FADEOUT over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)nbytes);
-
-	if (!interval) {
-		return;
-	}
-
-	ptr = decode_audio->fifo.wptr;
-	decode_audio->fifo.wptr = (nbytes <= decode_audio->fifo.wptr) ? (decode_audio->fifo.wptr - nbytes) : (decode_audio->fifo.wptr - nbytes + decode_audio->fifo.size);
-
-	transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
-	transition_gain = FIXED_ONE;
-	transition_sample_step = decode_audio->track_sample_rate / TRANSITION_STEPS_PER_SECOND;
-	transition_samples_in_step = 0;
-
-	while (decode_audio->fifo.wptr != ptr) {
-		size_t s, bytes_read, samples_read, wrap, bytes_remaining;
-		sample_t *sptr;
-
-		bytes_read = SAMPLES_TO_BYTES(transition_sample_step - transition_samples_in_step);
-		wrap = fifo_bytes_until_wptr_wrap(&decode_audio->fifo);
-		bytes_remaining = decode_transition_bytes_remaining(ptr);
-
-		if (bytes_remaining < wrap) {
-			wrap = bytes_remaining;
-		}
-
-		if (bytes_read > wrap) {
-			bytes_read = wrap;
-		}
-
-		samples_read = BYTES_TO_SAMPLES(bytes_read);
-
-		sptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.wptr);
-		for (s = 0; s < samples_read * 2; s++) {
-			*sptr = fixed_mul(transition_gain, *sptr);
-			sptr++;
-		}
-
-		fifo_wptr_incby(&decode_audio->fifo, bytes_read);
-
-		transition_samples_in_step += samples_read;
-		while (transition_gain && transition_samples_in_step >= transition_sample_step) {
-			transition_samples_in_step -= transition_sample_step;
-			transition_gain -= transition_gain_step;
-		}
-	}
-}
-
 
 /* Called to copy samples to the decode fifo when we are doing
  * a transition - crossfade or fade in. This method applies gain
@@ -535,12 +464,10 @@ void decode_output_song_ended(void) {
 	if (decode_transition_type & TRANSITION_FADE_OUT 
 	    && decode_transition_period
 	    && decode_audio->state & DECODE_STATE_RUNNING) {
-		/*
-		XXX Bug 16256, fade-out can take too long and stall the audio,
-		disabling this until a proper fix is implemented.
-		
-		decode_fade_out();
-		*/
+		// Signal audio module to begin fade-out
+		decode_audio->samples_until_fade = decode_audio->track_sample_rate * (TRANSITION_MAXIMUM_SECONDS - decode_transition_period);
+		decode_audio->samples_to_fade = decode_audio->track_sample_rate * decode_transition_period;
+		decode_audio->transition_sample_rate = decode_audio->track_sample_rate;
 	}
 }
 
