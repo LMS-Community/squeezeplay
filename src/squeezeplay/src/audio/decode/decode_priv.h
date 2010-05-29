@@ -107,6 +107,7 @@ extern void decode_output_set_track_gain(u32_t replay_gain);
 
 extern void decode_set_track_polarity_inversion(u8_t inversion);
 
+extern void decode_set_output_channels(u8_t channels);
 
 /* Audio output backends */
 struct decode_audio_func {

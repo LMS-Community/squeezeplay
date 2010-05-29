@@ -240,7 +240,8 @@ static void decode_flush_handler(void) {
 
 
 static void decode_start_handler(void) {
-	Uint32 decoder_id, transition_type, transition_period, replay_gain, output_threshold, polarity_inversion;
+	Uint32 decoder_id, transition_type, transition_period, replay_gain;
+	Uint32 output_threshold, polarity_inversion, output_channels;
 	Uint32 i, num_params;
 	Uint8 params[DECODER_MAX_PARAMS];
 
@@ -250,6 +251,7 @@ static void decode_start_handler(void) {
 	replay_gain = mqueue_read_u32(&decode_mqueue);
 	output_threshold = mqueue_read_u32(&decode_mqueue);
 	polarity_inversion = mqueue_read_u32(&decode_mqueue);
+	output_channels = mqueue_read_u32(&decode_mqueue);
 
 	num_params = mqueue_read_u32(&decode_mqueue);
 	if (num_params > DECODER_MAX_PARAMS) {
@@ -278,6 +280,7 @@ static void decode_start_handler(void) {
 	decode_output_set_transition(transition_type, transition_period);
 	decode_output_set_track_gain(replay_gain);
 	decode_set_track_polarity_inversion(polarity_inversion);
+	decode_set_output_channels(output_channels);
 
 	decoder_data = decoder->start(params, num_params);
 
@@ -705,7 +708,8 @@ static int decode_start(lua_State *L) {
 	 * 5: reply_gain
 	 * 6: output_threshold
 	 * 7: polarity_inversion
-	 * 8: params...
+	 * 8: output_channels
+	 * 9: params...
 	 */
 
 	/* Reset the decoder state in calling thread to avoid potential
@@ -721,11 +725,12 @@ static int decode_start(lua_State *L) {
 		mqueue_write_u32(&decode_mqueue, (Uint32) luaL_optinteger(L, 5, 0)); /* replay_gain */
 		mqueue_write_u32(&decode_mqueue, (Uint32) luaL_optinteger(L, 6, 0)); /* output_threshold */
 		mqueue_write_u32(&decode_mqueue, (Uint32) luaL_optinteger(L, 7, 0)); /* polarity_inversion */
-
-		num_params = lua_gettop(L) - 7;
+		mqueue_write_u32(&decode_mqueue, (Uint32) luaL_optinteger(L, 8, 0)); /* output_channels */
+		
+		num_params = lua_gettop(L) - 8;
 		mqueue_write_u32(&decode_mqueue, num_params);
 		for (i = 0; i < num_params; i++) {
-			mqueue_write_u8(&decode_mqueue, (Uint8) luaL_optinteger(L, 8 + i, 0));
+			mqueue_write_u8(&decode_mqueue, (Uint8) luaL_optinteger(L, 9 + i, 0));
 		}
 		mqueue_write_complete(&decode_mqueue);
 	}

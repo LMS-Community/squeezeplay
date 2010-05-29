@@ -657,7 +657,8 @@ function _strm(self, data)
 			     data.transitionPeriod,
 			     data.replayGain,
 			     data.outputThreshold,
-			     data.flags & 0x03,
+			     data.flags & 0x03, -- polarity inversion
+			     data.flags & 0xC,  -- output channels
 			     string.byte(data.pcmSampleSize),
 			     string.byte(data.pcmSampleRate),
 			     string.byte(data.pcmChannels),

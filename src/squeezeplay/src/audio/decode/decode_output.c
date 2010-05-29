@@ -31,8 +31,12 @@ static u32_t transition_samples_in_step;
 /* Per-track gain (ReplayGain) */
 static fft_fixed track_gain = FIXED_ONE;
 static sample_t track_clip_range[2] = { SAMPLE_MAX, SAMPLE_MIN };
+
+/* Polarity inversion */
 static s32_t track_inversion[2] = { 1, 1 };
 
+/* Output channels */
+static u8_t output_channels = 0;
 
 /* Upload tests */
 static int upload_fd = 0;
@@ -332,6 +336,21 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		decode_audio_unlock();
 		return;
 	}
+	
+	/* If output_channels is set, copy left samples to right, or vice versa */
+	if (output_channels) {
+		unsigned int i;
+		if (output_channels & OUTPUT_CHANNEL_LEFT) {
+			for (i = 0; i < nsamples * 2; i += 2) {
+				buffer[i+1] = buffer[i];
+			}
+		}
+		else {
+			for (i = 0; i < nsamples * 2; i += 2) {
+				buffer[i] = buffer[i+1];
+			}
+		}
+	}
 
 	decode_apply_track_gain(buffer, nsamples);
 
@@ -480,4 +499,11 @@ void decode_set_track_polarity_inversion(u8_t inversion) {
 
 	track_inversion[0] = (inversion & POLARITY_INVERSION_LEFT) ? -1 : 1;
 	track_inversion[1] = (inversion & POLARITY_INVERSION_RIGHT) ? -1 : 1;
+}
+
+void decode_set_output_channels(u8_t channels) {
+	LOG_DEBUG(log_audio_decode, "Output channels left %d, right %d",
+		channels & OUTPUT_CHANNEL_LEFT ? 1 : 0, channels & OUTPUT_CHANNEL_RIGHT ? 1 : 0);
+
+	output_channels = channels;
 }

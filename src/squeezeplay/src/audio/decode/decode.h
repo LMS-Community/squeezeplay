@@ -24,6 +24,9 @@
 #define POLARITY_INVERSION_LEFT	      0x1
 #define POLARITY_INVERSION_RIGHT      0x2
 
+/* Output channel flags */
+#define OUTPUT_CHANNEL_LEFT           0x4
+#define OUTPUT_CHANNEL_RIGHT          0x8
 
 #define TESTTONES_OFF					0
 #define TESTTONES_MULTITONE				1
