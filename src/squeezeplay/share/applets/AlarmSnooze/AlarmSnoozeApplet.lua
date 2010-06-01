@@ -282,6 +282,9 @@ end
 
 function notify_playerCurrent(self, player)
 	log:info("notify_playerCurrent(", player, ")")
+	if player:isLocal() then
+		self.localPlayer = player
+	end
 end
 
 
@@ -409,6 +412,17 @@ end
 
 function openAlarmWindow(self, caller)
 
+	-- Bug 16230: if self.localPlayer hasn't been set, try to here as it's essential to the alarm working
+	if not self.localPlayer then
+		log:warn('openAlarmWindow: called without self.localPlayer being set. try to acquire it now')
+		self.localPlayer = Player:getLocalPlayer()
+		-- if that returns nil (very unlikely), throw an error and return
+		if not self.localPlayer then
+			log:error('openAlarmWindow: without self.localPlayer the alarm cannot sound')
+			return
+		end
+	end
+
 	log:warn('openAlarmWindow()', caller, ' ', self.localPlayer:isConnected())
 
 	self:_babyAlarmThroughSpeakers()
@@ -462,10 +476,6 @@ function openAlarmWindow(self, caller)
 			log:warn('openAlarmWindow: fallback alarm activation')
 		else
 			log:warn('openAlarmWindow: fallback alarm snooze or explicit audio cycle')			
-		end
-		if not self.localPlayer then
-			log:warn('openAlarmWindow: cannot play an alarm without a player')
-			return
 		end
 
 		self:soundFallbackAlarm()
