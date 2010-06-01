@@ -73,6 +73,8 @@ function _layout(self)
 	self.barSpace = self:styleValue("barSpace")
 	self.binSpace = self:styleValue("binSpace")
 	self.clipSubbands = self:styleValue("clipSubbands")
+	
+	self.backgroundDrawn = false;
 
 	if self.barsInBin[1] < 1 then
 		self.barsInBin[1] = 1
@@ -143,11 +145,15 @@ end
 function draw(self, surface)
 -- Black background instead of image
 --	self.bgImg:blit(surface, self:getBounds())
-	local x, y, w, h = self:getBounds()
-	surface:filledRectangle(x, y, x + w, y + h, self.bgCol)
 
+	-- Avoid calling this more than once as it's not necessary
+	if not self.backgroundDrawn then
+		local x, y, w, h = self:getBounds()
+		surface:filledRectangle(x, y, x + w, y + h, self.bgCol)
+		self.backgroundDrawn = true
+	end
 
-	local bins = { {}, {}}
+	local bins = { {}, {} }
 
 	bins[1], bins[2] = decode:spectrum()
 
