@@ -176,6 +176,14 @@ irActionMappings.press = {
 
 	["factory_test_mode"] = "go_factory_test_mode",
 	["test_audio_routing"] = "go_test_audio_routing",
+
+-- Harmony remote integration: Discrete IR codes to play presets 1-6
+	["preset_1"]  = "play_preset_1",
+	["preset_2"]  = "play_preset_2",
+	["preset_3"]  = "play_preset_3",
+	["preset_4"]  = "play_preset_4",
+	["preset_5"]  = "play_preset_5",
+	["preset_6"]  = "play_preset_6",
 }
 
 irActionMappings.hold = {

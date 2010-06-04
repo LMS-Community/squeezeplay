@@ -50,4 +50,12 @@ irMap["map"] = {
 	[0x768930CF] = "factory_test_mode",
 	[0x768950AF] = "test_audio_routing",
 
+-- Harmony remote integration: Discrete IR codes to play presets 1-6
+	[0x76898A75] = "preset_1",
+	[0x76894AB5] = "preset_2",
+	[0x7689CA35] = "preset_3",
+	[0x76892AD5] = "preset_4",
+	[0x7689AA55] = "preset_5",
+	[0x76896A95] = "preset_6",
+
 }
