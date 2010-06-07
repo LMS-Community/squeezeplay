@@ -212,6 +212,31 @@ static bool_t consume_id3_tags(struct decode_mad *self) {
 }
 
 
+#ifdef HAVE_NULLAUDIO
+/*
+ * NAME:	synth->frame()
+ * DESCRIPTION:	perform PCM synthesis of frame subband samples
+ */
+void null_synth_frame(struct mad_synth *synth, struct mad_frame const *frame)
+{
+  unsigned int nch, ns;
+
+  nch = MAD_NCHANNELS(&frame->header);
+  ns  = MAD_NSBSAMPLES(&frame->header);
+
+  synth->pcm.samplerate = frame->header.samplerate;
+  synth->pcm.channels   = nch;
+  synth->pcm.length     = 32 * ns;
+
+  if (frame->options & MAD_OPTION_HALFSAMPLERATE) {
+    synth->pcm.samplerate /= 2;
+    synth->pcm.length     /= 2;
+
+  }
+}
+#endif
+
+
 static void decode_mad_frame(struct decode_mad *self) {
 	size_t read_max, read_num, remaining;
 	u8_t *read_start;
@@ -303,7 +328,11 @@ static void decode_mad_frame(struct decode_mad *self) {
 			}
 		}
 
+#ifdef HAVE_NULLAUDIO
+		null_synth_frame(&self->synth, &self->frame);
+#else
 		mad_synth_frame(&self->synth, &self->frame);
+#endif
 
 		/* pcm is now ready  */
 		self->state = MAD_STATE_PCM_READY;

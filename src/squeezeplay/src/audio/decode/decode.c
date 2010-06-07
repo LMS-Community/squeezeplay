@@ -1003,6 +1003,9 @@ static int decode_audio_open(lua_State *L) {
 		f = &decode_portaudio;
 	}
 #endif
+#ifdef HAVE_NULLAUDIO
+	f = &decode_null;
+#endif
 	if (!f) {
 		/* no audio support */
 		lua_pushnil(L);

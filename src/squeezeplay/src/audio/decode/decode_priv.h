@@ -175,7 +175,7 @@ extern struct decode_audio *decode_audio;
 /* Audio output backends */
 extern struct decode_audio_func decode_alsa;
 extern struct decode_audio_func decode_portaudio;
-
+extern struct decode_audio_func decode_null;
 
 /* Decode output api */
 extern void decode_init_buffers(void *buf, bool_t prio_inherit);
