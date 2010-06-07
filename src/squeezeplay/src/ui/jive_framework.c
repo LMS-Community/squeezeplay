@@ -163,23 +163,31 @@ static int jiveL_initSDL(lua_State *L) {
 	/* linux fbcon does not need a mouse */
 	SDL_putenv("SDL_NOMOUSE=1");
 
+#ifdef JIVE_NO_DISPLAY
+#   define JIVE_SDL_FEATURES (SDL_INIT_TIMER)
+#else
+#   define JIVE_SDL_FEATURES (SDL_INIT_VIDEO|SDL_INIT_TIMER)
+#endif
 	/* initialise SDL */
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(JIVE_SDL_FEATURES) < 0) {
 		LOG_ERROR(log_ui_draw, "SDL_Init(V|T|A): %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(-1);
 	}
 
 	/* report video info */
-	video_info = SDL_GetVideoInfo();
-	LOG_INFO(log_ui_draw, "%d,%d %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->current_w, video_info->current_h, video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
-	LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
+	if ((video_info = SDL_GetVideoInfo())) {
+		LOG_INFO(log_ui_draw, "%d,%d %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->current_w, video_info->current_h, video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
+		LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
+	}
 
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
 	SDL_SetEventFilter(filter_events);
 
 	platform_init(L);
+
+#ifndef JIVE_NO_DISPLAY
 
 	/* open window */
 	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
@@ -267,6 +275,8 @@ static int jiveL_initSDL(lua_State *L) {
 
 	ui_watchdog = watchdog_get();
 	watchdog_keepalive(ui_watchdog, 6); /* 60 seconds to start */
+
+#endif /* JIVE_NO_DISPLAY */
 
 	return 0;
 }

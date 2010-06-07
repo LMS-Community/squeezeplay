@@ -7,6 +7,8 @@
 #include "common.h"
 #include "jive.h"
 
+#ifndef JIVE_NO_DISPLAY
+
 /*
  * This file combines both JiveSurface and JiveTile into a single implementation.
  * The separate typdefs, JiveSurface and JiveTile, are still kept so that the
@@ -1640,3 +1642,139 @@ void jive_surface_filledTrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint
 			  y3 + srf->offset_y,
 			  col);
 }
+
+
+#else /* JIVE_NO_DISPLAY */
+
+#define DUMMY_SURFACE ((JiveTile *)1)
+#define IS_DUMMY_SURFACE(srf) ((srf) == DUMMY_SURFACE)
+
+JiveTile *jive_tile_fill_color(Uint32 col) {return DUMMY_SURFACE;}
+
+JiveTile *jive_tile_load_image(const char *path) {return path ? DUMMY_SURFACE : NULL;}
+
+JiveTile *jive_tile_load_image_data(const char *data, size_t len) {return DUMMY_SURFACE;}
+
+JiveTile *jive_tile_load_tiles(char *path[9]) {return DUMMY_SURFACE;}
+
+JiveTile *jive_tile_load_vtiles(char *path[3]) {return DUMMY_SURFACE;}
+
+JiveTile *jive_tile_load_htiles(char *path[3]) {return DUMMY_SURFACE;}
+
+JiveTile *jive_tile_ref(JiveTile *tile) {return tile;}
+
+void jive_tile_get_min_size(JiveTile *tile, Uint16 *w, Uint16 *h) {
+	if (w) *w = 1;
+	if (h) *h = 1;
+}
+
+void jive_tile_set_alpha(JiveTile *tile, Uint32 flags) {return;}
+
+void jive_tile_free(JiveTile *tile) {return;}
+
+/* this function must only be used for blitting tiles */
+void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, Sint16 *y) {*x = *y = 1;}
+
+void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {return;}
+
+void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {return;}
+
+JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {return DUMMY_SURFACE;}
+
+JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h) {return DUMMY_SURFACE;}
+
+JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h) {return DUMMY_SURFACE;}
+
+JiveSurface *jive_surface_new_SDLSurface(SDL_Surface *sdl_surface) {return DUMMY_SURFACE;}
+
+JiveSurface *jive_surface_ref(JiveSurface *srf) {return srf;}
+
+JiveSurface *jive_surface_load_image(const char *path) {return DUMMY_SURFACE;}
+
+JiveSurface *jive_surface_load_image_data(const char *data, size_t len) {return DUMMY_SURFACE;}
+
+int jive_surface_set_wm_icon(JiveSurface *srf) {return 1;}
+
+int jive_surface_save_bmp(JiveSurface *srf, const char *file) {return 0;}
+
+int jive_surface_cmp(JiveSurface *a, JiveSurface *b, Uint32 key) {return 0;}
+
+void jive_surface_get_offset(JiveSurface *srf, Sint16 *x, Sint16 *y) {*x = *y = 1;}
+
+void jive_surface_set_offset(JiveSurface *srf, Sint16 x, Sint16 y) {return;}
+
+void jive_surface_get_clip(JiveSurface *srf, SDL_Rect *r) {return;}
+
+void jive_surface_set_clip(JiveSurface *srf, SDL_Rect *r) {return;}
+
+void jive_surface_push_clip(JiveSurface *srf, SDL_Rect *r, SDL_Rect *pop) {return;}
+
+void jive_surface_set_clip_arg(JiveSurface *srf, Uint16 x, Uint16 y, Uint16 w, Uint16 h) {return;}
+
+void jive_surface_get_clip_arg(JiveSurface *srf, Uint16 *x, Uint16 *y, Uint16 *w, Uint16 *h) {*x = *y = *h = *w = 1;}
+
+void jive_surface_flip(JiveSurface *srf) {return;}
+
+
+void jive_surface_blit(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy) {return;}
+
+void jive_surface_blit_clip(JiveSurface *src, Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
+			  JiveSurface* dst, Uint16 dx, Uint16 dy) {return;}
+
+void jive_surface_blit_alpha(JiveSurface *src, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint8 alpha) {return;}
+
+void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
+	if (w) *w = 1;
+	if (h) *h = 1;
+}
+
+int jive_surface_get_bytes(JiveSurface *srf) {return 0;}
+
+void jive_surface_free(JiveSurface *srf) {return;}
+
+void jive_surface_release(JiveSurface *srf) {return;}
+
+/* SDL_gfx encapsulated functions */
+JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double zoom, int smooth) {return srf;}
+
+JiveSurface *jive_surface_zoomSurface(JiveSurface *srf, double zoomx, double zoomy, int smooth) {return srf;}
+
+JiveSurface *jive_surface_shrinkSurface(JiveSurface *srf, int factorx, int factory) {return srf;}
+
+void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 color) {return;}
+
+void jive_surface_hlineColor(JiveSurface *srf, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color) {return;}
+
+void jive_surface_vlineColor(JiveSurface *srf, Sint16 x, Sint16 y1, Sint16 y2, Uint32 color) {return;}
+
+void jive_surface_rectangleColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {return;}
+
+void jive_surface_boxColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {return;}
+
+void jive_surface_lineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {return;}
+
+void jive_surface_aalineColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col) {return;}
+
+void jive_surface_circleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {return;}
+
+void jive_surface_aacircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {return;}
+
+void jive_surface_filledCircleColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 r, Uint32 col) {return;}
+
+void jive_surface_ellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {return;}
+
+void jive_surface_aaellipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {return;}
+
+void jive_surface_filledEllipseColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col) {return;}
+
+void jive_surface_pieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col) {return;}
+
+void jive_surface_filledPieColor(JiveSurface *srf, Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col) {return;}
+
+void jive_surface_trigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {return;}
+
+void jive_surface_aatrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {return;}
+
+void jive_surface_filledTrigonColor(JiveSurface *srf, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col) {return;}
+
+#endif /* JIVE_NO_DISPLAY */

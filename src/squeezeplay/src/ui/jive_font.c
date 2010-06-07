@@ -276,7 +276,11 @@ static SDL_Surface *draw_ttf_font(JiveFont *font, Uint32 color, const char *str)
 JiveSurface *jive_font_draw_text(JiveFont *font, Uint32 color, const char *str) {
 	assert(font && font->magic == JIVE_FONT_MAGIC);
 
+#ifdef JIVE_NO_DISPLAY
+	return (JiveSurface *)1;
+#else
 	return jive_surface_new_SDLSurface(str ? font->draw(font, color, str) : NULL);
+#endif
 }
 
 JiveSurface *jive_font_ndraw_text(JiveFont *font, Uint32 color, const char *str, size_t len) {
