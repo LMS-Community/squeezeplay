@@ -1078,8 +1078,8 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	local resizeFrag = '_' .. sizeW .. 'x' .. sizeH .. '_m'
 
 	local url
-	if string.match(iconId, "^%x+$") then
-		-- if the iconId is a hex digit, this is cover art
+	if string.match(iconId, "^[%x%-]+$") then
+		-- if the iconId is a hex digit, this is a coverid or remote track id (a negative id)
 		url = '/music/' .. iconId .. '/cover' .. resizeFrag
 		if imgFormat then
 		 	url = url .. "." .. imgFormat
