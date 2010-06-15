@@ -621,6 +621,10 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.npvolumeB = { hidden = 1 }
 
+	-- line in is the same as s.nowplaying but with transparent background
+	s.linein = _uses(s.nowplaying, {
+		bgImg = false,
+	})
 
 end
 

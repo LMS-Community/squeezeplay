@@ -494,7 +494,7 @@ Example: 	21:57 (24h format)
 function getCurrentTime()
 	-- if the time has not been set, return an empty string
 	if not timeSet then
-		if tonumber(os.date("%Y")) < 2000 then
+		if tonumber(os.date("%Y")) < 2010 then
 			return ""
 		end
 

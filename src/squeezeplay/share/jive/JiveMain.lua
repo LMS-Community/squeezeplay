@@ -202,7 +202,7 @@ function JiveMain:setSoftPowerState(softPowerState, isServerRequest)
 			currentPlayer:setPower(false, nil, isServerRequest)
 		end
 		--todo: also pause/power off local player since local player might be playing and not be the current player
-		appletManager:callService("activateScreensaver")
+		appletManager:callService("activateScreensaver", isServerRequest)
 	elseif _softPowerState == "on" then
 		log:info("Turn soft power on")
 		--todo: Define what should happen for a non-jive remote player. Currently if a server is down, locally a SS will engage, but when the server

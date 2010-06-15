@@ -101,6 +101,9 @@ function onOverlayWindowShown(self)
 		})
 		self.window:addWidget(self.timeLabel)
 	else
+		if self.timeLabel then
+			self.window:removeWidget(self.timeLabel)
+		end
 		self.timeLabel = nil
 	end
 
