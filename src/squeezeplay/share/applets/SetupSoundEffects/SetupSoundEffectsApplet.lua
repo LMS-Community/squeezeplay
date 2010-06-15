@@ -131,44 +131,45 @@ function settingsShow(self, menuItem)
 	-- add sounds
 	local effectsEnabled = false
 	for k,v in pairs(groups) do
-		local soundEnabled = Framework:isSoundEnabled(v[1])
-		effectsEnabled = effectsEnabled or soundEnabled
+		if k ~= 'SOUND_CHARGING' or ( k == 'SOUND_CHARGING' and System:hasBatteryCapability() ) then
+			local soundEnabled = Framework:isSoundEnabled(v[1])
+			effectsEnabled = effectsEnabled or soundEnabled
+				local button = Checkbox(
+					"checkbox", 
+					function(obj, isSelected)
+						for i,snd in ipairs(v) do
+							settings[snd] = isSelected
+							Framework:enableSound(snd, isSelected)
+						end
 
-		local button = Checkbox(
-			"checkbox", 
-			function(obj, isSelected)
-				for i,snd in ipairs(v) do
-					settings[snd] = isSelected
-					Framework:enableSound(snd, isSelected)
-				end
+						if isSelected then
+							offButton:setSelected(false)
+						end
 
-				if isSelected then
-					offButton:setSelected(false)
-				end
+						-- turn on off switch?
+						local s = false
+						for b,_ in pairs(allButtons) do
+							s = s or b:isSelected()
+						end
+						
+						if s == false then
+							offButton:setSelected(true)
+						end
+					end,
+					soundEnabled
+				)
 
-				-- turn on off switch?
-				local s = false
-				for b,_ in pairs(allButtons) do
-					s = s or b:isSelected()
-				end
-				
-				if s == false then
-					offButton:setSelected(true)
-				end
-			end,
-			soundEnabled
-		)
+				allButtons[button] = v
 
-		allButtons[button] = v
-
-		if k ~= "SOUND_NONE" then
-			-- insert suitable entry for Choice menu
-			menu:addItem({
-					     text = self:string(k),
-						style = 'item_choice',
-					     check = button,
-					     weight = 10
-				     })
+			if k ~= "SOUND_NONE" then
+				-- insert suitable entry for Choice menu
+				menu:addItem({
+						     text = self:string(k),
+							style = 'item_choice',
+						     check = button,
+						     weight = 10
+					     })
+			end
 		end
 	end
 

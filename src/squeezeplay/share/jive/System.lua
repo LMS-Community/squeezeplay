@@ -154,6 +154,10 @@ function hasLocalStorage(self)
 	return self:hasUSB() or self:hasSDCard() or not self:isHardware()
 end
 
+function hasBatteryCapability(self)
+	return _capabilities["batteryCapable"] ~= nil
+end
+
 -- rest is C implementation
 
 
