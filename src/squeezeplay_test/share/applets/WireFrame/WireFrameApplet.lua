@@ -42,40 +42,87 @@ oo.class(_M, Applet)
 function details(self)
 
 	local data = {
-		sync1 = {
+		RadioModel = {
 			enabled     = true,
 			windowStyle = 'text_list',
-			titleText   = 'Synchronization',
-			helpText    = 'This is some test help text to show that this works',
+			titleText   = 'Synchronize',
+			helpText    = 'Synchronize Player A to:',
 			items       = {
-				{ text = 'Player A', radio = 1},
+				--{ text = 'Player A', radio = 1},
 				{ text = 'Player B', radio = 1},
 				{ text = 'Player C', radio = 1},
 				{ text = 'Player D', radio = 1},
 			},
 		},
-		sync2 = {
+		CheckboxModel = {
 			enabled = true,
 			windowStyle = 'text_list',
-			titleText  = 'Synchronization',
+			titleText  = 'Synchronize',
+			helpText    = 'Synchronize Player A with:',
 			items = {
-				{ text = 'Player A', checkbox = 1},
+				--{ text = 'Player A', checkbox = 1, checked = true},
 				{ text = 'Player B', checkbox = 1, checked = true},
 				{ text = 'Player C', checkbox = 1},
 				{ text = 'Player D', checkbox = 1},
 			},
 		},
-		sync3 = {
-			enabled = true,
+		GroupModel = {
+			enabled     = true,
 			windowStyle = 'text_list',
-			titleText  = 'Synchronization',
+			titleText   = 'Multi-Room Audio',
+			helpText    = 'Attach Player A to:', 
 			items = {
-				{ text = 'Player A', choice = 1, choices = { 'foo', 'bar', 'wtf' }, whichChoice = 3 },
-				{ text = 'Player B'},
-				{ text = 'Player C'},
-				{ text = 'Player D'},
+				{ text = 'Group 1', radio = 1},
+				{ text = 'Group 2', radio = 1},
+				{ text = 'Group 3', radio = 1},
+				{ text = 'Group Settings', },
 			},
 		},
+		AdvancedSettings1 = {
+			enabled     = true,
+			windowStyle = 'text_list',
+			titleText   = 'Multi-Room Audio',
+			helpText    = 'Select a multi-room audio group to manage:',
+			items = {
+				{ text = 'Group 1'},
+				{ text = 'Group 2'},
+				{ text = 'Group 3'},
+				{ text = 'Add Another Group' },
+			},
+		},
+		AdvancedSettings2 = {
+			enabled     = true,
+			windowStyle = 'text_list',
+			titleText   = 'Group 1',
+			items = {
+				{ text = 'Rename Group 1' },
+				{ text = 'Edit Attached Players', },
+				{ text = 'Group 1 Volume Behavior', },
+				{ text = 'Delete Group 1' },
+				{ text = 'TBD...' },
+			},
+		},
+		lineIn = {
+			special = 'lineIn',
+			windowStyle = 'nowplaying_small_art',
+			iconStyle = 'icon_linein',
+			--iconStyle = 'icon_apple',
+			titleText = 'Line In',
+		},
+		EditAttachedPlayer = {
+			enabled = true,
+			--windowStyle = 'text_list',
+			windowStyle = 'choose_player',
+			titleText  = 'Group 1 Players',
+			helpText    = 'Check the boxes of the players that should be synchronized within Group 1',
+			items = {
+				{ text = 'Player A', checkbox = 1, checked = true, iconStyle = 'player_baby'},
+				{ text = 'Player B', checkbox = 1, checked = true, iconStyle = 'player_fab4'},
+				{ text = 'Player C', checkbox = 1, iconStyle = 'player_receiver' },
+				{ text = 'Player D', checkbox = 1, iconStyle = 'player_boom' },
+			},
+		},
+	
 	}
 	return data
 end
@@ -105,28 +152,37 @@ function showWireFrame(self, key)
 
 	local data = self.data[key]
 
-	local window = Window(data.windowStyle or 'text_list', data.titleText)
-	self.menu   = SimpleMenu('menu')
+	local window
+	if data.special then
 
-	for i, item in ipairs(data.items) do
-		if item.radio then
-			if not self.group then
-				self.group = RadioGroup()
-			end
-			self:addRadioItem(item)
-		elseif item.checkbox then
-			self:addCheckboxItem(item)
-		elseif item.choice then
-			self:addChoiceItem(item)
-		else
-			self:addItem(item)
+		-- any of the data.special methods need to return a full window spec and fill the window var with it
+		if data.special == 'lineIn' then
+			window = self:lineInWindow(data)
 		end
-	end
-	if data.helpText then
-		self:addHelpText(data.helpText)
+	else
+		window = Window(data.windowStyle or 'text_list', data.titleText)
+		self.menu   = SimpleMenu('menu')
+
+		for i, item in ipairs(data.items) do
+			if item.radio then
+				if not self.group then
+					self.group = RadioGroup()
+				end
+				self:addRadioItem(item)
+			elseif item.checkbox then
+				self:addCheckboxItem(item)
+			elseif item.choice then
+				self:addChoiceItem(item)
+			else
+				self:addItem(item)
+			end
+		end
+		if data.helpText then
+			self:addHelpText(data.helpText)
+		end
+		window:addWidget(self.menu)
 	end
 
-	window:addWidget(self.menu)
 	window:show()
 end
 
@@ -142,6 +198,7 @@ function addItem(self, item)
 		{
 			text = item.text,
 			style = item.style or 'item',
+			iconStyle = item.iconStyle or nil,
 		}
 	)
 end
@@ -152,6 +209,7 @@ function addRadioItem(self, item)
                         text = item.text,
                         style = 'item_choice',
                         sound = "WINDOWSHOW",
+			iconStyle = item.iconStyle or nil,
                         check = RadioButton("radio",
                                 self.group,
                                 function()
@@ -168,6 +226,7 @@ function addCheckboxItem(self, item)
 		{	
                         text = item.text,
                         style = 'item_choice',
+			iconStyle = item.iconStyle or nil,
                         sound = "WINDOWSHOW",
                         check = Checkbox("checkbox",
                                 function()
@@ -187,6 +246,7 @@ function addChoiceItem(self, item)
                         text = item.text,
                         style = 'item_choice',
                         sound = "WINDOWSHOW",
+			iconStyle = item.iconStyle or nil,
                         check = Choice("choice",
 				item.choices,
                                 function()
@@ -196,6 +256,34 @@ function addChoiceItem(self, item)
                         ),
 		}
 	)
+end
+
+
+function lineInWindow(self, data)
+        log:debug("line in window")
+
+        local window = Window(data.windowStyle or 'linein')
+
+        local titleGroup = Group('title', {
+                --lbutton = window:createDefaultLeftButton(),
+                text = Label("text", data.titleText),
+                --rbutton = nil,
+           })
+
+        local artworkGroup = Group('npartwork', {
+                        artwork = Icon(data.iconStyle),
+        })
+
+        local nptrackGroup = Group('nptitle', {
+                nptrack = Label('nptrack', data.titleText ),
+                xofy    = nil,
+        })
+
+        window:addWidget(titleGroup)
+        window:addWidget(nptrackGroup)
+        window:addWidget(artworkGroup)
+
+	return window
 end
 
 
