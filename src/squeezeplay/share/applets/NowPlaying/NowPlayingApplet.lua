@@ -959,10 +959,19 @@ function _updatePosition(self)
 	local elapsed, duration = self.player:getTrackElapsed()
 
 	if elapsed then
-		strElapsed = _secondsToString(elapsed)
+		if duration and duration > 0 and elapsed > duration then
+			strElapsed = _secondsToString(duration)
+		else
+			strElapsed = _secondsToString(elapsed)
+		end
 	end
+
 	if elapsed and elapsed >= 0 and duration and duration > 0 then
-		strRemain = "-" .. _secondsToString(duration - elapsed)
+		if elapsed > duration then
+			strRemain = "-" .. _secondsToString(0)
+		else
+			strRemain = "-" .. _secondsToString(duration - elapsed)
+		end
 	end
 
 	if self.progressGroup then
