@@ -223,14 +223,16 @@ end
 --screensaver set for the current mode is activated.
 -- the force arg is set to true for preview, allowing screensavers that might be not shown in certain circumstances to still be previewed
 -- see ClockApplet for example
-function _activate(self, the_screensaver, force)
+function _activate(self, the_screensaver, force, isServerRequest)
 	log:debug("Screensaver activate")
 
 	-- what screensaver, check the playmode of the current player
 	if the_screensaver == nil then
-		the_screensaver = self:_getDefaultScreensaver()
+		self.currentSS = self:_getDefaultScreensaver()
+	else
+		self.currentSS = the_screensaver
 	end
-	local screensaver = self.screensavers[the_screensaver]
+	local screensaver = self.screensavers[self.currentSS]
 
 	-- In some situations the timer restart below tries to activate a SS when one is already running.
 	-- We don't want to do this for BlankScreen when BlankScreen is already active
@@ -258,18 +260,28 @@ function _activate(self, the_screensaver, force)
 	local year = os.date("%Y")
 
 	-- the "none" choice is false:false, for which the proper course is to do nothing
-	if the_screensaver == 'false:false' then
+	if self.currentSS == 'false:false' then
 		log:warn('"none" is the configured screensaver for ', self:_getMode(), ', so do nothing')
 		return
 	end
 
+	-- bug 15654, don't allow false:false to be the default whenOff SS when the clock is wrong
+	local useBlankSS = tonumber(year) < 2010 and not force and self:_getMode() == 'whenOff' and not isServerRequest
+
 	if not screensaver or not screensaver.applet -- fallback to default if screensaver.applet doesn't exist
-		or ( tonumber(year) < 2009 and not force and self:_getMode() == 'whenOff' ) then -- fallback to blank screensaver on whenOff and no clock
-		-- no screensaver, fallback to default
-		log:warn('The configured screensaver method ', the_screensaver, ' is not available. Falling back to default from Meta file')
-		local fallbackKey = self.defaultSettings[self:_getMode()]
-		screensaver = self.screensavers[fallbackKey]
-	--	return
+		or useBlankSS then -- fallback to blank screensaver on whenOff and no clock
+
+		if useBlankSS then
+			-- bug 16148: special case, fall back to blank SS for whenOff and the clock not set and not a server request
+			log:warn('Clock is not set properly, so fallback to blank screen SS')
+			self.currentSS = 'BlankScreen:openScreensaver'
+			screensaver = self.screensavers[self.currentSS]
+		else	
+			-- no screensaver, fallback to default
+			log:warn('The configured screensaver method ', self.currentSS, ' is not available. Falling back to default from Meta file')
+			self.currentSS = self.defaultSettings[self:_getMode()]
+			screensaver = self.screensavers[self.currentSS]
+		end
 	end
 
 	if screensaver.applet then
@@ -288,8 +300,8 @@ end
 
 
 --service method
-function activateScreensaver(self)
-	self:_activate(nil)
+function activateScreensaver(self, isServerRequest)
+	self:_activate(nil, _, isServerRequest)
 end
 
 
@@ -455,7 +467,7 @@ function _showPowerOnWindow(self)
 		return EVENT_UNUSED
 	end
 
-	local ss = self:_getOffScreensaver()
+	local ss = self.currentSS or self:_getOffScreensaver()
 
 	if ss then
 		local screensaver = self.screensavers[ss]
