@@ -52,13 +52,16 @@ function settingsShow(self, menuItem)
 
 	self.window = window
 	self.menu = menu
+	if sshEnabled then
+		self:_addHelpInfo()
+	end
 
 	self:tieAndShowWindow(window)
 	return window
 end
 
 
-function _enableSSH(self, window)
+function _addHelpInfo(self)
 	local ipaddr = _getIPAddress()
 	local password = "1234"
 
@@ -67,11 +70,16 @@ function _enableSSH(self, window)
 
 	self.howto = Textarea("help_text", self:string("SSH_HOWTO", tostring(password), tostring(ipaddr)))
 	self.menu:setHeaderWidget(self.howto)
-	self.menu:reLayout()
 
-	-- FIXME currently the last widget added to the window has focus, until this is fixed
-	-- pass events from the textarea to the menu.
-	self.howto:addListener(EVENT_ALL, function(event) return Framework:dispatchEvent(self.menu, event) end)
+	self.window:focusWidget(self.menu)
+
+end
+
+
+function _enableSSH(self, window)
+
+	self:_addHelpInfo()
+	self.menu:reLayout()
 
 	-- enable SSH
 	_fileSub("/etc/inetd.conf", "^#ssh", "ssh")
@@ -83,10 +91,7 @@ end
 
 
 function _disableSSH(self, window)
-	if self.howto then
-		self.window:removeWidget(self.howto)
-		self.howto = nil
-	end
+	self.howto = nil
 
 	-- disable SSH
 	_fileSub("/etc/inetd.conf", "^ssh", "#ssh")

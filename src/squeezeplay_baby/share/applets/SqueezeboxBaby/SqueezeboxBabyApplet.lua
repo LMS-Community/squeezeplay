@@ -147,6 +147,7 @@ function init(self)
 		["volumeKnob"] = 1,
 		["audioByDefault"] = 1,
 		["wiredNetworking"] = 1,
+		["batteryCapable"] = 1,
 	})
 
 	-- warn if uuid or mac are invalid
