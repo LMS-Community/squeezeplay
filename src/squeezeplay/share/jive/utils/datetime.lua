@@ -13,6 +13,7 @@ This object should provide all Date/Time related functions
 
 getAllDateFormats(self)
 setWeekstart(self, day)
+isClockSet(self)
 getWeekstart(self)
 setDateFormat(self, dateformat)
 getDateFormat(self)
@@ -481,6 +482,22 @@ function timeFromSFM(self, secondsFromMidnight, format)
 		return formattedTime
 	end
 end
+
+--[[
+=head2 isClockSet()
+
+Returns a boolean as to whether the clock appears to be set correctly
+
+=cut
+--]]
+function isClockSet()
+	if tonumber(os.date("%Y")) < 2010 then
+		return false
+	end
+	return true
+
+end
+
 
 --[[
 =head2 getCurrentTime()
