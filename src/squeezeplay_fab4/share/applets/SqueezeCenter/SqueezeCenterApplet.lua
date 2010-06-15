@@ -498,7 +498,9 @@ function _wipeRescan(self)
 	end
 
 	-- wipe the .Squeezebox directory forcefully through linux
-	local command = "rm -rf " .. scDrive .. "/.Squeezebox &"
+	local command = "rm -rf /media/" .. scDrive .. "/.Squeezebox &"
+
+	log:debug('remove .Squeezebox dir: ', command)
 	os.execute(command)
 
 	self.wipeTimeout = 0
@@ -700,7 +702,8 @@ end
 function squeezeboxDirPresent(self, scDrive)
 	local present = false
 	
-	for f in lfs.dir(scDrive) do
+	local scDriveLocation = "/media/" .. scDrive
+	for f in lfs.dir(scDriveLocation) do
 		present = string.match(f, "^\.Squeezebox")
 		if present then
 			log:info("squeezeboxDirPresent(), found it: ", present)
