@@ -1651,6 +1651,15 @@ function skin(self, s)
 		},
 	})
 
+	s.home_menu.menu.item.icon_no_artwork = {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix ),
+		h   = THUMB_SIZE,
+		padding = MENU_ITEM_ICON_PADDING,
+		align = 'center',
+	}
+	s.home_menu.menu.selected.item.icon_no_artwork = s.home_menu.menu.item.icon_no_artwork
+	s.home_menu.menu.locked.item.icon_no_artwork = s.home_menu.menu.item.icon_no_artwork
+
 	-- icon_list window
 	s.icon_list = _uses(s.window, {
 		menu = {

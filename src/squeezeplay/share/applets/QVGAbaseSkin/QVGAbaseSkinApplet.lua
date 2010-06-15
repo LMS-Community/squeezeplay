@@ -941,6 +941,37 @@ function skin(self, s, reload, useDefaultSize)
 		},
 	})
 
+	s.home_menu.menu.item.icon_no_artwork = {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix ),
+		w = 51,
+		padding = { 0, 1, 0, 0 },
+	}
+	s.home_menu.menu.selected.item.icon_no_artwork = {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix ),
+		w   = 51,
+		padding = { 0, 1, 0, 0 },
+	}
+	s.home_menu.menu.locked.item.icon_no_artwork = {
+		img = _loadImage(self, "IconsResized/icon_loading" .. skinSuffix ),
+		w   = 51,
+		padding = { 0, 1, 0, 0 },
+	}
+	s.home_menu.menu.item_play = _uses(s.home_menu.menu.item, {
+		arrow = { 
+			img = false, 
+		},
+	})
+	s.home_menu.menu.selected.item_play = _uses(s.home_menu.menu.selected.item, {
+		arrow = { 
+			img = false, 
+		},
+	})
+	s.home_menu.menu.locked.item_play = _uses(s.home_menu.menu.locked.item, {
+		arrow = { 
+			img = false, 
+		},
+	})
+
 	s.help_list = _uses(s.text_list)
 
 	-- choose player window is exactly the same as text_list on all windows except WQVGAlarge
