@@ -93,9 +93,10 @@ end
 function onOverlayWindowShown(self)
 	self:_setBrightness("on")
 
-	local time = datetime:getCurrentTime()
+	local clockSet = datetime:isClockSet()
 
-	if time then
+	if clockSet then
+		local time = datetime:getCurrentTime()
 		self.timeLabel = Group("text_block_black", {
 			text = Label("text", time)
 		})
