@@ -233,7 +233,7 @@ function createLineInNowPlaying(self)
 
 	--todo: don't show if already up
 
-	local window = Window("nowplaying")
+	local window = Window("linein")
 
 	local titleGroup = Group('title', {
 		lbutton = window:createDefaultLeftButton(),

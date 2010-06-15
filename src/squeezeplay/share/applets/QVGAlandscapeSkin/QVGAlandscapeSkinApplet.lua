@@ -324,6 +324,11 @@ function skin(self, s, reload, useDefaultSize)
 	s.nowplaying.pressed = s.nowplaying
 	s.nowplaying_small_art.pressed = s.nowplaying_small_art
 
+	-- line in window is the same as nowplaying but with transparent background
+	s.linein = _uses(s.nowplaying, {
+		bgImg = false,
+	})
+
 	-- sliders
 	s.npvolumeB = { hidden = 1 }
 
