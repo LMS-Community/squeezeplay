@@ -38,7 +38,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="SQUEEZEPLAY"
+				PreprocessorDefinitions="SQUEEZEPLAY ONLY_C"
 				RuntimeLibrary="3"
 			/>
 			<Tool
@@ -92,7 +92,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="SQUEEZEPLAY"
+				PreprocessorDefinitions="SQUEEZEPLAY ONLY_C"
 				RuntimeLibrary="2"
 			/>
 			<Tool
