@@ -472,10 +472,14 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
     /* dec_type choices here are 1,2; 3 doesn't make sense */
     {
       /* packed values */
-      long total1=(s->q_bits*s->dim+8)/8; /* remember flag bit */
+      long total1, total2;
+      
       if (s->dim > (INT_MAX-8)/s->q_bits) goto _eofout;
+      
+      total1=(s->q_bits*s->dim+8)/8; /* remember flag bit */
+      
       /* vector of column offsets; remember flag bit */
-      long total2=(_ilog(quantvals-1)*s->dim+8)/8+(s->q_bits+7)/8;
+      total2=(_ilog(quantvals-1)*s->dim+8)/8+(s->q_bits+7)/8;
 
 
       if(total1<=4 && total1<=total2){
