@@ -740,7 +740,11 @@ static int decode_map(codebook *s, oggpack_buffer *b, ogg_int32_t *v, int point)
   }
   case 3:{
     /* offset into array */
+#if defined(_MSC_VER)
+    void *ptr=((unsigned char *)s->q_val)+entry*s->q_pack;
+#else
     void *ptr=s->q_val+entry*s->q_pack;
+#endif
 
     if(s->q_bits<=8){
       for(i=0;i<s->dim;i++)
