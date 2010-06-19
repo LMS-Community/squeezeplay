@@ -48,6 +48,10 @@ extern void _VDBG_free(void *ptr,char *file,long line);
 
 #include <sys/types.h>
 
+#if defined(_MSC_VER)	 
+#define inline __inline	 
+#endif //defined(_MSC_VER)
+
 #if BYTE_ORDER==LITTLE_ENDIAN
 union magic {
   struct {
