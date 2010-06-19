@@ -60,9 +60,7 @@ union magic {
   } halves;
   ogg_int64_t whole;
 };
-#endif 
-
-#if BYTE_ORDER==BIG_ENDIAN
+#else
 union magic {
   struct {
     ogg_int32_t hi;
