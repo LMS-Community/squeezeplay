@@ -1,3 +1,21 @@
+This README covers the Tremolo library, version 0.08.
+
+Tremolo is a modified version of the Ogg Vorbis 'Tremor' integer
+playback codec, branching from 1.0.2 of the low memory branch of
+that source from svn.
+
+Previous versions of Tremolo have been released under the GNU GPL
+but thanks to a grant from Google, this version is back to being
+released under the same license as vanilla Tremor.
+
+Robin Watts
+
+tremolo@wss.co.uk
+
+----------------------------------------------------------------------
+
+
+
 This README covers the Ogg Vorbis 'Tremor' integer playback codec
 source as of date 2002 09 02, version 1.0.0.
 

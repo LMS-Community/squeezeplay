@@ -23,6 +23,10 @@ extern "C" {
 
 #include "os_types.h"
 
+#ifndef ONLY_C
+#define ARM_LITTLE_ENDIAN
+#endif
+
 typedef struct ogg_buffer_state{
   struct ogg_buffer    *unused_buffers;
   struct ogg_reference *unused_references;
@@ -34,7 +38,7 @@ typedef struct ogg_buffer {
   unsigned char      *data;
   long                size;
   int                 refcount;
-  
+
   union {
     ogg_buffer_state  *owner;
     struct ogg_buffer *next;
@@ -50,10 +54,15 @@ typedef struct ogg_reference {
 } ogg_reference;
 
 typedef struct oggpack_buffer {
+#ifdef ARM_LITTLE_ENDIAN
+  int            bitsLeftInSegment;
+  ogg_uint32_t  *ptr;
+  long           bitsLeftInWord;
+#else
   int            headbit;
   unsigned char *headptr;
   long           headend;
-
+#endif /* ARM_LITTLE_ENDIAN */
   /* memory management */
   ogg_reference *head;
   ogg_reference *tail;
@@ -115,7 +124,7 @@ typedef struct ogg_stream_state {
   int            clearflag;
   int            laceptr;
   ogg_uint32_t   body_fill_next;
-  
+
 } ogg_stream_state;
 
 typedef struct {

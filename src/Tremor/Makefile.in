@@ -64,9 +64,23 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libvorbisidec_la_LIBADD =
-am_libvorbisidec_la_OBJECTS = mdct.lo dsp.lo info.lo misc.lo floor1.lo \
-	floor0.lo vorbisfile.lo res012.lo mapping0.lo codebook.lo \
-	framing.lo bitwise.lo floor_lookup.lo
+am__libvorbisidec_la_SOURCES_DIST = mdct.c dsp.c info.c misc.c \
+	floor1.c floor0.c vorbisfile.c res012.c mapping0.c codebook.c \
+	framing.c bitwise.c codebook.h misc.h mdct_lookup.h os.h \
+	mdct.h ivorbisfile.h lsp_lookup.h window_lookup.h \
+	floor_lookup.c codec_internal.h ogg.h asm_arm.h ivorbiscodec.h \
+	mdctARM.s floor1ARM.s dpen.s bitwiseARM.s
+@TREMOR__CPU_ARM_FALSE@am_libvorbisidec_la_OBJECTS = mdct.lo dsp.lo \
+@TREMOR__CPU_ARM_FALSE@	info.lo misc.lo floor1.lo floor0.lo \
+@TREMOR__CPU_ARM_FALSE@	vorbisfile.lo res012.lo mapping0.lo \
+@TREMOR__CPU_ARM_FALSE@	codebook.lo framing.lo bitwise.lo \
+@TREMOR__CPU_ARM_FALSE@	floor_lookup.lo
+@TREMOR__CPU_ARM_TRUE@am_libvorbisidec_la_OBJECTS = mdct.lo mdctARM.lo \
+@TREMOR__CPU_ARM_TRUE@	dsp.lo info.lo misc.lo floor1.lo \
+@TREMOR__CPU_ARM_TRUE@	floor1ARM.lo floor0.lo vorbisfile.lo \
+@TREMOR__CPU_ARM_TRUE@	res012.lo mapping0.lo codebook.lo \
+@TREMOR__CPU_ARM_TRUE@	dpen.lo framing.lo bitwise.lo \
+@TREMOR__CPU_ARM_TRUE@	bitwiseARM.lo floor_lookup.lo
 libvorbisidec_la_OBJECTS = $(am_libvorbisidec_la_OBJECTS)
 am_ivorbisfile_example_OBJECTS = ivorbisfile_example.$(OBJEXT)
 ivorbisfile_example_OBJECTS = $(am_ivorbisfile_example_OBJECTS)
@@ -82,8 +96,11 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CCASCOMPILE = $(CCAS) $(AM_CCASFLAGS) $(CCASFLAGS)
+LTCCASCOMPILE = $(LIBTOOL) --mode=compile $(CCAS) $(AM_CCASFLAGS) \
+	$(CCASFLAGS)
 SOURCES = $(libvorbisidec_la_SOURCES) $(ivorbisfile_example_SOURCES)
-DIST_SOURCES = $(libvorbisidec_la_SOURCES) \
+DIST_SOURCES = $(am__libvorbisidec_la_SOURCES_DIST) \
 	$(ivorbisfile_example_SOURCES)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
 HEADERS = $(include_HEADERS)
@@ -111,6 +128,8 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CC = @CC@
+CCAS = @CCAS@
+CCASFLAGS = @CCASFLAGS@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
@@ -123,6 +142,7 @@ CYGPATH_W = @CYGPATH_W@
 DEBUG = @DEBUG@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -143,6 +163,7 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NMEDIT = @NMEDIT@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -153,9 +174,12 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PROFILE = @PROFILE@
 RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TREMOR__CPU_ARM_FALSE = @TREMOR__CPU_ARM_FALSE@
+TREMOR__CPU_ARM_TRUE = @TREMOR__CPU_ARM_TRUE@
 VERSION = @VERSION@
 V_LIB_AGE = @V_LIB_AGE@
 V_LIB_CURRENT = @V_LIB_CURRENT@
@@ -214,15 +238,25 @@ target_vendor = @target_vendor@
 AUTOMAKE_OPTIONS = foreign
 INCLUDES = -I./
 lib_LTLIBRARIES = libvorbisidec.la
-libvorbisidec_la_SOURCES = mdct.c dsp.c info.c misc.c \
-                        floor1.c floor0.c vorbisfile.c \
-                        res012.c mapping0.c codebook.c \
-			framing.c bitwise.c \
-                        codebook.h misc.h mdct_lookup.h\
-                        os.h mdct.h ivorbisfile.h lsp_lookup.h\
-                        window_lookup.h floor_lookup.c \
-                        codec_internal.h ogg.h \
-			asm_arm.h ivorbiscodec.h
+@TREMOR__CPU_ARM_FALSE@libvorbisidec_la_SOURCES = mdct.c dsp.c info.c misc.c \
+@TREMOR__CPU_ARM_FALSE@                        floor1.c floor0.c vorbisfile.c \
+@TREMOR__CPU_ARM_FALSE@                        res012.c mapping0.c codebook.c \
+@TREMOR__CPU_ARM_FALSE@                        framing.c bitwise.c \
+@TREMOR__CPU_ARM_FALSE@                        codebook.h misc.h mdct_lookup.h\
+@TREMOR__CPU_ARM_FALSE@                        os.h mdct.h ivorbisfile.h lsp_lookup.h\
+@TREMOR__CPU_ARM_FALSE@                        window_lookup.h floor_lookup.c \
+@TREMOR__CPU_ARM_FALSE@                        codec_internal.h ogg.h \
+@TREMOR__CPU_ARM_FALSE@                        asm_arm.h ivorbiscodec.h
+
+@TREMOR__CPU_ARM_TRUE@libvorbisidec_la_SOURCES = mdct.c mdctARM.s dsp.c info.c misc.c \
+@TREMOR__CPU_ARM_TRUE@                        floor1.c floor1ARM.s floor0.c vorbisfile.c \
+@TREMOR__CPU_ARM_TRUE@                        res012.c mapping0.c codebook.c dpen.s \
+@TREMOR__CPU_ARM_TRUE@			framing.c bitwise.c bitwiseARM.s \
+@TREMOR__CPU_ARM_TRUE@                        codebook.h misc.h mdct_lookup.h\
+@TREMOR__CPU_ARM_TRUE@                        os.h mdct.h ivorbisfile.h lsp_lookup.h\
+@TREMOR__CPU_ARM_TRUE@                        window_lookup.h floor_lookup.c \
+@TREMOR__CPU_ARM_TRUE@                        codec_internal.h ogg.h \
+@TREMOR__CPU_ARM_TRUE@			asm_arm.h ivorbiscodec.h 
 
 libvorbisidec_la_LDFLAGS = -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
 CLEANFILES = $(EXTRA_PROGRAMS) $(lib_LTLIBRARIES)
@@ -234,7 +268,7 @@ all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .c .lo .o .obj .s
 am--refresh:
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -361,6 +395,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+.s.o:
+	$(CCASCOMPILE) -c $<
+
+.s.obj:
+	$(CCASCOMPILE) -c `$(CYGPATH_W) '$<'`
+
+.s.lo:
+	$(LTCCASCOMPILE) -c -o $@ $<
 
 mostlyclean-libtool:
 	-rm -f *.lo

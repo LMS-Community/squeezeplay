@@ -33,7 +33,10 @@ AC_PROG_CC
 AC_PROG_CPP
 CFLAGS="$cflags_save"
 
+AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
+
+AM_PROG_AS
 
 dnl --------------------------------------------------
 dnl Set build flags based on environment
@@ -45,32 +48,35 @@ cflags_save="$CFLAGS"
 ldflags_save="$LDFLAGS"
 if test -z "$GCC"; then
         case $host in 
-        arm-*-*)
+        arm*)
+		cpu_arm=true
                 DEBUG="-g -D_ARM_ASSEM_" 
                 CFLAGS="-O -D_ARM_ASSEM_"
                 PROFILE="-p -g -O -D_ARM_ASSEM" ;;
         *)
-                DEBUG="-g"
-                CFLAGS="-O"
-                PROFILE="-g -p" ;;
+                DEBUG="-g -DONLY_C"
+                CFLAGS="-O -DONLY_C"
+                PROFILE="-g -p -DONLY_C" ;;
         esac
 else
 
         case $host in 
-        arm-*-*)
+        arm*)
+		cpu_arm=true
                 DEBUG="-g -Wall -W -D__NO_MATH_INLINES -fsigned-char -D_ARM_ASSEM_"
                 CFLAGS="-O2 -Wall -D_ARM_ASSEM_ -fsigned-char"
                 PROFILE="-Wall -pg -g -O2 -D_ARM_ASSEM_ -fsigned-char -fno-inline-functions";;
 
         *)
-                DEBUG="-g -Wall -W -D__NO_MATH_INLINES -fsigned-char"
-                CFLAGS="-O2 -Wall -fsigned-char"
-                PROFILE="-Wall -pg -g -O2 -fsigned-char -fno-inline-functions";;
+                DEBUG="-g -Wall -W -D__NO_MATH_INLINES -DONLY_C -fsigned-char"
+                CFLAGS="-O2 -Wall -DONLY_C -fsigned-char"
+                PROFILE="-Wall -pg -g -O2 -DONLY_C -fsigned-char -fno-inline-functions";;
         esac
 fi
 CFLAGS="$CFLAGS $cflags_save -D_REENTRANT"
 LDFLAGS="$LDFLAGS $ldflags_save"
 
+AM_CONDITIONAL(TREMOR__CPU_ARM, test "x$cpu_arm" = xtrue)
 
 # Test whenever ld supports -version-script
 AC_PROG_LD

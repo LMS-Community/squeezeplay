@@ -14,11 +14,11 @@
  function: sin,cos lookup tables
 
  ********************************************************************/
-  
+
 #include "os_types.h"
 
 /* {sin(2*i*PI/4096), cos(2*i*PI/4096)}, with i = 0 to 512 */
-static LOOKUP_T sincos_lookup0[1026] = {
+LOOKUP_T sincos_lookup0[1026] = {
   X(0x00000000), X(0x7fffffff), X(0x003243f5), X(0x7ffff621),
   X(0x006487e3), X(0x7fffd886), X(0x0096cbc1), X(0x7fffa72c),
   X(0x00c90f88), X(0x7fff6216), X(0x00fb5330), X(0x7fff0943),
@@ -277,9 +277,9 @@ static LOOKUP_T sincos_lookup0[1026] = {
   X(0x5a3b47ab), X(0x5ac973b5), X(0x5a5ee79a), X(0x5aa5fda5),
   X(0x5a82799a), X(0x5a82799a)
   };
-  
+
   /* {sin((2*i+1)*PI/4096), cos((2*i+1)*PI/4096)}, with i = 0 to 511 */
-static LOOKUP_T sincos_lookup1[1024] = {
+LOOKUP_T sincos_lookup1[1024] = {
   X(0x001921fb), X(0x7ffffd88), X(0x004b65ee), X(0x7fffe9cb),
   X(0x007da9d4), X(0x7fffc251), X(0x00afeda8), X(0x7fff8719),
   X(0x00e23160), X(0x7fff3824), X(0x011474f6), X(0x7ffed572),
@@ -537,4 +537,3 @@ static LOOKUP_T sincos_lookup1[1024] = {
   X(0x5a05bdae), X(0x5afe8a8b), X(0x5a29727b), X(0x5adb297d),
   X(0x5a4d1960), X(0x5ab7ba6c), X(0x5a70b258), X(0x5a943d5e),
 };
-  

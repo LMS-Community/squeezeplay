@@ -4,15 +4,28 @@ INCLUDES = -I./
 
 lib_LTLIBRARIES = libvorbisidec.la
 
-libvorbisidec_la_SOURCES = mdct.c dsp.c info.c misc.c \
-                        floor1.c floor0.c vorbisfile.c \
-                        res012.c mapping0.c codebook.c \
-			framing.c bitwise.c \
+if TREMOR__CPU_ARM
+libvorbisidec_la_SOURCES = mdct.c mdctARM.s dsp.c info.c misc.c \
+                        floor1.c floor1ARM.s floor0.c vorbisfile.c \
+                        res012.c mapping0.c codebook.c dpen.s \
+			framing.c bitwise.c bitwiseARM.s \
                         codebook.h misc.h mdct_lookup.h\
                         os.h mdct.h ivorbisfile.h lsp_lookup.h\
                         window_lookup.h floor_lookup.c \
                         codec_internal.h ogg.h \
-			asm_arm.h ivorbiscodec.h
+			asm_arm.h ivorbiscodec.h 
+else
+libvorbisidec_la_SOURCES = mdct.c dsp.c info.c misc.c \
+                        floor1.c floor0.c vorbisfile.c \
+                        res012.c mapping0.c codebook.c \
+                        framing.c bitwise.c \
+                        codebook.h misc.h mdct_lookup.h\
+                        os.h mdct.h ivorbisfile.h lsp_lookup.h\
+                        window_lookup.h floor_lookup.c \
+                        codec_internal.h ogg.h \
+                        asm_arm.h ivorbiscodec.h
+endif
+
 libvorbisidec_la_LDFLAGS = -version-info @V_LIB_CURRENT@:@V_LIB_REVISION@:@V_LIB_AGE@
 
 EXTRA_PROGRAMS = ivorbisfile_example
