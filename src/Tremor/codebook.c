@@ -679,7 +679,7 @@ static inline ogg_uint32_t decode_packed_entry_number(codebook *book,
     }
     case 4:
     {
-      Output("32/32");
+      //Output("32/32");
       for(i=0;i<read;i++){
 	chase=((ogg_uint32_t *)(book->dec_table))[chase*2+((lok>>i)&1)];
 	if(chase&0x80000000UL)break;
