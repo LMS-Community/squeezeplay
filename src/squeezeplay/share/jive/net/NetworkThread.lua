@@ -259,9 +259,16 @@ function notify(self, event, ...)
 	
 	for k,v in pairs(self.subscribers) do
 		if k[method] and type(k[method]) == 'function' then
-			k[method](k, ...)
+        		local ok, resOrErr = pcall(k[method], k, ...)
+	        	if not ok then
+				log:error("Error running ", method, ":", resOrErr)
+			else
+				if k._entry and k._entry.appletName then
+					log:debug(method, ' sent to ', k._entry.appletName)
+				end
+			end
 		end
-	end
+        end
 end
 
 
