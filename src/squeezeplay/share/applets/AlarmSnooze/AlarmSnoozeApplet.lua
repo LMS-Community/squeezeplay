@@ -282,6 +282,9 @@ end
 
 function notify_playerCurrent(self, player)
 	log:info("notify_playerCurrent(", player, ")")
+	if not player then
+		return
+	end
 	if player:isLocal() then
 		self.localPlayer = player
 	end
