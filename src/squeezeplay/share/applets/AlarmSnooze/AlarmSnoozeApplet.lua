@@ -407,11 +407,29 @@ end
 
 function soundFallbackAlarm(self)
 	log:warn("soundFallbackAlarm()")
-	self.localPlayer:volumeLocal(43)
+	self.alarmVolume = 0 -- start at 0 and fade in
+	-- cache previous volume setting
+	self.previousVolume = self.localPlayer:getVolume()
+	self.localPlayer:volumeLocal(self.alarmVolume)
 	self.localPlayer:stop(true)
 	self.alarmInProgress = 'rtc'
 	self.localPlayer:playFileInLoop(self.alarmTone)
+	self.fadeInTimer = Timer(200, 
+			function ()
+				if self.alarmVolume < 43 then
+					log:info("fading in fallback alarm: ", self.alarmVolume)
+					self.alarmVolume = self.alarmVolume + 1
+					self.localPlayer:volumeLocal(self.alarmVolume)
+				else
+					log:info("stop self.alarmVolume at reasonable volume (43):", self.alarmVolume)
+					self.fadeInTimer:stop()
+				end
+			end
+	)
+	self.fadeInTimer:start()
+
 end
+
 
 function openAlarmWindow(self, caller)
 
@@ -597,9 +615,25 @@ function _updateTime(self)
 end
 
 
+function _silenceFallbackAlarm(self)
+	if not self.localPlayer then
+		log:error('No self.localPlayer found!')
+		return
+	end
+	self.localPlayer:stop(true)
+	if self.fadeInTimer and self.fadeInTimer:isRunning() then
+		self.fadeInTimer:stop()
+	end
+	if self.previousVolume then
+		log:warn('setting player back to self.previousVolume: ', self.previousVolume)
+		self.localPlayer:volumeLocal(self.previousVolume)
+	end
+end
+
+
 function _alarmOff(self, stopStream)
 	if self.alarmInProgress == 'rtc' then
-		self.localPlayer:stop(true)
+		self:_silenceFallbackAlarm()
 		iconbar:setAlarm('OFF')
 		log:warn('_alarmOff: RTC alarm canceled')
 	else
@@ -742,7 +776,7 @@ function _alarmSnooze(self)
 	if self.alarmInProgress == 'rtc' then
 		log:warn('_alarmSnooze: stopping fallback alarm audio')
 		-- stop playback
-		self.localPlayer:stop(true)
+		self:_silenceFallbackAlarm()
 	else
 		self.alarmInProgress = 'snooze'
 	end
