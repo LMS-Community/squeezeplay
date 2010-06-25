@@ -63,15 +63,19 @@ function configureApplet(meta)
 		appletManager:callService("startSetup")
 	end
 
+	--[[
 	if not settings.registerDone then
 		hackMeta = meta
 		jnt:subscribe(meta)
 	end
+	--]]
 end
 
 
 function notify_serverNew(meta, server)
 	local settings = meta:getSettings()
+
+	--[[ This bit of code would prompt for mysb.com during setup when connected to mysb.com for the first time during setup
 
 	if settings.setupDone and server:isSqueezeNetwork() then
 		appletManager:callService("startRegister")
@@ -79,6 +83,8 @@ function notify_serverNew(meta, server)
 		jnt:unsubscribe(meta)
 		hackMeta = nil
 	end
+
+	--]]
 end
 
 

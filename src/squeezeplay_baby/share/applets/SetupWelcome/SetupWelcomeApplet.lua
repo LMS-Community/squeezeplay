@@ -71,7 +71,7 @@ end
 
 
 function startRegister(self)
-	step7(self)
+	_startRegister(self)
 end
 
 
@@ -205,11 +205,30 @@ function step6(self)
 		end, 'setuptitle')
 end
 
+function step7(self)
+	log:info("step7")
+
+	if UPGRADE_FROM_SCS_ENABLED then
+		local squeezenetwork = self:_getSqueezenetwork()
+		_squeezenetworkWait(self, squeezenetwork)
+	end
+
+	_setupComplete(self, false)
+	_setupDone(self, true, true)
+
+	self.locked = true -- free applet
+	jnt:unsubscribe(self)
+
+	jiveMain:goHome()
+
+end
+
 
 -- we are connected when we have a pin and upgrade url
 function _squeezenetworkConnected(self, squeezenetwork)
 	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected() 
 end
+
 
 function _anySqueezeCenterWithUpgradeFound(self)
 	local anyFound = false
@@ -224,19 +243,19 @@ function _anySqueezeCenterWithUpgradeFound(self)
 	return anyFound
 end
 
-function step7(self)
-	log:info("step7")
 
-	-- Once here, network setup is complete
-	self:_setupDone(true, false)
+function _startRegister(self)
+	log:info("_startRegister")
+
+	local settings = self:getSettings()
+	if settings.registerDone then
+		log:info("SqueezeNetwork registration complete")
+		return
+	end
 
 	-- Bug 12786: Selecting a Network, then backing out
 	--  and re-selecting will cause network errors
 	self.registerRequest = false
-
-	--might be coming into this from a restart, so re-disable
-	self:_disableNormalEscapeMechanisms()
-	self:_addReturnToSetupToHomeMenu()
 
 	-- Find squeezenetwork server
 	local squeezenetwork = false
@@ -248,27 +267,11 @@ function step7(self)
 
 	if not squeezenetwork then
 		log:error("no SqueezeNetwork instance")
-		self:_setupComplete(true)
 		return
 	end
 
-	local settings = self:getSettings()
-	if settings.registerDone then
-		log:error("SqueezeNetwork registration complete")
+	self:_registerRequest(squeezenetwork)
 
-		local player = appletManager:callService("getCurrentPlayer")
-		log:info("connecting ", player, " to ", squeezenetwork)
-		player:connectToServer(squeezenetwork)
-
-		self:_setupComplete(true)
-		return
-	end
-
-	if UPGRADE_FROM_SCS_ENABLED then
-		_squeezenetworkWait(self, squeezenetwork)
-	else
-		self:_registerRequest(squeezenetwork)
-	end
 end
 
 
@@ -290,12 +293,12 @@ function _squeezenetworkWait(self, squeezenetwork)
 	popup:addTimer(1000, function()
 		-- wait until we know if the player is linked
 		if _squeezenetworkConnected(self, squeezenetwork) then
-			step8(self, squeezenetwork)
+			_firmwareUpgrade(self, squeezenetwork)
 		else
 			log:info("SN not available, Waited: ", timeout + 1)
 			--allow 10 seconds to go by before doing SC check to allow SCs to be discovered
 			if timeout >= 9 and _anySqueezeCenterWithUpgradeFound(self) then
-				step8(self, squeezenetwork)
+				_firmwareUpgrade(self, squeezenetwork)
 			else
 				log:info("Looking for compatible SCs with an upgrade, Waited: ", timeout + 1)
 			end
@@ -392,13 +395,6 @@ function _squeezenetworkError(self, squeezenetwork, message)
 	window:addWidget(menu)
 	menu:setHeaderWidget(Textarea("help_text", self:string(message)))
 
-	-- back goes back to network selection
-	-- note add listener to menu, as it has the focus
-	menu:addActionListener("back", self, function()
-		Framework:playSound("WINDOWHIDE")
-		self:step3(Window.transitionPushRight)
-	end)
-
 	-- help shows diagnostics
 	window:setButtonAction("rbutton", "help")
 	window:addActionListener("help", self, function()
@@ -413,7 +409,7 @@ function _squeezenetworkError(self, squeezenetwork, message)
 	window:addTimer(1000, function()
 		-- wait until we know if the player is linked
 		if _squeezenetworkConnected(self, squeezenetwork) then
-			step8(self, squeezenetwork)
+			_firmwareUpgrade(self, squeezenetwork)
 			window:hide()
 		end
 	end)
@@ -422,8 +418,8 @@ function _squeezenetworkError(self, squeezenetwork, message)
 end
 
 
-function step8(self, squeezenetwork)
-	log:info("step8")
+function _firmwareUpgrade(self, squeezenetwork)
+	log:info("_firmwareUpgrade")
 	if not squeezenetwork:isConnected() then
 		log:info("get SC from one of discovered SCs")
 		appletManager:callService("firmwareUpgrade", nil)
@@ -438,8 +434,6 @@ function step8(self, squeezenetwork)
 	if force then
 		log:info("firmware upgrade from SN")
 		appletManager:callService("firmwareUpgrade", squeezenetwork)
-	else
-		self:_registerRequest(squeezenetwork)
 	end
 end
 
@@ -464,20 +458,9 @@ function _registerRequest(self, squeezenetwork)
 end
 
 
-function step9(self)
-	log:info("step9")
 
-	_setupComplete(self, false)
-	_setupDone(self, true, true)
-
-	self.locked = true -- free applet
-	jnt:unsubscribe(self)
-
-	jiveMain:goHome()
-
-end
-
-
+--[[ XXX: Don't think we need this any more, as mysb.com registration is not in setup
+if that's the case, this whole playerCurrent method can go byebye
 --finish setup if connected server is SC
 function notify_playerCurrent(self, player)
 	if not player then
@@ -494,11 +477,11 @@ function notify_playerCurrent(self, player)
 		return
 	end
 
-	log:info("Calling step9. server: ", server)
+	log:info("Calling step7. server: ", server)
 
-	step9(self)
+	step7(self)
 end
-
+--]]
 
 
 function notify_serverLinked(self, server, wasAlreadyLinked)
@@ -522,18 +505,23 @@ function notify_serverLinked(self, server, wasAlreadyLinked)
 		-- for testing connect the player tosqueezenetwork
 		local player = appletManager:callService("getCurrentPlayer")
 
-		local squeezenetwork = false
-		for name, server in slimServer:iterate() do
-			if server:isSqueezeNetwork() then
-				squeezenetwork = server
-			end
-		end
-
+		local squeezenetwork = self:_getSqueezenetwork()
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		self:step9()
+		self:step7()
 	end
+end
+
+
+function _getSqueezenetwork(self)
+	local squeezenetwork = false
+	for name, server in slimServer:iterate() do
+		if server:isSqueezeNetwork() then
+			squeezenetwork = server
+		end
+	end
+	return squeezenetwork
 end
 
 
@@ -543,7 +531,6 @@ function _setupDone(self, setupDone, registerDone)
 	local settings = self:getSettings()
 
 	settings.setupDone = setupDone
-	settings.registerDone = registerDone
 	self:storeSettings()
 
 	-- FIXME: workaround until filesystem write issue resolved
@@ -554,6 +541,7 @@ end
 function _jumpToDemo(self)
 	appletManager:callService("jumpToInStoreDemo")
 end
+
 
 function setupWelcomeShow(self, setupNext)
 	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
