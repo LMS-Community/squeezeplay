@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.SetupWelcome.SetupWelcomeMeta - SetupWelcome meta-info
+applets.NetworkRegistration.NetworkRegistrationMeta - NetworkRegistration meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.SetupWelcome.SetupWelcomeApplet>.
+See L<applets.NetworkRegistration.NetworkRegistrationApplet>.
 
 =head1 FUNCTIONS
 
@@ -44,22 +44,18 @@ end
 
 function defaultSettings(meta)
 	return {
-		[ "setupDone" ] = false,
+		[ "registerDone" ] = false,
 	}
 end
 
 
 function registerApplet(meta)
-	meta:registerService("startSetup")
+	meta:registerService("startRegister")
+	meta:registerService("waitForSqueezenetwork")
 end
 
 
 function configureApplet(meta)
-	local settings = meta:getSettings()
-
-	if not settings.setupDone then
-		appletManager:callService("startSetup")
-	end
 
 end
 
