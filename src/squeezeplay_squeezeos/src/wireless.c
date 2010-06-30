@@ -10,6 +10,8 @@
 
 
 #include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <arpa/inet.h>		/* Needed for inet_ntoa() */
 #include <linux/if.h>
 #include <linux/types.h>
 #include <linux/wireless.h>
@@ -411,6 +413,59 @@ static int jive_net_wlan_get_snr( lua_State *L) {
 }
 
 
+void extractIp( struct ifreq *ifr, char *addr) {
+	struct sockaddr *sa;
+	sa = (struct sockaddr *) &(ifr->ifr_addr);
+	strcpy( addr, inet_ntoa( ( (struct sockaddr_in *) sa)->sin_addr));
+
+	return;
+}
+
+
+static int jive_net_get_if_config( lua_State *L) {
+	struct net_data *data;
+	struct ifreq ifr;
+	char netaddr[INET_ADDRSTRLEN];
+	char netmask[INET_ADDRSTRLEN];
+
+	data = (struct net_data *) lua_touserdata( L, 1);
+
+	if( !data->fd) {
+		lua_pushnil( L);
+		lua_pushstring( L, "wlan closed");
+		return 2;
+	}
+
+	// Get ip address
+	memset( &ifr, 0, sizeof( ifr));
+	strcpy( ifr.ifr_name, data->iface);
+	if( ioctl( data->fd, SIOCGIFADDR, &ifr) < 0) {
+		lua_pushnil( L);
+		lua_pushfstring( L, "ioctl error: %s", strerror( errno));
+		return 2;
+	}
+	extractIp( &ifr, netaddr);
+
+	// Get net mask
+	memset( &ifr, 0, sizeof( ifr));
+	strcpy( ifr.ifr_name, data->iface);
+	if( ioctl( data->fd, SIOCGIFNETMASK, &ifr) < 0) {
+		lua_pushnil( L);
+		lua_pushfstring( L, "ioctl error: %s", strerror(errno));
+		return 2;
+	}
+	extractIp( &ifr, netmask);
+
+	lua_newtable( L);
+	lua_pushstring( L, netaddr);
+	lua_rawseti( L, -2, 1);
+	lua_pushstring( L, netmask);
+	lua_rawseti( L, -2, 2);
+
+	return 1;
+}
+
+
 static int jive_net_eth_status(lua_State *L) {
 	struct net_data *data;
 	struct ifreq ifr;
@@ -480,6 +535,7 @@ static const struct luaL_Reg jive_net_methods[] = {
       	{ "getPower", jive_net_wlan_get_power },
 	{ "setPower", jive_net_wlan_set_power },
       	{ "getSNR", jive_net_wlan_get_snr },
+	{ "getIfConfig", jive_net_get_if_config },
 	{ "ethStatus", jive_net_eth_status },
 	{ NULL, NULL },
 };
