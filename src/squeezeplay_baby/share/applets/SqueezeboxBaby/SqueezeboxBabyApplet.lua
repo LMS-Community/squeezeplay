@@ -333,7 +333,7 @@ end
 function doBrightnessRamping(self, target)
 	local diff = 0
 	diff = (target - brightCur)
-	log:debug("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")
+	--log:debug("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")
 	--log:info("Diff: " .. diff)
 
 	if math.abs(diff) > AMBIENT_RAMPSTEPS then
@@ -367,7 +367,7 @@ function getSmoothedLux()
 		sum = sum + luxSmooth[i]
 	end
 	local avg = sum / #luxSmooth;
-	log:debug("AVG: " .. avg)
+	--log:debug("AVG: " .. avg)
 
 	-- Second Pass, Standard Deviation
 	sum = 0.0
@@ -398,7 +398,7 @@ function getSmoothedLux()
 
 	if values >= 1 then
 		avg = sum / values;
-		log:debug("AVG2: " .. avg)
+		--log:debug("AVG2: " .. avg)
 	end
 
 	return avg
@@ -481,7 +481,7 @@ function _setBrightness(self, level)
 		return
 	end
 
-	log:debug("_setBrightness: ", level)
+	--log:debug("_setBrightness: ", level)
 
 	self.lcdBrightness = level
 
