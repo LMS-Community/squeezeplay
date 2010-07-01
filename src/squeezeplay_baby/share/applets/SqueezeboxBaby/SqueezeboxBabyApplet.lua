@@ -783,7 +783,7 @@ function _updatePower(self)
 		batteryState = "battery"
 		iconbar:setBattery(0)
 
-	elseif chargerState & 8 then
+	elseif (chargerState & 8) == 8 then
 		log:debug("on ac, charging")
 		batteryState = "ac"
 		iconbar:setBattery("CHARGING")
