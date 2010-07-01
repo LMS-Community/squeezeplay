@@ -199,7 +199,7 @@ function menuItems(self, chunk)
 
 	for i,item in ipairs(chunk["item_loop"]) do
 		local index = i + tonumber(chunk["offset"])
-		local textKey = item.params and item.params.textkey
+		local textKey = item.textkey or (item.params and item.params.textkey)
 		if textKey then
 			local textKeyIndex = self.textIndex[textKey]
 			if not textKeyIndex or textKeyIndex > index then

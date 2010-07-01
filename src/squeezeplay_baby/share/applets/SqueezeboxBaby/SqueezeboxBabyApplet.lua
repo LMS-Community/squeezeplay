@@ -333,7 +333,7 @@ end
 function doBrightnessRamping(self, target)
 	local diff = 0
 	diff = (target - brightCur)
-	log:debug("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")
+	--log:debug("ramp: target(" .. target .. "), brightCur(" .. brightCur ..")")
 	--log:info("Diff: " .. diff)
 
 	if math.abs(diff) > AMBIENT_RAMPSTEPS then
@@ -367,7 +367,7 @@ function getSmoothedLux()
 		sum = sum + luxSmooth[i]
 	end
 	local avg = sum / #luxSmooth;
-	log:debug("AVG: " .. avg)
+	--log:debug("AVG: " .. avg)
 
 	-- Second Pass, Standard Deviation
 	sum = 0.0
@@ -398,7 +398,7 @@ function getSmoothedLux()
 
 	if values >= 1 then
 		avg = sum / values;
-		log:debug("AVG2: " .. avg)
+		--log:debug("AVG2: " .. avg)
 	end
 
 	return avg
@@ -481,7 +481,7 @@ function _setBrightness(self, level)
 		return
 	end
 
-	log:debug("_setBrightness: ", level)
+	--log:debug("_setBrightness: ", level)
 
 	self.lcdBrightness = level
 
@@ -748,7 +748,11 @@ end
 function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
-	local batteryState
+	local batteryState = false
+
+	if chargerState == nil then
+		return
+	end
 
 	if chargerState == 1 then
 		-- no battery is installed, we must be on ac!
@@ -779,7 +783,7 @@ function _updatePower(self)
 		batteryState = "battery"
 		iconbar:setBattery(0)
 
-	elseif chargerState & 8 then
+	elseif (chargerState & 8) == 8 then
 		log:debug("on ac, charging")
 		batteryState = "ac"
 		iconbar:setBattery("CHARGING")
@@ -790,13 +794,16 @@ function _updatePower(self)
 	end
 
 	-- wake up on ac power changes
-	if batteryState ~= self.batteryState then
+	if batteryState and batteryState ~= self.batteryState then
 		self:wakeup()
-                if batteryState == "ac" then                                                                            
-                        iconbar.iconBattery:playSound("DOCKING")                            
-                end                                                                                       
+		if batteryState == "ac" then                                                                            
+			iconbar.iconBattery:playSound("DOCKING")                            
+		end                                                                                       
 	end
-	self.batteryState = batteryState
+
+	if batteryState then
+		self.batteryState = batteryState
+	end
 
 	self:_lowBattery(isLowBattery or self.testLowBattery)
 end

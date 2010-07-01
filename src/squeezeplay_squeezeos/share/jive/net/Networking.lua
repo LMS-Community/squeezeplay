@@ -719,18 +719,11 @@ function t_wpaStatus(self)
 		return status
 	end
 
-	local f, err = io.popen("/sbin/ifconfig " .. self.interface)
-	if f == nil then
-		log:error("Can't read ifconfig: ", err)
-	else
-		local ifconfig = f:read("*all")
-		f:close()
-
-		local ipaddr = string.match(ifconfig, "inet addr:([%d\.]+)")
-		local subnet = string.match(ifconfig, "Mask:([%d\.]+)")
-
-		status.ip_address = ipaddr
-		status.ip_subnet = subnet
+	-- Get ip address and net mask
+	local ifdata = self.t_sock:getIfConfig()
+	if ifdata ~= nil then
+		status.ip_address = ifdata[1]
+		status.ip_subnet = ifdata[2]
 	end
 
 	-- exit early if we do not have an ip address
@@ -738,18 +731,31 @@ function t_wpaStatus(self)
 		return status
 	end
 
-	local f, err = io.popen("/bin/ip route")
-	if f == nil then
-		log:error("Can't read default route: ", err)
-	else
-		local iproute = f:read("*all")
-		f:close()
+	-- Get gateway
+	local f2 = io.open("/proc/net/route")
+	if f2 ~= nil then
+		-- Read header line
+		local line = f2:read("*l")
+		while true do
+			local line = f2:read("*l")
+			if line == nil then
+				break
+			end
 
-		local gateway = string.match(iproute, "default via ([%d\.]+)")
+			local gateway, flags = string.match(line, "%S+%s+%x+%s+(%x+)%s+(%x+)")
 
-		status.ip_gateway = gateway
+			-- Look for the default gateway (RTF_UP | RTF_GATEWAY = 0x03)
+			if tonumber(flags) == 0x03 then
+				-- Convert ip4v to dotted format
+				local a, b, c, d = string.match(gateway, "(%x%x)(%x%x)(%x%x)(%x%x)")
+				gateway = tonumber(d, 16) .. "." .. tonumber(c, 16) .. "." .. tonumber(b, 16) .. "." .. tonumber(a, 16)
+				status.ip_gateway = gateway
+			end
+		end
+		f2:close()
 	end
 
+	-- Get nameserver
 	local f = io.open("/etc/resolv.conf")
 	if f ~= nil then
 		while true do
