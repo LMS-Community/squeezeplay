@@ -158,37 +158,26 @@ function step1(self)
 end
 
 
-function step2(self)
+function step2(self, transition)
 	log:info("step2")
-
-	-- welcome!
-	self:setupWelcomeShow(
-		function()
-			self:step3()
-		end)
-end
-
-
-function step3(self, transition)
-	log:info("step3")
 
 	-- network connection type
 	appletManager:callService("setupNetworking", 
 		function()
-			self:step6(iface)
+			self:step3(iface)
 		end,
 	transition)
 end
 
 
-function step6(self)
-	log:info("step6")
+function step3(self)
+	log:info("step3")
 
 	-- automatically setup local player as selected player
 	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isLocal() then
 			appletManager:callService("setCurrentPlayer", player)
-			return self:step7()
+			return self:step4()
 		end
         end
 
@@ -196,12 +185,12 @@ function step6(self)
 	log:error("no local player found?")
 	return appletManager:callService("setupShowSelectPlayer",
 		function()
-			self:step7()
+			self:step4()
 		end, 'setuptitle')
 end
 
-function step7(self)
-	log:info("step7")
+function step4(self)
+	log:info("step4")
 
 	if UPGRADE_FROM_SCS_ENABLED then
 		appletManager:callService("waitForSqueezenetwork")
@@ -245,7 +234,7 @@ function notify_serverLinked(self, server, wasAlreadyLinked)
 		log:info("connecting ", player, " to ", squeezenetwork)
 		player:connectToServer(squeezenetwork)
 
-		self:step7()
+		self:step4()
 	end
 end
 
@@ -273,45 +262,6 @@ function _setupDone(self, setupDone, registerDone)
 	-- FIXME: workaround until filesystem write issue resolved
 	os.execute("sync")
 end
-
-
-function _jumpToDemo(self)
-	appletManager:callService("jumpToInStoreDemo")
-end
-
-
-function setupWelcomeShow(self, setupNext)
-	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
-	window:setAllowScreensaver(false)
-
-	window:setButtonAction("rbutton", nil)
-
-	window:addActionListener('start_demo', self, _jumpToDemo)
-	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
-
-	local continueButton = SimpleMenu("menu")
-
-	continueButton:addItem({
-		text = (self:string("CONTINUE")),
-		sound = "WINDOWSHOW",
-		callback = setupNext,
-		weight = 1
-	})
-
-	continueButton:setHeaderWidget(textarea)
-	window:addWidget(continueButton)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-
---[[
-function init(self)
-	log:info("subscribe")
-	jnt:subscribe(self)
-end
---]]
 
 
 function free(self)

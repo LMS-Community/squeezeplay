@@ -134,6 +134,7 @@ end
 -- start network setup flow
 function setupNetworking(self, setupNext, transition)
 	self.mode = "setup"
+	self.addDemoListener = true
 
 	self.setupNext = setupNext
 
@@ -181,7 +182,9 @@ function _connectionType(self)
 	-- ask the user to choose
 	local window = Window("text_list", self:string("NETWORK_CONNECTION_TYPE"), "setup")
 	window:setAllowScreensaver(false)
-
+	if self.addDemoListener then
+	        window:addActionListener('start_demo', self, _jumpToDemo)
+	end
 	local connectionMenu = SimpleMenu("menu")
 
 	connectionMenu:addItem({
@@ -229,7 +232,10 @@ function _wirelessRegion(self, wlan, transition)
 
 	local window = Window("text_list", self:string("NETWORK_REGION"), "setup")
 	window:setAllowScreensaver(false)
-
+	if self.addDemoListener then
+	        window:addActionListener('start_demo', self, _jumpToDemo)
+		self.addDemoListener = nil
+	end
 	local region = wlan:getRegion()
 
 	local menu = SimpleMenu("menu")
@@ -1913,6 +1919,9 @@ function _setStaticIP(self, iface, ssid)
 	end):addTask()
 end
 
+function _jumpToDemo(self)
+        appletManager:callService("jumpToInStoreDemo")
+end
 
 --[[
 
