@@ -648,7 +648,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		end
 
 		-- set an acceleration key, but not for playlists
-		if item.params and item.params.textkey then
+		if item.textkey or (item.params and item.params.textkey) then
 			-- FIXME the, el, la, etc articles
 			group:setAccelKey(item.params.textkey)
 		end
