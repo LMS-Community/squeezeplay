@@ -748,7 +748,11 @@ end
 function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
-	local batteryState
+	local batteryState = false
+
+	if chargerState == nil then
+		return
+	end
 
 	if chargerState == 1 then
 		-- no battery is installed, we must be on ac!
@@ -790,13 +794,16 @@ function _updatePower(self)
 	end
 
 	-- wake up on ac power changes
-	if batteryState ~= self.batteryState then
+	if batteryState and batteryState ~= self.batteryState then
 		self:wakeup()
-                if batteryState == "ac" then                                                                            
-                        iconbar.iconBattery:playSound("DOCKING")                            
-                end                                                                                       
+		if batteryState == "ac" then                                                                            
+			iconbar.iconBattery:playSound("DOCKING")                            
+		end                                                                                       
 	end
-	self.batteryState = batteryState
+
+	if batteryState then
+		self.batteryState = batteryState
+	end
 
 	self:_lowBattery(isLowBattery or self.testLowBattery)
 end
