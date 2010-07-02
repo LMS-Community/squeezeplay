@@ -1110,7 +1110,6 @@ function offStage(self)
 	iconbar:setPlaymode(nil)
 	iconbar:setRepeat(nil)
 	iconbar:setShuffle(nil)
-	iconbar:setPlaylistMode(nil)
 
 	self.browseHistory = {}
 
@@ -1149,7 +1148,6 @@ function updateIconbar(self)
 		end
 
 		iconbar:setRepeat(0)
-		iconbar:setPlaylistMode(nil)
 
 		--[[ useful for layout skinning debug, set all modes to show icons
 			iconbar:setPlaymode('play')

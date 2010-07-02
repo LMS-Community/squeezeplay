@@ -214,8 +214,6 @@ styles = {
 	-- global icons
 	"background",
 	"button_battery_NONE",
-	"button_playlist_mode_OFF",
-	"button_playlist_mode_PARTY",
 	"button_playmode_OFF",
 	"button_playmode_STOP",
 	"button_playmode_PLAY",
