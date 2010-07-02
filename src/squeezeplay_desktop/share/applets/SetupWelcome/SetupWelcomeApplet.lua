@@ -42,7 +42,6 @@ local appletManager    = appletManager
 
 local jiveMain         = jiveMain
 
-local welcomeTitleStyle = 'setuptitle'
 local disableHomeKeyDuringSetup
 local freeAppletWhenEscapingSetup
 
@@ -53,11 +52,12 @@ function init(self, ...)
 	jnt:subscribe(self)
 end
 
+
 function notify_playerCurrent(self, player)
     if not self:getSettings().setupDone then
         if player and not player:needsMusicSource() then
             log:debug("notify_playerCurrent called with a source, so finishing setup")
-            self:step4()
+            self:setupDone()
         end
     end
 end
@@ -70,13 +70,14 @@ function _ignoreHomeAction(self)
 
 end
 
+
 function _freeAction(self)
 	free(self)
 	return EVENT_UNUSED
 
 end
 
-function step1(self)
+function startSetup(self)
 	-- put Return to Setup menu item on jiveMain menu
 	local returnToSetup = {
 		id   = 'returnToSetup',
@@ -85,7 +86,7 @@ function step1(self)
 		weight = 2,
 		callback = function()
 			--note: don't refer to self here since the applet wil have been freed if this is being called
-			appletManager:callService("step1")
+			appletManager:callService("startSetup")
 		end
 	}
 	jiveMain:addItem(returnToSetup)
@@ -98,15 +99,10 @@ function step1(self)
 
 	return self.topWindow
 
---	self._topWindow = self:setupWelcome(function() self:step3() end)
---	return self._topWindow
 end
 
 function step2(self)
-	return self:setupWelcomeShow(function() self:step3() end)
-end
-
-function step3(self)
+	log:info("step2")
 	for i, player in Player.iterate() do
 		--auto select local player
 		if player:isLocal() then
@@ -116,57 +112,14 @@ function step3(self)
 	return appletManager:callService("setupShowSelectPlayer", function() end, 'setuptitle')
 end
 
-function step4(self)
-	return self:setupDone(function()
 
-			self:getSettings().setupDone = true
-			jiveMain:removeItemById('returnToSetup')
-			self:storeSettings()
-
-	        jiveMain:closeToHome(true, Window.transitionPushLeft)
-		end)
+function setupDone(self)
+	self:getSettings().setupDone = true
+	jiveMain:removeItemById('returnToSetup')
+	self:storeSettings()
+        jiveMain:closeToHome(true, Window.transitionPushLeft)
 end
 
-
-function setupWelcomeShow(self, setupNext)
-	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
-	window:setAllowScreensaver(false)
-
-	window:setButtonAction("rbutton", nil)
-
-	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
-
-	local continueButton = SimpleMenu("menu")
-
-	continueButton:addItem({
-		text = (self:string("DONE_CONTINUE")),
-		sound = "WINDOWSHOW",
-		callback = setupNext,
-		weight = 1
-	})
-
-	continueButton:setHeaderWidget(textarea)
-	window:addWidget(continueButton)
-
-	self:tieAndShowWindow(window)
-	return window
-end
-
-function setupDone(self, setupNext)
-	local window = Window("text_list", self:string("DONE"), welcomeTitleStyle)
-	local menu = SimpleMenu("menu")
-
-	menu:addItem({ text = self:string("DONE_CONTINUE"),
-		       sound = "WINDOWSHOW",
-		       callback = setupNext
-		     })
-
-	menu:setHeaderWidget(Textarea("help_text", self:string("DONE_HELP")))
-	window:addWidget(menu)
-
-	self:tieAndShowWindow(window)
-	return window
-end
 
 function free(self)
 	-- remove listeners when leaving this applet

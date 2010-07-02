@@ -40,9 +40,6 @@ local Popup            = require("jive.ui.Popup")
 local localPlayer      = require("jive.slim.LocalPlayer")
 local slimServer       = require("jive.slim.SlimServer")
 
-local DNS              = require("jive.net.DNS")
-local Networking       = require("jive.net.Networking")
-
 local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
 local string           = require("jive.utils.string")
@@ -52,8 +49,6 @@ local appletManager    = appletManager
 
 local jiveMain         = jiveMain
 local jnt              = jnt
-
-local welcomeTitleStyle = 'setuptitle'
 
 --This can be enabled for situations like MP where a fw upgrade is absolutely required to complete setup
 local UPGRADE_FROM_SCS_ENABLED = false
@@ -196,8 +191,8 @@ function step4(self)
 		appletManager:callService("waitForSqueezenetwork")
 	end
 
-	_setupComplete(self, false)
-	_setupDone(self, true, true)
+	self:_setupComplete(false)
+	self:_setupDone(true)
 
 	self.locked = true -- free applet
 	jnt:unsubscribe(self)
@@ -251,7 +246,7 @@ end
 --]]
 
 
-function _setupDone(self, setupDone, registerDone)
+function _setupDone(self, setupDone)
 	log:info("network setup complete")
 
 	local settings = self:getSettings()

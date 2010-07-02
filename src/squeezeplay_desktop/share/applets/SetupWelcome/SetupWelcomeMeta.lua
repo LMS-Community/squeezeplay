@@ -40,12 +40,12 @@ end
 
 
 function registerApplet(meta)
-	meta:registerService("step1")
+	meta:registerService("startSetup")
 end
 
 function configureApplet(meta)
 	if not meta:getSettings().setupDone then
-		appletManager:callService("step1")
+		appletManager:callService("startSetup")
 	end
 end
 
