@@ -625,7 +625,9 @@ function _wirelessScanTask(self, callback)
 	-- Bug #5227 if we are associated use the same quality indicator
 	-- as the icon bar
 	if associated and self._scanResults[associated] then
-		self._scanResults[associated].quality = self:getLinkQuality()
+		local percentage, quality = self:getSignalStrength()
+
+		self._scanResults[associated].quality = quality
 	end
 
 	if callback then
@@ -1328,9 +1330,11 @@ used for dividing SNR values into categorical levels of signal quality
 --]]
 
 function getLinkQuality(self)
-	local strength = getSignalStrength(self)
+	log:error("**** This function is deprecated - use getSignalStrength() instead")
 
-	return math.ceil(strength / 25), strength
+	local percentage, quality = self:getSignalStrength()
+
+	return quality, percentage
 end
 
 
@@ -1389,10 +1393,14 @@ function getSignalStrength(self)
 	-- jive: 5 - 71
 	-- baby: 5 - 72
 
-	-- an SNR of 20dB should be adequate, this is
-	-- tuned so 40 SNR = 100%
+	-- an SNR of 20dB should be adequate, this is tuned so
+	-- percentage: 100% = 40 SNR
+	-- quality: 0 - 4
 
-	return math.ceil((math.min(snr, 40) / 40) * 100), snr
+	local percentage = math.ceil((math.min(snr, 40) / 40) * 100)
+	local quality = math.ceil(percentage / 25)
+
+	return percentage, quality
 end
 
 
