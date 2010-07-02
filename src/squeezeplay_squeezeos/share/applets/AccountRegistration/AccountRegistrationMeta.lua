@@ -2,11 +2,11 @@
 --[[
 =head1 NAME
 
-applets.NetworkRegistration.NetworkRegistrationMeta - NetworkRegistration meta-info
+applets.AccountRegistration.AccountRegistrationMeta - AccountRegistration meta-info
 
 =head1 DESCRIPTION
 
-See L<applets.NetworkRegistration.NetworkRegistrationApplet>.
+See L<applets.AccountRegistration.AccountRegistrationApplet>.
 
 =head1 FUNCTIONS
 

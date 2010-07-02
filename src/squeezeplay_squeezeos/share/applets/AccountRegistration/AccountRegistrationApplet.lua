@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.NetworkRegistration
+applets.AccountRegistration
 
 =head1 DESCRIPTION
 
