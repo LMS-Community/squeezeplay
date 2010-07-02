@@ -745,8 +745,8 @@ function warnOnAnyNetworkFailure(self, successCallback, failureCallback)
 			else
 				if iface:isWireless() then
 					-- wireless strength
-					local quality = iface:getLinkQuality()
-					if not quality or quality == 0 then
+					local percentage = iface:getSignalStrength()
+					if not percentage or percentage == 0 then
 						return failureCallback(self:_networkFailureWindow(false, successCallback))
 					end
 				else
