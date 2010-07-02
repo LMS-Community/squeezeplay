@@ -354,24 +354,23 @@ end
 
 --[[
 
-=head2 networking:getIP(self, interface)
+=head2 networking:getIPAddressAndSubnet(self)
 
-Returns the ip address, if any, of the object I<interface>
+Returns the ip address and subnet, if any
 
 =cut
 --]]
 
-function getIP(self, interfaceObj)
-	local ipaddr
-	local cmd = io.popen("/sbin/ifconfig " .. interfaceObj.interface)
-	for line in cmd:lines() do
-		ipaddr = string.match(line, "inet addr:([%d%.]+)")
-		if ipaddr ~= nil then 
-			break 
-		end
+function getIPAddressAndSubnet(self)
+	local ip_address, ip_subnet
+
+	local ifdata = self.t_sock:getIfConfig()
+	if ifdata ~= nil then
+		ip_address = ifdata[1]
+		ip_subnet = ifdata[2]
 	end
-	cmd:close()
-	return ipaddr
+
+	return ip_address, ip_subnet
 end
 
 
@@ -719,11 +718,11 @@ function t_wpaStatus(self)
 		return status
 	end
 
-	-- Get ip address and net mask
-	local ifdata = self.t_sock:getIfConfig()
-	if ifdata ~= nil then
-		status.ip_address = ifdata[1]
-		status.ip_subnet = ifdata[2]
+	local ip_address, ip_subnet = self:getIPAddressAndSubnet()
+
+	if ip_address and ip_subnet then
+		status.ip_address = ip_address
+		status.ip_subnet = ip_subnet
 	end
 
 	-- exit early if we do not have an ip address
