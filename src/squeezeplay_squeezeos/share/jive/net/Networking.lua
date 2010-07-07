@@ -1071,11 +1071,19 @@ function _ifUp(self, ssid)
 				id = nid
 				break
 			end
+
+			-- In wpa_supplicant.conf ssids do not have spaces replaced
+			--  doublecheck with spaces replaced
+			nssid = string.gsub(nssid, "[ \t]", "_")
+			if nssid == ssid then
+				id = nid
+				break
+			end
 		end
 
 		-- Select network
 		if not id then
-			log:warn("can't find network ", ssid)
+			log:warn("_ifUp - can't find network ", ssid)
 			return
 		end
 
@@ -1155,22 +1163,34 @@ function _ifDown(self)
 				id = nid
 				break
 			end
+
+			-- In wpa_supplicant.conf ssids do not have spaces replaced
+			--  doublecheck with spaces replaced
+			nssid = string.gsub(nssid, "[ \t]", "_")
+			if nssid == active then
+				id = nid
+				break
+			end
 		end
 
-		if id then
-			-- Disconnect from existing network
-			local request = 'DISCONNECT'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-			-- Disable network
-			local request = 'DISABLE_NETWORK ' .. id
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-			-- Save configuration
-			request = 'SAVE_CONFIG'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
+		-- Select network
+		if not id then
+			log:warn("_ifDown - can't find network ", active)
+			return
 		end
+
+		-- Disconnect from existing network
+		local request = 'DISCONNECT'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Disable network
+		local request = 'DISABLE_NETWORK ' .. id
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Save configuration
+		request = 'SAVE_CONFIG'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
 	end
 end
 
