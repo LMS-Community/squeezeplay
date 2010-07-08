@@ -135,6 +135,18 @@ function __init(self, jnt, interface, isWireless)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:detectChipset()
+
+Returns chipset used on particular platform
+- Jive - Marvell (gspi8686)
+- Radio - Atheros (ar6000)
+- Touch - Marvell (sd8686)
+
+=cut
+--]]
+
 function detectChipset(self)
 	local f = io.popen("/sbin/lsmod 2> /dev/null")
 	if f == nil then
@@ -362,6 +374,10 @@ Returns the ip address and subnet, if any
 --]]
 
 function getIPAddressAndSubnet(self)
+	if not self.t_sock then
+		return
+	end
+
 	local ip_address, ip_subnet
 
 	local ifdata = self.t_sock:getIfConfig()
@@ -638,7 +654,20 @@ function _wirelessScanTask(self, callback)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:_ethernetScanTask(callback)
+
+Similar to wireless scan task, but for wired interfaces
+
+=cut
+--]]
+
 function _ethernetScanTask(self, callback)
+	if not self.t_sock then
+		return 0
+	end
+
 	local status = self.t_sock:ethStatus()
 
 	local active = self:_ifstate()
@@ -655,8 +684,16 @@ function _ethernetScanTask(self, callback)
 end
 
 
--- check the ifup interface state. returns true if the interface is enabled
--- or the enabled ssid for wireless interfaces.
+--[[
+
+=head2 jive.net.Networking:_ifstate()
+
+Check the ifup interface state. returns true if the interface is enabled
+or the enabled ssid for wireless interfaces.
+
+=cut
+--]]
+
 function _ifstate(self)
 	 local active = false
 
@@ -679,6 +716,16 @@ function _ifstate(self)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:status()
+
+Get status information for wireless or wired interface.
+- Wired: link, speed, fullDuplex
+- Wireless: ssid, encryption, ...
+
+=cut
+--]]
 
 function status(self)
 	assert(Task:running(), "Networking:basicStatus must be called in a Task")
@@ -692,6 +739,9 @@ function status(self)
 			status[k] = v
 		end
 	else
+		if not self.t_sock then
+			return 0
+		end
 		status = self.t_sock:ethStatus()
 		status.wpa_state = "COMPLETED"
 	end
@@ -1194,6 +1244,15 @@ function _ifDown(self)
 	end
 end
 
+--[[
+
+=head2 jive.net.Networking:_ifUpDown(cmd)
+
+Utility function to call ifup and ifdown in a process.
+
+=cut
+--]]
+
 
 function _ifUpDown(self, cmd)
 	-- reading the output of ifup causes the process to block, we
@@ -1217,6 +1276,15 @@ function _ifUpDown(self, cmd)
 	end
 end
 
+
+--[[
+
+=head2 jive.net.Networking:_editAutoInterfaces( ssid)
+
+Handles the 'auto' entry for the active interface in /etc/network/interfaces
+
+=cut
+--]]
 
 function _editAutoInterfaces(self, ssid)
 	local interface = self.interface
@@ -1267,6 +1335,15 @@ function _editAutoInterfaces(self, ssid)
 	System:atomicWrite("/etc/network/interfaces", outStr)
 end
 
+--[[
+
+=head2 jive.net.Networking:_editNetworkInterfacesBlock( outStr, iface_name, method, ...)
+
+Helper function for _editInterfaces()
+
+=cut
+--]]
+
 
 function _editNetworkInterfacesBlock( self, outStr, iface_name, method, ...)
 
@@ -1282,6 +1359,15 @@ function _editNetworkInterfacesBlock( self, outStr, iface_name, method, ...)
 	return outStr
 end
 
+
+--[[
+
+=head2 jive.net.Networking:_editInterfaces(ssid, method, ...)
+
+Add and removes interfaces to /etc/network/interfaces
+
+=cut
+--]]
 
 function _editNetworkInterfaces( self, ssid, method, ...)
 	local iface = self.interface
@@ -1405,7 +1491,15 @@ function getSNR(self)
 end
 
 
--- returns wireless signal strength as a percentage
+--[[
+
+=head2 jive.net.Networking:getSignalStrength()
+
+Returns wireless signal strength as a percentage (0-100) and quality (0-4)
+
+=cut
+--]]
+
 function getSignalStrength(self)
 	local snr = getSNR(self)
 
@@ -1837,6 +1931,33 @@ function t_wpsStatus(self)
 	end
 
 	return status
+end
+
+
+--[[
+
+=head2 jive.net.Networking:repairNetwork()
+
+Attempt to repair network connction doing the following:
+- Bring down the active interface - this also stops DHCP
+- Disconnect from wireless network / wired network
+- Bring up the active network - this also starts DHCP
+- Conncet to wireless network / wired network
+
+=cut
+--]]
+
+function repairNetwork(self)
+	Task("repairnetwork", self, function()
+		log:info("Repair network - start")
+
+		local active = self:_ifstate()
+
+		self:_ifDown()
+		self:_ifUp(active)
+
+		log:info("Repair network - done")
+	end):addTask()
 end
 
 
