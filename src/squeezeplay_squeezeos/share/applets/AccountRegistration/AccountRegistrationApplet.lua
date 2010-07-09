@@ -41,7 +41,6 @@ local localPlayer      = require("jive.slim.LocalPlayer")
 local slimServer       = require("jive.slim.SlimServer")
 
 local DNS              = require("jive.net.DNS")
-local Networking       = require("jive.net.Networking")
 
 local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
@@ -82,11 +81,26 @@ function _anySqueezeCenterWithUpgradeFound(self)
 end
 
 
+function accountRegistered(self)
+	local player = appletManager:callService("getCurrentPlayer")
+	if not player then
+		log:error('No player found')
+		return false
+	end
+
+	local settings = self:getSettings()
+	return settings.registerDone and settings.registerDone[player:getId()]
+
+end
+
+
 function _startRegister(self)
 	log:info("_startRegister")
 
+	local player = appletManager:callService("getCurrentPlayer")
+
 	local settings = self:getSettings()
-	if settings.registerDone then
+	if settings.registerDone and settings.registerDone[player:getId()] then
 		log:info("SqueezeNetwork registration complete")
 		return
 	end
@@ -276,6 +290,54 @@ function _firmwareUpgrade(self, squeezenetwork)
 end
 
 
+function notify_serverLinked(self, server, wasAlreadyLinked)
+        log:info("notify_serverLinked: ", server)
+
+        if not server:isSqueezeNetwork() then
+                return
+        end
+
+        if not self.registerRequest then
+                return
+        end
+
+        --avoid race condition where we are in the registerRequest but for a player that is already linked
+        if  self.registerRequestRequireAlreadyLinked and not wasAlreadyLinked then
+                return
+        end
+        log:info("server linked: ", server, " pin=", server:getPin(), " registerRequestRequireAlreadyLinked: ", self.registerRequestRequireAlreadyLinked, " wasAlreadyLinked: ", wasAlreadyLinked)
+
+        if server:getPin() == false then
+                -- for testing connect the player tosqueezenetwork
+                local player = appletManager:callService("getCurrentPlayer")
+
+                local squeezenetwork = false
+                for name, server in slimServer:iterate() do
+                        if server:isSqueezeNetwork() then
+                                squeezenetwork = server
+                        end
+                end
+
+                log:info("connecting ", player, " to ", squeezenetwork)
+                player:connectToServer(squeezenetwork)
+
+		self:registerDone(player)
+        end
+end
+
+
+function registerDone(self, player)
+	if not player then
+		return
+	end
+
+	local settings = self:getSettings()
+	settings.registerDone[player:getId()] = true
+	self:storeSettings()
+
+end
+
+
 function _registerRequest(self, squeezenetwork)
 	if self.registerRequest then
 		return
@@ -292,7 +354,7 @@ function _registerRequest(self, squeezenetwork)
 	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true, successCallback )
 
 	self.locked = true -- don't free applet
-	-- XXX: it could be that the NetworkRegistration applet needs a notify_playerCurrent() method to deal with the registration being successful; the subscribe right here hints at that...
+	-- XXX: this appears to be so the serverLinked notification will pick up the successful registration when it completes
 	jnt:subscribe(self)
 end
 
@@ -305,19 +367,6 @@ function _getSqueezenetwork(self)
 		end
 	end
 	return squeezenetwork
-end
-
-
-function _setupDone(self, setupDone, registerDone)
-	log:info("network setup complete")
-
-	local settings = self:getSettings()
-
-	settings.setupDone = setupDone
-	self:storeSettings()
-
-	-- FIXME: workaround until filesystem write issue resolved
-	os.execute("sync")
 end
 
 

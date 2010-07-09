@@ -44,7 +44,7 @@ end
 
 function defaultSettings(meta)
 	return {
-		[ "registerDone" ] = false,
+		[ "registerDone" ] = {},
 	}
 end
 

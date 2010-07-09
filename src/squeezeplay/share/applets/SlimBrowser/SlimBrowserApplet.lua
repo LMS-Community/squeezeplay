@@ -781,7 +781,15 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	-- it's very helpful at times to dump the request table here to see what command is being issued
 	-- debug.dump(request)
 
-	if not useCachedResponse then
+	-- XXX: temporary hack to push appgallery request to SN registration applet
+	-- this needs to be changed to doing a check for 
+	-- 1. if the menu item requires an SN account,
+	-- 1a. if yes, check if settings.registerDone (via service method) is not true
+	if request[1] == 'appgallery' then
+		log:info('Redirecting request to registration applet')
+		appletManager:callService("startRegister")
+
+	elseif not useCachedResponse then
 		-- send the command
 		_server:userRequest(sink, playerid, request)
 	else
