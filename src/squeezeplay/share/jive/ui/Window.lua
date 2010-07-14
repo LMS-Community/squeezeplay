@@ -50,6 +50,7 @@ local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
 local Event                   = require("jive.ui.Event")
 local Surface                 = require("jive.ui.Surface")
+local Menu                    = require("jive.ui.Menu")
 
 local debug                   = require("jive.utils.debug")
 local log                     = require("jive.utils.log").logger("squeezeplay.ui")
@@ -233,10 +234,35 @@ function _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
 	return _ignoreAllInputListener(self, actionEvent, excludedActions, ignoredCallback)
 
 end
+--[[
+
+=head2 jive.ui.Window:extractWidgetFromWindow(widgetClass)
+
+iterates through window and returns first widget of class <class> found in the container window
+
+=cut
+--]]
+function extractWidgetFromWindow(self, class)
+
+        -- extract widget of <class> from Window widget
+        local widget = {}
+        self:iterate(function(w)
+                if oo.instanceof(w, class) then
+                        widget[#widget + 1] = w
+                end
+        end)
+	if widget then
+	        return unpack(widget)
+	else
+		log:error('widget not found')
+		return nil
+	end
+end
+
 
 --[[
 
-=head2 ignoreAllInputExcept(excludedActions, ignoredCallback)
+=head2 jive.ui.Window:ignoreAllInputExcept(excludedActions, ignoredCallback)
 
 Consume all input events except for i<excludedActions>. Note: The action "soft_reset" is always included in the excluded actions.
 if ignoredCallback exists, ignoredCallback(actionEvent) will be called for any ignored action.

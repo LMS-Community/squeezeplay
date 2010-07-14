@@ -81,8 +81,10 @@ function _anySqueezeCenterWithUpgradeFound(self)
 end
 
 
-function accountRegistered(self)
-	local player = appletManager:callService("getCurrentPlayer")
+function accountRegistered(self, player)
+	if not player then
+		local player = appletManager:callService("getCurrentPlayer")
+	end
 	if not player then
 		log:error('No player found')
 		return false
@@ -351,7 +353,7 @@ function _registerRequest(self, squeezenetwork)
 	end
 
 	log:info("registration on SN")
-	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true, successCallback )
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, false, successCallback )
 
 	self.locked = true -- don't free applet
 	-- XXX: this appears to be so the serverLinked notification will pick up the successful registration when it completes

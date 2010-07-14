@@ -19,7 +19,7 @@ TODO
 
 -- stuff we use
 local tostring, tonumber, type, sort = tostring, tonumber, type, sort
-local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
+local pairs, ipairs, select, _assert, unpack = pairs, ipairs, select, _assert, unpack
 
 local oo                     = require("loop.simple")
 local math                   = require("math")
@@ -379,7 +379,7 @@ local function _stepSetMenuItems(step, data)
 end
 
 
-local function _stepLockHandler(step, loadedCallback, skipMenuLock)
+local function _stepLockHandler(step, loadedCallback, skipMenuLock, myMenu)
 	if not step then
 		return
 	end
@@ -397,12 +397,16 @@ local function _stepLockHandler(step, loadedCallback, skipMenuLock)
 				end)
 		end
 	end
+	-- FIXME: allow for a means of getting the origin menu into this method if it's not a step
 	step.loaded = function()
 		if currentStep and currentStep.menu then
 			currentStep.menu:unlock()
 		end
 		if currentStep and currentStep.simpleMenu then
 			currentStep.simpleMenu:unlock()
+		end
+		if myMenu then
+			myMenu:unlock()
 		end
 
 		loadedCallback()
@@ -412,14 +416,15 @@ end
 
 -- skipMenuLock is given as true when no lock treatment is needed on the menu 
 -- (e.g., for when _pushToWindow is being used outside a menu like in titlebar CM touch button)
-local function _pushToNewWindow(step, skipMenuLock)
+local function _pushToNewWindow(step, skipMenuLock, myMenu)
 	_stepLockHandler(
 		step,  
 		function()
 			_pushStep(step)
 			step.window:show()
 		end, 
-		skipMenuLock
+		skipMenuLock,
+		myMenu
 	)
 end
 
@@ -780,21 +785,29 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
 	-- debug.dump(request)
-
+	
 	-- XXX: temporary hack to push appgallery request to SN registration applet
-	-- this needs to be changed to doing a check for 
-	-- 1. if the menu item requires an SN account,
-	-- 1a. if yes, check if settings.registerDone (via service method) is not true
+	-- this needs to be changed to doing a check for if the menu item requires an SN account
+	-- requires a flag on the item
+	
 	if request[1] == 'appgallery' then
-		log:info('Redirecting request to registration applet')
-		appletManager:callService("startRegister")
+		local playerRegistered = appletManager:callService("accountRegistered", _player)
 
-	elseif not useCachedResponse then
+		if not playerRegistered then
+			log:warn('this player needs to be registered with mysb.com first')
+			appletManager:callService("startRegister")
+			return
+		end
+	end
+
+	if not useCachedResponse then
 		-- send the command
 		_server:userRequest(sink, playerid, request)
+
 	else
                 log:info("using cachedResponse")
 		sink(cachedResponse)
+
 	end
 end
 
@@ -2912,6 +2925,9 @@ function squeezeNetworkRequest(self, request, inSetup, successCallback)
 
 	_server = squeezenetwork
 
+	local _originWindow = Window:getTopNonTransientWindow() 
+	local _originMenu = _originWindow:extractWidgetFromWindow(Menu)
+
 	-- create a window for SN signup
 	local step, sink = _newDestination(
 		nil,
@@ -2921,10 +2937,11 @@ function squeezeNetworkRequest(self, request, inSetup, successCallback)
 			menuStyle = 'menu',
 			labelItemStyle   = "item",
 			windowStyle = 'text_list',
-			disableBackButton = true,
 		},
 		_browseSink
 	)
+
+
 	local sinkWrapper = sink
 	if successCallback then
 		sinkWrapper =  function(...)
@@ -2934,9 +2951,10 @@ function squeezeNetworkRequest(self, request, inSetup, successCallback)
 				successCallback(squeezenetwork:isSpRegisteredWithSn())
 			end
 	end
-	_pushToNewWindow(step)
-        squeezenetwork:userRequest( sinkWrapper, nil, request )
+	_pushToNewWindow(step, true, _originMenu)
 
+        squeezenetwork:userRequest( sinkWrapper, nil, request )
+	
 end
 
 
@@ -3011,7 +3029,6 @@ function browserActionRequest(self, server, v, loadedCallback)
 					_pushStep(step)
 				else
 					from, qty = _decideFirstChunk(step, jsonAction)
-
 					step.loaded = function()
 						--if lastBrowseIndex then defer callback until lastBrowseIndex chunk received.
 						local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)

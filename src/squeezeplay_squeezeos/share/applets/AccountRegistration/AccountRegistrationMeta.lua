@@ -50,6 +50,7 @@ end
 
 
 function registerApplet(meta)
+	meta:registerService("accountRegistered")
 	meta:registerService("startRegister")
 	meta:registerService("waitForSqueezenetwork")
 end
