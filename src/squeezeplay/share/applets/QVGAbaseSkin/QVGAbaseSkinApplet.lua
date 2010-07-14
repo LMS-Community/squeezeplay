@@ -2287,21 +2287,6 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_repeat_on.png"),
 	})
 
-	s.button_playlist_mode_OFF = _uses(s._button_repeat, {
-		img = false,
-	})
-	s.button_playlist_mode_DISABLED = _uses(s._button_repeat, {
-		img = false,
-	})
-
-	-- XXX: these two can probably be removed after party mode is fully dead and buried
-	s.button_playlist_mode_ON = _uses(s._button_repeat, {
-		img = false,
-	})
-	s.button_playlist_mode_PARTY = _uses(s._button_repeat, {
-		img = false,
-	})
-
 	s._button_shuffle = _uses(s._iconbar_icon)
 	s.button_shuffle_OFF = _uses(s._button_shuffle, {
 		img = false,

@@ -135,6 +135,18 @@ function __init(self, jnt, interface, isWireless)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:detectChipset()
+
+Returns chipset used on particular platform
+- Jive - Marvell (gspi8686)
+- Radio - Atheros (ar6000)
+- Touch - Marvell (sd8686)
+
+=cut
+--]]
+
 function detectChipset(self)
 	local f = io.popen("/sbin/lsmod 2> /dev/null")
 	if f == nil then
@@ -354,24 +366,27 @@ end
 
 --[[
 
-=head2 networking:getIP(self, interface)
+=head2 networking:getIPAddressAndSubnet(self)
 
-Returns the ip address, if any, of the object I<interface>
+Returns the ip address and subnet, if any
 
 =cut
 --]]
 
-function getIP(self, interfaceObj)
-	local ipaddr
-	local cmd = io.popen("/sbin/ifconfig " .. interfaceObj.interface)
-	for line in cmd:lines() do
-		ipaddr = string.match(line, "inet addr:([%d%.]+)")
-		if ipaddr ~= nil then 
-			break 
-		end
+function getIPAddressAndSubnet(self)
+	if not self.t_sock then
+		return
 	end
-	cmd:close()
-	return ipaddr
+
+	local ip_address, ip_subnet
+
+	local ifdata = self.t_sock:getIfConfig()
+	if ifdata ~= nil then
+		ip_address = ifdata[1]
+		ip_subnet = ifdata[2]
+	end
+
+	return ip_address, ip_subnet
 end
 
 
@@ -626,7 +641,9 @@ function _wirelessScanTask(self, callback)
 	-- Bug #5227 if we are associated use the same quality indicator
 	-- as the icon bar
 	if associated and self._scanResults[associated] then
-		self._scanResults[associated].quality = self:getLinkQuality()
+		local percentage, quality = self:getSignalStrength()
+
+		self._scanResults[associated].quality = quality
 	end
 
 	if callback then
@@ -637,7 +654,20 @@ function _wirelessScanTask(self, callback)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:_ethernetScanTask(callback)
+
+Similar to wireless scan task, but for wired interfaces
+
+=cut
+--]]
+
 function _ethernetScanTask(self, callback)
+	if not self.t_sock then
+		return 0
+	end
+
 	local status = self.t_sock:ethStatus()
 
 	local active = self:_ifstate()
@@ -654,8 +684,16 @@ function _ethernetScanTask(self, callback)
 end
 
 
--- check the ifup interface state. returns true if the interface is enabled
--- or the enabled ssid for wireless interfaces.
+--[[
+
+=head2 jive.net.Networking:_ifstate()
+
+Check the ifup interface state. returns true if the interface is enabled
+or the enabled ssid for wireless interfaces.
+
+=cut
+--]]
+
 function _ifstate(self)
 	 local active = false
 
@@ -678,6 +716,16 @@ function _ifstate(self)
 end
 
 
+--[[
+
+=head2 jive.net.Networking:status()
+
+Get status information for wireless or wired interface.
+- Wired: link, speed, fullDuplex
+- Wireless: ssid, encryption, ...
+
+=cut
+--]]
 
 function status(self)
 	assert(Task:running(), "Networking:basicStatus must be called in a Task")
@@ -691,6 +739,9 @@ function status(self)
 			status[k] = v
 		end
 	else
+		if not self.t_sock then
+			return 0
+		end
 		status = self.t_sock:ethStatus()
 		status.wpa_state = "COMPLETED"
 	end
@@ -719,11 +770,11 @@ function t_wpaStatus(self)
 		return status
 	end
 
-	-- Get ip address and net mask
-	local ifdata = self.t_sock:getIfConfig()
-	if ifdata ~= nil then
-		status.ip_address = ifdata[1]
-		status.ip_subnet = ifdata[2]
+	local ip_address, ip_subnet = self:getIPAddressAndSubnet()
+
+	if ip_address and ip_subnet then
+		status.ip_address = ip_address
+		status.ip_subnet = ip_subnet
 	end
 
 	-- exit early if we do not have an ip address
@@ -1070,11 +1121,19 @@ function _ifUp(self, ssid)
 				id = nid
 				break
 			end
+
+			-- In wpa_supplicant.conf ssids do not have spaces replaced
+			--  doublecheck with spaces replaced
+			nssid = string.gsub(nssid, "[ \t]", "_")
+			if nssid == ssid then
+				id = nid
+				break
+			end
 		end
 
 		-- Select network
 		if not id then
-			log:warn("can't find network ", ssid)
+			log:warn("_ifUp - can't find network ", ssid)
 			return
 		end
 
@@ -1154,24 +1213,45 @@ function _ifDown(self)
 				id = nid
 				break
 			end
+
+			-- In wpa_supplicant.conf ssids do not have spaces replaced
+			--  doublecheck with spaces replaced
+			nssid = string.gsub(nssid, "[ \t]", "_")
+			if nssid == active then
+				id = nid
+				break
+			end
 		end
 
-		if id then
-			-- Disconnect from existing network
-			local request = 'DISCONNECT'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-			-- Disable network
-			local request = 'DISABLE_NETWORK ' .. id
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
-			-- Save configuration
-			request = 'SAVE_CONFIG'
-			assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
-
+		-- Select network
+		if not id then
+			log:warn("_ifDown - can't find network ", active)
+			return
 		end
+
+		-- Disconnect from existing network
+		local request = 'DISCONNECT'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Disable network
+		local request = 'DISABLE_NETWORK ' .. id
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
+		-- Save configuration
+		request = 'SAVE_CONFIG'
+		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
+
 	end
 end
+
+--[[
+
+=head2 jive.net.Networking:_ifUpDown(cmd)
+
+Utility function to call ifup and ifdown in a process.
+
+=cut
+--]]
 
 
 function _ifUpDown(self, cmd)
@@ -1196,6 +1276,15 @@ function _ifUpDown(self, cmd)
 	end
 end
 
+
+--[[
+
+=head2 jive.net.Networking:_editAutoInterfaces( ssid)
+
+Handles the 'auto' entry for the active interface in /etc/network/interfaces
+
+=cut
+--]]
 
 function _editAutoInterfaces(self, ssid)
 	local interface = self.interface
@@ -1246,6 +1335,15 @@ function _editAutoInterfaces(self, ssid)
 	System:atomicWrite("/etc/network/interfaces", outStr)
 end
 
+--[[
+
+=head2 jive.net.Networking:_editNetworkInterfacesBlock( outStr, iface_name, method, ...)
+
+Helper function for _editInterfaces()
+
+=cut
+--]]
+
 
 function _editNetworkInterfacesBlock( self, outStr, iface_name, method, ...)
 
@@ -1261,6 +1359,15 @@ function _editNetworkInterfacesBlock( self, outStr, iface_name, method, ...)
 	return outStr
 end
 
+
+--[[
+
+=head2 jive.net.Networking:_editInterfaces(ssid, method, ...)
+
+Add and removes interfaces to /etc/network/interfaces
+
+=cut
+--]]
 
 function _editNetworkInterfaces( self, ssid, method, ...)
 	local iface = self.interface
@@ -1329,9 +1436,11 @@ used for dividing SNR values into categorical levels of signal quality
 --]]
 
 function getLinkQuality(self)
-	local strength = getSignalStrength(self)
+	log:error("**** This function is deprecated - use getSignalStrength() instead")
 
-	return math.ceil(strength / 25), strength
+	local percentage, quality = self:getSignalStrength()
+
+	return quality, percentage
 end
 
 
@@ -1382,7 +1491,15 @@ function getSNR(self)
 end
 
 
--- returns wireless signal strength as a percentage
+--[[
+
+=head2 jive.net.Networking:getSignalStrength()
+
+Returns wireless signal strength as a percentage (0-100) and quality (0-4)
+
+=cut
+--]]
+
 function getSignalStrength(self)
 	local snr = getSNR(self)
 
@@ -1390,10 +1507,14 @@ function getSignalStrength(self)
 	-- jive: 5 - 71
 	-- baby: 5 - 72
 
-	-- an SNR of 20dB should be adequate, this is
-	-- tuned so 40 SNR = 100%
+	-- an SNR of 20dB should be adequate, this is tuned so
+	-- percentage: 100% = 40 SNR
+	-- quality: 0 - 4
 
-	return math.ceil((math.min(snr, 40) / 40) * 100), snr
+	local percentage = math.ceil((math.min(snr, 40) / 40) * 100)
+	local quality = math.ceil(percentage / 25)
+
+	return percentage, quality
 end
 
 
@@ -1810,6 +1931,33 @@ function t_wpsStatus(self)
 	end
 
 	return status
+end
+
+
+--[[
+
+=head2 jive.net.Networking:repairNetwork()
+
+Attempt to repair network connction doing the following:
+- Bring down the active interface - this also stops DHCP
+- Disconnect from wireless network / wired network
+- Bring up the active network - this also starts DHCP
+- Conncet to wireless network / wired network
+
+=cut
+--]]
+
+function repairNetwork(self)
+	Task("repairnetwork", self, function()
+		log:info("Repair network - start")
+
+		local active = self:_ifstate()
+
+		self:_ifDown()
+		self:_ifUp(active)
+
+		log:info("Repair network - done")
+	end):addTask()
 end
 
 

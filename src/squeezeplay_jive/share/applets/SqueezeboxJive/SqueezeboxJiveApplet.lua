@@ -346,10 +346,10 @@ function _updateTask(self)
 	end
 
 	-- wireless strength
-	local quality = self.wireless:getLinkQuality()
+	local percentage, quality = self.wireless:getSignalStrength()
 	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
 	if player then
-		player:setSignalStrength(strength)
+		player:setSignalStrength(percentage)
 	end
 end
 

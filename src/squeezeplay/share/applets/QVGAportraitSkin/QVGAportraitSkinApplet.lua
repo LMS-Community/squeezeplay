@@ -438,11 +438,6 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_repeat_1.border                = s._button_repeat.border
 	s.button_repeat_2.border                = s._button_repeat.border
 
-	s.button_playlist_mode_OFF.border       = _iconbarBorder
-	s.button_playlist_mode_DISABLED.border  = _iconbarBorder 
-	s.button_playlist_mode_ON.border        = _iconbarBorder 
-	s.button_playlist_mode_PARTY.border     = _iconbarBorder
-
 	s._button_shuffle.border                = _iconbarBorder
 	s.button_shuffle_OFF.border             = s._button_shuffle.border
 	s.button_shuffle_0.border               = s._button_shuffle.border

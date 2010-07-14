@@ -1741,6 +1741,7 @@ local _actionAliasMap = {
 	["play"]      = "playAction",
 	["play-hold"] = "playHoldAction",
 	["add"]       = "addAction",
+	["go"]        = "goAction",	
 }
 
 

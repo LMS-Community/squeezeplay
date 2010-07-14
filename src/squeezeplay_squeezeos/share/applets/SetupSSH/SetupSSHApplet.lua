@@ -100,14 +100,14 @@ end
 
 
 function _getIPAddress()
-	local ipaddr
+	local ip_address, ip_subnet
 	local ifObj = Networking:activeInterface()
 
 	if ifObj then
-		ipaddr = Networking:getIP(ifObj)
+		ip_address, ip_subnet = ifObj:getIPAddressAndSubnet()
 	end
 
-	return ipaddr or "?.?.?.?"
+	return ip_address or "?.?.?.?"
 end
 
 

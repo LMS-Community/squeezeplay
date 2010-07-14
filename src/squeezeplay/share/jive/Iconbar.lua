@@ -67,29 +67,6 @@ end
 
 --[[
 
-=head2 Iconbar:setPlaylistMode(val)
-
-Set the playlistmode of the iconbar. Values are nil (no mode), 1 for playlist mode and 2 for party mode.
-When not 1 or 2, setRepeat()
-
-=cut
---]]
-function setPlaylistMode(self, val)
-	log:debug("Iconbar:setPlaylistMode(", val, ")")
-
-	local mode = string.upper((val or "OFF"))
-	if mode ~= "OFF" and mode ~= "DISABLED" then
-		self.preferPlaylistModeIcon = true
-		self.iconRepeat:setStyle("button_playlist_mode_" .. mode)
-	else
-		self.preferPlaylistModeIcon = false
-		self:setRepeat(self.repeatMode)
-	end
-end
-
-
---[[
-
 =head2 Iconbar:setRepeat(val)
 
 Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat single track and 2 for repeat all playlist tracks.

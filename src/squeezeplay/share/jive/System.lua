@@ -64,6 +64,7 @@ local allCapabilities = {
 	["coreKeys"] = 1,
 	["sdcard"] = 1,
 	["usb"] = 1,
+	["batteryCapable"] = 1,
 }
 
 local _capabilities = {} -- of form string, 1 so
@@ -74,7 +75,7 @@ function setCapabilities(self, capabilities)
 
 	for capability, value in pairs(capabilities) do
 		if not allCapabilities[capability] then
-			log:error("Unknown capability: ", capability)
+			log:warn("Unknown capability: ", capability)
 		end
 	end
 	
