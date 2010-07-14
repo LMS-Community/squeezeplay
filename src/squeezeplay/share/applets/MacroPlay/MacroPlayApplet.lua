@@ -25,6 +25,7 @@ local table            = require("jive.utils.table")
 local dumper           = require("jive.utils.dumper")
 
 local Applet           = require("jive.Applet")
+local System           = require("jive.System")
 local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
 local Icon             = require("jive.ui.Icon")
@@ -367,7 +368,7 @@ function macroSelectMenuIndex(interval, index)
 	end
 
 	while menu:getSelectedIndex() ~= index do
-		macroEvent(100, EVENT_KEY_PRESS, KEY_DOWN)
+		macroEvent(100, EVENT_SCROLL, 1)
 	end
 
 	macroDelay(interval)
@@ -383,9 +384,9 @@ function macroSelectMenuItem(interval, pattern)
 	end
 
 	local index = menu:getSelectedIndex() or 1
-	local dir = KEY_DOWN
+	local dir = 1
 	if index ~= 1 then
-		dir = KEY_UP
+		dir = -1
 	end
 
 	local ok = false
@@ -395,7 +396,7 @@ function macroSelectMenuItem(interval, pattern)
 			break
 		end
 
-		macroEvent(100, EVENT_KEY_PRESS, dir)
+		macroEvent(100, EVENT_SCROLL, dir)
 	until menu:getSelectedIndex() == index
 
 	macroDelay(interval)
