@@ -251,11 +251,6 @@ function setupConnectionShow(self, setupSqueezebox, setupNetwork)
 end
 
 
--- we are connected when we have a pin and upgrade url
-function _squeezenetworkConnected(self, squeezenetwork)
-	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected()
-end
-
 function _anySqueezeCenterWithUpgradeFound(self)
 	local anyFound = false
 	for _,server in appletManager:callService("iterateSqueezeCenters") do
