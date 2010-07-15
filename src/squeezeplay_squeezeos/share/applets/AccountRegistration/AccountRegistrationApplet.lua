@@ -337,6 +337,8 @@ function registerDone(self, player)
 	settings.registerDone[player:getId()] = true
 	self:storeSettings()
 
+	appletManager:callService("goHome")
+
 end
 
 
