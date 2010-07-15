@@ -701,7 +701,6 @@ end
 -- performs the JSON action...
 local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, cachedResponse)
 	log:debug("_performJSONAction(from:", from, ", qty:", qty, "):")
-
 	local useCachedResponse = false
 	if cachedResponse and type(cachedResponse) == 'table' then
 	        log:warn("using cachedResponse: ", cachedResponse)
@@ -784,12 +783,14 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	-- debug.dump(request)
+	-- debug.dump(request, 8)
 	
 	-- XXX: temporary hack to push appgallery request to SN registration applet
 	-- this needs to be changed to doing a check for if the menu item requires an SN account
-	-- requires a flag on the item
-	
+
+	-- requires a flag on the item, probably contained in step.data, like:
+	-- if step and step.data and step.data.needsAccount then
+
 	if request[1] == 'appgallery' then
 		local playerRegistered = appletManager:callService("accountRegistered", _player)
 
