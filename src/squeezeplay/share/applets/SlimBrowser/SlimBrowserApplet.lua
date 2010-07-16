@@ -655,7 +655,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		-- set an acceleration key, but not for playlists
 		if item.textkey or (item.params and item.params.textkey) then
 			-- FIXME the, el, la, etc articles
-			group:setAccelKey(item.params.textkey)
+			group:setAccelKey(item.textkey or item.params.textkey)
 		end
 
 		if item["radio"] then
@@ -1046,6 +1046,11 @@ local function _refreshOrigin(setSelectedIndex)
 				if step.menu and setSelectedIndex then
 					step.menu:setSelectedIndex(setSelectedIndex)
 					step.lastBrowseIndexUsed = setSelectedIndex
+				end
+				if step.window and step.simpleMenu then
+					-- Bug 16336, ghosted menu over menu after refreshing origin
+					log:warn('removing simpleMenu overlay when refreshing origin')
+					step.window:removeWidget(step.simpleMenu)
 				end
 			end, true)
 		timer:start()
