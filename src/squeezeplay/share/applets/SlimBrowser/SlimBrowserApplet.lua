@@ -1025,6 +1025,11 @@ local function _refreshOrigin(setSelectedIndex)
 					step.menu:setSelectedIndex(setSelectedIndex)
 					step.lastBrowseIndexUsed = setSelectedIndex
 				end
+				if step.window and step.simpleMenu then
+					-- Bug 16336, ghosted menu over menu after refreshing origin
+					log:warn('removing simpleMenu overlay when refreshing origin')
+					step.window:removeWidget(step.simpleMenu)
+				end
 			end, true)
 		timer:start()
 	end
