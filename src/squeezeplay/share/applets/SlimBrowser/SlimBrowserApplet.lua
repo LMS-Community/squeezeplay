@@ -650,7 +650,7 @@ local function _decoratedLabel(group, labelStyle, item, step, menuAccel)
 		-- set an acceleration key, but not for playlists
 		if item.textkey or (item.params and item.params.textkey) then
 			-- FIXME the, el, la, etc articles
-			group:setAccelKey(item.params.textkey)
+			group:setAccelKey(item.textkey or item.params.textkey)
 		end
 
 		if item["radio"] then
