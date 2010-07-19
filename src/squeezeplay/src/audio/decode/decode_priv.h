@@ -99,6 +99,8 @@ extern void decode_output_samples(sample_t *buffer, u32_t samples, int sample_ra
 
 extern int decode_output_samplerate(void);
 
+extern int decode_output_max_rate(void);
+
 extern void decode_output_song_ended(void);
 
 extern void decode_output_set_transition(u32_t type, u32_t period);
