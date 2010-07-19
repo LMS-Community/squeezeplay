@@ -129,6 +129,9 @@ end
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
 	log:warn('notify_playerAlarmState received for ', player, ' with alarmState of ', alarmState)
+	if not player then
+		return
+	end
 	if player:isLocal() then
 		log:warn('**************************** notify_playerAlarmState received: ', alarmState, ' ', alarmNext)
 		-- if there's an existing alarm window on the screen and the rtc alarm isn't firing, 
@@ -253,6 +256,9 @@ end
 
 function notify_playerLoaded(self, player)
 	log:info("notify_playerLoaded(", player, ")")
+	if not player then
+		return
+	end
 	if player == self.localPlayer then
 --		self:_alarm_sledgehammerRearm('notify_playerLoaded')
 		-- check for pending server alarm in case that one is pending instead, since we may have changed players to force 
@@ -265,6 +271,9 @@ end
 
 
 function notify_playerPower(self, player, power)
+	if not player then
+		return
+	end
         if player ~= self.localPlayer then
                 return
         end
@@ -293,6 +302,9 @@ end
 
 function notify_playerModeChange(self, player, mode)
 	log:warn('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
+	if not player then
+		return
+	end
 	local status = decode:status()
 	log:warn('notify_playerModeChange: - audioState is ', status.audioState)
 end
@@ -300,6 +312,9 @@ end
 
 function notify_playerConnected(self, player)
 	log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
+	if not player then
+		return
+	end
 	if player == self.localPlayer then
 --		self:_alarm_sledgehammerRearm('notify_playerConnected')
 		self.server = player:getSlimServer()
@@ -312,6 +327,9 @@ end
 
 function notify_playerDisconnected(self, player)
 	log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
+	if not player then
+		return
+	end
 	if player == self.localPlayer then
 	end
 end
@@ -427,6 +445,21 @@ function soundFallbackAlarm(self)
 			end
 	)
 	self.fadeInTimer:start()
+
+	local alarmTimeoutSeconds = self.localPlayer:getAlarmTimeoutSeconds() or ( 60 * 60 ) -- defaults to 1 hour
+	if alarmTimeoutSeconds ~= 0 then
+		local alarmTimeoutMsecs = alarmTimeoutSeconds * 1000
+		log:info("Fallback alarm will timeout in ", alarmTimeoutSeconds, " seconds")
+		self.fallbackAlarmTimeout = Timer(alarmTimeoutMsecs,
+				function ()
+					if self.alarmInProgress == 'rtc' then
+						log:warn('rtc alarm has timed out')
+						self:_alarmOff()
+					end
+				end
+		)
+		self.fallbackAlarmTimeout:start()
+	end
 
 end
 
@@ -655,6 +688,11 @@ function _alarmOff(self, stopStream)
 		log:warn('_alarmOff: send stopAlarm to connected server')
 		self.localPlayer:stopAlarm()
 	end
+
+	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
+		self.fallbackAlarmTimeout:stop()
+	end
+
 end
 
 

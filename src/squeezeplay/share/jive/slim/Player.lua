@@ -1198,7 +1198,10 @@ function _process_status(self, event)
 	self.playlistCurrentIndex = event.data.playlist_cur_index and tonumber(event.data.playlist_cur_index) + 1
 	self.definedPresets = event.data.preset_loop
 	-- alarm snooze seconds for player, defaults to 540
-	self.alarmSnoozeSeconds = event.data.alarm_snooze_seconds
+	self.alarmSnoozeSeconds  = event.data.alarm_snooze_seconds
+	-- alarm timeout seconds for player, defaults to 3600 (same as server default)
+	self.alarmTimeoutSeconds = event.data.alarm_timeout_seconds
+
 	-- Bug 15814: flag for when the audio hasn't started streaming yet but mode is play
 	self.waitingToPlay = event.data.waitingToPlay or false
 
@@ -1882,6 +1885,10 @@ end
 
 function getAlarmSnoozeSeconds(self)
 	return self.alarmSnoozeSeconds or 540
+end
+
+function getAlarmTimeoutSeconds(self)
+	return self.alarmTimeoutSeconds or 3600
 end
 
 function isConnected(self)
