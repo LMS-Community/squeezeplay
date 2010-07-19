@@ -143,6 +143,31 @@ function Clock:__init(skin, windowStyle)
 	return obj
 end
 
+function Clock:_getHour(time)
+	local theHour = time.hour
+	if self.clock_format_hour == "%I" then
+		theHour = time.hour % 12
+	end
+	return string.format("%02s", tostring(theHour))
+
+end
+
+
+function Clock:_getMinute(time)
+	return string.format("%02s", tostring(time.min))
+end
+
+
+function Clock:_getDate(time)
+	local theDate
+	if self.clock_format_date == "%d%m%Y" then
+		theDate = string.format("%02s", tostring(time.day)) .. string.format("%02s", tostring(time.month)) .. tostring(time.year)
+	else
+		theDate = string.format("%02s", tostring(time.month)) .. string.format("%02s", tostring(time.day)) .. tostring(time.year)
+	end
+	return theDate
+end
+
 DotMatrix = oo.class({}, Clock)
 
 function DotMatrix:__init(ampm, shortDateFormat)
@@ -260,10 +285,11 @@ end
 
 function DotMatrix:Draw()
 
+	local time = os.date("*t")
 
-	local theHour   = os.date(self.clock_format_hour)
-	local theMinute = os.date(self.clock_format_minute)
-	local theDate   = os.date(self.clock_format_date)
+	local theHour   = self:_getHour(time)
+	local theMinute = self:_getMinute(time)
+	local theDate   = self:_getDate(time)
 
 --[[
 	FOR TESTING PURPOSES 
@@ -278,18 +304,15 @@ function DotMatrix:Draw()
 	local theMinute = '59'
 	local theDate   = '12312009'
 --]]
-
 	-- draw hour digits
 	self:DrawClock(string.sub(theHour, 1, 1), 'h1')
 	self:DrawClock(string.sub(theHour, 2, 2), 'h2')
 
 	-- draw minute digits
-	theTime = os.date(self.clock_format_minute)
 	self:DrawClock(string.sub(theMinute, 1, 1), 'm1')
 	self:DrawClock(string.sub(theMinute, 2, 2), 'm2')
 
 	-- draw month digits
-	theTime = os.date(self.clock_format_date)
 	self:DrawDate(string.sub(theDate, 1, 1), 'M1')
 	self:DrawDate(string.sub(theDate, 2, 2), 'M2')
 
@@ -370,8 +393,9 @@ function Analog:_reDraw(screen)
 	local x, y
 
 	-- Setup Time Objects
-	local m = os.date("%M")
-	local h = os.date("%I")
+	local time = os.date("*t")
+	local m = time.min
+	local h = time.hour % 12
 
 	-- Hour Pointer
 	local angle = (360 / 12) * (h + (m/60))
@@ -506,22 +530,24 @@ end
 	
 function Digital:Draw()
 
+	local time = os.date("*t")
+
 	-- string day of week
-	local dayOfWeek   = os.date("%w")
-	local token = "SCREENSAVER_CLOCK_DAY_" .. tostring(dayOfWeek)
+	local dayOfWeek   = tostring(time.wday - 1)
+
+	local token = "SCREENSAVER_CLOCK_DAY_" .. dayOfWeek
 	local dayOfWeekString = self.applet:string(token)
 	self.today:setValue(dayOfWeekString)
 	local widget = self.dateGroup:getWidget('dayofweek')
 	widget:setValue(dayOfWeekString)
 
 	-- numerical day of month
-	local dayOfMonth = os.date("%d")
+	local dayOfMonth = tostring(time.day)
 	widget = self.dateGroup:getWidget('dayofmonth')
 	widget:setValue(dayOfMonth)
 
 	-- string month of year
-	local monthOfYear = os.date("%m")
-	token = "SCREENSAVER_CLOCK_MONTH_" .. tostring(monthOfYear)
+	token = "SCREENSAVER_CLOCK_MONTH_" .. string.format("%02s", tostring(time.month))
 	local monthString = self.applet:string(token)
 	widget = self.dateGroup:getWidget('month')
 	widget:setValue(monthString)
@@ -534,7 +560,7 @@ function Digital:Draw()
 	end
 
 	-- what time is it? it's time to get ill!
-	self:DrawTime()
+	self:DrawTime(time)
 	
 	--FOR DEBUG
 	--[[
@@ -584,10 +610,15 @@ function Digital:DrawMaxTest()
 	widget:setValue('September')
 end
 
+function Digital:DrawTime(time)
 
-function Digital:DrawTime()
-	local theHour   = os.date(self.clock_format_hour)
-	local theMinute = os.date(self.clock_format_minute)
+	if not time then
+		time = os.date("*t")
+	end
+
+	--local theMinute = tostring(time.min)
+	local theMinute = self:_getMinute(time)
+	local theHour   = self:_getHour(time)
 
 	if string.sub(theHour, 1, 1) == '0' then
 		self.h1:setValue('')
@@ -605,7 +636,7 @@ function Digital:DrawTime()
 	
 	-- Draw AM PM
 	if self.useAmPm then
-		-- localized ampm rendering
+		-- localized ampm rendering requires an os.date() call
 		local ampm = os.date("%p")
 		self.ampm:setValue(ampm)
 	end

@@ -254,19 +254,37 @@ function _serverstatusSink(self, event, err)
 			if not self.players[playerId] then
 				self.players[playerId] = Player(self.jnt, playerId)
 			end
+			
+			local player = self.players[playerId]
 
 			-- update player state
 
 			local useSequenceNumber = false
 			local isSequenceNumberInSync = true
-			if self.players[playerId]:isLocal() and player_info.seq_no then
+			if player:isLocal() and player_info.seq_no then
 				useSequenceNumber = true
-				if not self.players[playerId]:isSequenceNumberInSync(tonumber(player_info.seq_no)) then
+				if not player:isSequenceNumberInSync(tonumber(player_info.seq_no)) then
 					isSequenceNumberInSync = false
 				end
 			end
-
-			self.players[playerId]:updatePlayerInfo(self, player_info, useSequenceNumber, isSequenceNumberInSync)
+			
+			-- Bug 16295: ignore serverStatus updates with information about the current player
+			-- because serverStatus from SN can contain out-of-date information (cached query);
+			-- just rely on (player)status notifications for that information,
+			-- unless this status indicates a change of server (possibly from none) for the player
+			-- or the connected status has changed (should be reliable).
+			--
+			-- It is important that these tests allow the first serverstatus for the current player
+			-- to be used because otherwise the correct notifications are not issued and various
+			-- necessary initialization functions are not run, including those that subscribe to
+			-- (player)status notifications.
+			
+			if Player:getCurrentPlayer() ~= player
+				or player:getSlimServer() ~= self
+				or player:isConnected() ~= (tonumber(player_info.connected) == 1)
+			then
+				player:updatePlayerInfo(self, player_info, useSequenceNumber, isSequenceNumberInSync)
+			end
 		end
 	else
 		log:debug(self, ": has no players!")

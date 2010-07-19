@@ -436,6 +436,17 @@ int decode_output_samplerate(void) {
 }
 
 
+int decode_output_max_rate(void) {
+	u32_t max_rate;
+
+	decode_audio_lock();
+	max_rate = decode_audio->max_rate;
+	decode_audio_unlock();
+
+	return max_rate;
+}
+
+
 void decode_output_song_ended(void) {
 	ASSERT_AUDIO_LOCKED();
 
