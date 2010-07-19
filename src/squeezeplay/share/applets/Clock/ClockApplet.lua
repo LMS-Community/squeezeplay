@@ -148,7 +148,7 @@ function Clock:_getHour(time)
 	if self.clock_format_hour == "%I" then
 		theHour = time.hour % 12
 	end
-	return string.format("%2s", tostring(theHour))
+	return string.format("%02s", tostring(theHour))
 
 end
 
@@ -161,9 +161,9 @@ end
 function Clock:_getDate(time)
 	local theDate
 	if self.clock_format_date == "%d%m%Y" then
-		theDate = string.format("%2s", tostring(time.day)) .. string.format("%2s", tostring(time.month)) .. tostring(time.year)
+		theDate = string.format("%02s", tostring(time.day)) .. string.format("%02s", tostring(time.month)) .. tostring(time.year)
 	else
-		theDate = string.format("%2s", tostring(time.month)) .. string.format("%2s", tostring(time.day)) .. tostring(time.year)
+		theDate = string.format("%02s", tostring(time.month)) .. string.format("%02s", tostring(time.day)) .. tostring(time.year)
 	end
 	return theDate
 end
@@ -304,7 +304,6 @@ function DotMatrix:Draw()
 	local theMinute = '59'
 	local theDate   = '12312009'
 --]]
-
 	-- draw hour digits
 	self:DrawClock(string.sub(theHour, 1, 1), 'h1')
 	self:DrawClock(string.sub(theHour, 2, 2), 'h2')
@@ -534,7 +533,8 @@ function Digital:Draw()
 	local time = os.date("*t")
 
 	-- string day of week
-	local dayOfWeek   = tostring(time.wday)
+	local dayOfWeek   = tostring(time.wday - 1)
+
 	local token = "SCREENSAVER_CLOCK_DAY_" .. dayOfWeek
 	local dayOfWeekString = self.applet:string(token)
 	self.today:setValue(dayOfWeekString)
