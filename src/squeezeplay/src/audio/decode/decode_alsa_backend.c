@@ -194,7 +194,6 @@ static void debug_pagefaults()
 	}
 
 	memcpy(&last_usage, &usage, sizeof(struct rusage));
-	LOG_WARN("debug_pagefaults()");
 }
 #endif
 
