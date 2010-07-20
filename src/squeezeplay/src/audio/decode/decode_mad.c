@@ -156,11 +156,11 @@ static void xing_parse(struct decode_mad *self) {
 		self->encoder_padding = 0;
 	}
 	
-	self->lame_samples        = frames * 1152UL;
+	self->lame_samples        = frames * 1152ULL;
 	self->lame_samples_remain = self->lame_samples - self->encoder_delay - self->encoder_padding;
 
 	LOG_DEBUG(log_audio_codec, "encoder delay=%d padding=%d", self->encoder_delay, self->encoder_padding);
-	LOG_DEBUG(log_audio_codec, "total LAME samples %ld", self->lame_samples);
+	LOG_DEBUG(log_audio_codec, "total LAME samples %llu", self->lame_samples);
 }
 
 
@@ -427,9 +427,9 @@ static void decode_mad_output(struct decode_mad *self) {
 	 */
 	if (self->encoder_padding && !streambuf_is_icy()) {
 		if (pcm->length > self->lame_samples_remain) {
-			LOG_DEBUG(log_audio_codec, "Removing encoder padding, lame_samples_remain=%ld", self->lame_samples_remain);
+			LOG_DEBUG(log_audio_codec, "Removing encoder padding, lame_samples_remain=%llu", self->lame_samples_remain);
 
-			pcm->length = self->lame_samples_remain;
+			pcm->length = (unsigned short)self->lame_samples_remain;
 		}
 
 		/* Bug 16233, if total decoded samples gets beyond lame_samples + 1152, assume we were given
@@ -449,8 +449,14 @@ static void decode_mad_output(struct decode_mad *self) {
 			nsamples = (buf - self->output_buffer) / 2;
 			decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
 			
-			if (self->encoder_padding)
-				self->lame_samples_remain -= nsamples;
+			if (self->encoder_padding) {
+				if (nsamples > self->lame_samples_remain) {
+					self->lame_samples_remain = 0;
+				}
+				else {
+					self->lame_samples_remain -= nsamples;
+				}
+			}
 
 			buf = self->output_buffer;
 		}
@@ -460,8 +466,14 @@ static void decode_mad_output(struct decode_mad *self) {
 	if (nsamples) {
 		decode_output_samples(self->output_buffer, nsamples, self->sample_rate);
 		
-		if (self->encoder_padding)
-			self->lame_samples_remain -= nsamples;
+		if (self->encoder_padding) {
+			if (nsamples > self->lame_samples_remain) {
+				self->lame_samples_remain = 0;
+			}
+			else {
+				self->lame_samples_remain -= nsamples;
+			}
+		}
 	}
 
 	/* If we've come to the guard pointer, we're done */
