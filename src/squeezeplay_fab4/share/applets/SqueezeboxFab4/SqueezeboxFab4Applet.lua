@@ -76,9 +76,11 @@ local MIN_BRIGHTNESS_LEVEL = 1
 -- Timer values
 local BRIGHTNESS_REFRESH_RATE = 100						-- 100ms (was 500ms)
 local BRIGHTNESS_OVERRIDE = math.floor( 10 * 1000 / BRIGHTNESS_REFRESH_RATE)	-- 10s (was 6 * 500ms = 3s)
+local BRIGHTNESS_READ_RATE_DIVIDER = 5						-- This gives 2 times a seconds
+
 
 -- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- 40 (was 8)
+local MAX_SMOOTHING_VALUES = math.floor( 4000 / (BRIGHTNESS_REFRESH_RATE * BRIGHTNESS_READ_RATE_DIVIDER))	-- 40 (was 8)
 local luxSmooth = {}
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -94,6 +96,7 @@ local STATIC_LUX_MAX = 500
 local brightCur = MAX_BRIGHTNESS_LEVEL
 local brightTarget = MAX_BRIGHTNESS_LEVEL
 local brightMin = MIN_BRIGHTNESS_LEVEL + 25;
+local brightReadRateDivider = 1
 
 -- brightOverride == 0 -> IDLE
 -- brightOverride > 0  -> ACTIVE (Someone is touching the screen or using a remote)
@@ -218,6 +221,7 @@ function initBrightness(self)
 	brightCur = MAX_BRIGHTNESS_LEVEL
 	brightTarget = MAX_BRIGHTNESS_LEVEL
 	brightMin = settings.brightnessMinimal
+	brightReadRateDivider = 1
 
 	self.brightPrev = self:getBrightness()
 	if self.brightPrev and self.brightPrev == 0 then
@@ -326,32 +330,42 @@ function getSmoothedLux()
 end
 
 
+-- This function is called every 100 ms to make the
+--  brightness ramping up / down smoothly
 function doAutomaticBrightnessTimer(self)
-	local f = io.open(AMBIENT_SYSPATH .. "lux")
-	local lux = f:read("*all")
-	f:close()
-	
-	f = io.open(AMBIENT_SYSPATH .. "adc")
-	local adc = f:read("*all")
-	f:close()
+	-- But only read ambient light sensor value
+	--  every 500 ms to reduce load
+	if brightReadRateDivider > 1 then
+		brightReadRateDivider = brightReadRateDivider - 1
+	else
+		brightReadRateDivider = BRIGHTNESS_READ_RATE_DIVIDER
 
-	local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
+		local f = io.open(AMBIENT_SYSPATH .. "lux")
+		local lux = f:read("*all")
+		f:close()
 	
-	local s, e = string.find(adc, ",")
-	local valCh0 = tonumber(string.sub(adc, 0, s-1))
+		f = io.open(AMBIENT_SYSPATH .. "adc")
+		local adc = f:read("*all")
+		f:close()
 
-	-- If channel 0 (visible and ir light) is at maximum
-	--  the calculated lux value isn't correct anymore
-	--  and goes down again. Use max lux value in this case.
-	if (luxvalue > STATIC_LUX_MAX) or (valCh0 == 65535) then
-		-- Fix calculation for very high lux values
-		luxvalue = STATIC_LUX_MAX
-	end
+		local luxvalue = tonumber(string.sub(lux, 0, string.len(lux)-1))
 	
-	-- Use the table to smooth out ambient value spikes
-	table.insert(luxSmooth, luxvalue)	
-	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
-		table.remove(luxSmooth, 1)
+		local s, e = string.find(adc, ",")
+		local valCh0 = tonumber(string.sub(adc, 0, s-1))
+
+		-- If channel 0 (visible and ir light) is at maximum
+		--  the calculated lux value isn't correct anymore
+		--  and goes down again. Use max lux value in this case.
+		if (luxvalue > STATIC_LUX_MAX) or (valCh0 == 65535) then
+			-- Fix calculation for very high lux values
+			luxvalue = STATIC_LUX_MAX
+		end
+	
+		-- Use the table to smooth out ambient value spikes
+		table.insert(luxSmooth, luxvalue)	
+		if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
+			table.remove(luxSmooth, 1)
+		end
 	end
 	
 	local ambient = self:getSmoothedLux(luxSmooth)	
@@ -574,7 +588,7 @@ function settingsMinBrightnessShow (self, menuItem)
 					if value > brightTarget then
 						self:setBrightness( value)
 					else
-						self:setBrightness( brightTarget)
+						self:setBrightness( math.floor( brightTarget))
 					end
 					
 					-- done is true for 'go' and 'play' but we do not want to leave
