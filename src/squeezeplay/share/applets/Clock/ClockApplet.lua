@@ -147,6 +147,9 @@ function Clock:_getHour(time)
 	local theHour = time.hour
 	if self.clock_format_hour == "%I" then
 		theHour = time.hour % 12
+		if theHour == 0 then
+			theHour = 12
+		end
 	end
 	return self:_padString(theHour)
 
