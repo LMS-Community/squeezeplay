@@ -303,6 +303,7 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 				/* Gain steps */
 				transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
 				transition_gain = 0;
+				transition_sample_step = sample_rate / TRANSITION_STEPS_PER_SECOND;
 				transition_samples_in_step = 0;
 
 				crossfade_started = TRUE;
