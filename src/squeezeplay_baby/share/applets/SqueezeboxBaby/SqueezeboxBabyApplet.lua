@@ -108,9 +108,10 @@ local MIN_BRIGHTNESS_LEVEL_INIT = 20
 
 -- Automatic brightness timer rate
 local BRIGHTNESS_REFRESH_RATE = 100						-- was 500
+local BRIGHTNESS_READ_RATE_DIVIDER = 5						-- This gives 2 times a seconds
 
 -- Lux Value Smoothing
-local MAX_SMOOTHING_VALUES = math.floor( 4000 / BRIGHTNESS_REFRESH_RATE)	-- was 8
+local MAX_SMOOTHING_VALUES = math.floor( 4000 / (BRIGHTNESS_REFRESH_RATE * BRIGHTNESS_READ_RATE_DIVIDER))	-- was 8
 local luxSmooth = {}
 
 -- Maximum number of brightness levels up/down per run of the timer
@@ -121,6 +122,7 @@ local STATIC_AMBIENT_MIN = 90000
 local brightCur = -1
 local brightTarget = -1
 local brightMin = MIN_BRIGHTNESS_LEVEL_INIT
+local brightReadRateDivider = 1
 
 
 function init(self)
@@ -316,6 +318,7 @@ function initBrightness(self)
 	brightCur = MAX_BRIGHTNESS_LEVEL
 	brightTarget = MAX_BRIGHTNESS_LEVEL
 	brightMin = settings.brightnessMinimal
+	brightReadRateDivider = 1
 
 	self.brightPrev = self:getBrightness()
 	if self.brightPrev and self.brightPrev == 0 then
@@ -405,16 +408,26 @@ function getSmoothedLux()
 end
 
 
+-- This function is called every 100 ms to make the
+--  brightness ramping up / down smoothly
 function doAutomaticBrightnessTimer(self)
-	local ambient = sysReadNumber(self, "ambient")
+	-- But only read ambient light sensor value
+	--  every 500 ms to reduce load
+	if brightReadRateDivider > 1 then
+		brightReadRateDivider = brightReadRateDivider - 1
+	else
+		brightReadRateDivider = BRIGHTNESS_READ_RATE_DIVIDER
 
-	-- Use the table to smooth out ambient value spikes
-	table.insert(luxSmooth, ambient)
-	if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
-		table.remove(luxSmooth, 1)
+		local luxvalue = sysReadNumber(self, "ambient")
+
+		-- Use the table to smooth out ambient value spikes
+		table.insert(luxSmooth, luxvalue)
+		if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
+			table.remove(luxSmooth, 1)
+		end
 	end
 
-	ambient = self:getSmoothedLux(luxSmooth)
+	local ambient = self:getSmoothedLux(luxSmooth)
 
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -989,7 +1002,7 @@ function settingsMinBrightnessShow (self, menuItem)
 			if value > brightTarget then
 				self:setBrightness( value)
 			else
-				self:setBrightness( brightTarget)
+				self:setBrightness( math.floor( brightTarget))
 			end
 
 			-- done is true for 'go' and 'play' but we do not want to leave
