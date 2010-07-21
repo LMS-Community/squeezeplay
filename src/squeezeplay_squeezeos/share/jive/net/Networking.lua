@@ -74,6 +74,11 @@ local Process     = require("jive.net.Process")
 local Task        = require("jive.ui.Task")
 local network     = require("jiveWireless")
 
+-- Needed for network health check function
+local DNS         = require("jive.net.DNS")
+local jnt         = jnt
+
+
 module("jive.net.Networking")
 oo.class(_M, Socket)
 
@@ -1936,6 +1941,151 @@ end
 
 --[[
 
+=head2 jive.net.Networking:checkNetworkHealth()
+
+The following checks are done (wired or wireless):
+- Check for a valid network object
+- Check link
+- Check for valid ip address
+- Check for gateway ip address
+- Check for DNS ip address
+- Resolve IP for server_name (normally SN)
+- Ping server_name (normally SN)
+
+While the checks are running status messages are returned
+via callback function. The callback provides three params:
+- continue: true or false
+- err: -1 or 0
+- message: message according to what is happening or failed
+
+self		- network object
+callback	- callback function
+full_check	- includes DNS resolution and ping
+server_name	- server to ping
+
+=cut
+--]]
+
+function checkNetworkHealth(self, callback, full_check, server_name)
+	assert(type(callback) == 'function', "No callback function provided")
+
+	Task("checknetworkhealth", self, function()
+		log:info("checkNetworkHealth task started")
+
+		callback(true, -1, "NOT_CONNECTED")
+
+		-- Check for valid network interface
+		if self == nil then
+			callback(false, -1, "NET_ERROR_NO_NETWORK_INTERFACE")
+			return
+		end
+
+		-- Getting network status (link / no link)
+		callback(true, 0, "NET_INFO_GETTING_NETWORK_STATUS")
+
+		local status = self:t_wpaStatus()
+
+		if self:isWireless() then
+			if status.wpa_state ~= "COMPLETED" then
+				callback(false, -1, "NET_ERROR_WIRELESS_NO_LINK")
+				return
+			end
+			callback(true, 0, "NET_INFO_WIRELESS_LINK_OK")
+		else
+			if status.link ~= true then
+				callback(false, -1, "NET_ERROR_ETHERNET_NO_LINK")
+				return
+			end
+			callback(true, 0, "NET_INFO_ETHERNET_LINK_OK")
+		end
+
+		-- We have a network link (wired or wireless)
+
+		-- Check for valid ip address
+		if status.ip_address == nil or string.match(status.ip_address, "^169.254.") then
+			callback(false, -1, "NET_ERROR_NO_VALID_IP_ADDRESS")
+			return
+		end
+
+		-- We have a valid ip address
+		callback(true, 0, "NET_INFO_IP_ADDRESS", tostring(status.ip_address))
+
+		-- Check for valid gateway
+		if status.ip_gateway == nil then
+			callback(false, -1, "NET_ERROR_NO_VALID_GATEWAY")
+			return
+		end
+
+		-- We have a valid gateway
+		callback(true, 0, "NET_INFO_GATEWAY", tostring(status.ip_gateway))
+
+		-- Check for valid dns
+		if status.ip_dns == nil then
+			callback(false, -1, "NET_ERROR_NO_VALID_DNS")
+			return
+		end
+
+		-- We have a valid dns
+		callback(true, 0, "NET_INFO_DNS", tostring(status.ip_dns))
+
+		-- Stop here if not full check is needed
+		if not full_check then
+			callback(false, 0, "NET_INFO_DNS", tostring(status.ip_dns))
+
+			log:info("checkNetworkHealth task done (part)")
+			return
+		end
+
+		-- Get ip of SN
+		local server_ip, err
+		if DNS:isip(server_name) then
+			server_ip = server_name
+		else
+			callback(true, 0, "NET_INFO_RESOLVING_IP_ADDRESS_FOR", server_name)
+			server_ip, err = DNS:toip(server_name)
+		end
+
+		-- Check for valid SN ip address
+		if server_ip == nil then
+			callback(false, -1, "NET_ERROR_DNS_RESOLUTON_FAILED_FOR", server_name)
+			return
+		end
+
+		-- We have a valid ip address for SN
+		callback(true, 0, tostring(server_name .. ": " .. server_ip))
+
+		-- Ping target
+		callback(true, 0, "NET_INFO_PINGING", server_name)
+
+		-- Ping
+		local pingOK = false
+		pingProc = Process(jnt, "ping -c 1 " .. server_ip)
+		pingProc:read(function(chunk)
+			if chunk then
+				if string.match(chunk, "bytes from") then
+					pingOK = true
+				end
+			else
+				if pingOK then
+					callback(false, 0, "NET_INFO_PING_OK", server_name)
+				else
+					callback(false, -1, "NET_ERROR_PING_NOT_OK", server_name)
+				end
+			end
+		end)
+
+		-- Wait until ping has finished - takes a while especially if it fails
+		while pingProc:status() ~= "dead" do
+			Task:yield()
+		end
+
+		log:info("checkNetworkHealth task done (full)")
+	end):addTask()
+end
+
+
+--[[
+
 =head2 jive.net.Networking:repairNetwork()
 
 Attempt to repair network connction doing the following:
@@ -1944,19 +2094,37 @@ Attempt to repair network connction doing the following:
 - Bring up the active network - this also starts DHCP
 - Conncet to wireless network / wired network
 
+While it's running status messages are returned
+via callback function. The callback provides three params:
+- continue: true or false
+- err: -1 or 0
+- message: message according to what is happening or failed
+
+self		- network object
+callback	- callback function
+
 =cut
 --]]
 
-function repairNetwork(self)
+function repairNetwork(self, callback)
+	assert(type(callback) == 'function', "No callback function provided")
+
 	Task("repairnetwork", self, function()
-		log:info("Repair network - start")
+		log:info("repairNetwork task started")
 
 		local active = self:_ifstate()
 
+		callback(true, 0, "NET_INFO_BRINGING_NETWORK_DOWN")
+
 		self:_ifDown()
+
+		callback(true, 0, "NET_INFO_BRINGING_NETWORK_UP")
+
 		self:_ifUp(active)
 
-		log:info("Repair network - done")
+		callback(false, 0, "NET_INFO_REPAIR_NETWORK_DONE")
+
+		log:info("repairNetwork task done")
 	end):addTask()
 end
 
