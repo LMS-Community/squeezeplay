@@ -1261,8 +1261,8 @@ Utility function to call ifup and ifdown in a process.
 
 function _ifUpDown(self, cmd)
 	-- reading the output of ifup causes the process to block, we
-	-- don't need the output, so send to /dev/null
-	local proc = Process(self.jnt, cmd .. " 2>1 > /dev/null")
+	-- don't need the output, so send stdout and stderr to /dev/null
+	local proc = Process(self.jnt, cmd .. " 2>/dev/null 1>/dev/null")
 	proc:read(
 		function(chunk, err)
 			if err then
@@ -1800,12 +1800,12 @@ function startWPSApp(self, wpsmethod, wpspin)
 --	Seems to be an issue lately - maybe since using the RT kernel?
 --	self:stopWPSApp()
 	log:info("startWPSApp")
-	os.execute("rm /usr/sbin/wps/wps.conf 2>1 > /dev/null &")
+	os.execute("rm /usr/sbin/wps/wps.conf 2>/dev/null 1>/dev/null &")
 	if( wpsmethod == "pbc") then
-		os.execute("killall wpsapp; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>1 > /dev/null &")
+		os.execute("killall wpsapp 2>/dev/null 1>/dev/null; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " 2>/dev/null 1>/dev/null &")
 	else
 		assert( wpspin, debug.traceback())
-		os.execute("killall wpsapp; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " " .. wpspin .. " 2>1 > /dev/null &")
+		os.execute("killall wpsapp 2>/dev/null 1>/dev/null; cd /usr/sbin/wps; ./wpsapp " .. self.interface .. " " .. wpsmethod .. " " .. wpspin .. " 2>/dev/null 1>/dev/null &")
 	end
 end
 
@@ -1820,7 +1820,7 @@ Stops the wpsapp (Marvell) to get passphrase etc. via WPS
 
 function stopWPSApp(self)
 	log:info("stopWPSApp")
-	os.execute("killall wpsapp 2>1 > /dev/null &")
+	os.execute("killall wpsapp 2>/dev/null 1>/dev/null &")
 end
 
 --[[
@@ -1850,7 +1850,7 @@ Stops wpa supplicant
 function stopWPASupplicant(self)
 	log:info("stopWPASupplicant")
 	wpaSupplicantRunning = false
-	os.execute("killall wpa_supplicant 2>1 > /dev/null &")
+	os.execute("killall wpa_supplicant 2>/dev/null 1>/dev/null &")
 	self:close()
 end
 
@@ -1865,7 +1865,7 @@ Restarts wpa cli
 
 function restartWpaCli(self)
 	log:info("restartWpaCli")
-	os.execute("killall wpa_cli; /usr/sbin/wpa_cli -B -a/etc/network/wpa_action 2>1 > /dev/null &")
+	os.execute("killall wpa_cli 2>/dev/null 1>/dev/null; /usr/sbin/wpa_cli -B -a/etc/network/wpa_action 2>/dev/null 1>/dev/null &")
 end
 
 --[[
@@ -1879,7 +1879,7 @@ Stops wpa cli
 
 function stopWpaCli(self)
 	log:info("stopWpaCli")
-	os.execute("killall wpa_cli 2>1 > /dev/null &")
+	os.execute("killall wpa_cli 2>/dev/null 1>/dev/null &")
 end
 
 --[[
@@ -2059,7 +2059,7 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 
 		-- Ping
 		local pingOK = false
-		pingProc = Process(jnt, "ping -c 1 " .. server_ip)
+		local pingProc = Process(jnt, "ping -c 1 " .. server_ip)
 		pingProc:read(function(chunk)
 			if chunk then
 				if string.match(chunk, "bytes from") then
