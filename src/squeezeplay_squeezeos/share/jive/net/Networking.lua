@@ -2036,6 +2036,35 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 			return
 		end
 
+		-- Arping our own ip address
+		callback(true, 0, "NET_INFO_ARPING", tostring(status.ip_address))
+
+		-- Arping
+		local arpingOK = false
+		local arpingProc = Process(jnt, "arping -I " .. self:getName() .. " -f -c 2 -w 5 " .. status.ip_address .. " 2>&1")
+		arpingProc:read(function(chunk)
+			if chunk then
+				if string.match(chunk, "Received 0 reply") then
+					arpingOK = true
+				end
+			else
+				if arpingOK then
+					callback(true, 0, "NET_INFO_ARPING_OK")
+				else
+					callback(false, -1, "NET_ERROR_ARPING_NOT_OK", tostring(status.ip_address))
+				end
+			end
+		end)
+
+		-- Wait until arping has finished
+		while arpingProc:status() ~= "dead" do
+			Task:yield()
+		end
+
+		if not arpingOK then
+			return
+		end
+
 		-- Get ip of SN
 		local server_ip, err
 		if DNS:isip(server_name) then
