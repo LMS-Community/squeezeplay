@@ -26,8 +26,10 @@ local table                  = require("jive.utils.table")
 local Applet                 = require("jive.Applet")
 local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
+local ContextMenuWindow      = require("jive.ui.ContextMenuWindow")
 local Textarea               = require('jive.ui.Textarea')
 local Framework              = require('jive.ui.Framework')
+local Timer                  = require('jive.ui.Timer')
 
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 
@@ -53,131 +55,285 @@ local function _indent(indentSize)
 	return indent
 end
 
+-- method to give menu of hidden items that can be restored individually back to home menu
+-- this feature is currently disabled in the Meta file.
+function restoreHiddenItemMenu(self, menuItem)
+	local settings = self:getSettings()
+
+	local window = Window('home_menu', self:string("RESTORE_HIDDEN_ITEMS"))
+	local menu   = SimpleMenu("menu")
+	local menuTable = jiveMain:getMenuTable()
+	local atLeastOneItem = false
+	for id, item in pairs(menuTable) do
+		if settings[id] == 'hidden' then
+			atLeastOneItem = true
+			menu:addItem({
+				text = item.text,
+				iconStyle = item.iconStyle,
+				callback = function()
+					appletManager:callService("goHome")
+					self:_timedExec( function()
+						self:getSettings()[item.id] = 'home'
+						jiveMain:addItemToNode(item, 'home')
+						self:_storeSettings('home')
+
+						-- immediately jump to the item that's been restored
+						local menu = jiveMain:getNodeMenu('home')
+						local restoredItemIdx = menu:getIdIndex(item.id)
+						menu:setSelectedIndex(restoredItemIdx)
+
+						local somethingHidden = false
+						for id, item in pairs(menuTable) do
+							if self:getSettings()[id] == 'hidden' then
+								somethingHidden = true
+							end
+						end
+						if not somethingHidden then
+							-- remove restore menu items item
+							local restoreHomeItems = jiveMain:getNodeItemById('appletCustomizeHomeRestoreHiddenItems', 'home')
+							jiveMain:removeItemFromNode(restoreHomeItems, 'home')
+							self:getSettings()['appletCustomizeHomeRestoreHiddenItems'] = nil
+							self:_storeSettings('home')
+						end
+					end, 500)
+					return EVENT_CONSUME
+				end,
+			})
+		end
+	end
+
+	local helpText = Textarea( 'help_text', self:string('RESTORE_HIDDEN_ITEMS_HELP') )
+
+	if not atLeastOneItem then
+		window = Window('text_list', self:string("RESTORE_HIDDEN_ITEMS"))
+		helpText    = Textarea('help_text', self:string('NO_HIDDEN_ITEMS') )
+		menu:addItem({
+			text = self:string('CUSTOMIZE_CANCEL'),
+			callback = function()
+				window:hide(Window.transitionPushRight)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	menu:setHeaderWidget(helpText)
+	window:addWidget(menu)
+	window:show()
+end
+
 function menu(self, menuItem)
 
 	log:info("menu")
-	self.currentSettings = self:getSettings()
 
-	-- get the menu table from jiveMain
-	self.menuTable = jiveMain:getMenuTable()
-	-- get items that have been customized
-	--local customTable = jiveMain:getCustomTable()
-
-	-- get the nodes. these become the choices + hidden
-	self.nodeTable = jiveMain:getNodeTable()
-
-	local homeMenuItems = {}
-	
+	local menu = SimpleMenu("menu")
 	-- add an entry for returning everything to defaults
-	table.insert(homeMenuItems,
+	menu:addItem(
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
 			weights = { 2000 },
 			callback = function()
 				self:restoreDefaultsMenu()
+				return EVENT_CONSUME
 			end
 		}
 	)
-
-
-	for id, item in pairs(self.menuTable) do
-		if id ~= 'hidden'
-			and id ~= 'nowhere'
-			-- a small hack to make sounds/effects not appear twice
-			and id ~= 'opmlsounds'
-			then
-			
-		local title, selected
-
-		local complexWeight = jiveMain:getComplexWeight(id, item)
-		local weights = {}
-		item.weights = string.split('%.', complexWeight, weights)
-
-		-- if this is a home item and setting = 'hidden', then unselect
-		if self.currentSettings[id] and self.currentSettings[id] == 'hidden' and item.node == 'home' then
-			selected = false
-		-- elseif setting = 'home' or item.node = 'home', then select
-		elseif (self.currentSettings[id] and self.currentSettings[id] == 'home') or item.node == 'home' then
-			selected = true
-		-- anything else is unselect
-		else
-			selected = false
-		end
-
-		local indentSize = 0
-		for i,v in ipairs(item.weights) do
-			if i > 1 then
-				indentSize = indentSize + 2
-			end
-		end
-		local indent = _indent(indentSize)
-
-		if item.node == 'home' then
-			title = item.text
-		elseif item.homeMenuToken then
-			title = indent .. tostring(self:string(item.homeMenuToken))
-		elseif item.homeMenuText then
-			title = indent .. tostring(item.homeMenuText)
-		else
-			title = indent .. tostring(item.text)
-		end
-	
-		if not item.weights[1] then
-			item.weights = { 2 }
-		end
-		local menuItem
-		if item.noCustom then
-			menuItem = {
-				text = title,
-				weights = item.weights,
-				indent = indentSize,
-				style = 'item_no_arrow'
-			}
-		else
-			menuItem = {
-				text = title,
-				weights = item.weights,
-				indent = indentSize,
-				style = 'item_choice',
-				check = Checkbox(
-					"checkbox",
-					function(object, isSelected)
-						if isSelected then
-							if item.node == 'home' then
-								self:getSettings()[item.id] = nil
-								jiveMain:setNode(item, 'home')
-							else
-								self:getSettings()[item.id] = 'home'
-								jiveMain:addItemToNode(item, 'home')
-							end
-						else
-							if item.node == 'home' then
-								self:getSettings()[item.id] = 'hidden'
-								jiveMain:setNode(item, 'hidden')
-							else
-								self:getSettings()[item.id] = nil
-								jiveMain:removeItemFromNode(item, 'home')
-							end
-						end
-						self:storeSettings()
-					end,
-					selected
-				),
-			}
-		end
-		if not item.synthetic then
-			table.insert(homeMenuItems, menuItem)
-		end
-		end
-	end
-
-	local menu = SimpleMenu("menu",  homeMenuItems  )
-	menu:setComparator(menu.itemComparatorComplexWeightAlpha)
-
 	local window = Window("text_list", self:string("CUSTOMIZE_HOME"), 'settingstitle')
+	local help_text = Textarea('help_text', self:string("CUSTOMIZE_HOME_HELP"))
+	menu:setHeaderWidget(help_text)
 	window:addWidget(menu)
 	window:show()
 end
+
+function homeMenuItemContextMenu(self, item)
+
+	local window = ContextMenuWindow(item.text)
+	local menu   = SimpleMenu("menu")
+
+	menu:addItem({
+		text = self:string("CUSTOMIZE_CANCEL"),
+		sound = "WINDOWHIDE",
+		callback = function()
+			window:hide()
+			return EVENT_CONSUME
+		end
+	})
+
+	local settings = self:getSettings()
+
+	if item.noCustom and item.node == 'home' then
+		menu:addItem({
+			text = self:string('ITEM_CANNOT_BE_HIDDEN'),
+			callback = function()
+				window:hide()
+				return EVENT_CONSUME
+			end
+		})
+	elseif item.node == 'home' or settings[item.id] == 'home' then
+			menu:addItem({
+				text = self:string('REMOVE_FROM_HOME'),
+				callback = function()
+					if item.node == 'home' then
+						
+						-- add restore home menu items at the bottom of the home menu
+						local restoreHomeItems = jiveMain:getNodeItemById('appletCustomizeHomeRestoreHiddenItems', 'advancedSettings')
+						local homeItem = jiveMain:addItemToNode(restoreHomeItems, 'home')
+						self:_timedExec(
+							function()
+								self:getSettings()[homeItem.id] = 'home'
+								jiveMain:setNode(item, 'hidden')
+								self:getSettings()[item.id] = 'hidden'
+								jiveMain:itemToBottom(homeItem, 'home')
+							end
+						)
+				
+					else
+						self:_timedExec(
+							function()
+								self:getSettings()[item.id] = nil
+								jiveMain:removeItemFromNode(item, 'home')
+							end
+						)
+
+					end
+					self:_storeSettings('home')
+					window:hide()
+					return EVENT_CONSUME
+				end
+			})
+	else
+		menu:addItem({
+			text = self:string('ADD_TO_HOME'),
+			callback = function()
+				self:getSettings()[item.id] = 'home'
+				local homeItem = jiveMain:addItemToNode(item, 'home')
+				jiveMain:itemToBottom(homeItem, 'home')
+				window:hide()
+				self:_storeSettings('home')
+
+				self:_timedExec(
+					function()
+						appletManager:callService("goHome")
+						local menu = jiveMain:getNodeMenu('home')
+						local restoredItemIdx = menu:getIdIndex(item.id)
+						menu:setSelectedIndex(restoredItemIdx)
+					end
+				)
+				
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	local node = 'home'
+	if #Framework.windowStack > 1 then
+		node = item.node
+	end
+
+	-- this is for suppressing actions that don't make sense in context, 
+	-- e.g. move to top when already at top
+	local nodeMenu = jiveMain:getNodeMenu(node)
+	local itemIdx  = nodeMenu:getIdIndex(item.id)
+
+	if itemIdx > 1 then
+		menu:addItem({
+			text = self:string("MOVE_TO_TOP"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemToTop(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	if itemIdx < #nodeMenu.items then
+		menu:addItem({
+			text = self:string("MOVE_TO_BOTTOM"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemToBottom(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	if itemIdx > 1 then
+		menu:addItem({
+			text = self:string("MOVE_UP_ONE"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemUpOne(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	if itemIdx < #nodeMenu.items then
+		menu:addItem({
+			text = self:string("MOVE_DOWN_ONE"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemDownOne(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+
+	window:addWidget(menu)
+	window:show(Window.transitionFadeIn)
+	return
+end
+
+-- many of the UI functions of repositioning items work better 
+-- if there's a small delay before execution so the user sees them happening
+function _timedExec(self, func, delay)
+
+	if not delay then
+		delay = 350
+	end
+	local timer = Timer(delay, func, true)
+	timer:start()
+
+end
+
+function _storeSettings(self, node)
+	if not node then
+		return
+	end
+	local menu = jiveMain:getNodeMenu(node)
+	if not menu then
+		log:error('no menu found for ', node)
+	end
+	local menuItems = {}
+	for i, v in ipairs (menu.items) do
+		table.insert(menuItems, v.id)
+        end
+
+	local settings = self:getSettings()
+	settings._nodes[node] = menuItems
+	self:storeSettings()
+end
+
 
 function restoreDefaultsMenu(self, id)
 	local window = Window("help_list", self:string("CUSTOMIZE_RESTORE_DEFAULTS"), 'settingstitle')
@@ -187,6 +343,7 @@ function restoreDefaultsMenu(self, id)
 			sound = "WINDOWHIDE",
 			callback = function()
 				window:hide()
+				return EVENT_CONSUME
 			end
 		},
 		{
@@ -194,17 +351,27 @@ function restoreDefaultsMenu(self, id)
 			sound = "WINDOWSHOW",
 			callback = function()
 				local currentSettings = self:getSettings()
-				for id, node in pairs(currentSettings) do
-					self:getSettings()[id] = nil
-					-- fetch item by id
-					local item = jiveMain:getMenuItem(id)
-					-- replace to original node, remove customNode
-					if item then
-						jiveMain:setNode(item, item.node)
+				for id, customNode in pairs(currentSettings) do
+					if id == '_nodes' then
+						for node, itemList in pairs(customNode) do
+							local menu = jiveMain:getNodeMenu(node)
+							log:info('resorting ', node, ' by weight/alpha')
+							menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+						end
+						self:getSettings()._nodes = {}
+					else
+						self:getSettings()[id] = nil
+						-- fetch item by id
+						local item = jiveMain:getMenuItem(id)
+						-- replace to original node, remove customNode
+						if item then
+							jiveMain:setNode(item, item.node)
+						end
 					end
 				end
 				self:storeSettings()
-				_goHome()
+				appletManager:callService("goHome")
+				return EVENT_CONSUME
 			end
 		},
 	})
@@ -214,8 +381,3 @@ function restoreDefaultsMenu(self, id)
 	window:show()
 end
 
--- goHome
--- pushes the home window to the top
-function _goHome()
-	jiveMain:goHome()
-end

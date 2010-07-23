@@ -351,6 +351,27 @@ function itemComparatorComplexWeightAlpha(a, b)
 
 end
 
+--[[
+
+=head2 jive.ui.Menu.itemComparatorRank
+
+Item comparator to sort items by rank (i.e. using item.rank).
+
+=cut
+--]]
+function itemComparatorRank(a, b)
+	local w
+	if a.rank and b.rank then
+		w = a.rank - b.rank
+	else
+		w = a.weight - b.weight
+	end
+
+	return (w < 0)
+end
+
+
+
 
 --[[
 
