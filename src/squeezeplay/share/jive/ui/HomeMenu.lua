@@ -1,5 +1,5 @@
 
-local assert, pairs, type, tostring, tonumber, setmetatable = assert, pairs, type, tostring, tonumber, setmetatable
+local assert, ipairs, pairs, type, tostring, tonumber, setmetatable = assert, ipairs, pairs, type, tostring, tonumber, setmetatable
 
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
@@ -13,9 +13,12 @@ local Icon          = require("jive.ui.Icon")
 local debug         = require("jive.utils.debug")
 local log           = require("jive.utils.log").logger("squeezeplay.ui")
 
+local appletManager = require("jive.AppletManager")
+
 local EVENT_WINDOW_ACTIVE         = jive.ui.EVENT_WINDOW_ACTIVE
 local EVENT_WINDOW_INACTIVE       = jive.ui.EVENT_WINDOW_INACTIVE
 local EVENT_UNUSED                = jive.ui.EVENT_UNUSED
+
 
 -- our class
 module(..., oo.class)
@@ -158,6 +161,174 @@ function getComplexWeight(self, id, item)
 	end
 end
 
+function setRank(self, item, rank)
+	log:debug('setting rank for ', item.id , ' from ', item.rank, ' to ', rank)
+	item.rank = rank
+end
+
+
+function getWeight(self, item)
+	return item.weight
+end
+
+-- goes through an established home menu node and sets the ranks from 1..N
+-- assists in the ability for CustomizeHomeMenuApplet to move items up/down one in the menu
+-- also needs to be run after any item is added to an already ranked menu
+function rankMenuItems(self, node)
+	if not self.nodeTable and not self.nodeTable[node] then
+		log:error('rankMenuItems not given proper args')
+                return
+        end
+	local menu = self:getNodeMenu(node)
+
+        local rank = 1
+        for i, v in ipairs (menu.items) do
+                self:setRank(v, rank)
+                rank = rank + 1
+		log:debug('v.id: ', v.id, ' rank: ', rank, '--->', v)
+        end
+
+	menu:setComparator(SimpleMenu.itemComparatorRank)
+end
+
+
+function getNodeMenu(self, node)
+	local menu = self.nodeTable and self.nodeTable[node] and self.nodeTable[node].menu
+	if not menu or not menu.items then
+		log:error('no menu object found for ', node)
+                return false
+        end
+	return menu
+end
+
+
+function itemUpOne(self, item, node)
+	if not node then
+		node = 'home'
+	end
+	local menu = self:getNodeMenu(node)
+	if not menu then
+		return
+	end
+	
+	-- first make sure we have a ranked weight menu
+	self:rankMenuItems(node)
+
+	local rank = 1
+	for i, v in ipairs(menu.items) do
+		if v == item then
+			if rank == 1 then
+				log:info('Item is already at the top')
+			else
+				local itemAbove = menu.items[i - 1]
+				self:setRank(itemAbove, rank)
+				self:setRank(v, rank - 1)
+				menu:setSelectedIndex(rank - 1)
+				menu:setComparator(SimpleMenu.itemComparatorRank)
+				break
+			end
+		end
+		rank = rank + 1
+	end
+end
+
+function itemDownOne(self, item, node)
+	if not node then
+		node = 'home'
+	end
+	local menu = self:getNodeMenu(node)
+	if not menu then
+		return
+	end
+
+	-- first make sure the items are ranked in order
+	self:rankMenuItems(node)
+	
+	local rank = 1
+	for i, v in ipairs(menu.items) do
+		if v == item then
+			if rank == #menu.items then
+				log:info('Item is already at the bottom')
+			else
+				local itemBelow = menu.items[i + 1]
+				self:setRank(itemBelow, rank)
+				self:setRank(v, rank + 1)
+				menu:setComparator(SimpleMenu.itemComparatorRank)
+				menu:setSelectedIndex(rank + 1)
+				break
+			end
+		end
+		rank = rank + 1
+	end
+end
+
+function itemToBottom(self, item, node)
+	if not node then
+		node = 'home'
+	end
+	local menu = self:getNodeMenu(node)
+	if not menu then
+		return
+	end
+	
+	-- first make sure the items are ranked in order
+	self:rankMenuItems(node)
+
+	local rank = 1
+	for i, v in ipairs(menu.items) do
+		if v == item then
+			if rank == #menu.items then
+				log:info('Item is already at the bottom')
+			else
+				local bottomIndex = #menu.items
+				-- note: order matters here, you don't want to rankMenuItems until the menu has been resorted
+				self:setRank(v, bottomIndex + 1)
+				menu:setSelectedIndex(bottomIndex)
+				menu:setComparator(SimpleMenu.itemComparatorRank)
+				self:rankMenuItems('home')
+				break
+			end
+		end
+		rank = rank + 1
+	end
+end
+
+
+function itemToTop(self, item, node)
+	if not node then
+		node = 'home'
+	end
+	local menu = self:getNodeMenu(node)
+	if not menu then
+		return
+	end
+
+	-- first make sure the items are ranked in order
+	self:rankMenuItems(node)
+
+	local rank = 1
+	for i, v in ipairs(menu.items) do
+		if v == item then
+			if rank == 1 then
+				log:info('Item is already at the top')
+			else
+				self:setRank(v, 1)
+			end
+		else
+			self:setRank(v, rank + 1)
+
+		end
+		rank = rank + 1
+	end
+	menu:setSelectedIndex(1)
+
+	-- sort menu before ranking it
+	menu:setComparator(SimpleMenu.itemComparatorRank)
+	self:rankMenuItems(node)
+
+end
+
+
 function setTitle(self, title)
 	if title then
 		self.window:setTitle(title)
@@ -240,9 +411,12 @@ function addNode(self, item)
 		return
 	end
 
-	log:debug("JiveMain.addNode: Adding a non-root node, ", item.id)
-
 	item.isANode = 1
+
+	item.cmCallback = function()
+		appletManager:callService("homeMenuItemContextMenu", item)
+		return EVENT_CONSUME
+	end
 
 	if not item.weight then 
 		item.weight = 100
@@ -266,18 +440,6 @@ function addNode(self, item)
 	end
 
 	local window
-	-- FIXME: this if clause is mostly for mini icon support, which is either going obsolete
-	-- or will need to be implemented differently after the skin reorg effort
-	--[[
-	if item.window and item.window.titleStyle then
-		window = Window("text_list", item.text, item.window.titleStyle .. "title")
-	elseif item.titleStyle then
-		window = Window("text_list", item.text, item.titleStyle .. "title")
-	else
-		window = Window("text_list", item.text)
-	end
-	--]]
-
 	if item.windowStyle then
 		window = Window(item.windowStyle, item.text)
 	else
@@ -329,12 +491,34 @@ function addItemToNode(self, item, node)
 	if self.nodeTable[node] then
 		self.nodeTable[node].items[item.id] = item
 		local menuIdx = self.nodeTable[node].menu:addItem(item)
-		if node == 'home' and item.homeMenuText then
+		-- items in the home menu get special handling and a new table created for them
+		if node == 'home' then
 			local labelText = item.homeMenuText
+			if not labelText then
+				if item.text.str then
+					-- FIXME: by grabbing the home menu text directly from item.text.str here, this creates 
+					-- a bug where if the user changes languages these items do not change their language
+					labelText = item.text.str
+				else
+					labelText = item.text
+				end
+			end
 			-- change the menu item's text by creating a new item table with different label text
-			local myItem = _uses(item, { text = labelText })
+			local myItem = _uses(item, { 
+				text = labelText,
+			 })
+			-- rewrite the callback for CM to use myItem instead of item
+			myItem.cmCallback = function()
+				appletManager:callService("homeMenuItemContextMenu", myItem)
+				return EVENT_CONSUME
+			end
 			self.customMenuTable[myItem.id] = myItem
-			self.nodeTable[node].menu:replaceIndex(myItem, menuIdx)
+			self.nodeTable[node].menu:addItem(myItem)
+			self.nodeTable[node].items[myItem.id] = myItem
+			return myItem
+
+		else
+			return item
 		end
 	end
 
@@ -345,6 +529,10 @@ function addItem(self, item)
 	assert(item.id)
 	assert(item.node)
 
+	item.cmCallback = function()
+		appletManager:callService("homeMenuItemContextMenu", item)
+		return EVENT_CONSUME
+	end
 	if item.iconStyle then
 		item.icon = Icon(item.iconStyle)
 	end
@@ -517,6 +705,11 @@ function removeItemById(self, id)
 	end
 end
 
+
+function getNodeItemById(self, id, node)
+	return self.nodeTable and self.nodeTable[node] and self.nodeTable[node].items and self.nodeTable[node].items[id]
+
+end
 
 -- lock an item in the menu
 function lockItem(self, item, ...)

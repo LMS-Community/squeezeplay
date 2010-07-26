@@ -91,6 +91,7 @@ static __inline void log_printf(int level, const char *format, ...) {
 
 /* debug switches */
 #define TEST_LATENCY 0
+#define DEBUG_PAGEFAULTS 0
 
 
 u8_t *decode_fifo_buf;
@@ -177,7 +178,7 @@ do { \
 #define TIMER_CHECK(NAME)
 #endif
 
-
+#if DEBUG_PAGEFAULTS
 static void debug_pagefaults()
 {
  	static struct rusage last_usage;
@@ -194,6 +195,7 @@ static void debug_pagefaults()
 
 	memcpy(&last_usage, &usage, sizeof(struct rusage));
 }
+#endif
 
 
 /* noise source for testing */
@@ -781,7 +783,9 @@ static void *audio_thread_execute(void *data) {
 		if (count++ > count_max) {
 			count = 0;
 
+#if DEBUG_PAGEFAULTS
 			debug_pagefaults();
+#endif
 
 			if (kill(state->parent_pid, 0) < 0) {
 				/* parent is dead, exit */
@@ -1025,7 +1029,9 @@ static int decode_lock_memory()
 		*(decode_fifo_buf + i) = 0;
 	}
 
+#if DEBUG_PAGEFAULTS
 	debug_pagefaults();
+#endif
 	
 	return 0;
 }

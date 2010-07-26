@@ -92,3 +92,54 @@ CUSTOMIZE_RESTORE_DEFAULTS_HELP
 	RU	Нажмите кнопку "Продолжить", чтобы удалить все организационные настройки пользовательского меню.
 	SV	Välj Fortsätt om du vill ta bort alla anpassade inställningar för menyordning
 
+RESTORE_HIDDEN_ITEMS
+	EN	Restore Home Menu Items
+
+REMOVE_FROM_HOME
+	EN	Hide from Home Menu
+
+ADD_TO_HOME
+	EN	Add to Home Menu
+
+RESTORE_HIDDEN_ITEMS_HELP
+	EN	Select an item to restore to the Home Menu. The following items have been hidden from view:
+
+CUSTOMIZE_HOME_HELP
+	EN	By pressing the + button on a selected Settings menu item and choosing "Add to Home Menu", the item can be added to the Home Menu. Items already in the Home Menu can be hidden from view via the same method.
+
+CUSTOMIZE_HOME_HELP_FAB4
+	EN	Touch-hold on a selected Settings Menu item and choose "Add to Home Menu" to add the item to the Home Menu. Items already in the Home Menu can be hidden from view via the same method.
+
+NONE
+	CS	Žádný
+	DA	Ingen
+	DE	Keine
+	EN	None
+	ES	Ninguno
+	FI	Ei mitään
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+	NO	Ingen
+	PL	Brak
+	RU	Нет
+	SV	Ingen
+
+NO_HIDDEN_ITEMS
+	EN	Currently no items are hidden from view on the Home Menu.
+
+ITEM_CANNOT_BE_HIDDEN
+	EN	This item cannot be hidden
+
+MOVE_TO_TOP
+	EN	Move to top
+
+MOVE_TO_BOTTOM
+	EN	Move to bottom
+
+MOVE_UP_ONE
+	EN	Move up one
+
+MOVE_DOWN_ONE
+	EN	Move down one
+

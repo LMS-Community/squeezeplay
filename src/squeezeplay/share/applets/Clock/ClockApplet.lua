@@ -147,23 +147,34 @@ function Clock:_getHour(time)
 	local theHour = time.hour
 	if self.clock_format_hour == "%I" then
 		theHour = time.hour % 12
+		if theHour == 0 then
+			theHour = 12
+		end
 	end
-	return string.format("%02s", tostring(theHour))
+	return self:_padString(theHour)
 
 end
 
+function Clock:_padString(number)
+	if number < 10 then
+		return "0" .. tostring(number)
+	else
+		return tostring(number)
+	end
+end
 
 function Clock:_getMinute(time)
-	return string.format("%02s", tostring(time.min))
+	return self:_padString(time.min)
 end
 
 
 function Clock:_getDate(time)
 	local theDate
 	if self.clock_format_date == "%d%m%Y" then
-		theDate = string.format("%02s", tostring(time.day)) .. string.format("%02s", tostring(time.month)) .. tostring(time.year)
+		theDate = self:_padString(time.day) .. self:_padString(time.month) .. tostring(time.year)
+		
 	else
-		theDate = string.format("%02s", tostring(time.month)) .. string.format("%02s", tostring(time.day)) .. tostring(time.year)
+		theDate = self:_padString(time.month) .. self:_padString(time.day) .. tostring(time.year)
 	end
 	return theDate
 end
@@ -547,7 +558,7 @@ function Digital:Draw()
 	widget:setValue(dayOfMonth)
 
 	-- string month of year
-	token = "SCREENSAVER_CLOCK_MONTH_" .. string.format("%02s", tostring(time.month))
+	token = "SCREENSAVER_CLOCK_MONTH_" .. self:_padString(time.month)
 	local monthString = self.applet:string(token)
 	widget = self.dateGroup:getWidget('month')
 	widget:setValue(monthString)
