@@ -88,13 +88,6 @@ function restoreHiddenItemMenu(self, menuItem)
 								somethingHidden = true
 							end
 						end
-						if not somethingHidden then
-							-- remove restore menu items item
-							local restoreHomeItems = jiveMain:getNodeItemById('appletCustomizeHomeRestoreHiddenItems', 'home')
-							jiveMain:removeItemFromNode(restoreHomeItems, 'home')
-							self:getSettings()['appletCustomizeHomeRestoreHiddenItems'] = nil
-							self:_storeSettings('home')
-						end
 					end, 500)
 					return EVENT_CONSUME
 				end,
@@ -126,22 +119,48 @@ function menu(self, menuItem)
 	log:info("menu")
 
 	local menu = SimpleMenu("menu")
+	-- add an entry for help
+	menu:addItem(
+		{
+			text = self:string('GLOBAL_HELP'),
+			callback = function()
+				self:helpWindow()
+			end
+		}
+	)
 	-- add an entry for returning everything to defaults
 	menu:addItem(
 		{
 			text = self:string('CUSTOMIZE_RESTORE_DEFAULTS'),
-			weights = { 2000 },
 			callback = function()
 				self:restoreDefaultsMenu()
 				return EVENT_CONSUME
 			end
 		}
 	)
-	local window = Window("text_list", self:string("CUSTOMIZE_HOME"), 'settingstitle')
-	local help_text = Textarea('help_text', self:string("CUSTOMIZE_HOME_HELP"))
-	menu:setHeaderWidget(help_text)
+	-- add an entry for restoring hidden items
+	menu:addItem(
+		{
+			text = self:string("RESTORE_HIDDEN_ITEMS"),
+			callback = function()
+				self:restoreHiddenItemMenu()
+				return EVENT_CONSUME
+			end
+		}
+	)
+	local helpText = Textarea( 'help_text', self:string('CUSTOMIZE_HOME_HELP') )
+	menu:setHeaderWidget(helpText)
+	local window = Window("text_list", self:string("CUSTOMIZE_HOME"))
 	window:addWidget(menu)
 	window:show()
+end
+
+function helpWindow(self)
+	local help_text = Textarea('help_text', self:string("CUSTOMIZE_HOME_MORE_HELP"))
+	local window = Window("information", self:string("CUSTOMIZE_HOME"))
+	window:addWidget(help_text)
+	window:show()
+
 end
 
 function homeMenuItemContextMenu(self, item)
@@ -174,15 +193,10 @@ function homeMenuItemContextMenu(self, item)
 				callback = function()
 					if item.node == 'home' then
 						
-						-- add restore home menu items at the bottom of the home menu
-						local restoreHomeItems = jiveMain:getNodeItemById('appletCustomizeHomeRestoreHiddenItems', 'advancedSettings')
-						local homeItem = jiveMain:addItemToNode(restoreHomeItems, 'home')
 						self:_timedExec(
 							function()
-								self:getSettings()[homeItem.id] = 'home'
 								jiveMain:setNode(item, 'hidden')
 								self:getSettings()[item.id] = 'hidden'
-								jiveMain:itemToBottom(homeItem, 'home')
 							end
 						)
 				

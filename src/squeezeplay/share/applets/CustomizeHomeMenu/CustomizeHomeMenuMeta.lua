@@ -38,7 +38,6 @@ function registerApplet(self)
 	end
 
 	jiveMain:addItem(self:menuItem('appletCustomizeHome', 'settings', "CUSTOMIZE_HOME", function(applet, ...) applet:menu(...) end, 55, nil, "hm_appletCustomizeHome"))
-	jiveMain:addItem(self:menuItem('appletCustomizeHomeRestoreHiddenItems', 'advancedSettings', "RESTORE_HIDDEN_ITEMS", function(applet, ...) applet:restoreHiddenItemMenu(...) end, _, nil, _))
 
 end
 
