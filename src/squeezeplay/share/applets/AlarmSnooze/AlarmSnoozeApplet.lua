@@ -459,7 +459,8 @@ function soundFallbackAlarm(self)
 						log:warn('rtc alarm has timed out')
 						self:_alarmOff()
 					end
-				end
+				end,
+				true
 		)
 		if self.fallbackAlarmTimeout:isRunning() then
 			self.fallbackAlarmTimeout:restart()
@@ -668,6 +669,7 @@ function _silenceFallbackAlarm(self)
 		self.localPlayer:volumeLocal(self.previousVolume)
 	end
 	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
+		log:warn('stopping fallback alarm timeout timer')
 		self.fallbackAlarmTimeout:stop()
 	end
 end
