@@ -88,6 +88,9 @@ function init(self, ...)
 			log:warn('**** self.localPlayer.alarmState: ', self.localPlayer:getAlarmState())
 			log:warn('**** RTC fallback running?:       ', self.RTCAlarmTimer:isRunning())
 			log:warn('**** self.server:                 ', self.server)
+			if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
+			log:warn('**** Fallback timeout running?:   ', self.fallbackAlarmTimeout:isRunning())
+			end
 			if self.server then
 				log:warn('**** self.server.mac:                 ', self.server.mac)
 			end
@@ -456,11 +459,15 @@ function soundFallbackAlarm(self)
 						log:warn('rtc alarm has timed out')
 						self:_alarmOff()
 					end
-				end
+				end,
+				true
 		)
-		self.fallbackAlarmTimeout:start()
+		if self.fallbackAlarmTimeout:isRunning() then
+			self.fallbackAlarmTimeout:restart()
+		else
+			self.fallbackAlarmTimeout:start()
+		end
 	end
-
 end
 
 
@@ -660,6 +667,10 @@ function _silenceFallbackAlarm(self)
 	if self.previousVolume then
 		log:warn('setting player back to self.previousVolume: ', self.previousVolume)
 		self.localPlayer:volumeLocal(self.previousVolume)
+	end
+	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
+		log:warn('stopping fallback alarm timeout timer')
+		self.fallbackAlarmTimeout:stop()
 	end
 end
 

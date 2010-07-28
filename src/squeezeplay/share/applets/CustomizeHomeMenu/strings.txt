@@ -93,7 +93,7 @@ CUSTOMIZE_RESTORE_DEFAULTS_HELP
 	SV	Välj Fortsätt om du vill ta bort alla anpassade inställningar för menyordning
 
 RESTORE_HIDDEN_ITEMS
-	EN	Restore Home Menu Items
+	EN	Restore Hidden Menu items
 
 REMOVE_FROM_HOME
 	EN	Hide from Home Menu
@@ -105,9 +105,12 @@ RESTORE_HIDDEN_ITEMS_HELP
 	EN	Select an item to restore to the Home Menu. The following items have been hidden from view:
 
 CUSTOMIZE_HOME_HELP
-	EN	By pressing the + button on a selected Settings menu item and choosing "Add to Home Menu", the item can be added to the Home Menu. Items already in the Home Menu can be hidden from view via the same method.
+	EN	Select help for more information
 
-CUSTOMIZE_HOME_HELP_FAB4
+CUSTOMIZE_HOME_MORE_HELP
+	EN	The home menu of your Squeezebox as well as several submenus can be customized, both in what items appear on the menu as well as what order the items take. Pressing the + button on a selected menu item raises a context menu that presents you with several options for customization of that item.
+
+CUSTOMIZE_HOME_MORE_HELP_FAB4
 	EN	Touch-hold on a selected Settings Menu item and choose "Add to Home Menu" to add the item to the Home Menu. Items already in the Home Menu can be hidden from view via the same method.
 
 NONE
