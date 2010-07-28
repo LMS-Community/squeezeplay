@@ -77,6 +77,7 @@ local network     = require("jiveWireless")
 -- Needed for network health check function
 local DNS         = require("jive.net.DNS")
 local jnt         = jnt
+local SocketTcp   = require("jive.net.SocketTcp")
 
 
 module("jive.net.Networking")
@@ -1949,8 +1950,11 @@ The following checks are done (wired or wireless):
 - Check for valid ip address
 - Check for gateway ip address
 - Check for DNS ip address
-- Resolve IP for server_name (normally SN)
-- Ping server_name (normally SN)
+The following checks are only done if full_check is true
+- Check if our ip address is already used by another device
+- Resolve ip address for server (SC or SN)
+- Ping server (SC or SN)
+- Try to connect to port 3483 and 9000
 
 While the checks are running status messages are returned
 via callback function. The callback provides three params:
@@ -1960,84 +1964,91 @@ via callback function. The callback provides three params:
 
 self		- network object
 callback	- callback function
-full_check	- includes DNS resolution and ping
-server_name	- server to ping
+full_check	- includes ip check, DNS resolution, ping and ports test
+server		- server to ping and test ports
 
 =cut
 --]]
 
-function checkNetworkHealth(self, callback, full_check, server_name)
+function checkNetworkHealth(self, callback, full_check, server)
 	assert(type(callback) == 'function', "No callback function provided")
 
 	Task("checknetworkhealth", self, function()
 		log:info("checkNetworkHealth task started")
 
-		callback(true, -1, "NOT_CONNECTED")
+		callback(true, -1, "NET_CONNECTION_NOK")
 
+		-- ------------------------------------------------------------
 		-- Check for valid network interface
 		if self == nil then
-			callback(false, -1, "NET_ERROR_NO_NETWORK_INTERFACE")
+			callback(false, -1, "NET_INTERFACE_NOK")
 			return
 		end
 
+		-- ------------------------------------------------------------
 		-- Getting network status (link / no link)
-		callback(true, 0, "NET_INFO_GETTING_NETWORK_STATUS")
+		callback(true, 0, "NET_LINK")
 
 		local status = self:t_wpaStatus()
 
 		if self:isWireless() then
 			if status.wpa_state ~= "COMPLETED" then
-				callback(false, -1, "NET_ERROR_WIRELESS_NO_LINK")
+				callback(false, -1, "NET_LINK_WIRELESS_NOK")
 				return
 			end
-			callback(true, 0, "NET_INFO_WIRELESS_LINK_OK")
+			callback(true, 0, "NET_LINK_WIRELESS_OK")
 		else
 			if status.link ~= true then
-				callback(false, -1, "NET_ERROR_ETHERNET_NO_LINK")
+				callback(false, -1, "NET_LINK_ETHERNET_NOK")
 				return
 			end
-			callback(true, 0, "NET_INFO_ETHERNET_LINK_OK")
+			callback(true, 0, "NET_LINK_ETHERNET_OK")
 		end
 
 		-- We have a network link (wired or wireless)
 
+		-- ------------------------------------------------------------
 		-- Check for valid ip address
 		if status.ip_address == nil or string.match(status.ip_address, "^169.254.") then
-			callback(false, -1, "NET_ERROR_NO_VALID_IP_ADDRESS")
+			callback(false, -1, "NET_IP_NOK")
 			return
 		end
 
 		-- We have a valid ip address
-		callback(true, 0, "NET_INFO_IP_ADDRESS", tostring(status.ip_address))
+		callback(true, 0, "NET_IP_OK", tostring(status.ip_address))
 
+		-- ------------------------------------------------------------
 		-- Check for valid gateway
 		if status.ip_gateway == nil then
-			callback(false, -1, "NET_ERROR_NO_VALID_GATEWAY")
+			callback(false, -1, "NET_GATEWAY_NOK")
 			return
 		end
 
 		-- We have a valid gateway
-		callback(true, 0, "NET_INFO_GATEWAY", tostring(status.ip_gateway))
+		callback(true, 0, "NET_GATEWAY_OK", tostring(status.ip_gateway))
 
-		-- Check for valid dns
+		-- ------------------------------------------------------------
+		-- Check for valid dns sever ip
 		if status.ip_dns == nil then
-			callback(false, -1, "NET_ERROR_NO_VALID_DNS")
+			callback(false, -1, "NET_DNS_NOK")
 			return
 		end
 
-		-- We have a valid dns
-		callback(true, 0, "NET_INFO_DNS", tostring(status.ip_dns))
+		-- We have a valid dns server ip
+		callback(true, 0, "NET_DNS_OK", tostring(status.ip_dns))
 
+		-- ------------------------------------------------------------
 		-- Stop here if not full check is needed
 		if not full_check then
-			callback(false, 0, "NET_INFO_DNS", tostring(status.ip_dns))
+			callback(false, 0, "NET_DNS_OK", tostring(status.ip_dns))
 
 			log:info("checkNetworkHealth task done (part)")
 			return
 		end
 
+		-- ------------------------------------------------------------
 		-- Arping our own ip address
-		callback(true, 0, "NET_INFO_ARPING", tostring(status.ip_address))
+		callback(true, 0, "NET_ARPING", tostring(status.ip_address))
 
 		-- Arping
 		local arpingOK = false
@@ -2049,9 +2060,9 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 				end
 			else
 				if arpingOK then
-					callback(true, 0, "NET_INFO_ARPING_OK")
+					callback(true, 0, "NET_ARPING_OK")
 				else
-					callback(false, -1, "NET_ERROR_ARPING_NOT_OK", tostring(status.ip_address))
+					callback(false, -1, "NET_ARPING_NOK", tostring(status.ip_address))
 				end
 			end
 		end)
@@ -2065,28 +2076,39 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 			return
 		end
 
-		-- Get ip of SN
+		-- ------------------------------------------------------------
+		-- Check for server
+		if not server then
+			callback(false, -1, "NET_SERVER_NOK")
+			return
+		end
+
+		-- ------------------------------------------------------------
+		-- Get ip of server (SC or SN)
+		local server_uri, server_port = server:getIpPort()
+		local server_name = server:getName()
+
 		local server_ip, err
-		if DNS:isip(server_name) then
-			server_ip = server_name
+		if DNS:isip(server_uri) then
+			server_ip = server_uri
 		else
-			callback(true, 0, "NET_INFO_RESOLVING_IP_ADDRESS_FOR", server_name)
-			server_ip, err = DNS:toip(server_name)
+			callback(true, 0, "NET_RESOLVE", server_name)
+			server_ip, err = DNS:toip(server_uri)
 		end
 
 		-- Check for valid SN ip address
 		if server_ip == nil then
-			callback(false, -1, "NET_ERROR_DNS_RESOLUTON_FAILED_FOR", server_name)
+			callback(false, -1, "NET_RESOLVE_NOK", server_name)
 			return
 		end
 
 		-- We have a valid ip address for SN
-		callback(true, 0, tostring(server_name .. ": " .. server_ip))
+		callback(true, 0, "NET_RESOLVE_OK", server_name .. ": " .. server_ip)
 
-		-- Ping target
-		callback(true, 0, "NET_INFO_PINGING", server_name)
+		-- ------------------------------------------------------------
+		-- Ping server (SC or SN)
+		callback(true, 0, "NET_PING", server_name)
 
-		-- Ping
 		local pingOK = false
 		local pingProc = Process(jnt, "ping -c 1 " .. server_ip)
 		pingProc:read(function(chunk)
@@ -2096,9 +2118,9 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 				end
 			else
 				if pingOK then
-					callback(false, 0, "NET_INFO_PING_OK", server_name)
+					callback(true, 0, "NET_PING_OK", server_name .. " (" .. server_ip .. ")")
 				else
-					callback(false, -1, "NET_ERROR_PING_NOT_OK", server_name)
+					callback(false, -1, "NET_PING_NOK", server_name .. " (" .. server_ip .. ")")
 				end
 			end
 		end)
@@ -2106,6 +2128,70 @@ function checkNetworkHealth(self, callback, full_check, server_name)
 		-- Wait until ping has finished - takes a while especially if it fails
 		while pingProc:status() ~= "dead" do
 			Task:yield()
+		end
+
+		if not pingOK then
+			return
+		end
+
+		-- ------------------------------------------------------------
+		-- Port 3483 test
+		callback(true, 0, "NET_PORT", server_name .. " (3483)")
+
+		local portOk_3483 = false
+		local tcp_3483 = SocketTcp(jnt, server_ip, 3483, "porttest")
+		tcp_3483:t_connect()
+		tcp_3483:t_addWrite(function(err)
+			local res, err = tcp_3483.t_sock:send(" ")
+			if not err then
+				portOk_3483 = true
+			end
+
+			if portOk_3483 then
+				callback(true, 0, "NET_PORT_OK", server_name .. " (3483)")
+			else
+				callback(false, 0, "NET_PORT_NOK", server_name .. " (3483)")
+			end
+			tcp_3483:close()
+		end)
+
+		-- Wait until port test has finished
+		while tcp_3483.t_sock ~= nil do
+			Task:yield()
+		end
+
+		if not portOk_3483 then
+			return
+		end
+
+		-- ------------------------------------------------------------
+		-- Port 9000 test
+		callback(true, 0, "NET_PORT", server_name .. " (" .. server_port .. ")")
+
+		local portOk = false
+		local tcp = SocketTcp(jnt, server_ip, server_port, "porttest")
+		tcp:t_connect()
+		tcp:t_addWrite(function(err)
+			local res, err = tcp.t_sock:send(" ")
+			if not err then
+				portOk = true
+			end
+
+			if portOk then
+				callback(false, 0, "NET_PORT_OK", server_name .. " (" .. server_port .. ")")
+			else
+				callback(false, 0, "NET_PORT_NOK", server_name .. " (" .. server_port .. ")")
+			end
+			tcp:close()
+		end)
+
+		-- Wait until port test has finished
+		while tcp.t_sock ~= nil do
+			Task:yield()
+		end
+
+		if not portOk then
+			return
 		end
 
 		log:info("checkNetworkHealth task done (full)")
@@ -2121,7 +2207,7 @@ Attempt to repair network connction doing the following:
 - Bring down the active interface - this also stops DHCP
 - Disconnect from wireless network / wired network
 - Bring up the active network - this also starts DHCP
-- Conncet to wireless network / wired network
+- Connect to wireless network / wired network
 
 While it's running status messages are returned
 via callback function. The callback provides three params:
@@ -2143,15 +2229,15 @@ function repairNetwork(self, callback)
 
 		local active = self:_ifstate()
 
-		callback(true, 0, "NET_INFO_BRINGING_NETWORK_DOWN")
+		callback(true, 0, "NET_BRINGING_NETWORK_DOWN")
 
 		self:_ifDown()
 
-		callback(true, 0, "NET_INFO_BRINGING_NETWORK_UP")
+		callback(true, 0, "NET_BRINGING_NETWORK_UP")
 
 		self:_ifUp(active)
 
-		callback(false, 0, "NET_INFO_REPAIR_NETWORK_DONE")
+		callback(false, 0, "NET_REPAIR_NETWORK_DONE")
 
 		log:info("repairNetwork task done")
 	end):addTask()
