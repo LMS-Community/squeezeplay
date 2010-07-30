@@ -179,6 +179,26 @@ function homeMenuItemContextMenu(self, item)
 
 	local settings = self:getSettings()
 
+	-- theItem is either the special custom home item for an app
+	-- use theItem instead of item for the add/remove to home actions
+	-- use item for the reordering actions
+	local theItem = item
+	local customHomeItem = nil
+	local hiddenCustomHomeItem = nil
+	if item.node ~= 'home' then
+		local id = 'hm_' .. item.id
+		customHomeItem = jiveMain:getNodeItemById(id, 'home')
+		if not customHomeItem then
+			customHomeItem = jiveMain:getNodeItemById(id, 'hidden')
+			if customHomeItem then
+				hiddenCustomHomeItem = true
+			end
+		end
+	end
+	if customHomeItem then
+		theItem = customHomeItem
+	end
+
 	if item.noCustom and item.node == 'home' then
 		menu:addItem({
 			text = self:string('ITEM_CANNOT_BE_HIDDEN'),
@@ -187,24 +207,24 @@ function homeMenuItemContextMenu(self, item)
 				return EVENT_CONSUME
 			end
 		})
-	elseif item.node == 'home' or settings[item.id] == 'home' then
+	elseif item.node == 'home' or settings[item.id] == 'home' or (customHomeItem and not hiddenCustomHomeItem) then
 			menu:addItem({
 				text = self:string('REMOVE_FROM_HOME'),
 				callback = function()
-					if item.node == 'home' then
+					if theItem.node == 'home' then
 						
 						self:_timedExec(
 							function()
-								jiveMain:setNode(item, 'hidden')
-								self:getSettings()[item.id] = 'hidden'
+								jiveMain:setNode(theItem, 'hidden')
+								self:getSettings()[theItem.id] = 'hidden'
 							end
 						)
 				
 					else
 						self:_timedExec(
 							function()
-								self:getSettings()[item.id] = nil
-								jiveMain:removeItemFromNode(item, 'home')
+								self:getSettings()[theItem.id] = nil
+								jiveMain:removeItemFromNode(theItem, 'home')
 							end
 						)
 
@@ -218,8 +238,8 @@ function homeMenuItemContextMenu(self, item)
 		menu:addItem({
 			text = self:string('ADD_TO_HOME'),
 			callback = function()
-				self:getSettings()[item.id] = 'home'
-				local homeItem = jiveMain:addItemToNode(item, 'home')
+				self:getSettings()[theItem.id] = 'home'
+				local homeItem = jiveMain:addItemToNode(theItem, 'home')
 				jiveMain:itemToBottom(homeItem, 'home')
 				window:hide()
 				self:_storeSettings('home')
@@ -228,7 +248,7 @@ function homeMenuItemContextMenu(self, item)
 					function()
 						appletManager:callService("goHome")
 						local menu = jiveMain:getNodeMenu('home')
-						local restoredItemIdx = menu:getIdIndex(item.id)
+						local restoredItemIdx = menu:getIdIndex(theItem.id)
 						menu:setSelectedIndex(restoredItemIdx)
 					end
 				)
@@ -247,7 +267,6 @@ function homeMenuItemContextMenu(self, item)
 	-- e.g. move to top when already at top
 	local nodeMenu = jiveMain:getNodeMenu(node)
 	local itemIdx  = nodeMenu:getIdIndex(item.id)
-
 	if itemIdx > 1 then
 		menu:addItem({
 			text = self:string("MOVE_TO_TOP"),
@@ -317,6 +336,7 @@ function homeMenuItemContextMenu(self, item)
 	window:show(Window.transitionFadeIn)
 	return
 end
+
 
 -- many of the UI functions of repositioning items work better 
 -- if there's a small delay before execution so the user sees them happening
