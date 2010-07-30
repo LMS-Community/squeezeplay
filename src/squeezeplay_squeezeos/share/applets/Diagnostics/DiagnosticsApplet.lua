@@ -1,13 +1,15 @@
 
 local ipairs, tostring, tonumber = ipairs, tostring, tonumber
 
+-- NETWORK HEALTH STUFF
+local type, pairs, setmetatable = type, pairs, setmetatable
+
 -- stuff we use
 local oo               = require("loop.simple")
 local io               = require("io")
 local math             = require("math")
 local string           = require("string")
 local table            = require("jive.utils.table")
-local lfs              = require("lfs")
 
 local Applet           = require("jive.Applet")
 local System           = require("jive.System")
@@ -24,8 +26,11 @@ local Task             = require("jive.ui.Task")
 local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 
-local debug            = require("jive.utils.debug")
-
+-- NETWORK HEALTH STUFF
+local Popup                  = require("jive.ui.Popup")
+local Icon                   = require("jive.ui.Icon")
+local Tile                   = require("jive.ui.Tile")
+local jive = jive
 
 local jnt = jnt
 local appletManager    = appletManager
@@ -36,19 +41,36 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local tests = {
+local generalTests = {
       "FIRMWARE_VERSION",
       "HARDWARE_VERSION",
       "MAC_ADDRESS",
+      "CURRENT_PLAYER",
+      "PLAYER_TYPE",
+      "UPTIME",
+      "MEMORY",
+}
+
+local wirelessTests = {
       "WLAN_SSID",
       "WLAN_ENCRYPTION",
       "WLAN_STRENGTH",
       -- (for testing): "WLAN_SNR",
+      "IP_ADDRESS",
+      "SUBNET_MASK",
+      "GATEWAY",
+      "DNS_SERVER",
+}
+
+local ethernetTests = {
       "ETH_CONNECTION",
       "IP_ADDRESS",
       "SUBNET_MASK",
       "GATEWAY",
       "DNS_SERVER",
+}
+
+local serverTests = {
       "SN_ADDRESS",
       "SN_PING",
       "SN_PORT_3483",
@@ -59,21 +81,17 @@ local tests = {
       "SC_PING",
       "SC_PORT_3483",
       "SC_PORT_9000",
-      "CURRENT_PLAYER",
-      "PLAYER_TYPE",
-      "UPTIME",
-      "MEMORY",
 }
 
 local powerTests = {
       "MSP_VERSION",
+      "POWER_MODE",
+      "WALL_VOLTAGE",
+      "CHARGE_STATE",
+      "BATTERY_TEMPERATURE",
       "BATTERY_VOLTAGE",
       "BATTERY_VMON1",
       "BATTERY_VMON2",
-      "WALL_VOLTAGE",
-      "BATTERY_TEMPERATURE",
-      "POWER_MODE",
-      "CHARGE_STATE",
 }
 
 local powerMode = {
@@ -91,6 +109,7 @@ local chargerState = {
 	  ["24"] = "BATT_CHARGING_PAUSED",
 }
 
+
 function setValue(self, key, value, customLabel)
 	if not value then
 		value = '-'
@@ -98,18 +117,10 @@ function setValue(self, key, value, customLabel)
 
 	-- if we have customLabelArgs, we want to insert those first to the string args
 	if customLabel then
-		self.diagMenu:setText(self.labels[key], self:string(key, tostring(customLabel), value))
+		self.menu:setText(self.labels[key], self:string(key, tostring(customLabel), value))
 	else
-		self.diagMenu:setText(self.labels[key], self:string(key, value))
+		self.menu:setText(self.labels[key], self:string(key, value))
 	end
-end
-
-
-function setPowerValue(self, key, value)
-	if not value then
-		value = '-'
-	end
-	self.powerDiagMenu:setText(self.labels[key], self:string(key, value))
 end
 
 
@@ -333,6 +344,7 @@ function systemStatus(self)
 	self:setValue("MEMORY", memory)
 end
 
+
 function _getSysValue(self, param)
 
 	local f = io.open("/sys/bus/i2c/devices/1-0010/" .. param)
@@ -342,6 +354,7 @@ function _getSysValue(self, param)
 
 	return value
 end
+
 
 function _getPowerSysValue(self, param)
 
@@ -354,27 +367,61 @@ function _getPowerSysValue(self, param)
 	return value
 end
 
-function dovalues(self, menu)
+
+-- DO VALUES
+
+function doGeneralValues(self, menu)
+	self.menu = menu
+
 	local machine, revision = System:getMachine();
 
-	-- fixed values
 	self:setValue("FIRMWARE_VERSION", JIVE_VERSION)
 	if revision then
 		self:setValue("HARDWARE_VERSION", tostring(revision))
 	end
 	self:setValue("MAC_ADDRESS", System:getMacAddress())
 
-	-- networks
+	self:systemStatus()
+
+	local currentPlayer = appletManager:callService("getCurrentPlayer")
+	if currentPlayer then
+		self:setValue("CURRENT_PLAYER", currentPlayer:getName())
+		if currentPlayer:isLocal() then
+			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_LOCAL")))
+		else
+			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_REMOTE")))
+		end
+	else
+		self:setValue("CURRENT_PLAYER", tostring(self:string("DIAGNOSTICS_NONE")))
+		self:setValue("PLAYER_TYPE", "")
+
+	end
+end
+
+
+function doWirelessValues(self, menu)
+	self.menu = menu
+
 	local wlanIface = Networking:wirelessInterface(jnt)
-	local ethIface = Networking:wiredInterface(jnt)
 
 	self:wlanStatus(wlanIface)
+end
+
+
+function doEthernetValues(self, menu)
+	self.menu = menu
+
+	local ethIface = Networking:wiredInterface(jnt)
+
 	if System:hasWiredNetworking() then
 		self:ethStatus(ethIface)
 	end
+end
 
 
-	-- servers
+function doServerValues(self, menu)
+	self.menu = menu
+
 	local sn = false
 	for name, server in SlimServer:iterate() do
 		if server:isSqueezeNetwork() then
@@ -383,7 +430,6 @@ function dovalues(self, menu)
 	end
 
 	local sc = SlimServer:getCurrentServer()
-
 
 	self:serverPing(sn, "SN_ADDRESS", "SN_PING", "SN_REG")
 	self:serverPort(sn, 3483, "SN_PORT_3483")
@@ -403,39 +449,178 @@ function dovalues(self, menu)
 		local ip, port = sc:getIpPort()
 		self:serverPort(sc, port, "SC_PORT_9000", port)
 	end
+end
 
 
-	local currentPlayer = appletManager:callService("getCurrentPlayer")
-	if currentPlayer then
-		self:setValue("CURRENT_PLAYER", currentPlayer:getName())
-		if currentPlayer:isLocal() then
-			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_LOCAL")))
-		else
-			self:setValue("PLAYER_TYPE", tostring(self:string("DIAGNOSTICS_REMOTE")))
-		end
-	else
-		self:setValue("CURRENT_PLAYER", tostring(self:string("DIAGNOSTICS_NONE")))
-		self:setValue("PLAYER_TYPE", "")
-
-	end
-
-	self:systemStatus()
-
+function roundNumber(num, idp)
+	return tonumber(string.format("%." .. (idp or 0) .. "f", num))
 end
 
 
 function doPowerValues(self, menu)
+	self.menu = menu
+
 	self:setValue("MSP_VERSION", self:_getSysValue("fw"))
-	self:setValue("BATTERY_VOLTAGE"	   , tostring(self:_getPowerSysValue("battery_voltage")      /1000.0) .. " V")
-	self:setValue("BATTERY_VMON1"  	   , tostring(self:_getPowerSysValue("battery_vmon1_voltage")/1000.0) .. " V")
-	self:setValue("BATTERY_VMON2"  	   , tostring(self:_getPowerSysValue("battery_vmon2_voltage")/1000.0) .. " V")
-	self:setValue("WALL_VOLTAGE"   	   , tostring(self:_getPowerSysValue("wall_voltage")         /1000.0) .. " V")
-	self:setValue("BATTERY_TEMPERATURE", tostring(self:_getPowerSysValue("battery_temperature")  /32.0  ) .. " C")
 
 	local mode = self:_getPowerSysValue("power_mode"):gsub("^%s*(.-)%s*$", "%1")
-	self:setValue("POWER_MODE"         , tostring(self:string(powerMode[mode])))
+	self:setValue("POWER_MODE", tostring(self:string(powerMode[mode])))
+
+	-- Battery only
+	if mode == "5" then
+		self:setValue("WALL_VOLTAGE", "-")
+	-- AC (maybe Battery)
+	else
+		local wallVoltage = roundNumber(self:_getPowerSysValue("wall_voltage") / 1000.0, 1)
+		self:setValue("WALL_VOLTAGE", tostring(wallVoltage .. " V"))
+	end
+
 	local mode = self:_getPowerSysValue("charger_state"):gsub("^%s*(.-)%s*$", "%1")
-	self:setValue("CHARGE_STATE"       , tostring(self:string(chargerState[mode])))
+	self:setValue("CHARGE_STATE", tostring(self:string(chargerState[mode])))
+
+	-- No battery installed
+	if mode == "1" then
+		self:setValue("BATTERY_TEMPERATURE", "-")
+		self:setValue("BATTERY_VOLTAGE", "-")
+		self:setValue("BATTERY_VMON1", "-")
+		self:setValue("BATTERY_VMON2", "-")
+
+	-- Battery installed
+	else
+		local batteryTemperature = roundNumber(self:_getPowerSysValue("battery_temperature") / 32.0, 1)
+		local batteryVoltage = roundNumber(self:_getPowerSysValue("battery_voltage") / 1000.0, 1)
+		local batteryMonitor1 = roundNumber(self:_getPowerSysValue("battery_vmon1_voltage") / 1000.0, 1)
+		local batteryMonitor2 = roundNumber(self:_getPowerSysValue("battery_vmon2_voltage") / 1000.0, 1)
+
+		self:setValue("BATTERY_TEMPERATURE", tostring(batteryTemperature) .. " C")
+		self:setValue("BATTERY_VOLTAGE", tostring(batteryVoltage) .. " V")
+		self:setValue("BATTERY_VMON1", tostring(batteryMonitor1) .. " V")
+		self:setValue("BATTERY_VMON2", tostring(batteryMonitor2) .. " V")
+	end
+end
+
+
+-- SUB MENUS
+
+function showGeneralDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("MENU_GENERAL"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(generalTests) do
+		self.labels[name] = {
+			text = self:string(name, ''),
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	doGeneralValues(self, menu)
+	menu:addTimer(5000, function()
+		doGeneralValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function showWirelessDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("MENU_WIRELESS"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(wirelessTests) do
+		self.labels[name] = {
+			text = self:string(name, ''),
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	doWirelessValues(self, menu)
+	menu:addTimer(5000, function()
+		doWirelessValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function showEthernetDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("MENU_ETHERNET"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(ethernetTests) do
+		self.labels[name] = {
+			text = self:string(name, ''),
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	doEthernetValues(self, menu)
+	menu:addTimer(5000, function()
+		doEthernetValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function showServerDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("MENU_SERVER"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(serverTests) do
+		local label
+		if name == 'SC_PORT_9000' then
+			label = self:string(name, '9000', '-')
+		else
+			label = self:string(name, '-')
+		end
+	
+		self.labels[name] = {
+			text = label,
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	doServerValues(self, menu)
+	menu:addTimer(5000, function()
+		doServerValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
 end
 
 
@@ -456,7 +641,6 @@ function showPowerDiagnosticsMenu(self)
 		menu:addItem(self.labels[name])
 	end
 
-	self.powerDiagMenu = menu
 	doPowerValues(self, menu)
 	menu:addTimer(5000, function()
 		doPowerValues(self, menu)
@@ -468,6 +652,10 @@ function showPowerDiagnosticsMenu(self)
 	return window
 end
 
+
+-- MAIN MENU
+
+-- Service menu
 function diagnosticsMenu(self, suppressNetworkingItem)
 	local window = Window("text_list", self:string("DIAGNOSTICS"))
 	window:setAllowScreensaver(false)
@@ -475,24 +663,47 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	local menu = SimpleMenu("menu")
 
-	self.labels = {}
-
-	for i,name in ipairs(tests) do
-		if name ~= 'ETH_CONNECTION' or System:getMachine() ~= 'jive' then
-			local label
-			if name == 'SC_PORT_9000' then
-				label = self:string(name, '9000', '-')
-			else
-				label = self:string(name, '-')
-			end
-		
-			self.labels[name] = {
-				text = label,
-				style = 'item_info',
-			}
-			menu:addItem(self.labels[name])
+	menu:addItem({
+		text = self:string("MENU_GENERAL"),
+		style = 'item',
+		callback = function ()
+			self:showGeneralDiagnosticsMenu()
 		end
+	})
+
+	menu:addItem({
+		text = self:string("MENU_NETWORK_HEALTH"),
+		style = 'item',
+		callback = function ()
+			self:showNetworkHealthDiagnosticsMenu()
+		end
+	})
+
+	menu:addItem({
+		text = self:string("MENU_WIRELESS"),
+		style = 'item',
+		callback = function ()
+			self:showWirelessDiagnosticsMenu()
+		end
+	})
+
+	if System:getMachine() ~= 'jive' then
+		menu:addItem({
+			text = self:string("MENU_ETHERNET"),
+			style = 'item',
+			callback = function ()
+				self:showEthernetDiagnosticsMenu()
+			end
+		})
 	end
+
+	menu:addItem({
+		text = self:string("MENU_SERVER"),
+		style = 'item',
+		callback = function ()
+			self:showServerDiagnosticsMenu()
+		end
+	})
 
 	if System:getMachine() == "baby" then
 		menu:addItem({
@@ -527,11 +738,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	self.notConnected = tostring(self:string('NOT_CONNECTED'))
 
-	self.diagMenu = menu
-	dovalues(self, menu)
-	menu:addTimer(5000, function()
-		dovalues(self, menu)
-	end)
+	self.menu = menu
 
 	window:addWidget(menu)
 
@@ -539,7 +746,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	return window
 end
 
-
+-- Service menu
 function supportMenu(self)
 	local window = Window("help_list", self:string("SUPPORT"))
 	window:setAllowScreensaver(false)
@@ -560,6 +767,196 @@ function supportMenu(self)
 
 	self:tieAndShowWindow(window)
 	return window
+end
+
+
+
+
+-- NETWORK HEALTH STUFF
+function showNetworkHealthDiagnosticsMenu(self)
+	local window = Window("text_list", self:string("MENU_NETWORK_HEALTH"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+	self.labels["NETWORK_STATUS"] = {
+		text = self:string("NETWORK_STATUS", '-'),
+		style = 'item_info',
+	}
+	menu:addItem(self.labels["NETWORK_STATUS"])
+
+	menu:addItem({
+		text = self:string("CHECK_NETWORK"),
+		style = 'item',
+		callback = function ()
+			self:manualCheckNetworkHealth(true)
+		end
+	})
+
+--	menu:addItem({
+--		text = self:string("CHECK_NETWORK_PART"),
+--		style = 'item',
+--		callback = function ()
+--			self:manualCheckNetworkHealth(false)
+--		end
+--	})
+
+	menu:addItem({
+		text = self:string("REPAIR_NETWORK"),
+		style = 'item',
+		callback = function ()
+			self:manualRepairNetwork()
+		end
+	})
+
+	self.networkHealthMenu = menu
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+
+	return window
+end
+
+
+function manualCheckNetworkHealth(self, full_check)
+	local popup = Popup("waiting_popup")
+	popup:setAllowScreensaver(false)
+	popup:ignoreAllInputExcept()
+
+        popup:addWidget(Icon("icon_connecting"))
+
+	if full_check then
+	        popup:addWidget(Label("text", self:string("CHECK_NETWORK")))
+	else
+	        popup:addWidget(Label("text", self:string("CHECK_NETWORK_PART")))
+	end
+
+	local status = Label("subtext", self:string("STATUS_MSG", "-"))
+	popup:addWidget(status)
+
+	-- Get current server
+	local server = SlimServer:getCurrentServer()
+
+	-- Get SN if SC is not available
+	if not server then
+		-- Get SN
+		for n, s in SlimServer:iterate() do
+			if s:isSqueezeNetwork() then
+				server = s
+			end
+		end
+	end
+
+	local ifObj = Networking:activeInterface()
+
+	ifObj:checkNetworkHealth( function(continue, err, msg, msg_param)
+			local message = self:string(msg, msg_param)
+			log:debug("checkNetworkHealth status: ", message)
+-- TODO: remove
+			log:warn("checkNetworkHealth status: ", message)
+
+			if continue then
+				-- Update spinny message
+				status:setValue(self:string("STATUS_MSG", message))
+			else
+				log:debug("Network health error: ", err)
+
+				-- Update final message
+				self:setResult("NETWORK_STATUS", err)
+
+--				self:setValue("NETWORK_STATUS", message)
+				self.networkHealthMenu:setText(self.labels["NETWORK_STATUS"], self:string("NETWORK_STATUS", message))
+
+				self.networkHealthMenu:setSelectedIndex(1)
+
+				popup:hide()
+			end
+		end,
+	full_check,		-- true full check (includes arping, DNS resolution and ping)
+	server
+	)
+
+	self:tieAndShowWindow(popup)
+end
+
+function setResult(self, index, err)
+	self:addExtraStyle(jive.ui.style)
+
+	local myItem = self.labels[index]
+
+	if err == 0 then
+		myItem.style = "item_info_green"
+	else
+		myItem.style = "item_info_red"
+	end
+-- TODO: needed?
+--	self.networkHealthMenu:replaceIndex(myItem, 1)
+end
+
+
+function manualRepairNetwork(self)
+	local popup = Popup("waiting_popup")
+	popup:setAllowScreensaver(false)
+	popup:ignoreAllInputExcept()
+
+        popup:addWidget(Icon("icon_connecting"))
+        popup:addWidget(Label("text", self:string("REPAIR_NETWORK")))
+
+	local status = Label("subtext", self:string("STATUS_MSG", "-"))
+	popup:addWidget(status)
+
+	local ifObj = Networking:activeInterface()
+
+	ifObj:repairNetwork( function(continue, err, msg, msg_param)
+			local message = self:string(msg, msg_param)
+			log:debug("repairNetwork status: ", message)
+
+			if continue then
+				-- Update spinny message
+				status:setValue(self:string("STATUS_MSG", message))
+			else
+				-- Update final message
+				log:debug("Repair network error: ", err)
+
+				popup:hide()
+			end
+		end
+	)
+
+	self:tieAndShowWindow(popup)
+end
+
+
+-- defines a new style that inherrits from an existing style
+local function _uses(parent, value)
+	if parent == nil then
+		log:warn("nil parent in _uses at:\n", debug.traceback())
+	end
+	local style = {}
+	setmetatable(style, { __index = parent })
+	for k,v in pairs(value or {}) do
+		if type(v) == "table" and type(parent[k]) == "table" then
+			-- recursively inherrit from parent style
+			style[k] = _uses(parent[k], v)
+		else
+			style[k] = v
+		end
+	end
+
+	return style
+end
+
+
+function addExtraStyle(self, s)
+	s.item_info_green = _uses(s.item_info, {
+		bgImg = Tile:fillColor(0x00ff0088),
+	})
+	s.item_info_red = _uses(s.item_info, {
+		bgImg = Tile:fillColor(0xff000088),
+	})
 end
 
 
