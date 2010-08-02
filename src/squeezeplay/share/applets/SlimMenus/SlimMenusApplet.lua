@@ -489,6 +489,7 @@ local function _menuSink(self, isCurrentServer, server)
 					screensavers = v.screensavers
 			}
 
+			--[[ FIXME: This block is commented out until all apps show up under this new myapps model (e.g., podcast player)
 			if item.isApp == 1 then
 				if not self.myAppsNode then
 					self:_addMyAppsNode()
@@ -498,6 +499,7 @@ local function _menuSink(self, isCurrentServer, server)
 				end
 				item.node = 'myApps'
 			end
+			--]]
 
 			local itemIcon
 			if v.window then
