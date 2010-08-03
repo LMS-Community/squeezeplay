@@ -963,3 +963,121 @@ CHARGE_STATE
 	RU	Состояние устройства зарядки\n%s
 	SV	Laddningsstatus\n%s
 
+MENU_GENERAL
+	EN	General Info
+
+MENU_NETWORK_HEALTH
+	EN	Network Health
+
+MENU_WIRELESS
+	EN	Wireless Info
+
+MENU_ETHERNET
+	EN	Ethernet Info
+
+MENU_SERVER
+	EN	Server Info
+
+NETWORK_STATUS
+	EN	Network Status\n%s
+
+REPAIR_NETWORK
+	EN	Repair Network
+
+CHECK_NETWORK
+	EN	Check Network
+
+CHECK_NETWORK_PART
+	EN	Check Network (part)
+
+STATUS_MSG
+	EN	%s
+
+NET_BRINGING_NETWORK_DOWN
+	EN	Bringing network down ...
+
+NET_BRINGING_NETWORK_UP
+	EN	Bringing network up ...
+
+NET_REPAIR_NETWORK_DONE
+	EN	Repair network done
+
+NET_CONNECTION_NOK
+	EN	Not connected
+
+NET_INTERFACE_NOK
+	EN	No network interface
+
+NET_LINK
+	EN	Check network link
+
+NET_LINK_WIRELESS_OK
+	EN	Wireless - link ok
+
+NET_LINK_WIRELESS_NOK
+	EN	Wireless - no link
+
+NET_LINK_ETHERNET_OK
+	EN	Ethernet link ok
+
+NET_LINK_ETHERNET_NOK
+	EN	Ethernet - no link
+
+NET_IP_OK
+	EN	IP: %s	
+
+NET_IP_NOK
+	EN	No valid IP
+
+NET_GATEWAY_OK
+	EN	Gateway IP: %s
+
+NET_GATEWAY_NOK
+	EN	No valid gateway IP
+
+NET_DNS_OK
+	EN	DNS IP: %s
+
+NET_DNS_NOK
+	EN	No valid DNS IP
+
+NET_ARPING
+	EN	Arping %s ...
+
+NET_ARPING_OK
+	EN	Arping ok
+
+NET_ARPING_NOK
+	EN	IP %s already in use.
+
+NET_SERVER_NOK
+	EN	No server
+
+NET_RESOLVE
+	EN	Getting IP for %s ...
+
+NET_RESOLVE_OK
+	EN	IP for %s
+
+NET_RESOLVE_NOK
+	EN	DNS resolution failed for %s
+
+NET_PING
+	EN	Pinging %s ...
+
+NET_PING_OK
+	EN	Ping %s ok
+
+NET_PING_NOK
+	EN	Ping %s not ok
+
+NET_PORT
+	EN	Test connection to %s
+
+NET_PORT_OK
+	EN	Connection to %s ok
+
+NET_PORT_NOK
+	EN	Connection to %s not ok
+
+

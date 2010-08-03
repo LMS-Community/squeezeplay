@@ -1,6 +1,6 @@
 
 -- stuff we use
-local tostring, tonumber, type, sort = tostring, tonumber, type, sort
+local tostring, tonumber, type, sort, setmetatable = tostring, tonumber, type, sort, setmetatable
 local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
 
 local oo                     = require("loop.simple")
@@ -108,6 +108,23 @@ local function _safeDeref(struct, ...)
 		end
 	end
 	return res
+end
+
+-- defines a new item that inherits from an existing item
+local function _uses(parent, value)
+        local item = {}
+        setmetatable(item, { __index = parent })
+
+        for k,v in pairs(value or {}) do
+                if type(v) == "table" and type(parent[k]) == "table" then
+                -- recursively inherrit from parent item
+                        item[k] = _uses(parent[k], v)
+                else
+                        item[k] = v
+                end
+        end
+
+        return item
 end
 
 
@@ -317,15 +334,21 @@ function  _addNode(self, node, isCurrentServer)
 	end
 end
 --add item to home menu only if this is for the current server or it doesn't exist. Only current server responses may replace existing items.
-function  _addItem(self, item, isCurrentServer)
+function  _addItem(self, item, isCurrentServer, addToHome)
 	if isCurrentServer or not _playerMenus[item.id] then
 		 _playerMenus[item.id] = item
 		 jiveMain:addItem(item)
+		if addToHome then
+			local customHomeItem = _uses(item, {
+				id = 'hm_' .. item.id,
+				node = 'home',
+			})
+			jiveMain:addItem(customHomeItem)
+		end
 	else
 		log:debug("item already present: ", item.id)
 	end
 end
-
 
 --register remote ss only if it doesn't exist. Only current server responses may replace existing items.
 function  _registerRemoteScreensaver(self, serverData)
@@ -394,6 +417,16 @@ function _getAppType(request)
 	return appType
 end
 
+
+function _addMyAppsNode(self)
+	jiveMain:addNode( { id = 'myApps', iconStyle = 'hm_myApps', node = 'home', text = self:string('MENUS_MY_APPS'), weight = 30  } )
+	-- remove the old style My Apps item, if it exists
+	jiveMain:removeItemById('opmlmyapps')
+	self.myAppsNode = true
+	return
+end
+
+
 -- _menuSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -442,9 +475,11 @@ local function _menuSink(self, isCurrentServer, server)
 
 		for k, v in pairs(menuItems) do
 
+			local addAppToHome = false
 			local item = {
 					id = v.id,
 					node = v.node,
+					isApp = v.isApp,
 					style = v.style,
 					text = v.text,
 					homeMenuText = v.homeMenuText,
@@ -452,7 +487,19 @@ local function _menuSink(self, isCurrentServer, server)
 					window = v.window,
 					sound = "WINDOWSHOW",
 					screensavers = v.screensavers
-				}
+			}
+
+			--[[ FIXME: This block is commented out until all apps show up under this new myapps model (e.g., podcast player)
+			if item.isApp == 1 then
+				if not self.myAppsNode then
+					self:_addMyAppsNode()
+				end
+				if item.node == 'home' then
+					addAppToHome = true
+				end
+				item.node = 'myApps'
+			end
+			--]]
 
 			local itemIcon
 			if v.window then
@@ -529,6 +576,8 @@ local function _menuSink(self, isCurrentServer, server)
 
 			if not item.id then
 				log:info("no id for menu item: ", item.text)
+			elseif item.id == 'opmlmyapps' and self.myAppsNode then
+				--ignore, if self.myAppsNode is set that means we're delivering My Apps via a node and opml home menu items
 			elseif item.id == "playerpower" and System:hasSoftPower() and System:getMachine() ~= 'squeezeplay' then
 				--ignore, playerpower no longer shown to users since we use power button, unless this is a device without a power button
 			elseif item.id == "settingsPIN" then
@@ -584,7 +633,7 @@ local function _menuSink(self, isCurrentServer, server)
 				item.removeOnServerChange = true
 
 				--add the item to the menu
-				self:_addItem(item, isCurrentServer)
+				self:_addItem(item, isCurrentServer, addAppToHome)
 
 			else
 				local actionInternal = function (noLocking)
@@ -705,7 +754,8 @@ local function _menuSink(self, isCurrentServer, server)
 						end
 					end
 				end
-				self:_addItem(item, isCurrentServer)
+
+				self:_addItem(item, isCurrentServer, addAppToHome)
 			end
 		end
 
