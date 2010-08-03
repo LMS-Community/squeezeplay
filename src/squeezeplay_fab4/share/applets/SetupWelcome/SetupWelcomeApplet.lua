@@ -194,7 +194,7 @@ function step4(self)
 	end
 
 	-- Once here, network setup is complete
-	self:_setupComplete(true)
+	self:_setupComplete(false)
 	self:_setupDone(true)
 
 	self.locked = true -- free applet
