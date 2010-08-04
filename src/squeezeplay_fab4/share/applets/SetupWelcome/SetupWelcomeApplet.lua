@@ -193,6 +193,23 @@ function step4(self)
 		appletManager:callService("waitForSqueezenetwork")
 	end
 
+	-- Find squeezenetwork server
+	local squeezenetwork = false
+	for name, server in slimServer:iterate() do
+		if server:isSqueezeNetwork() then
+			squeezenetwork = server
+		end
+	end
+
+	-- if player is still not connected, now connect to SN
+	local player = appletManager:callService("getCurrentPlayer")
+	assert(player)
+
+	if not player:getSlimServer() then
+		log:info("connect ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+	end
+
 	-- Once here, network setup is complete
 	self:_setupComplete(false)
 	self:_setupDone(true)

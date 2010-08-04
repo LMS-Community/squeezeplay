@@ -191,6 +191,23 @@ function step4(self)
 		appletManager:callService("waitForSqueezenetwork")
 	end
 
+	-- Find squeezenetwork server
+	local squeezenetwork = false
+	for name, server in slimServer:iterate() do
+		if server:isSqueezeNetwork() then
+			squeezenetwork = server
+		end
+	end
+
+	-- if player is still not connected, now connect to SN
+	local player = appletManager:callService("getCurrentPlayer")
+	assert(player)
+
+	if not player:getSlimServer() then
+		log:info("connect ", player, " to ", squeezenetwork)
+		player:connectToServer(squeezenetwork)
+	end
+
 	self:_setupComplete(false)
 	self:_setupDone(true)
 
@@ -200,50 +217,6 @@ function step4(self)
 	jiveMain:goHome()
 
 end
-
-
---[[ XXX: this may need to move to the NetworkRegistrationApplet
-
-function notify_serverLinked(self, server, wasAlreadyLinked)
-	log:info("notify_serverLinked: ", server)
-
-	if not server:isSqueezeNetwork() then
-		return
-	end
-
-	if not self.registerRequest then
-		return
-	end
-	
-	--avoid race condition where we are in the registerRequest but for a player that is already linked
-	if  self.registerRequestRequireAlreadyLinked and not wasAlreadyLinked then
-		return
-	end
-	log:info("server linked: ", server, " pin=", server:getPin(), " registerRequestRequireAlreadyLinked: ", self.registerRequestRequireAlreadyLinked, " wasAlreadyLinked: ", wasAlreadyLinked)
-
-	if server:getPin() == false then
-		-- for testing connect the player tosqueezenetwork
-		local player = appletManager:callService("getCurrentPlayer")
-
-		local squeezenetwork = self:_getSqueezenetwork()
-		log:info("connecting ", player, " to ", squeezenetwork)
-		player:connectToServer(squeezenetwork)
-
-		self:step4()
-	end
-end
-
-
-function _getSqueezenetwork(self)
-	local squeezenetwork = false
-	for name, server in slimServer:iterate() do
-		if server:isSqueezeNetwork() then
-			squeezenetwork = server
-		end
-	end
-	return squeezenetwork
-end
---]]
 
 
 function _setupDone(self, setupDone)
