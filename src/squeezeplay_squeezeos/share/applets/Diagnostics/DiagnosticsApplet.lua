@@ -852,7 +852,9 @@ function manualCheckNetworkHealth(self, full_check)
 
 	local ifObj = Networking:activeInterface()
 
-	ifObj:checkNetworkHealth( function(continue, err, msg, msg_param)
+	Networking:checkNetworkHealth(
+		ifObj,
+		function(continue, err, msg, msg_param)
 			local message = self:string(msg, msg_param)
 			log:debug("checkNetworkHealth status: ", message)
 -- TODO: remove
@@ -875,8 +877,8 @@ function manualCheckNetworkHealth(self, full_check)
 				popup:hide()
 			end
 		end,
-	full_check,		-- true full check (includes arping, DNS resolution and ping)
-	server
+		full_check,		-- true full check (includes arping, DNS resolution and ping)
+		server
 	)
 
 	self:tieAndShowWindow(popup)
@@ -910,7 +912,9 @@ function manualRepairNetwork(self)
 
 	local ifObj = Networking:activeInterface()
 
-	ifObj:repairNetwork( function(continue, err, msg, msg_param)
+	Networking:repairNetwork(
+		ifObj,
+		function(continue, err, msg, msg_param)
 			local message = self:string(msg, msg_param)
 			log:debug("repairNetwork status: ", message)
 
