@@ -2383,6 +2383,16 @@ function skin(self, s, reload, useDefaultSize)
 		img = false,
 	})
 
+	s.button_ethernet = _uses(s._button_wireless, {
+		img = _loadImage(self, "Icons/icon_ethernet.png"),
+	})
+	s.button_ethernet_ERROR = _uses(s._button_wireless, {
+		img = _loadImage(self, "Icons/icon_ethernet_disabled.png"),
+	})
+	s.button_ethernet_SERVERERROR = _uses(s._button_wireless, {
+		img = _loadImage(self, "Icons/icon_ethernet_cantconnect.png"),
+	})
+
 	-- time
 	s.button_time = {
 		w = WH_FILL,
