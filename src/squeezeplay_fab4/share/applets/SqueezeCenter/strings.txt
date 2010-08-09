@@ -392,6 +392,21 @@ DISCOVERING_FILES_PROGRESS
 	RU	Обнаружение файлов
 	SV	Filerna söks igenom
 
+DISCOVERING_DIRECTORY_PROGRESS
+	CS	Hledám soubory
+	DA	Søger efter filer
+	DE	Dateien werden erkannt
+	EN	Discovering files
+	ES	Detectando archivos
+	FI	Etsitään tiedostoja
+	FR	Détection des fichiers
+	IT	Rilevazione file
+	NL	Bestanden detecteren
+	NO	Ser etter filer
+	PL	Wykrywanie plików
+	RU	Обнаружение файлов
+	SV	Letar filer
+
 DIRECTORY_DELETED_PROGRESS
 	CS	Odebrat smazané soubory
 	DA	Fjern slettede filer
