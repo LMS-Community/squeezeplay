@@ -514,10 +514,10 @@ local function _checkboxItem(item, db)
 			function(_, checkboxFlag)
 				log:debug("checkbox updated: ", checkboxFlag)
 				if (checkboxFlag) then
-					log:warn("ON: ", checkboxFlag)
+					log:info("ON: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'on', item) 
 				else
-					log:warn("OFF: ", checkboxFlag)
+					log:info("OFF: ", checkboxFlag)
 					_actionHandler(nil, nil, db, nil, nil, 'off', item) 
 				end
 			end,
@@ -3662,6 +3662,31 @@ function notify_playerLoaded(self, player)
 	log:debug("SlimBrowserApplet:notify_playerCurrent(", player, ")")
 	_attachPlayer(self, player)
 end
+
+
+function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
+	if player == _player then
+		return
+	end
+
+	log:info('notify_playerDigitalVolumeControl()', digitalVolumeControl)
+
+	if digitalVolumeControl == 0 then
+		log:warn('set volume to 100')
+		self.cachedVolume = player:getVolume()
+		if player:isLocal() then
+			player:volumeLocal(100)
+		end
+		player:volume(100, true)
+	elseif self.cachedVolume then
+		log:warn('set volume to cached level')
+		if player:isLocal() then
+			player:volumeLocal(self.cachedVolume)
+		end
+		player:volume(self.cachedVolume, true)
+	end
+end
+
 
 function _attachPlayer(self, player)
 	-- has the player actually changed?
