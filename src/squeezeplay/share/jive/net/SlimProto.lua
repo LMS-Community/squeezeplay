@@ -33,6 +33,7 @@ local Timer       = require("jive.ui.Timer")
 
 local DNS         = require("jive.net.DNS")
 local SocketTcp   = require("jive.net.SocketTcp")
+local System      = require("jive.System")
 
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.slimproto")
@@ -343,6 +344,9 @@ function __init(self, jnt, heloPacket)
 	obj:capability("Model", obj.heloPacket.model)
 	obj:capability("ModelName", obj.heloPacket.modelName)
 	obj:capability("Firmware", string.gsub(obj.heloPacket.version, '%s', '-'))
+	if System:hasDigitalOut() then
+		obj:capability("HasDigitalOut", 1)
+	end
 
 	obj.statusCallback = _defaultStatusCallback
 

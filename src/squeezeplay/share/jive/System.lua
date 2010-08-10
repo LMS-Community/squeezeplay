@@ -49,6 +49,9 @@ function isHardware(class)
 	return (class:getMachine() ~= "squeezeplay")
 end
 
+-- NOTE: this table does not set default capabilities for all players, but rather is a simple list of all of the possible capabilities used
+-- to add a capability, go to the platform-specific applet (e.g. SqueezeboxFab4Applet) and add the capability there.
+-- if it is not set for the device, the assumption is that it does not have that capability
 local allCapabilities = {
 	["touch"] = 1,
 	["ir"] = 1,
@@ -65,6 +68,7 @@ local allCapabilities = {
 	["sdcard"] = 1,
 	["usb"] = 1,
 	["batteryCapable"] = 1,
+	["hasDigitalOut"] = 1,
 }
 
 local _capabilities = {} -- of form string, 1 so
@@ -80,6 +84,10 @@ function setCapabilities(self, capabilities)
 	end
 	
 	_capabilities = capabilities
+end
+
+function hasDigitalOut(self)
+	return _capabilities["hasDigitalOut"] ~= nil
 end
 
 function hasTouch(self)
