@@ -235,7 +235,7 @@ function wlanStatus(self, iface)
 
 	Task("Netstatus", self, function()
 		local status = iface:t_wpaStatus()
-		local snr, minsnr, maxsnr = iface:getSNR()
+		-- (for testing): local snr, minsnr, maxsnr = iface:getSNR()
 		local signalStrength = iface:getSignalStrength()
 
 		if status.ssid then
