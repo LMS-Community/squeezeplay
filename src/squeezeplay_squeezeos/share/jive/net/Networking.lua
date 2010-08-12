@@ -1993,7 +1993,9 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		local status = ifObj:t_wpaStatus()
 
 		if ifObj:isWireless() then
-			if status.wpa_state ~= "COMPLETED" then
+			local percentage, quality = ifObj:getSignalStrength()
+
+			if (status.wpa_state ~= "COMPLETED") or (quality == 0) then
 				callback(false, -1, "NET_LINK_WIRELESS_NOK")
 				return
 			end
