@@ -3672,7 +3672,7 @@ function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
 	log:info('notify_playerDigitalVolumeControl()', digitalVolumeControl)
 
 	if digitalVolumeControl == 0 then
-		log:warn('set volume to 100, cache previous volume as: ' self.cachedVolume)
+		log:warn('set volume to 100, cache previous volume as: ', self.cachedVolume)
 		self.cachedVolume = player:getVolume()
 		if player:isLocal() then
 			player:volumeLocal(100)
