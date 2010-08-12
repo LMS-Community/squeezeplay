@@ -1962,7 +1962,8 @@ via callback function. The callback provides three params:
 - err: -1 or 0
 - message: message according to what is happening or failed
 
-self		- network object
+class		- Networking class
+ifObj		- network object
 callback	- callback function
 full_check	- includes ip check, DNS resolution, ping and ports test
 server		- server to ping and test ports
@@ -1970,17 +1971,17 @@ server		- server to ping and test ports
 =cut
 --]]
 
-function checkNetworkHealth(self, callback, full_check, server)
+function checkNetworkHealth(class, ifObj, callback, full_check, server)
 	assert(type(callback) == 'function', "No callback function provided")
 
-	Task("checknetworkhealth", self, function()
+	Task("checknetworkhealth", ifObj, function()
 		log:info("checkNetworkHealth task started")
 
 		callback(true, -1, "NET_CONNECTION_NOK")
 
 		-- ------------------------------------------------------------
 		-- Check for valid network interface
-		if self == nil then
+		if ifObj == nil then
 			callback(false, -1, "NET_INTERFACE_NOK")
 			return
 		end
@@ -1989,10 +1990,12 @@ function checkNetworkHealth(self, callback, full_check, server)
 		-- Getting network status (link / no link)
 		callback(true, 0, "NET_LINK")
 
-		local status = self:t_wpaStatus()
+		local status = ifObj:t_wpaStatus()
 
-		if self:isWireless() then
-			if status.wpa_state ~= "COMPLETED" then
+		if ifObj:isWireless() then
+			local percentage, quality = ifObj:getSignalStrength()
+
+			if (status.wpa_state ~= "COMPLETED") or (quality == 0) then
 				callback(false, -1, "NET_LINK_WIRELESS_NOK")
 				return
 			end
@@ -2052,7 +2055,7 @@ function checkNetworkHealth(self, callback, full_check, server)
 
 		-- Arping
 		local arpingOK = false
-		local arpingProc = Process(jnt, "arping -I " .. self:getName() .. " -f -c 2 -w 5 " .. status.ip_address .. " 2>&1")
+		local arpingProc = Process(jnt, "arping -I " .. ifObj:getName() .. " -f -c 2 -w 5 " .. status.ip_address .. " 2>&1")
 		arpingProc:read(function(chunk)
 			if chunk then
 				if string.match(chunk, "Received 0 reply") then
@@ -2215,27 +2218,28 @@ via callback function. The callback provides three params:
 - err: -1 or 0
 - message: message according to what is happening or failed
 
-self		- network object
+class		- Networking class
+ifObj		- network object
 callback	- callback function
 
 =cut
 --]]
 
-function repairNetwork(self, callback)
+function repairNetwork(class, ifObj, callback)
 	assert(type(callback) == 'function', "No callback function provided")
 
-	Task("repairnetwork", self, function()
+	Task("repairnetwork", ifObj, function()
 		log:info("repairNetwork task started")
 
-		local active = self:_ifstate()
+		local active = ifObj:_ifstate()
 
 		callback(true, 0, "NET_BRINGING_NETWORK_DOWN")
 
-		self:_ifDown()
+		ifObj:_ifDown()
 
 		callback(true, 0, "NET_BRINGING_NETWORK_UP")
 
-		self:_ifUp(active)
+		ifObj:_ifUp(active)
 
 		callback(false, 0, "NET_REPAIR_NETWORK_DONE")
 

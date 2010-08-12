@@ -3084,6 +3084,9 @@ function skin(self, s)
                 img = _volumeSliderBar,
                 pillImg = _volumeSliderPill,
 	}
+	s.npvolumeB_disabled = _uses(s.npvolumeB, {
+		pillImg = false,
+	})
 
 	-- pressed styles
 	s.nowplaying.title.pressed = _uses(s.nowplaying.title, {

@@ -269,38 +269,6 @@ function homeMenuItemContextMenu(self, item)
 	local itemIdx  = nodeMenu:getIdIndex(item.id)
 	if itemIdx > 1 then
 		menu:addItem({
-			text = self:string("MOVE_TO_TOP"),
-			callback = function()
-				window:hide()
-				self:_timedExec(
-					function()
-						jiveMain:itemToTop(item, node)
-						self:_storeSettings(node)
-					end
-				)
-				return EVENT_CONSUME
-			end
-		})
-	end
-
-	if itemIdx < #nodeMenu.items then
-		menu:addItem({
-			text = self:string("MOVE_TO_BOTTOM"),
-			callback = function()
-				window:hide()
-				self:_timedExec(
-					function()
-						jiveMain:itemToBottom(item, node)
-						self:_storeSettings(node)
-					end
-				)
-				return EVENT_CONSUME
-			end
-		})
-	end
-
-	if itemIdx > 1 then
-		menu:addItem({
 			text = self:string("MOVE_UP_ONE"),
 			callback = function()
 				window:hide()
@@ -331,6 +299,38 @@ function homeMenuItemContextMenu(self, item)
 		})
 	end
 
+
+	if itemIdx > 1 then
+		menu:addItem({
+			text = self:string("MOVE_TO_TOP"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemToTop(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
+
+	if itemIdx < #nodeMenu.items then
+		menu:addItem({
+			text = self:string("MOVE_TO_BOTTOM"),
+			callback = function()
+				window:hide()
+				self:_timedExec(
+					function()
+						jiveMain:itemToBottom(item, node)
+						self:_storeSettings(node)
+					end
+				)
+				return EVENT_CONSUME
+			end
+		})
+	end
 
 	window:addWidget(menu)
 	window:show(Window.transitionFadeIn)

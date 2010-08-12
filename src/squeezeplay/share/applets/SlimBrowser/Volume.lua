@@ -50,7 +50,6 @@ local SMALL_KNOB_ACCEL_CONSTANT = 22
 
 module(..., oo.class)
 
-
 local function _updateDisplay(self)
 	if tonumber(self:_getVolume()) <= 0 then
 		self.title:setValue(self.applet:string("SLIMBROWSER_MUTED"))
@@ -90,7 +89,13 @@ end
 
 
 local function _openPopup(self)
+
 	if self.popup or not self.player then
+		return
+	end
+
+	-- don't do this if we have fixed volume
+	if self.player:getDigitalVolumeControl() == 0 then
 		return
 	end
 
@@ -165,6 +170,11 @@ end
 function _updateVolume(self, mute, directSet, noAccel, minAccelDelta)
 	if not self.popup then
 		self.timer:stop()
+		return
+	end
+
+	-- don't update volume if we're set for fixed volume
+	if self.player and self.player:getDigitalVolumeControl() == 0 then
 		return
 	end
 
@@ -540,6 +550,7 @@ function _getSmallKnobDelta(self, dir, eventTime)
 
 	return delta
 end
+
 
 --[[
 

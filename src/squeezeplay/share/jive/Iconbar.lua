@@ -142,7 +142,10 @@ end
 
 =head2 Iconbar:setWirelessSignal(val)
 
-Set the state of the network icon of the iconbar. Values are nil (no network), ERROR or 1-3.
+Set the state of the network icon of the iconbar.
+Wireless val: ERROR or 0, 1, 2, 3, 4
+Ethernet val: ETHERNET_ERROR or ETHERNET
+self.serverError: ERROR, nil or OK
 
 =cut
 --]]
@@ -151,12 +154,22 @@ function setWirelessSignal(self, val)
 
 	self.wirelessSignal = val
 
-	if val == "ERROR" then
-		self.iconWireless:setStyle("button_wireless_" .. val)
-	elseif val == 0 then
+	-- No ethernet link, ip, gateway or dns
+	if val == "ETHERNET_ERROR" then
+		self.iconWireless:setStyle("button_ethernet_ERROR")
+	-- No wireless link, ip, gateway or dns
+	elseif (val == "ERROR") or (val == 0) then
 		self.iconWireless:setStyle("button_wireless_ERROR")
-	elseif self.serverError == "ERROR" then
+	-- Ethernet ok, but no server connection
+	elseif (val == "ETHERNET") and (self.serverError == "ERROR" or self.serverError == nil) then
+		self.iconWireless:setStyle("button_ethernet_SERVERERROR")
+	-- Wireless ok, but no server connection
+	elseif (val ~= "ETHERNET") and (self.serverError == "ERROR" or self.serverError == nil) then
 		self.iconWireless:setStyle("button_wireless_SERVERERROR")
+	-- Etherent and server connection ok
+	elseif val == "ETHERNET" then
+		self.iconWireless:setStyle("button_ethernet")
+	-- Wireless and server connection ok, show signal strength
 	else
 		self.iconWireless:setStyle("button_wireless_" .. (val or "NONE"))
 	end

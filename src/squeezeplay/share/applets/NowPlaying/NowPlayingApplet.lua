@@ -386,6 +386,25 @@ function notify_playerShuffleModeChange(self, player, shuffleMode)
 end
 
 
+function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
+	log:info('notify_playerDigitalVolumeControl')
+	self.digitalVolumeControl = digitalVolumeControl
+	if self.volSlider then
+		if digitalVolumeControl == 0 then
+			log:info('disable volume UI in NP')
+			self.volSlider:setStyle('npvolumeB_disabled')
+			self.volSlider:setEnabled(false)
+			self.volSlider:setValue(100)
+			self.fixedVolumeSet = true
+		else
+			log:info('enable volume UI in NP')
+			self.volSlider:setStyle('npvolumeB')
+			self.volSlider:setEnabled(true)
+			self.fixedVolumeSet = false
+		end
+	end
+end
+
 function notify_playerRepeatModeChange(self, player, repeatMode)
 	if player ~= self.player then
 		return
@@ -1008,7 +1027,7 @@ function _updateVolume(self)
 	end
 
 	local volume       = tonumber(self.player:getVolume())
-	if self.volSlider then
+	if self.volSlider and not self.fixedVolumeSet then
 		local sliderVolume = self.volSlider:getValue()
 		if sliderVolume ~= volume then
 			log:debug("new volume from player: ", volume)
@@ -1511,18 +1530,31 @@ function _createUI(self)
 			end
 			)
 
-	--todo: this slider is not applicable for Jive, how do we handle this when on the controller
-	self.volSlider = Slider('npvolumeB', 0, 100, 0,
+	self.fixedVolumeSet = self.player:getDigitalVolumeControl() == 0
+	local volumeSliderStyle = 'npvolumeB'
+	if self.digitalVolumeControl == 0 then
+		volumeSliderStyle = 'npvolumeB_disabled'
+	end
+
+	self.volSlider = Slider(volumeSliderStyle, 0, 100, 0,
 			function(slider, value, done)
-				--rate limiting since these are serial networks calls
-				adjustVolume(self, value, true)
-				self.volumeSliderDragInProgress = true
+				if self.fixedVolumeSet then
+					log:info('FIXED VOLUME. DO NOTHING')
+				else
+					--rate limiting since these are serial networks calls
+					adjustVolume(self, value, true)
+					self.volumeSliderDragInProgress = true
+				end
 			end,
 			function(slider, value, done)
-				--called after a drag completes to insure final value not missed by rate limiting
-				self.volumeSliderDragInProgress = false
+				if self.fixedVolumeSet then
+					log:info('FIXED VOLUME. DO NOTHING')
+				else
+					--called after a drag completes to insure final value not missed by rate limiting
+					self.volumeSliderDragInProgress = false
 
-				adjustVolume(self, value, false)
+					adjustVolume(self, value, false)
+				end
 			end)
 	self.volSlider.jumpOnDown = true
 	self.volSlider.pillDragOnly = true
@@ -1623,6 +1655,11 @@ function _createUI(self)
 
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
+
+	if self.fixedVolumeSet then
+		self.volSlider:setValue(100)
+		self.volSlider:setEnabled(false)
+	end
 
 	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
 	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')

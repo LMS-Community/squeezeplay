@@ -392,6 +392,21 @@ DISCOVERING_FILES_PROGRESS
 	RU	Обнаружение файлов
 	SV	Filerna söks igenom
 
+DISCOVERING_DIRECTORY_PROGRESS
+	CS	Hledám soubory
+	DA	Søger efter filer
+	DE	Dateien werden erkannt
+	EN	Discovering files
+	ES	Detectando archivos
+	FI	Etsitään tiedostoja
+	FR	Détection des fichiers
+	IT	Rilevazione file
+	NL	Bestanden detecteren
+	NO	Ser etter filer
+	PL	Wykrywanie plików
+	RU	Обнаружение файлов
+	SV	Letar filer
+
 DIRECTORY_DELETED_PROGRESS
 	CS	Odebrat smazané soubory
 	DA	Fjern slettede filer
@@ -513,19 +528,19 @@ MERGEVA_PROGRESS
 	SV	Slå ihop Blandade artister
 
 PRECACHEARTWORK_PROGRESS
-	CS	Hledání obalů alb
-	DA	Søg efter covere
-	DE	Suche Plattenhüllen
-	EN	Artwork Scan
-	ES	Examen de carátula de álbum
-	FI	Kansitaiteen haku
-	FR	Analyse de pochettes
-	IT	Analisi copertine
-	NL	Hoesafbeeldingen scannen
-	NO	Søk etter albumomslag
-	PL	Przeszukiwanie okładek
-	RU	Сканирование обложек
-	SV	Sökning efter albumomslag
+	CS	Příprava ukládání obalu do mezipaměti
+	DA	Gem coverbilleder i cachelager
+	DE	Plattenhüllen werden zwischengespeichert
+	EN	Pre-caching Artwork
+	ES	Guardando carátula en caché previamente
+	FI	Levykansien tallennus valmiiksi välimuistiin
+	FR	Mise en cache de la pochette
+	IT	Pre-cache copertina
+	NL	Hoesafbeeldingen vooraf in cache opslaan
+	NO	Hurtigbufring av omslag på forhånd
+	PL	Wstępnie buforowanie okładki
+	RU	Предварительное кэширование обложки
+	SV	Cachelagrat albumomslag
 
 ARTWORK_PROGRESS
 	CS	Hledání obalů alb
@@ -541,6 +556,10 @@ ARTWORK_PROGRESS
 	PL	Przeszukiwanie okładek
 	RU	Сканирование обложек
 	SV	Sökning efter albumomslag
+
+DOWNLOADARTWORK_PROGRESS
+	DE	Plattenhüllen werden heruntergeladen
+	EN	Downloading Artwork
 
 CLEANUP1_PROGRESS
 	CS	Čištění databáze č.1

@@ -615,6 +615,7 @@ function skin(self, s, reload, useDefaultSize)
         s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
 
 	s.npvolumeB = { hidden = 1 }
+	s.npvolumeB_disabled = { hidden = 1 }
 
 	-- line in is the same as s.nowplaying but with transparent background
 	s.linein = _uses(s.nowplaying, {
