@@ -857,8 +857,6 @@ function manualCheckNetworkHealth(self, full_check)
 		function(continue, err, msg, msg_param)
 			local message = self:string(msg, msg_param)
 			log:debug("checkNetworkHealth status: ", message)
--- TODO: remove
-			log:warn("checkNetworkHealth status: ", message)
 
 			if continue then
 				-- Update spinny message

@@ -1975,7 +1975,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 	assert(type(callback) == 'function', "No callback function provided")
 
 	Task("checknetworkhealth", ifObj, function()
-		log:info("checkNetworkHealth task started")
+		log:debug("checkNetworkHealth task started")
 
 		callback(true, -1, "NET_CONNECTION_NOK")
 
@@ -2045,7 +2045,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		if not full_check then
 			callback(false, 0, "NET_DNS_OK", tostring(status.ip_dns))
 
-			log:info("checkNetworkHealth task done (part)")
+			log:debug("checkNetworkHealth task done (part)")
 			return
 		end
 
@@ -2197,7 +2197,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 			return
 		end
 
-		log:info("checkNetworkHealth task done (full)")
+		log:debug("checkNetworkHealth task done (full)")
 	end):addTask()
 end
 
