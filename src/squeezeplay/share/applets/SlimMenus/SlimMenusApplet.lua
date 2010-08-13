@@ -480,6 +480,7 @@ local function _menuSink(self, isCurrentServer, server)
 					id = v.id,
 					node = v.node,
 					isApp = v.isApp,
+					iconStyle = v.iconStyle,
 					style = v.style,
 					text = v.text,
 					homeMenuText = v.homeMenuText,
@@ -547,7 +548,7 @@ local function _menuSink(self, isCurrentServer, server)
 				end
 			else
 				-- make a style
-				if item.id then
+				if item.id and not item.iconStyle then
 					local iconStyle = 'hm_' .. item.id
 					item.iconStyle = iconStyle
 				end
