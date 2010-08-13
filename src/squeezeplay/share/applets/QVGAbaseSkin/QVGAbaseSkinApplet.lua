@@ -2077,7 +2077,7 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_device_USB" .. skinSuffix),
 	})
 	s.hm_sdcard = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_device_sdcard" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_device_SDcard" .. skinSuffix),
 	})
 	s.hm_settings = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings" .. skinSuffix),
