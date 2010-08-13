@@ -52,6 +52,9 @@ local appletManager          = appletManager
 local settings               = nil
 local brightnessTable        = {}
 
+local UPDATE_WIRELESS        = 0x01
+local UPDATE_POWER           = 0x02
+
 
 module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
@@ -203,9 +206,9 @@ function init(self)
 
 	-- status bar updates
 	local updateTask = Task("statusbar", self, _updateTask)
-	updateTask:addTask()
+	updateTask:addTask(UPDATE_WIRELESS | UPDATE_POWER)
 	iconbar.iconWireless:addTimer(5000, function()  -- every five seconds
-		updateTask:addTask()
+		updateTask:addTask(UPDATE_WIRELESS | UPDATE_POWER)
 	end)
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
@@ -235,7 +238,7 @@ function init(self)
 
 		elseif sw == 3 then
 			-- power event
-			self:_updatePower()
+			updateTask:addTask(UPDATE_POWER)
 		end
 	end)
 
@@ -708,32 +711,55 @@ function setDate(self, epoch)
 end
 
 
-local function _updateWireless(self)
-	local iface = Networking:activeInterface()
+local function _updateWirelessDone(self, iface, success)
 	local player = Player:getLocalPlayer()
 
-	if not iface then
-		iconbar:setWirelessSignal(nil)
-		player:setSignalStrength(nil)
-	else
-		if iface:isWireless() then
-			-- wireless strength
+	-- wireless
+	if iface:isWireless() then
+		if success then
 			local percentage, quality = iface:getSignalStrength()
 			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-
 			if player then
 				player:setSignalStrength(percentage)
 			end
-		else
-			-- wired
-			local status = iface:status()
-			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
-
+		else		
+			iconbar:setWirelessSignal("ERROR")
 			if player then
 				player:setSignalStrength(nil)
 			end
 		end
+	-- wired
+	else
+		if success then
+			iconbar:setWirelessSignal("ETHERNET")
+		else
+			iconbar:setWirelessSignal("ETHERNET_ERROR")
+		end
+		if player then
+			player:setSignalStrength(nil)
+		end
 	end
+end
+
+
+local function _updateWireless(self)
+	local iface = Networking:activeInterface()
+
+	Networking:checkNetworkHealth(
+		iface,
+		function(continue, err, msg, msg_param)
+			local message = self:string(msg, msg_param)
+			log:debug("_updateWireless status: ", message)
+
+			if not continue then
+				log:debug("_updateWireless: ", err)
+
+				_updateWirelessDone(self, iface, (err == 0))
+			end
+		end,
+		false,
+		nil
+	)
 end
 
 
@@ -759,7 +785,7 @@ function isBatteryLow(self)
 end
 
 
-function _updatePower(self)
+local function _updatePower(self)
 	local isLowBattery = false
 	local chargerState = sysReadNumber(self, "charger_state")
 	local batteryState = false
@@ -840,8 +866,14 @@ end
 
 function _updateTask(self)
 	while true do
-		_updatePower(self)
-		_updateWireless(self)
+		local what = unpack(Task:running().args)
+
+		if (what & UPDATE_POWER) == UPDATE_POWER then
+			_updatePower(self)
+		end
+		if (what & UPDATE_WIRELESS) == UPDATE_WIRELESS then
+			_updateWireless(self)
+		end
 
 		-- suspend task
 		Task:yield(false)
