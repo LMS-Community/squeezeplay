@@ -2671,9 +2671,6 @@ function skin(self, s)
 	s.hm_playerpower = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_power_off" .. skinSuffix),
 	})
-	s.hm_settingsScreen = _uses(_buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_blank" .. skinSuffix),
-	})
 	s.hm_myMusicArtists = _uses(_buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_ml_artist" .. skinSuffix),
 	})
