@@ -1,5 +1,5 @@
 
-local pairs, tonumber, tostring = pairs, tonumber, tostring
+local pairs, tonumber, tostring, unpack = pairs, tonumber, tostring, unpack
 
 -- board specific driver
 local fab4_bsp               = require("fab4_bsp")
@@ -49,6 +49,10 @@ local iconbar                = iconbar
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 local settings	             = nil
+
+local UPDATE_WIRELESS        = 0x01
+local UPDATE_POWER           = 0x02
+
 
 -- hack around global scope to allow bsp c code to call back to applet
 local ourUeventHandler
@@ -153,9 +157,10 @@ function init(self)
 	brightnessTimer:start()
 	
 	-- status bar updates
-	self:update()
-	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
-	      self:update()
+	local updateTask = Task("statusbar", self, _updateTask)
+	updateTask:addTask(UPDATE_WIRELESS)
+	iconbar.iconWireless:addTimer(5000, function()  -- every five seconds
+		updateTask:addTask(UPDATE_WIRELESS)
 	end)
 	
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
@@ -533,36 +538,69 @@ function setDate(self, epoch)
 	iconbar:update()
 end
 
-function update(self)
-	 Task("statusbar", self, _updateTask):addTask()
-end
 
-
-function _updateTask(self)
-	local iface = Networking:activeInterface()
+local function _updateWirelessDone(self, iface, success)
 	local player = Player:getLocalPlayer()
 
-	if not iface then
-		iconbar:setWirelessSignal(nil)
-		player:setSignalStrength(nil)
-	else	
-		if iface:isWireless() then
-			-- wireless strength
+	-- wireless
+	if iface:isWireless() then
+		if success then
 			local percentage, quality = iface:getSignalStrength()
 			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-
 			if player then
 				player:setSignalStrength(percentage)
 			end
-		else
-			-- wired
-			local status = iface:status()
-			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
-
+		else		
+			iconbar:setWirelessSignal("ERROR")
 			if player then
 				player:setSignalStrength(nil)
 			end
 		end
+	-- wired
+	else
+		if success then
+			iconbar:setWirelessSignal("ETHERNET")
+		else
+			iconbar:setWirelessSignal("ETHERNET_ERROR")
+		end
+		if player then
+			player:setSignalStrength(nil)
+		end
+	end
+end
+
+
+local function _updateWireless(self)
+	local iface = Networking:activeInterface()
+
+	Networking:checkNetworkHealth(
+		iface,
+		function(continue, err, msg, msg_param)
+			local message = self:string(msg, msg_param)
+			log:debug("_updateWireless status: ", message)
+
+			if not continue then
+				log:debug("_updateWireless: ", err)
+
+				_updateWirelessDone(self, iface, (err == 0))
+			end
+		end,
+		false,
+		nil
+	)
+end
+
+
+function _updateTask(self)
+	while true do
+		local what = unpack(Task:running().args)
+
+		if (what & UPDATE_WIRELESS) == UPDATE_WIRELESS then
+			_updateWireless(self)
+		end
+
+		-- suspend task
+		Task:yield(false)
 	end
 end
 
