@@ -391,6 +391,10 @@ function setupShowSelectPlayer(self, setupNext, windowStyle)
 	window:addWidget(menu)
 
 	window:addTimer(5000, function() 
+				-- only scan if this window is on top, not under a transparent popup
+				if Framework.windowStack[1] ~= window then
+					return
+				end
 				self:_scan() 
 			end)
 
