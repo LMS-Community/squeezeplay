@@ -86,8 +86,6 @@ static void decode_alsa_stop(void) {
 
 	ASSERT_AUDIO_LOCKED();
 
-	decode_audio->set_sample_rate = 44100;
-
 	decode_alsa_check_pids();
 }
 

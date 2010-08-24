@@ -761,6 +761,10 @@ static void *audio_thread_execute(void *data) {
 
 			do_open = 0;
 
+			if (loopback) {
+				decode_audio->set_sample_rate = 44100;
+			}
+
 			if ((err = pcm_open(state, loopback, SND_PCM_STREAM_PLAYBACK)) < 0) {
 				LOG_ERROR("Playback open failed: %s", snd_strerror(err));
 				goto thread_error;
