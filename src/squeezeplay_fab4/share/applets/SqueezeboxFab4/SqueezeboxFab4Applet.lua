@@ -573,6 +573,11 @@ end
 local function _updateWireless(self)
 	local iface = Networking:activeInterface()
 
+	-- After factory reset iface is nil (none selected yet)
+	if iface == nil then
+		return
+	end
+
 	Networking:checkNetworkHealth(
 		iface,
 		function(continue, err, msg, msg_param)
