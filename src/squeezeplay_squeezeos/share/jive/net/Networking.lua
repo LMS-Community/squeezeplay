@@ -554,7 +554,7 @@ end
 
 --[[
 
-=head2 jive.net.Networking:_scan_task(callback)
+=head2 jive.net.Networking:_wirelessScanTask(callback)
 
 network scanning. this can take a little time so we do this in 
 the network thread so the ui is not blocked.
@@ -565,29 +565,42 @@ the network thread so the ui is not blocked.
 function _wirelessScanTask(self, callback)
 	assert(Task:running(), "Networking:scan must be called in a Task")
 
-	local status, err = self:request("SCAN")
+	-- Get the active interface mapping (ssid)
+	-- Wireless: ssid, Ethernet: false
+	local activenSSID = self:_ifstate()
+
+	-- If we currently use ethernet wpa_supplicant needs to be kicked to allow scanning again
+	-- (I.e. move wpa_supplicant state from DISCONNECTED to INACTIVE)
+	-- Only Fab4 wpa_supplicant (Marvell?) has this issue
+	-- Jive does not have ethernet - not an issue
+	-- Baby uses different wpa_supplicant (newer) - not an issue
+	if System:getMachine() == "fab4" then
+		if not activenSSID then
+			self:request("REASSOCIATE")
+		end
+	end
+
+	-- Scan wireless network
+ 	local status, err = self:request("SCAN")
 	if err then
 		return
 	end
 
-	-- get the active interface mapping (ssid)
-	local active = self:_ifstate()
-
-	-- get the associated network
-	local associated = false
-	if active then
+	-- Get the associated network (ssid)
+	local associatedSSID = false
+	if activenSSID then
 		local status, err = self:request("STATUS")
 		if err then
 			return
 		end
 
-		associated = string.match(status, "\nssid=([^\n]+)")
+		associatedSSID = string.match(status, "\nssid=([^\n]+)")
 	end
  
-	-- load configured networks from wpa supplicant
+	-- Load configured networks from wpa supplicant
 	local networks = self:request("LIST_NETWORKS")
 
-	-- get scan results
+	-- Get scan results
 	local scan, err = self:request("SCAN_RESULTS")
 	if err then
 		return
@@ -595,7 +608,7 @@ function _wirelessScanTask(self, callback)
 
 	local now = Framework:getTicks()
 
-	-- process scan results
+	-- Process scan results
 	for bssid, level, flags, ssid in string.gmatch(scan, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
 
 		local quality = 1
@@ -612,7 +625,7 @@ function _wirelessScanTask(self, callback)
 			flags = flags,
 			level = level,
 			quality = quality,
-			associated = (ssid == active),
+			associated = (ssid == activenSSID),
 			lastScan = now
 		}
 	end
@@ -646,17 +659,15 @@ function _wirelessScanTask(self, callback)
 
 	-- Bug #5227 if we are associated use the same quality indicator
 	-- as the icon bar
-	if associated and self._scanResults[associated] then
+	if associatedSSID and self._scanResults[associatedSSID] then
 		local percentage, quality = self:getSignalStrength()
 
-		self._scanResults[associated].quality = quality
+		self._scanResults[associatedSSID].quality = quality
 	end
 
 	if callback then
 		callback(self._scanResults)
 	end
-
-	self.scanTask = nil
 end
 
 
@@ -676,6 +687,7 @@ function _ethernetScanTask(self, callback)
 
 	local status = self.t_sock:ethStatus()
 
+	-- This is eth0=eth0 for ethernet connection
 	local active = self:_ifstate()
 
 	status.flags  = "[ETH]"
@@ -684,9 +696,9 @@ function _ethernetScanTask(self, callback)
 
 	self._scanResults[self.interface] = status
 
-	callback(self._scanResults)
-
-	return
+	if callback then
+		callback(self._scanResults)
+	end
 end
 
 
