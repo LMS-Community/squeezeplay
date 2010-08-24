@@ -3705,6 +3705,9 @@ function _attachPlayer(self, player)
 	-- clear any errors, we may have changed servers
 	iconbar:setServerError("OK")
 
+	-- new player, no cached volume
+	self.cachedVolume = nil
+
 	-- update the volume object
 	if self.volume then
 		self.volume:setPlayer(player)
