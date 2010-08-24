@@ -438,19 +438,8 @@ function _scanResults(self, iface)
 			self.scanResults[ssid].bssid = entry.bssid
 			self.scanResults[ssid].flags = entry.flags
 
-			local itemStyle
-			if iface:isWireless() then
-				itemStyle = "wirelessLevel" .. (entry.quality or 0)
-			else
-				itemStyle = entry.link and "wiredEthernetLink" or "wiredEthernetNoLink"
-			end
-
-			local item = self.scanResults[ssid].item
-			item.arrow:setStyle(itemStyle)
-
-			if self.scanMenu then
-				self.scanMenu:updatedItem(item)
-			end
+			self.scanResults[ssid].associated = entry.associated
+			self.scanResults[ssid].quality = entry.quality
 		end
 	end
 
@@ -461,6 +450,26 @@ function _scanResults(self, iface)
 				self.scanMenu:removeItem(entry.item)
 			end
 			self.scanResults[ssid] = nil
+		end
+	end
+
+	-- update networks
+	for ssid, entry in pairs(self.scanResults) do
+		if iface:isWireless() then
+			local item = entry.item
+
+			-- Mark current wireless network (if available)
+			if entry.associated and entry.quality > 0 then
+				item.style = "item_checked"
+			else
+				item.style = "item"
+			end
+
+			-- Update wireless signal quality
+			item.arrow:setStyle("wirelessLevel" .. (entry.quality or 0))
+			if self.scanMenu then
+				self.scanMenu:updatedItem(item)
+			end
 		end
 	end
 end

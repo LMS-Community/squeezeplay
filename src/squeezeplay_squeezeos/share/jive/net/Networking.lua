@@ -620,17 +620,25 @@ function _wirelessScanTask(self, callback)
 			quality = i
 		end
 
+		-- Add (or update) all found networks to _scanResults list
 		self._scanResults[ssid] = {
 			bssid = string.lower(bssid),
 			flags = flags,
 			level = level,
 			quality = quality,
-			associated = (ssid == activenSSID),
+			associated = false,
 			lastScan = now
 		}
 	end
 
-	-- process configured networks
+	-- Timeout networks - remove from _scanResults list
+	for ssid, entry in pairs(self._scanResults) do
+		if now - entry.lastScan > SSID_TIMEOUT then
+			self._scanResults[ssid] = nil
+		end
+	end
+
+	-- Add (or update) already configured networks to _scanResults list
 	for id, ssid, flags in string.gmatch(networks, "([%d]+)\t([^\t]*)\t[^\t]*\t([^\t]*)\n") do
 		if not self._scanResults[ssid] then
 			self._scanResults[ssid] = {
@@ -639,20 +647,28 @@ function _wirelessScanTask(self, callback)
 				level = 0,
 				quality = 0,
 				associated = false,
+				lastScan = now,
 			}
 		end
 
 		self._scanResults[ssid].id = id
-		self._scanResults[ssid].lastScan = now
 	end
 
-	-- timeout networks
+	-- Mark current network (and count entries)
 	local count = 0
 	for ssid, entry in pairs(self._scanResults) do
-		count = count + 1
-		if now - entry.lastScan > SSID_TIMEOUT then
-			self._scanResults[ssid] = nil
+		-- Ssids do not have spaces replaced
+		local nssid = string.gsub(ssid, "[ \t]", "_")
+
+		local associated = false
+
+		if nssid and activenSSID and associatedSSID then
+			associated = (nssid == activenSSID)
 		end
+
+		self._scanResults[ssid].associated = associated
+
+		count = count + 1
 	end
 
 	log:info("scan found ", count, " wireless networks")
