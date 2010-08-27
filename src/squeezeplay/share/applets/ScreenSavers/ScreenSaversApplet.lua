@@ -719,11 +719,7 @@ function screensaverSetting(self, menuItem, mode)
 	menu:setHeaderWidget(Textarea("help_text", self:string(token)))
 	window:addWidget(menu)
 
-	window:addListener(EVENT_WINDOW_POP, function() 
-			-- we may be moving off of false:false here, so when we leave this window, restart the SS timer
-			self:restartScreenSaverTimer()
-			self:storeSettings() 
-	end)
+	window:addListener(EVENT_WINDOW_POP, function() self:storeSettings() end)
 
 	self:tieAndShowWindow(window)
 	return window
