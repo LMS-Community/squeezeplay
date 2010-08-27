@@ -240,14 +240,16 @@ int SDL_StartEventLoop(Uint32 flags)
 	SDL_ProcessEvents[SDL_SYSWMEVENT] = SDL_IGNORE;
 
 	/* Initialize event handlers */
-	retcode = 0;
-	retcode += SDL_AppActiveInit();
-	retcode += SDL_KeyboardInit();
-	retcode += SDL_MouseInit();
-	retcode += SDL_QuitInit();
-	if ( retcode < 0 ) {
-		/* We don't expect them to fail, but... */
-		return(-1);
+	if (flags & SDL_INIT_VIDEO) {
+		retcode = 0;
+		retcode += SDL_AppActiveInit();
+		retcode += SDL_KeyboardInit();
+		retcode += SDL_MouseInit();
+		retcode += SDL_QuitInit();
+		if ( retcode < 0 ) {
+			/* We don't expect them to fail, but... */
+			return(-1);
+		}
 	}
 
 	/* Create the lock and event thread */
