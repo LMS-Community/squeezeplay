@@ -65,10 +65,6 @@ module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
 
 
------------------------
--- Proximity Init Stuff
------------------------
-local PROXIMITY_SYSPATH = "/sys/bus/i2c/devices/0-0047/"
 
 -----------------------------
 -- Ambient Light Init Stuff
@@ -135,7 +131,6 @@ function init(self)
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 
-	self:initProximity()
 	self:initBrightness()
 	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
@@ -187,16 +182,6 @@ function ourUeventHandler(evt, msg)
 			listener(evt, msg)
 		end
 	end
-end
-
--------------------------------
--- Proximity Sensor Stuff Start
--------------------------------
-function initProximity(self)
-	-- Disable proximity
-	local f = io.open(PROXIMITY_SYSPATH .. "proximity_control", "w")
-	f:write("0")
-	f:close()
 end
 
 -----------------------------
