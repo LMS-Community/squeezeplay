@@ -162,7 +162,7 @@ function autoplayShow(self, countdown)
 		help:setValue(self:string("MACRO_AUTOSTART_COMPLETE"))
 	else
 		-- countdown to tests
-		local timer = countdown or 20
+		local timer = countdown or 5
 		help:setValue(self:string("MACRO_AUTOSTART_HELP", timer))
 
 		window:addTimer(1000,
@@ -320,6 +320,15 @@ function macroEvent(interval, ...)
 end
 
 
+-- dispatch ui action 'action', and delay for interval ms
+function macroAction(interval, action)
+	log:info("macroAction: ", action)
+
+	Framework:pushAction(action)
+	macroDelay(interval)
+end
+
+
 -- returns the widgets of type class from the window
 function _macroFindWidget(class)
 	local window = Framework.windowStack[1]
@@ -396,6 +405,7 @@ function macroSelectMenuItem(interval, pattern)
 			break
 		end
 
+		log:info("index=" .. menu:getSelectedIndex())
 		macroEvent(100, EVENT_SCROLL, dir)
 	until menu:getSelectedIndex() == index
 
@@ -447,6 +457,10 @@ function macroHome(interval)
 	if #Framework.windowStack > 1 then
 		Framework.windowStack[#Framework.windowStack - 1]:hideToTop()
 	end
+
+	macroDelay(50)
+	local menu = _macroFindWidget(Menu)
+	menu:setSelectedIndex(1)
 
 	macroDelay(interval)
 end
