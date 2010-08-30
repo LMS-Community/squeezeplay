@@ -107,6 +107,14 @@ int SDL_InitSubSystem(Uint32 flags)
 		}
 		SDL_initialized |= SDL_INIT_TIMER;
 
+		/* if we have timers but no Video then we still need the event loop */
+		if (!(flags & SDL_INIT_VIDEO)) {
+			/* Start the event loop */
+			if ( SDL_StartEventLoop(flags) < 0 ) {
+				SDL_TimerQuit();
+				return(-1);
+			}
+		}
 	}
 #else
 	if ( flags & SDL_INIT_TIMER ) {

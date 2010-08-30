@@ -268,7 +268,7 @@ int SDL_VideoInit (const char *driver_name, Uint32 flags)
 	video->info.vfmt = SDL_VideoSurface->format;
 
 	/* Start the event loop */
-	if ( SDL_StartEventLoop(flags) < 0 ) {
+	if ( SDL_StartEventLoop(flags | SDL_INIT_VIDEO) < 0 ) {
 		SDL_VideoQuit();
 		return(-1);
 	}
