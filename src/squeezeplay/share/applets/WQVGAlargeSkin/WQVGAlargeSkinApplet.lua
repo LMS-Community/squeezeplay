@@ -2320,6 +2320,8 @@ function skin(self, s)
                 },
 	})
  
+	s.nowplaying.npprogressNB.elapsedSmall = s.nowplaying.npprogressNB.elapsed
+
 	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB)
 
 	s.nowplaying_art_only = _uses(s.nowplaying, {

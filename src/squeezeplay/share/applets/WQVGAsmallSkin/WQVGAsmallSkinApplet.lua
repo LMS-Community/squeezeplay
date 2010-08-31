@@ -3065,6 +3065,7 @@ function skin(self, s)
 		},
 
 	})
+	s.nowplaying.npprogressNB.elapsedSmall = s.nowplaying.npprogressNB.elapsed
 
 	-- sliders
 	s.nowplaying.npprogress.npprogressB_disabled = _uses(s.nowplaying.npprogress.npprogressB, {
