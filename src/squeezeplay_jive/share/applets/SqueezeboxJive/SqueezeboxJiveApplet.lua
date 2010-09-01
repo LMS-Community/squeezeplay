@@ -341,14 +341,11 @@ local function _updateWireless(self)
 
 	Networking:checkNetworkHealth(
 		iface,
-		function(continue, err, msg, msg_param)
-			local message = self:string(msg, msg_param)
-			log:debug("_updateWireless status: ", message)
+		function(continue, result)
+			log:debug("_updateWireless: ", result)
 
 			if not continue then
-				log:debug("_updateWireless: ", err)
-
-				_updateWirelessDone(self, iface, (err == 0))
+				_updateWirelessDone(self, iface, (result >= 0))
 			end
 		end,
 		false,
