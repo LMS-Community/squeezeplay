@@ -1002,8 +1002,8 @@ NET_BRINGING_NETWORK_UP
 NET_REPAIR_NETWORK_DONE
 	EN	Repair network done
 
-NET_CONNECTION_NOK
-	EN	Not connected
+NET_INTERFACE
+	EN	Check network interface
 
 NET_INTERFACE_NOK
 	EN	No network interface
@@ -1080,4 +1080,6 @@ NET_PORT_OK
 NET_PORT_NOK
 	EN	Connection to %s not ok
 
+NET_SUCCESS
+	EN	All network tests passed successfully
 

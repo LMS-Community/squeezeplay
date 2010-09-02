@@ -665,6 +665,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_GENERAL"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showGeneralDiagnosticsMenu()
@@ -673,6 +674,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_NETWORK_HEALTH"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showNetworkHealthDiagnosticsMenu()
@@ -681,6 +683,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_WIRELESS"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showWirelessDiagnosticsMenu()
@@ -690,6 +693,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:getMachine() ~= 'jive' then
 		menu:addItem({
 			text = self:string("MENU_ETHERNET"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				self:showEthernetDiagnosticsMenu()
@@ -699,6 +703,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_SERVER"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showServerDiagnosticsMenu()
@@ -708,6 +713,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:getMachine() == "baby" then
 		menu:addItem({
 			text = self:string("POWER"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				self:showPowerDiagnosticsMenu()
@@ -718,6 +724,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:isHardware() then
 		menu:addItem({
 			text = self:string("SOFTWARE_UPDATE"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
@@ -728,6 +735,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 		if not suppressNetworkingItem then
 			menu:addItem({
 				text = self:string("DIAGNOSTICS_NETWORKING"),
+				sound = "WINDOWSHOW",		
 				style = 'item',
 				callback = function ()
 					appletManager:callService("settingsNetworking")
@@ -821,6 +829,64 @@ function showNetworkHealthDiagnosticsMenu(self)
 end
 
 
+local netResultToText = {
+	[1] = {		text="NET_INTERFACE",		help=""},
+	[-1] = {	text="NET_INTERFACE_NOK",	help=""},
+	[3] = {		text="NET_LINK",		help=""},
+	[5] = {		text="NET_LINK_WIRELESS_OK",	help=""},
+	[-5] = {	text="NET_LINK_WIRELESS_NOK",	help=""},
+	[6] = {		text="NET_LINK_ETHERNET_OK",	help=""},
+	[-6] = {	text="NET_LINK_ETHERNET_NOK",	help=""},
+	[8] = {		text="NET_IP_OK",		help=""},
+	[-8] = {	text="NET_IP_NOK",		help=""},
+	[10] = {	text="NET_GATEWAY_OK",		help=""},
+	[-10] = {	text="NET_GATEWAY_NOK",		help=""},
+	[12] = {	text="NET_DNS_OK",		help=""},
+	[-12] = {	text="NET_DNS_NOK",		help=""},
+	[20] = {	text="NET_ARPING",		help=""},
+	[21] = {	text="NET_ARPING_OK",		help=""},
+	[-21] = {	text="NET_ARPING_NOK",		help=""},
+	[-23] = {	text="NET_SERVER_NOK",		help=""},
+	[25] = {	text="NET_RESOLVE",		help=""},
+	[27] = {	text="NET_RESOLVE_OK",		help=""},
+	[-27] = {	text="NET_RESOLVE_NOK",		help=""},
+	[29] = {	text="NET_PING",		help=""},
+	[31] = {	text="NET_PING_OK",		help=""},
+	[-31] = {	text="NET_PING_NOK",		help=""},
+	[33] = {	text="NET_PORT",		help=""},
+	[35] = {	text="NET_PORT_OK",		help=""},
+	[-35] = {	text="NET_PORT_NOK",		help=""},
+	[37] = {	text="NET_PORT_OK",		help=""},
+	[-37] = {	text="NET_PORT_NOK",		help=""},
+	[100] = {	text="NET_BRINGING_NETWORK_DOWN",	help=""},
+	[102] = {	text="NET_BRINGING_NETWORK_UP",		help=""},
+	[104] = {	text="NET_REPAIR_NETWORK_DONE",		help=""},
+}
+
+
+local function setResult(self, index, result, msgStr)
+	self:addExtraStyle(jive.ui.style)
+
+	local myItem = self.labels[index]
+
+	-- no error
+	if result >= 0 then
+		-- Replace everything's ok message with a user friendly one
+		msgStr = tostring(self:string("NET_SUCCESS"))
+		myItem.style = "item_info_green"
+	-- some error
+	else
+		myItem.style = "item_info_red"
+	end
+
+	self.networkHealthMenu:setText(self.labels[index], self:string(index, msgStr))
+	self.networkHealthMenu:setSelectedIndex(1)
+
+-- TODO: needed?
+--	self.networkHealthMenu:replaceIndex(myItem, 1)
+end
+
+
 function manualCheckNetworkHealth(self, full_check)
 	local popup = Popup("waiting_popup")
 	popup:setAllowScreensaver(false)
@@ -854,23 +920,20 @@ function manualCheckNetworkHealth(self, full_check)
 
 	Networking:checkNetworkHealth(
 		ifObj,
-		function(continue, err, msg, msg_param)
-			local message = self:string(msg, msg_param)
-			log:debug("checkNetworkHealth status: ", message)
+		function(continue, result, msg_param)
+			local msg = netResultToText[result].text
+			local msgStr = tostring(self:string(msg, msg_param))
+
+			log:debug("checkNetworkHealth status: ", msgStr)
 
 			if continue then
 				-- Update spinny message
-				status:setValue(self:string("STATUS_MSG", message))
+				status:setValue(self:string("STATUS_MSG", msgStr))
 			else
-				log:debug("Network health error: ", err)
+				log:debug("Network health error: ", result)
 
 				-- Update final message
-				self:setResult("NETWORK_STATUS", err)
-
---				self:setValue("NETWORK_STATUS", message)
-				self.networkHealthMenu:setText(self.labels["NETWORK_STATUS"], self:string("NETWORK_STATUS", message))
-
-				self.networkHealthMenu:setSelectedIndex(1)
+				setResult(self, "NETWORK_STATUS", result, msgStr)
 
 				popup:hide()
 			end
@@ -880,20 +943,6 @@ function manualCheckNetworkHealth(self, full_check)
 	)
 
 	self:tieAndShowWindow(popup)
-end
-
-function setResult(self, index, err)
-	self:addExtraStyle(jive.ui.style)
-
-	local myItem = self.labels[index]
-
-	if err == 0 then
-		myItem.style = "item_info_green"
-	else
-		myItem.style = "item_info_red"
-	end
--- TODO: needed?
---	self.networkHealthMenu:replaceIndex(myItem, 1)
 end
 
 
@@ -912,16 +961,18 @@ function manualRepairNetwork(self)
 
 	Networking:repairNetwork(
 		ifObj,
-		function(continue, err, msg, msg_param)
-			local message = self:string(msg, msg_param)
-			log:debug("repairNetwork status: ", message)
+		function(continue, result)
+			local msg = netResultToText[result].text
+			local msgStr = tostring(self:string(msg))
+
+			log:debug("repairNetwork status: ", msgStr)
 
 			if continue then
 				-- Update spinny message
-				status:setValue(self:string("STATUS_MSG", message))
+				status:setValue(self:string("STATUS_MSG", msgStr))
 			else
 				-- Update final message
-				log:debug("Repair network error: ", err)
+				log:debug("Repair network error: ", result)
 
 				popup:hide()
 			end

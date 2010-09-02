@@ -1984,11 +1984,11 @@ The following checks are only done if full_check is true
 - Ping server (SC or SN)
 - Try to connect to port 3483 and 9000
 
-While the checks are running status messages are returned
+While the checks are running status values are returned
 via callback function. The callback provides three params:
 - continue: true or false
-- err: -1 or 0
-- message: message according to what is happening or failed
+- result: ok >= 0, nok < 0 (for specific values see code below or sample use in DiagnosticsApplet)
+- msg_param: additional message info
 
 class		- Networking class
 ifObj		- network object
@@ -2005,18 +2005,18 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 	Task("checknetworkhealth", ifObj, function()
 		log:debug("checkNetworkHealth task started")
 
-		callback(true, -1, "NET_CONNECTION_NOK")
+		callback(true, 1)
 
 		-- ------------------------------------------------------------
 		-- Check for valid network interface
 		if ifObj == nil then
-			callback(false, -1, "NET_INTERFACE_NOK")
+			callback(false, -1)
 			return
 		end
 
 		-- ------------------------------------------------------------
 		-- Getting network status (link / no link)
-		callback(true, 0, "NET_LINK")
+		callback(true, 3)
 
 		local status = ifObj:t_wpaStatus()
 
@@ -2024,16 +2024,16 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 			local percentage, quality = ifObj:getSignalStrength()
 
 			if (status.wpa_state ~= "COMPLETED") or (quality == 0) then
-				callback(false, -1, "NET_LINK_WIRELESS_NOK")
+				callback(false, -5)
 				return
 			end
-			callback(true, 0, "NET_LINK_WIRELESS_OK")
+			callback(true, 5)
 		else
 			if status.link ~= true then
-				callback(false, -1, "NET_LINK_ETHERNET_NOK")
+				callback(false, -6)
 				return
 			end
-			callback(true, 0, "NET_LINK_ETHERNET_OK")
+			callback(true, 6)
 		end
 
 		-- We have a network link (wired or wireless)
@@ -2041,37 +2041,37 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- ------------------------------------------------------------
 		-- Check for valid ip address
 		if status.ip_address == nil or string.match(status.ip_address, "^169.254.") then
-			callback(false, -1, "NET_IP_NOK")
+			callback(false, -8)
 			return
 		end
 
 		-- We have a valid ip address
-		callback(true, 0, "NET_IP_OK", tostring(status.ip_address))
+		callback(true, 8, tostring(status.ip_address))
 
 		-- ------------------------------------------------------------
 		-- Check for valid gateway
 		if status.ip_gateway == nil then
-			callback(false, -1, "NET_GATEWAY_NOK")
+			callback(false, -10)
 			return
 		end
 
 		-- We have a valid gateway
-		callback(true, 0, "NET_GATEWAY_OK", tostring(status.ip_gateway))
+		callback(true, 10, tostring(status.ip_gateway))
 
 		-- ------------------------------------------------------------
 		-- Check for valid dns sever ip
 		if status.ip_dns == nil then
-			callback(false, -1, "NET_DNS_NOK")
+			callback(false, -12)
 			return
 		end
 
 		-- We have a valid dns server ip
-		callback(true, 0, "NET_DNS_OK", tostring(status.ip_dns))
+		callback(true, 12, tostring(status.ip_dns))
 
 		-- ------------------------------------------------------------
 		-- Stop here if not full check is needed
 		if not full_check then
-			callback(false, 0, "NET_DNS_OK", tostring(status.ip_dns))
+			callback(false, 12, tostring(status.ip_dns))
 
 			log:debug("checkNetworkHealth task done (part)")
 			return
@@ -2079,7 +2079,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 
 		-- ------------------------------------------------------------
 		-- Arping our own ip address
-		callback(true, 0, "NET_ARPING", tostring(status.ip_address))
+		callback(true, 20, tostring(status.ip_address))
 
 		-- Arping
 		local arpingOK = false
@@ -2091,9 +2091,9 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 				end
 			else
 				if arpingOK then
-					callback(true, 0, "NET_ARPING_OK")
+					callback(true, 21)
 				else
-					callback(false, -1, "NET_ARPING_NOK", tostring(status.ip_address))
+					callback(false, -21, tostring(status.ip_address))
 				end
 			end
 		end)
@@ -2110,7 +2110,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- ------------------------------------------------------------
 		-- Check for server
 		if not server then
-			callback(false, -1, "NET_SERVER_NOK")
+			callback(false, -23)
 			return
 		end
 
@@ -2123,22 +2123,22 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		if DNS:isip(server_uri) then
 			server_ip = server_uri
 		else
-			callback(true, 0, "NET_RESOLVE", server_name)
+			callback(true, 25, server_name)
 			server_ip, err = DNS:toip(server_uri)
 		end
 
 		-- Check for valid SN ip address
 		if server_ip == nil then
-			callback(false, -1, "NET_RESOLVE_NOK", server_name)
+			callback(false, -27, server_name)
 			return
 		end
 
 		-- We have a valid ip address for SN
-		callback(true, 0, "NET_RESOLVE_OK", server_name .. ": " .. server_ip)
+		callback(true, 27, server_name .. ": " .. server_ip)
 
 		-- ------------------------------------------------------------
 		-- Ping server (SC or SN)
-		callback(true, 0, "NET_PING", server_name)
+		callback(true, 29, server_name)
 
 		local pingOK = false
 		local pingProc = Process(jnt, "ping -c 1 " .. server_ip)
@@ -2149,9 +2149,9 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 				end
 			else
 				if pingOK then
-					callback(true, 0, "NET_PING_OK", server_name .. " (" .. server_ip .. ")")
+					callback(true, 31, server_name .. " (" .. server_ip .. ")")
 				else
-					callback(false, -1, "NET_PING_NOK", server_name .. " (" .. server_ip .. ")")
+					callback(false, -31, server_name .. " (" .. server_ip .. ")")
 				end
 			end
 		end)
@@ -2167,7 +2167,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 
 		-- ------------------------------------------------------------
 		-- Port 3483 test
-		callback(true, 0, "NET_PORT", server_name .. " (3483)")
+		callback(true, 33, server_name .. " (3483)")
 
 		local portOk_3483 = false
 		local tcp_3483 = SocketTcp(jnt, server_ip, 3483, "porttest")
@@ -2179,9 +2179,9 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 			end
 
 			if portOk_3483 then
-				callback(true, 0, "NET_PORT_OK", server_name .. " (3483)")
+				callback(true, 35, server_name .. " (3483)")
 			else
-				callback(false, 0, "NET_PORT_NOK", server_name .. " (3483)")
+				callback(false, -35, server_name .. " (3483)")
 			end
 			tcp_3483:close()
 		end)
@@ -2197,7 +2197,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 
 		-- ------------------------------------------------------------
 		-- Port 9000 test
-		callback(true, 0, "NET_PORT", server_name .. " (" .. server_port .. ")")
+		callback(true, 33, server_name .. " (" .. server_port .. ")")
 
 		local portOk = false
 		local tcp = SocketTcp(jnt, server_ip, server_port, "porttest")
@@ -2209,9 +2209,9 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 			end
 
 			if portOk then
-				callback(false, 0, "NET_PORT_OK", server_name .. " (" .. server_port .. ")")
+				callback(false, 37, server_name .. " (" .. server_port .. ")")
 			else
-				callback(false, 0, "NET_PORT_NOK", server_name .. " (" .. server_port .. ")")
+				callback(false, -37, server_name .. " (" .. server_port .. ")")
 			end
 			tcp:close()
 		end)
@@ -2240,11 +2240,10 @@ Attempt to repair network connction doing the following:
 - Bring up the active network - this also starts DHCP
 - Connect to wireless network / wired network
 
-While it's running status messages are returned
-via callback function. The callback provides three params:
+While it's running status values are returned via
+callback function. The callback provides two params:
 - continue: true or false
-- err: -1 or 0
-- message: message according to what is happening or failed
+- result: ok >= 0, nok < 0
 
 class		- Networking class
 ifObj		- network object
@@ -2261,15 +2260,15 @@ function repairNetwork(class, ifObj, callback)
 
 		local active = ifObj:_ifstate()
 
-		callback(true, 0, "NET_BRINGING_NETWORK_DOWN")
+		callback(true, 100)
 
 		ifObj:_ifDown()
 
-		callback(true, 0, "NET_BRINGING_NETWORK_UP")
+		callback(true, 102)
 
 		ifObj:_ifUp(active)
 
-		callback(false, 0, "NET_REPAIR_NETWORK_DONE")
+		callback(false, 104)
 
 		log:info("repairNetwork task done")
 	end):addTask()
