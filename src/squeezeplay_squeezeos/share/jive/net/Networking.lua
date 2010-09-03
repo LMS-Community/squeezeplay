@@ -128,6 +128,7 @@ function __init(self, jnt, interface, isWireless)
 
 	obj.interface     = interface
 	obj.wireless      = isWireless
+	obj.networkResult = -9999
 
 	if isWireless then
 		obj:detectChipset()
@@ -369,6 +370,15 @@ function isWireless(self)
 	return self.wireless
 end
 
+
+
+function getNetworkResult(self)
+	return self.networkResult
+end
+
+function setNetworkResult(self, result)
+	self.networkResult = result
+end
 
 --[[
 
@@ -1967,7 +1977,6 @@ function t_wpsStatus(self)
 	return status
 end
 
-
 --[[
 
 =head2 jive.net.Networking:checkNetworkHealth()
@@ -2025,12 +2034,14 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 
 			if (status.wpa_state ~= "COMPLETED") or (quality == 0) then
 				callback(false, -5)
+				ifObj:setNetworkResult(-5)
 				return
 			end
 			callback(true, 5)
 		else
 			if status.link ~= true then
 				callback(false, -6)
+				ifObj:setNetworkResult(-6)
 				return
 			end
 			callback(true, 6)
@@ -2042,6 +2053,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- Check for valid ip address
 		if status.ip_address == nil or string.match(status.ip_address, "^169.254.") then
 			callback(false, -8)
+			ifObj:setNetworkResult(-8)
 			return
 		end
 
@@ -2052,6 +2064,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- Check for valid gateway
 		if status.ip_gateway == nil then
 			callback(false, -10)
+			ifObj:setNetworkResult(-10)
 			return
 		end
 
@@ -2062,6 +2075,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- Check for valid dns sever ip
 		if status.ip_dns == nil then
 			callback(false, -12)
+			ifObj:setNetworkResult(-12)
 			return
 		end
 
@@ -2074,6 +2088,8 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 			callback(false, 12, tostring(status.ip_dns))
 
 			log:debug("checkNetworkHealth task done (part)")
+
+			ifObj:setNetworkResult(12)
 			return
 		end
 
@@ -2104,6 +2120,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		end
 
 		if not arpingOK then
+			ifObj:setNetworkResult(-21)
 			return
 		end
 
@@ -2111,6 +2128,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- Check for server
 		if not server then
 			callback(false, -23)
+			ifObj:setNetworkResult(-23)
 			return
 		end
 
@@ -2130,6 +2148,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		-- Check for valid SN ip address
 		if server_ip == nil then
 			callback(false, -27, server_name)
+			ifObj:setNetworkResult(-27)
 			return
 		end
 
@@ -2162,6 +2181,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		end
 
 		if not pingOK then
+			ifObj:setNetworkResult(-31)
 			return
 		end
 
@@ -2192,6 +2212,7 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		end
 
 		if not portOk_3483 then
+			ifObj:setNetworkResult(-35)
 			return
 		end
 
@@ -2222,8 +2243,11 @@ function checkNetworkHealth(class, ifObj, callback, full_check, server)
 		end
 
 		if not portOk then
+			ifObj:setNetworkResult(-37)
 			return
 		end
+
+		ifObj:setNetworkResult(37)
 
 		log:debug("checkNetworkHealth task done (full)")
 	end):addTask()
