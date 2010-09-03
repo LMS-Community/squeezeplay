@@ -272,6 +272,25 @@ function autoplay(self)
 	self:saveConfig()
 end
 
+-- play the single autorun macro
+function autorun(self)
+	local config = self.config
+
+	if not config.autorun then
+		return
+	end
+
+	local macro = config.macros[config.autorun]
+	
+	if not macro then
+		log:warn('No autorun macro with the key ', config.autorun)
+		return
+	end
+
+	self:play(macro)
+
+end
+
 
 -- play the macro
 function play(self, _macro)
