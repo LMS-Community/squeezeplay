@@ -53,6 +53,10 @@ oo.class(_M, Applet)
 -- macro (global) state
 local instance = false
 
+-- make require available to macros
+function macroRequire(mod)
+	return require(mod)
+end
 
 function init(self)
 	self.config = {}
@@ -371,7 +375,7 @@ function macroSelectMenuIndex(interval, index)
 
 	local ok = false
 
-	local len = #menu:getItems()
+	local len = menu:getSize()
 	if index > len then
 		return false
 	end
@@ -405,7 +409,6 @@ function macroSelectMenuItem(interval, pattern)
 			break
 		end
 
-		log:info("index=" .. menu:getSelectedIndex())
 		macroEvent(100, EVENT_SCROLL, dir)
 	until menu:getSelectedIndex() == index
 

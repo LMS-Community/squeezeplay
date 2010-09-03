@@ -1259,6 +1259,18 @@ end
 
 --[[
 
+=head2 jive.ui.Menu:getSize()
+
+Returns the list items from a menu
+
+=cut
+--]]
+function getSize(self)
+	return self.listSize
+end
+
+--[[
+
 =head2 jive.ui.Menu:setSelectedIndex(index, coerce, noReLayout)
 
 Sets I<index> as the selected menu item.
