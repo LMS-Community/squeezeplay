@@ -152,6 +152,8 @@ self.serverError: ERROR, nil or OK
 function setWirelessSignal(self, val)
 	log:debug("Iconbar:setWireless(", val, ")")
 
+	local networkAndServerState = false
+
 	self.wirelessSignal = val
 
 	-- No ethernet link, ip, gateway or dns
@@ -168,11 +170,27 @@ function setWirelessSignal(self, val)
 		self.iconWireless:setStyle("button_wireless_SERVERERROR")
 	-- Etherent and server connection ok
 	elseif val == "ETHERNET" then
+		networkAndServerState = true
 		self.iconWireless:setStyle("button_ethernet")
 	-- Wireless and server connection ok, show signal strength
 	else
+		networkAndServerState = true
 		self.iconWireless:setStyle("button_wireless_" .. (val or "NONE"))
 	end
+
+	-- Send notification about network and server state
+	if self.oldNetworkAndServerState ~= networkAndServerState then
+		if networkAndServerState == true then
+			log:debug("Network and server ok")
+
+			self.jnt:notify("networkAndServerOK", iface)
+		else
+			log:debug("Network or server not ok")
+
+			self.jnt:notify("networkOrServerNotOK", iface)
+		end
+	end
+	self.oldNetworkAndServerState = networkAndServerState
 end
 
 
@@ -226,7 +244,7 @@ Creates the iconbar.
 
 =cut
 --]]
-function __init(self)
+function __init(self, jnt)
 	log:debug("Iconbar:__init()")
 
 	local obj = oo.rawnew(self, {
@@ -238,6 +256,8 @@ function __init(self)
 		iconSleep    = Icon("button_sleep_OFF"),
 		iconAlarm    = Icon("button_alarm_OFF"),
 		button_time  = Label("button_time", "XXXX"),
+
+		jnt = jnt
 	})
 
 	obj.iconbarGroup = Group("iconbar_group", {
