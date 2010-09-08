@@ -149,12 +149,13 @@ self.serverError: ERROR, nil or OK
 
 =cut
 --]]
-function setWirelessSignal(self, val)
+function setWirelessSignal(self, val, iface)
 	log:debug("Iconbar:setWireless(", val, ")")
 
 	local networkAndServerState = false
 
 	self.wirelessSignal = val
+	self.iface = iface
 
 	-- No ethernet link, ip, gateway or dns
 	if val == "ETHERNET_ERROR" then
@@ -204,7 +205,7 @@ Set the state of the SqueezeCenter connection. Values are nil, OK or ERROR.
 --]]
 function setServerError(self, val)
 	self.serverError = val
-	self:setWirelessSignal(self.wirelessSignal)
+	self:setWirelessSignal(self.wirelessSignal, self.iface)
 end
 
 
