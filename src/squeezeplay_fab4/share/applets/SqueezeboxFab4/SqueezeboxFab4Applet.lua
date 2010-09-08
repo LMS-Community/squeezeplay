@@ -531,12 +531,12 @@ local function _updateWirelessDone(self, iface, success)
 	if iface:isWireless() then
 		if success then
 			local percentage, quality = iface:getSignalStrength()
-			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+			iconbar:setWirelessSignal((quality ~= nil and quality or "ERROR"), iface)
 			if player then
 				player:setSignalStrength(percentage)
 			end
 		else		
-			iconbar:setWirelessSignal("ERROR")
+			iconbar:setWirelessSignal("ERROR", iface)
 			if player then
 				player:setSignalStrength(nil)
 			end
@@ -544,9 +544,9 @@ local function _updateWirelessDone(self, iface, success)
 	-- wired
 	else
 		if success then
-			iconbar:setWirelessSignal("ETHERNET")
+			iconbar:setWirelessSignal("ETHERNET", iface)
 		else
-			iconbar:setWirelessSignal("ETHERNET_ERROR")
+			iconbar:setWirelessSignal("ETHERNET_ERROR", iface)
 		end
 		if player then
 			player:setSignalStrength(nil)
