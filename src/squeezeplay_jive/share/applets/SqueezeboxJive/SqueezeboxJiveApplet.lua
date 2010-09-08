@@ -318,12 +318,12 @@ local function _updateWirelessDone(self, iface, success)
 	-- wireless
 	if success then
 		local percentage, quality = iface:getSignalStrength()
-		iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
+		iconbar:setWirelessSignal((quality ~= nil and quality or "ERROR"), iface)
 		if player then
 			player:setSignalStrength(percentage)
 		end
 	else		
-		iconbar:setWirelessSignal("ERROR")
+		iconbar:setWirelessSignal("ERROR", iface)
 		if player then
 			player:setSignalStrength(nil)
 		end
