@@ -183,6 +183,23 @@ function _addSwitchToSnMenuItem(self)
 
 end
 
+
+function notify_networkOrServerNotOK(self, iface)
+	log:warn('notify_networkOrServerNotOK')
+	self.networkOrServerError = iface
+
+end
+
+
+function notify_networkAndServerOK(self, iface)
+	self.networkOrServerError = false
+	if self.diagWindow then
+		self.diagWindow:hide()
+		self.diagWindow = nil
+	end
+end
+
+
 function notify_serverConnected(self, server)
 	log:debug("***serverConnected\t", server)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
@@ -692,6 +709,17 @@ local function _menuSink(self, isCurrentServer, server)
 						end
 
 					local currentPlayer = appletManager:callService("getCurrentPlayer")
+
+					-- if we know there is a network error condition, push on a diags window immediately
+					if self.networkOrServerError then
+						log:warn('Network or Server reported as not OK')
+						self.diagWindow = appletManager:callService("networkTroubleshootingMenu", self.networkOrServerError)
+						-- make sure we got a window generated to confirm we can leave this method
+						if self.diagWindow then
+							log:warn("we've pushed a diag window, so we're done here")
+							return
+						end
+					end
 
 					if not _server then
 						--should only happen if we load SN disconnected items and user selects one prior to _server being set on notify_playerCurrent

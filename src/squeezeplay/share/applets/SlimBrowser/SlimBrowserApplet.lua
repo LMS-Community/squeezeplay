@@ -102,6 +102,9 @@ local _string
 local _player = false
 local _server = false
 
+local _networkOrServerError = false
+local _diagWindow = false
+
 -- The path of enlightenment
 local _stepStack = {}
 
@@ -780,6 +783,23 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
 	-- debug.dump(request)
+
+	-- there's an existing network or server error, so trap this request and push to a diags troubleshooting window
+	if _networkOrServerError then
+		log:warn('_networkOrServerError is not false, therefore push on an error window for diags')
+		local currentStep = _getCurrentStep()
+		_diagWindow = appletManager:callService("networkTroubleshootingMenu", _networkOrServerError)
+		-- make sure we got a window generated to confirm we can leave this method
+		if _diagWindow then
+			-- FIXME: this part doesn't work. Menu item on home menu shows "locked" spinny icon after hitting back arrow from diags window
+			if currentStep then
+				if currentStep.menu then
+					currentStep.menu:unlock()
+				end
+			end
+			return
+		end
+	end
 
 	if not useCachedResponse then
 		-- send the command
@@ -3035,6 +3055,20 @@ end
 
 function browserCancel(self, step)
 	 step.cancelled = true
+end
+
+
+function notify_networkOrServerNotOK(self, iface)
+	_networkOrServerError = iface -- store the interface object in _networkOrServerError
+end
+
+
+function notify_networkAndServerOK(self, iface)
+	_networkOrServerError = false
+	if _diagWindow then
+		_diagWindow:hide()
+		_diagWindow = false
+	end
 end
 
 

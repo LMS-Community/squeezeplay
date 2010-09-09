@@ -1107,3 +1107,10 @@ NET_PORT_NOK_HELP
 NET_SUCCESS
 	EN	All network tests passed successfully
 
+NETWORK_PROBLEM
+	EN	Network Problem
+
+# for a generic troubleshooting message when no specific help is available
+NETWORK_PROBLEM_HELP
+	EN	Your squeezebox is experiencing a network problem.\nPossible solutions:\n - Confirm that a PC on your home network can connect to the internet.\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.
+
