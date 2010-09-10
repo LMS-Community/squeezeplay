@@ -399,7 +399,9 @@ function _networkScanComplete(self, iface)
 				return
 			end
 
+			window:setTitle(self:string("NETWORK_FINDING_NETWORKS"))
 			iface:scan(function()
+				window:setTitle(self:string("NETWORK_WIRELESS_NETWORKS"))
 				_scanResults(self, iface)
 			end)
 		end)
