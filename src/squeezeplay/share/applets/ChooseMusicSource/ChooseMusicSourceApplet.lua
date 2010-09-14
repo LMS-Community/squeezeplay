@@ -441,9 +441,9 @@ function selectServer(self, server, passwordEntered, serverForRetry)
 		return
 	end
 
-	--Confirmation check.  Also, don't show confirmation if current player is not playing and there are tracks in the playlist.
+	--Confirmation check.  Also, don't show confirmation if current player is not playing or there are no tracks in the playlist.
 	if not self.confirmOnChange or not currentPlayer:getSlimServer() or currentPlayer:getSlimServer() == server
-		or (currentPlayer:getPlayMode() ~= "play" and (not currentPlayer:getPlaylistSize() or currentPlayer:getPlaylistSize() == 0) ) then
+		or (currentPlayer:getPlayMode() ~= "play" or (not currentPlayer:getPlaylistSize() or currentPlayer:getPlaylistSize() == 0) ) then
        	        self:connectPlayerToServer(currentPlayer, server)
 	else
 		self:_confirmServerSwitch(currentPlayer, server, serverForRetry)
@@ -592,6 +592,7 @@ function showConnectToServer(self, playerConnectedCallback, server)
 end
 
 function _showConnectToServer(self, player, server)
+
 	if not self.connectingPopup then
 		self.connectingPopup = Popup("waiting_popup")
 		local window = self.connectingPopup

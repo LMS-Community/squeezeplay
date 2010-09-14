@@ -700,17 +700,23 @@ function networkTroubleshootingMenu(self, iface)
 	end
 
         local errorCode = iface:getNetworkResult()
-	if not errorCode then
+	if type(errorCode) == 'number' and errorCode >= 0 then
+		log:warn('A positive number means there is no error. Do not push a diags window in this condition.')
+	elseif type(errorCode) == 'number' then
+		log:warn('Error code is listed as: ', errorCode)
+	else
 		log:error('There is no network problem registered on this interface')
 		return
 	end
 
-        local window = Window("text_list", self:string("NETWORK_PROBLEM") )
+	local titleToken    = self.netResultToText[errorCode] and self.netResultToText[errorCode].text or "NETWORK_PROBLEM"
+	local helpTextToken = self.netResultToText[errorCode] and self.netResultToText[errorCode].help or "NETWORK_PROBLEM_HELP"
+
+        local window = Window("text_list", self:string(titleToken) )
 	window:setButtonAction("rbutton", nil)
 
         local menu = SimpleMenu("menu")
 	
-        local helpTextToken = self.netResultToText[errorCode] and self.netResultToText[errorCode].help or "NETWORK_PROBLEM_HELP"
 	menu:setHeaderWidget( Textarea( "help_text", self:string(helpTextToken) ) )
 
 	self:_addDiagnosticsMenuItem(menu)

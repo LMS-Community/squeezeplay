@@ -102,8 +102,9 @@ local _string
 local _player = false
 local _server = false
 
-local _networkOrServerError = false
-local _diagWindow = false
+local _networkError = false
+local _serverError  = false
+local _diagWindow   = false
 
 -- The path of enlightenment
 local _stepStack = {}
@@ -785,10 +786,10 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	-- debug.dump(request)
 
 	-- there's an existing network or server error, so trap this request and push to a diags troubleshooting window
-	if _networkOrServerError then
-		log:warn('_networkOrServerError is not false, therefore push on an error window for diags')
+	if _networkError then
+		log:warn('_networkError is not false, therefore push on an error window for diags')
 		local currentStep = _getCurrentStep()
-		_diagWindow = appletManager:callService("networkTroubleshootingMenu", _networkOrServerError)
+		_diagWindow = appletManager:callService("networkTroubleshootingMenu", _networkError)
 		-- make sure we got a window generated to confirm we can leave this method
 		if _diagWindow then
 			-- FIXME: this part doesn't work. Menu item on home menu shows "locked" spinny icon after hitting back arrow from diags window
@@ -3059,12 +3060,20 @@ end
 
 
 function notify_networkOrServerNotOK(self, iface)
-	_networkOrServerError = iface -- store the interface object in _networkOrServerError
+	log:warn("notify_networkOrServerNotOK()")
+	if iface and iface:isNetworkError() then
+		log:warn("this is a network error")
+		_networkError = iface -- store the interface object in _networkError
+	else
+		log:warn("this is a server error")
+		_serverError = true
+	end
 end
 
 
 function notify_networkAndServerOK(self, iface)
-	_networkOrServerError = false
+	_networkError = false
+	_serverError  = false
 	if _diagWindow then
 		_diagWindow:hide()
 		_diagWindow = false

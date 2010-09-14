@@ -186,13 +186,20 @@ end
 
 function notify_networkOrServerNotOK(self, iface)
 	log:warn('notify_networkOrServerNotOK')
-	self.networkOrServerError = iface
+	if iface and iface:isNetworkError() then
+		self.networkError = iface
+	else
+		self.networkError = false
+		self.serverError = true
+	end
 
 end
 
 
 function notify_networkAndServerOK(self, iface)
-	self.networkOrServerError = false
+	self.networkError = false
+	self.serverError  = false
+
 	if self.diagWindow then
 		self.diagWindow:hide()
 		self.diagWindow = nil
@@ -711,9 +718,9 @@ local function _menuSink(self, isCurrentServer, server)
 					local currentPlayer = appletManager:callService("getCurrentPlayer")
 
 					-- if we know there is a network error condition, push on a diags window immediately
-					if self.networkOrServerError then
-						log:warn('Network or Server reported as not OK')
-						self.diagWindow = appletManager:callService("networkTroubleshootingMenu", self.networkOrServerError)
+					if self.networkError then
+						log:warn('Network reported as not OK')
+						self.diagWindow = appletManager:callService("networkTroubleshootingMenu", self.networkError)
 						-- make sure we got a window generated to confirm we can leave this method
 						if self.diagWindow then
 							log:warn("we've pushed a diag window, so we're done here")
