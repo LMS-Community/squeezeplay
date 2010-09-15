@@ -2377,7 +2377,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_wireless_disabled.png"),
 	})
 	s.button_wireless_SERVERERROR = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_wireless_cantconnect.png"),
+		img = _loadImage(self, "Icons/icon_wireless_disabled.png"),
+		-- In 7.6, decision is to go with only red colored icons for both network and server errors
+		-- leaving the old path here in case we decide that was a mistake
+		--img = _loadImage(self, "Icons/icon_wireless_cantconnect.png"),
 	})
 	s.button_wireless_NONE = _uses(s._button_wireless, {
 		img = false,
@@ -2390,7 +2393,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "Icons/icon_ethernet_disabled.png"),
 	})
 	s.button_ethernet_SERVERERROR = _uses(s._button_wireless, {
-		img = _loadImage(self, "Icons/icon_ethernet_cantconnect.png"),
+		img = _loadImage(self, "Icons/icon_ethernet_disabled.png"),
+		-- In 7.6, decision is to go with only red colored icons for both network and server errors
+		-- leaving the old path here in case we decide that was a mistake
+		-- img = _loadImage(self, "Icons/icon_ethernet_cantconnect.png"),
 	})
 
 	-- time
