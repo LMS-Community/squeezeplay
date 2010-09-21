@@ -28,6 +28,7 @@ local string                 = require("string")
 local json                   = require("json")
                              
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
@@ -786,7 +787,8 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	-- debug.dump(request)
 
 	-- there's an existing network or server error, so trap this request and push to a diags troubleshooting window
-	if _networkError then
+	-- Bug 15662: don't push a diags window when tinySC is available on the system and running
+	if _networkError and not ( System:hasTinySC() and appletManager:callService("isBuiltInSCRunning") ) then
 		log:warn('_networkError is not false, therefore push on an error window for diags')
 		local currentStep = _getCurrentStep()
 		_diagWindow = appletManager:callService("networkTroubleshootingMenu", _networkError)

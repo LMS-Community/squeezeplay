@@ -123,6 +123,7 @@ function init(self)
 		["usb"] = 1,
 		["sdcard"] = 1,
 		["hasDigitalOut"] = 1,
+		["hasTinySC"] = 1,
 	})
 
 	--account for fab4 touchpad hardware issue: the bottom pixels aren't reported correctly 

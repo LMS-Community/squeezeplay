@@ -718,7 +718,8 @@ local function _menuSink(self, isCurrentServer, server)
 					local currentPlayer = appletManager:callService("getCurrentPlayer")
 
 					-- if we know there is a network error condition, push on a diags window immediately
-					if self.networkError then
+					-- Bug 16552: don't push to diags window if player has tinySC and tinySC is running
+					if self.networkError and not ( System:hasTinySC() and appletManager:callService("isBuiltInSCRunning") ) then
 						log:warn('Network reported as not OK')
 						self.diagWindow = appletManager:callService("networkTroubleshootingMenu", self.networkError)
 						-- make sure we got a window generated to confirm we can leave this method
