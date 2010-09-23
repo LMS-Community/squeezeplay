@@ -275,7 +275,7 @@ function JiveMain:__init()
 	jnt = NetworkThread()
 
 	appletManager = AppletManager(jnt)
-	iconbar = Iconbar()
+	iconbar = Iconbar(jnt)
 	
 	-- Singleton instances (locals)
 	_globalStrings = locale:readGlobalStringsFile()

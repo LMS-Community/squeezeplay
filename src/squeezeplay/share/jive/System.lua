@@ -69,6 +69,7 @@ local allCapabilities = {
 	["usb"] = 1,
 	["batteryCapable"] = 1,
 	["hasDigitalOut"] = 1,
+	["hasTinySC"] = 1,
 }
 
 local _capabilities = {} -- of form string, 1 so
@@ -84,6 +85,10 @@ function setCapabilities(self, capabilities)
 	end
 	
 	_capabilities = capabilities
+end
+
+function hasTinySC(self)
+	return _capabilities["hasTinySC"] ~= nil
 end
 
 function hasDigitalOut(self)

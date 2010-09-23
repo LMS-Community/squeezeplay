@@ -28,6 +28,7 @@ local string                 = require("string")
 local json                   = require("json")
                              
 local Applet                 = require("jive.Applet")
+local System                 = require("jive.System")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
 local Framework              = require("jive.ui.Framework")
@@ -101,6 +102,10 @@ local _string
 -- The player we're browsing and it's server
 local _player = false
 local _server = false
+
+local _networkError = false
+local _serverError  = false
+local _diagWindow   = false
 
 -- The path of enlightenment
 local _stepStack = {}
@@ -3064,6 +3069,28 @@ function browserCancel(self, step)
 end
 
 
+function notify_networkOrServerNotOK(self, iface)
+	log:warn("notify_networkOrServerNotOK()")
+	if iface and iface:isNetworkError() then
+		log:warn("this is a network error")
+		_networkError = iface -- store the interface object in _networkError
+	else
+		log:warn("this is a server error")
+		_serverError = true
+	end
+end
+
+
+function notify_networkAndServerOK(self, iface)
+	_networkError = false
+	_serverError  = false
+	if _diagWindow then
+		_diagWindow:hide()
+		_diagWindow = false
+	end
+end
+
+
 function notify_serverConnected(self, server)
 	if _server ~= server then
 		return
@@ -3698,7 +3725,7 @@ function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
 	log:info('notify_playerDigitalVolumeControl()', digitalVolumeControl)
 
 	if digitalVolumeControl == 0 then
-		log:warn('set volume to 100, cache previous volume as: ' self.cachedVolume)
+		log:warn('set volume to 100, cache previous volume as: ', self.cachedVolume)
 		self.cachedVolume = player:getVolume()
 		if player:isLocal() then
 			player:volumeLocal(100)
@@ -3730,6 +3757,9 @@ function _attachPlayer(self, player)
 
 	-- clear any errors, we may have changed servers
 	iconbar:setServerError("OK")
+
+	-- new player, no cached volume
+	self.cachedVolume = nil
 
 	-- update the volume object
 	if self.volume then

@@ -51,7 +51,10 @@ function registerApplet(meta)
 		applet:autoplayShow()
 	end
 
-	-- menu item to start
-	jiveMain:addItem(meta:menuItem('macroPlay', 'extras', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
-end
+	if applet.config.autorun then
+		applet:autorun()
+	end
 
+	-- menu item to start
+	jiveMain:addItem(meta:menuItem('macroPlay', 'home', 'MACRO_PLAY', function(applet, ...) applet:settingsShow(...) end))
+end

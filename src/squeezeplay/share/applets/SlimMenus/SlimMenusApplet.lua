@@ -183,6 +183,30 @@ function _addSwitchToSnMenuItem(self)
 
 end
 
+
+function notify_networkOrServerNotOK(self, iface)
+	log:warn('notify_networkOrServerNotOK')
+	if iface and iface:isNetworkError() then
+		self.networkError = iface
+	else
+		self.networkError = false
+		self.serverError = true
+	end
+
+end
+
+
+function notify_networkAndServerOK(self, iface)
+	self.networkError = false
+	self.serverError  = false
+
+	if self.diagWindow then
+		self.diagWindow:hide()
+		self.diagWindow = nil
+	end
+end
+
+
 function notify_serverConnected(self, server)
 	log:debug("***serverConnected\t", server)
 	local currentPlayer = appletManager:callService("getCurrentPlayer")
@@ -480,6 +504,7 @@ local function _menuSink(self, isCurrentServer, server)
 					id = v.id,
 					node = v.node,
 					isApp = v.isApp,
+					iconStyle = v.iconStyle,
 					style = v.style,
 					text = v.text,
 					homeMenuText = v.homeMenuText,
@@ -547,7 +572,7 @@ local function _menuSink(self, isCurrentServer, server)
 				end
 			else
 				-- make a style
-				if item.id then
+				if item.id and not item.iconStyle then
 					local iconStyle = 'hm_' .. item.id
 					item.iconStyle = iconStyle
 				end
@@ -691,6 +716,18 @@ local function _menuSink(self, isCurrentServer, server)
 						end
 
 					local currentPlayer = appletManager:callService("getCurrentPlayer")
+
+					-- if we know there is a network error condition, push on a diags window immediately
+					-- Bug 16552: don't push to diags window if player has tinySC and tinySC is running
+					if self.networkError and not ( System:hasTinySC() and appletManager:callService("isBuiltInSCRunning") ) then
+						log:warn('Network reported as not OK')
+						self.diagWindow = appletManager:callService("networkTroubleshootingMenu", self.networkError)
+						-- make sure we got a window generated to confirm we can leave this method
+						if self.diagWindow then
+							log:warn("we've pushed a diag window, so we're done here")
+							return
+						end
+					end
 
 					if not _server then
 						--should only happen if we load SN disconnected items and user selects one prior to _server being set on notify_playerCurrent

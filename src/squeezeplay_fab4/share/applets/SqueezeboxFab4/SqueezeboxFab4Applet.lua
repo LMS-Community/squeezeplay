@@ -1,5 +1,5 @@
 
-local pairs, tonumber, tostring = pairs, tonumber, tostring
+local pairs, tonumber, tostring, unpack = pairs, tonumber, tostring, unpack
 
 -- board specific driver
 local fab4_bsp               = require("fab4_bsp")
@@ -50,6 +50,10 @@ local jiveMain               = jiveMain
 local appletManager          = appletManager
 local settings	             = nil
 
+local UPDATE_WIRELESS        = 0x01
+local UPDATE_POWER           = 0x02
+
+
 -- hack around global scope to allow bsp c code to call back to applet
 local ourUeventHandler
 ueventHandler = function(...)
@@ -61,10 +65,6 @@ module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
 
 
------------------------
--- Proximity Init Stuff
------------------------
-local PROXIMITY_SYSPATH = "/sys/bus/i2c/devices/0-0047/"
 
 -----------------------------
 -- Ambient Light Init Stuff
@@ -123,6 +123,7 @@ function init(self)
 		["usb"] = 1,
 		["sdcard"] = 1,
 		["hasDigitalOut"] = 1,
+		["hasTinySC"] = 1,
 	})
 
 	--account for fab4 touchpad hardware issue: the bottom pixels aren't reported correctly 
@@ -131,7 +132,6 @@ function init(self)
 	-- warn if uuid or mac are invalid
 	verifyMacUUID(self)
 
-	self:initProximity()
 	self:initBrightness()
 	local brightnessTimer = Timer( BRIGHTNESS_REFRESH_RATE,
 		function()
@@ -153,9 +153,10 @@ function init(self)
 	brightnessTimer:start()
 	
 	-- status bar updates
-	self:update()
-	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
-	      self:update()
+	local updateTask = Task("statusbar", self, _updateTask)
+	updateTask:addTask(UPDATE_WIRELESS)
+	iconbar.iconWireless:addTimer(5000, function()  -- every five seconds
+		updateTask:addTask(UPDATE_WIRELESS)
 	end)
 	
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
@@ -182,16 +183,6 @@ function ourUeventHandler(evt, msg)
 			listener(evt, msg)
 		end
 	end
-end
-
--------------------------------
--- Proximity Sensor Stuff Start
--------------------------------
-function initProximity(self)
-	-- Disable proximity
-	local f = io.open(PROXIMITY_SYSPATH .. "proximity_control", "w")
-	f:write("0")
-	f:close()
 end
 
 -----------------------------
@@ -533,36 +524,71 @@ function setDate(self, epoch)
 	iconbar:update()
 end
 
-function update(self)
-	 Task("statusbar", self, _updateTask):addTask()
-end
 
-
-function _updateTask(self)
-	local iface = Networking:activeInterface()
+local function _updateWirelessDone(self, iface, success)
 	local player = Player:getLocalPlayer()
 
-	if not iface then
-		iconbar:setWirelessSignal(nil)
-		player:setSignalStrength(nil)
-	else	
-		if iface:isWireless() then
-			-- wireless strength
+	-- wireless
+	if iface:isWireless() then
+		if success then
 			local percentage, quality = iface:getSignalStrength()
-			iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-
+			iconbar:setWirelessSignal((quality ~= nil and quality or "ERROR"), iface)
 			if player then
 				player:setSignalStrength(percentage)
 			end
-		else
-			-- wired
-			local status = iface:status()
-			iconbar:setWirelessSignal(not status.link and "ERROR" or nil)
-
+		else		
+			iconbar:setWirelessSignal("ERROR", iface)
 			if player then
 				player:setSignalStrength(nil)
 			end
 		end
+	-- wired
+	else
+		if success then
+			iconbar:setWirelessSignal("ETHERNET", iface)
+		else
+			iconbar:setWirelessSignal("ETHERNET_ERROR", iface)
+		end
+		if player then
+			player:setSignalStrength(nil)
+		end
+	end
+end
+
+
+local function _updateWireless(self)
+	local iface = Networking:activeInterface()
+
+	-- After factory reset iface is nil (none selected yet)
+	if iface == nil then
+		return
+	end
+
+	Networking:checkNetworkHealth(
+		iface,
+		function(continue, result)
+			log:debug("_updateWireless: ", result)
+
+			if not continue then
+				_updateWirelessDone(self, iface, (result >= 0))
+			end
+		end,
+		false,
+		nil
+	)
+end
+
+
+function _updateTask(self)
+	while true do
+		local what = unpack(Task:running().args)
+
+		if (what & UPDATE_WIRELESS) == UPDATE_WIRELESS then
+			_updateWireless(self)
+		end
+
+		-- suspend task
+		Task:yield(false)
 	end
 end
 

@@ -197,7 +197,7 @@ static int decode_null_init(lua_State *L) {
 	decode_init_buffers(buf, false);
 	decode_audio->max_rate = 48000;
 
-	stream_sample_rate = decode_audio->set_sample_rate = 44100;
+	stream_sample_rate = decode_audio->set_sample_rate = decode_audio->track_sample_rate = 44100;
 
 	/* XXX set up timer to call callback reqularly */
 	/* only need callback to run while actually playing */

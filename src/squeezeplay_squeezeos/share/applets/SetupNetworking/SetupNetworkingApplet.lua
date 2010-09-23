@@ -273,24 +273,6 @@ end
 
 -------- NETWORK SCANNING --------
 
--- scan menu: update currect SSID
-function _setCurrentSSID(self, ssid)
-	if self.currentSSID == ssid then
-		return
-	end
-
-	if self.currentSSID and self.scanResults[self.currentSSID] then
-		local item = self.scanResults[self.currentSSID].item
-		item.style = nil
-		if self.scanMenu then
-			self.scanMenu:updatedItem(item)
-		end
-	end
-
-	self.currentSSID = ssid
-end
-
-
 -- scan menu: add network
 function _addNetwork(self, iface, ssid)
 
@@ -418,7 +400,14 @@ function _networkScanComplete(self, iface)
 	-- schedule network scan 
 	self.scanMenu:addTimer(5000,
 		function()
+			-- only scan if this window is on top, not under a transparent popup
+			if Framework.windowStack[1] ~= window then
+				return
+			end
+
+			window:setTitle(self:string("NETWORK_FINDING_NETWORKS"))
 			iface:scan(function()
+				window:setTitle(self:string("NETWORK_WIRELESS_NETWORKS"))
 				_scanResults(self, iface)
 			end)
 		end)
@@ -442,11 +431,8 @@ end
 
 
 function _scanResults(self, iface)
-	local now = Framework:getTicks()
-
 	local scanTable = iface:scanResults()
 
-	local associated = self.currentSSID
 	for ssid, entry in pairs(scanTable) do
 		-- hide squeezebox ad-hoc networks
 		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
@@ -460,23 +446,8 @@ function _scanResults(self, iface)
 			self.scanResults[ssid].bssid = entry.bssid
 			self.scanResults[ssid].flags = entry.flags
 
-			if entry.associated then
-				associated = ssid
-			end
-
-			local itemStyle
-			if iface:isWireless() then
-				itemStyle = "wirelessLevel" .. (entry.quality or 0)
-			else
-				itemStyle = entry.link and "wiredEthernetLink" or "wiredEthernetNoLink"
-			end
-
-			local item = self.scanResults[ssid].item
-			item.arrow:setStyle(itemStyle)
-
-			if self.scanMenu then
-				self.scanMenu:updatedItem(item)
-			end
+			self.scanResults[ssid].associated = entry.associated
+			self.scanResults[ssid].quality = entry.quality
 		end
 	end
 
@@ -490,8 +461,25 @@ function _scanResults(self, iface)
 		end
 	end
 
-	-- update current ssid 
-	_setCurrentSSID(self, associated)
+	-- update networks
+	for ssid, entry in pairs(self.scanResults) do
+		if iface:isWireless() then
+			local item = entry.item
+
+			-- Mark current wireless network (if available)
+			if entry.associated and entry.quality > 0 then
+				item.style = "item_checked"
+			else
+				item.style = "item"
+			end
+
+			-- Update wireless signal quality
+			item.arrow:setStyle("wirelessLevel" .. (entry.quality or 0))
+			if self.scanMenu then
+				self.scanMenu:updatedItem(item)
+			end
+		end
+	end
 end
 
 function _halfDuplexBugTest(self, iface, nextStep, useShowInstead)
@@ -1260,7 +1248,6 @@ function _selectNetworkTask(self, iface, ssid, createNetwork, useSupplicantWPS)
 	end
 
 	-- ensure the network state exists
-	_setCurrentSSID(self, nil)
 	if self.scanResults[ssid] == nil then
 		_addNetwork(self, iface, ssid)
 	end
@@ -1441,8 +1428,6 @@ function _connectSuccess(self, iface, ssid)
 	end
 
 	log:debug("connection OK ", ssid)
-
-	_setCurrentSSID(self, ssid)
 
 	-- forget connection state
 	self.encryption = nil

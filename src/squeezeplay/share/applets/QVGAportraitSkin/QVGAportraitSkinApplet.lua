@@ -598,6 +598,8 @@ function skin(self, s, reload, useDefaultSize)
 	
 	})
 
+	s.nowplaying.npprogressNB.elapsedSmall = s.nowplaying.npprogressNB.elapsed
+
 	s.nowplaying_small_art = _uses(s.nowplaying, {
 		bgImg = false,
 		npartwork = {

@@ -53,6 +53,10 @@ oo.class(_M, Applet)
 -- macro (global) state
 local instance = false
 
+-- make require available to macros
+function macroRequire(mod)
+	return require(mod)
+end
 
 function init(self)
 	self.config = {}
@@ -162,7 +166,7 @@ function autoplayShow(self, countdown)
 		help:setValue(self:string("MACRO_AUTOSTART_COMPLETE"))
 	else
 		-- countdown to tests
-		local timer = countdown or 20
+		local timer = countdown or 5
 		help:setValue(self:string("MACRO_AUTOSTART_HELP", timer))
 
 		window:addTimer(1000,
@@ -268,6 +272,25 @@ function autoplay(self)
 	self:saveConfig()
 end
 
+-- play the single autorun macro
+function autorun(self)
+	local config = self.config
+
+	if not config.autorun then
+		return
+	end
+
+	local macro = config.macros[config.autorun]
+	
+	if not macro then
+		log:warn('No autorun macro with the key ', config.autorun)
+		return
+	end
+
+	self:play(macro)
+
+end
+
 
 -- play the macro
 function play(self, _macro)
@@ -320,6 +343,15 @@ function macroEvent(interval, ...)
 end
 
 
+-- dispatch ui action 'action', and delay for interval ms
+function macroAction(interval, action)
+	log:info("macroAction: ", action)
+
+	Framework:pushAction(action)
+	macroDelay(interval)
+end
+
+
 -- returns the widgets of type class from the window
 function _macroFindWidget(class)
 	local window = Framework.windowStack[1]
@@ -362,7 +394,7 @@ function macroSelectMenuIndex(interval, index)
 
 	local ok = false
 
-	local len = #menu:getItems()
+	local len = menu:getSize()
 	if index > len then
 		return false
 	end
@@ -447,6 +479,10 @@ function macroHome(interval)
 	if #Framework.windowStack > 1 then
 		Framework.windowStack[#Framework.windowStack - 1]:hideToTop()
 	end
+
+	macroDelay(50)
+	local menu = _macroFindWidget(Menu)
+	menu:setSelectedIndex(1)
 
 	macroDelay(interval)
 end

@@ -40,74 +40,111 @@ local JIVE_VERSION  = jive.JIVE_VERSION
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+function init(self)
+	self.generalTests = {
+	      "FIRMWARE_VERSION",
+	      "HARDWARE_VERSION",
+	      "MAC_ADDRESS",
+	      "CURRENT_PLAYER",
+	      "PLAYER_TYPE",
+	      "UPTIME",
+	      "MEMORY",
+	}
 
-local generalTests = {
-      "FIRMWARE_VERSION",
-      "HARDWARE_VERSION",
-      "MAC_ADDRESS",
-      "CURRENT_PLAYER",
-      "PLAYER_TYPE",
-      "UPTIME",
-      "MEMORY",
-}
+	self.wirelessTests = {
+	      "WLAN_SSID",
+	      "WLAN_ENCRYPTION",
+	      "WLAN_STRENGTH",
+	      -- (for testing): "WLAN_SNR",
+	      "IP_ADDRESS",
+	      "SUBNET_MASK",
+	      "GATEWAY",
+	      "DNS_SERVER",
+	}
 
-local wirelessTests = {
-      "WLAN_SSID",
-      "WLAN_ENCRYPTION",
-      "WLAN_STRENGTH",
-      -- (for testing): "WLAN_SNR",
-      "IP_ADDRESS",
-      "SUBNET_MASK",
-      "GATEWAY",
-      "DNS_SERVER",
-}
+	self.ethernetTests = {
+	      "ETH_CONNECTION",
+	      "IP_ADDRESS",
+	      "SUBNET_MASK",
+	      "GATEWAY",
+	      "DNS_SERVER",
+	}
 
-local ethernetTests = {
-      "ETH_CONNECTION",
-      "IP_ADDRESS",
-      "SUBNET_MASK",
-      "GATEWAY",
-      "DNS_SERVER",
-}
+	self.serverTests = {
+	      "SN_ADDRESS",
+	      "SN_PING",
+	      "SN_PORT_3483",
+	      "SN_PORT_9000",
+	      "SN_REG",
+	      "SC_ADDRESS",
+	      "SC_NAME",
+	      "SC_PING",
+	      "SC_PORT_3483",
+	      "SC_PORT_9000",
+	}
 
-local serverTests = {
-      "SN_ADDRESS",
-      "SN_PING",
-      "SN_PORT_3483",
-      "SN_PORT_9000",
-      "SN_REG",
-      "SC_ADDRESS",
-      "SC_NAME",
-      "SC_PING",
-      "SC_PORT_3483",
-      "SC_PORT_9000",
-}
+	self.powerTests = {
+	      "MSP_VERSION",
+	      "POWER_MODE",
+	      "WALL_VOLTAGE",
+	      "CHARGE_STATE",
+	      "BATTERY_TEMPERATURE",
+	      "BATTERY_VOLTAGE",
+	      "BATTERY_VMON1",
+	      "BATTERY_VMON2",
+	}
 
-local powerTests = {
-      "MSP_VERSION",
-      "POWER_MODE",
-      "WALL_VOLTAGE",
-      "CHARGE_STATE",
-      "BATTERY_TEMPERATURE",
-      "BATTERY_VOLTAGE",
-      "BATTERY_VMON1",
-      "BATTERY_VMON2",
-}
+	self.powerMode = {
+		  ["3"] = "POWER_ON_AC",
+		  ["7"] = "POWER_ON_AC_AND_BATT",
+		  ["5"] = "POWER_ON_BATT",
+	}
 
-local powerMode = {
-	  ["3"] = "POWER_ON_AC",
-	  ["7"] = "POWER_ON_AC_AND_BATT",
-	  ["5"] = "POWER_ON_BATT",
-}
+	self.chargerState = {
+		  ["1"]  = "BATT_NONE",
+		  ["2"]  = "BATT_IDLE",
+		  ["3"]  = "BATT_DISCHARGING",
+		  ["35"] = "BATT_DISCHARGING_WARNING",
+		  ["8"]  = "BATT_CHARGING",
+		  ["24"] = "BATT_CHARGING_PAUSED",
+	}
 
-local chargerState = {
-	  ["1"]  = "BATT_NONE",
-	  ["2"]  = "BATT_IDLE",
-	  ["3"]  = "BATT_DISCHARGING",
-	  ["35"] = "BATT_DISCHARGING_WARNING",
-	  ["8"]  = "BATT_CHARGING",
-	  ["24"] = "BATT_CHARGING_PAUSED",
-}
+	self.netResultToText = {
+		[1] = {		text="NET_INTERFACE",		},
+		[-1] = {	text="NET_INTERFACE_NOK",	},
+		[3] = {		text="NET_LINK",		},
+		[5] = {		text="NET_LINK_WIRELESS_OK",	},
+		[-5] = {	text="NET_LINK_WIRELESS_NOK",	help="NET_LINK_WIRELESS_NOK_HELP"},
+		[6] = {		text="NET_LINK_ETHERNET_OK",	},
+		[-6] = {	text="NET_LINK_ETHERNET_NOK",	help="NET_LINK_ETHERNET_NOK_HELP"},
+		[8] = {		text="NET_IP_OK",		},
+		[-8] = {	text="NET_IP_NOK",		help="NET_IP_NOK_HELP"},
+		[10] = {	text="NET_GATEWAY_OK",		},
+		[-10] = {	text="NET_GATEWAY_NOK",		help="NET_GATEWAY_NOK_HELP"},
+		[12] = {	text="NET_DNS_OK",		},
+		[-12] = {	text="NET_DNS_NOK",		help="NET_DNS_NOK_HELP"},
+		[20] = {	text="NET_ARPING",		},
+		[21] = {	text="NET_ARPING_OK",		},
+		[-21] = {	text="NET_ARPING_NOK",		help="NET_ARPING_NOK_HELP"},
+		[-23] = {	text="NET_SERVER_NOK",		},
+		[25] = {	text="NET_RESOLVE",		},
+		[27] = {	text="NET_RESOLVE_OK",		},
+		[-27] = {	text="NET_RESOLVE_NOK",		help="NET_RESOLVE_NOK_HELP"},
+		[29] = {	text="NET_PING",		},
+		[31] = {	text="NET_PING_OK",		},
+		[-31] = {	text="NET_PING_NOK",		help="NET_PING_NOK_HELP"},
+		[33] = {	text="NET_PORT",		},
+		[35] = {	text="NET_PORT_OK",		},
+		[-35] = {	text="NET_PORT_NOK",		help="NET_PORT_NOK_HELP"},
+		[37] = {	text="NET_PORT_OK",		},
+		[-37] = {	text="NET_PORT_NOK",		help="NET_PORT_NOK_HELP"},
+		[100] = {	text="NET_BRINGING_NETWORK_DOWN",	},
+		[102] = {	text="NET_BRINGING_NETWORK_UP",		},
+		[104] = {	text="NET_REPAIR_NETWORK_DONE",		},
+	}
+
+end
+
 
 
 function setValue(self, key, value, customLabel)
@@ -463,7 +500,7 @@ function doPowerValues(self, menu)
 	self:setValue("MSP_VERSION", self:_getSysValue("fw"))
 
 	local mode = self:_getPowerSysValue("power_mode"):gsub("^%s*(.-)%s*$", "%1")
-	self:setValue("POWER_MODE", tostring(self:string(powerMode[mode])))
+	self:setValue("POWER_MODE", tostring(self:string(self.powerMode[mode])))
 
 	-- Battery only
 	if mode == "5" then
@@ -475,7 +512,7 @@ function doPowerValues(self, menu)
 	end
 
 	local mode = self:_getPowerSysValue("charger_state"):gsub("^%s*(.-)%s*$", "%1")
-	self:setValue("CHARGE_STATE", tostring(self:string(chargerState[mode])))
+	self:setValue("CHARGE_STATE", tostring(self:string(self.chargerState[mode])))
 
 	-- No battery installed
 	if mode == "1" then
@@ -510,7 +547,7 @@ function showGeneralDiagnosticsMenu(self)
 
 	self.labels = {}
 
-	for i,name in ipairs(generalTests) do
+	for i,name in ipairs(self.generalTests) do
 		self.labels[name] = {
 			text = self:string(name, ''),
 			style = 'item_info',
@@ -539,7 +576,7 @@ function showWirelessDiagnosticsMenu(self)
 
 	self.labels = {}
 
-	for i,name in ipairs(wirelessTests) do
+	for i,name in ipairs(self.wirelessTests) do
 		self.labels[name] = {
 			text = self:string(name, ''),
 			style = 'item_info',
@@ -568,7 +605,7 @@ function showEthernetDiagnosticsMenu(self)
 
 	self.labels = {}
 
-	for i,name in ipairs(ethernetTests) do
+	for i,name in ipairs(self.ethernetTests) do
 		self.labels[name] = {
 			text = self:string(name, ''),
 			style = 'item_info',
@@ -597,7 +634,7 @@ function showServerDiagnosticsMenu(self)
 
 	self.labels = {}
 
-	for i,name in ipairs(serverTests) do
+	for i,name in ipairs(self.serverTests) do
 		local label
 		if name == 'SC_PORT_9000' then
 			label = self:string(name, '9000', '-')
@@ -633,7 +670,7 @@ function showPowerDiagnosticsMenu(self)
 
 	self.labels = {}
 
-	for i,name in ipairs(powerTests) do
+	for i,name in ipairs(self.powerTests) do
 		self.labels[name] = {
 			text = self:string(name, ''),
 			style = 'item_info',
@@ -653,6 +690,46 @@ function showPowerDiagnosticsMenu(self)
 end
 
 
+-- Error Troubleshooting menu
+function networkTroubleshootingMenu(self, iface)
+
+	log:warn('networkTroubleshootingMenu: ', iface)
+	if not iface then
+		log:error('You must specify the interface object when calling this method')
+		return false
+	end
+
+        local errorCode = iface:getNetworkResult()
+	if type(errorCode) == 'number' and errorCode >= 0 then
+		log:warn('A positive number means there is no error. Do not push a diags window in this condition.')
+	elseif type(errorCode) == 'number' then
+		log:warn('Error code is listed as: ', errorCode)
+	else
+		log:error('There is no network problem registered on this interface')
+		return
+	end
+
+	local titleToken    = self.netResultToText[errorCode] and self.netResultToText[errorCode].text or "NETWORK_PROBLEM"
+	local helpTextToken = self.netResultToText[errorCode] and self.netResultToText[errorCode].help or "NETWORK_PROBLEM_HELP"
+
+        local window = Window("text_list", self:string(titleToken) )
+	window:setButtonAction("rbutton", nil)
+
+        local menu = SimpleMenu("menu")
+	
+	menu:setHeaderWidget( Textarea( "help_text", self:string(helpTextToken) ) )
+
+	self:_addDiagnosticsMenuItem(menu)
+	self:_addRepairNetworkItem(menu)
+
+        window:addWidget(menu)
+
+        window:show()
+	return window
+
+end
+
+
 -- MAIN MENU
 
 -- Service menu
@@ -665,6 +742,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_GENERAL"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showGeneralDiagnosticsMenu()
@@ -673,6 +751,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_NETWORK_HEALTH"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showNetworkHealthDiagnosticsMenu()
@@ -681,6 +760,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_WIRELESS"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showWirelessDiagnosticsMenu()
@@ -690,6 +770,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:getMachine() ~= 'jive' then
 		menu:addItem({
 			text = self:string("MENU_ETHERNET"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				self:showEthernetDiagnosticsMenu()
@@ -699,6 +780,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 
 	menu:addItem({
 		text = self:string("MENU_SERVER"),
+		sound = "WINDOWSHOW",		
 		style = 'item',
 		callback = function ()
 			self:showServerDiagnosticsMenu()
@@ -708,6 +790,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:getMachine() == "baby" then
 		menu:addItem({
 			text = self:string("POWER"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				self:showPowerDiagnosticsMenu()
@@ -718,6 +801,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 	if System:isHardware() then
 		menu:addItem({
 			text = self:string("SOFTWARE_UPDATE"),
+			sound = "WINDOWSHOW",		
 			style = 'item',
 			callback = function ()
 				--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
@@ -728,6 +812,7 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 		if not suppressNetworkingItem then
 			menu:addItem({
 				text = self:string("DIAGNOSTICS_NETWORKING"),
+				sound = "WINDOWSHOW",		
 				style = 'item',
 				callback = function ()
 					appletManager:callService("settingsNetworking")
@@ -754,13 +839,7 @@ function supportMenu(self)
 
 	local menu = SimpleMenu("menu")
 
-	menu:addItem({
-		text = self:string("DIAGNOSTICS"),
-		sound = "WINDOWSHOW",		
-		callback = function()
-			self:diagnosticsMenu(true)
-		end,
-	})
+	self:_addDiagnosticsMenuItem(menu, true)
 
 	menu:setHeaderWidget(Textarea("help_text", self:string("SUPPORT_HELP")))
 	window:addWidget(menu)
@@ -803,14 +882,7 @@ function showNetworkHealthDiagnosticsMenu(self)
 --		end
 --	})
 
-	menu:addItem({
-		text = self:string("REPAIR_NETWORK"),
-		style = 'item',
-		callback = function ()
-			self:manualRepairNetwork()
-		end
-	})
-
+	self:_addRepairNetworkItem(menu)
 	self.networkHealthMenu = menu
 
 	window:addWidget(menu)
@@ -818,6 +890,50 @@ function showNetworkHealthDiagnosticsMenu(self)
 	self:tieAndShowWindow(window)
 
 	return window
+end
+
+function _addDiagnosticsMenuItem(self, menu, suppressNetworkingItem)
+	menu:addItem({
+		text = self:string("DIAGNOSTICS"),
+		style = 'item',
+		callback = function ()
+			self:diagnosticsMenu(suppressNetworkingItem)
+		end
+	})
+end
+
+
+function _addRepairNetworkItem(self, menu)
+	menu:addItem({
+		text = self:string("REPAIR_NETWORK"),
+		style = 'item',
+		callback = function ()
+			self:manualRepairNetwork()
+		end
+	})
+end
+
+
+function setResult(self, index, result, msgStr)
+	self:addExtraStyle(jive.ui.style)
+
+	local myItem = self.labels[index]
+
+	-- no error
+	if result >= 0 then
+		-- Replace everything's ok message with a user friendly one
+		msgStr = tostring(self:string("NET_SUCCESS"))
+		myItem.style = "item_info_green"
+	-- some error
+	else
+		myItem.style = "item_info_red"
+	end
+
+	self.networkHealthMenu:setText(self.labels[index], self:string(index, msgStr))
+	self.networkHealthMenu:setSelectedIndex(1)
+
+-- TODO: needed?
+--	self.networkHealthMenu:replaceIndex(myItem, 1)
 end
 
 
@@ -854,25 +970,20 @@ function manualCheckNetworkHealth(self, full_check)
 
 	Networking:checkNetworkHealth(
 		ifObj,
-		function(continue, err, msg, msg_param)
-			local message = self:string(msg, msg_param)
-			log:debug("checkNetworkHealth status: ", message)
--- TODO: remove
-			log:warn("checkNetworkHealth status: ", message)
+		function(continue, result, msg_param)
+			local msg = self.netResultToText[result].text
+			local msgStr = tostring(self:string(msg, msg_param))
+
+			log:debug("checkNetworkHealth status: ", msgStr)
 
 			if continue then
 				-- Update spinny message
-				status:setValue(self:string("STATUS_MSG", message))
+				status:setValue(self:string("STATUS_MSG", msgStr))
 			else
-				log:debug("Network health error: ", err)
+				log:debug("Network health error: ", result)
 
 				-- Update final message
-				self:setResult("NETWORK_STATUS", err)
-
---				self:setValue("NETWORK_STATUS", message)
-				self.networkHealthMenu:setText(self.labels["NETWORK_STATUS"], self:string("NETWORK_STATUS", message))
-
-				self.networkHealthMenu:setSelectedIndex(1)
+				setResult(self, "NETWORK_STATUS", result, msgStr)
 
 				popup:hide()
 			end
@@ -882,20 +993,6 @@ function manualCheckNetworkHealth(self, full_check)
 	)
 
 	self:tieAndShowWindow(popup)
-end
-
-function setResult(self, index, err)
-	self:addExtraStyle(jive.ui.style)
-
-	local myItem = self.labels[index]
-
-	if err == 0 then
-		myItem.style = "item_info_green"
-	else
-		myItem.style = "item_info_red"
-	end
--- TODO: needed?
---	self.networkHealthMenu:replaceIndex(myItem, 1)
 end
 
 
@@ -914,16 +1011,18 @@ function manualRepairNetwork(self)
 
 	Networking:repairNetwork(
 		ifObj,
-		function(continue, err, msg, msg_param)
-			local message = self:string(msg, msg_param)
-			log:debug("repairNetwork status: ", message)
+		function(continue, result)
+			local msg = self.netResultToText[result].text
+			local msgStr = tostring(self:string(msg))
+
+			log:debug("repairNetwork status: ", msgStr)
 
 			if continue then
 				-- Update spinny message
-				status:setValue(self:string("STATUS_MSG", message))
+				status:setValue(self:string("STATUS_MSG", msgStr))
 			else
 				-- Update final message
-				log:debug("Repair network error: ", err)
+				log:debug("Repair network error: ", result)
 
 				popup:hide()
 			end
@@ -935,7 +1034,7 @@ end
 
 
 -- defines a new style that inherrits from an existing style
-local function _uses(parent, value)
+function _uses(parent, value)
 	if parent == nil then
 		log:warn("nil parent in _uses at:\n", debug.traceback())
 	end

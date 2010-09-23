@@ -1,6 +1,6 @@
 
 -- stuff we use
-local ipairs, pcall, tonumber, tostring = ipairs, pcall, tonumber, tostring
+local ipairs, pcall, tonumber, tostring, unpack = ipairs, pcall, tonumber, tostring, unpack
 
 local oo                     = require("loop.simple")
 local string                 = require("string")
@@ -60,6 +60,10 @@ local LAYOUT_NONE            = jive.ui.LAYOUT_NONE
 
 local SW_AC_POWER            = 0
 local SW_PHONE_DETECT        = 1
+
+local UPDATE_WIRELESS        = 0x01
+local UPDATE_POWER           = 0x02
+
 
 local squeezeboxjiveTitleStyle = 'settingstitle'
 module(..., Framework.constants)
@@ -133,8 +137,11 @@ function init(self)
 		self:_cpuPowerOverride(active)
 	end)
 
-	iconbar.iconWireless:addTimer(5000, function()  -- every 5 seconds
-	      self:update()
+	-- status bar updates
+	local updateTask = Task("statusbar", self, _updateTask)
+	updateTask:addTask(UPDATE_WIRELESS | UPDATE_POWER)
+	iconbar.iconWireless:addTimer(5000, function()  -- every five seconds
+		updateTask:addTask(UPDATE_WIRELESS | UPDATE_POWER)
 	end)
 
 	Framework:addListener(EVENT_SWITCH,
@@ -146,7 +153,7 @@ function init(self)
 					      log:info("acpower=", val)
 
 					      self.acpower = (val == 0)
-					      self:update()
+					      updateTask:addTask(UPDATE_POWER)
 
 					      if self.acpower then
 						      self:setPowerState("dimmed")
@@ -230,9 +237,6 @@ function init(self)
 	local headphoneInserted = jiveBSP.ioctl(18)
 	self:headphoneJack(headphoneInserted)
 
-	-- set initial state
-	self:update()
-
 	-- open audio device
 	Decode:open(settings)
 
@@ -308,14 +312,49 @@ function setDate(self, epoch)
 end
 
 
-function update(self)
-	 Task("statusbar", self, _updateTask):addTask()
+local function _updateWirelessDone(self, iface, success)
+	local player = Player:getLocalPlayer()
+
+	-- wireless
+	if success then
+		local percentage, quality = iface:getSignalStrength()
+		iconbar:setWirelessSignal((quality ~= nil and quality or "ERROR"), iface)
+		if player then
+			player:setSignalStrength(percentage)
+		end
+	else		
+		iconbar:setWirelessSignal("ERROR", iface)
+		if player then
+			player:setSignalStrength(nil)
+		end
+	end
 end
 
 
-function _updateTask(self)
-	local player = Player:getLocalPlayer()
+local function _updateWireless(self)
+	local iface = Networking:activeInterface()
 
+	-- After factory reset iface is nil (none selected yet)
+	if iface == nil then
+		return
+	end
+
+	Networking:checkNetworkHealth(
+		iface,
+		function(continue, result)
+			log:debug("_updateWireless: ", result)
+
+			if not continue then
+				_updateWirelessDone(self, iface, (result >= 0))
+			end
+		end,
+		false,
+		nil
+	)
+end
+
+
+local function _updatePower(self)
 	-- ac power / battery
 	if self.acpower then
 		if self.batteryPopup then
@@ -344,12 +383,22 @@ function _updateTask(self)
 			iconbar:setBattery("4")
 		end
 	end
+end
 
-	-- wireless strength
-	local percentage, quality = self.wireless:getSignalStrength()
-	iconbar:setWirelessSignal(quality ~= nil and quality or "ERROR")
-	if player then
-		player:setSignalStrength(percentage)
+
+function _updateTask(self)
+	while true do
+		local what = unpack(Task:running().args)
+
+		if (what & UPDATE_POWER) == UPDATE_POWER then
+			_updatePower(self)
+		end
+		if (what & UPDATE_WIRELESS) == UPDATE_WIRELESS then
+			_updateWireless(self)
+		end
+
+		-- suspend task
+		Task:yield(false)
 	end
 end
 

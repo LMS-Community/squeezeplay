@@ -153,9 +153,10 @@ int jive_traceback (lua_State *L) {
 
 static int jiveL_initSDL(lua_State *L) {
 	const SDL_VideoInfo *video_info;
+#ifndef JIVE_NO_DISPLAY
 	JiveSurface *srf, *splash, *icon;
 	Uint16 splash_w, splash_h;
-
+#endif
 	/* logging */
 	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
 	log_ui = LOG_CATEGORY_GET("squeezeplay.ui");

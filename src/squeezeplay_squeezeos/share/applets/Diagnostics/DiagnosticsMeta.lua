@@ -21,6 +21,7 @@ end
 function registerApplet(meta)
 	meta:registerService("diagnosticsMenu")
 	meta:registerService("supportMenu")
+	meta:registerService("networkTroubleshootingMenu")
 
 	Framework:addActionListener("help", nil, function()
 		appletManager:callService("supportMenu")
