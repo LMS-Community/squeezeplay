@@ -398,11 +398,32 @@ function macroSelectMenuIndex(interval, index)
 	if index > len then
 		return false
 	end
+	
+	menu:setSelectedIndex(index)
+	macroDelay(100)
 
 	while menu:getSelectedIndex() ~= index do
 		macroEvent(100, EVENT_SCROLL, 1)
 	end
 
+	macroDelay(interval)
+	return true
+end
+
+
+-- select the menu item, using id
+function macroSelectMenuId(interval, id)
+	local menu = _macroFindWidget(Menu)
+	if not menu then
+		return
+	end
+	
+	local index = menu:getIdIndex(id)
+	
+	if index == nil then return false end
+	
+	menu:setSelectedIndex(index)
+		
 	macroDelay(interval)
 	return true
 end
@@ -474,13 +495,13 @@ end
 
 
 -- force return to the home menu
-function macroHome(interval)
+function macroHome(interval, initialInterval)
 	log:info("macroHome")
 	if #Framework.windowStack > 1 then
 		Framework.windowStack[#Framework.windowStack - 1]:hideToTop()
 	end
 
-	macroDelay(50)
+	macroDelay(initialInterval or 50)
 	local menu = _macroFindWidget(Menu)
 	menu:setSelectedIndex(1)
 
