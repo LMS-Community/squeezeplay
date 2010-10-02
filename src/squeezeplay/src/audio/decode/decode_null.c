@@ -11,8 +11,9 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
-
 #ifdef HAVE_NULLAUDIO
+
+#include <time.h>
 
 /* Stream sample rate */
 static u32_t stream_sample_rate;
@@ -183,6 +184,43 @@ static void decode_null_stop(void) {
 	stream_sample_rate = decode_audio->set_sample_rate = 44100;
 }
 
+static SDL_Thread *callback_thread = NULL;
+
+static int callback_thread_execute(void *unused) {
+	struct timespec req, now, then;
+	long diffms;
+	clock_gettime(CLOCK_REALTIME, &then);
+
+	while (1) {
+		then.tv_nsec += 100000000;
+		if (then.tv_nsec > 999999999) {
+			then.tv_nsec -= 1000000000;
+			then.tv_sec += 1;
+		}
+		clock_gettime(CLOCK_REALTIME, &now);
+
+		diffms = (then.tv_sec - now.tv_sec) * 1000
+				+ (then.tv_nsec - now.tv_nsec) / 1000000;
+
+		req.tv_sec = 0;
+		req.tv_nsec = diffms * 1000000;
+		if (req.tv_nsec > 120000000) {
+			req.tv_nsec = 100000000;
+		} else if (req.tv_nsec < 0) {
+			req.tv_nsec = 10000000;
+			then = now;
+		}
+
+		if (nanosleep(&req, 0) < 0) {
+			continue;
+		}
+
+		callback(100);
+
+	}
+
+	return 0;
+}
 
 static int decode_null_init(lua_State *L) {
 	void *buf;
@@ -201,9 +239,13 @@ static int decode_null_init(lua_State *L) {
 
 	/* XXX set up timer to call callback reqularly */
 	/* only need callback to run while actually playing */
-	if (SDL_SetTimer(100, callback) != 0) {
-		LOG_WARN(log_audio_output, "Cannot start callback timer");
-		return 0;
+
+	if (!callback_thread) {
+		callback_thread = SDL_CreateThread(callback_thread_execute, NULL);
+		if (!callback_thread) {
+			LOG_WARN(log_audio_output, "Cannot start callback timer");
+			return 0;
+		}
 	}
 
 	return 1;

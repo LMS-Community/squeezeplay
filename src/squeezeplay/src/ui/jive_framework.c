@@ -165,9 +165,9 @@ static int jiveL_initSDL(lua_State *L) {
 	SDL_putenv("SDL_NOMOUSE=1");
 
 #ifdef JIVE_NO_DISPLAY
-#   define JIVE_SDL_FEATURES (SDL_INIT_TIMER)
+#   define JIVE_SDL_FEATURES (0)
 #else
-#   define JIVE_SDL_FEATURES (SDL_INIT_VIDEO|SDL_INIT_TIMER)
+#   define JIVE_SDL_FEATURES (SDL_INIT_VIDEO)
 #endif
 	/* initialise SDL */
 	if (SDL_Init(JIVE_SDL_FEATURES) < 0) {
