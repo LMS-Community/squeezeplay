@@ -1,4 +1,4 @@
-local assert, loadfile, ipairs, package, pairs, require, tostring, type = assert, loadfile, ipairs, package, pairs, require,tostring, type
+local assert, loadfile, ipairs, package, pairs, require, tostring, type, tonumber = assert, loadfile, ipairs, package, pairs, require,tostring, type, tonumber
 
 local oo               = require("loop.simple")
 local io               = require("io")
@@ -29,6 +29,11 @@ function init(self)
 	end
 	jnt:subscribe(self)
 	self.running = false
+	
+	local offset = os.getenv("LOADTEST_TIME_OFFSET")
+	if offset ~= nil and tonumber(offset) > 0 then
+		self.timeOffset = tonumber(offset)
+	end
 end
 
 local function loadconfigfile(file)
@@ -127,6 +132,11 @@ end
 function _new_getNextTrack(self)
 	local t = os.date("!*t")
 	local secondsSinceMidnight = t.sec + t.min * 60 + t.hour * 3600
+	
+	if self.timeOffset then
+		secondsSinceMidnight = (secondsSinceMidnight + self.timeOffset) % (3600 * 24)
+	end
+	
 	local ticsOffset = Framework:getTicks() / 1000 - secondsSinceMidnight
 	
 	local start, duration, pstart, pduration
