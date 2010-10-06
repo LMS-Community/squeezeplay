@@ -9,6 +9,7 @@ local math             = require("math")
 
 local Applet           = require("jive.Applet")
 local Framework        = require("jive.ui.Framework")
+local System           = require("jive.System")
 local Player           = require("jive.slim.Player")
 local macro            = require("applets.MacroPlay.MacroPlayApplet")
 
@@ -53,11 +54,11 @@ function loadConfig(self, file)
 	local f, dirorerr = loadconfigfile(file)
 	if f then
 		self.config = f()
-		log:info("Loaded config from ", dirorerr, file)
+		log:info(System:getMacAddress(), ': ',"Loaded config from ", dirorerr, file)
 	elseif dirorerr then
-		log:warn("Error loading config from ", file, ": ", dirorerr)
+		log:warn(System:getMacAddress(), ': ',"Error loading config from ", file, ": ", dirorerr)
 	else
-		log:warn("No config file found: ", file)
+		log:warn(System:getMacAddress(), ': ',"No config file found: ", file)
 	end
 	return f ~= nil
 end
@@ -70,7 +71,7 @@ end
 function notify_playerModeChange(self, player, mode)
 	if player ~= self.player then return end
 
-	log:info('mode=', mode)
+	log:info(System:getMacAddress(), ': ','mode=', mode)
 		
 	self.isPlaying = mode == 'play'
 	if not self.isPlaying and self.timerAction then
@@ -82,11 +83,11 @@ end
 function notify_playerCurrent(self, player)
 	self.player = player
 	self.isPlaying = player:getPlayerMode() == 'play'
-	log:info('player=', player)
+	log:info(System:getMacAddress(), ': ','player=', player)
 end
 
 function _play(self, track)
-	log:info('_play: track=', track or 'undef')
+	log:info(System:getMacAddress(), ': ','_play: track=', track or 'undef')
 	
 	-- go home
 	macro.macroHome(500, 10000)	-- long delay to allow for startup
@@ -171,7 +172,7 @@ end
 function _waitToFinish(self, endTime)
 	local duration = endTime - Framework:getTicks()
 
-	log:info('_waitToFinish: duration=', duration)
+	log:info(System:getMacAddress(), ': ','_waitToFinish: duration=', duration)
 
 	if duration > 0 then
 		macro.macroDelay(duration)
@@ -191,7 +192,7 @@ end
 function _checkPlaying(self, endTime)
 	local duration = endTime - Framework:getTicks()
 
-	log:info('_checkPlaying: duration=', duration)
+	log:info(System:getMacAddress(), ': ','_checkPlaying: duration=', duration)
 
 	if duration > 60000 then
 		macro.macroDelay(60000)
@@ -202,7 +203,7 @@ function _checkPlaying(self, endTime)
 								elseif interrupt then
 									self:_checkPlaying(endTime)
 								else
-									log:warn('Track not playing');
+									log:warn(System:getMacAddress(), ': ','Track not playing');
 									self.running = false
 								end
 							end
@@ -219,7 +220,7 @@ function runScript(self, configFile)
 		local index = math.random(#self.config.records)
 		self.config.record = self.config.records[index]
 		self.config.records = nil
-		log:info('Using test record #', index, ' entries=', #self.config.record)
+		log:info(System:getMacAddress(), ': ','Using test record #', index, ' entries=', #self.config.record)
 	end
 	
 	self.running = true
@@ -245,7 +246,7 @@ function playTrack(self, start, endTime, track)
 		startIn = 10000
 	end
 	
-	log:info('playTrack: startIn=', startIn, ', track=', track)
+	log:info(System:getMacAddress(), ': ','playTrack: startIn=', startIn, ', track=', track)
 
 	if (startIn > 0) then
 		if (self.isPlaying and startIn > 5000) then
