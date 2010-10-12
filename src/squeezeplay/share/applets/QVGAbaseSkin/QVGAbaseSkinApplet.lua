@@ -1631,9 +1631,19 @@ function skin(self, s, reload, useDefaultSize)
 					w = WH_FILL,
 					h = WH_FILL,
 					align = 'left',
-					font = _boldfont(c.TEXTMENU_FONT_SIZE),
 					fg = TEXT_COLOR,
 					sh = TEXT_SH_COLOR,
+					font = _font(c.ALBUMMENU_SMALL_FONT_SIZE),
+		 			line = {
+					{
+						font = _boldfont(18),
+						height = 20,
+					},
+					{
+						font = _font(14),
+						height = 18,
+					},
+					},
 				},
 				arrow = _uses(s.item.arrow),
 				bgImg = false,
@@ -1650,10 +1660,21 @@ function skin(self, s, reload, useDefaultSize)
 						h = WH_FILL,
 						align = 'left',
 						font = _boldfont(c.TEXTMENU_SELECTED_FONT_SIZE),
-						fg = c.TEXT_COLOR,
-						sh = c.TEXT_SH_COLOR,
+						fg = c.SELECT_COLOR,
+						sh = c.SELECT_SH_COLOR,
+						padding = { 0, 2, 0, 0 },
+						line = {
+							{
+								font = _boldfont(21),
+								height = 23,
+							},
+							{
+								font = _font(14),
+								height = 14,
+							},
+						},	
+						arrow = _uses(s.selected.item.arrow),
 					},
-					arrow = _uses(s.selected.item.arrow),
 				},
 			},
 			locked = {
@@ -1664,17 +1685,17 @@ function skin(self, s, reload, useDefaultSize)
 
 		},
 	}
+
 	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
 		order = { 'text' },
 	})
-
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
 		order = { 'text' },
 	})
-	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
-		order = { 'text' },
-	})
-	
+
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item_play)
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item_play)
+
 	s.alarm_header = {
 			w = screenWidth,
 			padding = { 50, 0, 50, 0 },
