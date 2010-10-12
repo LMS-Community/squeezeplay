@@ -1532,18 +1532,19 @@ function skin(self, s)
 			},
 			item = {
 				h = CM_MENU_HEIGHT,
-				order = { "icon", "text", "arrow" },
+				order = { "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 				bgImg = false,
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
-					padding = { 0, 0, 0, 8 },
+					padding = { 0, 8, 0, 8 },
 					align = 'left',
 					font = _font(ALBUMMENU_SMALL_FONT_SIZE),
 					line = {
 						{
 							font = _boldfont(ALBUMMENU_FONT_SIZE),
+							height = 42,
 						},
 						{
 							font = _font(ALBUMMENU_SMALL_FONT_SIZE),
@@ -1552,27 +1553,23 @@ function skin(self, s)
 					fg = TEXT_COLOR,
 					sh = TEXT_SH_COLOR,
 				},
-				icon = {
-					h = THUMB_SIZE,
-					padding = MENU_ITEM_ICON_PADDING,
-					align = 'center',
-				},
 				arrow = _uses(s.item.arrow),
 			},
 			selected = {
 				item = {
 					bgImg = threeItemCMSelectionBox,
-					order = { "icon", "text", "arrow" },
+					order = { "text", "arrow" },
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
 						w = WH_FILL,
 						h = WH_FILL,
 						align = 'left',
-						padding = { 0, 0, 0, 12 },
+						padding = { 0, 12, 0, 12 },
 						font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
 						line = {
 							{
 								font = _boldfont(ALBUMMENU_SELECTED_FONT_SIZE),
+								height = 42,
 							},
 							{
 								font = _font(ALBUMMENU_SELECTED_SMALL_FONT_SIZE),
@@ -1580,11 +1577,6 @@ function skin(self, s)
 						},
 						fg = TEXT_COLOR,
 						sh = TEXT_SH_COLOR,
-					},
-					icon = {
-						h = THUMB_SIZE,
-						padding = MENU_ITEM_ICON_PADDING,
-						align = 'center',
 					},
 					arrow = _uses(s.item.arrow, {
 			      			img = _loadImage(self, "Icons/selection_right_3line_on.png"),
@@ -1595,9 +1587,16 @@ function skin(self, s)
 		},
 	}
 	
-	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
-		order = { 'icon', 'text' },
+	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
 	})
+	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
+
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item_play)
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item_play)
+
 	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
 		arrow = addArrow,
 	})
