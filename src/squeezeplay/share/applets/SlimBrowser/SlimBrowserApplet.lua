@@ -223,7 +223,9 @@ local function _decideFirstChunk(step, jsonAction)
 	log:debug('Saving this json command to browse history table:')
 	log:debug(commandString)
 
-	if lastBrowse and not isContextMenu then
+
+	-- don't save browse history for context menus or searches
+	if lastBrowse and not isContextMenu and not string.match(commandString, 'search:') then
 		from = _getNewStartValue(_player:getLastBrowseIndex(commandString))
 	else
 		lastBrowse = { index = 1 }
