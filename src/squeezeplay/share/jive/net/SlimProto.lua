@@ -31,6 +31,8 @@ local Framework   = require("jive.ui.Framework")
 local Task        = require("jive.ui.Task")
 local Timer       = require("jive.ui.Timer")
 
+local locale      = require("jive.utils.locale")
+
 local DNS         = require("jive.net.DNS")
 local SocketTcp   = require("jive.net.SocketTcp")
 
@@ -142,7 +144,7 @@ local opcodes = {
 			packNumber(wlanList, 2),
 			packNumber(data.bytesReceivedH or 0, 4),
 			packNumber(data.bytesReceivedL or 0, 4),
-			"EN", -- XXXX language
+			string.upper(locale.getLocale()),
 			capabilities			
 		}
 	end,
