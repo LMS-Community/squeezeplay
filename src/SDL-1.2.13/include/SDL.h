@@ -57,6 +57,7 @@ extern "C" {
 #define SDL_INIT_VIDEO		0x00000020
 #define SDL_INIT_CDROM		0x00000100
 #define SDL_INIT_JOYSTICK	0x00000200
+#define SDL_INIT_EVENTLOOP	0x00000400
 #define SDL_INIT_NOPARACHUTE	0x00100000	/* Don't catch fatal signals */
 #define SDL_INIT_EVENTTHREAD	0x01000000	/* Not supported on all OS's */
 #define SDL_INIT_EVERYTHING	0x0000FFFF

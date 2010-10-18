@@ -111,7 +111,11 @@ function registerApplet(meta)
 --	System:setTouchpadBottomCorrection(30)
 	
 	-- SN hosthame
-	jnt:setSNHostname("jive.squeezenetwork.com")
+	if settings.snaddress then
+		jnt:setSNHostname(settings.snaddress)
+	else
+		jnt:setSNHostname("jive.squeezenetwork.com")
+	end
 	
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)

@@ -680,12 +680,12 @@ function hideToTop(self, transition)
 	end
 end
 
-function moveToTop(self)
+function moveToTop(self, transition)
 	if Framework:isCurrentWindow(self) then
 		return
 	end
 	self:hide()
-	self:show()
+	self:show(transition)
 end
 
 --[[

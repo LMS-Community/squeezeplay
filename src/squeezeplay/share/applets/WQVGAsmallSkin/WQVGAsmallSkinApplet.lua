@@ -2062,7 +2062,7 @@ function skin(self, s)
 			},
 			item = {
 				h = CM_MENU_HEIGHT,
-				order = { "icon", "text", "arrow" },
+				order = { "text", "arrow" },
 				padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 				text = {
 					padding = { 0, 4, 0, 0 },
@@ -2082,16 +2082,11 @@ function skin(self, s)
 					fg = TEXT_COLOR,
 					sh = TEXT_SH_COLOR,
 				},
-				icon = {
-					h = THUMB_SIZE,
-					padding = MENU_ITEM_ICON_PADDING,
-					align = 'center',
-				},
 				arrow = _uses(s.item.arrow),
 			},
 			selected = {
 				item = {
-					order = { "icon", "text", "arrow" },
+					order = { "text", "arrow" },
 					bgImg = fiveItemSelectionBox,
 					padding = { ITEM_LEFT_PADDING, 0, 12, 0 },
 					text = {
@@ -2112,11 +2107,6 @@ function skin(self, s)
 						fg = TEXT_COLOR,
 						sh = TEXT_SH_COLOR,
 					},
-					icon = {
-						h = THUMB_SIZE,
-						padding = MENU_ITEM_ICON_PADDING,
-						align = 'center',
-					},
 					arrow = _uses(s.item.arrow),
 				},
 			},
@@ -2127,7 +2117,13 @@ function skin(self, s)
 	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
 		order = { 'text' },
 	})
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
+	})
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
 		order = { 'text' },
 	})
 
@@ -3490,6 +3486,7 @@ function skin(self, s)
                 sh = TEXT_SH_COLOR,
         }
 
+	return s
 
 end
 
