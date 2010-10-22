@@ -50,6 +50,9 @@ local Task      = require("jive.ui.Task")
 
 local log       = require("jive.utils.log").logger("net.http")
 
+local jnt       = jnt
+local jive      = jive
+
 -- our class
 module(..., oo.class)
 
@@ -178,6 +181,8 @@ function __init(self, sink, method, uri, options)
 			["sink"]        = sink,
 			["stream"]      = stream,
 		},
+		-- stash options in case of redirect
+		options = options,
 	})
 end
 
@@ -333,10 +338,11 @@ function t_setResponseBody(self, data)
 	-- abort if we have no sink
 	if sink then
 	
-		-- the HTTP layer has read any data coming with a 404, but we do not care
-		-- only send data back in case of 200!
 		local code, err = self:t_getResponseStatus()
+
+		-- handle 200 OK
 		if code == 200 then
+
 			if self.t_httpResponse.stream then
 				sink(data, nil, self)
 			else
@@ -345,6 +351,50 @@ function t_setResponseBody(self, data)
 					sink(nil, nil, self)
 				end
 			end
+
+		-- handle redirects	
+		elseif (code == 301 or code == 302 or code == 307) and self.t_httpRequest.method == 'GET' and
+		       (not self.redirect or self.redirect < 5) then
+
+			local redirectUrl = self.t_httpResponse.headers["Location"]
+			log:info(code, " redirect: ", redirectUrl)
+
+			-- recreate headers and parsed uri
+			local defaults = {
+				host   = "",
+				port   = 80,
+				path   = "/",
+				scheme = "http"
+			}
+			local parsed = url.parse(redirectUrl, defaults)
+			
+			local defHeaders = {}
+			if self.options and self.options.headers then
+				for k, v in pairs(self.options.headers) do
+					defHeaders[k] = v
+				end
+			end
+			if parsed.host ~= "" then
+				defHeaders["Host"] = parsed.host
+				if parsed.port ~= 80 then
+					defHeaders["Host"] = defHeaders["Host"] .. ':' .. parsed.port
+				end
+			end
+
+			self.redirect = (self.redirect or 0) + 1
+
+			self.t_httpRequest.headers     = defHeaders
+			self.t_httpRequest.uri         = parsed
+
+			self.t_httpResponse.statusCode = false
+			self.t_httpResponse.statusLine = false
+			self.t_httpResponse.headers    = false
+			self.t_httpResponse.body       = ""
+			self.t_httpResponse.done       = false
+
+			jive.net.SocketHttp(jnt, parsed.host, parsed.port, url):fetch(self)
+
+		-- handle errors
 		else
 			if not err then
 				err = "HTTP request failed with code" .. code
