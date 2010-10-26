@@ -2850,6 +2850,7 @@ function skin(self, s)
 			h          = 32,
 			nptrack =  {
 				w          = screenWidth - _tracklayout.x - 10,
+				h          = WH_FILL,
 				align      = _tracklayout.align,
 				lineHeight = _tracklayout.lineHeight,
 				fg         = _tracklayout.fg,
