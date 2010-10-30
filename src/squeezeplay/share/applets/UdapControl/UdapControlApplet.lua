@@ -3,6 +3,7 @@ Methods to respond to the following udap requests:
  - discover
  - advanced discover
  - set server address
+ - set slimserver address
  - get uuid
 --]]
 
