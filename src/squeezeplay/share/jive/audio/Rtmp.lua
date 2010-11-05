@@ -394,15 +394,21 @@ function read(stream)
 
 	while readmore do
 
-		local new, error = stream:readToLua()
-		if error then
-			stream:setStreaming(false)
-			stream:disconnect()
-			return
-		end
-		if new then
-			inBuf = inBuf .. new
-			receivedBytes = receivedBytes + string.len(new)
+		-- read new data, contraining the size of our input buffer
+		-- without this check, fast servers can send us too much data causing OOM conditions
+		if string.len(inBuf) < 8192 then
+
+			local new, error = stream:readToLua()
+			if error then
+				stream:setStreaming(false)
+				stream:disconnect()
+				return
+			end
+			if new then
+				inBuf = inBuf .. new
+				receivedBytes = receivedBytes + string.len(new)
+			end
+
 		end
 
 		readmore = false
