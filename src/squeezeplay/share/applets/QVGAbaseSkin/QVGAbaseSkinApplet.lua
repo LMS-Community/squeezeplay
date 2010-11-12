@@ -840,6 +840,11 @@ function skin(self, s, reload, useDefaultSize)
 					order = { 'text', 'arrow', },
 				}
 			},
+			locked = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
 		},
 	})
 

@@ -1466,6 +1466,11 @@ function skin(self, s)
 					order = { 'text', 'arrow', },
 				}
 			},
+			locked = {
+				item = {
+					order = { 'text', 'arrow', },
+				}
+			},
 		},
 	})
 
