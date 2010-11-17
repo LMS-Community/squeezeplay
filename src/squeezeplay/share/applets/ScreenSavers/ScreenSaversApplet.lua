@@ -627,7 +627,7 @@ end
 
 
 function removeScreenSaver(self, appletName, method, settingsName, additionalKey)
-	local key = self:getKey(applet, method, additionalKey)
+	local key = self:getKey(appletName, method, additionalKey)
 
 	if settingsName then
 		self.screensaverSettings[settingsName] = nil
