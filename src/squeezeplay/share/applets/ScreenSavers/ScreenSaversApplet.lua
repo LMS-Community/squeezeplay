@@ -284,7 +284,7 @@ function _activate(self, the_screensaver, force, isServerRequest)
 		end
 	end
 
-	if screensaver.applet then
+	if screensaver and screensaver.applet then
 		-- activate the screensaver. it should register any windows with
 		-- screensaverWindow, and open then itself
 		local instance = appletManager:loadApplet(screensaver.applet)
