@@ -536,6 +536,12 @@ function notify_serverLinked(self, server, wasAlreadyLinked)
 	end
 end
 
+function isSetupDone(self)
+	local settings = self:getSettings()
+
+	return settings and settings.setupDone
+end
+
 
 function _setupDone(self, setupDone, registerDone)
 	log:info("network setup complete")
