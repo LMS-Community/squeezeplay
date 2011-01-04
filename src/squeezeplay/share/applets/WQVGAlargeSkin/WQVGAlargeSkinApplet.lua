@@ -264,6 +264,7 @@ function skin(self, s)
 	local sliderBackground        = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_lrg.png")
         local touchToolbarKeyDivider  = _loadImageTile(self,  imgpath .. "Touch_Toolbar/toolbar_divider.png")
 
+	local blackBackground   = Tile:fillColor(0x000000ff)
 	local nocturneWallpaper = _loadImageTile(self, "applets/SetupWallpaper/wallpaper/fab4_nocturne.png")
 
 	local deleteKeyBackground     = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry.png")
@@ -2325,7 +2326,7 @@ function skin(self, s)
 
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
-                bgImg = nocturneWallpaper,
+                bgImg            = blackBackground,
                 title            = { hidden = 1 },
                 nptitle          = { hidden = 1 },
                 npcontrols       = { hidden = 1 },
@@ -2342,7 +2343,7 @@ function skin(self, s)
                         align = "center",
                         h = 272,
                         border = 0,
-                        padding = 10,
+                        padding = 5,
                         artwork = {
                                 w = 480,
                                 border = 0,
