@@ -746,7 +746,7 @@ local function _updateWireless(self)
 	local iface = Networking:activeInterface()
 
 	-- After factory reset iface is nil (none selected yet)
-	if iface == nil then
+	if iface == nil or not appletManager:callService("isSetupDone") then
 		return
 	end
 
