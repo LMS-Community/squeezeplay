@@ -2037,9 +2037,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					if item['serverLinked'] then
 						log:info("serverlinked: pin: ", _server:getPin())
 						_server.jnt:notify('serverLinked', _server, true)
-					else
-						goHome()
 					end
+					goHome()
 					
 				elseif nextWindow == 'parentNoRefresh' then
 					_hideMe(true, _, setSelectedIndex)
