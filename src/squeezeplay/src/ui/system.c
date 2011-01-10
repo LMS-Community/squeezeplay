@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "jive.h"
+#include "version.h"
 
 
 static char *mac_address;
@@ -16,6 +17,19 @@ static char *machine;
 static int hardware_rev;
 static char *homedir;
 static char *resource_path = NULL;
+
+// public API
+const char * system_get_machine(void) {
+	return machine;
+}
+
+const char * system_get_arch(void) {
+	return arch;
+}
+
+const char * system_get_version(void) {
+	return JIVE_VERSION;
+}
 
 
 static int system_get_mac_address(lua_State *L) {
@@ -40,7 +54,7 @@ static int system_get_uuid(lua_State *L) {
 }
 
 
-static int system_get_arch(lua_State *L) {
+static int system_lua_get_arch(lua_State *L) {
 	if (arch) {
 		lua_pushstring(L, arch);
 	}
@@ -51,7 +65,7 @@ static int system_get_arch(lua_State *L) {
 }
 
 
-static int system_get_machine(lua_State *L) {
+static int system_lua_get_machine(lua_State *L) {
 	if (machine) {
 		lua_pushstring(L, machine);
 		lua_pushinteger(L, hardware_rev);
@@ -353,8 +367,8 @@ static int system_atomic_write(lua_State *L)
 
 
 static const struct luaL_Reg squeezeplay_system_methods[] = {
-	{ "getArch", system_get_arch },
-	{ "getMachine", system_get_machine },
+	{ "getArch", system_lua_get_arch },
+	{ "getMachine", system_lua_get_machine },
 	{ "getMacAddress", system_get_mac_address },
 	{ "getUUID", system_get_uuid },
 	{ "getUptime", system_get_uptime },

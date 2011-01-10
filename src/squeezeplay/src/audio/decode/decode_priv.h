@@ -85,6 +85,7 @@ extern struct decode_module decode_alac;
 #ifdef WITH_SPPRIVATE
 extern struct decode_module decode_wma;
 extern struct decode_module decode_aac;
+extern struct decode_module decode_spotify;
 #endif
 
 
@@ -110,6 +111,8 @@ extern void decode_output_set_track_gain(u32_t replay_gain);
 extern void decode_set_track_polarity_inversion(u8_t inversion);
 
 extern void decode_set_output_channels(u8_t channels);
+extern void decode_set_trigger_resume(void);
+
 
 /* Audio output backends */
 struct decode_audio_func {

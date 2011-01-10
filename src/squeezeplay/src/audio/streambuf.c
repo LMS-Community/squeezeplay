@@ -274,6 +274,11 @@ void streambuf_set_copyright() {
 }
 
 
+void streambuf_set_streaming(bool_t is_streaming) {
+	streambuf_streaming = is_streaming;
+}
+
+
 void streambuf_set_filter(streambuf_filter_t filter) {
 	fifo_lock(&streambuf_fifo);
 
