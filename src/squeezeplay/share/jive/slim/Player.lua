@@ -267,6 +267,7 @@ end
 -- returns the track_id from a playerstatus structure
 local function _whatsPlaying(obj)
 	local whatsPlaying = nil
+	local artwork = nil
 	if obj.item_loop then
 		if obj.item_loop[1].params then
 			if obj.item_loop[1].params.track_id and not obj.remote then
@@ -277,8 +278,9 @@ local function _whatsPlaying(obj)
 				whatsPlaying = obj.item_loop[1].text
 			end
 		end
+		artwork = obj.item_loop and obj.item_loop[1]["icon-id"] or obj.item_loop[1].icon
 	end
-	return whatsPlaying
+	return whatsPlaying, artwork
 end
 
 
@@ -1230,7 +1232,7 @@ function _process_status(self, event)
 	self:updatePlayerInfo(self.slimServer, playerInfo, useSequenceNumber, isSequenceNumberInSync)
 
 	-- update track list
-	local nowPlaying = _whatsPlaying(event.data)
+	local nowPlaying, artwork = _whatsPlaying(event.data)
 
 	if self.state.mode ~= oldState.mode then
 		-- self.mode is set immedidately by togglePause and stop methods to give immediate user feedback in e.g. iconbar
@@ -1272,10 +1274,11 @@ function _process_status(self, event)
 		self.jnt:notify('playerRepeatModeChange', self, self.state['playlist repeat'])
 	end
 
-	if self.nowPlaying ~= nowPlaying then
+	if self.nowPlaying ~= nowPlaying or self.nowPlayingArtwork ~= artwork then
 		log:debug('notify_playerTrackChange')
 		self.nowPlaying = nowPlaying
-		self.jnt:notify('playerTrackChange', self, nowPlaying)
+		self.nowPlayingArtwork = artwork
+		self.jnt:notify('playerTrackChange', self, nowPlaying, artwork)
 	end
 
 	if self.state.playlist_timestamp ~= oldState.playlist_timestamp then

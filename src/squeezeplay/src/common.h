@@ -116,6 +116,11 @@ extern int squeezeplay_find_file(const char *path, char *fullpath);
 int watchdog_get();
 int watchdog_keepalive(int watchdog_id, int count);
 
+/* system */
+const char * system_get_machine(void);
+const char * system_get_arch(void);
+const char * system_get_version(void);
+
 /* time */
 #if HAVE_CLOCK_GETTIME
 static inline u32_t jive_jiffies(void)
