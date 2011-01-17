@@ -174,6 +174,10 @@ end
 
 
 function needsMusicSource(self)
+	if not self.slimproto then
+		log:warn("no slimproto connection")
+		return true
+	end
 	return not self.slimproto:isConnected()
 end
 
@@ -195,7 +199,7 @@ function connectToServer(self, server)
 
 	-- Needs to be fully connected, both SlimProto and Comet connection before we can use server connection
 	-- Otherwise, just do it locally
-	if not self:isConnected() then
+	if not self:isConnected() and self.slimproto then
 		log:info('connectToServer(): connecting localPlayer to server', server, ' via internal call')
 
 		-- close any previous connection
@@ -215,12 +219,20 @@ function connectToServer(self, server)
 end
 
 function connectIp(self, serverip, slimserverip)
+	if not self.slimproto then
+		log:warn("no slimproto connection")
+		return
+	end
 	self.slimproto:disconnect()
 	self.slimproto:connectIp(serverip, slimserverip)
 end
 
 
 function disconnectFromServer(self)
+	if not self.slimproto then
+		log:warn("no slimproto connection")
+		return
+	end
 	self.slimproto:disconnect()
 	self.playback:stop()
 end
@@ -244,14 +256,21 @@ end
 -- can be used to tell the player to switch servers.
 
 function isConnected(self)
+	if not self.slimproto then
+		log:warn('no slimproto connection')
+		return false
+	end
 	return self.slimproto:isConnected() and Player.isConnected(self)
 end
 
+
 -- Has the connection attempt actually failed
 function hasConnectionFailed(self)
+	if not self.slimproto then
+		return true
+	end
 	return self.slimproto:hasConnectionFailed()
 end
-
 
 
 function setSignalStrength(self, signalStrength)
