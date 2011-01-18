@@ -194,7 +194,12 @@ function addTimeInputWidgets(self)
 	self.hourMenu.itemsBeforeScroll = 2
 	self.hourMenu.snapToItemEnabled = true
 	if self.initHour then
-		self.hourMenu:setSelectedIndex(hourMenuMiddle + self.initHour - 1)
+		-- subtract one for initial hour in 12h menu
+		if self.initampm then
+			self.hourMenu:setSelectedIndex(hourMenuMiddle + self.initHour - 1)
+		else
+			self.hourMenu:setSelectedIndex(hourMenuMiddle + self.initHour)
+		end
 	else
 		self.hourMenu:setSelectedIndex(hourMenuMiddle)
 	end
