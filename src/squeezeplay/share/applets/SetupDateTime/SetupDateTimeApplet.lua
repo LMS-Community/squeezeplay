@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, io, string, tostring = ipairs, pairs, io, string, tostring
+local ipairs, pairs, io, string, tostring, pcall = ipairs, pairs, io, string, tostring, pcall
 
 local oo               = require("loop.simple")
 local hasSqueezeos, squeezeos        = pcall('require', "squeezeos_bsp")
