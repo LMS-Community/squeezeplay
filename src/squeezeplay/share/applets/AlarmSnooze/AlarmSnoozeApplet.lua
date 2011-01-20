@@ -678,7 +678,6 @@ end
 function _alarmOff(self, stopStream)
 	if self.alarmInProgress == 'rtc' then
 		self:_silenceFallbackAlarm()
-		iconbar:setAlarm('OFF')
 		log:warn('_alarmOff: RTC alarm canceled')
 	else
 		if self.localPlayer:isConnected() then
@@ -717,6 +716,9 @@ function _stopTimer(self)
 		log:warn('_stopTimer: stopping WOL timer')
 		self.wakeOnLanTimer:stop()
 	end
+
+	-- no RTC timer means no alarm, so let's go ahead and remove our alarm icon
+	iconbar:setAlarm('OFF')
 end
 
 
@@ -786,6 +788,7 @@ function _startTimer(self, interval)
 	end
 
 	self.RTCAlarmTimer:start()
+	iconbar:setAlarm('ON')
 end
 
 
