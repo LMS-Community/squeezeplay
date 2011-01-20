@@ -212,7 +212,7 @@ function homeMenuItemContextMenu(self, item)
 				text = self:string('REMOVE_FROM_HOME'),
 				callback = function()
 					if theItem.node == 'home' then
-						
+
 						self:_timedExec(
 							function()
 								jiveMain:setNode(theItem, 'hidden')
@@ -240,6 +240,7 @@ function homeMenuItemContextMenu(self, item)
 			text = self:string('ADD_TO_HOME'),
 			callback = function()
 				self:getSettings()[theItem.id] = 'home'
+				theItem.node = 'home'
 				local homeItem = jiveMain:addItemToNode(theItem, 'home')
 				jiveMain:itemToBottom(homeItem, 'home')
 				window:hide()
