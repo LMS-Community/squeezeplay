@@ -217,6 +217,7 @@ function homeMenuItemContextMenu(self, item)
 							function()
 								jiveMain:setNode(theItem, 'hidden')
 								self:getSettings()[theItem.id] = 'hidden'
+								self:_storeSettings('home')
 							end
 						)
 				
@@ -225,11 +226,11 @@ function homeMenuItemContextMenu(self, item)
 							function()
 								self:getSettings()[theItem.id] = nil
 								jiveMain:removeItemFromNode(theItem, 'home')
+								self:_storeSettings('home')
 							end
 						)
 
 					end
-					self:_storeSettings('home')
 					window:hide()
 					return EVENT_CONSUME
 				end
