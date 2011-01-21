@@ -10,6 +10,7 @@ local Applet           = require("jive.Applet")
 local Font             = require("jive.ui.Font")
 local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
+local System           = require("jive.System")
 local Icon             = require("jive.ui.Icon")
 local Button           = require("jive.ui.Button")
 local Choice           = require("jive.ui.Choice")
@@ -27,6 +28,7 @@ local Widget           = require("jive.ui.Widget")
 local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
+local Player           = require("jive.slim.Player")
 
 local VUMeter          = require("jive.audio.VUMeter")
 local SpectrumMeter    = require("jive.audio.SpectrumMeter")
@@ -1625,6 +1627,14 @@ function _createUI(self)
 		  	volDown  = Button(
 				Icon('volDown'),
 				function()
+					-- Bug 15826: Allow volume events to be sent even if volume is fixed
+					--  at 100% to allow IR Blaster (a server side extra) to work properly.
+					-- Catch volume down button in NP screen on Fab4
+					if self.fixedVolumeSet and System:hasIRBlasterCapability() then
+						-- Send command directly to server w/o updating local volume
+						Player.volume(self.player, 99, true)
+					end
+
 					local e = Event:new(EVENT_SCROLL, -3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME
@@ -1633,6 +1643,14 @@ function _createUI(self)
  		  	volUp  = Button(
 				Icon('volUp'),
 				function() 
+					-- Bug 15826: Allow volume events to be sent even if volume is fixed
+					--  at 100% to allow IR Blaster (a server side extra) to work properly.
+					-- Catch volume up button in NP screen on Fab4
+					if self.fixedVolumeSet and System:hasIRBlasterCapability() then
+						-- Send command directly to server w/o updating local volume
+						Player.volume(self.player, 101, true);
+					end
+
 					local e = Event:new(EVENT_SCROLL, 3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME

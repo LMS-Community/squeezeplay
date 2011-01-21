@@ -168,6 +168,15 @@ end
 
 
 function _updateVolume(self, mute, directSet, noAccel, minAccelDelta)
+
+	-- Bug 15826: Allow volume events to be sent even if volume is fixed
+	--  at 100% to allow IR Blaster (a server side extra) to work properly.
+	-- Catch volume IR commands received by Fab4
+	if self.player and (self.player:getDigitalVolumeControl() == 0) and System:hasIRBlasterCapability() then
+		-- Send command directly to server w/o updating local volume
+		Player.volume(self.player, 100 + self.delta, true)
+	end
+
 	if not self.popup then
 		self.timer:stop()
 		return
