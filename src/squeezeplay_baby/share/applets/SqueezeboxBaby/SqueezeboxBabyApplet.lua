@@ -284,6 +284,10 @@ function isLineInConnected(self)
 	return bsp:getMixer("Line In Switch")
 end
 
+function overrideAudioEndpoint(self, override) -- 'Speaker' | 'Headphone' | nil => default
+	self:_setEndpoint(override)
+end
+
 -----------------------------
 -- Ambient Light Stuff Start
 -----------------------------
@@ -601,14 +605,23 @@ function getDefaultWallpaper(self)
 end
 
 
-function _setEndpoint(self)
+function _setEndpoint(self, override)
 	if self.isHeadphone == nil then
 		-- don't change state during initialization
 		return
 	end
 
 	local endpoint
-	if self.isHeadphone then
+	if override then
+		if override == "Speaker" then
+			endpoint = "Speaker"
+		elseif override == "Headphone" then
+			endpoint = "Headphone"
+		else
+			log:warn("Invalid audio endpoint override ignored: ", override)
+			endpoint = self.endpoint
+		end
+	elseif self.isHeadphone then
 		endpoint = "Headphone"
 	elseif self.powerState == "ACTIVE" or self.powerState == "IDLE" then
 		endpoint = "Speaker"

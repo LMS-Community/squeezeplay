@@ -100,6 +100,7 @@ function registerApplet(meta)
 	meta:registerService("reboot")
 	meta:registerService("wasLastShutdownUnclean")
 	meta:registerService("isLineInConnected")
+	meta:registerService("overrideAudioEndpoint")	-- 'Speaker' | 'Headphone' | nil => default
 end
 
 
