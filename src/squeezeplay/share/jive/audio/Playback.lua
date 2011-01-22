@@ -638,10 +638,23 @@ function _strm(self, data)
 		self.ignoreStream = false
 		self.decodeThreshold = 2048
 
-		-- Except for Vorbis, where we should use the buffer threshold value
-		-- Even this may not be enough for files with large comments...
 		if self.mode == 'o' then
+			-- For Vorbis, where we should use the buffer threshold value
+			-- Even this may not be enough for files with large comments...
 			self.decodeThreshold = self.threshold
+		
+		elseif self.threshold > (254 * 1024) and (self.mode == 'f' or self.mode == 'p' or self.mode == 'l') then 
+			-- For lossless (high bit-rate) formats, lets try to get a much bigger chunk so that
+			-- any server-side delay in streaming caused by playlist updates, etc., do not cause undue problems.
+			--
+			-- For a network operating at 5Mb/s, 1MB => 2s. That is probably the maximum acceptable delay,
+			-- and gives us 4 times as much buffered data. 
+			--
+			-- For a radio stream transcoded to FLAC (50% compression) from 44100/16/2, 1MB => 11s
+			-- which is a long time but this should not generally happen because self.threshold should be < 255KiB
+			-- in that case.
+			
+			self.threshold = 1000000
 		end
 
 		if self.flags & 0x10 ~= 0 then
