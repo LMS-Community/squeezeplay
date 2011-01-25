@@ -2148,9 +2148,8 @@ function skin(self, s)
 	-- alarm popup
 	s.alarm_header = {
 			w = screenWidth,
-			--padding = { 50, 0, 50, 0 },
-			--order = { 'icon', 'time' },
 			order = { 'time' },
+			padding = { 0, 0, 0, 50 },
 	}
 
 	s.alarm_time = {
@@ -2158,7 +2157,7 @@ function skin(self, s)
 		fg = TEXT_COLOR,
 		sh = TEXT_SH_COLOR,
 		align = "center",
-		font = _boldfont(62),
+		font = _boldfont(120),
 	}
 
 	s.preview_text = _uses(s.alarm_time, {
@@ -2177,12 +2176,7 @@ function skin(self, s)
 		layer = LAYER_TITLE,
 
      		title = {
-			layer = LAYER_TITLE,
-			w = WH_FILL,
-			h = 52,
-			--padding = { 0, 10, 0, 0 },
-			padding = { 10, 10, 10, 5 },
-			bgImg = false,
+			hidden = 1,
 		},
 
 		menu = {

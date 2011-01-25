@@ -549,13 +549,12 @@ function openAlarmWindow(self, caller)
 		return
 	end
 
-	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
+	local window = Window('alarm_popup')
 
-	self.time = datetime:getCurrentTime()
-	local icon = Icon('icon_alarm')
+	self.time = self:_formattedTime()
+
 	local label = Label('alarm_time', self.time)
 	local headerGroup = Group('alarm_header', {
-		icon = icon,
 		time = label,
 	})
 
@@ -646,7 +645,7 @@ end
 
 
 function _updateTime(self) 	 
-	local time = datetime:getCurrentTime() 	 
+	local time = self:_formattedTime()
 	if time ~= self.time then 	 
 		log:debug('updating time in alarm window') 	 
 		self.time = time 	 
@@ -654,6 +653,19 @@ function _updateTime(self)
 	end 	 
 end
 
+function _formattedTime(self)
+	if not self.clockFormat then
+		self.clockFormat = datetime:getHours()
+	end
+
+	local time
+	if self.clockFormat == '12' then
+		time = datetime:getCurrentTime('%I:%M')
+	else
+		time = datetime:getCurrentTime()
+	end
+	return time
+end
 
 function _silenceFallbackAlarm(self)
 	if not self.localPlayer then

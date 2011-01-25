@@ -1595,6 +1595,7 @@ function skin(self, s)
 
 	-- alarm popup
 	s.alarm_header = {
+		border = { 0, 4, 0, 0 },
 		w = screenWidth - 16,
 		align = 'center',
 		layer = LAYER_TITLE,
@@ -1607,8 +1608,8 @@ function skin(self, s)
 		sh = TEXT_SH_COLOR,
 		layer = LAYER_TITLE,
 		align = "center",
-		font = _boldfont(62),
-		border = { 0, 14, 0, 0 },
+		font = _boldfont(82),
+		border = { 0, 2, 0, 0 },
 	}
 	s.preview_text = _uses(s.alarm_time, {
 		font = _boldfont(TITLE_FONT_SIZE),
@@ -1619,7 +1620,7 @@ function skin(self, s)
 		x = 8,
 		y = 21,
 		w = screenWidth - 16,
-		h = screenHeight - 42,
+		h = screenHeight - 36,
 		bgImg = contextMenuBox,
 		layer = LAYER_TITLE,
 
@@ -1628,7 +1629,7 @@ function skin(self, s)
 		},
 
 		menu = {
-			border = { 7, 7, 7, 0 },
+			border = { 7, 12, 7, 0 },
 			padding = { 0, 0, 0, 100 },
 			scrollbar = {
 				h = CM_MENU_HEIGHT * 3 - 8, 
