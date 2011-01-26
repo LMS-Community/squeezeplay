@@ -549,11 +549,6 @@ function connectTask(self, serverip)
 		self.txqueue = {}
 	end
 
-	if self.state == CONNECTED and self.serverip == serverip then
-		log:debug("already connected to ", self.serverip)
-		return
-	end
-
 	-- disconnect from previous server
 	self:disconnect()
 
