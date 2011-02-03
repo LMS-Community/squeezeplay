@@ -171,7 +171,11 @@ function mmFindFirmware(self, devName)
 			if version or entry == machine .. ".bin" then
 				log:info('Firmware update detected on ', path)
 				upgradePresent = true
-				break
+-- Bug 15741 - media ejection SD and USB unreliable
+-- Do not use 'break' to end directory iterator early but let it run to the very end.
+-- Allowing that actively closes the directory so a subsequent 'umount' is less likely to fail.
+-- (BTW: There is a close() function in lfs 1.5, but not in lfs 1.2 we are currently using.)
+--				break
 			end
 		end
 	end
