@@ -777,6 +777,8 @@ u8_t *mp4_read(struct decode_mp4 *mp4, int track_idx, size_t *rlen, bool_t *stre
 		if (pos == 0) {
 			/* end of file */
 			*rlen = 0;
+			if (streaming) *streaming = 0;	/* if we have reached the logical end of the stream,
+												then indicate no longer streaming */
 			return 0;
 		}
 

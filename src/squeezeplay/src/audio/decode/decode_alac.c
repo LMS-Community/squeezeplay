@@ -59,12 +59,14 @@ static bool_t decode_alac_callback(void *data) {
 		if (status == 2) {
 			return TRUE;		/* need to wait for some more data */
 		} else 	if (status != 1) {
+			LOG_DEBUG(log_audio_codec, "mp4_open() failed");
 			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
 
 		mp4_track_conf(&self->mp4, 0, &conf, &conf_size);
 		if (!conf) {
+			LOG_DEBUG(log_audio_codec, "mp4_track_conf() failed");
 			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
@@ -83,8 +85,12 @@ static bool_t decode_alac_callback(void *data) {
 	avpkt.data = (void *)mp4_read(&self->mp4, 0, &len, &streaming);
 	avpkt.size = len;
 	if (avpkt.size == 0) {
-		current_decoder_state |= DECODE_STATE_UNDERRUN;
-		return FALSE;
+		if (streaming) {
+			return TRUE;	/* need to wait for more */
+		} else {
+			current_decoder_state |= DECODE_STATE_UNDERRUN;
+			return FALSE;
+		}
 	}
 
 	outputsize = OUTPUT_BUFFER_SIZE / 2;
