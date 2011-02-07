@@ -873,6 +873,7 @@ end
 
 
 function _audg(self, data, isLocal)
+
 	if not isLocal then
 		local gain, volume = self:translateServerGain(data.gainL)
 
@@ -892,9 +893,16 @@ function _audg(self, data, isLocal)
 		-- and the initial volume for fade-out. 
 	end
 
-	log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)
 
-	decode:audioGain(data.gainL, data.gainR)
+	local player = Player:getLocalPlayer()
+	if player and player:getDigitalVolumeControl() == 0 then
+		log:debug("User setting of 100% Fixed Volume is set")
+		decode:audioGain(65536, 65536)
+	else
+		log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)
+		decode:audioGain(data.gainL, data.gainR)
+	end
+
 end
 
 

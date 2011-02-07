@@ -389,10 +389,26 @@ end
 
 
 function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
-	log:info('notify_playerDigitalVolumeControl')
-	self.digitalVolumeControl = digitalVolumeControl
+	if player ~= self.player then
+		return
+	end
+	log:info('notify_playerDigitalVolumeControl: ', digitalVolumeControl)
+	self:_setVolumeSliderStyle()
+end
+
+
+function notify_playerRepeatModeChange(self, player, repeatMode)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
+	self:_updateRepeat(repeatMode)
+end
+
+
+function _setVolumeSliderStyle(self)
 	if self.volSlider then
-		if digitalVolumeControl == 0 then
+		if self.player:getDigitalVolumeControl() == 0 then
 			log:info('disable volume UI in NP')
 			self.volSlider:setStyle('npvolumeB_disabled')
 			self.volSlider:setEnabled(false)
@@ -405,14 +421,6 @@ function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
 			self.fixedVolumeSet = false
 		end
 	end
-end
-
-function notify_playerRepeatModeChange(self, player, repeatMode)
-	if player ~= self.player then
-		return
-	end
-	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
-	self:_updateRepeat(repeatMode)
 end
 
 
@@ -596,6 +604,8 @@ function notify_playerCurrent(self, player)
 	log:debug("notify_playerCurrent(): ", player)
 
 	self.player = player
+	self:_setVolumeSliderStyle()
+
 	if not self.player then
 		return
 	end
@@ -1532,13 +1542,7 @@ function _createUI(self)
 			end
 			)
 
-	self.fixedVolumeSet = self.player:getDigitalVolumeControl() == 0
-	local volumeSliderStyle = 'npvolumeB'
-	if self.digitalVolumeControl == 0 then
-		volumeSliderStyle = 'npvolumeB_disabled'
-	end
-
-	self.volSlider = Slider(volumeSliderStyle, 0, 100, 0,
+	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
 				if self.fixedVolumeSet then
 					log:info('FIXED VOLUME. DO NOTHING')
@@ -1671,13 +1675,10 @@ function _createUI(self)
 		window:addWidget(self.visuGroup)
 	end
 
+	self:_setVolumeSliderStyle()
+
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
-
-	if self.fixedVolumeSet then
-		self.volSlider:setValue(100)
-		self.volSlider:setEnabled(false)
-	end
 
 	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
 	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')
