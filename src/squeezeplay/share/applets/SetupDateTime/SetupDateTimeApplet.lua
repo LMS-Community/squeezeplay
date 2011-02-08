@@ -17,10 +17,10 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, pairs, io, string, tostring = ipairs, pairs, io, string, tostring
+local ipairs, pairs, io, string, tostring, pcall = ipairs, pairs, io, string, tostring, pcall
 
 local oo               = require("loop.simple")
-local squeezeos        = require("squeezeos_bsp")
+local hasSqueezeos, squeezeos        = pcall('require', "squeezeos_bsp")
 
 local Applet           = require("jive.Applet")
 local Choice	       = require("jive.ui.Choice")
@@ -247,6 +247,11 @@ end
 
 -- service callback to allow other applets to set default formats depending on language and time zone
 function setDateTimeDefaultFormats(self)
+	if not hasSqueezeos then
+		log:warn('no squeezeos found, do nothing')
+		return
+	end
+
 	local tz = tostring(squeezeos.getTimezone())
 	local lang = locale:getLocale()
 	log:debug("Using language (", lang, ") and time zone (", tz, ") to determine date/time default formats")

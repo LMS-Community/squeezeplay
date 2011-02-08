@@ -1151,11 +1151,7 @@ function updateIconbar(self)
 			iconbar:setSleep('OFF')
 		end
 
-		if self:getAlarmState() == 'set' or self:getAlarmState() == 'snooze' then
-			iconbar:setAlarm('ON')
-		else
-			iconbar:setAlarm('OFF')
-		end
+		-- alarm icon in iconbar is set directly via AlarmSnoozeApplet
 
 		iconbar:setRepeat(0)
 

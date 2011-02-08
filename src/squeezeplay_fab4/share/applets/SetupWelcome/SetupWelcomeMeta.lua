@@ -51,6 +51,7 @@ end
 
 function registerApplet(meta)
 	meta:registerService("startSetup")
+	meta:registerService("isSetupDone")
 end
 
 

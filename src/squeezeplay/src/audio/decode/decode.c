@@ -59,6 +59,8 @@ static Uint32 metadata_mqueue_buffer[DECODE_MQUEUE_SIZE / sizeof(Uint32)];
 static size_t wma_guid_len;
 static u8_t *wma_guid;
 
+static bool_t trigger_resume = FALSE;
+
 
 /* audio instance */
 struct decode_audio *decode_audio;
@@ -81,6 +83,7 @@ static struct decode_module *all_decoders[] = {
 #ifdef WITH_SPPRIVATE
 	&decode_wma,
 	&decode_aac,
+	&decode_spotify,
 #endif
 	&decode_vorbis,
 	&decode_flac,
@@ -854,6 +857,15 @@ static int decode_status(lua_State *L) {
 	lua_pushinteger(L, decode_audio->state);
 	lua_setfield(L, -2, "audioState");
 
+	// Allow a decoder to trigger audio to resume. This is
+	// needed to resume Spotify after rebuffering earlier than
+	// the server would normally resume
+	if (trigger_resume) {
+		lua_pushinteger(L, 1);
+		lua_setfield(L, -2, "triggerResume");
+		trigger_resume = FALSE;
+	}
+
 	decode_audio_unlock();
 
 
@@ -875,6 +887,12 @@ static int decode_status(lua_State *L) {
 	lua_setfield(L, -2, "decodeState");
 
 	return 1;
+}
+
+void decode_set_trigger_resume(void) {
+	decode_audio_lock();
+	trigger_resume = TRUE;
+	decode_audio_unlock();
 }
 
 static int decode_audio_enable(lua_State *L) {

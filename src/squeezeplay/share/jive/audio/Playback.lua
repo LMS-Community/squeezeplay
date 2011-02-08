@@ -132,8 +132,15 @@ function __init(self, jnt, slimproto)
 	self.sentDecoderUnderrunEvent = false
 	self.sentOutputUnderrunEvent = false
 	self.sentAudioUnderrunEvent = false
+	self.ignoreStream = false
+	self.decodeThreshold = 2048
 
 	return obj
+end
+
+
+function setDecodeThreshold(self, threshold)
+	self.decodeThreshold = threshold
 end
 
 
@@ -281,13 +288,16 @@ function _timerCallback(self)
 
 			self.sentDecoderUnderrunEvent = true
 			self.sentDecoderFullEvent = false
+			
+			-- If the decoder has underrun then we can stop
+			-- ignoring that we do not actually have a stream
+			self.ignoreStream = false
 
 			decode:songEnded()
 		end
 	else
 		self.sentDecoderUnderrunEvent = false
 	end
-
 
 	if status.audioState & DECODE_UNDERRUN ~= 0 then
 
@@ -301,7 +311,7 @@ function _timerCallback(self)
 
 		-- output underruns are used by the server to detect
 		-- when streaming (and decoding) is not able to keep up with playback,
-		-- usualy for radio streams
+		-- usually for radio streams
 
 		if not self.sentAudioUnderrunEvent and
 			self.sentDecoderUnderrunEvent then
@@ -312,8 +322,10 @@ function _timerCallback(self)
 
 			self.sentAudioUnderrunEvent = true
 
+		-- ignoreStream is set for Spotify, where there is no stream connection but we
+		-- still need to be able to send output underrun events
 		elseif not self.sentOutputUnderrunEvent and
-			self.stream then
+			(self.stream or self.ignoreStream) then
 
 			log:info("OUTPUT UNDERRUN")
 			decode:pauseAudio(0) -- auto-pause to prevent glitches
@@ -338,26 +350,17 @@ function _timerCallback(self)
 		self.tracksStarted = status.tracksStarted
 	end
 
-	-- We can begin decoding with 2K of data
-	local decodeThreshold = 2048
-	
-	-- Except for Vorbis, where we should use the buffer threshold value
-	-- Even this may not be enough for files with large comments...
-	if self.mode == 'o' then
-		decodeThreshold = self.threshold
-	end
-
 	-- Start the decoder if:
 	-- 1) some encoded data is buffered
 	-- 2) if we are auto-starting
 	-- 3) decode is not already running
 	-- 4) we have finished processing any strm-q command
-	if status.decodeFull > decodeThreshold and
+	if status.decodeFull > self.decodeThreshold and
 		(self.autostart == '0' or self.autostart == '1') and
 		status.decodeState & DECODE_RUNNING == 0 and not self.sentResumeDecoder and
 		status.audioState & DECODE_STOPPING == 0 then
 
-		log:debug("resume decoder, ", status.decodeFull, " bytes buffered, decode threshold ", decodeThreshold)
+		log:debug("resume decoder, ", status.decodeFull, " bytes buffered, decode threshold ", self.decodeThreshold)
 		decode:resumeDecoder()
 		self.sentResumeDecoder = true
 	end
@@ -389,7 +392,7 @@ function _timerCallback(self)
 			self.sentResume = true
 			self.sentDecoderFullEvent = true -- fake it so we don't send STMl with pause
 
-		elseif not self.sentDecoderFullEvent then
+		elseif not self.sentDecoderFullEvent or status.triggerResume then
 			-- Tell SC decoder buffer is full
 			log:debug("status FULL")
 			self:sendStatus(status, "STMl")
@@ -632,6 +635,27 @@ function _strm(self, data)
 		self.sentOutputUnderrunEvent = false
 		self.sentAudioUnderrunEvent = false
 		self.isLooping = false
+		self.ignoreStream = false
+		self.decodeThreshold = 2048
+
+		if self.mode == 'o' then
+			-- For Vorbis, where we should use the buffer threshold value
+			-- Even this may not be enough for files with large comments...
+			self.decodeThreshold = self.threshold
+		
+		elseif self.threshold > (254 * 1024) and (self.mode == 'f' or self.mode == 'p' or self.mode == 'l') then 
+			-- For lossless (high bit-rate) formats, lets try to get a much bigger chunk so that
+			-- any server-side delay in streaming caused by playlist updates, etc., do not cause undue problems.
+			--
+			-- For a network operating at 5Mb/s, 1MB => 2s. That is probably the maximum acceptable delay,
+			-- and gives us 4 times as much buffered data. 
+			--
+			-- For a radio stream transcoded to FLAC (50% compression) from 44100/16/2, 1MB => 11s
+			-- which is a long time but this should not generally happen because self.threshold should be < 255KiB
+			-- in that case.
+			
+			self.threshold = 1000000
+		end
 
 		if self.flags & 0x10 ~= 0 then
 			-- custom handler
@@ -849,6 +873,7 @@ end
 
 
 function _audg(self, data, isLocal)
+
 	if not isLocal then
 		local gain, volume = self:translateServerGain(data.gainL)
 
@@ -868,9 +893,16 @@ function _audg(self, data, isLocal)
 		-- and the initial volume for fade-out. 
 	end
 
-	log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)
 
-	decode:audioGain(data.gainL, data.gainR)
+	local player = Player:getLocalPlayer()
+	if player and player:getDigitalVolumeControl() == 0 then
+		log:debug("User setting of 100% Fixed Volume is set")
+		decode:audioGain(65536, 65536)
+	else
+		log:debug("gainL, gainR: ", data.gainL, " ", data.gainR)
+		decode:audioGain(data.gainL, data.gainR)
+	end
+
 end
 
 

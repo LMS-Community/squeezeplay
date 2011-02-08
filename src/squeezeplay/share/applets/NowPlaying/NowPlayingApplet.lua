@@ -10,6 +10,7 @@ local Applet           = require("jive.Applet")
 local Font             = require("jive.ui.Font")
 local Event            = require("jive.ui.Event")
 local Framework        = require("jive.ui.Framework")
+local System           = require("jive.System")
 local Icon             = require("jive.ui.Icon")
 local Button           = require("jive.ui.Button")
 local Choice           = require("jive.ui.Choice")
@@ -27,6 +28,7 @@ local Widget           = require("jive.ui.Widget")
 local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
+local Player           = require("jive.slim.Player")
 
 local VUMeter          = require("jive.audio.VUMeter")
 local SpectrumMeter    = require("jive.audio.SpectrumMeter")
@@ -387,10 +389,26 @@ end
 
 
 function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
-	log:info('notify_playerDigitalVolumeControl')
-	self.digitalVolumeControl = digitalVolumeControl
+	if player ~= self.player then
+		return
+	end
+	log:info('notify_playerDigitalVolumeControl: ', digitalVolumeControl)
+	self:_setVolumeSliderStyle()
+end
+
+
+function notify_playerRepeatModeChange(self, player, repeatMode)
+	if player ~= self.player then
+		return
+	end
+	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
+	self:_updateRepeat(repeatMode)
+end
+
+
+function _setVolumeSliderStyle(self)
 	if self.volSlider then
-		if digitalVolumeControl == 0 then
+		if self.player:getDigitalVolumeControl() == 0 then
 			log:info('disable volume UI in NP')
 			self.volSlider:setStyle('npvolumeB_disabled')
 			self.volSlider:setEnabled(false)
@@ -403,14 +421,6 @@ function notify_playerDigitalVolumeControl(self, player, digitalVolumeControl)
 			self.fixedVolumeSet = false
 		end
 	end
-end
-
-function notify_playerRepeatModeChange(self, player, repeatMode)
-	if player ~= self.player then
-		return
-	end
-	log:debug("notify_playerRepeatModeChange(): ", repeatMode)
-	self:_updateRepeat(repeatMode)
 end
 
 
@@ -594,6 +604,8 @@ function notify_playerCurrent(self, player)
 	log:debug("notify_playerCurrent(): ", player)
 
 	self.player = player
+	self:_setVolumeSliderStyle()
+
 	if not self.player then
 		return
 	end
@@ -1530,13 +1542,7 @@ function _createUI(self)
 			end
 			)
 
-	self.fixedVolumeSet = self.player:getDigitalVolumeControl() == 0
-	local volumeSliderStyle = 'npvolumeB'
-	if self.digitalVolumeControl == 0 then
-		volumeSliderStyle = 'npvolumeB_disabled'
-	end
-
-	self.volSlider = Slider(volumeSliderStyle, 0, 100, 0,
+	self.volSlider = Slider('npvolumeB', 0, 100, 0,
 			function(slider, value, done)
 				if self.fixedVolumeSet then
 					log:info('FIXED VOLUME. DO NOTHING')
@@ -1625,6 +1631,14 @@ function _createUI(self)
 		  	volDown  = Button(
 				Icon('volDown'),
 				function()
+					-- Bug 15826: Allow volume events to be sent even if volume is fixed
+					--  at 100% to allow IR Blaster (a server side extra) to work properly.
+					-- Catch volume down button in NP screen on Fab4
+					if self.fixedVolumeSet and System:hasIRBlasterCapability() then
+						-- Send command directly to server w/o updating local volume
+						Player.volume(self.player, 99, true)
+					end
+
 					local e = Event:new(EVENT_SCROLL, -3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME
@@ -1633,6 +1647,14 @@ function _createUI(self)
  		  	volUp  = Button(
 				Icon('volUp'),
 				function() 
+					-- Bug 15826: Allow volume events to be sent even if volume is fixed
+					--  at 100% to allow IR Blaster (a server side extra) to work properly.
+					-- Catch volume up button in NP screen on Fab4
+					if self.fixedVolumeSet and System:hasIRBlasterCapability() then
+						-- Send command directly to server w/o updating local volume
+						Player.volume(self.player, 101, true);
+					end
+
 					local e = Event:new(EVENT_SCROLL, 3)
 					Framework:dispatchEvent(self.volSlider, e)
 					return EVENT_CONSUME
@@ -1653,13 +1675,10 @@ function _createUI(self)
 		window:addWidget(self.visuGroup)
 	end
 
+	self:_setVolumeSliderStyle()
+
 	window:addWidget(self.controlsGroup)
 	window:addWidget(self.progressGroup)
-
-	if self.fixedVolumeSet then
-		self.volSlider:setValue(100)
-		self.volSlider:setEnabled(false)
-	end
 
 	-- FIXME: the suppressTitlebar skin param should not be necessary if the window's style for title is { hidden = 1 }, but this looks to be a bug in the underlying skin code
 	self.suppressTitlebar = self:getSelectedStyleParam('suppressTitlebar')

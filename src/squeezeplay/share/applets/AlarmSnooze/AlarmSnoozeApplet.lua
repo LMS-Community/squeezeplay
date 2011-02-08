@@ -409,7 +409,7 @@ function _hideAlarmWindow(self)
 	if self.alarmWindow then
 		self.alarmWindow:hide()
 		self.alarmWindow = nil
-		self:_babyRevertHeadphones()
+		self:_revertAudioEndpointOverride()
 	end
 end
 
@@ -486,9 +486,9 @@ function openAlarmWindow(self, caller)
 
 	log:warn('openAlarmWindow()', caller, ' ', self.localPlayer:isConnected())
 
-	self:_babyAlarmThroughSpeakers()
+	self:_alarmThroughSpeakers()
 
-	-- if radio is controlling a different player, switch to the local player
+	-- if UI is controlling a different player, switch to the local player
 	-- if notify_playerLoaded needs invocation prior to player change taking effect then refire openAlarmWindow() at that time
 	local currentPlayer = Player:getCurrentPlayer()
 
@@ -549,13 +549,12 @@ function openAlarmWindow(self, caller)
 		return
 	end
 
-	local window = Window('alarm_popup', self:string('ALARM_SNOOZE_ALARM'))
+	local window = Window('alarm_popup')
 
-	self.time = datetime:getCurrentTime()
-	local icon = Icon('icon_alarm')
+	self.time = self:_formattedTime()
+
 	local label = Label('alarm_time', self.time)
 	local headerGroup = Group('alarm_header', {
-		icon = icon,
 		time = label,
 	})
 
@@ -646,7 +645,7 @@ end
 
 
 function _updateTime(self) 	 
-	local time = datetime:getCurrentTime() 	 
+	local time = self:_formattedTime()
 	if time ~= self.time then 	 
 		log:debug('updating time in alarm window') 	 
 		self.time = time 	 
@@ -654,6 +653,19 @@ function _updateTime(self)
 	end 	 
 end
 
+function _formattedTime(self)
+	if not self.clockFormat then
+		self.clockFormat = datetime:getHours()
+	end
+
+	local time
+	if self.clockFormat == '12' then
+		time = datetime:getCurrentTime('%I:%M')
+	else
+		time = datetime:getCurrentTime()
+	end
+	return time
+end
 
 function _silenceFallbackAlarm(self)
 	if not self.localPlayer then
@@ -678,7 +690,6 @@ end
 function _alarmOff(self, stopStream)
 	if self.alarmInProgress == 'rtc' then
 		self:_silenceFallbackAlarm()
-		iconbar:setAlarm('OFF')
 		log:warn('_alarmOff: RTC alarm canceled')
 	else
 		if self.localPlayer:isConnected() then
@@ -717,6 +728,9 @@ function _stopTimer(self)
 		log:warn('_stopTimer: stopping WOL timer')
 		self.wakeOnLanTimer:stop()
 	end
+
+	-- no RTC timer means no alarm, so let's go ahead and remove our alarm icon
+	iconbar:setAlarm('OFF')
 end
 
 
@@ -786,6 +800,7 @@ function _startTimer(self, interval)
 	end
 
 	self.RTCAlarmTimer:start()
+	iconbar:setAlarm('ON')
 end
 
 
@@ -846,33 +861,20 @@ function free(self)
 	return false
 end
 
--- On Radio guarantee that alarm audio comes through speakers even even Headphones are plugged in
-function _babyAlarmThroughSpeakers(self)
-	if System:getMachine()=='baby' then 
-		-- if headphones are (un)plugged while alarm is playing mixer gets reverted automatically 
-		os.execute("amixer -q sset Endpoint Speaker")
-	end
+-- On player with multiple audio output endpoints guarantee that alarm audio
+-- comes through speakers even even Headphones (or some other output) is enabled
+function _alarmThroughSpeakers(self)
+	appletManager:callService("overrideAudioEndpoint", 'Speaker')
 end
 
--- On Radio alarm was routed through the speaker. When alarm is turned off we need to 
--- revert the audio to the headphone out (if headphones are plugged in)
+-- If alarm was overridden to the speaker then, when alarm is turned off, we need to 
+-- revert the audio endpoint
 --
 -- note: this method is called from the _hideAlarmWindow() method, so if at some future date
 -- there are options added to allow a user to have an alarm with no notification window, 
 -- where the revert method is called  needs rethinking
-function _babyRevertHeadphones(self)
-	if System:getMachine()=='baby' then
-		-- check if headphones are plugged in 
-		-- (code taken from TestAudioRoutingApplet who can show the Headphones status in the factory test)
-		local fh = _assert(io.popen("amixer cget name=\"Headphone Switch\"  | grep : | sed 's/^.*=\\([^,]*\\).*$/\\1/'"))
-		local state = fh:read("*a")
-		fh:close()
-		
-		-- revert to headphones if needed
-		if state and state:sub(1,1) == "1" then
-			os.execute("amixer -q sset Endpoint Headphone")
-		end 
-	end
+function _revertAudioEndpointOverride(self)
+	appletManager:callService("overrideAudioEndpoint", nil)
 end
 
 --[[

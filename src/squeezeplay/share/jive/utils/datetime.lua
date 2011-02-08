@@ -500,15 +500,18 @@ end
 
 
 --[[
-=head2 getCurrentTime()
+=head2 getCurrentTime(self, format)
 
 Returns the current, formatted time.
+If date format given, return the time in that format.
 
 Example: 	21:57 (24h format)
 		 9:57PM (AM/PM)
+		 9:57 ('%I:%M' format sent as optional argument)
 =cut
 --]]
-function getCurrentTime()
+function getCurrentTime(self, format)
+
 	-- if the time has not been set, return an empty string
 	if not timeSet then
 		if tonumber(os.date("%Y")) < 2010 then
@@ -519,7 +522,9 @@ function getCurrentTime()
 	end
 
 	local str
-	if globalHours == "12" then
+	if format then
+		str = os.date(format)
+	elseif globalHours == "12" then
 		str = os.date("%I:%M%p")		
 	else
 		str = os.date("%H:%M")

@@ -1702,13 +1702,9 @@ function skin(self, s, reload, useDefaultSize)
 	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item_play)
 
 	s.alarm_header = {
-			w = screenWidth,
-			padding = { 50, 0, 50, 0 },
-			order = { 'icon', 'time' },
-			icon = {
-				h = WH_FILL,
-				w = 34,
-			},
+			w = screenWidth - 20,
+			padding = { 0, 0, 0, 30 },
+			order = { 'time' },
 			time = {
 				h = WH_FILL,
 				w = WH_FILL,
@@ -1719,8 +1715,8 @@ function skin(self, s, reload, useDefaultSize)
 		w = WH_FILL,
 		fg = c.TEXT_COLOR,
 		sh = c.TEXT_SH_COLOR,
-		align = "left",
-		font = _font(32),
+		align = "center",
+		font = _boldfont(92),
 	}
 	s.preview_text = _uses(s.alarm_time, {
 		font = _boldfont(c.TITLE_FONT_SIZE),
@@ -1739,27 +1735,14 @@ function skin(self, s, reload, useDefaultSize)
 		layer = LAYER_TITLE,
 
      		title = {
-			layer = LAYER_TITLE,
-			w = WH_FILL,
-			h = 35,
-			padding = { 10, 20, 10, 0 },
-	                text = {
-				w = WH_FILL,
-				h = WH_FILL,
-				align = 'center',
-				font = _boldfont(18),
-			},
-			bgImg = false,
-			border = { 0, 0, 10, 0 },
+			hidden = 1,
 		},
 
 		menu = {
-
-
 			h = c.CM_MENU_HEIGHT * 5,
 			w = screenWidth - 34,
 			x = 7,
-			y = 65,
+			y = 53,
 			border = 0,
 			itemHeight = c.CM_MENU_HEIGHT,
 			position = LAYOUT_NORTH,

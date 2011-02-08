@@ -124,6 +124,7 @@ function init(self)
 		["sdcard"] = 1,
 		["hasDigitalOut"] = 1,
 		["hasTinySC"] = 1,
+		["IRBlasterCapable"] = 0,
 	})
 
 	--account for fab4 touchpad hardware issue: the bottom pixels aren't reported correctly 
@@ -560,7 +561,7 @@ local function _updateWireless(self)
 	local iface = Networking:activeInterface()
 
 	-- After factory reset iface is nil (none selected yet)
-	if iface == nil then
+	if iface == nil or not appletManager:callService("isSetupDone") then
 		return
 	end
 
