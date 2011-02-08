@@ -219,6 +219,13 @@ function step4(self)
 end
 
 
+function isSetupDone(self)
+	local settings = self:getSettings()
+
+	return settings and settings.setupDone
+end
+
+
 function _setupDone(self, setupDone)
 	log:info("network setup complete")
 
