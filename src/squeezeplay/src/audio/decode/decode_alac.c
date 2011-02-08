@@ -84,7 +84,7 @@ static bool_t decode_alac_callback(void *data) {
 		self->sample_rate = self->alacdec.samplerate;
 		self->num_channels = self->alacdec.channels;
 
-		LOG_INFO(log_audio_codec, "sample_rate=%d channels=%d", sample_rate, num_channels);
+		LOG_INFO(log_audio_codec, "sample_rate=%d channels=%d", self->sample_rate, self->num_channels);
 		self->init = TRUE;
 	}
 
