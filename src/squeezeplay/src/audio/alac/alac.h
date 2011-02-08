@@ -12,6 +12,7 @@
 
 #define INT_BIT 32
 #define SAMPLE_FMT_S16 16
+#define SAMPLE_FMT_S32 32
 
 #define av_malloc(X) malloc(X)
 #define av_free(X) free(X)
@@ -28,6 +29,7 @@ typedef struct {
 
     int channels;
     int sample_fmt;
+    int samplerate;
 } AVCodecContext;
 
 typedef struct {
@@ -37,7 +39,7 @@ typedef struct {
 
 
 int alac_decode_frame(AVCodecContext *avctx,
-		      void *outbuffer, int *outputsize,
+		      void *outbuffer, unsigned int *outputsize,
 		      AVPacket *avpkt);
 
 int alac_decode_init(AVCodecContext *avctx);

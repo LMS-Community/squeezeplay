@@ -42,8 +42,8 @@ static bool_t decode_alac_callback(void *data) {
 	struct decode_alac *self = (struct decode_alac *) data;
 	bool_t streaming;
 	AVPacket avpkt;
-	int outputsize, num;
-	s16_t *rptr;
+	unsigned int outputsize;
+	int num;
 	sample_t *wptr, s;
 	size_t len;
 	int i, frames;
@@ -59,26 +59,32 @@ static bool_t decode_alac_callback(void *data) {
 		if (status == 2) {
 			return TRUE;		/* need to wait for some more data */
 		} else 	if (status != 1) {
-			LOG_DEBUG(log_audio_codec, "mp4_open() failed");
+			LOG_WARN(log_audio_codec, "mp4_open() failed");
 			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
 
 		mp4_track_conf(&self->mp4, 0, &conf, &conf_size);
 		if (!conf) {
-			LOG_DEBUG(log_audio_codec, "mp4_track_conf() failed");
+			LOG_WARN(log_audio_codec, "mp4_track_conf() failed");
 			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
 			return FALSE;
 		}
-
-		self->num_channels = 2; // XXXX
-		self->sample_rate = 44100; // XXXX
 
 		self->alacdec.channels = self->num_channels;
 		self->alacdec.extradata = conf + 28;
 		self->alacdec.extradata_size = conf_size - 28;
 
-		alac_decode_init(&self->alacdec);
+		if (alac_decode_init(&self->alacdec) < 0) {
+			LOG_WARN(log_audio_codec, "alac_decode_init() failed");
+			current_decoder_state |= DECODE_STATE_ERROR;
+			return FALSE;
+		}
+
+		self->sample_rate = self->alacdec.samplerate;
+		self->num_channels = self->alacdec.channels;
+
+		LOG_INFO(log_audio_codec, "sample_rate=%d channels=%d", sample_rate, num_channels);
 		self->init = TRUE;
 	}
 
@@ -93,34 +99,68 @@ static bool_t decode_alac_callback(void *data) {
 		}
 	}
 
-	outputsize = OUTPUT_BUFFER_SIZE / 2;
+	outputsize = OUTPUT_BUFFER_SIZE;
+	if (self->alacdec.sample_fmt == SAMPLE_FMT_S16) outputsize /= 2;
 
 	num = alac_decode_frame(&self->alacdec,
 				self->output_buffer, &outputsize,
 				&avpkt);
 
+	if (num < 0) {
+		LOG_WARN(log_audio_codec, "alac_decode_frame() failed");
+		current_decoder_state |= DECODE_STATE_ERROR;
+		return FALSE;
+	}
+
 	frames = outputsize / sizeof(u16_t) / self->num_channels;
 
 	wptr = ((sample_t *)(void *)self->output_buffer) + (frames * 2);
 
-	if (self->num_channels == 1) {
-		/* mono */		
-		rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 1);
+	switch (self->alacdec.sample_fmt) {
+	case SAMPLE_FMT_S16:
+		if (self->num_channels == 1) {
+			/* mono */
+			s16_t *rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 1);
 
-		for (i = 0; i < frames; i++) {
-			s = (*--rptr) << 16;
-			*--wptr = s;
-			*--wptr = s;
+			for (i = 0; i < frames; i++) {
+				s = (*--rptr) << 16;
+				*--wptr = s;
+				*--wptr = s;
+			}
 		}
-	}
-	else if (self->num_channels == 2) {
-		/* stereo */
-		rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 2);
+		else if (self->num_channels == 2) {
+			/* stereo */
+			s16_t *rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 2);
 
-		for (i = 0; i < frames; i++) {
-			*--wptr = (*--rptr) << 16;
-			*--wptr = (*--rptr) << 16;
+			for (i = 0; i < frames; i++) {
+				*--wptr = (*--rptr) << 16;
+				*--wptr = (*--rptr) << 16;
+			}
 		}
+		break;
+
+	case SAMPLE_FMT_S32:
+		if (self->num_channels == 1) {
+			/* mono */
+			s32_t *rptr = ((s32_t *)(void *)self->output_buffer) + (frames * 1);
+
+			for (i = 0; i < frames; i++) {
+				s = *--rptr;
+				*--wptr = s;
+				*--wptr = s;
+			}
+		}
+		else if (self->num_channels == 2) {
+			/* stereo */
+
+			/* nothing to do */
+		}
+		break;
+
+	default:
+		LOG_WARN(log_audio_codec, "unsupported sample format: %d", self->alacdec.sample_fmt);
+		current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
+		return FALSE;
 	}
 
 	decode_output_samples(self->output_buffer,
