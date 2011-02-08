@@ -205,8 +205,7 @@ static inline int mp4_skip(struct decode_mp4 *mp4, size_t n)
 
 static int mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 {
-	static struct mp4_parser *parser;
-	int i;
+	struct mp4_parser *parser;
 
 	/* mp4 box */
 	if (r < 8) {
@@ -219,28 +218,26 @@ static int mp4_parse_container_box(struct decode_mp4 *mp4, size_t r)
 	memcpy(mp4->box_type, mp4->ptr, 4);
 	mp4_skip(mp4, 4);
 
-	mp4->box_size -= 8;
-
-	if (mp4->box_size == 1) {
-		/* extended box size */
-		mp4->box_size = mp4_get_u64(mp4);
-		mp4->box_size -= 8;
-	}
-	else if (mp4->box_size == 0) {
+	if (mp4->box_size == 0) {
 		/* box extends to end of file */
 		mp4->box_size = ULONG_MAX;
+	} else {
+		if (mp4->box_size == 1) {
+			/* extended box size */
+			mp4->box_size = mp4_get_u64(mp4);
+			mp4->box_size -= 8;
+		}
+
+		mp4->box_size -= 8;
 	}
 
-	LOG_DEBUG(log_audio_codec, "box %.4s, size without header %d (%x)", mp4->box_type, mp4->box_size, mp4->box_size);
+	LOG_DEBUG(log_audio_codec, "box %.4s, size without header %u (%x)", mp4->box_type, mp4->box_size, mp4->box_size);
 
 	/* find box parser */
-	i=0;
-	parser = &mp4_parsers[i++];
-	while (parser->type) {
+	for (parser = &mp4_parsers[0]; parser->type; parser++) {
 		if (FOURCC_EQ(mp4->box_type, parser->type)) {
 			break;
 		}
-		parser = &mp4_parsers[i++];		
 	}
 
 	if (parser->type) {
