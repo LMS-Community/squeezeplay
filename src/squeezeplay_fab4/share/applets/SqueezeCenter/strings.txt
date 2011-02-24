@@ -532,7 +532,7 @@ PRECACHEARTWORK_PROGRESS
 	DA	Gem coverbilleder i cachelager
 	DE	Plattenhüllen werden zwischengespeichert
 	EN	Pre-caching Artwork
-	ES	Guardando carátula en caché previamente
+	ES	Examen de carátula de álbum
 	FI	Levykansien tallennus valmiiksi välimuistiin
 	FR	Mise en cache de la pochette
 	IT	Pre-cache copertina
@@ -1061,7 +1061,7 @@ SWITCH_MEDIA
 	DA	Brug %s til Squeezebox Server
 	DE	Verwenden Sie %s für Squeezebox Server
 	EN	Use %s for Squeezebox Server
-	ES	Use % para Squeezebox Server
+	ES	Use %s para Squeezebox Server
 	FI	Käytä kohdetta %s  Squeezebox Serveriin.
 	FR	Utiliser %s pour Squeezebox Server
 	IT	Usa %s per Squeezebox Server

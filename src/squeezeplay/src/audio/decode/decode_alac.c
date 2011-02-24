@@ -49,6 +49,7 @@ static bool_t decode_alac_callback(void *data) {
 	int i, frames;
 	size_t conf_size;
 	u8_t *conf;
+	int samplesize;
 
 	if (current_decoder_state & DECODE_STATE_ERROR) {
 		return FALSE;
@@ -112,7 +113,20 @@ static bool_t decode_alac_callback(void *data) {
 		return FALSE;
 	}
 
-	frames = outputsize / sizeof(u16_t) / self->num_channels;
+	switch (self->alacdec.sample_fmt) {
+	case SAMPLE_FMT_S16:
+		samplesize = 2;
+		break;
+	case SAMPLE_FMT_S32:
+		samplesize = 4;
+		break;
+	default:
+		LOG_WARN(log_audio_codec, "unsupported sample format: %d", self->alacdec.sample_fmt);
+		current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
+		return FALSE;
+	}
+
+	frames = outputsize / samplesize / self->num_channels;
 
 	wptr = ((sample_t *)(void *)self->output_buffer) + (frames * 2);
 
@@ -156,11 +170,6 @@ static bool_t decode_alac_callback(void *data) {
 			/* nothing to do */
 		}
 		break;
-
-	default:
-		LOG_WARN(log_audio_codec, "unsupported sample format: %d", self->alacdec.sample_fmt);
-		current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
-		return FALSE;
 	}
 
 	decode_output_samples(self->output_buffer,
