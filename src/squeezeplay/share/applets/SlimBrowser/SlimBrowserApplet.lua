@@ -2086,7 +2086,8 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					actionName == "add" and (item['addAction'] == 'more' or
 					-- using addAction is temporary to ensure backwards compatibility 
 					-- until all 'add' commands are removed in SC in favor of 'more'
-					_safeDeref(chunk, 'base', 'addAction') == 'more') then
+					_safeDeref(chunk, 'base', 'addAction') == 'more') or
+					isContextMenu then
 					log:debug('Context Menu')
 					-- Bug 14061: send command flag to have XMLBrowser fork CM response off to get playback controls
 					if jsonAction.params then
