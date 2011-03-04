@@ -32,6 +32,9 @@ xcopy luasocket-2.0.2\src\smtp.lua %1\lua\socket /Y
 xcopy luasocket-2.0.2\src\tp.lua %1\lua\socket /Y
 xcopy luasocket-2.0.2\src\url.lua %1\lua\socket /Y
 
+md %1\lua\lxp
+xcopy luaexpat-1.0.2\src\lxp\lom.lua %1\lua\lxp /Y
+
 md %1\fonts
 xcopy freefont-20090104\*.ttf %1\fonts /Y
 
