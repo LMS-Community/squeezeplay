@@ -138,8 +138,8 @@ tolua++:
 #
 # squeezeplay
 #
-.PHONY: squeezeplay-all portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont 
-squeezeplay-all: portaudio flac libmad tremor squeezeplay squeezeplay_jive freefont
+.PHONY: squeezeplay-all portaudio flac libmad tremor rtmp squeezeplay squeezeplay_jive freefont 
+squeezeplay-all: portaudio flac libmad tremor rtmp squeezeplay squeezeplay_jive freefont
 
 
 # portaudio
@@ -169,6 +169,10 @@ Tremor/Makefile:
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
+
+rtmp: 
+	cd luartmp-squeezeplay; make
+	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
 
 
 # squeezeplay

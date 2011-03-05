@@ -158,8 +158,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay-tgz
+.PHONY: app portaudio flac libmad tremor rtmp squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls
+app: portaudio flac libmad tremor rtmp ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay-tgz
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -207,6 +207,9 @@ ${AXTLS_DIR}/Makefile: generated
 axtls: ${AXTLS_DIR}/Makefile
 	cd ${AXTLS_DIR}; make oldconfig && make && make install
 
+rtmp: 
+	cd luartmp-squeezeplay; make
+	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
 
 
 # squeezeplay
