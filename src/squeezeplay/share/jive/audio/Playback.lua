@@ -1,5 +1,5 @@
 
-local assert, tostring, type, pairs, ipairs, getmetatable = assert, tostring, type, pairs, ipairs, getmetatable
+local assert, tostring, type, pairs, ipairs, getmetatable, require = assert, tostring, type, pairs, ipairs, getmetatable, require
 
 
 local oo                     = require("loop.base")
@@ -10,7 +10,6 @@ local table                  = require("table")
 local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
-local Rtmp                   = require("jive.audio.Rtmp")
 local SlimProto              = require("jive.net.SlimProto")
 local Player                 = require("jive.slim.Player")
 
@@ -118,7 +117,8 @@ function __init(self, jnt, slimproto)
 		slimproto:capability("Spdirect", cap)
 	end
 
-	Rtmp:init(slimproto)
+	-- signal we are Rtmp capable, but don't load module until used
+	slimproto:capability("Rtmp", 2)
 
 	self.mode = 0
 	self.threshold = 0
@@ -466,7 +466,8 @@ function _streamConnect(self, serverIp, serverPort, reader, writer)
 		m.read  = reader
 		m.write = writer
 	elseif self.flags & 0x20 == 0x20 then
-		-- use Rtmp methods
+		-- use Rtmp methods, load Rtmp module on demand
+		Rtmp = require("jive.audio.Rtmp")
 		m.read  = Rtmp.read
 		m.write = Rtmp.write
 	else

@@ -1,0 +1,4 @@
+This directory is a cut down version of the expat-2.0.1 distribution used to build luaexpat on windows.
+It is only included in the windows build and is not included in any other targets.
+
+License, change log and critical files are included, but files related to non windows targets have been removed.
