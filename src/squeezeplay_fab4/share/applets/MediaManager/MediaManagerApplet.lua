@@ -354,6 +354,14 @@ end
 ---function _mountingDrive(self)
 function _deviceRemoval(self, devName)
 
+	-- If unmount success window is still up - automatically hide it and go home
+	-- This saves the user from needing to click 'ok' manually
+	if self.unmountSuccessWindow then
+		self.unmountSuccessWindow:hide()
+		self.unmountSuccessWindow = nil
+		Framework:pushAction("go_home")
+	end
+
 	-- if devName is still in the self.mountedDevices table, consider this an unsafe eject
 	if self.mountedDevices and self.mountedDevices[devName] then
 		
@@ -581,6 +589,10 @@ function _unmountSuccess(self, devName)
 
 
 	local window = Window("text_list", self:string("DEVICE_EJECTED"))
+
+	-- Keep a reference so we can hide window when user removed SD card
+	self.unmountSuccessWindow = window
+
 	window:setAllowScreensaver(false)
 	window:setButtonAction("rbutton", nil)
 	window:setButtonAction("lbutton", nil)
@@ -598,6 +610,9 @@ function _unmountSuccess(self, devName)
 				self.ejectWarningWindow = nil
 			end
 			window:hide()
+
+			-- User clicked ok before removing SD card - no need to keep the reference
+			self.unmountSuccessWindow = nil		
 		end
 	})
 
