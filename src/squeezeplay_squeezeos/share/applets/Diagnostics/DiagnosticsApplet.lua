@@ -861,7 +861,8 @@ function showNetworkHealthDiagnosticsMenu(self)
 
 	self.labels = {}
 	self.labels["NETWORK_STATUS"] = {
-		text = self:string("NETWORK_STATUS", '-'),
+--		text = self:string("NETWORK_STATUS", '-'),
+		text = self:string("NETWORK_STATUS", tostring(self:string("NET_HEALTH_HINT"))),
 		style = 'item_info',
 	}
 	menu:addItem(self.labels["NETWORK_STATUS"])
