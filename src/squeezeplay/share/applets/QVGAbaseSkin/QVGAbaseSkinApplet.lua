@@ -1703,7 +1703,6 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.alarm_header = {
 			w = screenWidth - 20,
-			padding = { 0, 0, 0, 30 },
 			order = { 'time' },
 			time = {
 				h = WH_FILL,

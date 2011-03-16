@@ -993,6 +993,9 @@ CHECK_NETWORK_PART
 STATUS_MSG
 	EN	%s
 
+NET_HEALTH_HINT
+	EN	Select 'Check Network' to perfom a network health check.
+
 NET_BRINGING_NETWORK_DOWN
 	EN	Bringing network down ...
 
