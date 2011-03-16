@@ -26,7 +26,7 @@ local string, table, math, pairs, type = string, table, math, pairs, type
 
 local Stream   = require("squeezeplay.stream")
 local mime     = require("mime")
-local rtmpC    = require("rtmp")
+local hasC, rtmpC = pcall(require, "rtmp")
 
 local debug    = require("jive.utils.debug")
 local log      = require("jive.utils.log").logger("audio.decode")
@@ -36,7 +36,9 @@ module(...)
 local FLASH_VER  = "LNX 10,0,22,87"
 
 -- C read method
-read = rtmpC.read
+if hasC then
+	read = rtmpC.read
+end
 
 -- session params (can't be stored in the object as we reuse the streambuf object)
 rtmpMessages = {} -- not local so it can be accessed from C
@@ -47,6 +49,11 @@ function write(stream, playback, header)
 	-- initialise
 	rtmpMessages = {}
 	slimproto = playback.slimproto
+
+	if not hasC then
+		log:warn("no rtmp binary module loaded - stream not supported")
+		return
+	end
 
 	-- extract the pre built rtmp packets or params within the header
 	for k, v in string.gmatch(header, "(%w+)=([a-zA-Z0-9%/%+]+%=*)&") do
