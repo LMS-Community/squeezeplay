@@ -3128,6 +3128,8 @@ function skin(self, s)
 		hate        = _uses(s.nowplaying.npcontrols.hate, { bgImg = keyMiddlePressed }),
 		fwdDisabled = _uses(s.nowplaying.npcontrols.fwdDisabled),
 		rewDisabled = _uses(s.nowplaying.npcontrols.rewDisabled),
+		shuffleDisabled = _uses(s.nowplaying.npcontrols.shuffleDisabled),
+		repeatDisabled = _uses(s.nowplaying.npcontrols.repeatDisabled),
 	}
 	
 	s.nowplaying_art_only = _uses(s.nowplaying, {
