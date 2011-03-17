@@ -1316,6 +1316,20 @@ function _process_status(self, event)
 	self:updateIconbar()
 end
 
+function _alertWindow(self, textValue)
+
+	local window = Window('help_list', ' ')
+	window:setAllowScreensaver(false)
+        window:showAfterScreensaver()
+	local text = Textarea("text", textValue)
+	window:addWidget(text)
+
+	local s = {}
+	s.window = window
+	self:tieWindow(window)
+	return s
+end
+
 
 -- _process_displaystatus
 -- receives the display status data
@@ -1328,6 +1342,7 @@ function _process_displaystatus(self, event)
 		local display = data.display
 		local type    = display["type"] or 'text'
 		local special = display and (type == 'icon' and display.style)
+		local alertWindow = display and type == 'alertWindow'
 		local playMode = display["play-mode"]
 		local isRemote = display["is-remote"] and (display["is-remote"] == 1) or false
 
@@ -1342,7 +1357,10 @@ function _process_displaystatus(self, event)
 
 		-- this showBriefly should be displayed unless there's a good reason not to
 		local showMe = true
-		if special then
+		if alertWindow then
+			s = self:_alertWindow(textValue)
+
+		elseif special then
 			s = self.popupIcon
 			local style = 'icon_popup_' .. special
 			s.icon:setStyle(style)	
@@ -1387,7 +1405,7 @@ function _process_displaystatus(self, event)
 			s.textarea:setValue(textValue)
 		end
 		if showMe then
-			if tonumber(duration) == -1 then
+			if alertWindow or tonumber(duration) == -1 then
 				s.window:show()
 			else
 				s.window:showBriefly(duration, nil, transitionOn, transitionOff)
