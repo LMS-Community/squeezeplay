@@ -188,7 +188,7 @@ function setEndpoint(self, ip, port, path)
 	self.chttp:setPriority(Task.PRIORITY_HIGH)
 	self.rhttp:setPriority(Task.PRIORITY_HIGH)
 
-	if oldState == CONNECTING or self.state == CONNECTED then
+	if oldState == CONNECTING or oldState == CONNECTED then
 		-- Reconnect
 		_handshake(self)
 	end
@@ -476,6 +476,13 @@ function request(self, func, playerid, request, priority)
 	-- Bump reqid for the next request
 	self.reqid = id + 1
 
+	-- SlimServer.lua may think that we are reconnecting but actually we are not
+	-- because we got reconnect advice of 'none' previously.
+	-- But this request is likely user-initiated so we should try again now.
+	if self.state == UNCONNECTED or self.state == UNCONNECTING then
+		_reconnect(self)
+	end
+
 	-- Send immediately unless we're batching queries
 	if self.state ~= CONNECTED or self.batch ~= 0 then
 		if self.state ~= CONNECTED then
@@ -581,9 +588,17 @@ _handshake = function(self)
 
 	-- Go through all existing subscriptions and reset the pending flag
 	-- so they are re-subscribed to during _connect()
-	for i, v in ipairs( self.subs ) do
-		log:debug("Will re-subscribe to ", v.subscription)
-		v.pending = true
+	for i, sub in ipairs( self.subs ) do
+		log:debug("Will re-subscribe to ", sub.subscription)
+		sub.pending = true
+		
+		-- Also remove them from the set of requests waiting to be sent
+		-- They will get readded later and we do not want duplicates
+		for j, request in ipairs(self.sent_reqs) do
+			if sub.reqid == request.id then
+				table.remove( self.sent_reqs, j )
+			end
+		end
 	end
 
 	-- Reset clientId
@@ -649,10 +664,10 @@ _getHandshakeSink = function(self)
 
 			log:debug(self, ": _handshake OK, clientId: ", self.clientId)
 
-			-- Rewrite clientId in requests to be reset
+			-- Rewrite clientId in requests to be resent
 			for i, req in ipairs(self.sent_reqs) do
 				if req.data.response then
-					req.data.response = string.gsub(req.data.response, "/(%x+)/", "/" .. self.clientId .. "/")
+					req.data.response = string.gsub(req.data.response, "/([%xX]+)/", "/" .. self.clientId .. "/")
 				end
 			end
 
@@ -715,6 +730,14 @@ _reconnect = function(self)
 		channel        = '/meta/reconnect',
 		clientId       = self.clientId,
 		connectionType = 'streaming',
+	},
+	
+	-- Need to include the /meta/subscribe here just in case the one from the 
+	-- /meta/connect was lost (see _connect()) due to a network problem 
+	{
+		channel      = '/meta/subscribe',
+		clientId     = self.clientId,
+		subscription = '/' .. self.clientId .. '/**',
 	} }
 
 	_state(self, CONNECTING)
@@ -834,7 +857,7 @@ function removeRequest(self, requestId)
 		return false
 	end
 
-	--try both sent and pending,s ince request may have been sent prior to knowing server was down
+	--try both sent and pending, since request may have been sent prior to knowing server was down
 	for i, request in ipairs( self.sent_reqs ) do
 		if request.id == requestId then
 			table.remove( self.sent_reqs, i )
@@ -871,17 +894,20 @@ _response = function(self, chunk)
 			end
 		end
 
-		-- Log response
-		if event.error then
-			log:warn(self, ": _response, ", event.channel, " id=", event.id, " failed: ", event.error)
-		else
-			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
-		end
-
 		-- Update advice if any
 		if event.advice then
 			self.advice = event.advice
 			log:debug(self, ": _response, advice updated from server")
+		end
+
+		-- Log response
+		if event.error then
+			log:warn(self, ": _response, ", event.channel, " id=", event.id, " failed: ", event.error)
+			if event.advice then
+				return _handleAdvice(self)
+			end
+		else
+			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
 		end
 
 		-- Handle response
