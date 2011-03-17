@@ -894,17 +894,20 @@ _response = function(self, chunk)
 			end
 		end
 
-		-- Log response
-		if event.error then
-			log:warn(self, ": _response, ", event.channel, " id=", event.id, " failed: ", event.error)
-		else
-			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
-		end
-
 		-- Update advice if any
 		if event.advice then
 			self.advice = event.advice
 			log:debug(self, ": _response, advice updated from server")
+		end
+
+		-- Log response
+		if event.error then
+			log:warn(self, ": _response, ", event.channel, " id=", event.id, " failed: ", event.error)
+			if event.advice then
+				return _handleAdvice(self)
+			end
+		else
+			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
 		end
 
 		-- Handle response
