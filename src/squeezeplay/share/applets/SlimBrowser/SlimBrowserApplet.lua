@@ -2126,7 +2126,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 	-- these may work without an item
 	
 	-- Note the assumption here: event handling happens for front window only
-	if _getCurrentStep().actionModifier then
+	if _getCurrentStep() and _getCurrentStep().actionModifier then
 		local builtInAction = actionName .. _getCurrentStep().actionModifier
 
 		local func = _defaultActions[builtInAction]
@@ -2264,7 +2264,7 @@ local function _browseMenuListener(menu, step, menuItem, dbIndex, event)
 
 	-- we don't care about events not on the current window
 	-- assumption for event handling code: _curStep corresponds to current window!
-	if _getCurrentStep().menu != menu then
+	if _getCurrentStep() and _getCurrentStep().menu != menu then
 		log:debug("_getCurrentStep(): ", _getCurrentStep())
 
 		log:error("Ignoring, not visible, or step/windowStack out of sync: current step menu: ", _getCurrentStep().menu, " window menu: ", menu)

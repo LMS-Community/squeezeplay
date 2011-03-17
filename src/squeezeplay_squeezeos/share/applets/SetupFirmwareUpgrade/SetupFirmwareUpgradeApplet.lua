@@ -63,6 +63,28 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
+function init(self)
+	jnt:subscribe(self)
+
+end
+
+
+function notify_firmwareAvailable(self, server)
+        local url, force = server:getUpgradeUrl()
+
+        if force and not url then
+                log:warn("sometimes force is true but url is nil, seems like a server bug: server:", server)
+        end
+        if force and url then
+                local player = appletManager:callService("getCurrentPlayer")
+
+                if player and player:getSlimServer() == server then
+			self:firmwareUpgrade(server)
+                end
+        end
+end
+
+
 function _firmwareVersion(self, url)
 	local machine = System:getMachine()
 
