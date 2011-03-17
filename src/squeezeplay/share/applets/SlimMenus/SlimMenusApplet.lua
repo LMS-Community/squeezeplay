@@ -957,6 +957,11 @@ end
 
 function _updateMyMusicTitle(self, serverName)
 	local myMusicNode = jiveMain:getMenuTable()["_myMusic"]
+	-- it is possible on some branches for there to be no myMusicNode
+	if not myMusicNode then
+		return
+	end
+
 	if not myMusicNode.originalNodeText then
 		myMusicNode.originalNodeText = myMusicNode.text
 		--todo: this doesn't handle on-the-fly language change well
