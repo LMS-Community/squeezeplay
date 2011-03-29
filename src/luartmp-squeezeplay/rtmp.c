@@ -339,7 +339,7 @@ bool messageType8(lua_State *L, u8_t *buf, struct incache_entry *entry) {
 			header[3] |= ((framesize >> 11) & 0x03);
 			header[4] |= ((framesize >>  3) & 0xFF);
 			header[5] |= ((framesize <<  5) & 0xE0);
-			LOG_DEBUG(log_audio_decode, "aac audio data: %d timestamp: %d", framesize, entry->ts);
+			// LOG_DEBUG(log_audio_decode, "aac audio data: %d timestamp: %d", framesize, entry->ts);
 			if (n > framesize) {
 				streambuf_feed(header, 7);
 				streambuf_feed(buf + 2, entry->len - 2);
@@ -365,7 +365,7 @@ bool messageType8(lua_State *L, u8_t *buf, struct incache_entry *entry) {
 		
 	} else if ((*buf & 0xF0) == 0x20) {
 		// MP3 audio
-		LOG_DEBUG(log_audio_decode, "mp3 audio data: %d timestamp: %d", entry->len - 1, entry->ts);
+		// LOG_DEBUG(log_audio_decode, "mp3 audio data: %d timestamp: %d", entry->len - 1, entry->ts);
 		if (n >= entry->len - 1) {
 			streambuf_feed(buf + 1, entry->len - 1);
 		} else {
