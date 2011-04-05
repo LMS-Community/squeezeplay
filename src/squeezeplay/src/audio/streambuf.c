@@ -787,6 +787,37 @@ static int stream_readtoL(lua_State *L) {
 }
 
 
+/* read bytes from the streaming socket and discard - used by network test to measure network throughput*/
+static int stream_readtonullL(lua_State *L) {
+	struct stream *stream;
+	char buf[4094];
+	int n;
+	/*
+	 * 1: Stream (self)
+	 */
+
+	stream = lua_touserdata(L, 1);
+
+	n = recv(stream->fd, buf, sizeof(buf), 0);	
+
+	if (n > 0) {
+		fifo_lock(&streambuf_fifo);
+		streambuf_bytes_received += n;
+		fifo_unlock(&streambuf_fifo);
+		lua_pushinteger(L, n);
+		return 1;
+	} else if (n == -1 && errno == EAGAIN) {
+		lua_pushinteger(L, 0);
+		return 1;
+	} else {
+		CLOSESOCKET(stream->fd);
+		lua_pushnil(L);
+		lua_pushstring(L, strerror(n));
+		return 2;
+	}
+}
+
+
 static int stream_setstreamingL(lua_State *L) {
 	/*
 	 * 1: Stream (self)
@@ -845,6 +876,7 @@ static const struct luaL_Reg stream_m[] = {
 	{ "write", stream_writeL },
 	{ "feedFromLua", stream_feedfromL },
 	{ "readToLua", stream_readtoL },
+	{ "readToNull", stream_readtonullL },
 	{ "setStreaming", stream_setstreamingL },
 	{ NULL, NULL }
 };
