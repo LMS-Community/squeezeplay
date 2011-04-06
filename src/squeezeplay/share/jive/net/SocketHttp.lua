@@ -181,7 +181,11 @@ function t_sendDequeue(self)
 
 	if self.t_httpSendRequest then
 		log:debug(self, " send processing ", self.t_httpSendRequest)
-		self:t_nextSendState(true, 't_sendResolve')
+		if self:connected() then
+			self:t_nextSendState(true, 't_sendRequest')
+		else
+			self:t_nextSendState(true, 't_sendResolve')
+		end
 		return
 	end
 end
@@ -248,14 +252,12 @@ end
 function t_sendConnect(self)
 	log:debug(self, ":t_sendConnect()")
 
-	if not self:connected() then
-		local err = socket.skip(1, self:t_connect())
+	local err = socket.skip(1, self:t_connect())
 	
-		if err then
-			log:error(self, ":t_sendConnect: ", err)
-			self:close(err)
-			return
-		end
+	if err then
+		log:error(self, ":t_sendConnect: ", err)
+		self:close(err)
+		return
 	end
 		
 	self:t_nextSendState(true, 't_sendRequest')
