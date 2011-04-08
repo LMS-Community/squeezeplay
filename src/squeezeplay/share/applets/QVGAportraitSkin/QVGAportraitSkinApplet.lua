@@ -178,6 +178,8 @@ function skin(self, s, reload, useDefaultSize)
 
 	s.menu.itemHeight           = c.PORTRAIT_LINE_ITEM_HEIGHT
 	s.icon_list.menu.itemHeight = c.PORTRAIT_LINE_ITEM_HEIGHT
+	-- Bug 17104: change the padding in icon_list to 1 px top/bottom (landscape is 2 px top/bottom)
+	s.icon_list.menu.item.padding = { 10, 1, 4, 1 }
 
 	-- hide alarm icon on controller status bar, no room
 	s.iconbar_group.order = { 'play', 'repeat_mode', 'shuffle', 'sleep', 'battery', 'wireless' } --'repeat' is a Lua reserved word
