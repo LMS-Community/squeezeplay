@@ -1456,6 +1456,7 @@ function _createUI(self)
 	
 	self.progressSlider = Slider('npprogressB', 0, 100, 0,
 		function(slider, value, done)
+			self.player:setWaitingToPlay(1)
 			self.gotoElapsed = value
 			self.gotoTimer:restart()
 		end)

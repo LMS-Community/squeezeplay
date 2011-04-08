@@ -1512,6 +1512,11 @@ function isWaitingToPlay(self)
 end
 
 
+function setWaitingToPlay(self, value)
+	self.waitingToPlay = value
+end
+
+
 function getAlarmState(self)
 	return self.alarmState
 end
@@ -1727,6 +1732,7 @@ function gototime(self, time)
 	self.trackTime = time
 	log:debug("Sending player:time(", time, ")")
 	self:send({'time', time })
+	self:setWaitingToPlay(1)
 	return nil
 end
 
