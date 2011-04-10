@@ -117,6 +117,8 @@ function __init(self, jnt, slimproto)
 		slimproto:capability("Spdirect", cap)
 	end
 
+	slimproto:capability("test")
+
 	-- signal we are Rtmp capable, but don't load module until used
 	slimproto:capability("Rtmp", 2)
 
@@ -470,6 +472,10 @@ function _streamConnect(self, serverIp, serverPort, reader, writer)
 		Rtmp = require("jive.audio.Rtmp")
 		m.read  = Rtmp.read
 		m.write = Rtmp.write
+	elseif self.mode == 'n' then
+		-- network test, use specific read method
+		m.read = m.readToNull
+		m.write = m._streamWrite
 	else
 		-- use standard stream methods
 		m.read  = m._streamRead
@@ -675,6 +681,10 @@ function _strm(self, data)
 				self.slimproto:sendStatus('STMc')
 				self.slimproto:sendStatus('STMn')
 			end
+		elseif data.mode == 'n' then
+			-- network test stream - only stream, don't decode
+			log:info("network test stream")
+			self:_streamConnect(serverIp, data.serverPort)
 		else
 			-- standard stream - start the decoder and connect
 			decode:start(string.byte(data.mode),
