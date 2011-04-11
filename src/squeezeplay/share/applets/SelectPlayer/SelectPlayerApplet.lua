@@ -239,6 +239,8 @@ function _addPlayerItem(self, player)
 		playerWeight = ACTIVATE_WEIGHT
 	end
 
+	local server = tostring(player:getSlimServer())
+	playerName = playerName .. '(' .. server .. ')'
 	local item = {
 		id = mac,
 		style = 'item',

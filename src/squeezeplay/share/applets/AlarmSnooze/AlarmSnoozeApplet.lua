@@ -706,9 +706,9 @@ function _alarmOff(self, stopStream)
 	
 	self:_stopDecodeStatePoller()
 
-	if self.localPlayer:isConnected() and stopStream then
-		log:warn('_alarmOff: send stopAlarm to connected server')
-		self.localPlayer:stopAlarm()
+	if self.localPlayer:isConnected() then
+		log:warn('_alarmOff: tell server alarm is off, and only pause if stopStream is true')
+		self.localPlayer:stopAlarm(not stopStream)
 	end
 
 	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
