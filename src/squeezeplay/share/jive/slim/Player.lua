@@ -1466,11 +1466,13 @@ function unpause(self)
 	self:updateIconbar()
 end
 
-function stopAlarm(self)
+-- optional continueAudio flag cancels alarm without pausing audio
+function stopAlarm(self, continueAudio)
 	if not self.state then return end
 
-	-- stopAlarm pauses audio
-	self:pause()
+	if not continueAudio then
+		self:pause()
+	end
 
 	self.alarmState = 'none'
 	self:call({'jivealarm', 'stop:1'})
