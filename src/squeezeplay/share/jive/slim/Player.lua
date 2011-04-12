@@ -989,7 +989,7 @@ function onStage(self)
 	self.slimServer.comet:startBatch()
 	
 	-- subscribe to player status updates
-	local cmd = { 'status', '-', 10, 'menu:menu', 'useContextMenu:1', 'subscribe:0' }
+	local cmd = { 'status', '-', 10, 'menu:menu', 'useContextMenu:1', 'subscribe:600' }
 	self.slimServer.comet:subscribe(
 		'/slim/playerstatus/' .. self.id,
 		_getSink(self, cmd),
