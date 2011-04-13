@@ -1316,18 +1316,29 @@ function _process_status(self, event)
 	self:updateIconbar()
 end
 
-function _alertWindow(self, textValue)
+function _alertWindow(self, title, textValue)
 
-	local window = Window('help_list', ' ')
-	window:setAllowScreensaver(false)
-        window:showAfterScreensaver()
-	local text = Textarea("text", textValue)
-	window:addWidget(text)
+	local showMe = true
+	local currentWindow = Window:getTopNonTransientWindow()
+	if currentWindow and currentWindow:getWindowId() == textValue then
+		showMe = false
+	end
 
-	local s = {}
-	s.window = window
-	self:tieWindow(window)
-	return s
+	if showMe then
+		local window = Window('help_list', title)
+		window:setAllowScreensaver(false)
+		window:showAfterScreensaver()
+		local text = Textarea("text", textValue)
+		window:setWindowId(textValue)
+		window:addWidget(text)
+
+		local s = {}
+		s.window = window
+		self:tieWindow(window)
+		return s
+	else
+		return nil
+	end
 end
 
 
@@ -1358,7 +1369,11 @@ function _process_displaystatus(self, event)
 		-- this showBriefly should be displayed unless there's a good reason not to
 		local showMe = true
 		if alertWindow then
-			s = self:_alertWindow(textValue)
+			local title = display['title'] or ''
+			s = self:_alertWindow(title, textValue)
+			if not s then
+				showMe = false
+			end
 
 		elseif special then
 			s = self.popupIcon
