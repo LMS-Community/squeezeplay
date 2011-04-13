@@ -59,6 +59,7 @@ function init(self, ...)
 
 	self.debugRTCTime = timeToAlarm
 	self.debugWOLTime = 0
+	self.failedAudioTicker = 0
 	self.RTCAlarmTimer = Timer(timeToAlarm,
 			function ()
 				log:warn("RTC ALARM FIRING")
@@ -119,7 +120,7 @@ function init(self, ...)
 		self:_startTimer()
 	end
 
-	self.decodeStatePoller = Timer(10000, 
+	self.decodeStatePoller = Timer(5000, 
 		function ()
 			self:_pollDecodeState()
 		end,
@@ -240,6 +241,15 @@ function _alarm_sledgehammerRearm(self, caller)
 
 	log:warn('alarm_sledgehammerRearm(', caller,'): ', self.alarmInProgress, ' alarm in progress - audioState is ', status.audioState)
 	if self.alarmInProgress and self.alarmInProgress ~= 'snooze' and status.audioState ~= 1 then
+		self.failedAudioTicker = self.failedAudioTicker + 1
+		log:warn('Audio failed! (', self.failedAudioTicker, ')')
+	else
+		self.failedAudioTicker = 0
+		log:warn('Audio now in good shape, reset ticker to ', self.failedAudioTicker)
+	end
+
+	if self.failedAudioTicker > 5 then
+		log:warn('Decode state bad ', self.failedAudioTicker, ' consecutive times. Trigger fallback alarm!')
 		hammer = true
 	end
 
@@ -258,11 +268,11 @@ end
 -- polling would eventually manifest the transition anyway...
 
 function notify_playerLoaded(self, player)
-	log:info("notify_playerLoaded(", player, ")")
 	if not player then
 		return
 	end
 	if player == self.localPlayer then
+		log:debug("notify_playerLoaded(", player, ")")
 --		self:_alarm_sledgehammerRearm('notify_playerLoaded')
 		-- check for pending server alarm in case that one is pending instead, since we may have changed players to force 
 		--       local control during a previous call to openAlarmWindow()
@@ -304,36 +314,38 @@ end
 
 
 function notify_playerModeChange(self, player, mode)
-	log:warn('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
-	if not player then
-		return
-	end
-	local status = decode:status()
-	log:warn('notify_playerModeChange: - audioState is ', status.audioState)
-end
-
-
-function notify_playerConnected(self, player)
-	log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
+	log:debug('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
 	if not player then
 		return
 	end
 	if player == self.localPlayer then
+		local status = decode:status()
+		log:warn('notify_playerModeChange: - audioState is ', status.audioState)
+	end
+end
+
+
+function notify_playerConnected(self, player)
+	if not player then
+		return
+	end
+	if player == self.localPlayer then
+		log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
 --		self:_alarm_sledgehammerRearm('notify_playerConnected')
 		self.server = player:getSlimServer()
 		log:warn("notify_playerConnected(): setting self.server to: ", self.server)
 	else
-		log:info('notify_playerConnected(): this notification player: ', player, ' not for local player: ', self.localPlayer)
+		log:debug('notify_playerConnected(): this notification player: ', player, ' not for local player: ', self.localPlayer)
 	end
 end
 
 
 function notify_playerDisconnected(self, player)
-	log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
 	if not player then
 		return
 	end
 	if player == self.localPlayer then
+		log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
 	end
 end
 
