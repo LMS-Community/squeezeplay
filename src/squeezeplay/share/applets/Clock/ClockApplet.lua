@@ -101,7 +101,8 @@ function Clock:notify_playerAlarmState(player, alarmSet)
 	if not player:isLocal() then
 		return
 	end
-	self.alarmSet = alarmSet
+	self.alarmSet = player:getAlarmState()
+	log:debug('Setting self.alarmSet to ', self.alarmSet)
 
 	self:Draw()
 end

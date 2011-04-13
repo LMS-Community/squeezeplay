@@ -344,10 +344,12 @@ end
 
 
 -- Send any pending subscriptions and requests
-_sendPendingRequests = function(self)
+_sendPendingRequests = function(self, data)
 
 	-- add all pending unsub requests, and any others we need to send
-	local data = {}
+	if not data then
+		data = {}
+	end
 	_addPendingRequests(self, data)
 	
 	-- Only continue if we have some data to send
@@ -760,26 +762,7 @@ _connected = function(self)
 		table.insert(data, v)
 	end
 
-	-- Add any other pending requests to the outgoing data
-	_addPendingRequests(self, data)
-
-	-- Only continue if we have some data to send
-	if data[1] then
-
-		if log:isDebug() then
-			log:debug("Sending pending request(s):")
-			debug.dump(data, 5)
-		end
-
-		local req = CometRequest(
-			_getEventSink(self),
-			self.uri,
-			data
-		)
-
-		self.rhttp:fetch(req)
-	end
-
+	_sendPendingRequests(self, data)
 	_state(self, CONNECTED)
 end
 

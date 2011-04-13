@@ -132,6 +132,9 @@ struct decode_alsa {
 
 	/* parent */
 	pid_t parent_pid;
+
+	/* MMAP output available? */
+	char has_mmap;
 };
 
 #define PCM_FRAMES_TO_BYTES(frames) (snd_pcm_frames_to_bytes(state->pcm, (frames)))
@@ -667,6 +670,18 @@ static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 				state->playback_device,
 				SND_PCM_ACCESS_MMAP_INTERLEAVED,
 				sample_rate);
+		state->has_mmap = 1;
+
+		if (err < 0) {
+			/* Retry without MMAP */
+			err = _pcm_open(state,
+					&state->pcm,
+					mode,
+					state->playback_device,
+					SND_PCM_ACCESS_RW_INTERLEAVED,
+					sample_rate);
+			state->has_mmap = 0;
+		}
 
 		if (err < 0) {
 			return err;
@@ -745,6 +760,7 @@ static void *audio_thread_execute(void *data) {
 	snd_pcm_status_t *status;
 	int err, count = 0, count_max = 441, first = 1;
 	u32_t delay, do_open = 1;
+	void *buf = NULL;
 
 	LOG_DEBUG("audio_thread_execute");
 
@@ -870,7 +886,6 @@ static void *audio_thread_execute(void *data) {
 			const snd_pcm_channel_area_t *areas;
 			snd_pcm_uframes_t frames, offset;
 			snd_pcm_sframes_t commitres;
-			void *buf;
 
 			frames = size;
 
@@ -878,17 +893,24 @@ static void *audio_thread_execute(void *data) {
 				capture_read(state, frames);
 			}
 
-			if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
-				LOG_WARN("xrun (snd_pcm_mmap_begin)");
-				if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
-					LOG_ERROR("mmap begin failed: %s", snd_strerror(err));
+			if (state->has_mmap) {
+				if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
+					LOG_WARN("xrun (snd_pcm_mmap_begin)");
+					if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
+						LOG_ERROR("mmap begin failed: %s", snd_strerror(err));
+					}
+					first = 1;
 				}
-				first = 1;
 			}
 
 			TIMER_CHECK("BEGIN");
 
-			buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
+			if (state->has_mmap) {
+				buf = ((u8_t *)areas[0].addr) + (areas[0].first + offset * areas[0].step) / 8;
+			} else {
+				if (!buf)
+					buf = malloc(PCM_FRAMES_TO_BYTES(state->period_size));
+			}
 
 			if (state->flags & FLAG_STREAM_PLAYBACK) {
 				decode_audio_lock();
@@ -960,14 +982,27 @@ static void *audio_thread_execute(void *data) {
 
 			TIMER_CHECK("EFFECTS");
 
-			commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
-			if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
-				LOG_WARN("xrun (snd_pcm_mmap_commit) err=%ld", commitres);
-				if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
-					LOG_ERROR("mmap commit failed: %s", snd_strerror(err));
+			if (state->has_mmap) {
+				commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
+				if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
+					LOG_WARN("xrun (snd_pcm_mmap_commit) err=%ld", commitres);
+					if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
+						LOG_ERROR("mmap commit failed: %s", snd_strerror(err));
+					}
+					first = 1;
 				}
-				first = 1;
+			} else {
+				commitres = snd_pcm_writei(state->pcm, buf, frames); 
+				if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
+					LOG_WARN("xrun (snd_pcm_writei) err=%ld", commitres);
+					if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
+						LOG_ERROR("sound write failed: %s", snd_strerror(err));
+					}
+					first = 1;
+				}
 			}
+
+
 			size -= frames;
 
 			TIMER_CHECK("COMMIT");
@@ -975,6 +1010,7 @@ static void *audio_thread_execute(void *data) {
 	}
 
  thread_error:
+	if (!state->has_mmap && buf) free(buf);
 	free(status);
 
 	LOG_ERROR("Audio thread exited");

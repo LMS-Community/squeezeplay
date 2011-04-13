@@ -764,7 +764,7 @@ int readL(lua_State *L) {
 		if (recv_bytes > next_ack) {
 			u8_t *packet_template, packet[16];
 
-			LOG_DEBUG(log_audio_decode, "sending ack: %ud", recv_bytes);
+			LOG_DEBUG(log_audio_decode, "sending ack: %u", recv_bytes);
 
 			// send ack packet
 			packet_template = (u8_t *)
