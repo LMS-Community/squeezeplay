@@ -493,6 +493,8 @@ function addItemToNode(self, item, node)
 		local menuIdx = self.nodeTable[node].menu:addItem(item)
 		-- items in the home menu get special handling and a new table created for them
 		if node == 'home' then
+			--this breaks localization code, punt for now. items moved to the home menu will not display custom text
+			--[[
 			local labelText = item.homeMenuText
 			if not labelText then
 				if item.text.str then
@@ -507,6 +509,10 @@ function addItemToNode(self, item, node)
 			local myItem = _uses(item, { 
 				text = labelText,
 			 })
+			--]]
+
+			local myItem = _uses(item)
+
 			-- rewrite the callback for CM to use myItem instead of item
 			myItem.cmCallback = function()
 				appletManager:callService("homeMenuItemContextMenu", myItem)
