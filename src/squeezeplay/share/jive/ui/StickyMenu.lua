@@ -9,8 +9,8 @@ A sticky menu widget, extends L<jive.ui.SimpleMenu>, which extends L<jive.ui.Men
 
 =head1 SYNOPSIS
 
- -- Create a new menu
- local menu = jive.ui.StickyMenu("menu",
+ -- Create a new menu, with a sticky multiplier of 3x the stickiness of a normal menu
+ local menu = jive.ui.StickyMenu("menu", 3
 		   {
 			   {
 				   id = 'uniqueString',
@@ -26,8 +26,7 @@ A sticky menu widget, extends L<jive.ui.SimpleMenu>, which extends L<jive.ui.Men
 				   icon = widget2,
 				   callback = function2
 			   ),
-		   },
-		2
+		   }
 )
 
 =head1 STYLE

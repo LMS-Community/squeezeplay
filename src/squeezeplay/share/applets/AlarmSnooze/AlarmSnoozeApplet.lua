@@ -14,7 +14,7 @@ local Framework        = require("jive.ui.Framework")
 local Group            = require("jive.ui.Group")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
-local SimpleMenu       = require("jive.ui.SimpleMenu")
+local StickyMenu       = require("jive.ui.StickyMenu")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
 local Timer            = require("jive.ui.Timer")
@@ -570,7 +570,7 @@ function openAlarmWindow(self, caller)
 		time = label,
 	})
 
-	local menu = SimpleMenu('menu')
+	local menu = StickyMenu('menu', 3)
 	menu:addItem({
 		text = self:string("ALARM_SNOOZE_SNOOZE"),
 		sound = "WINDOWHIDE",
