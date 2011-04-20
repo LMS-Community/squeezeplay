@@ -2149,7 +2149,6 @@ function skin(self, s)
 	s.alarm_header = {
 			w = screenWidth,
 			order = { 'time' },
-			padding = { 0, 0, 0, 50 },
 	}
 
 	s.alarm_time = {
