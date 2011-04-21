@@ -570,7 +570,8 @@ function openAlarmWindow(self, caller)
 		time = label,
 	})
 
-	local menu = StickyMenu('menu', 3)
+	-- Bug 15398: make this menu 6x stickier than a normal menu for scrolling
+	local menu = StickyMenu('menu', 6)
 	menu:addItem({
 		text = self:string("ALARM_SNOOZE_SNOOZE"),
 		sound = "WINDOWHIDE",
