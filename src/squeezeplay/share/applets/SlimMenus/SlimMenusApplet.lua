@@ -443,7 +443,11 @@ end
 
 
 function _addMyAppsNode(self)
-	jiveMain:addNode( { id = 'myApps', iconStyle = 'hm_myApps', node = 'home', text = self:string('MENUS_MY_APPS'), weight = 30  } )
+	local version = _player and _player:getSlimServer() and _player:getSlimServer():getVersion()
+	local myApps = { id = 'myApps', iconStyle = 'hm_myApps', node = 'home', text = self:string('MENUS_MY_APPS'), weight = 30  } 
+	jiveMain:addNode( myApps )
+	_playerMenus['myApps'] = myApps
+
 	-- remove the old style My Apps item, if it exists
 	jiveMain:removeItemById('opmlmyapps')
 	self.myAppsNode = true
@@ -1164,6 +1168,9 @@ function notify_playerCurrent(self, player)
 				log:debug("player and server didn't change , not changing menus: ", player)
 				return
 			else
+				-- Bug 17172
+				self.myAppsNode = false
+
 				-- server changed, ergo playerMenus may also be different. Remove the existing ones
 				for id, v in pairs(_playerMenus) do
 					jiveMain:removeItem(v)
@@ -1380,6 +1387,10 @@ function free(self)
 
 	-- remove player menus
 	jiveMain:setTitle(nil)
+
+	-- Bug 17172
+	self.myAppsNode = false
+
 	for id, v in pairs(_playerMenus) do
 		jiveMain:removeItem(v)
 	end
