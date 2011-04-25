@@ -235,7 +235,11 @@ function npviewsSettingsShow(self)
 		settings.views = {}
 	end
 
-	if #settings.views == 0 then
+	local settingsViews = 0
+	for k, v in pairs(settings.views) do
+		settingsViews = settingsViews + 1
+	end
+	if settingsViews == 0 then
 		for i, v in ipairs(npscreenViews) do
 			settings.views[v.style] = true
 			npscreenViews[i].enabled = true
