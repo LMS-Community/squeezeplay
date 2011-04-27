@@ -1030,7 +1030,7 @@ NET_LINK_ETHERNET_NOK
 	EN	Ethernet - no link
 
 NET_LINK_ETHERNET_NOK_HELP
-	EN	Your squeezebox's ethernet connection is reporting itself to be down.\nPossible solutions:\n - Confirm that the ethernet cable is plugged into the back of your squeezebox firmly\n - Confirm that the link light on the ethernet switch is lit where your squeezebox cable is plugged in\n - Replace the ethernet cable
+	EN	Your squeezebox's Ethernet connection is reporting itself to be down.\nPossible solutions:\n - Confirm that the ethernet cable is plugged into the back of your squeezebox firmly\n - Confirm that the link light on the Ethernet switch is lit where your squeezebox cable is plugged in\n - Replace the Ethernet cable
 
 NET_IP_OK
 	EN	IP: %s	

@@ -983,7 +983,7 @@ NETWORK_CONNECTION_TYPE_WIRED
 	CS	Připojit k ethernetové síti
 	DA	Opret forbindelse til Ethernet-netværk
 	DE	Mit Ethernet-Netzwerk verbinden
-	EN	Connect to ethernet network
+	EN	Connect to Ethernet network
 	ES	Conectar a red Ethernet
 	FI	Muodosta yhteys ethernet-verkkoon
 	FR	Se connecter au réseau Ethernet
@@ -1013,7 +1013,7 @@ NETWORK_CONNECTION_HELP_BODY
 	CS	Pokud si přejete připojit tento Squeezebox k blízkému bezdrátovému routeru, vyberte  "bezdrátová."\n\nPokud dáváte přednost kabelového uspořádání, připojte tento Squeezebox k vašemu routeru s použitím ethernetového / cat 5 kabelu zvolte "kabelová".
 	DA	Hvis du vil slutte denne Squeezebox til en trådløs router i nærheden, skal du vælge Trådløs.\n\nHvis du foretrækker at bruge et kabel, skal du slutte denne Squeezebox til routeren vha. et Ethernet/cat5-kabel og vælge Kabelforbundet.
 	DE	Wenn Sie die Squeezebox mit einem nahegelegenen, kabellosen Router verbinden möchten, wählen Sie 'kabellos'.\n\nWenn Sie ein verkabeltes Netzwerk vorziehen, schließen Sie die Squeeezebox mithilfe eines Ethernet-/Cat-5-Kabels am Router an und wählen Sie 'verkabelt'.
-	EN	If you'd like to connect this Squeezebox to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Squeezebox to your router using an ethernet/cat5 cable and select "wired."
+	EN	If you'd like to connect this Squeezebox to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Squeezebox to your router using an Ethernet/cat5 cable and select "wired."
 	ES	Si desea conectar este Squeezebox a un enrutador inalámbrico cercano, seleccione "Inalámbrica".\n\nSi prefiere utilizar una conexión con cable, conecte este Squeezebox con el enrutador mediante un cable Ethernet/cat5 y seleccione "Con cable".
 	FI	Jos haluat liittää tämän Squeezeboxin läheiseen langattomaan reitittimeen, valitse "langaton."\n\nJos haluat käyttää langallista asennusta, liitä Squeezebox reitittimeen ethernet/cat5-kaapelilla ja valitse "langallinen."
 	FR	Si vous souhaitez connecter cette Squeezebox à un routeur sans fil proche, sélectionnez "Sans fil".\n\nSi vous préférez utiliser une configuration câblée, connectez cette Squeezebox à votre routeur à l'aide d'un câble Ethernet/cat5 et sélectionnez "Filaire".
@@ -1058,7 +1058,7 @@ NETWORK_HALF_SPEED_HUB
 	CS	Využíváte poloduplexní ethernetový hub, který není podporován tímto Squeezebox zařízením.\n\nPřipojte prosím plně duplexní ethernetové zařízení, nebo vyberte dostupnou bezdrátovou síť. Pro více informací se prosím obraťte na zákaznickou podporu.
 	DA	Du bruger en Ethernet-hub med halv dupleks, og det understøttes ikke af denne Squeezebox.\n\nDu skal slutte afspilleren til en Ethernet-enhed med fuld dupleks eller til et trådløst netværk. Hvis du vil have flere oplysninger, kan du kontakte kundeservice eller supportafdelingen.
 	DE	Sie verwenden ein Halbduplex-Ethernet-Hub, der nicht von der Squeezebox unterstützt wird.\n\nSchließen Sie ein Vollduplex-Ethernet-Gerät an oder verwenden Sie ein verfügbares kabelloses Netzwerk. Wenden Sie sich für weitere Informationen an den Kundendienst.
-	EN	You are using a half-duplex ethernet hub that is not supported by this Squeezebox.\n\nPlease attach a full-duplex ethernet device, or choose an available wireless network.  For more information, please contact customer support.
+	EN	You are using a half-duplex Ethernet hub that is not supported by this Squeezebox.\n\nPlease attach a full-duplex Ethernet device, or choose an available wireless network.  For more information, please contact customer support.
 	ES	Está utilizando un concentrador Ethernet con medio dúplex que no es compatible con este Squeezebox.\n\nUtilice un dispositivo Ethernet con dúplex completo o escoja una red inalámbrica disponible. Para obtener más información, póngase en contacto con el servicio de asistencia al cliente.
 	FI	Käytät puoliksi kaksisuuntaista ethernet-keskitintä, jota tätä Squeezebox ei tue.\n\nLiitä täysin kaksisuuntaisesti toimiva ethernet-laite tai valitse käytettävissä oleva langaton verkko. Saat lisätietoja asiakastuesta.
 	FR	Le hub Ethernet semi-duplex que vous utilisez n'est pas pris en charge par cette Squeezebox.\n\nVeuillez connecter un dispositif Ethernet duplex intégral ou sélectionner un réseau sans fil disponible. Pour plus d'informations, veuillez contacter le service d'assistance à la clientèle.
@@ -1418,7 +1418,7 @@ NETWORK_ATTACH_CABLE_DETAILED
 	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
 	DA	Der blev ikke fundet en kableforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
-	EN	We can't detect a wired connection. Please check your ethernet cable, and make sure your network is running and available.
+	EN	We can't detect a wired connection. Please check your Ethernet cable, and make sure your network is running and available.
 	ES	No se puede detectar una conexión con cable. Compruebe el cable cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.

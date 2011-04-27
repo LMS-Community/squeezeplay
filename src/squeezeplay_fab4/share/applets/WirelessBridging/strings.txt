@@ -36,7 +36,7 @@ BRIDGE_HOWTO
 	CS	Bezdrátové přemostění vám umožňuje připojení kabelového zařízení přes ethernetový port Squeezebox Touch k vaší bezdrátové síti.
 	DA	Hvis du bruger den trådløse bro, kan du slutte en ledningsforbundet enhed til det trådløse netværk vha. Ethernet-porten på Squeezebox Touch.
 	DE	Mit Wireless Bridging können Sie ein verkabeltes Gerät über den Ethernet-Anschluss der Squeezebox Touch mit Ihrem WLAN verbinden.
-	EN	Wireless Bridging allows you to connect a wired device via Squeezebox Touch ethernet port to your wireless network.
+	EN	Wireless Bridging allows you to connect a wired device via Squeezebox Touch Ethernet port to your wireless network.
 	ES	El puente inalámbrico permite conectar un dispositivo con cable a través del puerto Ethernet de Squeezebox Touch a la red inalámbrica.
 	FI	Wireless Bridgingin avulla voit liittää langallisen laitteen Squeezebox Touchin ethernet-portin välityksellä langattomaan verkkoosi.
 	FR	Le pont sans fil vous permet de connecter un dispositif câblé à votre réseau sans fil via un port Ethernet de Squeezebox Touch.
