@@ -37,12 +37,9 @@ static u32_t pcm_sample_widths[] = {
 };
 
 
-static sample_t pcm_read8bitBE(u8_t *pos) { 
-	return (sample_t) (*pos << 24);
-}
-
-static sample_t pcm_read8bitLE(u8_t *pos) { 
-	return (sample_t) (*pos << 24);
+static sample_t pcm_read8bit(u8_t *pos) { 
+	// 8 bit wav stores samples as unsigned char
+	return (sample_t) ((((u8_t)*pos) - 128) << 24);
 }
 
 static sample_t pcm_read16bitBE(u8_t *pos) { 
@@ -87,8 +84,8 @@ static sample_t pcm_read32bitLE(u8_t *pos) {
 
 typedef sample_t (*pcm_read_func_t)(u8_t *pos);
 static pcm_read_func_t pcm_read_funcs[] = {
-	pcm_read8bitLE,
-	pcm_read8bitBE,
+	pcm_read8bit,
+	pcm_read8bit,
 	pcm_read16bitLE,
 	pcm_read16bitBE,
 	pcm_read24bitLE,
