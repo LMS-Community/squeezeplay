@@ -27,7 +27,7 @@ SCREENSAVER_STOPPED
 	FR	Arrêté
 	IT	Arrestato
 	NL	Gestopt
-	NO	Stoppet
+	NO	Ved stopp
 	PL	Zatrzymane
 	RU	Остановлено
 	SV	Stoppad
@@ -57,7 +57,7 @@ SCREENSAVER_OFF
 	FR	Désactivé
 	IT	Disattivato
 	NL	Uit
-	NO	Av
+	NO	Når av
 	PL	Wył.
 	RU	Выкл
 	SV	Av

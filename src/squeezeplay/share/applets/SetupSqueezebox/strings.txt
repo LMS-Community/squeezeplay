@@ -329,7 +329,7 @@ SQUEEZEBOX_IP_ADDRESS
 	FR	Adresse IP
 	IT	Indirizzo IP
 	NL	IP-adres
-	NO	Ip-adresse
+	NO	IP-adresse
 	PL	Adres IP
 	RU	IP-адрес
 	SV	IP-adress
@@ -344,7 +344,7 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
 	IT	Inserire l'indirizzo IP da utilizzare con questo Squeezebox.
 	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
-	NO	Skriv inn ip-adressen som denne Squeezebox kan bruke.
+	NO	Skriv inn IP-adressen som denne Squeezebox kan bruke.
 	PL	Wprowadź adres IP, który ma być używany przez to urządzenie Squeezebox.
 	RU	Введите IP-адрес для использования Squeezebox.
 	SV	Ange IP-adressen som ska användas för den här Squeezebox-spelaren.

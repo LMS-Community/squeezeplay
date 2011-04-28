@@ -537,7 +537,7 @@ PRECACHEARTWORK_PROGRESS
 	FR	Mise en cache de la pochette
 	IT	Pre-cache copertina
 	NL	Hoesafbeeldingen vooraf in cache opslaan
-	NO	Hurtigbufring av omslag på forhånd
+	NO	Søk etter albumomslag
 	PL	Wstępnie buforowanie okładki
 	RU	Предварительное кэширование обложки
 	SV	Cachelagrat albumomslag

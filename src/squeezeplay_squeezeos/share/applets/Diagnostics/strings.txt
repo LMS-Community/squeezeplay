@@ -357,7 +357,7 @@ IP_ADDRESS
 	FR	Adresse IP\n%s
 	IT	Indirizzo IP\n%s
 	NL	IP-adres\n%s
-	NO	Ip-adresse\n%s
+	NO	IP-adresse\n%s
 	PL	Adres IP\n%s
 	RU	IP-адрес\n%s
 	SV	IP-address\n%s
@@ -372,7 +372,7 @@ SUBNET_MASK
 	FR	Sous-réseau IP\n%s
 	IT	Subnet IP\n%s
 	NL	IP-subnet\n%s
-	NO	Ip-delnett\n%s
+	NO	IP-delnett\n%s
 	PL	Podsieć IP\n%s
 	RU	Подсеть IP\n%s
 	SV	IP-delnät\n%s
@@ -388,7 +388,7 @@ GATEWAY
 	FR	Passerelle IP\n%s
 	IT	Gateway IP\n%s
 	NL	IP-gateway\n%s
-	NO	Gateway-ip\n%s
+	NO	Gateway-IP\n%s
 	PL	Brama IP\n%s
 	RU	Шлюз IP\n%s
 	SV	IP-gateway\n%s
@@ -702,6 +702,7 @@ POWER
 	FR	Mise sous tension
 	IT	Accensione
 	NL	Voeding
+	NO	Strøm
 	PL	Zasilanie
 	RU	Питание
 
@@ -777,7 +778,7 @@ WALL_VOLTAGE
 	FR	Tension du secteur\n%s
 	IT	Voltaggio corrente\n%s
 	NL	Voltage stopcontact\n%s
-	NO	Spenning fra stikkontakt\n%s
+	NO	Nettspenning\n%s
 	PL	Napięcie w gniazdku\n%s
 	RU	Сеть питания\n%s
 	SV	Spänning för nätdrift\n%s
@@ -980,6 +981,8 @@ MENU_SERVER
 
 NETWORK_STATUS
 	EN	Network Status\n%s
+	NO	Nettverksstatus
+	SV	Nätverksstatus
 
 REPAIR_NETWORK
 	EN	Repair Network

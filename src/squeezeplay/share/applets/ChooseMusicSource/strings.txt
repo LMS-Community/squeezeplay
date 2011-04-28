@@ -238,7 +238,7 @@ SLIMSERVER_HELP
 	FR	Spécifiez l'adresse IP de l'ordinateur exécutant Squeezebox Server
 	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione Squeezebox Server
 	NL	Voer het IP-adres van de computer in waarop Squeezebox Server wordt uitgevoerd
-	NO	Oppgi ip-adressen til datamaskinen som kjører Squeezebox Server
+	NO	Oppgi IP-adressen til datamaskinen som kjører Squeezebox Server
 	PL	Wprowadź adres IP komputera, na którym działa program Squeezebox Server
 	RU	Введите IP-адрес компьютера, на котором используется Squeezebox Server
 	SV	Ange IP-adressen till datorn där Squeezebox Server körs

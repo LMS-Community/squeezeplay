@@ -794,7 +794,7 @@ STATIC_ADDRESS
 	FR	Entrer les informations concernant l'IP manuellement
 	IT	Immettere i dati IP manualmente
 	NL	IP-gegevens handmatig invoeren
-	NO	Angi ip-informasjon manuelt
+	NO	Angi IP-informasjon manuelt
 	PL	Wprowadź ręcznie informacje o adresie IP
 	RU	Ввести информацию IP вручную
 	SV	Ange IP-uppgifterna manuellt
@@ -839,7 +839,7 @@ NETWORK_IP_ADDRESS_HELP
 	FR	Aide sur l'adresse IP
 	IT	Guida sull'indirizzo IP
 	NL	Help bij IP-adres
-	NO	Hjelp med ip-adresse
+	NO	Hjelp med IP-adresse
 	PL	Pomoc na temat adresu IP
 	RU	Справка по IP-адресам
 	SV	Hjälp om IP-adresser
@@ -854,7 +854,7 @@ NETWORK_IP_ADDRESS_HELP_BODY
 	FR	Pour une connexion manuelle, nous avons besoin des informations suivantes:\n\n1. Adresse IP: l'adresse IP que vous voulez utiliser pour cette Squeezebox. 2. Masque de sous-réseau: le masque de sous-réseau de votre réseau. 3. Adresse IP de la passerelle: en général, l'adresse IP de votre routeur. 4. DNS: l'adresse IP du serveur DNS que vous utilisez.\n\nSi vos ordinateurs ou vos dispositifs réseau se connectent automatiquement normalement et que vous n'êtes pas sûr de la façon ni de la raison de configurer des paramètres DHCP manuels, vous pouvez contacter le fabricant de votre routeur ou l'administrateur réseau pour obtenir de l'aide ou vous rendre sur le site www.mysqueezebox.com/support.
 	IT	Per eseguire la connessione manualmente è necessario disporre delle seguenti informazioni:\n\n1. Indirizzo IP: l'indirizzo IP da utilizzare per questo Squeezebox. 2. Subnet mask: la subnet mask della rete utilizzata. 3. Indirizzo IP del gateway: di solito si tratta dell'indirizzo IP del router. 4. DNS: l'indirizzo IP del server DNS utilizzato.\n\nSe il computer o i dispositivi di rete si collegano automaticamente e non si è sicuri del motivo per cui impostare DHCP manualmente o di come farlo, contattare il produttore del router o l'amministratore di rete per assistenza, oppure visitare www.mysqueezebox.com/support.
 	NL	Voor een handmatige verbinding is de volgende informatie vereist:\n\n1. IP-adres: het IP-adres dat je voor deze Squeezebox wilt gebruiken. 2. Subnetmasker: het subnetmasker van je netwerk. 3. IP-adres van de gateway: meestal het IP-adres van je router. 4. DNS: het IP-adres van de DNS-server die je gebruikt.\n\nAls je computers of netwerkapparaten normaal gesproken automatisch verbinding maken, en je niet zeker weet hoe of waarom je DHCP-instellingen handmatig kunt instellen, kun je voor extra hulp contact opnemen met de netwerkbeheerder, de fabrikant van je router of je kunt www.mysqueezebox.com/support bezoeken.
-	NO	Hvis du vil kople til manuelt, trenger vi følgende informasjon:\n\n1. Ip-adresse: Ip-adressen du vil bruke for Squeezebox. 2. Nettverksmaske: Nettverksmasken til nettverket. 3. Ip-adresse for gateway: Vanligvis er dette ip-adressen til ruteren. 4. DNS: Ip-adressen til DNS-serveren du bruker.\n\nHvis datamaskinene eller nettverksenhetene dine vanligvis kopler seg til nettverket automatisk, og du ikke vet hvordan du skal angi DHCP-innstillinger manuelt, kan du kontakte ruterprodusenten eller nettverksansvarlig for å få hjelp, eller du kan gå til www.mysqueezebox.com/support.
+	NO	Hvis du vil kople til manuelt, trenger vi følgende informasjon:\n\n1. IP-adresse: IP-adressen du vil bruke for Squeezebox. 2. Nettverksmaske: Nettverksmasken til nettverket. 3. IP-adresse for gateway: Vanligvis er dette IP-adressen til ruteren. 4. DNS: IP-adressen til DNS-serveren du bruker.\n\nHvis datamaskinene eller nettverksenhetene dine vanligvis kopler seg til nettverket automatisk, og du ikke vet hvordan du skal angi DHCP-innstillinger manuelt, kan du kontakte ruterprodusenten eller nettverksansvarlig for å få hjelp, eller du kan gå til www.mysqueezebox.com/support.
 	PL	Aby nawiązać połączenie ręcznie, wymagane są następujące informacje:\n\n1. Adres IP – adres IP, który ma być używany dla tego urządzenia Squeezebox. 2. Maska podsieci – maska podsieci dla danej sieci. 3. Adres IP bramy – zwykle jest to adres IP routera. 4. DNS – adres IP używanego serwera DNS.\n\nJeśli komputery lub urządzenia sieciowe zwykle łączą się automatycznie i nie masz pewności, jak lub dlaczego należy skonfigurować ręczne ustawienia DHCP, skontaktuj się z producentem routera lub administratorem sieci, aby uzyskać dalszą pomoc, albo odwiedź stronę www.mysqueezebox.com/support.
 	RU	Для подключения вручную необходима следующая информация.\n\n1. IP-адрес, который будет использоваться для Squeezebox. 2. Маска подсети для вашей сети. 3. IP-адрес шлюза — обычно это IP-адрес маршрутизатора. 4. DNS — IP-адрес используемого DNS-сервера.\n\nЕсли ваш компьютер или сетевые устройства обычно подключаются автоматически и вы не знаете, как или зачем вручную устанавливать настройки DHCP, обратитесь за помощью к изготовителю маршрутизатора или администратору сети либо посетите www.mysqueezebox.com/support.
 	SV	Du måste ange följande information om du vill ansluta manuellt:\n\n1. IP-adress: IP-adressen som du vill att Squeezebox ska använda. 2. Nätmask: Nätverkets nätmask. 3. Gateway-IP-adress: Vanligtvis samma IP-adress som routern använder. 4. DNS: DNS-serverns IP-adress.\n\nOm datorerna eller nätverksenheterna i vanliga fall ansluter automatiskt och du inte vet hur du definierar DHCP manuellt, bör du ta kontakt med routerns tillverkare eller nätverksadministratören. Du kan även gå in på www.mysqueezebox.com/support.
@@ -884,7 +884,7 @@ NETWORK_GATEWAY
 	FR	Entrer l'adresse IP de la passerelle
 	IT	Immettere l'indirizzo IP del gateway
 	NL	IP-adres van de gateway invoeren
-	NO	Angi ip-adresse for gateway
+	NO	Angi IP-adresse for gateway
 	PL	Wprowadź adres IP bramy
 	RU	Введите IP-адрес шлюза
 	SV	Ange gateway-IP-adress
@@ -899,7 +899,7 @@ NETWORK_DNS
 	FR	Entrer l'IP du serveur DNS
 	IT	Immettere l'indirizzo IP del server DNS
 	NL	IP van DNS-server invoeren
-	NO	Angi ip for DNS-server
+	NO	Angi IP for DNS-server
 	PL	Wprowadź adres IP serwera DNS
 	RU	Введите IP-адрес DNS-сервера
 	SV	Ange IP-adressen för DNS-servern
@@ -989,7 +989,7 @@ NETWORK_CONNECTION_TYPE_WIRED
 	FR	Se connecter au réseau Ethernet
 	IT	Connetti a rete Ethernet
 	NL	Met ethernetnetwerk verbinden
-	NO	Kople til ethernet-nettverk
+	NO	Kople til Ethernet-nettverk
 	PL	Połącz z siecią Ethernet
 	RU	Подключиться к сети Ethernet
 	SV	Anslut till Ethernet-nätverk
@@ -1019,10 +1019,10 @@ NETWORK_CONNECTION_HELP_BODY
 	FR	Si vous souhaitez connecter cette Squeezebox à un routeur sans fil proche, sélectionnez "Sans fil".\n\nSi vous préférez utiliser une configuration câblée, connectez cette Squeezebox à votre routeur à l'aide d'un câble Ethernet/cat5 et sélectionnez "Filaire".
 	IT	Per connettere questo Squeezebox a un router senza fili situato nelle vicinanze, selezionare Senza fili.\n\nSe si preferisce utilizzare una configurazione con cavo, connettere lo Squeezebox al router con un cavo Ethernet/cat5 e selezionare Cablata.
 	NL	Als je deze Squeezebox met een draadloze router in de buurt wilt verbinden, selecteer dan 'draadloos'\n\nAls je liever een bedrade verbinding gebruikt, verbind deze Squeezebox dan met je router via een ethernet/cat5-draad en selecteer 'bedraad'.
-	NO	Hvis du vil kople Squeezebox til et tilgjengelig trådløst nettverk, velger du Trådløs.\n\nHvis du vil bruke en trådet tilkopling, kopler du Squeezebox til ruteren med en ethernet- eller cat5-kabel og velger Trådet.
+	NO	Hvis du vil kople Squeezebox til et tilgjengelig trådløst nettverk, velger du Trådløs.\n\nHvis du vil bruke en trådet tilkopling, kopler du Squeezebox til ruteren med en Ethernet- eller cat5-kabel og velger Trådet.
 	PL	Aby podłączyć to urządzenie Squeezebox do znajdującego się w pobliżu routera bezprzewodowego, wybierz opcję „Bezprzewodowa”.\n\nJeśli wolisz użyć konfiguracji przewodowej, podłącz to urządzenie Squeezebox do routera przy użyciu kabla Ethernet/cat5 i wybierz opcję „Przewodowa”.
 	RU	Если требуется подключить Squeezebox к ближайшему беспроводному маршрутизатору, выберите "беспроводная".\n\nЕсли вы хотите использовать проводную сеть, подключите Squeezebox к маршрутизатору кабелем ethernet/cat5 и выберите "проводная".
-	SV	Om du vill ansluta Squeezebox till en trådlös router väljer du trådlöst.\n\nOm du istället vill ansluta Squeezebox via en ethernet-/kategori 5-kabel väljer du kabelanslutet.
+	SV	Om du vill ansluta Squeezebox till en trådlös router väljer du trådlöst.\n\nOm du istället vill ansluta Squeezebox via en Ethernet-/kategori 5-kabel väljer du kabelanslutet.
 
 NETWORK_ETH_STATUS
 	CS	Stav
@@ -1184,7 +1184,7 @@ NETWORK_WPS_METHOD_PIN
 	FR	Utiliser la méthode du PIN
 	IT	Usa il metodo PIN
 	NL	PIN-methode gebruiken
-	NO	Bruk pin-metoden
+	NO	Bruk PIN-metoden
 	PL	Użyj metody z kodem PIN
 	RU	Использовать PIN-код
 	SV	Använd PIN-kod
@@ -1244,7 +1244,7 @@ NETWORK_ENTER_PIN
 	FR	Entrer le PIN
 	IT	Immettere il PIN
 	NL	PIN invoeren
-	NO	Angi pin
+	NO	Angi PIN
 	PL	Wprowadź kod PIN
 	RU	Введите PIN-код
 	SV	Ange PIN-kod
@@ -1259,7 +1259,7 @@ NETWORK_ENTER_PIN_HINT
 	FR	PIN: %s\n\nSuivez les instructions du fabricant de votre routeur pour la saisie de ce PIN. Pour des raisons de sécurité, vous disposez de 120 secondes pour saisir votre PIN. Appuyez sur "Démarrer le chronomètre" pour commencer.
 	IT	PIN: %s\n\nSeguire le istruzioni del produttore del router per immettere questo PIN. Per motivi di sicurezza sono disponibili 120 secondi per completare l'immissione del PIN. Selezionare Avvia timer per iniziare.
 	NL	PIN: %s\n\nVolg de instructies van de fabrikant van je router voor het invoeren van deze PIN. Om veiligheidsredenen heb je 120 seconden om de PIN-invoer te voltooien. Klik op 'Timer starten' om te beginnen.
-	NO	Pin: %s\n\nFølg instruksjonene fra ruterprodusenten for pin-metoden. Du har av sikkerhetsmessige årsaker 120 sekunder på deg til å legge inn pin-koden. Trykk på Start nedtelling for å begynne.
+	NO	PIN: %s\n\nFølg instruksjonene fra ruterprodusenten for PIN-metoden. Du har av sikkerhetsmessige årsaker 120 sekunder på deg til å legge inn PIN-koden. Trykk på Start nedtelling for å begynne.
 	PL	Kod PIN: %s\n\nPostępuj zgodnie z instrukcjami producenta routera, aby wprowadzić ten kod PIN. Ze względów bezpieczeństwa masz 120 sekund na wprowadzenie konta PIN. Kliknij przycisk Uruchom czasomierz, aby rozpocząć.
 	RU	PIN-код: %s\n\nВведите PIN-код согласно инструкциям изготовителя маршрутизатора. По соображениям безопасности на ввод PIN-кода дается 120 секунд. Чтобы начать, нажмите кнопку "Запуск таймера".
 	SV	PIN: %s\n\nAnge PIN-kod i enlighet med routertillverkarens instruktioner. Av säkerhetsskäl måste du ange koden inom 120 sekunder. Tryck på Påbörja nedräkning för att börja.
@@ -1334,7 +1334,7 @@ NETWORK_WPS_PROGRESS_PIN
 	FR	Entrer ce PIN\n%s
 	IT	Immettere questo PIN\n%s
 	NL	Deze PIN\n%s invoeren
-	NO	Angi denne pin-koden\n%s
+	NO	Angi denne PIN-koden\n%s
 	PL	Wprowadź ten kod PIN\n%s
 	RU	Введите этот PIN-код\n%s
 	SV	Ange PIN-kod\n%s
@@ -1424,7 +1424,7 @@ NETWORK_ATTACH_CABLE_DETAILED
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
 	IT	Impossibile rilevare una connessione cablata. Verificare il cavo Ethernet e accertarsi che la rete sia in esecuzione e accessibile.
 	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer je ethernetkabel en zorg ervoor dat je netwerk actief en beschikbaar is.
-	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre deg om at nettverket er oppe og tilgjengelig.
+	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre
 	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
 	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.
 	SV	Ingen kabelanslutning upptäcktes. Kontrollera ethernetkabeln och se till att nätverket är igång och tillgängligt.

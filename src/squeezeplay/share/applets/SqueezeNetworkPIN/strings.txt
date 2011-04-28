@@ -23,7 +23,7 @@ SQUEEZENETWORK_PIN
 	FR	PIN de la platine: %s
 	IT	PIN lettore: %s
 	NL	Muzieksysteem-PIN: %s
-	NO	Pin-kode for spiller: %s
+	NO	PIN-kode for spiller: %s
 	PL	Kod PIN odtwarzacza: %s
 	RU	PIN-код плеера: %s
 	SV	PIN-kod för spelare: %s
@@ -38,7 +38,7 @@ SQUEEZENETWORK_PIN_HELP
 	FR	Rendez-vous sur\n%s\net spécifiez votre code PIN pour accéder à votre compte. Appuyez sur le bouton central une fois que vous avez spécifié le code PIN.
 	IT	Visitare il sito Web\n%s\ne inserire il PIN per accedere all'account. Premere il pulsante centrale dopo avere inserito il PIN.
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
-	NO	Gå til\n%s\n og skriv inn pin-koden for å kople til kontoen din.  Trykk på midtknappen etter at du har oppgitt pin-koden.
+	NO	Gå til\n%s\n og skriv inn PIN-koden for å kople til kontoen din.  Trykk på midtknappen etter at du har oppgitt PIN-koden.
 	PL	Odwiedź\n%s\ni wprowadź kod PIN, aby połączyć się z kontem. Naciśnij środkowy przycisk po wprowadzeniu kodu PIN.
 	RU	Посетите\n%s\nи введите PIN-код, чтобы подключиться к своей учетной записи. После ввода PIN-кода нажмите центральную кнопку.
 	SV	Gå till\n%s\noch ange din PIN-kod för att ansluta till kontot.  Tryck på mittenknappen när du har angett PIN-koden.
@@ -53,7 +53,7 @@ SQUEEZENETWORK_NOT_LINKED
 	FR	Impossible de vérifier le code PIN. Spécifiez le code sur le site Web.
 	IT	Impossibile verificare il PIN. È stato inserito nel sito Web?
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
-	NO	Pin-koden ble ikke godkjent. Har du tastet den inn på nettsiden?
+	NO	PIN-koden ble ikke godkjent. Har du tastet den inn på nettsiden?
 	PL	Nie można zweryfikować kodu PIN. Czy został on wprowadzony w witrynie internetowej?
 	RU	Не удалось проверить PIN-код. Вы ввели его на веб-сайте?
 	SV	Det gick inte att verifiera PIN-koden.  Har du angett koden på webbplatsen?
