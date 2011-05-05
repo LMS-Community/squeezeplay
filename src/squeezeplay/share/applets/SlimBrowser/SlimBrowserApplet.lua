@@ -786,7 +786,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	-- debug.dump(request)
+	 debug.dump(request)
 
 	-- there's an existing network or server error, so trap this request and push to a diags troubleshooting window
 	-- Bug 15662: don't push a diags window when tinySC is available on the system and running
@@ -1863,6 +1863,17 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				return EVENT_CONSUME
 			end
 			
+
+			-- call local service which has previously been registered with applet manager
+			-- this allows SlimBrowser menus to link to local applets
+			if item.actions and item.actions.go and item.actions.go.localservice then
+				log:debug("_actionHandler calling ", item.actions.go.localservice)
+				menuItem:playSound("WINDOWSHOW")
+				appletManager:callService(item.actions.go.localservice, { text = item.text })
+				return EVENT_CONSUME
+			end
+       
+
 			-- check for a 'do' action (overrides a straight 'go')
 			-- actionName is corrected below!!
 			bAction = _safeDeref(chunk, 'base', 'actions', 'do')
