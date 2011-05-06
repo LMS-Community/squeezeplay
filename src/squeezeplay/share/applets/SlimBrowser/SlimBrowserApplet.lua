@@ -786,7 +786,7 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 	end
 
 	-- it's very helpful at times to dump the request table here to see what command is being issued
-	 debug.dump(request)
+	 --debug.dump(request)
 
 	-- there's an existing network or server error, so trap this request and push to a diags troubleshooting window
 	-- Bug 15662: don't push a diags window when tinySC is available on the system and running
