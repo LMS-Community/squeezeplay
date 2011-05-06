@@ -197,19 +197,7 @@ UPDATE_ALL
 	EN	Update All
 
 APPLET_WARN
-	CS	Aplety třetích stran nejsou podporovány a měly by být instalovány na vlastní riziko. Před instalací se ujistěte se, že důvěřujete autorovi apletu.
-	DA	Underprogrammer fra tredjepart understøttes ikke, og installationen sker på eget ansvar. Du skal sikre dig at du kan stole på udgiveren, inden du installerer underprogrammet.
-	DE	Plugins anderer Hersteller werden nicht unterstützt. Die Installation dieser Plugins erfolgt auf eigene Gefahr. Vergewissern Sie sich vor der Installation, dass Sie dem Hersteller des Applets vertrauen können.
-	EN	3rd party applets are unsupported and should be installed at your own risk.  Please check you trust the author of an applet before installing it.
-	ES	Los subprogramas de terceros no son compatibles y usted los instala por su cuenta y riesgo. Compruebe si el autor del subprograma es de confianza antes de la instalación.
-	FI	Muiden valmistajien sovelmia ei tueta, ja ne asennetaan omalla riskillä.  Varmista, että luotat sovelman tekijään, ennen kuin asennat sovelman.
-	FR	Les applets tiers ne sont pas pris en charge et leur installation s'effectue à vos propres risques. Vérifiez l'auteur de l'applet avant de commencer l'installation.
-	IT	Le applet di terzi non sono supportate e vengono installate a rischio dell'utente. Verificare che l'autore dell'applet sia affidabile prima di installarla.
-	NL	Applets van derden worden niet ondersteund en worden op eigen risico geïnstalleerd.  Kijk of je de auteur van een applet vertrouwt, voordat je het installeert.
-	NO	Tredjeparts tilleggsprogrammer støttes ikke, og du installerer dem på egen risiko. Kontroller at du stoler på den som har laget tilleggsprogrammet, før du installerer det.
-	PL	Aplety innych firm nie są obsługiwane i należy instalować je na własne ryzyko. Przed zainstalowaniem apletu należy upewnić się, że jego autorowi można zaufać.
-	RU	Java-приложения сторонних изготовителей не поддерживаются и должны устанавливаться под вашу ответственность. Перед установкой убедитесь, что вы доверяете автору Java-приложения.
-	SV	Det saknas stöd för appletar från tredje part. Sådana installeras på egen risk. Kontrollera vem som har skapat den och bestäm om du vill lita på den personen eller det företaget.
+	EN	Install at your own risk, 3rd party apps are unsupported by Logitech.\nPlease note: installing 3rd Party apps includes an automatic restart to complete installation.
 
 APPLET_RECONLY
 	CS	Pouze doporučené aplety
