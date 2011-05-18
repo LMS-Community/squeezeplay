@@ -85,6 +85,12 @@ end
 
 function nextImage(self, ordering)
 	oo.superclass(ImageSourceHttp).nextImage(self, ordering)
+
+	-- refresh url list when we've reached the last item
+	if self.currentImage >= #self.imgFiles then
+		self:readImageList()
+	end
+
 	self:requestImage()
 end
 
