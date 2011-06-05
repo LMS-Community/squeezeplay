@@ -3656,12 +3656,12 @@ function notify_playerPlaylistChange(self, player)
 
 		return
 	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
-	elseif playlistSize and emptyStep then
+	elseif playlistSize then
 		-- only move into NowPlaying if screensaver is allowed
 		if Window:getTopNonTransientWindow():canActivateScreensaver() then
 			_goNowPlaying(nil, true)
 		end
-		if emptyStep.window then
+		if emptyStep and emptyStep.window then
 			emptyStep.window:hide()
 		end
 		_emptyStep = nil
