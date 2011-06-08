@@ -991,7 +991,7 @@ CHECK_NETWORK
 	EN	Check Network
 
 CHECK_NETWORK_PART
-	EN	Check Network (part)
+	EN	Partial Network Check 
 
 STATUS_MSG
 	EN	%s
