@@ -41,6 +41,8 @@ by a L<jive.net.SocketHttp>.
 -- stuff we use
 local _assert, pairs, tostring, type = _assert, pairs, tostring, type
 
+local string    = require("string")
+
 local oo        = require("loop.base")
 local url       = require("socket.url")
 local table     = require("jive.utils.table")
@@ -49,7 +51,6 @@ local ltn12       = require("ltn12")
 local Task      = require("jive.ui.Task")
 
 local log       = require("jive.utils.log").logger("net.http")
-
 local jnt       = jnt
 local jive      = jive
 
@@ -274,10 +275,15 @@ function t_setResponseHeaders(self, statusCode, statusLine, headers)
 --		statusLine, 
 --		")"
 --	)
-
+	
+	local mappedHeaders = {}
+	for k, v in pairs(headers) do
+		mappedHeaders[string.lower(k)] = v;
+	end
+	
 	self.t_httpResponse.statusCode = statusCode
 	self.t_httpResponse.statusLine = statusLine
-	self.t_httpResponse.headers = headers
+	self.t_httpResponse.headers = mappedHeaders
 	
 	local sink = self.t_httpResponse.headersSink
 	
@@ -292,7 +298,7 @@ end
 -- returns a response header
 function t_getResponseHeader(self, key)
 	if self.t_httpResponse.headers then
-		return self.t_httpResponse.headers[key]
+		return self.t_httpResponse.headers[string.lower(key)]
 	else
 		return nil
 	end
@@ -356,7 +362,7 @@ function t_setResponseBody(self, data)
 		elseif (code == 301 or code == 302 or code == 307) and self.t_httpRequest.method == 'GET' and
 		       (not self.redirect or self.redirect < 5) then
 
-			local redirectUrl = self.t_httpResponse.headers["Location"]
+			local redirectUrl = self:t_getResponseHeader("Location")
 			log:info(code, " redirect: ", redirectUrl)
 
 			-- recreate headers and parsed uri
