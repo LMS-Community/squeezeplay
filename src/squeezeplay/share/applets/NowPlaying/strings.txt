@@ -27,7 +27,7 @@ SCREENSAVER_STOPPED
 	FR	Arrêté
 	IT	Arrestato
 	NL	Gestopt
-	NO	Ved stopp
+	NO	Stoppet
 	PL	Zatrzymane
 	RU	Остановлено
 	SV	Stoppad

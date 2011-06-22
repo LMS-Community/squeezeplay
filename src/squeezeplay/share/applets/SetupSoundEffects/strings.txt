@@ -95,7 +95,7 @@ SOUND_CHARGING
 SOUND_NONE
 	CS	Žádný
 	DA	Ingen
-	DE	Kein
+	DE	Keine
 	EN	None
 	ES	Ninguno
 	FI	Ei mitään

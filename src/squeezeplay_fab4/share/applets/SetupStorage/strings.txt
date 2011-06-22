@@ -234,7 +234,7 @@ SHARING_HOWTO
 	EN	Sharing allows you to transfer files from your Computer to Squeezebox Touch.\nUser: %s Password: %s
 	ES	La función Compartir le permite transferir archivos entre su ordenador y Squeezebox Touch.\nUsuario: %s Contraseña: %s
 	FI	Jakaminen mahdollistaa tiedostojen siirtämisen tietokoneelta Squeezebox Touchiin.\nKäyttäjä: %s Salasana: %s
-	FR	Le partage permet de transférer des fichiers depuis votre ordinateur vers Squeezebox Touch.\nUtilisateur: %s Mot de passe: %s
+	FR	Le partage permet de transférer des fichiers depuis votre ordinateur vers Squeezebox Touch.\Utilisateur: %s Mot de passe: %s
 	IT	La condivisione consente di trasferire file dal computer a Squeezebox Touch.\nUtente: %s Password: %s
 	NL	Door te delen kun je bestanden van je computer naar Squeezebox Touch overdragen.\nGebruiker: %s Wachtwoord: %s
 	NO	Ved å bruke deling kan du overføre filer fra datamaskinen til Squeezebox Touch.\nBruker: %s Passord: %s

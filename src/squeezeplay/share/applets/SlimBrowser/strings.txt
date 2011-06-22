@@ -50,7 +50,7 @@ SLIMBROWSER_ENTER_PASSWORD
 SLIMBROWSER_GO_HOME
 	CS	Přejít Domů
 	DA	Til startside
-	DE	Zurück zum Start
+	DE	Zurück zum Startmenü
 	EN	Go Home
 	ES	Go Home (Ir a casa)
 	FI	Alkuun
@@ -155,7 +155,7 @@ SLIMBROWSER_TRY_AGAIN
 SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	CS	Přepnout knihovnu
 	DA	Skift bibliotek
-	DE	Musiksammlung umschalten
+	DE	Bibliothek umschalten
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
@@ -352,7 +352,7 @@ SLIMBROWSER_SCANNER
 SLIMBROWSER_CONNECTING_TO
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung mit
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen
@@ -402,7 +402,7 @@ SLIMBROWSER_ALARM_SOUND_HELP
 	ES	En estos menús, seleccione un elemento para un sonido de alarma o pulse el botón de reproducción para obtener una vista previa.
 	FI	Näissä valikoissa valitset kohteen hälytysäänelle tai esikuuntelet painamalla soita.
 	FR	Dans ces menus, choisissez un son pour le réveil, ou appuyez sur le bouton Play pour lancer la lecture.
-	IT	In questi menu, selezionare un elemento per il suono della sveglia. Premere il tasto di riproduzione per generarne l'anteprima.
+	IT	In questi menu, selezionare un elemento per il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
 	NL	In deze menu's selecteer je een item als weksignaal of druk je op PLAY voor een voorbeeld.
 	NO	I disse menyene velger du et element du vil bruke som alarmlyd, eller trykker på avspillingsknappen for å høre lyden.
 	PL	W tych menu można wybrać element odpowiadający dźwiękowi alarmu i nacisnąć opcję odtwarzania, aby włączyć podgląd.

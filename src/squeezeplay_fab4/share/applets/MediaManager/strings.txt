@@ -80,7 +80,7 @@ UNSUPPORTED_DISK_FORMAT_INFO_SD
 EJECT_WARNING
 	CS	DŮLEŽITÉ UPOZORNĚNÍ
 	DA	VIGTIG MEDDELELSE
-	DE	Wichtig!
+	DE	Wichtig
 	EN	IMPORTANT NOTICE
 	ES	AVISO IMPORTANTE
 	FI	TÄRKEÄ HUOMAUTUS
@@ -129,7 +129,7 @@ NEW_STORAGE_MEDIA_INFO
 	EN	A new device has been added to "My Music" and is being scanned
 	ES	Se ha agregado un nuevo dispositivo a "Mi música" y se está examinando
 	FI	Oma musiikki -kohtaan on lisätty uusi laite, jota tarkistetaan
-	FR	Un nouveau dispositif a été ajouté à "Ma musique". Analyse en cours...
+	FR	Un nouveau dispositif a été ajouté à "Ma musique". Analyse en cours
 	IT	È stato aggiunto un nuovo dispositivo a Musica e in questo momento viene analizzato
 	NL	Er is een nieuw apparaat aan 'Mijn muziek' toegevoegd. Het wordt momenteel gescand
 	NO	En ny enhet er lagt til i Min musikk, og blir for øyeblikket gjennomsøkt
@@ -228,8 +228,8 @@ EJECT_DRIVE_SD
 	SV	Mata ut SD-kort
 
 DEVICE_REMOVAL_WARNING
-	CS	Upozornění.
-	DA	Advarsel
+	CS	Upozornění!
+	DA	Advarsel!
 	DE	Warnung!
 	EN	Warning!
 	ES	¡Advertencia!
@@ -729,7 +729,7 @@ EJECT_TRY_AGAIN
 	EN	Try again
 	ES	Vuelva a intentarlo
 	FI	Yritä uudelleen
-	FR	Réessayer
+	FR	Veuillez réessayer
 	IT	Riprova
 	NL	Opnieuw proberen
 	NO	Prøv igjen

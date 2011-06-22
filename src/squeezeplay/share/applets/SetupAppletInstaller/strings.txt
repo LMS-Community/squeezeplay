@@ -194,10 +194,34 @@ REINSTALL_ALL
 	SV	Installera om alla
 
 UPDATE_ALL
+	CS	Aktualizovat vše
+	DA	Opdater alt
+	DE	Alle aktualisieren
 	EN	Update All
+	ES	Actualizar todo
+	FI	Päivitä kaikki
+	FR	Tout mettre à jour
+	IT	Aggiorna tutto
+	NL	Alles bijwerken
+	NO	Oppdater alt
+	PL	Aktualizuj wszystko
+	RU	Обновить все
+	SV	Uppdatera allt
 
 APPLET_WARN
+	CS	Aplety třetích stran nejsou podporovány společností Logitech a měly by být instalovány na vlastní riziko.\nUpozornění: Instalace apletů třetích stran zahrnuje po dokončení instalace automatický restart.
+	DA	Installationen sker på eget ansvar, og tredjepartsprogrammer understøttes ikke af Logitech.\nBemærk: Hvis du installerer tredjepartsprogrammer, genstartes computeren automatisk for at fuldføre installationen.
+	DE	Installation auf eigene Gefahr. Anwendungen anderer Hersteller werden von Logitech nicht unterstützt.\nHinweis: Bei Anwendungen anderer Hersteller wird ein automatischer Neustart vorgenommen, um die Installation abzuschließen.
 	EN	Install at your own risk, 3rd party apps are unsupported by Logitech.\nPlease note: installing 3rd Party apps includes an automatic restart to complete installation.
+	ES	Instale por su cuenta y riesgo, Logitech no admite los subprogramas de terceros.\nTenga en cuenta que: la instalación de subprogramas incluye un reinicio automático para completar la instalación.
+	FI	Asennus tapahtuu omalla vastuulla, sillä Logitech ei tue muiden valmistajien sovelluksia.\nHuomaa: Muiden valmistajien sovellusten lataaminen sisältää automaattisen uudelleenkäynnistyksen, jotta asennus saadaan päätökseen.
+	FR	Les applications tierces ne sont pas pris en charge par Logitech et leur installation s'effectue à vos propres risques.\nVeuillez noter que l'installation d'une application tierce implique un redémarrage automatique.
+	IT	Le applicazioni di terzi non sono supportate da Logitech e vengono installate a rischio dell'utente.\nNota: il completamento dell'installazione di applicazioni di terzi richiede il riavvio automatico.
+	NL	Installeren op eigen risico, externe toepassingen worden niet ondersteund door Logitech.\nLet op: voor externe toepassingen wordt het systeem automatisch opnieuw opgestart om de installatie te voltooien.
+	NO	Tredjepartsapplikasjoner støttes ikke av Logitech, og du installerer dem på egen risiko.\nMerk: Det foretas en automatisk omstart etter installering av tredjepartsapplikasjoner, for å fullføre installasjonsprosessen.
+	PL	Aplikacje innych firm nie są obsługiwane przez firmę Logitech i należy instalować je na własne ryzyko.\nUwaga: instalacja aplikacji innych firm wiąże się z automatycznym ponownym uruchomieniem.
+	RU	Устанавливайте под вашу ответственность: компания Logitech не обеспечивает техническую поддержку сторонних приложений.\n Установка стороннего приложения включает в себя автоматический перезапуск.
+	SV	Du installerar på egen risk. Logitech stöder inte program från tredje part.\nObs! Installation av program från tredje part inbegriper automatisk omstart.
 
 APPLET_RECONLY
 	CS	Pouze doporučené aplety

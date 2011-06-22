@@ -247,7 +247,7 @@ SLIMSERVER_CONNECTING_TO
 #SLT: please keep this message as short as possible
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung mit
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen
@@ -337,7 +337,7 @@ SQUEEZEBOX_PROBLEM_HELP_GENERIC
 SQUEEZEBOX_PROBLEM_HELP
 	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je Squeezebox Server spuštěn.
 	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at Squeezebox Server kører.
-	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das Squeezebox Server ausgeführt wird.
+	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das Squeezebox Server ausgeführt wird.
 	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Squeezebox Server is currently running.
 	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que Squeezebox Server se está ejecutando en este momento.
 	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että Squeezebox Server on käynnissä.
@@ -347,7 +347,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	NO	Kunne ikke kople til %s. Kontroller at datamaskinen kjører og er koplet til det lokale nettverket, og at Squeezebox Server kjører.
 	PL	Nie można nawiązać połączenia z %s. Upewnij się, że komputer jest włączony i połączony z siecią lokalną, a program Squeezebox Server jest uruchomiony.
 	RU	Не удалось подключиться к %s. Убедитесь, что компьютер включен и подключен к локальной сети и что Squeezebox Server запущен.
-	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att Squeezebox Server körs.
+	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att Squeezebox Server körs för närvarande.
 
 SQUEEZECENTER_VERSION
 	CS	Aktualizovat software

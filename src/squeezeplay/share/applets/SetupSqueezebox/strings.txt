@@ -189,14 +189,14 @@ SQUEEZEBOX_ETHERNET_PROBLEM_HELP
 	DA	Squeezebox kunne ikke sluttes til dit Ethernet-netværk.
 	DE	Die Squeezebox konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
 	EN	Couldn't connect your Squeezebox to your Ethernet network.
-	ES	No se ha podido conectar Squeezebox a la red Ethernet.
+	ES	No se pudo conectar Squeezebox a la red Ethernet.
 	FI	Squeezeboxin ja ethernet-verkon välille ei voitu muodostaa yhteyttä.
 	FR	Impossible de connecter votre Squeezebox à votre réseau Ethernet.
 	IT	Impossibile connettere Squeezebox alla rete Ethernet.
 	NL	Kan je Squeezebox niet met je ethernetnetwerk verbinden.
 	NO	Kunne ikke kople Squeezebox til Ethernet-nettverket.
 	PL	Nie można podłączyć urządzenia Squeezebox do sieci Ethernet.
-	RU	Не удалось подключить Squeezebox к вашей сети ethernet.
+	RU	Не удалось подключить Squeezebox к вашей сети Ethernet.
 	SV	Det gick inte att ansluta Squeezebox till Ethernet-nätverket.
 
 SQUEEZEBOX_PROBLEM_HELP

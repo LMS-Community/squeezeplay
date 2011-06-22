@@ -146,7 +146,7 @@ NETWORK_STATE_DISCONNECTED
 	ES	Desconectado
 	FI	Yhteys katkaistu
 	FR	Déconnecté
-	IT	Disconnesso
+	IT	Scollegato
 	NL	Verbinding verbroken
 	NO	Frakoplet
 	PL	Rozłączono
@@ -1427,7 +1427,7 @@ NETWORK_ATTACH_CABLE_DETAILED
 	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre
 	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
 	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.
-	SV	Ingen kabelanslutning upptäcktes. Kontrollera ethernetkabeln och se till att nätverket är igång och tillgängligt.
+	SV	Ingen kabelanslutning upptäcktes. Kontrollera Ethernet-kabeln och se till att nätverket är igång och tillgängligt.
 
 NETWORK_NO_WIRELESS_DETAILED
 	CS	Nemohli jsme detekovat bezdrátové připojení. Zkontrolujte prosím, zda je vaše síť v provozu a k dispozici.

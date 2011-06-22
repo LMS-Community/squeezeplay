@@ -96,7 +96,7 @@ HTTP_AUTH_CONNECTING_TO
 #SLT: please keep this short (<30 characters)
 	CS	Připojování k
 	DA	Etablerer forbindelse til
-	DE	Verbindung mit
+	DE	Verbinden mit
 	EN	Connecting to
 	ES	Conectando a
 	FI	Yhdistää kohteeseen

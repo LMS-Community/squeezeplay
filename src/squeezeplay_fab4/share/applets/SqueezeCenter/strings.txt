@@ -24,7 +24,7 @@ STOP
 	EN	Stop Squeezebox Server
 	ES	Detener Squeezebox Server
 	FI	Pysäytä Squeezebox Server
-	FR	Arrêter Squeezebox Server
+	FR	Arrêter le Squeezebox Server
 	IT	Arresta Squeezebox Server
 	NL	Squeezebox Server stoppen
 	NO	Stopp Squeezebox Server
@@ -390,7 +390,7 @@ DISCOVERING_FILES_PROGRESS
 	NO	Ser etter filer
 	PL	Wykrywanie plików
 	RU	Обнаружение файлов
-	SV	Filerna söks igenom
+	SV	Leta filer
 
 DISCOVERING_DIRECTORY_PROGRESS
 	CS	Hledám soubory
@@ -405,7 +405,7 @@ DISCOVERING_DIRECTORY_PROGRESS
 	NO	Ser etter filer
 	PL	Wykrywanie plików
 	RU	Обнаружение файлов
-	SV	Letar filer
+	SV	Leta filer
 
 DIRECTORY_DELETED_PROGRESS
 	CS	Odebrat smazané soubory
@@ -532,12 +532,12 @@ PRECACHEARTWORK_PROGRESS
 	DA	Gem coverbilleder i cachelager
 	DE	Plattenhüllen werden zwischengespeichert
 	EN	Pre-caching Artwork
-	ES	Examen de carátula de álbum
+	ES	Guardando carátula en caché previamente
 	FI	Levykansien tallennus valmiiksi välimuistiin
-	FR	Mise en cache de la pochette
+	FR	Mise en pré-cache de la pochette
 	IT	Pre-cache copertina
 	NL	Hoesafbeeldingen vooraf in cache opslaan
-	NO	Søk etter albumomslag
+	NO	Hurtigbufring av omslag på forhånd
 	PL	Wstępnie buforowanie okładki
 	RU	Предварительное кэширование обложки
 	SV	Cachelagrat albumomslag
@@ -558,8 +558,19 @@ ARTWORK_PROGRESS
 	SV	Sökning efter albumomslag
 
 DOWNLOADARTWORK_PROGRESS
-	DE	Plattenhüllen werden heruntergeladen
+	CS	Stahování obalu alba
+	DA	Henter albumcovere
+	DE	Plattenhülle wird heruntergeladen
 	EN	Downloading Artwork
+	ES	Descargando carátula
+	FI	Kansitaidetta ladataan
+	FR	Téléchargement de la pochette
+	IT	Download copertina in corso
+	NL	Hoesafbeeldingen downloaden
+	NO	Laster ned omslag
+	PL	Pobieranie okładek
+	RU	Загрузка обложки
+	SV	Ladda ner albumomslag
 
 CLEANUP1_PROGRESS
 	CS	Čištění databáze č.1
@@ -738,7 +749,7 @@ CANT_COMPLETE_SCAN_INFO
 	NL	Squeezebox Touch moet %s vrije ruimte hebben op dit USB-/SD-apparaat om de collectie te kunnen scannen.
 	NO	Du trenger %s ledig plass på usb- eller SD-enheten for at Squeezebox Touch skal kunne utføre et biblioteksøk.
 	PL	%s jest wymagane na tym urządzeniu USB/SD, aby urządzenie Squeezebox Touch mogło przeszukać bibliotekę.
-	RU	Чтобы Squeezebox Touch выполнял просмотр библиотек, требуется %s свободного пространства устройства USB/SD.
+	RU	Чтобы Squeezebox Touch выполнял просмотр медиатек, требуется %s свободного пространства устройства USB/SD.
 	SV	Det går inte att utföra en bibliotekssökning om det inte finns minst %s ledigt på USB-enheten/SD-kortet.
 
 GO_TO_MY_MUSIC
@@ -798,7 +809,7 @@ SCANNING_LIBRARY
 	NL	Collectie wordt gescand: %s
 	NO	Søker i bibliotek: %s
 	PL	Przeszukiwanie biblioteki: %s
-	RU	Сканирование библиотеки: %s
+	RU	Сканирование медиатеки: %s
 	SV	Söker igenom biblioteket %s
 
 CANCEL
@@ -1014,7 +1025,7 @@ MY_MUSIC
 UPDATE
 	CS	Aktualizace softwaru
 	DA	Softwareopdatering
-	DE	Software-Aktualisierung
+	DE	Software-Update
 	EN	Software Update
 	ES	Actualización de software
 	FI	Ohjelmiston päivitys
@@ -1024,7 +1035,7 @@ UPDATE
 	NO	Programvareoppdatering
 	PL	Aktualizacja oprogramowania
 	RU	Обновление ПО
-	SV	Programuppdatering
+	SV	Programvaruuppdatering
 
 SKIP
 	CS	Přeskočit

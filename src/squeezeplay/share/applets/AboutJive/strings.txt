@@ -20,18 +20,18 @@ ABOUT_JIVE
 
 ABOUT_COPYRIGHT
 	CS	Copyright 2007-2011 Logitech
-	DA	Copyright 2007-2011 Logitech
+	DA	Copyright 2007-2011, Logitech.
 	DE	Copyright 2007–2011, Logitech.
 	EN	Copyright 2007-2011, Logitech.
-	ES	Copyright 2007-2011 Logitech
-	FI	Copyright 2007-2011 Logitech
-	FR	Copyright 2007-2011 Logitech
-	IT	Copyright 2002-2011 Logitech
+	ES	Copyright 2007-2011, Logitech.
+	FI	Copyright 2007-2011, Logitech.
+	FR	Copyright 2007-2011, Logitech.
+	IT	Copyright 2007-2011, Logitech.
 	NL	Copyright 2007-2011, Logitech.
-	NO	Opphavsrett 2007–2011 Logitech
-	PL	Copyright 2007-2011 Logitech
-	RU	© Logitech, 2002–2011
-	SV	Copyright 2007-2011, Logitech.
+	NO	Opphavsrett 2007–2011, Logitech.
+	PL	Copyright 2007-2011, Logitech.
+	RU	© Logitech, 2007–2011.
+	SV	© 2007–2011 Logitech.
 
 ABOUT_MAC_ADDRESS
 	CS	Adresa MAC: %s

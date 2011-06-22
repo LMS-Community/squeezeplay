@@ -35,15 +35,15 @@ BRIDGE_ENABLE
 BRIDGE_HOWTO
 	CS	Bezdrátové přemostění vám umožňuje připojení kabelového zařízení přes ethernetový port Squeezebox Touch k vaší bezdrátové síti.
 	DA	Hvis du bruger den trådløse bro, kan du slutte en ledningsforbundet enhed til det trådløse netværk vha. Ethernet-porten på Squeezebox Touch.
-	DE	Mit Wireless Bridging können Sie ein verkabeltes Gerät über den Ethernet-Anschluss der Squeezebox Touch mit Ihrem WLAN verbinden.
+	DE	Mit Wireless Bridging können Sie ein verkabeltes Gerät über den Ethernet-Anschluss der Squeezebox Touch mit Ihrem WLAN-Netzwerk verbinden.
 	EN	Wireless Bridging allows you to connect a wired device via Squeezebox Touch Ethernet port to your wireless network.
-	ES	El puente inalámbrico permite conectar un dispositivo con cable a través del puerto Ethernet de Squeezebox Touch a la red inalámbrica.
-	FI	Wireless Bridgingin avulla voit liittää langallisen laitteen Squeezebox Touchin ethernet-portin välityksellä langattomaan verkkoosi.
-	FR	Le pont sans fil vous permet de connecter un dispositif câblé à votre réseau sans fil via un port Ethernet de Squeezebox Touch.
+	ES	El puente inalámbrico permite conectar un dispositivo con cable a través del puerto Ethernet de Squeezbox Touch a la red inalámbrica.
+	FI	Wireless Bridgingin avulla voit liittää langallisen laitteen Squeezbox Touchin ethernet-portin välityksellä langattomaan verkkoosi.
+	FR	Possibilité de connecter un dispositif câblé à votre réseau sans fil via un port Ethernet de Squeezebox Touch.
 	IT	Wireless Bridging consente di collegare un dispositivo cablato alla rete senza fili tramite la porta Ethernet di Squeezebox Touch.
 	NL	Dankzij draadloze bridging kun je een apparaat met draad via de ethernetpoort van je Squeezebox Touch verbinden met je draadloze netwerk.
 	NO	Med Wireless Bridging kan du kople en trådet enhet til det trådløse nettverket via Ethernet-porten på Squeezebox Touch.
-	PL	Funkcja Most bezprzewodowy umożliwia podłączenie urządzenia przewodowego przez port ethernetowy urządzenia Squeezebox Touch do sieci bezprzewodowej.
-	RU	Режим беспроводного моста позволяет подключить проводное устройство к беспроводной сети через Ethernet-порт Squeezebox Touch.
-	SV	Med trådlös bryggning kan du ansluta till en trådbunden enhet via nätverksporten på Squeezebox Touch till ditt trådlösa nätverk.
+	PL	Funkcja Most bezprzewodowy umożliwia podłączenie urządzenia przewodowego przez port Ethernet urządzenia Squeezbox Touch do sieci bezprzewodowej.
+	RU	Режим беспроводного моста позволяет подключить проводное устройство к беспроводной сети через Ethernet-порт Squeezbox Touch.
+	SV	Med trådlös bryggning kan du ansluta till en trådbunden enhet via Ethernet-porten på Squeezebox Touch till ditt trådlösa nätverk.
 

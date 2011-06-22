@@ -717,7 +717,7 @@ IMAGE_VIEWER_CARD_NOT_DIRECTORY
 IMAGE_VIEWER_HTTP_PATH
 	CS	Definuje umístění seznamu obrázků
 	DA	Definerer hvor billedlisten er placeret
-	DE	Legt den Speicherort der Bildliste fest
+	DE	Legt den Speicherort der Bildliste fest.
 	EN	Defines the location of the image list
 	ES	Define la ubicación de la lista de imágenes
 	FI	Määrittää kuvaluettelon sijainnin
@@ -1101,7 +1101,7 @@ IMAGE_VIEWER_BROWSE_MEDIA
 	ES	Examinar medios
 	FI	Selaa mediaa
 	FR	Parcourir le support
-	IT	Sfoglia supporto
+	IT	Cerca nel supporto
 	NL	Media doorzoeken
 	NO	Bla i medium
 	PL	Przeglądaj multimedia
