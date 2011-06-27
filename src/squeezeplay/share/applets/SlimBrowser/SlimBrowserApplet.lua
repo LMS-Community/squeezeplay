@@ -782,6 +782,12 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 		serverData.allowMotion = true
 
 		appletManager:callService("openRemoteScreensaver", true, serverData)
+
+		local currentStep = _getCurrentStep()
+		if currentStep and currentStep.menu then
+			currentStep.menu:unlock()
+		end
+
 		return
 	end
 

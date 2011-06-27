@@ -269,7 +269,7 @@ end
 local function hideOnAllButtonInputListener(self, event)
 
 	if event:getType() == ACTION then
-		log:error("Hiding on unconsumed action")
+		log:warn("Hiding on unconsumed action")
 
 		self:playSound("WINDOWHIDE")
 		self:hide()
