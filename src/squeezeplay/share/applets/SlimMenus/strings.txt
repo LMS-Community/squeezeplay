@@ -71,7 +71,7 @@ MENUS_OTHER_LIBRARY
 	FI	Vaihda kirjastoa
 	FR	Changer de collection
 	IT	Cambia libreria
-	NL	Bibliotheek veranderen
+	NL	Collectie wisselen
 	NO	Bytt bibliotek
 	PL	Przełącz bibliotekę
 	RU	Сменить медиатеку

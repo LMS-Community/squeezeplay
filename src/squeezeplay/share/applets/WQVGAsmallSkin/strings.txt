@@ -57,7 +57,7 @@ ENTER
 	FI	Valmis
 	FR	Terminé
 	IT	Fatto
-	NL	Klaar
+	NL	Gereed
 	NO	Fullført
 	PL	Gotowe
 	RU	Готово

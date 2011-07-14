@@ -56,7 +56,7 @@ DONE
 	FI	Siinä kaikki!
 	FR	Vous avez terminé!
 	IT	Fatto!
-	NL	Dat is het!
+	NL	Klaar!
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!

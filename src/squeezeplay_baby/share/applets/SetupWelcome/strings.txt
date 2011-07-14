@@ -52,11 +52,11 @@ DONE
 	DA	Det var det!
 	DE	Fertig!
 	EN	That's it!
-	ES	Y esto es todo!
+	ES	¡Ya está!
 	FI	Siinä kaikki!
 	FR	Vous avez terminé!
 	IT	Fatto!
-	NL	Dat is het!
+	NL	Klaar!
 	NO	Ferdig!
 	PL	To już wszystko!
 	RU	Сделано!

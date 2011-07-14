@@ -70,7 +70,7 @@ BSP_BRIGHTNESS_ADJUST_HELP
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
 	FI	Voit säätää kirkkautta kiekolla.
-	FR	Utilisez la molette pour ajuster la luminosité.
+	FR	Utilisez la molette pour régler la luminosité.
 	IT	Usare la rotellina per regolare la luminosità.
 	NL	Gebruik het wiel om de helderheid aan te passen.
 	NO	Bruk hjulet til å justere lysstyrken.
@@ -145,7 +145,7 @@ BSP_BRIGHTNESS_MIN_ADJUST_HELP
 	EN	Use the wheel to adjust the minimal brightness.
 	ES	Use la rueda para ajustar el brillo al mínimo.
 	FI	Voit säätää kirkkautta kiekolla.
-	FR	Utilisez la molette pour ajuster la luminosité.
+	FR	Utilisez la molette pour régler la luminosité minimale.
 	IT	Usare la rotellina per regolare la luminosità minima.
 	NL	Gebruik het wiel om de minimale helderheid aan te passen.
 	NO	Bruk hjulet til å justere minimal lysstyrke.
