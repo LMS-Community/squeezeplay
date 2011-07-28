@@ -1105,7 +1105,7 @@ end
 function canActivateScreensaver(self)
 	if self.allowScreensaver == nil then
 		return true
-	elseif self.allowScreensaver == "function" then
+	elseif type(self.allowScreensaver) == "function" then
 		return self.allowScreensaver()
 	else
 		return self.allowScreensaver
