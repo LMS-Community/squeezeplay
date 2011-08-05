@@ -20,7 +20,7 @@ Applet related methods are described in L<jive.Applet>.
 local ipairs, pairs, io, string, tostring, pcall = ipairs, pairs, io, string, tostring, pcall
 
 local oo               = require("loop.simple")
-local hasSqueezeos, squeezeos        = pcall('require', "squeezeos_bsp")
+local hasSqueezeos, squeezeos = pcall(function() return require("squeezeos_bsp") end)
 
 local Applet           = require("jive.Applet")
 local Choice	       = require("jive.ui.Choice")

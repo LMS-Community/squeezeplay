@@ -1419,11 +1419,11 @@ NETWORK_ATTACH_CABLE_DETAILED
 	DA	Der blev ikke fundet en kableforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	We can't detect a wired connection. Please check your Ethernet cable, and make sure your network is running and available.
-	ES	No se puede detectar una conexión con cable. Compruebe el cable cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
+	ES	No se puede detectar una conexión con cable. Compruebe el cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
 	IT	Impossibile rilevare una connessione cablata. Verificare il cavo Ethernet e accertarsi che la rete sia in esecuzione e accessibile.
-	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer je ethernetkabel en zorg ervoor dat je netwerk actief en beschikbaar is.
+	NL	Er is geen bedrade aansluiting gedetecteerd. Controleer je ethernetdraad en zorg ervoor dat je netwerk actief en beschikbaar is.
 	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre
 	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
 	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.

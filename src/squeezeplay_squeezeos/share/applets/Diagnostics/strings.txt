@@ -1040,19 +1040,19 @@ MENU_SERVER
 	SV	Serverinformation
 
 NETWORK_STATUS
-	CS	Stav sítě\n%s
-	DA	Netværksstatus\n%s
-	DE	Netzwerkstatus\n%s
-	EN	Network Status\n%s
-	ES	Estado de red\n%s
-	FI	Verkon tila\n%s
-	FR	Etat du réseau\n%s
-	IT	Stato della rete\n%s
-	NL	Netwerkstatus\n%s
-	NO	Nettverksstatus\n%s
-	PL	Stan sieci\n%s
-	RU	Статус сети\n%s
-	SV	Nätverksstatus\n%s
+	CS	Stav sítě
+	DA	Netværksstatus
+	DE	Netzwerkstatus
+	EN	Network Status
+	ES	Estado de red
+	FI	Verkon tila
+	FR	Etat du réseau
+	IT	Stato della rete
+	NL	Netwerkstatus
+	NO	Nettverksstatus
+	PL	Stan sieci
+	RU	Статус сети
+	SV	Nätverksstatus
 
 REPAIR_NETWORK
 	CS	Opravit síť
@@ -1088,7 +1088,7 @@ CHECK_NETWORK_PART
 	CS	Zkontrolovat síť (část)
 	DA	Kontroller netværk (delvist)
 	DE	Netzwerk prüfen (teilweise)
-	EN	Partial Network Check
+	EN	Check Network (part)
 	ES	Comprobación de red parcial
 	FI	Tarkista verkko (osittain)
 	FR	Vérifier partiellement le réseau
