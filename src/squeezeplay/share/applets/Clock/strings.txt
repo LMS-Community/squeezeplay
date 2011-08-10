@@ -199,7 +199,7 @@ SCREENSAVER_CLOCK_MONTH_07
 	SV	juli
 
 SCREENSAVER_CLOCK_MONTH_08
-	CS	Říjen
+	CS	Srpen
 	DA	august
 	DE	August
 	EN	August
