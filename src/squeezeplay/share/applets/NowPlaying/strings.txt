@@ -19,18 +19,18 @@ SCREENSAVER_NOWPLAYING
 
 SCREENSAVER_STOPPED
 	CS	Při zastavení
-	DA	Når den er stoppet
-	DE	Wenn angehalten
-	EN	When stopped
-	ES	Al detener
-	FI	Keskeytettynä
-	FR	A l'arrêt
-	IT	Quando la riproduzione è interrotta
-	NL	Wanneer gestopt
-	NO	Ved stopp
-	PL	Po zatrzymaniu
-	RU	При остановке
-	SV	I stoppat läge
+	DA	Stoppet
+	DE	Angehalten
+	EN	Stopped
+	ES	Detenido
+	FI	Pysäytetty
+	FR	Arrêté
+	IT	Arrestato
+	NL	Gestopt
+	NO	Stoppet
+	PL	Zatrzymane
+	RU	Остановлено
+	SV	Stoppad
 
 SCREENSAVER_PAUSED
 	CS	Pozastaveno
@@ -48,19 +48,19 @@ SCREENSAVER_PAUSED
 	SV	Pausad
 
 SCREENSAVER_OFF
-	CS	Při vypnutí
-	DA	Når den er slukket
-	DE	Wenn aus
-	EN	When off
-	ES	Al apagar
-	FI	Laitteen ollessa pois päältä
-	FR	En état éteint
-	IT	Se disattivato
-	NL	Wanneer uit
+	CS	Vypnuto
+	DA	Fra
+	DE	Aus
+	EN	Off
+	ES	Apagado
+	FI	Ei käytössä
+	FR	Désactivé
+	IT	Disattivato
+	NL	Uit
 	NO	Når av
-	PL	Po wyłączeniu
-	RU	При выкл.
-	SV	I avstängt läge
+	PL	Wył.
+	RU	Выкл
+	SV	Av
 
 SCREENSAVER_NOWPLAYING_OF
 	CS	%s z %s

@@ -792,7 +792,7 @@ function openSettings(self, menuItem)
 	local menu = SimpleMenu("menu",
 		{
 			{ 
-				text = self:string('SCREENSAVER_PLAYING'),
+				text = self:string('SCREENSAVER_WHEN_PLAYING'),
 				weight = 1,
 				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
@@ -800,7 +800,7 @@ function openSettings(self, menuItem)
 					   end
 			},
 			{
-				text = self:string("SCREENSAVER_STOPPED"),
+				text = self:string("SCREENSAVER_WHEN_STOPPED"),
 				weight = 1,
 				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
@@ -821,7 +821,7 @@ function openSettings(self, menuItem)
 	if Player:getLocalPlayer() then
 		menu:addItem(
 			{
-				text = self:string("SCREENSAVER_OFF"),
+				text = self:string("SCREENSAVER_WHEN_OFF"),
 				weight = 2,
 				sound = "WINDOWSHOW",
 				callback = function(event, menu_item)
