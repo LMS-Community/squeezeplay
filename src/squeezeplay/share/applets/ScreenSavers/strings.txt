@@ -17,7 +17,7 @@ SCREENSAVERS
 	RU	Экранные заставки
 	SV	Skärmsläckare
 
-SCREENSAVER_PLAYING
+SCREENSAVER_WHEN_PLAYING
 	CS	Při přehrávání
 	DA	Under afspilning
 	DE	Bei Wiedergabe
@@ -32,7 +32,7 @@ SCREENSAVER_PLAYING
 	RU	При воспроизведении
 	SV	Vid uppspelning
 
-SCREENSAVER_OFF
+SCREENSAVER_WHEN_OFF
 	CS	Při vypnutí
 	DA	Når den er slukket
 	DE	Wenn aus
@@ -47,7 +47,7 @@ SCREENSAVER_OFF
 	RU	При выкл.
 	SV	I avstängt läge
 
-SCREENSAVER_STOPPED
+SCREENSAVER_WHEN_STOPPED
 	CS	Při zastavení
 	DA	Når den er stoppet
 	DE	Wenn angehalten
