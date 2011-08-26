@@ -155,8 +155,8 @@ luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
 
 luamd5:
-	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
-	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
+	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-bundle -undefined dynamic_lookup" CC="${CC}"
+	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-bundle -undefined dynamic_lookup" CC="${CC}"
 	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
 	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
 
