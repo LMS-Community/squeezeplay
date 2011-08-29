@@ -424,7 +424,7 @@ function connectIp(self, serverip, slimserverip)
 		end
 		serverip = self.lastServerip
 	elseif serverip == 1 then
-		serverip = "www.squeezenetwork.com"
+		serverip = self.jnt:getSNHostname()
 	elseif serverip == 2 then
 		serverip = "www.test.squeezenetwork.com"
 	else
