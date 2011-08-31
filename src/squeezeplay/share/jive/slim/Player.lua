@@ -463,8 +463,8 @@ function updatePlayerInfo(self, slimServer, playerInfo, useSequenceNumber, isSeq
 		self.jnt:notify('playerNeedsUpgrade', self, self:isNeedsUpgrade(), self:isUpgrading())
 	end
 
-	-- Check if the player name has changed
-	if oldInfo.name ~= self.info.name then
+	-- Check if the player name has changed & is defined
+	if self.info.name and oldInfo.name ~= self.info.name then
 		self.jnt:notify('playerNewName', self, self.info.name)
 	end
 
