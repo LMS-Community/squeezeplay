@@ -41,6 +41,8 @@ function __init(self, applet)
 	log:info("initialize ImageSourceHttp")
 	obj = oo.rawnew(self, ImageSource(applet))
 
+	obj:_fixImageListURL()
+
 	obj.imgFiles = {}
 	obj:readImageList()
 
@@ -149,6 +151,8 @@ function settings(self, window)
 			log:debug("Input " .. value)
 			self.applet:getSettings()["http.path"] = value
 			self.applet:storeSettings()
+			
+			self:_fixImageListURL();
 
 			window:playSound("WINDOWSHOW")
 			window:hide(Window.transitionPushLeft)
@@ -164,6 +168,21 @@ function settings(self, window)
 	self:_helpAction(window, "IMAGE_VIEWER_HTTP_PATH", "IMAGE_VIEWER_HTTP_PATH_HELP")
 
 	return window
+end
+
+
+-- in an attempt to escape the URL input screen people often accidentally invalidate the default url
+-- if the new value is a sub-string of the default value, revert it
+function _fixImageListURL(self)
+	local urlString  = self.applet:getSettings()["http.path"]
+	local defaultUrl = self.applet:getDefaultSettings()["http.path"]
+	
+	if (urlString != defaultUrl and string.find(defaultUrl, urlString, 1, true)) then
+		log:warn("Invalid URL: " .. urlString)
+		log:warn("Replacing with default value")
+		self.applet:getSettings()["http.path"] = defaultUrl
+		self.applet:storeSettings()
+	end 
 end
 
 --[[
