@@ -3661,19 +3661,7 @@ function notify_playerPlaylistChange(self, player)
 		appletManager:callService("hideNowPlaying")
 
 		return
-	-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
-	elseif _player:isPowerOn() and playlistSize then
-		-- only move into NowPlaying if screensaver is allowed
-		if Window:getTopNonTransientWindow():canActivateScreensaver() then
-			_goNowPlaying(nil, true)
-		end
-		if emptyStep and emptyStep.window then
-			emptyStep.window:hide()
-		end
-		_emptyStep = nil
-	
 	end
-
 	-- update the window
 	step.db:updateStatus(playerStatus)
 	step.menu:reLayout()
@@ -3696,7 +3684,20 @@ function notify_playerTrackChange(self, player, nowplaying)
 	end
 
 	local playerStatus = player:getPlayerStatus()
+	local playlistSize = _player:getPlaylistSize()
 	local step = _statusStep
+
+	if _player:isPowerOn() and playlistSize then
+		-- only move into NowPlaying if screensaver is allowed 
+		if Window:getTopNonTransientWindow():canActivateScreensaver() then
+			_goNowPlaying(nil, true)
+		end
+		-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
+		if emptyStep and emptyStep.window then
+			emptyStep.window:hide()
+		end
+		_emptyStep = nil
+	end
 
 	step.db:updateStatus(playerStatus)
 	if step.db:playlistIndex() then
@@ -3812,6 +3813,7 @@ function _attachPlayer(self, player)
 		_statusSink
 	)
 	_statusStep = step
+	_statusStep.window:setAllowScreensaver(false)
 	
 	-- make sure it has our modifier (so that we use different default action in Now Playing)
 	_statusStep.actionModifier = "-status"
