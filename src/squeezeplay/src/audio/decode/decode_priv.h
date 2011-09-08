@@ -152,6 +152,7 @@ struct decode_audio {
 	/* sync state */
 	size_t skip_ahead_bytes;
 	int add_silence_ms;
+	u32_t start_at_jiffies;
 
 	/* effect_fifo locks: effect_gain */
 	struct fifo effect_fifo;
