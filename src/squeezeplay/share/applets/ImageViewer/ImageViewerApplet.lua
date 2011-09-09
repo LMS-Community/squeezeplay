@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs, tostring = ipairs, tostring
+local ipairs, tostring, collectgarbage = ipairs, tostring, collectgarbage
 
 local os			= require("os")
 local oo			= require("loop.simple")
@@ -867,7 +867,12 @@ function _renderImage(self)
 		end
 	)
 	
+
 	log:debug("image rendering done")
+
+	-- free memory as quickly as possible - resizing large images might have consumed a lot of it
+	collectgarbage("collect")
+
 	self.isRendering = false
 	self.task:removeTask()
 end
