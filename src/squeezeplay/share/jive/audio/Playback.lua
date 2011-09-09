@@ -117,6 +117,8 @@ function __init(self, jnt, slimproto)
 		slimproto:capability("Spdirect", cap)
 	end
 
+	slimproto:capability("ImmediateCrossfade")
+
 	slimproto:capability("test")
 
 	-- signal we are Rtmp capable, but don't load module until used

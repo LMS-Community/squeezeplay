@@ -257,6 +257,13 @@ static void decode_start_handler(void) {
 	}
 	mqueue_read_complete(&decode_mqueue);
 
+	if (decoder) {
+		decoder->stop(decoder_data);
+
+		decoder = NULL;
+		decoder_data = NULL;
+	}
+
 	for (i=0; i<(sizeof(all_decoders)/sizeof(struct decode_module *)); i++) {
 		if (all_decoders[i]->id == decoder_id) {
 			decoder = all_decoders[i];

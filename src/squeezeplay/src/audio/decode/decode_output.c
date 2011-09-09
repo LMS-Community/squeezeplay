@@ -285,11 +285,23 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		
 		if (decode_transition_type & TRANSITION_CROSSFADE) {
 			size_t crossfadeBytes;
+			fft_fixed interval;
+
+			if (decode_transition_type & TRANSITION_IMMEDIATE) {
+				size_t wanted = SAMPLES_TO_BYTES(decode_transition_period * decode_audio->track_sample_rate);
+				size_t used = fifo_bytes_used(&decode_audio->fifo);
+
+				if (used > wanted) {
+					size_t skip = used - wanted;
+					if (skip > decode_audio->fifo.wptr) decode_audio->fifo.wptr += decode_audio->fifo.size;
+					decode_audio->fifo.wptr -= skip;
+				}
+			}
 
 			/* We are being asked to do a crossfade. Find out
 			 * if it is possible.
 			 */
-			fft_fixed interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
+			interval = determine_transition_interval(sample_rate, decode_transition_period, &crossfadeBytes);
 
 			if (interval) {
 				LOG_DEBUG(log_audio_decode, "Starting CROSSFADE over %d seconds, requiring %d bytes", fixed_to_s32(interval), (unsigned int)crossfadeBytes);
@@ -298,7 +310,8 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 				crossfade_ptr = decode_audio->fifo.wptr;
 
 				/* Buffer position to start crossfade */
-				decode_audio->fifo.wptr = (crossfadeBytes <= decode_audio->fifo.wptr) ? (decode_audio->fifo.wptr - crossfadeBytes) : (decode_audio->fifo.wptr - crossfadeBytes + decode_audio->fifo.size);
+				if (crossfadeBytes > decode_audio->fifo.wptr) decode_audio->fifo.wptr += decode_audio->fifo.size;
+				decode_audio->fifo.wptr -= crossfadeBytes;
 
 				/* Gain steps */
 				transition_gain_step = fixed_div(FIXED_ONE, fixed_mul(interval, s32_to_fixed(TRANSITION_STEPS_PER_SECOND)));
@@ -490,6 +503,9 @@ void decode_output_set_transition(u32_t type, u32_t period) {
 
 		/* Halve the period for fade in/fade out */
 		decode_transition_period >>= 1;
+		break;
+	case 5:
+		decode_transition_type = TRANSITION_CROSSFADE | TRANSITION_IMMEDIATE;
 		break;
 	}
 }

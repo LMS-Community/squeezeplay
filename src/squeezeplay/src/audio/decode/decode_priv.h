@@ -20,6 +20,7 @@ extern LOG_CATEGORY *log_audio_output;
 #define TRANSITION_CROSSFADE    0x1
 #define TRANSITION_FADE_IN      0x2
 #define TRANSITION_FADE_OUT     0x4
+#define TRANSITION_IMMEDIATE    0x8
 
 /* Transition steps per second should be a common factor
  * of all supported sample rates.
