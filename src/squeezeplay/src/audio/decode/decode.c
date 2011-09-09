@@ -123,26 +123,18 @@ static void decode_resume_decoder_handler(void) {
 
 
 static void decode_resume_audio_handler(void) {
-	int start_interval = 0;
 	Uint32 start_jiffies;
 
 	start_jiffies = mqueue_read_u32(&decode_mqueue);
 	mqueue_read_complete(&decode_mqueue);
 	
-	if (start_jiffies) {
-		start_interval = start_jiffies - jive_jiffies();
-	}
-	
-	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_interval=%d", start_interval);
+	LOG_DEBUG(log_audio_decode, "decode_resume_audio_handler start_jiffies=%u", start_jiffies);
 	debug_fullness();
 
 	decode_audio_lock();
 
-	if (start_interval) {
-		decode_audio->add_silence_ms = start_interval;
-	}
-
 	if (((decode_audio->state & (DECODE_STATE_RUNNING | DECODE_STATE_AUTOSTART)) == 0)) {
+		decode_audio->start_at_jiffies = start_jiffies;
 		decode_audio->state = DECODE_STATE_AUTOSTART;
 		decode_audio->f->resume();
 	}
@@ -264,6 +256,13 @@ static void decode_start_handler(void) {
 		params[i] = mqueue_read_u8(&decode_mqueue);
 	}
 	mqueue_read_complete(&decode_mqueue);
+
+	if (decoder) {
+		decoder->stop(decoder_data);
+
+		decoder = NULL;
+		decoder_data = NULL;
+	}
 
 	for (i=0; i<(sizeof(all_decoders)/sizeof(struct decode_module *)); i++) {
 		if (all_decoders[i]->id == decoder_id) {

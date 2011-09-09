@@ -47,6 +47,11 @@ static Uint32 callback(Uint32 interval) {
 			&& bytes_used >= SAMPLES_TO_BYTES((u32_t)((decode_audio->output_threshold * stream_sample_rate) / 10))
 		)
 	{
+		u32_t now = jive_jiffies();
+
+		if (decode_audio->start_at_jiffies > now && now > decode_audio->start_at_jiffies - 5000)
+			decode_audio->add_silence_ms = decode_audio->start_at_jiffies - now;
+
 		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
 		decode_audio->state |= DECODE_STATE_RUNNING;
 	}

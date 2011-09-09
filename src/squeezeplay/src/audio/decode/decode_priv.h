@@ -20,6 +20,7 @@ extern LOG_CATEGORY *log_audio_output;
 #define TRANSITION_CROSSFADE    0x1
 #define TRANSITION_FADE_IN      0x2
 #define TRANSITION_FADE_OUT     0x4
+#define TRANSITION_IMMEDIATE    0x8
 
 /* Transition steps per second should be a common factor
  * of all supported sample rates.
@@ -152,6 +153,7 @@ struct decode_audio {
 	/* sync state */
 	size_t skip_ahead_bytes;
 	int add_silence_ms;
+	u32_t start_at_jiffies;
 
 	/* effect_fifo locks: effect_gain */
 	struct fifo effect_fifo;

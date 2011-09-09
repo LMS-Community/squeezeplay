@@ -286,6 +286,12 @@ static void playback_callback(struct decode_alsa *state,
 			&& decode_frames > (decode_audio->output_threshold * state->pcm_sample_rate / 10)
 		)
 	{
+		u32_t now = jive_jiffies();
+
+		if (decode_audio->start_at_jiffies > now && now > decode_audio->start_at_jiffies - 5000)
+			/* This does not consider any delay in the ALSA output chain - usually 1 period which is 10ms by default */
+			decode_audio->add_silence_ms = decode_audio->start_at_jiffies - now;
+
 		decode_audio->state &= ~DECODE_STATE_AUTOSTART;
 		decode_audio->state |= DECODE_STATE_RUNNING;
 	}
