@@ -3661,7 +3661,18 @@ function notify_playerPlaylistChange(self, player)
 		appletManager:callService("hideNowPlaying")
 
 		return
+	-- Bug 17529: Only push to NowPlaying if the playlist now has size, and an emptyStep window currently exists
+	-- in other words, we're moving from an empty playlist (special case NP window that says "Nothing") to a non-empty playlist
+	-- so in this case only, we need to explicitly push to NowPlaying and remove the emptyStep window
+	elseif playlistSize and emptyStep and emptyStep.window then 
+		-- only move into NowPlaying if screensaver is allowed
+		if Window:getTopNonTransientWindow():canActivateScreensaver() then
+			_goNowPlaying(nil, true)
+		end
+		emptyStep.window:hide()
+		_emptyStep = nil
 	end
+
 	-- update the window
 	step.db:updateStatus(playerStatus)
 	step.menu:reLayout()
@@ -3686,18 +3697,6 @@ function notify_playerTrackChange(self, player, nowplaying)
 	local playerStatus = player:getPlayerStatus()
 	local playlistSize = _player:getPlaylistSize()
 	local step = _statusStep
-
-	if _player:isPowerOn() and playlistSize then
-		-- only move into NowPlaying if screensaver is allowed 
-		if Window:getTopNonTransientWindow():canActivateScreensaver() then
-			_goNowPlaying(nil, true)
-		end
-		-- make sure we have step.window replace emptyStep.window when there are tracks and emptyStep exists
-		if emptyStep and emptyStep.window then
-			emptyStep.window:hide()
-		end
-		_emptyStep = nil
-	end
 
 	step.db:updateStatus(playerStatus)
 	if step.db:playlistIndex() then
