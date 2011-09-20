@@ -3664,7 +3664,7 @@ function notify_playerPlaylistChange(self, player)
 	-- Bug 17529: Only push to NowPlaying if the playlist now has size, and an emptyStep window currently exists
 	-- in other words, we're moving from an empty playlist (special case NP window that says "Nothing") to a non-empty playlist
 	-- so in this case only, we need to explicitly push to NowPlaying and remove the emptyStep window
-	elseif playlistSize and emptyStep and emptyStep.window then 
+	elseif _player:isPowerOn() and playlistSize and emptyStep and emptyStep.window then 
 		-- only move into NowPlaying if screensaver is allowed
 		if Window:getTopNonTransientWindow():canActivateScreensaver() then
 			_goNowPlaying(nil, true)
