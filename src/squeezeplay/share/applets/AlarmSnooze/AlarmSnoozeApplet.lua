@@ -446,6 +446,9 @@ function soundFallbackAlarm(self)
 	self.localPlayer:volumeLocal(self.alarmVolume)
 	self.localPlayer:stop(true)
 	self.alarmInProgress = 'rtc'
+	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
+	-- We need to set a valid alarm state for the fallback case
+	self.localPlayer:setAlarmState("active_fallback")
 	self.localPlayer:playFileInLoop(self.alarmTone)
 	self.fadeInTimer = Timer(200, 
 			function ()
@@ -498,7 +501,9 @@ function openAlarmWindow(self, caller)
 
 	log:warn('openAlarmWindow()', caller, ' ', self.localPlayer:isConnected())
 
-	self:_alarmThroughSpeakers()
+	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
+	-- Calling _alarmThroughSpeakers() here is too early for the fallback alarm
+	--self:_alarmThroughSpeakers()
 
 	-- if UI is controlling a different player, switch to the local player
 	-- if notify_playerLoaded needs invocation prior to player change taking effect then refire openAlarmWindow() at that time
@@ -557,6 +562,10 @@ function openAlarmWindow(self, caller)
 		log:error('openAlarmWindow: unknown caller')
 	end
 	
+	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
+	-- Calling _alarmThroughSpeakers() here works for regular, fallback alarm and snooze
+	self:_alarmThroughSpeakers()
+
 	if self.alarmWindow then
 		return
 	end

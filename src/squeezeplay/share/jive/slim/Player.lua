@@ -1538,6 +1538,13 @@ function getAlarmState(self)
 	return self.alarmState
 end
 
+
+-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
+-- We need to be able to set the alarm state for fallback alarms
+function setAlarmState(self, state)
+	self.alarmState = state
+end
+
 -- getPlayMode returns nil|stop|play|pause
 --
 function getPlayMode(self)
