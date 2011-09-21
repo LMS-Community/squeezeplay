@@ -989,8 +989,8 @@ function setPowerState(self, state)
 
 	self.powerState = state
 
-	-- Bug 16100, only setEndpoint if alarm is not active
-	if self.player and (self.player:getAlarmState() == 'active' or self.player:getAlarmState() == 'snooze') then
+	-- Bug 16100, only setEndpoint if alarm is not in state: active, snooze or active_fallback
+	if self.player and (self.player:getAlarmState() == 'active' or self.player:getAlarmState() == 'snooze' or self.player:getAlarmState() == 'active_fallback') then
 		-- leave audio coming out speaker when alarm is active or in snooze (alarm forces output out speaker)
 		log:info('Alarm either in progress or snooze, do not call _setEndpoint()')
 	else
