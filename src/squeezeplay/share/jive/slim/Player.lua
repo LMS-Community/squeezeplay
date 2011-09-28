@@ -1153,7 +1153,8 @@ function updateIconbar(self)
 
 		-- alarm icon in iconbar is set directly via AlarmSnoozeApplet
 
-		iconbar:setRepeat(0)
+		-- set the repeat (nil, 0=off, 1=single track, 2=all playlist tracks)
+		iconbar:setRepeat(self.state['playlist repeat'])
 
 		--[[ useful for layout skinning debug, set all modes to show icons
 			iconbar:setPlaymode('play')

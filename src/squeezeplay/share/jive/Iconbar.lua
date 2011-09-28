@@ -75,10 +75,7 @@ Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat sin
 --]]
 function setRepeat(self, val)
 	log:debug("Iconbar:setRepeat(", val, ")")
-	self.repeatMode = string.upper((val or "OFF"))
-	if not self.preferPlaylistModeIcon then
-		self.iconRepeat:setStyle("button_repeat_" .. self.repeatMode)
-	end
+	self.iconRepeat:setStyle("button_repeat_" .. string.upper((val or "OFF")))
 end
 
 
