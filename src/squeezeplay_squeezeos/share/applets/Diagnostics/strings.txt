@@ -469,19 +469,19 @@ SN_PORT_9000
 	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	CS	Squeezebox Server\n%s
-	DA	Squeezebox Server\n%s
-	DE	Squeezebox Server\n%s
-	EN	Squeezebox Server\n%s
-	ES	Squeezebox Server\n%s
-	FI	Squeezebox Server\n%s
-	FR	Squeezebox Server\n%s
-	IT	Squeezebox Server\n%s
-	NL	Squeezebox Server\n%s
-	NO	Squeezebox Server\n%s
-	PL	Squeezebox Server\n%s
-	RU	Squeezebox Server\n%s
-	SV	Squeezebox Server\n%s
+	CS	Logitech Media Server\n%s
+	DA	Logitech Media Server\n%s
+	DE	Logitech Media Server\n%s
+	EN	Logitech Media Server\n%s
+	ES	Logitech Media Server\n%s
+	FI	Logitech Media Server\n%s
+	FR	Logitech Media Server\n%s
+	IT	Logitech Media Server\n%s
+	NL	Logitech Media Server\n%s
+	NO	Logitech Media Server\n%s
+	PL	Logitech Media Server\n%s
+	RU	Logitech Media Server\n%s
+	SV	Logitech Media Server\n%s
 
 SC_NAME
 	CS	Název knihovny\n%s

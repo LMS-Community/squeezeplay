@@ -3,64 +3,64 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 START
-	CS	Spustit Squeezebox Server
-	DA	Start Squeezebox Server
-	DE	Squeezebox Server starten
-	EN	Start Squeezebox Server
-	ES	Iniciar Squeezebox Server
-	FI	Käynnistä Squeezebox Server
-	FR	Démarrer Squeezebox Server
-	IT	Avvia Squeezebox Server
-	NL	Squeezebox Server starten
-	NO	Start Squeezebox Server
-	PL	Uruchom program Squeezebox Server
-	RU	Запустить Squeezebox Server
-	SV	Starta Squeezebox Server
+	CS	Spustit Logitech Media Server
+	DA	Start Logitech Media Server
+	DE	Logitech Media Server starten
+	EN	Start Logitech Media Server
+	ES	Iniciar Logitech Media Server
+	FI	Käynnistä Logitech Media Server
+	FR	Démarrer Logitech Media Server
+	IT	Avvia Logitech Media Server
+	NL	Logitech Media Server starten
+	NO	Start Logitech Media Server
+	PL	Uruchom program Logitech Media Server
+	RU	Запустить Logitech Media Server
+	SV	Starta Logitech Media Server
 
 STOP
-	CS	Zastavit Squeezebox Server
-	DA	Stop Squeezebox Server
-	DE	Anhalten von Squeezebox Server
-	EN	Stop Squeezebox Server
-	ES	Detener Squeezebox Server
-	FI	Pysäytä Squeezebox Server
-	FR	Arrêter le Squeezebox Server
-	IT	Arresta Squeezebox Server
-	NL	Squeezebox Server stoppen
-	NO	Stopp Squeezebox Server
-	PL	Zatrzymaj program Squeezebox Server
-	RU	Остановить Squeezebox Server
-	SV	Stoppa Squeezebox Server
+	CS	Zastavit Logitech Media Server
+	DA	Stop Logitech Media Server
+	DE	Anhalten von Logitech Media Server
+	EN	Stop Logitech Media Server
+	ES	Detener Logitech Media Server
+	FI	Pysäytä Logitech Media Server
+	FR	Arrêter le Logitech Media Server
+	IT	Arresta Logitech Media Server
+	NL	Logitech Media Server stoppen
+	NO	Stopp Logitech Media Server
+	PL	Zatrzymaj program Logitech Media Server
+	RU	Остановить Logitech Media Server
+	SV	Stoppa Logitech Media Server
 
 STOP_INFO
-	CS	Opravdu chcete vypnout Squeezebox Server?
-	DA	Er du sikker på at du vil stoppe Squeezebox Server?
-	DE	Soll Squeezebox Server wirklich beendet werden?
-	EN	Are you sure you want to stop Squeezebox Server?
-	ES	¿Confirma que desea detener Squeezebox Server?
-	FI	Haluatko varmasti pysäyttää Squeezebox Serverin?
-	FR	Voulez-vous vraiment arrêter Squeezebox Server?
-	IT	Arrestare Squeezebox Server?
-	NL	Weet je zeker dat je Squeezebox Server wilt stoppen?
-	NO	Er du sikker på at du vil stanse Squeezebox Server?
-	PL	Czy na pewno chcesz zatrzymać program Squeezebox Server?
-	RU	Остановить Squeezebox Server?
-	SV	Vill du stoppa Squeezebox Server?
+	CS	Opravdu chcete vypnout Logitech Media Server?
+	DA	Er du sikker på at du vil stoppe Logitech Media Server?
+	DE	Soll Logitech Media Server wirklich beendet werden?
+	EN	Are you sure you want to stop Logitech Media Server?
+	ES	¿Confirma que desea detener Logitech Media Server?
+	FI	Haluatko varmasti pysäyttää Logitech Media Serverin?
+	FR	Voulez-vous vraiment arrêter Logitech Media Server?
+	IT	Arrestare Logitech Media Server?
+	NL	Weet je zeker dat je Logitech Media Server wilt stoppen?
+	NO	Er du sikker på at du vil stanse Logitech Media Server?
+	PL	Czy na pewno chcesz zatrzymać program Logitech Media Server?
+	RU	Остановить Logitech Media Server?
+	SV	Vill du stoppa Logitech Media Server?
 
 SQUEEZEBOX_SERVER
-	CS	Squeezebox Server
-	DA	Squeezebox Server
-	DE	Squeezebox Server
-	EN	Squeezebox Server
-	ES	Squeezebox Server
-	FI	Squeezebox Server
-	FR	Squeezebox Server
-	IT	Squeezebox Server
-	NL	Squeezebox Server
-	NO	Squeezebox Server
-	PL	Squeezebox Server
-	RU	Squeezebox Server
-	SV	Squeezebox Server
+	CS	Logitech Media Server
+	DA	Logitech Media Server
+	DE	Logitech Media Server
+	EN	Logitech Media Server
+	ES	Logitech Media Server
+	FI	Logitech Media Server
+	FR	Logitech Media Server
+	IT	Logitech Media Server
+	NL	Logitech Media Server
+	NO	Logitech Media Server
+	PL	Logitech Media Server
+	RU	Logitech Media Server
+	SV	Logitech Media Server
 
 WIPE_AND_RESTART
 	CS	Smazat a znovu prohledat
@@ -93,19 +93,19 @@ REMOVING_DATABASE
 	SV	Tar bort befintlig databas
 
 WIPE_AND_RESTART_INFO
-	CS	Jste si jistí, že chcete smazat stávající databázi Squeezebox Server database a začít prohledávat vaše soubory znovu?
-	DA	Er du sikker på at du vil slette den eksisterende Squeezebox Server-database og registrere alle dine filer igen?
-	DE	Wollen Sie Ihre bestehende Squeezebox Server-Datenbank wirklich löschen und Ihre Dateien neu durchsuchen?
-	EN	Are you sure you want to wipe your existing Squeezebox Server database and start over scanning your files?
-	ES	¿Confirma que desea borrar la base de datos de Squeezebox Server existente y volver a examinar los archivos?
-	FI	Haluatko varmasti pyyhkiä vanhan Squeezebox Server -tietokannan ja aloittaa tiedostojen tarkistuksen alusta?
-	FR	Etes-vous sûr de vouloir supprimer la base de données Squeezebox Server existante et de vouloir redémarrer l'analyse de vos fichiers?
-	IT	Eliminare il database Squeezebox Server esistente e ripetere l'analisi dei file?
-	NL	Weet je zeker dat je je bestaande Squeezebox Server-database wilt wissen en je bestanden opnieuw wilt scannen?
-	NO	Er du sikker på at du vil tømme den eksisterende Squeezebox Server-databasen og starte søk i filene dine på nytt?
-	PL	Czy na pewno chcesz usunąć istniejącą bazę danych programu Squeezebox Server i ponownie rozpocząć wyszukiwanie plików?
-	RU	Стереть существующую базу данных Squeezebox Server и запустить сканирование файлов?
-	SV	Vill du rensa din befintliga Squeezebox Server-databas och börja om från början med att läsa in filer?
+	CS	Jste si jistí, že chcete smazat stávající databázi Logitech Media Server database a začít prohledávat vaše soubory znovu?
+	DA	Er du sikker på at du vil slette den eksisterende Logitech Media Server-database og registrere alle dine filer igen?
+	DE	Wollen Sie Ihre bestehende Logitech Media Server-Datenbank wirklich löschen und Ihre Dateien neu durchsuchen?
+	EN	Are you sure you want to wipe your existing Logitech Media Server database and start over scanning your files?
+	ES	¿Confirma que desea borrar la base de datos de Logitech Media Server existente y volver a examinar los archivos?
+	FI	Haluatko varmasti pyyhkiä vanhan Logitech Media Server -tietokannan ja aloittaa tiedostojen tarkistuksen alusta?
+	FR	Etes-vous sûr de vouloir supprimer la base de données Logitech Media Server existante et de vouloir redémarrer l'analyse de vos fichiers?
+	IT	Eliminare il database Logitech Media Server esistente e ripetere l'analisi dei file?
+	NL	Weet je zeker dat je je bestaande Logitech Media Server-database wilt wissen en je bestanden opnieuw wilt scannen?
+	NO	Er du sikker på at du vil tømme den eksisterende Logitech Media Server-databasen og starte søk i filene dine på nytt?
+	PL	Czy na pewno chcesz usunąć istniejącą bazę danych programu Logitech Media Server i ponownie rozpocząć wyszukiwanie plików?
+	RU	Стереть существующую базу данных Logitech Media Server и запустить сканирование файлов?
+	SV	Vill du rensa din befintliga Logitech Media Server-databas och börja om från början med att läsa in filer?
 
 STOP_RESCAN_START
 	CS	Zastavit-Znovu prohledat-Znovu spustit
@@ -123,34 +123,34 @@ STOP_RESCAN_START
 	SV	Stoppa-Sök igen-Starta om
 
 STOP_RESCAN_START_INFO
-	CS	Jste si jistý, že chcete restartovat Squeezebox Server?
-	DA	Er du sikker på at du vil genstarte Squeezebox Server?
-	DE	Soll Squeezebox Server wirklich neu gestartet werden?
-	EN	Are you sure you want to restart Squeezebox Server?
-	ES	¿Confirma que desea reiniciar Squeezebox Server?
-	FI	Haluatko varmasti käynnistää Squeezebox Serverin uudelleen?
-	FR	Voulez-vous vraiment redémarrer Squeezebox Server?
-	IT	Riavviare Squeezebox Server?
-	NL	Weet je zeker dat je Squeezebox Server opnieuw wilt opstarten?
-	NO	Er du sikker på at du vil starte Squeezebox Server på nytt?
-	PL	Czy na pewno chcesz uruchomić ponownie program Squeezebox Server?
-	RU	Перезапустить Squeezebox Server?
-	SV	Vill du starta om Squeezebox Server?
+	CS	Jste si jistý, že chcete restartovat Logitech Media Server?
+	DA	Er du sikker på at du vil genstarte Logitech Media Server?
+	DE	Soll Logitech Media Server wirklich neu gestartet werden?
+	EN	Are you sure you want to restart Logitech Media Server?
+	ES	¿Confirma que desea reiniciar Logitech Media Server?
+	FI	Haluatko varmasti käynnistää Logitech Media Serverin uudelleen?
+	FR	Voulez-vous vraiment redémarrer Logitech Media Server?
+	IT	Riavviare Logitech Media Server?
+	NL	Weet je zeker dat je Logitech Media Server opnieuw wilt opstarten?
+	NO	Er du sikker på at du vil starte Logitech Media Server på nytt?
+	PL	Czy na pewno chcesz uruchomić ponownie program Logitech Media Server?
+	RU	Перезапустить Logitech Media Server?
+	SV	Vill du starta om Logitech Media Server?
 
 STARTING_SQUEEZECENTER
-	CS	Spouštění Squeezebox Server
-	DA	Starter Squeezebox Server
-	DE	Squeezebox Server wird gestartet...
-	EN	Starting Squeezebox Server
-	ES	Iniciando Squeezebox Server
-	FI	Käynnistetään Squeezebox Server
-	FR	Démarrage du Squeezebox Server
-	IT	Avvio di Squeezebox Server
-	NL	Squeezebox Server wordt gestart
-	NO	Starter Squeezebox Server
-	PL	Squeezebox Server — uruchamianie
-	RU	Squeezebox Server запускается
-	SV	Startar Squeezebox Server
+	CS	Spouštění Logitech Media Server
+	DA	Starter Logitech Media Server
+	DE	Logitech Media Server wird gestartet...
+	EN	Starting Logitech Media Server
+	ES	Iniciando Logitech Media Server
+	FI	Käynnistetään Logitech Media Server
+	FR	Démarrage du Logitech Media Server
+	IT	Avvio di Logitech Media Server
+	NL	Logitech Media Server wordt gestart
+	NO	Starter Logitech Media Server
+	PL	Logitech Media Server — uruchamianie
+	RU	Logitech Media Server запускается
+	SV	Startar Logitech Media Server
 
 STARTING_SQUEEZECENTER_TEXT
 	CS	Spuštění by mělo trvat asi minutu.
@@ -168,19 +168,19 @@ STARTING_SQUEEZECENTER_TEXT
 	SV	Det bör ta omkring en minut att starta.
 
 STOPPING_SQUEEZECENTER
-	CS	Zastavování Squeezebox Server
-	DA	Stopper Squeezebox Server
-	DE	Squeezebox Server wird angehalten...
-	EN	Stopping Squeezebox Server
-	ES	Deteniendo Squeezebox Server
-	FI	Pysäytetään Squeezebox Server
-	FR	Arrêt du Squeezebox Server
-	IT	Arresto di Squeezebox Server
-	NL	Squeezebox Server wordt gestopt
-	NO	Stopper Squeezebox Server
-	PL	Zatrzymywanie programu Squeezebox Server
-	RU	Squeezebox Server останавливается
-	SV	Stoppar Squeezebox Server
+	CS	Zastavování Logitech Media Server
+	DA	Stopper Logitech Media Server
+	DE	Logitech Media Server wird angehalten...
+	EN	Stopping Logitech Media Server
+	ES	Deteniendo Logitech Media Server
+	FI	Pysäytetään Logitech Media Server
+	FR	Arrêt du Logitech Media Server
+	IT	Arresto di Logitech Media Server
+	NL	Logitech Media Server wordt gestopt
+	NO	Stopper Logitech Media Server
+	PL	Zatrzymywanie programu Logitech Media Server
+	RU	Logitech Media Server останавливается
+	SV	Stoppar Logitech Media Server
 
 RESCAN_SQUEEZECENTER
 	CS	Zahajování opětovného prohledávání
@@ -213,34 +213,34 @@ RESCAN_SQUEEZECENTER_TEXT
 	SV	Detta kan ta flera minuter.
 
 RESTART_SQUEEZECENTER
-	CS	Restarovat Squeezebox Server
-	DA	Genstart Squeezebox Server
-	DE	Squeezebox Server neu starten
-	EN	Restart Squeezebox Server
-	ES	Reiniciar Squeezebox Server
-	FI	Käynnistä Squeezebox Server uudelleen
-	FR	Redémarrer Squeezebox Server
-	IT	Riavvia Squeezebox Server
-	NL	Squeezebox Server opnieuw opstarten
-	NO	Start Squeezebox Server på nytt
-	PL	Uruchom ponownie program Squeezebox Server
-	RU	Перезапустить Squeezebox Server
-	SV	Starta om Squeezebox Server
+	CS	Restarovat Logitech Media Server
+	DA	Genstart Logitech Media Server
+	DE	Logitech Media Server neu starten
+	EN	Restart Logitech Media Server
+	ES	Reiniciar Logitech Media Server
+	FI	Käynnistä Logitech Media Server uudelleen
+	FR	Redémarrer Logitech Media Server
+	IT	Riavvia Logitech Media Server
+	NL	Logitech Media Server opnieuw opstarten
+	NO	Start Logitech Media Server på nytt
+	PL	Uruchom ponownie program Logitech Media Server
+	RU	Перезапустить Logitech Media Server
+	SV	Starta om Logitech Media Server
 
 RESTARTING_SQUEEZECENTER
-	CS	Spouštění Squeezebox Server
-	DA	Starter Squeezebox Server
-	DE	Squeezebox Server wird gestartet...
-	EN	Starting Squeezebox Server
-	ES	Iniciando Squeezebox Server
-	FI	Käynnistetään Squeezebox Server
-	FR	Démarrage du Squeezebox Server
-	IT	Avvio di Squeezebox Server
-	NL	Squeezebox Server wordt gestart
-	NO	Starter Squeezebox Server
-	PL	Squeezebox Server — uruchamianie
-	RU	Squeezebox Server запускается
-	SV	Startar Squeezebox Server
+	CS	Spouštění Logitech Media Server
+	DA	Starter Logitech Media Server
+	DE	Logitech Media Server wird gestartet...
+	EN	Starting Logitech Media Server
+	ES	Iniciando Logitech Media Server
+	FI	Käynnistetään Logitech Media Server
+	FR	Démarrage du Logitech Media Server
+	IT	Avvio di Logitech Media Server
+	NL	Logitech Media Server wordt gestart
+	NO	Starter Logitech Media Server
+	PL	Logitech Media Server — uruchamianie
+	RU	Logitech Media Server запускается
+	SV	Startar Logitech Media Server
 
 PLEASE_WAIT
 	CS	Čekejte, prosím...
@@ -258,19 +258,19 @@ PLEASE_WAIT
 	SV	Ett ögonblick...
 
 STATUS_SQUEEZECENTER_RUNNING
-	CS	Squeezebox Server je spuštěn
-	DA	Squeezebox Server kører
-	DE	Squeezebox Server wird ausgeführt
-	EN	Squeezebox Server is running
-	ES	Squeezebox Server se está ejecutando
-	FI	Squeezebox Server on käynnistymässä
-	FR	Squeezebox Server est en cours d'exécution
-	IT	Squeezebox Server è in esecuzione
-	NL	Squeezebox Server wordt uitgevoerd
-	NO	Squeezebox Server kjører
-	PL	Program Squeezebox Server jest uruchomiony
-	RU	Squeezebox Server выполняется
-	SV	Squeezebox Server körs
+	CS	Logitech Media Server je spuštěn
+	DA	Logitech Media Server kører
+	DE	Logitech Media Server wird ausgeführt
+	EN	Logitech Media Server is running
+	ES	Logitech Media Server se está ejecutando
+	FI	Logitech Media Server on käynnistymässä
+	FR	Logitech Media Server est en cours d'exécution
+	IT	Logitech Media Server è in esecuzione
+	NL	Logitech Media Server wordt uitgevoerd
+	NO	Logitech Media Server kjører
+	PL	Program Logitech Media Server jest uruchomiony
+	RU	Logitech Media Server выполняется
+	SV	Logitech Media Server körs
 
 STATUS_SCANNER_RUNNING
 	CS	Scanner běží
@@ -288,19 +288,19 @@ STATUS_SCANNER_RUNNING
 	SV	Sökningen körs
 
 STATUS_NOTHING
-	CS	Neběží ani Squeezebox Server ani scanner
-	DA	Hverken Squeezebox Server eller indekseringstjenesten kører
-	DE	Weder Squeezebox Server noch der Scanner werden ausgeführt.
-	EN	Neither Squeezebox Server nor the scanner are running
-	ES	Ni Squeezebox Server ni el examinador se están ejecutando
-	FI	Squeezebox Server ja skanneri eivät ole käynnissä
-	FR	Squeezebox Server et l'analyseur ne sont pas en cours d'exécution
-	IT	Squeezebox Server e l'analisi non sono in esecuzione
-	NL	De Squeezebox Server en de scanner worden geen van beiden uitgevoerd
-	NO	Verken Squeezebox Server eller søket kjører
-	PL	Program Squeezebox Server i moduł przeszukiwania nie są uruchomione
-	RU	Squeezebox Server и сканер не выполняются
-	SV	Varken Squeezebox Server eller sökningen körs
+	CS	Neběží ani Logitech Media Server ani scanner
+	DA	Hverken Logitech Media Server eller indekseringstjenesten kører
+	DE	Weder Logitech Media Server noch der Scanner werden ausgeführt.
+	EN	Neither Logitech Media Server nor the scanner are running
+	ES	Ni Logitech Media Server ni el examinador se están ejecutando
+	FI	Logitech Media Server ja skanneri eivät ole käynnissä
+	FR	Logitech Media Server et l'analyseur ne sont pas en cours d'exécution
+	IT	Logitech Media Server e l'analisi non sono in esecuzione
+	NL	De Logitech Media Server en de scanner worden geen van beiden uitgevoerd
+	NO	Verken Logitech Media Server eller søket kjører
+	PL	Program Logitech Media Server i moduł przeszukiwania nie są uruchomione
+	RU	Logitech Media Server и сканер не выполняются
+	SV	Varken Logitech Media Server eller sökningen körs
 
 SCANNER_NO_STATUS
 	CS	Vyhledávání hudebních souborů v médiích, prosím, vyčkejte ...
@@ -693,19 +693,19 @@ TOTAL_TIME
 	SV	Total tid:
 
 FAILED_TO_START
-	CS	Spuštění Squeezebox Server se nezdařilo
-	DA	Squeezebox Server blev ikke startet
-	DE	Squeezebox Server konnte nicht gestartet werden.
-	EN	Squeezebox Server failed to start
-	ES	No se ha podido iniciar Squeezebox Server
-	FI	Squeezebox Server ei käynnistynyt
-	FR	Echec du démarrage de Squeezebox Server
-	IT	Avvio di Squeezebox Server non riuscito
-	NL	Squeezebox Server is niet gestart
-	NO	Squeezebox Server startet ikke
-	PL	Uruchomienie programu Squeezebox Server nie powiodło się
-	RU	Не удалось запустить Squeezebox Server
-	SV	Squeezebox Server kunde inte starta.
+	CS	Spuštění Logitech Media Server se nezdařilo
+	DA	Logitech Media Server blev ikke startet
+	DE	Logitech Media Server konnte nicht gestartet werden.
+	EN	Logitech Media Server failed to start
+	ES	No se ha podido iniciar Logitech Media Server
+	FI	Logitech Media Server ei käynnistynyt
+	FR	Echec du démarrage de Logitech Media Server
+	IT	Avvio di Logitech Media Server non riuscito
+	NL	Logitech Media Server is niet gestart
+	NO	Logitech Media Server startet ikke
+	PL	Uruchomienie programu Logitech Media Server nie powiodło się
+	RU	Не удалось запустить Logitech Media Server
+	SV	Logitech Media Server kunde inte starta.
 
 INTERNAL_ERROR
 	CS	Interní chyba
@@ -933,34 +933,34 @@ USE_DRIVE_USB
 	SV	Använd USB-enhet
 
 MULTIPLE_DRIVES_DETECTED
-	CS	Zvolte zařízení Squeezebox Server
-	DA	Vælg Squeezebox Server-enhed
-	DE	Squeezebox Server-Gerät wählen
-	EN	Choose Squeezebox Server Device
-	ES	Seleccionar dispositivo Squeezebox Server
-	FI	Valitse Squeezebox Server -laite
-	FR	Choisissez le dispositif Squeezebox Server
-	IT	Scegli dispositivo Squeezebox Server
-	NL	Squeezebox Server-apparaat kiezen
-	NO	Velg enhet for Squeezebox Server
-	PL	Wybierz urządzenie Squeezebox Server
-	RU	Выберите устройство Squeezebox Server
-	SV	Välj Squeezebox Server-enhet
+	CS	Zvolte zařízení Logitech Media Server
+	DA	Vælg Logitech Media Server-enhed
+	DE	Logitech Media Server-Gerät wählen
+	EN	Choose Logitech Media Server Device
+	ES	Seleccionar dispositivo Logitech Media Server
+	FI	Valitse Logitech Media Server -laite
+	FR	Choisissez le dispositif Logitech Media Server
+	IT	Scegli dispositivo Logitech Media Server
+	NL	Logitech Media Server-apparaat kiezen
+	NO	Velg enhet for Logitech Media Server
+	PL	Wybierz urządzenie Logitech Media Server
+	RU	Выберите устройство Logitech Media Server
+	SV	Välj Logitech Media Server-enhet
 
 MULTIPLE_DRIVES_DETECTED_INFO
-	CS	K vašemu Squeezebox Touch je připojeno více paměťových zařízení. Vyberte laskavě jedno z nich k použití se Squeezebox Server.
-	DA	Der er sluttet flere lagerenheder til din Squeezebox Touch. Vælg hvilken der skal bruges til Squeezebox Server.
-	DE	Mehrere Speichergeräte wurden an die Squeezebox Touch angeschlossen. Wählen Sie das mit Squeezebox Server zu verwendende Gerät.
-	EN	Multiple storage devices are attached to your Squeezebox Touch. Please select one device for use with Squeezebox Server.
-	ES	Hay varios dispositivos de almacenamiento conectados a Squeezebox Touch. Seleccione un dispositivo para usarlo con Squeezebox Server.
-	FI	Squeezebox Touchiin on liitetty useita tallennusvälineitä. Valitse yksi laite käyttäväksi Squeezebox Serverin kanssa.
-	FR	Plusieurs dispositifs de stockage sont connectés à votre Squeezebox Touch. Sélectionnez le dispositif à utiliser avec Squeezebox Server.
-	IT	A Squeezebox Touch sono collegati più dispositivi di memorizzazione. Selezionarne uno da utilizzare con Squeezebox Server.
-	NL	Er zijn meerdere opslagapparaten aan je Squeezebox Touch gekoppeld. Selecteer één apparaat voor gebruik met Squeezebox Server.
-	NO	Flere lagringsenheter er koplet til Squeezebox Touch. Velg én enhet du vil bruke med Squeezebox Server.
-	PL	Do urządzenia Squeezebox Touch przyłączonych jest kilka urządzeń pamięci masowej. Wybierz jedno urządzenie, które ma być używane z programem Squeezebox Server.
-	RU	К устройству Squeezebox Touch присоединено несколько накопителей. Выберите одно устройство для использования со Squeezebox Server.
-	SV	Det finns flera lagringsenheter anslutna till Squeezebox Touch. Välj vilken av dem som ska användas med Squeezebox Server.
+	CS	K vašemu Squeezebox Touch je připojeno více paměťových zařízení. Vyberte laskavě jedno z nich k použití se Logitech Media Server.
+	DA	Der er sluttet flere lagerenheder til din Squeezebox Touch. Vælg hvilken der skal bruges til Logitech Media Server.
+	DE	Mehrere Speichergeräte wurden an die Squeezebox Touch angeschlossen. Wählen Sie das mit Logitech Media Server zu verwendende Gerät.
+	EN	Multiple storage devices are attached to your Squeezebox Touch. Please select one device for use with Logitech Media Server.
+	ES	Hay varios dispositivos de almacenamiento conectados a Squeezebox Touch. Seleccione un dispositivo para usarlo con Logitech Media Server.
+	FI	Squeezebox Touchiin on liitetty useita tallennusvälineitä. Valitse yksi laite käyttäväksi Logitech Media Serverin kanssa.
+	FR	Plusieurs dispositifs de stockage sont connectés à votre Squeezebox Touch. Sélectionnez le dispositif à utiliser avec Logitech Media Server.
+	IT	A Squeezebox Touch sono collegati più dispositivi di memorizzazione. Selezionarne uno da utilizzare con Logitech Media Server.
+	NL	Er zijn meerdere opslagapparaten aan je Squeezebox Touch gekoppeld. Selecteer één apparaat voor gebruik met Logitech Media Server.
+	NO	Flere lagringsenheter er koplet til Squeezebox Touch. Velg én enhet du vil bruke med Logitech Media Server.
+	PL	Do urządzenia Squeezebox Touch przyłączonych jest kilka urządzeń pamięci masowej. Wybierz jedno urządzenie, które ma być używane z programem Logitech Media Server.
+	RU	К устройству Squeezebox Touch присоединено несколько накопителей. Выберите одно устройство для использования со Logitech Media Server.
+	SV	Det finns flera lagringsenheter anslutna till Squeezebox Touch. Välj vilken av dem som ska användas med Logitech Media Server.
 
 TIME_LEFT
 	CS	Zbývající čas
@@ -993,19 +993,19 @@ PERCENT_DONE
 	SV	Procent klart
 
 SERVER_STATUS
-	CS	Stav Squeezebox Server
-	DA	Status for Squeezebox Server
-	DE	Squeezebox Server-Status
-	EN	Squeezebox Server Status
-	ES	Estado de Squeezebox Server
-	FI	Squeezebox Serverin tila
-	FR	Etat du Squeezebox Server
-	IT	Stato di Squeezebox Server
-	NL	Status van Squeezebox Server
-	NO	Status for Squeezebox Server
-	PL	Stan programu Squeezebox Server
-	RU	Статус Squeezebox Server
-	SV	Squeezebox Server-status
+	CS	Stav Logitech Media Server
+	DA	Status for Logitech Media Server
+	DE	Logitech Media Server-Status
+	EN	Logitech Media Server Status
+	ES	Estado de Logitech Media Server
+	FI	Logitech Media Serverin tila
+	FR	Etat du Logitech Media Server
+	IT	Stato di Logitech Media Server
+	NL	Status van Logitech Media Server
+	NO	Status for Logitech Media Server
+	PL	Stan programu Logitech Media Server
+	RU	Статус Logitech Media Server
+	SV	Logitech Media Server-status
 
 MY_MUSIC
 	CS	Moje hudba
@@ -1053,47 +1053,47 @@ SKIP
 	SV	Hoppa över
 
 SWITCH_MEDIA_HELP
-	CS	Squeezebox Server je spuštěn, ale momentálně je nakonfigurován, aby přehrával hudbu z jiného zařízení. Z této nabídky můžete nastavit cestu na jinou jednotku.
-	DA	Squeezebox Server kører, men er konfigureret til at transmittere musik fra en anden enhed. Du kan pege på et andet drev fra denne menu.
-	DE	Squeezebox Server wird ausgeführt, ist aber für die Musikwiedergabe von einem anderen Gerät konfiguriert. In diesem Menü können Sie eine Auswahl für ein anderes Gerät treffen.
-	EN	Squeezebox Server is running but is currently configured to serve music from a different device. From this menu you can choose to point to a different drive.
-	ES	Squeezebox Server está en ejecución, pero se ha configurado para ofrecer música de un dispositivo diferente. Desde este menú se puede apuntar a otra unidad.
-	FI	Squeezebox Server on käytössä, mutta se on nyt määritetty syöttämään musiikkia toiselta laitteelta. Tällä valikolla voit valita sen osoittamaan toiseen asemaan.
-	FR	Squeezebox Server est en cours d'exécution mais est paramétré pour lire de la musique à partir d'un autre dispositif. Dans ce menu, vous pouvez modifier le lecteur source.
-	IT	Squeezebox Server è in esecuzione ma è configurato per inviare musica da un dispositivo differente. Da questo menu è possibile puntare a un'unità diversa.
-	NL	Squeezebox Server is actief maar wordt momenteel geconfigureerd om muziek van een ander apparaat af te spelen. Via dit menu kun je een ander station toewijzen.
-	NO	Squeezebox Server kjører, men er konfigurert til å spille av musikk fra en annen enhet. Du kan velge en annen stasjon fra denne menyen.
-	PL	Program Squeezebox Server jest uruchomiony, ale jego obecna konfiguracja dotyczy odtwarzania muzyki z innego urządzenia. W tym menu można wskazać inny napęd.
-	RU	Squeezebox Server запущен, но настроен на воспроизведение музыки с другого устройства. В этом меню можно выбрать другой диск.
-	SV	Squeezebox Server körs men är konfigurerad för att spela musik från en annan enhet. Du kan välja en annan enhet från den här menyn.
+	CS	Logitech Media Server je spuštěn, ale momentálně je nakonfigurován, aby přehrával hudbu z jiného zařízení. Z této nabídky můžete nastavit cestu na jinou jednotku.
+	DA	Logitech Media Server kører, men er konfigureret til at transmittere musik fra en anden enhed. Du kan pege på et andet drev fra denne menu.
+	DE	Logitech Media Server wird ausgeführt, ist aber für die Musikwiedergabe von einem anderen Gerät konfiguriert. In diesem Menü können Sie eine Auswahl für ein anderes Gerät treffen.
+	EN	Logitech Media Server is running but is currently configured to serve music from a different device. From this menu you can choose to point to a different drive.
+	ES	Logitech Media Server está en ejecución, pero se ha configurado para ofrecer música de un dispositivo diferente. Desde este menú se puede apuntar a otra unidad.
+	FI	Logitech Media Server on käytössä, mutta se on nyt määritetty syöttämään musiikkia toiselta laitteelta. Tällä valikolla voit valita sen osoittamaan toiseen asemaan.
+	FR	Logitech Media Server est en cours d'exécution mais est paramétré pour lire de la musique à partir d'un autre dispositif. Dans ce menu, vous pouvez modifier le lecteur source.
+	IT	Logitech Media Server è in esecuzione ma è configurato per inviare musica da un dispositivo differente. Da questo menu è possibile puntare a un'unità diversa.
+	NL	Logitech Media Server is actief maar wordt momenteel geconfigureerd om muziek van een ander apparaat af te spelen. Via dit menu kun je een ander station toewijzen.
+	NO	Logitech Media Server kjører, men er konfigurert til å spille av musikk fra en annen enhet. Du kan velge en annen stasjon fra denne menyen.
+	PL	Program Logitech Media Server jest uruchomiony, ale jego obecna konfiguracja dotyczy odtwarzania muzyki z innego urządzenia. W tym menu można wskazać inny napęd.
+	RU	Logitech Media Server запущен, но настроен на воспроизведение музыки с другого устройства. В этом меню можно выбрать другой диск.
+	SV	Logitech Media Server körs men är konfigurerad för att spela musik från en annan enhet. Du kan välja en annan enhet från den här menyn.
 
 SWITCH_MEDIA
-	CS	Použít %s pro Squeezebox Server
-	DA	Brug %s til Squeezebox Server
-	DE	Verwenden Sie %s für Squeezebox Server
-	EN	Use %s for Squeezebox Server
-	ES	Use %s para Squeezebox Server
-	FI	Käytä kohdetta %s  Squeezebox Serveriin.
-	FR	Utiliser %s pour Squeezebox Server
-	IT	Usa %s per Squeezebox Server
-	NL	%s voor Squeezebox Server gebruiken
-	NO	Bruk %s for Squeezebox Server
-	PL	Użyj elementu %s w programie Squeezebox Server
-	RU	Использовать %s для Squeezebox Server
-	SV	Använd %s för Squeezebox Server
+	CS	Použít %s pro Logitech Media Server
+	DA	Brug %s til Logitech Media Server
+	DE	Verwenden Sie %s für Logitech Media Server
+	EN	Use %s for Logitech Media Server
+	ES	Use %s para Logitech Media Server
+	FI	Käytä kohdetta %s  Logitech Media Serveriin.
+	FR	Utiliser %s pour Logitech Media Server
+	IT	Usa %s per Logitech Media Server
+	NL	%s voor Logitech Media Server gebruiken
+	NO	Bruk %s for Logitech Media Server
+	PL	Użyj elementu %s w programie Logitech Media Server
+	RU	Использовать %s для Logitech Media Server
+	SV	Använd %s för Logitech Media Server
 
 SQUEEZEBOX_SERVER_DISK_EJECT_WARNING
-	CS	Výstraha: V tomto zařízení je právě spuštěn Squeezebox Server. Přehrávání z tohoto Squeezebox Server bude přerušeno, pokud tuto jednotku vysunete.
-	DA	Advarsel: Squeezebox Server kører på denne enhed. Al afspilning fra denne Squeezebox Server ophører når drevet fjernes.
-	DE	Warnung: Auf diesem Gerät wird aktuell Squeezebox Server ausgeführt. Die Wiedergabe von diesem Squeezebox Server wird beendet, sobald der Datenträger ausgeworfen wird.
-	EN	Warning: This device is currently running Squeezebox Server. All playback from this Squeezebox Server will cease when this drive is ejected.
-	ES	Advertencia: este dispositivo está ejecutando Squeezebox Server en este momento. Toda reproducción desde este Squeezebox Server se detendrá al expulsar la unidad.
-	FI	Varoitus: Tämä laite käyttää parhaillaan Squeezebox Serveriä. Kaikki äänentoisto tältä Squeezebox Serveriltä lakkaa, kun tämä asema irrotetaan.
-	FR	Attention: ce dispositif fonctionne actuellement avec SqueezeBox Server. Toutes les lectures depuis Squeezebox Server seront arrêtées quand vous éjecterez ce lecteur.
-	IT	Attenzione: in questo dispositivo è in esecuzione Squeezebox Server. Quando questa unità verrà espulsa, la riproduzione proveniente da questo Squeezebox Server terminerà.
-	NL	Waarschuwing: Squeezebox Server is momenteel actief op dit apparaat. Het afspelen via deze Squeezebox Server wordt gestopt als dit station wordt vrijgegeven.
-	NO	Advarsel: Denne enheten kjører for øyeblikket Squeezebox Server. All avspilling fra Squeezebox Server stanser når du løser ut denne stasjonen.
-	PL	Ostrzeżenie: Na tym urządzeniu jest obecnie uruchomiony program Squeezebox Server. Po odłączeniu tego napędu odtwarzanie wszystkich elementów używanych w programie Squeezebox Server zostanie zatrzymane.
-	RU	Предупреждение. На этом устройстве сейчас запущен Squeezebox Server. При извлечении диска воспроизведение с помощью Squeezebox Server будет остановлено.
-	SV	Varning: Squeezebox Server körs för närvarande på den här enheten. Alla uppspelningar från Squeezebox Server upphör när enheten matas ut.
+	CS	Výstraha: V tomto zařízení je právě spuštěn Logitech Media Server. Přehrávání z tohoto Logitech Media Server bude přerušeno, pokud tuto jednotku vysunete.
+	DA	Advarsel: Logitech Media Server kører på denne enhed. Al afspilning fra denne Logitech Media Server ophører når drevet fjernes.
+	DE	Warnung: Auf diesem Gerät wird aktuell Logitech Media Server ausgeführt. Die Wiedergabe von diesem Logitech Media Server wird beendet, sobald der Datenträger ausgeworfen wird.
+	EN	Warning: This device is currently running Logitech Media Server. All playback from this Logitech Media Server will cease when this drive is ejected.
+	ES	Advertencia: este dispositivo está ejecutando Logitech Media Server en este momento. Toda reproducción desde este Logitech Media Server se detendrá al expulsar la unidad.
+	FI	Varoitus: Tämä laite käyttää parhaillaan Logitech Media Serveriä. Kaikki äänentoisto tältä Logitech Media Serveriltä lakkaa, kun tämä asema irrotetaan.
+	FR	Attention: ce dispositif fonctionne actuellement avec SqueezeBox Server. Toutes les lectures depuis Logitech Media Server seront arrêtées quand vous éjecterez ce lecteur.
+	IT	Attenzione: in questo dispositivo è in esecuzione Logitech Media Server. Quando questa unità verrà espulsa, la riproduzione proveniente da questo Logitech Media Server terminerà.
+	NL	Waarschuwing: Logitech Media Server is momenteel actief op dit apparaat. Het afspelen via deze Logitech Media Server wordt gestopt als dit station wordt vrijgegeven.
+	NO	Advarsel: Denne enheten kjører for øyeblikket Logitech Media Server. All avspilling fra Logitech Media Server stanser når du løser ut denne stasjonen.
+	PL	Ostrzeżenie: Na tym urządzeniu jest obecnie uruchomiony program Logitech Media Server. Po odłączeniu tego napędu odtwarzanie wszystkich elementów używanych w programie Logitech Media Server zostanie zatrzymane.
+	RU	Предупреждение. На этом устройстве сейчас запущен Logitech Media Server. При извлечении диска воспроизведение с помощью Logitech Media Server будет остановлено.
+	SV	Varning: Logitech Media Server körs för närvarande på den här enheten. Alla uppspelningar från Logitech Media Server upphör när enheten matas ut.
 

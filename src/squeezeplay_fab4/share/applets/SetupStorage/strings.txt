@@ -1,18 +1,18 @@
 
 SBS_SETTINGS
-	CS	Nastavení Squeezebox Server
-	DA	Indstillinger for Squeezebox Server
-	DE	Squeezebox Server-Einstellungen
-	EN	Squeezebox Server Settings
-	ES	Configuración de Squeezebox Server
-	FI	Squeezebox Serverin asetukset
-	FR	Réglages du Squeezebox Server
-	IT	Impostazioni di Squeezebox Server
-	NL	Instellingen van Squeezebox Server
-	NO	Innstillinger for Squeezebox Server
-	PL	Ustawienia programu Squeezebox Server
-	RU	Параметры Squeezebox Server
-	SV	Squeezebox Server-inställningar
+	CS	Nastavení Logitech Media Server
+	DA	Indstillinger for Logitech Media Server
+	DE	Logitech Media Server-Einstellungen
+	EN	Logitech Media Server Settings
+	ES	Configuración de Logitech Media Server
+	FI	Logitech Media Serverin asetukset
+	FR	Réglages du Logitech Media Server
+	IT	Impostazioni di Logitech Media Server
+	NL	Instellingen van Logitech Media Server
+	NO	Innstillinger for Logitech Media Server
+	PL	Ustawienia programu Logitech Media Server
+	RU	Параметры Logitech Media Server
+	SV	Logitech Media Server-inställningar
 
 USB_SD_STORAGE
 	CS	USB & SD ukládání
