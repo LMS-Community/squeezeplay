@@ -399,7 +399,7 @@ stream_status messageType8(lua_State *L, u8_t *buf, struct incache_entry *entry)
 			lua_getfield(L, -1, "Rtmp");
 			lua_getfield(L, -1, "streamStartEvent");
 			if (lua_pcall(L, 0, 0, 0) != 0) {
-				fprintf(stderr, "error running streamStartEvent: %s\n", lua_tostring(L, -1));
+				LOG_ERROR(log_audio_decode, "error running streamStartEvent: %s\n", lua_tostring(L, -1));
 			}
 			change_state(RTMP_PLAYING);
 		}
@@ -419,7 +419,7 @@ stream_status messageType18(lua_State *L, u8_t *buf, struct incache_entry *entry
 	lua_getfield(L, -1, "sendMeta");
 	lua_pushlstring(L, (const char *)buf, entry->len);
 	if (lua_pcall(L, 1, 0, 0) != 0) {
-		fprintf(stderr, "error running sendMeta: %s\n", lua_tostring(L, -1));
+		LOG_ERROR(log_audio_decode, "error running sendMeta: %s\n", lua_tostring(L, -1));
 	}
 	return STREAM_OK;
 }
@@ -452,7 +452,7 @@ stream_status messageType20(lua_State *L, u8_t *buf, struct incache_entry *entry
 	lua_getfield(L, -1, "sendMeta");
 	lua_pushlstring(L, (const char *)buf, entry->len);
 	if (lua_pcall(L, 1, 0, 0) != 0) {
-		fprintf(stderr, "error running sendMeta: %s\n", lua_tostring(L, -1));
+		LOG_ERROR(log_audio_decode, "error running sendMeta: %s\n", lua_tostring(L, -1));
 	}
 
 	if (bufmatch(buf, entry->len, "_result")) {
@@ -772,7 +772,7 @@ int readL(lua_State *L) {
 						lua_pushboolean(L, FALSE);
 						return 1;
 					} else if (status == STREAM_ERROR) {
-						LOG_WARN(log_audio_decode, "handler returned false - closing stream");
+						LOG_WARN(log_audio_decode, "stream error - closing stream");
 						lua_pushnil(L);
 						lua_pushstring(L, "stream error - closing stream");
 						return 2;
