@@ -44,7 +44,7 @@ extern size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *str
 
 extern size_t streambuf_read(u8_t *buf, size_t min, size_t max, bool_t *streaming);
 
-extern ssize_t streambuf_feed_fd(int fd);
+extern ssize_t streambuf_feed_fd(int fd, lua_State *L);
 
 extern bool_t streambuf_is_copyright();
 

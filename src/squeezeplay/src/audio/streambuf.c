@@ -50,6 +50,37 @@ static bool_t streambuf_copyright;
 static u32_t icy_meta_interval;
 static s32_t icy_meta_remaining;
 
+struct chunk {
+	u8_t *buf;
+	size_t len;
+};
+
+static void proxy_chunk (u8_t *buf, size_t size, lua_State *L)
+{
+	if (L && size) {
+		struct chunk *chunk;
+		/*
+		 * Send chunk to proxy clients
+		 *
+		 * Relies on this being sent before wrap-around occurs
+		 * which is ensured by Playback.lua not scheduling any more reads
+		 * on the stream until the queued chunk (or, initially, chunks)
+		 * has been written to all proxy clients.
+		 *
+		 * At the start of a stream, there may be up to 3 queued chunks:
+		 * 	1. the header
+		 * 	2. the remains of the initial read up until fifo wrap-around
+		 * 	3. the remains of the initial read after fifo wrap-around
+		 */
+		/*  */
+		lua_getfield(L, 2, "_proxyQueueSegment");
+		lua_pushvalue(L, 2);
+		chunk = lua_newuserdata(L, sizeof(*chunk));
+		chunk->buf = buf;
+		chunk->len = size;
+		lua_call(L, 2, 0);
+	}
+}
 
 size_t streambuf_get_size(void) {
 	return STREAMBUF_SIZE;
@@ -127,7 +158,7 @@ void streambuf_flush(void) {
 }
 
 
-void streambuf_feed(u8_t *buf, size_t size) {
+static void streambuf_feedL(u8_t *buf, size_t size, lua_State *L) {
 	size_t n;
 
 	fifo_lock(&streambuf_fifo);
@@ -144,6 +175,9 @@ void streambuf_feed(u8_t *buf, size_t size) {
 		}
 
 		memcpy(streambuf_buf + streambuf_fifo.wptr, buf, n);
+
+		proxy_chunk(streambuf_buf + streambuf_fifo.wptr, n, L);
+
 		fifo_wptr_incby(&streambuf_fifo, n);
 		size -= n;
 	}
@@ -151,8 +185,11 @@ void streambuf_feed(u8_t *buf, size_t size) {
 	fifo_unlock(&streambuf_fifo);
 }
 
+void streambuf_feed(u8_t *buf, size_t size) {
+	streambuf_feedL(buf, size, 0);
+}
 
-ssize_t streambuf_feed_fd(int fd) {
+ssize_t streambuf_feed_fd(int fd, lua_State *L) {
 	ssize_t n, size;
 
 	fifo_lock(&streambuf_fifo);
@@ -181,6 +218,8 @@ ssize_t streambuf_feed_fd(int fd) {
 		streambuf_streaming = FALSE;
 	}
 	else {
+		proxy_chunk(streambuf_buf + streambuf_fifo.wptr, n, L);
+
 		fifo_wptr_incby(&streambuf_fifo, n);
 
 		streambuf_bytes_received += n;
@@ -581,7 +620,7 @@ static int stream_readL(lua_State *L) {
 
 	/* shortcut, just read to streambuf */
 	if (stream->num_crlf == 4) {
-		n = streambuf_feed_fd(stream->fd);		
+		n = streambuf_feed_fd(stream->fd, L);
 		if (n == 0) {
 			/* closed */
 			lua_pushboolean(L, FALSE);
@@ -653,7 +692,7 @@ static int stream_readL(lua_State *L) {
 			n--;
 
 			if (stream->num_crlf == 4) {
-				header_len = body_ptr - stream->body - 1;
+				header_len = body_ptr - stream->body;
 
 				//LOG_DEBUG(log_audio_decode, "headers %d %*s\n", header_len, header_len, stream->body);
 
@@ -663,9 +702,12 @@ static int stream_readL(lua_State *L) {
 				lua_pushlstring(L, (char *)stream->body, header_len);
 				lua_call(L, 2, 0);
 
-				free(stream->body);
-				stream->body = NULL;
-				stream->body_len = 0;
+				/* do not free the header here - leave it to disconnect -
+				 * so that it can be used by the proxy code
+				 */
+
+				/* Send headers to proxy clients */
+				proxy_chunk(stream->body, header_len, L);
 
 				break;
 			}
@@ -676,7 +718,7 @@ static int stream_readL(lua_State *L) {
 	streambuf_lptr = streambuf_fifo.wptr;
 
 	/* feed remaining buffer */
-	streambuf_feed(buf_ptr, n);
+	streambuf_feedL(buf_ptr, n, L);
 
 	lua_pushboolean(L, TRUE);
 	return 1;
@@ -723,6 +765,43 @@ static int stream_writeL(lua_State *L) {
 	*/
 
 	lua_pushboolean(L, TRUE);
+	return 1;
+}
+
+
+static int stream_proxyWriteL(lua_State *L) {
+	struct stream *stream;
+	struct chunk *chunk;
+	ssize_t n;
+	size_t len, offset;
+
+	/*
+	 * 1: Stream (self)
+	 * 2: Proxy stream
+	 * 3: chunk
+	 * 4: offset
+	 */
+
+	stream = lua_touserdata(L, 2);
+	chunk = lua_touserdata(L, 3);
+	offset = lua_tointeger(L, 4);
+
+	len = chunk->len - offset;
+	n = send(stream->fd, chunk->buf + offset, len, MSG_NOSIGNAL);
+	if (n < 0) {
+		if (errno != EAGAIN) {
+			lua_pushnil(L);
+			lua_pushstring(L, strerror(SOCKETERROR));
+			return 2;
+		}
+	} else if ((size_t)n < len) {
+		offset += n;
+	} else {
+		/* wrote it all */
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_pushinteger(L, offset);
 	return 1;
 }
 
@@ -865,6 +944,7 @@ static const struct luaL_Reg stream_f[] = {
 	{ "loadLoop", stream_load_loopL },
 	{ "markLoop", stream_mark_loopL },
 	{ "icyMetaInterval", stream_icy_metaintervalL },
+	{ "proxyWrite", stream_proxyWriteL },
 	{ NULL, NULL }
 };
 

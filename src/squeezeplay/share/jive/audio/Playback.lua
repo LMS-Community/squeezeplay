@@ -10,12 +10,14 @@ local table                  = require("table")
 local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
 local Stream                 = require("squeezeplay.stream")
+local socket                 = require("socket") -- for proxy streams
 local SlimProto              = require("jive.net.SlimProto")
 local Player                 = require("jive.slim.Player")
 
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Framework              = require("jive.ui.Framework")
+local Networking             = require("jive.net.Networking")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("audio.decode")
@@ -41,9 +43,13 @@ local TCP_CLOSE_UNREACHABLE   = 3
 local TCP_CLOSE_LOCAL_TIMEOUT = 4
 
 
--- Do NOT set a read timeout, the stream may be paused indefinately
+-- Do NOT set a read timeout, the stream may be paused indefinitely
 local STREAM_READ_TIMEOUT = 0
 local STREAM_WRITE_TIMEOUT = 5
+
+local PROXY_WRITE_TIMEOUT = 0 -- because the stream may be paused
+local PROXY_CONNECT_TIMEOUT = STREAM_WRITE_TIMEOUT + 1
+local PROXY_LISTEN_PORT = 9001
 
 local LOCAL_PAUSE_STOP_TIMEOUT = 400
 
@@ -124,6 +130,26 @@ function __init(self, jnt, slimproto)
 	-- signal we are Rtmp capable, but don't load module until used
 	slimproto:capability("Rtmp", 2)
 
+	slimproto:capability(function()
+			local ip_address, ip_subnet
+			local ifObj = Networking:activeInterface()
+		
+			if ifObj then
+				ip_address, ip_subnet = ifObj:getIPAddressAndSubnet()
+				if not ip_address then                                    
+					log:warn('Cannot get ip_address for active network interface ', ifObj)
+				end                                                                                       
+			else
+				log:warn('Cannot find active network interface')
+			end
+
+			if ip_address then
+				return "Proxy", tostring(ip_address) .. ":" .. tostring(PROXY_LISTEN_PORT)
+			else
+				return nil
+			end
+		end)
+
 	self.mode = 0
 	self.threshold = 0
 	self.tracksStarted = 0
@@ -138,6 +164,9 @@ function __init(self, jnt, slimproto)
 	self.sentAudioUnderrunEvent = false
 	self.ignoreStream = false
 	self.decodeThreshold = 2048
+	
+	self.proxy = nil
+	self.proxyListener = nil
 
 	return obj
 end
@@ -266,7 +295,7 @@ function _timerCallback(self)
 
 	-- enable stream reads when decode buffer is not full
 	if status.decodeFull < status.decodeSize and self.stream then
-		self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
+		self:_proxyAndStream(true)
 	end
 
 	if status.decodeState & DECODE_UNDERRUN ~= 0 or
@@ -443,7 +472,7 @@ function _ipstring(ip)
 end
 
 
-function _streamConnect(self, serverIp, serverPort, reader, writer)
+function _streamConnect(self, serverIp, serverPort, reader, writer, slaves)
 	log:info("connect ", _ipstring(serverIp), ":", serverPort, " ", string.match(self.header, "(.-)\n"))
 
 	if serverIp ~= self.slimproto:getServerIp() then
@@ -483,16 +512,230 @@ function _streamConnect(self, serverIp, serverPort, reader, writer)
 		m.read  = m._streamRead
 		m.write = m._streamWrite
 	end 
+	
+	self:_proxyInit(slaves, self.stream)
 
 	local wtask = Task("streambufW", self, _streamWrite, nil, Task.PRIORITY_AUDIO)
 	self.jnt:t_addWrite(self.stream, wtask, STREAM_WRITE_TIMEOUT)
 	
 	self.rtask = Task("streambufR", self, _streamRead, nil, Task.PRIORITY_AUDIO)
-	self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
+	self:_proxyAndStream(true)
 
 	self.slimproto:sendStatus('STMc')
 end
 
+function _proxyQueueSegment(self, chunk)
+	if self.proxy then
+		table.insert(self.proxy.q, chunk)
+	end
+end
+
+function _proxyConnClose(self, conn, err, leaveConnectionTable)
+	log:info("Proxy connection closed: from ", conn.ip, ':', conn.port, '; ', err or '')
+	self.jnt:t_removeWrite(conn.stream)
+	self.jnt:t_removeRead(conn.stream)
+	conn.stream:close()
+	conn.chunk = nil
+	if self.proxy and not leaveConnectionTable then
+		for i, c in ipairs(self.proxy.connections) do
+			if c == conn then
+				table.remove(self.proxy.connections, i)
+				break
+			end
+		end
+	end
+end
+
+function _proxyWrite(self, conn, networkErr)
+	if networkErr then
+		self:_proxyConnClose(conn, networkErr)
+		return
+	end
+	
+	while true do
+		local n, err
+		if conn.chunk then
+			n, err = Stream:proxyWrite(conn.stream, conn.chunk, conn.chunkOffset)
+			if n then -- stuff left
+				conn.chunkOffset = n
+			else
+				conn.chunk = nil
+				self.jnt:t_removeWrite(conn.stream)
+				-- Let reading be restarted by the status timer
+				-- once the decoder is running.
+				-- This prevents the streambuf starving the cpu
+				self:_proxyAndStream(not self.sentResumeDecoder)
+			end
+		end
+		
+		if err then
+			self:_proxyConnClose(conn, err)
+			break
+		end
+		
+		_, networkErr = Task:yield(false)
+	end
+end
+	
+function _proxyRead(self, conn, networkErr)
+	if networkErr then
+		log:info("proxyRead: ", err)
+		return
+	end
+	
+	while true do
+		local n, err = conn.stream:receive(10000)
+		if err then
+			log:info("proxyRead: ", err)
+			break
+		elseif n then
+			log:info("proxyRead received ", #n);
+		end
+		_, networkErr = Task:yield(false)
+	end
+	self.jnt:t_removeRead(conn.stream)
+end
+
+function _proxyAccept(self, networkErr)
+	-- XXX check error
+	
+	while true do
+		local stream
+		stream, networkErr = self.proxyListener:accept()
+		
+		if networkErr then
+			log:info("proxyAccept: ", networkErr)
+			break
+		end
+
+		if stream then
+			local conn = {}
+			conn.ip, conn.port = stream:getpeername()
+			log:info("Proxy connection accepted: from ", conn.ip, ':', conn.port)
+			conn.stream = stream
+			stream:settimeout(0)
+			conn.wtask = Task("proxyW", self, 
+					function (self, networkErr) self:_proxyWrite(conn, networkErr) end,
+					nil, Task.PRIORITY_AUDIO)
+			conn.rtask = Task("proxyR", self, 
+					function (self, networkErr) self:_proxyRead(conn, networkErr) end,
+					nil, Task.PRIORITY_AUDIO)
+			self.jnt:t_addRead(conn.stream, conn.rtask, STREAM_WRITE_TIMEOUT) -- read and discard the request
+			table.insert(self.proxy.connections, conn)
+			
+			self.proxy.expected = self.proxy.expected - 1
+			if self.proxy.expected <= 0 then -- we have them all
+				log:info("All proxy connections active")
+				self.jnt:t_removeRead(self.proxyListener)
+				self.proxy.listenTask = nil
+				self:_proxyAndStream(true)
+				return;
+			end
+		end
+		
+		_, networkErr = Task:yield(false)
+	end
+	
+	self.jnt:t_removeRead(self.proxyListener)
+	self.proxy.listenTask = nil
+	
+	if self.proxy.expected > 0 then
+		log:warn('Not all proxy connections accepted: ', networkErr)
+		if self.stream and self.stream == self.proxy.stream then
+			self:_streamDisconnect(TCP_CLOSE_LOCAL_TIMEOUT)
+		end
+	end
+end
+
+function _proxyCleanup(self)
+	if self.proxy then
+		-- close existing connections, etc.
+		self.jnt:t_removeRead(self.proxyListener)
+		self.proxy.listenTask = nil
+		
+		for i, c in ipairs(self.proxy.connections) do
+			self:_proxyConnClose(c, nil, true)
+		end
+	
+		self.proxy = nil
+	end
+end
+
+function _proxyInit(self, expected, stream)
+	
+	if self.proxy then
+		if self.proxy.close and not self.proxy.listenTask then
+			-- let them drain
+			self.proxy.expected = expected
+			self.proxy.stream = stream
+			return
+		else
+			self:_proxyCleanup()
+		end
+	end
+
+	if expected and expected > 0 then
+		log:info("Proxy: connections expected = ", expected)
+		local proxy = {}
+		proxy.expected = expected
+		proxy.stream = stream
+		proxy.q = {}
+		proxy.connections = {}
+		
+		if not self.proxyListener then
+			self.proxyListener = socket.bind(0, PROXY_LISTEN_PORT)
+			self.proxyListener:settimeout(0)
+		end
+		
+		proxy.listenTask = Task("proxyListen", self, _proxyAccept, nil, Task.PRIORITY_AUDIO)
+		self.jnt:t_addRead(self.proxyListener, proxy.listenTask, PROXY_CONNECT_TIMEOUT)
+		
+		self.proxy = proxy
+	end
+end
+
+function _proxyAndStream(self, canRead)
+	if not canRead then
+		self.jnt:t_removeRead(self.stream)
+	end
+
+	if self.proxy then
+		if self.proxy.listenTask then
+			return
+		end
+		
+		for i, c in ipairs(self.proxy.connections) do
+			if c.chunk then return end
+		end
+						
+		if #self.proxy.q > 0 then
+			local chunk = table.remove(self.proxy.q, 1)
+			for i, c in ipairs(self.proxy.connections) do
+				c.chunk, c.chunkOffset = chunk, 0
+				self.jnt:t_addWrite(c.stream, c.wtask, PROXY_WRITE_TIMEOUT)
+			end
+			return
+		end
+		
+		if self.proxy.close then
+			for i, c in ipairs(self.proxy.connections) do
+				self:_proxyConnClose(c, nil, true)
+			end
+			self.proxy.close = false
+			self.proxy.connections = {}
+			if self.proxy.expected > 0 and self.stream == self.proxy.stream then
+				-- next connection now
+				self:_proxyInit(self.proxy.expected, self.proxy.stream)
+			end
+		end
+	end
+
+	if canRead then
+		self.jnt:t_addRead(self.stream, self.rtask, STREAM_READ_TIMEOUT)
+	end
+end
+				
+				
 
 function _streamDisconnect(self, reason, flush)
 	if not self.stream then
@@ -511,6 +754,20 @@ function _streamDisconnect(self, reason, flush)
 
 	self.stream:disconnect()
 	self.stream = nil
+	
+	if self.proxy then
+		if reason and not reason == TCP_CLOSE_FIN then
+			self:_proxyCleanup()
+		else 
+			if self.proxy.listenTask then
+				self.proxy.listenTask = nil
+				self.jnt:t_removeRead(self.proxyListener)
+			end
+			-- Close any proxy connections as soon as they have drained
+			self.proxy.close = true
+			self:_proxyAndStream(false)
+		end
+	end
 
 	-- Notify SqueezeCenter the stream is closed
 	if (flush) then
@@ -553,9 +810,7 @@ function _streamRead(self, networkErr)
 		-- stop reading if the decoder is running. the socket will
 		-- be added again by the status timer. this prevents the 
 		-- streambuf starving the cpu
-		if self.sentResumeDecoder then
-			self.jnt:t_removeRead(self.stream)
-		end
+		self:_proxyAndStream(not self.sentResumeDecoder)
 
 		_, networkErr = Task:yield(false)
 
@@ -701,7 +956,7 @@ function _strm(self, data)
 			     string.byte(data.pcmChannels),
 			     string.byte(data.pcmEndianness)
 		    )
-			self:_streamConnect(serverIp, data.serverPort)
+			self:_streamConnect(serverIp, data.serverPort, nil, nil, data.slaves)
 		end
 
 	elseif data.command == 'q' then
@@ -757,6 +1012,8 @@ function stopInternal(self)
 		_setSource(self, "off")
 	end
 	self:_streamDisconnect(nil, true)
+	
+	self:_proxyCleanup()
 
 	self.tracksStarted = 0
 end

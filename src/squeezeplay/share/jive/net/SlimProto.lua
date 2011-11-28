@@ -17,7 +17,7 @@ This class implements a TCP socket running in a L<jive.net.NetworkThread>.
 =cut
 --]]
 
-local assert, ipairs, tonumber = assert, ipairs, tonumber
+local assert, ipairs, tonumber, type = assert, ipairs, tonumber, type
 
 
 local oo          = require("loop.base")
@@ -125,11 +125,25 @@ local opcodes = {
 			wlanList = wlanList | 0x4000
 		end
 
-		local capabilities = table.concat(self.capabilities, ",")
+		local capabilities = {}
+		for i, key in ipairs(self.capabilities) do
+			if type(key) == 'function' then
+				local v
+				key, v = key()
+				if key and v then
+					key = key .. '=' .. v
+				end
+			end
+			if key then
+				table.insert(capabilities, key)
+			end
+		end
+
+		capabilities = table.concat(capabilities, ",")
 
 		-- always clear the syncgroupid after using it
 		for i, key in ipairs(self.capabilities) do
-			if string.match(key, "SyncgroupID=") then
+			if type(key) == 'string' and string.match(key, "SyncgroupID=") then
 				table.remove(self.capabilities, i)
 				break
 			end
@@ -269,7 +283,7 @@ local opcodes = {
 			transitionType = string.sub(packet, 15, 15),
 			flags = unpackNumber(packet, 16, 1),
 			outputThreshold = unpackNumber(packet, 17, 1),
-			-- reserved = unpackNumber(packet, 18, 1),
+			slaves = unpackNumber(packet, 18, 1),
 			replayGain = unpackNumber(packet, 19, 4),
 			serverPort = unpackNumber(packet, 23, 2),
 			serverIp = unpackNumber(packet, 25, 4),
