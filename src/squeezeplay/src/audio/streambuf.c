@@ -788,7 +788,7 @@ static int stream_proxyWriteL(lua_State *L) {
 
 	len = chunk->len - offset;
 	n = send(stream->fd, chunk->buf + offset, len,
-#if defined MSG_NOSIGNAL
+#ifdef MSG_NOSIGNAL
 										MSG_NOSIGNAL
 #else
 										0
