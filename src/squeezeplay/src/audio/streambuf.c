@@ -787,7 +787,13 @@ static int stream_proxyWriteL(lua_State *L) {
 	offset = lua_tointeger(L, 4);
 
 	len = chunk->len - offset;
-	n = send(stream->fd, chunk->buf + offset, len, MSG_NOSIGNAL);
+	n = send(stream->fd, chunk->buf + offset, len,
+#if defined MSG_NOSIGNAL
+										MSG_NOSIGNAL
+#else
+										0
+#endif
+										);
 	if (n < 0) {
 		if (errno != EAGAIN) {
 			lua_pushnil(L);
