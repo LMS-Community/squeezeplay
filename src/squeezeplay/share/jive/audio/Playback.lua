@@ -17,7 +17,7 @@ local Player                 = require("jive.slim.Player")
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
 local Framework              = require("jive.ui.Framework")
-local Networking             = require("jive.net.Networking")
+local hasNetworking, Networking = pcall(require, "jive.net.Networking")
 
 local debug                  = require("jive.utils.debug")
 local log                    = require("jive.utils.log").logger("audio.decode")
@@ -132,7 +132,7 @@ function __init(self, jnt, slimproto)
 
 	slimproto:capability(function()
 			local ip_address, ip_subnet
-			local ifObj = Networking:activeInterface()
+			local ifObj = hasNetworking and Networking:activeInterface()
 		
 			if ifObj then
 				ip_address, ip_subnet = ifObj:getIPAddressAndSubnet()
