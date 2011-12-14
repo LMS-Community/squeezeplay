@@ -1,3 +1,3 @@
 /* This file should be automatically generated with the SVN revision number, patches welcome */
-#define JIVE_VERSION "7.7.1 r0"
+#define JIVE_VERSION "7.7.2 r0"
 
