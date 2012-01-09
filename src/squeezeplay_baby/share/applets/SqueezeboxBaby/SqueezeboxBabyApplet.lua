@@ -121,10 +121,15 @@ local luxSmooth = {}
 local AMBIENT_RAMPSTEPS = 4
 
 local STATIC_AMBIENT_MIN = 90000
+local SENS_BRIGHTNESS_LEVEL_MAX = 36
+local SENS_BRIGHTNESS_LEVEL_INIT = 36
+local SENS_BRIGHTNESS_LEVEL_FACTOR = STATIC_AMBIENT_MIN / SENS_BRIGHTNESS_LEVEL_MAX
 
 local brightCur = -1
 local brightTarget = -1
 local brightMin = MIN_BRIGHTNESS_LEVEL_INIT
+local brightSens = STATIC_AMBIENT_MIN
+local brightLast = -1
 local brightReadRateDivider = 1
 
 
@@ -309,6 +314,10 @@ function initBrightness(self)
 	settings.brightness = settings.brightness or MAX_BRIGHTNESS_LEVEL
 	-- Value of minimal brightness (auto) slider
 	settings.brightnessMinimal = settings.brightnessMinimal or (MIN_BRIGHTNESS_LEVEL_INIT)
+
+	-- Value of sensitivity brightness (auto) slider
+	settings.brightnessSensitivity = settings.brightnessSensitivity or (SENS_BRIGHTNESS_LEVEL_INIT)
+
 	-- Value of brightness control
 	settings.brightnessControl = settings.brightnessControl or "automatic"
 
@@ -325,6 +334,8 @@ function initBrightness(self)
 	brightCur = MAX_BRIGHTNESS_LEVEL
 	brightTarget = MAX_BRIGHTNESS_LEVEL
 	brightMin = settings.brightnessMinimal
+	brightSens = settings.brightnessSensitivity * SENS_BRIGHTNESS_LEVEL_FACTOR
+	brightLast = MAX_BRIGHTNESS_LEVEL
 	brightReadRateDivider = 1
 
 	self.brightPrev = self:getBrightness()
@@ -432,9 +443,11 @@ function doAutomaticBrightnessTimer(self)
 		if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
 			table.remove(luxSmooth, 1)
 		end
+
+		brightLast = self:getSmoothedLux(luxSmooth)
 	end
 
-	local ambient = self:getSmoothedLux(luxSmooth)
+	local ambient = brightLast
 
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -443,13 +456,14 @@ function doAutomaticBrightnessTimer(self)
 	]]--
 
 	-- switch around ambient value (darker is higher)
-	ambient = STATIC_AMBIENT_MIN - ambient
+	ambient = brightSens - ambient
+
 	if ambient < 0 then
 		ambient = 0
 	end
 	--log:info("AmbientFixed: " .. tostring(ambient))
 
-	brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
+	brightTarget = (MAX_BRIGHTNESS_LEVEL / brightSens) * ambient
 
 	self:doBrightnessRamping(brightTarget);
 
@@ -1028,6 +1042,68 @@ function setWakeupAlarm (self, epochsecs)
 
 	sysWrite(self, "alarm_time", wakeup)
 end
+
+
+-- Sensitivity brightness slider (Auto)
+function settingsSensBrightnessShow (self, menuItem)
+	local window = Window("text_list", self:string("BSP_BRIGHTNESS_SENS"), squeezeboxjiveTitleStyle)
+
+	local settings = self:getSettings()
+	local level = settings.brightnessSensitivity
+
+-- DEBUG only - remove
+	local status = Label("text", brightSens)
+
+	local slider = Slider("slider", 1, SENS_BRIGHTNESS_LEVEL_MAX, level,
+		function(slider, value, done)
+--			log:info("Value: " .. value)
+
+			-- Set to automatic when changing minimal brightness
+			settings.brightnessControl = "automatic"
+
+			-- Prepare setting to store later
+			settings.brightnessSensitivity = value
+			-- Update sens value for timer loop
+			brightSens = value * SENS_BRIGHTNESS_LEVEL_FACTOR
+
+-- DEBUG only - remove
+			status:setValue(brightSens)
+
+			-- done is true for 'go' and 'play' but we do not want to leave
+			if done then
+				window:playSound("BUMP")
+				window:bumpRight()
+			end
+	end)
+
+	window:addWidget(Textarea("help_text", self:string("BSP_BRIGHTNESS_SENS_ADJUST_HELP")))
+
+-- DEBUG only - remove
+	window:addWidget(status)
+
+	window:addWidget(Group("sliderGroup", {
+		min = Icon("button_slider_min"),
+		slider = slider,
+		max = Icon("button_slider_max"),
+	}))
+
+	-- If we are here already, eat this event to avoid piling up this screen over and over
+	window:addActionListener("go_brightness", self,
+				function()
+					return EVENT_CONSUME
+				end)
+
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			brightSens = settings.brightnessSensitivity * SENS_BRIGHTNESS_LEVEL_FACTOR
+			self:storeSettings()
+		end
+	)
+
+	window:show()
+	return window
+end
+
 
 -- Minimal brightness slider (Auto)
 function settingsMinBrightnessShow (self, menuItem)

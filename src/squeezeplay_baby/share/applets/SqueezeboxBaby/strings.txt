@@ -153,6 +153,12 @@ BSP_BRIGHTNESS_MIN_ADJUST_HELP
 	RU	Используйте колесико для регулировки яркости.
 	SV	Justera ljusstyrkan med rullningshjulet.
 
+BSP_BRIGHTNESS_SENS
+	EN	Sensitivity (Auto)
+
+BSP_BRIGHTNESS_SENS_ADJUST_HELP
+	EN	Use the wheel to adjust brightness sensitivity.
+
 GOODBYE
 	CS	Nashledanou
 	DA	Farvel

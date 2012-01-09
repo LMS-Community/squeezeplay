@@ -82,9 +82,10 @@ function registerApplet(meta)
 	jiveMain:setDefaultSkin("QVGAlandscapeSkin")
 
 	-- settings
-	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MANUAL", function(applet, ...) applet:settingsBrightnessShow(...) end, _, _, "hm_settingsBrightness"))
-	jiveMain:addItem(meta:menuItem('minBrightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MIN", function(applet, ...) applet:settingsMinBrightnessShow(...) end)) 
-	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'settingsBrightness', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessControlShow(...) end, _, _, "hm_settingsBrightness"))
+	jiveMain:addItem(meta:menuItem('sensBrightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_SENS", function(applet, ...) applet:settingsSensBrightnessShow(...) end, 40)) 
+	jiveMain:addItem(meta:menuItem('brightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MANUAL", function(applet, ...) applet:settingsBrightnessShow(...) end, 20, _, "hm_settingsBrightness"))
+	jiveMain:addItem(meta:menuItem('minBrightnessSetting', 'settingsBrightness', "BSP_BRIGHTNESS_MIN", function(applet, ...) applet:settingsMinBrightnessShow(...) end, 30)) 
+	jiveMain:addItem(meta:menuItem('brightnessSettingControl', 'settingsBrightness', "BSP_BRIGHTNESS_CTRL", function(applet, ...) applet:settingsBrightnessControlShow(...) end, 10, _, "hm_settingsBrightness"))
 
 	-- services
 	meta:registerService("getBrightness")
