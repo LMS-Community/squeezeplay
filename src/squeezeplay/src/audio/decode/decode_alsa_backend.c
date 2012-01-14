@@ -427,17 +427,38 @@ static void playback_callback(struct decode_alsa *state,
 		}
 
 		if (PCM_SAMPLE_WIDTH() == 24) {
-			sample_t *decode_ptr;
-			Sint32 *output_ptr;
-
-			output_ptr = (Sint32 *)(void *)output_buffer;
-			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-			while (frames_cnt--) {
-				*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 8;
-				*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 8;
+			if (state->format == SND_PCM_FORMAT_S24_LE) {
+				/* handle SND_PCM_FORMAT_S24_LE case */
+				sample_t *decode_ptr;
+				Sint32 *output_ptr;
+				
+				output_ptr = (Sint32 *)(void *)output_buffer;
+				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+				while (frames_cnt--) {
+					*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 8;
+					*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 8;
+				}
+			} else {
+				/* handle SND_PCM_FORMAT_S24_3LE case */
+				sample_t *decode_ptr;
+				u8_t *output_ptr;
+				
+				output_ptr = (u8_t *)(void *)output_buffer;
+				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+				while (frames_cnt--) {
+					sample_t lsample = fixed_mul(lgain, *(decode_ptr++));
+					sample_t rsample = fixed_mul(rgain, *(decode_ptr++));
+					*(output_ptr++) = (lsample & 0x0000ff00) >>  8;
+					*(output_ptr++) = (lsample & 0x00ff0000) >> 16;
+					*(output_ptr++) = (lsample & 0xff000000) >> 24;
+					*(output_ptr++) = (rsample & 0x0000ff00) >>  8;
+					*(output_ptr++) = (rsample & 0x00ff0000) >> 16;
+					*(output_ptr++) = (rsample & 0xff000000) >> 24;
+				}
 			}
 		}
 		else {
+			/* handle SND_PCM_FORMAT_S16_LE case */
 			sample_t *decode_ptr;
 			Sint16 *output_ptr;
 
@@ -576,8 +597,18 @@ static int _pcm_open(struct decode_alsa *state,
 
 	/* set the sample format */
 	if ((err = snd_pcm_hw_params_set_format(*pcmp, hw_params, state->format)) < 0) {
-		LOG_ERROR("Sample format not available: %s", snd_strerror(err));
-		return err;
+
+		/* for 24bit try S24_LE and S24_3LE */
+		if (state->format == SND_PCM_FORMAT_S24_LE) {
+			state->format = SND_PCM_FORMAT_S24_3LE;
+			LOG_INFO("S24_LE unavailable trying S24_3LE");
+			err = snd_pcm_hw_params_set_format(*pcmp, hw_params, state->format);
+		}
+
+		if (err < 0) {
+			LOG_ERROR("Sample format not available: %s", snd_strerror(err));
+			return err;
+		}
 	}
 
 	/* set the channel count */
