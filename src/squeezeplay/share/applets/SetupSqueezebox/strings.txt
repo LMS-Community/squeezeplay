@@ -128,7 +128,7 @@ SQUEEZEBOX_SETUP_COMPLETE
 	CS	Váš Squeezebox je nyní nastaven.
 	DA	Nu er din Squeezebox konfigureret.
 	DE	Die Squeezebox ist eingerichtet.
-	EN	Your squeezebox is now set up.
+	EN	Your Squeezebox is now set up.
 	ES	Se ha configurado Squeezebox.
 	FI	Squeezebox on nyt valmiina käyttöön.
 	FR	Votre Squeezebox est configurée.
