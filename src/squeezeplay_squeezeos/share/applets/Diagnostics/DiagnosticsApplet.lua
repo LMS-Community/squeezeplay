@@ -702,6 +702,7 @@ function networkTroubleshootingMenu(self, iface)
         local errorCode = iface:getNetworkResult()
 	if type(errorCode) == 'number' and errorCode >= 0 then
 		log:warn('A positive number means there is no error. Do not push a diags window in this condition.')
+		return false
 	elseif type(errorCode) == 'number' then
 		log:warn('Error code is listed as: ', errorCode)
 	else
