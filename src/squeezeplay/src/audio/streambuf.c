@@ -179,6 +179,7 @@ static void streambuf_feedL(u8_t *buf, size_t size, lua_State *L) {
 		proxy_chunk(streambuf_buf + streambuf_fifo.wptr, n, L);
 
 		fifo_wptr_incby(&streambuf_fifo, n);
+		buf  += n;
 		size -= n;
 	}
 
