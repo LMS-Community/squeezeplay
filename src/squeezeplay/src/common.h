@@ -120,6 +120,7 @@ int watchdog_keepalive(int watchdog_id, int count);
 const char * system_get_machine(void);
 const char * system_get_arch(void);
 const char * system_get_version(void);
+const char * system_get_uuid_char(void);
 
 /* time */
 #if HAVE_CLOCK_GETTIME
