@@ -120,11 +120,14 @@ local luxSmooth = {}
 -- Maximum number of brightness levels up/down per run of the timer
 local AMBIENT_RAMPSTEPS = 4
 
-local STATIC_AMBIENT_MIN = 90000
+local STATIC_AMBIENT_MIN_TOSHIBA = 90000
+local STATIC_AMBIENT_MIN_LITEON	 =  5000
+local staticAmbientMin = -1
 
 local brightCur = -1
 local brightTarget = -1
 local brightMin = MIN_BRIGHTNESS_LEVEL_INIT
+local brightLast = -1
 local brightReadRateDivider = 1
 
 
@@ -325,6 +328,16 @@ function initBrightness(self)
 	brightCur = MAX_BRIGHTNESS_LEVEL
 	brightTarget = MAX_BRIGHTNESS_LEVEL
 	brightMin = settings.brightnessMinimal
+
+	if self._revision >= 7 then
+		-- LiteOn ambient light sensor
+		staticAmbientMin = STATIC_AMBIENT_MIN_LITEON
+	else
+		-- Toshiba ambient light sensor
+		staticAmbientMin = STATIC_AMBIENT_MIN_TOSHIBA
+	end
+
+	brightLast = MAX_BRIGHTNESS_LEVEL
 	brightReadRateDivider = 1
 
 	self.brightPrev = self:getBrightness()
@@ -432,9 +445,11 @@ function doAutomaticBrightnessTimer(self)
 		if( MAX_SMOOTHING_VALUES < #luxSmooth ) then
 			table.remove(luxSmooth, 1)
 		end
+
+		brightLast = self:getSmoothedLux(luxSmooth)
 	end
 
-	local ambient = self:getSmoothedLux(luxSmooth)
+	local ambient = brightLast
 
 	--[[
 	log:info("Ambient:      " .. tostring(ambient))
@@ -443,13 +458,13 @@ function doAutomaticBrightnessTimer(self)
 	]]--
 
 	-- switch around ambient value (darker is higher)
-	ambient = STATIC_AMBIENT_MIN - ambient
+	ambient = staticAmbientMin - ambient
 	if ambient < 0 then
 		ambient = 0
 	end
 	--log:info("AmbientFixed: " .. tostring(ambient))
 
-	brightTarget = (MAX_BRIGHTNESS_LEVEL / STATIC_AMBIENT_MIN) * ambient
+	brightTarget = (MAX_BRIGHTNESS_LEVEL / staticAmbientMin) * ambient
 
 	self:doBrightnessRamping(brightTarget);
 
