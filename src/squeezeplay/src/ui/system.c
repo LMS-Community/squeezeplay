@@ -31,6 +31,10 @@ const char * system_get_version(void) {
 	return JIVE_VERSION;
 }
 
+const char * system_get_uuid_char(void) {
+	return uuid;
+}
+
 
 static int system_get_mac_address(lua_State *L) {
 	if (mac_address) {
