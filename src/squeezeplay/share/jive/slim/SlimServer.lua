@@ -74,6 +74,11 @@ local Player      = require("jive.slim.Player")
 -- minimum support server version, can be set per device
 local minimumVersion = "7.4"
 
+-- oldest firmware version which is supposed to be compatible with this firmware
+-- use this value to prevent downgrading firmwares unless really necessary
+-- XXXX - to be updated with real version/revision
+local MINIMUM_COMPATIBLE_FIRMWARE = "7.6 r0"
+
 -- list of servers index by id. this weak table is used to enforce
 -- object equality with the server name.
 local serverIds = {}
@@ -327,7 +332,30 @@ function _upgradeSink(self, chunk, err)
 	local oldUpgradeForce = self.upgradeForce
 
 	self.upgradeUrl = url
-	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
+	self.upgradeForce = false
+
+	if url then
+		local machine = System:getMachine()
+		
+		local versionNew, revisionNew = string.match(url, "\/" .. machine .. "_([^_]+)_r([^_]+)\.bin")
+		local versionOld, revisionOld = string.match(JIVE_VERSION, "(.+) r(.+)")
+		local versionOldest, revisionOldest = string.match(MINIMUM_COMPATIBLE_FIRMWARE, "(.+) r(.+)")
+		
+		if (not versionNew) or (not revisionNew) then
+			log:info("missing firmware version/revision - ignoring")
+
+		elseif versionOld == versionNew and revisionOld == revisionNew then
+			log:info("we're up to date - no firmware change")
+
+		elseif self:isMoreRecent(versionNew, versionOld) or self:isMoreRecent(revisionNew, revisionOld) then
+			log:info("there's a new firmware available - update!")
+			self.upgradeForce = true
+
+		elseif self:isMoreRecent(versionOldest, versionNew) or self:isMoreRecent(revisionOldest, revisionNew) then
+			log:info("firmware offered is older than oldest known compatible - downgrade")
+			self.upgradeForce = true
+		end
+	end
 
 	log:info(self.name, " firmware=", self.upgradeUrl, " force=", self.upgradeForce)
 
@@ -1213,12 +1241,16 @@ function isCompatible(self)
 	if not self.state.version then
 		return nil
 	end
+	
+	return self:isMoreRecent(self.state.version, minimumVersion)
+end
 
-	local serVer = string.split("%.", self.state.version)
-	local minVer = string.split("%.", minimumVersion)
+function isMoreRecent(self, new, old)
+	local newVer = string.split("%.", new)
+	local oldVer = string.split("%.", old)
 
-	for i,v in ipairs(serVer) do
-		if minVer[i] and v < minVer[i] then
+	for i,v in ipairs(newVer) do
+		if oldVer[i] and v < oldVer[i] then
 			return false
 		end
 	end
