@@ -324,7 +324,7 @@ function _upgradeSink(self, chunk, err)
 	end
 
 	local oldUpgradeUrl = self.upgradeUrl
-	local oldUpgradeForce = self.upgrdaeForce
+	local oldUpgradeForce = self.upgradeForce
 
 	self.upgradeUrl = url
 	self.upgradeForce = (tonumber(chunk.data.firmwareUpgrade) == 1)
