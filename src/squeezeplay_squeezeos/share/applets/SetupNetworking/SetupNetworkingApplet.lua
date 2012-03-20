@@ -169,6 +169,28 @@ function _connectionType(self)
 
 	assert(self.wlanIface or self.ethIface)
 
+-- fm+
+	-- Shortcut to use Ethernet immediately if available and link is up
+	if self.ethIface then
+		Task("halfDuplexBugVerification", self,
+			function()
+				local status = self.ethIface:t_wpaStatus()
+				if status.link then
+					return _halfDuplexBugVerification(self, self.ethIface)
+				else
+					-- Ethernet available but no link - do a wireless scan
+					return _networkScan(self, self.wlanIface)
+				end
+			end
+		):addTask()
+	else
+		-- Only wireless available - do a wireless scan
+		return _networkScan(self, self.wlanIface)
+	end
+-- fm-
+
+
+--[[
 	-- short cut if only one interface is available
 	if not self.wlanIface then
 		-- Only ethernet available
@@ -209,6 +231,7 @@ function _connectionType(self)
 	_helpAction(self, window, "NETWORK_CONNECTION_HELP", "NETWORK_CONNECTION_HELP_BODY", connectionMenu)
 
 	self:tieAndShowWindow(window)
+--]]
 end
 
 
@@ -350,6 +373,8 @@ end
 function _networkScanComplete(self, iface)
 	self.scanResults = {}
 
+-- fm+
+--[[
 	-- for ethernet, automatically connect
 	if not iface:isWireless() then
 		local nextStep =        function()
@@ -366,6 +391,8 @@ function _networkScanComplete(self, iface)
 			return
 		end
 	end
+--]]
+-- fm-
 
 	local window = Window("text_list", self:string("NETWORK_WIRELESS_NETWORKS"), 'setuptitle')
 	window:setAllowScreensaver(false)
@@ -375,13 +402,44 @@ function _networkScanComplete(self, iface)
 
 	-- add hidden ssid menu
 	menu:addItem({
-		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
+-- fm+
+--		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
+		text = self:string("NETWORK_ENTER_SSID"),
+-- fm-
 		sound = "WINDOWSHOW",
 		callback = function()
-			_chooseEnterSSID(self, iface)
+-- fm+
+--			_chooseEnterSSID(self, iface)
+			_enterSSID(self, iface)
+-- fm-
 		end,
 		weight = 3
 	})
+
+-- fm+
+	-- add 'Ethernet' menu item if available
+	if self.ethIface then
+		menu:addItem({
+			text = self:string("NETWORK_ETHERNET"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				_halfDuplexBugVerification(self, self.ethIface)
+			end,
+			weight = 11
+		})
+	end
+
+	-- add 'search again' menu item
+	menu:addItem({
+		text = self:string("NETWORK_SEARCH_FOR_MY_NETWORK"),
+		sound = "WINDOWSHOW",
+		callback = function()
+			_networkScanAgain(self, iface, false)
+		end,
+		weight = 12
+	})
+-- fm-
+
 
 	window:addWidget(menu)
 
@@ -391,6 +449,8 @@ function _networkScanComplete(self, iface)
 	-- process existing scan results
 	_scanResults(self, iface)
 
+-- fm+
+--[[
 	-- schedule network scan 
 	self.scanMenu:addTimer(5000,
 		function()
@@ -405,7 +465,8 @@ function _networkScanComplete(self, iface)
 				_scanResults(self, iface)
 			end)
 		end)
-
+--]]
+-- fm-
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", self.scanMenu)
 
 	self:tieAndShowWindow(window)
@@ -476,6 +537,23 @@ function _scanResults(self, iface)
 	end
 end
 
+-- fm+
+function _halfDuplexBugVerification(self, iface)
+	log:info("_halfDuplexBugVerification")
+	local nextStep = function()
+		_connect(self, iface, iface:getName(), true, false)
+	end
+
+	if appletManager:callService("performHalfDuplexBugTest") then
+		_halfDuplexBugTest(self, iface, nextStep)
+		return
+	else
+		nextStep()
+		return
+	end
+end
+-- fm-
+
 function _halfDuplexBugTest(self, iface, nextStep, useShowInstead)
 	log:info("_halfDuplexBugTest:")
 	local status = iface:t_wpaStatus()
@@ -533,7 +611,8 @@ end
 
 -------- WIRELESS SSID AND PASSWORD --------
 
-
+-- fm+
+--[[
 function _chooseEnterSSID(self, iface)
 	local window = Window("help_list", self:string("NETWORK_DONT_SEE_YOUR_NETWORK"), 'setuptitle')
 	window:setAllowScreensaver(false)
@@ -564,7 +643,8 @@ function _chooseEnterSSID(self, iface)
 
 	self:tieAndShowWindow(window)
 end
-
+--]]
+-- fm-
 
 function _enterSSID(self, iface)
 	assert(iface, debug.traceback())
