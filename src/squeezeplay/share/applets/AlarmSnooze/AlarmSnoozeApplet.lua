@@ -62,7 +62,7 @@ function init(self, ...)
 	self.failedAudioTicker = 0
 	self.RTCAlarmTimer = Timer(timeToAlarm,
 			function ()
-				log:warn("RTC ALARM FIRING")
+				log:warn("*** Alarm: RTC alarm firing")
 				self:openAlarmWindow('rtc')
 			end,
 			true
@@ -71,10 +71,10 @@ function init(self, ...)
 	self.wakeOnLanTimer = Timer(86400000, -- arbitrary countdown, as timer interval will be set by _startTimer(), not here
 			function()
 				if self.server then
-					log:warn('WOL packet being sent to ', self.server)
+					log:warn("*** Alarm: WOL packet being sent to ", self.server)
 					self.server:wakeOnLan()
 				else
-					log:warn('WOL timer has been hit, but no self.server is available to send to')
+					log:warn("*** Alarm: WOL timer has been hit, but no self.server is available to send to")
 				end
 			end,
 			true
@@ -83,28 +83,30 @@ function init(self, ...)
 	self.statusPoller = Timer(1000, 
 		function ()
 			local status = decode:status()
-			log:warn('----------------------------------')
-			log:warn('**** self.alarmInProgress:        ', self.alarmInProgress)
-			log:warn('**** status.audioState:           ', status.audioState)
-			log:warn('**** self.localPlayer.alarmState: ', self.localPlayer:getAlarmState())
-			log:warn('**** RTC fallback running?:       ', self.RTCAlarmTimer:isRunning())
-			log:warn('**** self.server:                 ', self.server)
+			log:warn("*** Alarm ------------------------")
+			log:warn("*** self.alarmInProgress:         ", self.alarmInProgress)
+			log:warn("*** status.audioState:            ", status.audioState)
+			log:warn("*** self.localPlayer.alarmState:  ", self.localPlayer:getAlarmState())
+			log:warn("*** RTC fallback running?:        ", self.RTCAlarmTimer:isRunning())
+			log:warn("*** self.server:                  ", self.server)
+
 			if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
-			log:warn('**** Fallback timeout running?:   ', self.fallbackAlarmTimeout:isRunning())
+				log:warn("*** Fallback timeout running?:    ", self.fallbackAlarmTimeout:isRunning())
 			end
+
 			if self.server then
-				log:warn('**** self.server.mac:                 ', self.server.mac)
+				log:warn("*** self.server.mac:              ", self.server.mac)
 			end
 			if self.RTCAlarmTimer:isRunning() and self.debugRTCTime and self.debugRTCTime > 0 then
 				local timeToAlarm = self.debugRTCTime / 1000
-				log:warn('**** RTC time:       ', timeToAlarm)
+				log:warn("*** RTC time:                     ", timeToAlarm)
 				if self.debugRTCTime > 0 then	
 					self.debugRTCTime = self.debugRTCTime - 1000
 				end
 			end
 			if self.wakeOnLanTimer:isRunning() and self.debugWOLTime and self.debugWOLTime > 0 then
 				local timeToWOL = self.debugWOLTime / 1000
-				log:warn('**** WOL timer:       ', timeToWOL)
+				log:warn("*** WOL timer:                    ", timeToWOL)
 				if self.debugWOLTime > 0 then	
 					self.debugWOLTime = self.debugWOLTime - 1000
 				end
@@ -132,13 +134,13 @@ end
 
 function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
-	log:warn('notify_playerAlarmState received for ', player, ' with alarmState of ', alarmState)
+	log:warn("*** Alarm: notify_playerAlarmState: player: ", player, " alarmState: ", alarmState)
 	if not player then
 		return
 	end
 	if player:isLocal() then
-		log:warn('**************************** notify_playerAlarmState received: ', alarmState, ' ', alarmNext)
-		-- if there's an existing alarm window on the screen and the rtc alarm isn't firing, 
+		log:warn("*** Alarm: notify_playerAlarmState: alarmState: ", alarmState, " alarmNext: ", alarmNext)
+		-- if there's an existing alarm window on the screen and the RTC alarm isn't firing, 
 		-- we're going to hide it in the event of this notification. if alarmState is 'active', we bring up a new one
 		if self.alarmInProgress ~= 'rtc' then
 			self:_hideAlarmWindow()
@@ -146,37 +148,33 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 
 		if alarmState == 'active' then
 			if player ~= Player:getCurrentPlayer() then
-				log:warn('alarm has fired locally, switching to local player')
+				log:warn("*** Alarm: Local alarm has fired -> switching to local player")
                         	appletManager:callService("setCurrentPlayer", player)
 			end
 
 			-- ignore server alarm if an alarm is already in progress
 			if self.alarmInProgress == 'rtc' then
-				log:warn('ignoring alarm notification because fallback fired prior')
+				log:warn("*** Alarm: Ignore server alarm because fallback fired prior")
 				return
 			elseif self.alarmInProgress == 'server' then
-				log:info('[likely post-snooze] alarm notification received while alarm already in progress')
+				log:info("*** Alarm: [likely post-snooze] alarm notification received while alarm already in progress")
 			    -- keep going 
 			end
-            
+
 			-- stop fallback timer and proceed
 			self.alarmInProgress = 'server'
-
 			self:_stopTimer()			
-			
 			self:openAlarmWindow('server')
 
 		elseif alarmState == 'snooze' then
-		    
-			log:warn('snooze state received')
+			log:warn("*** Alarm: snooze state received")
 			self.alarmInProgress = alarmState
-			log:warn('self.alarmInProgress set to: ', self.alarmInProgress)
-			
+			log:warn("*** Alarm: self.alarmInProgress: ", self.alarmInProgress)
+
 		elseif alarmState == 'none' then
-		
 			if self.alarmInProgress ~= 'rtc' then
 				self.alarmNext = false
-				log:info('no alarm set, clearing settings')
+				log:info("*** Alarm: No alarm set, clearing settings")
 				self:getSettings()['alarmNext'] = false
 				self:storeSettings()
 				self:_setWakeupTime('none')
@@ -184,39 +182,38 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 		                -- might want to qualify whether or not to stop this timer dependent upon whether it's already running.
 				-- for now just log the information
 				if self.RTCAlarmTimer:isRunning() then
-					log:warn('clear alarm directive received while RTC timer is running!  Stopping.  Careful now...')
+					log:warn("*** Alarm: Clear alarm received while RTC timer is running! Stopping. Careful now...")
 				end
 				self:_stopDecodeStatePoller()
 				self:_stopTimer()
 			else
-				log:warn('clear alarm directive received while fallback alarm in progress!  ignoring')
+				log:warn("*** Alarm: Clear alarm received while fallback alarm in progress! Ignoring")
 				return
 			end
+
 		elseif alarmState == 'set' then
-			
 			self:_stopDecodeStatePoller()
 			if self.alarmInProgress ~= 'rtc' then
 				self.alarmInProgress = nil
 			end
-
 		end
 		
 		-- store alarmNext data as epoch seconds
 		if alarmNext and alarmNext > 0 then
 
-			log:debug('notify_playerAlarmState: ALARMNEXT is ', alarmNext,' : NOW is ', os.time())
+			log:debug("*** Alarm: notify_playerAlarmState: alarmNext: ", alarmNext, " : NOW is ", os.time())
 		
 			-- want to know if this happens
 			if alarmState == 'active' then
-			    log:error('notify_playerAlarmState: alarmNext is ', alarmNext, '  while alarmState is ACTIVE!  ignoring...')
+			    log:error("*** Alarm: notify_playerAlarmState: alarmNext: ", alarmNext, " while alarmState is ACTIVE! Ignoring...")
 				return
 			end
-			
+
 			self.alarmNext = alarmNext
-			
-			log:info('storing epochseconds of next alarm:  ', alarmNext)
+
+			log:info("*** Alarm: Storing epochseconds of next alarm: ", alarmNext)
 		        self:getSettings()['alarmNext'] = alarmNext
-			
+
 			self:storeSettings()
 			self:_setWakeupTime()
 			if self.alarmInProgress ~= 'rtc' then
@@ -239,24 +236,24 @@ function _alarm_sledgehammerRearm(self, caller)
 	local status = decode:status()
 	--debug.dump(status)
 
-	log:warn('alarm_sledgehammerRearm(', caller,'): ', self.alarmInProgress, ' alarm in progress - audioState is ', status.audioState)
+	log:warn("*** Alarm: alarm_sledgehammerRearm: caller: ", caller, " alarmInProgress: ", self.alarmInProgress, " audioState: ", status.audioState)
 	if self.alarmInProgress and self.alarmInProgress ~= 'snooze' and status.audioState ~= 1 then
 		self.failedAudioTicker = self.failedAudioTicker + 1
-		log:warn('Audio failed! (', self.failedAudioTicker, ')')
+		log:warn("*** Alarm: Audio failed! failedAudioTicker: ", self.failedAudioTicker)
 	else
 		self.failedAudioTicker = 0
-		log:warn('Audio now in good shape, reset ticker to ', self.failedAudioTicker)
+		log:warn("*** Alarm: Audio ok -> reset failedAudioTicker: ", self.failedAudioTicker)
 	end
 
 	if self.failedAudioTicker > 5 then
-		log:warn('Decode state bad ', self.failedAudioTicker, ' consecutive times. Trigger fallback alarm!')
+		log:warn("*** Alarm: Decode state bad! failedAudioTicker: ", self.failedAudioTicker, " Trigger fallback alarm!")
 		hammer = true
 	end
 
 	if hammer then 
 		self:_stopTimer()
 		-- kickstart audio output again, asynchronously, so whatever else is messing with the audio settings is hopefully finished
-		log:warn('alarm_sledgehammerRearm: audio not in good shape while alarm is firing. restart timer asynchronously at 1.5secs')
+		log:warn("*** Alarm: alarm_sledgehammerRearm: Audio in bad shape while alarm is firing. Restart timer asynchronously at 1.5secs")
 		self:_startTimer(1500)
 	end
 end
@@ -272,12 +269,12 @@ function notify_playerLoaded(self, player)
 		return
 	end
 	if player == self.localPlayer then
-		log:debug("notify_playerLoaded(", player, ")")
+		log:debug("*** Alarm: notify_playerLoaded: player: ", player)
 --		self:_alarm_sledgehammerRearm('notify_playerLoaded')
 		-- check for pending server alarm in case that one is pending instead, since we may have changed players to force 
 		--       local control during a previous call to openAlarmWindow()
 		if self.alarmInProgress == 'server' then
-			log:warn("notify_playerLoaded: called while `server` alarm in progress")
+			log:warn("*** Alarm: notify_playerLoaded: called while `server` alarm in progress")
 		end
 	end
 end
@@ -290,12 +287,12 @@ function notify_playerPower(self, player, power)
         if player ~= self.localPlayer then
                 return
         end
-        log:debug("notify_playerPower(): ", power)
+        log:debug("*** Alarm: notify_playerPower(): ", power)
 
         -- turning power off while alarm is in progress always means alarm should be cancelled
         if not power then
 		if self.alarmInProgress then
-			log:warn('Power turned off while alarm in progress. By design, turn the alarm off')
+			log:warn("*** Alarm: Power turned off while alarm in progress. By design, turn the alarm off")
 			self:_alarmOff(true)
 		end
         end
@@ -303,7 +300,7 @@ end
 
 
 function notify_playerCurrent(self, player)
-	log:info("notify_playerCurrent(", player, ")")
+	log:info("*** Alarm: notify_playerCurrent: ", player)
 	if not player then
 		return
 	end
@@ -314,13 +311,13 @@ end
 
 
 function notify_playerModeChange(self, player, mode)
-	log:debug('notify_playerModeChange: player (', player,') mode has been changed to ', mode)
+	log:debug("*** Alarm: notify_playerModeChange: player: ", player, " mode: ", mode)
 	if not player then
 		return
 	end
 	if player == self.localPlayer then
 		local status = decode:status()
-		log:warn('notify_playerModeChange: - audioState is ', status.audioState)
+		log:warn("*** Alarm: notify_playerModeChange: audioState: ", status.audioState)
 	end
 end
 
@@ -330,12 +327,12 @@ function notify_playerConnected(self, player)
 		return
 	end
 	if player == self.localPlayer then
-		log:warn('notify_playerConnected: ', player, ' ', self.alarmInProgress)
+		log:warn("*** Alarm: notify_playerConnected: player: ", player, " alarmInProgress: ", self.alarmInProgress)
 --		self:_alarm_sledgehammerRearm('notify_playerConnected')
 		self.server = player:getSlimServer()
-		log:warn("notify_playerConnected(): setting self.server to: ", self.server)
+		log:warn("*** Alarm: notify_playerConnected: self.server: ", self.server)
 	else
-		log:debug('notify_playerConnected(): this notification player: ', player, ' not for local player: ', self.localPlayer)
+		log:debug("*** Alarm: notify_playerConnected: player: ", player, " localPlayer: ", self.localPlayer)
 	end
 end
 
@@ -345,7 +342,7 @@ function notify_playerDisconnected(self, player)
 		return
 	end
 	if player == self.localPlayer then
-		log:warn('notify_playerDisconnected ', player, self.alarmInProgress)
+		log:warn("*** Alarm: notify_playerDisconnected: player: ", player, " alarmInProgress: ", self.alarmInProgress)
 	end
 end
 
@@ -357,17 +354,17 @@ function notify_serverConnected(self, server)
 	-- go ahead and set self.localPlayer here
 	self.localPlayer = Player:getLocalPlayer()
 
-	log:info('notify_serverConnected: ', server, ' is now connected')
+	log:info("*** Alarm: notify_serverConnected: server: ", server)
 
 	if self.localPlayer then
-		log:info('local player connection status is ', self.localPlayer:isConnected())
+		log:info("*** Alarm: Local player connection status is: ", self.localPlayer:isConnected())
 	else
-		log:info('there is currently no self.localPlayer set')
+		log:info("*** Alarm: There is currently no self.localPlayer set")
 	end
 
 	-- don't want to cause error if no connection
 	if self.localPlayer and self.localPlayer:isConnected() then
-		log:info('                      local player->server is ', self.localPlayer:getSlimServer())
+		log:info("*** Alarm: Local player->server is ", self.localPlayer:getSlimServer())
 		if self.localPlayer:getSlimServer() == server then
 			self:_alarm_sledgehammerRearm('notify_serverConnected')
 		end
@@ -376,20 +373,20 @@ end
 
 
 function notify_serverDisconnected(self, server)
-	log:info('notify_serverDisconnected: ', server, ' is now disconnected')
+	log:info("*** Alarm: notify_serverDisconnected: server: ", server, " alarmInProgress: ", self.alarmInProgress)
 
 	-- blindly check state here irrespective of which server caused this notification
 	if self.alarmInProgress == 'snooze' or self.alarmInProgress == 'rtc' then
-		log:warn('notify_serverDisconnected: ', server, ' - disconnected, but no server alarm in progress : ', self.alarmInProgress)
+		log:warn("*** Alarm: Server disconnected, but no server alarm in progress -> we are good")
 	elseif self.alarmInProgress == 'server' then
 		if not self.localPlayer:isConnected() then
-			log:warn('notify_serverDisconnected: ', server, ' - while server alarm in progress! state ', self.alarmInProgress, ' triggering fallback alarm!')
+			log:warn("*** Alarm: Local player disconnected and server alarm -> Triggering RTC fallback alarm!")
 			self:openAlarmWindow('rtc')
 		else
-			log:warn('notify_serverDisconnected: ', server, ' - server alarm in progress, but player still connected to ', self.localPlayer:getSlimServer())
+			log:warn("*** Alarm: Server alarm in progress, but player still connected to ", self.localPlayer:getSlimServer())
 		end
 	else
-		log:warn('notify_serverDisconnected: ', server, ' - disconnected, but no server alarm in progress : ', self.alarmInProgress)
+		log:warn("*** Alarm: Server disconnceted, but no server alarm in progress")
 	end
 end
 
@@ -400,7 +397,7 @@ function _deltaMsecs(self, epochsecs)
 
 	local deltaSecs = epochsecs - os.time() 
 	if deltaSecs <= 0 then
-		log:warn('_deltaMsecs: epochsecs is in the past, deltaSecs is ', delta)
+		log:warn("*** Alarm: _deltaMsecs: epochsecs is in the past, deltaSecs: ", deltaSecs)
 		return(1000)
 	end
 	-- else
@@ -429,9 +426,11 @@ end
 function _pollDecodeState(self)
 	local status = decode:status()
 	if self.localPlayer:isConnected() then
-		log:warn('_pollDecodeState(',self.alarmInProgress,'): audioState is ', status.audioState)
+		log:warn("*** Alarm: _pollDecodeState alarmInProgress: ", self.alarmInProgress, " audioState: ", status.audioState)
+		log:warn("*** Alarm: localPlayer connected")
 	else
-		log:warn('_pollDecodeState(',self.alarmInProgress,'): audioState is ', status.audioState)
+		log:warn("*** Alarm: _pollDecodeState alarmInProgress: ", self.alarmInProgress, " audioState: ", status.audioState)
+		log:warn("*** Alarm: localPlayer not connected")
 	end
 
 	self:_alarm_sledgehammerRearm('_pollDecodeState')	
@@ -439,7 +438,7 @@ end
 
 
 function soundFallbackAlarm(self)
-	log:warn("soundFallbackAlarm()")
+	log:warn("*** Alarm: soundFallbackAlarm()")
 	self.alarmVolume = 0 -- start at 0 and fade in
 	-- cache previous volume setting
 	self.previousVolume = self.localPlayer:getVolume()
@@ -453,11 +452,11 @@ function soundFallbackAlarm(self)
 	self.fadeInTimer = Timer(200, 
 			function ()
 				if self.alarmVolume < 43 then
-					log:info("fading in fallback alarm: ", self.alarmVolume)
+					log:info("*** Alarm: fading in fallback alarmVolume: ", self.alarmVolume)
 					self.alarmVolume = self.alarmVolume + 1
 					self.localPlayer:volumeLocal(self.alarmVolume)
 				else
-					log:info("stop self.alarmVolume at reasonable volume (43):", self.alarmVolume)
+					log:info("*** Alarm: stop self.alarmVolume at reasonable volume (43):", self.alarmVolume)
 					self.fadeInTimer:stop()
 				end
 			end
@@ -467,11 +466,11 @@ function soundFallbackAlarm(self)
 	local alarmTimeoutSeconds = self.localPlayer:getAlarmTimeoutSeconds() or ( 60 * 60 ) -- defaults to 1 hour
 	if alarmTimeoutSeconds ~= 0 then
 		local alarmTimeoutMsecs = alarmTimeoutSeconds * 1000
-		log:info("Fallback alarm will timeout in ", alarmTimeoutSeconds, " seconds")
+		log:info("*** Alarm: Fallback alarm will timeout in ", alarmTimeoutSeconds, " seconds")
 		self.fallbackAlarmTimeout = Timer(alarmTimeoutMsecs,
 				function ()
 					if self.alarmInProgress == 'rtc' then
-						log:warn('rtc alarm has timed out')
+						log:warn("*** Alarm: RTC alarm has timed out")
 						self:_alarmOff()
 					end
 				end,
@@ -490,16 +489,16 @@ function openAlarmWindow(self, caller)
 
 	-- Bug 16230: if self.localPlayer hasn't been set, try to here as it's essential to the alarm working
 	if not self.localPlayer then
-		log:warn('openAlarmWindow: called without self.localPlayer being set. try to acquire it now')
+		log:warn("*** Alarm: openAlarmWindow: called without self.localPlayer being set. try to acquire it now")
 		self.localPlayer = Player:getLocalPlayer()
 		-- if that returns nil (very unlikely), throw an error and return
 		if not self.localPlayer then
-			log:error('openAlarmWindow: without self.localPlayer the alarm cannot sound')
+			log:error("*** Alarm: openAlarmWindow: without self.localPlayer the alarm cannot sound")
 			return
 		end
 	end
 
-	log:warn('openAlarmWindow()', caller, ' ', self.localPlayer:isConnected())
+	log:warn("*** Alarm: openAlarmWindow: caller: ", caller, " local player connected: " , self.localPlayer:isConnected())
 
 	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
 	-- Calling _alarmThroughSpeakers() here is too early for the fallback alarm
@@ -510,7 +509,7 @@ function openAlarmWindow(self, caller)
 	local currentPlayer = Player:getCurrentPlayer()
 
 	if currentPlayer ~= self.localPlayer then
-		log:warn('openAlarmWindow: switching squeezeplay control to local player (', self.localPlayer,') from (', currentPlayer,')')
+		log:warn("*** Alarm: openAlarmWindow: switching squeezeplay control to local player: ", self.localPlayer, " from current player: ", currentPlayer)
 		appletManager:callService("setCurrentPlayer", self.localPlayer)
 		-- let notify_playerLoaded do its thing if we're not dealing with a fallback alarm
 		-- originally was using notify_playerLoaded as Ben was in revision 8255, but unfortunately it also gets 
@@ -541,25 +540,25 @@ function openAlarmWindow(self, caller)
 		-- just informational stuff for now
 		local status = decode:status()
 		-- just informational
-		log:warn('openAlarmWindow: called with `server` - audioState is ', status.audioState)
+		log:warn("*** Alarm: openAlarmWindow: called with `server` - audioState: ", status.audioState)
 
 		if self.alarmInProgress == 'rtc' then
-			log:warn('openAlarmWindow: called with `server` while `rtc` alarm in progress!')
+			log:warn("*** Alarm: openAlarmWindow: called with `server` while RTC alarm in progress!")
 			-- where did we come from?
-			log:error('CALL STACK TRAP: ')
+			log:error("*** Alarm: CALL STACK TRAP: ")
 		end
 
 	elseif caller == 'rtc' then
 		if self.alarmInProgress ~= 'rtc' then
-			log:warn('openAlarmWindow: fallback alarm activation')
+			log:warn("*** Alarm: openAlarmWindow: fallback alarm activation")
 		else
-			log:warn('openAlarmWindow: fallback alarm snooze or explicit audio cycle')			
+			log:warn("*** Alarm: openAlarmWindow: fallback alarm snooze or explicit audio cycle")			
 		end
 
 		self:soundFallbackAlarm()
 		
 	else
-		log:error('openAlarmWindow: unknown caller')
+		log:error("*** Alarm: openAlarmWindow: unknown caller")
 	end
 	
 	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
@@ -610,7 +609,7 @@ function openAlarmWindow(self, caller)
 	end
 
 	local consumeAction = function()
-		log:warn('Consuming this action')
+		log:warn("*** Alarm: Consuming this action")
 		Framework:playSound("BUMP")
 		window:bumpLeft()
 		return EVENT_CONSUME
@@ -669,7 +668,7 @@ end
 function _updateTime(self) 	 
 	local time = self:_formattedTime()
 	if time ~= self.time then 	 
-		log:debug('updating time in alarm window') 	 
+		log:debug("*** Alarm: updating time in alarm window") 	 
 		self.time = time 	 
 		self.timeWidget:setValue(time) 	 
 	end 	 
@@ -691,7 +690,7 @@ end
 
 function _silenceFallbackAlarm(self)
 	if not self.localPlayer then
-		log:error('No self.localPlayer found!')
+		log:error("*** Alarm: No self.localPlayer found!")
 		return
 	end
 	self.localPlayer:stop(true)
@@ -699,11 +698,11 @@ function _silenceFallbackAlarm(self)
 		self.fadeInTimer:stop()
 	end
 	if self.previousVolume then
-		log:warn('setting player back to self.previousVolume: ', self.previousVolume)
+		log:warn("*** Alarm: setting player back to self.previousVolume: ", self.previousVolume)
 		self.localPlayer:volumeLocal(self.previousVolume)
 	end
 	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
-		log:warn('stopping fallback alarm timeout timer')
+		log:warn("*** Alarm: stopping fallback alarm timeout timer")
 		self.fallbackAlarmTimeout:stop()
 	end
 end
@@ -712,12 +711,12 @@ end
 function _alarmOff(self, stopStream)
 	if self.alarmInProgress == 'rtc' then
 		self:_silenceFallbackAlarm()
-		log:warn('_alarmOff: RTC alarm canceled')
+		log:warn("*** Alarm: _alarmOff: RTC alarm canceled")
 	else
 		if self.localPlayer:isConnected() then
-			log:warn('_alarmOff: server alarm canceled - alarmInProgress state (', self.alarmInProgress, ')')
+			log:warn("*** Alarm: _alarmOff: server alarm canceled - alarmInProgress: ", self.alarmInProgress)
 		else
-			log:warn('_alarmOff: player not connected! - alarmInProgress state (', self.alarmInProgress, ')')
+			log:warn("*** Alarm: _alarmOff: player not connected! - alarmInProgress: ", self.alarmInProgress)
 		end
 	end
 	
@@ -729,7 +728,7 @@ function _alarmOff(self, stopStream)
 	self:_stopDecodeStatePoller()
 
 	if self.localPlayer:isConnected() then
-		log:warn('_alarmOff: tell server alarm is off, and only pause if stopStream is true')
+		log:warn("*** Alarm: _alarmOff: tell server alarm is off, and only pause if stopStream is true")
 		self.localPlayer:stopAlarm(not stopStream)
 	end
 
@@ -742,12 +741,12 @@ end
 
 function _stopTimer(self)
 	if self.RTCAlarmTimer:isRunning() then
-		log:warn('_stopTimer: stopping RTC fallback alarm timer')
+		log:warn("*** Alarm: _stopTimer: stopping RTC fallback alarm timer")
 		self.RTCAlarmTimer:stop()
 		self.debugRTCTime = 0
 	end
 	if self.wakeOnLanTimer:isRunning() then
-		log:warn('_stopTimer: stopping WOL timer')
+		log:warn("*** Alarm: _stopTimer: stopping WOL timer")
 		self.wakeOnLanTimer:stop()
 	end
 
@@ -758,7 +757,7 @@ end
 
 function _stopDecodeStatePoller(self)
 	if self.decodeStatePoller and self.decodeStatePoller:isRunning() then
-		log:warn('stopping decodeStatePoller')
+		log:warn("*** Alarm: stopping decodeStatePoller")
 		self.decodeStatePoller:stop()
 	end
 end
@@ -767,8 +766,10 @@ end
 function _startDecodeStatePoller(self)
 	if self.decodeStatePoller then
 		if self.decodeStatePoller:isRunning() then
+			log:warn("*** Alarm: restart decodeStatePoller")
 			self.decodeStatePoller:restart()
 		else
+			log:warn("*** Alarm: start decodeStatePoller")
 			self.decodeStatePoller:start()
 		end
 	end
@@ -791,18 +792,18 @@ end
 function _startTimer(self, interval)
 	
 	if not self.alarmNext and not interval then
-		log:error('both alarmNext and interval have no value!')	
+		log:error("*** Alarm: both alarmNext and interval have no value!")
 		return
 	end
 
 	if self.RTCAlarmTimer:isRunning() then
 		self.RTCAlarmTimer:stop()
 		self.debugRTCTime = 0
-		log:warn('_startTimer: stopping RTC fallback alarm timer')
+		log:warn("*** Alarm: _startTimer: stopping RTC fallback alarm timer")
 	end
 	
 	if interval then
-		log:warn('starting RTC fallback alarm timer for interval ', interval)
+		log:warn("*** Alarm: _startTimer: starting RTC fallback alarm timer - interval: ", interval)
 		self.RTCAlarmTimer:setInterval(interval)
 		self.debugRTCTime = interval
 	else
@@ -812,7 +813,7 @@ function _startTimer(self, interval)
 		-- add 20 secs for fallback timer to bias alarm toward server wakeup
 		local rtcSleepMsecs = interval + 20000
 
-		log:warn('_startTimer: starting RTC fallback alarm timer (', rtcSleepMsecs, ')')
+		log:warn("*** Alarm: _startTimer: starting RTC fallback alarm timer - rtcSleepMsecs: ", rtcSleepMsecs)
 		self.RTCAlarmTimer:setInterval(rtcSleepMsecs)
 		self.debugRTCTime = rtcSleepMsecs
 
@@ -838,7 +839,7 @@ function _wolTimerRestart(self, msecsToAlarm)
 		end
 	-- if it's within 5 minutes, send a WOL packet as a best effort
 	elseif self.server then
-		log:warn('SEND WOL NOW')
+		log:warn("*** Alarm: _wolTimerRestart - Send WOL now!")
 		self.debugWOLTime = 0
 		self.server:wakeOnLan()
 	end	
@@ -847,11 +848,11 @@ end
 
 function _alarmSnooze(self)
 	
-	log:warn('_alarmSnooze: alarmInProgress is ', self.alarmInProgress, ' : connection status is ', self.localPlayer:isConnected())
+	log:warn("*** Alarm: _alarmSnooze: alarmInProgress: ", self.alarmInProgress, " local player connected: ", self.localPlayer:isConnected())
 
 	self:_stopTimer()
 
-	log:warn('_alarmSnooze: fallback alarm snoozing for ', alarmSnoozeSeconds,'  + 20 seconds')
+	log:warn("*** Alarm: _alarmSnooze: fallback alarm snoozing for ", alarmSnoozeSeconds, " + 20 seconds")
 	local alarmSnoozeSeconds = self.localPlayer:getAlarmSnoozeSeconds()
 	local fallbackAlarmMsecs = alarmSnoozeSeconds * 1000 + 20000 
 	self.debugRTCTime = fallbackAlarmMsecs
@@ -860,7 +861,7 @@ function _alarmSnooze(self)
 	self:_wolTimerRestart(alarmSnoozeSeconds * 1000)
 	
 	if self.alarmInProgress == 'rtc' then
-		log:warn('_alarmSnooze: stopping fallback alarm audio')
+		log:warn("*** Alarm: _alarmSnooze: stopping fallback alarm audio")
 		-- stop playback
 		self:_silenceFallbackAlarm()
 	else
@@ -868,7 +869,7 @@ function _alarmSnooze(self)
 	end
 
 	if self.localPlayer:isConnected() then
-		log:warn('_alarmSnooze: sending snooze command to connected server for connected player ', self.localPlayer)
+		log:warn("*** Alarm: _alarmSnooze: sending snooze command to connected server for connected local player ", self.localPlayer)
 		self.localPlayer:snooze()
 	end
 	self:_stopDecodeStatePoller()
