@@ -733,10 +733,13 @@ function _enterPassword(self, iface, ssid, nocheck)
 		self.encryption = "none"
 		return _connect(self, iface, ssid, true, false)
 
-	-- FIXME: 08/31/09 Re-enable WPS for Controller at a later stage (after more testing is done)
-	elseif nocheck ~= "wps" and string.find(flags, "WPS") and System:getMachine() ~= "jive" then
-		self.encryption = "wpa2"
-		return _chooseWPS(self, iface, ssid)
+-- fm+
+-- Disable WPS until the UX team has figured out how the correct wording should be
+--	-- FIXME: 08/31/09 Re-enable WPS for Controller at a later stage (after more testing is done)
+--	elseif nocheck ~= "wps" and string.find(flags, "WPS") and System:getMachine() ~= "jive" then
+--		self.encryption = "wpa2"
+--		return _chooseWPS(self, iface, ssid)
+-- fm-
 
 	elseif string.find(flags, "WPA2%-PSK") then
 		self.encryption = "wpa2"
