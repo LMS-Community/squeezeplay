@@ -981,7 +981,10 @@ function t_addNetwork(self, ssid, option)
 		assert(self:request(request) == "OK\n", "wpa_cli failed:" .. request)
 	end
 
-	if option.encryption == "wep40" or option.encryption == "wep104" then
+-- fm+
+--	if option.encryption == "wep40" or option.encryption == "wep104" then
+	if option.encryption == "wep40_104" then
+-- fm-
 		log:info("encryption WEP")
 
 		request = 'SET_NETWORK ' .. id .. ' wep_key0 ' .. option.key
@@ -1961,12 +1964,18 @@ function t_wpsStatus(self)
 		-- No encryption
 		if proto == nil and psk == nil and key == nil then
 			status.wps_encryption = "none"
-		-- WEP 64
-		elseif key ~= nil and #key <= 10 then
-			status.wps_encryption = "wep40"
-		-- WEP 128
+
+-- fm+
+--		-- WEP 64
+--		elseif key ~= nil and #key <= 10 then
+--			status.wps_encryption = "wep40"
+--		-- WEP 128
+--		elseif key ~= nil then
+--			status.wps_encryption = "wep104"
 		elseif key ~= nil then
-			status.wps_encryption = "wep104"
+			status.wps_encryption = "wep10_104"
+-- fm-
+
 		-- WPA
 		elseif proto == "WPA" then
 			status.wps_encryption = "wpa"

@@ -438,6 +438,21 @@ NETWORK_WEP_128
 	RU	128-разрядный WEP (26 знаков)
 	SV	128-bitars WEP (26 tecken)
 
+NETWORK_WEP_64_128
+	CS	WEP 64-bit (10 znaků) / WEP 128-bit (26 znaků)
+	DA	WEP 64-bit (10 tegn) / WEP 128-bit (26 tegn)
+	DE	64-Bit-WEP (10 Zeichen) / 128-Bit-WEP (26 Zeichen)
+	EN	WEP 64-bit (10 Characters) / WEP 128-bit (26 Characters)
+	ES	WEP de 64 bits (10 caracteres) / WEP de 128 bits (26 caracteres)
+	FI	WEP 64-bittinen (10 merkkiä) / WEP 128-bittinen (26 merkkiä)
+	FR	WEP 64 bits (10 caractères) / WEP 128 bits (26 caractères)
+	IT	WEP a 64 bit (10 caratteri) / WEP a 128 bit (26 caratteri)
+	NL	WEP 64-bits (10 tekens) / WEP 128 bits (26 tekens)
+	NO	WEP 64-bit (10 tegn) / WEP 128-bit (26 tegn)
+	PL	WEP 64 bity (10 znaków) / WEP 128 bitów (26 znaków)
+	RU	64-разрядный WEP (10 знаков) / 128-разрядный WEP (26 знаков)
+	SV	64-bitars WEP (10 tecken) / 128-bitars WEP (26 tecken)
+
 NETWORK_WPA
 	CS	WPA Personal
 	DA	WPA Personal

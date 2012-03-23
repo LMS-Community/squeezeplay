@@ -750,7 +750,11 @@ function _enterPassword(self, iface, ssid, nocheck)
 		return _enterPSK(self, iface, ssid)
 
 	elseif string.find(flags, "WEP") then
-		return _chooseWEPLength(self, iface, ssid)
+-- fm+
+--		return _chooseWEPLength(self, iface, ssid)
+		self.encryption = "wep40_104"
+		return _enterWEPKey(self, iface, ssid)
+-- fm-
 
 	elseif string.find(flags, "WPA%-EAP") or string.find(flags, "WPA2%-EAP") then
 		return _enterEAP(self, iface, ssid)
@@ -778,19 +782,25 @@ function _chooseEncryption(self, iface, ssid)
 				_connect(self, iface, ssid, true, false)
 			end
 		},
+-- fm+
+--		{
+--			text = self:string("NETWORK_WEP_64"),
+--			sound = "WINDOWSHOW",
+--			callback = function()
+--				self.encryption = "wep40"
+--				_enterWEPKey(self, iface, ssid)
+--			end
+--		},
+-- fm-
+
 		{
-			text = self:string("NETWORK_WEP_64"),
+			text = self:string("NETWORK_WEP_64_128"),
 			sound = "WINDOWSHOW",
 			callback = function()
-				self.encryption = "wep40"
-				_enterWEPKey(self, iface, ssid)
-			end
-		},
-		{
-			text = self:string("NETWORK_WEP_128"),
-			sound = "WINDOWSHOW",
-			callback = function()
-				self.encryption = "wep104"
+-- fm+
+--				self.encryption = "wep104"
+				self.encryption = "wep40_104"
+-- fm-
 				_enterWEPKey(self, iface, ssid)
 			end
 		},
@@ -861,12 +871,19 @@ function _enterWEPKey(self, iface, ssid)
 	window:setAllowScreensaver(false)
 
 	local v
-	-- set the initial value
-	if self.encryption == "wep40" then
-		v = Textinput.hexValue("", 10, 10)
-	else
-		v = Textinput.hexValue("", 26, 26)
-	end
+
+-- fm+
+--	-- set the initial value
+--	if self.encryption == "wep40" then
+--		v = Textinput.hexValue("", 10, 10)
+--	else
+--		v = Textinput.hexValue("", 26, 26)
+--	end
+
+	-- allow for longer input
+	self.encryption = "wep40_104"
+	v = Textinput.hexValue("", 10, 26)
+-- fm-
 
 	local textinput = Textinput("textinput", v,
 				    function(widget, value)
