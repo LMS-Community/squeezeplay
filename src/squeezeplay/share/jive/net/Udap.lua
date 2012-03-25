@@ -559,7 +559,7 @@ function createGetIpResponse(srcmac, destmac, seq, ip)
 				  packNumber(0x0002, 2),		-- get_ip
 				  packNumber(0x05, 1),			-- ip_addr
 				  packNumber(#ip, 1),			-- ip_addr len
-				  ip,
+				  ip
 	)
 end
 
