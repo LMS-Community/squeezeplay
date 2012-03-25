@@ -231,7 +231,7 @@ local opcodes = {
 	end,
 
 	audg = function(self, packet)
-		local gainL, gainR, fixedDigital, preampAtten, sequenceNumber
+		local gainL, gainR, fixedDigital, preampAtten, sequenceNumber, controller
 
 		gainL = unpackNumber(packet, 5, 4) << 9
 		gainR = unpackNumber(packet, 9, 4) << 9
@@ -251,6 +251,9 @@ local opcodes = {
 		if #packet > 22 then
 			sequenceNumber = unpackNumber(packet, 23, 4)
 		end
+		if #packet > 28 then
+			controller = unpackNumber(packet, 27, 6)
+		end
 
 		return {
 			gainL = gainL,
@@ -258,6 +261,7 @@ local opcodes = {
 			fixedDigital = fixedDigital,
 			preampAtten = preampAtten,
 			sequenceNumber = sequenceNumber,
+			controller = controller,
 		}
 	end,
 

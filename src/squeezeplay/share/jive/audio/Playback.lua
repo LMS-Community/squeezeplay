@@ -6,6 +6,7 @@ local oo                     = require("loop.base")
 
 local string                 = require("string")
 local table                  = require("table")
+local math                   = require("math")
 
 local hasDecode, decode      = pcall(require, "squeezeplay.decode")
 local hasSprivate, spprivate = pcall(require, "spprivate")
@@ -1087,9 +1088,22 @@ function getCurrentSequenceNumber(self)
 	return self.sequenceNumber
 end
 
-function isSequenceNumberInSync(self, serverSequenceNumber)
-	if serverSequenceNumber ~= self.sequenceNumber then
-		log:debug("server sequence # out of sync. server: ", serverSequenceNumber, " local: ", self.sequenceNumber)
+function isSequenceNumberInSync(self, sequenceNumber, sequenceController)
+	if sequenceController and sequenceNumber then
+		if self.sequenceController ~= sequenceController then
+			self.sequenceController = sequenceController
+			self.sequenceControllerNumber = sequenceNumber
+			return true
+		elseif sequenceNumber > (self.sequenceControllerNumber or 0)
+			or math.abs(self.sequenceControllerNumber - sequenceNumber) > 100
+		then
+			self.sequenceControllerNumber = sequenceNumber
+			return true
+		else
+			return false
+		end
+	elseif sequenceNumber ~= self.sequenceNumber then
+		log:debug("server sequence # out of sync. server: ", sequenceNumber, " local: ", self.sequenceNumber)
 		return false
 	end
 	return true
@@ -1113,9 +1127,15 @@ function overrideDefaultVolumeToGain(self, value)
 	_defaultVolumeToGain = value
 end
 
-function setVolume(self, volume, stateOnly)
+function setVolume(self, volume, stateOnly, controller, sequenceNumber)
 	log:debug("setVolume: ", volume)
 
+	if controller and sequenceNumber
+		and not self:isSequenceNumberInSync(sequenceNumber, controller)
+	then
+		return
+	end
+	
 	self.volume = volume
 	if (not stateOnly) then
 		self:_setGain(self:_getGainFromVolume(volume))
@@ -1148,7 +1168,7 @@ function _audg(self, data, isLocal)
 		local gain, volume = self:translateServerGain(data.gainL)
 
 		local serverSequenceNumber = data.sequenceNumber
-		if serverSequenceNumber and not self:isSequenceNumberInSync(serverSequenceNumber) then
+		if serverSequenceNumber and not self:isSequenceNumberInSync(serverSequenceNumber, data.controller) then
 			--ignore since not in sync
 			return
 		end

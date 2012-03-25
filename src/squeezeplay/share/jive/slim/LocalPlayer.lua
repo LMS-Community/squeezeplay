@@ -336,6 +336,9 @@ function volumeLocal(self, vol, updateSequenceNumber, stateOnly)
 	self.playback:setVolume(vol, stateOnly)
 end
 
+function volumeFromController(self, vol, controller, sequenceNumber)
+	self.playback:setVolume(vol, false, controller, sequenceNumber)
+end
 
 function mute(self, mute)
 	local vol = self:getVolume()
@@ -354,14 +357,14 @@ function mute(self, mute)
 end
 
 
-function pause(self, useBackgroundRequest)
+function pause(self, useBackgroundRequest, localActionOnly)
 	local active = self.playback:isLocalPauseOrStopTimeoutActive()
 	if not active then
 		self.playback:startLocalPauseTimeout()
 		self.mode = "pause"
 		self:updateIconbar()
 
-		Player.pause(self, useBackgroundRequest)
+		if not localActionOnly then Player.pause(self, useBackgroundRequest) end
 	else
 		log:debug("discarding pause while timeout active")
 	end

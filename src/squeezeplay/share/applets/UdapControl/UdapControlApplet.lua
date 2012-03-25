@@ -22,6 +22,8 @@ local Timer         = require("jive.ui.Timer")
 
 local SocketUdp     = require("jive.net.SocketUdp")
 local Udap          = require("jive.net.Udap")
+local Player        = require("jive.slim.Player")
+local hasNetworking, Networking = pcall(require, "jive.net.Networking")
 
 local debug         = require("jive.utils.debug")
 
@@ -71,6 +73,46 @@ function _udapSink( self, chunk, err)
 	if ownMacAddress == pkt.source then
 		log:debug("UDAP: self origined packet - discard packet")
 		return
+	end
+
+	-- There are some requests we can and will handle without a current player
+	-- but we do need a LocalPlayer
+	local localPlayer = Player:getLocalPlayer()
+	
+	if localPlayer and pkt.dest == ownMacAddress then
+		if pkt.uapMethod == "get_ip" then
+			log:debug("UDAP - get_ip request received - sending answer...")
+			
+			local ip_address, ip_subnet
+			local ifObj = hasNetworking and Networking:activeInterface()
+		
+			if ifObj then
+				ip_address, ip_subnet = ifObj:getIPAddressAndSubnet()
+				if not ip_address then                                    
+					log:warn('Cannot get ip_address for active network interface ', ifObj)
+				end                                                                                       
+			else
+				log:warn('Cannot find active network interface')
+			end
+			
+			if not ip_address then return end                                
+			
+			local packet = Udap.createGetIpResponse(ownMacAddress, pkt.source, pkt.seqno, ip_address)
+			self.udap:send(function() return packet end, chunk.ip, chunk.port)
+			
+			return
+			
+		elseif pkt.uapMethod == "pause" then
+			log:debug("UDAP - pause request received")
+			localPlayer:pause(false, true)
+			return
+			
+		elseif pkt.uapMethod == "set_volume" then
+			log:debug("UDAP - set_volume request received: seq=", pkt.data.seq, ", vol=", pkt.data.volume)
+			localPlayer:volumeFromController(pkt.data.volume, pkt.source, pkt.data.seq)
+			return
+			
+		end
 	end
 
 	local acceptPacket = false

@@ -52,17 +52,19 @@ local configSettings = {
 
 -- ucp methods
 local ucpMethods = {
-	"discover",
-	"get_ip",
-	"set_ip",
-	"reset",
-	"get_data",
-	"set_data",
-	"error",
-	"credentials_error",
-	"adv_discover",
-	nil,
-	"get_uuid"
+	"discover",				-- 1
+	"get_ip",				-- 2
+	"set_ip",				-- 3
+	"reset",				-- 4
+	"get_data",				-- 5
+	"set_data",				-- 6
+	"error",				-- 7
+	"credentials_error",	-- 8
+	"adv_discover",			-- 9
+	nil,					-- 10
+	"get_uuid",				-- 11
+	"set_volume",			-- 12
+	"pause",				-- 13
 }
 
 
@@ -266,6 +268,13 @@ function parseGetUUID(pkt, recv, offset)
 	pkt.uuid = table.concat(pkt.uuid)
 end
 
+function parseSetVolume(pkt, recv, offset)
+	pkt.data = {}
+
+	pkt.data.volume, offset = unpackNumber(recv, offset, 1)
+	pkt.data.seq, offset = unpackNumber(recv, offset, 4)
+end
+
 -- Handlers for udap responses we receive upon requests we've sent
 local ucpMethodHandlers = {
 	[ "discover" ] = parseDiscover,
@@ -292,6 +301,8 @@ local ucpMethodHandlersRequest = {
 	[ "credentials_error" ] = nil,
 	[ "adv_discover" ] = parseDiscover,
 	[ "get_uuid" ] = nil,
+	[ "set_volume" ] = parseSetVolume,
+	[ "pause" ] = nil,
 }
 
 
@@ -539,6 +550,17 @@ function createUdapResponse(srcmac, destmac, seq, ...)
 		packNumber(0x00001, 2),
 		table.concat({...})
 	}
+end
+
+function createGetIpResponse(srcmac, destmac, seq, ip)
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(0x0002, 2),		-- get_ip
+				  packNumber(0x05, 1),			-- ip_addr
+				  packNumber(#ip, 1),			-- ip_addr len
+				  ip,
+	)
 end
 
 function createDiscoverResponse(srcmac, destmac, seq, devName, devType)
