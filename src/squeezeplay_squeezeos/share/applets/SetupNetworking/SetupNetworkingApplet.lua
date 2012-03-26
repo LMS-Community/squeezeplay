@@ -124,7 +124,7 @@ function setupScan(self, setupNext)
 	self.wlanIface:scan(setupNext)
 
 	-- or timeout after 10 seconds if no networks are found
-	window:addTimer(10000, function() setupNext() end)
+	window:addTimer(10000, function() setupNext() end, true)	-- once
 
 	self:tieAndShowWindow(window)
 	return window
@@ -351,7 +351,9 @@ function _networkScan(self, iface)
 			end
 
 			status:setValue(self:string("NETWORK_FOUND_NETWORKS", tostring(numNetworks) ) )
-		end)
+		end,
+		false	-- repeat
+	)
 
 	-- start network scan
 	iface:scan(function()
@@ -363,7 +365,9 @@ function _networkScan(self, iface)
 		function()
 			ifaceCount = 0
 			_networkScanComplete(self, iface)
-		end)
+		end,
+		true	-- once
+	)
 
 	self:tieAndShowWindow(popup)
 end
@@ -464,7 +468,9 @@ function _networkScanComplete(self, iface)
 				window:setTitle(self:string("NETWORK_WIRELESS_NETWORKS"))
 				_scanResults(self, iface)
 			end)
-		end)
+		end,
+		false	-- repeat
+	)
 --]]
 -- fm-
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", self.scanMenu)
@@ -1112,7 +1118,9 @@ function _processWPS(self, iface, ssid, wpsmethod, wpspin)
 
 			local remaining_walk_time = WPS_WALK_TIMEOUT - self.processWPSTimeout
 			status:setValue(self:string("NETWORK_WPS_REMAINING_WALK_TIME", tostring(remaining_walk_time)))
-		end)
+		end,
+		false	-- repeat
+	)
 
 	local _stopWPSAction = function(self, event)
 		if iface:isMarvell() then
@@ -1293,7 +1301,9 @@ function _connect_1(self, iface, ssid, createNetwork, useSupplicantWPS)
 	icon:addTimer(1000,
 		function()
 			_connectTimer(self, iface, ssid, createNetwork)
-		end)
+		end,
+		false	-- repeat
+	)
 	popup:addWidget(icon)
 	popup:ignoreAllInputExcept()
 
@@ -1415,7 +1425,8 @@ function _attachEthernet(self, iface, ssid, createNetwork)
 					end
              			end
 			):addTask()
-		end
+		end,
+		false	-- repeat
 	)
 
 	_helpAction(self, window, nil, nil, menu)
@@ -1546,7 +1557,8 @@ function _connectSuccess(self, iface, ssid)
 			function(event)
 				self.setupNext()
 			end,
-			true)
+			true	-- once
+	)
 
 	popup:addListener(EVENT_KEY_PRESS | EVENT_MOUSE_PRESS, --todo IR should work too, but not so simple - really window:hideOnAllButtonInput should allow for a callback on hide for "next" type situations such as this
 			   function(event)
