@@ -1383,19 +1383,16 @@ function _process_displaystatus(self, event)
 			transitionOn = Window.transitionNone
 			transitionOff = Window.transitionNone
 			
-			-- Bug 15815: We use a long default duration to try to ensure
-			-- that this is still up when the new-track playerstatus eventually arrives
-			-- so that we do not flip-flop between old and new track title.
-			-- See also the delays programmed in Slim::Control::Queries::statusQuery_filter()
-			duration = tonumber(display['duration'] or 3000)
-			
 			-- icon-based showBrieflies only appear for IR
 			if not usingIR then
 				showMe = false
 			end
 			if not isRemote and playMode and playMode == "play" then
-				--provide quicker feedback on NP screen that a new track is playing, other display delay for next local track can be long.
-				self.jnt:notify('playerTitleStatus', self, textValue, duration)
+				-- Provide quicker feedback on NP screen that a new track is playing,
+				-- other display delay for next local track can be long.
+				-- Bug 17758: force long duration on title so that we do not get oscillation;
+				-- it will get updated with new playerStatus.
+				self.jnt:notify('playerTitleStatus', self, textValue, 10000)
 			end
 		elseif type == 'mixed' or type == 'popupalbum' then
 			s = self.mixedPopup
