@@ -170,7 +170,7 @@ portaudio: portaudio_v19_1360/Makefile
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-ogg --disable-xmms-plugin --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --disable-xmms-plugin --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install

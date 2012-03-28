@@ -192,18 +192,39 @@ static void *decode_flac_start(u8_t *params, u32_t num_params) {
 	self->decoder = FLAC__stream_decoder_new();
 	// XXXX error handling
 
-	FLAC__stream_decoder_init_stream(
-		self->decoder,
-		decode_flac_read_callback,
-		NULL, /* seek_callback */
-		NULL, /* tell_callback */
-		NULL, /* length_callback */
-		NULL, /* eof_callback */
-		decode_flac_write_callback,
-		decode_flac_metadata_callback,
-		decode_flac_error_callback,
-		self
+	if (params[0] != 'o') {
+
+		FLAC__stream_decoder_init_stream(
+			self->decoder,
+			decode_flac_read_callback,
+			NULL, /* seek_callback */
+			NULL, /* tell_callback */
+			NULL, /* length_callback */
+			NULL, /* eof_callback */
+			decode_flac_write_callback,
+			decode_flac_metadata_callback,
+			decode_flac_error_callback,
+			self
 		);
+
+	} else {
+
+		LOG_DEBUG(log_audio_codec, "oggflac stream - using init_ogg_stream()");
+
+		FLAC__stream_decoder_init_ogg_stream(
+			self->decoder,
+			decode_flac_read_callback,
+			NULL, /* seek_callback */
+			NULL, /* tell_callback */
+			NULL, /* length_callback */
+			NULL, /* eof_callback */
+			decode_flac_write_callback,
+			decode_flac_metadata_callback,
+			decode_flac_error_callback,
+			self
+		);
+	}
+
 	// XXXX error handling
 
 	/* Assume we aren't changing sample rates until proven wrong */
@@ -233,7 +254,7 @@ static void decode_flac_stop(void *data) {
 
 struct decode_module decode_flac = {
 	'f',
-	"flc",
+	"flc,ogf",
 	decode_flac_start,
 	decode_flac_stop,
 	decode_flac_samples,
