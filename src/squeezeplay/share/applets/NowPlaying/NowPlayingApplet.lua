@@ -434,14 +434,16 @@ function _setTitleStatus(self, text, duration)
 	local nowPlayingTrackInfoLines = jiveMain:getSkinParam("NOWPLAYING_TRACKINFO_LINES")
 	local msgs = string.split("\n", text)
 	if nowPlayingTrackInfoLines == 2 and self.artistalbumTitle then
-		--artistalbumTitle and trackTitle widgets are used as messaging widget
-		-- two line message means use artistAlbumTitle for line 1, trackTitle for line 2
 		if #msgs > 1 then
+			-- artistalbumTitle and trackTitle widgets are used as messaging widget
+			-- two line message means use artistAlbumTitle for line 1, trackTitle for line 2
+			-- Bug 17937: leave the title alone if a zero-length title is provided
 			self.artistalbumTitle:setValue(msgs[1], duration)
-			self.trackTitle:setValue(msgs[2], duration)
-		-- one line message means use trackTitle for line 1 and keep what is already on screen for artistalbumTitle
-		-- keeping existing artistalbumTitle text is important for multiple-showBriefly cases e.g., rebuffering messages
+			if string.len(msgs[2]) > 0 then self.trackTitle:setValue(msgs[2], duration) end
 		else
+			-- one line message means use trackTitle for line 1 and keep what is already on screen for artistalbumTitle
+			-- keeping existing artistalbumTitle text is important for multiple-showBriefly cases e.g., rebuffering messages
+			-- awy: This may no longer be true.
 			self.trackTitle:setValue(msgs[1], duration)
 			self.artistalbumTitle:setValue(self.artistalbumTitle:getValue(), duration) --keep any temporary text up for same duration to avoid flickering
 		end
