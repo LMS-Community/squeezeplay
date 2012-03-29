@@ -342,6 +342,8 @@ function _networkScan(self, iface)
 	local status = Label("subtext", self:string("NETWORK_FOUND_NETWORKS", 0))
 	popup:addWidget(status)
 
+	local now = os.time()
+
         popup:addTimer(1000, function()
 			local numNetworks = 0
 
@@ -357,7 +359,18 @@ function _networkScan(self, iface)
 
 	-- start network scan
 	iface:scan(function()
-		_networkScanComplete(self, iface)
+		-- Wait at least 2 seconds (and leave the spinny up)
+		--  to allow the user to read the screen
+		if os.time() > (now + 2) then
+			_networkScanComplete(self, iface)
+		else
+			popup:addTimer(2000,
+				function ()
+					_networkScanComplete(self, iface)
+				end,
+				true	-- once
+			)
+		end
 	end)
 
 	-- or timeout after 10 seconds if no networks are found
