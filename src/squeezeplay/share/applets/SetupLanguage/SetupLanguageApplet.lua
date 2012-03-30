@@ -60,6 +60,18 @@ local locales = {
 	CS = 'Čeština',
 }
 
+
+function _jumpToDemo(self)
+	appletManager:callService("jumpToInStoreDemo")
+end
+
+-- Second part of demo listener (Fab4 only)
+function _addDemoListener(self)
+	log:warn('ADD DEMO LISTENER')
+	self.window:addActionListener("go_now_playing_or_playlist", self, _jumpToDemo)
+end
+
+
 function setupShowSetupLanguage(self, setupNext, helpText)
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
@@ -71,6 +83,12 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 	-- setup menu
 	local window = Window("text_list", self:string("CHOOSE_LANGUAGE"), "setuptitle")
 	window:setAllowScreensaver(false)
+
+	self.window = window
+	-- Demo listener for devices with hard buttons: Jive and Baby
+	window:addActionListener("start_demo", self, _jumpToDemo)
+	-- Demo listener for devices with touch screen: Fab4
+	window:addActionListener("go_now_playing_or_playlist", self, _addDemoListener)
 
 	window:setButtonAction("lbutton", nil)
 	window:setButtonAction("rbutton", nil)
