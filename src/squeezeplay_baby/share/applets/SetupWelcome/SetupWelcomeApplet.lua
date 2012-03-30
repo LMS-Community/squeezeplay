@@ -158,19 +158,8 @@ function step1(self)
 	-- choose language
 	appletManager:callService("setupShowSetupLanguage",
 		function()
-			self:step2()
-		end, false)
-end
-
-
-function step2(self)
-	log:info("step2")
-
-	-- welcome!
-	self:setupWelcomeShow(
-		function()
 			self:step3()
-		end)
+		end, false)
 end
 
 
@@ -555,36 +544,6 @@ function _setupDone(self, setupDone, registerDone)
 
 	-- FIXME: workaround until filesystem write issue resolved
 	os.execute("sync")
-end
-
-
-function _jumpToDemo(self)
-	appletManager:callService("jumpToInStoreDemo")
-end
-
-function setupWelcomeShow(self, setupNext)
-	local window = Window("help_list", self:string("WELCOME"), welcomeTitleStyle)
-	window:setAllowScreensaver(false)
-
-	window:setButtonAction("rbutton", nil)
-
-	window:addActionListener('start_demo', self, _jumpToDemo)
-	local textarea = Textarea("help_text", self:string("WELCOME_WALKTHROUGH"))
-
-	local continueButton = SimpleMenu("menu")
-
-	continueButton:addItem({
-		text = (self:string("CONTINUE")),
-		sound = "WINDOWSHOW",
-		callback = setupNext,
-		weight = 1
-	})
-
-	continueButton:setHeaderWidget(textarea)
-	window:addWidget(continueButton)
-
-	self:tieAndShowWindow(window)
-	return window
 end
 
 
