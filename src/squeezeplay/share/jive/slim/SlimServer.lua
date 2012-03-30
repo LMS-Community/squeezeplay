@@ -347,6 +347,9 @@ function _upgradeSink(self, chunk, err)
 		elseif versionOld == versionNew and revisionOld == revisionNew then
 			log:info("we're up to date - no firmware change")
 
+		elseif self:isMoreRecent(versionOld, versionNew) then
+			log:info("we don't downgrade, even if lower versioned firmware is of more recent revision - ignoring")
+
 		elseif self:isMoreRecent(versionNew, versionOld) or self:isMoreRecent(revisionNew, revisionOld) then
 			log:info("there's a new firmware available - update!")
 			self.upgradeForce = true
