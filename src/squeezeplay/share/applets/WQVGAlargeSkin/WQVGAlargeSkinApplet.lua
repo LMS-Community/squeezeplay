@@ -507,9 +507,12 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/selection_play_3line_on.png"),
 	}
 	local addArrow  = { 
-		img = _loadImage(self, "Icons/selection_add_3line_off.png"),
+		img = _loadImage(self, "Icons/selection_add_3line_on.png"),
 	}
-
+	local favItem  = { 
+		img = _loadImage(self, "Icons/icon_toolbar_fav.png"),
+	}
+	
 
 	---- REVIEWED BELOW THIS LINE ----
 
@@ -1499,19 +1502,20 @@ function skin(self, s)
 			hidden = 1,
 		},
 
-                multiline_text = {
-                        w = WH_FILL,
-                        h = 223,
-                        padding = { 18, 20, 14, 18 },
-                        border = { 0, 0, 6, 15 },
-                        fg = { 0xe6, 0xe6, 0xe6 },
-                        sh = { },
-                        align = "top-left",
-                        scrollbar = {
-                                h = 210,
-                                border = {0, 10, 2, 10},
-                        },
-                },
+        multiline_text = {
+            w = WH_FILL,
+            h = 223,
+            padding = { 18, 20, 14, 18 },
+            border = { 0, 0, 6, 15 },
+            fg = { 0xe6, 0xe6, 0xe6 },
+            sh = { },
+            align = "top-left",
+            scrollbar = {
+                h = 210,
+                border = {0, 10, 2, 10},
+            },
+        },
+        
 		menu = {
 			border = { 7, 7, 7, 0 },
 			padding = { 0, 0, 0, 100 },
@@ -1577,17 +1581,59 @@ function skin(self, s)
 	}
 	
 	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
-		order = { 'text' },
+		arrow = {img = playArrow.img},
 	})
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = playArrow.img},
+	})
+
+	s.context_menu.menu.item_insert = _uses(s.context_menu.menu.item, {
+		arrow = {img = addArrow.img},
+	})
+	s.context_menu.menu.selected.item_insert = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = addArrow.img},
+	})
+
+	s.context_menu.menu.item_add = _uses(s.context_menu.menu.item, {
+		arrow = {img = addArrow.img},
+	})
+	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = addArrow.img},
+	})
+
+	s.context_menu.menu.item_playall = _uses(s.context_menu.menu.item, {
+		arrow = {img = playArrow.img},
+	})
+	s.context_menu.menu.selected.item_playall = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = playArrow.img},
+	})
+
+	s.context_menu.menu.item_fav = _uses(s.context_menu.menu.item, {
+		arrow = {img = favItem.img},
+	})
+	s.context_menu.menu.selected.item_fav = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = favItem.img},
+	})
+
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
+	})
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
 		order = { 'text' },
 	})
 
-	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item_play)
-	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item_play)
+	s.context_menu.menu.item_fav = _uses(s.context_menu.menu.item, {
+		arrow = {img = favItem.img},
+	})
+	s.context_menu.menu.selected.item_fav = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = favItem.img},
+	})
 
-	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
-		arrow = addArrow,
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item, {
+		order = { 'text' },
+	})
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
 	})
 
 	s.context_menu.menu.pressed = _uses(s.context_menu.menu.selected, {

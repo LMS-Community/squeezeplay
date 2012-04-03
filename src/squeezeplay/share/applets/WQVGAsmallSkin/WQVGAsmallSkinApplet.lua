@@ -710,7 +710,10 @@ function skin(self, s)
 		img = _loadImage(self, "Icons/selection_play_3line_on.png"),
 	}
 	local addArrow  = { 
-		img = _loadImage(self, "Icons/selection_add_3line_off.png"),
+		img = _loadImage(self, "Icons/selection_add_3line_on.png"),
+	}
+	local favItem  = { 
+		img = _loadImage(self, "Icons/icon_toolbar_fav.png"),
 	}
 
 
@@ -2017,23 +2020,23 @@ function skin(self, s)
 		layer = LAYER_TITLE,
 
 		multiline_text = {
-                        w = WH_FILL,
-                        h = 172,
-                        padding = { 18, 2, 14, 18 },
-                        border = { 0, 0, 6, 15 },
-                        lineHeight = 22,
-                        font = _font(18),
-                        fg = { 0xe6, 0xe6, 0xe6 },
-                        sh = { },
-                        align = "top-left",
-                        scrollbar = {
-                                h = 164,
-                                border = {0, 2, 2, 10},
-                        },
-                },
+            w = WH_FILL,
+            h = 172,
+            padding = { 18, 2, 14, 18 },
+            border = { 0, 0, 6, 15 },
+            lineHeight = 22,
+            font = _font(18),
+            fg = { 0xe6, 0xe6, 0xe6 },
+            sh = { },
+            align = "top-left",
+            scrollbar = {
+                h = 164,
+                border = {0, 2, 2, 10},
+            },
+        },
 
 		title = {
-		layer = LAYER_TITLE,
+			layer = LAYER_TITLE,
 			h = 52,
 			padding = {10,10,10,5},
 			bgImg = false,
@@ -2057,8 +2060,8 @@ function skin(self, s)
 				font = _boldfont(TITLE_FONT_SIZE),
 				fg = TEXT_COLOR,
 			},
-
 		},
+
 		menu = {
 			h = CM_MENU_HEIGHT * 4,
 			border = { 7, 0, 7, 0 },
@@ -2121,12 +2124,41 @@ function skin(self, s)
 	}
 	
 	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
-		order = { 'text' },
-	})
-	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item, {
-		order = { 'text' },
+		arrow = {img = playArrow.img},
 	})
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = playArrow.img},
+	})
+
+	s.context_menu.menu.item_insert = _uses(s.context_menu.menu.item, {
+		arrow = {img = addArrow.img},
+	})
+	s.context_menu.menu.selected.item_insert = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = addArrow.img},
+	})
+
+	s.context_menu.menu.item_add = _uses(s.context_menu.menu.item, {
+		arrow = {img = addArrow.img},
+	})
+	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = addArrow.img},
+	})
+
+	s.context_menu.menu.item_playall = _uses(s.context_menu.menu.item, {
+		arrow = {img = playArrow.img},
+	})
+	s.context_menu.menu.selected.item_playall = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = playArrow.img},
+	})
+
+	s.context_menu.menu.item_fav = _uses(s.context_menu.menu.item, {
+		arrow = {img = favItem.img},
+	})
+	s.context_menu.menu.selected.item_fav = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = favItem.img},
+	})
+
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item, {
 		order = { 'text' },
 	})
 	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {

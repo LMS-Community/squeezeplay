@@ -389,8 +389,26 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.img.playArrow = {
+		img = _loadImage(self, "Icons/selection_play_off.png"),
+	}
+	s.img.playArrowSel = {
 		img = _loadImage(self, "Icons/selection_play_sel.png"),
-		h = WH_FILL
+	}
+	s.img.playAllArrow = s.img.playArrow
+	s.img.playAllArrowSel = s.img.playArrowSel
+	s.img.itemAdd = {
+		img = _loadImage(self, "Icons/selection_add_off.png"),
+	}
+	s.img.itemAddSel = {
+		img = _loadImage(self, "Icons/selection_add_sel.png"),
+	}
+	s.img.itemAddNext = s.img.itemAdd
+	s.img.itemAddNextSel = s.img.itemAddSel
+	s.img.itemFav = {
+		img = _loadImage(self, "Icons/selection_fav_off.png"),
+	}
+	s.img.itemFavSel = {
+		img = _loadImage(self, "Icons/selection_fav_sel.png"),
 	}
 	s.img.rightArrowSel = {
 		img = _loadImage(self, "Icons/selection_right_sel.png"),
@@ -1590,11 +1608,11 @@ function skin(self, s, reload, useDefaultSize)
 		layer = LAYER_TITLE,
 
 		--FIXME, something very wrong here. space still being allocated for hidden, no height title
-     		title = {
+     	title = {
 			layer = LAYER_TITLE,
 			hidden = 1,
-	                h = 0,
-	                text = {
+			h = 0,
+			text = {
 				hidden = 1,
 			},
 			bgImg = false,
@@ -1632,22 +1650,24 @@ function skin(self, s, reload, useDefaultSize)
 			item = {
 				h = c.CM_MENU_HEIGHT,
 				order = { "text", "arrow" },
+				padding = { 8, 0, 5, 0 },
 				text = {
 					w = WH_FILL,
 					h = WH_FILL,
+					padding = { 0, 0, 0, 0 },
 					align = 'left',
 					fg = TEXT_COLOR,
 					sh = TEXT_SH_COLOR,
 					font = _font(c.ALBUMMENU_SMALL_FONT_SIZE),
 		 			line = {
-					{
-						font = _boldfont(18),
-						height = 20,
-					},
-					{
-						font = _font(14),
-						height = 18,
-					},
+						{
+							font = _boldfont(18),
+							height = 20,
+						},
+						{
+							font = _font(14),
+							height = 18,
+						},
 					},
 				},
 				arrow = _uses(s.item.arrow),
@@ -1660,6 +1680,7 @@ function skin(self, s, reload, useDefaultSize)
 				item = {
 					bgImg = s.img.contextMenuSelectionBox,
 					order = { "text", "arrow" },
+					padding = { 8, 0, 5, 0 },
 					text = {
 						w = WH_FILL,
 						h = WH_FILL,
@@ -1678,8 +1699,8 @@ function skin(self, s, reload, useDefaultSize)
 								height = 14,
 							},
 						},	
-						arrow = _uses(s.selected.item.arrow),
 					},
+					arrow = _uses(s.selected.item.arrow),
 				},
 			},
 			locked = {
@@ -1692,14 +1713,46 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.context_menu.menu.item_play = _uses(s.context_menu.menu.item, {
-		order = { 'text' },
+		arrow = {img = s.img.playArrow.img},
 	})
 	s.context_menu.menu.selected.item_play = _uses(s.context_menu.menu.selected.item, {
-		order = { 'text' },
+		arrow = {img = s.img.playArrowSel.img},
+	})
+	
+	s.context_menu.menu.item_insert = _uses(s.context_menu.menu.item, {
+		arrow = {img = s.img.itemAddNext.img},
+	})
+	s.context_menu.menu.selected.item_insert = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = s.img.itemAddNextSel.img},
+	})
+	
+	s.context_menu.menu.item_add = _uses(s.context_menu.menu.item, {
+		arrow = {img = s.img.itemAdd.img},
+	})
+	s.context_menu.menu.selected.item_add = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = s.img.itemAddSel.img},
+	})
+	
+	s.context_menu.menu.item_playall = _uses(s.context_menu.menu.item, {
+		arrow = {img = s.img.playAllArrow.img},
+	})
+	s.context_menu.menu.selected.item_playall = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = s.img.playAllArrowSel.img},
+	})
+	
+	s.context_menu.menu.item_fav = _uses(s.context_menu.menu.item, {
+		arrow = {img = s.img.itemFav.img},
+	})
+	s.context_menu.menu.selected.item_fav = _uses(s.context_menu.menu.selected.item, {
+		arrow = {img = s.img.itemFavSel.img},
 	})
 
-	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item_play)
-	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item_play)
+	s.context_menu.menu.item_no_arrow = _uses(s.context_menu.menu.item_play, {
+		order = { 'text' },
+	})
+	s.context_menu.menu.selected.item_no_arrow = _uses(s.context_menu.menu.selected.item, {
+		order = { 'text' },
+	})
 
 	s.alarm_header = {
 			w = screenWidth - 20,
