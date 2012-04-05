@@ -340,6 +340,9 @@ function _upgradeSink(self, chunk, err)
 		local versionNew, revisionNew = string.match(url, "\/" .. machine .. "_([^_]+)_r([^_]+)\.bin")
 		local versionOld, revisionOld = string.match(JIVE_VERSION, "(.+) r(.+)")
 		local versionOldest, revisionOldest = string.match(MINIMUM_COMPATIBLE_FIRMWARE, "(.+) r(.+)")
+
+		log:debug("old version:  ", versionOld,  ", new version:  ", versionNew)
+		log:debug("old revision: ", revisionOld, ", new revision: ", revisionNew)
 		
 		if (not versionNew) or (not revisionNew) then
 			log:info("missing firmware version/revision - ignoring")
@@ -350,11 +353,11 @@ function _upgradeSink(self, chunk, err)
 		elseif self:isMoreRecent(versionOld, versionNew) then
 			log:info("we don't downgrade, even if lower versioned firmware is of more recent revision - ignoring")
 
-		elseif self:isMoreRecent(versionNew, versionOld) or self:isMoreRecent(revisionNew, revisionOld) then
+		elseif self:isMoreRecent(versionNew, versionOld) or revisionNew > revisionOld then
 			log:info("there's a new firmware available - update!")
 			self.upgradeForce = true
 
-		elseif self:isMoreRecent(versionOldest, versionNew) or self:isMoreRecent(revisionOldest, revisionNew) then
+		elseif self:isMoreRecent(versionOldest, versionNew) or revisionOldest > revisionNew then
 			log:info("firmware offered is older than oldest known compatible - downgrade")
 			self.upgradeForce = true
 		end
@@ -1253,12 +1256,12 @@ function isMoreRecent(self, new, old)
 	local oldVer = string.split("%.", old)
 
 	for i,v in ipairs(newVer) do
-		if oldVer[i] and v < oldVer[i] then
-			return false
+		if oldVer[i] and v > oldVer[i] then
+			return true
 		end
 	end
 
-	return true
+	return false
 end
 
 
