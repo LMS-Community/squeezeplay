@@ -2317,6 +2317,47 @@ end
 
 --[[
 
+=head2 jive.net.Networking:pingServer()
+
+Ping a server by name or ip address
+Note: DNS resolution has a long timeout, especially when there is no DNS or network
+
+--]]
+function pingServer(self, serverNameOrIP)
+	assert(Task:running(), "Networking:pingServer must be called in a Task")
+
+	local ipaddr, err
+	if DNS:isip(serverNameOrIP) then
+		ipaddr = serverNameOrIP
+	else
+		ipaddr, err = DNS:toip(serverNameOrIP)
+	end
+
+	if not ipaddr then
+		return false
+	end
+
+	local pingOK = false
+	local pingProc = Process(jnt, "ping -c 1 -W 2 " .. ipaddr)
+
+	pingProc:read(function(chunk)
+		if chunk then
+			if string.match(chunk, "bytes from") then
+				pingOK = true
+			end
+		end
+	end)
+
+	while pingProc:status() ~= "dead" do
+		Task:yield()
+	end
+
+	return pingOK
+end
+
+
+--[[
+
 =head1 LICENSE
 
 Copyright 2010 Logitech. All Rights Reserved.

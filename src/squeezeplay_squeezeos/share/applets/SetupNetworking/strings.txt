@@ -574,6 +574,9 @@ NETWORK_ETHERNET
 	RU	Ethernet
 	SV	Ethernet
 
+NETWORK_ETHERNET_CHECK
+	EN	Verify Ethernet Connection
+
 NETWORK_CONNECTED_TO
 	CS	Připojeno k
 	DA	Afspilleren er tilsluttet
