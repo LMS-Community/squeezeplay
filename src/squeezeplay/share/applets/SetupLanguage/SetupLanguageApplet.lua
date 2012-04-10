@@ -44,20 +44,21 @@ local jiveMain         = jiveMain
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+-- the second value is used as weight for the language list
 local locales = {
-	NO = 'Norsk',
-	SV = 'Svenska',
-	FI = 'Suomi',
-	DA = 'Dansk',
-	DE = 'Deutsch',
-	EN = 'English',
-	ES = 'Español',
-	FR = 'Français',
-	IT = 'Italiano',
-	NL = 'Nederlands',
-	RU = 'русский',
-	PL = 'Polski',
-	CS = 'Čeština',
+	NO = {'Norsk', 10},
+	SV = {'Svenska', 10},
+	FI = {'Suomi', 10},
+	DA = {'Dansk', 10},
+	DE = {'Deutsch', 2},
+	EN = {'English', 1},
+	ES = {'Español', 10},
+	FR = {'Français', 4},
+	IT = {'Italiano', 10},
+	NL = {'Nederlands', 3},
+	RU = {'русский', 10},
+	PL = {'Polski', 10},
+	CS = {'Čeština', 10},
 }
 
 
@@ -101,17 +102,18 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 		else
 			menu:addItem({
 				locale = locale,
-				text = locales[locale],
+				text = locales[locale][1],
 				sound = "WINDOWSHOW",
 				callback = function()
 					self:setLang(locale, setupNext)
 				end,
-				focusGained = function() self:_showLang(locale) end
+				focusGained = function() self:_showLang(locale) end,
+				weight = locales[locale][2]
 			})
 		end
 	end
 
-	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	for i, item in menu:iterator() do
 		if item.locale == currentLocale then
@@ -165,14 +167,15 @@ function settingsShow(self, menuItem)
 			)
 			menu:addItem({
 				locale = locale,
-				text = locales[locale],
+				text = locales[locale][1],
 				style = 'item_choice',
 				check = button,
-				focusGained = function() self:_showLang(locale) end
+				focusGained = function() self:_showLang(locale) end,
+				weight = locales[locale][2]
 			})
 		end
 	end
-	menu:setComparator(SimpleMenu.itemComparatorAlpha)
+	menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 
 	for i, item in menu:iterator() do
 		if item.locale == currentLocale then
