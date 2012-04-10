@@ -252,6 +252,27 @@ end
 
 -- Add any pending requests to the request data
 _addPendingRequests = function(self, data)
+
+	-- Add pending unsubscribe requests
+	-- Do this before pending subscription requests in case
+	-- a timing window with network reconnects results in the
+	-- possibility of an old unsubscribe negating a newer subscribe.
+	for i, v in ipairs( self.pending_unsubs ) do
+		local unsub = {
+			channel = '/slim/unsubscribe',
+			id      = v.reqid,
+			data    = {
+				unsubscribe = '/' .. self.clientId .. v.subscription,
+			},
+		}
+
+		table.insert( data, unsub )
+		table.insert( self.sent_reqs, unsub )
+	end
+
+	-- Clear out pending requests
+	self.pending_unsubs = {}
+
 	-- Add any pending subscription requests
 	for i, v in ipairs( self.subs ) do
 		if v.pending then
@@ -286,24 +307,6 @@ _addPendingRequests = function(self, data)
 			table.insert( self.sent_reqs, sub )
 		end
 	end
-
-	-- Add pending unsubscribe requests
-	for i, v in ipairs( self.pending_unsubs ) do
-		local unsub = {
-			channel = '/slim/unsubscribe',
-			id      = v.reqid,
-			data    = {
-				unsubscribe = '/' .. self.clientId .. v.subscription,
-			},
-		}
-
-		table.insert( data, unsub )
-		table.insert( self.sent_reqs, unsub )
-	end
-
-	-- Clear out pending requests
-	self.pending_unsubs = {}
-
 
 	-- Add pending requests
 	for i, v in ipairs( self.pending_reqs ) do
@@ -522,7 +525,7 @@ end
 
 -- Begin a set of batched queries
 function startBatch(self)
-	log:debug(self, ": startBatch", self.batch)
+	log:debug(self, ": startBatch ", self.batch)
 
 	self.batch = self.batch + 1
 end
@@ -591,7 +594,7 @@ _handshake = function(self)
 	-- Go through all existing subscriptions and reset the pending flag
 	-- so they are re-subscribed to during _connect()
 	for i, sub in ipairs( self.subs ) do
-		log:debug("Will re-subscribe to ", sub.subscription)
+		log:debug("Will re-subscribe to ", sub.subscription, " id=", sub.reqid)
 		sub.pending = true
 		
 		-- Also remove them from the set of requests waiting to be sent
@@ -869,14 +872,6 @@ _response = function(self, chunk)
 	-- Process each response event
 	for i, event in ipairs(chunk) do
 
-		-- Remove request from sent queue
-		for i, v in ipairs( self.sent_reqs ) do
-			if v.id == tonumber(event.id) then
-				table.remove( self.sent_reqs, i )
-				break
-			end
-		end
-
 		-- Update advice if any
 		if event.advice then
 			self.advice = event.advice
@@ -891,6 +886,14 @@ _response = function(self, chunk)
 			end
 		else
 			log:debug(self, ": _response, ", event.channel, " id=", event.id, " OK")
+		end
+
+		-- Remove request from sent queue
+		for i, v in ipairs( self.sent_reqs ) do
+			if v.id == tonumber(event.id) then
+				table.remove( self.sent_reqs, i )
+				break
+			end
 		end
 
 		-- Handle response
@@ -965,6 +968,11 @@ _response = function(self, chunk)
 			log:warn(self, ": _response, unknown error: ", event.error)
 			return _handleAdvice(self)
 		end
+		
+		-- If there are still sent requests for which we have not had responses, and we had an error
+		-- response, then maybe some requests were lost by the server and we need to plan to resend them
+		-- after a short timeout.
+		
 	end
 end
 

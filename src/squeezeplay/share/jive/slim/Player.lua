@@ -641,7 +641,7 @@ function free(self, slimServer, serverDeleteOnly)
 	end
 
 	if self.slimServer then
-		self:offStage()
+		if self.isOnStage then self:offStage() end
 
 		self.slimServer:_deletePlayer(self)
 		self.slimServer = false
