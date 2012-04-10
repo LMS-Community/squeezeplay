@@ -63,9 +63,9 @@ APP_NAME = SqueezePlay Beta
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
-VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n .. | sed -e 's/[MS]//g')
-DEB_VERSION_TEXT = $(shell cat ../squeezeplay.version)~$(shell svnversion -n .. | sed -e 's/[MS]//g')
-TGZ_VERSION_TEXT = $(shell cat ../squeezeplay.version)-$(shell svnversion -n .. | sed -e 's/[MS]//g')
+VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell git rev-list --abbrev-commit --max-count=1 HEAD)
+DEB_VERSION_TEXT = $(shell cat ../squeezeplay.version)~$(shell git rev-list --abbrev-commit --max-count=1 HEAD)
+TGZ_VERSION_TEXT = $(shell cat ../squeezeplay.version)-$(shell git rev-list --abbrev-commit --max-count=1 HEAD)
 ICNS_NAME = icon.icns
 DMG_TEMP_DIR = temp-SqueezePlay_image
 DMG_IMAGE_DIR = SqueezePlay_image
@@ -154,7 +154,7 @@ src/version.h: FORCE
 	@echo '#define SQUEEZEPLAY_RELEASE "'`cat ../squeezeplay.version`'"' >> src/version.h
 	@echo '#endif' >> src/version.h
 	@echo '#ifndef SQUEEZEPLAY_REVISION' >> src/version.h
-	@echo '#define SQUEEZEPLAY_REVISION "'`svnversion -n ..`'"' >> src/version.h
+	@echo '#define SQUEEZEPLAY_REVISION "'`git rev-list --abbrev-commit --max-count=1 HEAD`'"' >> src/version.h
 	@echo '#endif' >> src/version.h
 	@echo '#define JIVE_VERSION SQUEEZEPLAY_RELEASE" r"SQUEEZEPLAY_REVISION' >> src/version.h
 
