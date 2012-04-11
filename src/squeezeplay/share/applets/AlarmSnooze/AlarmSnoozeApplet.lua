@@ -53,6 +53,9 @@ What's been changed so far:
 - A separate timer is used for snoozing (snoozeTimer) instead of sharing the alarm timer (RTCAlarmTimer)
 - Check for good audio has been extended to a total of 60 seconds (was 25 seconds) to allow more time for slow radio stations
 
+** Alarm version 2 adds:
+- Retrieve one (the next) full alarm, including repeat and weekdays etc. to act upon it in case there is no server connection
+
 TODO:
 - Readd fade in for fallback alarm
 
@@ -62,6 +65,8 @@ TODO:
 function init(self, ...)
 	-- Read stored alarm - for instance after reboot
 	self.alarmNext = self:getSettings()['alarmNext']
+	self.alarmRepeat = self:getSettings()['alarmRepeat']
+	self.alarmDays = self:getSettings()['alarmDays']
 
 	-- Get some data about the player
 	self.localPlayer = Player:getLocalPlayer()
@@ -97,6 +102,9 @@ function init(self, ...)
 			end
 
 			self.alarmInProgress = 'rtc'
+
+			-- Rearm fallback alarm (if repeating)
+			self:rearmRTCAlarm()
 
 			-- This also starts check about audio state
 			self:openAlarmWindow()
@@ -168,20 +176,75 @@ function init(self, ...)
 	return self
 end
 
+-- When an alarm fires, check if it's a repeating alarm and if yes, set the timer
+--  according to the next day it should fire
+-- This will be overwritten if the player is still connected or gets reconnected
+function rearmRTCAlarm(self)
+	if self.alarmRepeat and self.alarmRepeat == 1 and self.alarmDays and self.alarmDays != "0000000" then
+		log:info("*** Alarm: Set repeating fallback alarm.")
 
--- This info comes from the server via player status
--- alarmNext > 0 sets an alarm
+		-- os.date("%w") returns 0-6 for Sun-Sat convert to 1-7 for Sun-Sat
+		local weekDay = os.date("%w") + 1
+
+		log:debug("*** Alarm: weekDay (1-7 => Sun-Sat): ", weekDay)
+		log:debug("*** Alarm: days: ", self.alarmDays)
+
+		-- Add alarm days at the end of itself to avoid dealing with wrapping
+		local alarmDaysList = self.alarmDays .. self.alarmDays
+
+		-- Find next day the alarm should fire
+		local start, stop = string.find( alarmDaysList, "1", weekDay + 1)
+
+		if not start then
+			return
+		end
+
+		local numDays = start - weekDay
+
+		log:debug("*** Alarm: nuber of days the next alarm is away: ", numDays)
+
+		-- Calculate the next alarm time
+		self.alarmNext = os.time() + numDays * (24 * 60 * 60)
+
+		log:info("*** Alarm: Storing epochseconds of next alarm: ", self.alarmNext, " now: ", os.time())
+	        self:getSettings()['alarmNext'] = self.alarmNext
+		self:storeSettings()
+		-- This is Baby only
+		self:_setWakeupTime()
+		-- Restart local timer
+		self:_stopRTCAlarmTimer()
+		self:_startRTCAlarmTimer()
+	end
+end
+
+
+-- This notification is player status info from the server
+-- OLD ALARM CODE
+-- alarmNext > 0 sets an alarm (max 24 hours later)
 -- alarmState == 'none' clears next alarm (but not an ongoing alarm), all other states are ignored as
 --  it can hold old information and restart an old alarm if connection is reestablished
-function notify_playerAlarmState(self, player, alarmState, alarmNext)
-	log:warn("*** Alarm: notify_playerAlarmState: player: ", player, " alarmState: ", alarmState)
+
+-- NEW ALARM CODE - handles repeated alarm that can be later than 24 hours
+-- alarmNext2: epoch seconds to the next alarm (if any) or nil
+-- alarmRepeat: 0/1/nil
+-- alarmDays: string with alarm days starting with Sunday. Sample weekdays: "0111110"
+function notify_playerAlarmState(self, player, alarmState, alarmNext, alarmVersion, alarmNext2, alarmRepeat, alarmDays)
+	log:debug("*** Alarm: notify_playerAlarmState: player: ", player, " alarmState: ", alarmState)
 
 	if not player then
 		return
 	end
 
-	if player:isLocal() then
-		log:warn("*** Alarm: notify_playerAlarmState: alarmState: ", alarmState, " alarmNext: ", alarmNext)
+	if not player:isLocal() then
+		return
+	end
+	
+	log:debug("*** Alarm: notify_playerAlarmState: alarmState: ", alarmState, " alarmNext: ", alarmNext)
+	log:debug("*** Alarm: notify_playerAlarmState: alarmVersion: ", alarmVersion, " alarmNext2: ", alarmNext2, " alarmRepeat: ", alarmRepeat, " alarmDays: ", alarmDays)
+
+	-- Old alarm code
+	if not alarmVersion then
+		log:debug("*** OLD ALARM CODE ***")
 		-- Clear out alarm
 		if alarmState == 'none' then
 			self.alarmNext = false
@@ -205,6 +268,56 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext)
 			-- Restart local timer
 			self:_stopRTCAlarmTimer()
 			self:_startRTCAlarmTimer()
+		end
+	end
+
+	-- New alarm code
+	-- need to check alarmState too to prevent overriding values when it is 'active' or 'snooze'
+	if alarmVersion and alarmVersion == 2 and (alarmState == 'none' or alarmState == 'set') then
+		log:debug("*** NEW ALARM CODE ***")
+		-- store alarmNext2 as epoch seconds
+		if alarmNext2 and alarmNext2 > 0 then
+			if alarmNext2 > os.time() then
+				log:info("*** Alarm: Storing epochseconds of next alarm: ", alarmNext2, " now: ", os.time())
+
+				-- use existing variable
+				self.alarmNext = alarmNext2
+				self.alarmRepeat = alarmRepeat
+				self.alarmDays = alarmDays
+
+				self:getSettings()['alarmNext'] = self.alarmNext
+				self:getSettings()['alarmRepeat'] = self.alarmRepeat
+				self:getSettings()['alarmDays'] = self.alarmDays
+				self:storeSettings()
+
+				-- This is Baby only
+				self:_setWakeupTime()
+
+				-- Restart local timer
+				self:_stopRTCAlarmTimer()
+				self:_startRTCAlarmTimer()
+			else
+				log:warn("*** Alarm: ignoring past alarm: ", alarmNext2, " now: ", os.time())
+			end
+		-- clear out alarm
+		else
+			log:info("*** Alarm: No alarm set, clearing settings")
+
+			-- use existing variable
+			self.alarmNext = false
+			self.alarmRepeat = false
+			self.alarmDays = false
+
+			-- use existing variable
+			self:getSettings()['alarmNext'] = false
+			self:getSettings()['alarmRepeat'] = false
+			self:getSettings()['alarmDays'] = false
+			self:storeSettings()
+
+			-- This is baby only
+			self:_setWakeupTime('none')
+
+			self:_stopRTCAlarmTimer()
 		end
 	end
 end
