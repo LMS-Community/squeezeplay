@@ -826,7 +826,7 @@ function skin(self, s, reload, useDefaultSize)
 	s.internetradiotitle =
 		_uses(s.minititle, {
 			      icon = {
-				      img = _loadImage(self, "Icons/Mini/icon_internet_radio.png")
+				      img = _loadImage(self, "Icons/Mini/icon_tunein.png")
 			      }
 		      })
 
