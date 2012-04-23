@@ -447,7 +447,7 @@ function __init(self, jnt, id, name, version)
 		players = {},
 
 		-- our comet connection, initially not connected
-		comet = Comet(jnt, name),
+		comet = Comet(jnt, id),
 
 		-- are we connected to the server?
 		-- 'disconnected' = not connected
@@ -808,7 +808,7 @@ end
 
 -- Returns true if the server is SqueezeNetwork
 function isSqueezeNetwork(self)
-	return self.name == "mysqueezebox.com"
+	return self.id == "ID_mysqueezebox.com"
 end
 
 
@@ -1217,7 +1217,7 @@ if I<aSlimServer> is a L<jive.slim.SlimServer>, prints
 =cut
 --]]
 function __tostring(self)
-	return "SlimServer {" .. tostring(self.name) .. "}"
+	return "SlimServer {" .. tostring(self.name) .. " - " .. tostring(self.ip) .. "}"
 end
 
 

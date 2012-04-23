@@ -959,7 +959,7 @@ function _addServerHomeMenuItems(self, server, menuItems)
 end
 
 
-function _updateMyMusicTitle(self, serverName)
+function _updateMyMusicTitle(self, server)
 	local myMusicNode = jiveMain:getMenuTable()["_myMusic"]
 	-- it is possible on some branches for there to be no myMusicNode
 	if not myMusicNode then
@@ -971,10 +971,10 @@ function _updateMyMusicTitle(self, serverName)
 		--todo: this doesn't handle on-the-fly language change well
 	end
 
-	if not serverName or serverName == "mysqueezebox.com" then
+	if not server or server:getId() == "ID_mysqueezebox.com" then
 		myMusicNode.text = myMusicNode.originalNodeText
 	else
-		myMusicNode.text =  serverName
+		myMusicNode.text =  server:getName()
 	end
 end
 
@@ -1100,21 +1100,21 @@ function myMusicSelector(self)
 		end
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
-						self:_updateMyMusicTitle(_server and _server.name or nil)
+						self:_updateMyMusicTitle(_server)
 						jiveMain:openNodeById('_myMusic', true)
 					end,
 					connectServer)
 	elseif not _server then
 		self:_selectMusicSource(function()
 						jiveMain:goHome()
-						self:_updateMyMusicTitle(_server and _server.name or nil)
+						self:_updateMyMusicTitle(_server)
 						jiveMain:openNodeById('_myMusic', true)
 					end)
 
 	elseif _server:isSqueezeNetwork() then
 		--offer switch back to SC
 		self:_selectMusicSource(function()
-						self:_updateMyMusicTitle(_server and _server.name or nil)
+						self:_updateMyMusicTitle(_server)
 						jiveMain:openNodeById('_myMusic', true)
 					end,
 					_player:getLastSqueezeCenter(), nil, true)
@@ -1128,17 +1128,17 @@ function myMusicSelector(self)
 
 					appletManager:callService("showConnectToServer",
 								function()
-									self:_updateMyMusicTitle(_server and _server.name or nil)
+									self:_updateMyMusicTitle(_server)
 									jiveMain:openNodeById('_myMusic', true)
 								end,
 								_server)
 				else
-					self:_updateMyMusicTitle(_server and _server.name or nil)
+					self:_updateMyMusicTitle(_server)
 					jiveMain:openNodeById('_myMusic')
 				end
 			else
 				self:_selectMusicSource(function()
-								self:_updateMyMusicTitle(_server and _server.name or nil)
+								self:_updateMyMusicTitle(_server)
 								jiveMain:openNodeById('_myMusic', true)
 							end,
 							_server)
@@ -1150,7 +1150,7 @@ end
 function otherLibrarySelector(self)
 	self:_selectMusicSource(function()
 					jiveMain:goHome()
-					self:_updateMyMusicTitle(_server and _server.name or nil)
+					self:_updateMyMusicTitle(_server)
 					jiveMain:openNodeById('_myMusic', true)
 				end, false)
 end
@@ -1179,7 +1179,7 @@ function notify_playerCurrent(self, player)
 				_server = player:getSlimServer()
 
 				local playerName = _player:getName()
-				self:_updateMyMusicTitle(_server and _server.name or nil)
+				self:_updateMyMusicTitle(_server)
 
 				jiveMain:setTitle(playerName)
 
@@ -1274,7 +1274,7 @@ function notify_playerCurrent(self, player)
 
 		local playerName = _player:getName()
 --		playerName = self:_addServerNameToHomeTitle(playerName)
-		self:_updateMyMusicTitle(_server.name)
+		self:_updateMyMusicTitle(_server)
 
 		jiveMain:setTitle(playerName)
 
