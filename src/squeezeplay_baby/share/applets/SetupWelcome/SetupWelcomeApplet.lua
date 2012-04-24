@@ -169,11 +169,27 @@ function step3(self, transition)
 	-- network connection type
 	appletManager:callService("setupNetworking", 
 		function()
-			self:step6(iface)
+--			self:step6(iface)
+			self:step3a(iface)
 		end,
 	transition)
 end
 
+
+function step3a(self)
+	log:info("step3a")
+	-- Contact config server, set correct SN, do not yet register
+	if appletManager:hasService("fetchUpdateChannelList") then
+		appletManager:callService("fetchUpdateChannelList",
+			true,	-- set SN
+			false,	-- do not register
+			function()
+				self:step6()
+			end)
+	else
+		self:step6()
+	end
+end
 
 function step6(self)
 	log:info("step6")

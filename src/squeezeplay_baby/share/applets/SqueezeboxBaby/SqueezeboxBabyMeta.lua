@@ -68,7 +68,8 @@ function registerApplet(meta)
 	Sample:setEffectAttenuation(Sample.MAXVOLUME / 25)
 
 	-- SN hostname
-	jnt:setSNHostname("baby.squeezenetwork.com")
+--	jnt:setSNHostname("baby.squeezenetwork.com")
+	jnt:setSNHostname("sn_not_configured")	-- it will be configured during boot time by consulting the config server
 
 	-- BSP is a resident Applet
 	appletManager:loadApplet("SqueezeboxBaby")

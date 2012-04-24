@@ -62,6 +62,18 @@ function configureApplet(meta)
 
 	if not settings.setupDone then
 		appletManager:callService("startSetup")
+
+	else
+		-- Contact config server, set correct SN, register
+		if appletManager:hasService("fetchUpdateChannelList") then
+			appletManager:callService("fetchUpdateChannelList",
+				true,	-- set SN
+				true,	-- register if needed
+				false)  -- no callback
+		else
+			-- Fallback - should never be needed
+			jnt:setSNHostname("squeezenetwork.com")
+		end
 	end
 
 	if not settings.registerDone then
