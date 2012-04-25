@@ -32,7 +32,7 @@ local JIVE_VERSION      = jive.JIVE_VERSION
 
 local CONFIG_SERVER	= "config.nightly.belsonic.squeezenetwork.com"
 local CONFIG_PORT	= 80
-local DEFAULT_SN	= "squeezenetwork.com"
+local DEFAULT_SN	= "baby.squeezenetwork.com"
 
 
 module(..., Framework.constants)
@@ -45,7 +45,7 @@ function init(self)
 	local mac = System:getMacAddress()
 	local machine, revision = System:getMachine()
 
-	self.configPath = "/config/player/" .. machine .. "/id/" .. URL.escape(mac) .. "?firmware=" .. URL.escape(JIVE_VERSION)
+	self.configPath = "/config/id/" .. URL.escape(mac) .. "?firmware/" .. URL.escape(JIVE_VERSION)
 end
 
 

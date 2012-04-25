@@ -72,7 +72,7 @@ function configureApplet(meta)
 				false)  -- no callback
 		else
 			-- Fallback - should never be needed
-			jnt:setSNHostname("squeezenetwork.com")
+			jnt:setSNHostname("baby.squeezenetwork.com")
 		end
 	end
 
