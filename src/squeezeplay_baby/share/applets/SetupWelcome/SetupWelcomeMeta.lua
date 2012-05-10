@@ -66,10 +66,11 @@ function configureApplet(meta)
 
 	else
 		-- Contact config server, set correct SN, register
-		if appletManager:hasService("fetchUpdateChannelList") then
-			appletManager:callService("fetchUpdateChannelList",
+		if appletManager:hasService("fetchConfigServerData") then
+			appletManager:callService("fetchConfigServerData",
 				true,	-- set SN
 				true,	-- register if needed
+				true,	-- firmware upgrade if available
 				false)  -- no callback
 		else
 			-- Fallback - should never be needed

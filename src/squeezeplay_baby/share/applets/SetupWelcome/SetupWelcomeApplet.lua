@@ -177,7 +177,6 @@ function step3(self, transition)
 	-- network connection type
 	appletManager:callService("setupNetworking", 
 		function()
---			self:step6(iface)
 			self:step3a(iface)
 		end,
 	transition)
@@ -186,17 +185,38 @@ end
 
 function step3a(self)
 	log:info("step3a")
-	-- Contact config server, set correct SN, do not yet register
-	if appletManager:hasService("fetchUpdateChannelList") then
-		appletManager:callService("fetchUpdateChannelList",
-			true,	-- set SN
-			false,	-- do not register
-			function()
-				self:step6()
-			end)
-	else
-		self:step6()
-	end
+
+-- TODO: need to retest first
+--	-- Add a dummy window to prevent old content (like wireless PW entry window)
+--	--  to show when all popup windows are removed again
+--	local window = Window("help_list", self:string("PLEASE_WAIT"))
+--	self:tieAndShowWindow(window)
+
+	-- Waiting popup
+	local popup = Popup("waiting_popup")
+	local icon  = Icon("icon_connecting")
+	popup:addWidget(icon)
+	popup:addWidget(Label("text", self:string("CHECK_FIRMWARE_UPDATE")))
+	popup:addWidget(Label("subtext", self:string("PLEASE_WAIT")))
+	popup:setAllowScreensaver(false)
+	popup:ignoreAllInputExcept()
+	popup:addTimer(1000, function()
+		-- Contact config server, set correct SN, do not yet register
+		if appletManager:hasService("fetchConfigServerData") then
+			appletManager:callService("fetchConfigServerData",
+				true,	-- set SN
+				false,	-- do not register (yet)
+				false,  -- don't do firmware upgrade (yet)
+				function()
+					self:step6()
+				end)
+		else
+			self:step6()
+		end
+	end,
+	true)	--once
+
+	self:tieAndShowWindow(popup)
 end
 
 function step6(self)
@@ -275,6 +295,18 @@ function step7(self)
 
 		self:_setupComplete(true)
 		return
+	end
+
+	-- Check if config server returned a firmware url
+	if appletManager:hasService("getConfigServerFirmwareUrl") then
+		local firmwareUrl = appletManager:callService("getConfigServerFirmwareUrl")
+		log:info("New firmware upgrade from config server available: ", firmwareUrl)
+
+		if firmwareUrl and appletManager:hasService("firmwareUpgradeWithUrl") then
+			appletManager:callService("firmwareUpgradeWithUrl", firmwareUrl)
+			-- Early return as the device will reboot anyways after the fw upgrade
+			return
+		end
 	end
 
 	if UPGRADE_FROM_SCS_ENABLED then

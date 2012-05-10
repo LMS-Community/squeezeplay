@@ -228,3 +228,10 @@ BATTERY_HELP
 	RU	Продолжить
 	SV	Fortsätt
 
+CHECK_FIRMWARE_UPDATE
+	EN	Check firmware update
+
+PLEASE_WAIT
+	EN	Please wait
+
+
