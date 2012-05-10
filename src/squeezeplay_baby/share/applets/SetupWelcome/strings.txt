@@ -199,34 +199,10 @@ SN_CHOOSE_DIFFERENT
 	SV	Välj ett annat nätverk
 
 BATTERY_TITLE
-	CS	Pokračovat
-	DA	Fortsæt
-	DE	Weiter
 	EN	Remove Battery Tab
-	ES	Continuar
-	FI	Jatka
-	FR	Continuer
-	IT	Continua
-	NL	Verdergaan
-	NO	Fortsett
-	PL	Kontynuuj
-	RU	Продолжить
-	SV	Fortsätt
 
 BATTERY_HELP
-	CS	Pokračovat
-	DA	Fortsæt
-	DE	Weiter
-	EN	Please remove battery tab. You can find it on the battery door on the bottom of your Smart Radio. This will activate your battery.
-	ES	Continuar
-	FI	Jatka
-	FR	Continuer
-	IT	Continua
-	NL	Verdergaan
-	NO	Fortsett
-	PL	Kontynuuj
-	RU	Продолжить
-	SV	Fortsätt
+	EN	Please remove battery tab. You can find it on the battery door on the bottom of your Logitech UE Smart Radio. This will activate your battery.
 
 CHECK_FIRMWARE_UPDATE
 	EN	Check firmware update
