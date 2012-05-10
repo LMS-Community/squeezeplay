@@ -397,6 +397,19 @@ function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
 end
 
 
+-- service method
+function firmwareUpgradeWithUrl(self, url)
+	local upgrades = {}
+	local version = self:_firmwareVersion(url)
+	upgrades[#upgrades + 1] = {
+		url = url,
+		version = version,
+	}
+
+	return _upgradeWindow(self, upgrades, false) -- not optional
+end
+
+
 function showFirmwareUpgradeMenu(self)
 	local url = false
 	local server

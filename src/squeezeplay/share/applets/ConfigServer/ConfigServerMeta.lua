@@ -18,18 +18,14 @@ end
 
 function defaultSettings(self)
 	return {
-		currentSN = nil,
-		updateChannelList = {}
+		currentSN = nil
 	}
 end
 
 
 function registerApplet(meta)
-	meta:registerService("fetchUpdateChannelList")
-
--- Only for debugging purposes
--- The menu is added if there is more than one entry in the returned JSON file
---	jiveMain:addItem(meta:menuItem('developer', 'advancedSettings', "DEVELOPER", function(applet, ...) applet:developerMenu() end))
+	meta:registerService("fetchConfigServerData")
+	meta:registerService("getConfigServerFirmwareUrl")
 end
 
 
