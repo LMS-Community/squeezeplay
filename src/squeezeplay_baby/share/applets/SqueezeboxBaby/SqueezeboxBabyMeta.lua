@@ -59,7 +59,7 @@ function registerApplet(meta)
 --        jive.perfhook(1000, 10000)
 
 	-- Set player device type
-	LocalPlayer:setDeviceType("baby", "Squeezebox Radio")
+	LocalPlayer:setDeviceType("baby", "Logitech UE Smart Radio")
 
 	-- Set the minimum support server version
 	SlimServer:setMinimumVersion("7.4")

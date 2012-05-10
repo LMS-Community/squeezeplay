@@ -183,19 +183,19 @@ DIAGNOSTICS_LOCAL
 	SV	Lokal
 
 SN_REG
-	CS	registrace mysqueezebox.com\n%s
-	DA	registrering på mysqueezebox.com\n%s
-	DE	mysqueezebox.com-Registrierung\n%s
-	EN	mysqueezebox.com registration\n%s
-	ES	Registro en mysqueezebox.com\n%s
-	FI	mysqueezebox.com-rekisteröinti\n%s
-	FR	Enregistrement à mysqueezebox.com\n%s
-	IT	Registrazione mysqueezebox.com\n%s
-	NL	Registratie bij mysqueezebox.com\n%s
-	NO	mysqueezebox.com-registrering\n%s
-	PL	Rejestracja w witrynie mysqueezebox.com\n%s
-	RU	Регистрация mysqueezebox.com\n%s
-	SV	registrering av mysqueezebox.com\n%s
+	CS	registrace UEsmartradio.com\n%s
+	DA	registrering på UEsmartradio.com\n%s
+	DE	UEsmartradio.com-Registrierung\n%s
+	EN	UEsmartradio.com registration\n%s
+	ES	Registro en UEsmartradio.com\n%s
+	FI	UEsmartradio.com-rekisteröinti\n%s
+	FR	Enregistrement à UEsmartradio.com\n%s
+	IT	Registrazione UEsmartradio.com\n%s
+	NL	Registratie bij UEsmartradio.com\n%s
+	NO	UEsmartradio.com-registrering\n%s
+	PL	Rejestracja w witrynie UEsmartradio.com\n%s
+	RU	Регистрация UEsmartradio.com\n%s
+	SV	registrering av UEsmartradio.com\n%s
 
 SN_REG_YES
 	CS	Registrován
@@ -409,19 +409,19 @@ DNS_SERVER
 	SV	DNS-server\n%s
 
 SN_ADDRESS
-	CS	mysqueezebox.com\n%s
-	DA	mysqueezebox.com\n%s
-	DE	mysqueezebox.com\n%s
-	EN	mysqueezebox.com\n%s
-	ES	mysqueezebox.com\n%s
-	FI	mysqueezebox.com\n%s
-	FR	mysqueezebox.com\n%s
-	IT	mysqueezebox.com\n%s
-	NL	mysqueezebox.com\n%s
-	NO	mysqueezebox.com\n%s
-	PL	mysqueezebox.com\n%s
-	RU	mysqueezebox.com\n%s
-	SV	mysqueezebox.com\n%s
+	CS	UEsmartradio.com\n%s
+	DA	UEsmartradio.com\n%s
+	DE	UEsmartradio.com\n%s
+	EN	UEsmartradio.com\n%s
+	ES	UEsmartradio.com\n%s
+	FI	UEsmartradio.com\n%s
+	FR	UEsmartradio.com\n%s
+	IT	UEsmartradio.com\n%s
+	NL	UEsmartradio.com\n%s
+	NO	UEsmartradio.com\n%s
+	PL	UEsmartradio.com\n%s
+	RU	UEsmartradio.com\n%s
+	SV	UEsmartradio.com\n%s
 
 SN_PING
 	CS	Zvonění\n%s
@@ -469,19 +469,19 @@ SN_PORT_9000
 	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	CS	Logitech Media Server\n%s
-	DA	Logitech Media Server\n%s
-	DE	Logitech Media Server\n%s
-	EN	Logitech Media Server\n%s
-	ES	Logitech Media Server\n%s
-	FI	Logitech Media Server\n%s
-	FR	Logitech Media Server\n%s
-	IT	Logitech Media Server\n%s
-	NL	Logitech Media Server\n%s
-	NO	Logitech Media Server\n%s
-	PL	Logitech Media Server\n%s
-	RU	Logitech Media Server\n%s
-	SV	Logitech Media Server\n%s
+	CS	Logitech UE Music Library\n%s
+	DA	Logitech UE Music Library\n%s
+	DE	Logitech UE Music Library\n%s
+	EN	Logitech UE Music Library\n%s
+	ES	Logitech UE Music Library\n%s
+	FI	Logitech UE Music Library\n%s
+	FR	Logitech UE Music Library\n%s
+	IT	Logitech UE Music Library\n%s
+	NL	Logitech UE Music Library\n%s
+	NO	Logitech UE Music Library\n%s
+	PL	Logitech UE Music Library\n%s
+	RU	Logitech UE Music Library\n%s
+	SV	Logitech UE Music Library\n%s
 
 SC_NAME
 	CS	Název knihovny\n%s
@@ -559,19 +559,19 @@ SUPPORT
 	SV	Ytterligare hjälp
 
 SUPPORT_HELP
-	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.mysqueezebox.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
-	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.mysqueezebox.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
-	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
-	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
-	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.mysqueezebox.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
-	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.mysqueezebox.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
-	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.mysqueezebox.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
-	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.mysqueezebox.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
-	NL	Ga naar \nwww.mysqueezebox.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
-	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.mysqueezebox.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
-	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.mysqueezebox.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
-	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.mysqueezebox.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
-	SV	Mer information och kundsupport finns på \nwww.mysqueezebox.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
+	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.UEsmartradio.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
+	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.UEsmartradio.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
+	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.UEsmartradio.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
+	EN	For more help and customer support, please visit \nwww.UEsmartradio.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
+	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.UEsmartradio.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
+	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.UEsmartradio.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
+	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.UEsmartradio.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
+	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.UEsmartradio.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
+	NL	Ga naar \nwww.UEsmartradio.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
+	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.UEsmartradio.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
+	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.UEsmartradio.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
+	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.UEsmartradio.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
+	SV	Mer information och kundsupport finns på \nwww.UEsmartradio.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
 
 SOFTWARE_UPDATE
 	CS	Aktualizace softwaru
