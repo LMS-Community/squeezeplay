@@ -158,8 +158,16 @@ function step1(self)
 	-- choose language
 	appletManager:callService("setupShowSetupLanguage",
 		function()
-			self:step3()
+			self:step2()
 		end, false)
+end
+
+function step2(self)
+	log:debug('step2')
+	appletManager:callService("isBatteryTabThere",
+		function()
+			self:step3()
+		end)
 end
 
 
@@ -560,6 +568,71 @@ function _setupDone(self, setupDone, registerDone)
 
 	-- FIXME: workaround until filesystem write issue resolved
 	os.execute("sync")
+end
+
+function _getPowerSysValue(self, param)
+
+	local f = io.open("/sys/devices/platform/i2c-adapter:i2c-1/1-0010/" .. param)
+	log:warn("opening: ", param)
+
+	local value = f:read("*all")
+	f:close()
+
+	return value
+end
+
+function _isBatteryTabThere(self)
+	local batteryTemperature = tonumber(self:_getPowerSysValue("battery_temperature"))
+	local batteryVoltage = tonumber(self:_getPowerSysValue("battery_voltage"))
+	local batteryMonitor1 = tonumber(self:_getPowerSysValue("battery_vmon1_voltage"))
+	local batteryMonitor2 = tonumber(self:_getPowerSysValue("battery_vmon2_voltage"))
+	-- read batv twice for correct value
+	batteryVoltage = tonumber(self:_getPowerSysValue("battery_voltage"))
+	--Bogus values -> bat values temp=679 v=17971 v1=20 v2=20
+	if batteryTemperature < 65000 and batteryMonitor1 < 50 and batteryMonitor2 < 50 and (batteryVoltage < 50 or batteryVoltage > 17000) then
+		return true
+	end
+	return false
+end
+
+function isBatteryTabThere(self, f)
+	local showBatWindow = self:_isBatteryTabThere()
+	self.timer = nil
+
+	if showBatWindow == true then
+		local window = Window("Battery tab", self:string("BATTERY_TITLE"))
+		window:setAllowScreensaver(false)
+
+		local menu = SimpleMenu("menu")
+		menu:addItem({
+			text = self:string("CONTINUE"),
+			sound = "WINDOWSHOW",
+			callback = function()
+				if self.timer then
+					self.timer:stop()
+				end
+				window:hide(Window.transitionPushLeft)
+				f()
+			end,
+			weight = 1
+		})
+		menu:setHeaderWidget(Textarea("help_text", self:string("BATTERY_HELP")))
+
+		window:addWidget(menu)
+
+		self.timer = window:addTimer(1000, function()
+			local showBatWindow = self:_isBatteryTabThere()
+			if showBatWindow == false then
+				self.timer:stop()
+				window:hide(Window.transitionPushLeft)
+				f()
+			end
+		end)
+
+		self:tieAndShowWindow(window)
+	else
+		f()
+	end
 end
 
 

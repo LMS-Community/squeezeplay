@@ -54,6 +54,7 @@ function registerApplet(meta)
 	meta:registerService("startSetup")
 	meta:registerService("startRegister")
 	meta:registerService("isSetupDone")
+	meta:registerService("isBatteryTabThere")
 end
 
 
@@ -74,6 +75,10 @@ function configureApplet(meta)
 			-- Fallback - should never be needed
 			jnt:setSNHostname("baby.squeezenetwork.com")
 		end
+		appletManager:callService("isBatteryTabThere", function()
+				jiveMain:goHome()
+			end
+		)
 	end
 
 	if not settings.registerDone then
