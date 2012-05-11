@@ -45,7 +45,7 @@ function init(self)
 	local machine, revision = System:getMachine()
 
 	self.configServer = "config.logitechmusic.com"
-	self.configPath = "/config/id/" .. URL.escape(mac) .. "?firmware/" .. URL.escape(JIVE_VERSION)
+	self.configPath = "/config/id/" .. URL.escape(mac) .. "?firmware=" .. URL.escape(JIVE_VERSION)
 
 	self.channelText = false
 	self.channelService = false
