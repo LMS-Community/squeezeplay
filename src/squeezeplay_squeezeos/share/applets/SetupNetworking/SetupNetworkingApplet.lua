@@ -188,9 +188,7 @@ function _connectionType(self)
 					--  delays while trying to resolve mysb.com
 					if self.ethIface:pingServer(status.ip_dns) then
 						-- Then ping mysb.com
-						-- Cannot use jnt:getSNHostname() here as it might not yet be set
-						--  due to the fact that we havn't connected to the config server yet
-						pingOK = self.ethIface:pingServer("squeezenetwork.com")
+						pingOK = self.ethIface:pingServer(jnt:getSNDefaultHostname())
 					end
 				end
 

@@ -60,7 +60,8 @@ local _isArpEnabled = true
 -- jive.net.NetworkThread is a base class
 module(..., oo.class)
 
-local squeezenetworkHostname = "www.squeezenetwork.com"
+local SN_DEFAULT_HOSTNAME = "www.logitechmusic.com"	-- used if config server cannot be reached
+local squeezenetworkHostname = SN_DEFAULT_HOSTNAME
 
 
 -- _add
@@ -387,6 +388,11 @@ function setSNHostname(self, hostname)
 	squeezenetworkHostname = hostname
 end
 
+
+-- Get default (backup) SN name
+function getSNDefaultHostname(self)
+	return SN_DEFAULT_HOSTNAME
+end
 
 --[[
 
