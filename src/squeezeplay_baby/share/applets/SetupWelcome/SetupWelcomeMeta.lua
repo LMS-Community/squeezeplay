@@ -74,7 +74,7 @@ function configureApplet(meta)
 				false)  -- no callback
 		else
 			-- Fallback - should never be needed
-			jnt:setSNHostname("baby.squeezenetwork.com")
+			jnt:setSNHostname(jnt:getSNDefaultHostname())
 		end
 		appletManager:callService("isBatteryTabThere", function()
 				jiveMain:goHome()

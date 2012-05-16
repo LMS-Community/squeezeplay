@@ -31,7 +31,6 @@ local jnt		= jnt
 local JIVE_VERSION      = jive.JIVE_VERSION
 
 local CONFIG_PORT	= 80
-local DEFAULT_SN	= "baby.squeezenetwork.com"
 
 
 module(..., Framework.constants)
@@ -204,7 +203,7 @@ function fetchConfigServerData(self, doSet, doRegister, doFirmwareUpgrade, callb
 			url = settings.currentSN
 			-- stored SN not available - use default SN
 			if not url then
-				url = DEFAULT_SN
+				url = jnt:getSNDefaultHostname()
 			end
 		end
 
