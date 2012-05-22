@@ -321,7 +321,7 @@ function _deleteAction(self, event, alwaysBackspace)
 		self:playSound("WINDOWHIDE")
 		self:hide()
 	else
-		if _delete(self, alwaysBackspace) then
+		if _delete(self, true) then
 			self:playSound("CLICK")
 		else
 			self:playSound("BUMP")
@@ -364,8 +364,13 @@ function _goAction(self, _, bumpAtEnd)
 		end
 	elseif self.cursor <= #tostring(self.value) then
 		_moveCursor(self, 1)
+		if self.cursor-1 == #tostring(self.value) then 
+			self.numberLetterAccel:stopCurrentCharacter()
+			_scroll(self, 1)
+		end
 		self:reDraw()
 	else
+		_scroll(self, 2)
 		self:playSound("BUMP")
 		self:getWindow():bumpRight()
 	end
@@ -428,6 +433,7 @@ end
 
 
 function _doneAction(self)
+	self:setValue(string.sub(tostring(self.value), 1, #tostring(self.value)-1))
 	self:_goToEndAction()
 	return self:_goAction()
 end
@@ -491,14 +497,16 @@ function _eventHandler(self, event)
 		--play is delete, add is insert, just like jive
 		if event:isIRCode("play") then
 			self.numberLetterAccel:stopCurrentCharacter()
-			return _goAction(self)
+			return _doneAction(self)
 		end
+--[[
 		if event:isIRCode("add") then
 			self.numberLetterAccel:stopCurrentCharacter()
 			return _insertAction(self)
 		end
-
+]]--
 	elseif type == EVENT_IR_UP and self.upHandlesCursor and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
+--[[
 		self.upHandlesCursor = false
 
 		--handle right and left on the up while at the ends of the text so that hold/repeat doesn't push past the ends of the screen
@@ -508,11 +516,12 @@ function _eventHandler(self, event)
 		if event:isIRCode("arrow_right") and self:_cursorAtEnd() then
 			self:_goAction()
 		end
-
+]]--
 		return EVENT_CONSUME
 
 	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
 		local irCode = event:getIRCode()
+--[[
 		if type == EVENT_IR_HOLD then
 			if event:isIRCode("rew") then
 				return _goToStartAction(self)
@@ -520,7 +529,7 @@ function _eventHandler(self, event)
 				return _goToEndAction(self)
 			end
 		end
-
+]]--
 		if type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT then
 
 			--IR left/right
@@ -628,7 +637,7 @@ function _eventHandler(self, event)
 		local s1 = string.sub(tostring(self.value), 1, self.cursor - 1)
 		local s3 = string.sub(tostring(self.value), self.cursor)
 		if self:setValue(s1 .. keyboardEntry .. s3) then
-			_moveCursor(self, 1)
+			_moveCursor(self, self.cursor)
 		else
 			self:playSound("BUMP")
 			self:getWindow():bumpRight()
@@ -643,15 +652,16 @@ function _eventHandler(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		self.numberLetterAccel:stopCurrentCharacter()
 		local keycode = event:getKeycode()
-
+--[[
 		if keycode == KEY_REW then
 			return _cursorLeftAction(self)
 		elseif keycode == KEY_FWD then
 			return _cursorRightAction(self)
-		elseif keycode == KEY_BACK then
+]]--
+		if keycode == KEY_BACK then
 			return _deleteAction(self)
-
 		end
+--[[
 	elseif type == EVENT_KEY_HOLD then
 		self.numberLetterAccel:stopCurrentCharacter()
 		local keycode = event:getKeycode()
@@ -661,6 +671,7 @@ function _eventHandler(self, event)
 		elseif keycode == KEY_FWD then
 			return _goToEndAction(self)
 		end
+]]--
 	end
 
 	return EVENT_UNUSED
@@ -720,7 +731,7 @@ function __init(self, style, value, closure, allowedChars)
 						obj:reDraw()
 					end
 	)
-	obj:addActionListener("play", obj, _goAction)
+	obj:addActionListener("play", obj, _doneAction)
 	obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
 
@@ -741,6 +752,13 @@ function __init(self, style, value, closure, allowedChars)
 				return _eventHandler(obj, event)
 			end)
 
+	obj.cursorWidth = 1
+	local v = obj:_getChars()
+	if tostring(obj.value) == "" then
+		obj:setValue(string.sub(v, 2, 2))
+	else 
+		obj:setValue(tostring(obj.value) .. string.sub(v, 2, 2))
+	end
 	return obj
 end
 

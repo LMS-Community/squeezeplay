@@ -189,6 +189,7 @@ function skin(self, s, reload, useDefaultSize)
 	-- textinputs should be able to not have cursor and right arrow assets if not defined
 	s.img.textinputCursor     = Tile:loadImage(imgpath .. "Text_Entry/text_bar_vert_fill.png")
 	s.img.textinputEnterImg   = Tile:loadImage(imgpath .. "Icons/selection_right_textentry.png")
+	s.img.textinputHintImg   = Tile:loadImage(imgpath .. "Icons/keyboard_hints.png")
 	s.img.textareaBackground  = Tile:loadImage(imgpath .. "Titlebar/tb_dropdwn_bkrgd.png")
 
 	s.img.textareaBackgroundBottom  = 
@@ -815,6 +816,7 @@ function skin(self, s, reload, useDefaultSize)
 		cursorImg  = s.img.textinputCursor,
 		enterImg   = s.img.textinputEnterImg,
 		wheelImg   = s.img.textinputWheel,
+		hintImg   = s.img.textinputHintImg,
 		cursorColor = c.TEXTINPUT_WHEEL_SELECTED_COLOR,
 		charOffsetY = 13,
 		wheelCharOffsetY = 6,

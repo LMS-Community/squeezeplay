@@ -29,6 +29,7 @@ typedef struct textinput_widget {
 	JiveTile *wheel_mask_tile;
 	JiveTile *cursor_tile;
 	JiveTile *enter_tile;
+	JiveTile *hint_tile;
 } TextinputWidget;
 
 
@@ -102,6 +103,14 @@ int jiveL_textinput_skin(lua_State *L) {
 			jive_tile_free(peer->enter_tile);
 		}
 		peer->enter_tile = jive_tile_ref(tile);
+	}
+
+	tile = jive_style_tile(L, 1, "hintImg", NULL);
+	if (tile != peer->hint_tile) {
+		if (peer->hint_tile) {
+			jive_tile_free(peer->hint_tile);
+		}
+		peer->hint_tile = jive_tile_ref(tile);
 	}
 
 	peer->char_height = jive_style_int(L, 1, "charHeight", jive_font_height(peer->font));
@@ -331,6 +340,17 @@ int jiveL_textinput_draw(lua_State *L) {
 		jive_surface_blit(tsrf, srf, text_x, text_y + offset_y);
 		jive_surface_free(tsrf);
 
+		{ /* Hint tile implementation */
+				Uint16 cw, ch;
+				int hint_x = 0;
+				jive_tile_get_min_size(peer->hint_tile, &cw, &ch);
+				if ((int)(peer->w.bounds.w - cw) > (int)(cursor_x + cursor_w)) {
+					hint_x = peer->w.bounds.w - cw - peer->w.padding.right;
+				} else {
+					hint_x = peer->w.bounds.x + peer->w.padding.left;
+				}
+				jive_surface_blit(peer->hint_tile, srf, hint_x, text_y + text_h - 5 );
+		}
 		/* cursor */
 		tsrf = jive_font_ndraw_text(peer->cursor_font, peer->cursor_color, text + cursor - cursor_width, cursor_width);
 		jive_surface_blit(tsrf, srf, cursor_x + (cursor_w - len_2) / 2, text_y + offset_cursor_y);
