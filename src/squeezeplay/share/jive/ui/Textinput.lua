@@ -732,20 +732,20 @@ function __init(self, style, value, closure, allowedChars)
 					end
 	)
 	obj:addActionListener("play", obj, _doneAction)
-	obj:addActionListener("add", obj, _insertAction)
+	--obj:addActionListener("add", obj, _insertAction)
 	obj:addActionListener("go", obj, _goAction)
 
 	--only touch back action will be handled this way (as escape), other back sources are use _cursorBackAction, and are handled directly in the main listener
-	obj:addActionListener("back", obj, _escapeAction)
+	--obj:addActionListener("back", obj, _escapeAction)
 
 	obj:addActionListener("finish_operation", obj, _doneAction)
-	obj:addActionListener("cursor_left", obj, _cursorLeftAction)
-	obj:addActionListener("cursor_right", obj, _cursorRightAction)
-	obj:addActionListener("clear", obj, _clearAction)
-	obj:addActionListener("jump_rew", obj, _cursorLeftAction)
-	obj:addActionListener("jump_fwd", obj, _cursorRightAction)
-	obj:addActionListener("scanner_rew", obj, _goToStartAction)
-	obj:addActionListener("scanner_fwd", obj, _goToEndAction)
+	--obj:addActionListener("cursor_left", obj, _cursorLeftAction)
+	--obj:addActionListener("cursor_right", obj, _cursorRightAction)
+	--obj:addActionListener("clear", obj, _clearAction)
+	--obj:addActionListener("jump_rew", obj, _cursorLeftAction)
+	--obj:addActionListener("jump_fwd", obj, _cursorRightAction)
+	--obj:addActionListener("scanner_rew", obj, _goToStartAction)
+	--obj:addActionListener("scanner_fwd", obj, _goToEndAction)
 
 	obj:addListener(EVENT_CHAR_PRESS| EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_SCROLL | EVENT_WINDOW_RESIZE | EVENT_IR_ALL,
 			function(event)

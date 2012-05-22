@@ -513,6 +513,10 @@ int jiveL_textinput_gc(lua_State *L) {
 		jive_tile_free(peer->enter_tile);
 		peer->enter_tile = NULL;
 	}
+	if (peer->hint_tile) {
+		jive_tile_free(peer->hint_tile);
+		peer->hint_tile = NULL;
+	}
 
 	return 0;
 }
