@@ -506,7 +506,6 @@ function _eventHandler(self, event)
 		end
 ]]--
 	elseif type == EVENT_IR_UP and self.upHandlesCursor and (event:isIRCode("arrow_left") or event:isIRCode("arrow_right")) then
---[[
 		self.upHandlesCursor = false
 
 		--handle right and left on the up while at the ends of the text so that hold/repeat doesn't push past the ends of the screen
@@ -516,7 +515,6 @@ function _eventHandler(self, event)
 		if event:isIRCode("arrow_right") and self:_cursorAtEnd() then
 			self:_goAction()
 		end
-]]--
 		return EVENT_CONSUME
 
 	elseif type == EVENT_IR_DOWN or type == EVENT_IR_REPEAT or type == EVENT_IR_HOLD then
