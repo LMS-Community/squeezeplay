@@ -2250,6 +2250,7 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"EVENT_KEY_UP",JIVE_EVENT_KEY_UP);
    tolua_constant(tolua_S,"EVENT_KEY_PRESS",JIVE_EVENT_KEY_PRESS);
    tolua_constant(tolua_S,"EVENT_KEY_HOLD",JIVE_EVENT_KEY_HOLD);
+   tolua_constant(tolua_S,"EVENT_KEY_LONGHOLD",JIVE_EVENT_KEY_LONGHOLD);
    tolua_constant(tolua_S,"EVENT_CHAR_PRESS",JIVE_EVENT_CHAR_PRESS);
    tolua_constant(tolua_S,"EVENT_MOUSE_DOWN",JIVE_EVENT_MOUSE_DOWN);
    tolua_constant(tolua_S,"EVENT_MOUSE_UP",JIVE_EVENT_MOUSE_UP);

@@ -364,6 +364,21 @@ function buildMainMenuItems(self)
 	
 			self:_addItem(items, inputMapping, defaultAction, isCustom, target, currentAction, newSettingTable, newSettingTableEntry, key, inputWrapper)
 		end
+		
+		for key, inputWrapper in pairs(self:_getInputMap().keyActionMappings.longHold) do
+			local inputMapping = Framework.inputToActionMap.keyActionMappings.longHold[key]
+			local defaultAction = Framework._inputToActionOverrideDefaults.keyActionMappings.longHold[key]
+			local isCustom = (Framework._inputToActionOverrideDefaults.keyActionMappings.longHold[key] ~= inputMapping)
+			local target = "keys"
+			local currentAction = self:getSettings().keyActionMappings.longHold[key]
+			local newSettingTable = {}
+			newSettingTable.keyActionMappings = {}
+			newSettingTable.keyActionMappings.longHold = {}
+			local newSettingTableEntry = newSettingTable.keyActionMappings.longHold
+	
+			self:_addItem(items, inputMapping, defaultAction, isCustom, target, currentAction, newSettingTable, newSettingTableEntry, key, inputWrapper)
+		end
+		
 	end
 
 	-- add an entry for returning everything to defaults

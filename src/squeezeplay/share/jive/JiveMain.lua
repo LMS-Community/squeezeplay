@@ -63,6 +63,7 @@ local EVENT_KEY_UP         = jive.ui.EVENT_KEY_UP
 local EVENT_KEY_DOWN       = jive.ui.EVENT_KEY_DOWN
 local EVENT_CHAR_PRESS      = jive.ui.EVENT_CHAR_PRESS
 local EVENT_KEY_HOLD       = jive.ui.EVENT_KEY_HOLD
+local EVENT_KEY_LONGHOLD   = jive.ui.EVENT_KEY_LONGHOLD
 local EVENT_SCROLL         = jive.ui.EVENT_SCROLL
 local EVENT_WINDOW_RESIZE  = jive.ui.EVENT_WINDOW_RESIZE
 local EVENT_UNUSED         = jive.ui.EVENT_UNUSED
