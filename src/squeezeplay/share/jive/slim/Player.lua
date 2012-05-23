@@ -55,6 +55,7 @@ local Label          = require("jive.ui.Label")
 local Textarea       = require("jive.ui.Textarea")
 local Window         = require("jive.ui.Window")
 local Group          = require("jive.ui.Group")
+local SimpleMenu     = require("jive.ui.SimpleMenu")
 
 local Udap           = require("jive.net.Udap")
 
@@ -1334,25 +1335,67 @@ function _process_status(self, event)
 	self:updateIconbar()
 end
 
-function _alertWindow(self, title, textValue)
 
+--[[
+type:     must be alertWindow
+id:       window reference (needed to hide window again)
+title:    text for window title
+text:     array of strings shown below title
+button:   array of hash with 'label' and 'action' for button(s)
+    label:  text for button
+    action: CLI cmd array of strings (sample: acceptAccount:id nonce:nonce-value)
+duration: seconds the window is shown (0 = show forever, -1 hide window)
+--]]
+function _alertWindow(self, id, title, textValue, button, duration)
 	local showMe = true
 	local currentWindow = Window:getTopNonTransientWindow()
-	if currentWindow and currentWindow:getWindowId() == textValue then
+	if currentWindow and currentWindow:getWindowId() == id then
 		showMe = false
+		if duration < 0 then
+			currentWindow:hide()
+		end
 	end
 
-	if showMe then
+	if showMe and duration and duration >= 0 then
 		local window = Window('help_list', title)
+		window:setWindowId(id)
+
 		window:setAllowScreensaver(false)
 		window:showAfterScreensaver()
-		local text = Textarea("text", textValue)
-		window:setWindowId(textValue)
-		window:addWidget(text)
+
+		local menu = SimpleMenu("menu")
+		local helptext = Textarea("help_text", textValue)
+
+		menu:setHeaderWidget(helptext)
+
+		if button then
+			for i, v in ipairs(button) do
+				if v.label and v.action then
+					local item = {
+						text = v.label,
+						callback = function()
+							self:send(v.action)
+							window:hide()
+						end
+					}
+					menu:addItem(item)
+				end
+			end
+		end
+
+		window:addWidget(menu)
+
+		if duration > 0 then
+			window:addTimer( duration,
+				function()
+					window:hide()
+				end,
+				true	-- once
+			)
+		end
 
 		local s = {}
 		s.window = window
-		self:tieWindow(window)
 		return s
 	else
 		return nil
@@ -1378,6 +1421,9 @@ function _process_displaystatus(self, event)
 		local s
 		local textValue = _formatShowBrieflyText(display['text'])
 
+		local id = display["id"] or textValue
+		local button = display["button"];
+
 		local transitionOn = Window.transitionFadeIn
 		local transitionOff = Window.transitionFadeOut
 		local duration = tonumber(display['duration'] or 3000)
@@ -1388,7 +1434,7 @@ function _process_displaystatus(self, event)
 		local showMe = true
 		if alertWindow then
 			local title = display['title'] or ''
-			s = self:_alertWindow(title, textValue)
+			s = self:_alertWindow(id, title, textValue, button, duration)
 			if not s then
 				showMe = false
 			end
