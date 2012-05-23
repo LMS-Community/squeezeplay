@@ -7,7 +7,7 @@ local lfs           = require("lfs")
 local math          = require("math")
 local string        = require("jive.utils.string")
 local table         = require("jive.utils.table")
-
+local os            = require("os")
 local Applet        = require("jive.Applet")
 local System        = require("jive.System")
 local SlimServer    = require("jive.slim.SlimServer")
@@ -167,7 +167,7 @@ end
 
 function _windowListeners(self, window)
        -- don't allow anything but vol up and vol down
-        window:ignoreAllInputExcept({ "volume_up", "volume_down" },
+        window:ignoreAllInputExcept({ "volume_up", "volume_down", "exit_demo" },
                         function(actionEvent)
                             return EVENT_CONSUME
                         end
@@ -177,6 +177,7 @@ function _windowListeners(self, window)
 
         window:addActionListener('volume_up', self, volEvent)
         window:addActionListener('volume_down', self, volEvent)
+        window:addActionListener('exit_demo', self, demoEvent)
 end
 
 
@@ -236,6 +237,39 @@ function volEvent(self, volumeEvent)
 	return EVENT_CONSUME
 end
 
+function demoEvent(self, demoEvent)
+       -- add setting not to start demo on boot
+        self:getSettings()['startDemo'] = false
+        self:storeSettings()
+        _stopMusic()
+        self.nextSlideTimer:stop()
+        _rebootBox()
+        return EVENT_CONSUME                     
+end  
+
+function _stopMusic(self)
+        local localPlayer = nil
+        for mac, player in appletManager:callService("iteratePlayers") do
+        if player:isLocal() then
+                localPlayer = player
+                break
+        end
+        end
+        localPlayer:stop(true)
+end
+
+function _rebootBox(self)
+    -- we're shutting down, so prohibit any key presses or holds
+	Framework:addListener(EVENT_ALL_INPUT,
+			      function () 
+				      return EVENT_CONSUME
+			      end,
+			      true)
+    log:info("Rebooting...")
+    --reboot
+    appletManager:callService("reboot")
+end
+					
 -- main setting menu
 function enableDemo(self)
 	-- keyboard window to enter code
@@ -310,7 +344,6 @@ function startDemo(self)
 	--each entry in slides directory is a slide to display
 	for entry in self:readdir("slides") do
 		table.insert(self.slides, entry)
-
 		local substrings = string.split('/', entry)
 		local filename   = substrings[#substrings]
 		substrings       = string.split('%.', filename)
@@ -389,7 +422,7 @@ function _showNextSlide(self)
 end
 
 function _playTone(self)
-	local localPlayer = nil
+    local localPlayer = nil
 	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isLocal() then
 			localPlayer = player

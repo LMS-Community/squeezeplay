@@ -57,6 +57,7 @@ int jiveL_event_new(lua_State *L) {
 		case JIVE_EVENT_KEY_UP:
 		case JIVE_EVENT_KEY_PRESS:
 		case JIVE_EVENT_KEY_HOLD:
+		case JIVE_EVENT_KEY_LONGHOLD:
 			event->u.key.code = lua_tointeger(L, 3);
 			break;
 		
@@ -153,6 +154,7 @@ int jiveL_event_get_keycode(lua_State *L) {
 	case JIVE_EVENT_KEY_UP:
 	case JIVE_EVENT_KEY_PRESS:
 	case JIVE_EVENT_KEY_HOLD:
+	case JIVE_EVENT_KEY_LONGHOLD:
 		lua_pushinteger(L, (lua_Integer)event->u.key.code);
 		return 1;
 
@@ -349,7 +351,9 @@ int jiveL_event_tostring(lua_State* L) {
 	case JIVE_EVENT_KEY_HOLD:
 		lua_pushfstring(L, "KEY_HOLD code=%d", event->u.key.code);
 		break;
-
+	case JIVE_EVENT_KEY_LONGHOLD:
+		lua_pushfstring(L, "KEY_LONGHOLD code=%d", event->u.key.code);
+				break;
 	case JIVE_EVENT_CHAR_PRESS:
 		lua_pushfstring(L, "CHAR_PRESS code=%d", event->u.text.unicode);
 		break;

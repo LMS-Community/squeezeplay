@@ -50,6 +50,7 @@ local Timer                   = require("jive.ui.Timer")
 local Widget                  = require("jive.ui.Widget")
 local Event                   = require("jive.ui.Event")
 local Surface                 = require("jive.ui.Surface")
+local os                      = require("os")
 
 local debug                   = require("jive.utils.debug")
 local log                     = require("jive.utils.log").logger("squeezeplay.ui")
@@ -71,7 +72,8 @@ local EVENT_ACTION            = jive.ui.EVENT_ACTION
 local EVENT_SCROLL            = jive.ui.EVENT_SCROLL
 local EVENT_KEY_PRESS         = jive.ui.EVENT_KEY_PRESS
 local EVENT_KEY_HOLD          = jive.ui.EVENT_KEY_HOLD
-local EVENT_CHAR_PRESS         = jive.ui.EVENT_CHAR_PRESS
+local EVENT_KEY_LONGHOLD      = jive.ui.EVENT_KEY_LONGHOLD
+local EVENT_CHAR_PRESS        = jive.ui.EVENT_CHAR_PRESS
 local EVENT_WINDOW_PUSH       = jive.ui.EVENT_WINDOW_PUSH
 local EVENT_WINDOW_POP        = jive.ui.EVENT_WINDOW_POP
 local EVENT_WINDOW_ACTIVE     = jive.ui.EVENT_WINDOW_ACTIVE
@@ -197,7 +199,6 @@ function _ignoreAllInputListener(self, event, excludedActions, ignoredCallback)
 	if log:isDebug() then
 		log:debug("_ignoreAllInputListener: ", event:tostring())
 	end
-	
 	if event:getType() == ACTION then
 		local action = event:getAction()
 		if excludedActions then
@@ -267,8 +268,7 @@ function ignoreAllInputExcept(self, excludedActions, ignoredCallback)
 end
 
 local function hideOnAllButtonInputListener(self, event)
-
-	if event:getType() == ACTION then
+        if event:getType() == ACTION then
 		log:warn("Hiding on unconsumed action")
 
 		self:playSound("WINDOWHIDE")
@@ -290,7 +290,7 @@ end
 
 function hideOnAllButtonInput(self)
 	if not self.hideOnAllButtonInputHandle then
-		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_HOLD | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
+		self.hideOnAllButtonInputHandle = self:addListener(ACTION | EVENT_KEY_PRESS | EVENT_KEY_LONGHOLD | EVENT_KEY_HOLD | EVENT_MOUSE_PRESS | EVENT_MOUSE_HOLD | EVENT_MOUSE_DRAG,
 								function(event)
 									return hideOnAllButtonInputListener(self, event)
 								end)

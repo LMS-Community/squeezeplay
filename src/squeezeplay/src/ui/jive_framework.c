@@ -30,7 +30,8 @@ struct jive_perfwarn perfwarn = { 0, 0, 0, 0, 0, 0 };
 
 /* button hold threshold 1 seconds */
 #define HOLD_TIMEOUT 1000
-
+/* button hold threshold 10 seconds */
+#define LONGHOLD_TIMEOUT 10000
 #define LONG_HOLD_TIMEOUT 3500
 
 #define POINTER_TIMEOUT 20000
@@ -68,6 +69,7 @@ static enum jive_mouse_state {
 static JiveKey key_mask = 0;
 
 static Uint32 key_timeout = 0;
+static Uint32 longKey_timeout = 0;
 
 static Uint32 mouse_timeout = 0;
 static Uint32 mouse_long_timeout = 0;
@@ -1192,6 +1194,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 				jevent.u.key.code = entry->keycode;
 
 				key_timeout = now + HOLD_TIMEOUT;
+				longKey_timeout = now + LONGHOLD_TIMEOUT;
+		                LOG_INFO(log_ui_draw, "key_timeout is %d, longKeyTimeout is %d available",key_timeout, longKey_timeout);
 				break;
 			 }
 
@@ -1239,6 +1243,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 			}
 
 			key_timeout = 0;
+			longKey_timeout = 0;
 			key_mask &= ~(entry->keycode);
 			if (key_mask == 0) {
 				key_state = KEY_STATE_NONE;
@@ -1331,14 +1336,25 @@ static void process_timers(lua_State *L) {
 		mouse_long_timeout = 0;
 	}
 
-	if (key_timeout && key_timeout < now) {
+	if (key_timeout && (key_timeout < now) && (now < longKey_timeout)) {
 		jevent.type = JIVE_EVENT_KEY_HOLD;
+		LOG_INFO(log_ui_draw, "key_timeout is %d, longKeyTimeout is %d available now is %d ------------wrong",key_timeout, longKey_timeout, now);
 		jevent.u.key.code = key_mask;
 		key_state = KEY_STATE_SENT;
 
 		do_dispatch_event(L, &jevent);
 
 		key_timeout = 0;
+	}
+	if (longKey_timeout && longKey_timeout < now) {
+		LOG_INFO(log_ui_draw, "key_timeout is %d, longKeyTimeout is %d available now is %d ------------right",key_timeout, longKey_timeout, now);
+			jevent.type = JIVE_EVENT_KEY_LONGHOLD;
+			jevent.u.key.code = key_mask;
+			key_state = KEY_STATE_SENT;
+
+			do_dispatch_event(L, &jevent);
+
+			longKey_timeout = 0;
 	}
 }
 

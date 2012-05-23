@@ -182,6 +182,7 @@ function constants(module)
 	module.EVENT_KEY_UP = jive.ui.EVENT_KEY_UP
 	module.EVENT_KEY_PRESS = jive.ui.EVENT_KEY_PRESS
 	module.EVENT_KEY_HOLD = jive.ui.EVENT_KEY_HOLD
+	module.EVENT_KEY_LONGHOLD = jive.ui.EVENT_KEY_LONGHOLD
 	module.EVENT_MOUSE_DOWN = jive.ui.EVENT_MOUSE_DOWN
 	module.EVENT_MOUSE_UP = jive.ui.EVENT_MOUSE_UP
 	module.EVENT_MOUSE_PRESS = jive.ui.EVENT_MOUSE_PRESS
@@ -751,6 +752,8 @@ function getAction(self, event)
 		action = self.inputToActionMap.gestureActionMappings[event:getGesture()]
 	elseif eventType == jive.ui.EVENT_KEY_HOLD then
 		action = self.inputToActionMap.keyActionMappings.hold[event:getKeycode()]
+    elseif eventType == jive.ui.EVENT_KEY_LONGHOLD then
+		action = self.inputToActionMap.keyActionMappings.longHold[event:getKeycode()]
 	elseif eventType == jive.ui.EVENT_CHAR_PRESS then
 		action = self.inputToActionMap.charActionMappings.press[string.char(event:getUnicode())]
 	elseif eventType == jive.ui.EVENT_IR_PRESS then
@@ -779,6 +782,9 @@ function registerActions(self, map)
 		self:registerAction(action)
 	end
 	for key, action in pairs(self.inputToActionMap.keyActionMappings.hold) do
+		self:registerAction(action)
+	end
+	for key, action in pairs(self.inputToActionMap.keyActionMappings.longHold) do
 		self:registerAction(action)
 	end
 	for key, action in pairs(self.inputToActionMap.charActionMappings.press) do
@@ -825,7 +831,11 @@ function applyInputToActionOverridesToDestination(self, overrideMap, destination
 			destinationMap.keyActionMappings.hold[key] = action
 		end
 	end
-
+    if overrideMap.keyActionMappings and overrideMap.keyActionMappings.longHold then
+		for key, action in pairs(overrideMap.keyActionMappings.longHold) do
+			destinationMap.keyActionMappings.longHold[key] = action
+		end
+	end
 	if overrideMap.charActionMappings and overrideMap.charActionMappings.press then
 		for key, action in pairs(overrideMap.charActionMappings.press) do
 			destinationMap.charActionMappings.press[key] = action
