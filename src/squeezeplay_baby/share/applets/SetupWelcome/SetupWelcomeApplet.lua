@@ -312,7 +312,22 @@ function step7(self)
 	if UPGRADE_FROM_SCS_ENABLED then
 		_squeezenetworkWait(self, squeezenetwork)
 	else
-		self:_registerRequest(squeezenetwork)
+
+-- Defect: 47 - [Belsonic] Language selection screen appear(momentarily) again after FW check
+-- We need to wait until we are connected to SN before sending the register request.
+-- If we don't wait the register request will trigger a (re-)connect event which by
+--  default does a disconnect first, leading to a (re-)connection spinny which goes
+--  away too early, exposing the last real window (language screen) on the window stack.
+-- The reason this is different than before is that before the device did connect
+--  to SN as soon as the network was established and that was long enough before the
+--  register request was sent so that no (re-)connect event was triggered.
+-- Now the first thing after the network is established is the call to the config
+--  server to get the SN channel to connect to and only then the connection to
+--  SN happens and that's not early enough for the register request to succeed w/o
+--  (re-)connect event so we wait until we are connected ok.
+
+--		self:_registerRequest(squeezenetwork)
+		_squeezenetworkWait(self, squeezenetwork)
 	end
 end
 
