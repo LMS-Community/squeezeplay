@@ -399,6 +399,12 @@ end
 
 -- service method
 function firmwareUpgradeWithUrl(self, url)
+
+-- TODO: add upgrade logic (optional, mandatory, etc.)
+-- always up-/downgrade for now w/o prompt when fw is offered
+	self:_upgrade(url)
+
+--[[
 	local upgrades = {}
 	local version = self:_firmwareVersion(url)
 	upgrades[#upgrades + 1] = {
@@ -407,6 +413,7 @@ function firmwareUpgradeWithUrl(self, url)
 	}
 
 	return _upgradeWindow(self, upgrades, false) -- not optional
+--]]
 end
 
 
