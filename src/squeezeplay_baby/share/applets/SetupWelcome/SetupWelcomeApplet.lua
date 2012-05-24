@@ -241,7 +241,9 @@ end
 
 -- we are connected when we have a pin and upgrade url
 function _squeezenetworkConnected(self, squeezenetwork)
-	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected() 
+-- Defect 98: disable firmware upgrade from SN or LMS
+--	return squeezenetwork:getPin() ~= nil and squeezenetwork:getUpgradeUrl() and squeezenetwork:isConnected()
+	return squeezenetwork:getPin() ~= nil and squeezenetwork:isConnected()
 end
 
 function _anySqueezeCenterWithUpgradeFound(self)

@@ -490,21 +490,22 @@ function __init(self, jnt, id, name, version)
 
 	local inSetup = jnt.inSetupHack and 1 or 0
 
-	local machine = System:getMachine()
-	-- this is not relevant to desktop SP
-	if machine ~= 'squeezeplay' then
-		obj.comet:subscribe('/slim/firmwarestatus',
-			_getSink(obj, '_upgradeSink'),
-			nil,
-			{
-				'firmwareupgrade',
-				'firmwareVersion:' .. JIVE_VERSION,
-				'inSetup:' .. tostring(inSetup),
-				'machine:' .. machine,
-				'subscribe:0'
-			}
-		)
-	end
+-- Defect 98: disable firmware upgrade from SN or LMS
+--	local machine = System:getMachine()
+--	-- this is not relevant to desktop SP
+--	if machine ~= 'squeezeplay' then
+--		obj.comet:subscribe('/slim/firmwarestatus',
+--			_getSink(obj, '_upgradeSink'),
+--			nil,
+--			{
+--				'firmwareupgrade',
+--				'firmwareVersion:' .. JIVE_VERSION,
+--				'inSetup:' .. tostring(inSetup),
+--				'machine:' .. machine,
+--				'subscribe:0'
+--			}
+--		)
+--	end
 
 
 	setmetatable(obj.imageCache, { __mode = "kv" })
