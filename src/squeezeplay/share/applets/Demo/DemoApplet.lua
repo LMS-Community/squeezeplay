@@ -12,7 +12,7 @@ local Applet        = require("jive.Applet")
 local System        = require("jive.System")
 local SlimServer    = require("jive.slim.SlimServer")
 local LocalPlayer   = require("jive.slim.LocalPlayer")
-
+local Font			= require("jive.ui.Font")
 local decode        = require("squeezeplay.decode")
 
 local Surface       = require("jive.ui.Surface")
@@ -301,8 +301,6 @@ function confirmDemo(self, force)
 	-- the code is '1234'
 	if tonumber(self.code) == 1234 or force == true then
 		local window = Window("text_list", self:string("DEMO_START_DEMO"))
-		window:setAllowScreensaver(false)
-
 		local menu = SimpleMenu("menu", items)
 		menu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
 		local textArea = Textarea('help_text', self:string('DEMO_START_DEMO_WARNING'))
@@ -351,7 +349,8 @@ function startDemo(self)
 		local token      = string.upper(filename)
 		table.insert(self.strings, token)
 	end
-
+        table.sort(self.strings)
+        table.sort(self.slides) 
 	if #self.slides > 0 then
 		self:_playSlides()
 		if System:findFile(self.mp3file) then
@@ -396,13 +395,37 @@ function _showNextSlide(self)
 
 	local window = Window('window')
 	window:setShowFrameworkWidgets(false)
-	window:addWidget(Icon("background", totImg))
-
-	-- draw text
-	local label = Textarea('demo_text', self:string(self.strings[self.currentImage]))
-	window:addWidget(label)
-
-	-- replace the window if it's already there
+	local fontBold = Font:load("fonts/FreeSansBold.ttf", 20)
+	
+	local stringTxt = tostring(self:string(self.strings[self.currentImage]))
+	local titleWidth = fontBold:width(stringTxt)
+        if string.match(slide,'center%.png$') then
+		--if text to be added to center
+		local start = string.find(stringTxt, "\n")
+		if(start~=nil) then
+		-- need to add check for the text and title width and add support for multiple lines
+	    		local token = string.sub(stringTxt, 1, start -1)
+	    		local titleWidthNew = fontBold:width(token)
+	    		local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, token)
+	    		txt1:blit(totImg, (w-titleWidthNew)/2, (h-18-fontBold:offset())/2)
+	    		local nextToken = string.sub(stringTxt, (start+1), #stringTxt)
+	    		titleWidthNew = fontBold:width(nextToken)
+	    		local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, nextToken)
+	    		txt2:blit(totImg, (w-titleWidthNew)/2, ((h-18-fontBold:offset())/2+ 20))
+		else
+	    		local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
+	    		txt1:blit(totImg, (w-titleWidth)/2, (h-18-fontBold:offset())/2)
+		end
+	else 
+		--default considered at the bottom for now. Could be changed if needed in future
+	    if stringTxt != '\n' then
+	    	local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
+	    	txt2:blit(totImg, (self.screenWidth-titleWidth)/2, self.screenHeight-34-fontBold:offset())
+	    end
+	end
+	
+	window:addWidget(Icon("icon", totImg))
+	    -- replace the window if it's already there
 	if self.window then
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window

@@ -33,19 +33,19 @@ DEMO_START_DEMO
 	SV	Starta demonstration
 
 DEMO_START_DEMO_WARNING
-	CS	VAROVÁNÍ: po spuštění demonstrace její vypnutí vyžaduje obnovení do továrního nastavení. Podržte tlačítko + při spuštění.
-	DA	ADVARSEL: Når demoen er startet, må den ikke afbrydes, da afspilleren i så fald skal nulstilles bagefter. Hold + (knappen) nede mens afspilleren startes.
-	DE	Warnung: Nachdem Sie die Demo gestartet haben, müssen Sie die Standardeinstellungen wiederherstellen, um die Demo zu deaktivieren. Halten Sie beim Einschalten die Taste '+' gedrückt.
-	EN	WARNING: after starting the demo, disabling the demo requires a factory reset. Hold the + button down while powering up.
-	ES	ADVERTENCIA: una vez iniciada la demostración, ésta sólo se podrá desactivar con la configuración de fábrica. Mantenga pulsado el botón + al encender el dispositivo.
-	FI	Varoitus: jos esittely on käynnistetty, sen käytöstä poisto vaatii tehdasasetuksen palautuksen. Pidä plus (+) -näppäintä painettuna virtaa kytkettäessä.
-	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
-	IT	ATTENZIONE: dopo avere avviato il demo, per disattivarlo è necessario effettuare una reimpostazione di fabbrica. Tenere premuto il pulsante + durante l'accensione.
-	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
-	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
-	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
-	RU	Предупреждение. После запуска демонстрации для ее отключения потребуется возврат заводских настроек. Нажмите и удерживайте кнопку + при включении питания.
-	SV	VARNING! När du har startat demonstrationen måste du återställa standardinställningarna för att inaktivera den. Håll ned plusknappen vid uppstart.
+	CS	VÝSTRAHA: Chcete-li demo deaktivovat, stiskněte tlačítka BACK a PLAY současně.
+	DA	ADVARSEL: Du slår demoen fra ved at trykke på, BACK og PLAY samtidigt.
+	DE	Warnung: Drücken Sie zum Deaktivieren der Demo gleichzeitig BACK und PLAY.
+	EN	WARNING: To disable the demo, press the BACK and PLAY buttons at the same time.
+	ES	ADVERTENCIA: para desactivar la demostración, pulse los botones BACK y PLAY al mismo tiempo.
+	FI	VAROITUS: jos haluat poistaa demon käytöstä, paina BACK- ja PLAY-painikkeita samanaikaisesti.
+	FR	AVERTISSEMENT: pour désactiver la démonstration, appuyez simultanément sur les boutons BACK et PLAY.
+	IT	ATTENZIONE: per disattivare il demo, premere contemporaneamente i pulsanti BACK e PLAY.
+	NL	WAARSCHUWING: druk tegelijkertijd op de knoppen BACK en PLAY om de demo uit te schakelen.
+	NO	ADVARSEL: Du deaktiverer demoen ved å trykke på knappene BACK og PLAY AV samtidig.
+	PL	UWAGA: Aby wyłączyć wersję demonstracyjną, naciśnij jednocześnie przyciski BACK i PLAY.	
+	RU	ПРЕДУПРЕЖДЕНИЕ. Для отключения демонстрации одновременно нажмите кнопки BACK (Назад) и PLAY (Воспроизведение).
+	SV	VARNING: Tryck på BACK och PLAY samtidigt för att aktivera demonstrationen.
 
 DEMO_ERROR
 	CS	Chyba
@@ -122,142 +122,70 @@ DEMO_VOLUME_MUTED
 	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
-SLIDE_01
-	CS	Squeezebox™ rádio\nWi-Fi Internetové rádio
-	DA	Squeezebox™ Radio\nTrådløs internetradio
-	DE	Squeezebox™ Radio\nWLAN-Internetradio
-	EN	Squeezebox™ Radio\nWi-Fi Internet Radio
-	ES	Squeezebox™ Radio\nRadio por Internet vía WiFi
-	FI	Squeezebox™ Radio\nLangattomassa lähiverkossa toimiva Internet radio
-	FR	Squeezebox™ Radio\nRadio Internet Wi-Fi
-	IT	Squeezebox™ Radio\nRadio Internet Wi-Fi
-	NL	Squeezebox™-radio\nWifi-internetradio
-	NO	Squeezebox™ Radio\nWi-Fi Internet Radio
-	PL	Radio Squeezebox™\nRadio internetowe Wi-Fi
-	RU	Радио Squeezebox™\nWi-Fi интернет-радио
-	SV	Squeezebox™-radio\nTrådlös Internetradio
+SLIDE_01CENTER
+	CS	Svět plný hudby\n na dosah ruky
+	DA	En verden af musik\n i din hule hånd
+	DE	Die Welt der Musik\n per Knopfdruck
+	EN	A world of music\n at your fingertips
+	ES	Un mundo musical\n en sus manos
+	FI	Musiikin maailma\n sormiesi ulottuvilla
+	FR	Tout un monde de\n musique à portée de main
+	IT	Un mondo di musica\n a portata di dita
+	NL	Een wereld van muziek\n binnen handbereik
+	NO	En verden av musikk\n ved fingerspissene
+	PL	Pełen świat muzyki\n do Twojej dyspozycji	
+	RU	Мир музыки �\n� на расстоянии вытянутой руки
+	SV	En hel värld av musik\n inom räckhåll
 
 SLIDE_02
-	CS	Objevte svět digitální hudby.
-	DA	Gå på opdagelse i den digitale musikverden.
-	DE	Entdecken Sie die Welt der digitalen Musik.
-	EN	Discover a world of digital music.
-	ES	Descubra un mundo de música digital.
-	FI	Löydä digitaalinen musiikkimaailma.
-	FR	Découvrez un univers de musique numérique.
-	IT	Scopri un mondo di musica digitale.
-	NL	Ontdek een wereld van digitale muziek.
-	NO	Oppdag en verden av digital musikk.
-	PL	Odkryj świat muzyki cyfrowej.
-	RU	Откройте мир цифровой музыки.
-	SV	Upptäck en värld av digital musik.
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n	
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
 
 SLIDE_03
-	CS	Z tisíců bezplatných internetových radiostanic...
-	DA	Fra tusindvis af gratis radiostationer på internetet...
-	DE	Von Tausenden kostenlosen Internetradiosendern ...
-	EN	From thousands of free Internet radio stations...
-	ES	Desde miles de emisoras de radio por Internet gratuitas...
-	FI	Tuhansista ilmaisista internet-radioasemista
-	FR	De milliers de radios Internet gratuites...
-	IT	Da migliaia di stazioni radio Internet gratuite...
-	NL	Van duizenden gratis internetradiostations...
-	NO	Fra tusenvis av gratis Internett-radiostasjoner...
-	PL	Od tysięcy bezpłatnych internetowych stacji radiowych...
-	RU	От тысяч бесплатных интернет-радиостанций
-	SV	Från tusentals gratis webbradiostationer...
+	CS	Logitech UE Smart Radio
+	DA	Logitech UE Smart Radio
+	DE	Logitech UE Smart Radio
+	EN	Logitech UE Smart Radio
+	ES	Logitech UE Smart Radio
+	FI	Logitech UE Smart Radio
+	FR	Logitech UE Smart Radio
+	IT	Logitech UE Smart Radio
+	NL	Logitech UE Smart Radio
+	NO	Logitech UE Smart Radio
+	PL	Logitech UE Smart Radio
+	RU	Logitech UE Smart Radio
+	SV	Logitech UE Smart Radio
 
-SLIDE_04
-	CS	...k vaší osobní hudební sbírce...
-	DA	... til din egen personlige musiksamling
-	DE	...zu Ihrer eigenen Musiksammlung...
-	EN	...to your own personal music collection...
-	ES	...hasta su colección de música personal...
-	FI	henkilökohtaista musiikkikokoelmaasi varten
-	FR	...à votre collection musicale personnelle...
-	IT	...alla propria raccolta di musica personale...
-	NL	...naar je persoonlijke muziekcollectie...
-	NO	...til din personlige musikksamling...
-	PL	...do swojej kolekcji muzyki...
-	RU	до вашей личной музыкальной коллекции
-	SV	...till din egen personliga musiksamling...
+
+SLIDE_04CENTER
+	CS	Tisíce internetových\nradiostanicí zdarma
+	DA	Tusindvis af gratis\ninternetradiostationer
+	DE	Tausende kostenlose\nInternetradiosender
+	EN	Thousands of free\ninternet radio stations
+	ES	Miles de emisoras de\nradio por Internet gratuitas
+	FI	Tuhansia ilmaisia\ninternet-radiokanavia
+	FR	Des milliers de radio\nInternet gratuites
+	IT	Migliaia di stazioni\nradio Internet gratuite
+	NL	Duizenden gratis\ninternetradiostations
+	NO	Tusenvis av gratis\nnettradiostasjoner
+	PL	Tysiące darmowych\ninternetowych stacji radiowych
+	RU	Тысячи бесплатных\nинтернет-радиостанций	
+	SV	Tusentals kostnadsfria\nwebbradiostationer
+
 
 SLIDE_05
-	CS	...k nejzajímavějším hudebním službám online.
-	DA	... til de bedste musiktjenester på nettet.
-	DE	...zu den angesagtesten Online-Musikdiensten.
-	EN	...to the hottest online music services.
-	ES	...o los mejores servicios de música en línea.
-	FI	suosituimpiin online-musiikkipalveluihin.
-	FR	...aux meilleurs services de musique en ligne.
-	IT	...ai servizi di musica online più richiesti.
-	NL	...naar de beste onlinemuziekservices.
-	NO	...til de beste musikktjenestene på nett.
-	PL	...do najnowszych usług muzycznych w trybie online.
-	RU	до самых горячих сетевых музыкальных служб.
-	SV	...till de senaste onlinemusiktjänsterna.
-
-SLIDE_06
-	CS	V podstatě neomezená hudební sbírka.
-	DA	En næsten uendelig musiksamling.
-	DE	Nahezu grenzenlose Musikauswahl.
-	EN	A virtually unlimited music collection.
-	ES	Una colección de música prácticamente ilimitada.
-	FI	Käytännössä rajoittamaton määrä musiikkia.
-	FR	Une collection musicale presque illimitée.
-	IT	Una raccolta di musica praticamente illimitata.
-	NL	Een vrijwel grenzeloze muziekcollectie.
-	NO	En nesten ubegrenset musikksamling.
-	PL	Prawie nieograniczona kolekcja muzyki.
-	RU	Практически неограниченная музыкальная коллекция.
-	SV	En praktiskt taget obegränsad musiksamling.
-
-SLIDE_07
-	CS	Přehrát veškerou vaší hudbu. I tu ze zařízení iPod™.
-	DA	Du kan spille alle dine numre, selv dem på din iPod™.
-	DE	Spielen Sie Ihre ganze Musik ab. Sogar die Musik von Ihrem iPod™.
-	EN	Play all your music. Even from your iPod™.
-	ES	Toda su música a su alcance. Incluso la de su iPod™.
-	FI	Kuuntele kaikkia musiikkitiedostojasi. Jopa iPod™-soittimessa.
-	FR	Jouez toute votre musique. Même depuis votre iPod™.
-	IT	Riproduci tutta la musica, anche dell'iPod™.
-	NL	Speel al je muziek af. Zelfs van je iPod™.
-	NO	Spill av all musikken du har, selv på iPod™.
-	PL	Posłuchaj swojej kolekcji muzyki. Także z odtwarzacza iPod™.
-	RU	Слушайте любую музыку. Даже c iPod™.
-	SV	Spela upp all din musik. Till och med från din iPod™.
-
-SLIDE_08
-	CS	Internetové rádio. Poslouchejte v libovolné místnosti.
-	DA	Internetradio. Du kan lytte i ethvert værelse.
-	DE	Hören Sie Internetradio – in jedem Raum.
-	EN	Internet Radio. Listen in any room.
-	ES	Radio por Internet. Escúchela desde cualquier parte de la casa.
-	FI	Internet-radio. Voit kuunnella sitä missä tahansa huoneessa.
-	FR	Radio Internet. Ecoutez-la où que vous vous trouviez dans la maison.
-	IT	Radio Internet. Ascolta in ogni stanza.
-	NL	Internetradio. Luister in elke kamer.
-	NO	Internettradio. Lytt i alle rom.
-	PL	Radio internetowe, którego możesz słuchać w dowolnym pomieszczeniu.
-	RU	Интернет-радио. Слушайте в любой комнате.
-	SV	Webbradio. Lyssna i alla rum.
-
-SLIDE_09
-	CS	Malé balení. Výrazný zvuk.
-	DA	En lille pakke med en stor lyd.
-	DE	Kleines Format. Voller Sound.
-	EN	Small package. Big Sound.
-	ES	Gran sonido en un producto de tamaño reducido.
-	FI	Pieni paketti. Paljon ääntä.
-	FR	Petit dispositif. Son colossal.
-	IT	Piccole dimensioni, grande suono.
-	NL	Klein pakketje. Groots geluid.
-	NO	Liten innpakning. Stor lyd.
-	PL	Niewielkie rozmiary, potężny dźwięk.
-	RU	Компактная форма. Объемный звук.
-	SV	Litet format. Karftfullt ljud.
-
-SLIDE_10
 	CS	\n
 	DA	\n
 	DE	\n
@@ -271,4 +199,189 @@ SLIDE_10
 	PL	\n
 	RU	\n
 	SV	\n
+
+
+SLIDE_06CENTER
+	CS	Přístup ke špičkovým\nhudebním službám online
+	DA	Adgang til de bedste\nmusiktjenester online
+	DE	Zugriff auf die besten\nOnline-Musikdienste
+	EN	Access to the top\nonline music services
+	ES	Acceso a los principales\nservicios de música en línea
+	FI	Pääsy parhaisiin\nverkkomusiikkipalveluihin
+	FR	Accédez aux meilleurs\nservices de musique en ligne
+	IT	Accesso ai principali\nservizi di musica online
+	NL	Toegang tot de beste\nonlinemuziekservices
+	NO	Tilgang til de beste\nnettmusikktjenestene
+	PL	Dostęp do najlepszych\nusług muzycznych w Internecie
+	RU	Доступ к лучшим\nинтерактивным музыкальным службам
+	SV	Använd de bästa\nwebbmusiktjänsterna
+
+
+
+SLIDE_07
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n 
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
+
+SLIDE_08CENTER
+	CS	Umožňuje také poslech vaší\noblíbené hudby uložené v počítači
+	DA	Lyt til din yndlingsmusik\npå din pc
+	DE	Oder genießen Sie Ihre auf\ndem PC gespeicherte Lieblingsmusik
+	EN	Also listen to your favorite\n music stored on your PC
+	ES	Y escuche su música favorita\nguardada en el PC
+	FI	Voit kuunnella myös tietokoneelle\ntallennettua musiikkia
+	FR	Ecoutez également votre musique\npréférée stockée sur votre ordinateur
+	IT	Ascolta anche la tua musica\npreferita memorizzata nel PC
+	NL	Luister ook naar je favoriete\nmuziek die is opgeslagen op je pc
+	NO	Og du kan lytte til\nmusikken på pc-en også
+	PL	Słuchanie ulubionej\nmuzyki z komputera
+	RU	Возможность прослушивания\nлюбимой музыки, хранящейся на ПК
+	SV	Lyssna på din\nfavoritmusik från datorn
+
+SLIDE_09
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
+
+SLIDE_10CENTER
+	CS	Připojte rádio k vaší síti\nWi-Fi a můžete okamžitě přehrávat hudbu	
+	DA	Slut radioen til det trådløse\nnetværk og afspil musikken
+	DE	Geben Sie Musik sofort über\nIhre WLAN-Verbindung wieder
+	EN	Connect the radio to your WiFi\nand instantly play music
+	ES	Conecte la radio a la red Wi-Fi\ny reproduzca música al instante
+	FI	Yhdistä radio Wi-Fi-verkkoon\nja toista musiikkia välittömästi
+	FR	Connectez la radio à votre\nréseau Wi-Fi et profitez instantanément de votre musique
+	IT	Connetti la radio alla rete Wi-Fi\ne ascolta musica immediatamente
+	NL	Verbind de radio met je wifi\nen speel direct muziek af
+	NO	Kople radioen til det trådløse\nnettverket, og spill av
+	PL	Aby rozpocząć odtwarzanie muzyki,\nwystarczy podłączyć radio do odtwarzacza Wi-Fi
+	RU	Подключите радио к\nсети Wi-Fi и сразу же слушайте музыку
+	SV	Anslut radion till ditt Wi-Fi-nät\noch spela upp musik direkt
+
+SLIDE_11CENTER
+	CS	Jednoduše a intuitivně
+	DA	Enkelt og intuitivt
+	DE	Einfach und intuitiv
+	EN	Simple & intutive
+	ES	Simple e intuitivo
+	FI	Yksinkertainen ja intuitiivinen
+	FR	Fonctionnement simple et intuitif
+	IT	Facile e intuitivo
+	NL	Simpel en intuïtief
+	NO	Enkel og intuitiv
+	PL	Proste i intuicyjne
+	RU	Просто и интуитивно понятно
+	SV	Enkelt och intuitivt
+
+SLIDE_12
+	CS	Ovládání pomocí rádia
+	DA	Betjening fra radioen
+	DE	Steuerung über das Radio
+	EN	Control from the radio
+	ES	Control desde la radio
+	FI	Hallinta radiosta
+	FR	Contrôle à partir de la radio
+	IT	Controllo dalla radio
+	NL	Bediening vanaf de radio
+	NO	Kontroll fra radioen
+	PL	Sterowanie z odtwarzacza
+	RU	Управление с панели радио
+	SV	Styr via radion
+
+SLIDE_13
+	CS	Nebo tabletu či chytrého telefonu
+	DA	Eller tablet-pc eller smartphone
+	DE	Oder Tablet-PC und Smartphone
+	EN	Or tablet and smart phone
+	ES	O tablet y smartphone
+	FI	Tai taulutietokoneesta ja älypuhelimesta
+	FR	Ou de votre tablette ou smartphone
+	IT	O dal tablet e dallo smartphone
+	NL	Of tablet en smartphone
+	NO	Eller nettbrettet og smarttelefonen
+	PL	Lub tabletu albo smartfonu
+	RU	и с помощью планшетного ПК или смартфона
+	SV	Eller en surfplatta eller smartphone
+SLIDE_14CENTER
+	CS	Zařízení je dobíjecí,\ntakže si jej můžete brát s sebou
+	DA	Den kan oplades\nog tages med
+	DE	Laden Sie es einfach\nauf und nehmen Sie es überallhin mit
+	EN	Its rechargeable, so you\n can take it with you
+	ES	Es recargable, puede\nllevársela a todas partes
+	FI	Laite on ladattava,\njoten voit ottaa sen mukaasi
+	FR	Rechargeable, vous pouvez\nl'emporter partout
+	IT	È ricaricabile, per\nportarla con te
+	NL	De radio is oplaadbaar,\ndus u kunt hem meenemen	
+	NO	Den er oppladbar, slik\nat du kan ta den med deg
+	PL	Dzięki możliwości doładowywania\nakumulatora możesz zabrać odtwarzacz ze sobą
+	RU	Питание от аккумуляторов\nпозволяет взять радио с собой	
+	SV	Uppladdningsbar, så att\ndu kan ta den med dig
+
+SLIDE_15
+	CS	Z ložnice
+	DA	Fra soveværelset
+	DE	Vom Schlafzimmer
+	EN	From the bedroom
+	ES	Del dormitorio
+	FI	Makuuhuoneesta
+	FR	De la chambre
+	IT	Dalla camera da letto
+	NL	Van de slaapkamer
+	NO	Fra soverommet
+	PL	Z sypialni
+	RU	из спальни
+	SV	Från sovrummet
+
+
+SLIDE_16
+	CS	Do kuchyně
+	DA	Til køkkenet
+	DE	In die Küche
+	EN	To the kitchen
+	ES	A la cocina
+	FI	Keittiöön
+	FR	A la cuisine
+	IT	Alla cucina
+	NL	Tot de keuken
+	NO	Til kjøkkenet
+	PL	Do kuchni
+	RU	на кухню
+	SV	Till köket
+
+SLIDE_17
+	CS	Výkon pro hudbu
+	DA	Al magt til musikken
+	DE	Power to the music
+	EN	Power to the music
+	ES	La música al poder
+	FI	Tehoa musiikkiin
+	FR	La musique au pouvoir
+	IT	Tutta la potenza della musica
+	NL	De kracht zit in de muziek
+	NO	Gi musikken kraft
+	PL	Dom wypełniony muzyką
+	RU	Вся мощь музыки
+	SV	Musiken regerar
 
