@@ -7,7 +7,6 @@ local debug         = require("jive.utils.debug")
 
 local appletManager = appletManager
 local jiveMain      = jiveMain
-local jnt           = jnt
 
 -- naughty polluting global table, but I don't want to store this
 -- in the applet settings as this value does not need to be persisted
@@ -30,11 +29,6 @@ function registerApplet(meta)
 	meta:registerService("showFirmwareUpgradeMenu")
 	meta:registerService("wasFirmwareUpgraded")
 	meta:registerService("mmFindFirmware")
-
-	-- check for firmware upgrades when we connect to a new player
-	-- we don't want the firmware upgrade applets always loaded so
-	-- do this in the meta class
-	jnt:subscribe(meta)
 end
 
 
@@ -49,21 +43,6 @@ function configureApplet(meta)
                         weight            = 100, -- default is 50, so this will put it at/near the bottom
                 }
         )
-end
-
-
-function notify_playerCurrent(meta, player)
-	local server = player and player:getSlimServer()
-
-	if not server then
-		return
-	end
-
-	local url, force = server:getUpgradeUrl()
-
-	if force then
-		appletManager:callService("firmwareUpgrade", server)
-	end
 end
 
 

@@ -38,7 +38,6 @@ local Upgrade                = require("applets.SetupFirmwareUpgrade.Upgrade")
 
 local debug                  = require("jive.utils.debug")
 
-local jnt                    = jnt
 local jiveMain               = jiveMain
 local appletManager          = appletManager
 
@@ -63,26 +62,9 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function init(self)
-	jnt:subscribe(self)
-
-end
-
-
-function notify_firmwareAvailable(self, server)
-        local url, force = server:getUpgradeUrl()
-
-        if force and not url then
-                log:warn("sometimes force is true but url is nil, seems like a server bug: server:", server)
-        end
-        if force and url then
-                local player = appletManager:callService("getCurrentPlayer")
-
-                if player and player:getSlimServer() == server then
-			self:firmwareUpgrade(server)
-                end
-        end
-end
+-- We no longer care about firmware update notifications from server
+-- Settings/Advanced/FirmwareUpdate can still be used manually
+-- function notify_firmwareAvailable(self, server) ...
 
 
 function _firmwareVersion(self, url)

@@ -282,12 +282,6 @@ function _squeezenetworkWait(self, squeezenetwork)
 			step8(self, squeezenetwork)
 		else
 			log:info("SN not available, Waited: ", timeout + 1)
-			--allow 10 seconds to go by before doing SC check to allow SCs to be discovered
-			if timeout >= 9 and _anySqueezeCenterWithUpgradeFound(self) then
-				step8(self, squeezenetwork)
-			else
-				log:info("Looking for compatible SCs with an upgrade, Waited: ", timeout + 1)
-			end
 		end
 
 
@@ -413,23 +407,7 @@ end
 
 function step8(self, squeezenetwork)
 	log:info("step8")
-	if not squeezenetwork:isConnected() then
-		log:info("get SC from one of discovered SCs")
-		appletManager:callService("firmwareUpgrade", nil)
-		return
-	end
-
-	local url, force = squeezenetwork:getUpgradeUrl()
-	local pin = squeezenetwork:getPin()
-
-	log:info("squeezenetwork pin=", pin, " url=", url)
-
-	if force then
-      		log:info("firmware upgrade from SN")
-		appletManager:callService("firmwareUpgrade", squeezenetwork)
-	else
-		self:_registerRequest(squeezenetwork)
-	end
+	self:_registerRequest(squeezenetwork)
 end
 
 
