@@ -5,6 +5,10 @@ Methods to respond to the following udap requests:
  - set server address
  - set slimserver address
  - get uuid
+ - get-ip
+ - get-pin
+ - pause
+ - set-volume
 --]]
 
 local pairs, tonumber, tostring = pairs, tonumber, tostring
@@ -79,7 +83,28 @@ function _udapSink( self, chunk, err)
 	-- but we do need a LocalPlayer
 	local localPlayer = Player:getLocalPlayer()
 	
-	if localPlayer and pkt.dest == ownMacAddress then
+	if localPlayer and pkt.uapMethod == "get_pin" and localPlayer:getSlimServer() then
+		-- Provide a PIN to register this player with an account, if not already registered
+		local sink = function(result, err)
+			if result.error then
+				log:debug(result.error)
+			end
+			
+			-- Maybe SN will provide a nonce in the response that needs to be signed
+			-- with the player's UUID as a verifier. In this case sign the nonce
+			-- and append it to the value, separated with a colon.
+			
+			local packet = Udap.createGetPinResponse(ownMacAddress, pkt.source, pkt.seqno,
+				(result.data and result.data.result and result.data.result ~= 0) and result.data.result or nil,
+				localPlayer:getName())
+			self.udap:send(function() return packet end, chunk.ip, chunk.port)
+		end
+		
+		localPlayer:getSlimServer():request(sink, localPlayer:getId(), {'service', 'get_nonce'})
+		
+		return
+		
+	elseif localPlayer and pkt.dest == ownMacAddress then
 		if pkt.uapMethod == "get_ip" then
 			log:debug("UDAP - get_ip request received - sending answer...")
 			

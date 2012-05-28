@@ -65,6 +65,7 @@ local ucpMethods = {
 	"get_uuid",				-- 11
 	"set_volume",			-- 12
 	"pause",				-- 13
+	"get_pin",				-- 14
 }
 
 
@@ -303,6 +304,7 @@ local ucpMethodHandlersRequest = {
 	[ "get_uuid" ] = nil,
 	[ "set_volume" ] = parseSetVolume,
 	[ "pause" ] = nil,
+	[ "get_pin"] = nil,
 }
 
 
@@ -560,6 +562,29 @@ function createGetIpResponse(srcmac, destmac, seq, ip)
 				  packNumber(0x05, 1),			-- ip_addr
 				  packNumber(#ip, 1),			-- ip_addr len
 				  ip
+	)
+end
+
+function createGetPinResponse(srcmac, destmac, seq, pin1, name)
+	
+	local pindata = ''
+	if (pin1) then
+		local pin = tostring(pin1)
+		pindata = table.concat({
+				  packNumber(0x01, 1),			-- PIN
+				  packNumber(#pin, 1),			-- pin len
+				  pin
+		})
+	end
+	
+	return createUdapResponse(srcmac,
+				  destmac,
+				  seq,
+				  packNumber(14, 2),			-- get_pin
+				  packNumber(0x02, 1),			-- Name
+				  packNumber(#name, 1),			-- Name len
+				  name,
+				  pindata
 	)
 end
 
