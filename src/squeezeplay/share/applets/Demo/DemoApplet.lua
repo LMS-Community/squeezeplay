@@ -15,6 +15,8 @@ local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Font			= require("jive.ui.Font")
 local decode        = require("squeezeplay.decode")
 
+local debug	       = require("jive.utils.debug")
+
 local Surface       = require("jive.ui.Surface")
 local Framework     = require("jive.ui.Framework")
 local Checkbox      = require("jive.ui.Checkbox")
@@ -44,7 +46,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 local VOLUME_STEP = 1
-
+local FONT_SIZE = 18
 -- volumeMap has the correct gain settings for volume settings 1-100. Based on Boom volume curve
 local volumeMap = {
 16, 18, 22, 26, 31, 36, 43, 51, 61, 72, 85, 101, 120, 142, 168, 200, 237, 281, 333, 395, 468, 555, 658, 781, 926, 980, 1037, 1098, 1162, 1230, 1302, 1378, 1458, 1543, 1634, 1729, 1830, 1937, 2050, 2048, 2304, 2304, 2560, 2816, 2816, 3072, 3328, 3328, 3584, 3840, 4096, 4352, 4608, 4864, 5120, 5376, 5632, 6144, 6400, 6656, 7168, 7680, 7936, 8448, 8960, 9472, 9984, 10752, 11264, 12032, 12544, 13312, 14080, 14848, 15872, 16640, 17664, 18688, 19968, 20992, 22272, 23552, 24832, 26368, 27904, 29696, 31232, 33024, 35072, 37120, 39424, 41728, 44032, 46592, 49408, 52224, 55296, 58624, 61952, 65536,
@@ -395,33 +397,40 @@ function _showNextSlide(self)
 
 	local window = Window('window')
 	window:setShowFrameworkWidgets(false)
-	local fontBold = Font:load("fonts/FreeSansBold.ttf", 20)
-	
+	local fontBold = Font:load("fonts/FreeSansBold.ttf", FONT_SIZE)
+
+	self.txtLines = {}
 	local stringTxt = tostring(self:string(self.strings[self.currentImage]))
 	local titleWidth = fontBold:width(stringTxt)
-        if string.match(slide,'center%.png$') then
-		--if text to be added to center
-		local start = string.find(stringTxt, "\n")
-		if(start~=nil) then
-		-- need to add check for the text and title width and add support for multiple lines
-	    		local token = string.sub(stringTxt, 1, start -1)
-	    		local titleWidthNew = fontBold:width(token)
-	    		local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, token)
-	    		txt1:blit(totImg, (w-titleWidthNew)/2, (h-18-fontBold:offset())/2)
-	    		local nextToken = string.sub(stringTxt, (start+1), #stringTxt)
-	    		titleWidthNew = fontBold:width(nextToken)
-	    		local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, nextToken)
-	    		txt2:blit(totImg, (w-titleWidthNew)/2, ((h-18-fontBold:offset())/2+ 20))
+	if (titleWidth > (self.screenWidth - 8)) then
+		self:formatText(stringTxt, fontBold)
+	end
+	local i
+	if string.match(slide,'center%.png$') then
+		--text to be added to center
+		log:debug("come in center")
+		if #self.txtLines==0 then
+			log:debug("come here in normal cases single line")
+			local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
+	    		txt1:blit(totImg, (w-titleWidth)/2, (h-FONT_SIZE-fontBold:offset())/2)
 		else
-	    		local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
-	    		txt1:blit(totImg, (w-titleWidth)/2, (h-18-fontBold:offset())/2)
+		        log:debug("number of lines : ", #self.txtLines)
+		        for i = 1, #self.txtLines do
+				local titleWidthNew = fontBold:width(self.txtLines[i])
+				local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, self.txtLines[i])
+			    	txt1:blit(totImg, (w-titleWidthNew)/2, (h-FONT_SIZE-fontBold:offset()-(fontBold:height() * #self.txtLines))/2 + FONT_SIZE*i)
+			end
+	    		self.txtLines = {}
 		end
 	else 
+		log:debug('come in bottom')
 		--default considered at the bottom for now. Could be changed if needed in future
-	    if stringTxt != '\n' then
-	    	local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
-	    	txt2:blit(totImg, (self.screenWidth-titleWidth)/2, self.screenHeight-34-fontBold:offset())
-	    end
+		if (stringTxt ~= '\n') then
+		    	log:debug("come in single line botton stringTxt: ", stringTxt)
+	    		local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
+	    		txt2:blit(totImg, (self.screenWidth-titleWidth)/2, self.screenHeight-34-fontBold:offset())
+	    	end
+		self.txtLines = {}
 	end
 	
 	window:addWidget(Icon("icon", totImg))
@@ -442,6 +451,54 @@ function _showNextSlide(self)
 
 	-- no screensavers por favor
 	self.window:setAllowScreensaver(false)
+end
+
+function formatText(self, strTxt, fontStyle)
+	log:debug('come in _formatText')
+	local tmpStrTxt = strTxt
+	log:debug("strTxt is: ", strTxt)
+	local pos = 1
+	local i = 1
+	local numLines = 1
+	local titleWidth = fontStyle:width(strTxt)
+	while(titleWidth > (self.screenWidth - 8)) do
+		local tmpTxt = string.sub(tmpStrTxt,1, (#tmpStrTxt/2))
+		titleWidth = fontStyle:width(tmpTxt)
+		numLines = numLines * 2
+		tmpStrTxt = tmpTxt
+	end
+	for i=1,numLines do
+		self.txtLines[i] = string.sub(strTxt, pos, pos + (#strTxt/numLines))
+		pos = pos + #strTxt/numLines + 1
+		log:debug("txtline is: ", self.txtLines[i])
+
+	end
+	local tempPos = 0
+	local j = 0
+	for i=1, numLines-1 do
+		tempPos = string.find(self.txtLines[i+1], " ", 1)
+		if tempPos ~= 1 then
+		        local strPart = string.sub(self.txtLines[i+1], 1, tempPos)
+			local tempStr = self.txtLines[i] .. strPart
+			if fontStyle:width(tempStr) > (self.screenWidth - 8) then
+				log:debug("come in first string long case")
+				local newStr = string.split(" ", self.txtLines[i])
+				log:debug("newStr[#newStr] is: ", newStr[#newStr])
+				self.txtLines[i+1] = newStr[#newStr] .. self.txtLines[i+1]
+				self.txtLines[i] = newStr[1]
+				log:debug("self.txtLines[i]  is: ", self.txtLines[i])
+				for j=2, #newStr -1 do
+					self.txtLines[i] = self.txtLines[i] .." " .. newStr[j]
+				end
+				log:debug("self.txtLines[i]  is: ", self.txtLines[i])
+				log:debug("self.txtLines[i+1]  is: ", self.txtLines[i+1])
+			else
+				self.txtLines[i] = tempStr
+				log:debug("strPart is: ", strPart)
+				self.txtLines[i+1] = string.sub(self.txtLines[i+1], tempPos+1, #self.txtLines[i+1])
+			end
+		end
+	end						
 end
 
 function _playTone(self)
@@ -482,4 +539,3 @@ This file is licensed under BSD. Please see the LICENSE file for details.
 
 =cut
 --]]
-

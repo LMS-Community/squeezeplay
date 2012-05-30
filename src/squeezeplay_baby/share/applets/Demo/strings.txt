@@ -123,19 +123,19 @@ DEMO_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIDE_01CENTER
-	CS	Svět plný hudby\n na dosah ruky
-	DA	En verden af musik\n i din hule hånd
-	DE	Die Welt der Musik\n per Knopfdruck
-	EN	A world of music\n at your fingertips
-	ES	Un mundo musical\n en sus manos
-	FI	Musiikin maailma\n sormiesi ulottuvilla
-	FR	Tout un monde de\n musique à portée de main
-	IT	Un mondo di musica\n a portata di dita
-	NL	Een wereld van muziek\n binnen handbereik
-	NO	En verden av musikk\n ved fingerspissene
-	PL	Pełen świat muzyki\n do Twojej dyspozycji	
-	RU	Мир музыки �\n� на расстоянии вытянутой руки
-	SV	En hel värld av musik\n inom räckhåll
+	CS	Svět plný hudby na dosah ruky
+	DA	En verden af musik i din hule hånd
+	DE	Die Welt der Musik per Knopfdruck
+	EN	A world of music at your fingertips
+	ES	Un mundo musical en sus manos
+	FI	Musiikin maailma sormiesi ulottuvilla
+	FR	Tout un monde de musique à portée de main
+	IT	Un mondo di musica a portata di dita
+	NL	Een wereld van muziek binnen handbereik
+	NO	En verden av musikk ved fingerspissene
+	PL	Pełen świat muzyki do Twojej dyspozycji
+	RU	Мир музыки — на расстоянии
+	SV	En hel värld av musik inom räckhåll
 
 SLIDE_02
 	CS	\n
@@ -170,19 +170,19 @@ SLIDE_03
 
 
 SLIDE_04CENTER
-	CS	Tisíce internetových\nradiostanicí zdarma
-	DA	Tusindvis af gratis\ninternetradiostationer
-	DE	Tausende kostenlose\nInternetradiosender
-	EN	Thousands of free\ninternet radio stations
-	ES	Miles de emisoras de\nradio por Internet gratuitas
-	FI	Tuhansia ilmaisia\ninternet-radiokanavia
-	FR	Des milliers de radio\nInternet gratuites
-	IT	Migliaia di stazioni\nradio Internet gratuite
-	NL	Duizenden gratis\ninternetradiostations
-	NO	Tusenvis av gratis\nnettradiostasjoner
-	PL	Tysiące darmowych\ninternetowych stacji radiowych
-	RU	Тысячи бесплатных\nинтернет-радиостанций	
-	SV	Tusentals kostnadsfria\nwebbradiostationer
+	CS	Tisíce internetových radiostanicí zdarma
+	DA	Tusindvis af gratis internetradiostationer
+	DE	Tausende kostenlose Internetradiosender
+	EN	Thousands of free internet radio stations
+	ES	Miles de emisoras de radio por Internet gratuitas
+	FI	Tuhansia ilmaisia internet-radiokanavia
+	FR	Des milliers de radio Internet gratuites
+	IT	Migliaia di stazioni radio Internet gratuite
+	NL	Duizenden gratis internetradiostations
+	NO	Tusenvis av gratis nettradiostasjoner
+	PL	Tysiące darmowych internetowych stacji radiowych
+	RU	Тысячи бесплатных интернет-радиостанций
+	SV	Tusentals kostnadsfria webbradiostationer
 
 
 SLIDE_05
@@ -202,19 +202,19 @@ SLIDE_05
 
 
 SLIDE_06CENTER
-	CS	Přístup ke špičkovým\nhudebním službám online
-	DA	Adgang til de bedste\nmusiktjenester online
-	DE	Zugriff auf die besten\nOnline-Musikdienste
-	EN	Access to the top\nonline music services
-	ES	Acceso a los principales\nservicios de música en línea
-	FI	Pääsy parhaisiin\nverkkomusiikkipalveluihin
-	FR	Accédez aux meilleurs\nservices de musique en ligne
-	IT	Accesso ai principali\nservizi di musica online
-	NL	Toegang tot de beste\nonlinemuziekservices
-	NO	Tilgang til de beste\nnettmusikktjenestene
-	PL	Dostęp do najlepszych\nusług muzycznych w Internecie
-	RU	Доступ к лучшим\nинтерактивным музыкальным службам
-	SV	Använd de bästa\nwebbmusiktjänsterna
+	CS	Přístup ke špičkovým hudebním službám online
+	DA	Adgang til de bedste musiktjenester online
+	DE	Zugriff auf die besten Online-Musikdienste
+	EN	Access to the top online music services
+	ES	Acceso a los principales servicios de música en línea
+	FI	Pääsy parhaisiin verkkomusiikkipalveluihin
+	FR	Accédez aux meilleurs services de musique en ligne
+	IT	Accesso ai principali servizi di musica online
+	NL	Toegang tot de beste onlinemuziekservices
+	NO	Tilgang til de beste nettmusikktjenestene
+	PL	Dostęp do najlepszych usług muzycznych w Internecie
+	RU	Доступ к лучшим интерактивным музыкальным службам
+	SV	Använd de bästa webbmusiktjänsterna
 
 
 
@@ -235,19 +235,19 @@ SLIDE_07
 
 
 SLIDE_08CENTER
-	CS	Umožňuje také poslech vaší\noblíbené hudby uložené v počítači
-	DA	Lyt til din yndlingsmusik\npå din pc
-	DE	Oder genießen Sie Ihre auf\ndem PC gespeicherte Lieblingsmusik
-	EN	Also listen to your favorite\n music stored on your PC
-	ES	Y escuche su música favorita\nguardada en el PC
-	FI	Voit kuunnella myös tietokoneelle\ntallennettua musiikkia
-	FR	Ecoutez également votre musique\npréférée stockée sur votre ordinateur
-	IT	Ascolta anche la tua musica\npreferita memorizzata nel PC
-	NL	Luister ook naar je favoriete\nmuziek die is opgeslagen op je pc
-	NO	Og du kan lytte til\nmusikken på pc-en også
-	PL	Słuchanie ulubionej\nmuzyki z komputera
-	RU	Возможность прослушивания\nлюбимой музыки, хранящейся на ПК
-	SV	Lyssna på din\nfavoritmusik från datorn
+	CS	Umožňuje také poslech vaší oblíbené hudby uložené v počítači
+	DA	Lyt til din yndlingsmusik på din pc
+	DE	Oder genießen Sie Ihre auf dem PC gespeicherte Lieblingsmusik
+	EN	Also listen to your favorite music stored on your PC
+	ES	Y escuche su música favorita guardada en el PC
+	FI	Voit kuunnella myös tietokoneelle tallennettua musiikkia
+	FR	Ecoutez également votre musique préférée stockée sur votre ordinateur
+	IT	Ascolta anche la tua musica preferita memorizzata nel PC
+	NL	Luister ook naar je favoriete muziek die is opgeslagen op je pc
+	NO	Og du kan lytte til musikken på pc-en også
+	PL	Słuchanie ulubionej muzyki z komputera
+	RU	Возможность прослушивания любимой музыки, хранящейся на ПК
+	SV	Lyssna på din favoritmusik från datorn
 
 SLIDE_09
 	CS	\n
@@ -266,25 +266,25 @@ SLIDE_09
 
 
 SLIDE_10CENTER
-	CS	Připojte rádio k vaší síti\nWi-Fi a můžete okamžitě přehrávat hudbu	
-	DA	Slut radioen til det trådløse\nnetværk og afspil musikken
-	DE	Geben Sie Musik sofort über\nIhre WLAN-Verbindung wieder
-	EN	Connect the radio to your WiFi\nand instantly play music
-	ES	Conecte la radio a la red Wi-Fi\ny reproduzca música al instante
-	FI	Yhdistä radio Wi-Fi-verkkoon\nja toista musiikkia välittömästi
-	FR	Connectez la radio à votre\nréseau Wi-Fi et profitez instantanément de votre musique
-	IT	Connetti la radio alla rete Wi-Fi\ne ascolta musica immediatamente
-	NL	Verbind de radio met je wifi\nen speel direct muziek af
-	NO	Kople radioen til det trådløse\nnettverket, og spill av
-	PL	Aby rozpocząć odtwarzanie muzyki,\nwystarczy podłączyć radio do odtwarzacza Wi-Fi
-	RU	Подключите радио к\nсети Wi-Fi и сразу же слушайте музыку
-	SV	Anslut radion till ditt Wi-Fi-nät\noch spela upp musik direkt
+	CS	Připojte rádio k vaší síti Wi-Fi a můžete okamžitě přehrávat hudbu
+	DA	Slut radioen til det trådløse netværk og afspil musikken
+	DE	Geben Sie Musik sofort über Ihre WLAN-Verbindung wieder
+	EN	Connect the radio to your WiFi and instantly play music
+	ES	Conecte la radio a la red Wi-Fi y reproduzca música al instante
+	FI	Yhdistä radio Wi-Fi-verkkoon ja toista musiikkia välittömästi
+	FR	Connectez la radio à votre réseau Wi-Fi et profitez instantanément de votre musique
+	IT	Connetti la radio alla rete Wi-Fi e ascolta musica immediatamente
+	NL	Verbind de radio met je wifi en speel direct muziek af
+	NO	Kople radioen til det trådløse nettverket, og spill av
+	PL	Aby rozpocząć odtwarzanie muzyki, wystarczy podłączyć radio do odtwarzacza Wi-Fi
+	RU	Подключите радио к сети Wi-Fi и сразу же слушайте музыку
+	SV	Anslut radion till ditt Wi-Fi-nät noch spela upp musik direkt
 
 SLIDE_11CENTER
 	CS	Jednoduše a intuitivně
 	DA	Enkelt og intuitivt
 	DE	Einfach und intuitiv
-	EN	Simple & intutive
+	EN	Simple & intuitive
 	ES	Simple e intuitivo
 	FI	Yksinkertainen ja intuitiivinen
 	FR	Fonctionnement simple et intuitif
@@ -316,28 +316,28 @@ SLIDE_13
 	DE	Oder Tablet-PC und Smartphone
 	EN	Or tablet and smart phone
 	ES	O tablet y smartphone
-	FI	Tai taulutietokoneesta ja älypuhelimesta
+	FI	Tai muusta älylaitteesta
 	FR	Ou de votre tablette ou smartphone
 	IT	O dal tablet e dallo smartphone
 	NL	Of tablet en smartphone
 	NO	Eller nettbrettet og smarttelefonen
 	PL	Lub tabletu albo smartfonu
-	RU	и с помощью планшетного ПК или смартфона
+	RU	и с помощью планшета или смартфона
 	SV	Eller en surfplatta eller smartphone
 SLIDE_14CENTER
-	CS	Zařízení je dobíjecí,\ntakže si jej můžete brát s sebou
-	DA	Den kan oplades\nog tages med
-	DE	Laden Sie es einfach\nauf und nehmen Sie es überallhin mit
-	EN	Its rechargeable, so you\n can take it with you
-	ES	Es recargable, puede\nllevársela a todas partes
-	FI	Laite on ladattava,\njoten voit ottaa sen mukaasi
-	FR	Rechargeable, vous pouvez\nl'emporter partout
-	IT	È ricaricabile, per\nportarla con te
-	NL	De radio is oplaadbaar,\ndus u kunt hem meenemen	
-	NO	Den er oppladbar, slik\nat du kan ta den med deg
-	PL	Dzięki możliwości doładowywania\nakumulatora możesz zabrać odtwarzacz ze sobą
-	RU	Питание от аккумуляторов\nпозволяет взять радио с собой	
-	SV	Uppladdningsbar, så att\ndu kan ta den med dig
+	CS	Zařízení je dobíjecí, takže si jej můžete brát s sebou
+	DA	Den kan oplades og tages med
+	DE	Laden Sie es einfach auf und nehmen Sie es überallhin mit
+	EN	Its rechargeable, so you can take it with you
+	ES	Es recargable, puede llevársela a todas partes
+	FI	Laite on ladattava, joten voit ottaa sen mukaasi
+	FR	Rechargeable, vous pouvez l'emporter partout
+	IT	È ricaricabile, per portarla con te
+	NL	De radio is oplaadbaar, dus u kunt hem meenemen
+	NO	Den er oppladbar, slik at du kan ta den med deg
+	PL	Dzięki możliwości doładowywania akumulatora możesz zabrać odtwarzacz ze sobą
+	RU	Питание от аккумуляторов позволяет взять радио с собой
+	SV	Uppladdningsbar, så att du kan ta den med dig
 
 SLIDE_15
 	CS	Z ložnice
