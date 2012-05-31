@@ -94,19 +94,19 @@ CONNECTING_TO_SN
 	SV	Ansluts till
 
 MYSQUEEZEBOX_DOT_COM
-	CS	mysqueezebox.com
-	DA	mysqueezebox.com
-	DE	mysqueezebox.com
-	EN	mysqueezebox.com
-	ES	mysqueezebox.com
-	FI	mysqueezebox.com
-	FR	mysqueezebox.com
-	IT	mysqueezebox.com
-	NL	mysqueezebox.com
-	NO	mysqueezebox.com
-	PL	mysqueezebox.com
-	RU	mysqueezebox.com
-	SV	mysqueezebox.com
+	CS	UEsmartradio.com
+	DA	UEsmartradio.com
+	DE	UEsmartradio.com
+	EN	UEsmartradio.com
+	ES	UEsmartradio.com
+	FI	UEsmartradio.com
+	FR	UEsmartradio.com
+	IT	UEsmartradio.com
+	NL	UEsmartradio.com
+	NO	UEsmartradio.com
+	PL	UEsmartradio.com
+	RU	UEsmartradio.com
+	SV	UEsmartradio.com
 
 CANT_CONNECT
 	CS	Nemohu připojit
