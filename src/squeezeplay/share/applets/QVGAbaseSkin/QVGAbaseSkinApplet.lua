@@ -117,7 +117,7 @@ end
 -- defines a new style that inherrits from an existing style
 function _uses(parent, value)
 	if parent == nil then
-		log:warn("nil parent in _uses at:\n", debug.traceback())
+		log:warn("nil parent in _uses at: \n", debug.traceback())
 	end
 	local style = {}
 	setmetatable(style, { __index = parent })
@@ -338,6 +338,7 @@ function skin(self, s, reload, useDefaultSize)
 
 		TEXT_COLOR = { 0xE7, 0xE7, 0xE7 },
         	TEXT_COLOR_TEAL = { 0, 0xbe, 0xbe },
+		TEXT_COLOR_BLUE = { 0x14, 0x5a, 0xa0 },
 		TEXT_COLOR_BLACK = { 0x00, 0x00, 0x00 },
 		TEXT_SH_COLOR = { 0x37, 0x37, 0x37 },
 
@@ -919,7 +920,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
-		fg = c.TEXT_COLOR_TEAL,
+		fg = c.TEXT_COLOR_BLUE,
 	})
 
 	s.black_popup = _uses(s.waiting_popup)
@@ -1523,7 +1524,7 @@ function skin(self, s, reload, useDefaultSize)
 	}
 
 	s.waiting_popup.subtext_connected = _uses(s.waiting_popup.subtext, {
-		fg = c.TEXT_COLOR_TEAL,
+		fg = c.TEXT_COLOR_BLUE,
 	})
 
 
