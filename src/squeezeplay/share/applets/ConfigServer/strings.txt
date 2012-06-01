@@ -2,30 +2,3 @@
 # The two letter codes are defined by ISO 639-1
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
-DEVELOPER
-	EN	Developer
-
-DEVELOPER_CURRENT_SN
-	EN	Current SN
-
-DEVELOPER_UPDATE_CHANNEL
-	EN	Update Channel
-
-DEVELOPER_NO_OPTION_AVAILABLE
-	EN	No option available
-
-DEVELOPER_OUTOFBOX
-	EN	Out Of Box (reboots)
-
-DEVELOPER_OUTOFBOX_CANCEL
-	EN	Cancel
-
-DEVELOPER_OUTOFBOX_CONTINUE
-	EN	Continue
-
-DEVELOPER_OUTOFBOX_REBOOTING
-	EN	Rebooting...
-
-DEVELOPER_TEST_FETCH
-	EN	Fetch JSON file
-
