@@ -337,6 +337,8 @@ end
 function _squeezenetworkWait(self, squeezenetwork)
 	log:info("Looking for upgrade, waiting to connect to SqueezeNetwork and find any compatible SCs")
 
+	self.timer = nil
+
 	-- Waiting popup
 	local popup = Popup("waiting_popup")
 
@@ -349,20 +351,21 @@ function _squeezenetworkWait(self, squeezenetwork)
 
 	local timeout = 0
 	--Wait until SN is connected before going to step 8. Also if SN isn't being found, use available SCs. Allow 10 seconds to go by to give all SCs a chacne to be discovered.
-	popup:addTimer(1000, function()
+	self.timer = popup:addTimer(1000, function()
 		-- wait until we know if the player is linked
 		if _squeezenetworkConnected(self, squeezenetwork) then
+			self.timer:stop()
 			step8(self, squeezenetwork)
 		else
 			log:info("SN not available, Waited: ", timeout + 1)
 		end
-
 
 		timeout = timeout + 1
 
 		--try for 30 seconds
 		if timeout >= 30 then
 			log:info("Can't find any SC or connect to SqueezeNetwork after ", timeout, " seconds")
+			self.timer:stop()
 			_squeezenetworkFailed(self, squeezenetwork)
 		end
 	end)
