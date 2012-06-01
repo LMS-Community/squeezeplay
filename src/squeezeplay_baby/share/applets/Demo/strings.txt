@@ -134,7 +134,7 @@ SLIDE_01CENTER
 	NL	Een wereld van muziek binnen handbereik
 	NO	En verden av musikk ved fingerspissene
 	PL	Pełen świat muzyki do Twojej dyspozycji
-	RU	Мир музыки — на расстоянии
+	RU	Мир музыки — на расстоянии вытянутой руки
 	SV	En hel värld av musik inom räckhåll
 
 SLIDE_02
