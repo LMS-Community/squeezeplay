@@ -63,6 +63,15 @@ local locales = {
 
 
 function _jumpToDemo(self)
+	log:info("come in _jumpToDemo")
+	if self.gChoice ~= locale:getLocale() then
+		self:setLang(self.gChoice, _demoNext)
+	else
+		_demoNext()
+	end
+end
+
+function _demoNext(self)
 	appletManager:callService("jumpToInStoreDemo")
 end
 
@@ -74,6 +83,7 @@ end
 
 
 function setupShowSetupLanguage(self, setupNext, helpText)
+	self.gChoice = 0
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
@@ -100,6 +110,7 @@ function setupShowSetupLanguage(self, setupNext, helpText)
 		if not locales[locale] then
 			log:warn("unknown lang ", locale)
 		else
+		
 			menu:addItem({
 				locale = locale,
 				text = locales[locale][1],
@@ -143,6 +154,7 @@ end
 
 
 function settingsShow(self, menuItem)
+	self.gChoice = 0
 	local currentLocale = locale:getLocale()
 	log:info("locale currently is ", currentLocale)
 
@@ -202,7 +214,8 @@ function _showLang(self, choice)
 	if not choice then
 		choice = self:getSettings().locale
 	end
-
+	self.gChoice = choice
+	log:info("self.gChoice set to: ", self.gChoice)
 	-- this modifies the Applets strings directly. don't do this elsewhere, but it's
 	-- needed for speed here
 	for k,v in pairs(self._stringsTable) do
