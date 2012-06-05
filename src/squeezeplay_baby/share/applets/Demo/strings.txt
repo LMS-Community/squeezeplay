@@ -34,12 +34,12 @@ DEMO_START_DEMO
 
 DEMO_START_DEMO_WARNING
 	CS	VÝSTRAHA: Chcete-li demo deaktivovat, stiskněte tlačítka BACK a PLAY současně.
-	DA	ADVARSEL: Du slår demoen fra ved at trykke på, BACK og PLAY samtidigt.
+	DA	ADVARSEL: Du slår demoen fra ved at trykke på BACK og PLAY samtidigt.
 	DE	Warnung: Drücken Sie zum Deaktivieren der Demo gleichzeitig BACK und PLAY.
 	EN	WARNING: To disable the demo, press the BACK and PLAY buttons at the same time.
 	ES	ADVERTENCIA: para desactivar la demostración, pulse los botones BACK y PLAY al mismo tiempo.
 	FI	VAROITUS: jos haluat poistaa demon käytöstä, paina BACK- ja PLAY-painikkeita samanaikaisesti.
-	FR	AVERTISSEMENT: pour désactiver la démonstration, appuyez simultanément sur les boutons BACK et PLAY.
+	FR	AVERTISSEMENT: pour désactiver la démo, appuyez simultanément sur les boutons BACK et PLAY.
 	IT	ATTENZIONE: per disattivare il demo, premere contemporaneamente i pulsanti BACK e PLAY.
 	NL	WAARSCHUWING: druk tegelijkertijd op de knoppen BACK en PLAY om de demo uit te schakelen.
 	NO	ADVARSEL: Du deaktiverer demoen ved å trykke på knappene BACK og PLAY AV samtidig.
@@ -210,7 +210,7 @@ SLIDE_06CENTER
 	FI	Pääsy parhaisiin verkkomusiikkipalveluihin
 	FR	Accédez aux meilleurs services de musique en ligne
 	IT	Accesso ai principali servizi di musica online
-	NL	Toegang tot de beste onlinemuziekservices
+	NL	Toegang tot de beste online muziekdiensten
 	NO	Tilgang til de beste nettmusikktjenestene
 	PL	Dostęp do najlepszych usług muzycznych w Internecie
 	RU	Доступ к лучшим интерактивным музыкальным службам
@@ -246,7 +246,7 @@ SLIDE_08CENTER
 	NL	Luister ook naar je favoriete muziek die is opgeslagen op je pc
 	NO	Og du kan lytte til musikken på pc-en også
 	PL	Słuchanie ulubionej muzyki z komputera
-	RU	Возможность прослушивания любимой музыки, хранящейся на ПК
+	RU	Возможность прослушивания музыки, хранящейся на ПК
 	SV	Lyssna på din favoritmusik från datorn
 
 SLIDE_09
@@ -312,7 +312,7 @@ SLIDE_12
 
 SLIDE_13
 	CS	Nebo tabletu či chytrého telefonu
-	DA	Eller tablet-pc eller smartphone
+	DA	Eller tablet og smartphone
 	DE	Oder Tablet-PC und Smartphone
 	EN	Or tablet and smart phone
 	ES	O tablet y smartphone
@@ -322,7 +322,7 @@ SLIDE_13
 	NL	Of tablet en smartphone
 	NO	Eller nettbrettet og smarttelefonen
 	PL	Lub tabletu albo smartfonu
-	RU	и с помощью планшета или смартфона
+	RU	или с помощью ПК, смартфона
 	SV	Eller en surfplatta eller smartphone
 SLIDE_14CENTER
 	CS	Zařízení je dobíjecí, takže si jej můžete brát s sebou
@@ -371,17 +371,17 @@ SLIDE_16
 	SV	Till köket
 
 SLIDE_17
-	CS	Výkon pro hudbu
-	DA	Al magt til musikken
-	DE	Power to the music
-	EN	Power to the music
-	ES	La música al poder
-	FI	Tehoa musiikkiin
-	FR	La musique au pouvoir
-	IT	Tutta la potenza della musica
-	NL	De kracht zit in de muziek
-	NO	Gi musikken kraft
-	PL	Dom wypełniony muzyką
-	RU	Вся мощь музыки
-	SV	Musiken regerar
+	CS	POWER TO THE MUSIC
+	DA	POWER TO THE MUSIC
+	DE	POWER TO THE MUSIC
+	EN	POWER TO THE MUSIC
+	ES	POWER TO THE MUSIC
+	FI	POWER TO THE MUSIC
+	FR	LA MUSIQUE AU POUVOIR
+	IT	POWER TO THE MUSIC
+	NL	POWER TO THE MUSIC
+	NO	POWER TO THE MUSIC
+	PL	POWER TO THE MUSIC
+	RU	POWER TO THE MUSIC
+	SV	POWER TO THE MUSIC
 
