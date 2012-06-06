@@ -1256,7 +1256,7 @@ function isMoreRecent(self, new, old)
 	local oldVer = string.split("%.", old)
 
 	for i,v in ipairs(newVer) do
-		if oldVer[i] and v > oldVer[i] then
+		if oldVer[i] and tonumber(v) > tonumber(oldVer[i]) then
 			return true
 		end
 	end
