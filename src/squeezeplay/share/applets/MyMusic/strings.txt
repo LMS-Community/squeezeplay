@@ -1,0 +1,37 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+MYMUSIC_MY_MUSIC
+	CS	Hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Omat musiikkitiedostot
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
+
+MYMUSIC_SERVERS
+	CS	Knihovny
+	DA	Biblioteker
+	DE	Musiksammlungen
+	EN	Libraries
+	ES	Bibliotecas
+	FI	Kirjastot
+	FR	Collections
+	IT	Librerie
+	NL	Bibliotheken
+	NO	Bibliotek
+	PL	Biblioteki
+	RU	Медиатеки
+	SV	Bibliotek
+
+MYMUSIC_HINT
+	EN	To access your local music, download and install UEML.
+

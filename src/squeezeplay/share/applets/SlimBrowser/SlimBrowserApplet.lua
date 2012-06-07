@@ -479,23 +479,23 @@ local function _artworkItem(step, item, group, menuAccel)
 	local iconId = item["icon-id"] or item["icon"]
 
 	if iconId then
-		if menuAccel and not _server:artworkThumbCached(iconId, iconSize) then
+		if menuAccel and not step.server:artworkThumbCached(iconId, iconSize) then
 			-- Don't load artwork while accelerated
-			_server:cancelArtwork(icon)
+			step.server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			_server:fetchArtwork(iconId, icon, iconSize)
+			step.server:fetchArtwork(iconId, icon, iconSize)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
-		if menuAccel and not _server:artworkThumbCached(item["params"]["track_id"], iconSize) then
+		if menuAccel and not step.server:artworkThumbCached(item["params"]["track_id"], iconSize) then
 			-- Don't load artwork while accelerated
-			_server:cancelArtwork(icon)
+			step.server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			_server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
+			step.server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
 		end
 	else
-		_server:cancelArtwork(icon)
+		step.server:cancelArtwork(icon)
 
 	end
 end
@@ -814,7 +814,14 @@ local function _performJSONAction(jsonAction, from, qty, step, sink, itemType, c
 
 	if not useCachedResponse then
 		-- send the command
-		_server:userRequest(sink, playerid, request)
+		if step and step.server then
+			log:info("step.server available: ", step.server)
+			step.server:userRequest(sink, playerid, request)
+		else
+			log:info("step.server not available - using _server: ", _server)
+			_server:userRequest(sink, playerid, request)
+		end
+
 	else
                 log:info("using cachedResponse")
 		sink(cachedResponse)
@@ -849,7 +856,7 @@ local function _refreshJSONAction(step)
 		return
 	end
 
-	_server:userRequest(step.sink, playerid, step.jsonAction)
+	step.server:userRequest(step.sink, playerid, step.jsonAction)
 
 end
 
@@ -1169,7 +1176,7 @@ end
 
 
 --destination that does nothing, but handles step.cancelled and step.loaded
-local function _emptyDestination(step)
+local function _emptyDestination(currentStep)
 	local step = {}
 
 	step.sink = function(chunk, err)
@@ -1183,6 +1190,10 @@ local function _emptyDestination(step)
 			step.loaded()
 			step.loaded = nil
 		end
+	end
+
+	if currentStep and currentStep.server then
+		step.server = currentStep.server
 	end
 
 	return step, step.sink
@@ -1930,7 +1941,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 		end
 
 		-- XXX: After an input box is used, chunk is nil, so base can't be used
-	
+
 		if iAction or bAction or choiceAction or nextWindow then
 			-- the resulting action, if any
 			local jsonAction
@@ -2038,13 +2049,13 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				if nextWindow == 'nowPlaying' then
 					skipNewWindowPush = true
 
-					step, sink = _emptyDestination(step)
+					step, sink = _emptyDestination(_getCurrentStep())
 					_stepLockHandler(step, function () _goNowPlaying(nil, true, true ) end)
 
 				elseif actionName == 'preview' then
 					skipNewWindowPush = true
 
-					step, sink = _emptyDestination(step)
+					step, sink = _emptyDestination(_getCurrentStep())
 					_stepLockHandler(step, function () _alarmPreviewWindow(iAction and iAction.title) end )
 
 				elseif nextWindow == 'playlist' then
@@ -2643,7 +2654,8 @@ end
 -- data is generic data that is stored in the step; it is used f.e. to keep the json action between the
 --  first incantation and the subsequent ones needed to capture all data (see _browseSink).
 -- containerContextMenu is the json action of the more command (if any) from the previous menu item
-_newDestination = function(origin, item, windowSpec, sink, data, containerContextMenu)
+-- server is an optional server to use instead of the default _server
+_newDestination = function(origin, item, windowSpec, sink, data, containerContextMenu, server)
 	log:debug("_newDestination():")
 	log:debug(windowSpec)
 
@@ -2738,8 +2750,7 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 		end
 
 	end
-	
-	
+
 	-- a step for our enlightenment path
 	local step = {
 		origin          = origin,   -- origin step
@@ -2750,8 +2761,9 @@ _newDestination = function(origin, item, windowSpec, sink, data, containerContex
 		sink            = false,    -- sink closure embedding this step
 		data            = data,     -- data (generic)
 		actionModifier  = false,    -- modifier
+		server          = server or (origin and origin.server or _server)
 	}
-	
+
 	log:debug("new step: " , step)
 
 
@@ -3042,7 +3054,9 @@ function browserActionRequest(self, server, v, loadedCallback)
 					v,
 					_newWindowSpec(nil, v),
 					_browseSink,
-					jsonAction
+					jsonAction,
+					nil,
+					server
 				)
 
 				if v.input then
@@ -3103,32 +3117,58 @@ end
 
 
 function notify_serverConnected(self, server)
-	if _server ~= server then
-		return
+	-- connectedServer: server the player is connected to, normally SN
+	-- attachedServer: server we browse w/o connecting the player to it, normally UEML
+	local connectedServer = _server
+	local attachedServer = nil
+	local step = _getCurrentStep()
+
+	if step and step.server and step.server != _server then
+		attachedServer = step.server
 	end
 
-	iconbar:setServerError("OK")
+	log:info("serverConnected() - ConnectedServer: ", connectedServer)
+	log:info("serverConnected() - AttachedServer: ", attachedServer)
 
-	-- hide connection error window
-	if self.serverErrorWindow then
-		self.serverErrorWindow:hide(Window.transitionNone)
-		self.serverErrorWindow = false
+	if connectedServer == server then
+		iconbar:setServerError("OK")
+	end
+
+	if connectedServer == server or attachedServer and attachedServer == server then
+		-- hide connection error window
+		if self.serverErrorWindow then
+			self.serverErrorWindow:hide(Window.transitionNone)
+			self.serverErrorWindow = false
+		end
 	end
 end
 
 
 function notify_serverDisconnected(self, server, numUserRequests)
-	if _server ~= server then
-		return
+	-- connectedServer: server the player is connected to, normally SN
+	-- attachedServer: server we browse w/o connecting the player to it, normally UEML
+	local connectedServer = _server
+	local attachedServer = nil
+	local step = _getCurrentStep()
+
+	if step and step.server and step.server != _server then
+		attachedServer = step.server
 	end
 
-	iconbar:setServerError("ERROR")
+	log:info("serverDisconnected() - connectedServer: ", connectedServer)
+	log:info("serverDisconnected() - attachedServer: ", attachedServer)
 
-	if numUserRequests == 0 or self.serverErrorWindow then
-		return
+	if connectedServer == server then
+		iconbar:setServerError("ERROR")
 	end
 
-	self:_problemConnectingPopup(server)
+	if connectedServer == server or attachedServer and attachedServer == server then
+		if numUserRequests == 0 or self.serverErrorWindow then
+			return
+		end
+
+		self:_problemConnectingPopup(server)
+	end
 end
 
 

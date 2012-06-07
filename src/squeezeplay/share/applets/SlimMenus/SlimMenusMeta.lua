@@ -21,9 +21,10 @@ function registerApplet(self)
 	self:registerService('warnOnAnyNetworkFailure')
 	self:registerService('addSwitchToSnMenuItem')
 
-	-- add a menu item for myMusic
-	jiveMain:addItem(self:menuItem('myMusicSelector', 'home', 'MENUS_MY_MUSIC', function(applet, ...) applet:myMusicSelector(...) end, 2, nil, "hm_myMusicSelector"))
-	jiveMain:addItem(self:menuItem('otherLibrary', '_myMusic', 'MENUS_OTHER_LIBRARY', function(applet, ...) applet:otherLibrarySelector(...) end, 100, nil, "hm_otherLibrary"))
+-- This is now handled in MyMusicApplet
+--	-- add a menu item for myMusic
+--	jiveMain:addItem(self:menuItem('myMusicSelector', 'home', 'MENUS_MY_MUSIC', function(applet, ...) applet:myMusicSelector(...) end, 2, nil, "hm_myMusicSelector"))
+--	jiveMain:addItem(self:menuItem('otherLibrary', '_myMusic', 'MENUS_OTHER_LIBRARY', function(applet, ...) applet:otherLibrarySelector(...) end, 100, nil, "hm_otherLibrary"))
 
 	appletManager:loadApplet("SlimMenus")
 end
