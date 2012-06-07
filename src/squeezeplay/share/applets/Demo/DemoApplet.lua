@@ -15,7 +15,6 @@ local LocalPlayer   = require("jive.slim.LocalPlayer")
 local Font			= require("jive.ui.Font")
 local decode        = require("squeezeplay.decode")
 
-local debug	       = require("jive.utils.debug")
 
 local Surface       = require("jive.ui.Surface")
 local Framework     = require("jive.ui.Framework")
@@ -57,22 +56,35 @@ function init(self)
 	self.delta = 0
 	self.volume = 51
 
-	self.idleTimer = Timer(
-		30000, 
-		function()
-			_volumeAutoAdjust(self)
-		end
-	)
 	self.volumePrefSaver = Timer(
 		60000,
 		function()
 			_saveVolPref(self)
 		end
 	)
+	self.autoMuteTimer = Timer(
+		90000,
+		function()
+			_autoMuteAdjust(self)
+		end
+	)
 
-        return self
+	return self
 end
 
+function _autoMuteAdjust(self)
+	if self.volume > 0 then
+		log:warn('idle timeout, setting the volume to 0')
+		log:debug('self.volume is: ', self.volume)
+		if self.localPlayer then
+			self.volume = self.localPlayer:getVolume()
+		end
+		log:debug('self.volume is: ', self.volume)
+		self.audioMute = true
+		self.localPlayer:volumeLocal(0)
+	end
+	self.autoMuteTimer:stop()
+end
 
 function _saveVolPref(self)
 	local currentSetting = self:getSettings()['volumeSetting']
@@ -84,198 +96,72 @@ function _saveVolPref(self)
 end
 
 
-function _volumeAutoAdjust(self)
-	if self.volume > 60 then
-		log:warn('idle timeout, setting the volume to 20')
-		self.delta = 20 - self.volume 
-		_updateVolume(self, 20, true)
-		_openPopup(self)
-	end
-	self.idleTimer:stop()
-end
-
-function _updateDisplay(self)
-	if self.volume <= 0 then
-		self.title:setValue(self:string("DEMO_VOLUME_MUTED"))
-		self.slider:setValue(0)
-
-	else
-		self.title:setValue(self:string("DEMO_VOLUME", tostring(self.volume) ) )
-		self.slider:setValue(self.volume)
-	end
-end
-
-function _openPopup(self)
-	if self.popup then
-		return
-	end
-
-	local popup = Popup("slider_popup")
-	popup:setAutoHide(false)
-	popup:setAlwaysOnTop(true)
-
-	local title = Label("heading", "")
-	popup:addWidget(title)
-
-        popup:addWidget(Icon('icon_popup_volume'))
-
-	--slider is focused widget so it will receive events before popup gets a chance
-	local slider = Slider("volume_slider", -1, 100, self.volume,
-                              function(slider, value, done)
-					self.delta = value - self.volume
-					self:_updateVolume(value)
-                              end)
-
-	popup:addWidget(Group("slider_group", {
-		slider = slider,
-	}))
-
-	popup:focusWidget(nil)
-
-	-- we handle events
-	popup.brieflyHandler = false
-
-	self:_windowListeners(popup)
-
-	-- open the popup
-	self.popup = popup
-	self.title = title
-	self.slider = slider
-
-	_updateDisplay(self)
-
-	popup:showBriefly(3000,
-		function()
-
-			--This happens on ANY window pop, not necessarily the popup window's pop
-			local isPopupOnStack = false
-			local stack = Framework.windowStack
-			for i in ipairs(stack) do
-				if stack[i] == popup then
-					isPopupOnStack = true
-					break
-				end
-			end
-
-			--don't clear it out if the pop was from another window
-			if not isPopupOnStack then
-				self.popup = nil
-			end
-		end,
-		Window.transitionPushPopupUp,
-		Window.transitionPushPopupDown
-	)
-end
 
 function _windowListeners(self, window)
-       -- don't allow anything but vol up and vol down
-        window:ignoreAllInputExcept({ "volume_up", "volume_down", "exit_demo" },
-                        function(actionEvent)
-                            return EVENT_CONSUME
-                        end
-        )
-        -- there is no escape, resistance is futile!
-        window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
-
-        window:addActionListener('volume_up', self, volEvent)
-        window:addActionListener('volume_down', self, volEvent)
-        window:addActionListener('exit_demo', self, demoEvent)
-end
-
-
-function _updateVolume(self, force)
-
-	if not self.popup and not force then
-		return
+	local retEventStatus = EVENT_CONSUME
+	window:addListener(EVENT_KEY_ALL | EVENT_SCROLL, function(event)
+	if event:getType() == EVENT_KEY_LONGHOLD then
+	--since there is only one long hold key for exit demo
+		log:debug("recieved event longhold")
+		retEventStatus = EVENT_UNUSED
 	end
-	-- keep the popup window open
-	if self.popup then
-		self.popup:showBriefly()
-	-- or open it (in the case of force for auto vol adjust)
+	if event:getType() == EVENT_KEY_PRESS  then
+		local keycode = event:getKeycode()
+		if (keycode & (KEY_VOLUME_UP|KEY_VOLUME_DOWN) ~= 0) and System:hasVolumeKnob() then
+			log:debug("event volume received and sending to volume applet")
+			retEventStatus =  EVENT_UNUSED
+		end
+		--Handle Volume knob
+	end
+	if self.audioMute ~= nil then
+		log:debug('self.volume is: ', self.volume)
+		if self.localPlayer then
+			self.localPlayer:volumeLocal(self.volume)
+		end
+		self.audioMute = nil
+	end
+	--start the automute timer
+	if self.autoMuteTimer:isRunning() then
+		self.autoMuteTimer:restart()
 	else
-		_openPopup(self)
+		self.autoMuteTimer:start()
 	end
-
-        local new
-
-	new = math.abs(self.volume) + self.delta
-
-        if new > 100 then
-                new = 100
-        elseif new <= VOLUME_STEP and new > 0 then
-                new = 1 -- lowest volume
-        elseif new < 0 then
-                new = 0
-        end
-
-	if self.volume == new then
-		return
-	end
-
-	local setVolume = volumeMap[new]
-	log:info('set volume to : ', new, '(', setVolume, ')')
-	decode:audioGain(setVolume, setVolume)
-
-	self.delta  = 0
-	self.volume = new
-	self.idleTimer:restart()
-
-	_updateDisplay(self)
-
+	return retEventStatus
+	end)
+	window:addActionListener('soft_reset', self, function() return EVENT_CONSUME end)
+	window:addActionListener('exit_demo', self, demoEvent)
 end
 
-function volEvent(self, volumeEvent)
-	if not self.popup then
-		_openPopup(self)
-	end
-
-	if volumeEvent:getAction() == 'volume_up' then
-		self.delta = VOLUME_STEP
-	else
-		self.delta = -1 * VOLUME_STEP
-	end
-
-	_updateVolume(self)
-	return EVENT_CONSUME
-end
 
 function demoEvent(self, demoEvent)
-       -- add setting not to start demo on boot
-        self:getSettings()['startDemo'] = false
-        self:storeSettings()
-        _stopMusic()
-        self.nextSlideTimer:stop()
-        _rebootBox()
-        return EVENT_CONSUME                     
-end  
-
-function _stopMusic(self)
-        local localPlayer = nil
-        for mac, player in appletManager:callService("iteratePlayers") do
-        if player:isLocal() then
-                localPlayer = player
-                break
-        end
-        end
-        localPlayer:stop(true)
+	-- add setting not to start demo on boot
+	log:debug("event recieved as ", demoEvent:getType())
+	self:getSettings()['volumeSetting'] = 51
+	self:getSettings()['startDemo'] = false
+	self:storeSettings()
+	self.localPlayer:stop(true)
+	self.nextSlideTimer:stop()
+	_rebootBox()
+	return EVENT_CONSUME 
 end
 
+
 function _rebootBox(self)
-    -- we're shutting down, so prohibit any key presses or holds
+	-- we're shutting down, so prohibit any key presses or holds
 	Framework:addListener(EVENT_ALL_INPUT,
-			      function () 
-				      return EVENT_CONSUME
-			      end,
-			      true)
-    log:info("Rebooting...")
-    --reboot
-    appletManager:callService("reboot")
+				function ()
+				return EVENT_CONSUME
+				end,
+				true)
+	log:info("Rebooting...")
+	--reboot
+	appletManager:callService("reboot")
 end
 					
 -- main setting menu
 function enableDemo(self)
 	-- keyboard window to enter code
-        self.window = Window('text_list', self:string("DEMO_ENTER_CODE"))
+	self.window = Window('text_list', self:string("DEMO_ENTER_CODE"))
 	local input = Textinput("textinput", "",
 		function(_, value)
 			self.code = value
@@ -289,8 +175,8 @@ function enableDemo(self)
 	local group = Group('keyboard_textinput', { textinput = input, backspace = backspace } )
 
 	self.window:addWidget(group)
-        self.window:addWidget(keyboard)
-        self.window:focusWidget(group)
+	self.window:addWidget(keyboard)
+	self.window:focusWidget(group)
 	self.window:show()
 end
 
@@ -351,8 +237,8 @@ function startDemo(self)
 		local token      = string.upper(filename)
 		table.insert(self.strings, token)
 	end
-        table.sort(self.strings)
-        table.sort(self.slides) 
+	table.sort(self.strings)
+	table.sort(self.slides)
 	if #self.slides > 0 then
 		self:_playSlides()
 		if System:findFile(self.mp3file) then
@@ -366,6 +252,7 @@ end
 
 function _playSlides(self)
 	self:_showNextSlide()
+	log:debug('in playslide self.volume is: ', self.volume)
 	self.nextSlideTimer = Timer(5000, 
 		function()
 			self:_nextImage()
@@ -412,29 +299,29 @@ function _showNextSlide(self)
 		if #self.txtLines==0 then
 			log:debug("come here in normal cases single line")
 			local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
-	    		txt1:blit(totImg, (w-titleWidth)/2, (h-FONT_SIZE-fontBold:offset())/2)
+			txt1:blit(totImg, (w-titleWidth)/2, (h-FONT_SIZE-fontBold:offset())/2)
 		else
-		        log:debug("number of lines : ", #self.txtLines)
-		        for i = 1, #self.txtLines do
+			log:debug("number of lines : ", #self.txtLines)
+			for i = 1, #self.txtLines do
 				local titleWidthNew = fontBold:width(self.txtLines[i])
 				local txt1 = Surface:drawText(fontBold, 0xFFFFFFFF, self.txtLines[i])
-			    	txt1:blit(totImg, (w-titleWidthNew)/2, (h-FONT_SIZE-fontBold:offset()-(fontBold:height() * #self.txtLines))/2 + FONT_SIZE*i)
+				txt1:blit(totImg, (w-titleWidthNew)/2, (h-FONT_SIZE-fontBold:offset()-(fontBold:height() * #self.txtLines))/2 + FONT_SIZE*i)
 			end
-	    		self.txtLines = {}
+			self.txtLines = {}
 		end
 	else 
 		log:debug('come in bottom')
 		--default considered at the bottom for now. Could be changed if needed in future
 		if (stringTxt ~= '\n') then
-		    	log:debug("come in single line botton stringTxt: ", stringTxt)
-	    		local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
-	    		txt2:blit(totImg, (self.screenWidth-titleWidth)/2, self.screenHeight-34-fontBold:offset())
-	    	end
+			log:debug("come in single line botton stringTxt: ", stringTxt)
+			local txt2 = Surface:drawText(fontBold, 0xFFFFFFFF, stringTxt)
+			txt2:blit(totImg, (self.screenWidth-titleWidth)/2, self.screenHeight-34-fontBold:offset())
+		end
 		self.txtLines = {}
 	end
 	
 	window:addWidget(Icon("icon", totImg))
-	    -- replace the window if it's already there
+	-- replace the window if it's already there
 	if self.window then
 		window:showInstead(Window.transitionFadeIn)
 		self.window = window
@@ -478,7 +365,7 @@ function formatText(self, strTxt, fontStyle)
 	for i=1, numLines-1 do
 		tempPos = string.find(self.txtLines[i+1], " ", 1)
 		if tempPos ~= 1 then
-		        local strPart = string.sub(self.txtLines[i+1], 1, tempPos)
+			local strPart = string.sub(self.txtLines[i+1], 1, tempPos)
 			local tempStr = self.txtLines[i] .. strPart
 			if fontStyle:width(tempStr) > (self.screenWidth - 8) then
 				log:debug("come in first string long case")
@@ -502,15 +389,13 @@ function formatText(self, strTxt, fontStyle)
 end
 
 function _playTone(self)
-    local localPlayer = nil
 	for mac, player in appletManager:callService("iteratePlayers") do
 		if player:isLocal() then
-			localPlayer = player
+			self.localPlayer = player
 			break
 		end
-       	end
-			
-	if localPlayer then
+	end
+	if self.localPlayer then
 		if self:getSettings()['volumeSetting'] then
 			self.volume = self:getSettings()['volumeSetting']
 		end
@@ -518,13 +403,18 @@ function _playTone(self)
 		-- hack to give 2 second delay for startup sound before kicking in demo audio
 		local timer = Timer(2000, 
 			function()
-				localPlayer:playFileInLoop(self.mp3file)
-				decode:audioGain(volumeMap[self.volume], volumeMap[self.volume])
+				self.localPlayer:playFileInLoop(self.mp3file)
+				self.localPlayer:volumeLocal(self.volume)
 			end,
 			true)
 		timer:start()
 		-- also save the volume preference save timer
 		self.volumePrefSaver:start()
+		if self.autoMuteTimer:isRunning() then
+			self.autoMuteTimer:restart()
+		else
+			self.autoMuteTimer:start()
+		end
 	end
 end
 
