@@ -73,7 +73,7 @@ function configureApplet(meta)
 	-- Current server
 	if settings.squeezeNetwork then
 		--                       id                     name (visible to user)
-		server = SlimServer(jnt, "ID_mysqueezebox.com", "mysqueezebox.com")
+		server = SlimServer(jnt, "ID_mysqueezebox.com", "UEsmartradio.com")
 		server:updateInit({ip=jnt:getSNHostname()}, 9000)
 		SlimServer:addLocallyRequestedServer(server)
 

@@ -82,7 +82,7 @@ function _setSN(self, url, doRegister)
 
 	jnt:setSNHostname(url)
 	--                           url  port  name (visible to user)
-	squeezenetwork:updateAddress(url, 9000, "mysqueezebox.com")
+	squeezenetwork:updateAddress(url, 9000, "UEsmartradio.com")
 
 	local player = appletManager:callService("getCurrentPlayer")
 

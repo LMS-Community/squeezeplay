@@ -302,9 +302,9 @@ function _discover(self)
 	-- Special case Squeezenetwork
 	if System:getUUID() then
 		--                               id                     name (visible to user)
-		squeezenetwork = SlimServer(jnt, "ID_mysqueezebox.com", "mysqueezebox.com")
+		squeezenetwork = SlimServer(jnt, "ID_mysqueezebox.com", "UEsmartradio.com")
 		--                                        url                  port  name (visible to user)
-		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000, "mysqueezebox.com")
+		self:_serverUpdateAddress(squeezenetwork, jnt:getSNHostname(), 9000, "UEsmartradio.com")
 	end
 
 	-- Remove SqueezeCenters that have not been seen for a while
