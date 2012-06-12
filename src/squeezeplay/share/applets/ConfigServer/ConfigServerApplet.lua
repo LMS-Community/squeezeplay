@@ -86,16 +86,18 @@ function _setSN(self, url, doRegister)
 
 	local player = appletManager:callService("getCurrentPlayer")
 
--- TODO: Issue to solve: If player is on LMS and SN changes from prod to test,
---  switch to SN (via menu) fails because LMS is handling the switch and
---  doesn't know the correct SN, sending the player to prod instead.
-	local server = appletManager:callService("getInitialSlimServer")
-	log:info("Initial server to connect to: ", server)
-	-- LMS in use -> connect to LMS
-	if server and not server:isSqueezeNetwork() then
-		player:connectToServer(server)
-		return
-	end
+-- This is not used anymore - the player always only connects to the backend
+-- Local servers (UEML) (i.e. attached servers) are only browsed
+---- TODO: Issue to solve: If player is on LMS and SN changes from prod to test,
+----  switch to SN (via menu) fails because LMS is handling the switch and
+----  doesn't know the correct SN, sending the player to prod instead.
+--	local server = appletManager:callService("getInitialSlimServer")
+--	log:info("Initial server to connect to: ", server)
+--	-- LMS in use -> connect to LMS
+--	if server and not server:isSqueezeNetwork() then
+--		player:connectToServer(server)
+--		return
+--	end
 
 	-- SN in use
 	local settings = self:getSettings()
