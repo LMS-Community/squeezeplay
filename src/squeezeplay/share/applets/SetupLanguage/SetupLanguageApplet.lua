@@ -243,31 +243,35 @@ function setLang(self, choice, next)
 	end
 
 	-- changing the locale is slow, do this in a task with a spinny
-	self.popup = Popup("waiting_popup")
-	self.popup:setAllowScreensaver(false)
-	self.popup:setAlwaysOnTop(true)
-	self.popup:setAutoHide(false)
-	self.popup:ignoreAllInputExcept()
+	if choice ~= locale:getLocale() then
+		self.popup = Popup("waiting_popup")
+		self.popup:setAllowScreensaver(false)
+		self.popup:ignoreAllInputExcept()
 
-	self.popup:addWidget(Icon("icon_connecting"))
-  	local stringChoice = "LOADING_LANGUAGE"
-	self.popup:addWidget(Label("text", self:string(stringChoice)))
-   	self.popup:show()
+		self.popup:addWidget(Icon("icon_connecting"))
+	  	local stringChoice = "LOADING_LANGUAGE"
+		self.popup:addWidget(Label("text", self:string(stringChoice)))
+		self:tieAndShowWindow(self.popup)
+	end
 
 	self.task = Task('setLang', self, 
-			 function(self)
-				 locale:setLocale(choice, true)
+			function(self)
+				locale:setLocale(choice, true)
 
-				 -- FIXME jiveMainNodes should use notification
-				 jiveMain:jiveMainNodes()
-				 Framework:styleChanged()
+				-- FIXME jiveMainNodes should use notification
+				jiveMain:jiveMainNodes()
+				Framework:styleChanged()
 
-				 self.popup:hide()
-
-				 if next then
-					 next()
-				 end
-			 end
+				if next then
+					-- Hiding works automatically when next screen is loaded
+					next()
+				else
+					-- Just hide the popup and show the language list again
+					if self.popup then
+						self.popup:hide()
+					end
+				end
+			end
 		 ):addTask()
 end
 
