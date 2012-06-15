@@ -22,9 +22,10 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-function settingsShow(self, menuItem)
+function factorySettingsShow(self, menuItem)
 	local window = Window("text_list", menuItem.text, 'settingstitle')
 
+	log:info("create menuItem...")
 	local menu = SimpleMenu("menu", {
 					{
 						text = self:string("RESET_CANCEL"),
@@ -37,8 +38,8 @@ function settingsShow(self, menuItem)
 						text = self:string("RESET_CONTINUE"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_factoryReset()
-							   end
+								self:_factoryReset("factory_reset")
+							end
 					},
 				})
 
@@ -49,9 +50,41 @@ function settingsShow(self, menuItem)
 end
 
 
-function _factoryReset(self)
+function restoreSettingsShow(self, menuItem)
+	local window = Window("text_list", menuItem.text, 'settingstitle')
+
+	log:info("create menuItem...")
+	local menu = SimpleMenu("menu", {
+					{
+						text = self:string("RESET_CANCEL"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								window:hide()
+							end
+					},
+					{
+						text = self:string("RESET_CONTINUE"),
+						sound = "WINDOWSHOW",
+						callback = function()
+								self:_factoryReset("restore_defaults")
+							end
+					},
+				})
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function _factoryReset(self, strToWrite)
+	if strToWrite == nil then
+		return
+	end
 	-- disconnect from Player/SqueezeCenter
 	appletManager:callService("disconnectPlayer")
+
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
@@ -64,18 +97,18 @@ function _factoryReset(self)
 
 	-- we're shutting down, so prohibit any key presses or holds
 	Framework:addListener(EVENT_ALL_INPUT,
-			      function () 
-				      return EVENT_CONSUME
-			      end,
-			      true)
+			function () 
+				return EVENT_CONSUME
+			end,
+			true)
 
 	popup:addTimer(2000, function()
-				     log:info("Factory reset...")
+				log:info("Factory reset...")
 
-				     -- touch .factoryreset and reboot
-				     System:atomicWrite("/.factoryreset", "factory_reset")
-				     appletManager:callService("reboot")
-			      end)
+				-- touch .factoryreset and reboot
+				System:atomicWrite("/.factoryreset", strToWrite)
+				appletManager:callService("reboot")
+			end)
 
 	self:tieAndShowWindow(popup)
 end

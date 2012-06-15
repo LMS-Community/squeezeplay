@@ -17,6 +17,21 @@ RESET_FACTORY_RESET
 	RU	Восстановить заводские настройки
 	SV	Återställ standardinställningarna
 
+RESET_RESTORE_DEFAULTS
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	Restore Defaults
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
 RESET_CANCEL
 	CS	Storno
 	DA	Annuller
