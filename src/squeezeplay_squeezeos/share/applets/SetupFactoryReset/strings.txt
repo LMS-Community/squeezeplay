@@ -18,19 +18,19 @@ RESET_FACTORY_RESET
 	SV	Återställ standardinställningarna
 
 RESET_RESTORE_DEFAULTS
-	CS	\n
-	DA	\n
-	DE	\n
+	CS
+	DA
+	DE
 	EN	Restore Defaults
-	ES	\n
-	FI	\n
-	FR	\n
-	IT	\n
-	NL	\n
-	NO	\n
-	PL	\n
-	RU	\n
-	SV	\n
+	ES
+	FI
+	FR
+	IT
+	NL
+	NO
+	PL
+	RU
+	SV
 
 RESET_CANCEL
 	CS	Storno
