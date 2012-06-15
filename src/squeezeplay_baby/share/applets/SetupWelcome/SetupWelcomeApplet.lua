@@ -21,7 +21,7 @@ local ipairs, pairs, assert, io, string, tonumber = ipairs, pairs, assert, io, s
 
 local oo               = require("loop.simple")
 local os               = require("os")
-
+local System           = require("jive.System")
 local Applet           = require("jive.Applet")
 local RadioGroup       = require("jive.ui.RadioGroup")
 local RadioButton      = require("jive.ui.RadioButton")
@@ -497,10 +497,37 @@ function _registerRequest(self, squeezenetwork)
 	local successCallback = function(requireAlreadyLinked)
 		self.registerRequest = true
 		self.registerRequestRequireAlreadyLinked = requireAlreadyLinked
+		local filePath = "/mnt/storage/etc/factoryresetState"
+		if System:findFile(filePath) then
+			os.remove(filePath)
+		end
 	end
 
 	log:info("registration on SN")
-	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN' }, true, successCallback )
+	local factoryResetFile = "/mnt/storage/etc/factoryresetState"
+	local wipeFlag = "wipeFlag:0"
+	if System:findFile(factoryResetFile) then
+		log:info('located factoryreset file')
+		factoryFile = io.open(factoryResetFile)
+		if factoryFile == nil then
+			log:error("Err in openeing factoryResetFile")
+		else
+			local line = factoryFile:read()
+			if line ~= nil then
+				if string.match(line, "factory_reset") then
+					wipeFlag = "wipeFlag:1"
+				end
+				log:debug("wipeFlag read as: ", wipeFlag)
+				log:debug("line read as: ", line)
+			end
+			factoryFile:close()
+		end
+		--read the data
+	else
+		log:info('No factory reset info')
+	end
+	appletManager:callService("squeezeNetworkRequest", { 'register', 0, 100, 'service:SN', wipeFlag }, true, successCallback )
+
 
 	self.locked = true -- don't free applet
 	jnt:subscribe(self)

@@ -37,7 +37,7 @@ function settingsShow(self, menuItem)
 						text = self:string("RESET_CONTINUE"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								   self:_factoryReset()
+								   self:_restoreDefaults()
 							   end
 					},
 				})
@@ -49,13 +49,13 @@ function settingsShow(self, menuItem)
 end
 
 
-function _factoryReset(self)
+function _restoreDefaults(self)
 	-- disconnect from Player/SqueezeCenter
 	appletManager:callService("disconnectPlayer")
 
 	local popup = Popup("waiting_popup")
 	popup:addWidget(Icon("icon_connected"))
-	popup:addWidget(Label("text", self:string("RESET_RESETTING")))
+	popup:addWidget(Label("text", self:string("RESET_RESTORE_DEFAULTS")))
 
 	-- make sure this popup remains on screen
 	popup:setAllowScreensaver(false)
@@ -70,10 +70,10 @@ function _factoryReset(self)
 			      true)
 
 	popup:addTimer(2000, function()
-				     log:info("Factory reset...")
+				     log:info("restore defaults reset...")
 
 				     -- touch .factoryreset and reboot
-				     System:atomicWrite("/.factoryreset", "factory_reset")
+				     System:atomicWrite("/.factoryreset", "restore_defaults")
 				     appletManager:callService("reboot")
 			      end)
 
