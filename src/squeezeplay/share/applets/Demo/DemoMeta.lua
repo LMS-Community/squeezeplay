@@ -23,14 +23,14 @@ end
 
 function registerApplet(meta)
 	meta:registerService("jumpToInStoreDemo")
-
+	meta:registerService("getDemoStatus")
 	-- uncomment this when wanting to test from desktop SP
 	-- jiveMain:addItem(meta:menuItem('appletDemo', 'settings', "DEMO", function(applet, ...) applet:enableDemo() end))
 
 end
 
 function defaultSettings(meta)
-        return { 
+	return {
 		startDemo = false,
 	}
 end
@@ -39,7 +39,7 @@ function configureApplet(meta)
 
 	if meta:getSettings()['startDemo'] then
 		local demo = appletManager:loadApplet('Demo')
-	        demo:startDemo()
+		demo:startDemo()
 	end
 
 end

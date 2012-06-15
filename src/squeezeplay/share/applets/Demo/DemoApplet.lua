@@ -418,7 +418,9 @@ function _playTone(self)
 	end
 end
 
-
+function getDemoStatus(self)
+	return self:getSettings()['startDemo']
+end
 --[[
 
 =head1 LICENSE
