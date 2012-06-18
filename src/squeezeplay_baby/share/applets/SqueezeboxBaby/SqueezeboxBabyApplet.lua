@@ -526,9 +526,8 @@ function _setBrightness(self, level)
 		level = MAX_BRIGHTNESS_LEVEL
 	end
 
-	local demoStatus = appletManager:callService("getDemoStatus")
 	-- Gradually reduce display brightness in IDLE mode when over half brightness
-	if  not demoStatus and self.powerState == "IDLE" then
+	if  self.powerState == "IDLE" then
 		if level > (MAX_BRIGHTNESS_LEVEL / 2) then
 			level = level - math.floor(10 * (level - (MAX_BRIGHTNESS_LEVEL / 2)) / (MAX_BRIGHTNESS_LEVEL / 2))
 		end

@@ -267,6 +267,9 @@ function _nextImage(self)
 	if self.currentImage > #self.slides then
 		self.currentImage = 1
 	end
+	-- restart idle timeout timer to keep the player active and 
+	-- the brightness to max level
+	Framework.wakeup()
 end
 
 function _showNextSlide(self)
@@ -418,9 +421,6 @@ function _playTone(self)
 	end
 end
 
-function getDemoStatus(self)
-	return self:getSettings()['startDemo']
-end
 --[[
 
 =head1 LICENSE
