@@ -299,14 +299,11 @@ function step7(self)
 		return
 	end
 
-	-- Check if config server returned a firmware url
-	if appletManager:hasService("getConfigServerFirmwareUrl") then
-		local firmwareUrl = appletManager:callService("getConfigServerFirmwareUrl")
-		log:info("New firmware upgrade from config server available: ", firmwareUrl)
-
-		if firmwareUrl and appletManager:hasService("firmwareUpgradeWithUrl") then
-			appletManager:callService("firmwareUpgradeWithUrl", firmwareUrl)
-			-- Early return as the device will reboot anyways after the fw upgrade
+	-- Check if there is a required firmware update, if yes, do it
+	if appletManager:hasService("checkRequiredFirmwareUpgrade") then
+		if appletManager:callService("checkRequiredFirmwareUpgrade") then
+			-- above returns true if there was a required firmware upgrade
+			-- return as the player will reboot anyways
 			return
 		end
 	end

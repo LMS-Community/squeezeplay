@@ -25,7 +25,7 @@ end
 
 function registerApplet(meta)
 	meta:registerService("fetchConfigServerData")
-	meta:registerService("getConfigServerFirmwareUrl")
+	meta:registerService("checkRequiredFirmwareUpgrade")
 end
 
 

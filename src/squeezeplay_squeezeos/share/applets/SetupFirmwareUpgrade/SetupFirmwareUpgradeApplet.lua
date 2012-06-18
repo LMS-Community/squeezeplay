@@ -379,12 +379,64 @@ function firmwareUpgrade(self, server, optionalForScDiscoveryMode)
 end
 
 
--- service method
-function firmwareUpgradeWithUrl(self, url)
+function _softwareUpdateAvailableMenu(self, url)
+	local window = Window("text_list", self:string("SOFTWARE_UPDATE_AVAILABLE"))
+	local menu = SimpleMenu("menu")
 
--- TODO: add upgrade logic (optional, mandatory, etc.)
--- always up-/downgrade for now w/o prompt when fw is offered
-	self:_upgrade(url)
+	menu:addItem({
+		text = self:string("UPDATE_NOW"),
+		sound = "WINDOWSHOW",
+		style = "item",
+		callback = function ()
+			self:_upgrade(url)
+		end
+	})
+	menu:addItem({
+		text = self:string("UPDATE_LATER"),
+		sound = "WINDOWSHOW",
+		style = "item",
+		callback = function ()
+			window:hide()
+		end
+	})
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+-- service method
+-- no url -> remove menu
+-- url and required -> upgrade without asking
+-- url and not required -> show options
+function firmwareUpgradeWithUrl(self, url, required)
+	-- no url provided - remove menu item
+	if not url then
+		-- Remove software update available menu
+		jiveMain:removeItemById("homeMenuFirmwareUpgrade")
+		return
+	end
+
+	-- url and a required upgrade - just do it
+	if url and required then
+		self:_upgrade(url)
+		return
+	end
+
+	-- Add software update available menu
+	local menuItem = {
+		id = "homeMenuFirmwareUpgrade",
+		node = "home",
+		text = self:string("SOFTWARE_UPDATE_AVAILABLE"),
+		sound = "WINDOWSHOW",
+		callback = function ()
+				self:_softwareUpdateAvailableMenu(url)
+			end,
+		weight = 1005	-- 1005 or bigger to be below 'Settings'
+	}
+	jiveMain:addItem(menuItem)
 
 --[[
 	local upgrades = {}
@@ -394,7 +446,7 @@ function firmwareUpgradeWithUrl(self, url)
 		version = version,
 	}
 
-	return _upgradeWindow(self, upgrades, false) -- not optional
+	return _upgradeWindow(self, upgrades, true)
 --]]
 end
 

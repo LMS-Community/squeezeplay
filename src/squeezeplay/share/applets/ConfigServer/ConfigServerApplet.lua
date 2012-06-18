@@ -2,27 +2,18 @@ local tostring, pairs, ipairs = tostring, pairs, ipairs
 
 -- stuff we use
 local oo                     = require("loop.simple")
-local io                     = require("io")
 local os                     = require("os")
 
 local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
-local Icon                   = require("jive.ui.Icon")
-local Label                  = require("jive.ui.Label")
-local Popup                  = require("jive.ui.Popup")
-local SimpleMenu             = require("jive.ui.SimpleMenu")
-local Textarea               = require("jive.ui.Textarea")
 local Timer                  = require("jive.ui.Timer")
-local Window                 = require("jive.ui.Window")
 
 local SlimServer	= require("jive.slim.SlimServer")
 local Task		= require("jive.ui.Task")
 local SocketHttp	= require("jive.net.SocketHttp")
 local RequestHttp	= require("jive.net.RequestHttp")
 local json		= require("json")
-local table		= require("jive.utils.table")
-local System		= require("jive.System")
 local URL		= require("socket.url")
 
 local appletManager	= appletManager
@@ -50,6 +41,23 @@ function init(self)
 	self.channelService = false
 	self.firmwareUrl = false
 	self.firmwarePrompt = false
+end
+
+
+function _handleFirmwareUpgradeMenuItem(self)
+	if self.firmwareUrl and self.firmwarePrompt and self.firmwarePrompt != "required" then
+		if appletManager:hasService("firmwareUpgradeWithUrl") then
+			-- show firmware upgrade menu in home screen
+			appletManager:callService("firmwareUpgradeWithUrl", self.firmwareUrl, false)
+		end
+
+	else
+		if appletManager:hasService("firmwareUpgradeWithUrl") then
+			-- remove firmware upgrade menu in home screen
+			appletManager:callService("firmwareUpgradeWithUrl", false, false)
+		end
+
+	end
 end
 
 
@@ -88,9 +96,6 @@ function _setSN(self, url, doRegister)
 
 -- This is not used anymore - the player always only connects to the backend
 -- Local servers (UEML) (i.e. attached servers) are only browsed
----- TODO: Issue to solve: If player is on LMS and SN changes from prod to test,
-----  switch to SN (via menu) fails because LMS is handling the switch and
-----  doesn't know the correct SN, sending the player to prod instead.
 --	local server = appletManager:callService("getInitialSlimServer")
 --	log:info("Initial server to connect to: ", server)
 --	-- LMS in use -> connect to LMS
@@ -131,26 +136,38 @@ function _parseConfigData(self, chunk)
 		self.channelText = obj.channel.text
 		self.channelService = obj.channel.service
 	end
-	if obj.firmware and obj.firmware.url then
+	if obj.firmware and obj.firmware.url and obj.firmware.prompt then
 		self.firmwareUrl = obj.firmware.url
+		self.firmwarePrompt = obj.firmware.prompt
 	end
 
 	log:info("text    : ", self.channelText)
 	log:info("service : ", self.channelService)
 	log:info("firmware: ", self.firmwareUrl)
+	log:info("prompt  : ", self.firmwarePrompt)
 end
 
 
 -- Service method
-function getConfigServerFirmwareUrl(self)
-	return self.firmwareUrl
+function checkRequiredFirmwareUpgrade(self)
+	if self.firmwareUrl and self.firmwarePrompt then
+		if self.firmwarePrompt == "required" then
+			-- Upgrade required firmware without asking
+			log:info("Upgrade required firmware without asking")
+			if appletManager:hasService("firmwareUpgradeWithUrl") then
+				appletManager:callService("firmwareUpgradeWithUrl", self.firmwareUrl, true)
+				return true
+			end
+		end
+	end
+	return false
 end
 
 
 -- Contact config server, fill Update Channel list, get firmware url
 -- Service method
 -- Called during boot time
-function fetchConfigServerData(self, doSet, doRegister, doFirmwareUpgrade, callback)
+function fetchConfigServerData(self, doSet, doRegister, doRequiredFirmwareUpgrade, callback)
 
 	if not self.configServer then
 		self:init()
@@ -166,6 +183,7 @@ function fetchConfigServerData(self, doSet, doRegister, doFirmwareUpgrade, callb
 	self.channelText = false
 	self.channelService = false
 	self.firmwareUrl = false
+	self.firmwarePrompt = false
 
 	Task("fetchConfigServerData", abc, function()
 		local url = false
@@ -211,10 +229,15 @@ function fetchConfigServerData(self, doSet, doRegister, doFirmwareUpgrade, callb
 
 		log:info("SN url to use: ", url)
 
-		if doFirmwareUpgrade and self.firmwareUrl and appletManager:hasService("firmwareUpgradeWithUrl") then
-			appletManager:callService("firmwareUpgradeWithUrl", self.firmwareUrl)
-			return
+		-- Do required firmware upgrade
+		if doRequiredFirmwareUpgrade then
+			if self:checkRequiredFirmwareUpgrade() then
+				return
+			end
 		end
+
+		-- Handle firmware upgrade menu for non required upgrades
+		self:_handleFirmwareUpgradeMenuItem()
 
 		if doSet then
 			self:_setSN(url, doRegister)

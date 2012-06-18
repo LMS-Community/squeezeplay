@@ -333,3 +333,14 @@ UPDATE_7.4_UPGRADE_MESSAGE_JIVE
 	RU	Выполнено обновление микропрограммного обеспечения до версии 7.4. Это важное обновление, содержащее большое количество изменений. Дополнительные сведения см. на сайте www.squeezenetwork.com.
 	SV	Den inbyggda programvaran har uppgraderats till version 7.4. Den nya versionen innehåller omfattande förbättringar, som du kan läsa mer om på www.squeezenetwork.com.
 
+SOFTWARE_UPDATE_AVAILABLE
+	EN	Software Update Available
+
+UPDATE_NOW
+	EN	Update Now
+
+UPDATE_LATER
+	EN	Update later
+
+
+
