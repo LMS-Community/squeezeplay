@@ -18,19 +18,7 @@ RESET_FACTORY_RESET
 	SV	Återställ standardinställningarna
 
 RESET_RESTORE_DEFAULTS
-	CS
-	DA
-	DE
 	EN	Restore Defaults
-	ES
-	FI
-	FR
-	IT
-	NL
-	NO
-	PL
-	RU
-	SV
 
 RESET_CANCEL
 	CS	Storno
