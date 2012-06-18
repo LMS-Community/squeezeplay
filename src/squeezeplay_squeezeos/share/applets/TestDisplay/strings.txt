@@ -16,7 +16,7 @@ TEST_DISPLAY
 	NO	Skjerm
 	PL	Wyświetlacz
 	RU	Экран
-	SV	Display
+	SV	Visning
 
 TEST_COMPLETE
 	CS	Test ukončen
@@ -26,7 +26,7 @@ TEST_COMPLETE
 	ES	Prueba completada
 	FI	Testi suoritettu
 	FR	Test terminé
-	IT	Verifica completata
+	IT	Test completato
 	NL	Test voltooid
 	NO	Testing fullført
 	PL	Test został ukończony

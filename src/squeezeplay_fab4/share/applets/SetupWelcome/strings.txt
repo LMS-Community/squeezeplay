@@ -14,23 +14,23 @@ WELCOME
 	NL	Welkom
 	NO	Velkommen
 	PL	Zapraszamy
-	RU	Добро пожаловать
+	RU	Добро пожаловать!
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
-	CS	Vítejte do Squeezebox Touch. Začněme vaším připojením k vaší síti.
-	DA	Velkommen til Squeezebox Touch. Lad os begynde med at slutte afspilleren til netværket.
-	DE	Willkommen bei Squeezebox Touch. Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	Welcome to Squeezebox Touch. Let's start by getting you connected to your network.
-	ES	Bienvenido a Squeezebox Touch. Para empezar, nos conectaremos a la red.
-	FI	Tervetuloa Squeezebox Touchiin. Aloitetaan muodostamalla yhteys verkkoosi.
-	FR	Bienvenue dans Squeezebox Touch. Commençons par vous connecter à votre réseau.
-	IT	Benvenuti in Squeezebox Touch. Iniziamo con il collegamento alla rete.
-	NL	Welkom bij Squeezebox Touch. Ga aan de slag door verbinding te maken met je netwerk.
-	NO	Velkommen til Squeezebox Touch. La oss starte med å kople deg til nettverket.
-	PL	Squeezebox Touch — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
-	RU	Добро пожаловать в Squeezebox Touch. Начнем с подключения к сети.
-	SV	Välkommen till Squeezebox Touch. Vi börjar med att ansluta till nätverket.
+	CS	Začneme tím, že Vás připojíme k vaší síti a hudbě.
+	DA	Lad os begynde med at slutte afspilleren til netværket og din musiksamling.
+	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
+	EN	Let's get started by getting you connected to your network and music.
+	ES	Comencemos por realizar la conexión a la red y música.
+	FI	Aloitetaan yhdistämällä sinut verkkoon ja musiikkitiedostoihisi.
+	FR	Commençons par vous connecter au réseau.
+	IT	Iniziamo con il collegamento alla rete e alla musica.
+	NL	We gaan je eerst met je netwerk en muziek verbinden.
+	NO	La oss starte med å kople deg til nettverket ditt og musikken din.
+	PL	Rozpocznij od nawiązania połączenia z siecią i muzyką.
+	RU	Начнем работу, подключив вас к сети и музыке.
+	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
 
 CONTINUE
 	CS	Pokračovat
@@ -54,7 +54,7 @@ DONE
 	EN	That's it!
 	ES	¡Ya está!
 	FI	Siinä kaikki!
-	FR	Vous avez terminé!
+	FR	La procédure est terminée.
 	IT	Fatto!
 	NL	Klaar!
 	NO	Ferdig!
@@ -63,19 +63,19 @@ DONE
 	SV	Sedan är det bara att sätta igång!
 
 DONE_HELP
-	CS	Nyní můžete použít váš Squeezebox pro přístup k vaší hudbě!
-	DA	Nu kan du bruge din Squeezebox til at høre al din musik!
-	DE	Jetzt können Sie mit der Squeezebox auf Ihre Musik zugreifen!
-	EN	You can now use your Squeezebox to access all your music!
-	ES	Ya puede utilizar Squeezebox para acceder a toda su música.
-	FI	Nyt pääset käyttämään Squeezeboxilla kaikkia musiikkitiedostojasi!
-	FR	Vous pouvez maintenant utiliser votre Squeezebox pour accéder à toute votre musique!
-	IT	Ora è possibile utilizzare Squeezebox per accedere alla musica.
-	NL	Met je Squeezebox kun je nu naar je al je muziek luisteren!
-	NO	Nå kan du få tilgang til all musikken din via Squeezebox.
-	PL	Teraz możesz używać urządzenia Squeezebox, aby uzyskać dostęp do całej swojej muzyki!
-	RU	Теперь вся ваша музыка доступна в Squeezebox!
-	SV	Nu har du tillgång till all din musik via Squeezebox!
+	CS	Nyní můžete používat svůj ovladač Squeezebox pro přístup k veškeré hudbě. Pokračujte stiskem prostředního tlačítka.
+	DA	Du kan nu bruge din Squeezebox Controller til at lytte til al din musik. Tryk på midterknappen for at fortsætte.
+	DE	Jetzt können Sie mit dem Squeezebox Controller auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die mittlere Taste.
+	EN	Now you can use your Squeezebox Controller to access all your music. Press the center button to continue.
+	ES	Ya puede usar Squeezebox Controller para acceder a toda su música. Pulse el botón central para continuar.
+	FI	Voit nyt ohjata kaikkia musiikkitiedostojasi Squeezebox-kaukosäätimelläsi. Jatka painamalla keskipainiketta.
+	FR	Vous pouvez maintenant accéder à votre musique avec la Squeezebox Controller. Appuyez sur le bouton central pour continuer.
+	IT	Ora è possibile utilizzare Squeezebox Controller per accedere alla musica. Premere il pulsante centrale per continuare.
+	NL	Nu heb je met je Squeezebox Controller toegang tot al je muziek. Druk op de middelste knop om verder te gaan.
+	NO	Du kan nå bruke Squeezebox-kontrollen til å få tilgang på all musikken din. Trykk på midtknappen for å fortsette.
+	PL	Teraz możesz użyć programu urządzenia sterującego Squeezebox w celu uzyskania dostępu do całej swojej muzyki. Naciśnij środkowy przycisk, aby kontynuować.
+	RU	Теперь вы с помощью SqueezePlay получаете доступ к своей музыке. Для продолжения нажмите центральную кнопку.
+	SV	Nu har du tillgång till all din musik via Squeezebox Controller. Tryck på mittenknappen för att fortsätta.
 
 CONNECTING_TO_SN
 # SLT: please keep this short
@@ -91,7 +91,7 @@ CONNECTING_TO_SN
 	NO	Kopler til
 	PL	Trwa łączenie z
 	RU	Подключение к
-	SV	Ansluter till
+	SV	Ansluts till
 
 MYSQUEEZEBOX_DOT_COM
 	CS	mysqueezebox.com

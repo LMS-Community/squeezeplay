@@ -335,13 +335,13 @@ NETWORK_REGION_HELP
 
 NETWORK_REGION_HELP_BODY
 	CS	Pokud se nacházíte ve Spojených státech, Kanadě nebo Mexiku, zvolte laskavě "Severní Amerika."\n\nPro zbytek světa zvolte "Všechny ostatní regiony."\n\nNa tuto otázku se ptáme za účelem dodržení místních předpisů týkajících se bezdrátových frekvencí.
-	DA	Hvis du befinder dig i USA, Canada eller Mexico, skal du vælge Nordamerika.\n\nHvis du bor et andet sted i verden, skal du vælge Alle andre områder. Du bliver spurgt om dette af hensyn til særlige lokale love og bestemmelser mht. hvilke frekvenser der må bruges til trådløse netværk i de forskellige områder og lande.
+	DA	Hvis du befinder dig i USA, Canada eller Mexico, skal du vælge Nordamerika.\n\nHvis du bor et andet sted i verden, skal du vælge Alle andre områder.\n\nDu bliver spurgt om dette af hensyn til særlige lokale love og bestemmelser mht. hvilke frekvenser der må bruges til trådløse netværk i de forskellige områder og lande.
 	DE	Wenn Sie sich in den Vereinigten Staaten, Kanada oder Mexiko befinden, wählen Sie "Nordamerika."\n\nWählen Sie für den Rest der Welt "Alle anderen Regionen".\n\nWir bitten um diese Angaben, um den Richtlinien für WLAN-Frequenzen gerecht zu werden.
 	EN	If you are located in the United States, Canada, or Mexico, please select "North America."\n\nFor the rest of the world, select "All Other Regions."\n\nWe ask this question in order to comply with local rules regarding wireless frequencies.
 	ES	Si se encuentra en Estados Unidos, Canadá o México, seleccione "Norteamérica".\n\nPara el resto de ubicaciones, seleccione "Resto de países".\n\nEsta pregunta se hace para cumplir con las normas locales referentes a las frecuencias inalámbricas.
 	FI	Jos sijaintipaikkasi on Yhdysvallat, Kanada tai Meksiko, valitse "Pohjois-Amerikka".\n\nKaikilla muilla alueilla valitse "Kaikki muut alueet".\n\nTätä kysytään, jotta voisimme toimia paikallisten langattomia taajuuksia koskevien sääntöjen mukaisesti.
 	FR	Si vous êtes aux Etats-Unis, au Canada ou au Mexique, sélectionnez "Amérique du Nord".\n\nPour tous les autres pays, sélectionnez "Toutes les autres régions". \n\nNous posons cette question afin de respecter les règlements locaux concernant les fréquences sans fil.
-	IT	Selezionare Nord America se ci si trova negli Stati Uniti, in Canada o in Messico.\n\nPer tutti gli altri paesi, selezionare Tutte le altre aree geografiche. Poniamo questa domanda per conformarci alle normative locali in merito alle frequenze delle reti senza fili.
+	IT	Selezionare Nord America se ci si trova negli Stati Uniti, in Canada o in Messico.\n\nPer tutti gli altri paesi, selezionare Tutte le altre aree geografiche.\n\nPoniamo questa domanda per conformarci alle normative locali in merito alle frequenze delle reti senza fili.
 	NL	Als je je in de Verenigde Staten, Canada of Mexico bevindt, selecteer je 'Noord-Amerika'.\n\nSelecteer 'Alle andere regio's' voor de rest van de wereld."\n\nWij vragen dit om aan lokale regels betreffende draadloze frequenties te voldoen.
 	NO	Hvis du befinner deg i USA, Canada eller Mexico, velger du Nord-Amerika.\n\nHvis du bor et annet sted, velger du Alle andre områder.\n\nVi stiller dette spørsmålet for å kunne etterkomme lokal lovgivning relatert til trådløse frekvenser.
 	PL	Jeśli przebywasz w Stanach Zjednoczonych, Kanadzie lub Meksyku, wybierz opcję „Ameryka Północna”.\n\nDla pozostałych lokalizacji wybierz opcję „Wszystkie inne regiony”.\n\nZadajemy to pytanie, aby zachować zgodność z lokalnymi przepisami dotyczącymi częstotliwości bezprzewodowych.
@@ -575,7 +575,19 @@ NETWORK_ETHERNET
 	SV	Ethernet
 
 NETWORK_ETHERNET_CHECK
+	CS	Zkontrolujte připojení k síti Ethernet
+	DA	Kontroller Ethernet-forbindelse
+	DE	Ethernet-Verbindung überprüfen
 	EN	Verify Ethernet Connection
+	ES	Verificar conexión Ethernet
+	FI	Vahvista Ethernet-yhteys
+	FR	Vérifier la connexion Ethernet
+	IT	Verificare connessione Ethernet
+	NL	Ethernetverbinding verifiëren
+	NO	Bekreft Ethernet-tilkoplingen
+	PL	Sprawdź połączenie Ethernet
+	RU	Проверка интернет-соединения
+	SV	Verifiera Ethernet-anslutningen
 
 NETWORK_CONNECTED_TO
 	CS	Připojeno k

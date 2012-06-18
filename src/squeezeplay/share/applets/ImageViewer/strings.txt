@@ -821,7 +821,7 @@ IMAGE_VIEWER_FLICKR_DISPLAY
 	NO	Skjerm
 	PL	Wyświetlacz
 	RU	Экран
-	SV	Display
+	SV	Visning
 
 IMAGE_VIEWER_FLICKR_DISPLAY_OWN
 	CS	Mé vlastní fotky

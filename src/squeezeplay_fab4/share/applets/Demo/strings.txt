@@ -41,7 +41,7 @@ DEMO_START_DEMO_WARNING
 	FI	Varoitus: jos esittely on käynnistetty, sen käytöstä poisto vaatii tehdasasetuksen palautuksen. Pidä plus (+) -näppäintä painettuna virtaa kytkettäessä.
 	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
 	IT	ATTENZIONE: dopo avere avviato il demo, per disattivarlo è necessario effettuare una reimpostazione di fabbrica. Tenere premuto il pulsante + durante l'accensione.
-	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
+	NL	WAARSCHUWING: Wanneer de demo wordt uitgeschakeld nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
 	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
 	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
 	RU	Предупреждение. После запуска демонстрации для ее отключения потребуется возврат заводских настроек. Нажмите и удерживайте кнопку + при включении питания.
@@ -123,19 +123,19 @@ DEMO_VOLUME_MUTED
 	SV	Volym (av)
 
 SLIDE_01
-	CS	Hudební přehrávač Squeezebox™ Touch\nWi-Fi
-	DA	Squeezebox™ Touch\nTrådløs musikafspiller
-	DE	Squeezebox™ Touch\nWLAN-Musikplayer
-	EN	Squeezebox™ Touch\nWi-Fi Music Player
-	ES	Squeezebox™ Touch\nReproductor de música Wi-Fi
-	FI	Squeezebox™ Touch\nWi-Fi -soitin
-	FR	Lecteur de musique sans fil Squeezebox™ Touch
-	IT	Lettore musicale Wi-Fi\nSqueezebox™ Touch
-	NL	Squeezebox™ Touch\nWi-Fi-muzieksysteem
-	NO	Squeezebox™ Touch\nTrådløs musikkspiller
-	PL	Odtwarzacz muzyczny Squeezebox™  Touch\nWi-Fi
-	RU	Музыкальный плеер Wi-Fi\nSqueezebox™ Touch
-	SV	Squeezebox™ Touch\nWi-Fi-spelare
+	CS	Hudební přehrávač Squeezebox™ Duet\nWi-Fi
+	DA	Squeezebox™ Duet\nWi-Fi-musikafspiller
+	DE	Squeezebox™ Duet\nWLAN-Musikplayer
+	EN	Squeezebox™ Duet\nWi-Fi Music Player
+	ES	Squeezebox™ Duet\nReproductor de música Wi-Fi
+	FI	Squeezebox™ Duet\nWi-Fi -soitin
+	FR	Lecteur de musique sans fil Squeezebox™ Duet
+	IT	Lettore musicale Wi-Fi\nSqueezebox™ Duet
+	NL	Squeezebox™ Duet\nWi-Fi-muzieksysteem
+	NO	Squeezebox™ Duet\nWi-Fi Music Player
+	PL	Odtwarzacz muzyczny Squeezebox™ Duet\nWi-Fi
+	RU	Музыкальный плеер Wi-Fi\nSqueezebox™ Duet
+	SV	Squeezebox™ Duet\nWi-Fi-spelare
 
 SLIDE_02
 	CS	Objevte svět digitální hudby.
@@ -198,36 +198,21 @@ SLIDE_05
 	SV	...till de senaste onlinemusiktjänsterna.
 
 SLIDE_06
-	CS	Snadný přístup k nekončícímu výběru hudby přes intuitivní dotykovou obrazovku.
-	DA	Hurtig adgang til et væld af musik via det smarte berøringsfølsomme display.
-	DE	Einfacher Zugriff auf eine unbegrenzte Musikauswahl über den intuitiven Touchscreen.
-	EN	Easy access to endless music choices via intuitive touch screen.
-	ES	Acceso fácil a opciones musicales ilimitadas mediante una pantalla táctil de uso sencillo.
-	FI	Nauti rajattomasta musiikkivalikoimasta helposti intuitiivisen kosketusnäytön avulla.
-	FR	Accès facile à un choix musical infini via un écran tactile intuitif.
-	IT	Facile accesso a un'infinità di brani musicali tramite l'intuitivo touch screen.
-	NL	Vlotte toegang tot eindeloze muziekopties via intuïtief touchscreen.
-	NO	Enkel tilgang til uendelige mengder musikk via en intuitiv berøringsskjerm.
-	PL	Prosty dostęp do nieograniczonego wyboru muzyki za pomocą intuicyjnego ekranu dotykowego.
-	RU	Простой доступ к неограниченному количеству музыки через интуитивно понятный сенсорный интерфейс.
-	SV	Välj den musik du lyssnar på eller upptäck nya favoriter via den lättanvända pekskärmen.
+	CS	Snadný přístup k nekonečnému množství hudby vám leží v dlani.
+	DA	En genvej til at få et væld af musik i din hule hånd.
+	DE	Einfacher Zugriff auf ein unbegrenztes Musikangebot und Steuerung direkt aus der Handfläche.
+	EN	Easy access to endless music all in the palm of your hand.
+	ES	Acceso fácil a música ilimitada en la palma de la mano.
+	FI	Nautit rajattomasta musiikkivalikoimasta vähällä vaivalla.
+	FR	Accès facile à un choix musical infini dans le creux de la main.
+	IT	Semplicità di accesso a un'infinità di brani musicali dal palmo della mano.
+	NL	Vlotte toegang tot eindeloze muziekopties vanuit de palm van je hand.
+	NO	Enkel tilgang til ubegrensede mengder musikk, rett fra fjernkontrollen.
+	PL	Prosty dostęp do nieograniczonej muzyki w zasięgu Twojej ręki.
+	RU	Бескрайнее море музыки — у вас под рукой.
+	SV	Tryck på en knapp och musiken strömmar från en outsinlig källa.
 
 SLIDE_07
-	CS	Jednoduché nastavení. Plně se integruje do vaší stávající domácí sítě.
-	DA	Enkel installation. Perfekt integration i dit nuværende hjemmenetværk.
-	DE	Einfache Einrichtung. Lässt sich ganz einfach in Ihr Heimnetzwerk integrieren.
-	EN	Simple set-up. Seamlessly integrates with your existing home network.
-	ES	Instalación sencilla. Se integra a la perfección con la red doméstica existente.
-	FI	Tietokoneesi yhdistetään saumattomasti nykyiseen kotiverkkoon yksinkertaisella asennustoimenpiteellä.
-	FR	Configuration simple. S'intègre parfaitement à votre réseau domestique existant.
-	IT	Semplicità di configurazione: si integra perfettamente con la rete domestica esistente.
-	NL	Eenvoudig in te stellen. Naadloos te integreren in je bestaande thuisnetwerk.
-	NO	Enkelt oppsett. Smidig integrering med det eksisterende hjemmenettverket.
-	PL	Bardzo prosta instalacja. Bezproblemowa integracja z istniejącą siecią domową.
-	RU	Простая настройка. Удобная интеграция с домашней сетью.
-	SV	Installationen går både snabbt och smidigt. Anslut bara spelaren till ditt hemnätverk.
-
-SLIDE_08
 	CS	Plná, cele digitální hudba přes vaši stereo soustavu.
 	DA	Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
 	DE	Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
@@ -242,52 +227,82 @@ SLIDE_08
 	RU	Богатый, насыщенный цифровой звук на вашей стереосистеме.
 	SV	Fylligt och rikt ljud via din stereoanläggning.
 
+SLIDE_08
+	CS	Prohlédněte si obaly alb a dokonce vlastní fotky na 2,4" barevném displeji
+	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
+	DE	Zeigen Sie Cover und sogar eigene Fotos auf dem 6-cm-Farbdisplay an.
+	EN	View album art and even your own photos on the 2.4-inch color display
+	ES	Vea carátulas de álbumes y hasta sus propias fotos en la pantalla en color de 6 cm.
+	FI	Nauti kansitaiteesta ja jopa omista valokuvistasi 2,4 tuuman värinäytöllä
+	FR	Visualisez les pochettes d'album et même vos propres photos sur l'écran couleur 2,4 pouces
+	IT	Display a colori da 2,4 pollici per la visualizzazione di copertine di album e foto
+	NL	Bekijk hoesafbeeldingen en zelfs je eigen foto's op de 2,4-inch kleurendisplay.
+	NO	Se albumgrafikk og egne bilder på fargeskjermen på 2,4 tommer
+	PL	Wyświetla okładki albumów, a nawet własne zdjęcia na kolorowym wyświetlaczu o przekątnej 2,4 cala
+	RU	Цветной экран диагональю 2,4 дюйма позволяет просматривать обложки альбомов и даже фотографии.
+	SV	Titta på skivomslag på 2,4-tumsskärmen. Du kan också titta på dina egna bilder.
+
 SLIDE_09
-	CS	Prohlížejte obaly alb a spořiče obrazovky na 4.3 palcovém barevném displeji.
-	DA	Du kan se albumcovere og pauseskærme på det 4,3" store farvedisplay.
-	DE	Anzeige von CD-Covern und Bildschirmschonern auf dem 6-cm-Farbdisplay.
-	EN	View album art and screensavers on the 4.3 inch color display.
-	ES	Vea protectores de pantalla y carátulas de álbumes en la pantalla en color de 11 cm.
-	FI	Nauti kansitaiteesta ja näytönsäästäjistä 4,3 tuuman värinäytöllä.
-	FR	Visualisez les pochettes d'album et les écrans de veille sur l'écran couleur 4,3 pouces.
-	IT	Display a colori da 4,3 pollici per la visualizzazione di copertine di album e screen saver.
-	NL	Bekijk hoesafbeeldingen en schermbeveiligers op de 4,3-inch kleurendisplay.
-	NO	Se albumgrafikk og skjermsparere på fargeskjermen på 4,3 tommer.
-	PL	Wyświetlaj okładki albumów i wygaszacze ekranu na kolorowym wyświetlaczu o przekątnej 4,3 cala.
-	RU	Цветной экран диагональю 4,3 дюйма позволяет просматривать обложки альбомов и экранные заставки.
-	SV	Skärmen är rejält tilltagen (4,3 tum) och perfekt för skivomslag och skärmsläckare.
+	CS	Snadné nastavení. Plně se integruje do vaší stávající domácí sítě.
+	DA	Hurtig installation uden bøvl. Perfekt integration i dit nuværende hjemmenetværk.
+	DE	Einfaches Einrichten. Problemlos in Ihr Heimnetzwerk zu integrieren.
+	EN	Simple setup. Integrates easily with your existing home network.
+	ES	Instalación sencilla. Fácil integración con la red doméstica existente.
+	FI	Yksinkertainen asentaa. Helposti yhdistettävissä nykyiseen kotiverkkoon.
+	FR	Configuration simple. S'intègre facilement à votre réseau domestique existant.
+	IT	Configurazione semplificata: si integra facilmente con la rete domestica esistente.
+	NL	Eenvoudige set-up. Kan gemakkelijk in je bestaande thuisnetwerk geïntegreerd worden.
+	NO	Enkelt oppsett. Smidig integrering med det eksisterende hjemmenettverket.
+	PL	Łatwa instalacja. Prosta integracja z istniejącą siecią domową.
+	RU	Удобная установка. Простая интеграция с  домашней сетью.
+	SV	Snabb och smidig installation. Det är bara att ansluta spelaren till ditt hemnätverk.
 
 SLIDE_10
-	CS	A získejte přístup k hudbě a fotkám přímo z USB pamětí a SD karet.
-	DA	Samt direkte adgang til din musik og dine billeder på USB-drev og SD-kort.
-	DE	Zugriff auf Ihre Musik und Fotos direkt von USB-Laufwerken und SD-Karten.
-	EN	And access your music and photos directly from USB drives and SD cards.
-	ES	Y acceda a música y fotos directamente desde las unidades USB y tarjetas SD.
-	FI	Voit soittaa musiikkia ja katsella valokuvia suoraan USB-asemalta ja SD-kortilta.
-	FR	Vous pouvez également accéder à votre musique et vos photos directement depuis un lecteur USB ou une carte SD.
-	IT	Accesso a musica e foto direttamente da unità USB e schede SD.
-	NL	En roep je muziek en foto's rechtstreeks op vanaf USB-drives en SD-kaarten.
-	NO	Du får også tilgang til musikk og bilder direkte fra usb-stasjoner og sd-kort.
-	PL	Możesz też uzyskać dostęp do muzyki i zdjęć bezpośrednio z dysków USB i kart SD.
-	RU	И наконец, доступ к музыке и фото непосредственно с USB-дисков и SD-карт.
-	SV	Du får dessutom tillgång till musik och bilder från USB-enheter och SD-kort.
+	CS	Přidejte přehrávače Squeezebox nebo Přijímače a vytvořte si vícepokojový systém.
+	DA	Tilføj flere Squeezebox-modtagere eller -afspillere hvis du vil have et system der dækker flere rum.
+	DE	Fügen Sie Squeezebox-Player oder -Receiver hinzu und richten Sie so ein Musiksystem in mehreren Räumen ein.
+	EN	Add Squeezebox players or Receivers to create a multi-room system.
+	ES	Agregue más reproductores o receptores Squeezebox para crear un sistema para varias habitaciones.
+	FI	Lisäämällä Squeezebox-soittimia tai -vastaanottimia voit kuunnella musiikkia useissa huoneissa.
+	FR	Ajoutez des platines ou des récepteurs Squeezebox pour créer un système multipièce.
+	IT	Aggiungere altri lettori o ricevitori Squeezebox per creare un sistema per più locali.
+	NL	Voeg meer Squeezebox-spelers of Squeezebox Receivers toe om een systeem voor meerdere kamers te maken.
+	NO	Du kan legge til flere Squeezebox-mottakere eller -spillere for å spre musikken rundt i hele huset.
+	PL	Dodaj więcej odtwarzaczy lub odbiorników Squeezebox, aby stworzyć system obejmujący wiele pomieszczeń.
+	RU	Вы сможете создать многокомнатную аудиосистему, добавляя приемники или плееры Squeezebox.
+	SV	Du kan lägga till fler mottagare och spelare och förvandla hela din bostad till en musikanläggning.
 
 SLIDE_11
-	CS	Wi-Fi hudba na dosah prstů.
-	DA	Musik via Wi-Fi – lige ved hånden.
-	DE	Musik über WLAN zum Greifen nah.
-	EN	Wi-Fi music at your fingertips.
-	ES	Música Wi-Fi en sus manos.
-	FI	Wi-Fi-musiikkia sormenpäidesi ulottuvilla.
-	FR	De la musique en Wi-Fi à la portée de vos doigts.
-	IT	Musica Wi-Fi a portata di mano.
-	NL	Wi-Fi-muziek binnen handbereik.
-	NO	Trådløs musikk ved fingerspissene.
-	PL	Muzyka Wi-Fi w zasięgu ręki.
-	RU	Музыка по Wi-Fi — у вас под рукой.
-	SV	Musik via trådlöst nätverk – alltid nära till hands.
+	CS	Bezdrátový ovladač funguje s celou rodinu produktů Squeezebox.
+	DA	Squeezebox Controller fungerer med alle afspillerne i Squeezebox-familien.
+	DE	Der kabellose Controller funktioniert mit allen Squeezebox-Produkten.
+	EN	The wireless Controller works with the entire Squeezebox family.
+	ES	El Controller inalámbrico funciona con toda la familia de productos Squeezebox.
+	FI	Langaton kaukosäädin toimii kaikkien Squeezebox-tuotteiden kanssa.
+	FR	Le contrôleur sans fil est compatible avec l'ensemble de la gamme de produits Squeezebox.
+	IT	Il Controller senza fili funziona con tutta la famiglia di prodotti Squeezebox.
+	NL	De draadloze Controller werkt met de hele Squeezebox-reeks.
+	NO	Den trådløse fjernkontrollen kan brukes til å styre alle produktene i Squeezebox-serien.
+	PL	Bezprzewodowy kontroler działa z całą rodziną produktów Squeezebox.
+	RU	Беспроводной контроллер Squeezebox работает со всем семейством Squeezebox.
+	SV	Med fjärrkontrollen kan du styra alla produkter i Squeezebox-sortimentet.
 
 SLIDE_12
+	CS	Otoč. Klepni. Vychutnej.
+	DA	Drej, klik og rock
+	DE	Drehen. Klicken. Grooven.
+	EN	Spin. Click. Groove.
+	ES	Seleccionar, hacer clic y disfrutar.
+	FI	Pyöritä, napsauta ja kuuntele.
+	FR	Naviguez. Cliquez. Vibrez.
+	IT	Ruota. Clicca. Ascolta.
+	NL	Draaien. Klikken. Swingen.
+	NO	Snurr. Klikk. Groove.
+	PL	Podkręcaj. Klikaj. Dyryguj.
+	RU	Поверните, щелкните и наслаждайтесь.
+	SV	Snurra. Klicka. Rocka.
+
+SLIDE_13
 	CS	\n
 	DA	\n
 	DE	\n
@@ -301,19 +316,4 @@ SLIDE_12
 	PL	\n
 	RU	\n
 	SV	\n
-
-SLIDE_13
-	CS	Žádejte podrobnosti o rodině produktů Squeezebox.
-	DA	Bed om flere oplysninger om Squeezebox-familien.
-	DE	Fragen Sie nach weiteren Informationen zu den Squeezebox-Produkten.
-	EN	Ask for details about the Squeezebox family.
-	ES	Solicite información detallada sobre la familia Squeezebox.
-	FI	Kysy lisää Squeezebox-perheestä.
-	FR	Demandez des informations sur la gamme Squeezebox.
-	IT	Richiedi ulteriori informazioni sui prodotti della famiglia Squeezebox.
-	NL	Vraag om informatie over de Squeezebox-reeks.
-	NO	Få mer informasjon om Squeezebox-serien.
-	PL	Zapytaj o szczegółowe informacje o rodzinie produktów Squeezebox.
-	RU	Узнайте больше о семействе Squeezebox.
-	SV	Ställ frågor om Squeezebox-sortimentet.
 

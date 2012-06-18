@@ -18,7 +18,19 @@ SETTINGS
 	SV	Inställningar
 
 INTERNET_RADIO
+	CS	Rádio od TuneIn
+	DA	Radio fra TuneIn
+	DE	Radio von TuneIn
 	EN	Radio by TuneIn
+	ES	Radio de TuneIn
+	FI	Radio TuneIn-palvelusta
+	FR	Radio par TuneIn
+	IT	Radio TuneIn
+	NL	Radio van TuneIn
+	NO	Radio fra TuneIn
+	PL	Radio TuneIn
+	RU	Радио TuneIn
+	SV	Radio från TuneIn
 
 MY_MUSIC
 	CS	Hudba
@@ -442,7 +454,7 @@ MONTH_3
 
 MONTH_4
 	CS	Duben
-	DA	April
+	DA	april
 	DE	April
 	EN	April
 	ES	Abril
@@ -645,7 +657,7 @@ MONTHSHORT_5
 	DA	Maj
 	DE	Mai
 	EN	May
-	ES	May
+	ES	Mayo
 	FI	tou
 	FR	Mai
 	IT	Maggio

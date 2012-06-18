@@ -36,7 +36,7 @@ SMALL_ART
 LARGE_ART
 	CS	Velký obal alba
 	DA	Store albumcovere
-	DE	Grosse Plattenhüllen
+	DE	Große Plattenhüllen
 	EN	Large Artwork
 	ES	Carátula de álbum grande
 	FI	Suuri kuva
@@ -47,3 +47,4 @@ LARGE_ART
 	PL	Duża okładka
 	RU	Большая обложка
 	SV	Stora albumomslag
+

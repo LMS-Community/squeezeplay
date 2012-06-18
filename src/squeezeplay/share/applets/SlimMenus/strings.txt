@@ -33,7 +33,19 @@ MENUS_MY_APPS
 	SV	Mina program
 
 MENUS_INTERNET_RADIO
+	CS	Rádio od TuneIn
+	DA	Radio fra TuneIn
+	DE	Radio von TuneIn
 	EN	Radio by TuneIn
+	ES	Radio de TuneIn
+	FI	Radio TuneIn-palvelusta
+	FR	Radio par TuneIn
+	IT	Radio TuneIn
+	NL	Radio van TuneIn
+	NO	Radio fra TuneIn
+	PL	Radio TuneIn
+	RU	Радио TuneIn
+	SV	Radio från TuneIn
 
 MENUS_SQUEEZENETWORK_SWITCH
 	CS	Přepnout na mysqueezebox.com
@@ -57,7 +69,7 @@ MENUS_OTHER_LIBRARY
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
-	FR	Changer de collection
+	FR	Changer de bibliothèque
 	IT	Cambia libreria
 	NL	Collectie wisselen
 	NO	Bytt bibliotek

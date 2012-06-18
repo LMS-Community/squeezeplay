@@ -51,7 +51,7 @@ RESET_CONTINUE
 	SV	Fortsätt
 
 RESET_RESETTING
-	CS	\nRestartování
+	CS	Restartování
 	DA	Genstarter
 	DE	Neustart
 	EN	Restarting

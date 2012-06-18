@@ -166,7 +166,7 @@ GOODBYE
 	NO	Farvel
 	PL	Do widzenia
 	RU	До свидания
-	SV	Hej då!
+	SV	Hej då
 
 BATTERY_LOW
 	CS	Nízký stav baterie

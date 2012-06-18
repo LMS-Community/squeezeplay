@@ -9,7 +9,7 @@ SLIMSERVER_SERVERS
 	EN	Libraries
 	ES	Bibliotecas
 	FI	Kirjastot
-	FR	Collections
+	FR	Bibliothèques
 	IT	Librerie
 	NL	Bibliotheken
 	NO	Bibliotek
@@ -39,7 +39,7 @@ SWITCH_SERVER_TITLE
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
-	FR	Changer de collection
+	FR	Changer de bibliothèque
 	IT	Cambia libreria
 	NL	Collectie wisselen
 	NO	Bytt bibliotek
@@ -100,7 +100,7 @@ SWITCH_BUTTON
 	EN	Switch to library: %s
 	ES	Cambiar a biblioteca: %s
 	FI	Vaihda kirjastoon: %s
-	FR	Passer à la collection: %s
+	FR	Passer à la bibliothèque: %s
 	IT	Passa alla libreria: %s
 	NL	Overstappen op bibiliotheek: %s
 	NO	Bytt til følgende bibliotek: %s
@@ -145,7 +145,7 @@ SLIMSERVER_ADD_SERVER
 	EN	Remote Library
 	ES	Biblioteca remota
 	FI	Etäkirjasto
-	FR	Collection à distance
+	FR	Bibliothèque distante
 	IT	Libreria remota
 	NL	Externe bibliotheek
 	NO	Eksternt bibliotek
@@ -311,7 +311,7 @@ CHOOSE_OTHER_LIBRARY
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
-	FR	Changer de collection
+	FR	Changer de bibliothèque
 	IT	Cambia libreria
 	NL	Collectie wisselen
 	NO	Bytt bibliotek

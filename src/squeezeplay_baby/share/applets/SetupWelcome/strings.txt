@@ -199,25 +199,50 @@ SN_CHOOSE_DIFFERENT
 	SV	Välj ett annat nätverk
 
 BATTERY_TITLE
+	CS	Odstraňte jazýček baterie
+	DA	Fjern batterifane
+	DE	Schutzstreifen der Batterie herausziehen
 	EN	Remove Battery Tab
+	ES	Retirar lengüeta de batería
+	FI	Poista paristoliuska
+	FR	Retirez la languette de protection des piles
+	IT	Rimuovere la linguetta della batteria
+	NL	Batterijlipje verwijderen
+	NO	Ta av batterifliken
+	PL	Wyjmij pasek baterii
+	RU	Удалите ярлычок батареи
+	SV	Ta bort batteriets skyddsflik
 
 BATTERY_HELP
-	CS	Vyjměte jazýček baterie. Naleznete jej na krytu baterie ve spodní části zařízení Smart Radio. Tím dojde k aktivaci baterie.
-	DA	Fjern batteristrimlen. Du kan finde den på batteridækslet på undersiden af din Smart Radio. Derved deaktiveres dit batteri.
-	DE	Entfernen Sie zum Aktivieren des Akkus den Schutzstreifen vom Akkufachdeckel an der Unterseite des Smart Radio.
+	CS	Vyjměte jazýček baterie. Naleznete jej na krytu baterie ve spodní části zařízení Logitech UE Smart Radio. Tím dojde k aktivaci baterie.
+	DA	Fjern batteristrimlen. Du kan finde den på batteridækslet på undersiden af din Logitech UE Smart Radio. Derved deaktiveres dit batteri.
+	DE	Entfernen Sie zum Aktivieren des Akkus den Schutzstreifen vom Akkufachdeckel an der Unterseite des Logitech UE Smart Radio.
 	EN	Please remove the battery tab. You can find it on the battery door on the bottom of your Logitech UE Smart Radio. This will activate your battery.
-	ES	Retire la lengüeta de la batería. La encontrará en la tapa de la batería en la parte inferior de Smart Radio. Así se activará la batería.
-	FI	Poista paristoliuska, jotta paristo aktivoituu. Liuska on Smart Radion pohjassa olevassa paristoluukussa.﻿
-	FR	Pour activer les piles, retirez la languette de protection située sur le couvercle du compartiment des piles sur la face inférieure de votre Smart Radio.
-	IT	Per attivare la batteria, estrarre la linguetta dal coperchio del vano batteria posto nella parte inferiore di Smart Radio.
+	ES	Retire la lengüeta de la batería. La encontrará en la tapa de la batería en la parte inferior de Logitech UE Smart Radio. Así se activará la batería.
+	FI	Poista paristoliuska, jotta paristo aktivoituu. Liuska on Logitech UE Smart Radion pohjassa olevassa paristoluukussa.﻿
+	FR	Pour activer les piles, retirez la languette de protection située sur le couvercle du compartiment des piles sur la face inférieure de votre Logitech UE Smart Radio.
+	IT	Per attivare la batteria, estrarre la linguetta dal coperchio del vano batteria posto nella parte inferiore di Logitech UE Smart Radio.
 	NB	Fjern batterifliken. Du finner den på batteriluken på undersiden av Smart Radio. Dette aktiverer batteriet.
-	NL	Verwijder het batterijlipje op het klepje aan de onderkant van je Smart Radio. Hiermee wordt de batterij geactiveerd.
-	PL	Wyciągnij zaczep akumulatora, który znajduje się przy klapce na dole odtwarzacza Smart Radio. Spowoduje to włączenie akumulatora.
+	NL	Verwijder het batterijlipje op het klepje aan de onderkant van je Logitech UE Smart Radio. Hiermee wordt de batterij geactiveerd.
+	NO	Fjern batterifliken. Du finner den på batteriluken på undersiden av Logitech UE Smart Radio. Dette aktiverer batteriet.
+	PL	Wyciągnij zaczep akumulatora, który znajduje się przy klapce na dole odtwarzacza Logitech UE Smart Radio. Spowoduje to włączenie akumulatora.
 	RU	Удалите ярлычок батареи. Он находится под крышкой батарейного отсека на нижней панели Smart Radio. При этом батарея будет активирована.
-	SV	Ta bort batteriets skyddsflik. Den finns på batteriluckan längst ned på din Smart Radio. Batteriet börjar då att fungera.
+	SV	Ta bort batteriets skyddsflik. Den finns på batteriluckan längst ned på din Logitech UE Smart Radio. Batteriet börjar då att fungera.
 
 CHECK_FIRMWARE_UPDATE
+	CS	Vyhledat aktualizace firmwaru
+	DA	Kontroller firmware-opdatering
+	DE	Nach Firmware-Update suchen
 	EN	Check firmware update
+	ES	Buscar actualización de firmware
+	FI	Tarkista laiteohjelmistopäivitys
+	FR	Vérifier la mise à jour du micrologiciel
+	IT	Controllare aggiornamento firmware
+	NL	Firmware-update controleren
+	NO	Kontroller fastvareoppdatering
+	PL	Dostępność aktualizacji oprogramowania
+	RU	Проверка обновл. микропрограм. обеспеч.
+	SV	Kontrollera uppdat av inb programvara
 
 PLEASE_WAIT
 	EN	Please wait

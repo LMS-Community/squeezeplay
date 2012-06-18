@@ -469,19 +469,19 @@ SN_PORT_9000
 	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	CS	Logitech UE Music Library\n%s
-	DA	Logitech UE Music Library\n%s
-	DE	Logitech UE Music Library\n%s
+	CS	Hudební knihovna Logitech UE\n%s
+	DA	Logitech UE-musikbibliotek\n%s
+	DE	Logitech UE-Musiksammlung\n%s
 	EN	Logitech UE Music Library\n%s
-	ES	Logitech UE Music Library\n%s
-	FI	Logitech UE Music Library\n%s
-	FR	Logitech UE Music Library\n%s
-	IT	Logitech UE Music Library\n%s
-	NL	Logitech UE Music Library\n%s
-	NO	Logitech UE Music Library\n%s
-	PL	Logitech UE Music Library\n%s
-	RU	Logitech UE Music Library\n%s
-	SV	Logitech UE Music Library\n%s
+	ES	Biblioteca de música de Logitech UE\n%s
+	FI	Logitechin UE-musiikkikirjasto\n%s
+	FR	Bibliothèque musicale Logitech UE\n%s
+	IT	Libreria musicale Logitech UE\n%s
+	NL	Logitech UE-muziekcollectie\n%s
+	NO	Logitech UE musikkbibliotek\n%s
+	PL	Biblioteka muzyki Logitech UE\n%s
+	RU	Музыкальная библиотека Logitech UE\n%s
+	SV	Logitechs UE-musikbibliotek\n%s
 
 SC_NAME
 	CS	Název knihovny\n%s
@@ -490,7 +490,7 @@ SC_NAME
 	EN	Library name\n%s
 	ES	Nombre de biblioteca\n%s
 	FI	Kirjaston nimi\n%s
-	FR	Nom de la collection\n%s
+	FR	Nom de la bibliothèque\n%s
 	IT	Nome libreria\n%s
 	NL	Naam van muziekcollectie\n%s
 	NO	Navn på bibliotek\n%s
@@ -529,7 +529,7 @@ SC_PORT_3483
 	SV	TCP-port 3483\n%s
 
 SC_PORT_9000
-	CS	Port TCP %\n%s
+	CS	Port TCP %s\n%s
 	DA	TCP-port %s\n%s
 	DE	TCP-Anschluss %s\n%s
 	EN	TCP port %s\n%s
@@ -696,6 +696,8 @@ MEMORY
 POWER
 #SLT: This is "power" as in "power supply"
 	CS	Napájení
+	DA	Tænd/sluk
+	DE	Ein/Aus
 	EN	Power
 	ES	Encendido
 	FI	Virta
@@ -705,6 +707,7 @@ POWER
 	NO	Strøm
 	PL	Zasilanie
 	RU	Питание
+	SV	Av/på
 
 MSP_VERSION
 	CS	MSP verze\n%s
@@ -1434,7 +1437,7 @@ NET_DNS_NOK_HELP
 	DA	Din Squeezebox har ikke et gyldigt domænenavn for serveradressen til at løse problemer med internetadresser.\nMulige løsninger:\n - Genstart den enhed der indeholder netværkskonfiguration til enhederne i dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.
 	DE	Ihre Squeezebox hat keine gültige Domänennamenserver-Adresse zum Auflösen von Internetadressen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das die Netzwerkkonfiguration für die Geräte in Ihrem Heimnetzwerk enthält. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
 	EN	Your Squeezebox does not have a valid domain name server address for resolving internet addresses.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
-	ES	Su dispositivo Squeezebox no tiene una dirección de servidor de nombres de dominio válida para resolver direcciones de Internet.\nSoluciones posibles: - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	ES	Su dispositivo Squeezebox no tiene una dirección de servidor de nombres de dominio válida para resolver direcciones de Internet.\nSoluciones posibles:\n - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Squeezeboxillasi ei ole kelvollista toimialueen palvelinosoitetta, jotta internet-osoitteita voitaisiin selvittää.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, jossa kotiverkkosi verkkomääritykset tehdään. Laite on yleensä langaton reititin tai laajakaistamodeemi.
 	FR	Votre Squeezebox ne dispose d'aucune adresse de serveur DNS valide pour résoudre les adresses Internet. \nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	Lo Squeezebox non dispone di un indirizzo DNS valido per la risoluzione degli indirizzi Internet.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
@@ -1562,7 +1565,7 @@ NET_RESOLVE_NOK_HELP
 	NO	Squeezebox-spilleren kunne ikke løse nettverksadressen til %s.\nMulige løsninger:\n - Start enheten som løser Internett-adresser for hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
 	PL	Urządzenie Squeezebox nie może rozpoznać adresu sieciowego %s.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie, które rozpoznaje adresy internetowe w sieci domowej. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
 	RU	Плеер Squeezebox не может разрешить сетевой адрес для %s.\nВариант решения:\n — перезагрузить устройство, разрешающее интернет-адреса для вашей домашней сети. Обычно это беспроводной маршрутизатор или широкополосный модем.
-	SV	Squeezebox-enheten kunde inte matcha nätverksadressen för %s.
+	SV	Squeezebox-enheten kunde inte matcha nätverksadressen för %s.\nMöjliga lösningar:\n – Starta om enheten som matchar Internetadresser i ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
 
 NET_PING
 	CS	Ping %s ...
@@ -1610,7 +1613,7 @@ NET_PING_NOK
 	SV	Ping %s inte OK
 
 NET_PING_NOK_HELP
-	CS	Přehrávač Squeezebox neobdržel síťovou odezvu od %s.\nMožné řešení:\n - Restartujte zařízení, které spravuje vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	CS	Přehrávač Squeezebox neobdržel síťovou odezvu od %s.\nMožné řešení:\n - Restartujte zařízení, které spravuje vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.\n - Ujistěte se, že počítač na vaší domácí síti se může připojit k internetu.
 	DA	Din Squeezebox kunne ikke få et ping-svar fra %s.\nMulige løsninger:\n - Genstart den enhed der administrerer dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.\n - Kontroller at pc'er på dit hjemmenetværk kan oprette forbindelse til internettet.
 	DE	Ihre Squeezebox konnte keine Pingantwort von %s abrufen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das Ihr Heimnetzwerk verwaltet. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.\n – Vergewissern Sie sich, dass ein PC in Ihrem Heimnetzwerk eine Verbindung mit dem Internet herstellen kann.
 	EN	Your Squeezebox was unsuccessful in getting a ping response from %s.\nPossible solutions:\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.\n - Confirm that a PC on your home network can connect to the internet.

@@ -183,7 +183,7 @@ UPDATE_VERIFY
 	SV	Installerar
 
 UPDATE_REBOOT
-	CS	\nRestartování
+	CS	Restartování
 	DA	Genstarter
 	DE	Neustart
 	EN	Restarting
@@ -249,7 +249,7 @@ UPDATE_BEGIN_REMOVABLE_MEDIA
 	EN	Install %s from removable media.
 	ES	Instalar %s desde medios extraíbles.
 	FI	Asenna %s siirrettävästä tietovälineestä.
-	FR	Installet %s à partir du support amovible.
+	FR	Installer %s à partir du support amovible.
 	IT	Installa %s da supporto rimovibile.
 	NL	Installeer %s via verwijderbare media.
 	NO	Installer %s fra flyttbar stasjon.

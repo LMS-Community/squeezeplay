@@ -15,5 +15,5 @@ TEST
 	NO	Test
 	PL	Test
 	RU	Тест
-	SV	Test
+	SV	Testa
 

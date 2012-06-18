@@ -159,7 +159,7 @@ SLIMBROWSER_CHOOSE_MUSIC_SOURCE
 	EN	Switch Library
 	ES	Cambiar biblioteca
 	FI	Vaihda kirjastoa
-	FR	Changer de collection
+	FR	Changer de bibliothèque
 	IT	Cambia libreria
 	NL	Collectie wisselen
 	NO	Bytt bibliotek

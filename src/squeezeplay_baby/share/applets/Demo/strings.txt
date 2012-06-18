@@ -184,7 +184,6 @@ SLIDE_04CENTER
 	RU	Тысячи бесплатных интернет-радиостанций
 	SV	Tusentals kostnadsfria webbradiostationer
 
-
 SLIDE_05
 	CS	\n
 	DA	\n
@@ -215,8 +214,6 @@ SLIDE_06CENTER
 	PL	Dostęp do najlepszych usług muzycznych w Internecie
 	RU	Доступ к лучшим интерактивным музыкальным службам
 	SV	Använd de bästa webbmusiktjänsterna
-
-
 
 SLIDE_07
 	CS	\n
@@ -353,7 +350,6 @@ SLIDE_15
 	PL	Z sypialni
 	RU	из спальни
 	SV	Från sovrummet
-
 
 SLIDE_16
 	CS	Do kuchyně

@@ -186,7 +186,7 @@ BSP_BRIGHTNESS_MIN
 BSP_BRIGHTNESS_ADJUST_HELP
 	CS	K nastavení jasu použijte kolečko.
 	DA	Brug drejeknappen til at justere lysstyrken.
-	DE	Sie können die Helligkeit mit dem Rad anpassen.
+	DE	Sie können die Helligkeit mit dem Rad anpassen
 	EN	Use the wheel to adjust the brightness.
 	ES	Use la rueda para ajustar el brillo.
 	FI	Voit säätää kirkkautta kiekolla.
