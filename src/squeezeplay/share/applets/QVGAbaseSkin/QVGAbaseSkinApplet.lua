@@ -2413,14 +2413,21 @@ function skin(self, s, reload, useDefaultSize)
 	s.button_battery_NONE = _uses(s._button_battery, {
 		img = false,
 	})
-
 	s.button_sleep_ON = _uses(s._iconbar_icon, {
 		img = _loadImage(self, "Icons/icon_mode_sleep_on.png"),
 	})
 	s.button_sleep_OFF = _uses(s.button_sleep_ON, {
 		img = false,
 	})
-
+	s.button_battery_DEAD = _uses(s._button_battery, {
+		img = _loadImage(self, "Icons/icon_battery_dead.png"),
+	})
+	s.button_battery_WARNING = _uses(s._button_battery, {
+		img = _loadImage(self, "Icons/icon_battery_warning.png"),
+	})
+	s.button_battery_ERROR = _uses(s._button_battery, {
+		img = _loadImage(self, "Icons/icon_battery_error.png"),
+	})
 	s._button_wireless = _uses(s._iconbar_icon, {
 		w = 16,
 		border = { 5, 0, 10, 0 },
