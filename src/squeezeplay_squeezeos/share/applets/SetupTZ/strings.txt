@@ -6,7 +6,7 @@ TZ_TIMEZONE
 	CS	Časové pásmo
 	DA	Tidszone
 	DE	Zeitzone
-	EN	Timezone
+	EN	Time zone
 	ES	Zona horaria
 	FI	Aikavyöhyke
 	FR	Fuseau horaire
