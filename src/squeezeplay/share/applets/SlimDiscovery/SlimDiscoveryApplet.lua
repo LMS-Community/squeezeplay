@@ -57,7 +57,7 @@ oo.class(_M, Applet)
 
 
 -- constants
-local PORT    = 3483             -- port used to discover SqueezeCenters
+local PORT    = 3546             -- port used to discover SqueezeCenters (UEML)
 local DISCOVERY_TIMEOUT = 120000 -- timeout (in milliseconds) before removing SqueezeCenters and Players
 local DISCOVERY_PERIOD = 60000   -- discovery period
 local SEARCHING_PERIOD = 10000   -- searching period
