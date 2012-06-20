@@ -1183,28 +1183,40 @@ local function _devnull(chunk, err)
 end
 
 
---destination that does nothing, but handles step.cancelled and step.loaded
-local function _emptyDestination(currentStep)
+local function _basicStep(currentStep)
 	local step = {}
+	
+	if currentStep and currentStep.server then
+		step.server = currentStep.server
+	end
+	
+	return step
+end
 
+
+local function _emptySink(step)
 	step.sink = function(chunk, err)
 		-- are we cancelled?
 		if step.cancelled then
 			log:debug("_devnull(): , action cancelled...")
 			return
 		end
-
+		
 		if step.loaded then
 			step.loaded()
 			step.loaded = nil
 		end
 	end
+	
+	return step.sink
+end
 
-	if currentStep and currentStep.server then
-		step.server = currentStep.server
-	end
 
-	return step, step.sink
+--destination that does nothing, but handles step.cancelled and step.loaded
+local function _emptyDestination(currentStep)
+	local step = _basicStep(currentStep)
+	
+	return step, _emptySink(step)
 end
 
 
@@ -2048,22 +2060,19 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					menuItem:playSound("WINDOWSHOW")
 				end
 
-				local skipNewWindowPush = false
+				local skipNewWindowPush = true
 				-- set good or dummy sink as needed
 				-- prepare the window if needed
-				local step, sink
+				local step = _basicStep(_getCurrentStep())
+				local sink
 				local from, qty
 				-- cover all our "special cases" first, custom navigation, artwork popup, etc.
 				if nextWindow == 'nowPlaying' then
-					skipNewWindowPush = true
-
-					step, sink = _emptyDestination(_getCurrentStep())
+					sink = _emptySink(step)
 					_stepLockHandler(step, function () _goNowPlaying(nil, true, true ) end)
 
 				elseif actionName == 'preview' then
-					skipNewWindowPush = true
-
-					step, sink = _emptyDestination(_getCurrentStep())
+					sink = _emptySink(step)
 					_stepLockHandler(step, function () _alarmPreviewWindow(iAction and iAction.title) end )
 
 				elseif nextWindow == 'playlist' then
@@ -2108,8 +2117,6 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif itemType == "slideshow" or (item and item["slideshow"]) then
 					from, qty = 0, 200
 					
-					skipNewWindowPush = true
-
 				elseif item["showBigArtwork"] then
 					sink = _bigArtworkPopup
 				elseif actionName == 'go' or actionName == 'play-hold' then
@@ -2117,6 +2124,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
+					skipNewWindowPush = false
 				-- context menu handler
 				elseif actionName == 'more' or
 					actionName == "add" and (item['addAction'] == 'more' or
@@ -2135,6 +2143,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 					if step.menu then
 						from, qty = _decideFirstChunk(step, jsonAction)
 					end
+					skipNewWindowPush = false
 				end
 
 				if jsonAction then
