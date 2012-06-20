@@ -118,6 +118,12 @@ function getServerByAddress(self, address)
 end
 
 
+-- class method
+function getServerById(self, id)
+	return serverList[id]
+end
+
+
 -- class method to return current server
 function getCurrentServer(class)
 	return currentServer
@@ -1077,6 +1083,12 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 	logcache:debug(self, ":fetchArtwork(", iconId, ", ", size, ", ", imgFormat, ")")
 
 	assert(size)
+
+	-- Extract artwork path
+	local path = string.match(iconId, "^lms://[%x%-]*/(.*)")
+	if path then
+		iconId = path
+	end
 
 	local cacheKey = iconId .. "@" .. size .. "/" .. (imgFormat or '')
 

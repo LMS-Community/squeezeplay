@@ -473,29 +473,37 @@ local function _artworkItem(step, item, group, menuAccel)
 	local icon = group and group:getWidget("icon")
 	local iconSize
 
+	local server = step.server
+
 	local THUMB_SIZE = jiveMain:getSkinParam("THUMB_SIZE")
 	iconSize = THUMB_SIZE
 	
 	local iconId = item["icon-id"] or item["icon"]
 
 	if iconId then
+		-- Extract server from artwork path
+		local serverId = string.match(iconId, "^lms://([%x%-]*)/")
+		if serverId then
+                        server = SlimServer:getServerById(serverId)
+		end
+
 		if menuAccel and not step.server:artworkThumbCached(iconId, iconSize) then
 			-- Don't load artwork while accelerated
-			step.server:cancelArtwork(icon)
+			server:cancelArtwork(icon)
 		else
 			-- Fetch an image from SlimServer
-			step.server:fetchArtwork(iconId, icon, iconSize)
+			server:fetchArtwork(iconId, icon, iconSize)
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not step.server:artworkThumbCached(item["params"]["track_id"], iconSize) then
 			-- Don't load artwork while accelerated
-			step.server:cancelArtwork(icon)
+			server:cancelArtwork(icon)
                	else
 			-- workaround: this needs to be png not jpg to allow for transparencies
-			step.server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
+			server:fetchArtwork(item["params"]["track_id"], icon, iconSize, 'png')
 		end
 	else
-		step.server:cancelArtwork(icon)
+		server:cancelArtwork(icon)
 
 	end
 end

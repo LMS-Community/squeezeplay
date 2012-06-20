@@ -29,6 +29,7 @@ local SnapshotWindow   = require("jive.ui.SnapshotWindow")
 local Tile             = require("jive.ui.Tile")
 local Timer            = require("jive.ui.Timer")
 local Player           = require("jive.slim.Player")
+local SlimServer       = require("jive.slim.SlimServer")
 
 local VUMeter          = require("jive.audio.VUMeter")
 local SpectrumMeter    = require("jive.audio.SpectrumMeter")
@@ -110,6 +111,12 @@ local function _getIcon(self, item, icon, remote)
 	end
 
 	if iconId then
+		-- Extract server from artwork path
+		local serverId = string.match(iconId, "^lms://([%x%-]*)/")
+		if serverId then
+                        server = SlimServer:getServerById(serverId)
+		end
+
 		-- Fetch an image from SlimServer
 		server:fetchArtwork(iconId, icon, ARTWORK_SIZE) 
 	elseif item and item["params"] and item["params"]["track_id"] then

@@ -14,6 +14,7 @@ local Stream                 = require("squeezeplay.stream")
 local socket                 = require("socket") -- for proxy streams
 local SlimProto              = require("jive.net.SlimProto")
 local Player                 = require("jive.slim.Player")
+local SlimServer             = require("jive.slim.SlimServer")
 
 local Task                   = require("jive.ui.Task")
 local Timer                  = require("jive.ui.Timer")
@@ -130,6 +131,9 @@ function __init(self, jnt, slimproto)
 
 	-- signal we are Rtmp capable, but don't load module until used
 	slimproto:capability("Rtmp", 2)
+
+	-- signal we are cabable of playing music from attached servers
+	slimproto:capability("LmsUrls")
 
 	slimproto:capability(function()
 			local ip_address, ip_subnet
@@ -859,11 +863,21 @@ function _strm(self, data)
 		-- start
 		
 		local serverIp = data.serverIp == 0 and self.slimproto:getServerIp() or data.serverIp
+		local serverPort = data.serverPort
 		self.flags = data.flags
 		self.mode = data.mode
 		self.header = data.header
 		self.autostart = data.autostart
 		self.threshold = data.threshold * 1024
+
+		-- Extract server from header
+		local serverId = string.match(self.header, "X%-LMS%-Server: ([%x%-]*)")
+		if serverId then
+			local server = SlimServer:getServerById(serverId)
+			if server then
+				serverIp, serverPort = server:getIpPort()
+			end
+		end
 
 		-- Is this a reconnect (bit 0x40)?
 		if (self.flags & 0x40 ~= 0 and self.flags & 0x10 == 0) then
@@ -882,7 +896,7 @@ function _strm(self, data)
 				self:_streamDisconnect(nil, false)
 			
 				-- Just reconnect the stream and send STMc
-				self:_streamConnect(serverIp, data.serverPort)
+				self:_streamConnect(serverIp, serverPort)
 				
 				return true;
 			end
@@ -942,7 +956,7 @@ function _strm(self, data)
 		elseif data.mode == 'n' then
 			-- network test stream - only stream, don't decode
 			log:info("network test stream")
-			self:_streamConnect(serverIp, data.serverPort)
+			self:_streamConnect(serverIp, serverPort)
 		else
 			-- standard stream - start the decoder and connect
 			decode:start(string.byte(data.mode),
@@ -957,7 +971,7 @@ function _strm(self, data)
 			     string.byte(data.pcmChannels),
 			     string.byte(data.pcmEndianness)
 		    )
-			self:_streamConnect(serverIp, data.serverPort, nil, nil, data.slaves)
+			self:_streamConnect(serverIp, serverPort, nil, nil, data.slaves)
 		end
 
 	elseif data.command == 'q' then
