@@ -620,6 +620,10 @@ _handshake = function(self)
 	} }
 
 	data[1].ext.mac = System:getMacAddress()
+	
+	if self.controllingServerAddress then
+		data[1].ext.server = self.controllingServerAddress
+	end
 
 	-- XXX: according to the spec this should be sent as application/x-www-form-urlencoded
 	-- with message=<url-encoded json> but it works as straight JSON
@@ -635,6 +639,20 @@ _handshake = function(self)
 	self.chttp:fetch(req)
 end
 
+setControllingServerAddress = function(self, address)
+	local oldAddress = self.controllingServerAddress
+	self.controllingServerAddress = address
+	
+	if address and address ~= oldAddress then
+		if self.state == CONNECTING or self.state == CONNECTED then
+			-- Force disconnection
+			_state(self, UNCONNECTED)
+			
+			-- reconnect
+			_handshake(self)
+		end
+	end
+end
 
 _getHandshakeSink = function(self)
 	return function(chunk, err, cometRequest)
@@ -890,7 +908,7 @@ _response = function(self, chunk)
 
 		-- Remove request from sent queue
 		for i, v in ipairs( self.sent_reqs ) do
-			if v.id == tonumber(event.id) then
+			if v.id == tonumber(event.id) and event.channel ~= '/slim/request' then
 				table.remove( self.sent_reqs, i )
 				break
 			end
