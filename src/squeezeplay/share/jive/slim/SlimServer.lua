@@ -24,6 +24,7 @@ Notifications:
  serverDelete (performed by SlimServers)
  serverConnected(self)
  serverDisconnected(self, numUserRequests)
+ serverCurrent(self, current)
 
 =head1 FUNCTIONS
 
@@ -147,6 +148,10 @@ function setCurrentServer(class, server)
 	lastCurrentServer = currentServer
 
 	currentServer = server
+
+	if lastCurrentServer ~= currentServer then
+		jnt:notify("serverCurrent", currentServer)
+	end
 
 	-- is the current server still active, it not clean up?
 	if lastCurrentServer and lastCurrentServer.lastSeen == 0 then
@@ -484,6 +489,8 @@ function __init(self, jnt, id, name, version)
 	})
 
 	obj.state.version = version
+	
+	_setControllingServerAddress(obj, getCurrentServer())
 
 	-- subscribe to server status, max 50 players every 60 seconds.
 	-- FIXME: what if the server has more than 50 players?
@@ -527,6 +534,22 @@ function __init(self, jnt, id, name, version)
 	return obj
 end
 
+function _setControllingServerAddress(self, server)
+	if server and server ~= self then
+		local ip, port = server:getIpPort()
+		if (ip and port) then
+			self.comet:setControllingServerAddress(ip .. ':' .. tostring(port))
+		end
+	end
+end
+
+-- Only notified if current-server actually changes, possibly to nil
+-- or changes its address
+function notify_serverCurrent(self, server)
+	if server ~= self then
+		_setControllingServerAddress(self, server)
+	end
+end
 
 -- Update server on start up
 function updateInit(self, init)
@@ -599,6 +622,10 @@ function updateAddress(self, ip, port, name)
 		-- reconnect, if we were already connected
 		if oldstate ~= 'disconnected' then
 			self:connect()
+		end
+		
+		if (self == getCurrentServer()) then
+			self.jnt:notify('serverCurrent', self)
 		end
 	end
 
