@@ -47,6 +47,7 @@ local debug            = require("jive.utils.debug")
 local locale           = require("jive.utils.locale")
 local string           = require("jive.utils.string")
 local table            = require("jive.utils.table")
+local iconbar          = iconbar
 
 local appletManager    = appletManager
 
@@ -154,7 +155,7 @@ function step1(self)
 	log:debug('step1')
 	self:_addReturnToSetupToHomeMenu()
 	self:_disableNormalEscapeMechanisms()
-
+	iconbar:hideBatteryIcon("ON")
 	-- choose language
 	appletManager:callService("setupShowSetupLanguage",
 		function()
@@ -163,6 +164,7 @@ function step1(self)
 end
 
 function step2(self)
+	iconbar:hideBatteryIcon("OFF")
 	log:debug('step2')
 	appletManager:callService("isBatteryTabThere",
 		function()

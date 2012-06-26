@@ -39,7 +39,7 @@ local Label     = require("jive.ui.Label")
 local Group     = require("jive.ui.Group")
 
 local hasDecode, decode = pcall(require, "squeezeplay.decode")
-
+local locale            = require("jive.utils.locale")
 local datetime  = require("jive.utils.datetime")
 local log       = require("jive.utils.log").logger("squeezeplay.iconbar")
 
@@ -50,8 +50,8 @@ module(..., oo.class)
 
 -- to debug buffer fullness
 local bufferFullness = false
-
-
+local _globalStrings
+local hideBatteryIconFlag = "OFF"
 --[[
 
 =head2 Iconbar:setPlaymode(val)
@@ -131,7 +131,9 @@ Set the state of the battery icon of the iconbar. Values are nil (no battery), C
 --]]
 function setBattery(self, val)
 	log:debug("Iconbar:setBattery(", val, ")")
-	self.iconBattery:setStyle("button_battery_" .. string.upper((val or "NONE")))
+	if hideBatteryIconFlag == "OFF" or val == nil then
+		self.iconBattery:setStyle("button_battery_" .. string.upper((val or "NONE")))
+	end
 end
 
 
@@ -215,6 +217,13 @@ function showDebug(self, value, elapsed)
 end
 
 
+function hideBatteryIcon(self, flag)
+	log:debug("Hide battery icon set to :", flag)
+	hideBatteryIconFlag = flag
+	if flag == "ON" then
+		self:setBattery(nil)
+	end
+end
 --[[
 
 =head2 Iconbar:update()
@@ -229,8 +238,11 @@ function update(self)
 	if self.debugTimeout and Framework:getTicks() < self.debugTimeout then
 		return
 	end
-
-	self.button_time:setValue(datetime:getCurrentTime())
+	if datetime:getCurrentTime() == "" and (hideBatteryIconFlag == "ON" or self.iconBattery:getStyle() == "button_battery_NONE") then
+		self.button_time:setValue(_globalStrings:str("POWER_TO_MUSIC"))
+	else
+		self.button_time:setValue(datetime:getCurrentTime())
+	end
 end
 
 
@@ -244,7 +256,8 @@ Creates the iconbar.
 --]]
 function __init(self, jnt)
 	log:debug("Iconbar:__init()")
-
+	-- Singleton instances (locals)
+	_globalStrings = locale:readGlobalStringsFile()
 	local obj = oo.rawnew(self, {
 		iconPlaymode = Icon("button_playmode_OFF"),
 		iconRepeat   = Icon("button_repeat_OFF"),
@@ -254,7 +267,6 @@ function __init(self, jnt)
 		iconSleep    = Icon("button_sleep_OFF"),
 		iconAlarm    = Icon("button_alarm_OFF"),
 		button_time  = Label("button_time", "XXXX"),
-
 		jnt = jnt
 	})
 
