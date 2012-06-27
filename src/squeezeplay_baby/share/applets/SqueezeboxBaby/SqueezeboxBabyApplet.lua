@@ -131,7 +131,7 @@ local brightTarget = -1
 local brightMin = MIN_BRIGHTNESS_LEVEL_INIT
 local brightLast = -1
 local brightReadRateDivider = 1
-
+local initialState = false
 
 function init(self)
 	settings = self:getSettings()
@@ -915,13 +915,14 @@ local function _updatePower(self)
 		-- wake up on ac power changes
 		if batteryState and batteryState ~= self.batteryState then
 			self:wakeup()
-			if batteryState == "ac" then
+			if batteryState == "ac" and initialState then
 				iconbar.iconBattery:playSound("DOCKING")
 			end
 		end
 
 		if batteryState then
 			self.batteryState = batteryState
+			initialState = true
 		end
 
 		self:_lowBattery(isLowBattery or self.testLowBattery)
