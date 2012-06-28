@@ -103,6 +103,8 @@ function init(self, ...)
 
 			self.alarmInProgress = 'rtc'
 
+			self.localPlayer:setAlarmState('active')
+
 			-- Rearm fallback alarm (if repeating)
 			self:rearmRTCAlarm()
 
@@ -116,6 +118,9 @@ function init(self, ...)
 		function ()
 			log:warn("*** Alarm: Snooze time passed")
 			self.alarmInProgress = 'rtc'
+
+			self.localPlayer:setAlarmState('active')
+
 			-- Kick server again to play
 			self.localPlayer:play(true)
 			-- This also starts check about audio state
@@ -385,6 +390,8 @@ function _alarmSnooze(self)
 		self:_hideAlarmWindow()
 	end
 
+	self.localPlayer:setAlarmState('snooze')
+
 	-- Inform server
 	if self.localPlayer:isConnected() then
 		log:warn("*** Alarm: _alarmSnooze: sending snooze command to connected server for connected local player ", self.localPlayer)
@@ -398,6 +405,9 @@ function _alarmOff(self, stopStream)
 	
 	self:_silenceFallbackAlarm()
 	self.alarmInProgress = nil
+
+	self.localPlayer:setAlarmState('none')
+
 	self:_stopSnoozeTimer()
 
 	if self.alarmWindow then

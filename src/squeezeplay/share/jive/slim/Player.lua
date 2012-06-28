@@ -333,7 +333,10 @@ function __init(self, jnt, playerId)
 		popupIcon = {},
 
 		-- browse history
-		browseHistory = {}
+		browseHistory = {},
+
+		-- alarm state
+		alarmState = 'none'
 	})
 
 	playerIds[obj.id] = obj
@@ -1257,11 +1260,9 @@ function _process_status(self, event)
 		log:debug('notify_playerAlarmState')
 		-- none from server for alarm_state changes this to nil
 		if self.state['alarm_state'] == 'none' then
-			self.alarmState = nil
 			self.alarmNext  = nil
 --			self.jnt:notify('playerAlarmState', self, 'none', nil)
 		else
-			self.alarmState = self.state['alarm_state']
 			self.alarmNext  = tonumber(self.state['alarm_next'])
 --			self.jnt:notify('playerAlarmState', self, self.state['alarm_state'], self.state['alarm_next'] and tonumber(self.state['alarm_next']) or nil)
 		end
@@ -1550,7 +1551,6 @@ function stopAlarm(self, continueAudio)
 		self:pause()
 	end
 
-	self.alarmState = 'none'
 	self:call({'jivealarm', 'stop:1'})
 	self:updateIconbar()
 
@@ -1561,7 +1561,6 @@ function snooze(self)
 	if not self.state then return end
 
 	if self.alarmState == 'active' then
-		self.alarmState = 'snooze'
 		self:call({'jivealarm', 'snooze:1'})
 	end
 	self:updateIconbar()
