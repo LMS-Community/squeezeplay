@@ -56,7 +56,7 @@ local UPDATE_WIRELESS        = 0x01
 local UPDATE_POWER           = 0x02
 local VOLTAGE_ALMOST_ZERO    = 1000
 local MAX_VALID_BATT_TEMP    = 100
-local MAX_SAFE_BATT_TEMP     = 40
+local MAX_SAFE_BATT_TEMP     = 47
 
 module(..., Framework.constants)
 oo.class(_M, SqueezeboxApplet)
