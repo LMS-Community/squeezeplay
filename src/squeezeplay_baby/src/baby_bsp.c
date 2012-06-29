@@ -13,7 +13,6 @@
 #include <time.h>
 #include <alsa/asoundlib.h>
 
-
 static int msp430_event_fd = -1;
 static snd_hctl_t *hctl = NULL;
 
@@ -67,9 +66,9 @@ static int handle_msp430_events(int fd) {
 				if ((scroll < 0 && value > 0) ||
 				    (scroll > 0 && value < 0)
 				    ) {
+					event.type = (JiveEventType) JIVE_EVENT_SCROLL;
 					event.u.scroll.rel = scroll;
 					jive_queue_event(&event);
-
 					scroll = 0;
 				}
 
@@ -90,6 +89,7 @@ static int handle_msp430_events(int fd) {
 	}
 
 	if (scroll != 0) {
+		event.type = (JiveEventType) JIVE_EVENT_SCROLL;
 		event.u.scroll.rel = scroll;
 		jive_queue_event(&event);
 	}
