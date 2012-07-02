@@ -77,7 +77,7 @@ function configureApplet(meta)
 			jnt:setSNHostname(jnt:getSNDefaultHostname())
 		end
 		appletManager:callService("isBatteryTabThere", function()
-				jiveMain:goHome()
+				jiveMain:goHomeWithoutPlaySound()
 			end
 		)
 	end

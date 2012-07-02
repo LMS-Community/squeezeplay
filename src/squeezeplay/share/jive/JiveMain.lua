@@ -125,6 +125,16 @@ function JiveMain:goHome()
 		end
 end
 
+function JiveMain:goHomeWithoutPlaySound()
+		local windowStack = Framework.windowStack
+
+		if #windowStack > 1 then
+			jiveMain:closeToHome(true)
+		else
+			windowStack[1]:bumpLeft()
+		end
+end
+
 function JiveMain:disconnectPlayer( event) --self, event not used in our case, could be left out
 	appletManager:callService("setCurrentPlayer", nil)
 	JiveMain:goHome()
