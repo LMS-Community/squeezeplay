@@ -3,19 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 RESET_FACTORY_RESET
-	CS	Obnovit tovární nastavení
-	DA	Gendan fabriksindstillinger
-	DE	Standardeinstellungen wiederherstellen
-	EN	Restore Factory Settings
-	ES	Restaurar configuración de fábrica
-	FI	Palauta tehdasasetukset
-	FR	Rétablir les réglages d'usine
-	IT	Ripristina impostazioni di fabbrica
-	NL	Fabrieksinstellingen herstellen
-	NO	Gjenopprett fabrikkinnstillingene
-	PL	Przywróć ustawienia fabryczne
-	RU	Восстановить заводские настройки
-	SV	Återställ standardinställningarna
+	EN	Factory Reset
 
 RESET_RESTORE_DEFAULTS
 	EN	Restore Defaults
