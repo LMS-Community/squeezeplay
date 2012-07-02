@@ -1,6 +1,5 @@
 
 local assert, ipairs, pairs, type, tostring, tonumber, setmetatable = assert, ipairs, pairs, type, tostring, tonumber, setmetatable
-
 local oo            = require("loop.base")
 local table         = require("jive.utils.table")
 local string        = require("jive.utils.string")
@@ -418,6 +417,15 @@ function addNode(self, item)
 		return EVENT_CONSUME
 	end
 
+	item.devCallback = function()
+		log:info("node add function with item.node as ", item.node)
+		log:info("framework window stack number is ", #Framework.windowStack)
+		if item.node == 'settings' and #Framework.windowStack == 2 then
+			appletManager:callService("developerModeSwitch", item)
+		end
+		return EVENT_CONSUME
+	end
+
 	if not item.weight then 
 		item.weight = 100
 	end
@@ -513,6 +521,14 @@ function addItemToNode(self, item, node)
 
 			local myItem = _uses(item)
 
+	myItem.devCallback = function()
+		log:info("node add function with item.node as ", item.node)
+		log:info("framework window stack number is ", #Framework.windowStack)
+		if item.node == 'settings' and #Framework.windowStack == 2 then
+			appletManager:callService("developerModeSwitch", item)
+		end
+		return EVENT_CONSUME
+	end
 			-- rewrite the callback for CM to use myItem instead of item
 			myItem.cmCallback = function()
 				appletManager:callService("homeMenuItemContextMenu", myItem)
@@ -535,6 +551,14 @@ function addItem(self, item)
 	assert(item.id)
 	assert(item.node)
 
+	item.devCallback = function()
+		log:info("node add function with item.node as ", item.node)
+		log:info("framework window stack number is ", #Framework.windowStack)
+		if item.node == 'settings' and #Framework.windowStack == 2 then
+			appletManager:callService("developerModeSwitch", item)
+		end
+		return EVENT_CONSUME
+	end
 	item.cmCallback = function()
 		appletManager:callService("homeMenuItemContextMenu", item)
 		return EVENT_CONSUME

@@ -46,7 +46,6 @@ B<itemHeight> : the height of each menu item.
 -- stuff we use
 local _assert, ipairs, string, tostring, type, tonumber = _assert, ipairs, string, tostring, type, tonumber
 
-
 local oo              = require("loop.simple")
 local debug           = require("jive.utils.debug")
 
@@ -188,6 +187,9 @@ local function _itemListener(menu, list, menuItem, index, event)
 		end
 		return item.callback(event, item) or EVENT_CONSUME
 	
+	elseif (event:getType() == ACTION and event:getAction() == "show_developer_menu" and item.devCallback)  then
+		return item.devCallback(event, item) or EVENT_CONSUME
+
 	elseif (event:getType() == ACTION and event:getAction() == "add" and item.cmCallback)  then
 		return item.cmCallback(event, item) or EVENT_CONSUME
 	

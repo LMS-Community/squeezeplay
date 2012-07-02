@@ -17,7 +17,7 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupSSH', 'advancedSettings', "SSH", function(applet, ...) applet:settingsShow(...) end, 110))
+	jiveMain:addItem(meta:menuItem('appletSetupSSH', 'developerSettings', "SSH", function(applet, ...) applet:settingsShow(...) end, 110))
 end
 
 

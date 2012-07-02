@@ -996,3 +996,5 @@ DAYSHORT_7
 	RU	Суб
 	SV	lör
 
+DEVELOPER_MENU
+	EN	Developer

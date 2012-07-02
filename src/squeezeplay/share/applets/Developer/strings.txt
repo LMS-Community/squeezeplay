@@ -1,0 +1,49 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+EXIT_DEVELOPER_MODE
+	CS	Ukončit
+	DA	Afslut
+	DE	Beenden
+	EN	Exit
+	ES	Salir
+	FI	Sulje
+	FR	Quitter
+	IT	Esci
+	NL	Afsluiten
+	NO	Avslutt
+	PL	Zamknij
+	RU	Выход
+	SV	Avsluta
+
+EXIT_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+EXIT_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
