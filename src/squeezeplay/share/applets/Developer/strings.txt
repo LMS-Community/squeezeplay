@@ -3,19 +3,7 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 EXIT_DEVELOPER_MODE
-	CS	Ukončit
-	DA	Afslut
-	DE	Beenden
-	EN	Exit
-	ES	Salir
-	FI	Sulje
-	FR	Quitter
-	IT	Esci
-	NL	Afsluiten
-	NO	Avslutt
-	PL	Zamknij
-	RU	Выход
-	SV	Avsluta
+	EN	Disable Developer Mode
 
 EXIT_CANCEL
 	CS	Storno
@@ -47,3 +35,11 @@ EXIT_CONTINUE
 	RU	Продолжить
 	SV	Fortsätt
 
+LOCAL_STRING_TRACE_ENABLE
+	EN	Enable String Tagging
+
+STR_TRACE_HOWTO
+	EN	Local strings are appended with a "."
+
+STR_TRACE
+	EN	String Tag

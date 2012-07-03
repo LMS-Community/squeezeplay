@@ -23,6 +23,7 @@ end
 function registerApplet(meta)
 	meta:registerService("developerModeSwitch")
 	jiveMain:addItem(meta:menuItem('appletDeveloperExit', 'developerSettings', "EXIT_DEVELOPER_MODE", function(applet, ...) applet:settingsShow(...) end, 150))
+	jiveMain:addItem(meta:menuItem('appletEnableStrTrace', 'developerSettings', "STR_TRACE", function(applet, ...) applet:enableLocalStrIdentifier(...) end, 110))
 end
 
 function defaultSettings(meta)

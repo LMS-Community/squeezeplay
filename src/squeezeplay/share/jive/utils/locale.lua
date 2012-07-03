@@ -24,7 +24,6 @@ local log              = require("jive.utils.log").logger("squeezeplay")
 
 local System           = require("jive.System")
 local Task             = require("jive.ui.Task")
-
 module(...)
 
 
@@ -44,6 +43,11 @@ local globalStrings = {}
 -- contains type of machine
 local globalMachine = false
 
+local localStrIdentifier = false
+
+function getLocalStrIdentifier(self)
+	return localStrIdentifier
+end
 --[[
 =head 2 setLocale(newLocale)
 
@@ -69,6 +73,24 @@ function setLocale(self, newLocale, doYield)
 	end
 end
 
+--[[
+=head 2 reloadAllStrings()
+
+reparse the strings files for the existing local
+=cut
+--]]
+function reloadAllStrings(self, stringAppendFlag)
+	localStrIdentifier = stringAppendFlag
+	readGlobalStringsFile(self)
+
+	-- reload existing strings files
+	for k, v in pairs(loadedFiles) do
+		if doYield then
+			Task:yield(true)
+		end
+		_parseStringsFile(self, globalLocale, k, v)
+	end
+end
 
 --[[
 =head2 getLocale()
@@ -162,7 +184,11 @@ function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 			-- fallback for previous token
 			if token and fallback and not stringsTable[token].str then
 				log:debug("EN fallback=", fallback)
-				stringsTable[token].str = fallback
+				if localStrIdentifier == true then
+					stringsTable[token].str = "." .. fallback
+				else
+					stringsTable[token].str = fallback
+				end
 			end
 
 			-- next token
@@ -197,7 +223,11 @@ function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 
 				-- convert \n
 				translation = string.gsub(translation, "\\n", "\n")
-				stringsTable[token].str = translation
+				if localStrIdentifier == true then
+					stringsTable[token].str = "." .. translation
+				else
+					stringsTable[token].str = translation
+				end
 			end
 
 			if locale == "EN" then
@@ -211,7 +241,11 @@ function _parseStringsFile(self, myLocale, myFilePath, stringsTable)
 	-- fallback for last token
 	if token and fallback and not stringsTable[token].str then
 		log:debug("EN fallback=", fallback)
-		stringsTable[token].str = fallback
+		if localStrIdentifier == true then
+			stringsTable[token].str = "." .. fallback
+		else
+			stringsTable[token].str = fallback
+		end
 	end
 
 	stringsFile:close()
@@ -264,7 +298,6 @@ function loadAllStrings(self, myFilePath)
 				if allStrings[locale] == nil then
 					allStrings[locale] = {}
 				end
-
 				allStrings[locale][token] = translation
 			end
 		end

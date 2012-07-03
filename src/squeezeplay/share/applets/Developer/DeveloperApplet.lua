@@ -10,7 +10,7 @@ This applet is to allow a developer to display/hide the developer menu from the 
 
 =head1 FUNCTIONS
 
-Applet related methods are described in L<jive.Applet>.
+Applet related methods are described in L<jive.Applet>. 
 
 =cut
 --]]
@@ -19,22 +19,29 @@ Applet related methods are described in L<jive.Applet>.
 -- stuff we use
 local tostring, tonumber, pairs, ipairs, table = tostring, tonumber, pairs, ipairs, table
 local oo                     = require("loop.simple")
-local string                = require("jive.utils.string")
+local string                 = require("jive.utils.string")
 local Applet                 = require("jive.Applet")
+local Checkbox               = require("jive.ui.Checkbox")
 local Window                 = require("jive.ui.Window")
+local Textarea               = require('jive.ui.Textarea')
 local Framework              = require('jive.ui.Framework')
 
 local SimpleMenu             = require("jive.ui.SimpleMenu")
 
 local debug                  = require("jive.utils.debug")
+
+local Label            	     = require("jive.ui.Label")
+local locale           	     = require("jive.utils.locale")
+local Popup                  = require("jive.ui.Popup")
+local Icon                   = require("jive.ui.Icon")
+
 local jiveMain               = jiveMain
-local appletManager          = appletManager
 
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
 function developerModeSwitch(self, item)
-	log:debug("Entering developerContextMenu")
+	log:debug("Entering developerModeSwitch")
 	if item.node ~= 'settings' then
 		log:debug("item node is not settings, ignore it")
 		return EVENT_CONSUME
@@ -55,9 +62,56 @@ function loadDeveloperMenu(self)
 	log:debug("item received as ", item);
 	if item then
 		local newItem = jiveMain:addItemToNode(item, 'settings')
-		jiveMain:itemToBottom(newItem, 'settings')
+		--jiveMain:itemToBottom(newItem, 'settings')
 	end
 	log:info("developer menu LOADED")
+end
+
+function enableLocalStrIdentifier(self, menuItem)
+	local strTraceEnabled = locale:getLocalStrIdentifier()
+
+	local window = Window("help_list", menuItem.text, 'settingstitle')
+	local menu = SimpleMenu("menu", {
+					{
+						text = self:string("LOCAL_STRING_TRACE_ENABLE"),
+						style = 'item_choice',
+						check = Checkbox("checkbox",
+								function(_, isSelected)
+									if isSelected then
+										self:_changeChoice(true)
+									else
+										self:_changeChoice(false)
+									end
+								end,
+								strTraceEnabled
+							)
+					},
+				})
+
+	window:addWidget(menu)
+
+	self.window = window
+	self.menu = menu
+	if strTraceEnabled then
+		self:_addHelpInfo()
+	end
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+function _changeChoice(self, flag)
+	locale:reloadAllStrings(flag)
+	jiveMain:jiveMainNodes()
+	Framework:styleChanged()
+	self:_addHelpInfo()
+end
+
+function _addHelpInfo(self)
+	self.howto = Textarea("help_text", self:string("STR_TRACE_HOWTO"))
+	self.menu:setHeaderWidget(self.howto)
+
+	self.window:focusWidget(self.menu)
 end
 
 function settingsShow(self, menuItem)
@@ -76,7 +130,7 @@ function settingsShow(self, menuItem)
 						text = self:string("EXIT_CONTINUE"),
 						sound = "WINDOWSHOW",
 						callback = function()
-								self:_exitDeveloper()
+								self:exitDeveloper()
 								window:hide()
 								appletManager:callService("goHome")
 							end
@@ -89,8 +143,8 @@ function settingsShow(self, menuItem)
 	return window
 end
 
-function _exitDeveloper(self)
-	log:debug("Entered _exitDeveloper function")
+function exitDeveloper(self)
+	log:debug("Entered exitDeveloper function")
 	local item = jiveMain:getMenuItem('developerSettings')
 	log:debug("item received as ", item);
 	item.node = 'hidden'
@@ -101,13 +155,3 @@ function _exitDeveloper(self)
 	log:info("developer menu item removed")
 end
 
---[[
-
-=head1 LICENSE
-
-Copyright 2012 Logitech. All Rights Reserved.
-
-This file is licensed under BSD. Please see the LICENSE file for details.
-
-=cut
---]]
