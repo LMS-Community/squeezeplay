@@ -342,7 +342,7 @@ function _squeezenetworkWait(self, squeezenetwork)
 	local icon  = Icon("icon_connecting")
 	popup:addWidget(icon)
 	popup:addWidget(Label("text", self:string("CONNECTING_TO_SN")))
-	popup:addWidget(Label("subtext", self:string("MYSQUEEZEBOX_DOT_COM")))
+	popup:addWidget(Label("subtext", self:string("MYSERVICE_DOT_COM")))
 	popup:setAllowScreensaver(false)
 	popup:ignoreAllInputExcept()
 

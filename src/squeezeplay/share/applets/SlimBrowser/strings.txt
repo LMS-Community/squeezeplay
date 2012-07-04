@@ -3,19 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 SN_SIGNUP
-	CS	Přihlášení do mysqueezebox.com
-	DA	Tilmelding til mysqueezebox.com
-	DE	Anmeldung bei mysqueezebox.com
-	EN	mysqueezebox.com Signup
-	ES	Registro de mysqueezebox.com
-	FI	mysqueezebox.com-rekisteröityminen
-	FR	Inscription à mysqueezebox.com
-	IT	Iscrizione a mysqueezebox.com
-	NL	Aanmelding bij mysqueezebox.com
-	NO	mysqueezebox.com-registrering
-	PL	Rejestracja w usłudze mysqueezebox.com
-	RU	Подписка mysqueezebox.com
-	SV	Registrering för mysqueezebox.com
+	CS	Přihlášení do uesmartradio.com
+	DA	Tilmelding til uesmartradio.com
+	DE	Anmeldung bei uesmartradio.com
+	EN	uesmartradio.com Signup
+	ES	Registro de uesmartradio.com
+	FI	uesmartradio.com-rekisteröityminen
+	FR	Inscription à uesmartradio.com
+	IT	Iscrizione a uesmartradio.com
+	NL	Aanmelding bij uesmartradio.com
+	NO	uesmartradio.com-registrering
+	PL	Rejestracja w usłudze uesmartradio.com
+	RU	Подписка uesmartradio.com
+	SV	Registrering för uesmartradio.com
 
 SLIMBROWSER_PLAYLIST
 	CS	Aktuální seznam

@@ -31,19 +31,19 @@ INFOBROWSER_NORESPONSE
 	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
 
 INFOBROWSER_NOINFO_SN
-	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu mysqueezebox.com a přidejte informační kanály.
-	DA	Der blev ikke fundet nogen informationsfeeds. Log på din mysqueezebox.com-konto, og tilføj nogen.
-	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem mysqueezebox.com-Konto an und fügen Sie Info-Feeds hinzu.
-	EN	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
-	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta mysqueezebox.com y agregue fuentes de información.
-	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu mysqueezebox.com-tiliisi ja lisää syötteitä.
-	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte mysqueezebox.com et ajoutez des flux d'informations.
-	IT	Nessun feed di informazioni trovato. Accedere all'account mysqueezebox.com e aggiungere i feed di informazioni.
-	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op mysqueezebox.com en voeg informatiekanalen toe.
-	NO	Fant ingen informasjonsfeeder. Logg på mysqueezebox.com-kontoen og legg til informasjonsfeeder.
-	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto mysqueezebox.com i dodaj kanały informacji.
-	RU	Каналы информации не найдены. Войдите в учетную запись mysqueezebox.com и добавьте каналы информации.
-	SV	Inga informationsflöden hittades. Logga in på mysqueezebox.com-kontot och lägg till informationsflöden.
+	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu uesmartradio.com a přidejte informační kanály.
+	DA	Der blev ikke fundet nogen informationsfeeds. Log på din uesmartradio.com-konto, og tilføj nogen.
+	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem uesmartradio.com-Konto an und fügen Sie Info-Feeds hinzu.
+	EN	No information feeds found.  Please login to your uesmartradio.com account and add information feeds.
+	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta uesmartradio.com y agregue fuentes de información.
+	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu uesmartradio.com-tiliisi ja lisää syötteitä.
+	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte uesmartradio.com et ajoutez des flux d'informations.
+	IT	Nessun feed di informazioni trovato. Accedere all'account uesmartradio.com e aggiungere i feed di informazioni.
+	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op uesmartradio.com en voeg informatiekanalen toe.
+	NO	Fant ingen informasjonsfeeder. Logg på uesmartradio.com-kontoen og legg til informasjonsfeeder.
+	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto uesmartradio.com i dodaj kanały informacji.
+	RU	Каналы информации не найдены. Войдите в учетную запись uesmartradio.com и добавьте каналы информации.
+	SV	Inga informationsflöden hittades. Logga in på uesmartradio.com-kontot och lägg till informationsflöden.
 
 INFOBROWSER_NOINFO_SC
 	CS	Nenalezeny žádné informační kanály. K přidání infokanálů pod nabídku Extra/Prohlížeč informací použijte webové rozhraní Logitech Media Server.
