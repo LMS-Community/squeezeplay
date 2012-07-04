@@ -363,12 +363,8 @@ Close all windows to expose the home menu. By default alwaysOnTop windows
 are not hidden. Also move to root home item.
 
 --]]
-function closeToHome(self, hideAlwaysOnTop, transition)
 
-	--move to root item :bug #14066
-	if self.nodeTable then
-		self.nodeTable["home"].menu:setSelectedIndex(1)
-	end
+local function _closeToHome(self, hideAlwaysOnTop, transition)
 
 	local stack = Framework.windowStack
 
@@ -386,6 +382,21 @@ function closeToHome(self, hideAlwaysOnTop, transition)
 	end
 end
 
+function closeToHome(self, hideAlwaysOnTop, transition)
+	--move to root item :bug #14066
+	if self.nodeTable then
+		self.nodeTable["home"].menu:setSelectedIndex(1)
+	end
+	_closeToHome(self, hideAlwaysOnTop, transition)
+end
+
+function closeToHomeAfterSetup(self, hideAlwaysOnTop, transition)
+	if self.nodeTable then
+		log:info("Selected 3rd item after reset")
+		self.nodeTable["home"].menu:setSelectedIndex(3)
+	end
+	_closeToHome(self, hideAlwaysOnTop, transition)
+end
 
 function _changeNode(self, id, node)
 	-- looks at the node and decides whether it needs to be removed
