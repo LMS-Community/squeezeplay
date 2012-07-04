@@ -144,7 +144,7 @@ function _setupComplete(self, gohome)
 	self:_enableNormalEscapeMechanisms()
 
 	if gohome then
-		jiveMain:closeToHome(true, Window.transitionPushLeft)
+		jiveMain:closeToHomeAfterSetup(true, Window.transitionPushLeft)
 	end
 end
 
@@ -540,7 +540,7 @@ function step9(self)
 	self.locked = true -- free applet
 	jnt:unsubscribe(self)
 
-	jiveMain:goHome()
+	jiveMain:closeToHomeAfterSetup(true, Window.transitionPushLeft)
 
 end
 
