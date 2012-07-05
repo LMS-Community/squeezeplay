@@ -168,19 +168,19 @@ MENUS_CONTINUE_WITHOUT_NETWORK
 	SV	Fortsätt utan nätverk
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
-	CS	Aktualizuji firmware Squeezeboxu
-	DA	Opdaterer Squeezebox-firmwaren
-	DE	Squeezebox-Firmware wird aktualisiert
-	EN	Updating Squeezebox firmware
-	ES	Actualizando firmware de Squeezebox
-	FI	Squeezeboxin laitteisto-ohjelmiston päivitys
-	FR	Mise à jour du micrologiciel Squeezebox
-	IT	Aggiornamento firmware Squeezebox
-	NL	Squeezebox-firmware wordt bijgewerkt
-	NO	Oppdaterer Squeezebox-fastvare
-	PL	Aktualizowanie oprogramowania układowego urządzenia Squeezebox
-	RU	Обновление микропрограмм Squeezebox
-	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
+	CS	Aktualizuji firmware Smart Radiou
+	DA	Opdaterer Smart Radio-firmwaren
+	DE	Smart Radio-Firmware wird aktualisiert
+	EN	Updating Smart Radio firmware
+	ES	Actualizando firmware de Smart Radio
+	FI	Smart Radioin laitteisto-ohjelmiston päivitys
+	FR	Mise à jour du micrologiciel Smart Radio
+	IT	Aggiornamento firmware Smart Radio
+	NL	Smart Radio-firmware wordt bijgewerkt
+	NO	Oppdaterer Smart Radio-fastvare
+	PL	Aktualizowanie oprogramowania układowego urządzenia Smart Radio
+	RU	Обновление микропрограмм Smart Radio
+	SV	Uppdaterar Smart Radio-spelarens inbyggda programvara
 
 SLIMBROWSER_PLAYER_UPDATE_REQUIRED
 	CS	Aktualizace přehrávače

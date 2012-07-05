@@ -40,7 +40,7 @@ SELECT_SKIN_TOUCH_SKIN
 	EN	Touch Skin
 	ES	Máscara de Touch
 	FI	Kosketusolemus
-	FR	Habillage Squeezebox Touch
+	FR	Habillage Touch
 	IT	Skin interfaccia tattile
 	NL	Skin bij aanraken
 	NO	Berøringsskall

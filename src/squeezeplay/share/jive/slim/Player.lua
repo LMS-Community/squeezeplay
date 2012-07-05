@@ -817,7 +817,7 @@ function getName(self)
 	if self.info.name then
 		return self.info.name
 	else
-		return "Squeezebox " .. string.gsub(string.sub(self.id, 10), ":", "")
+		return "UE Smart Radio " .. string.gsub(string.sub(self.id, 10), ":", "")
 	end
 end
 

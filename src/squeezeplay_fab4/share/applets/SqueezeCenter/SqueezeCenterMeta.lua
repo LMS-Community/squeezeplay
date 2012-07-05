@@ -30,7 +30,7 @@ function registerApplet(meta)
 	meta:registerService("stopSqueezeCenter")
 	meta:registerService("startSqueezeCenter")
 	meta:registerService("mmStopSqueezeCenter")
-	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', "Squeezebox Server", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSqueezeCenter', 'advancedSettings', meta:string('SQUEEZEBOX_SERVER'), function(applet, ...) applet:settingsShow(...) end))
 
 end
 

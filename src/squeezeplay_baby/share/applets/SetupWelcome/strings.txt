@@ -18,19 +18,19 @@ WELCOME
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
-	CS	Vítejte do Squeezebox Radio. Začněme připojením k vaší síti.
-	DA	Velkommen til Squeezebox Radio. Lad os begynde med at slutte afspilleren til netværket.
+	CS	Vítejte do UE Smart Radio. Začněme připojením k vaší síti.
+	DA	Velkommen til UE Smart Radio. Lad os begynde med at slutte afspilleren til netværket.
 	DE	Willkommen! Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	Welcome to Squeezebox Radio. Let's start by getting you connected to your network.
-	ES	Bienvenido a Squeezebox Radio. Para empezar, nos conectaremos a la red.
-	FI	Tervetuloa Squeezebox Radioon. Aloitetaan muodostamalla yhteys verkkoosi.
-	FR	Bienvenue dans Squeezebox Radio. Commençons par vous connecter à votre réseau.
-	IT	Benvenuti in Squeezebox Radio. Iniziamo con il collegamento alla rete.
-	NL	Welkom bij Squeezebox Radio. Ga aan de slag door een verbinding te maken met je netwerk.
-	NO	Velkommen til Squeezebox Radio. La oss starte med å kople deg til nettverket.
-	PL	Squeezebox Touch — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
-	RU	Добро пожаловать в Squeezebox Touch. Для начала нужно настроить подключение к сети.
-	SV	Välkommen till Squeezebox Radio. Vi börjar med att ansluta till nätverket.
+	EN	Welcome to UE Smart Radio. Let's start by getting you connected to your network.
+	ES	Bienvenido a UE Smart Radio. Para empezar, nos conectaremos a la red.
+	FI	Tervetuloa UE Smart Radioon. Aloitetaan muodostamalla yhteys verkkoosi.
+	FR	Bienvenue dans UE Smart Radio. Commençons par vous connecter à votre réseau.
+	IT	Benvenuti in UE Smart Radio. Iniziamo con il collegamento alla rete.
+	NL	Welkom bij UE Smart Radio. Ga aan de slag door een verbinding te maken met je netwerk.
+	NO	Velkommen til UE Smart Radio. La oss starte med å kople deg til nettverket.
+	PL	UE Smart Touch — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
+	RU	Добро пожаловать в UE Smart Touch. Для начала нужно настроить подключение к сети.
+	SV	Välkommen till UE Smart Radio. Vi börjar med att ansluta till nätverket.
 
 CONTINUE
 	CS	Pokračovat
@@ -63,19 +63,19 @@ DONE
 	SV	Klart!
 
 DONE_HELP
-	CS	Nyní můžete použít váš Squeezebox pro přístup k vaší hudbě!
-	DA	Nu kan du bruge din Squeezebox til at høre al din musik!
-	DE	Jetzt können Sie mit der Squeezebox auf Ihre Musik zugreifen!
-	EN	You can now use your Squeezebox to access all your music!
-	ES	Ya puede utilizar Squeezebox para acceder a toda su música!
-	FI	Nyt pääset käyttämään Squeezeboxilla kaikkia musiikkitiedostojasi!
-	FR	Vous pouvez maintenant utiliser votre Squeezebox pour accéder à toute votre musique!
-	IT	Ora è possibile utilizzare Squeezebox per accedere alla musica!
-	NL	Met je Squeezebox kun je nu naar je al je muziek luisteren!
-	NO	Nå kan du få tilgang til all musikken din via Squeezebox!
-	PL	Teraz możesz używać urządzenia Squeezebox, aby uzyskać dostęp do całej swojej muzyki!
-	RU	Теперь вся ваша музыка доступна в Squeezebox!
-	SV	Nu har du tillgång till all din musik via Squeezebox!
+	CS	Nyní můžete použít váš UE Smart Radio pro přístup k vaší hudbě!
+	DA	Nu kan du bruge din UE Smart Radio til at høre al din musik!
+	DE	Jetzt können Sie mit der UE Smart Radio auf Ihre Musik zugreifen!
+	EN	You can now use your UE Smart Radio to access all your music!
+	ES	Ya puede utilizar UE Smart Radio para acceder a toda su música!
+	FI	Nyt pääset käyttämään UE Smart Radioilla kaikkia musiikkitiedostojasi!
+	FR	Vous pouvez maintenant utiliser votre UE Smart Radio pour accéder à toute votre musique!
+	IT	Ora è possibile utilizzare UE Smart Radio per accedere alla musica!
+	NL	Met je UE Smart Radio kun je nu naar je al je muziek luisteren!
+	NO	Nå kan du få tilgang til all musikken din via UE Smart Radio!
+	PL	Teraz możesz używać urządzenia UE Smart Radio, aby uzyskać dostęp do całej swojej muzyki!
+	RU	Теперь вся ваша музыка доступна в UE Smart Radio!
+	SV	Nu har du tillgång till all din musik via UE Smart Radio!
 
 CONNECTING_TO_SN
 # SLT: please keep this short

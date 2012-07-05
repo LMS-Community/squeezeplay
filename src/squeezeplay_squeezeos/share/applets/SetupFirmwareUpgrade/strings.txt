@@ -213,19 +213,19 @@ UPDATE_BEGIN_UPGRADE
 	SV	En ny uppdatering finns tillgänglig. Det kan ta några minuter innan den har laddats ner och installerats.
 
 UPDATE_BEGIN_REINSTALL
-	CS	Software pro tento Squeezebox je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
-	DA	Softwaren til denne Squeezebox er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
-	DE	Die Software für diese Squeezebox ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
-	EN	The software for this Squeezebox is up to date. If you'd like to reinstall version %s, choose Begin Update.
-	ES	El software de este Squeezebox está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
-	FI	Tämän Squeezeboxin ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
-	FR	Le logiciel de cette Squeezebox est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
-	IT	Il software di questo Squeezebox è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
-	NL	De software voor deze Squeezebox is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
+	CS	Software pro tento Smart Radio je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DA	Softwaren til denne Smart Radio er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
+	DE	Die Software für diese Smart Radio ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
+	EN	The software for this Smart Radio is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este Smart Radio está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FI	Tämän Smart Radioin ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
+	FR	Le logiciel de cette Smart Radio est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	IT	Il software di questo Smart Radio è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze Smart Radio is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
 	NO	Programvaren for denne enheten er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.
 	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
 	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
-	SV	Programvaran för den här Squeezebox-enheten är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
+	SV	Programvaran för den här Smart Radio-enheten är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
 
 UPDATE_BEGIN_REINSTALL_JIVE
 	CS	Software pro tento ovladač je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.

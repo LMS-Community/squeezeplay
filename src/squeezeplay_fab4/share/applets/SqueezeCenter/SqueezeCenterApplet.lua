@@ -174,8 +174,7 @@ function switchServerToDifferentMedia(self, devName)
 
 	self.devName = devName
 
-	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
-	local window = Window("text_list", 'Squeezebox Server')
+	local window = Window("text_list", self:string('SQUEEZEBOX_SERVER'))
 	
 	window:setAllowScreensaver(false)
 	local menu = SimpleMenu("menu")
@@ -215,8 +214,7 @@ end
 
 
 function settingsShow(self)
-	-- Squeezebox Server is Squeezebox Server in all langs, so no need to translate title text
-	local window = Window("text_list", 'Squeezebox Server')
+	local window = Window("text_list", self:string('SQUEEZEBOX_SERVER'))
 	
 	window:setAllowScreensaver(false)
 	-- XXX: first attempt at showing scan process running
