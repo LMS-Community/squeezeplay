@@ -168,19 +168,19 @@ IMAGE_VIEWER_SOURCE_LOCAL_STORAGE
 	SV	Lokalt lagringsmedium
 
 IMAGE_VIEWER_SOURCE_SC
-	CS	Logitech Media Server
-	DA	Logitech Media Server
-	DE	Logitech Media Server
-	EN	Logitech Media Server
-	ES	Logitech Media Server
-	FI	Logitech Media Server
-	FR	Logitech Media Server
-	IT	Logitech Media Server
-	NL	Logitech Media Server
-	NO	Logitech Media Server
-	PL	Logitech Media Server
-	RU	Logitech Media Server
-	SV	Logitech Media Server
+	CS	UE Music Library
+	DA	UE Music Library
+	DE	UE Music Library
+	EN	UE Music Library
+	ES	UE Music Library
+	FI	UE Music Library
+	FR	UE Music Library
+	IT	UE Music Library
+	NL	UE Music Library
+	NO	UE Music Library
+	PL	UE Music Library
+	RU	UE Music Library
+	SV	UE Music Library
 
 IMAGE_VIEWER_SOURCE_HTTP
 	CS	Seznam URL

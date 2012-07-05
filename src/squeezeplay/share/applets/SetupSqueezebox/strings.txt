@@ -200,19 +200,19 @@ SQUEEZEBOX_ETHERNET_PROBLEM_HELP
 	SV	Det gick inte att ansluta Squeezebox till Ethernet-nätverket.
 
 SQUEEZEBOX_PROBLEM_HELP
-	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je Logitech Media Server spuštěn.
-	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at Logitech Media Server kører.
-	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das Logitech Media Server ausgeführt wird.
-	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Logitech Media Server is currently running.
-	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que Logitech Media Server se está ejecutando en este momento.
-	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että Logitech Media Server on käynnissä.
-	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le Logitech Media Server est en cours d'exécution.
-	IT	Impossibile connettersi a %s. Verificare che il computer sia acceso e connesso alla rete locale e che Logitech Media Server sia in esecuzione.
-	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of je computer aanstaat en met je lokale netwerk is verbonden, en of Logitech Media Server actief is.
-	NO	Kunne ikke kople til %s. Kontroller at datamaskinen kjører og er koplet til det lokale nettverket, og at Logitech Media Server kjører.
-	PL	Nie można nawiązać połączenia z %s. Upewnij się, że komputer jest włączony i połączony z siecią lokalną, a program Logitech Media Server jest uruchomiony.
-	RU	Не удалось подключиться к %s. Убедитесь, что компьютер включен и подключен к локальной сети и что Logitech Media Server запущен и работает.
-	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att Logitech Media Server körs för närvarande.
+	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je UE Music Library spuštěn.
+	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at UE Music Library kører.
+	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das UE Music Library ausgeführt wird.
+	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that UE Music Library is currently running.
+	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que UE Music Library se está ejecutando en este momento.
+	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että UE Music Library on käynnissä.
+	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le UE Music Library est en cours d'exécution.
+	IT	Impossibile connettersi a %s. Verificare che il computer sia acceso e connesso alla rete locale e che UE Music Library sia in esecuzione.
+	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of je computer aanstaat en met je lokale netwerk is verbonden, en of UE Music Library actief is.
+	NO	Kunne ikke kople til %s. Kontroller at datamaskinen kjører og er koplet til det lokale nettverket, og at UE Music Library kjører.
+	PL	Nie można nawiązać połączenia z %s. Upewnij się, że komputer jest włączony i połączony z siecią lokalną, a program UE Music Library jest uruchomiony.
+	RU	Не удалось подключиться к %s. Убедитесь, что компьютер включен и подключен к локальной сети и что UE Music Library запущен и работает.
+	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att UE Music Library körs för närvarande.
 
 SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	CS	(Spojení ztraceno).

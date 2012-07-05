@@ -1,18 +1,18 @@
 
 SBS_SETTINGS
-	CS	Nastavení Logitech Media Server
-	DA	Indstillinger for Logitech Media Server
-	DE	Logitech Media Server-Einstellungen
-	EN	Logitech Media Server Settings
-	ES	Configuración de Logitech Media Server
-	FI	Logitech Media Serverin asetukset
-	FR	Réglages du Logitech Media Server
-	IT	Impostazioni di Logitech Media Server
-	NL	Instellingen van Logitech Media Server
-	NO	Innstillinger for Logitech Media Server
-	PL	Ustawienia programu Logitech Media Server
-	RU	Параметры Logitech Media Server
-	SV	Logitech Media Server-inställningar
+	CS	Nastavení UE Music Library
+	DA	Indstillinger for UE Music Library
+	DE	UE Music Library-Einstellungen
+	EN	UE Music Library Settings
+	ES	Configuración de UE Music Library
+	FI	UE Music Libraryin asetukset
+	FR	Réglages du UE Music Library
+	IT	Impostazioni di UE Music Library
+	NL	Instellingen van UE Music Library
+	NO	Innstillinger for UE Music Library
+	PL	Ustawienia programu UE Music Library
+	RU	Параметры UE Music Library
+	SV	UE Music Library-inställningar
 
 USB_SD_STORAGE
 	CS	USB & SD ukládání

@@ -229,19 +229,19 @@ CONNECT_TO_THIS_LIBRARY
 	SV	Anslut till det här biblioteket
 
 SLIMSERVER_HELP
-	CS	Zadejte IP adresu PC, na kterém běží Logitech Media Server
-	DA	Angiv IP-adressen på den computer hvor Logitech Media Server kører
-	DE	IP-Adresse des Computers mit Logitech Media Server eingeben
-	EN	Enter the IP address of the computer running Logitech Media Server
-	ES	Escriba la dirección IP del ordenador que ejecuta Logitech Media Server
-	FI	Anna sen tietokoneen IP-osoite, johon Logitech Media Server on asennettu
-	FR	Spécifiez l'adresse IP de l'ordinateur exécutant Logitech Media Server
-	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione Logitech Media Server
-	NL	Voer het IP-adres van de computer in waarop Logitech Media Server wordt uitgevoerd
-	NO	Oppgi IP-adressen til datamaskinen som kjører Logitech Media Server
-	PL	Wprowadź adres IP komputera, na którym działa program Logitech Media Server
-	RU	Введите IP-адрес компьютера, на котором используется Logitech Media Server
-	SV	Ange IP-adressen till datorn där Logitech Media Server körs
+	CS	Zadejte IP adresu PC, na kterém běží UE Music Library
+	DA	Angiv IP-adressen på den computer hvor UE Music Library kører
+	DE	IP-Adresse des Computers mit UE Music Library eingeben
+	EN	Enter the IP address of the computer running UE Music Library
+	ES	Escriba la dirección IP del ordenador que ejecuta UE Music Library
+	FI	Anna sen tietokoneen IP-osoite, johon UE Music Library on asennettu
+	FR	Spécifiez l'adresse IP de l'ordinateur exécutant UE Music Library
+	IT	Inserire l'indirizzo IP del computer in cui è in esecuzione UE Music Library
+	NL	Voer het IP-adres van de computer in waarop UE Music Library wordt uitgevoerd
+	NO	Oppgi IP-adressen til datamaskinen som kjører UE Music Library
+	PL	Wprowadź adres IP komputera, na którym działa program UE Music Library
+	RU	Введите IP-адрес компьютера, на котором используется UE Music Library
+	SV	Ange IP-adressen till datorn där UE Music Library körs
 
 SLIMSERVER_CONNECTING_TO
 #SLT: please keep this message as short as possible
@@ -320,34 +320,34 @@ CHOOSE_OTHER_LIBRARY
 	SV	Byt bibliotek
 
 SQUEEZEBOX_PROBLEM_HELP_GENERIC
-	CS	Nepovedlo se připojení k %s. Pokud tento problém nadále přetrvá, zkontrolujte prosím Logitech Media Server, abyste se ujistili, že řádně pracuje a že máte spolehlivé síťové připojení.
-	DA	Der kunne ikke etableres forbindelse til %s. Hvis problemet varer ved, skal du tjekke at Logitech Media Server kører som den skal og at du har en stabil netværksforbindelse.
-	DE	Verbindung mit %s nicht möglich. Sollte das Problem weiterhin bestehen, prüfen Sie, ob der Logitech Media Server funktionstüchtig ist und Sie über eine zuverlässige Netzwerkverbindung verfügen.
-	EN	We couldn't connect to %s.  If this problem persists, please check Logitech Media Server to make sure it is running properly, and that you have a reliable network connection.
-	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que Logitech Media Server se está ejecutando correctamente y de que la conexión de red es fiable.
-	FI	Emme voineet muodostaa yhteyttä kohteeseen %s.  Jos ongelma jatkuu, tarkista Logitech Media Serverin ja verkkoyhteyden toiminta.
-	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le Logitech Media Server est correctement exécuté et que la connexion au réseau est fiable.
-	IT	Non è stato possibile connettersi a %s. Se il problema persiste, verificare che Logitech Media Server sia in esecuzione correttamente e che la connessione sia affidabile.
-	NL	Er kan geen verbinding worden gemaakt met %s. Blijft dit probleem zich voordoen, controleer dan of de Logitech Media Server goed functioneert en of je een betrouwbare netwerkverbinding hebt.
-	NO	Kan ikke kople til %s. Hvis dette problemet vedvarer, må du kontrollere at Logitech Media Server kjører som den skal, og at du har en stabil nettverkstilkopling.
-	PL	Nie można nawiązać połączenia z %s. Jeśli problem będzie się powtarzał, sprawdź działanie programu Logitech Media Server i połączenia sieciowego.
-	RU	Не удалось подключиться к %s. Если эта неполадка будет повторяться, проверьте, правильно ли работает Logitech Media Server и установлено ли надежное сетевое подключение.
-	SV	Det gick inte att ansluta till %s.  Om problemet kvarstår kontrollerar du Logitech Media Server och kontrollerar att den är igång, och att du har en stabil nätverksanslutning.
+	CS	Nepovedlo se připojení k %s. Pokud tento problém nadále přetrvá, zkontrolujte prosím UE Music Library, abyste se ujistili, že řádně pracuje a že máte spolehlivé síťové připojení.
+	DA	Der kunne ikke etableres forbindelse til %s. Hvis problemet varer ved, skal du tjekke at UE Music Library kører som den skal og at du har en stabil netværksforbindelse.
+	DE	Verbindung mit %s nicht möglich. Sollte das Problem weiterhin bestehen, prüfen Sie, ob der UE Music Library funktionstüchtig ist und Sie über eine zuverlässige Netzwerkverbindung verfügen.
+	EN	We couldn't connect to %s.  If this problem persists, please check UE Music Library to make sure it is running properly, and that you have a reliable network connection.
+	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que UE Music Library se está ejecutando correctamente y de que la conexión de red es fiable.
+	FI	Emme voineet muodostaa yhteyttä kohteeseen %s.  Jos ongelma jatkuu, tarkista UE Music Libraryin ja verkkoyhteyden toiminta.
+	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le UE Music Library est correctement exécuté et que la connexion au réseau est fiable.
+	IT	Non è stato possibile connettersi a %s. Se il problema persiste, verificare che UE Music Library sia in esecuzione correttamente e che la connessione sia affidabile.
+	NL	Er kan geen verbinding worden gemaakt met %s. Blijft dit probleem zich voordoen, controleer dan of de UE Music Library goed functioneert en of je een betrouwbare netwerkverbinding hebt.
+	NO	Kan ikke kople til %s. Hvis dette problemet vedvarer, må du kontrollere at UE Music Library kjører som den skal, og at du har en stabil nettverkstilkopling.
+	PL	Nie można nawiązać połączenia z %s. Jeśli problem będzie się powtarzał, sprawdź działanie programu UE Music Library i połączenia sieciowego.
+	RU	Не удалось подключиться к %s. Если эта неполадка будет повторяться, проверьте, правильно ли работает UE Music Library и установлено ли надежное сетевое подключение.
+	SV	Det gick inte att ansluta till %s.  Om problemet kvarstår kontrollerar du UE Music Library och kontrollerar att den är igång, och att du har en stabil nätverksanslutning.
 
 SQUEEZEBOX_PROBLEM_HELP
-	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je Logitech Media Server spuštěn.
-	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at Logitech Media Server kører.
-	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das Logitech Media Server ausgeführt wird.
-	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that Logitech Media Server is currently running.
-	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que Logitech Media Server se está ejecutando en este momento.
-	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että Logitech Media Server on käynnissä.
-	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le Logitech Media Server est en cours d'exécution.
-	IT	Impossibile connettersi a %s. Verificare che il computer sia acceso e connesso alla rete locale e che Logitech Media Server sia in esecuzione.
-	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of je computer aanstaat en met je lokale netwerk is verbonden, en of Logitech Media Server actief is.
-	NO	Kunne ikke kople til %s. Kontroller at datamaskinen kjører og er koplet til det lokale nettverket, og at Logitech Media Server kjører.
-	PL	Nie można nawiązać połączenia z %s. Upewnij się, że komputer jest włączony i połączony z siecią lokalną, a program Logitech Media Server jest uruchomiony.
-	RU	Не удалось подключиться к %s. Убедитесь, что компьютер включен и подключен к локальной сети и что Logitech Media Server запущен.
-	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att Logitech Media Server körs för närvarande.
+	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je UE Music Library spuštěn.
+	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at UE Music Library kører.
+	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das UE Music Library ausgeführt wird.
+	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that UE Music Library is currently running.
+	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que UE Music Library se está ejecutando en este momento.
+	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että UE Music Library on käynnissä.
+	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le UE Music Library est en cours d'exécution.
+	IT	Impossibile connettersi a %s. Verificare che il computer sia acceso e connesso alla rete locale e che UE Music Library sia in esecuzione.
+	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of je computer aanstaat en met je lokale netwerk is verbonden, en of UE Music Library actief is.
+	NO	Kunne ikke kople til %s. Kontroller at datamaskinen kjører og er koplet til det lokale nettverket, og at UE Music Library kjører.
+	PL	Nie można nawiązać połączenia z %s. Upewnij się, że komputer jest włączony i połączony z siecią lokalną, a program UE Music Library jest uruchomiony.
+	RU	Не удалось подключиться к %s. Убедитесь, что компьютер включен и подключен к локальной сети и что UE Music Library запущен.
+	SV	Det gick inte att ansluta till %s. Kontrollera att datorn är igång och ansluten till ditt lokala nätverk och att UE Music Library körs för närvarande.
 
 SQUEEZECENTER_VERSION
 	CS	Aktualizovat software
@@ -365,17 +365,17 @@ SQUEEZECENTER_VERSION
 	SV	Uppgradera
 
 SQUEEZECENTER_VERSION_HELP
-	CS	%s vyžaduje aktualizaci na novější verzi Logitech Media Server.\n\nPro stažení nejnovější verze navštivte laskavě uesmartradio.com/downloads.
-	DA	%s skal opdateres til en nyere version af Logitech Media Server.\n\nGå til uesmartradio.com/downloads, og hent den nyeste version.
-	DE	%s muss auf eine neue Version von Logitech Media Server aktualisiert werden.\n\nLaden Sie unter uesmartradio.com/downloads die neueste Version herunter.
-	EN	%s needs to be updated to a newer version of the Logitech Media Server.\n\nPlease visit uesmartradio.com/downloads to download the latest version.
-	ES	%s debe actualizarse a una versión nueva de Logitech Media Server.\n\nVisite uesmartradio.com/downloads para descargar la versión más reciente.
-	FI	%s täytyy päivittää Logitech Media Serverin uudempaan versioon.\n\nLataa uusin versio osoitteesta uesmartradio.com/downloads.
-	FR	Vous devez mettre %s à jour à la dernière version du Logitech Media Server.\n\nVisitez uesmartradio.com/downloads pour télécharger la dernière version.
-	IT	È necessario aggiornare %s a una versione più recente di Logitech Media Server.\n\nVisitare uesmartradio.com/downloads per scaricarla.
-	NL	%s moet worden bijgewerkt naar een recentere versie van de Logitech Media Server.\n\nGa naar uesmartradio.com/downloads om de nieuwste versie te downloaden.
-	NO	%s må oppdateres til en nyere versjon av Logitech Media Server.\n\nGå til uesmartradio.com/downloads for å laste ned den nyeste versjonen.
-	PL	%s wymaga aktualizacji do nowszej wersji programu Logitech Media Server.\n\nOdwiedź witrynę uesmartradio.com/downloads, aby pobrać najnowszą wersję.
-	RU	%s необходимо обновить до более новой версии Logitech Media Server.\n\nПосетите uesmartradio.com/downloads, чтобы загрузить последнюю версию.
-	SV	%s måste uppdateras till en senare version av Logitech Media Server.\n\nGå till uesmartradio.com/downloads för att ladda ner den senaste versionen.
+	CS	%s vyžaduje aktualizaci na novější verzi UE Music Library.\n\nPro stažení nejnovější verze navštivte laskavě uesmartradio.com/downloads.
+	DA	%s skal opdateres til en nyere version af UE Music Library.\n\nGå til uesmartradio.com/downloads, og hent den nyeste version.
+	DE	%s muss auf eine neue Version von UE Music Library aktualisiert werden.\n\nLaden Sie unter uesmartradio.com/downloads die neueste Version herunter.
+	EN	%s needs to be updated to a newer version of the UE Music Library.\n\nPlease visit uesmartradio.com/downloads to download the latest version.
+	ES	%s debe actualizarse a una versión nueva de UE Music Library.\n\nVisite uesmartradio.com/downloads para descargar la versión más reciente.
+	FI	%s täytyy päivittää UE Music Libraryin uudempaan versioon.\n\nLataa uusin versio osoitteesta uesmartradio.com/downloads.
+	FR	Vous devez mettre %s à jour à la dernière version du UE Music Library.\n\nVisitez uesmartradio.com/downloads pour télécharger la dernière version.
+	IT	È necessario aggiornare %s a una versione più recente di UE Music Library.\n\nVisitare uesmartradio.com/downloads per scaricarla.
+	NL	%s moet worden bijgewerkt naar een recentere versie van de UE Music Library.\n\nGa naar uesmartradio.com/downloads om de nieuwste versie te downloaden.
+	NO	%s må oppdateres til en nyere versjon av UE Music Library.\n\nGå til uesmartradio.com/downloads for å laste ned den nyeste versjonen.
+	PL	%s wymaga aktualizacji do nowszej wersji programu UE Music Library.\n\nOdwiedź witrynę uesmartradio.com/downloads, aby pobrać najnowszą wersję.
+	RU	%s необходимо обновить до более новой версии UE Music Library.\n\nПосетите uesmartradio.com/downloads, чтобы загрузить последнюю версию.
+	SV	%s måste uppdateras till en senare version av UE Music Library.\n\nGå till uesmartradio.com/downloads för att ladda ner den senaste versionen.
 
