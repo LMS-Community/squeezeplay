@@ -37,6 +37,7 @@ local Icon                   = require("jive.ui.Icon")
 
 local jiveMain               = jiveMain
 
+local appletManager    = appletManager
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
