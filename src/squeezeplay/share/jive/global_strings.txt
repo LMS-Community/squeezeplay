@@ -153,19 +153,7 @@ ADVANCED_SETTINGS
 	SV	Avancerat
 
 AUDIO_SETTINGS
-	CS	Nastavení zvuku
-	DA	Lydindstillinger
-	DE	Audioeinstellungen
-	EN	Audio Settings
-	ES	Configuración de audio
-	FI	Ääniasetukset
-	FR	Paramètres audio
-	IT	Impostazioni audio
-	NL	Geluidsinstellingen
-	NO	Lydinnstillinger
-	PL	Ustawienia audio
-	RU	Настройки аудиоканала
-	SV	Ljudinställningar
+	EN	Audio
 
 BETA_FEATURES
 	CS	Beta vlastnosti
