@@ -28,7 +28,7 @@ function registerApplet(meta)
 		Framework:playSound("WINDOWSHOW")
 	end, 1)
 
-	jiveMain:addItem(meta:menuItem('diagnostics', 'advancedSettings', "DIAGNOSTICS", function(applet, ...) applet:diagnosticsMenu() end))
+	jiveMain:addItem(meta:menuItem('diagnostics', 'advancedSettings', "DIAGNOSTICS", function(applet, ...) applet:diagnosticsMenu() end, 15))
 end
 
 

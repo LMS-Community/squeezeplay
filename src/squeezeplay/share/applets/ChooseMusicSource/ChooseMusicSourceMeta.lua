@@ -58,6 +58,7 @@ function configureApplet(meta)
 		appletManager:callService("setPollList", meta:getSettings().poll)
 	end
 
+--[[
 	jiveMain:addItem(
 		meta:menuItem(
 			'appletRemoteSlimservers',
@@ -69,6 +70,7 @@ function configureApplet(meta)
 			11
 		)
 	)
+--]]
 
 end
 

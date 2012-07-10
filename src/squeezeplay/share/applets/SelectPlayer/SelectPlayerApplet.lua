@@ -155,6 +155,9 @@ function manageSelectPlayerMenu(self)
 				weight = 50
 			end
 
+			-- Not sure what happens if this item is removed - only hide it
+			node = "hidden"
+
 			local menuItem = {
 				id = 'selectPlayer',
 				iconStyle = 'hm_selectPlayer',

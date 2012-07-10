@@ -652,7 +652,7 @@ function addNowPlayingItem(self)
 		node = 'home',
 		text = self:string('SCREENSAVER_NOWPLAYING'),
 		sound = 'WINDOWSHOW',
-		weight = 1,
+		weight = 5,
 		callback = function(event, menuItem)
 			self:goNowPlaying(Window.transitionPushLeft)
 			end

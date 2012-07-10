@@ -799,29 +799,6 @@ function diagnosticsMenu(self, suppressNetworkingItem)
 		})
 	end
 	
-	if System:isHardware() then
-		menu:addItem({
-			text = self:string("SOFTWARE_UPDATE"),
-			sound = "WINDOWSHOW",		
-			style = 'item',
-			callback = function ()
-				--todo: this does setup style FW upgrade only (since this menu is avilable from setup).  When we want different support for a non-setup version, make sure to leave the setup style behavior
-				appletManager:callService("firmwareUpgrade", nil, true)
-			end
-		})
-
-		if not suppressNetworkingItem then
-			menu:addItem({
-				text = self:string("DIAGNOSTICS_NETWORKING"),
-				sound = "WINDOWSHOW",		
-				style = 'item',
-				callback = function ()
-					appletManager:callService("settingsNetworking")
-				end
-			})
-		end
-	end
-
 	self.notConnected = tostring(self:string('NOT_CONNECTED'))
 
 	self.menu = menu

@@ -2262,6 +2262,18 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_settingsPlugin = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings_plugin" .. skinSuffix),
 	})
+	s.hm_settingsTime = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_time" .. skinSuffix),
+	})
+	s.hm_settingsSmartRadio = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_smartradio" .. skinSuffix),
+	})
+	s.hm_settingsAboutJive = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_aboutjive" .. skinSuffix),
+	})
+	s.hm_settingsLanguage = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_language" .. skinSuffix),
+	})
 
 	-- indicator icons, on right of menus
 	s._indicator = {

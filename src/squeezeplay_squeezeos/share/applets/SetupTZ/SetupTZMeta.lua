@@ -18,7 +18,7 @@ function jiveVersion(meta)
 end
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupTZ', 'advancedSettings', "TZ_TIMEZONE", function(applet, ...) applet:settingsShow(...) end))
+	jiveMain:addItem(meta:menuItem('appletSetupTZ', 'settingsTime', "TZ_TIMEZONE", function(applet, ...) applet:settingsShow(...) end))
 
 	-- At register time, subscribe to network events
 	-- if the timezone hasn't been set

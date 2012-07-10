@@ -83,6 +83,19 @@ local itemMap = {
 	-- items
 	settingsPlaylistMode = { "settingsPlaylistMode", "advancedSettingsBetaFeatures", 100 },
 	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
+
+	-- Belsonic menu nodes/items reshuffle
+	-- TODO: This list can be removed as soon as the server side has been fixed
+	favorites = { "favorites", "home", 1},
+	globalSearch = { "globalSearch", "hidden" },
+	opmlmyapps = { "opmlmyapps", "hidden" },
+	opmlappgallery = { "opmlappgallery", "hidden" },
+	settingsPlayerNameChange = { "settingsPlayerNameChange", "settingsSmartRadio" },
+	settingsSync = { "settingsSync", "settingsSmartRadio" },
+	audioscrobbler = { "audioscrobbler", "hidden" },
+	settingsInformation = { "settingsInformation", "hidden" },
+	settingsRepeat = { "settingsRepeat", "hidden"},
+	settingsShuffle = { "settingsShuffle", "hidden" },
 }
 
 
@@ -444,7 +457,7 @@ end
 
 function _addMyAppsNode(self)
 	local version = _player and _player:getSlimServer() and _player:getSlimServer():getVersion()
-	local myApps = { id = 'myApps', iconStyle = 'hm_myApps', node = 'home', text = self:string('MENUS_MY_APPS'), weight = 30  } 
+	local myApps = { id = 'myApps', iconStyle = 'hm_myApps', node = 'hidden', text = self:string('MENUS_MY_APPS'), weight = 30  }
 	jiveMain:addNode( myApps )
 	_playerMenus['myApps'] = myApps
 
@@ -605,6 +618,20 @@ local function _menuSink(self, isCurrentServer, server)
 				log:info("no id for menu item: ", item.text)
 			elseif item.id == 'opmlmyapps' and self.myAppsNode then
 				--ignore, if self.myAppsNode is set that means we're delivering My Apps via a node and opml home menu items
+			elseif item.id == 'opmlappgallery' then
+				--If opmlappgallery is present replace with hint
+				local itemMusicServices = {
+					id = 'menuMusicServices',
+					node = 'home',
+					iconStyle = 'hm_myMusicSelector',
+					text = self:string('MUSIC_SERVICES_ADD'),
+					sound = 'WINDOWSHOW',
+					weight = 90,
+					callback = function(event, menuItem)
+						self:_menuMusicServices(menuItem)
+					end
+				}
+				self:_addItem(itemMusicServices, isCurrentServer, addAppToHome)
 			elseif item.id == "playerpower" and System:hasSoftPower() and System:getMachine() ~= 'squeezeplay' then
 				--ignore, playerpower no longer shown to users since we use power button, unless this is a device without a power button
 			elseif item.id == "settingsPIN" then
@@ -1371,6 +1398,28 @@ function _mergeServerMenuToHomeMenu(self, server, menuItems, isConnectedServer)
 
 	_menuSink(self, isConnectedServer, server)(chunk)
 
+end
+
+
+function _menuMusicServices(self)
+	local window = Window("text_list", self:string("MUSIC_SERVICES_ADD"), 'settingstitle')
+
+	local menu = SimpleMenu("menu", {
+					{
+						text = self:string("MUSIC_SERVICES_GO_BACK"),
+						sound = "WINDOWHIDE",
+						callback = function()
+								   window:hide()
+							   end
+					},
+				})
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("MUSIC_SERVICES_HINT")))
+
+	window:addWidget(menu)
+
+	window:show()
+	return window
 end
 
 

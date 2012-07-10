@@ -257,3 +257,25 @@ INSTALL_SC_TEXT_JIVE
 	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение UE Music Library с сайта www.uesmartradio.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 	SV	Om du vill aktivera Min musik laddar du ned UE Music Library-programvaran från www.uesmartradio.com och se till att den är installerad och körs på en dator i nätverket.
 
+MUSIC_SERVICES_ADD
+	EN	Add Music Services
+
+MUSIC_SERVICES_HINT
+	EN	Enhance your Smart Radio with music services like Pandora, Deezer, Spotify, MOG and many more! To get started, download the Smart Radio Controller mobile app or go to UEsmartradio.com.
+
+MUSIC_SERVICES_GO_BACK
+	CS	Jít zpět
+	DA	Gå tilbage
+	DE	Zurück
+	EN	Go back
+	ES	Regresar
+	FI	Takaisin
+	FR	Retour
+	IT	Indietro
+	NL	Terug
+	NO	Gå tilbake
+	PL	Wstecz
+	RU	Назад
+	SV	Tillbaka
+
+

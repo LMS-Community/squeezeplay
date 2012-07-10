@@ -25,7 +25,7 @@ function configureApplet(self)
 	appletManager:loadApplet("MyMusic")
 
 	-- add a menu item for myMusic
-	jiveMain:addItem(self:menuItem('myMusicSelector', 'home', 'MYMUSIC_MY_MUSIC', function(applet, ...) applet:myMusicSelector(...) end, 2, nil, "hm_myMusicSelector"))
+	jiveMain:addItem(self:menuItem('myMusicSelector', 'home', 'MYMUSIC_MY_MUSIC', function(applet, ...) applet:myMusicSelector(...) end, 23, nil, "hm_myMusicSelector"))
 end
 
 

@@ -61,7 +61,7 @@ function registerApplet(meta)
 	meta:registerService("setDateTimeDefaultFormats")
 
         -- Menu for configuration
-        jiveMain:addItem(meta:menuItem('appletSetupDateTime', 'screenSettings', "DATETIME_TITLE", function(applet, ...) applet:settingsShow(...) end))
+        jiveMain:addItem(meta:menuItem('appletSetupDateTime', 'settingsTime', "DATETIME_TIMEFORMAT", function(applet, ...) applet:timeSetting(...) end))
 end
 
 

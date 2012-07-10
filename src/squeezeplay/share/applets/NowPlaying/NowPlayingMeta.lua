@@ -26,21 +26,11 @@ function registerApplet(self)
 
 	jiveMain:addItem(
 		self:menuItem(
-			'appletNowPlayingScrollMode', 
-			'screenSettingsNowPlaying', 
-			'SCREENSAVER_SCROLLMODE', 
-			function(applet, ...) 
-				applet:scrollSettingsShow(...) 
-			end
-		)
-	)
-	jiveMain:addItem(
-		self:menuItem(
-			'appletNowPlayingViewsSettings', 
-			'screenSettingsNowPlaying', 
-			'NOW_PLAYING_VIEWS', 
-			function(applet, ...) 
-				applet:npviewsSettingsShow(...) 
+			'appletNowPlayingViewsSettings',
+			'screenSettings',
+			'SCREENSAVER_NOWPLAYING',
+			function(applet, ...)
+				applet:npviewsSettingsShow(...)
 			end
 		)
 	)
@@ -53,9 +43,9 @@ end
 function configureApplet(self)
 
 	appletManager:callService("addScreenSaver",
-		self:string("SCREENSAVER_NOWPLAYING"), 
-		"NowPlaying", 
-		"openScreensaver", 
+		self:string("SCREENSAVER_NOWPLAYING"),
+		"NowPlaying",
+		"openScreensaver",
 		_,
 		_,
 		10,
