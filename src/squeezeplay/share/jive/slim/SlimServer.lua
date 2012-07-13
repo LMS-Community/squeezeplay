@@ -1288,6 +1288,10 @@ function isCompatible(self)
 		return nil
 	end
 	
+	if self.state.version == minimumVersion then
+		return true
+	end
+
 	return self:isMoreRecent(self.state.version, minimumVersion)
 end
 

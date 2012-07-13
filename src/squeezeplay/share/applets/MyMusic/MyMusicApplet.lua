@@ -49,6 +49,40 @@ function _addItem(self, item)
 	end
 end
 
+
+function _serverVersionError(self, server)
+	local window = Window("error", self:string("MYMUSIC_MUSIC_LIBRARY_VERSION"), setupsqueezeboxTitleStyle)
+	window:setAllowScreensaver(false)
+
+	local help = Textarea("help_text", self:string("MYMUSIC_MUSIC_LIBRARY_VERSION_HELP", server:getName(), server:getVersion()))
+
+	window:addWidget(help)
+
+	-- timer to check if server has been upgraded
+	window:addTimer(1000, function()
+		appletManager:callService("discoverServers")
+		if server:isCompatible() then
+			self:_selectServer(server)
+			window:hide(Window.transitionPushLeft)
+		end
+	end)
+
+	self:tieAndShowWindow(window)
+end
+
+
+function _selectServer(self, server)
+	if server:getVersion() and not server:isCompatible() then
+		--we only know if compatible if serverstatus has come back, other version will be nil, and we shouldn't assume not compatible
+		_serverVersionError(self, server)
+		return
+	end
+
+	self:_updateMyMusicTitle(server)
+	jiveMain:openNodeById(server:getId())
+end
+
+
 -- _menuSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -152,8 +186,7 @@ function myMusicSelector(self)
 
 	if numServer == 1 then
 		-- Only one attached server - show it directly
-		_updateMyMusicTitle(self, lastServer)
-		jiveMain:openNodeById(lastServer:getId())
+		self:_selectServer(lastServer)
 		return
 	end
 
@@ -168,8 +201,7 @@ function myMusicSelector(self)
 				text = server:getName(),
 				sound = "WINDOWSHOW",
 				callback = function()
-						_updateMyMusicTitle(self, server)
-						jiveMain:openNodeById(server:getId())
+						self:_selectServer(server)
 					   end,
 				weight = 1,
 			}
@@ -184,7 +216,7 @@ function myMusicSelector(self)
 
 	window:addWidget(self.serverMenu)
 
-	-- Discover players in this window
+	-- Discover servers in this window
 	appletManager:callService("discoverServers")
 	window:addTimer(1000, function() appletManager:callService("discoverServers") end)
 
@@ -239,8 +271,7 @@ function notify_serverNew(self, server)
 			text = server:getName(),
 			sound = "WINDOWSHOW",
 			callback = function()
-					_updateMyMusicTitle(self, server)
-					jiveMain:openNodeById(server:getId())
+					self:_selectServer(server)
 				   end,
 			weight = 1,
 		}

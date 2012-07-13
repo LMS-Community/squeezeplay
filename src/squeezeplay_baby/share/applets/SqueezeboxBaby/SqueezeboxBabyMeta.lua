@@ -62,7 +62,7 @@ function registerApplet(meta)
 	LocalPlayer:setDeviceType("baby", "Logitech UE Smart Radio")
 
 	-- Set the minimum support server version
-	SlimServer:setMinimumVersion("7.4")
+	SlimServer:setMinimumVersion("10.0.0")
 
 	-- System sound effects attenuation
 	Sample:setEffectAttenuation(Sample.MAXVOLUME / 25)
