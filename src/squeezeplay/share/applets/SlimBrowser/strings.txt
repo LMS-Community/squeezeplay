@@ -111,7 +111,7 @@ SLIMBROWSER_SEARCH_HELP
 	CS	Pomocí kolečka měňte písmena a stisknutím prostředního tlačítka proveďte výběr. Chcete-li spustit hledání, stiskněte znovu prostřední tlačítko.
 	DA	Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen igen for at begynde søgningen.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die mittlere Taste. Drücken Sie zum Starten der Suche die mittlere Taste erneut.
-	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press the center button again to start your search.
+	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press Play to start your search.
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
 	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
 	FR	Utiliser la molette pour choisir une lettre, puis appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
@@ -323,7 +323,7 @@ SLIMBROWSER_PASSWORD_WRONG_BODY
 	CS	Zadané uživatelské jméno a heslo není platné.
 	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
-	EN	The username or password you entered is not valid.
+	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
 	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
@@ -398,7 +398,7 @@ SLIMBROWSER_ALARM_SOUND_HELP
 	CS	V těchto nabídkách vyberte položku jako zvuk budíku nebo stiskem play přehrajte ukázku zvuku.
 	DA	I disse menuer skal du vælge en lyd til vækkeuret og trykke på Afspil for at høre et eksempel.
 	DE	Wählen Sie in diesen Menüs ein Element für einen Alarmton aus.  Drücken Sie 'Play', um eine Vorschau anzuzeigen.
-	EN	In these menus, select an item for an alarm sound or press play to preview.
+	EN	In these menus, select an item for an alarm sound, or press Play to preview.
 	ES	En estos menús, seleccione un elemento para un sonido de alarma o pulse el botón de reproducción para obtener una vista previa.
 	FI	Näissä valikoissa valitset kohteen hälytysäänelle tai esikuuntelet painamalla soita.
 	FR	Dans ces menus, choisissez un son pour le réveil, ou appuyez sur le bouton Play pour lancer la lecture.
@@ -428,7 +428,7 @@ SLIMBROWSER_ALARM_SOUND_HELP_BABY
 	CS	V těchto nabídkách můžete stiskem ovladače zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
 	DA	I disse menuer kan du trykke på drejeknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
 	DE	Drücken Sie in diesen Menüs den Knopf zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
-	EN	In these menus, press the knob to select an alarm sound, press play to preview.
+	EN	In these menus, press the knob to select an alarm sound, or press Play to preview.
 	ES	En estos menús, pulse el control para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
 	FI	Näissä valikoissa valitset hälytysäänen painamalla nuppia, esikuuntelet painamalla soita.
 	FR	Dans ces menus, appuyez sur le bouton de commande pour sélectionner un son de réveil et appuyez sur le bouton Play pour l'écouter.
@@ -443,7 +443,7 @@ SLIMBROWSER_ALARM_SOUND_HELP_JIVE
 	CS	V těchto nabídkách můžete stiskem středového tlačítka zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
 	DA	I disse menuer kan du trykke på midterknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
 	DE	Drücken Sie in diesen Menüs die mittlere Taste zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
-	EN	In these menus, press the center button to select an alarm sound, press play to preview.
+	EN	In these menus, press the center button to select an alarm sound, or press Play to preview.
 	ES	En estos menús, pulse el botón central para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
 	FI	Näissä valikoissa valitset hälytysäänen painamalla keskipainiketta, esikuuntelet painamalla soita.
 	FR	Dans ces menus, appuyez sur le bouton central pour sélectionner un son de réveil, puis appuyez sur le bouton Play pour l'écouter.

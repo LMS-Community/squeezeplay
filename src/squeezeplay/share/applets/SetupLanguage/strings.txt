@@ -37,7 +37,7 @@ CHOOSE_LANGUAGE_HELP
 	CS	Pro výběr vašeho jazyka použijte kolečko. Pro další úkon prostřední tlačítko.
 	DA	Brug drejeknappen til at vælge sprog. Tryk på midterknappen for at fortsætte.
 	DE	Wählen Sie Ihre Sprache mit dem Rad aus. Drücken Sie zum Fortfahren die mittlere Taste.
-	EN	Use the wheel to choose your language. Press the center button to go on.
+	EN	Spin the dial to choose your language, then press the dial to proceed.
 	ES	Use el botón rueda para elegir el idioma. Pulse el botón central para continuar.
 	FI	Valitse kieli vierityskiekolla. Jatka painamalla keskipainiketta.
 	FR	Utilisez la roulette pour choisir une langue. Appuyez sur le bouton central pour continuer.

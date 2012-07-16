@@ -47,7 +47,7 @@ SQUEEZENETWORK_NOT_LINKED
 	CS	Nemohu ověřit váš PIN.  Zadali jste jej na webu?
 	DA	Pinkoden kunne ikke verificeres.  Har du angivet den på websiden?
 	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?
-	EN	Could not verify your PIN.  Have you entered it on the website?
+	EN	Could not verify your PIN. Make sure you have recently entered it on the website.
 	ES	No se ha podido verificar el PIN. ¿Lo ha introducido en el sitio Web?
 	FI	PIN-koodia ei voi vahvistaa.  Annoitko sen WWW-sivustolla?
 	FR	Impossible de vérifier le code PIN. Spécifiez le code sur le site Web.

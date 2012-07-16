@@ -36,7 +36,7 @@ MYMUSIC_HINT
 	CS	Chcete-li mít přístup k vaší místní hudbě, stáhněte a nainstalujte UEML.
 	DA	Hent og installer UEML for at få adgang til din lokale musik.
 	DE	Um auf Ihre lokal gespeicherte Musik zuzugreifen, laden Sie die UEML herunter und installieren Sie sie.
-	EN	To access your local music, download and install UEML.
+	EN	To play your local music, download and install UEML from uesmartradio.com/downloads.
 	ES	Para acceder a su música local, descargue e instale UEML.
 	FI	Lataa ja asenna UEML, jotta saat paikallisen musiikin käyttöösi.
 	FR	Pour accéder à votre musique locale, téléchargez et installez UEML.

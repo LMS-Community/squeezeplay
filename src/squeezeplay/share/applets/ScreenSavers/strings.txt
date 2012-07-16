@@ -96,7 +96,7 @@ SCREENSAVER_SELECT_PLAYING_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že tento Smart Radio přehrává. K prohlédnutí spořiče stiskněte přehrávání.
 	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Smart Radio spiller. Tryk på afspil for at se et eksempel på en pauseskærm.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn eine Wiedergabe über die Smart Radio erfolgt. Drücken Sie "Play", um eine Vorschau des Bildschirmschoners anzuzeigen.
-	EN	Press the center button to select a screensaver to be shown when this Smart Radio is playing. Press play to preview a screensaver.
+	EN	Press the center button to select the screensaver for "Play" mode. Press the Play button to preview a screensaver.
 	ES	Pulse el botón central para seleccionar un protector de pantalla que aparecerá cuando este Smart Radio esté reproduciendo música. Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FI	Valitse keskipainikkeella näytönsäästäjä, joka näkyy, kun tämä Smart Radio toistaa ääntä. Esikatsele näytönsäästäjä painamalla Toisto-painiketta.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Smart Radio est en cours d'utilisation. Appuyez sur le bouton de lecture pour obtenir un aperçu de l'écran de veille.
@@ -111,7 +111,7 @@ SCREENSAVER_SELECT_STOPPED_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který bude zobrazen v případě, že tento Smart Radio nepřehrává. K prohlédnutí spořiče stiskněte přehrávání.
 	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Smart Radio ikke spiller. Tryk på afspil for at se et eksempel på en pauseskærm.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der angezeigt werden soll, wenn keine Wiedergabe über die Smart Radio erfolgt. Drücken Sie 'Play', um eine Vorschau des Bildschirmschoners anzuzeigen.
-	EN	Press the center button to select a screensaver to be shown when this Smart Radio is not playing. Press play to preview a screensaver.
+	EN	Press the center button to select the screensaver to be shown when the Radio is on but not playing. Press the Play button to preview a screensaver.
 	ES	Pulse el botón central para seleccionar un protector de pantalla que aparecerá cuando este Smart Radio no esté reproduciendo música. Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FI	Valitse keskipainikkeella näytönsäästäjä, joka näkyy, kun tämä Smart Radio ei toista ääntä. Esikatsele näytönsäästäjä painamalla Toisto-painiketta.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Smart Radio n'est pas en cours d'utilisation. Appuyez sur le bouton de lecture pour obtenir un aperçu de l'écran de veille.
@@ -126,7 +126,7 @@ SCREENSAVER_SELECT_OFF_HELP
 	CS	Stiskněte středové tlačítko pro volbu spořiče obrazovky, který se zobrazí v případě, že je tento Smart Radio vypnut. K prohlédnutí spořiče stiskněte přehrávání.
 	DA	Tryk på midterknappen for at vælge den pauseskærm som skal vises når denne Smart Radio er slukket. Tryk på afspil for at se et eksempel på en pauseskærm.
 	DE	Drücken Sie die mittlere Taste, um einen Bildschirmschoner zu wählen, der bei ausgeschalteter Smart Radio angezeigt werden soll. Drücken Sie "Play", um eine Vorschau des Bildschirmschoners anzuzeigen.
-	EN	Press the center button to select a screensaver to be shown when this Smart Radio is off. Press play to preview a screensaver.
+	EN	Press the center button to select the screensaver for "Off" mode. Press the Play button to preview a screensaver.
 	ES	Pulse el botón central para seleccionar un protector de pantalla que aparecerá cuando este Smart Radio esté apagado. Pulse el botón de reproducción para obtener una vista previa de un protector de pantalla.
 	FI	Valitse keskipainikkeella näytönsäästäjä, joka näkyy, kun Smart Radio ei ole käytössä. Esikatsele näytönsäästäjä painamalla Toisto-painiketta.
 	FR	Appuyez sur le bouton central pour sélectionner un écran de veille à afficher lorsque cette Smart Radio est hors tension. Appuyez sur le bouton de lecture pour obtenir l'aperçu d'un écran de veille.

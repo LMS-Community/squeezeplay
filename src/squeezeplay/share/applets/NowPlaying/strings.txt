@@ -216,7 +216,7 @@ NOW_PLAYING_VIEWS_HELP
 	CS	Na obrazovce Právě hraje je k dispozici několik různých konfigurací, neboli "zobrazení", mezi kterými můžete přepínat. Zde si můžete zvolit požadovaná zobrazení přehrávače.
 	DA	Vinduet Nu spiller kan vises på forskellige måder som du kan skifte mellem. Her kan du vælge hvordan vinduet skal se ud.
 	DE	Für den Bildschirm "Aktueller Titel" gibt es eine Reihe unterschiedlicher Fensterkonfigurationen oder Ansichten, zwischen denen Sie umschalten können. Wählen Sie die Ansichten aus, die Sie für den vorliegenden Player haben möchten.
-	EN	The Now Playing screen has a number of different window configurations or "views" that can be toggled through. Select the views you'd like for this player here.
+	EN	The Now Playing screen has several "views". Choose the views you want to see for this Smart Radio here.
 	ES	La pantalla Reproduciendo tiene varias configuraciones o "vistas" de ventana entre las que se puede alternar. Seleccione aquí las vistas que desee para este reproductor.
 	FI	Nyt soittaa -näytössä on monia erilaisia ikkunamäärityksiä tai "näkymiä", joita voidaan vaihdella. Valitse tästä näkymät, joita haluat käytettävän tässä soittimelle.
 	FR	L'écran de lecture en cours vous permet de basculer d'une fenêtre ("affichage") à une autre, selon votre choix. Sélectionnez ici les affichages que vous souhaitez utiliser pour ce lecteur.

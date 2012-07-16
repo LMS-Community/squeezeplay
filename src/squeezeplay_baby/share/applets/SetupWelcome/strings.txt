@@ -21,7 +21,7 @@ WELCOME_WALKTHROUGH
 	CS	Vítejte do UE Smart Radio. Začněme připojením k vaší síti.
 	DA	Velkommen til UE Smart Radio. Lad os begynde med at slutte afspilleren til netværket.
 	DE	Willkommen! Jetzt stellen wir die Verbindung zum Netzwerk her.
-	EN	Welcome to UE Smart Radio. Let's start by getting you connected to your network.
+	EN	Let's get started by getting you connected to your network and music.
 	ES	Bienvenido a UE Smart Radio. Para empezar, nos conectaremos a la red.
 	FI	Tervetuloa UE Smart Radioon. Aloitetaan muodostamalla yhteys verkkoosi.
 	FR	Bienvenue dans UE Smart Radio. Commençons par vous connecter à votre réseau.
@@ -66,7 +66,7 @@ DONE_HELP
 	CS	Nyní můžete použít váš UE Smart Radio pro přístup k vaší hudbě!
 	DA	Nu kan du bruge din UE Smart Radio til at høre al din musik!
 	DE	Jetzt können Sie mit der UE Smart Radio auf Ihre Musik zugreifen!
-	EN	You can now use your UE Smart Radio to access all your music!
+	EN	Now you can use your Smart Radio Controller to access all your music. Press the center button to continue.
 	ES	Ya puede utilizar UE Smart Radio para acceder a toda su música!
 	FI	Nyt pääset käyttämään UE Smart Radioilla kaikkia musiikkitiedostojasi!
 	FR	Vous pouvez maintenant utiliser votre UE Smart Radio pour accéder à toute votre musique!
@@ -142,7 +142,7 @@ SN_DNS_FAILED
 	CS	Zdá se, že vaše internetové připojení nefunguje. Zkontrolujte vaši síť a ujistěte se, že je připojena a pracuje správně.
 	DA	Din internetforbindelse fungerer tilsyneladende ikke. Kontroller netværket, og undersøg om internetforbindelsen fungerer ordentligt.
 	DE	Es scheint ein Fehler an Ihrer Internetverbindung vorzuliegen. Überprüfen Sie, ob die Netzwerkverbindung funktionstüchtig ist.
-	EN	It appears your internet connection is not working. Please check your network to make sure it is connected and running properly.
+	EN	Unable to connect. Please check your network to make sure it is connected and running properly.
 	ES	Parece que su conexión a Internet no funciona. Compruebe que la red está conectada y que funciona correctamente.
 	FI	Internet-yhteytesi ei ilmeisesti toimi. Tarkista onko verkkosi liitetty, ja että se toimii oikein.
 	FR	Votre connexion à Internet semble ne pas fonctionner. Vérifiez que votre réseau est connecté et qu'il fonctionne correctement.
@@ -246,5 +246,4 @@ CHECK_FIRMWARE_UPDATE
 
 PLEASE_WAIT
 	EN	Please wait
-
 

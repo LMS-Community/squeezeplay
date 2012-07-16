@@ -22,7 +22,7 @@ ABOUT_COPYRIGHT
 	CS	Copyright 2007-2011 Logitech
 	DA	Copyright 2007-2011, Logitech.
 	DE	Copyright 2007–2011, Logitech.
-	EN	Copyright 2007-2011, Logitech.
+	EN	Copyright 2007-2012, Logitech.
 	ES	Copyright 2007-2011, Logitech.
 	FI	Copyright 2007-2011, Logitech.
 	FR	Copyright 2007-2011, Logitech.

@@ -51,7 +51,7 @@ SWITCH_SERVER_TEXT
 	CS	Provedli jste volbu, která povede k připojení k jiné knihovně, což zastaví přehrávání.
 	DA	Du har valgt noget som kræver at der etableres forbindelse til et andet bibliotek. Afspilningen vil stoppe.
 	DE	Sie haben eine Option ausgewählt, durch die eine Verbindung zu einer anderen Musiksammlung hergestellt wird. Die Wiedergabe wird dadurch beendet.
-	EN	You have made a selection that will connect to a different library, which will stop playback.
+	EN	Choosing a different Music Library will stop playback.
 	ES	Ha realizado una selección que hará que el reproductor se conecte a otra biblioteca, lo cual detendrá la reproducción.
 	FI	Olet tehnyt valinnan, jonka johdosta soitin muodostaa yhteyden eri kirjastoon. Tämä lopettaa toiston.
 	FR	Cette sélection entraîne la connexion à une autre collection. La lecture en cours s'arrêtera, etc.
@@ -66,7 +66,7 @@ SWITCH_PASSWORD_WRONG
 	CS	Neplatné uživatelské jméno/ heslo
 	DA	Brugernavnet/adgangskoden er ugyldig
 	DE	Benutzername/Kennwort ungültig
-	EN	Username/Password Invalid
+	EN	Username or Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
 	FI	Käyttäjätunnus/salasana ei kelpaa
 	FR	Nom d'utilisateur/mot de passe non valide
@@ -81,7 +81,7 @@ SWITCH_PASSWORD_WRONG_BODY
 	CS	Zadané uživatelské jméno a heslo není platné.
 	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
-	EN	The username or password you entered is not valid.
+	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
 	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
@@ -232,7 +232,7 @@ SLIMSERVER_HELP
 	CS	Zadejte IP adresu PC, na kterém běží UE Music Library
 	DA	Angiv IP-adressen på den computer hvor UE Music Library kører
 	DE	IP-Adresse des Computers mit UE Music Library eingeben
-	EN	Enter the IP address of the computer running UE Music Library
+	EN	Enter the IP address of the computer running your UE Music Library.
 	ES	Escriba la dirección IP del ordenador que ejecuta UE Music Library
 	FI	Anna sen tietokoneen IP-osoite, johon UE Music Library on asennettu
 	FR	Spécifiez l'adresse IP de l'ordinateur exécutant UE Music Library
@@ -323,7 +323,7 @@ SQUEEZEBOX_PROBLEM_HELP_GENERIC
 	CS	Nepovedlo se připojení k %s. Pokud tento problém nadále přetrvá, zkontrolujte prosím UE Music Library, abyste se ujistili, že řádně pracuje a že máte spolehlivé síťové připojení.
 	DA	Der kunne ikke etableres forbindelse til %s. Hvis problemet varer ved, skal du tjekke at UE Music Library kører som den skal og at du har en stabil netværksforbindelse.
 	DE	Verbindung mit %s nicht möglich. Sollte das Problem weiterhin bestehen, prüfen Sie, ob der UE Music Library funktionstüchtig ist und Sie über eine zuverlässige Netzwerkverbindung verfügen.
-	EN	We couldn't connect to %s.  If this problem persists, please check UE Music Library to make sure it is running properly, and that you have a reliable network connection.
+	EN	Unable to connect to %s.  Check that your UE Music Library is running properly, and that you have a reliable network connection.
 	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que UE Music Library se está ejecutando correctamente y de que la conexión de red es fiable.
 	FI	Emme voineet muodostaa yhteyttä kohteeseen %s.  Jos ongelma jatkuu, tarkista UE Music Libraryin ja verkkoyhteyden toiminta.
 	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le UE Music Library est correctement exécuté et que la connexion au réseau est fiable.
@@ -338,7 +338,7 @@ SQUEEZEBOX_PROBLEM_HELP
 	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je UE Music Library spuštěn.
 	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at UE Music Library kører.
 	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das UE Music Library ausgeführt wird.
-	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that UE Music Library is currently running.
+	EN	Unable to connect to %s.  Check that your UE Music Library is running properly, and that you have a reliable network connection.
 	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que UE Music Library se está ejecutando en este momento.
 	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty paikallisverkkoon. Tarkista myös, että UE Music Library on käynnissä.
 	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le UE Music Library est en cours d'exécution.

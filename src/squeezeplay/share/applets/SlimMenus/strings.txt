@@ -81,7 +81,7 @@ MENUS_ATTACH_CABLE_DETAILED
 	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
 	DA	Der blev ikke fundet en kabelforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
-	EN	We can't detect a wired connection. Please check your Ethernet cable, and make sure your network is running and available.
+	EN	Wired connection not detected. Please check your Ethernet cable, and ensure your network is running and available.
 	ES	No se puede detectar una conexión con cable. Compruebe el cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
@@ -96,7 +96,7 @@ MENUS_NO_WIRELESS_DETAILED
 	CS	Nemohli jsme detekovat bezdrátové připojení. Zkontrolujte prosím, zda je vaše síť v provozu a k dispozici.
 	DA	Der blev ikke fundet et trådløst netværk. Kontroller at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine kabellose Verbindung erkannt werden. Vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
-	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+	EN	Wireless connection not detected. Please check that your network is running and available.
 	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista, että verkko on käytössä ja että se on saatavilla.
 	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.
@@ -216,7 +216,7 @@ INSTALL_SC_TEXT
 	CS	Pro aktivaci "Moje hudba" vyzkoušejte následující: \n\n- Stáhněte si software UE Music Library z adresy www.uesmartradio.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.\n\n- Vložte SD kartu do slotu SD.\n\n- Připojte úložné zařízení k portu USB.
 	DA	Hvis du vil aktivere Musik, kan du prøve følgende:\n\n- Hent UE Music Library-softwaren på www.uesmartradio.com, og sørg for at den er installeret og kører på en computer som er på netværket.\n\n- Sæt et SD-kort i SD-kortpladsen.\n\n- Slut en lagerenhed til USB-porten.
 	DE	Führen Sie zum Aktivieren von 'Eigene Musik' die folgenden Schritte aus:\n\n- Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.\n\n- Stecken Sie eine SD-Karte in das Fach ein.\n\n- Schließen Sie an der USB-Schnittstelle ein Speichergerät an.
-	EN	To enable "My Music" try the following:\n\n- Download the UE Music Library software from www.uesmartradio.com and make sure it is installed and running on a computer on the network.\n\n- Insert a SD card into the SD slot.\n\n- Connect a storage device to the USB port.
+	EN	To enable "My Music", download the UE Music Library software from www.uesmartradio.com and make sure it is installed and running on a computer on your network.
 	ES	Para activar "Mi música", haga lo siguiente:\n\n- Descargue el software de UE Music Library desde www.uesmartradio.com e instálelo y ejecútelo en un ordenador de la red.\n\n- Inserte una tarjeta SD en la ranura SD.\n\n- Conecte un dispositivo de almacenamiento al puerto USB.
 	FI	Ota käyttöön Oma musiikki seuraavasti: \n\n- Lataa UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com. Tarkista, että ohjelmisto asennettu ja että se suoritetaan verkossa olevassa tietokoneessa.\n\n- Aseta SD-kortti SD-paikkaan.\n\n- Yhdistä tallennuslaite USB-porttiin.
 	FR	Pour activer «Ma musique», essayez de procéder comme suit:\n\n- Téléchargez le logiciel du UE Music Library à partir du site www.uesmartradio.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.\n\n- Insérez une carte SD dans la fente correspondante.\n\n- Connectez un dispositif de stockage au port USB.

@@ -66,7 +66,7 @@ HTTP_AUTH_USERNAME_HELP
 	CS	Zadejte heslo nastavené pro ochranu vašeho UE Music Library
 	DA	Angiv det brugernavn som bruges sammen med adgangskoden til at beskytte UE Music Library
 	DE	Geben Sie den für den UE Music Library-Kennwortschutz konfigurierten Benutzernamen ein
-	EN	Enter the Username configured for password protection on your UE Music Library
+	EN	Enter your UE Music Library username
 	ES	Introduzca el nombre de usuario tal y como se haya configurado para protección por contraseña en UE Music Library
 	FI	Anna käyttäjätunnus, joka määritettiin salasanasuojausta varten UE Music Libraryissä
 	FR	Saisissez le nom d'utilisateur configuré pour la protection par mot de passe du UE Music Library
@@ -81,7 +81,7 @@ HTTP_AUTH_PASSWORD_HELP
 	CS	Zadejte heslo nastavené pro ochranu vašeho UE Music Library
 	DA	Indtast den adgangskode som bruges til at beskytte UE Music Library
 	DE	Geben Sie das für den UE Music Library-Kennwortschutz konfigurierte Kennwort ein
-	EN	Enter the Password configured for password protection on your UE Music Library
+	EN	Enter your UE Music Library password
 	ES	Introduzca la contraseña tal y como se haya configurado para protección por contraseña en UE Music Library
 	FI	Anna salasana, joka määritettiin salasanasuojausta varten UE Music Libraryissä
 	FR	Saisissez le mot de passe configuré pour la protection par mot de passe du UE Music Library
@@ -112,7 +112,7 @@ HTTP_AUTH_PASSWORD_WRONG
 	CS	Neplatné uživatelské jméno/ heslo
 	DA	Brugernavnet/adgangskoden er ugyldig
 	DE	Benutzername/Kennwort ungültig
-	EN	Username/Password Invalid
+	EN	Username or Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
 	FI	Käyttäjätunnus/salasana ei kelpaa
 	FR	Nom d'utilisateur/mot de passe non valide
@@ -127,7 +127,7 @@ HTTP_AUTH_PASSWORD_WRONG_BODY
 	CS	Zadané uživatelské jméno a heslo není platné.
 	DA	Brugernavnet eller adgangskoden er ikke gyldig(t).
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
-	EN	The username or password you entered is not valid.
+	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
 	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.

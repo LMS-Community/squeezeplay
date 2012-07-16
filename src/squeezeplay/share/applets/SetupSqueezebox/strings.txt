@@ -37,7 +37,7 @@ SQUEEZEBOX_CONNECT_HELP
 	CS	Vyberte, jakým způsobem by se měl Squeezebox připojit k vaší síti.
 	DA	Vælg hvordan Squeezebox skal tilsluttes netværket.
 	DE	Bestimmen Sie, wie die Squeezebox mit dem Netzwerk verbunden werden soll.
-	EN	Choose how your Squeezebox should connect to your network.
+	EN	Choose how your Smart Radio should connect to your network.
 	ES	Elija cómo se conecta Squeezebox a la red.
 	FI	Valitse, miten Squeezebox muodostaa verkkoyhteyden.
 	FR	Sélectionnez le type de connexion de la Squeezebox au réseau.
@@ -82,7 +82,7 @@ SQUEEZEBOX_HELP
 	CS	Vyberte přijímač Squeezebox, který chcete nastavit. Jestliže není vidět, stiskněte a přidržte tlačítko na přední straně, dokud nezačne blikat.
 	DA	Vælg den Squeezebox Receiver der skal konfigureres. Hvis du ikke kan se den her, skal du holde knappen på forsiden nede indtil den blinker.
 	DE	Wählen Sie den gewünschten Squeezebox Receiver. Wird er nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
-	EN	Choose the Squeezebox Receiver you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
+	EN	Choose the Smart Radio you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
 	ES	Seleccione el receptor Squeezebox que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
 	FI	Valitse Squeezebox-vastaanotin, jonka haluat ottaa käyttöön. Jos sitä ei näy tässä, pidä laitteen etuosassa olevaa painiketta pohjassa, kunnes sen valo vilkkuu.
 	FR	Sélectionnez le Squeezebox Receiver à configurer. S'il ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
@@ -128,7 +128,7 @@ SQUEEZEBOX_SETUP_COMPLETE
 	CS	Váš Squeezebox je nyní nastaven.
 	DA	Nu er din Squeezebox konfigureret.
 	DE	Die Squeezebox ist eingerichtet.
-	EN	Your Squeezebox is now set up.
+	EN	Your Smart Radio is now set up.
 	ES	Se ha configurado Squeezebox.
 	FI	Squeezebox on nyt valmiina käyttöön.
 	FR	Votre Squeezebox est configurée.
@@ -188,7 +188,7 @@ SQUEEZEBOX_ETHERNET_PROBLEM_HELP
 	CS	Nemohl jsem připojit váš Squeezebox k ethernetové síti.
 	DA	Squeezebox kunne ikke sluttes til dit Ethernet-netværk.
 	DE	Die Squeezebox konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
-	EN	Couldn't connect your Squeezebox to your Ethernet network.
+	EN	Couldn't connect your Smart Radio to your Ethernet network.
 	ES	No se pudo conectar Squeezebox a la red Ethernet.
 	FI	Squeezeboxin ja ethernet-verkon välille ei voitu muodostaa yhteyttä.
 	FR	Impossible de connecter votre Squeezebox à votre réseau Ethernet.
@@ -308,7 +308,7 @@ SQUEEZEBOX_MUSIC_SOURCE_HELP
 	CS	Squeezebox %s je připojen k vaší síti. Vyberte zdroj hudby.
 	DA	Squeezebox %s er sluttet til netværket. Vælg en musikkilde.
 	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
-	EN	The Squeezebox %s is connected to your network. Choose a music source.
+	EN	The Smart Radio %s is connected to your network. Choose a music source.
 	ES	Squeezebox %s está conectado a la red. Elija un origen de música.
 	FI	Squeezebox %s on yhdistetty verkkoosi. Valitse musiikkilähde.
 	FR	La Squeezebox %s est connectée au réseau. Sélectionnez une source musicale.
@@ -338,7 +338,7 @@ SQUEEZEBOX_IP_ADDRESS_HELP
 	CS	Zadejte IP adresu pro tento Squeezebox.
 	DA	Angiv IP-adressen som denne Squeezebox-afspiller skal benytte.
 	DE	Geben Sie die IP-Adresse für diese Squeezebox ein.
-	EN	Enter the IP address for this Squeezebox to use.
+	EN	Enter the IP address for this Smart Radio to use.
 	ES	Escriba la dirección IP que debe usar este Squeezebox.
 	FI	Anna IP-osoite, jota Squeezebox käyttää.
 	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
@@ -368,7 +368,7 @@ SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Squeezeboxu
 	DA	Opdaterer Squeezebox-firmwaren
 	DE	Squeezebox-Firmware wird aktualisiert
-	EN	Updating Squeezebox firmware
+	EN	Updating Smart Radio firmware
 	ES	Actualizando firmware de Squeezebox
 	FI	Squeezeboxin laitteisto-ohjelmiston päivitys
 	FR	Mise à jour du micrologiciel Squeezebox

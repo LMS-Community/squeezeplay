@@ -653,7 +653,7 @@ NETWORK_DHCP_ERROR
 	CS	Adresa DHCP nenalezena
 	DA	DHCP-adressen blev ikke fundet
 	DE	DHCP-Adresse konnte nicht gefunden werden
-	EN	DHCP Address Can't Be Found
+	EN	DHCP Address Not Found
 	ES	No se puede encontrar la dirección DHCP
 	FI	DHCP-osoitetta ei löydy
 	FR	L'adresse DHCP est introuvable
@@ -698,7 +698,7 @@ NETWORK_CONNECTION_PROBLEM_HELP
 	CS	Zadali jste: %s\n\nNemohli jsme uskutečnit připojení s použitím výše uvedeného hesla.
 	DA	Du angav: %s\n\nDet var ikke muligt at etablere forbindelse med denne adgangskode.
 	DE	Sie haben eingegeben: %s\n\nEs konnte keine Verbindung mithilfe des oben angegebenen Kennworts hergestellt werden.
-	EN	You entered: %s\n\nWe were unable to connect using the above password.
+	EN	Unable to connect using the password %s.
 	ES	Ha introducido: %s\n\nNo se ha podido establecer conexión con la contraseña proporcionada.
 	FI	Kirjoiti: %s\n\nYhdistämistä ei voi suorittaa käyttämällä yllä olevaa salasanaa.
 	FR	Vous avez saisi: %s\n\nNous n'avons pas pu établir de connexion avec le mot de passe ci-dessus.
@@ -1043,7 +1043,7 @@ NETWORK_CONNECTION_HELP_BODY
 	CS	Pokud si přejete připojit tento Smart Radio k blízkému bezdrátovému routeru, vyberte  "bezdrátová."\n\nPokud dáváte přednost kabelového uspořádání, připojte tento Smart Radio k vašemu routeru s použitím ethernetového / cat 5 kabelu zvolte "kabelová".
 	DA	Hvis du vil slutte denne Smart Radio til en trådløs router i nærheden, skal du vælge Trådløs.\n\nHvis du foretrækker at bruge et kabel, skal du slutte denne Smart Radio til routeren vha. et Ethernet/cat5-kabel og vælge Kabelforbundet.
 	DE	Wenn Sie die Smart Radio mit einem nahegelegenen, kabellosen Router verbinden möchten, wählen Sie 'kabellos'.\n\nWenn Sie ein verkabeltes Netzwerk vorziehen, schließen Sie die Squeeezebox mithilfe eines Ethernet-/Cat-5-Kabels am Router an und wählen Sie 'verkabelt'.
-	EN	If you'd like to connect this Smart Radio to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Smart Radio to your router using an Ethernet/cat5 cable and select "wired."
+	EN	If you'd like to connect this Smart Radio to a nearby wireless router, please select "wireless".\n\nIf you'd prefer to use a wired setup, please connect this Smart Radio to your router using an Ethernet/cat5 cable and select "wired".
 	ES	Si desea conectar este Smart Radio a un enrutador inalámbrico cercano, seleccione "Inalámbrica".\n\nSi prefiere utilizar una conexión con cable, conecte este Smart Radio con el enrutador mediante un cable Ethernet/cat5 y seleccione "Con cable".
 	FI	Jos haluat liittää tämän Smart Radioin läheiseen langattomaan reitittimeen, valitse "langaton."\n\nJos haluat käyttää langallista asennusta, liitä Smart Radio reitittimeen ethernet/cat5-kaapelilla ja valitse "langallinen."
 	FR	Si vous souhaitez connecter cette Smart Radio à un routeur sans fil proche, sélectionnez "Sans fil".\n\nSi vous préférez utiliser une configuration câblée, connectez cette Smart Radio à votre routeur à l'aide d'un câble Ethernet/cat5 et sélectionnez "Filaire".
@@ -1088,7 +1088,7 @@ NETWORK_HALF_SPEED_HUB
 	CS	Využíváte poloduplexní ethernetový hub, který není podporován tímto Smart Radio zařízením.\n\nPřipojte prosím plně duplexní ethernetové zařízení, nebo vyberte dostupnou bezdrátovou síť. Pro více informací se prosím obraťte na zákaznickou podporu.
 	DA	Du bruger en Ethernet-hub med halv dupleks, og det understøttes ikke af denne Smart Radio.\n\nDu skal slutte afspilleren til en Ethernet-enhed med fuld dupleks eller til et trådløst netværk. Hvis du vil have flere oplysninger, kan du kontakte kundeservice eller supportafdelingen.
 	DE	Sie verwenden ein Halbduplex-Ethernet-Hub, der nicht von der Smart Radio unterstützt wird.\n\nSchließen Sie ein Vollduplex-Ethernet-Gerät an oder verwenden Sie ein verfügbares kabelloses Netzwerk. Wenden Sie sich für weitere Informationen an den Kundendienst.
-	EN	You are using a half-duplex Ethernet hub that is not supported by this Smart Radio.\n\nPlease attach a full-duplex Ethernet device, or choose an available wireless network.  For more information, please contact customer support.
+	EN	You are using a half-duplex Ethernet hub that is not supported by this Smart Radio.\n\nPlease attach a full-duplex Ethernet device, or choose an available wireless network.  For more information, please contact Customer Support.
 	ES	Está utilizando un concentrador Ethernet con medio dúplex que no es compatible con este Smart Radio.\n\nUtilice un dispositivo Ethernet con dúplex completo o escoja una red inalámbrica disponible. Para obtener más información, póngase en contacto con el servicio de asistencia al cliente.
 	FI	Käytät puoliksi kaksisuuntaista ethernet-keskitintä, jota tätä Smart Radio ei tue.\n\nLiitä täysin kaksisuuntaisesti toimiva ethernet-laite tai valitse käytettävissä oleva langaton verkko. Saat lisätietoja asiakastuesta.
 	FR	Le hub Ethernet semi-duplex que vous utilisez n'est pas pris en charge par cette Smart Radio.\n\nVeuillez connecter un dispositif Ethernet duplex intégral ou sélectionner un réseau sans fil disponible. Pour plus d'informations, veuillez contacter le service d'assistance à la clientèle.
@@ -1448,7 +1448,7 @@ NETWORK_ATTACH_CABLE_DETAILED
 	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
 	DA	Der blev ikke fundet en kableforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
-	EN	We can't detect a wired connection. Please check your Ethernet cable, and make sure your network is running and available.
+	EN	Wired connection not found. Please check your Ethernet cable, and make sure your network is running and available.
 	ES	No se puede detectar una conexión con cable. Compruebe el cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
@@ -1463,7 +1463,7 @@ NETWORK_NO_WIRELESS_DETAILED
 	CS	Nemohli jsme detekovat bezdrátové připojení. Zkontrolujte prosím, zda je vaše síť v provozu a k dispozici.
 	DA	Der blev ikke fundet et trådløst netværk. Kontroller at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine kabellose Verbindung erkannt werden. Vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
-	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+	EN	Wireless connection not found. Please check to make sure your network is running and available.
 	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista, että verkko on käytössä ja että se on saatavilla.
 	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.

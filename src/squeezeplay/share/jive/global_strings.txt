@@ -153,7 +153,7 @@ ADVANCED_SETTINGS
 	SV	Avancerat
 
 AUDIO_SETTINGS
-	EN	Audio
+	EN	Audio Settings
 
 BETA_FEATURES
 	CS	Beta vlastnosti
