@@ -2150,10 +2150,10 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_settings_adv" .. skinSuffix),
 	})
 	s.hm_radio = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_tunein" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
 	})
 	s.hm_radios = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_tunein" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_internet_radio" .. skinSuffix),
 	})
 	s.hm_myApps = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_my_apps" .. skinSuffix),
@@ -2269,10 +2269,40 @@ function skin(self, s, reload, useDefaultSize)
 		img = _loadImage(self, "IconsResized/icon_settings_smartradio" .. skinSuffix),
 	})
 	s.hm_settingsAboutJive = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_settings_aboutjive" .. skinSuffix),
+		img = _loadImage(self, "IconsResized/icon_settings_about" .. skinSuffix),
 	})
 	s.hm_settingsLanguage = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings_language" .. skinSuffix),
+	})
+	s.hm_appGallery = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_app_gallery" .. skinSuffix),
+	})
+	s.hm_swUpload = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_swupload" .. skinSuffix),
+	})
+	s.hm_settingsDeveloper = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_developer" .. skinSuffix),
+	})
+	s.hm_settingsDiagnostics = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_diagnostics" .. skinSuffix),
+	})
+	s.hm_settingsNetworking = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_networking" .. skinSuffix),
+	})
+	s.hm_settingsFactoryReset = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_factoryreset" .. skinSuffix),
+	})
+	s.hm_settingsRestoreDefaults = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_restoredefaults" .. skinSuffix),
+	})
+	s.hm_settingsNetworkTest = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_networktest" .. skinSuffix),
+	})
+	s.hm_settingsAccount = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_account" .. skinSuffix),
+	})
+	s.hm_settingsGeneratePin = _uses(s._buttonicon, {
+		img = _loadImage(self, "IconsResized/icon_settings_generatepin" .. skinSuffix),
 	})
 
 	-- indicator icons, on right of menus

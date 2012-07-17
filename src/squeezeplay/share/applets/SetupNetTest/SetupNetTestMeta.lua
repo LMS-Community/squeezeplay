@@ -25,7 +25,7 @@ end
 
 function registerApplet(self)
 	jnt:subscribe(self)
-	self.menu = self:menuItem('appletSetupNetTest', 'hidden', self:string("SETUPNETTEST"), function(applet, ...) applet:open(...) end, 100)
+	self.menu = self:menuItem('appletSetupNetTest', 'hidden', self:string("SETUPNETTEST"), function(applet, ...) applet:open(...) end, 100, nil, 'hm_settingsNetworkTest')
 	-- to begin with, we place this in the 'hidden' node
 	jiveMain:addItem(self.menu)
 end

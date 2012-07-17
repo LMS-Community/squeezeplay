@@ -623,7 +623,7 @@ local function _menuSink(self, isCurrentServer, server)
 				local itemMusicServices = {
 					id = 'menuMusicServices',
 					node = 'home',
-					iconStyle = 'hm_myApps',
+					iconStyle = 'hm_appGallery',
 					text = self:string('MUSIC_SERVICES_ADD'),
 					sound = 'WINDOWSHOW',
 					weight = 90,

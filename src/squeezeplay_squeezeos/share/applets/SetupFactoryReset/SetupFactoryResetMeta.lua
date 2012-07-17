@@ -17,8 +17,8 @@ end
 
 
 function registerApplet(meta)
-	jiveMain:addItem(meta:menuItem('appletSetupFactoryReset', 'advancedSettings', "RESET_FACTORY_RESET", function(applet, ...) applet:factorySettingsShow(...) end, 125, { noCustom = 1 }))
-	jiveMain:addItem(meta:menuItem('appletSetupRestoreDefaults', 'advancedSettings', "RESET_RESTORE_DEFAULTS", function(applet, ...) applet:restoreSettingsShow(...) end, 125, { noCustom = 1 }))
+	jiveMain:addItem(meta:menuItem('appletSetupFactoryReset', 'advancedSettings', "RESET_FACTORY_RESET", function(applet, ...) applet:factorySettingsShow(...) end, 125, { noCustom = 1 }, 'hm_settingsFactoryReset'))
+	jiveMain:addItem(meta:menuItem('appletSetupRestoreDefaults', 'advancedSettings', "RESET_RESTORE_DEFAULTS", function(applet, ...) applet:restoreSettingsShow(...) end, 125, { noCustom = 1 }, 'hm_settingsRestoreDefaults'))
 end
 
 

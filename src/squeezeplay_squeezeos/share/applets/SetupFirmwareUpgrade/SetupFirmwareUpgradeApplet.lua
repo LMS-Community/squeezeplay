@@ -429,6 +429,7 @@ function firmwareUpgradeWithUrl(self, url, required)
 	local menuItem = {
 		id = "homeMenuFirmwareUpgrade",
 		node = "home",
+		iconStyle = "hm_swUpload",
 		text = self:string("SOFTWARE_UPDATE_AVAILABLE"),
 		sound = "WINDOWSHOW",
 		callback = function ()
