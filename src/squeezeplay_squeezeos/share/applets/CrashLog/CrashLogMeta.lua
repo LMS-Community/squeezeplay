@@ -2,7 +2,7 @@
 local ipairs = ipairs
 
 local oo            = require("loop.simple")
-
+local os            = require("os")
 local lfs           = require("lfs")
 local string        = require("string")
 
@@ -37,12 +37,16 @@ end
 
 local function _findCrash(meta, boot)
 	local crashLogs = {}
-
+	local demoStatus = appletManager:callService("getDemoStatus")
 	for file in lfs.dir("/root") do
 		if string.match(file, "^crashlog%.") then
-			crashLogs[#crashLogs + 1] = "/root/" .. file
-
-			appletManager:callService("crashLog", "/root/" .. file, meta.prompt)
+			if demoStatus == true then
+				local fileName = "/root/" .. file
+				os.remove(fileName)	
+			else
+				crashLogs[#crashLogs + 1] = "/root/" .. file
+				appletManager:callService("crashLog", "/root/" .. file, meta.prompt)
+			end
 			meta.prompt = false
 		end
 	end
