@@ -786,10 +786,10 @@ function _updateButtons(self, playerStatus)
 		
 		button = buttons.like or buttons.shuffle	-- backwards compatible
 		if button then
+			local command = button.command or function() return EVENT_CONSUME end
 			local callback = function()
 				local id      = self.player:getId()
 				local server  = self.player:getSlimServer()
-				local command = button.command or function() return EVENT_CONSUME end
 				server:userRequest(nil, id, command)
 			end
 			self:_remapButton('shuffleMode', button.jiveStyle, callback)
@@ -797,10 +797,10 @@ function _updateButtons(self, playerStatus)
 		
 		button = buttons.dislike or buttons['repeat']	-- backwards compatible
 		if button then
+			local command = button.command or function() return EVENT_CONSUME end
 			local callback = function()
 				local id      = self.player:getId()
 				local server  = self.player:getSlimServer()
-				local command = button.command or function() return EVENT_CONSUME end
 				server:userRequest(nil, id, command)
 			end
 			self:_remapButton('repeatMode', button.jiveStyle, callback)
