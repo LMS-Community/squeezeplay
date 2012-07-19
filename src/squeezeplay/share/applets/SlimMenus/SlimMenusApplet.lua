@@ -84,18 +84,21 @@ local itemMap = {
 	settingsPlaylistMode = { "settingsPlaylistMode", "advancedSettingsBetaFeatures", 100 },
 	playerDisplaySettings = { "playerDisplaySettings", "settingsBrightness", 105 },
 
-	-- Belsonic menu nodes/items reshuffle
-	-- TODO: This list can be removed as soon as the server side has been fixed
-	favorites = { "favorites", "home", 1},
+	-- Belsonic menu nodes/items reordering
+	-- Delivered from backend but currently hidden on player
 	globalSearch = { "globalSearch", "hidden" },
 	opmlmyapps = { "opmlmyapps", "hidden" },
 	opmlappgallery = { "opmlappgallery", "hidden" },
-	settingsPlayerNameChange = { "settingsPlayerNameChange", "settingsSmartRadio" },
-	settingsSync = { "settingsSync", "settingsSmartRadio" },
 	audioscrobbler = { "audioscrobbler", "hidden" },
-	settingsInformation = { "settingsInformation", "hidden" },
 	settingsRepeat = { "settingsRepeat", "hidden"},
 	settingsShuffle = { "settingsShuffle", "hidden" },
+
+	-- TODO: This list can be removed as soon as the server side has been fixed
+	-- Delivered from backend but wrong order / location
+	favorites = { "favorites", "home", 1},
+	settingsPlayerNameChange = { "settingsPlayerNameChange", "settingsSmartRadio" },
+	settingsSync = { "settingsSync", "settingsSmartRadio" },
+	settingsInformation = { "settingsInformation", "developerSettings" },
 }
 
 
