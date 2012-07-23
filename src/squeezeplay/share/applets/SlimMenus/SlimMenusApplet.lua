@@ -90,8 +90,6 @@ local itemMap = {
 	opmlmyapps = { "opmlmyapps", "hidden" },
 	opmlappgallery = { "opmlappgallery", "hidden" },
 	audioscrobbler = { "audioscrobbler", "hidden" },
-	settingsRepeat = { "settingsRepeat", "hidden"},
-	settingsShuffle = { "settingsShuffle", "hidden" },
 
 	-- TODO: This list can be removed as soon as the server side has been fixed
 	-- Delivered from backend but wrong order / location
