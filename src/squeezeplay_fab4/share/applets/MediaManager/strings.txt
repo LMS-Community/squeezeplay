@@ -1,0 +1,739 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+INTERNAL_ERROR
+	CS	Interní chyba
+	DA	Intern fejl
+	DE	Interner Fehler
+	EN	Internal Error
+	ES	Error interno
+	FI	Sisäinen virhe
+	FR	Erreur interne
+	IT	Errore interno
+	NL	Interne fout
+	NO	Intern feil
+	PL	Błąd wewnętrzny
+	RU	Внутренняя ошибка
+	SV	Internt fel
+
+UNSUPPORTED_DISK_FORMAT
+	CS	Nepodporovaný formát disku
+	DA	Diskens filformat understøttes ikke
+	DE	Nicht unterstütztes Datenträgerformat
+	EN	Unsupported Disk Format
+	ES	Formato de disco incompatible
+	FI	Levyn muotoa ei tueta
+	FR	Format de disque non pris en charge
+	IT	Formato disco non supportato
+	NL	Niet-ondersteunde schijfindeling
+	NO	Diskformatet støttes ikke
+	PL	Nieobsługiwany format dysku
+	RU	Неподдерживаемый формат диска
+	SV	Diskformat som inte stöds
+
+UNSUPPORTED_DISK_FORMAT_INFO
+	CS	Toto USB/SD zařízení používá nepodporovaný formát. Podporované formáty jsou %s.
+	DA	USB-/SD-enheden er formateret på en måde der ikke understøttes. Følgende formater understøttes: %s.
+	DE	Dieses USB/SD-Gerät verwendet ein nicht unterstütztes Datenträgerformat. Folgende Formate werden unterstützt: %s.
+	EN	This USB/SD device is using an unsupported disk format. Supported formats are %s.
+	ES	El dispositivo USB/SD está utilizando un formato de disco incompatible. Los formatos compatibles son %s.
+	FI	Tämä USB-/SD-laite käyttää levymuotoa, jota ei tueta. Tuettuja muotoja ovat %s.
+	FR	Le format de disque utilisé par ce dispositif USB/SD n'est pas pris en charge. Les formats pris en charge sont les suivants: %s.
+	IT	Questo dispositivo USB/SD utilizza un formato di disco non supportato. Formati supportati: %s.
+	NL	De schijfindeling van dit USB-/SD-apparaat wordt niet ondersteund. Ondersteunde indelingen zijn %s.
+	NO	Usb/SD-enheten bruker et diskformat det ikke er støtte for. Følgende formater støttes: %s.
+	PL	To urządzenie USB/SD ma nieobsługiwany format dysku. Obsługiwane formaty to %s.
+	RU	Это USB/SD-устройство использует неподдерживаемый формат диска. Поддерживаемые форматы: %s.
+	SV	USB-enheten/SD-kortet har ett format som inte stöds. Det finns stöd för följande format: %s.
+
+UNSUPPORTED_DISK_FORMAT_INFO_USB
+	CS	Toto USB zařízení používá nepodporovaný formát. Podporované formáty jsou %s.
+	DA	USB-enhedens filformat understøttes ikke. Følgende formater understøttes: %s.
+	DE	Dieses USB-Gerät verwendet ein nicht unterstütztes Format. Folgende Formate werden unterstützt: %s.
+	EN	This USB device is using an unsupported format. Supported formats are %s.
+	ES	El dispositivo USB utiliza un formato incompatible. Los formatos compatibles son %s.
+	FI	USB-laitteen muotoa ei tueta. Tuettuja muotoja ovat %s.
+	FR	Le format de ce dispositif USB n'est pas pris en charge. Les formats pris en charge sont les suivants: %s.
+	IT	Questo dispositivo USB utilizza un formato non supportato. Formati supportati: %s.
+	NL	De indeling van dit USB-apparaat wordt niet ondersteund. Ondersteunde indelingen zijn %s.
+	NO	Usb-enheten bruker et format det ikke er støtte for. Følgende formater støttes: %s.
+	PL	To urządzenie USB ma nieobsługiwany format. Obsługiwane formaty to %s.
+	RU	Это USB-устройство использует неподдерживаемый формат. Поддерживаемые форматы: %s.
+	SV	USB-enheten stöds inte. Det finns stöd för följande format: %s.
+
+UNSUPPORTED_DISK_FORMAT_INFO_SD
+	CS	Tato SD karta používá nepodporovaný formát. Podporované formáty jsou %s.
+	DA	SD-kortets filformat understøttes ikke. Følgende formater understøttes: %s.
+	DE	Diese SD-Karte verwendet ein nicht unterstütztes Format. Folgende Formate werden unterstützt: %s.
+	EN	This SD card is using an unsupported format. Supported formats are %s.
+	ES	La tarjeta SD utiliza un formato incompatible. Los formatos compatibles son %s.
+	FI	SD-kortin muotoa ei tueta. Tuettuja muotoja ovat %s.
+	FR	Le format de cette carte SD n'est pas pris en charge. Les formats pris en charge sont les suivants: %s.
+	IT	Questa scheda SD utilizza un formato non supportato. Formati supportati: %s.
+	NL	De indeling van deze SD-kaart wordt niet ondersteund. Ondersteunde indelingen zijn %s.
+	NO	SD-kortet bruker et format det ikke er støtte for. Følgende formater støttes: %s.
+	PL	Ta karta SD ma nieobsługiwany format. Obsługiwane formaty to %s.
+	RU	Эта SD-карта использует неподдерживаемый формат. Поддерживаемые форматы: %s.
+	SV	SD-kortet stöds inte. Det finns stöd för följande format: %s.
+
+EJECT_WARNING
+	CS	DŮLEŽITÉ UPOZORNĚNÍ
+	DA	VIGTIG MEDDELELSE
+	DE	Wichtig
+	EN	IMPORTANT NOTICE
+	ES	AVISO IMPORTANTE
+	FI	TÄRKEÄ HUOMAUTUS
+	FR	AVIS IMPORTANT
+	IT	AVVISO IMPORTANTE
+	NL	BELANGRIJK
+	NO	VIKTIG BESKJED
+	PL	WAŻNA UWAGA
+	RU	ВАЖНОЕ УВЕДОМЛЕНИЕ
+	SV	VIKTIG INFORMATION
+
+EJECT_WARNING_INFO
+	CS	Před vyjmutím USB nebo SD zařízení ho PROSÍM vždy vysuňte pomocí volby "vysunout" v menu Domovská stránka. Pokud to neuděláte, může to vést k vážnému poškození dat.
+	DA	Inden du fjerner en USB-nøgle eller et SD-kort, skal du huske at afbryde forbindelsen til den/det via hovedmenuen. Hvis du ikke gør det, kan filerne blive ødelagt.
+	DE	Bevor Sie ein USB- oder SD-Gerät entfernen, werfen Sie es zunächst mithilfe der entsprechenden Option im Hauptmenü aus. Wenn Sie dies nicht tun, können die Daten beschädigt werden.
+	EN	Before removing a USB or SD device, PLEASE be sure to eject it by selecting the "eject" option from the Home menu. Failure to do so may cause serious damage to the data.
+	ES	Antes de retirar un dispositivo USB o SD, asegúrese de que lo extrae seleccionando la opción "extraer" desde el menú Inicio. Si no lo hace, puede provocar daños graves en la información.
+	FI	Ennen kuin poistat USB- tai SD-laitteen, muista napsauttaa Poista-painiketta Koti-valikossa. Jos tämä jätetään tekemättä, tiedot saattavat vaurioitua vakavasti.
+	FR	Avant de retirer un dispositif USB ou SD, veillez à l'éjecter en sélectionnant l'option correspondante dans le menu Accueil. Cette opération permet d'éviter le risque de dommages permanents pour vos données.
+	IT	Prima di rimuovere un dispositivo USB o SD, ESPELLERLO selezionando l'opzione Espelli dal menu iniziale. Non facendolo si rischia di danneggiare gravemente i dati.
+	NL	Voordat je een USB- of SD-apparaat verwijdert, MOET je het vrijgeven door de toepasselijke optie te selecteren in het hoofdmenu. Als je dit niet doet, kunnen de gegevens ernstig beschadigd raken.
+	NO	Før du fjerner en usb- eller SD-enhet, MÅ du løse den ut ved å velge alternativet for dette i hovedmenyen. Hvis du ikke gjør dette, kan det føre til dataskader.
+	PL	Przed odłączeniem urządzenia USB lub SD NALEŻY wysunąć je, wybierając opcję Usuń z menu głównego. W przeciwnym razie dane mogą zostać poważnie uszkodzone.
+	RU	Перед удалением USB- или SD-устройства НЕОБХОДИМО правильно извлечь его, выбрав пункт "Извлечь" в главном меню. В противном случае можно повредить данные.
+	SV	Tänk på att alltid välja Mata ut på menyn Min musik innan du tar bort en USB-enhet eller ett SD-kort. Annars kan filerna skadas.
+
+NEW_STORAGE_MEDIA
+	CS	Nová ukládací média
+	DA	Ny lagerenhed
+	DE	Neues Speichermedium
+	EN	New Storage Media
+	ES	Nuevo medio de almacenamiento
+	FI	Uusi tallennustietoväline
+	FR	Nouveau support de stockage
+	IT	Nuovo supporto di memorizzazione
+	NL	Nieuwe opslagmedia
+	NO	Nytt lagringsmedium
+	PL	Nowy nośnik pamięci masowej
+	RU	Новый носитель данных
+	SV	NYTT LAGRINGSMEDIUM
+
+NEW_STORAGE_MEDIA_INFO
+	CS	Do "Moje hudba" bylo přidáno nové zařízení a probíhá prohledávání
+	DA	Der er føjet en ny enhed til Musik, og enheden gennemsøges i øjeblikket
+	DE	Ein neues Gerät wurde unter "Eigene Musik" hinzugefügt und wird nun durchsucht
+	EN	A new device has been added to "My Music" and is being scanned
+	ES	Se ha agregado un nuevo dispositivo a "Mi música" y se está examinando
+	FI	Oma musiikki -kohtaan on lisätty uusi laite, jota tarkistetaan
+	FR	Un nouveau dispositif a été ajouté à "Ma musique". Analyse en cours
+	IT	È stato aggiunto un nuovo dispositivo a Musica e in questo momento viene analizzato
+	NL	Er is een nieuw apparaat aan 'Mijn muziek' toegevoegd. Het wordt momenteel gescand
+	NO	En ny enhet er lagt til i Min musikk, og blir for øyeblikket gjennomsøkt
+	PL	Nowe urządzenie zostało dodane do kategorii Moja muzyka i trwa jego przeszukiwanie
+	RU	Новое устройство добавлено в список "Моя музыка" и просматривается
+	SV	En ny enhet har lagts till i Min musik och söks nu igenom
+
+EXIT
+	CS	Ukončit
+	DA	Afslut
+	DE	Beenden
+	EN	Exit
+	ES	Salir
+	FI	Sulje
+	FR	Quitter
+	IT	Esci
+	NL	Afsluiten
+	NO	Avslutt
+	PL	Zamknij
+	RU	Выход
+	SV	Avsluta
+
+OK
+	CS	OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	PL	OK
+	RU	ОК
+	SV	OK
+
+EJECT_DRIVE
+	CS	Vysunout %s
+	DA	Afbryd forbindelse til %s
+	DE	%s auswerfen
+	EN	Eject %s
+	ES	Extraer %s
+	FI	Poista %s
+	FR	Ejecter %s
+	IT	Espelli %s
+	NL	%s vrijgeven
+	NO	Løs ut %s
+	PL	Wysuń %s
+	RU	Извлечь %s
+	SV	Mata ut %s
+
+EJECT_REMOVABLE_MEDIA
+	CS	Vysunout vysunutelná média
+	DA	Afbryd forbindelse til flytbart medie
+	DE	Wechseldatenträger auswerfen
+	EN	Eject Removable Media
+	ES	Extraer medio extraíble
+	FI	Poista siirrettävä tietoväline
+	FR	Ejecter le support amovible
+	IT	Espelli supporto rimovibile
+	NL	Verwisselbare media vrijgeven
+	NO	Løs ut flyttbart medium
+	PL	Wysuń nośnik wymienny
+	RU	Извлечь съемный носитель
+	SV	Mata ut flyttbara medier
+
+EJECT_DRIVE_USB
+	CS	Vysunout USB zařízení
+	DA	Afbryd forbindelse til USB-enhed
+	DE	USB-Gerät auswerfen
+	EN	Eject USB Device
+	ES	Extraer dispositivo USB
+	FI	Poista USB-laite
+	FR	Ejecter le dispositif USB
+	IT	Espelli dispositivo USB
+	NL	USB-apparaat vrijgeven
+	NO	Løs ut usb-enhet
+	PL	Wysuń urządzenie USB
+	RU	Извлечь USB-устройство
+	SV	Mata ut USB-enhet
+
+EJECT_DRIVE_SD
+	CS	Vysunout SD kartu
+	DA	Afbryd forbindelse til SD-kort
+	DE	SD-Karte auswerfen
+	EN	Eject SD Card
+	ES	Extraer tarjeta SD
+	FI	Poista SD-kortti
+	FR	Ejecter la carte SD
+	IT	Espelli scheda SD
+	NL	SD-kaart vrijgeven
+	NO	Løs ut SD-kort
+	PL	Wysuń kartę SD
+	RU	Извлечь SD-карту
+	SV	Mata ut SD-kort
+
+DEVICE_REMOVAL_WARNING
+	CS	Upozornění!
+	DA	Advarsel!
+	DE	Warnung!
+	EN	Warning!
+	ES	¡Advertencia!
+	FI	Varoitus!
+	FR	Attention!
+	IT	Attenzione!
+	NL	Waarschuwing!
+	NO	Advarsel!
+	PL	Uwaga!
+	RU	Предупреждение!
+	SV	Varning!
+
+DEVICE_REMOVAL_WARNING_INFO
+	CS	VAROVÁNÍ: Zařízení bylo vyjmuto nesprávně. Mohlo dojít k poškození nebo ztrátě dat na zařízení.
+	DA	ADVARSEL: Enheden blev ikke fjernet korrekt. Filerne på enheden kan have taget skade eller være gået tabt.
+	DE	Warnung: Das Gerät wurde nicht ordnungsgemäß entfernt. Auf diesem Gerät gespeicherte Daten sind möglicherweise verloren gegangen oder wurden beschädigt.
+	EN	WARNING: The device was removed improperly. Data on this device may have been lost or damaged.
+	ES	ADVERTENCIA: El dispositivo se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
+	FI	VAROITUS: Laite poistettiin väärin. Laitteen tiedot ovat saattaneet kadota tai vioittua.
+	FR	AVERTISSEMENT: le dispositif a été retiré de manière incorrecte. Les données stockées sur ce dispositif ont peut-être été perdues ou endommagées.
+	IT	ATTENZIONE: il dispositivo non è stato rimosso correttamente. I dati sul dispositivo potrebbero essere stati danneggiati o persi.
+	NL	WAARSCHUWING: Het apparaat is onjuist verwijderd. Mogelijk zijn er gegevens verloren gegaan of beschadigd geraakt.
+	NO	ADVARSEL: Enheten ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
+	PL	OSTRZEŻENIE: To urządzenie zostało nieprawidłowo odłączone. Dane na tym urządzeniu mogły zostać utracone lub uszkodzone.
+	RU	Предупреждение. Устройство было извлечено неверно. Данные на этом устройстве могут быть повреждены или потеряны.
+	SV	VARNING! Enheten togs bort på fel sätt. Filer kan ha skadats eller gått förlorade.
+
+DEVICE_REMOVAL_WARNING_INFO_USB
+	CS	VAROVÁNÍ: USB zařízení bylo vyjmuto nesprávně. Mohlo dojít k poškození nebo ztrátě dat na zařízení.
+	DA	ADVARSEL: USB-enheden blev ikke fjernet korrekt. Data på enheden kan have taget skade eller være gået tabt.
+	DE	Warnung: Das USB-Gerät wurde nicht ordnungsgemäß entfernt. Auf diesem Gerät gespeicherte Daten sind möglicherweise verloren gegangen oder wurden beschädigt.
+	EN	WARNING: The USB device was removed improperly. Data on this device may have been lost or damaged.
+	ES	ADVERTENCIA: El dispositivo USB se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
+	FI	VAROITUS: USB-laite poistettiin väärin. Laitteen tiedot ovat saattaneet kadota tai vioittua.
+	FR	AVERTISSEMENT: le dispositif USB a été retiré de manière incorrecte. Les données stockées sur ce dispositif ont peut-être été perdues ou endommagées.
+	IT	ATTENZIONE: il dispositivo USB non è stato rimosso correttamente. I dati sul dispositivo potrebbero essere stati danneggiati o persi.
+	NL	WAARSCHUWING: Het USB-apparaat is onjuist verwijderd. Mogelijk zijn er gegevens verloren gegaan of beschadigd geraakt.
+	NO	ADVARSEL: Usb-enheten ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
+	PL	OSTRZEŻENIE: To urządzenie USB zostało nieprawidłowo odłączone. Dane na tym urządzeniu mogły zostać utracone lub uszkodzone.
+	RU	Предупреждение. USB-устройство было извлечено неверно. Данные на этом устройстве могут быть повреждены или потеряны.
+	SV	VARNING! USB-enheten togs bort på fel sätt. Filer kan har skadats eller gått förlorade.
+
+DEVICE_REMOVAL_WARNING_INFO_SD
+	CS	VAROVÁNÍ: SD karta byla vyjmuta nesprávně. Mohlo dojít k poškození nebo ztrátě dat na kartě.
+	DA	ADVARSEL: SD-kortet blev ikke fjernet korrekt. Data på kortet kan have taget skade eller være gået tabt.
+	DE	Warnung: Die SD-Karte wurde nicht ordnungsgemäß entfernt. Auf dieser Karte gespeicherte Daten sind möglicherweise verloren gegangen oder wurden beschädigt.
+	EN	WARNING: The SD card was removed improperly. Data on this card may have been lost or damaged.
+	ES	ADVERTENCIA: La tarjeta SD se ha retirado de forma inadecuada y es posible que los datos que contiene se hayan perdido o dañado.
+	FI	VAROITUS: SD-kortti poistettiin väärin. Kortin tiedot ovat saattaneet kadota tai vioittua.
+	FR	AVERTISSEMENT: la carte USB a été retirée de manière incorrecte. Les données stockées sur cette carte ont peut-être été perdues ou endommagées.
+	IT	ATTENZIONE: la scheda SD non è stata rimossa correttamente. I dati sulla scheda potrebbero essere stati danneggiati o persi.
+	NL	WAARSCHUWING: De SD-kaart is onjuist verwijderd. Mogelijk zijn er gegevens op deze kaart verloren gegaan of beschadigd geraakt.
+	NO	ADVARSEL: SD-kortet ble ikke fjernet på riktig måte. Data på denne enheten kan ha gått tapt eller blitt skadet.
+	PL	OSTRZEŻENIE: Ta karta SD została nieprawidłowo odłączona. Dane na tej karcie mogły zostać utracone lub uszkodzone.
+	RU	Предупреждение. SD-карта была извлечена неверно. Данные на этой карте могут быть повреждены или потеряны.
+	SV	VARNING! SD-kortet matades inte ut på rätt sätt. Det kan bero på att det finns program som läser från eller skriver till det.
+
+EJECT_CONFIRM
+	CS	Vysunout vyjmutelné zařízení?
+	DA	Afbryd forbindelse til flytbar enhed?
+	DE	Wechseldatenträger auswerfen?
+	EN	Eject Removable Device?
+	ES	¿Desea extraer el dispositivo extraíble?
+	FI	Poistetaanko siirrettävä tietoväline?
+	FR	Ejecter le dispositif amovible?
+	IT	Espellere dispositivo rimovibile?
+	NL	Verwisselbaar apparaat vrijgeven?
+	NO	Løs ut flyttbar enhet?
+	PL	Wysunąć urządzenie wymienne?
+	RU	Извлечь съемное устройство?
+	SV	Vill du mata ut det flyttbara lagringsmediet?
+
+EJECT_CONFIRM_SD
+	CS	Vysunout SD kartu?
+	DA	Vil du afbryde forbindelsen til SD-kortet?
+	DE	SD-Karte auswerfen?
+	EN	Eject SD Card?
+	ES	¿Extraer tarjeta SD?
+	FI	Poistetaanko SD-kortti?
+	FR	Ejecter la carte SD?
+	IT	Espellere scheda SD?
+	NL	SD-kaart vrijgeven?
+	NO	Løs ut SD-kort?
+	PL	Wysunąć kartę SD?
+	RU	Извлечь SD-карту?
+	SV	Vill du mata ut SD-kortet?
+
+EJECT_CONFIRM_USB
+	CS	Vysunout zařízení USB?
+	DA	Afbryd forbindelse til USB-enhed?
+	DE	USB-Gerät auswerfen?
+	EN	Eject USB Device?
+	ES	¿Extraer dispositivo USB?
+	FI	Poistetaanko USB-laite?
+	FR	Ejecter le dispositif USB?
+	IT	Espellere il dispositivo USB?
+	NL	USB-apparaat vrijgeven?
+	NO	Løs ut usb-enhet?
+	PL	Wysunąć urządzenie USB?
+	RU	Извлечь USB-устройство?
+	SV	Vill du mata ut USB-enheten?
+
+EJECT_CONFIRM_INFO
+	CS	Opravdu chcete vysunout zařízení %s?
+	DA	Er du sikker på at du vil afbryde forbindelsen til %s?
+	DE	Soll das Gerät %s wirklich ausgeworfen werden?
+	EN	Are you sure you want to eject the device %s?
+	ES	¿Confirma que desea extraer el dispositivo%s?
+	FI	Haluatko varmasti poistaa laitteen %s?
+	FR	Voulez-vous vraiment éjecter le dispositif %s?
+	IT	Espellere il dispositivo %s?
+	NL	Weet je zeker dat je het apparaat %s wilt vrijgeven?
+	NO	Er du sikker på at du vil løse ut enheten %s?
+	PL	Czy na pewno chcesz wysunąć urządzenie %s?
+	RU	Извлечь устройство %s?
+	SV	Vill du mata ut enheten %s?
+
+EJECT_CONFIRM_INFO_SD
+	CS	Opravdu chcete vysunout SD kartu?
+	DA	Er du sikker på at du vil afbryde forbindelsen til SD-kortet?
+	DE	Soll die SD-Karte wirklich ausgeworfen werden?
+	EN	Are you sure you want to eject the SD card?
+	ES	¿Confirma que desea extraer la tarjeta SD?
+	FI	Haluatko varmasti poistaa SD-kortin?
+	FR	Voulez-vous vraiment éjecter la carte SD?
+	IT	Espellere la scheda SD?
+	NL	Weet je zeker dat je de SD-kaart wilt vrijgeven?
+	NO	Er du sikker på at du vil løse ut SD-kortet?
+	PL	Czy na pewno chcesz wysunąć kartę SD?
+	RU	Извлечь SD-карту?
+	SV	Vill du mata ut SD-kortet?
+
+EJECT_CONFIRM_INFO_USB
+	CS	Opravdu chcete vysunout toto USB zařízení?
+	DA	Er du sikker på at du vil afbryde forbindelsen til denne USB-enhed?
+	DE	Soll das USB-Gerät wirklich ausgeworfen werden?
+	EN	Are you sure you want to eject this USB device?
+	ES	¿Confirma que desea extraer el dispositivo USB?
+	FI	Haluatko varmasti poistaa tämän USB-laitteen?
+	FR	Voulez-vous vraiment éjecter ce dispositif USB?
+	IT	Espellere questo dispositivo USB?
+	NL	Weet je zeker dat je dit USB-apparaat wilt vrijgeven?
+	NO	Er du sikker på at du vil løse ut denne usb-enheten?
+	PL	Czy na pewno chcesz wysunąć to urządzenie USB?
+	RU	Извлечь это USB-устройство?
+	SV	Vill du mata ut USB-enheten?
+
+EJECT_CONFIRM_ITEM
+	CS	Vysunout vyjímatelné zařízení
+	DA	Afbryd forbindelse til flytbar enhed
+	DE	Wechseldatenträger auswerfen
+	EN	Eject removable device
+	ES	Extraer dispositivo extraíble
+	FI	Poista siirrettävä tallennusväline
+	FR	Ejecter le dispositif amovible
+	IT	Espelli dispositivo rimovibile
+	NL	Verwisselbaar apparaat vrijgeven
+	NO	Løs ut flyttbar enhet
+	PL	Wysuń urządzenie wymienne
+	RU	Извлечь съемное устройство
+	SV	Mata ut flyttbar enhet
+
+CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleer
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+DEVICE_EJECTED
+	CS	Zařízení vysunuto
+	DA	Forbindelsen til enheden blev afbrudt
+	DE	Gerät wurde ausgeworfen
+	EN	Device Ejected
+	ES	Dispositivo extraído
+	FI	Laite poistettu
+	FR	Dispositif éjecté
+	IT	Dispositivo espulso
+	NL	Apparaat vrijgegeven
+	NO	Enhet løst ut
+	PL	Wysunięto urządzenie
+	RU	Устройство извлечено
+	SV	Enheten har matats ut
+
+DEVICE_EJECTED_INFO
+	CS	Nyní můžete vaše zařízení bezpečně vyjmout.
+	DA	Nu kan du fjerne enheden.
+	DE	Sie können das Gerät jetzt entfernen.
+	EN	It is now safe to remove your device.
+	ES	Ahora puede retirar el dispositivo con seguridad.
+	FI	Laitteen voi nyt poistaa turvallisesti.
+	FR	Vous pouvez à présent retirer votre dispositif en toute sécurité.
+	IT	Ora è possibile rimuovere il dispositivo.
+	NL	Het apparaat kan nu worden verwijderd.
+	NO	Du kan nå fjerne enheten.
+	PL	Teraz można bezpiecznie odłączyć urządzenie.
+	RU	Теперь можно безопасно удалить устройство.
+	SV	Du kan nu ta bort enheten.
+
+DEVICE_EJECTED_INFO_SD
+	CS	Nyní můžete bezpečně vyjmout vaši SD kartu.
+	DA	Nu kan du tage SD-kortet ud.
+	DE	Sie können die SD-Karte jetzt entfernen.
+	EN	It is now safe to remove your SD Card.
+	ES	Es seguro retirar la tarjeta SD.
+	FI	SD-kortin voi nyt poistaa turvallisesti.
+	FR	Vous pouvez à présent retirer votre carte SD en toute sécurité.
+	IT	Ora è possibile rimuovere la scheda SD.
+	NL	Je kunt de SD-kaart nu verwijderen.
+	NO	Du kan nå fjerne SD-kortet.
+	PL	Teraz można bezpiecznie odłączyć kartę SD.
+	RU	Теперь можно безопасно удалить SD-карту.
+	SV	Du kan nu ta ut SD-kortet.
+
+DEVICE_EJECTED_INFO_USB
+	CS	Nyní můžete bezpečně vyjmout vaše ukládací USB zařízení.
+	DA	Nu kan du fjerne USB-lagerenheden.
+	DE	Sie können das USB-Speichergerät jetzt entfernen.
+	EN	It is now safe to remove your USB storage device.
+	ES	Ahora puede retirar el dispositivo de almacenamiento USB con seguridad.
+	FI	USB-tallennusvälineen voi nyt poistaa turvallisesti.
+	FR	Vous pouvez à présent retirer votre dispositif USB en toute sécurité.
+	IT	Ora è possibile rimuovere il dispositivo di memorizzazione USB.
+	NL	Het USB-opslagapparaat kan nu worden verwijderd.
+	NO	Du kan nå fjerne usb-enheten.
+	PL	Teraz można bezpiecznie odłączyć urządzenie pamięci masowej USB.
+	RU	Теперь можно безопасно удалить USB-накопитель.
+	SV	Du kan nu ta bort USB-lagringsenheten.
+
+ATTACHING_DRIVE
+	CS	Připojování zařízení...
+	DA	Tilslutter enhed...
+	DE	Gerät wird angeschlossen...
+	EN	Attaching Device...
+	ES	Conectando dispositivo...
+	FI	Liitetään laitetta...
+	FR	Connexion du dispositif...
+	IT	Collegamento dispositivo in corso...
+	NL	Apparaat wordt gekoppeld...
+	NO	Legger til enhet...
+	PL	Przyłączanie urządzenia...
+	RU	Присоединение устройства...
+	SV	Enheten ansluts...
+
+ATTACHING_DRIVE_USB
+	CS	Připojování USB zařízení...
+	DA	Tilslutter USB-enhed...
+	DE	USB-Gerät wird angeschlossen...
+	EN	Attaching USB Device...
+	ES	Conectando dispositivo USB...
+	FI	Liitetään USB-laite...
+	FR	Connexion du dispositif USB...
+	IT	Collegamento dispositivo USB in corso...
+	NL	USB-apparaat wordt gekoppeld...
+	NO	Legger til usb-enhet...
+	PL	Przyłączanie urządzenia USB...
+	RU	Присоединение USB-устройства...
+	SV	USB-enheten ansluts...
+
+ATTACHING_DRIVE_SD
+	CS	Připojování SD karty...
+	DA	Tilslutter SD-kort...
+	DE	SD-Karte wird angeschlossen...
+	EN	Attaching SD Card...
+	ES	Conectando tarjeta SD...
+	FI	Liitetään SD-kortti...
+	FR	Connexion de la carte SD...
+	IT	Collegamento scheda SD in corso...
+	NL	SD-kaart wordt gekoppeld...
+	NO	Legger til SD-kort...
+	PL	Przyłączanie karty SD...
+	RU	Присоединение SD-карты...
+	SV	SD-kortet ansluts...
+
+DEVICE
+	CS	Zařízení
+	DA	Enhed
+	DE	Gerät
+	EN	Device
+	ES	Dispositivo
+	FI	Laite
+	FR	Dispositif
+	IT	Dispositivo
+	NL	Apparaat
+	NO	Enhet
+	PL	Urządzenie
+	RU	Устройство
+	SV	Enhet
+
+USB
+	CS	USB zařízení
+	DA	USB-lagerenhed
+	DE	USB-Gerät
+	EN	USB Device
+	ES	Dispositivo USB
+	FI	USB-laite
+	FR	Dispositif USB
+	IT	Dispositivo USB
+	NL	USB-apparaat
+	NO	Usb-enhet
+	PL	Urządzenie USB
+	RU	USB-устройство
+	SV	USB-enhet
+
+SD
+	CS	SD karta
+	DA	SD-kort
+	DE	SD-Karte
+	EN	SD Card
+	ES	Tarjeta SD
+	FI	SD-kortti
+	FR	Carte SD
+	IT	Scheda SD
+	NL	SD-kaart
+	NO	SD-kort
+	PL	Karta SD
+	RU	SD-карта.
+	SV	SD-kort
+
+ATTACHING
+	CS	Připojování
+	DA	Tilslutter
+	DE	Anschließen
+	EN	Attaching
+	ES	Conectar
+	FI	Liitetään
+	FR	Branchement
+	IT	Collegamento
+	NL	De
+	NO	Legger til
+	PL	Przyłączanie
+	RU	Присоединение
+	SV	Anslutning
+
+EJECT_USB
+	CS	Vysunout USB zařízení
+	DA	Afbryd forbindelse til USB-enhed
+	DE	USB-Gerät auswerfen
+	EN	Eject USB Device
+	ES	Extraer dispositivo USB
+	FI	Poista USB-laite
+	FR	Ejecter le dispositif USB
+	IT	Espelli dispositivo USB
+	NL	USB-apparaat vrijgeven
+	NO	Løs ut usb-enhet
+	PL	Wysuń urządzenie USB
+	RU	Извлечь USB-устройство
+	SV	Mata ut USB-enhet
+
+EJECT_SD
+	CS	Vysunout SD kartu
+	DA	Afbryd forbindelse til SD-kort
+	DE	SD-Karte auswerfen
+	EN	Eject SD Card
+	ES	Extraer tarjeta SD
+	FI	Poista SD-kortti
+	FR	Ejecter la carte SD
+	IT	Espelli scheda SD
+	NL	SD-kaart vrijgeven
+	NO	Løs ut SD-kort
+	PL	Wysuń kartę SD
+	RU	Извлечь SD-карту
+	SV	Mata ut SD-kort
+
+EJECTING
+	CS	Vysunuji
+	DA	Afbryder forbindelse
+	DE	Gerät wird ausgeworfen
+	EN	Ejecting
+	ES	Extrayendo
+	FI	Poistetaan
+	FR	Ejection
+	IT	Espulsione
+	NL	Bezig met vrijgeven
+	NO	Løser ut
+	PL	Wysuwanie
+	RU	Извлечение
+	SV	Matar ut
+
+NO_DRIVES_DETECTED
+	CS	Nejsou detekována žádná zařízení
+	DA	Der blev ikke fundet nogen enheder
+	DE	Es wurden keine Geräte erkannt.
+	EN	No Devices Detected
+	ES	No se ha detectado ningún dispositivo
+	FI	Laitteita ei havaittu
+	FR	Aucun dispositif détecté
+	IT	Nessun dispositivo rilevato
+	NL	Geen apparaten gedetecteerd
+	NO	Ingen enheter oppdaget
+	PL	Nie wykryto żadnych urządzeń
+	RU	Не найдены устройства
+	SV	Inga enheter upptäcktes
+
+NO_DRIVES_DETECTED_INFO
+	CS	Squeezebox Touch nedetekoval žádné ukládací zařízení. Připojte laskavě buď USB zařízení nebo SD kartu a zkuste znovu.
+	DA	Squeezebox Touch kunne ikke finde nogen tilsluttet lagerenhed. Tilslut en USB-lagerenhed eller et SD-kort, og prøv igen.
+	DE	Squeezebox Touch erkennt kein angeschlossenes Speichergerät. Schließen Sie entweder ein USB-Gerät oder eine SD-Karte an und versuchen Sie es erneut.
+	EN	Squeezebox Touch detects no attached storage device. Please attach either a USB device or SD card and try again.
+	ES	Squeezebox Touch no reconoce ningún dispositivo de almacenamiento conectado. Conecte un dispositivo USB o una tarjeta SD e inténtelo de nuevo.
+	FI	Squeezebox Touch ei havaitse liitettyä tallennuslaitetta. Liitä joko USB-laite tai SD-kortti ja yritä uudelleen.
+	FR	Squeezebox Touch ne détecte aucun dispositif de stockage. Connectez un dispositif USB ou une carte SD, puis réessayez.
+	IT	Squeezebox Touch non ha rilevato alcun dispositivo di memorizzazione collegato. Collegare un dispositivo USB o una scheda SD e riprovare.
+	NL	Squeezebox Touch heeft geen gekoppeld opslagapparaat gevonden. Koppel een USB-apparaat of een SD-kaart en probeer het opnieuw.
+	NO	Squeezebox Touch har ikke registrert noen tilkoplet lagringsenhet. Kople til en usb-enhet eller et SD-kort, og prøv på nytt.
+	PL	Urządzenie Squeezebox Touch nie wykryło żadnego podłączonego urządzenia pamięci masowej. Podłącz urządzenie USB lub kartę SD i spróbuj ponownie.
+	RU	Squeezebox Touch не обнаруживает присоединенный накопитель. Присоедините USB-устройство или SD-карту и повторите попытку.
+	SV	Ingen ansluten lagringsenhet upptäcktes. Anslut en USB-enhet eller sätt i ett SD-kort och försök igen.
+
+USE_DRIVE_SD
+	CS	Použít SD kartu
+	DA	Brug SD-kort
+	DE	SD-Karte verwenden
+	EN	Use SD Card
+	ES	Utilizar tarjeta SD
+	FI	Käytä SD-korttia
+	FR	Utiliser une carte SD
+	IT	Usa scheda SD
+	NL	SD-kaart gebruiken
+	NO	Bruk SD-kort
+	PL	Użyj karty SD
+	RU	Использовать SD-карту
+	SV	Använd SD-kort
+
+USE_DRIVE_USB_NAMED
+	CS	Použít USB zařízení %s
+	DA	Brug USB-enhed %s
+	DE	USB-Gerät %s verwenden
+	EN	Use USB Device %s
+	ES	Utilizar dispositivo USB %s
+	FI	Käytä USB-laitetta %s
+	FR	Utiliser le dispositif USB %s
+	IT	Usa dispositivo USB %s
+	NL	USB-apparaat %s gebruiken
+	NO	Bruk usb-enhet %s
+	PL	Użyj urządzenia USB %s
+	RU	Использовать USB-устройство %s
+	SV	Använd USB-enhet %s
+
+USE_DRIVE_USB
+	CS	Použít USB zařízení
+	DA	Brug USB-enhed
+	DE	USB-Gerät verwenden
+	EN	Use USB Device
+	ES	Utilizar dispositivo USB
+	FI	Käytä USB-laitetta
+	FR	Utiliser le dispositif USB
+	IT	Usa dispositivo USB
+	NL	USB-apparaat gebruiken
+	NO	Bruk usb-enhet
+	PL	Użyj urządzenia USB
+	RU	Использовать USB-устройство
+	SV	Använd USB-enhet
+
+EJECT_FAILURE
+	CS	Vysunutí selhalo
+	DA	Forbindelsen kunne ikke afbrydes
+	DE	Fehler beim Auswerfen
+	EN	Eject Failure
+	ES	Fallo en la extracción
+	FI	Poistovirhe
+	FR	Echec de l'éjection
+	IT	Espulsione non riuscita
+	NL	Vrijgeven mislukt
+	NO	Feil ved utløsning
+	PL	Niepowodzenie wysuwania
+	RU	Ошибка извлечения
+	SV	Utmatningsfel
+
+EJECT_FAILURE_INFO
+	CS	VAROVÁNÍ: Toto zařízení se nevysunulo správně. Může to být způsobeno přístupem jednoho nebo více programů do systému.
+	DA	ADVARSEL: Forbindelsen til enheden kunne ikke afbrydes. Den er muligvis i brug i et eller flere programmer.
+	DE	Warnung: Das Gerät konnte nicht ordnungsgemäß entfernt werden. Möglicherweise wird es von einem oder mehreren Programmen auf dem System verwendet.
+	EN	WARNING: The device failed to eject properly. This may be due to one or more programs on the system accessing it.
+	ES	ADVERTENCIA: No se ha podido extraer el dispositivo de forma correcta. Puede deberse a que hay uno o más programas en el sistema que están intentando acceder a él.
+	FI	VAROITUS: Laitteen poisto epäonnistui. Tämä voi johtua siitä, että yksi tai useampi ohjelma käyttää laitetta.
+	FR	AVERTISSEMENT: impossible d'éjecter correctement le dispositif. Il se peut qu'il soit en cours d'utilisation par un ou plusieurs programmes exécutés sur le système.
+	IT	ATTENZIONE: il dispositivo non è stato espulso correttamente. Il motivo può essere dovuto al fatto che uno o più programmi del sistema stanno accedendo ad esso.
+	NL	WAARSCHUWING: Het apparaat is niet goed vrijgegeven. Dit kan zijn omdat het gebruikt wordt door een of meer programma's.
+	NO	ADVARSEL: Enheten ble ikke løst ut på riktig måte. Dette kan skyldes at ett eller flere programmer bruker den.
+	PL	OSTRZEŻENIE: To urządzenie nie zostało prawidłowo wysunięte. Może to być spowodowane tym, że co najmniej jeden program w systemie uzyskuje dostęp do tego urządzenia.
+	RU	ПРЕДУПРЕЖДЕНИЕ. Не удалось правильно извлечь устройство. Возможно, с ним работают одна или несколько программ.
+	SV	VARNING! Enheten matades inte ut på rätt sätt. Det kan bero på att det finns program som läser från eller skriver till den.
+
+EJECT_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+

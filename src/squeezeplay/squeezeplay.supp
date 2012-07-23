@@ -1,0 +1,141 @@
+
+{
+   <insert a suppression name here>
+   Memcheck:Addr4
+   obj:/lib/ld-2.7.so
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   semctl(IPC_SET, arg.buf)
+   obj:/lib/ld-2.7.so
+   fun:snd_pcm_direct_semaphore_create_or_connect
+   fun:snd_pcm_dmix_open
+   fun:_snd_pcm_dmix_open
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+   fun:_snd_pcm_plug_open
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+   fun:_snd_pcm_asym_open
+   obj:/usr/lib/libasound.so.2.0.0
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(arg)
+   obj:/lib/ld-2.7.so
+   fun:snd_pcm_prepare
+   fun:snd_pcm_hw_params
+   fun:snd_pcm_direct_initialize_slave
+   fun:snd_pcm_dmix_open
+   fun:_snd_pcm_dmix_open
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+   fun:_snd_pcm_plug_open
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(arg)
+   obj:/lib/ld-2.7.so
+   fun:snd_pcm_start
+   fun:snd_pcm_direct_initialize_slave
+   fun:snd_pcm_dmix_open
+   fun:_snd_pcm_dmix_open
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+   fun:_snd_pcm_plug_open
+   obj:/usr/lib/libasound.so.2.0.0
+   fun:snd_pcm_open_named_slave
+   fun:_snd_pcm_asym_open
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   fun:snd_pcm_hw_param_set_near
+   fun:snd_pcm_hw_params_set_period_size_near
+   fun:pcm_open
+   fun:decode_alsa_init
+   fun:luaopen_decode
+   fun:luaD_precall
+   fun:luaD_call
+   fun:lua_call
+   fun:openlibs
+   fun:pmain
+   fun:luaD_precall
+   fun:luaD_call
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   fun:_snd_pcm_hw_param_set_min
+   fun:snd_pcm_hw_param_set_min
+   fun:snd_pcm_hw_param_set_near
+   fun:snd_pcm_hw_params_set_period_size_near
+   fun:pcm_open
+   fun:decode_alsa_init
+   fun:luaopen_decode
+   fun:luaD_precall
+   fun:luaD_call
+   fun:lua_call
+   fun:openlibs
+   fun:pmain
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(arg)
+   obj:/lib/ld-2.7.so
+   fun:snd_pcm_hwsync
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(arg)
+   obj:/lib/ld-2.7.so
+   fun:snd_timer_start
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Param
+   ioctl(arg)
+   obj:/lib/ld-2.7.so
+   fun:snd_timer_stop
+   obj:/usr/lib/libasound.so.2.0.0
+   obj:/usr/lib/libasound.so.2.0.0
+}
+
+{
+   <insert a suppression name here>
+   Memcheck:Cond
+   obj:/lib/ld-2.7.so
+   obj:/lib/tls/i686/cmov/libc-2.7.so
+   fun:_dl_sym
+   obj:/lib/tls/i686/cmov/libdl-2.7.so
+   obj:/lib/ld-2.7.so
+   obj:/lib/tls/i686/cmov/libdl-2.7.so
+   fun:dlsym
+   fun:SDL_LoadFunction
+   fun:X11_GetSym
+   fun:SDL_X11_LoadSymbols
+   fun:X11_Available
+   fun:SDL_VideoInit
+}

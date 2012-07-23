@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.RequestJsonRpc - A JSON request over HTTP.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_requestjsonrpc_sink__uri__method__params__options_">jive.net.RequestJsonRpc(sink, uri, method, params, options)</a></li>
+		<li><a href="#getjsonid__"><code>getJsonId()</code></a></li>
+		<li><a href="#tostring_arequest_"><code>tostring(aRequest)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>jive.net.RequestJsonRpc implements the JSON-RPC protocol
+over POST HTTP. It is a subclass of <em>jive.net.RequestHttp</em>.</p>
+<p>Note the implementation uses the source and sink concept of luasocket.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a sink to receive JSON
+ local function mySink(chunk, err)
+   if err then
+     print(&quot;error!: &quot; .. err)
+   elseif chunk then
+     print(&quot;received: &quot; .. chunk.id)
+   end
+ end
+ 
+ -- create a RequestJsonRpc
+ local myRequest = RequestJsonRpc(mySink, '/jsonservice.js', 'secretmethod', {1, 2 , 3})</pre>
+<pre>
+ -- use a SocketHttp to fetch
+ <a href="http:fetch">http:fetch</a>(myRequest)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_requestjsonrpc_sink__uri__method__params__options_">jive.net.RequestJsonRpc(sink, uri, method, params, options)</a></h2>
+<p>Creates a RequestJsonRpc. Parameters:</p>
+<p><em>sink</em> : a main thread sink that accepts a table built from the JSON data returned by the server</p>
+<p><em>uri</em> : the URI of the JSON service (on the HTTP server pointed by the <em>jive.net.SocketHttp</em> this request will be sent to)</p>
+<p><em>method</em> : the method field of JSON</p>
+<p><em>params</em> : the params field of JSON (a table that this class will convert to JSON)</p>
+<p><em>options</em> : options as defined by <em>jive.net.RequestHttp</em>. This class defines the request body.</p>
+<p>Note the class calculates a JSON ID.
+=cut
+--]]
+function __init(self, sink, uri, method, params, options)
+	--log:debug(``RequestJsonRpc:__init()'')</p>
+<p><table cellspacing="0" cellpadding="0"><tr><td>--<td><code>assert(method)</code>
+<tr><td>--<td><code>assert(uri)</code>
+<tr><td>--<td><code>assert(sink)</code>
+<tr><td><td>if not params then
+<tr><td><td>params = {}
+<tr><td><td>end
+</table></p>
+<pre>
+
+        local json = {
+                [&quot;method&quot;] = method,
+                [&quot;params&quot;] = params,
+        }
+        local id = string.sub(tostring(json), 9)
+        json.id = id</pre>
+<pre>
+
+        if not options then
+                options = {}
+        end
+        options.t_bodySource = _getBodySource(json)</pre>
+<pre>
+        local obj = oo.rawnew(self, RequestHttp(sink, 'POST', uri, options))</pre>
+<pre>
+        obj.json = json</pre>
+<pre>
+        return obj
+end</pre>
+<p>-- t_setResponseBody
+-- HTTP socket data to process, along with a safe sink to send it to customer
+function t_setResponseBody(self, data, safeSinkGen)
+	--log:debug(``RequestJsonRpc:t_setResponseBody()'')
+--	log:info(data)</p>
+<pre>
+        -- transform our sink into a safe one using handy function
+        local safeSink = self:sinkToSafeSink(self:t_getResponseSink(), safeSinkGen)
+        
+        -- abort if we have no sink
+        if safeSink then
+        
+                -- the HTTP layer has read any data coming with a 404, but we do not care
+                -- only send data back in case of 200!
+                local code, err = self:t_getResponseStatus()
+                if code == 200 then
+                        local mySink = ltn12.sink.chain(
+                                jsonfilters.decode,
+                                safeSink
+                        )
+                        mySink(data)
+                else
+                        safeSink(nil, err)
+                end
+        end
+end</pre>
+<p>--[[</p>
+<p>
+</p>
+<h2><a name="getjsonid__"><code>getJsonId()</code></a></h2>
+<p>Returns the JsonId assigned to this request</p>
+<p>
+</p>
+<h2><a name="tostring_arequest_"><code>tostring(aRequest)</code></a></h2>
+<p>If <em>aRequest</em> is a <em>jive.net.RequestJsonRpc</em>, prints
+ RequestJsonRpc {id}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

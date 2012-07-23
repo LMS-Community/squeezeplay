@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.HttpPool - Manages a set of HTTP sockets.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_httppool_jnt__ip__port__quantity__threshold__name_">jive.net.HttpPool(jnt, ip, port, quantity, threshold, name)</a></li>
+		<li><a href="#jive_net_httppool_free__">jive.net.HttpPool:free()</a></li>
+		<li><a href="#jive_net_httppool_queue_request_">jive.net.HttpPool:queue(request)</a></li>
+		<li><a href="#jive_net_httppool_queuepriority_request_">jive.net.HttpPool:queuePriority(request)</a></li>
+		<li><a href="#tostring_apool_"><code>tostring(aPool)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This class manages 2 queues of a requests, processed using a number
+of HTTP sockets (see <em>jive.net.SocketHttp</em>). The sockets are opened
+dynamically as the queue size grows, and are closed once all requests
+have been serviced.
+jive.net.HttpPool defines 2 priorities: basic and high. High priority
+requests are serviced before basic ones.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a pool for <a href="http://192.168.1.1:9000">http://192.168.1.1:9000</a>
+ -- with a max of 4 connections, threshold of 2 requests
+ local pool = HttpPool(jnt, &quot;192.168.1.1&quot;, 9000, 4, 2, 'slimserver'),</pre>
+<pre>
+ -- queue a request
+ pool:queue(aRequest)</pre>
+<pre>
+ -- queue a request, with high priority
+ pool:queuePriority(anImportantRequest)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_httppool_jnt__ip__port__quantity__threshold__name_">jive.net.HttpPool(jnt, ip, port, quantity, threshold, name)</a></h2>
+<p>Creates an HTTP pool named <em>name</em> to interface with the given <em>jnt</em> 
+(a <em>jive.net.NetworkThread</em> instance). <em>name</em> is used for debugging and
+defaults to ``''. <em>ip</em> and <em>port</em> are the IP address and port of the HTTP server.</p>
+<p><em>quantity</em> is the maximum number of connections to open, depending on
+the number of requests waiting for service. This is controlled using the
+<em>threshold</em> parameter which indicates the ratio of requests to connections.
+For example, if <em>threshold</em> is 2, a single connection is used until 2 requests
+are pending, at which point a second connection is used. A third connection
+will be opened as soon as the number of queued requests reaches 6.</p>
+<p>
+</p>
+<h2><a name="jive_net_httppool_free__">jive.net.HttpPool:free()</a></h2>
+<p>Frees the pool, close and free all connections.</p>
+<p>
+</p>
+<h2><a name="jive_net_httppool_queue_request_">jive.net.HttpPool:queue(request)</a></h2>
+<p>Queues <em>request</em>, a <em>jive.net.RequestHttp</em> instance. All previously
+queued requests will be serviced before this one.</p>
+<p>
+</p>
+<h2><a name="jive_net_httppool_queuepriority_request_">jive.net.HttpPool:queuePriority(request)</a></h2>
+<p>Queues <em>request</em>, a <em>jive.net.RequestHttp</em> instance. All previously
+priority queued requests will be serviced before this one, but the request
+will be serviced before normal requests.</p>
+<p>
+</p>
+<h2><a name="tostring_apool_"><code>tostring(aPool)</code></a></h2>
+<p>if <em>aPool</em> is a <em>jive.net.HttpPool</em>, prints
+ HttpPool {name}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

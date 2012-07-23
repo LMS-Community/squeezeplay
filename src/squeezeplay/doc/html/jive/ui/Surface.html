@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Surface - A graphic surface</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#newrgb_w__h_">newRGB(w, h)</a></li>
+		<li><a href="#newrgba_w__h_">newRGBA(w, h)</a></li>
+		<li><a href="#loadimage_path_"><code>loadImage(path)</code></a></li>
+		<li><a href="#loadimagedata_data__len_">loadImageData(data, len)</a></li>
+		<li><a href="#drawtext_font__color__str_">drawText(font, color, str)</a></li>
+		<li><a href="#setoffset_x__y_">setOffset(x, y)</a></li>
+		<li><a href="#setclip_x__y__w__h_">setClip(x, y, w, h)</a></li>
+		<li><a href="#getclip__"><code>getClip()</code></a></li>
+		<li><a href="#blit_dst__dx__dy_">blit(dst, dx, dy)</a></li>
+		<li><a href="#blitclip_sx__sy__sw__sh__dst__dx__dy_">blitClip(sx, sy, sw, sh, dst, dx, dy)</a></li>
+		<li><a href="#getsize__"><code>getSize()</code></a></li>
+	</ul>
+
+	<li><a href="#drawing_methods">DRAWING METHODS</a></li>
+	<ul>
+
+		<li><a href="#rotozoom_angle__zoom__smooth_">rotozoom(angle, zoom, smooth)</a></li>
+		<li><a href="#zoom_zoomx__zoomy__smooth_">zoom(zoomx, zoomy, smooth)</a></li>
+		<li><a href="#shrink_factorx__factory_">shrink(factorx, factory)</a></li>
+		<li><a href="#pixel_x__y__color_">pixel(x, y, color)</a></li>
+		<li><a href="#hline_x1__x2__y__color_">hline(x1, x2, y, color)</a></li>
+		<li><a href="#vline_x__y1__y2__color_">vline(x, y1, y2, color)</a></li>
+		<li><a href="#rectangle_x1__y1__x2__y2__color_">rectangle(x1, y1, x2, y2, color)</a></li>
+		<li><a href="#filledrectangle_x1__y1__x2__y2__color_">filledRectangle(x1, y1, x2, y2, color)</a></li>
+		<li><a href="#line_x1__y1__x2__y2__color_">line(x1, y1, x2, y2, color)</a></li>
+		<li><a href="#aaline_x1__y1__x2__y2__color_">aaline(x1, y1, x2, y2, color)</a></li>
+		<li><a href="#circle_x__y__r__color_">circle(x, y, r, color)</a></li>
+		<li><a href="#aacircle_x__y__r__color_">aacircle(x, y, r, color)</a></li>
+		<li><a href="#filledcircle_x__y__r__color_">filledCircle(x, y, r, color)</a></li>
+		<li><a href="#ellipse_x__y__rx__ry__color_">ellipse(x, y, rx, ry, color)</a></li>
+		<li><a href="#aaellipse_x__y__rx__ry__color_">aaellipse(x, y, rx, ry, color)</a></li>
+		<li><a href="#filledellipse_x__y__rx__ry__color_">filledEllipse(x, y, rx, ry, color)</a></li>
+		<li><a href="#pie_x__y__rad__start__end__color_">pie(x, y, rad, start, end, color)</a></li>
+		<li><a href="#filledpie_x__y__rad__start__end__color_">filledPie(x, y, rad, start, end, color)</a></li>
+		<li><a href="#trigon_x1__y1__x2__y2__x3__y3__color_">trigon(x1, y1, x2, y2, x3, y3, color)</a></li>
+		<li><a href="#aatrigon_x1__y1__x2__y2__x3__y3__color_">aatrigon(x1, y1, x2, y2, x3, y3, color)</a></li>
+		<li><a href="#filledtrigon_x1__y1__x2__y2__x3__y3__color_">filledTrigon(x1, y1, x2, y2, x3, y3, color)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A graphic surface. Can be used for drawing or images.</p>
+<p>All colors used in the api are given as 32bit RGBA values.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Drawing
+ local srf = jive.ui.Surface:newRGBA(100, 100)
+ srf:rectangle(10, 10, 90, 90, 0xFFFFFFFF)</pre>
+<pre>
+ -- Images
+ local img = jive.ui.Surface:loadImage(&quot;example.png&quot;)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="newrgb_w__h_">newRGB(w, h)</a></h2>
+<p>Constructs a new RGB surface of width and height <em>w</em> and <em>h</em>.</p>
+<p>
+</p>
+<h2><a name="newrgba_w__h_">newRGBA(w, h)</a></h2>
+<p>Constructs a new RGBA surface of width and height <em>w</em> and <em>h</em>. The surface is filled with transparency.</p>
+<p>
+</p>
+<h2><a name="loadimage_path_"><code>loadImage(path)</code></a></h2>
+<p>Load an image from <em>path</em>. If <em>path</em> is relative the lua path is searched for the image. Returns the loaded image.</p>
+<p>
+</p>
+<h2><a name="loadimagedata_data__len_">loadImageData(data, len)</a></h2>
+<p>Load an image from <em>data</em> using <em>len</em> bytes. Returns the loaded image.</p>
+<p>
+</p>
+<h2><a name="drawtext_font__color__str_">drawText(font, color, str)</a></h2>
+<p>Draw text <em>str</em> in font <em>font</em>, in color <em>color</em>. Returns a new surface containing the text.</p>
+<p>
+</p>
+<h2><a name="setoffset_x__y_">setOffset(x, y)</a></h2>
+<p>Sets a surface offset. This offset is used by all blitting and drawing methods.</p>
+<p>
+</p>
+<h2><a name="setclip_x__y__w__h_">setClip(x, y, w, h)</a></h2>
+<p>Sets <em>x, y, w, h</em> as the surface clip rectangle. This offset is used by all blitting and drawing methods.</p>
+<p>
+</p>
+<h2><a name="getclip__"><code>getClip()</code></a></h2>
+<p>Returns <em>x, y, w, h</em> the surface clip rectangle.</p>
+<p>
+</p>
+<h2><a name="blit_dst__dx__dy_">blit(dst, dx, dy)</a></h2>
+<p>Blits this surface to the <em>dst</em> surface at <em>dx, dy</em>.</p>
+<p>
+</p>
+<h2><a name="blitclip_sx__sy__sw__sh__dst__dx__dy_">blitClip(sx, sy, sw, sh, dst, dx, dy)</a></h2>
+<p>Blits a subset this surface <em>sx, sy, sw, sh</em> to the <em>dst</em> surface at <em>dx, dy</em>.</p>
+<p>
+</p>
+<h2><a name="getsize__"><code>getSize()</code></a></h2>
+<p>Returns <em>w, h</em>, the surface size.</p>
+<p>
+</p>
+<hr />
+<h1><a name="drawing_methods">DRAWING METHODS</a></h1>
+<p>The following methods are from the SDL_gfx package. See <a href="http://www.ferzkopp.net/joomla/content/view/19/14/">http://www.ferzkopp.net/joomla/content/view/19/14/</a> for more details.</p>
+<p>
+</p>
+<h2><a name="rotozoom_angle__zoom__smooth_">rotozoom(angle, zoom, smooth)</a></h2>
+<p>
+</p>
+<h2><a name="zoom_zoomx__zoomy__smooth_">zoom(zoomx, zoomy, smooth)</a></h2>
+<p>
+</p>
+<h2><a name="shrink_factorx__factory_">shrink(factorx, factory)</a></h2>
+<p>
+</p>
+<h2><a name="pixel_x__y__color_">pixel(x, y, color)</a></h2>
+<p>
+</p>
+<h2><a name="hline_x1__x2__y__color_">hline(x1, x2, y, color)</a></h2>
+<p>
+</p>
+<h2><a name="vline_x__y1__y2__color_">vline(x, y1, y2, color)</a></h2>
+<p>
+</p>
+<h2><a name="rectangle_x1__y1__x2__y2__color_">rectangle(x1, y1, x2, y2, color)</a></h2>
+<p>
+</p>
+<h2><a name="filledrectangle_x1__y1__x2__y2__color_">filledRectangle(x1, y1, x2, y2, color)</a></h2>
+<p>
+</p>
+<h2><a name="line_x1__y1__x2__y2__color_">line(x1, y1, x2, y2, color)</a></h2>
+<p>
+</p>
+<h2><a name="aaline_x1__y1__x2__y2__color_">aaline(x1, y1, x2, y2, color)</a></h2>
+<p>
+</p>
+<h2><a name="circle_x__y__r__color_">circle(x, y, r, color)</a></h2>
+<p>
+</p>
+<h2><a name="aacircle_x__y__r__color_">aacircle(x, y, r, color)</a></h2>
+<p>
+</p>
+<h2><a name="filledcircle_x__y__r__color_">filledCircle(x, y, r, color)</a></h2>
+<p>
+</p>
+<h2><a name="ellipse_x__y__rx__ry__color_">ellipse(x, y, rx, ry, color)</a></h2>
+<p>
+</p>
+<h2><a name="aaellipse_x__y__rx__ry__color_">aaellipse(x, y, rx, ry, color)</a></h2>
+<p>
+</p>
+<h2><a name="filledellipse_x__y__rx__ry__color_">filledEllipse(x, y, rx, ry, color)</a></h2>
+<p>
+</p>
+<h2><a name="pie_x__y__rad__start__end__color_">pie(x, y, rad, start, end, color)</a></h2>
+<p>
+</p>
+<h2><a name="filledpie_x__y__rad__start__end__color_">filledPie(x, y, rad, start, end, color)</a></h2>
+<p>
+</p>
+<h2><a name="trigon_x1__y1__x2__y2__x3__y3__color_">trigon(x1, y1, x2, y2, x3, y3, color)</a></h2>
+<p>
+</p>
+<h2><a name="aatrigon_x1__y1__x2__y2__x3__y3__color_">aatrigon(x1, y1, x2, y2, x3, y3, color)</a></h2>
+<p>
+</p>
+<h2><a name="filledtrigon_x1__y1__x2__y2__x3__y3__color_">filledTrigon(x1, y1, x2, y2, x3, y3, color)</a></h2>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

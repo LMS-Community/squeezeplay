@@ -1,0 +1,1581 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+NETWORK
+	CS	Bezdrátová síť
+	DA	Trådløst netværk
+	DE	Kabelloses Netzwerk
+	EN	Wireless Network
+	ES	Red inalámbrica
+	FI	Langaton verkko
+	FR	Réseau sans fil
+	IT	Rete senza fili
+	NL	Draadloze netwerk
+	NO	Trådløst nettverk
+	PL	Sieć bezprzewodowa
+	RU	Беспроводная сеть
+	SV	Trådlöst nätverk
+
+NETWORK_FINDING_NETWORKS
+	CS	Hledání sítí...
+	DA	Søger efter netværk...
+	DE	Netzwerke werden gesucht...
+	EN	Finding Networks...
+	ES	Buscando redes...
+	FI	Etsitään verkkoja...
+	FR	Recherche de réseaux...
+	IT	Rilevamento delle reti in corso...
+	NL	Bezig met het zoeken naar netwerken...
+	NO	Finner nettverk ...
+	PL	Trwa wyszukiwanie sieci...
+	RU	Поиск сетей...
+	SV	Söker efter nätverk ...
+
+NETWORK_BSSID
+	CS	BSSID:
+	DA	BSSID:
+	DE	BSSID:
+	EN	BSSID:
+	ES	BSSID:
+	FI	BSSID:
+	FR	BSSID:
+	IT	BSSID:
+	NL	BSSID:
+	NO	BSSID:
+	PL	BSSID:
+	RU	BSSID:
+	SV	BSSID:
+
+NETWORK_ENCRYPTION
+	CS	Šifrování:
+	DA	Kryptering:
+	DE	Verschlüsselung:
+	EN	Encryption:
+	ES	Cifrado:
+	FI	Salaus:
+	FR	Chiffrement:
+	IT	Crittografia:
+	NL	Codering:
+	NO	Kryptering:
+	PL	Szyfrowanie:
+	RU	Шифрование:
+	SV	Kryptering:
+
+NETWORK_ENTER_ANOTHER_NETWORK
+	CS	Nevidím svou síť
+	DA	Jeg kan ikke se mit netværk
+	DE	Mein Netzwerk wird nicht angezeigt
+	EN	I don't see my network
+	ES	No puedo ver mi red
+	FI	En näe verkkoani
+	FR	Je ne vois pas mon réseau
+	IT	La mia rete non è visualizzata
+	NL	Ik zie mijn netwerk niet
+	NO	Jeg ser ikke nettverket
+	PL	Nie widzę mojej sieci
+	RU	Я не вижу свою сеть
+	SV	Nätverket visas inte här
+
+NETWORK_SSID
+	CS	SSID:
+	DA	SSID:
+	DE	SSID:
+	EN	SSID:
+	ES	SSID:
+	FI	SSID:
+	FR	SSID:
+	IT	SSID:
+	NL	SSID:
+	NO	SSID:
+	PL	SSID:
+	RU	SSID:
+	SV	SSID:
+
+NETWORK_SNR
+	CS	SNR:
+	DA	Signal/støjforhold:
+	DE	SNR:
+	EN	SNR:
+	ES	SNR:
+	FI	SNR:
+	FR	SNR:
+	IT	SNR:
+	NL	SNR:
+	NO	SNR:
+	PL	SNR:
+	RU	SNR:
+	SV	Brusvärde:
+
+NETWORK_BITRATE
+	CS	Rychlost Tx:
+	DA	Transmissionshastighed:
+	DE	Übertragungsrate:
+	EN	Tx rate:
+	ES	Velocidad Tx:
+	FI	Siirtonopeus:
+	FR	Taux de transfert:
+	IT	Velocità trasferimento:
+	NL	Overdrachtssnelheid:
+	NO	Overføringshastighet:
+	PL	Szybkość transmisji:
+	RU	Частота передачи:
+	SV	Överföringshastighet:
+
+NETWORK_STATE
+	CS	Stav:
+	DA	Status:
+	DE	Zustand:
+	EN	State:
+	ES	Estado:
+	FI	Osavaltio:
+	FR	Etat:
+	IT	Stato:
+	NL	Status:
+	NO	Status:
+	PL	Stan:
+	RU	Состояние:
+	SV	Status:
+
+NETWORK_STATE_DISCONNECTED
+	CS	Odpojeno
+	DA	Forbindelsen afbrudt
+	DE	Getrennt
+	EN	Disconnected
+	ES	Desconectado
+	FI	Yhteys katkaistu
+	FR	Déconnecté
+	IT	Scollegato
+	NL	Verbinding verbroken
+	NO	Frakoplet
+	PL	Rozłączono
+	RU	Отключено
+	SV	Frånkopplad
+
+NETWORK_STATE_SCANNING
+	CS	Vyhledávám
+	DA	Søger
+	DE	Suche läuft...
+	EN	Scanning
+	ES	Examinando
+	FI	Tarkistetaan
+	FR	Analyse
+	IT	Analisi in corso
+	NL	Scannen
+	NO	Søker
+	PL	Przeszukiwanie
+	RU	Сканирование
+	SV	Söker
+
+NETWORK_STATE_CONNECTING
+	CS	Probíhá připojování
+	DA	Opretter forbindelse
+	DE	Verbindung
+	EN	Connecting
+	ES	Conectando
+	FI	Yhdistää
+	FR	Connexion
+	IT	Connessione
+	NL	Bezig met verbinden
+	NO	Kopler til
+	PL	Łączenie
+	RU	Подключение
+	SV	Ansluter
+
+NETWORK_STATE_HANDSHAKE
+	CS	Navázat spojení
+	DA	Handshake
+	DE	Handshake
+	EN	Handshake
+	ES	Enlace
+	FI	Kättely
+	FR	Connexion
+	IT	Handshake
+	NL	Handshake
+	NO	Handshake
+	PL	Uzgadnianie
+	RU	Согласование
+	SV	Handskakning
+
+NETWORK_STATE_CONNECTED
+	CS	Připojeno
+	DA	Tilsluttet
+	DE	Verbunden
+	EN	Connected
+	ES	Conectado
+	FI	Yhdistetty
+	FR	Connecté
+	IT	Connesso
+	NL	Verbonden
+	NO	Tilkoplet
+	PL	Połączono
+	RU	Подключено
+	SV	Ansluten
+
+NETWORK_STATUS
+	CS	Stav sítě
+	DA	Netværksstatus
+	DE	Netzwerkstatus
+	EN	Network Status
+	ES	Estado de red
+	FI	Verkon tila
+	FR	Etat du réseau
+	IT	Stato della rete
+	NL	Netwerkstatus
+	NO	Nettverksstatus
+	PL	Stan sieci
+	RU	Статус сети
+	SV	Nätverksstatus
+
+NETWORK_UNSUPPORTED_TYPES_HELP
+	CS	Omlouváme se; WPA-EAP a WPA2-EAP nejsou podporované typy šifrování. Podporované formáty zahrnují WPA, WPA2 a WEP.
+	DA	Krypteringstyperne WPA-EAP og WPA2-EAP understøttes desværre ikke. Formaterne WPA, WPA2 og WEP er understøttet.
+	DE	WPA-EAP und WPA2-EAP werden nicht unterstützt. Zu den unterstützten Verschlüsselungsformaten zählen WPA, WPA2 und WEP.
+	EN	We're sorry; WPA-EAP and WPA2-EAP are not supported encryption types. Formats supported include WPA, WPA2 and WEP.
+	ES	WPA-EAP y WPA2-EAP no son tipos de cifrado admitidos. Los formatos admitidos son WPA, WPA2 y WEP.
+	FI	Olemme pahoillamme. WPA-EAP ja WPA2-EAP eivät ole tuettuja salaustyyppejä. Tuettuja muotoja ovat WPA, WPA2 ja WEP.
+	FR	WPA-EAP et WPA2-EAP ne sont pas des types de chiffrement pris en charge. Les formats pris en charge sont WPA, WPA2 et WEP.
+	IT	Spiacenti. I tipi di crittografia WPA-EAP e WPA2-EAP non sono supportati. I tipi supportati sono WPA, WPA2 e WEP.
+	NL	WPA-EAP en WPA2-EAP zijn helaas geen ondersteunde coderingstypen. Ondersteunde indelingen zijn o.a. WPA, WPA2 en WEP.
+	NO	Beklager, krypteringstypene WPA-EAP og WPA2-EAP støttes ikke. Støttede formater er blant annet WPA, WPA2 og WEP.
+	PL	Przepraszamy, nie są obsługiwane typy szyfrowania WPA-EAP i WPA2-EAP. Dostępne formaty obejmują WPA, WPA2 i WEP.
+	RU	Типы шифрования WPA-EAP и WPA2-EAP не поддерживаются. Поддерживаемые форматы включают WPA, WPA2 и WEP.
+	SV	Det finns tyvärr inget stöd för WPA-EAP- och WPA2-EAP-krypteringar. Däremot stöds WPA, WPA2 samt WEP.
+
+NETWORK_UNSUPPORTED_OTHER_NETWORK
+	CS	Zvolte jinou síť
+	DA	Vælg et andet netværk
+	DE	Wählen Sie ein anderes Netzwerk
+	EN	Choose a different network
+	ES	Elija otra red
+	FI	Valitse eri verkko
+	FR	Sélectionner un réseau différent
+	IT	Scegli una rete diversa
+	NL	Een ander netwerk kiezen
+	NO	Velg et annet nettverk
+	PL	Wybierz inną sieć
+	RU	Выбрать другую сеть
+	SV	Välj ett annat nätverk
+
+NETWORK_WIRELESS_KEY
+	CS	Zadejte své heslo
+	DA	Indtast adgangskoden
+	DE	Geben Sie Ihr Kennwort ein
+	EN	Enter Your Password
+	ES	Escriba su contraseña
+	FI	Anna salasana
+	FR	Entrer votre mot de passe
+	IT	Immettere la password
+	NL	Uw wachtwoord invoeren
+	NO	Angi passord
+	PL	Wprowadź hasło
+	RU	Введите пароль
+	SV	Ange lösenordet
+
+NETWORK_REGION
+	CS	Vyberte region
+	DA	Vælg område
+	DE	Region wählen
+	EN	Choose Region
+	ES	Seleccione una región
+	FI	Valitse alue
+	FR	Sélectionner une région
+	IT	Scegli area geografica
+	NL	Regio kiezen
+	NO	Velg område
+	PL	Wybierz region
+	RU	Выберите регион
+	SV	Välj region
+
+NETWORK_REGION_US
+	CS	Severní Amerika
+	DA	Nordamerika
+	DE	Nordamerika
+	EN	North America
+	ES	Norteamérica
+	FI	Pohjois-Amerikka
+	FR	Amérique du Nord
+	IT	Nord America
+	NL	Noord-Amerika
+	NO	Nord-Amerika
+	PL	Ameryka Północna
+	RU	Северная Америка
+	SV	Nordamerika
+
+NETWORK_REGION_XX
+	CS	Všechny ostatní regiony
+	DA	Alle andre områder
+	DE	Alle anderen Regionen
+	EN	All Other Regions
+	ES	Resto de países
+	FI	Kaikki muut alueet
+	FR	Toutes les autres régions
+	IT	Tutte le altre aree geografiche
+	NL	Alle overige regio's
+	NO	Alle andre områder
+	PL	Wszystkie inne regiony
+	RU	Другие регионы
+	SV	Övriga regioner
+
+NETWORK_REGION_HELP
+	CS	Zvolte nápovědu pro region
+	DA	Hjælp til at vælge område
+	DE	Hilfe zum Wählen der Region
+	EN	Choose Region Help
+	ES	Ayuda de selección de región
+	FI	Valitse alueohje
+	FR	Aide sur la sélection de la région
+	IT	Guida sulla scelta dell'area geografica
+	NL	Help bij Regio kiezen
+	NO	Hjelp med å velge område
+	PL	Pomoc na temat wyboru regionu
+	RU	Выберите справку для региона
+	SV	Hjälp om regioner
+
+NETWORK_REGION_HELP_BODY
+	CS	Pokud se nacházíte ve Spojených státech, Kanadě nebo Mexiku, zvolte laskavě "Severní Amerika."\n\nPro zbytek světa zvolte "Všechny ostatní regiony."\n\nNa tuto otázku se ptáme za účelem dodržení místních předpisů týkajících se bezdrátových frekvencí.
+	DA	Hvis du befinder dig i USA, Canada eller Mexico, skal du vælge Nordamerika.\n\nHvis du bor et andet sted i verden, skal du vælge Alle andre områder. Du bliver spurgt om dette af hensyn til særlige lokale love og bestemmelser mht. hvilke frekvenser der må bruges til trådløse netværk i de forskellige områder og lande.
+	DE	Wenn Sie sich in den Vereinigten Staaten, Kanada oder Mexiko befinden, wählen Sie "Nordamerika."\n\nWählen Sie für den Rest der Welt "Alle anderen Regionen".\n\nWir bitten um diese Angaben, um den Richtlinien für WLAN-Frequenzen gerecht zu werden.
+	EN	If you are located in the United States, Canada, or Mexico, please select "North America."\n\nFor the rest of the world, select "All Other Regions."\n\nWe ask this question in order to comply with local rules regarding wireless frequencies.
+	ES	Si se encuentra en Estados Unidos, Canadá o México, seleccione "Norteamérica".\n\nPara el resto de ubicaciones, seleccione "Resto de países".\n\nEsta pregunta se hace para cumplir con las normas locales referentes a las frecuencias inalámbricas.
+	FI	Jos sijaintipaikkasi on Yhdysvallat, Kanada tai Meksiko, valitse "Pohjois-Amerikka".\n\nKaikilla muilla alueilla valitse "Kaikki muut alueet".\n\nTätä kysytään, jotta voisimme toimia paikallisten langattomia taajuuksia koskevien sääntöjen mukaisesti.
+	FR	Si vous êtes aux Etats-Unis, au Canada ou au Mexique, sélectionnez "Amérique du Nord".\n\nPour tous les autres pays, sélectionnez "Toutes les autres régions". \n\nNous posons cette question afin de respecter les règlements locaux concernant les fréquences sans fil.
+	IT	Selezionare Nord America se ci si trova negli Stati Uniti, in Canada o in Messico.\n\nPer tutti gli altri paesi, selezionare Tutte le altre aree geografiche. Poniamo questa domanda per conformarci alle normative locali in merito alle frequenze delle reti senza fili.
+	NL	Als je je in de Verenigde Staten, Canada of Mexico bevindt, selecteer je 'Noord-Amerika'.\n\nSelecteer 'Alle andere regio's' voor de rest van de wereld."\n\nWij vragen dit om aan lokale regels betreffende draadloze frequenties te voldoen.
+	NO	Hvis du befinner deg i USA, Canada eller Mexico, velger du Nord-Amerika.\n\nHvis du bor et annet sted, velger du Alle andre områder.\n\nVi stiller dette spørsmålet for å kunne etterkomme lokal lovgivning relatert til trådløse frekvenser.
+	PL	Jeśli przebywasz w Stanach Zjednoczonych, Kanadzie lub Meksyku, wybierz opcję „Ameryka Północna”.\n\nDla pozostałych lokalizacji wybierz opcję „Wszystkie inne regiony”.\n\nZadajemy to pytanie, aby zachować zgodność z lokalnymi przepisami dotyczącymi częstotliwości bezprzewodowych.
+	RU	Если вы находитесь в США, Канаде или Мексике, выберите "Северная Америка."\n\nДля других стран выберите "Другие регионы".\n\nЭтот вопрос позволяет обеспечить соответствие локальным правилам для частот беспроводной связи.
+	SV	Om du befinner dig i USA, Kanada eller i Mexico ska du välja Nordamerika.\n\nFör övriga länder väljer du Alla andra regioner.\n\nVi ställer dessa frågor för att se till att kraven avseende trådlösa frekvenser uppfylls.
+
+NETWORK_WIRELESS_NETWORKS
+	CS	Zvolit síť
+	DA	Vælg netværk
+	DE	Netzwerk wählen
+	EN	Choose Network
+	ES	Elegir red
+	FI	Valitse verkko
+	FR	Sélectionnez un réseau
+	IT	Scegli rete
+	NL	Netwerk kiezen
+	NO	Velg nettverk
+	PL	Wybierz sieć
+	RU	Выберите сеть
+	SV	Välj nätverk
+
+NETWORK_WIRELESS_ENCRYPTION
+	CS	Zvolte metodu kódování
+	DA	Vælg krypteringsmetode
+	DE	Verschlüsselungsmethode wählen
+	EN	Choose Encryption Method
+	ES	Seleccione método de cifrado
+	FI	Valitse salausmenetelmä
+	FR	Sélectionner la méthode de chiffrement
+	IT	Scegli metodo di crittografia
+	NL	Coderingsmethode kiezen
+	NO	Velg kryptering
+	PL	Wybierz metodę szyfrowania
+	RU	Выберите способ шифрования
+	SV	Välj krypteringsmetod
+
+NETWORK_PASSWORD_TYPE
+	CS	Zvolte typ hesla
+	DA	Vælg adgangskodetype
+	DE	Kennworttyp wählen
+	EN	Choose Password Type
+	ES	Seleccione tipo de contraseña
+	FI	Valitse salasanatyyppi
+	FR	Sélectionner un type de mot de passe
+	IT	Scegli tipo di password
+	NL	Wachtwoordtype kiezen
+	NO	Velg passordtype
+	PL	Wybierz typ hasła
+	RU	Выберите тип пароля
+	SV	Välj lösenordstyp
+
+NETWORK_NO_ENCRYPTION
+	CS	Otevřená síť (bez hesla)
+	DA	Åbent netværk (ingen adgangskode)
+	DE	Offenes Netzwerk (kein Kennwort)
+	EN	Open network (no password)
+	ES	Red abierta (sin contraseña)
+	FI	Avoin verkko (ei salasanaa)
+	FR	Réseau ouvert (sans mot de passe)
+	IT	Rete aperta (nessuna password)
+	NL	Open netwerk (geen wachtwoord)
+	NO	Åpent nettverk (ikke passordbeskyttet)
+	PL	Otwarta sieć (bez hasła)
+	RU	Открытая сеть (без пароля)
+	SV	Öppet nätverk (inget lösenord)
+
+NETWORK_WEP_64
+	CS	WEP 64-bit (10 znaků)
+	DA	WEP 64-bit (10 tegn)
+	DE	64-Bit-WEP (10 Zeichen)
+	EN	WEP 64-bit (10 Characters)
+	ES	WEP de 64 bits (10 caracteres)
+	FI	WEP 64-bittinen (10 merkkiä)
+	FR	WEP 64 bits (10 caractères)
+	IT	WEP a 64 bit (10 caratteri)
+	NL	WEP 64-bits (10 tekens)
+	NO	WEP 64-bit (10 tegn)
+	PL	WEP 64 bity (10 znaków)
+	RU	64-разрядный WEP (10 знаков)
+	SV	64-bitars WEP (10 tecken)
+
+NETWORK_WEP_128
+	CS	WEP 128-bit (26 znaků)
+	DA	WEP 128-bit (26 tegn)
+	DE	128-Bit-WEP (26 Zeichen)
+	EN	WEP 128-bit (26 Characters)
+	ES	WEP de 128 bits (26 caracteres)
+	FI	WEP 128-bittinen (26 merkkiä)
+	FR	WEP 128 bits (26 caractères)
+	IT	WEP a 128 bit (26 caratteri)
+	NL	WEP 128 bits (26 tekens)
+	NO	WEP 128-bit (26 tegn)
+	PL	WEP 128 bitów (26 znaków)
+	RU	128-разрядный WEP (26 знаков)
+	SV	128-bitars WEP (26 tecken)
+
+NETWORK_WEP_64_128
+	CS	WEP 64-bit (10 znaků) / WEP 128-bit (26 znaků)
+	DA	WEP 64-bit (10 tegn) / WEP 128-bit (26 tegn)
+	DE	64-Bit-WEP (10 Zeichen) / 128-Bit-WEP (26 Zeichen)
+	EN	WEP 64-bit (10 Characters) / WEP 128-bit (26 Characters)
+	ES	WEP de 64 bits (10 caracteres) / WEP de 128 bits (26 caracteres)
+	FI	WEP 64-bittinen (10 merkkiä) / WEP 128-bittinen (26 merkkiä)
+	FR	WEP 64 bits (10 caractères) / WEP 128 bits (26 caractères)
+	IT	WEP a 64 bit (10 caratteri) / WEP a 128 bit (26 caratteri)
+	NL	WEP 64-bits (10 tekens) / WEP 128 bits (26 tekens)
+	NO	WEP 64-bit (10 tegn) / WEP 128-bit (26 tegn)
+	PL	WEP 64 bity (10 znaków) / WEP 128 bitów (26 znaków)
+	RU	64-разрядный WEP (10 знаков) / 128-разрядный WEP (26 знаков)
+	SV	64-bitars WEP (10 tecken) / 128-bitars WEP (26 tecken)
+
+NETWORK_WPA
+	CS	WPA Personal
+	DA	WPA Personal
+	DE	WPA-Personal
+	EN	WPA Personal
+	ES	WPA personal
+	FI	WPA Personal
+	FR	WPA personnel
+	IT	WPA Personal
+	NL	WPA Personal
+	NO	Personlig WPA
+	PL	WPA Personal
+	RU	Личный WPA
+	SV	WPA Personal
+
+NETWORK_WPA2
+	CS	WPA2 Personal
+	DA	WPA2 Personal
+	DE	WPA2-Personal
+	EN	WPA2 Personal
+	ES	WPA2 personal
+	FI	WPA2 Personal
+	FR	WPA2 personnel
+	IT	WPA2 Personal
+	NL	WPA2 Personal
+	NO	Personlig WPA2
+	PL	WPA2 Personal
+	RU	Личный WPA2
+	SV	WPA2 Personal
+
+NETWORK_WIRELESS_ENCRYPTION_HELP
+	CS	Zvolte si velikost šifrovacího klíče, který používá vaše síť. Klíč může obsahovat číslice 0-9 a písmena A-F. 64-bitové klíče mají 10 číslic, 128-bitové sítě 26.
+	DA	Vælg størrelsen på krypteringsnøglen der bruges på netværket. Nøglen kan bestå af cifrene 0-9 og bogstaverne A-F. 64-bit nøgler består af 10 tegn, 128-bit nøgler af 26 tegn.
+	DE	Wählen Sie die Größe des im Netzwerk verwendeten Verschlüsselungsschlüssels. Der Schlüssel darf die Zahlen 0-9 und Buchstaben A-F enthalten. 64-Bit-Schlüssel haben 10, 128-Bit-Schlüssel 26 Stellen.
+	EN	Choose the size of encryption key that your network uses. The key may include digits 0-9 and letters A-F. 64-bit keys are 10 digits long, 128-bit networks are 26 digits long.
+	ES	Elija el tamaño de la clave de cifrado que utiliza la red. La clave puede incluir dígitos del 0 al 9 y letras de la A a la F. Las claves de 64 bits tienen 10 dígitos, mientras que las claves de 128 bits tienen 26 dígitos.
+	FI	Valitse verkossa käytetyn salausavaimen koko. Avaimessa voidaan käyttää numeroita 0-9 ja kirjaimia A-F. 64-bittiset avaimet ovat 10 merkkiä pitkiä, 128-bittiset 26 merkkiä pitkiä.
+	FR	Sélectionnez le type de chiffrement de votre réseau. La clé peut inclure des chiffres de 0 à 9 et des lettres de A à F. Les clés 64 bits contiennent 10 chiffres ou lettres, et les clés 128 bits en contiennent 26.
+	IT	Scegliere le dimensioni della chiave di crittografia utilizzata dalla rete. La chiave può essere composta dai numeri da 0 a 9 e dalle lettere da A a F. Le chiavi da 64 bit contengono 10 caratteri, quelle da 128 bit ne contengono 26.
+	NL	Kies de grootte van de coderingssleutel die je netwerk gebruikt. De sleutel kan cijfers (0-9) en letters (A-F) bevatten. 64-bits sleutels zijn 10 tekens lang, 128-bits sleutels zijn 26 tekens lang.
+	NO	Velg størrelsen på krypteringsnøkkel som nettverket bruker. Nøkkelen kan inneholde tallene 0–9 og bokstavene A–F. 64-biters nøkler er på 10 tegn, 128-biters nøkler er på 26 tegn.
+	PL	Wybierz wielkość klucza szyfrowania, który jest używany w sieci. Klucz może zawierać cyfry 0-9 i litery A-F. Klucze 64-bitowe zawierają 10 znaków, a klucze 128-bitowe zawierają 26 znaków.
+	RU	Выберите размер ключа шифрования, используемый сетью. Ключ должен содержать цифры 0–9 и буквы A–F. Длина 64-разрядных ключей 10 разрядов, 128-разрядных — 26 разрядов.
+	SV	Välj längden på krypteringsnyckeln som används i ditt nätverk. Nyckeln kan innehålla siffror (0–9) och bokstäver (A–F). 64-bitars nycklar är 10 tecken långa, 128-bitars nycklar 26 tecken.
+
+NETWORK_WIRELESS_PASSWORD
+	CS	Zadejte své heslo
+	DA	Indtast adgangskoden
+	DE	Geben Sie Ihr Kennwort ein
+	EN	Enter Your Password
+	ES	Escriba su contraseña
+	FI	Anna salasana
+	FR	Entrer votre mot de passe
+	IT	Immettere la password
+	NL	Uw wachtwoord invoeren
+	NO	Angi passord
+	PL	Wprowadź hasło
+	RU	Введите пароль
+	SV	Ange lösenordet
+
+NETWORK_WIRELESS_PASSWORD_HELP
+	CS	Nápověda pro bezdrátovou síť
+	DA	Hjælp til trådløst netværk
+	DE	Hilfe zum kabellosen Netzwerk
+	EN	Wireless Network Help
+	ES	Ayuda de red inalámbrica
+	FI	Langattoman verkon ohje
+	FR	Aide sur le réseau sans fil
+	IT	Guida sulla rete senza fili
+	NL	Help bij Draadloos netwerk
+	NO	Hjelp med trådløst nettverk
+	PL	Pomoc na temat sieci bezprzewodowej
+	RU	Справка по беспроводным сетям
+	SV	Hjälp om trådlösa nätverk
+
+NETWORK_WIRELESS_PASSWORD_HELP_BODY
+	CS	Pokud neznáte heslo vaší sítě a máte bezdrátovou síť, zkuste jednu nebo více následujících možností:\n\n1.Zkontrolujte, jestli nemáte heslo někde zapsané.\n2. Zeptejte se jiných osob u vás doma, jestli heslo znají.\n3. Kontaktujte osobu, která instalovala vaši domácí síť.\n\nPOZNÁMKA: Heslo se někdy nazývá bezdrátový klíč nebo bezpečnostní klíč.\nPOZNÁMKA: Squeezebox nepodporuje WEP hesla ve formátu ASCII. Stále můžete připojit váš Squeezebox k vaší síti, ale budete muset převést heslo ve formátu ASCII na hexadecimální formát.  Pravděpodobně naleznete nástroj k převodu někde online. Nebo navštivte www.mysqueezebox.com/support pro další informace.
+	DA	Hvis du har et trådløst netværk, men ikke kender adgangskoden til det, kan du prøve et af følgende:\n\n1. Prøv at huske om ikke du har skrevet det ned et eller andet sted.\n2. Spørg de andre i huset om en af dem kender adgangskoden.\n3. Kontakt den som installerede dit netværk.\n\nOBS: Sommetider kaldes adgangskoden for en nøgle eller sikkerhedsnøgle til det trådløse netværk.\nOBS: Squeezebox understøtter ikke WEP-adgangskoder formateret med ASCII-tegn. Du kan stadig slutte din Squeezebox til netværket, men du skal først konvertere adgangskoden fra ASCII- til hexadecimalformat. Der findes flere konverteringsprogrammer på internettet. Du kan også finde flere oplysninger på www.mysqueezebox.com/support.
+	DE	Wenn Sie über ein kabelloses Netzwerk verfügen und Ihnen das Netzwerkkennwort nicht bekannt ist, führen Sie einen oder mehrere der folgenden Schritte aus:\n\n1. Überprüfen Sie, ob Sie das Kennwort irgendwo notiert haben.\n2. Fragen Sie andere Personen, die Zugang zum Netzwerk haben, ob sie das Kennwort kennen.\n3. Wenden Sie sich an die Person, die das Netzwerk für Sie eingerichtet hat.\n\nHinweis: Ein Kennwort wird auch als WEP-Schlüssel oder Sicherheitsschlüssel bezeichnet.\nHinweis: Die Squeezebox unterstützt keine WEP-Kennwörter mit ASCII-Formatierung. Sie kann zwar mit dem Netzwerk verbunden werden, das ASCII-Kennwort muss jedoch in ein hexadezimales Format umgewandelt werden. Verwenden Sie dazu eines der Konvertierungsprogramme, die online erhältlich sind. Weitere Informationen finden Sie auch unter  www.mysqueezebox.com/support.
+	EN	If you don't know your network password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have it written down somewhere.\n2. Ask someone else in your home if they know the password.\n3. Contact the person who set up your home network.\n\nNOTE: A password is sometimes referred to as a wireless key, or security key.\nNOTE: Squeezebox does not support ASCII-formatted WEP passwords. You can still connect your Squeezebox to your network, but you will need to convert the ASCII password to Hexadecimal format.  You can likely find a converter tool somewhere online.  Or visit www.mysqueezebox.com/support for more information.
+	ES	Si desconoce su contraseña de red y tiene una red inalámbrica, pruebe lo siguiente:\n\n1. Compruebe si está escrita en algún lugar.\n2. Pregunte a otras personas que vivan en su casa si conocen la contraseña.\n3. Póngase en contacto con la persona que configuró la red doméstica.\n\nNOTA: en ocasiones la contraseña recibe el nombre de clave inalámbrica o clave de seguridad.\nNOTA: Squeezebox no admite contraseñas WEP en formato ASCII. En tal caso, es posible conectar Squeezebox a la red, pero para ello deberá convertir la contraseña ASCII al formato hexadecimal. Seguramente podrá encontrar una herramienta para realizar esta conversión en línea. Si desea obtener más información, visite www.mysqueezebox.com/support.
+	FI	Jos et tiedä verkkosi salasanaa ja sinulla on langaton verkko, kokeile yhtä tai useampaa seuraavista:\n\n1. Tarkista oletko kirjoittanut salasana johonkin muistiin.\n2. Kysy joltakin toiselta perheenjäseneltä tietääkö hän salasanan.\n3. Ota yhteys henkilöön, joka asensi kotiverkon.\n\nHUOMAUTUS: Salasanaan viitataan joskus termeillä "langaton avain" tai "suojausavain".\nHUOMAUTUS: Squeezebox ei tue ASCII-muotoisia WEP-salasanoja. Voit silti liittää Squeezeboxin verkkoon, mutta sinun on muunnettava ASCII-salasana heksadesimaaliseen muotoon.  Löydät luultavasti verkosta tarkoitukseen sopivan muuntimen. Tai siirry osoitteeseen www.mysqueezebox.com/support saadaksesi lisätietoja.
+	FR	Si vous ne connaissez pas votre mot de passe réseau et que vous disposez d'un réseau sans fil, tentez l'une des actions suivantes:\n\n1. Regardez si vous l'avez noté quelque part.\n2. Demandez aux personnes de votre entourage si elles connaissent votre mot de passe.\n3. Contactez la personne qui a configuré votre réseau personnel.\n\nREMARQUE: le mot de passe est quelquefois désigné par le nom de "clé sans fil" ou de "clé de sécurité".\nREMARQUE: Squeezebox ne prend pas en charge les mots de passe WEP au format ASCII. Vous pouvez tout de même connecter votre Squeezebox au réseau, mais vous devrez convertir le mot de passe ASCII au format hexadécimal. Vous pouvez trouver un outil de conversion sur Internet ou vous rendre sur le site www.mysqueezebox.com/support pour plus d'informations.
+	IT	Se non si conosce la password della rete e si utilizza una rete senza fili, provare quanto segue:\n\n1. Controllare se la password è stata scritta da qualche parte.\n2. Chiedere a qualcuno in casa se conosce la password.\n3. Contattare la persona che ha configurato la rete di casa.\n\nNOTA: a volte la password viene anche detta chiave senza fili o chiave di sicurezza.\nNOTA: Squeezebox non supporta le password WEP in formato ASCII. Squeezebox può essere connesso alla rete ugualmente, ma è necessario convertire la password dal formato ASCII a quello esadecimale. Su Internet è possibile trovare strumenti per effettuare la conversione oppure visitare www.mysqueezebox.com/support per maggiori informazioni.
+	NL	Als je je netwerkwachtwoord niet weet en je een draadloos netwerk hebt, probeer dan een of meer van de volgende handelingen:\n\n1. Controleer of je het ergens hebt opgeschreven.\n2. Vraag anderen thuis of zij het wachtwoord weten.\n3. Neem contact op met degene die je thuisnetwerk heeft ingesteld.\n\nN.B. Een wachtwoord wordt soms een draadloze sleutel of beveiligingssleutel genoemd.\nN.B. Squeezebox ondersteunt geen ASCII-geformatteerde WEP-wachtwoorden. Je kunt je Squeezebox nog steeds op je netwerk aansluiten, maar je moet het ASCII-wachtwoord naar een hexadecimale indeling converteren.  Je kunt waarschijnlijk online een converteertool te vinden.  Of bezoek www.mysqueezebox.com/support voor meer informatie.
+	NO	Hvis du ikke vet passordet til nettverket, og du har et trådløst nettverk, kan du prøve følgende:\n\n1. Se om du har skrevet ned passordet et sted.\n2. Spør noen andre som bruker samme nettverk om de vet passordet.\n3. Ta kontakt med personen som satte opp hjemmenettverket.\n\nMERK: Passord kalles iblant nettverksnøkler eller sikkerhetsnøkler.\nMERK: Squeezebox støtter ikke WEP-passord i ASCII-format. Du kan fremdeles kople Squeezebox til nettverket, men du må konvertere ASCII-passordet til heksadesimalt format. Det finnes flere konverteringsverktøy på nett. Du finner mer informasjon på www.mysqueezebox.com/support.
+	PL	Jeśli nie znasz hasła sieci i używana jest sieć bezprzewodowa, wypróbuj jedną lub kilka poniższych metod:\n\n1. Sprawdź, czy hasło nie zostało gdzieś zapisane.\n2. Zapytaj innego domownika, czy zna hasło.\n3. Skontaktuj się z osobą, która skonfigurowała sieć w domu.\n\nUWAGA: Hasło jest czasami nazywane kluczem sieci bezprzewodowej lub kluczem zabezpieczeń.\nUWAGA: Urządzenie Squeezebox nie obsługuje haseł WEP w formacie ASCII. Możliwe jest podłączenie urządzenia Squeezebox do sieci, ale należy przekształcić hasło ASCII do formatu szesnastkowego. Narzędzie do konwersji można z łatwością znaleźć w Internecie. Możesz także odwiedzić stronę www.mysqueezebox.com/support w celu uzyskania dodatkowych informacji.
+	RU	Если вы не знаете свой сетевой пароль и используете беспроводную сеть, попробуйте выполнить следующие действия.\n\n1. Проверьте, не записали ли вы его где-нибудь.\n2. Спросите кого-нибудь из домашних, не знают ли они пароль.\n3. Обратитесь к лицу, установившему вашу домашнюю сеть.\n\nПРИМЕЧАНИЕ. Пароль иногда называют беспроводным ключом или ключом безопасности.\nПРИМЕЧАНИЕ. Squeezebox не поддерживает WEP-пароли в формате ASCII. Вы можете подключить ваш Squeezebox к сети, но потребуется преобразовать пароль ASCII в шестнадцатеричный формат. Конвертор можно найти в сети. Дополнительные сведения см. на сайте www.mysqueezebox.com/support.
+	SV	Om du ansluter via ett trådlöst nätverk och inte känner till lösenordet kan du prova med följande:\n\n1. Kontrollera om du har lösenordet nedskrivet.\n2. Fråga någon annan som använder nätverket om de känner till lösenordet.\n3. Hör med personen som konfigurerade hemmanätverket.\n\nOBS! Lösenord går ibland under beteckningen säkerhetsnyckel.\nOBS! Squeezebox har inte stöd för WEP-lösenord i ASCII-format. Du kan fortfarande ansluta Squeezebox till nätverket, men du måste först omvandla ASCII-lösenordet till hexadecimalt format. Det finns gott om omvandlingsprogram på nätet. Du kan även gå in på www.mysqueezebox.com/support för mer information.
+
+NETWORK_CONNECTING_TO_SSID
+# SLT: please keep this short
+	CS	Připojování k
+	DA	Etablerer forbindelse til
+	DE	Verbinden mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistää kohteeseen
+	FR	Connexion à
+	IT	Collegamento a
+	NL	Verbinden met
+	NO	Kopler til
+	PL	Trwa łączenie z
+	RU	Подключение к
+	SV	Ansluts till
+
+NETWORK_ETHERNET
+	CS	Ethernet
+	DA	Ethernet
+	DE	Ethernet
+	EN	Ethernet
+	ES	Ethernet
+	FI	Ethernet
+	FR	Ethernet
+	IT	Ethernet
+	NL	Ethernet
+	NO	Ethernet
+	PL	Ethernet
+	RU	Ethernet
+	SV	Ethernet
+
+NETWORK_CONNECTED_TO
+	CS	Připojeno k
+	DA	Afspilleren er tilsluttet
+	DE	Verbunden mit
+	EN	Connected to
+	ES	Conexión a
+	FI	Yhdistetty kohteeseen
+	FR	Connecté à
+	IT	Connesso a
+	NL	Verbonden met
+	NO	Koplet til
+	PL	Połączono z
+	RU	Установлено подключение к
+	SV	Ansluten till
+
+NETWORK_TRY_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+
+NETWORK_TRY_DIFFERENT
+	CS	Zvolte jinou síť
+	DA	Vælg et andet netværk
+	DE	Wählen Sie ein anderes Netzwerk
+	EN	Choose a different network
+	ES	Elija otra red
+	FI	Valitse eri verkko
+	FR	Sélectionner un réseau différent
+	IT	Scegli una rete diversa
+	NL	Een ander netwerk kiezen
+	NO	Velg et annet nettverk
+	PL	Wybierz inną sieć
+	RU	Выбрать другую сеть
+	SV	Välj ett annat nätverk
+
+NETWORK_TRY_PASSWORD
+	CS	Zadejte heslo znovu
+	DA	Indtast adgangskoden igen
+	DE	Kennwort erneut eingeben
+	EN	Re-enter password
+	ES	Vuelva a introducir la contraseña
+	FI	Anna salasana uudelleen
+	FR	Entrer à nouveau le mot de passe
+	IT	Immettere di nuovo la password
+	NL	Wachtwoord opnieuw invoeren
+	NO	Angi passord på nytt
+	PL	Wpisz hasło ponownie
+	RU	Повторите ввод пароля
+	SV	Ange lösenordet på nytt
+
+NETWORK_DHCP_ERROR
+	CS	Adresa DHCP nenalezena
+	DA	DHCP-adressen blev ikke fundet
+	DE	DHCP-Adresse konnte nicht gefunden werden
+	EN	DHCP Address Can't Be Found
+	ES	No se puede encontrar la dirección DHCP
+	FI	DHCP-osoitetta ei löydy
+	FR	L'adresse DHCP est introuvable
+	IT	Impossibile trovare indirizzo DHCP
+	NL	DHCP-adres niet gevonden
+	NO	Finner ikke DHCP-adresse
+	PL	Nie można znaleźć adresu DHCP
+	RU	Не удалось найти DHCP-адрес
+	SV	DHCP-adressen hittades inte
+
+NETWORK_DHCP_ERROR_HINT
+	CS	Nemohli jsme najít DHCP adresu pro tuto síť.
+	DA	Det var ikke muligt at finde dette netværks DHCP-adresse.
+	DE	Es konnte keine DHCP-Adresse für dieses Netzwerk ermittelt werden.
+	EN	We were unable to find a DHCP address for this network.
+	ES	No se ha podido encontrar una dirección DHCP para esta red.
+	FI	Tämän verkon DHCP-osoitetta ei löytynyt.
+	FR	Nous n'avons pas pu trouver d'adresse DHCP pour ce réseau.
+	IT	Impossibile trovare un indirizzo DHCP per questa rete.
+	NL	Voor dit netwerk kan geen DHCP-adres worden gevonden.
+	NO	Finner ikke DHCP-adresse for dette nettverket.
+	PL	Nie można znaleźć adresu DHCP dla tej sieci.
+	RU	Не удалось найти DHCP-адрес для этой сети.
+	SV	Det gick inte att hitta någon DHCP-adress för det här nätverket.
+
+NETWORK_DHCP_AGAIN
+	CS	Zkuste to znovu
+	DA	Prøv igen
+	DE	Erneut versuchen
+	EN	Try again
+	ES	Vuelva a intentarlo
+	FI	Yritä uudelleen
+	FR	Veuillez réessayer
+	IT	Riprova
+	NL	Opnieuw proberen
+	NO	Prøv igjen
+	PL	Spróbuj ponownie
+	RU	Повторите попытку
+	SV	Försök igen
+
+NETWORK_CONNECTION_PROBLEM_HELP
+	CS	Zadali jste: %s\n\nNemohli jsme uskutečnit připojení s použitím výše uvedeného hesla.
+	DA	Du angav: %s\n\nDet var ikke muligt at etablere forbindelse med denne adgangskode.
+	DE	Sie haben eingegeben: %s\n\nEs konnte keine Verbindung mithilfe des oben angegebenen Kennworts hergestellt werden.
+	EN	You entered: %s\n\nWe were unable to connect using the above password.
+	ES	Ha introducido: %s\n\nNo se ha podido establecer conexión con la contraseña proporcionada.
+	FI	Kirjoiti: %s\n\nYhdistämistä ei voi suorittaa käyttämällä yllä olevaa salasanaa.
+	FR	Vous avez saisi: %s\n\nNous n'avons pas pu établir de connexion avec le mot de passe ci-dessus.
+	IT	Password immessa: %s\n\nNon è stato possibile connettersi utilizzando la password fornita.
+	NL	Je hebt het volgende ingevoerd: %s\n\nMet bovenstaand wachtwoord kan geen verbinding worden gemaakt.
+	NO	Du skrev: %s\n\nVi kunne ikke kople til med ovenstående passord.
+	PL	Wprowadzono: %s\n\nNie można nawiązać połączenia przy użyciu powyższego hasła.
+	RU	Введено: %s\n\nМы не можем подключить вас с этим паролем.
+	SV	Du angav: %s\n\nDet gick tyvärr inte att ansluta med det lösenordet.
+
+NETWORK_IP_ADDRESS
+	CS	IP adresa
+	DA	IP-adresse
+	DE	IP-Adresse
+	EN	IP Address
+	ES	Dirección IP
+	FI	IP-osoite
+	FR	Adresse IP
+	IT	Indirizzo IP
+	NL	IP-adres
+	NO	IP-adresse
+	PL	Adres IP
+	RU	IP-адрес
+	SV	IP-adress
+
+NETWORK_NETWORK_NAME
+	CS	Zadejte název sítě
+	DA	Angiv netværkets navn
+	DE	Netzwerkname eingeben
+	EN	Enter Network Name
+	ES	Introducir nombre de red
+	FI	Anna verkon nimi
+	FR	Entrer le nom du réseau
+	IT	Immettere il nome della rete
+	NL	Netwerknaam invoeren
+	NO	Angi nettverksnavn
+	PL	Wprowadź nazwę sieci
+	RU	Введите имя сети
+	SV	Ange nätverksnamnet
+
+NETWORK_NETWORK_NAME_HELP
+	CS	Nápověda pro název sítě
+	DA	Hjælp til at finde netværkets navn
+	DE	Hilfe zum Netzwerknamen
+	EN	Network Name Help
+	ES	Ayuda de nombre de red
+	FI	Verkon nimiohje
+	FR	Aide sur le nom du réseau
+	IT	Guida sul nome della rete
+	NL	Help bij Netwerknaam
+	NO	Hjelp med nettverksnavn
+	PL	Pomoc na temat nazwy sieci
+	RU	Справка по сетевым названиям
+	SV	Hjälp om nätverksnamnet
+
+NETWORK_NETWORK_NAME_HELP_BODY
+	CS	V této fázi musíte zadat jedinečný název vaší sítě (někdy nazývaný SSID).
+	DA	Nu skal du angive dit netværks særlige navn (det kaldes også netværkets SSID).
+	DE	Geben Sie jetzt den eindeutigen Namen (auch SSID genannt) des Netzwerks ein.
+	EN	At this stage, you need to enter in the unique name of your network (sometimes called an SSID).
+	ES	En esta fase, debe introducir el nombre único de la red (en ocasiones denominado SSID).
+	FI	Tässä vaiheessa sinun on annettava verkon yksilöllinen nimi (käytetään joskus nimitystä SSID).
+	FR	Vous devez maintenant saisir le nom unique de votre réseau (quelquefois appelé SSID).
+	IT	A questo punto è necessario immettere il nome univoco della rete (a volte detto SSID).
+	NL	Je moet nu de unieke naam van je netwerk invoeren (soms SSID genoemd).
+	NO	Nå skal du angi det unike navnet på nettverket (iblant kalt en SSID).
+	PL	Na tym etapie należy wprowadzić unikatową nazwę sieci (czasami nazywaną identyfikatorem SSID).
+	RU	На этом этапе необходимо ввести уникальное имя сети (иногда называемое идентификатором SSID).
+	SV	Ange nu nätverkets unika namn. Det kallas ibland SSID.
+
+NETWORK_ADDRESS_HELP_WEP
+	CS	Zadali jste: %s\n\nNebyli jsme schopni provést připojení s použitím výše uvedeného hesla. Pokud jste si jisti, že jste zadali své heslo správně, zvolte "moje heslo nefunguje"
+	DA	Du angav: %s\n\nDer kunne ikke etableres forbindelse med den adgangskode. Hvis du er sikker på at du angav adgangskoden korrekt, skal du vælge Min adgangskode fungerer ikke.
+	DE	Sie haben eingegeben: %s\n\nEs konnte keine Verbindung mithilfe des oben angegebenen Kennworts hergestellt werden. Wenn Sie sich sicher sind, dass Sie das Kennwort richtig eingegeben haben, geben Sie an, dass Ihr Kennwort nicht funktioniert.
+	EN	You entered: %s\n\nWe were unable to connect using the above password. If you are sure you entered your password correctly, please select "my password is not working"
+	ES	Ha introducido: %s\n\nNo se ha podido establecer conexión con la contraseña proporcionada. Si está seguro de que la contraseña es correcta, seleccione "Mi contraseña no funciona"
+	FI	Kirjoitit: %s\n\nYhteyttä ei pystytä luomaan yllä olevalla salasanalla. Jos olet varma, että annoit salasanan oikein, valitse "salasanani ei toimi"
+	FR	Vous avez saisi: %s\n\nNous n'avons pas pu établir une connexion avec le mot de passe ci-dessus. Si vous êtes sûr de l'avoir saisi correctement, sélectionnez "Mon mot de passe ne fonctionne pas"
+	IT	Password immessa: %s\n\nNon è stato possibile connettersi utilizzando la password fornita. Se si è certi di avere immesso la password corretta, selezionare La password non funziona.
+	NL	Je hebt het volgende ingevoerd: %s\n\nMet bovenstaand wachtwoord kan geen verbinding worden gemaakt. Als je zeker weet dat je je wachtwoord correct hebt ingevoerd, selecteer dan 'mijn wachtwoord werkt niet'
+	NO	Du skrev: %s\n\nVi kunne ikke kople til med ovenstående passord. Hvis du er sikker på at du oppga riktig passord, velger du Passordet fungerer ikke.
+	PL	Wprowadzono: %s\n\nNie można nawiązać połączenia przy użyciu powyższego hasła. Jeśli na pewno wprowadzono hasło poprawnie, wybierz opcję „Moje hasło nie działa”.
+	RU	Введено: %s\n\nМы не можем подключить вас с этим паролем. Если вы уверены, что пароль введен правильно, выберите параметр "мой пароль не работает"
+	SV	Du angav: %s\n\nDet gick tyvärr inte att ansluta med det lösenordet. Är du säker på att du angav rätt lösenord? Välj i sådana fall Lösenordet fungerar inte.
+
+ZEROCONF_ADDRESS
+	CS	Samostatně přiřadit adresu
+	DA	Selvtildelt IP-adresse
+	DE	IP-Adresse selbst zuweisen
+	EN	Self-assign address
+	ES	Dirección autoasignada
+	FI	Määritä osoite itse
+	FR	Attribuer l'adresse automatiquement
+	IT	Indirizzo assegnato automaticamente
+	NL	Adres zelf toewijzen
+	NO	Tildel adresse manuelt
+	PL	Samoprzypisany adres
+	RU	Самоназначить адрес
+	SV	Tilldela adress manuellt
+
+NETWORK_WEP_DHCP
+	CS	Moje heslo nefunguje
+	DA	Adgangskoden fungerer ikke
+	DE	Das Kennwort funktioniert nicht
+	EN	My password is not working
+	ES	Mi contraseña no funciona
+	FI	Salasanani ei toimi
+	FR	Mon mot de passe ne fonctionne pas
+	IT	La password non funziona
+	NL	Mijn wachtwoord werkt niet
+	NO	Passordet fungerer ikke
+	PL	Moje hasło nie działa
+	RU	Мой пароль не работает
+	SV	Lösenordet fungerar inte
+
+STATIC_ADDRESS
+	CS	Zadejte IP informace manuálně
+	DA	Angiv IP-adressen manuelt
+	DE	IP-Informationen manuell eingeben
+	EN	Enter IP information manually
+	ES	Introducir información de IP manualmente
+	FI	Kirjoita IP-tiedot manuaalisesti
+	FR	Entrer les informations concernant l'IP manuellement
+	IT	Immettere i dati IP manualmente
+	NL	IP-gegevens handmatig invoeren
+	NO	Angi IP-informasjon manuelt
+	PL	Wprowadź ręcznie informacje o adresie IP
+	RU	Ввести информацию IP вручную
+	SV	Ange IP-uppgifterna manuellt
+
+SETUP_NETWORKING_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+NETWORK_ADDRESS_HELP
+	CS	Nastal problém při získávání  DHCP adresy u vaší sítě.
+	DA	Der opstod et problem under hentning af DHCP-adressen på dit netværk.
+	DE	Problem bei Abfrage einer DHCP-Adresse in Ihrem Netzwerk.
+	EN	There was a problem obtaining a DHCP address on your network.
+	ES	Problema al obtener una dirección DHCP en la red.
+	FI	Verkon DHCP-osoitteen hankkimisessa oli ongelma.
+	FR	Une erreur s'est produite en obtenant l'adresse DHCP sur votre réseau.
+	IT	Impossibile ottenere un indirizzo DHCP nella rete.
+	NL	Er is een probleem met het verkrijgen van een DHCP-adres op je netwerk.
+	NO	Det oppsto et problem med å finne en DHCP-adresse på nettverket.
+	PL	Wystąpił problem z uzyskaniem adresu DHCP w sieci.
+	RU	Ошибка при получении DHCP-адреса сети.
+	SV	Det gick inte att erhålla en DHCP-adress på nätverket.
+
+NETWORK_IP_ADDRESS_HELP
+	CS	Nápověda IP adresy
+	DA	Hjælp til at finde IP-adresse
+	DE	Hilfe zur IP-Adresse
+	EN	IP Address Help
+	ES	Ayuda de dirección IP
+	FI	IP-osoiteohje
+	FR	Aide sur l'adresse IP
+	IT	Guida sull'indirizzo IP
+	NL	Help bij IP-adres
+	NO	Hjelp med IP-adresse
+	PL	Pomoc na temat adresu IP
+	RU	Справка по IP-адресам
+	SV	Hjälp om IP-adresser
+
+NETWORK_IP_ADDRESS_HELP_BODY
+	CS	Pro manuální připojení budeme potřebovat následující informace:\n\n1. IP adresa - IP adresa, kterou chcete použít pro tento Squeezebox. 2. Maska podsítě - maska podsítě vaší sítě. 3. IP adresa brány - obvykle IP adresa vašeho routeru. 4. DNS - IP adresa DNS serveru, který používáte.\n\nPokud se vaše počítače nebo síťová zařízení normálně připojují automaticky a nejste si jisti jak a kdy nastavit manuální nastavení DHCP, možná budete potřebovat kontaktovat výrobce vašeho routeru nebo administrátora kvůli asistenci nebo navštívit www.mysqueezebox.com/support.
+	DA	Hvis du vil etablere forbindelse manuelt, skal du angive følgende oplysninger:\n\n1. IP-adresse – den IP-adresse som skal denne Squeezebox skal have. 2. Undernetmaske – netværkets undernetmaske. 3. Gatewayens IP-adresse – normalt routerens IP-adresse. 4. DNS – IP-adressen på den DNS-server du benytter.\n\nHvis dine computere og andre netværksenheder normalt tilsluttes automatisk, og du ikke er sikker på hvordan du konfigurerer DHCP-indstillingerne manuelt, kan du læs i dokumentationen til routeren eller på producentens hjemmeside eller bede din netværksadministrator om hjælp, eller gå til www.mysqueezebox.com/support.
+	DE	Um die Verbindung manuell herzustellen, sind folgende Informationen erforderlich\n\n1. IP-Adresse - die IP-Adresse, die für diese Squeezebox verwendet werden soll. 2. Subnetzmaske - die Subnetzmaske Ihres Netzwerks 3. Gateway-IP-Adresse - die IP-Adresse Ihres Routers. 4. DNS - die IP-Adresse des verwendeten DNS-Servers.\n\nWenn sich die Computer oder Geräte im Netzwerk normalerweise automatisch mit dem Netzwerk verbinden und Sie nicht sicher sind wie und warum manuelle DHCP-Einstellungen vorgenommen werden, müssen Sie sich für weitere Informationen unter Umständen an den Router-Hersteller oder Netzwerkadmnistrator wenden oder sich unter www.mysqueezebox.com/support informieren.
+	EN	To connect manually, we'll need the following pieces of information:\n\n1. IP address - the IP address you want to use for this Squeezebox. 2. Subnet mask - the subnet mask of your network. 3. Gateway IP address - typically the IP address of your router. 4. DNS - the IP address of the DNS server you are using.\n\nIf your computers or network devices normally connect automatically, and you're not sure how or why to set up manual DHCP settings, you may need to contact your router manufacturer or network admin for further assistance, or visit www.mysqueezebox.com/support.
+	ES	Para establecer una conexión manual, necesita la siguiente información:\n\n1. Dirección IP: la dirección IP que desea utilizar para este Squeezebox. 2. Máscara de subred: la máscara de subred de la red. 3. Dirección IP de puerta de enlace: suele ser la dirección IP del enrutador. 4. DNS: la dirección IP del servidor DNS que está usando.\n\nSi su ordenador o sus dispositivos de red suelen conectarse de forma automática y no está seguro de cómo configurar opciones DHCP de forma manual ni de por qué debe hacerlo, puede ponerse en contacto con el fabricante del enrutador o el administrador de la red para obtener ayuda o visitar www.mysqueezebox.com/support.
+	FI	Manuaalisen yhteyden luomiseen tarvitaan seuraavat tiedot:\n\n1. IP-osoite - IP-osoite, jota haluat käyttää tässä Squeezeboxissa. 2. Aliverkon peite - verkon aliverkon peite. 3. Yhdyskäytävän IP-osoite - tyypillisesti reitittimen IP-osoite. 4. DNS - käyttämäsi DNS-palvelimen IP-osoite.\n\nJos tietokoneesi tai verkkolaitteesi muodostavat yhteyden automaattisesti, etkä ole varma miten tai miksi asettaa manuaalisesti DHCP-asetukset, sinun on ehkä otettava yhteyttä reitittimesi valmistajaan tai verkon järjestelmänvalvojaan saadaksesi apua tai siirryttävä sivulle www.mysqueezebox.com/support.
+	FR	Pour une connexion manuelle, nous avons besoin des informations suivantes:\n\n1. Adresse IP: l'adresse IP que vous voulez utiliser pour cette Squeezebox. 2. Masque de sous-réseau: le masque de sous-réseau de votre réseau. 3. Adresse IP de la passerelle: en général, l'adresse IP de votre routeur. 4. DNS: l'adresse IP du serveur DNS que vous utilisez.\n\nSi vos ordinateurs ou vos dispositifs réseau se connectent automatiquement normalement et que vous n'êtes pas sûr de la façon ni de la raison de configurer des paramètres DHCP manuels, vous pouvez contacter le fabricant de votre routeur ou l'administrateur réseau pour obtenir de l'aide ou vous rendre sur le site www.mysqueezebox.com/support.
+	IT	Per eseguire la connessione manualmente è necessario disporre delle seguenti informazioni:\n\n1. Indirizzo IP: l'indirizzo IP da utilizzare per questo Squeezebox. 2. Subnet mask: la subnet mask della rete utilizzata. 3. Indirizzo IP del gateway: di solito si tratta dell'indirizzo IP del router. 4. DNS: l'indirizzo IP del server DNS utilizzato.\n\nSe il computer o i dispositivi di rete si collegano automaticamente e non si è sicuri del motivo per cui impostare DHCP manualmente o di come farlo, contattare il produttore del router o l'amministratore di rete per assistenza, oppure visitare www.mysqueezebox.com/support.
+	NL	Voor een handmatige verbinding is de volgende informatie vereist:\n\n1. IP-adres: het IP-adres dat je voor deze Squeezebox wilt gebruiken. 2. Subnetmasker: het subnetmasker van je netwerk. 3. IP-adres van de gateway: meestal het IP-adres van je router. 4. DNS: het IP-adres van de DNS-server die je gebruikt.\n\nAls je computers of netwerkapparaten normaal gesproken automatisch verbinding maken, en je niet zeker weet hoe of waarom je DHCP-instellingen handmatig kunt instellen, kun je voor extra hulp contact opnemen met de netwerkbeheerder, de fabrikant van je router of je kunt www.mysqueezebox.com/support bezoeken.
+	NO	Hvis du vil kople til manuelt, trenger vi følgende informasjon:\n\n1. IP-adresse: IP-adressen du vil bruke for Squeezebox. 2. Nettverksmaske: Nettverksmasken til nettverket. 3. IP-adresse for gateway: Vanligvis er dette IP-adressen til ruteren. 4. DNS: IP-adressen til DNS-serveren du bruker.\n\nHvis datamaskinene eller nettverksenhetene dine vanligvis kopler seg til nettverket automatisk, og du ikke vet hvordan du skal angi DHCP-innstillinger manuelt, kan du kontakte ruterprodusenten eller nettverksansvarlig for å få hjelp, eller du kan gå til www.mysqueezebox.com/support.
+	PL	Aby nawiązać połączenie ręcznie, wymagane są następujące informacje:\n\n1. Adres IP – adres IP, który ma być używany dla tego urządzenia Squeezebox. 2. Maska podsieci – maska podsieci dla danej sieci. 3. Adres IP bramy – zwykle jest to adres IP routera. 4. DNS – adres IP używanego serwera DNS.\n\nJeśli komputery lub urządzenia sieciowe zwykle łączą się automatycznie i nie masz pewności, jak lub dlaczego należy skonfigurować ręczne ustawienia DHCP, skontaktuj się z producentem routera lub administratorem sieci, aby uzyskać dalszą pomoc, albo odwiedź stronę www.mysqueezebox.com/support.
+	RU	Для подключения вручную необходима следующая информация.\n\n1. IP-адрес, который будет использоваться для Squeezebox. 2. Маска подсети для вашей сети. 3. IP-адрес шлюза — обычно это IP-адрес маршрутизатора. 4. DNS — IP-адрес используемого DNS-сервера.\n\nЕсли ваш компьютер или сетевые устройства обычно подключаются автоматически и вы не знаете, как или зачем вручную устанавливать настройки DHCP, обратитесь за помощью к изготовителю маршрутизатора или администратору сети либо посетите www.mysqueezebox.com/support.
+	SV	Du måste ange följande information om du vill ansluta manuellt:\n\n1. IP-adress: IP-adressen som du vill att Squeezebox ska använda. 2. Nätmask: Nätverkets nätmask. 3. Gateway-IP-adress: Vanligtvis samma IP-adress som routern använder. 4. DNS: DNS-serverns IP-adress.\n\nOm datorerna eller nätverksenheterna i vanliga fall ansluter automatiskt och du inte vet hur du definierar DHCP manuellt, bör du ta kontakt med routerns tillverkare eller nätverksadministratören. Du kan även gå in på www.mysqueezebox.com/support.
+
+NETWORK_SUBNET
+	CS	Zadejte masku podsítě
+	DA	Angiv undernetmaske
+	DE	Subnetzmaske eingeben
+	EN	Enter Subnet Mask
+	ES	Introduzca máscara de subred
+	FI	Kirjoita aliverkon peitto
+	FR	Entrer un masque de sous-réseau
+	IT	Immettere la subnet mask
+	NL	Subnetmasker invoeren
+	NO	Angi nettverksmaske
+	PL	Wprowadź maskę podsieci
+	RU	Введите маску подсети
+	SV	Ange nätverksmask
+
+NETWORK_GATEWAY
+	CS	Zadejte IP adresu brány
+	DA	Angiv din gateways IP-adresse
+	DE	Gateway-IP-Adresse eingeben
+	EN	Enter Gateway IP Address
+	ES	Introduzca dirección IP de puerta de enlace
+	FI	Anna yhdyskäytävän IP-osoite
+	FR	Entrer l'adresse IP de la passerelle
+	IT	Immettere l'indirizzo IP del gateway
+	NL	IP-adres van de gateway invoeren
+	NO	Angi IP-adresse for gateway
+	PL	Wprowadź adres IP bramy
+	RU	Введите IP-адрес шлюза
+	SV	Ange gateway-IP-adress
+
+NETWORK_DNS
+	CS	Zadejte IP serveru DNS
+	DA	Angiv DNS-serverens IP-adresse
+	DE	DNS-Server-IP-Adresse eingeben
+	EN	Enter DNS Server IP
+	ES	Introduzca IP de servidor DNS
+	FI	Anna DNS-palvelimen IP
+	FR	Entrer l'IP du serveur DNS
+	IT	Immettere l'indirizzo IP del server DNS
+	NL	IP van DNS-server invoeren
+	NO	Angi IP for DNS-server
+	PL	Wprowadź adres IP serwera DNS
+	RU	Введите IP-адрес DNS-сервера
+	SV	Ange IP-adressen för DNS-servern
+
+NETWORK_ADDRESS_IP_HELP
+	CS	Nápověda pro DCHP
+	DA	Hjælp til DCHP
+	DE	DCHP-Hilfe
+	EN	DCHP Help
+	ES	Ayuda de DCHP
+	FI	DCHP-ohje
+	FR	Aide sur DCHP
+	IT	Guida su DCHP
+	NL	Help bij DCHP
+	NO	Hjelp med DCHP
+	PL	Pomoc na temat protokołu DCHP
+	RU	Справка DCHP
+	SV	Hjälp om DHCP
+
+ALLOWEDCHARS_WPA
+	CS	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	DA	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	DE	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	EN	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	ES	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	FI	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	FR	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	IT	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	NL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	NO	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	PL	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	RU	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+	SV	 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}|:\"'<>?-=,./~`[];0123456789
+
+NETWORK_FOUND_NETWORKS
+	CS	Nalezené sítě: %s
+	DA	Fundne netværk: %s
+	DE	Gefundene Netzwerke: %s
+	EN	Found Networks: %s
+	ES	Redes encontradas: %s
+	FI	Verkkoja löytyi: %s
+	FR	Réseaux trouvés: %s
+	IT	Reti rilevate: %s
+	NL	Gevonden netwerken: %s
+	NO	Oppdagede nettverk: %s
+	PL	Znaleziono sieci: %s
+	RU	Найденные сети: %s
+	SV	Följande nätverk upptäcktes: %s
+
+NETWORK_CONNECTION_TYPE
+	CS	Zvolte typ sítě
+	DA	Vælg netværkstype
+	DE	Netzwerktyp wählen
+	EN	Choose network type
+	ES	Seleccione tipo de red
+	FI	Valitse verkon tyyppi
+	FR	Choisir le type de réseau
+	IT	Scegli tipo rete
+	NL	Netwerktype kiezen
+	NO	Velg nettverkstype
+	PL	Wybierz typ sieci
+	RU	Выберите тип сети
+	SV	Välj nätverkstyp
+
+NETWORK_CONNECTION_TYPE_WIRELESS
+	CS	Připojit k bezdrátové síti
+	DA	Opret forbindelse til trådløst netværk
+	DE	Verbindung mit drahtlosem Netzwerk herstellen
+	EN	Connect to wireless network
+	ES	Conectar a red inalámbrica
+	FI	Muodosta yhteys langattomaan verkkoon
+	FR	Se connecter au réseau sans fil
+	IT	Connetti a rete senza fili
+	NL	Met draadloos netwerk verbinden
+	NO	Kople til trådløst nettverk
+	PL	Połącz z siecią bezprzewodową
+	RU	Подключиться к беспроводной сети
+	SV	Anslut till trådlöst nätverk
+
+NETWORK_CONNECTION_TYPE_WIRED
+	CS	Připojit k ethernetové síti
+	DA	Opret forbindelse til Ethernet-netværk
+	DE	Mit Ethernet-Netzwerk verbinden
+	EN	Connect to Ethernet network
+	ES	Conectar a red Ethernet
+	FI	Muodosta yhteys ethernet-verkkoon
+	FR	Se connecter au réseau Ethernet
+	IT	Connetti a rete Ethernet
+	NL	Met ethernetnetwerk verbinden
+	NO	Kople til Ethernet-nettverk
+	PL	Połącz z siecią Ethernet
+	RU	Подключиться к сети Ethernet
+	SV	Anslut till Ethernet-nätverk
+
+NETWORK_CONNECTION_HELP
+	CS	Typ připojení
+	DA	Forbindelsestype
+	DE	Verbindungstyp
+	EN	Connection Type
+	ES	Tipo de conexión
+	FI	Liitäntätyyppi
+	FR	Type de connexion
+	IT	Tipo di connessione
+	NL	Type verbinding
+	NO	Oppkoplingstype
+	PL	Typ połączenia
+	RU	Тип подключения
+	SV	Anslutningstyp
+
+NETWORK_CONNECTION_HELP_BODY
+	CS	Pokud si přejete připojit tento Squeezebox k blízkému bezdrátovému routeru, vyberte  "bezdrátová."\n\nPokud dáváte přednost kabelového uspořádání, připojte tento Squeezebox k vašemu routeru s použitím ethernetového / cat 5 kabelu zvolte "kabelová".
+	DA	Hvis du vil slutte denne Squeezebox til en trådløs router i nærheden, skal du vælge Trådløs.\n\nHvis du foretrækker at bruge et kabel, skal du slutte denne Squeezebox til routeren vha. et Ethernet/cat5-kabel og vælge Kabelforbundet.
+	DE	Wenn Sie die Squeezebox mit einem nahegelegenen, kabellosen Router verbinden möchten, wählen Sie 'kabellos'.\n\nWenn Sie ein verkabeltes Netzwerk vorziehen, schließen Sie die Squeeezebox mithilfe eines Ethernet-/Cat-5-Kabels am Router an und wählen Sie 'verkabelt'.
+	EN	If you'd like to connect this Squeezebox to a nearby wireless router, please select "wireless."\n\nIf you'd prefer to use a wired setup, please connect this Squeezebox to your router using an Ethernet/cat5 cable and select "wired."
+	ES	Si desea conectar este Squeezebox a un enrutador inalámbrico cercano, seleccione "Inalámbrica".\n\nSi prefiere utilizar una conexión con cable, conecte este Squeezebox con el enrutador mediante un cable Ethernet/cat5 y seleccione "Con cable".
+	FI	Jos haluat liittää tämän Squeezeboxin läheiseen langattomaan reitittimeen, valitse "langaton."\n\nJos haluat käyttää langallista asennusta, liitä Squeezebox reitittimeen ethernet/cat5-kaapelilla ja valitse "langallinen."
+	FR	Si vous souhaitez connecter cette Squeezebox à un routeur sans fil proche, sélectionnez "Sans fil".\n\nSi vous préférez utiliser une configuration câblée, connectez cette Squeezebox à votre routeur à l'aide d'un câble Ethernet/cat5 et sélectionnez "Filaire".
+	IT	Per connettere questo Squeezebox a un router senza fili situato nelle vicinanze, selezionare Senza fili.\n\nSe si preferisce utilizzare una configurazione con cavo, connettere lo Squeezebox al router con un cavo Ethernet/cat5 e selezionare Cablata.
+	NL	Als je deze Squeezebox met een draadloze router in de buurt wilt verbinden, selecteer dan 'draadloos'\n\nAls je liever een bedrade verbinding gebruikt, verbind deze Squeezebox dan met je router via een ethernet/cat5-draad en selecteer 'bedraad'.
+	NO	Hvis du vil kople Squeezebox til et tilgjengelig trådløst nettverk, velger du Trådløs.\n\nHvis du vil bruke en trådet tilkopling, kopler du Squeezebox til ruteren med en Ethernet- eller cat5-kabel og velger Trådet.
+	PL	Aby podłączyć to urządzenie Squeezebox do znajdującego się w pobliżu routera bezprzewodowego, wybierz opcję „Bezprzewodowa”.\n\nJeśli wolisz użyć konfiguracji przewodowej, podłącz to urządzenie Squeezebox do routera przy użyciu kabla Ethernet/cat5 i wybierz opcję „Przewodowa”.
+	RU	Если требуется подключить Squeezebox к ближайшему беспроводному маршрутизатору, выберите "беспроводная".\n\nЕсли вы хотите использовать проводную сеть, подключите Squeezebox к маршрутизатору кабелем ethernet/cat5 и выберите "проводная".
+	SV	Om du vill ansluta Squeezebox till en trådlös router väljer du trådlöst.\n\nOm du istället vill ansluta Squeezebox via en Ethernet-/kategori 5-kabel väljer du kabelanslutet.
+
+NETWORK_ETH_STATUS
+	CS	Stav
+	DA	Status
+	DE	Status
+	EN	Status
+	ES	Estado
+	FI	Tila
+	FR	Etat
+	IT	Stato
+	NL	Status
+	NO	Status
+	PL	Stan
+	RU	Статус
+	SV	Status
+
+NETWORK_ETH_SPEED
+	CS	Rychlost
+	DA	Hastighed
+	DE	Geschwindigkeit
+	EN	Speed
+	ES	Velocidad
+	FI	Nopeus
+	FR	Vitesse
+	IT	Velocità
+	NL	Snelheid
+	NO	Hastighet
+	PL	Szybkość
+	RU	Скорость
+	SV	Hastighet
+
+NETWORK_HALF_SPEED_HUB
+	CS	Využíváte poloduplexní ethernetový hub, který není podporován tímto Squeezebox zařízením.\n\nPřipojte prosím plně duplexní ethernetové zařízení, nebo vyberte dostupnou bezdrátovou síť. Pro více informací se prosím obraťte na zákaznickou podporu.
+	DA	Du bruger en Ethernet-hub med halv dupleks, og det understøttes ikke af denne Squeezebox.\n\nDu skal slutte afspilleren til en Ethernet-enhed med fuld dupleks eller til et trådløst netværk. Hvis du vil have flere oplysninger, kan du kontakte kundeservice eller supportafdelingen.
+	DE	Sie verwenden ein Halbduplex-Ethernet-Hub, der nicht von der Squeezebox unterstützt wird.\n\nSchließen Sie ein Vollduplex-Ethernet-Gerät an oder verwenden Sie ein verfügbares kabelloses Netzwerk. Wenden Sie sich für weitere Informationen an den Kundendienst.
+	EN	You are using a half-duplex Ethernet hub that is not supported by this Squeezebox.\n\nPlease attach a full-duplex Ethernet device, or choose an available wireless network.  For more information, please contact customer support.
+	ES	Está utilizando un concentrador Ethernet con medio dúplex que no es compatible con este Squeezebox.\n\nUtilice un dispositivo Ethernet con dúplex completo o escoja una red inalámbrica disponible. Para obtener más información, póngase en contacto con el servicio de asistencia al cliente.
+	FI	Käytät puoliksi kaksisuuntaista ethernet-keskitintä, jota tätä Squeezebox ei tue.\n\nLiitä täysin kaksisuuntaisesti toimiva ethernet-laite tai valitse käytettävissä oleva langaton verkko. Saat lisätietoja asiakastuesta.
+	FR	Le hub Ethernet semi-duplex que vous utilisez n'est pas pris en charge par cette Squeezebox.\n\nVeuillez connecter un dispositif Ethernet duplex intégral ou sélectionner un réseau sans fil disponible. Pour plus d'informations, veuillez contacter le service d'assistance à la clientèle.
+	IT	Si sta utilizzando un hub Ethernet half-duplex, non supportato da questo Squeezebox.\n\nCollegare un dispositivo Ethernet full-duplex o scegliere una rete senza fili disponibile. Per ulteriori informazioni, rivolgersi al supporto clienti.
+	NL	Je gebruikt een half-duplex ethernet-hub die niet door deze Squeezebox ondersteund wordt.\n\nVerbind een full-duplex ethernetapparaat of kies een beschikbaar draadloos netwerk. Neem contact op met de klantenondersteuning voor meer informatie.
+	NO	Du bruker en Ethernet-hub med halv dupleks. Squeezebox støtter ikke det.\n\nDu må enten kople til en enhet med full dupleks, eller velge et tilgjengelig trådløst nettverk. Hvis du vil vite mer, kontakt kundestøtte.
+	PL	Korzystasz z koncentratora Ethernet w trybie półdupleksu, który jest nieobsługiwany przez to urządzenie Squeezebox.\n\nPodłącz urządzenie Ethernet działające w trybie pełnego dupleksu lub wybierz dostępną sieć bezprzewodową.  Aby uzyskać więcej informacji, skontaktuj się z działem pomocy technicznej.
+	RU	Вы используете полудуплексный концентратор ethernet, который не поддерживается этим плеером Squeezebox.
+	SV	Du använder en halv-duplex-ethernethubb som inte stöds av denna Squeezebox.\n\nAnslut en full-duplex-ethernetenhet eller välj ett tillgängligt trådlöst nätverk. Kontakta kundtjänst om du behöver mer information.
+
+NETWORK_CONNECTION_PROBLEM
+	CS	Problém s připojením
+	DA	Forbindelsesfejl
+	DE	Verbindungsproblem
+	EN	Connection Problem
+	ES	Problema de conexión
+	FI	Yhteysongelma
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Verbindingsprobleem
+	NO	Tilkoplingsproblem
+	PL	Problem z połączeniem
+	RU	Ошибка подключения
+	SV	Anslutningsproblem
+
+NETWORK_ETH_MBPS
+	CS	%s Mb/s
+	DA	%s Mbps
+	DE	%s Mbit/s
+	EN	%s Mbps
+	ES	%s Mbps
+	FI	%s Mt/s
+	FR	%s Mbps
+	IT	%s Mbps
+	NL	%s Mbps
+	NO	%s Mbps
+	PL	%s Mb/s
+	RU	%s Мбит/с
+	SV	%s Mbps
+
+NETWORK_ETH_CONNECTED
+	CS	Připojeno
+	DA	Tilsluttet
+	DE	Verbunden
+	EN	Connected
+	ES	Conectado
+	FI	Yhdistetty
+	FR	Connecté
+	IT	Connesso
+	NL	Verbonden
+	NO	Tilkoplet
+	PL	Połączono
+	RU	Подключено
+	SV	Ansluten
+
+NETWORK_ETH_NOT_CONNECTED
+	CS	Nepřipojeno
+	DA	Ikke tilsluttet
+	DE	Nicht verbunden
+	EN	Not connected
+	ES	No conectado
+	FI	Ei yhdistetty
+	FR	Non connecté
+	IT	Non connesso
+	NL	Niet verbonden
+	NO	Ikke koplet til
+	PL	Niepołączony
+	RU	Не подключено
+	SV	Ej ansluten
+
+NETWORK_ETH_HALF_DUPLEX
+	CS	Half Duplex
+	DA	Halv dupleks
+	DE	Halbduplex
+	EN	Half Duplex
+	ES	Dúplex medio
+	FI	Half Duplex
+	FR	Semi-duplex
+	IT	Half Duplex
+	NL	Halfduplex
+	NO	Halv dupleks
+	PL	Półdupleks
+	RU	Полудуплексная
+	SV	Halv duplex
+
+NETWORK_WPS_METHOD
+	CS	Vyberte metodu přihlašování k WPS
+	DA	Vælg hvordan du logger på WPS-netværk
+	DE	Verfahren zur WPS-Anmeldung wählen
+	EN	Choose WPS Login Method
+	ES	Seleccione método de registro WPS
+	FI	Valitse WPS-kirjautumistapa
+	FR	Sélectionner la méthode de connexion WPS
+	IT	Scegli metodo di accesso WPS
+	NL	WPS-aanmeldingsmethode kiezen
+	NO	Velg WPS-påloggingsmetode
+	PL	Wybierz metodę logowania WPS
+	RU	Выберите метод входа для WPS
+	SV	Välj inloggningsmetod för WPS
+
+NETWORK_WPS_METHOD_PBC
+	CS	Použijte metodu tlačítek / PBC
+	DA	Brug trykknapmetoden
+	DE	Methode "Taste/PBC" verwenden
+	EN	Use Push Button/PBC Method
+	ES	Usar método de botón de comando/PBC
+	FI	Käytä painiketta/PBC-menetelmää
+	FR	Utiliser le bouton poussoir/la méthode de configuration du bouton pressoir
+	IT	Usa il metodo Pulsante/PBC
+	NL	Drukknop/PBC-methode gebruiken
+	NO	Bruk metoden Trykk på knappen/PBC
+	PL	Użyj metody Przycisk/PBC
+	RU	Воспользоваться кнопкой воспроизведения/PBC
+	SV	Använd anslutningsknappen (PBC)
+
+NETWORK_WPS_METHOD_PIN
+	CS	Použijte metodu s PIN
+	DA	Brug pinkode
+	DE	PIN-Methode verwenden:
+	EN	Use PIN Method
+	ES	Usar método de PIN
+	FI	Käytä PIN-tapaa
+	FR	Utiliser la méthode du PIN
+	IT	Usa il metodo PIN
+	NL	PIN-methode gebruiken
+	NO	Bruk PIN-metoden
+	PL	Użyj metody z kodem PIN
+	RU	Использовать PIN-код
+	SV	Använd PIN-kod
+
+NETWORK_WPS_METHOD_PSK
+	CS	Vložit heslo pro bezdrátovou síť
+	DA	Indtast adgangskoden til det trådløse netværk
+	DE	Netzwerkkennwort eingeben
+	EN	Enter Wireless Password
+	ES	Introducir contraseña para red inalámbrica
+	FI	Anna langattoman verkon salasana
+	FR	Entrer le mot de passe sans fil
+	IT	Immettere password rete senza fili
+	NL	Wachtwoord voor draadloos invoeren
+	NO	Angi trådløst passord
+	PL	Wprowadź hasło sieci bezprzewodowej
+	RU	Введите пароль беспроводной сети
+	SV	Ange lösenord för trådlöst
+
+NETWORK_WPS_HELP
+	CS	Nápověda pro WPS
+	DA	Hjælp til WPS
+	DE	WPS-Hilfe
+	EN	WPS Help
+	ES	Ayuda de WPS
+	FI	WPS-ohje
+	FR	Aide sur WPS
+	IT	Guida su WPS
+	NL	Help bij WPS
+	NO	Hjelp med WPS
+	PL	Pomoc na temat protokołu WPS
+	RU	Справка WPS
+	SV	Hjälp om WPS
+
+NETWORK_WPS_HELP_BODY
+	CS	Tato síť využívá chráněné nastavení Wi-Fi (WPS). Pro připojení přes WPS konzultujte manuál výrobce routeru nebo zvolte "Vložit bezdrátové heslo" k přeskočení WPS a vložte obvyklé heslo.
+	DA	Dette trådløse netværk er beskyttet med WPS. I brugervejledningen til routeren kan du læse hvordan man slutter enheder til et trådløst netværk som er sikret på denne måde. Alternativt kan du vælge Angiv adgangskode til trådløst netværk og indtaste en almindelig adgangskode.
+	DE	Zur Implementierung dieses Netzwerks wird WPS (Wi-Fi Protected Setup) verwendet. Folgen Sie den Anweisungen des Router-Herstellers, um eine Verbindung über WPS herzustellen. Wählen Sie alternativ 'Netzwerkkennwort eingeben', um WPS zu umgehen, und geben Sie ein normales Kennwort ein.
+	EN	This network uses Wi-Fi Protected Setup (WPS). Please consult the router manufacturer's instructions for connecting via WPS, or select "Enter Wireless Password" to bypass WPS and enter a regular password.
+	ES	Esta red utiliza una configuración protegida Wi-Fi (WPS). Consulte las instrucciones del enrutador para averiguar cómo conectarse por medio de WPS o seleccione "Introducir contraseña para red inalámbrica" para omitir la configuración WPS e introducir una contraseña normal.
+	FI	Tämä verkko käyttää suojattua Wi-Fi-yhteyden määritystä (WPS). Katso reitittimen valmistajan ohjeista, miten yhteys muodostetaan WPS:n kautta, tai ohita WPS valitsemalla Anna langattoman verkon salasana. Näppäile sitten tavallinen salasana.
+	FR	Ce réseau utilise WPS (Wi-Fi Protected Setup). Reportez-vous aux instructions fournies par le fabricant du routeur pour vous connecter via WPS, ou sélectionnez l'option "Entrer un mot de passe Wi-Fi" pour ignorer WPS et saisir un mot de passe standard.
+	IT	Questa rete utilizza Wi-Fi Protected Setup (WPS). Consultare il manuale d'utilizzo del router per effettuare la connessione tramite WPS o selezionare "Immettere password rete senza fili" per ignorare WPS e immettere una password normale.
+	NL	Dit netwerk maakt gebruik van WPS (Wi-Fi Protected Setup). Raadpleeg de instructies van de fabrikant van de router voor verbinding via WPS, of selecteer 'Draadloos wachtwoord invoeren' om WPS te omzeilen en een regulier wachtwoord in te voeren.
+	NO	Dette nettverket bruker WPS (Wi-Fi Protected Setup). Du kan kontakte produsenten av ruteren for å finne ut hvordan du kopler til via WPS, eller du kan velge Angi trådløst passord for å omgå WPS og angi et vanlig passord.
+	PL	Ta sieć używa protokołu Wi-Fi Protected Setup (WPS). Zapoznaj się z instrukcjami producenta routera na temat łączenia się przy użyciu protokołu WPS lub wybierz opcję „Wprowadź hasło sieci bezprzewodowej”, aby pominąć WPS i wprowadzić zwykłe hasło.
+	RU	В этой сети используется функция WPS (Wi-Fi Protected Setup). Сведения о том, как установить соединение с помощью WPS, можно найти в инструкциях, предоставленных изготовителем маршрутизатора. Чтобы не использовать WPS и ввести стандартный пароль, выберите параметр "Ввести беспроводной пароль".
+	SV	I det trådlösa nätverket används WPS-skydd (Wi-Fi Protected Setup). Läs igenom anvisningarna i routerns bruksanvisning för hur du ansluter via WPS. Du kan också välja Ange lösenord för trådlöst nätverk och ange ett vanligt lösenord.
+
+NETWORK_ENTER_PIN
+	CS	Zadejte PIN
+	DA	Angiv pinkode
+	DE	PIN eingeben
+	EN	Enter PIN
+	ES	Introduzca el PIN
+	FI	Anna PIN
+	FR	Entrer le PIN
+	IT	Immettere il PIN
+	NL	PIN invoeren
+	NO	Angi PIN
+	PL	Wprowadź kod PIN
+	RU	Введите PIN-код
+	SV	Ange PIN-kod
+
+NETWORK_ENTER_PIN_HINT
+	CS	PIN: %s\n\nPři zadávání tohoto PIN se řiďte pokyny výrobce vašeho routeru. Z bezpečnostních důvodů budete mít na dokončení zadávání PIN 120 sekund. Pro start stiskněte "Začít odpočítávání".
+	DA	Pinkode: %s\n\nAngiv pinkoden som beskrevet i vejledningen til routeren. Af sikkerhedsgrunde har du kun 120 sekunder til at angive pinkoden. Vælg Start timeren for at begynde.
+	DE	PIN: %s\n\nFolgen Sie den Anweisungen des Router-Herstellers, um diese PIN einzugeben. Aus Sicherheitsgründen darf die PIN-Eingabe nicht länger als 120 Sekunden dauern. Klicken Sie auf 'Zeitgeber starten', um mit der Eingabe zu beginnen.
+	EN	PIN: %s\n\nFollow your router manufacturer's instructions for entering this PIN. For security reasons, you'll have 120 seconds to complete PIN entry. Press "Start Timer" to begin.
+	ES	PIN: %s\n\nSiga las instrucciones del fabricante del enrutador para introducir este PIN. Por razones de seguridad, tiene 120 segundos para introducir el PIN. Pulse "Iniciar temporizador" para comenzar.
+	FI	PIN: %s\n\nNoudata PIN-koodin antamisessa reitittimen valmistajan ohjeita. Turvallisuussyistä sinulla on 120 sekuntia aikaa antaa PIN-koodi. Aloita painamalla "Käynnistä ajastin".
+	FR	PIN: %s\n\nSuivez les instructions du fabricant de votre routeur pour la saisie de ce PIN. Pour des raisons de sécurité, vous disposez de 120 secondes pour saisir votre PIN. Appuyez sur "Démarrer le chronomètre" pour commencer.
+	IT	PIN: %s\n\nSeguire le istruzioni del produttore del router per immettere questo PIN. Per motivi di sicurezza sono disponibili 120 secondi per completare l'immissione del PIN. Selezionare Avvia timer per iniziare.
+	NL	PIN: %s\n\nVolg de instructies van de fabrikant van je router voor het invoeren van deze PIN. Om veiligheidsredenen heb je 120 seconden om de PIN-invoer te voltooien. Klik op 'Timer starten' om te beginnen.
+	NO	PIN: %s\n\nFølg instruksjonene fra ruterprodusenten for PIN-metoden. Du har av sikkerhetsmessige årsaker 120 sekunder på deg til å legge inn PIN-koden. Trykk på Start nedtelling for å begynne.
+	PL	Kod PIN: %s\n\nPostępuj zgodnie z instrukcjami producenta routera, aby wprowadzić ten kod PIN. Ze względów bezpieczeństwa masz 120 sekund na wprowadzenie konta PIN. Kliknij przycisk Uruchom czasomierz, aby rozpocząć.
+	RU	PIN-код: %s\n\nВведите PIN-код согласно инструкциям изготовителя маршрутизатора. По соображениям безопасности на ввод PIN-кода дается 120 секунд. Чтобы начать, нажмите кнопку "Запуск таймера".
+	SV	PIN: %s\n\nAnge PIN-kod i enlighet med routertillverkarens instruktioner. Av säkerhetsskäl måste du ange koden inom 120 sekunder. Tryck på Påbörja nedräkning för att börja.
+
+NETWORK_ENTER_PBC
+	CS	Stiskněte tlačítko/PBC
+	DA	Trykknap
+	DE	Taste/PBC
+	EN	Push Button/PBC
+	ES	Botón de comando/PBC
+	FI	Painike/PBC
+	FR	Bouton poussoir/Configuration du bouton pressoir
+	IT	Pulsante/PBC
+	NL	Drukknop/PBC
+	NO	Trykk på knappen/PBC
+	PL	Przycisk/PBC
+	RU	Кнопка включения/PBC
+	SV	Anslutningsknapp (PBC)
+
+NETWORK_ENTER_PBC_HINT
+	CS	Pro tlačítko / PBC se řiďte pokyny výrobce vašeho routeru. Z bezpečnostních důvodů budete mít 120 sekund na zadání tlačítka. Pro start stiskněte "Začít odpočítávání".
+	DA	Brug trykknapmetoden som beskrevet i vejledningen til routeren. Af sikkerhedsgrunde har du kun 120 sekunder til at trykke på knappen. Vælg Start timeren for at begynde.
+	DE	Folgen Sie zur Verwendung der Konfigurationstaste/PBC den Anweisungen des Router-Herstellers. Aus Sicherheitsgründen darf die PIN-Eingabe nicht länger als 120 Sekunden dauern. Klicken Sie auf 'Zeitgeber starten', um den Vorgang zu starten.
+	EN	Follow your router manufacturer's instructions for Push Button/PBC. For security reasons, you'll have 120 seconds to complete push button entry. Press "Start Timer" to begin.
+	ES	Siga las instrucciones del fabricante del enrutador para el botón de comando/PBC. Por razones de seguridad, tiene 120 segundos para completar la entrada de botón de comando. Pulse "Iniciar temporizador" para comenzar.
+	FI	Noudata reitittimen valmistajan Painikkeen/PBC:n käytöstä antamia ohjeita. Turvallisuussyistä sinulla on 120 sekuntia aikaa suorittaa painikesyöttö. Aloita painamalla "Käynnistä ajastin".
+	FR	Suivez les instructions fournies par le fabricant de votre routeur concernant le bouton poussoir/la configuration du bouton pressoir. Pour des raisons de sécurité, vous disposez de 120 secondes pour saisir le bouton poussoir. Appuyez sur "Démarrer le chronomètre" pour commencer.
+	IT	Per il metodo Pulsante/PBC, seguire le istruzioni del produttore del router utilizzato. Per motivi di sicurezza si hanno a disposizione 120 secondi per completare la configurazione Push Button. Premere Avvia timer per iniziare.
+	NL	Volg de instructies van de fabrikant van je router voor Drukknop/PBC. Om veiligheidsredenen heb je 120 seconden om de PIN-invoer te voltooien. Klik op 'Timer starten' om te beginnen.
+	NO	Følg instruksjonene fra ruterprodusenten for metoden Trykk på knappen/PBC. Du har av sikkerhetsmessige årsaker 120 sekunder på deg til å utføre dette. Trykk på Start nedtelling for å begynne.
+	PL	Postępuj zgodnie z instrukcjami producenta routera dla funkcji Przycisk/PBC. Ze względów bezpieczeństwa masz 120 sekund na zakończenie operacji naciskania przycisku. Kliknij przycisk Uruchom czasomierz, aby rozpocząć.
+	RU	Следуйте инструкциям изготовителя по использованию кнопки воспроизведения/PBC. По соображениям безопасности на ввод кнопки дается 120 секунд. Чтобы начать, нажмите кнопку "Запуск таймера".
+	SV	Följ routertillverkarens anvisningar om hur du använder anslutningsknappen (PBC). Av säkerhetsskäl måste du trycka på knappen inom 120 sekunder. Tryck på Påbörja nedräkning.
+
+NETWORK_START_TIMER
+	CS	Spustit odpočítávání
+	DA	Start timeren
+	DE	Zeitgeber starten
+	EN	Start Timer
+	ES	Iniciar temporizador
+	FI	Käynnistä ajastin
+	FR	Démarrer le chronomètre
+	IT	Avvia timer
+	NL	Timer starten
+	NO	Start nedtelling
+	PL	Uruchom czasomierz
+	RU	Запуск таймера
+	SV	Påbörja nedräkning
+
+NETWORK_WPS_PROGRESS_PBC
+	CS	Tlačítko
+	DA	Trykknap
+	DE	Taste
+	EN	Push Button
+	ES	Botón de comando
+	FI	Painike
+	FR	Bouton poussoir
+	IT	Pulsante
+	NL	Drukknop
+	NO	Trykk på knappen
+	PL	Przycisk
+	RU	Кнопка воспроизведения
+	SV	Anslutningsknapp
+
+NETWORK_WPS_PROGRESS_PIN
+	CS	Zadejte tento PIN\n%s
+	DA	Indtast denne pinkode\n%s
+	DE	Diese PIN\n%s eingeben
+	EN	Enter This PIN\n%s
+	ES	Introduzca este PIN\n%s
+	FI	Anna tämä PIN\n%s
+	FR	Entrer ce PIN\n%s
+	IT	Immettere questo PIN\n%s
+	NL	Deze PIN\n%s invoeren
+	NO	Angi denne PIN-koden\n%s
+	PL	Wprowadź ten kod PIN\n%s
+	RU	Введите этот PIN-код\n%s
+	SV	Ange PIN-kod\n%s
+
+NETWORK_WPS_PROBLEM
+	CS	Vypršení doby WPS
+	DA	WPS er afbrudt
+	DE	WPS-Zeitlimit
+	EN	WPS Timeout
+	ES	Tiempo de espera para WPS
+	FI	WPS-aikakatkaisu
+	FR	Délai d'expiration de WPS
+	IT	Timeout di WPS
+	NL	Time-out van WPS
+	NO	Tidsavbrudd for WPS
+	PL	Limit czasu WPS
+	RU	Перерыв в работе WPS
+	SV	Tiden för WPS-anslutning har löpt ut
+
+NETWORK_WPS_PROBLEM_HINT
+	CS	Z bezpečnostních důvodů doba pro nastavení WPS vypršela.
+	DA	Af sikkerhedsgrunde er konfigurationen af WPS blevet afbrudt.
+	DE	Das Zeitlimit für die WPS-Einrichtung wurde überschritten. Der Vorgang wurde aus Sicherheitsgründen abgebrochen.
+	EN	For security reasons, WPS setup has timed out.
+	ES	Por razones de seguridad, la configuración WPS ha excedido el tiempo de espera.
+	FI	Turvallisuussyistä WPS-asennus on aikakatkaistu.
+	FR	Pour des raisons de sécurité, la configuration de WPS a expiré.
+	IT	Per motivi di sicurezza, il tempo consentito per la configurazione WPS è scaduto.
+	NL	Om veiligheidsredenen is er een time-out opgetreden tijdens de WPS-installatie.
+	NO	WPS-tilkoplingen har blitt tidsavbrutt av sikkerhetsmessige årsaker.
+	PL	Ze względów bezpieczeństwa upłynął limit czasu konfiguracji WPS.
+	RU	По соображениям безопасности время установки WPS истекло.
+	SV	Tiden för WPS-anslutning har löpt ut (detta är ett säkerhetsskydd).
+
+NETWORK_WPS_DIFFERENT_METHOD
+	CS	Vyberte jinou metodu nastavení
+	DA	Vælg en anden konfigurationsmetode
+	DE	Andere Einrichtungsmethode wählen
+	EN	Choose different setup method
+	ES	Seleccione otro método de configuración
+	FI	Valitse eri asennustapa
+	FR	Sélectionner une méthode de mise en réseau différente
+	IT	Scegli un altro metodo di configurazione
+	NL	Andere installatiemethode kiezen
+	NO	Velg en annen konfigureringsmetode
+	PL	Wybierz inną metodę konfiguracji
+	RU	Выбрать другой способ установки
+	SV	Välj en annan konfigurationstyp
+
+NETWORK_WPS_REMAINING_WALK_TIME
+	CS	Zbývající čas: %s sekund
+	DA	Resterende tid: %s sekunder
+	DE	Verbleibende Zeit: %s Sekunden
+	EN	Remaining time: %s seconds
+	ES	Tiempo restante: %s segundos
+	FI	Jäljellä oleva aika: %s sekuntia
+	FR	Temps restant: %s secondes
+	IT	Tempo rimanente: %s secondi
+	NL	Resterende tijd: %s seconden
+	NO	Gjenværende tid: %s sekunder
+	PL	Pozostały czas: %s s
+	RU	Осталось: %s с
+	SV	Återstående tid: %s sekunder
+
+NETWORK_ATTACH_CABLE
+	CS	Nepřipojeno
+	DA	Ikke tilsluttet
+	DE	Nicht verbunden
+	EN	Not Connected
+	ES	No conectado
+	FI	Ei yhdistetty
+	FR	Non connecté
+	IT	Non connesso
+	NL	Niet verbonden
+	NO	Ikke tilkoplet
+	PL	Niepołączony
+	RU	Не подключено
+	SV	Ej ansluten
+
+NETWORK_ATTACH_CABLE_DETAILED
+	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
+	DA	Der blev ikke fundet en kableforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
+	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
+	EN	We can't detect a wired connection. Please check your Ethernet cable, and make sure your network is running and available.
+	ES	No se puede detectar una conexión con cable. Compruebe el cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
+	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
+	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
+	IT	Impossibile rilevare una connessione cablata. Verificare il cavo Ethernet e accertarsi che la rete sia in esecuzione e accessibile.
+	NL	Er is geen bedrade aansluiting gedetecteerd. Controleer je ethernetdraad en zorg ervoor dat je netwerk actief en beschikbaar is.
+	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre
+	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
+	RU	Не удалось обнаружить проводное подключение. Проверьте кабель ethernet и убедитесь, что сеть работает нормально.
+	SV	Ingen kabelanslutning upptäcktes. Kontrollera Ethernet-kabeln och se till att nätverket är igång och tillgängligt.
+
+NETWORK_NO_WIRELESS_DETAILED
+	CS	Nemohli jsme detekovat bezdrátové připojení. Zkontrolujte prosím, zda je vaše síť v provozu a k dispozici.
+	DA	Der blev ikke fundet et trådløst netværk. Kontroller at netværket er i drift og at der kan etableres forbindelse til det.
+	DE	Es konnte keine kabellose Verbindung erkannt werden. Vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
+	EN	We can't detect a wireless connection. Please check to make sure your network is running and available.
+	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
+	FI	Langallista yhteyttä ei havaita. Tarkista, että verkko on käytössä ja että se on saatavilla.
+	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.
+	IT	Impossibile rilevare una connessione senza fili. Verificare che la rete sia in esecuzione e accessibile.
+	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer of je netwerk actief en beschikbaar is.
+	NO	Finner ikke en trådløs tilkopling. Kontroller at nettverket er oppe og tilgjengelig.
+	PL	Nie można wykryć połączenia bezprzewodowego. Sprawdź, czy sieć działa i jest dostępna.
+	RU	Не удается обнаружить беспроводное подключение. Убедитесь, что сеть работает и доступна.
+	SV	Ingen trådlös anslutning upptäcktes. Kontrollera att nätverket körs och är tillgängligt.
+
+NETWORK_ERROR
+	CS	Problém s připojením
+	DA	Forbindelsesfejl
+	DE	Verbindungsproblem
+	EN	Connection Problem
+	ES	Problema de conexión
+	FI	Yhteysongelma
+	FR	Problème de connexion
+	IT	Problema di connessione
+	NL	Verbindingsprobleem
+	NO	Tilkoplingsproblem
+	PL	Problem z połączeniem
+	RU	Ошибка подключения
+	SV	Anslutningsproblem
+
+NETWORK_CANT_CONNECT
+	CS	Nemohu připojit
+	DA	Der kan ikke etableres forbindelse
+	DE	Verbindung kann nicht hergestellt werden
+	EN	Can't Connect
+	ES	No se puede conectar
+	FI	Ei voi yhdistää
+	FR	Connexion impossible
+	IT	Impossibile connettersi
+	NL	Kan geen verbinding maken
+	NO	Kan ikke kople til
+	PL	Nie można nawiązać połączenia
+	RU	Не удалось подключиться
+	SV	Det går inte att ansluta
+
+NETWORK_LIST_HELP_BODY
+	CS	V této fázi potřebujeme, aby se váš Squeezebox připojil k vaší bezdrátové síti. Abyste to mohli provést, potřebujete znát název vaší sítě a heslo (pokud máte otevřenou síť, heslo nebudete potřebovat).\n\nPokud neznáte název vaší sítě nebo heslo a máte bezdrátovou síť, zkuste jeden nebo více z následujících kroků:\n\n1. Přesvědčte se, jestli jste si je někam nezapsali.\n2. Zeptejte se někoho ve vaší domácnosti, jestli je nezná.\n3. Kontaktujte osobu, která instalovala vaši domácí síť.\n4. Nahlédněte do manuálu vašeho routeru.\n5. Požádejte o pomoc výrobce vašeho routeru.\n\nPOZNÁMKA: Název sítě se někdy nazývá  SSID, a heslo je někdy označováno jako bezdrátový klíč nebo bezpečnostní klíč.\n\nPokud se vaše síť neobjeví v seznamu bezdrátových sítí, zkuste jeden nebo více následujících kroků:\n\n1. Ujistěte se, že Squeezebox je v dosahu vaší bezdrátové sítě.\n2. Jděte ke svému počítači a přesvědčte se, že vaše síť je v provozu.\n3. Pokud je váš router konfigurován tak, aby nevysílal název vaší sítě (SSID), zvolte "Nevidím svou síť" na spodu seznamu sítí a vložte svou síť.\n4. Odpojte router, počkejte 30 sekund a znovu jej zapojte.\n5. Nahlédněte do dokumentace vašeho routeru nebo zkontaktujte výrobce kvůli asistenci.
+	DA	Nu må vi se at få sluttet din Squeezebox til det trådløse netværk. Til det skal du bruge netværkets navn og adgangskoden til det (hvis netværket er åbent og ubeskyttet, skal du ikke bruge en adgangskode).\n\nHvis du har et trådløst netværk, men ikke kender dets navn og adgangskoden til det, kan du prøve et af følgende: \n\n\n1. Prøv at huske om ikke du har skrevet det ned et eller andet sted.\n2. Spørg de andre i huset om en af dem kender adgangskoden.\n3. Kontakt den som installerede dit netværk.\n4. Læs i vejledningen til routeren.\n5. Bed forhandleren om hjælp, eller tjek routerproducentens hjemmeside.\n\nOBS: Sommetider kaldes netværkets navn for SSID, og adgangskoden for en nøgle eller sikkerhedsnøgle til det trådløse netværk.\n\nHvis dit netværk ikke bliver vist på listen over trådløse netværk, kan du prøve et af følgende:\n\n1. Kontroller at din Squeezebox er inden for det trådløse netværks rækkevidde.\n2. Sæt dig ved computeren, og tjek at det trådløse netværk fungerer.\n3. Hvis routeren er indstillet til ikke at transmittere navnet på netværket (også kaldet SSID), skal du vælge "Jeg kan ikke se mit netværk" nederst på listen over netværk og angive navnet på det.\n4. Træk strømstikket ud af routeren, vent 30 sekunder, og sæt det i igen.\n5. Læs i dokumentationen til routeren, spørg forhandleren eller tjek producentens hjemmeside.
+	DE	Jetzt müssen Sie die Squeezebox mit dem WLAN verbinden. Dazu benötigen Sie den Netzwerknamen und das Kennwort (wenn Sie ein offenes Netzwerk haben, brauchen Sie kein Kennwort).\n\nWenn Sie den Netzwerknamen oder das Kennwort nicht kennen und ein WLAN haben, haben Sie folgende Möglichkeiten:\n\n1. Überprüfen Sie, ob Sie Namen und Kennwort irgendwo notiert haben.\n2. Fragen Sie die anderen Hausbewohner danach.\n3. Fragen Sie die Person, die Ihr Heimnetzwerk eingerichtet hat.\n4. Lesen Sie im Handbuch zum Router nach.\n5. Wenden Sie sich für weitere Informationen an den Hersteller des Routers.\n\nHinweis: Ein Netzwerkname wird auch als SSID und ein Kennwort auch als WEP-Schlüssel oder Sicherheitsschlüssel bezeichnet.\n\nWenn Ihr Netzwerk nicht in der Liste der verfügbaren Netzwerke angezeigt wird, haben Sie folgende Möglichkeiten:\n\n1. Vergewissern Sie sich, dass sich die Squeezebox in Reichweite des Netzwerks befindet.\n2. Prüfen Sie am Computer, ob das Netzwerk funktioniert.\n3. Ist der Router so konfiguriert, dass der Netzwerkname (SSID) nicht bekannt gegeben wird, wählen sie die Option "Mein Netzwerk wird nicht angezeigt" unter der Liste der Netzwerke und geben Sie den Namen Ihres Netzwerks ein.\n4. Ziehen Sie den Netzstecker des Routers und schließen Sie ihn nach 30 Sekunden wieder an.\n5. Weitere Informationen erhalten Sie in der Dokumentation zum Router oder vom Hersteller.
+	EN	At this stage, we need to get your Squeezebox connected to your wireless network. To do this, you'll need to know your network name and password (if you have an open network, you won't need a password).\n\nIf you don't know your network name or password, and you have a wireless network, try one or more of the following:\n\n1. Check to see if you have them written down somewhere.\n2. Ask someone else in your home if they know them.\n3. Contact the person who set up your home network.\n4. Check your router manual.\n5. Contact your router manufacturer for assistance.\n\nNOTE: A network name is sometimes referred to as an SSID, and a password is sometimes referred to as a wireless key, or security key.\n\nIf your network does not appear on the list of wireless networks, try one or more of the following:\n\n1. Make sure the Squeezebox is within range of your wireless network.\n2. Go to your computer to make sure your network is working.\n3. If your router is configured to not broadcast your network name (SSID), select "I don't see my network" at the bottom of the list of networks, and enter yours.\n4. Unplug your router, wait 30 seconds, and plug it back in.\n5. Refer to your router documentation or contact the manufacturer for assistance.
+	ES	En esta fase, debe conectar Squeezebox a la red inalámbrica. Para ello, necesitará el nombre y la contraseña de la red (si tiene una red abierta, no necesitará una contraseña).\n\nSi desconoce el nombre o la contraseña de la red y tiene una red inalámbrica, pruebe lo siguiente:\n\n\n1. Compruebe si estos datos están escritos en algún lugar.\n2. Pregunte a otras personas que vivan en su casa si tienen esta información.\n3. Póngase en contacto con la persona que configuró la red doméstica.\n4. Consulte el manual del enrutador.\n5. Póngase en contacto con el fabricante del enrutador para obtener ayuda.\n\nNOTA: en ocasiones el nombre de red se denomina SSID y la contraseña recibe el nombre de clave inalámbrica o clave de seguridad.\n\nSi su red no aparece en la lista de redes inalámbricas, pruebe lo siguiente:\n\n1. Asegúrese de que Squeezebox se encuentra dentro del radio de acción de la red inalámbrica.\n2. Asegúrese desde el ordenador de que la red funciona.\n3. Si la configuración del enrutador no permite que se emita el nombre de red (SSID), seleccione "No puedo ver mi red" en la parte inferior de la lista de redes e introduzca su red.\n4. Desconecte el enrutador, espere 30 segundos y vuelva a conectarlo.\n5. Consulte la documentación del enrutador o póngase en contacto con el fabricante para obtener ayuda.
+	FI	Tässä vaiheessa Squeezeboxisi pitää saada yhdistettyä langattomaan verkkoosi. Tätä varten sinun täytyy tietää verkkosi nimi ja salasana (jos sinulla on avoin verkko, et tarvitse salasanaa).\n\nJos et tiedä verkkosi nimeä tai salasanaa ja käytät langatonta verkkoa, kokeile yhtä tai useampia seuraavista keinoista:\n\n1. Tarkista, oletko kirjoittanut ne johonkin ylös.\n2. Kysy, tietääkö kukaan muu kotonasi asuva niitä.\n3. Ota yhteyttä henkilöön, joka asensi kotiverkkosi.\n4. Tarkista reitittimen käyttöohje.\n5. Ota yhteyttä reitittimen valmistajaan ja pyydä apua.\n\nHUOMAUTUS: Verkon nimeen viitataan joskus termillä SSID. Salasanaa kutsutaan joskus langattomaksi avaimeksi tai suojausavaimeksi.\n\nJos verkkosi ei tule näkyviin langattomien verkkojen luetteloon, kokeile yhtä tai useampia seuraavista keinoista:\n\n1. Varmista, että Squeezebox on langattoman verkkosi ulottuvilla.\n2. Tarkista tietokoneeltasi, että verkko toimii.\n3. Jos reitittimesi on määritetty olemaan lähettämättä verkon nimeä (SSID), valitse "En näe verkkoani" verkkoluettelon alalaidasta ja anna omasi.\n4. Irrota reititin, odota 30 sekuntia ja kytke se uudestaan.\n5. Katso lisätietoja reitittimen käyttöohjeesta tai ota yhteyttä reitittimen valmistajaan.
+	FR	A ce stade, vous devez connecter la Squeezebox à votre réseau sans fil. Pour ce faire, vous devez connaître le nom et le mot de passe de votre réseau (dans le cas d'un réseau ouvert, le mot de passe n'est pas demandé).\n\nSi vous ignorez le nom ou le mot de passe de votre réseau sans fil, essayez une ou plusieurs des solutions suivantes:\n\n1. Vérifiez si vous les avez notés quelque part.\n2. Demandez aux membres de votre foyer s'ils les connaissent.\n3. Contactez la personne ayant configuré votre réseau local.\n4. Consultez le manuel du routeur.\n5. Demandez l'aide du fabricant du routeur.\n\nREMARQUE: un nom de réseau est souvent appelé SSID et son mot de passe est souvent désigné comme clé sans fil ou clé de sécurité.\n\nSi votre réseau ne figure pas dans la liste des réseaux sans fil, essayez une ou plusieurs des solutions suivantes:\n\n1. Assurez-vous que la Squeezebox est à portée du réseau sans fil.\n2. Sur votre ordinateur, vérifiez que le réseau fonctionne.\n3. Si le routeur est configuré de manière à ne pas afficher le nom de votre réseau (le SSID), sélectionnez l'option "Je ne vois pas mon réseau" située au bas de la liste et entrez votre réseau.\n4. Débranchez votre routeur, attendez 30 secondes, puis rebranchez-le.\n5. Consultez la documentation du routeur ou demandez de l'aide auprès du fabricant.
+	IT	A questo punto è necessario connettere lo Squeezebox alla rete senza fili. A tale fine è necessario conoscere il nome e la password della rete (se si utilizza una rete aperta, la password non è necessaria).\n\nSe non si conosce il nome o la password della rete e si utilizza una rete senza fili, provare quanto segue:\n\n\n1. Controllare se queste informazioni sono state scritte da qualche parte.\n2. Chiedere a qualcuno in casa se ne è a conoscenza.\n3. Contattare la persona che ha configurato la rete di casa.\n4. Controllare il manuale d'uso del router.\n5. Contattare il produttore del router per assistenza.\n\nNOTA: a volte il nome della rete è anche detto SSID e la password è detta chiave senza fili o chiave di sicurezza.\n\nSe la rete non è inclusa nell'elenco delle reti senza fili, provare quanto segue:\n\n1. Assicurarsi che lo Squeezebox sia nella portata della rete senza fili.\n2. Verificare con il computer che la rete funzioni.\n3. Se il router è configurato per non diffondere il nome della rete (SSID), selezionare La mia rete non è visualizzata in fondo all'elenco delle reti e immettere il nome della rete utilizzata.\n4. Scollegare il router, attendere 30 secondi e ricollegarlo.\n5. Consultare il manuale d'uso del router o contattare il produttore per assistenza.
+	NL	We moeten er nu voor zorgen dat je Squeezebox met je draadloze netwerk wordt verbonden. Je moet hiervoor de naam en het wachtwoord van het netwerk weten (als je een open netwerk hebt, heb je geen wachtwoord nodig).\n\nAls je de naam en het wachtwoord van het netwerk niet weet, en je hebt een draadloos netwerk, probeer dan een of meer van de volgende opties:\n\n1. Controleer of je de informatie ergens hebt opgeschreven.\n2. Vraag iemand anders in je huis of zij de informatie hebben.\n3. Neem contact op met degene die je thuisnetwerk heeft geïnstalleerd.\n4. Raadpleeg de handleiding van je router.\n5. Neem contact op met de fabrikant van de router voor hulp.\n\nN.B. Een netwerknaam wordt soms een SSID genoemd, en een wachtwoord een draadloze of beveiligingssleutel.\n\nAls jouw netwerk niet in de lijst met draadloze netwerken verschijnt, probeer dan een of meer van de volgende opties:\n\n1. Zorg dat de Squeezebox zich binnen het bereik van het draadloze netwerk bevindt.\n2. Ga naar je computer en controleer of je netwerk functioneert.\n3. Als je router zo is geconfigureerd dat je netwerknaam (SSID) niet wordt uitgezonden, selecteer je 'I don't see my network' onder aan de lijst met netwerken en voer je jouw netwerk in.\n4. Ontkoppel de router, wacht 30 seconden en sluit deze weer aan.\n5. Raadpleeg de documentatie van de router of neem contact op met de fabrikant voor hulp.
+	NO	Nå må Squeezebox koples til det trådløse nettverket. Du trenger nettverksnavnet og nettverkspassordet for å kunne gjøre dette (hvis du har et åpent nettverk, trenger du ikke et passord).\n\nHvis du ikke vet hva navnet på nettverket og passordet er, og du har et trådløst nettverk, kan du prøve et av følgende:\n\n1. Se etter om du har skrevet denne informasjonen ned et sted.\n2. Spør noen andre i huset om de kjenner til denne informasjonen.\n3. Ta kontakt med personen som konfigurerte hjemmenettverket.\n4. Se i bruksanvisningen til ruteren.\n5. Ta kontakt med ruterprodusenten.\n\nMERK: Nettverksnavnet kalles noen ganger SSID, og passordet kalles noen ganger en trådløs nøkkel eller sikkerhetsnøkkel.\n\nHvis nettverket ditt ikke er oppført på listen over trådløse nettverk, kan du prøve et av følgende:\n\n1. Sørg for at Squeezebox er plassert innenfor rekkevidden til det trådløse nettverket.\n2. Sjekk at nettverket fungerer via datamaskinen.\n3. Hvis ruteren er konfigurert slik at den ikke kringkaster nettverksnavnet ditt (SSID), velger du "Jeg ser ikke nettverket" nederst på listen med nettverk, og oppgir deretter nettverksinformasjonen din.\n4. Kople fra ruteren, vent i 30 sekunder og kople den deretter til på nytt.\n5. Se i dokumentasjonen som fulgte med ruteren, eller ta kontakt med produsenten for å få hjelp.
+	PL	Na tym etapie należy podłączyć urządzenie Squeezebox do sieci bezprzewodowej. W tym celu wymagana jest nazwa sieci i hasła (w przypadku otwartej sieci hasło nie jest wymagane).\n\nJeśli nie znasz nazwy sieci lub hasła, a używana jest sieć bezprzewodowa, wypróbuj jedną lub kilka poniższych metod:\n\n1. Sprawdź, czy te informacje nie zostało gdzieś zapisane.\n2. Zapytaj innego domownika, czy zna te informacje.\n3. Skontaktuj się z osobą, która skonfigurowała sieć w domu.\n4. Sprawdź instrukcję obsługi routera.\n5. Skontaktuj się z producentem routera w celu uzyskania pomocy.\n\nUWAGA: Nazwa sieci jest czasami nazywana identyfikatorem SSID, a hasło jest czasami nazywane kluczem sieci bezprzewodowej lub kluczem zabezpieczeń.\n\nJeśli sieć nie pojawia się na liście sieci bezprzewodowych, wypróbuj jedną lub kilka poniższych metod:\n\n1. Upewnij się, że urządzenie Squeezebox znajduje się w zasięgu sieci bezprzewodowej.\n2. Sprawdź na komputerze, czy sieć działa.\n3. Jeśli router nie jest skonfigurowany na rozgłaszanie nazwy sieci (SSID), wybierz pozycję „Nie widzę mojej sieci” na dole listy sieci i wprowadź nazwę swojej sieci.\n4. Odłącz router, poczekaj 30 sekund i podłącz go ponownie.\n5. Zapoznaj się z dokumentacją routera lub skontaktuj się z routerem, aby uzyskać pomoc.
+	RU	На этом этапе необходимо подключить Squeezebox к беспроводной сети. Для этого вы должны знать имя вашей сети и пароль (для открытой сети пароль не потребуется).\n\nЕсли вы не знаете имя сети или пароль и используете беспроводную сеть, попробуйте выполнить следующие действия.:\n\n1. Проверьте, не записали ли вы где-нибудь эти данные.\n2. Спросите кого-нибудь из домашних, не знают ли они имя сети и пароль.\n3. Обратитесь к лицу, настроившему вашу домашнюю сеть.\n4. Посмотрите в руководстве маршрутизатора.\n5. Обратитесь за помощью к изготовителю маршрутизатора.\n\nПРИМЕЧАНИЕ. Имя сети иногда называют идентификатором SSID, а пароль — беспроводным ключом или ключом безопасности.\n\nЕсли ваша сеть не появляется в списке беспроводных сетей, попробуйте выполнить следующие действия:\n\n1. Убедитесь, что Squeezebox находится в диапазоне беспроводной сети.\n2. Убедитесь, что сеть работает.\n3. Если маршрутизатор не настроен на вещание имени вашей сети (SSID), выберите параметр "Я не вижу свою сеть" снизу в списке сетей и введите свою.\n4. Отсоедините маршрутизатор, подождите 30 секунд и снова подсоедините его.\n5. Обратитесь за помощью к документации маршрутизатора или к его изготовителю.
+	SV	Du måste ansluta Squeezebox till ditt trådlösa nätverk i det här skedet. Du måste känna till namnet på nätverket och lösenordet till det (om du har ett öppet nätverk behöver du inget lösenord).\n\nOm du inte känner till nätverksnamnet eller lösenordet och du har ett trådlöst nätverk, kan du försöka med något av följande:\n\n1. Fundera på om du har skrivit ner uppgifterna någonstans.\n2. Fråga någon annan där hemma om de känner till dem.\n3. Kontakta personen som installerade nätverket.\n4. Kontrollera routermanualen.\n5. Kontakta routertillverkaren för hjälp.\n\nOBS! Ibland kallas ett nätverksnamn för SSID och lösenordet för trådlöst lösenord eller säkerhetsnyckel.\n\nOm nätverket inte visas i listan över trådlösa nätverk kan du försöka med något av följande:\n\n1. Kontrollera att Squeezebox är inom räckhåll för det trådlösa nätverket.\n2. Kontrollera på datorn om nätverket fungerar.\n3. Om routern är konfigurerad för att skicka nätverksnamnet (SSID) väljer du "Jag kan inte se mitt nätverk" i slutet av listan över nätverk och anger ditt nätverk.\n4. Koppla ur routern, vänta i 30 sekunder och anslut den igen.\n5. Se routerdokumentationen eller kontakta tillverkaren för hjälp.
+
+NETWORK_LIST_HELP
+	CS	Nápověda pro bezdrátovou síť
+	DA	Hjælp til trådløst netværk
+	DE	Hilfe zum kabellosen Netzwerk
+	EN	Wireless Network Help
+	ES	Ayuda de red inalámbrica
+	FI	Langattoman verkon ohje
+	FR	Aide sur le réseau sans fil
+	IT	Guida sulla rete senza fili
+	NL	Help bij Draadloos netwerk
+	NO	Hjelp med trådløst nettverk
+	PL	Pomoc na temat sieci bezprzewodowej
+	RU	Справка по беспроводным сетям
+	SV	Hjälp om trådlösa nätverk
+
+NETWORK_DONT_SEE_YOUR_NETWORK
+	CS	Nevidím svou síť
+	DA	Jeg kan ikke se mit netværk
+	DE	Mein Netzwerk wird nicht angezeigt
+	EN	I Don't See My Network
+	ES	No puedo ver mi red
+	FI	En näe verkkoani
+	FR	Je ne vois pas mon réseau
+	IT	La mia rete non è visualizzata
+	NL	Ik zie mijn netwerk niet
+	NO	Jeg ser ikke nettverket
+	PL	Nie widzę mojej sieci
+	RU	Я не вижу свою сеть
+	SV	Nätverket visas inte här
+
+NETWORK_SEARCH_FOR_MY_NETWORK
+	CS	Hledat moji síť
+	DA	Søg efter mit netværk
+	DE	Nach Netzwerk suchen
+	EN	Search for my network
+	ES	Buscar mi red
+	FI	Etsi oma verkko
+	FR	Rechercher mon réseau
+	IT	Cerca la mia rete
+	NL	Naar mijn netwerk zoeken
+	NO	Søk etter nettverket
+	PL	Szukaj mojej sieci
+	RU	Искать мою сеть
+	SV	Sök efter nätverket
+
+NETWORK_ENTER_SSID
+	CS	Zadat název mojí sítě
+	DA	Angiv navnet på netværket
+	DE	Netzwerknamen eingeben
+	EN	Enter my network name
+	ES	Introducir mi nombre de red
+	FI	Anna verkon nimi
+	FR	Entrer le nom de mon réseau
+	IT	Immettere il nome della propria rete
+	NL	Mijn netwerknaam invoeren
+	NO	Angi nettverksnavn
+	PL	Wprowadź nazwę sieci
+	RU	Ввести имя сети
+	SV	Ange nätverksnamnet
+
+NETWORK_ENTER_SSID_HINT
+	CS	Ujistěte se, že vaše síť je v provozu a v dosahu. Pokud je vaše síť skrytá, budete musedt zadat  název vaší sítě manuálně.
+	DA	Kontroller at netværket kører og er inden for rækkevidde. Hvis netværket er skjult (ikke rundsender navnet), skal du indtaste navnet på det manuelt.
+	DE	Vergewissern Sie sich, dass das Netzwerk aktiviert und in Reichweite Ihres Computers ist. Wenn das Netzwerk verborgen ist, muss der Netzwerkname manuell eingegeben werden.
+	EN	Please make sure your network is running and in range. If your network is hidden, you'll have to enter your network name manually.
+	ES	Asegúrese de que la red está en ejecución y de que se encuentra dentro del radio de acción. Si la red está oculta, deberá introducir el nombre de red manualmente.
+	FI	Varmista, että verkko on käytössä ja alueella. Jos verkkosi on piilotettu, verkon nimi on annettava manuaalisesti.
+	FR	Vérifiez que votre réseau fonctionne et qu'il est à portée. S'il est masqué, vous devez entrer son nom manuellement.
+	IT	Verificare che la rete sia operativa e raggiungibile. Se la rete è nascosta, è necessario immetterne il nome manualmente.
+	NL	Controleer of je netwerk actief en binnen bereik is. Als je netwerk verborgen is, moet je je netwerknaam handmatig invoeren.
+	NO	Kontroller at nettverket er på og innen rekkevidde. Hvis nettverket er skjult, må du angi nettverksnavnet manuelt.
+	PL	Upewnij się, czy sieć działa i znajduje się w zasięgu. Jeśli sieć jest ukryta, należy ręcznie wprowadzić nazwę sieci.
+	RU	Убедитесь, что сеть работает и находится в диапазоне доступа. Если сеть скрыта, необходимо ввести имя сети вручную.
+	SV	Kontrollera att nätverket är i gång och att det är inom räckvidden. Om nätverket är dolt måste du ange namnet manuellt.
+

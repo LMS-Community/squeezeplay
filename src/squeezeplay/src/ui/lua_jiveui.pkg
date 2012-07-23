@@ -1,0 +1,243 @@
+
+$#include "common.h"
+$#include "jive.h"
+
+// Need to define this to get tolua++ output to compile
+// FIXME why?
+$#define tolua_outside
+$#define tolua_create
+$#define tolua_delete
+
+
+typedef short Sint16;
+typedef unsigned short Uint16;
+
+typedef unsigned char Uint8;
+typedef unsigned short Uint16;
+typedef unsigned int Uint32;
+
+typedef unsigned int size_t;
+
+
+module jive {
+	module ui {
+
+// SDL structures
+class SDL_Rect {
+	Sint16 x, y;
+	Uint16 w, h;
+};
+
+
+// jive_ui.h
+typedef unsigned int bool;
+#define true 1
+#define false !true
+
+#define JIVE_FRAME_RATE @ FRAME_RATE 20
+
+#define JIVE_XY_NIL @ XY_NIL -1
+#define JIVE_WH_NIL @ WH_NIL 65535
+#define JIVE_WH_FILL @ WH_FILL 65534
+
+
+// typedefs
+
+typedef enum {
+        JIVE_ALIGN_CENTER @ ALIGN_CENTER = 0,
+        JIVE_ALIGN_LEFT @ ALIGN_LEFT,
+        JIVE_ALIGN_RIGHT @ ALIGN_RIGHT,
+        JIVE_ALIGN_TOP @ ALIGN_TOP,
+        JIVE_ALIGN_BOTTOM @ ALIGN_BOTTOM,
+        JIVE_ALIGN_TOP_LEFT @ ALIGN_TOP_LEFT,
+        JIVE_ALIGN_TOP_RIGHT @ ALIGN_TOP_RIGHT,
+        JIVE_ALIGN_BOTTOM_LEFT @ ALIGN_BOTTOM_LEFT,
+        JIVE_ALIGN_BOTTOM_RIGHT @ ALIGN_BOTTOM_RIGHT,
+} Align;
+
+
+typedef enum {
+	JIVE_LAYOUT_NORTH @ LAYOUT_NORTH = 0,
+	JIVE_LAYOUT_EAST @ LAYOUT_EAST,
+	JIVE_LAYOUT_SOUTH @ LAYOUT_SOUTH,
+	JIVE_LAYOUT_WEST @ LAYOUT_WEST,
+	JIVE_LAYOUT_CENTER @ LAYOUT_CENTER,
+	JIVE_LAYOUT_NONE @ LAYOUT_NONE,
+} Layout;
+
+
+typedef enum {
+	JIVE_LAYER_FRAME @ LAYER_FRAME			= 0x01,
+	JIVE_LAYER_CONTENT @ LAYER_CONTENT		= 0x02,
+	JIVE_LAYER_CONTENT_OFF_STAGE @ LAYER_CONTENT_OFF_STAGE	= 0x04,
+	JIVE_LAYER_CONTENT_ON_STAGE @ LAYER_CONTENT_ON_STAGE	= 0x08,
+	JIVE_LAYER_LOWER @ LAYER_LOWER		= 0x10,
+	JIVE_LAYER_TITLE @ LAYER_TITLE		= 0x20,
+	JIVE_LAYER_ALL @ LAYER_ALL			= 0xFF,
+} Layer;
+
+
+typedef enum {
+	JIVE_EVENT_NONE @ EVENT_NONE			= 0x00000000,
+
+	JIVE_EVENT_SCROLL @ EVENT_SCROLL		= 0x00000001,
+	JIVE_EVENT_ACTION @ EVENT_ACTION		= 0x00000002,
+        
+	JIVE_EVENT_KEY_DOWN @ EVENT_KEY_DOWN		= 0x00000010,
+	JIVE_EVENT_KEY_UP @ EVENT_KEY_UP		= 0x00000020,
+	JIVE_EVENT_KEY_PRESS @ EVENT_KEY_PRESS		= 0x00000040,
+	JIVE_EVENT_KEY_HOLD @ EVENT_KEY_HOLD		= 0x00000080,
+
+	JIVE_EVENT_MOUSE_DOWN @ EVENT_MOUSE_DOWN		= 0x00000100,
+	JIVE_EVENT_MOUSE_UP @ EVENT_MOUSE_UP		= 0x00000200,
+	JIVE_EVENT_MOUSE_PRESS @ EVENT_MOUSE_PRESS		= 0x00000400,
+	JIVE_EVENT_MOUSE_HOLD @ EVENT_MOUSE_HOLD		= 0x00000800,
+	JIVE_EVENT_MOUSE_MOVE @ EVENT_MOUSE_MOVE		= 0x01000000,
+	JIVE_EVENT_MOUSE_DRAG @ EVENT_MOUSE_DRAG		= 0x00100000,
+    
+	JIVE_EVENT_WINDOW_PUSH @ EVENT_WINDOW_PUSH		= 0x00001000,
+	JIVE_EVENT_WINDOW_POP @ EVENT_WINDOW_POP		= 0x00002000,
+	JIVE_EVENT_WINDOW_ACTIVE @ EVENT_WINDOW_ACTIVE	= 0x00004000,
+	JIVE_EVENT_WINDOW_INACTIVE @ EVENT_WINDOW_INACTIVE	= 0x00008000,
+
+	JIVE_EVENT_SHOW @ EVENT_SHOW			= 0x00010000,
+	JIVE_EVENT_HIDE @ EVENT_HIDE			= 0x00020000,
+	JIVE_EVENT_FOCUS_GAINED @ EVENT_FOCUS_GAINED		= 0x00040000,
+	JIVE_EVENT_FOCUS_LOST @ EVENT_FOCUS_LOST		= 0x00080000,
+
+	JIVE_EVENT_WINDOW_RESIZE @ EVENT_WINDOW_RESIZE		= 0x00200000,
+	JIVE_EVENT_SWITCH @ EVENT_SWITCH			= 0x00400000,
+	JIVE_EVENT_MOTION @ EVENT_MOTION			= 0x00800000,
+
+	JIVE_EVENT_CHAR_PRESS	= 0x02000000,
+	JIVE_EVENT_IR_PRESS             = 0x04000000,
+	JIVE_EVENT_IR_HOLD              = 0x08000000,
+
+	JIVE_EVENT_CHAR_ALL 	= ( JIVE_EVENT_CHAR_PRESS),
+	JIVE_EVENT_IR_ALL               = ( JIVE_EVENT_IR_PRESS | JIVE_EVENT_IR_HOLD);
+	JIVE_EVENT_KEY_ALL @ EVENT_KEY_ALL		= ( JIVE_EVENT_KEY_DOWN | JIVE_EVENT_KEY_UP | JIVE_EVENT_KEY_PRESS | JIVE_EVENT_KEY_HOLD ),
+	JIVE_EVENT_MOUSE_ALL @ EVENT_MOUSE_ALL		= ( JIVE_EVENT_MOUSE_DOWN | JIVE_EVENT_MOUSE_UP | JIVE_EVENT_MOUSE_PRESS | JIVE_EVENT_MOUSE_HOLD | JIVE_EVENT_MOUSE_MOVE | JIVE_EVENT_MOUSE_DRAG ),
+	JIVE_EVENT_ALL_INPUT @ EVENT_ALL_INPUT		= ( JIVE_EVENT_KEY_ALL | JIVE_EVENT_MOUSE_ALL | JIVE_EVENT_SCROLL | JIVE_EVENT_CHAR_ALL | JIVE_ACTION),
+	JIVE_EVENT_VISIBLE_ALL @ EVENT_VISIBLE_ALL		= ( JIVE_EVENT_SHOW | JIVE_EVENT_HIDE ),
+	JIVE_EVENT_ALL @ EVENT_ALL			= 0xFFFFFFFF,
+} EventType;
+
+
+typedef enum {
+	JIVE_EVENT_UNUSED @ EVENT_UNUSED		= 0x0000,
+	JIVE_EVENT_CONSUME @ EVENT_CONSUME		= 0x0001,
+	JIVE_EVENT_QUIT @ EVENT_QUIT			= 0x0002,
+} EventStatus;
+
+
+typedef enum {
+	JIVE_KEY_NONE @ KEY_NONE		= 0x0000,
+	JIVE_KEY_GO @ KEY_GO			= 0x0001,
+	JIVE_KEY_BACK @ KEY_BACK		= 0x0002,
+	JIVE_KEY_UP @ KEY_UP			= 0x0004,
+	JIVE_KEY_DOWN @ KEY_DOWN		= 0x0008,
+	JIVE_KEY_LEFT @ KEY_LEFT		= 0x0010,
+	JIVE_KEY_RIGHT @ KEY_RIGHT		= 0x0020,
+	JIVE_KEY_HOME @ KEY_HOME		= 0x0040,
+	JIVE_KEY_PLAY @ KEY_PLAY		= 0x0080,
+	JIVE_KEY_ADD @ KEY_ADD			= 0x0100,
+	JIVE_KEY_PAUSE @ KEY_PAUSE		= 0x0200,
+	JIVE_KEY_REW @ KEY_REW			= 0x0400,
+	JIVE_KEY_FWD @ KEY_FWD			= 0x0800,
+	JIVE_KEY_VOLUME_UP @ KEY_VOLUME_UP	= 0x1000,
+	JIVE_KEY_VOLUME_DOWN @ KEY_VOLUME_DOWN	= 0x2000,
+	JIVE_KEY_PRINT @ KEY_PRINT		= 0x10000,
+} Key;
+
+
+$typedef JiveSurface Surface;
+$typedef JiveTile Tile;
+$typedef JiveFont Font;
+
+
+// jive_surface functions
+
+class Surface {
+	static tolua_create Surface * jive_surface_newRGB @ newRGB(Uint16 w, Uint16 h);
+	static tolua_create Surface * jive_surface_newRGBA @ newRGBA(Uint16 w, Uint16 h);
+	static tolua_create Surface *jive_surface_load_image @ loadImage(const char *path);
+	static tolua_create Surface *jive_surface_load_image_data @ loadImageData(const char *data, size_t len);
+	static tolua_create Surface *jive_font_draw_text @ drawText(Font *font, Uint32 color, const char *str);
+	tolua_destroy void jive_surface_free @ free();
+	tolua_destroy void jive_surface_release @ release();
+
+	tolua_outside int jive_surface_save_bmp @ saveBMP(const char *file);
+	tolua_outside int jive_surface_cmp @ compare(Surface *b, Uint32 key);
+
+	tolua_outside void jive_surface_set_offset @ setOffset(Sint16 x, Sint16 y);
+
+	tolua_outside void jive_surface_set_clip_arg @ setClip(Uint16 x, Uint16 y, Uint16 w, Uint16 h);
+	tolua_outside void jive_surface_get_clip_arg @ getClip(Uint16 *x=0, Uint16 *y=0, Uint16 *w=0, Uint16 *h=0);
+
+	tolua_outside void jive_surface_blit @ blit(Surface *dst, Sint16 dx, Sint16 dy);
+	tolua_outside void jive_surface_blit_clip @ blitClip(Uint16 sx, Uint16 sy, Uint16 sw, Uint16 sh,
+			    Surface* dst, Uint16 dx, Uint16 dy);
+	tolua_outside void jive_surface_blit_alpha @ blitAlpha(Surface *dst, Sint16 dx, Sint16 dy, Uint8 alpha);
+	tolua_outside void jive_surface_get_size @ getSize(Uint16 *w=0, Uint16 *h=0);
+	tolua_outside int jive_surface_get_bytes @ getBytes();
+
+	tolua_create Surface *jive_surface_rotozoomSurface @ rotozoom(double angle, double zoom, int smooth=1);
+	tolua_create Surface *jive_surface_zoomSurface @ zoom(double zoomx, double zoomy, int smooth=1);
+	tolua_create Surface *jive_surface_shrinkSurface @ shrink(int factorx, int factory);
+
+
+	tolua_outside void jive_surface_pixelColor @ pixel(Sint16 x, Sint16 y, Uint32 col);
+	tolua_outside void jive_surface_hlineColor @ hline(Sint16 x1, Sint16 x2, Sint16 y, Uint32 color);
+	tolua_outside void jive_surface_vlineColor @ vline(Sint16 x, Sint16 y1, Sint16 y2, Uint32 color);
+	tolua_outside void jive_surface_rectangleColor @ rectangle(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col);
+	tolua_outside void jive_surface_boxColor @ filledRectangle(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col);
+	tolua_outside void jive_surface_lineColor @ line(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col);
+	tolua_outside void jive_surface_aalineColor @ aaline(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint32 col);
+	tolua_outside void jive_surface_circleColor @ circle(Sint16 x, Sint16 y, Sint16 r, Uint32 col);
+	tolua_outside void jive_surface_aacircleColor @ aacircle(Sint16 x, Sint16 y, Sint16 r, Uint32 col);
+	tolua_outside void jive_surface_filledCircleColor @ filledCircle(Sint16 x, Sint16 y, Sint16 r, Uint32 col);
+	tolua_outside void jive_surface_ellipseColor @ ellipse(Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col);
+	tolua_outside void jive_surface_aaellipseColor @ aaellipse(Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col);
+	tolua_outside void jive_surface_filledEllipseColor @ filledEllipse(Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint32 col);
+	tolua_outside void jive_surface_pieColor @ pie(Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col);
+	tolua_outside void jive_surface_filledPieColor @ filledPie(Sint16 x, Sint16 y, Sint16 rad, Sint16 start, Sint16 end, Uint32 col);
+	tolua_outside void jive_surface_trigonColor @ trigon(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col);
+	tolua_outside void jive_surface_aatrigonColor @ aatrigon(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col);
+	tolua_outside void jive_surface_filledTrigonColor @ filledTrigon(Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Sint16 x3, Sint16 y3, Uint32 col);
+	// FIXME polygon
+	// FIXME aapolygon
+	// FIXME filledPolygon
+	// FIXME texturedPolygon
+	// FIXME bezier
+};
+
+
+class Tile {
+	static tolua_create Tile *jive_tile_fill_color @ fillColor(Uint32 col);
+	static tolua_create Tile *jive_tile_load_image @ loadImage(const char *path);
+	static tolua_create Tile *jive_tile_load_tiles @ loadTiles(char *path[9]);
+	static tolua_create Tile *jive_tile_load_vtiles @ loadVTiles(char *path[3]);
+	static tolua_create Tile *jive_tile_load_htiles @ loadHTiles(char *path[3]);
+	tolua_destroy void jive_tile_free @ free();
+
+	tolua_outside void jive_tile_blit @ blit(Surface* dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh);
+	tolua_outside void jive_tile_get_min_size @ getMinSize(Uint16 *w=0, Uint16 *h=0);
+};
+
+
+// jive_font functions
+class Font {
+	static tolua_create Font *jive_font_load @ load(const char *name, size_t size);
+	tolua_destroy void jive_font_free @ _free();
+
+	tolua_outside int jive_font_width @ width(const char *str);
+	tolua_outside int jive_font_capheight @ capheight();
+	tolua_outside int jive_font_height @ height();
+	tolua_outside int jive_font_ascend @ ascend();
+	tolua_outside int jive_font_offset @ offset();
+};
+
+
+}
+
+}

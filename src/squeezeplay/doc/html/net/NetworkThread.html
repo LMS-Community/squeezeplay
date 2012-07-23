@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.NetworkThread - thread for network IO</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#networkthread_stop__">NetworkThread:stop()</a></li>
+		<li><a href="#networkthread_perform_func_">NetworkThread:perform(func)</a></li>
+		<li><a href="#networkthread_idle__">NetworkThread:idle()</a></li>
+		<li><a href="#__init__"><code>__init()</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Implements a separate thread (using luathread) for network functions. The base class for network protocols is Socket. Messaging from/to the thread uses mutexed queues. The queues contain functions executed once they leave the queue in the respective thread.
+The network thread queue is polled repeatedly. The main thread queue shall serviced by the main code; currently, an event EVENT_SERVICE_JNT exists for this purpose.</p>
+<p>FIXME: Subscribe description</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a NetworkThread (done for you in JiveMain stored in global jnt)
+ jnt = NetworkThread()</pre>
+<pre>
+ -- Create an HTTP socket that uses this jnt
+ local http = SocketHttp(jnt, '192.168.1.1', 80)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="networkthread_stop__">NetworkThread:stop()</a></h2>
+<p>Sends a message to stop the thread.</p>
+<p>
+</p>
+<h2><a name="networkthread_perform_func_">NetworkThread:perform(func)</a></h2>
+<p>Queues a function for execution thread side.
+
+</p>
+<p>
+</p>
+<h2><a name="networkthread_idle__">NetworkThread:idle()</a></h2>
+<p>Processes the queue on the main thread side. Messages are closures (functions), and simply called.
+
+</p>
+<p>
+</p>
+<h2><a name="__init__"><code>__init()</code></a></h2>
+<p>Creates a new NetworkThread. The thread starts immediately.
+
+</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

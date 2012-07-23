@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.SocketUdpBcast - A socket for UDP broadcast.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_socketudpbcast_jnt__sink__name_">jive.net.SocketUdpBcast(jnt, sink, name)</a></li>
+		<li><a href="#jive_net_socketudpbcast_send_t_source__port_">jive.net.SocketUdpBcast:send(t_source, port)</a></li>
+		<li><a href="#tostring_asocket_"><code>tostring(aSocket)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Implements a socket that performs some udp broadcast and returns packets
+obtained in response. This is used to discover slimservers on the network.
+jive.net.SocketUdbBcast is a subclass of <em>jive.net.Socket</em> to be used with a
+<em>jive.net.NetworkSocket</em>.</p>
+<p>Note the implementation uses the source and sink concept of luasocket.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a source to send some data
+ local function mySource()
+   return &quot;Hello&quot;
+ end</pre>
+<pre>
+ -- create a sink to receive data from the network
+ local function mySink(chunk, err)
+   if err then
+     print(&quot;error!: &quot; .. err)
+   elseif chunk then
+     print(&quot;received: &quot; .. chunk.data .. &quot; from &quot; .. chunk.ip)
+   end
+ end</pre>
+<pre>
+ -- create a SocketUdpBcast
+ local mySocket = jive.net.SocketUdpBcast(jnt, mySink)</pre>
+<pre>
+ -- broadcast some data on port 3333
+ mySocket:send(mySource, 3333)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_socketudpbcast_jnt__sink__name_">jive.net.SocketUdpBcast(jnt, sink, name)</a></h2>
+<p>Creates a UDP broadcast socket named <em>name</em> to interface with the given <em>jnt</em> 
+(a <em>jive.net.NetworkThread</em> instance). <em>name</em> is used for debugging and
+defaults to ``''. <em>sink</em> is the main thread ltn12 sink that will receive the data.
+Must be called by subclasses.</p>
+<p>The sink receives chunks that are tables. NIL is never sent as the network source
+cannot determine the ``end'' of the stream. The table contains the following members:
+=over</p>
+<p><strong>data</strong> : the data.</p>
+<p><strong>ip</strong> : the source ip address.</p>
+<p><strong>port</strong> : the source port</p>
+<p>
+</p>
+<h2><a name="jive_net_socketudpbcast_send_t_source__port_">jive.net.SocketUdpBcast:send(t_source, port)</a></h2>
+<p>Broadcasts the data obtained through <em>t_source</em> to the 
+given <em>port</em>. <em>t_source</em> is a ltn12 source called from 
+the network thread.</p>
+<p>
+</p>
+<h2><a name="tostring_asocket_"><code>tostring(aSocket)</code></a></h2>
+<p>if <em>aSocket</em> is a <em>jive.net.SocketUdpBcast</em>, prints
+ SocketUdpBcast {name}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

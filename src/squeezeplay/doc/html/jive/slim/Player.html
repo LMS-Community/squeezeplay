@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.slim.Player - Squeezebox/Transporter player.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerInfo)</a></li>
+		<li><a href="#jive_slim_player_updatefromss_playerinfo_">jive.slim.Player:updateFromSS(playerInfo)</a></li>
+		<li><a href="#jive_slim_player_free__">jive.slim.Player:free()</a></li>
+		<li><a href="#jive_slim_player_gethomemenuitem__">jive.slim.Player:getHomeMenuItem()</a></li>
+		<li><a href="#jive_slim_player_sethomemenuitem_homemenuitem_">jive.slim.Player:setHomeMenuItem(homeMenuItem)</a></li>
+		<li><a href="#tostring_aplayer_"><code>tostring(aPlayer)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>TODO</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>Notifications:</p>
+<pre>
+ playerConnected:
+ playerDisconnected:
+ playerNew
+ playerDelete</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_slim_player_server__jnt__jpool__playerinfo_">jive.slim.Player(server, jnt, jpool, playerInfo)</a></h2>
+<p>Create a Player object for server <em>server</em>.</p>
+<p>
+</p>
+<h2><a name="jive_slim_player_updatefromss_playerinfo_">jive.slim.Player:updateFromSS(playerInfo)</a></h2>
+<p>Updates the player with fresh data from SS.</p>
+<p>
+</p>
+<h2><a name="jive_slim_player_free__">jive.slim.Player:free()</a></h2>
+<p>Deletes the player.</p>
+<p>
+</p>
+<h2><a name="jive_slim_player_gethomemenuitem__">jive.slim.Player:getHomeMenuItem()</a></h2>
+<p>Returns the home menu menuItem that represents this player. This is
+used by <em>jive.applet.SlimDiscovery</em> to remove the player from the menu
+if/when it disappears.</p>
+<p>
+</p>
+<h2><a name="jive_slim_player_sethomemenuitem_homemenuitem_">jive.slim.Player:setHomeMenuItem(homeMenuItem)</a></h2>
+<p>Stores the main home menuItem that represents this player. This is
+used by <em>jive.applet.SlimDiscovery</em> to manage the home menu item.</p>
+<p>
+</p>
+<h2><a name="tostring_aplayer_"><code>tostring(aPlayer)</code></a></h2>
+<p>if <em>aPlayer</em> is a <em>jive.slim.Player</em>, prints
+ Player {name}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

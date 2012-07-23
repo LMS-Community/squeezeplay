@@ -1,0 +1,100 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT(squeezeplay_squeezeos, 0.1, bugs@slimdevices.com)
+AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_SRCDIR([src/wireless.c])
+AC_CONFIG_HEADER([src/config.h])
+
+dnl Detect the canonical host and target build environment
+AC_CANONICAL_HOST
+
+AM_INIT_AUTOMAKE
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_LIBTOOL
+AC_PROG_RANLIB
+
+# Check if -Wl,E is valid for linking
+SAVE_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS -Wl,-E"
+AC_CACHE_CHECK([whether we can link with -Wl,-E], cc_wl_e_switch,
+  [AC_TRY_LINK([],[],[cc_wl_e_switch=yes],[cc_wl_e_switch=no])])
+if test x"$cc_wl_e_switch" != x"yes"; then
+  LDFLAGS=$SAVE_LDFLAGS
+fi
+
+# Checks for libraries.
+
+dnl Check for SDL
+SDL_VERSION=1.2.10
+AM_PATH_SDL($SDL_VERSION,
+	:,
+	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+)
+CFLAGS="$CFLAGS $SDL_CFLAGS"
+LIBS="$LIBS $SDL_LIBS"
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([fcntl.h libgen.h stdlib.h stropts.h string.h sys/time.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+
+# Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS([malloc calloc realloc getcwd gettimeofday memmove realpath strchr strdup strerror strtol sqrt])
+
+dnl Dmalloc (multi-threaded version)
+AC_DEFUN([AM_WITH_DMALLOC],
+[AC_MSG_CHECKING([if malloc debugging is wanted])
+AC_ARG_WITH(dmalloc,
+[  --with-dmalloc          use dmalloc, as in
+			  http://www.dmalloc.com/dmalloc.tar.gz],
+[if test "$withval" = yes; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(WITH_DMALLOC,1,
+	    [Define if using the dmalloc debugging malloc package])
+  LIBS="$LIBS -ldmallocth"
+  LDFLAGS="$LDFLAGS -g"
+else
+  AC_MSG_RESULT(no)
+fi], [AC_MSG_RESULT(no)])
+])
+
+AU_DEFUN([fp_WITH_DMALLOC], [AM_WITH_DMALLOC])
+
+AM_WITH_DMALLOC
+
+dnl Profiling
+profile=""
+
+AC_MSG_CHECKING(whether to enable profiling)
+AC_ARG_ENABLE(profiling, AC_HELP_STRING([--enable-profiling],
+                         [generate profiling code]),
+[
+    case "$enableval" in
+        yes) profile="-pg" ;;
+    esac
+])
+AC_MSG_RESULT(${enable_profiling-no})
+
+
+dnl Be pedantic when compiling
+if test x"$GCC" = x"yes"
+then
+	CFLAGS="$CFLAGS -Wall -Werror"
+fi
+
+
+test -n "$profile" && CFLAGS="$CFLAGS $profile" LDFLAGS="$LDFLAGS $profile"
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT

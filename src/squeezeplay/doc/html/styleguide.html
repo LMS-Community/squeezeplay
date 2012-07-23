@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Jive Code Style Guide</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#jive_code_style_guide">Jive Code Style Guide</a></li>
+	<ul>
+
+		<li><a href="#code_layout">Code lay-out</a></li>
+		<ul>
+
+			<li><a href="#indentation">Indentation</a></li>
+			<li><a href="#line_length">Line Length</a></li>
+			<li><a href="#blank_lines">Blank Lines</a></li>
+			<li><a href="#encodings">Encodings</a></li>
+			<li><a href="#requires">requires</a></li>
+		</ul>
+
+		<li><a href="#identifiers">Identifiers</a></li>
+		<ul>
+
+			<li><a href="#general_convention">General convention</a></li>
+			<li><a href="#private_variables_and_functions">Private variables and functions</a></li>
+			<li><a href="#threads">Threads</a></li>
+		</ul>
+
+	</ul>
+
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<hr />
+<h1><a name="jive_code_style_guide">Jive Code Style Guide</a></h1>
+<p>This document describes the conventions used in the Jive Lua source code. Coherence has more
+value than minimal improvements in readability, so all developers should strive to check in
+code that adheres to these guidelines when appropriate.</p>
+<p>
+</p>
+<h2><a name="code_layout">Code lay-out</a></h2>
+<p>
+</p>
+<h3><a name="indentation">Indentation</a></h3>
+<p>Use TABs to indent the code. Tabs worth 4 spaces work best.</p>
+<p>Do NOT use tabs to make columns (for example, when aligning = signs). This just breaks on
+everyone else's terminal. Use spaces instead.</p>
+<pre>
+ local oo......spaces...= require(&quot;loop.simple&quot;)
+ local table...spaces...= require(&quot;table&quot;)</pre>
+<p>
+</p>
+<h3><a name="line_length">Line Length</a></h3>
+<p>No maximum value is provided, but long lines should be broken up at natural
+boundaries. With Lua you can pretty much break the line wherever you want, no special 
+line continuation mark is required.</p>
+<pre>
+ menuItem:addListener(EVENT_ACTION,
+     function()
+         local window, r = self:openWindow(appletName, method, menuItem, unpack(args))
+         return r
+     end
+ )</pre>
+<p>
+</p>
+<h3><a name="blank_lines">Blank Lines</a></h3>
+<p>Separate functions by 2 blank lines, and use 2 blank lines to distinguish
+any group (like between requires and module(...), or from the last function in
+the file to the Logitech license at the end of the file)</p>
+<p>Use blank lines in functions to indicate logical sections.</p>
+<p>
+</p>
+<h3><a name="encodings">Encodings</a></h3>
+<p>Code files should use UTF-8.</p>
+<p>
+</p>
+<h3><a name="requires">requires</a></h3>
+<p>Modules should require what they need from global space before the
+<code>module(...)</code> declaration. First copy global functions from Lua:</p>
+<pre>
+ local pairs, ipairs = pairs, ipairs</pre>
+<p>then any Lua or external module:</p>
+<pre>
+ local debug = require(&quot;debug&quot;)
+ local socket = require(&quot;socket&quot;)</pre>
+<p>then Jive modules/classes:</p>
+<pre>
+ local Window = require(&quot;jive.ui.Window&quot;)</pre>
+<p>ending with the log if used:</p>
+<pre>
+ local log = require(&quot;jive.utils.log&quot;).logger(&quot;ui&quot;)</pre>
+<p>finally, Jive globals or identifiers:</p>
+<pre>
+ local EVENT_UNUSED = jive.ui.EVENT_UNUSED
+ local jnt = jnt</pre>
+<p>
+</p>
+<h2><a name="identifiers">Identifiers</a></h2>
+<p>
+</p>
+<h3><a name="general_convention">General convention</a></h3>
+<p>Identifiers (for variables, functions and methods) start with a lower case letter and 
+words are concatenated using a capital letter.</p>
+<pre>
+ function getSelected()
+ local likeThisConvention</pre>
+<p>
+</p>
+<h3><a name="private_variables_and_functions">Private variables and functions</a></h3>
+<p>Lua has very few privacy restrictions. Instance variables of objects, for example, can be
+easily accessed the outside of the objet code. Functions and variables starting with an 
+underscore denote privacy, they should not be used outside of the core code that uses it.</p>
+<pre>
+ local _privateVariable
+ local function _doTheWork()</pre>
+<p>In general, identifiers starting with an underscore should be declared <code>local</code>.</p>
+<p>
+</p>
+<h3><a name="threads">Threads</a></h3>
+<p>Jive uses a separate thread for networking I/O. Functions and variables with are designed
+to be called from code running in the network thread use a prefix of t_. Mutual exclusion should
+be addressed when using or writing code identified as network thread side.</p>
+<pre>
+ function t_getHeaders()</pre>
+
+</body>
+
+</html>

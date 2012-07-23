@@ -1,0 +1,245 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+INVALID_MAC_TITLE
+	CS	Chyba
+	DA	Fejl
+	DE	Fehler
+	EN	Error
+	ES	Error
+	FI	Virhe
+	FR	Erreur
+	IT	Errore
+	NL	Fout
+	NO	Feil
+	PL	Błąd
+	RU	Ошибка
+	SV	Fel
+
+INVALID_MAC_TEXT
+	CS	Neplatná adresa mac nebo uuid. Kontaktujte zákaznickou podporu.
+	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
+	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
+	EN	Invalid mac address or uuid. Please contact support.
+	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
+	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
+	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
+	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
+	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
+	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
+	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
+
+INVALID_MAC_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+BSP_BRIGHTNESS
+	CS	Jas
+	DA	Lysstyrke
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
+	SV	Ljusstyrka
+
+BSP_BRIGHTNESS_ADJUST_HELP
+	CS	K nastavení jasu použijte kolečko.
+	DA	Brug drejeknappen til at justere lysstyrken.
+	DE	Sie können die Helligkeit mit dem Rad anpassen.
+	EN	Use the wheel to adjust the brightness.
+	ES	Use la rueda para ajustar el brillo.
+	FI	Voit säätää kirkkautta kiekolla.
+	FR	Utilisez la molette pour régler la luminosité.
+	IT	Usare la rotellina per regolare la luminosità.
+	NL	Gebruik het wiel om de helderheid aan te passen.
+	NO	Bruk hjulet til å justere lysstyrken.
+	PL	Użyj pokrętła, aby ustawić jasność.
+	RU	Используйте колесико для регулировки яркости.
+	SV	Justera ljusstyrkan med rullningshjulet.
+
+BSP_BRIGHTNESS_CTRL
+	CS	Ovládání jasu
+	DA	Lysstyrkeregulering
+	DE	Helligkeitsregelung
+	EN	Brightness Control
+	ES	Control de brillo
+	FI	Kirkkauden säätö
+	FR	Contrôle de luminosité
+	IT	Controllo della luminosità
+	NL	Helderheidscontrole
+	NO	Lysstyrke
+	PL	Regulacja jasności
+	RU	Управление яркостью
+	SV	Ljusstyrka
+
+BSP_BRIGHTNESS_AUTOMATIC
+	CS	Automatický jas
+	DA	Automatisk lysstyrke
+	DE	Automatische Helligkeit
+	EN	Automatic Brightness
+	ES	Brillo automático
+	FI	Automaattinen kirkkaus
+	FR	Luminosité automatique
+	IT	Luminosità automatica
+	NL	Automatische helderheid
+	NO	Automatisk lysstyrke
+	PL	Automatyczna regulacja jasności
+	RU	Автонастройка яркости
+	SV	Automatisk ljusstyrka
+
+BSP_BRIGHTNESS_MANUAL
+	CS	Manuální jas
+	DA	Manuel lysstyrke
+	DE	Manuelle Helligkeit
+	EN	Manual Brightness
+	ES	Brillo manual
+	FI	Manuaalinen kirkkaus
+	FR	Luminosité manuelle
+	IT	Luminosità manuale
+	NL	Handmatige helderheid
+	NO	Manuell lysstyrke
+	PL	Ręczna regulacja jasności
+	RU	Ручная настройка яркости
+	SV	Manuell ljusstyrka
+
+BSP_BRIGHTNESS_MIN
+	CS	Minimální jas (Auto)
+	DA	Mindste lysstyrke (automatisk)
+	DE	Minimale Helligkeit (automatisch)
+	EN	Minimal Brightness (Auto)
+	ES	Brillo mínimo (automático)
+	FI	Vähimmäiskirkkaus (autom.)
+	FR	Luminosité minimale (Auto)
+	IT	Luminosità minima (auto)
+	NL	Minimale helderheid (automatisch)
+	NO	Minimal lysstyrke (Automatisk)
+	PL	Minimalna jasność (automatycznie)
+	RU	Минимальная яркость (Авто)
+	SV	Minsta ljusstyrka (auto)
+
+BSP_BRIGHTNESS_MIN_ADJUST_HELP
+	CS	K nastavení minimálního jasu použijte kolečko.
+	DA	Brug hjulet til at justere lysstyrken.
+	DE	Sie können die minimale Helligkeit mit dem Rad anpassen.
+	EN	Use the wheel to adjust the minimal brightness.
+	ES	Use la rueda para ajustar el brillo al mínimo.
+	FI	Voit säätää kirkkautta kiekolla.
+	FR	Utilisez la molette pour régler la luminosité minimale.
+	IT	Usare la rotellina per regolare la luminosità minima.
+	NL	Gebruik het wiel om de minimale helderheid aan te passen.
+	NO	Bruk hjulet til å justere minimal lysstyrke.
+	PL	Użyj pokrętła, aby ustawić minimalną jasność.
+	RU	Используйте колесико для регулировки яркости.
+	SV	Justera ljusstyrkan med rullningshjulet.
+
+GOODBYE
+	CS	Nashledanou
+	DA	Farvel
+	DE	Auf Wiedersehen
+	EN	Goodbye
+	ES	Adiós
+	FI	Näkemiin
+	FR	Au revoir
+	IT	Arrivederci
+	NL	Tot ziens
+	NO	Farvel
+	PL	Do widzenia
+	RU	До свидания
+	SV	Hej då!
+
+BATTERY_LOW
+	CS	Nízký stav baterie
+	DA	Lavt batteriniveau
+	DE	Batterie schwach
+	EN	Battery Low
+	ES	Carga de pila baja
+	FI	Heikko paristojännite
+	FR	Niveau faible des piles
+	IT	Batteria quasi scarica
+	NL	Laag batterijvermogen
+	NO	Dårlig batteri
+	PL	Niski poziom naładowania baterii
+	RU	Аккумулятор разряжен
+	SV	Låg batterinivå
+
+BATTERY_LOW_2
+	CS	Prosím o dobití
+	DA	Vær sød at skifte batterier
+	DE	Bitte aufladen
+	EN	Please Charge Me
+	ES	Necesita carga
+	FI	Lataa minut
+	FR	Veuillez la recharger
+	IT	Ricaricare la batteria
+	NL	Laad mij op
+	NO	Lad meg opp
+	PL	Naładuj baterię
+	RU	Зарядите батарею
+	SV	Ladda mig
+
+BETA_HARDWARE_TITLE
+	CS	Beta Hardware
+	DA	Beta-hardware
+	DE	Beta-Hardware
+	EN	Beta Hardware
+	ES	Hardware beta
+	FI	Beeta-laitteisto
+	FR	Matériel Beta
+	IT	Hardware in versione beta
+	NL	Bèta-hardware
+	NO	Testmaskinvare
+	PL	Sprzęt w wersji beta
+	RU	Бета-версия оборудования
+	SV	Betamaskinvara
+
+BETA_HARDWARE_TEXT
+	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nNěkteré vlastnosti nemusí být funkční.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nNogle funktioner virker muligvis ikke.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nEinige Funktionen funktionieren möglicherweise nicht.
+	EN	This is a pre-production unit, hardware revision %s.\n\nSome features may not work.
+	ES	Esta es una unidad de pre-producción, revisión de hardware %s.\n\nPuede que algunas características no funcionen.
+	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nKaikki ominaisuudet eivät välttämättä toimi.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCertaines fonctionnalités risquent de ne pas fonctionner.
+	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nAlcune funzioni potrebbero non funzionare.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nSommige functies werken mogelijk niet.
+	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nIkke alle funksjoner fungerer nødvendigvis.
+	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nNiektóre funkcje mogą nie działać.
+	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nНекоторые функции могут не работать.
+	SV	Det här är en prototyp av maskinvaran med versionsbeteckning %s.\n\nDet kan hända att vissa funktioner inte fungerar.
+
+BETA_HARDWARE_EUTHANIZE
+	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nTato jednotka již není podporována, vraťte laskavě Logitech.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere. Send den tilbage til Logitech.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt. Bitte geben Sie es an Logitech zurück.
+	EN	This is a pre-production unit, hardware revision %s.\n\nThis unit is no longer supported, please return to Logitech.
+	ES	Ésta es una unidad de pre-producción, revisión de hardware %s.\n\nEsta unidad ya no es compatible, devuélvala a Logitech.
+	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nYksikköä ei enää tueta, palauta yksikkö Logitechille.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge. Veuillez la renvoyer à Logitech.
+	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nQuesta unità non è più supportata. Restituirla a Logitech.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund. Gelieve deze aan Logitech te retourneren.
+	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nDenne enheten støttes ikke lenger, returner den til Logitech.
+	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nTo urządzenie nie jest już obsługiwane, prosimy zwrócić je do firmy Logitech.
+	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nЭто устройство больше не поддерживается, верните его в Logitech.
+	SV	Det här är en prototyp av maskinvaran med versionsbeteckning %s.\n\nEnheten stöds inte längre och ska återlämnas till Logitech.
+

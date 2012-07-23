@@ -1,0 +1,50 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SSH
+	CS	Vzdálené přihlášení
+	DA	Fjernadgang
+	DE	Remote-Anmeldung
+	EN	Remote Login
+	ES	Inicio de sesión remoto
+	FI	Kaukosäätimen kirjautuminen
+	FR	Connexion à distance
+	IT	Accesso remoto
+	NL	Externe aanmelding
+	NO	Ekstern pålogging
+	PL	Zdalne logowanie
+	RU	Удаленный вход
+	SV	Fjärrinloggning
+
+SSH_ENABLE
+	CS	Povolit SSH
+	DA	Aktiver SSH
+	DE	SSH aktivieren
+	EN	Enable SSH
+	ES	Activar SSH
+	FI	Ota SSH käyttöön
+	FR	Activer SSH
+	IT	Attiva SSH
+	NL	SSH inschakelen
+	NO	Aktiver SSH
+	PL	Włącz protokół SSH
+	RU	Включить SSH
+	SV	Aktivera SSH
+
+SSH_HOWTO
+# SLT: don't translate "root" it's a username which needs to be used litterally
+	CS	Kořenové heslo pro toto zařízení je %s a můžete se k němu připojit na adrese %s
+	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
+	DE	Root-Kennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen
+	EN	The root password for this device is %s and you can connect to it on address %s
+	ES	La contraseña de root para este dispositivo es %s y se puede conectar en la dirección %s
+	FI	Käyttäjän root-salasana on %s. Voit yhdistää laitteen osoitteeseen %s
+	FR	Le mot de passe de l'utilisateur root pour ce dispositif est %s et vous pouvez vous y connecter à l'adresse %s
+	IT	La password dell'utente root di questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
+	NL	Het wachtwoord voor de gebruiker-root van dit apparaat is %s en je kunt er verbinding mee maken via het adres %s
+	NO	Passordet for brukeren root på denne enheten er %s, og du kan kople til den på adressen %s
+	PL	Hasło użytkownika głównego (root) dla tego urządzenia to %s. Z urządzeniem można połączyć się pod adresem %s.
+	RU	Пароль пользователя root этого устройства %s, и вы можете подключиться к нему по адресу %s
+	SV	Enhetens rootlösenord är %s, och du kan ansluta till den på adressen: %s
+

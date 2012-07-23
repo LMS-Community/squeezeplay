@@ -1,0 +1,139 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+AUDIO_PLAYBACK
+	CS	Přehrávání audia
+	DA	Lydafspilning
+	DE	Audio-Wiedergabe
+	EN	Audio Playback
+	ES	Reproducción de audio
+	FI	Äänentoisto
+	FR	Lecture audio
+	IT	Riproduzione audio
+	NL	Audio afspelen
+	NO	Lydavspilling
+	PL	Odtwarzanie audio
+	RU	Воспроизведение аудио
+	SV	Ljuduppspelning
+
+ENABLE_AUDIO
+	CS	Povolit přehrávání (BETA)
+	DA	Aktiver afspilning (BETA)
+	DE	Wiedergabe aktivieren (BETA)
+	EN	Enable Playback (BETA)
+	ES	Activar reproducción (BETA)
+	FI	Ota käyttöön toisto (BETA)
+	FR	Activer la lecture (BETA)
+	IT	Attiva riproduzione (BETA)
+	NL	Afspelen inschakelen (BETA)
+	NO	Aktiver avspilling (beta)
+	PL	Włącz odtwarzanie (BETA)
+	RU	Включить воспроизведение (бета)
+	SV	Aktivera uppspelning (BETA)
+
+DEBUG_AUDIO
+	CS	Ladit při přehrávání
+	DA	Fejlfinding ved afspilning
+	DE	Wiedergabe-Debug
+	EN	Debug Playback
+	ES	Depurar reproducción
+	FI	Virheenkorjaustoisto
+	FR	Débogage de la lecture
+	IT	Debug riproduzione
+	NL	Afspelen debuggen
+	NO	Feilsøk avspilling
+	PL	Debuguj odtwarzanie
+	RU	Отладка воспроизведения
+	SV	Felsök uppspelning
+
+FORMAT
+	CS	Formát:
+	DA	Format:
+	DE	Format:
+	EN	Format:
+	ES	Formato:
+	FI	Muoto:
+	FR	Format:
+	IT	Formato:
+	NL	Indeling:
+	NO	Format:
+	PL	Format:
+	RU	Формат:
+	SV	Format:
+
+DECODE_BUFFER
+	CS	Dekódovat vyrovnávací paměť:
+	DA	Afkodningsbuffer:
+	DE	Decode-Puffer
+	EN	Decode buffer:
+	ES	Búfer de descodificador:
+	FI	Purkupuskuri:
+	FR	Tampon de décodage:
+	IT	Buffer decodifica:
+	NL	Decoderingsbuffer:
+	NO	Dekoder buffer:
+	PL	Bufor dekodowania:
+	RU	Буфер декодирования:
+	SV	Avkodningsbuffert:
+
+OUTPUT_BUFFER
+	CS	Výstup vyrovnávací paměti:
+	DA	Outputbuffer:
+	DE	Ausgabe-Puffer
+	EN	Output buffer:
+	ES	Búfer de salida:
+	FI	Toistopuskuri:
+	FR	Tampon de sortie:
+	IT	Buffer di output:
+	NL	Uitvoerbuffer:
+	NO	Utsignalbuffer:
+	PL	Bufor wyjściowy:
+	RU	Буфер выхода:
+	SV	Utgångsbuffert:
+
+ELAPSED_SECS
+	CS	Uplynulý čas:
+	DA	Forløbet (sek.):
+	DE	Vergangene Sek.:
+	EN	Elapsed Secs:
+	ES	Segundos transcurridos:
+	FI	Kuluneet sekunnit:
+	FR	Secs écoulées:
+	IT	Secondi trascorsi:
+	NL	Verstreken seconden:
+	NO	Sekunder gått:
+	PL	Upłynęło sekund:
+	RU	Прошло секунд:
+	SV	Sekunder som förflutit:
+
+NUM_TRACKS
+	CS	Počet skladeb:
+	DA	Antal numre:
+	DE	Anzahl Titel:
+	EN	Num Tracks:
+	ES	Número de pistas:
+	FI	Raitojen määrä:
+	FR	Pistes num:
+	IT	N. brani:
+	NL	Tracknummers:
+	NO	Ant. spor:
+	PL	Ścieżki Num:
+	RU	Номера дорожек:
+	SV	Antal spår:
+
+DECODE_STATE
+	CS	Stav dekódování:
+	DA	Afkodningsstatus:
+	DE	Dekodierstatus:
+	EN	Decode State:
+	ES	Estado de descodificación:
+	FI	Purkutila:
+	FR	Etat de décodage:
+	IT	Stato decodifica:
+	NL	Decoderingsstatus:
+	NO	Omkodingsstatus:
+	PL	Stan dekodowania:
+	RU	Состояние декодирования:
+	SV	Avkodningsstatus:
+

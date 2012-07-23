@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Textarea - A text area widget.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_textarea_style__text_">jive.ui.Textarea(style, text)</a></li>
+		<li><a href="#jive_ui_textarea_gettext__">jive.ui.Textarea:getText()</a></li>
+		<li><a href="#jive_ui_textarea_settext_text_">jive.ui.Textarea:setText(text)</a></li>
+		<li><a href="#jive_ui_textarea_isscrollable__">jive.ui.Textarea:isScrollable()</a></li>
+		<li><a href="#jive_ui_textarea_scrollby_scroll_">jive.ui.Textarea:scrollBy(scroll)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A text area widget, extends <em>jive.ui.Widget</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a new text area
+ local textarea = jive.ui.Textarea(&quot;text&quot;, &quot;This is some\ntext that spans\nseveral lines&quot;)</pre>
+<pre>
+ -- Scroll the text down by 2 lines
+ textarea:scroll(2)</pre>
+<pre>
+ -- Set the text
+ textarea:setText(&quot;Different text&quot;)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Label includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>bg</strong> : the background color, defaults to no background color.</p>
+<p><strong>fg</strong> : the foreground color, defaults to black.</p>
+<p><strong>bg_img</strong> : the background image.</p>
+<p><strong>font</strong> : the text font, a <em>jive.ui.Font</em> object.</p>
+<p><strong>line_height</strong> : the line height to use, defaults to the font ascend height.
+=back</p>
+<p><strong>text_align</strong> : the text alignment.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_textarea_style__text_">jive.ui.Textarea(style, text)</a></h2>
+<p>Construct a new Textarea widget. <em>style</em> is the widgets style. <em>text</em> is the initial text displayed.</p>
+<p>
+</p>
+<h2><a name="jive_ui_textarea_gettext__">jive.ui.Textarea:getText()</a></h2>
+<p>Returns the text contained in this Textarea.</p>
+<p>
+</p>
+<h2><a name="jive_ui_textarea_settext_text_">jive.ui.Textarea:setText(text)</a></h2>
+<p>Sets the text in the Textarea to <em>text</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_textarea_isscrollable__">jive.ui.Textarea:isScrollable()</a></h2>
+<p>Returns true if the textarea is scrollable, otherwise it returns false.</p>
+<p>
+</p>
+<h2><a name="jive_ui_textarea_scrollby_scroll_">jive.ui.Textarea:scrollBy(scroll)</a></h2>
+<p>Scroll the Textarea by <em>scroll</em> items. If <em>scroll</em> is negative the text scrolls up, otherwise the text scrolls down.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+# Installation directories
+# System's libraries directory (where binary libraries are installed)
+LUA_LIBDIR= ${PREFIX}/lib/lua/5.1
+# System's lua directory (where Lua libraries are installed)
+LUA_DIR= ${PREFIX}/share/lua/5.1
+# Lua includes directory
+LUA_INC= ${PREFIX}/include
+
+LIBNAME= $T.so.$V
+#COMPAT_DIR= /Users/fred/Programs/lua/compat-5.1r5
+
+# Compilation parameters
+CWARNS = -Wall -pedantic \
+        -Waggregate-return \
+        -Wcast-align \
+        -Wmissing-prototypes \
+        -Wstrict-prototypes \
+        -Wnested-externs \
+        -Wpointer-arith \
+        -Wshadow \
+        -Wwrite-strings
+
+CFLAGS := $(CWARNS) -ansi -O2 -I$(LUA_INC) -I$(EXPAT_INC) $(PLATFORM_CFLAGS)
+CC ?= gcc

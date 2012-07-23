@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Choice - A widget to select an item from a list.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_choice_style__options__closure__selectedindex_">jive.ui.Choice(style, options, closure, selectedIndex)</a></li>
+		<li><a href="#jive_ui_choice_getselectedindex__">jive.ui.Choice:getSelectedIndex()</a></li>
+		<li><a href="#jive_ui_choice_getselected__">jive.ui.Choice:getSelected()</a></li>
+		<li><a href="#jive_ui_choice_setselectedindex_selectedindex_">jive.ui.Choice:setSelectedIndex(selectedIndex)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A choice widget, extends <em>jive.ui.Widget</em>. This widget lets the user select a value from a set of options.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- New choice with options On and Off, Off is selected
+ local choice = jive.ui.Choice(
+        &quot;choice&quot;, 
+        { &quot;On&quot;, &quot;Off&quot; },
+    function(object, selectedIndex)
+            print(&quot;Choice is &quot; .. tostring(selectedIndex))
+    end,
+        2
+ )</pre>
+<pre>
+ -- Change checkbox state
+ choice:setSelectedIndex(1)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Choice includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>bg</strong> : the background color, defaults to no background color.</p>
+<p><strong>fg</strong> : the foreground color, defaults to black.</p>
+<p><strong>bg_img</strong> : the background image.</p>
+<p><strong>font</strong> : the text font, a <em>jive.ui.Font</em> object.</p>
+<p><strong>line_height</strong> : the line height to use, defaults to the font ascend height.
+=back</p>
+<p><strong>text_align</strong> : the text alignment.</p>
+<p><strong>icon_align</strong> : the icon alignment.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_choice_style__options__closure__selectedindex_">jive.ui.Choice(style, options, closure, selectedIndex)</a></h2>
+<p>Constructs a Choice widget. <em>style</em> is the widgets style. <em>options</em> is a table containing the list of options. <em>selectedIndex</em> is the index of the selected option, this defaults to 1 (i.e. the first option in the list). <em>closure</em> is a function that will get called whenever the selected value is changed by the
+user; the function prototype is:
+ function(choiceObject, selectedIndex)</p>
+<p>
+</p>
+<h2><a name="jive_ui_choice_getselectedindex__">jive.ui.Choice:getSelectedIndex()</a></h2>
+<p>Returns the selected option index.</p>
+<p>
+</p>
+<h2><a name="jive_ui_choice_getselected__">jive.ui.Choice:getSelected()</a></h2>
+<p>Returns the selected option.</p>
+<p>
+</p>
+<h2><a name="jive_ui_choice_setselectedindex_selectedindex_">jive.ui.Choice:setSelectedIndex(selectedIndex)</a></h2>
+<p>Sets the selected option index. <em>selectedIndex</em> is the index of the option to select; 
+it is coerced to the next option if out of bounds (i.e. setSelectedIndex(#options + 1) 
+selects the first option).</p>
+<p>Note that using this function calls the closure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

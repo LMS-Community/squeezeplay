@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.Applet - The applet base class.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_applet_init__">jive.Applet:init()</a></li>
+		<li><a href="#jive_applet_free__">jive.Applet:free()</a></li>
+		<li><a href="#self_tiewindow_window_">self:tieWindow(window)</a></li>
+		<li><a href="#self_tiewindow_window_">self:tieWindow(window)</a></li>
+		<li><a href="#jive_applet_setsettings_settings_">jive.Applet:setSettings(settings)</a></li>
+		<li><a href="#jive_applet_getsettings__">jive.Applet:getSettings()</a></li>
+		<li><a href="#jive_applet_string_token_">jive.Applet:string(token)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>jive.Applet is the base class for all Jive applets. In Jive,
+applets are very flexible in the methods they implement; this
+class implements a very simple framework to manage localization,
+settings and memory management.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_applet_init__">jive.Applet:init()</a></h2>
+<p>Called to initialize the Applet.</p>
+<p>In the object __init method the applet settings and localized strings
+are not available.</p>
+<p>
+</p>
+<h2><a name="jive_applet_free__">jive.Applet:free()</a></h2>
+<p>This is called when the Applet will be freed. It must make sure all
+data is unreferenced to allow for garbage collection. The method
+should return true if the applet can be freed, or false if it should
+be left loaded into memory. The default return value in jive.Applet is
+true.</p>
+<p>
+</p>
+<h2><a name="self_tiewindow_window_">self:tieWindow(window)</a></h2>
+<p>Tie the <em>window</em> to this applet. When all tied windows are poped 
+from the window stack then this applet is freed.</p>
+<p>
+</p>
+<h2><a name="self_tiewindow_window_">self:tieWindow(window)</a></h2>
+<p>Tie the <em>window</em> to this applet, and then show the <em>window</em>. When all 
+tied windows are poped from the window stack then this applet is freed.</p>
+<p>
+</p>
+<h2><a name="jive_applet_setsettings_settings_">jive.Applet:setSettings(settings)</a></h2>
+<p>Sets the applet settings to <em>settings</em>.</p>
+<p>
+</p>
+<h2><a name="jive_applet_getsettings__">jive.Applet:getSettings()</a></h2>
+<p>Returns a table with the applet settings</p>
+<p>
+</p>
+<h2><a name="jive_applet_string_token_">jive.Applet:string(token)</a></h2>
+<p>Returns a localised version of token</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

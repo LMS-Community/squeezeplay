@@ -1,0 +1,64 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+RESET_FACTORY_RESET
+	CS	Obnovit tovární nastavení
+	DA	Gendan fabriksindstillinger
+	DE	Standardeinstellungen wiederherstellen
+	EN	Restore Factory Settings
+	ES	Restaurar configuración de fábrica
+	FI	Palauta tehdasasetukset
+	FR	Rétablir les réglages d'usine
+	IT	Ripristina impostazioni di fabbrica
+	NL	Fabrieksinstellingen herstellen
+	NO	Gjenopprett fabrikkinnstillingene
+	PL	Przywróć ustawienia fabryczne
+	RU	Восстановить заводские настройки
+	SV	Återställ standardinställningarna
+
+RESET_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+RESET_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+RESET_RESETTING
+	CS	\nRestartování
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
+

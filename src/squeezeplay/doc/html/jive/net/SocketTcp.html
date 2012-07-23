@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.SocketTcp - A TCP socket to send/recieve data using a NetworkThread</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_sockettcp_jnt__ip__port__name_">jive.net.SocketTcp(jnt, ip, port, name)</a></li>
+		<li><a href="#jive_net_sockettcp_connected__">jive.net.SocketTcp:connected()</a></li>
+		<li><a href="#tostring_asocket_"><code>tostring(aSocket)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Implements a tcp socket that sends/receive data using a NetworkThread. 
+jive.net.SocketTcp is a subclass of <em>jive.net.Socket</em> and therefore inherits
+its methods.
+This class is mainly designed as a superclass for <em>jive.net.SocketHttp</em> and
+therefore is not fully useful as is.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a jive.net.SocketTcp
+ local mySocket = jive.net.SocketTcp(jnt, &quot;192.168.1.1&quot;, 9090, &quot;cli&quot;)</pre>
+<pre>
+ -- print the connected state
+ if mySocket:connected() then
+   print(tostring(mySocket) .. &quot; is connected&quot;)
+ end</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_sockettcp_jnt__ip__port__name_">jive.net.SocketTcp(jnt, ip, port, name)</a></h2>
+<p>Creates a TCP/IP socket named <em>name</em> to interface with the given <em>jnt</em> 
+(a <em>jive.net.NetworkThread</em> instance). <em>name</em> is used for debugging and
+defaults to ``''. <em>ip</em> and <em>port</em> are the IP address and port to 
+send/receive data from/to.
+Must be called by subclasses.</p>
+<p>
+</p>
+<h2><a name="jive_net_sockettcp_connected__">jive.net.SocketTcp:connected()</a></h2>
+<p>Returns the connected state of the socket. This is mutexed
+to enable querying the state from the main thread while operations
+on the socket occur network thread-side.</p>
+<p>
+</p>
+<h2><a name="tostring_asocket_"><code>tostring(aSocket)</code></a></h2>
+<p>if <em>aSocket</em> is a <em>jive.net.SocketTcp</em>, prints
+ SocketTcp {name}
+
+</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

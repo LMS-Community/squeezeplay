@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.SimpleMenu - A simple menu widget.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_menu_setcomparator_comp_">jive.ui.Menu:setComparator(comp)</a></li>
+		<li><a href="#jive_ui_menu_itemcomparatoralpha">jive.ui.Menu.itemComparatorAlpha</a></li>
+		<li><a href="#jive_ui_menu_itemcomparatorweightalpha">jive.ui.Menu.itemComparatorWeightAlpha</a></li>
+		<li><a href="#jive_ui_menu_numitems__">jive.ui.Menu:numItems()</a></li>
+		<li><a href="#jive_ui_menu_getitem_index_">jive.ui.Menu:getItem(index)</a></li>
+		<li><a href="#jive_ui_menu_getindex_item_">jive.ui.Menu:getIndex(item)</a></li>
+		<li><a href="#jive_ui_menu_setitems_items_">jive.ui.Menu:setItems(items)</a></li>
+		<li><a href="#jive_ui_menu_additem_item_">jive.ui.Menu:addItem(item)</a></li>
+		<li><a href="#jive_ui_menu_insertitem_item__index_">jive.ui.Menu:insertItem(item, index)</a></li>
+		<li><a href="#jive_ui_menu_replaceindex_item__index_">jive.ui.Menu:replaceIndex(item, index)</a></li>
+		<li><a href="#jive_ui_menu_removeindex_index_">jive.ui.Menu:removeIndex(index)</a></li>
+		<li><a href="#jive_ui_menu_removeitem_item_">jive.ui.Menu:removeItem(item)</a></li>
+		<li><a href="#jive_ui_menu_updatedindex_index_">jive.ui.Menu:updatedIndex(index)</a></li>
+		<li><a href="#jive_ui_menu_updateditem_item_">jive.ui.Menu:updatedItem(item)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A simple menu widget, extends <em>jive.ui.Menu</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a new menu
+ local menu = jive.ui.Menu(&quot;menu&quot;,
+                   {
+                           {
+                                   text = &quot;Item 1&quot;,
+                                   icon = widget1,
+                                   callback = function1
+                           ),
+                           {
+                                   text = &quot;Item 2&quot;,
+                                   icon = widget2,
+                                   callback = function2
+                           ),
+                   })</pre>
+<pre>
+ -- Sort the menu alphabetically
+ menu:setComparator(SimpleMenu.itemComparatorAlpha)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Label includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>itemHeight</strong> : the height of each menu item.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_menu_setcomparator_comp_">jive.ui.Menu:setComparator(comp)</a></h2>
+<p>Sets the menu comparator to <em>comp</em> used to sort the menu items. By default
+the menu is not sorted and elements will be displayed in the order they are
+added.</p>
+<p>--]]
+function setComparator(self, comp)
+	self.comparator = comp</p>
+<pre>
+        if comp ~= nil then
+                table.sort(self.items, comp)
+        end
+end</pre>
+<p>--[[</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_itemcomparatoralpha">jive.ui.Menu.itemComparatorAlpha</a></h2>
+<p>Item comparator to sort items alphabetically.</p>
+<p>--]]
+function itemComparatorAlpha(a, b)
+	return <code>tostring(a.text)</code> &lt; <code>tostring(b.text)</code>
+end</p>
+<p>--[[</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_itemcomparatorweightalpha">jive.ui.Menu.itemComparatorWeightAlpha</a></h2>
+<p>Item comparator to sort items using item.weight as a primary key, and
+item.text as a secondary key.</p>
+<p>--]]
+function itemComparatorWeightAlpha(a, b)
+	local w = a.weight - b.weight</p>
+<pre>
+        if w == 0 then
+                return tostring(a.text) &lt; tostring(b.text)
+        end
+        return (w &lt; 0)
+end</pre>
+<p>--[[</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_numitems__">jive.ui.Menu:numItems()</a></h2>
+<p>Returns the top number of items in the menu.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_getitem_index_">jive.ui.Menu:getItem(index)</a></h2>
+<p>Returns the item at the index <em>index</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_getindex_item_">jive.ui.Menu:getIndex(item)</a></h2>
+<p>Returns the index of item <em>item</em>, or nil if it is not in this menu.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_setitems_items_">jive.ui.Menu:setItems(items)</a></h2>
+<p>Efficiently replaces the current menu items, with <em>items</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_additem_item_">jive.ui.Menu:addItem(item)</a></h2>
+<p>Add <em>item</em> to the end of the menu. The item is a table with the following entries: text, icon (optional), callback (optional).</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_insertitem_item__index_">jive.ui.Menu:insertItem(item, index)</a></h2>
+<p>Insert <em>item</em> into the menu at <em>index</em>. The item can be any type of widget. The item is a table with the following entries: text, icon (optional), callback (optional).</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_replaceindex_item__index_">jive.ui.Menu:replaceIndex(item, index)</a></h2>
+<p>Replace the item at <em>index</em> with <em>item</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_removeindex_index_">jive.ui.Menu:removeIndex(index)</a></h2>
+<p>Remove the item at <em>index</em> from the menu. Returns the item removed from
+the menu.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_removeitem_item_">jive.ui.Menu:removeItem(item)</a></h2>
+<p>Remove <em>item</em> from the menu. Returns the item removed from the menu.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_updatedindex_index_">jive.ui.Menu:updatedIndex(index)</a></h2>
+<p>Notifies the menu with the items at <em>index</em> has changed. If neccessary this will cause the menu to be redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_menu_updateditem_item_">jive.ui.Menu:updatedItem(item)</a></h2>
+<p>Notifies the menu with the item <em>item</em> has changed. If neccessary this will cause the menu to be redrawn.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

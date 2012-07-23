@@ -1,0 +1,1 @@
+"%VS90COMNTOOLS%\..\IDE\devenv.com" /clean "RELEASE|win32" Jive.sln

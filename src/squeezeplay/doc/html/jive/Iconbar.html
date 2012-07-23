@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.Iconbar - icon raw at the bottom of the screen</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#iconbar_setplaymode_val_">Iconbar:setPlaymode(val)</a></li>
+		<li><a href="#iconbar_setrepeat_val_">Iconbar:setRepeat(val)</a></li>
+		<li><a href="#iconbar_setshuffle_val_">Iconbar:setShuffle(val)</a></li>
+		<li><a href="#iconbar_update__">Iconbar:update()</a></li>
+		<li><a href="#iconbar__"><code>Iconbar()</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The Iconbar class implements the Jive iconbar at the bottom of the screen. It refreshes itself every second.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create the iconbar (this done for you in JiveMain)
+ iconbar = Iconbar()</pre>
+<pre>
+ -- Update playmode icon
+ iconbar:setPlaymode('stop')</pre>
+<pre>
+ -- force iconbar update
+ iconbar:update()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="iconbar_setplaymode_val_">Iconbar:setPlaymode(val)</a></h2>
+<p>Set the playmode icon of the iconbar. Values are nil (off), ``stop'', ``play'' or ``pause''.</p>
+<p>
+</p>
+<h2><a name="iconbar_setrepeat_val_">Iconbar:setRepeat(val)</a></h2>
+<p>Set the repeat icon of the iconbar. Values are nil (no repeat), 1 for repeat single track and 2 for repeat all playlist tracks.</p>
+<p>
+</p>
+<h2><a name="iconbar_setshuffle_val_">Iconbar:setShuffle(val)</a></h2>
+<p>Set the shuffle icon of the iconbar. Values are nil (no shuffle), 1 for shuffle by track and 2 for shuffle by album.</p>
+<p>
+</p>
+<h2><a name="iconbar_update__">Iconbar:update()</a></h2>
+<p>Updates the iconbar.</p>
+<p>
+</p>
+<h2><a name="iconbar__"><code>Iconbar()</code></a></h2>
+<p>Creates the iconbar.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

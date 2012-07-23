@@ -1,0 +1,5 @@
+# OS dependent
+LIB_OPTION= -shared -fPIC -L${PREFIX}/lib
+PLATFORM_CFLAGS = -fPIC
+# Expat includes directory
+EXPAT_INC= ${PREFIX}/include

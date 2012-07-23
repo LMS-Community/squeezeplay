@@ -1,0 +1,335 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+
+BEGIN_UPDATE
+	CS	Zahájit aktualizaci
+	DA	Start opdateringen
+	DE	Update starten
+	EN	Begin update
+	ES	Iniciar actualización
+	FI	Aloita päivitys
+	FR	Commencer la mise à jour
+	IT	Inizia aggiornamento
+	NL	Update starten
+	NO	Start oppdatering
+	PL	Rozpocznij aktualizację
+	RU	Начать обновление
+	SV	Påbörja uppdatering
+
+CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+UPDATE_FROM_REMOVABLE_MEDIA
+	CS	Aktualizovat z výměnného média
+	DA	Opdater fra flytbart medie
+	DE	Aktualisierung vom Wechseldatenträger
+	EN	Update from removable media
+	ES	Actualizar desde medios extraíbles
+	FI	Päivitä siirrettävästä tietovälineestä
+	FR	Mise à jour à partir d'un support amovible
+	IT	Aggiorna da supporto rimovibile
+	NL	Update van verwijderbare media
+	NO	Oppdater fra flyttbar stasjon
+	PL	Aktualizacja z nośnika wymiennego
+	RU	Обновить со съемного носителя
+	SV	Uppdatera från flyttbart medium
+
+UPDATE_TO_X
+	CS	Aktualizovat do %s
+	DA	Opdatering til %s
+	DE	Aktualisierung auf %s
+	EN	Update to %s
+	ES	Actualizar a %s
+	FI	Päivitä kohteeseen %s
+	FR	Mettre à jour vers %s
+	IT	Aggiorna a %s
+	NL	Naar %s updaten
+	NO	Oppdater til %s
+	PL	Aktualizuj do %s
+	RU	Обновить до %s
+	SV	Uppdatera till %s
+
+UPDATE_FAILURE
+	CS	Aktualizace selhala
+	DA	Opdateringen mislykkedes
+	DE	Update-Fehler
+	EN	Update failed
+	ES	Fallo al actualizar
+	FI	Päivitys epäonnistui
+	FR	Echec de la mise à jour
+	IT	Aggiornamento non riuscito
+	NL	Update mislukt
+	NO	Oppdatering mislyktes
+	PL	Aktualizacja nie powiodła się
+	RU	Ошибка при обновлении
+	SV	Uppdateringen misslyckades
+
+UPDATE_FAILURE_HELP
+	CS	Při instalaci této aktualizace došlo k potížím. Zkuste laskavě znovu nebo kontaktujte asistenční službu.
+	DA	Der opstod et problem under installationen af denne opdatering. Prøv igen, eller kontakt kundeservice.
+	DE	Fehler bei der Installation des Updates. Versuchen Sie es noch einmal oder wenden Sie sich an den Kundendienst.
+	EN	There was a problem installing this update. Please try again, or contact support.
+	ES	Se ha producido un problema al instalar la actualización. Vuelva a intentarlo o póngase en contacto con el servicio de asistencia.
+	FI	Tätä päivitystä asennettaessa ilmeni ongelma. Yritä uudelleen tai ota yhteys tukeen.
+	FR	Un problème est survenu lors de l'installation de cette mise à jour. Essayez à nouveau ou contactez le support.
+	IT	Si è verificato un problema durante l'installazione dell'aggiornamento. Riprovare o contattare l'assistenza.
+	NL	Er is een probleem opgetreden bij de installatie van deze update. Probeer het opnieuw, of neem contact op met de helpdesk.
+	NO	Det oppsto et problem med installeringen av denne oppdateringen. Prøv på nytt, eller kontakt kundestøtte.
+	PL	Wystąpił błąd podczas instalowania tej aktualizacji. Spróbuj ponownie lub skontaktuj się z działem wsparcia.
+	RU	Ошибка при установке обновления. Повторите попытку или обратитесь в службу поддержки.
+	SV	Det uppstod ett fel när uppdateringen skulle installeras. Försök igen eller ta kontakt med support.
+
+UPDATE_TRY_AGAIN
+	CS	Zkuste to znovu...
+	DA	Prøv igen...
+	DE	Erneut versuchen...
+	EN	Try again...
+	ES	Vuelva a intentarlo...
+	FI	Yritä uudelleen...
+	FR	Veuillez réessayer...
+	IT	Riprova...
+	NL	Probeer opnieuw...
+	NO	Prøv igjen ...
+	PL	Spróbuj ponownie...
+	RU	Повторите попытку...
+	SV	Försök igen ...
+
+UPDATE_USB
+	CS	Rozhraní USB
+	DA	Usb-port
+	DE	USB
+	EN	USB
+	ES	USB
+	FI	USB
+	FR	USB
+	IT	USB
+	NL	USB
+	NO	USB-port
+	PL	USB
+	RU	USB
+	SV	USB-port
+
+UPDATE_SD
+	CS	SD
+	DA	SD
+	DE	SD
+	EN	SD
+	ES	SD
+	FI	SD
+	FR	SD
+	IT	SD
+	NL	SD
+	NO	SD
+	PL	Karta SD
+	RU	SD
+	SV	SD
+
+UPDATE_DOWNLOAD
+	CS	Stahování
+	DA	Henter
+	DE	Daten werden heruntergeladen
+	EN	Downloading
+	ES	Descargando
+	FI	Ladataan
+	FR	Téléchargement en cours...
+	IT	Download in corso...
+	NL	Downloaden
+	NO	Laster ned
+	PL	Pobieranie
+	RU	Загрузка
+	SV	Hämtar
+
+UPDATE_VERIFY
+	CS	Instalace
+	DA	Installerer
+	DE	Installieren
+	EN	Installing
+	ES	Instalar
+	FI	Asentaminen
+	FR	Installation
+	IT	Installazione
+	NL	Installeren
+	NO	Installerer
+	PL	Instalowanie
+	RU	Установка
+	SV	Installerar
+
+UPDATE_REBOOT
+	CS	\nRestartování
+	DA	Genstarter
+	DE	Neustart
+	EN	Restarting
+	ES	Reiniciando
+	FI	Käynnistetään uudelleen
+	FR	Redémarrage
+	IT	Riavvio
+	NL	Bezig met opnieuw starten
+	NO	Starter på nytt
+	PL	Restartowanie
+	RU	Перезапуск
+	SV	Startar om
+
+UPDATE_BEGIN_UPGRADE
+	CS	Je dostupná nová aktualizace softwaru. Stažení a instalace této aktualizace může trvat několik minut.
+	DA	Der er en ny softwareopdatering. Det kan tage et par minutter at hente og installere den.
+	DE	Ein neues Software-Update ist verfügbar. Es kann ein paar Minuten dauern, bis das Update heruntergeladen und installiert wurde.
+	EN	A new software update is available. It may take a few minutes to download and install this update.
+	ES	Existe una nueva actualización de software. Puede que se tarde unos minutos en descargar e instalar esta actualización.
+	FI	Uusi ohjelmisto on käytettävissä. Tämän päivityksen lataaminen ja asentaminen saattaa kestää joitakin minuutteja.
+	FR	Une nouvelle mise à jour logicielle est disponible. Son téléchargement et son installation peuvent prendre quelques minutes.
+	IT	È disponibile un nuovo aggiornamento del software. Per scaricarlo e installarlo potrebbero essere necessari alcuni minuti.
+	NL	Er is een nieuwe software-update beschikbaar. Het kan enkele minuten duren om deze update te downloaden en te installeren.
+	NO	En ny programvareoppdatering er tilgjengelig. Det kan ta noen minutter å laste ned og installere denne oppdateringen.
+	PL	Dostępna jest nowa aktualizacja oprogramowania. Pobranie i zainstalowanie aktualizacji może zająć kilka minut.
+	RU	Доступно новое обновление ПО. Для загрузки и установки обновления может потребоваться несколько минут.
+	SV	En ny uppdatering finns tillgänglig. Det kan ta några minuter innan den har laddats ner och installerats.
+
+UPDATE_BEGIN_REINSTALL
+	CS	Software pro tento Squeezebox je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DA	Softwaren til denne Squeezebox er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
+	DE	Die Software für diese Squeezebox ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
+	EN	The software for this Squeezebox is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este Squeezebox está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FI	Tämän Squeezeboxin ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
+	FR	Le logiciel de cette Squeezebox est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	IT	Il software di questo Squeezebox è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze Squeezebox is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
+	NO	Programvaren for denne enheten er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.
+	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
+	SV	Programvaran för den här Squeezebox-enheten är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
+
+UPDATE_BEGIN_REINSTALL_JIVE
+	CS	Software pro tento ovladač je aktuální. Chcete-li znovu nainstalovat verzi %s, zvolte Zahájit aktualizaci.
+	DA	Softwaren til denne fjernbetjening er allerede up to date. Hvis du vil geninstallere version %s, skal du vælge Start opdatering.
+	DE	Die Software für diesen Controller ist aktuell. Wenn Sie Version %s erneut installieren möchten, wählen Sie 'Update starten'.
+	EN	The software for this controller is up to date. If you'd like to reinstall version %s, choose Begin Update.
+	ES	El software de este controlador está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
+	FI	Tämän ohjaimen ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
+	FR	Le logiciel de ce contrôleur est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	IT	Il software di questo telecomando è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
+	NL	De software voor deze controller is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
+	NO	Programvaren for denne fjernkontrollen er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.
+	PL	Oprogramowanie tego pilota zdalnego sterowania jest aktualne. Aby ponownie zainstalować wersję %s, wybierz opcję Rozpocznij aktualizację.
+	RU	ПО удаленного устройства не нуждается в обновлении. Если требуется переустановить версию %s, выберите "Начало обновления".
+	SV	Controller-programvaran är uppdaterad. Om du vill installera om version %s väljer du Påbörja uppdatering.
+
+UPDATE_BEGIN_REMOVABLE_MEDIA
+	CS	Instalovat %s z výměnného média.
+	DA	Installer %s fra flytbart medie.
+	DE	%s vom Wechseldatenträger installieren.
+	EN	Install %s from removable media.
+	ES	Instalar %s desde medios extraíbles.
+	FI	Asenna %s siirrettävästä tietovälineestä.
+	FR	Installet %s à partir du support amovible.
+	IT	Installa %s da supporto rimovibile.
+	NL	Installeer %s via verwijderbare media.
+	NO	Installer %s fra flyttbar stasjon.
+	PL	Instaluj %s z nośnika wymiennego.
+	RU	Установить %s со съемного носителя.
+	SV	Installera %s från flyttbart medium.
+
+UPDATE_BATTERY
+	CS	Dobijte baterii
+	DA	Lad batteriet op
+	DE	Batterie aufladen
+	EN	Charge Battery
+	ES	Cargar batería
+	FI	Lataa akku
+	FR	Charger la batterie
+	IT	Carica batteria
+	NL	Batterij opladen
+	NO	Lad batteriet
+	PL	Naładuj baterię
+	RU	Зарядка батареи
+	SV	Ladda batteriet
+
+UPDATE_BATTERY_HELP
+	CS	Vaše baterie je vybitá. Připojte AC napájení (nabíječku nebo kabel), aby mohla pokračovat aktualizace tohoto softwaru.
+	DA	Batteriet er næsten fladt. Tilslut lysnetadapteren eller opladerkablet inden du fortsætter med firmwareopdateringen.
+	DE	Der Akku ist schwach. Schließen Sie das Gerät an eine Steckdose oder ein Ladegerät an, um mit der Software-Aktualisierung fortzufahren.
+	EN	Your battery is very low.  Please attach AC power (charger or cable) to continue with this software upgrade.
+	ES	Queda poca batería. Conecte una fuente de CA (cargador o cable) para continuar con la actualización del software.
+	FI	Akun lataus on alhainen.  Kytke laite verkkovirtaan (laturilla tai johdolla), jotta voit jatkaa ohjelmiston päivitystä.
+	FR	La batterie est très faible. Connectez le dispositif à une source d'alimentation (chargeur ou câble) pour continuer la mise à niveau du logiciel.
+	IT	La batteria è quasi scarica. Per continuare l'aggiornamento del software, collegare il cavo dell'alimentazione elettrica (caricatore o cavo).
+	NL	Het batterijvermogen is erg laag. Sluit de netvoeding aan (oplader of draad) om deze software-upgrade voort te zetten.
+	NO	Svært lavt batteri. Kople til stikkontakt for å fortsette med programvareoppgraderingen.
+	PL	Bardzo niski poziom naładowania baterii. Podłącz zasilanie (ładowarkę lub kabel), aby kontynuować aktualizację oprogramowania.
+	RU	Аккумулятор разряжен. Чтобы продолжить обновление программного обеспечения, присоедините источник переменного тока (устройство зарядки или кабель).
+	SV	Batteriet är svagt. Sätt fjärrkontrollen i laddaren om du vill fortsätta med programuppdateringen.
+
+UPDATE_BATTERY_HELP_JIVE
+	CS	Vložte ovládání do nabíječky, aby mohl pokračovat upgrade softwaru.
+	DA	Pladser venligst denne fjernbetjening i opladeren for at fortsætte med opdateringen af programmel.
+	DE	Stellen Sie die Fernbedienung in die Ladestation, um die Software-Aktualisierung fortzusetzen.
+	EN	Please put this remote in the charger to continue with the software upgrade.
+	ES	Coloque este mando en el cargador para continuar con la actualización del software.
+	FI	Laita kaukosäädin latautumaan, jotta voit jatkaa ohjelmiston päivittämistä.
+	FR	Veuillez placer la télécommande sur son dispositif de charge afin de poursuivre la mise à niveau du logiciel.
+	IT	Collocare il telecomando nella base di ricarica per continuare l'aggiornamento del software.
+	NL	Zet deze afstandsbediening in de oplader om de software-upgrade voort te zetten.
+	NO	Plasser denne fjernkontrollen i laderen for å fortsette med programvareoppgraderingen.
+	PL	Umieść pilota zdalnego sterowania w ładowarce, aby kontynuować aktualizację oprogramowania.
+	RU	Чтобы продолжить обновление ПО, установите пульт в устройство зарядки.
+	SV	Sätt fjärrkontrollen i laddaren om du vill fortsätta med programuppdateringen.
+
+UPDATE_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+UPDATE_7.4_UPGRADE_MESSAGE_JIVE
+# SLT: this needs to remain squeezenetwork.com. It will present the user information about the change to mysqueezebox.com
+	CS	Právě jste provedli aktualizaci na firmware verze 7.4! Jde o velkou aktualizaci obsahující mnoho změn. Další informace naleznete na www.squeezenetwork.com.
+	DA	Du har opgraderet firmwaren til version 7.4! Der er sket mange ændringer siden forrige version. Du kan læse mere på www.squeezenetwork.com.
+	DE	Sie haben auf die Firmware-Version 7.4 aktualisiert! Dies ist ein wichtiges Upgrade und umfasst zahlreiche Änderungen. Weitere Informationen finden Sie unter www.squeezenetwork.com.
+	EN	You have just upgraded to firmware version 7.4! This is a major upgrade and there have been many changes. Please visit www.squeezenetwork.com for more information.
+	ES	Acaba de realizar la actualización a la versión 7.4 del firmware. Es una actualización importante y se han producido muchos cambios. Visite www.squeezenetwork.com si desea más información.
+	FI	Olet juuri päivittänyt laitteisto-ohjelmiston versioon 7.4! Tämä on suuri päivitys ja muutoksia on ollut paljon. Saat lisätietoja osoitteesta www.squeezenetwork.com.
+	FR	Vous venez de passer à la version 7.4 du micrologiciel! Cette mise à niveau est importante et comporte de nombreux changements. Pour plus d'informations, veuillez vous rendre sur le site www.squeezenetwork.com.
+	IT	È stato eseguito l'aggiornamento del firmware alla versione 7.4. L'aggiornamento comporta una serie di modifiche importanti. Visitare www.squeezenetwork.com per ulteriori informazioni.
+	NL	Je hebt zojuist een upgrade naar firmwareversie 7.4 uitgevoerd. Dit is een belangrijke upgrade, en er is een groot aantal wijzigingen aangebracht. Ga naar www.squeezenetwork.com voor meer informatie.
+	NO	Du har oppgradert til fastvareversjon 7.4. Dette er en viktig oppgradering, og det har skjedd mange endringer. Gå til www.squeezenetwork.com for mer informasjon.
+	PL	Dokonano aktualizacji oprogramowania układowego do wersji 7.4! Jest to ważna aktualizacja zawierająca wiele zmian. Aby uzyskać więcej informacji, odwiedź witrynę www.squeezenetwork.com.
+	RU	Выполнено обновление микропрограммного обеспечения до версии 7.4. Это важное обновление, содержащее большое количество изменений. Дополнительные сведения см. на сайте www.squeezenetwork.com.
+	SV	Den inbyggda programvaran har uppgraderats till version 7.4. Den nya versionen innehåller omfattande förbättringar, som du kan läsa mer om på www.squeezenetwork.com.
+

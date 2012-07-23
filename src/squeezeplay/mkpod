@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+use strict;
+use File::Find;
+use File::Basename;
+use File::Path;
+use Pod::Html;
+
+my $srcpath='./share';
+my $destpath='./doc/html';
+
+push @ARGV,'.' unless @ARGV;
+find({ wanted => \&wanted, no_chdir => 1 },@ARGV);
+
+sub wanted {
+  return unless -f && /\.(pod|pm|lua)$/;
+  (my $dstname=$File::Find::name)=~s/^$srcpath/$destpath/o;
+  $dstname=~s/(^.*)\..*?$/$1.html/;
+  mkpath(dirname($dstname)) unless -d dirname($dstname);
+  unlink($dstname)||warn "Cannot delete $dstname" if -f $dstname;
+  pod2html("--infile=$File::Find::name","--outfile=$dstname","--htmlroot=.");
+  print "$File::Find::name => $dstname\n";
+}
+

@@ -1,0 +1,25 @@
+Building on Linux
+=================
+
+This was tested using Ubuntu 6.10, using gcc 4.1.2
+
+To build in ../../build/linux:
+$ make -f Makefile.linux
+
+## Requirements:
+
+You will need to install the following packages using apt-get (for example "sudo apt-get install build-essential").
+
+* build-essential
+* flex
+* bison
+* subversion
+* automake
+* libtool
+* libpng12-dev
+* libjpeg62-dev
+* libexpat1-dev
+* libreadline5-dev
+* xorg-dev
+* libasound2-dev
+

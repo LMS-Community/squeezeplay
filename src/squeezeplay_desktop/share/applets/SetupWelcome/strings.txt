@@ -1,0 +1,109 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SETUP_WELCOME
+	CS	Vítejte
+	DA	Velkommen
+	DE	Willkommen
+	EN	Welcome
+	ES	Bienvenido
+	FI	Tervetuloa
+	FR	Bienvenue
+	IT	Benvenuti
+	NL	Welkom
+	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать!
+	SV	Välkommen!
+
+WELCOME
+	CS	Vítejte
+	DA	Velkommen
+	DE	Willkommen
+	EN	Welcome
+	ES	Bienvenido
+	FI	Tervetuloa
+	FR	Bienvenue
+	IT	Benvenuti
+	NL	Welkom
+	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать!
+	SV	Välkommen
+
+WELCOME_WALKTHROUGH
+	CS	Začneme tím, že Vás připojíme k vaší síti a hudbě.
+	DA	Lad os begynde med at slutte afspilleren til netværket og din musiksamling.
+	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
+	EN	Let's get started by getting you connected to your network and music.
+	ES	Comencemos por realizar la conexión a la red y música.
+	FI	Aloitetaan yhdistämällä sinut verkkoon ja musiikkitiedostoihisi.
+	FR	Commençons par vous connecter au réseau.
+	IT	Iniziamo con il collegamento alla rete e alla musica.
+	NL	We gaan je eerst met je netwerk en muziek verbinden.
+	NO	La oss starte med å kople deg til nettverket ditt og musikken din.
+	PL	Rozpocznij od nawiązania połączenia z siecią i muzyką.
+	RU	Начнем работу, подключив вас к сети и музыке.
+	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
+
+WELCOME_HELP
+	CS	Chcete-li pokračovat, stiskněte pravou kurzorovou šipku.
+	DA	Tryk på knappen med højrepilen når du er klar til at fortsætte.
+	DE	Drücken Sie zum Fortfahren die rechte Pfeiltaste.
+	EN	Press the right arrow key when you are ready to move on.
+	ES	Pulse la flecha derecha cuando esté listo para continuar.
+	FI	Paina oikeaa nuolta, kun olet valmis jatkamaan.
+	FR	Appuyez sur la flèche droite pour continuer.
+	IT	Premere il tasto freccia destra per proseguire.
+	NL	Druk op het rechterpijltje om verder te gaan.
+	NO	Trykk på høyreknappen når du er klar til å gå videre.
+	PL	Naciśnij klawisz strzałki w prawo, kiedy będzie można kontynuować.
+	RU	Нажмите клавишу "стрелка вправо", когда вы будете готовы продолжить.
+	SV	Tryck på högerpilen när du är klar att gå vidare.
+
+DONE
+	CS	A je to!
+	DA	Det var det.
+	DE	Fertig!
+	EN	That's it!
+	ES	¡Ya está!
+	FI	Siinä kaikki!
+	FR	La procédure est terminée.
+	IT	Fatto!
+	NL	Klaar!
+	NO	Ferdig!
+	PL	To już wszystko!
+	RU	Сделано!
+	SV	Sedan är det bara att sätta igång!
+
+DONE_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+DONE_HELP
+	CS	Nyní můžete používat SqueezePlay pro přístup k vaší hudbě. Chcete-li pokračovat, stiskněte pravou kurzorovou šipku.
+	DA	Nu kan du bruge SqueezePlay til at lytte til al din musik. Tryk på knappen med højrepilen for at fortsætte.
+	DE	Sie können nun mit SqueezePlay auf Ihre gesamte Musiksammlung zugreifen. Drücken Sie zum Fortfahren die rechte Pfeiltaste.
+	EN	Now you can use SqueezePlay to access all your music. Press the right arrow key to continue.
+	ES	Ya puede usar SqueezePlay para acceder a toda su música. Pulse la flecha derecha para continuar.
+	FI	Nyt voit ohjata kaikkia musiikkitiedostojasi SqueezePlayllä. Jatka painamalla oikeaa nuolta.
+	FR	Vous pouvez maintenant utiliser SqueezePlay pour accéder à votre musique. Appuyez sur la flèche droite pour continuer.
+	IT	Ora è possibile utilizzare SqueezePlay per accedere alla musica. Premere il tasto freccia destra per continuare.
+	NL	Nu kun je SqueezePlay gebruiken om al je muziek op te roepen. Druk op het rechterpijltje om verder te gaan.
+	NO	Du kan nå bruke SqueezePlay til å få tilgang på all musikken din. Trykk på høyreknappen for å fortsette.
+	PL	Teraz możesz użyć programu SqueezePlay w celu uzyskania dostępu do całej swojej muzyki. Naciśnij klawisz strzałki w prawo, aby kontynuować.
+	RU	Теперь вы с помощью SqueezePlay получаете доступ к своей музыке. Для продолжения нажмите клавишу "стрелка вправо".
+	SV	Nu kan du använda SqueezePlay och komma åt all din musik. Tryck på högerpilen för att fortsätta.
+

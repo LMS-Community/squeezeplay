@@ -1,0 +1,1099 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+START
+	CS	Spustit Logitech Media Server
+	DA	Start Logitech Media Server
+	DE	Logitech Media Server starten
+	EN	Start Logitech Media Server
+	ES	Iniciar Logitech Media Server
+	FI	Käynnistä Logitech Media Server
+	FR	Démarrer Logitech Media Server
+	IT	Avvia Logitech Media Server
+	NL	Logitech Media Server starten
+	NO	Start Logitech Media Server
+	PL	Uruchom program Logitech Media Server
+	RU	Запустить Logitech Media Server
+	SV	Starta Logitech Media Server
+
+STOP
+	CS	Zastavit Logitech Media Server
+	DA	Stop Logitech Media Server
+	DE	Anhalten von Logitech Media Server
+	EN	Stop Logitech Media Server
+	ES	Detener Logitech Media Server
+	FI	Pysäytä Logitech Media Server
+	FR	Arrêter le Logitech Media Server
+	IT	Arresta Logitech Media Server
+	NL	Logitech Media Server stoppen
+	NO	Stopp Logitech Media Server
+	PL	Zatrzymaj program Logitech Media Server
+	RU	Остановить Logitech Media Server
+	SV	Stoppa Logitech Media Server
+
+STOP_INFO
+	CS	Opravdu chcete vypnout Logitech Media Server?
+	DA	Er du sikker på at du vil stoppe Logitech Media Server?
+	DE	Soll Logitech Media Server wirklich beendet werden?
+	EN	Are you sure you want to stop Logitech Media Server?
+	ES	¿Confirma que desea detener Logitech Media Server?
+	FI	Haluatko varmasti pysäyttää Logitech Media Serverin?
+	FR	Voulez-vous vraiment arrêter Logitech Media Server?
+	IT	Arrestare Logitech Media Server?
+	NL	Weet je zeker dat je Logitech Media Server wilt stoppen?
+	NO	Er du sikker på at du vil stanse Logitech Media Server?
+	PL	Czy na pewno chcesz zatrzymać program Logitech Media Server?
+	RU	Остановить Logitech Media Server?
+	SV	Vill du stoppa Logitech Media Server?
+
+SQUEEZEBOX_SERVER
+	CS	Logitech Media Server
+	DA	Logitech Media Server
+	DE	Logitech Media Server
+	EN	Logitech Media Server
+	ES	Logitech Media Server
+	FI	Logitech Media Server
+	FR	Logitech Media Server
+	IT	Logitech Media Server
+	NL	Logitech Media Server
+	NO	Logitech Media Server
+	PL	Logitech Media Server
+	RU	Logitech Media Server
+	SV	Logitech Media Server
+
+WIPE_AND_RESTART
+	CS	Smazat a znovu prohledat
+	DA	Slet, og gennemsøg igen
+	DE	Löschen und neu durchsuchen
+	EN	Wipe and rescan
+	ES	Borrar y volver a examinar
+	FI	Pyyhi ja tarkista uudelleen
+	FR	Supprimer et analyser
+	IT	Elimina e ripeti analisi
+	NL	Wissen en opnieuw scannen
+	NO	Tøm og søk på nytt
+	PL	Usuń i przeszukaj ponownie
+	RU	Стереть и повторить сканирование
+	SV	Rensa och läsa in igen
+
+REMOVING_DATABASE
+	CS	Odstraňování existující databáze
+	DA	Fjerner eksisterende database
+	DE	Bestehende Datenbank wird gelöscht
+	EN	Removing existing database
+	ES	Quitando base de datos existente
+	FI	Poistetaan vanhaa tietokantaa
+	FR	Suppression de la base de données existante
+	IT	Rimozione database esistente
+	NL	Bestaande database verwijderen
+	NO	Fjerner eksisterende database
+	PL	Usuwanie istniejącej bazy danych
+	RU	Удаление существующей базы данных
+	SV	Tar bort befintlig databas
+
+WIPE_AND_RESTART_INFO
+	CS	Jste si jistí, že chcete smazat stávající databázi Logitech Media Server database a začít prohledávat vaše soubory znovu?
+	DA	Er du sikker på at du vil slette den eksisterende Logitech Media Server-database og registrere alle dine filer igen?
+	DE	Wollen Sie Ihre bestehende Logitech Media Server-Datenbank wirklich löschen und Ihre Dateien neu durchsuchen?
+	EN	Are you sure you want to wipe your existing Logitech Media Server database and start over scanning your files?
+	ES	¿Confirma que desea borrar la base de datos de Logitech Media Server existente y volver a examinar los archivos?
+	FI	Haluatko varmasti pyyhkiä vanhan Logitech Media Server -tietokannan ja aloittaa tiedostojen tarkistuksen alusta?
+	FR	Etes-vous sûr de vouloir supprimer la base de données Logitech Media Server existante et de vouloir redémarrer l'analyse de vos fichiers?
+	IT	Eliminare il database Logitech Media Server esistente e ripetere l'analisi dei file?
+	NL	Weet je zeker dat je je bestaande Logitech Media Server-database wilt wissen en je bestanden opnieuw wilt scannen?
+	NO	Er du sikker på at du vil tømme den eksisterende Logitech Media Server-databasen og starte søk i filene dine på nytt?
+	PL	Czy na pewno chcesz usunąć istniejącą bazę danych programu Logitech Media Server i ponownie rozpocząć wyszukiwanie plików?
+	RU	Стереть существующую базу данных Logitech Media Server и запустить сканирование файлов?
+	SV	Vill du rensa din befintliga Logitech Media Server-databas och börja om från början med att läsa in filer?
+
+STOP_RESCAN_START
+	CS	Zastavit-Znovu prohledat-Znovu spustit
+	DA	Stop-Gennemsøg igen-Genstart
+	DE	Anhalten-Musiksammlung durchsuchen-Neu starten
+	EN	Stop-Rescan-Restart
+	ES	Detener-Volver a examinar-Reiniciar
+	FI	Pysäytä-tarkista uudelleen-käynnistä uudelleen
+	FR	Arrêter-Nouvelle analyse-Redémarrer
+	IT	Arresto-Nuova analisi-Riavvio
+	NL	Stoppen-Opnieuw scannen-Opnieuw starten
+	NO	Stopp – Søk på nytt – Start på nytt
+	PL	Zatrzymaj-Przeszukaj ponownie-Uruchom ponownie
+	RU	Остановить-Пересканировать-Перезапустить
+	SV	Stoppa-Sök igen-Starta om
+
+STOP_RESCAN_START_INFO
+	CS	Jste si jistý, že chcete restartovat Logitech Media Server?
+	DA	Er du sikker på at du vil genstarte Logitech Media Server?
+	DE	Soll Logitech Media Server wirklich neu gestartet werden?
+	EN	Are you sure you want to restart Logitech Media Server?
+	ES	¿Confirma que desea reiniciar Logitech Media Server?
+	FI	Haluatko varmasti käynnistää Logitech Media Serverin uudelleen?
+	FR	Voulez-vous vraiment redémarrer Logitech Media Server?
+	IT	Riavviare Logitech Media Server?
+	NL	Weet je zeker dat je Logitech Media Server opnieuw wilt opstarten?
+	NO	Er du sikker på at du vil starte Logitech Media Server på nytt?
+	PL	Czy na pewno chcesz uruchomić ponownie program Logitech Media Server?
+	RU	Перезапустить Logitech Media Server?
+	SV	Vill du starta om Logitech Media Server?
+
+STARTING_SQUEEZECENTER
+	CS	Spouštění Logitech Media Server
+	DA	Starter Logitech Media Server
+	DE	Logitech Media Server wird gestartet...
+	EN	Starting Logitech Media Server
+	ES	Iniciando Logitech Media Server
+	FI	Käynnistetään Logitech Media Server
+	FR	Démarrage du Logitech Media Server
+	IT	Avvio di Logitech Media Server
+	NL	Logitech Media Server wordt gestart
+	NO	Starter Logitech Media Server
+	PL	Logitech Media Server — uruchamianie
+	RU	Logitech Media Server запускается
+	SV	Startar Logitech Media Server
+
+STARTING_SQUEEZECENTER_TEXT
+	CS	Spuštění by mělo trvat asi minutu.
+	DA	Den burde starte i løbet af et minut.
+	DE	Der Startvorgang sollte etwa eine Minute dauern.
+	EN	It should take about a minute to start.
+	ES	Debería tardar un minuto en iniciar.
+	FI	Käynnistymiseen kuluu noin minuutti.
+	FR	Le démarrage devrait prendre une minute environ.
+	IT	L'avvio richiede circa un minuto.
+	NL	Het starten neemt ongeveer een minuut in beslag.
+	NO	Det tar ca. et minutt å starte opp.
+	PL	Przygotowanie do uruchomienia powinno trwać około minuty.
+	RU	Приложение запустится через минуту.
+	SV	Det bör ta omkring en minut att starta.
+
+STOPPING_SQUEEZECENTER
+	CS	Zastavování Logitech Media Server
+	DA	Stopper Logitech Media Server
+	DE	Logitech Media Server wird angehalten...
+	EN	Stopping Logitech Media Server
+	ES	Deteniendo Logitech Media Server
+	FI	Pysäytetään Logitech Media Server
+	FR	Arrêt du Logitech Media Server
+	IT	Arresto di Logitech Media Server
+	NL	Logitech Media Server wordt gestopt
+	NO	Stopper Logitech Media Server
+	PL	Zatrzymywanie programu Logitech Media Server
+	RU	Logitech Media Server останавливается
+	SV	Stoppar Logitech Media Server
+
+RESCAN_SQUEEZECENTER
+	CS	Zahajování opětovného prohledávání
+	DA	Starter ny gennemsøgning
+	DE	Das erneute Durchsuchen der Musiksammlung wird vorbereitet...
+	EN	Initiating rescan
+	ES	Iniciando volver a examinar
+	FI	Uudelleentarkistuksen alustaminen
+	FR	Début de la nouvelle analyse
+	IT	Inizializzazione della nuova analisi
+	NL	Opnieuw scannen wordt geïnitieerd
+	NO	Starter nytt søk
+	PL	Rozpoczynanie ponownego przeszukiwania
+	RU	Запуск повторного сканирования
+	SV	En ny sökning påbörjas
+
+RESCAN_SQUEEZECENTER_TEXT
+	CS	Může to trvat několik minut.
+	DA	Det kan tage et par minutter.
+	DE	Dies kann einige Minuten dauern.
+	EN	This can take several minutes.
+	ES	La operación puede tardar varios minutos.
+	FI	Tämä voi viedä useita minuutteja.
+	FR	Cela peut prendre plusieurs minutes.
+	IT	Questa operazione può richiedere diversi minuti.
+	NL	Dit kan enkele minuten in beslag nemen.
+	NO	Dette kan ta flere minutter.
+	PL	Może to potrwać kilka minut.
+	RU	Это может занять несколько минут.
+	SV	Detta kan ta flera minuter.
+
+RESTART_SQUEEZECENTER
+	CS	Restarovat Logitech Media Server
+	DA	Genstart Logitech Media Server
+	DE	Logitech Media Server neu starten
+	EN	Restart Logitech Media Server
+	ES	Reiniciar Logitech Media Server
+	FI	Käynnistä Logitech Media Server uudelleen
+	FR	Redémarrer Logitech Media Server
+	IT	Riavvia Logitech Media Server
+	NL	Logitech Media Server opnieuw opstarten
+	NO	Start Logitech Media Server på nytt
+	PL	Uruchom ponownie program Logitech Media Server
+	RU	Перезапустить Logitech Media Server
+	SV	Starta om Logitech Media Server
+
+RESTARTING_SQUEEZECENTER
+	CS	Spouštění Logitech Media Server
+	DA	Starter Logitech Media Server
+	DE	Logitech Media Server wird gestartet...
+	EN	Starting Logitech Media Server
+	ES	Iniciando Logitech Media Server
+	FI	Käynnistetään Logitech Media Server
+	FR	Démarrage du Logitech Media Server
+	IT	Avvio di Logitech Media Server
+	NL	Logitech Media Server wordt gestart
+	NO	Starter Logitech Media Server
+	PL	Logitech Media Server — uruchamianie
+	RU	Logitech Media Server запускается
+	SV	Startar Logitech Media Server
+
+PLEASE_WAIT
+	CS	Čekejte, prosím...
+	DA	Vent lidt...
+	DE	Bitte warten ...
+	EN	Please wait...
+	ES	Espere...
+	FI	Odota...
+	FR	Veuillez patienter...
+	IT	Attendere...
+	NL	Even wachten...
+	NO	Vent litt...
+	PL	Czekaj...
+	RU	Подождите...
+	SV	Ett ögonblick...
+
+STATUS_SQUEEZECENTER_RUNNING
+	CS	Logitech Media Server je spuštěn
+	DA	Logitech Media Server kører
+	DE	Logitech Media Server wird ausgeführt
+	EN	Logitech Media Server is running
+	ES	Logitech Media Server se está ejecutando
+	FI	Logitech Media Server on käynnistymässä
+	FR	Logitech Media Server est en cours d'exécution
+	IT	Logitech Media Server è in esecuzione
+	NL	Logitech Media Server wordt uitgevoerd
+	NO	Logitech Media Server kjører
+	PL	Program Logitech Media Server jest uruchomiony
+	RU	Logitech Media Server выполняется
+	SV	Logitech Media Server körs
+
+STATUS_SCANNER_RUNNING
+	CS	Scanner běží
+	DA	Indekseringstjenesten kører
+	DE	Der Scanner wird ausgeführt.
+	EN	The scanner is running
+	ES	El examinador se está ejecutando
+	FI	Skanneri on käynnissä
+	FR	L'analyseur est en cours d'exécution
+	IT	L'analisi è in esecuzione
+	NL	De scanner wordt uitgevoerd
+	NO	Søket kjører
+	PL	Moduł przeszukiwania jest uruchomiony
+	RU	Сканер выполняется
+	SV	Sökningen körs
+
+STATUS_NOTHING
+	CS	Neběží ani Logitech Media Server ani scanner
+	DA	Hverken Logitech Media Server eller indekseringstjenesten kører
+	DE	Weder Logitech Media Server noch der Scanner werden ausgeführt.
+	EN	Neither Logitech Media Server nor the scanner are running
+	ES	Ni Logitech Media Server ni el examinador se están ejecutando
+	FI	Logitech Media Server ja skanneri eivät ole käynnissä
+	FR	Logitech Media Server et l'analyseur ne sont pas en cours d'exécution
+	IT	Logitech Media Server e l'analisi non sono in esecuzione
+	NL	De Logitech Media Server en de scanner worden geen van beiden uitgevoerd
+	NO	Verken Logitech Media Server eller søket kjører
+	PL	Program Logitech Media Server i moduł przeszukiwania nie są uruchomione
+	RU	Logitech Media Server и сканер не выполняются
+	SV	Varken Logitech Media Server eller sökningen körs
+
+SCANNER_NO_STATUS
+	CS	Vyhledávání hudebních souborů v médiích, prosím, vyčkejte ...
+	DA	Der søges efter musikfiler på mediet. Vent lidt...
+	DE	Medien werden nach Musikdateien durchsucht. Bitte warten...
+	EN	Scanning media for music files, please wait...
+	ES	Buscando archivos de música en medios, espere...
+	FI	Etsitään musiikkitiedostoja tietovälineestä. Odota...
+	FR	Analyse de vos fichiers musicaux en cours. Veuillez patienter...
+	IT	Ricerca file di musica sul supporto. Attendere...
+	NL	Media worden op muziekbestanden gescand, een ogenblik geduld...
+	NO	Søker etter musikkfiler, vent litt ...
+	PL	Czekaj, trwa wyszukiwanie plików muzycznych na nośnikach...
+	RU	Выполняется поиск музыкальных файлов на носителях; подождите, пожалуйста...
+	SV	Genomsökning görs efter musikfiler. Det kan ta en stund.
+
+SCANNER_PROGRESS
+	CS	Detaily hledání hudby
+	DA	Detaljer om musikindeksering
+	DE	Details zum Musik-Scan
+	EN	Music Scan Details
+	ES	Detalles de examen de música
+	FI	Musiikkihaun tiedot
+	FR	Détails de l'analyse de la musique
+	IT	Dettagli analisi musica
+	NL	Details van muziekscan
+	NO	Detaljer om søk etter musikk
+	PL	Szczegóły przeszukiwania muzyki
+	RU	Сведения о сканировании музыки
+	SV	Information om musiksökning
+
+FAILURE_PROGRESS
+	CS	Prohledávání hudby neočekávaně ukončeno (%s)
+	DA	Musiksøgningen blev afsluttet uventet (%s)
+	DE	Durchsuchen der Musiksammlung unerwartet abgebrochen (%s)
+	EN	Music scan terminated unexpectedly (%s)
+	ES	El examen de música terminó inesperadamente (%s)
+	FI	Musiikkihaku lopetettiin odottamatta (%s)
+	FR	L'analyse de la musique s'est terminée de façon inattendue (%s)
+	IT	Analisi della musica interrotta in modo imprevisto (%s)
+	NL	Muziekscan onverwacht beëindigd (%s)
+	NO	Musikksøket stoppet plutselig (%s)
+	PL	Przeszukiwanie muzyki zostało przerwane nieoczekiwanie (%s)
+	RU	Сканирование музыки было неожиданно прервано (%s)
+	SV	Musiksökningen avslutades oväntat (%s)
+
+SCAN_ABORTED_PROGRESS
+	CS	Prohledávání bylo manuálně přerušeno uživatelem
+	DA	Søgningen blev afbrudt manuelt af brugeren
+	DE	Vorgang wurde vom Benutzer manuell abgebrochen.
+	EN	Scan was manually aborted by the user
+	ES	El usuario anuló manualmente el examen
+	FI	Käyttäjä keskeytti tarkistuksen manuaalisesti
+	FR	L'utilisateur a interrompu manuellement l'analyse
+	IT	Analisi annullata manualmente dall'utente
+	NL	De gebruiker heeft de scan handmatig afgebroken
+	NO	Søket ble manuelt avbrutt av brukeren
+	PL	Przeszukiwanie zostało ręcznie przerwane przez użytkownika
+	RU	Сканирование было прервано пользователем
+	SV	Sökningen avbröts manuellt av användaren
+
+DIRECTORY_SCAN_PROGRESS
+	CS	Prohledávání adresáře
+	DA	Indeksering af mapper
+	DE	Durchsuche Musik-Verzeichnis
+	EN	Directory Scan
+	ES	Examen de directorios
+	FI	Hakemistohaku
+	FR	Analyse du répertoire
+	IT	Analisi delle directory
+	NL	Directory scannen
+	NO	Katalogsøk
+	PL	Przeszukiwanie katalogu
+	RU	Сканирование каталога
+	SV	Mappsökning
+
+DISCOVERING_FILES_PROGRESS
+	CS	Hledám soubory
+	DA	Søger efter filer
+	DE	Dateien werden erkannt
+	EN	Discovering Files
+	ES	Detectando archivos
+	FI	Etsitään tiedostoja
+	FR	Détection des fichiers
+	IT	Rilevazione file
+	NL	Bestanden detecteren
+	NO	Ser etter filer
+	PL	Wykrywanie plików
+	RU	Обнаружение файлов
+	SV	Leta filer
+
+DISCOVERING_DIRECTORY_PROGRESS
+	CS	Hledám soubory
+	DA	Søger efter filer
+	DE	Dateien werden erkannt
+	EN	Discovering files
+	ES	Detectando archivos
+	FI	Etsitään tiedostoja
+	FR	Détection des fichiers
+	IT	Rilevazione file
+	NL	Bestanden detecteren
+	NO	Ser etter filer
+	PL	Wykrywanie plików
+	RU	Обнаружение файлов
+	SV	Leta filer
+
+DIRECTORY_DELETED_PROGRESS
+	CS	Odebrat smazané soubory
+	DA	Fjern slettede filer
+	DE	Gelöschte Dateien entfernen
+	EN	Remove deleted files
+	ES	Quitar archivos eliminados
+	FI	Poista poistetut tiedostot
+	FR	Enlever les fichiers supprimés
+	IT	Rimuovi file eliminati
+	NL	Verwijderde bestanden weghalen
+	NO	Fjern slettede filer
+	PL	Kasuj usunięte pliki
+	RU	Убрать удаленные файлы
+	SV	Ta bort borttagna filer
+
+DIRECTORY_NEW_PROGRESS
+	CS	Prohledat nové soubory
+	DA	Søg efter nye filer
+	DE	Neue Dateien durchsuchen
+	EN	Scan new files
+	ES	Examinar archivos nuevos
+	FI	Tarkista uudet tiedostot
+	FR	Analyse des nouveaux fichiers
+	IT	Analizza i nuovi file
+	NL	Nieuwe bestanden scannen
+	NO	Søk i nye filer
+	PL	Przeszukuj nowe pliki
+	RU	Сканировать новые файлы
+	SV	Sök igenom nya filer
+
+DIRECTORY_CHANGED_PROGRESS
+	CS	Skenování změněných souborů
+	DA	Tjekker ændrede filer
+	DE	Geänderte Dateien werden durchsucht
+	EN	Scanning changed files
+	ES	Examinando archivos modificados
+	FI	Tarkistaa muutettuja tiedostoja
+	FR	Analyse des fichiers modifiés
+	IT	Analisi file modificati in corso
+	NL	Gewijzigde bestanden worden gescand
+	NO	Søker i endrede filer
+	PL	Przeszukiwanie zmienionych plików
+	RU	Сканирование измененных файлов
+	SV	Söker igenom ändrade filer
+
+PLAYLIST_DELETED_PROGRESS
+	CS	Odebrat smazané seznamy skladeb
+	DA	Fjern slettede afspilningslister
+	DE	Gelöschte Wiedergabelisten entfernen
+	EN	Remove deleted playlists
+	ES	Quitar listas de reproducción eliminadas
+	FI	Poista poistetut soittoluettelot
+	FR	Enlever les listes de lecture supprimées
+	IT	Rimuovi playlist eliminate
+	NL	Verwijderde playlists weghalen
+	NO	Fjern slettede spillelister
+	PL	Kasuj usunięte listy odtwarzania
+	RU	Убрать удаленные плей-листы
+	SV	Ta bort borttagna spellistor
+
+PLAYLIST_NEW_PROGRESS
+	CS	Prohledat nové seznamy skladeb
+	DA	Søg efter nye afspilningslister
+	DE	Neue Wiedergabelisten durchsuchen
+	EN	Scan new playlists
+	ES	Examinar listas de reproducción nuevas
+	FI	Tarkista uudet soittoluettelot
+	FR	Analyser les nouvelles listes de lecture
+	IT	Analizza nuove playlist
+	NL	Nieuwe playlists scannen
+	NO	Søk i nye spillelister
+	PL	Przeszukuj nowe listy odtwarzania
+	RU	Сканировать новые плей-листы
+	SV	Sök igenom nya spellistor
+
+PLAYLIST_CHANGED_PROGRESS
+	CS	Skenování změněných seznamů skladeb
+	DA	Søger efter ændrede afspilningslister
+	DE	Geänderte Wiedergabelisten werden durchsucht
+	EN	Scanning changed playlists
+	ES	Examinando listas de reproducción modificadas
+	FI	Tarkistaa muutettuja soittoluetteloita
+	FR	Analyse des listes de lecture modifiées
+	IT	Analisi playlist modificate in corso
+	NL	Gewijzigde playlists worden gescand
+	NO	Søker i endrede spillelister
+	PL	Przeszukiwanie zmienionych list odtwarzania
+	RU	Сканирование измененных плей-листов
+	SV	Söker igenom ändrade spellistor
+
+PLAYLIST_PROGRESS
+	CS	Prohledání seznamu skladeb
+	DA	Søgning efter afspilningslister
+	DE	Suche Wiedergabelisten
+	EN	Playlist Scan
+	ES	Examen de listas de reproducción
+	FI	Soittoluetteloiden haku
+	FR	Analyse de liste de lecture
+	IT	Analisi playlist
+	NL	Scannen van playlists
+	NO	Søk etter spilleliste
+	PL	Przeszukiwanie listy odtwarzania
+	RU	Сканирование плей-листа
+	SV	Sökning i spellista
+
+MERGEVA_PROGRESS
+	CS	Sloučit více interpretů
+	DA	Flet Diverse kunstnere
+	DE	Gruppiere "Diverse Artisten"
+	EN	Merge Various Artists
+	ES	Fusionar varios artistas
+	FI	Yhdistä useita artisteja
+	FR	Fusionner les artistes divers
+	IT	Raggruppamento Artisti vari
+	NL	Diverse artiesten samenvoegen
+	NO	Slå sammen diverse artister
+	PL	Połącz różnych wykonawców
+	RU	Объединить неск. исполнителей
+	SV	Slå ihop Blandade artister
+
+PRECACHEARTWORK_PROGRESS
+	CS	Příprava ukládání obalu do mezipaměti
+	DA	Gem coverbilleder i cachelager
+	DE	Plattenhüllen werden zwischengespeichert
+	EN	Pre-caching Artwork
+	ES	Guardando carátula en caché previamente
+	FI	Levykansien tallennus valmiiksi välimuistiin
+	FR	Mise en pré-cache de la pochette
+	IT	Pre-cache copertina
+	NL	Hoesafbeeldingen vooraf in cache opslaan
+	NO	Hurtigbufring av omslag på forhånd
+	PL	Wstępnie buforowanie okładki
+	RU	Предварительное кэширование обложки
+	SV	Cachelagrat albumomslag
+
+ARTWORK_PROGRESS
+	CS	Hledání obalů alb
+	DA	Søg efter covere
+	DE	Suche Plattenhüllen
+	EN	Artwork Scan
+	ES	Examen de carátula de álbum
+	FI	Kansitaiteen haku
+	FR	Analyse de pochettes
+	IT	Analisi copertine
+	NL	Hoesafbeeldingen scannen
+	NO	Søk etter albumomslag
+	PL	Przeszukiwanie okładek
+	RU	Сканирование обложек
+	SV	Sökning efter albumomslag
+
+DOWNLOADARTWORK_PROGRESS
+	CS	Stahování obalu alba
+	DA	Henter albumcovere
+	DE	Plattenhülle wird heruntergeladen
+	EN	Downloading Artwork
+	ES	Descargando carátula
+	FI	Kansitaidetta ladataan
+	FR	Téléchargement de la pochette
+	IT	Download copertina in corso
+	NL	Hoesafbeeldingen downloaden
+	NO	Laster ned omslag
+	PL	Pobieranie okładek
+	RU	Загрузка обложки
+	SV	Ladda ner albumomslag
+
+CLEANUP1_PROGRESS
+	CS	Čištění databáze č.1
+	DA	Oprydning i database nr. 1
+	DE	Datenbankbereinigung 1. Durchgang
+	EN	Database Cleanup #1
+	ES	Limpieza 1 de base de datos
+	FI	Tietokannan puhdistus #1
+	FR	Nettoyage de base de données 1
+	IT	Pulizia del database n. 1
+	NL	Opschonen van database 1
+	NO	Databaseopprydding #1
+	PL	Czyszczenie bazy danych nr 1
+	RU	Очистка базы данных №1
+	SV	Databasrensning nr 1
+
+CLEANUP2_PROGRESS
+	CS	Vyčištění databáze č. 2
+	DA	Oprydning i database nr. 2
+	DE	Datenbankbereinigung 2. Durchgang
+	EN	Database Cleanup #2
+	ES	Limpieza 2 de base de datos
+	FI	Tietokannan puhdistus #2
+	FR	Nettoyage de base de données 2
+	IT	Pulizia del database n. 2
+	NL	Opschonen van database 2
+	NO	Databaseopprydding #2
+	PL	Czyszczenie bazy danych nr 2
+	RU	Очистка базы данных №2
+	SV	Databasrensning #2
+
+DBOPTIMIZE_PROGRESS
+	CS	Optimalizovat databázi
+	DA	Optimering af database
+	DE	Datenbank Optimierung
+	EN	Database Optimize
+	ES	Optimización de base de datos
+	FI	Tietokannan optimointi
+	FR	Optimisation de base de données
+	IT	Ottimizzazione database
+	NL	Database optimaliseren
+	NO	Databaseoptimalisering
+	PL	Optymalizacja bazy danych
+	RU	Оптимизация базы данных
+	SV	Optimering av databas
+
+IMPORTER_PROGRESS
+	CS	Průběh prohledávání
+	DA	Status for gennemsøgning
+	DE	Fortschritt der Musik-Suche
+	EN	Scanning Progress
+	ES	Progreso de examen
+	FI	Tarkistuksen eteneminen
+	FR	Progression de l'analyse
+	IT	Avanzamento analisi
+	NL	Scanvoortgang
+	NO	Framdrift for søk
+	PL	Postęp przeszukiwania
+	RU	Ход сканирования
+	SV	Sökningsförlopp
+
+RUNNING
+	CS	Spuštěno
+	DA	Kører
+	DE	Läuft
+	EN	Running
+	ES	En ejecución
+	FI	Käynnistetty
+	FR	En cours d'exécution
+	IT	In esecuzione
+	NL	Actief
+	NO	Kjører
+	PL	Uruchomiony
+	RU	Выполняется
+	SV	Körs
+
+COMPLETE
+	CS	Dokončit
+	DA	Fuldstændig
+	DE	Beendet
+	EN	Complete
+	ES	Completado
+	FI	Valmis
+	FR	Terminé
+	IT	Completo
+	NL	Voltooien
+	NO	Fullført
+	PL	Gotowe
+	RU	Завершено
+	SV	Fullständig
+
+PROGRESS_IMPORTER_COMPLETE_DESC
+	CS	Server ukončil prohledávání vaší sbírky hudby.
+	DA	Serveren er færdig med at gennemsøge din musiksamling.
+	DE	Der Server hat das Durchsuchen Ihrer Musiksammlung abgeschlossen.
+	EN	The server has finished scanning your music collection.
+	ES	El servidor ha finalizado el examen de su colección de música.
+	FI	Palvelin on nyt lopettanut musiikkikokoelmasi tarkistuksen.
+	FR	Le serveur a terminé d'analyser la collection musicale.
+	IT	Il server ha completato l'analisi della raccolta musicale.
+	NL	De server heeft je muziekcollectie gescand.
+	NO	Serveren har nå søkt gjennom musikksamlingen din.
+	PL	Serwer zakończył przeszukiwanie kolekcji muzyki.
+	RU	Сервер завершил сканирование музыкальной коллекции.
+	SV	Sökningen av musikbiblioteket har slutförts.
+
+TOTAL_TIME
+	CS	Celkem doba:
+	DA	Samlet spilletid:
+	DE	Laufzeit:
+	EN	Total Time:
+	ES	Tiempo total:
+	FI	Kokonaisaika:
+	FR	Durée totale:
+	IT	Tempo totale:
+	NL	Totale tijd:
+	NO	Samlet tid:
+	PL	Całkowity czas:
+	RU	Общее время:
+	SV	Total tid:
+
+FAILED_TO_START
+	CS	Spuštění Logitech Media Server se nezdařilo
+	DA	Logitech Media Server blev ikke startet
+	DE	Logitech Media Server konnte nicht gestartet werden.
+	EN	Logitech Media Server failed to start
+	ES	No se ha podido iniciar Logitech Media Server
+	FI	Logitech Media Server ei käynnistynyt
+	FR	Echec du démarrage de Logitech Media Server
+	IT	Avvio di Logitech Media Server non riuscito
+	NL	Logitech Media Server is niet gestart
+	NO	Logitech Media Server startet ikke
+	PL	Uruchomienie programu Logitech Media Server nie powiodło się
+	RU	Не удалось запустить Logitech Media Server
+	SV	Logitech Media Server kunde inte starta.
+
+INTERNAL_ERROR
+	CS	Interní chyba
+	DA	Intern fejl
+	DE	Interner Fehler
+	EN	Internal Error
+	ES	Error interno
+	FI	Sisäinen virhe
+	FR	Erreur interne
+	IT	Errore interno
+	NL	Interne fout
+	NO	Intern feil
+	PL	Błąd wewnętrzny
+	RU	Внутренняя ошибка
+	SV	Internt fel
+
+CANT_COMPLETE_SCAN
+	CS	Nemohu dokončit prohledávání
+	DA	Gennemsøgningen kunne ikke udføres
+	DE	Durchsuchung kann nicht abgeschlossen werden
+	EN	Can't Complete Scan
+	ES	No se puede completar el examen
+	FI	Tarkistusta ei voi suorittaa loppuun
+	FR	Impossible de terminer l'analyse
+	IT	Impossibile completare l'analisi
+	NL	Scan kan niet voltooid worden
+	NO	Kan ikke fullføre søket
+	PL	Nie można zakończyć przeszukiwania
+	RU	Не удалось завершить сканирование
+	SV	Det gick inte att slutföra sökningen.
+
+CANT_COMPLETE_SCAN_INFO
+	CS	%s volného místa na tomto USB/SD zařízení je potřeba k tomu, aby Squeezebox Touch mohl provést prohledávání knihovny.
+	DA	Der kræves %s ledig plads på USB-/SD-enheden for at der kan foretages en gennemsøgning af bibliotekerne i Squeezebox Touch.
+	DE	Auf diesem USB/SD-Gerät wird %s freier Speicherplatz benötigt, damit die Squeezebox Touch eine Musiksammlung durchsuchen kann.
+	EN	%s of free space is needed on this USB/SD device in order for Squeezebox Touch to perform a library scan.
+	ES	Se necesita un espacio libre de %s en este dispositivo USB/SD para que Squeezebox Touch realice un examen de biblioteca.
+	FI	Tässä USB-/SD-laitteessa pitää olla vapaana %s, jotta Squeezebox Touch voi suorittaa kirjaston tarkistuksen.
+	FR	L'analyse de la bibliothèque par Squeezebox Touch nécessite %s d'espace disponible sur ce dispositif USB/SD.
+	IT	Per consentire a Squeezebox Touch di eseguire la scansione dalla libreria sono necessari %s di spazio libero su questo dispositivo USB/SD.
+	NL	Squeezebox Touch moet %s vrije ruimte hebben op dit USB-/SD-apparaat om de collectie te kunnen scannen.
+	NO	Du trenger %s ledig plass på usb- eller SD-enheten for at Squeezebox Touch skal kunne utføre et biblioteksøk.
+	PL	%s jest wymagane na tym urządzeniu USB/SD, aby urządzenie Squeezebox Touch mogło przeszukać bibliotekę.
+	RU	Чтобы Squeezebox Touch выполнял просмотр медиатек, требуется %s свободного пространства устройства USB/SD.
+	SV	Det går inte att utföra en bibliotekssökning om det inte finns minst %s ledigt på USB-enheten/SD-kortet.
+
+GO_TO_MY_MUSIC
+	CS	Přejít na Moje hudba
+	DA	Åbn Musik
+	DE	Gehen Sie zu 'Eigene Musik'.
+	EN	Go to My Music
+	ES	Acceder a Mi música
+	FI	Avaa Oma musiikki
+	FR	Accéder à Ma musique
+	IT	Vai a Musica
+	NL	Naar Mijn muziek gaan
+	NO	Gå til Min musikk
+	PL	Idź do Mojej muzyki
+	RU	Перейти к моей музыке
+	SV	Gå till Min musik
+
+EXIT
+	CS	Ukončit
+	DA	Afslut
+	DE	Beenden
+	EN	Exit
+	ES	Salir
+	FI	Sulje
+	FR	Quitter
+	IT	Esci
+	NL	Afsluiten
+	NO	Avslutt
+	PL	Zamknij
+	RU	Выход
+	SV	Avsluta
+
+OK
+	CS	OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	PL	OK
+	RU	ОК
+	SV	OK
+
+SCANNING_LIBRARY
+	CS	Prohledávání knihovny: %s
+	DA	Gennemsøger bibliotek: %s
+	DE	Musiksammlung wird durchsucht: %s
+	EN	Scanning Library: %s
+	ES	Examinando biblioteca: %s
+	FI	Tarkistetaan kirjastoa: %s
+	FR	Analyse de la bibliothèque: %s
+	IT	Analisi libreria: %s
+	NL	Collectie wordt gescand: %s
+	NO	Søker i bibliotek: %s
+	PL	Przeszukiwanie biblioteki: %s
+	RU	Сканирование медиатеки: %s
+	SV	Söker igenom biblioteket %s
+
+CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleer
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+USB
+	CS	USB zařízení
+	DA	USB-lagerenhed
+	DE	USB-Gerät
+	EN	USB Device
+	ES	Dispositivo USB
+	FI	USB-laite
+	FR	Dispositif USB
+	IT	Dispositivo USB
+	NL	USB-apparaat
+	NO	Usb-enhet
+	PL	Urządzenie USB
+	RU	USB-устройство
+	SV	USB-enhet
+
+SD
+	CS	SD karta
+	DA	SD-kort
+	DE	SD-Karte
+	EN	SD Card
+	ES	Tarjeta SD
+	FI	SD-kortti
+	FR	Carte SD
+	IT	Scheda SD
+	NL	SD-kaart
+	NO	SD-kort
+	PL	Karta SD
+	RU	SD-карта.
+	SV	SD-kort
+
+NO_DRIVES_DETECTED
+	CS	Nejsou detekována žádná zařízení
+	DA	Der blev ikke fundet nogen enheder
+	DE	Es wurden keine Geräte erkannt.
+	EN	No Devices Detected
+	ES	No se ha detectado ningún dispositivo
+	FI	Laitteita ei havaittu
+	FR	Aucun dispositif détecté
+	IT	Nessun dispositivo rilevato
+	NL	Geen apparaten gedetecteerd
+	NO	Ingen enheter oppdaget
+	PL	Nie wykryto żadnych urządzeń
+	RU	Не найдены устройства
+	SV	Inga enheter upptäcktes
+
+NO_DRIVES_DETECTED_INFO
+	CS	Squeezebox Touch nedetekoval žádné ukládací zařízení. Připojte laskavě buď USB zařízení nebo SD kartu a zkuste znovu.
+	DA	Squeezebox Touch kunne ikke finde nogen tilsluttet lagerenhed. Tilslut en USB-lagerenhed eller et SD-kort, og prøv igen.
+	DE	Squeezebox Touch erkennt kein angeschlossenes Speichergerät. Schließen Sie entweder ein USB-Gerät oder eine SD-Karte an und versuchen Sie es erneut.
+	EN	Squeezebox Touch detects no attached storage device. Please attach either a USB device or SD card and try again.
+	ES	Squeezebox Touch no reconoce ningún dispositivo de almacenamiento conectado. Conecte un dispositivo USB o una tarjeta SD e inténtelo de nuevo.
+	FI	Squeezebox Touch ei havaitse liitettyä tallennuslaitetta. Liitä joko USB-laite tai SD-kortti ja yritä uudelleen.
+	FR	Squeezebox Touch ne détecte aucun dispositif de stockage. Connectez un dispositif USB ou une carte SD, puis réessayez.
+	IT	Squeezebox Touch non ha rilevato alcun dispositivo di memorizzazione collegato. Collegare un dispositivo USB o una scheda SD e riprovare.
+	NL	Squeezebox Touch heeft geen gekoppeld opslagapparaat gevonden. Koppel een USB-apparaat of een SD-kaart en probeer het opnieuw.
+	NO	Squeezebox Touch har ikke registrert noen tilkoplet lagringsenhet. Kople til en usb-enhet eller et SD-kort, og prøv på nytt.
+	PL	Urządzenie Squeezebox Touch nie wykryło żadnego podłączonego urządzenia pamięci masowej. Podłącz urządzenie USB lub kartę SD i spróbuj ponownie.
+	RU	Squeezebox Touch не обнаруживает присоединенный накопитель. Присоедините USB-устройство или SD-карту и повторите попытку.
+	SV	Ingen ansluten lagringsenhet upptäcktes. Anslut en USB-enhet eller sätt i ett SD-kort och försök igen.
+
+USE_DRIVE_SD
+	CS	Použít SD kartu
+	DA	Brug SD-kort
+	DE	SD-Karte verwenden
+	EN	Use SD Card
+	ES	Utilizar tarjeta SD
+	FI	Käytä SD-korttia
+	FR	Utiliser une carte SD
+	IT	Usa scheda SD
+	NL	SD-kaart gebruiken
+	NO	Bruk SD-kort
+	PL	Użyj karty SD
+	RU	Использовать SD-карту
+	SV	Använd SD-kort
+
+USE_DRIVE_USB_NAMED
+	CS	Použít USB zařízení %s
+	DA	Brug USB-enhed %s
+	DE	USB-Gerät %s verwenden
+	EN	Use USB Device %s
+	ES	Utilizar dispositivo USB %s
+	FI	Käytä USB-laitetta %s
+	FR	Utiliser le dispositif USB %s
+	IT	Usa dispositivo USB %s
+	NL	USB-apparaat %s gebruiken
+	NO	Bruk usb-enhet %s
+	PL	Użyj urządzenia USB %s
+	RU	Использовать USB-устройство %s
+	SV	Använd USB-enhet %s
+
+USE_DRIVE_USB
+	CS	Použít USB zařízení
+	DA	Brug USB-enhed
+	DE	USB-Gerät verwenden
+	EN	Use USB Device
+	ES	Utilizar dispositivo USB
+	FI	Käytä USB-laitetta
+	FR	Utiliser le dispositif USB
+	IT	Usa dispositivo USB
+	NL	USB-apparaat gebruiken
+	NO	Bruk usb-enhet
+	PL	Użyj urządzenia USB
+	RU	Использовать USB-устройство
+	SV	Använd USB-enhet
+
+MULTIPLE_DRIVES_DETECTED
+	CS	Zvolte zařízení Logitech Media Server
+	DA	Vælg Logitech Media Server-enhed
+	DE	Logitech Media Server-Gerät wählen
+	EN	Choose Logitech Media Server Device
+	ES	Seleccionar dispositivo Logitech Media Server
+	FI	Valitse Logitech Media Server -laite
+	FR	Choisissez le dispositif Logitech Media Server
+	IT	Scegli dispositivo Logitech Media Server
+	NL	Logitech Media Server-apparaat kiezen
+	NO	Velg enhet for Logitech Media Server
+	PL	Wybierz urządzenie Logitech Media Server
+	RU	Выберите устройство Logitech Media Server
+	SV	Välj Logitech Media Server-enhet
+
+MULTIPLE_DRIVES_DETECTED_INFO
+	CS	K vašemu Squeezebox Touch je připojeno více paměťových zařízení. Vyberte laskavě jedno z nich k použití se Logitech Media Server.
+	DA	Der er sluttet flere lagerenheder til din Squeezebox Touch. Vælg hvilken der skal bruges til Logitech Media Server.
+	DE	Mehrere Speichergeräte wurden an die Squeezebox Touch angeschlossen. Wählen Sie das mit Logitech Media Server zu verwendende Gerät.
+	EN	Multiple storage devices are attached to your Squeezebox Touch. Please select one device for use with Logitech Media Server.
+	ES	Hay varios dispositivos de almacenamiento conectados a Squeezebox Touch. Seleccione un dispositivo para usarlo con Logitech Media Server.
+	FI	Squeezebox Touchiin on liitetty useita tallennusvälineitä. Valitse yksi laite käyttäväksi Logitech Media Serverin kanssa.
+	FR	Plusieurs dispositifs de stockage sont connectés à votre Squeezebox Touch. Sélectionnez le dispositif à utiliser avec Logitech Media Server.
+	IT	A Squeezebox Touch sono collegati più dispositivi di memorizzazione. Selezionarne uno da utilizzare con Logitech Media Server.
+	NL	Er zijn meerdere opslagapparaten aan je Squeezebox Touch gekoppeld. Selecteer één apparaat voor gebruik met Logitech Media Server.
+	NO	Flere lagringsenheter er koplet til Squeezebox Touch. Velg én enhet du vil bruke med Logitech Media Server.
+	PL	Do urządzenia Squeezebox Touch przyłączonych jest kilka urządzeń pamięci masowej. Wybierz jedno urządzenie, które ma być używane z programem Logitech Media Server.
+	RU	К устройству Squeezebox Touch присоединено несколько накопителей. Выберите одно устройство для использования со Logitech Media Server.
+	SV	Det finns flera lagringsenheter anslutna till Squeezebox Touch. Välj vilken av dem som ska användas med Logitech Media Server.
+
+TIME_LEFT
+	CS	Zbývající čas
+	DA	Resterende tid
+	DE	Verbleibende Zeit
+	EN	Time left
+	ES	Tiempo restante
+	FI	Aikaa jäljellä
+	FR	Temps restant
+	IT	Tempo residuo
+	NL	Resterende tijd
+	NO	Gjenstående tid
+	PL	Pozostały czas
+	RU	Осталось
+	SV	Tid kvar
+
+PERCENT_DONE
+	CS	Procent hotovo
+	DA	Procent udført
+	DE	Prozent abgeschlossen
+	EN	Percent done
+	ES	Porcentaje listo
+	FI	prosenttia valmiina
+	FR	Progression (%)
+	IT	Percentuale completata
+	NL	Percentage voltooid
+	NO	prosent fullført
+	PL	Wykonano procent
+	RU	Процент выполнения
+	SV	Procent klart
+
+SERVER_STATUS
+	CS	Stav Logitech Media Server
+	DA	Status for Logitech Media Server
+	DE	Logitech Media Server-Status
+	EN	Logitech Media Server Status
+	ES	Estado de Logitech Media Server
+	FI	Logitech Media Serverin tila
+	FR	Etat du Logitech Media Server
+	IT	Stato di Logitech Media Server
+	NL	Status van Logitech Media Server
+	NO	Status for Logitech Media Server
+	PL	Stan programu Logitech Media Server
+	RU	Статус Logitech Media Server
+	SV	Logitech Media Server-status
+
+MY_MUSIC
+	CS	Moje hudba
+	DA	Musik
+	DE	Eigene Musik
+	EN	My Music
+	ES	Mi música
+	FI	Omat musiikkitiedostot
+	FR	Ma musique
+	IT	Musica
+	NL	Mijn muziek
+	NO	Min musikk
+	PL	Moja muzyka
+	RU	Моя музыка
+	SV	Min musik
+
+UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+
+SKIP
+	CS	Přeskočit
+	DA	Spring over
+	DE	Überspringen
+	EN	Skip
+	ES	Omitir
+	FI	Ohita
+	FR	Ignorer
+	IT	Salta
+	NL	Overslaan
+	NO	Hopp over
+	PL	Pomiń
+	RU	Пропустить
+	SV	Hoppa över
+
+SWITCH_MEDIA_HELP
+	CS	Logitech Media Server je spuštěn, ale momentálně je nakonfigurován, aby přehrával hudbu z jiného zařízení. Z této nabídky můžete nastavit cestu na jinou jednotku.
+	DA	Logitech Media Server kører, men er konfigureret til at transmittere musik fra en anden enhed. Du kan pege på et andet drev fra denne menu.
+	DE	Logitech Media Server wird ausgeführt, ist aber für die Musikwiedergabe von einem anderen Gerät konfiguriert. In diesem Menü können Sie eine Auswahl für ein anderes Gerät treffen.
+	EN	Logitech Media Server is running but is currently configured to serve music from a different device. From this menu you can choose to point to a different drive.
+	ES	Logitech Media Server está en ejecución, pero se ha configurado para ofrecer música de un dispositivo diferente. Desde este menú se puede apuntar a otra unidad.
+	FI	Logitech Media Server on käytössä, mutta se on nyt määritetty syöttämään musiikkia toiselta laitteelta. Tällä valikolla voit valita sen osoittamaan toiseen asemaan.
+	FR	Logitech Media Server est en cours d'exécution mais est paramétré pour lire de la musique à partir d'un autre dispositif. Dans ce menu, vous pouvez modifier le lecteur source.
+	IT	Logitech Media Server è in esecuzione ma è configurato per inviare musica da un dispositivo differente. Da questo menu è possibile puntare a un'unità diversa.
+	NL	Logitech Media Server is actief maar wordt momenteel geconfigureerd om muziek van een ander apparaat af te spelen. Via dit menu kun je een ander station toewijzen.
+	NO	Logitech Media Server kjører, men er konfigurert til å spille av musikk fra en annen enhet. Du kan velge en annen stasjon fra denne menyen.
+	PL	Program Logitech Media Server jest uruchomiony, ale jego obecna konfiguracja dotyczy odtwarzania muzyki z innego urządzenia. W tym menu można wskazać inny napęd.
+	RU	Logitech Media Server запущен, но настроен на воспроизведение музыки с другого устройства. В этом меню можно выбрать другой диск.
+	SV	Logitech Media Server körs men är konfigurerad för att spela musik från en annan enhet. Du kan välja en annan enhet från den här menyn.
+
+SWITCH_MEDIA
+	CS	Použít %s pro Logitech Media Server
+	DA	Brug %s til Logitech Media Server
+	DE	Verwenden Sie %s für Logitech Media Server
+	EN	Use %s for Logitech Media Server
+	ES	Use %s para Logitech Media Server
+	FI	Käytä kohdetta %s  Logitech Media Serveriin.
+	FR	Utiliser %s pour Logitech Media Server
+	IT	Usa %s per Logitech Media Server
+	NL	%s voor Logitech Media Server gebruiken
+	NO	Bruk %s for Logitech Media Server
+	PL	Użyj elementu %s w programie Logitech Media Server
+	RU	Использовать %s для Logitech Media Server
+	SV	Använd %s för Logitech Media Server
+
+SQUEEZEBOX_SERVER_DISK_EJECT_WARNING
+	CS	Výstraha: V tomto zařízení je právě spuštěn Logitech Media Server. Přehrávání z tohoto Logitech Media Server bude přerušeno, pokud tuto jednotku vysunete.
+	DA	Advarsel: Logitech Media Server kører på denne enhed. Al afspilning fra denne Logitech Media Server ophører når drevet fjernes.
+	DE	Warnung: Auf diesem Gerät wird aktuell Logitech Media Server ausgeführt. Die Wiedergabe von diesem Logitech Media Server wird beendet, sobald der Datenträger ausgeworfen wird.
+	EN	Warning: This device is currently running Logitech Media Server. All playback from this Logitech Media Server will cease when this drive is ejected.
+	ES	Advertencia: este dispositivo está ejecutando Logitech Media Server en este momento. Toda reproducción desde este Logitech Media Server se detendrá al expulsar la unidad.
+	FI	Varoitus: Tämä laite käyttää parhaillaan Logitech Media Serveriä. Kaikki äänentoisto tältä Logitech Media Serveriltä lakkaa, kun tämä asema irrotetaan.
+	FR	Attention: ce dispositif fonctionne actuellement avec SqueezeBox Server. Toutes les lectures depuis Logitech Media Server seront arrêtées quand vous éjecterez ce lecteur.
+	IT	Attenzione: in questo dispositivo è in esecuzione Logitech Media Server. Quando questa unità verrà espulsa, la riproduzione proveniente da questo Logitech Media Server terminerà.
+	NL	Waarschuwing: Logitech Media Server is momenteel actief op dit apparaat. Het afspelen via deze Logitech Media Server wordt gestopt als dit station wordt vrijgegeven.
+	NO	Advarsel: Denne enheten kjører for øyeblikket Logitech Media Server. All avspilling fra Logitech Media Server stanser når du løser ut denne stasjonen.
+	PL	Ostrzeżenie: Na tym urządzeniu jest obecnie uruchomiony program Logitech Media Server. Po odłączeniu tego napędu odtwarzanie wszystkich elementów używanych w programie Logitech Media Server zostanie zatrzymane.
+	RU	Предупреждение. На этом устройстве сейчас запущен Logitech Media Server. При извлечении диска воспроизведение с помощью Logitech Media Server будет остановлено.
+	SV	Varning: Logitech Media Server körs för närvarande på den här enheten. Alla uppspelningar från Logitech Media Server upphör när enheten matas ut.
+

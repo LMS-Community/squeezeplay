@@ -1,0 +1,555 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+
+<html>
+<head>
+	<title>JiveMLON</title>
+</head>
+
+<body>
+	<h1>JiveMLON</h1>
+
+	<p>Interface specifications for browsing using Jive.</p>
+
+	<p>Version 1.6 (<a href="#rev">revision history</a>)</p>
+
+	<h2>Introduction</h2>
+
+	<p>SlimBrowser is designed to browse music from SS. It expects data in the following form to build its menus (using approximate Perl syntax, where {} denotes a hash and [] an array):</p>
+
+	<blockquote>
+		<pre>
+{
+    base = {
+        &lt;base_fields&gt;
+    },
+    count = &lt;count_value&gt;,
+    rescan = 1,
+    item_loop = [
+        {
+            &lt;item_fields&gt;
+        },
+        {
+            &lt;item_fields&gt;
+        },
+        ...,
+    ],
+}
+        
+</pre>
+	</blockquote>
+
+	<p>where (items in bold are mandatory):</p>
+
+	<blockquote>
+		<p><code>base</code><br>
+		Contains are a number of fields applicable to the entire window/menu as defined in <a href="#base_fields">&lt;base_fields&gt;</a>.</p>
+
+		<p><strong><code>count</code></strong><br>
+		Positive integer indicating how many items are available for the given query (which may be different than the number of items in the item_loop array; Jive requests shall support paging).</p>
+
+		<p><code>rescan</code><br>
+		If present with value 1, indicates a rescan is in progress. Jive behavior TBD.</p>
+
+		<p><strong><code>item_loop</code></strong><br>
+		Array containing the items, each containing a number of fields applicable to an individual menu item as defined in <a href="#item_fields">&lt;item_fields&gt;</a>. A menu item can itself be a list, i.e. contain the fields described here to define the lower level. See <a href="#hierarchical%20support">hierarchical support</a> below.</p>
+	</blockquote>
+
+	<h2 id="base_fields"><code>&lt;base_fields&gt;</code></h2>
+
+	<p>These fields allow defining values applicable to the entire menu or window.</p>
+
+	<blockquote>
+		<pre>
+{
+    icon = "..."
+    jsonrpc = "http://..."
+    window = {
+        &lt;window_fields&gt;
+    }
+    actions = {
+        &lt;actions_fields&gt;
+    }
+}
+        
+</pre>
+	</blockquote>
+
+	<blockquote>
+		<p><code>icon</code><br>
+		Full or partial base URL for images.</p>
+
+		<p><code>window</code><br>
+		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>
+
+		<p><code>actions</code><br>
+		Allows specifying the command(s) to use for this menu. See <a href="#action_fields">&lt;actions_fields&gt;</a>.</p>
+
+		<p><code>jsonrpc</code><br>
+		Allows to override the JSONRPC URL used by Jive (defaults to the JSON RPC server of the SlimServer it's browsing from).</p>
+	</blockquote>
+
+	<h2 id="item_fields"><code>&lt;item_fields&gt;</code></h2>
+
+	<p>These fields are parsed into a menu item. Some fields are designed to complement fields defined in the &lt;base_fields&gt;.</p>
+
+	<blockquote>
+		<pre>
+{
+    text = "..."
+    textArea = "..."
+    icon-id = ...
+    icon = "..."
+    radio = val
+    checkbox = val
+    input = {
+        &lt;input_fields&gt;
+    }
+    window = {
+        &lt;window_fields&gt;
+    }
+    actions = {
+        &lt;actions_fields&gt;
+    }
+}
+        
+</pre>
+	</blockquote>
+
+	<p>where (items in bold are mandatory):</p>
+
+	<blockquote>
+		<p><strong><code>text</code></strong><br>
+		Menu item text. May contain \n, in which case the item is displayed on multiple lines</p>
+
+		<p><code>textArea</code><br>
+		If the window is to contain a (fullscreen) textArea window, the string can be sent via this item. Title bar will be given by the 'text' item. All other item_fields are unused when using textArea.
+
+		<p><code>icon-id</code><br>
+		SlimServer artwork id. Will be fetched using a separate http request to SS using the well known URL. The size is defined by the style. <code>icon-id</code> has precedence over <code>icon</code> (defined below)</p>
+
+		<p><code>icon</code><br>
+		Full or partial URL of some image to display.</p>
+
+		<p><code>radio</code><br>
+		If present, indicates a radio button is to be created on this base item. Radio buttons involve a do action, defined in <a href="#action_fields">&lt;action_fields&gt;</a>.</p>
+
+		<p><code>checkbox</code><br>
+		If present, indicates a checkbox is to be created on this base item. See checkbox-specific items "on" and "off" under <a href="#action_fields">&lt;action_fields&gt;</a>.</p>
+
+		<p><code>input</code><br>
+		If present, indicates user input is required before proceeding with the actions. See <a href="#input_fields">&lt;input_fields&gt;</a>.</p>
+
+		<p><code>window</code><br>
+		Allows specifying the elements to use for a window opened from this menu. See <a href="#window_fields">&lt;window_fields&gt;</a>.</p>
+
+		<p><code>actions</code><br>
+		Allows specifying the command(s) to use for this menu. See <a href="#action_fields">&lt;actions_fields&gt;</a>.</p>
+	</blockquote>
+
+	<h2 id="input_fields"><code>&lt;input_fields&gt;</code></h2>
+	<p>Used if input is required before proceeding with the action. Specifies length to input, allowed chars and help text or token.</p>
+
+    <blockquote>
+<pre>
+ { 
+
+{
+    len = ...
+    allowedChars = "..."
+    help = {
+        text = "...",
+        token = "...",
+    }
+    softbutton1 = "...",
+    softbutton2 = "...",
+}
+        
+</pre>
+	</blockquote>
+
+	<p>where (items in bold are mandatory):</p>
+
+	<blockquote>
+		<p><strong><code>len</code></strong><br>
+		Min number of characters to request before proceeding.</p>
+
+		<p><code>allowedChars</code><br>
+		Overrides the set of characters allowed for input. The default value is given by the localized ALLOWEDCHARS_NOCAPS string in share/jive/global_strings.txt. In EN, this is &quot; abcdefghijklmnopqrstuvwxyz!@#$%^&amp;*()_+{}|:\\\&quot;&apos;&lt;&gt;?-=,./~`[];0123456789&quot;</p>
+
+		<p><code>initialText</code><br>
+		String that contains what should be filled into the text input entry as a default.</p>
+
+		<p><code>help</code><br>
+		A help text, if any. Can be specified either using the localized text or a token (localized by Jive),</p>
+
+		<p><code>softbutton1, softbutton2</code><br>
+		Text for softbuttons, if any. If either of these are configured, the help text widget will change from 'help' to 'softHelp' to accomodate the layout of the buttons.</p>
+
+	</blockquote>
+
+	<h2 id="window_fields"><code>&lt;window_fields&gt;</code></h2>
+
+	<p>If selecting an item results in opening a new window (i.e. the &quot;go&quot; action), the window fields, if present, will be used instead of the item fields for the window title and style. Fields defined in an item override any field defined in &lt;base_fields&gt;.&lt;window_fields&gt;.</p>
+
+	<blockquote>
+		<pre>
+{
+    text = "..."
+    icon-id = ...
+    icon = "..."
+    titleStyle = "..."
+    menuStyle = "..."
+    help = {
+             text = "..."
+    }
+}
+        
+</pre>
+	</blockquote>
+
+	<p>where (items in bold are mandatory):</p>
+
+	<blockquote>
+		<p><code>text</code>, <code>icon-id</code> and <code>icon</code><br>
+		Same semantic as for items. Typically, these are different for each item and are defined in &lt;item_fields&gt;.&lt;window_fields&gt;.</p>
+
+		<p><code>titleStyle</code> and <code>menuStyle</code><br>
+		Style of the title (resp. menu) of the new window. Typically, this is the same for all items and is defined in &lt;base_fields&gt;.&lt;window_fields&gt;. The only supported value is "album" (for multiline with icon title/item)</p>
+
+		<p><code>help{text}</code><br>
+		Displays help text at the bottom of a window.</p>
+	</blockquote>
+
+
+	<h2 id="actions_fields"><code>&lt;actions_fields&gt;</code></h2>
+
+	<p>The action fields specify the command sent by Jive when the user performs an action on the item, for example presses a key. In many cases, the command to be performed is the same regardless of the item (f.e., play), only one parameter will change for each item (f.e., the item id). The syntax therefore allows actions to be defined in the <a href="#base_fields">&lt;base_fields&gt;</a> and being completed in the <a href="#item_fields">&lt;item_fields&gt;</a>. It is however possible to define completely a command at the item level.</p>
+
+	<blockquote>
+		<pre>
+{
+    &lt;action_name&gt; = "&lt;url_command&gt;"
+    &lt;action_name&gt; = {
+        &lt;json_command&gt;
+    }
+    &lt;action_name&gt; = null
+
+    &lt;json_params_id&gt; = {
+        &lt;params&gt;
+    }
+}
+</pre>
+	</blockquote>
+
+	<p>Actions are identified by their name, corresponding to the keys or other controls available on Jive. Actions can refer to a JSON command or a URL (this shall remain coherent between base and item level). Actions can be set as "null" to have no effect (to prevent a pre-defined or base-defined command to work on a particular menu or item).</p>
+
+	<p>&lt;json_params_id&gt; is only available in items, see json commands below.</p>
+
+	<h3>&lt;action_name&gt;</h3>
+
+	<p>Actions are defined using a string composed of the key pressed and its holding state.</p>
+
+	<blockquote>
+		<p><strong>keys</strong><br>
+		One of "go"/"do", "back", "play", "add", "rew", "fwd" or "pause".</p>
+
+		<p><strong>holding state</strong><br>
+		"" or "-hold" (not for "go"/"do" and "back")</p>
+	</blockquote>
+
+	<p>For example, field <code>play-hold</code> defines the command to send when the play key is held. It can be defined at the item level (applies to the item only), or at the base level. In this last case, it can be complemented by params defined at the item level.</p>
+
+	<h3>&lt;url_command&gt;</h3>
+
+	<p>URLs are strings, enclosed in quotes. MULTI-LEVEL</p>
+
+	<h3>&lt;json_command&gt;</h3>
+
+	<p>JSON RPC commands consist of a hash with the following keys:</p>
+
+	<blockquote>
+		<pre>
+{
+    player = 0
+    cmd = ["...", "..."]
+    params = {
+        &lt;param_name&gt; = ...,
+        ...
+    }
+    itemsParams = &lt;json_params_id&gt;
+}
+</pre>
+	</blockquote>
+
+	<blockquote>
+		<p><code>player</code><br>
+		Player if the command requires it. The actual value is replaced by Jive.</p>
+
+		<p><strong><code>cmd</code></strong><br>
+		Array of command terms, f.e. <code>['playlist', 'jump']</code></p>
+
+		<p><code>params</code><br>
+		Hash of parameters, f.e. <code>{sort = new}</code>. Passed to the server in the form "key:value", f.e. 'sort:new'. <p> 
+	<ul><li>The value "__INPUT__" is replaced by any user entered data.</li>
+	<li>The value "__TAGGEDINPUT__" is replaced by user entered data in a "key:value" format.
+		For example, the param foo = "__TAGGEDINPUT__" would be replaced by 'foo:&lt;user-entered input&gt;'</li>
+	</ul></p>
+
+		<p><code>itemParams</code><br>
+		In base level commands, this defines the name of the field in the item <a href="#action_fields">&lt;actions_fields&gt;</a> that must be used to complete the command for a particular item. See the example below.</p>
+	</blockquote>
+
+	<h3 id="go-do">Go and Do, On and Off actions</h3>
+	
+	<p>&quot;go&quot; refers to a command that opens a new window (i.e. returns results to browse), 
+		while &quot;do&quot; refers to an action to perform that does not return browsable data. &quot;do&quot; takes precedence over &quot;go&quot;.</p>
+&quot;on&quot; and &quot;off&quot; are similar to &quot;do&quot;, but are used in the specific case of a checkbox item (i.e., one &quot;do&quot; action for when the checkbox is checked, one for when it is unchecked).
+	<p>Paging parameters (json: _index and _qty, url: TBD) are added automatically by Jive for &quot;go&quot;.</p>
+
+	<h3 id="pre-defined actions">Pre-defined actions</h3>
+
+	<p>Some actions have "built in" defaults: the presence of a new action overrides Jive's standard (built in) behavior.</p>
+
+	<blockquote>
+				<p><code>back</code><br>
+		Goes up one level in the browsing, closing the current window. Override not supported.</p>
+
+		<p><code>rew</code><br>
+		Does 'playlist jump -1' or 'playlist jump 0' depending on the repetition rate of the key</p>
+
+		<p><code>fwd</code><br>
+		Does 'playlist jump +1'</p>
+
+		<p><code>pause</code><br>
+		Does 'pause 0' or 'pause 1' depending on the player state</p>
+
+		<p><code>pause-hold</code><br>
+		Does 'stop'</p>
+
+		<p><code>play, play-hold, add, add-hold, rew-hold, fwd-hold</code><br>
+		These have no predefined command.</p>
+	</blockquote>
+
+	<h2 id="example">Example</h2>
+
+	<p>Partial top level menu:</p>
+
+	<blockquote>
+		<pre>
+{
+    // no base defined as most items have a very different command set
+
+    count = 3,
+    // because the top menu contains few elements, Jive got them all in one step and this is equal to the number of elements
+    // in the item_loop array below.
+
+    item_loop = [
+        {
+            text = 'Albums',
+            // this is what the menu item will show. No icon or icon-id defined, so the menu item is text only.
+
+            actions = {
+                go = {
+                    cmd = ['albums'],
+                    params = {
+                            menu = "tracks"
+                    }
+                }
+                // our action command will requests albums from the server using JSON
+                
+                // no other actions defined, so pressing play f.e. has no effect
+            }
+        },
+        {
+            text = 'New music',
+
+            window = {
+                text = 'Surprise!',
+                icon = 'http://....'
+            },
+            // Normally Jive opens a window titled using the text of the menu item (i.e. "text"), but in this case
+            // we want the window title to be different and read "Surprise!"
+
+            actions = {
+                go = {
+                    cmd = ['albums'],
+                    params = {
+                        sort = 'new',
+                        tags = 'jsjs',
+                        menu = 'tracks',
+                    }
+                }
+            }
+        },
+        {
+            text = 'Browse SlimNetwork',
+            actions = {
+                go = "http://slimnetwork/browse"
+                // SN uses URLs, not JSON commands
+            }
+        },
+        {
+            text = 'Settings',
+
+            // this is hierarchical so we define here the items
+            count = 5,
+            item_loop = [
+                ...
+            ]
+        },
+        {
+            text = 'Search',
+            // ask user for at least 3 chars before firing the action
+            input = 3,
+            actions = {
+                go = {
+                    cmd = ['search'],
+                    params = {
+                        // __TAGGEDINPUT__ will be replaced by the entered text in the form "search:<user-entered text>"
+                        search = '__TAGGEDINPUT__',
+                        tags = 'blabla',
+                        menu = 'tracks',
+                    }
+                }
+            }            
+        },
+    ]
+}
+        
+</pre>
+	</blockquote>
+
+	<p>Selecting albums issues the command defined in actions.action and returns the following data:</p>
+
+	<blockquote>
+		<pre>
+{
+        base = {
+                icon = "art?id="
+                actions = {
+                        go = {
+                                cmd = ['tracks'],
+                                params = {
+                                        menu = "songinfo",
+                                },
+                                itemParams = 'anyParams',
+                        }
+                        play = {
+                                player = 0,
+                                cmd = ['playlistctrl'],
+                                params = {
+                                        cmd = 'load'
+                                },
+                                itemParams = 'anyParams',
+                        }
+                }
+        }
+
+    count = 12,
+
+    item_loop = [
+        {
+            text = "Play all",
+            actions = {
+                do = {...} // overrides go in base
+            },
+        },
+        {
+            text = "Rock",
+            icon = "rock.jpg", // a partial URL, combined with the above
+            anyParams = {
+                genre_id = 33,
+            },
+        },
+        {
+            text = "Alternative",
+            icon-id = 33,  // a SS artworkId
+            anyParams = {
+                genre_id = 34,
+            },
+        },
+        ...
+    ]
+}
+        
+</pre>
+	</blockquote>
+
+	<h2>NOTES</h2>
+
+	<ul>
+		<li>There is a dependency between the style (in Jive) and the data returned.</li>
+
+		<li>Now Playing and Exit items are added by Jive to the menu and fully handled by Jive.</li>
+
+		<li>Settings are not supported by the above syntax.</li>
+
+		<li>Paging and stacking is controlled by Jive (no "redirect")</li>
+
+		<li>If the player is off, Jive manages the single menu item "Power On", that transforms itself in the menu (consequence of the no redirect)</li>
+
+		<li>The business with checking for multiple params should not cause performance issues as it is done "rarely" (at each button press, but not while scrolling, building the menu, etc.)</li>
+	</ul>
+
+	<h2>SS command implementation</h2>
+
+	<p>A new "menu" query is defined to handle the top level menu. Other existing queries are re-used, but a new parameter "menu" is added that allows:</p>
+
+	<ul>
+		<li>declaring usage in menu mode (the data returned conforms to the syntax above)</li>
+
+		<li>indicate the next browse level</li>
+	</ul>
+
+	<p>For example, the hierarchy [genres, artist, album] is done using a top level menu with command "genres menu:artist", that generates items with commands "artists menu:albums", etc... This is done in order to re-use the code of these queries. Experience shows they are high maintenance.</p>
+
+	<h2 id="rev">Revision history</h2>
+
+	<h3>1.6</h3>
+
+	<ul>
+		<li>Support for soft buttons in input window help box</li>
+	</ul>
+
+
+	<h3>1.5</h3>
+
+	<ul>
+		<li>Add textArea item_field option</li>
+	</ul>
+
+	<h3>1.4</h3>
+
+	<ul>
+		<li>Localization of allowedChars charset. Addition of initialText &lt;input_fields&gt; parameter.</li>
+	</ul>
+	<h3>1.3</h3>
+
+	<ul>
+		<li>Added support for __TAGGEDINPUT__ param, sends data in 'k:v' format, where v is user-entered text</li>
+	</ul>
+	<h3>1.2</h3>
+
+	<ul>
+		<li>Added radio and checkbox items. Added on/off actions to assist checkboxes</li>
+	</ul>
+
+	<h3>1.1</h3>
+
+	<ul>
+		<li>Improved input description: now can specify allowed chars and help text or token.</li>
+	</ul>
+
+	<h3>1.0</h3>
+
+	<ul>
+		<li>Added the ability to have a "go" action that goes nowhere.</li>
+	</ul>
+
+	<h3>0.9</h3>
+
+	<ul>
+		<li>Added the necessary plumbing to allow expressing an action containing user entered data on the client side. JSON parameters containing "__INPUT__" are replaced by the user entered value. User input is triggered by the "input" item_field.</li>
+	</ul>
+</body>
+</html>

@@ -1,0 +1,19 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SLIDESHOW
+	CS	Prezentace
+	DA	Diasshow
+	DE	Slideshow
+	EN	Slideshow
+	ES	Presentación
+	FI	Diaesitys
+	FR	Diaporama
+	IT	Presentazione
+	NL	Diavoorstelling
+	NO	Lysbildefremvisning
+	PL	Pokaz slajdów
+	RU	Слайд-шоу
+	SV	Bildspel
+

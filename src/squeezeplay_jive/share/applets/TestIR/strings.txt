@@ -1,0 +1,19 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+TEST_IR
+	CS	Infračervený přenos
+	DA	Infrarød
+	DE	Infrarot
+	EN	Infrared
+	ES	Infrarrojos
+	FI	Infrapuna
+	FR	Infrarouge
+	IT	Infrarossi
+	NL	Infrarood
+	NO	Infrarød
+	PL	Podczerwień
+	RU	ИК
+	SV	Infraröd
+

@@ -1,0 +1,319 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+DEMO
+	CS	Demonstrace v obchodě
+	DA	Butiksdemo
+	DE	Verfügbare Demo
+	EN	In-store Demo
+	ES	Demostración en tienda
+	FI	Liikkeessä näytettävä esittely
+	FR	Démo intégrée
+	IT	Demo
+	NL	Winkeldemo
+	NO	Butikkdemonstrasjon
+	PL	Prezentacja sklepu
+	RU	Внутренняя демонстрация
+	SV	Demonstration i butik
+
+DEMO_START_DEMO
+	CS	Spustit demonstraci
+	DA	Start demo
+	DE	Demo starten
+	EN	Start Demo
+	ES	Iniciar demostración
+	FI	Aloitusesittely
+	FR	Lancer la démo
+	IT	Avvia demo
+	NL	Demo starten
+	NO	Start demoversjon
+	PL	Uruchom prezentację
+	RU	Запустить демонстрацию
+	SV	Starta demonstration
+
+DEMO_START_DEMO_WARNING
+	CS	VAROVÁNÍ: po spuštění demonstrace její vypnutí vyžaduje obnovení do továrního nastavení. Podržte tlačítko + při spuštění.
+	DA	ADVARSEL: Når demoen er startet, må den ikke afbrydes, da afspilleren i så fald skal nulstilles bagefter. Hold + (knappen) nede mens afspilleren startes.
+	DE	Warnung: Nachdem Sie die Demo gestartet haben, müssen Sie die Standardeinstellungen wiederherstellen, um die Demo zu deaktivieren. Halten Sie beim Einschalten die Taste '+' gedrückt.
+	EN	WARNING: after starting the demo, disabling the demo requires a factory reset. Hold the + button down while powering up.
+	ES	ADVERTENCIA: una vez iniciada la demostración, ésta sólo se podrá desactivar con la configuración de fábrica. Mantenga pulsado el botón + al encender el dispositivo.
+	FI	Varoitus: jos esittely on käynnistetty, sen käytöstä poisto vaatii tehdasasetuksen palautuksen. Pidä plus (+) -näppäintä painettuna virtaa kytkettäessä.
+	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
+	IT	ATTENZIONE: dopo avere avviato il demo, per disattivarlo è necessario effettuare una reimpostazione di fabbrica. Tenere premuto il pulsante + durante l'accensione.
+	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
+	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
+	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
+	RU	Предупреждение. После запуска демонстрации для ее отключения потребуется возврат заводских настроек. Нажмите и удерживайте кнопку + при включении питания.
+	SV	VARNING! När du har startat demonstrationen måste du återställa standardinställningarna för att inaktivera den. Håll ned plusknappen vid uppstart.
+
+DEMO_ERROR
+	CS	Chyba
+	DA	Fejl
+	DE	Fehler
+	EN	Error
+	ES	Error
+	FI	Virhe
+	FR	Erreur
+	IT	Errore
+	NL	Fout
+	NO	Feil
+	PL	Błąd
+	RU	Ошибка
+	SV	Fel
+
+DEMO_WRONG_CODE
+	CS	Chybný kód
+	DA	Forkert kode
+	DE	Falscher Code
+	EN	Wrong code
+	ES	Código incorrecto
+	FI	Väärä koodi
+	FR	Code erroné
+	IT	Codice errato
+	NL	Verkeerde code
+	NO	Feil kode
+	PL	Nieprawidłowy kod
+	RU	Неверный код
+	SV	Fel kod
+
+DEMO_ENTER_CODE
+	CS	Demonstrace v obchodě: Zadejte kód
+	DA	Butiksdemo: Indtast kode
+	DE	Verfügbare Demo: Code eingeben
+	EN	In-store Demo: Enter Code
+	ES	Demostración en tienda: introduzca el código
+	FI	Liikkeessä näytettävä esittely: Anna koodi
+	FR	Démo intégrée: saisissez le code
+	IT	Demo: immettere il codice
+	NL	Winkeldemo: code invoeren
+	NO	Butikkdemonstrasjon: angi kode
+	PL	Prezentacja sklepu: wprowadź kod
+	RU	Внутренняя демонстрация: введите код
+	SV	Demonstration i butik: Ange kod
+
+DEMO_VOLUME
+	CS	Hlasitost (%s)
+	DA	Volumen (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
+
+DEMO_VOLUME_MUTED
+	CS	Hlasitost  (ztlumeno)
+	DA	Volumen (lyden er slået fra)
+	DE	Lautstärke (Stumm)
+	EN	Volume (Muted)
+	ES	Volumen (silenciado)
+	FI	Äänenvoimakkuus (mykistetty)
+	FR	Volume (SOURDINE)
+	IT	Volume (DISATTIVATO)
+	NL	Volume (gedempt)
+	NO	Volum (av)
+	PL	Głośność (wyciszona)
+	RU	Громкость (приглушенная)
+	SV	Volym (av)
+
+SLIDE_01
+	CS	Hudební přehrávač Squeezebox™ Touch\nWi-Fi
+	DA	Squeezebox™ Touch\nTrådløs musikafspiller
+	DE	Squeezebox™ Touch\nWLAN-Musikplayer
+	EN	Squeezebox™ Touch\nWi-Fi Music Player
+	ES	Squeezebox™ Touch\nReproductor de música Wi-Fi
+	FI	Squeezebox™ Touch\nWi-Fi -soitin
+	FR	Lecteur de musique sans fil Squeezebox™ Touch
+	IT	Lettore musicale Wi-Fi\nSqueezebox™ Touch
+	NL	Squeezebox™ Touch\nWi-Fi-muzieksysteem
+	NO	Squeezebox™ Touch\nTrådløs musikkspiller
+	PL	Odtwarzacz muzyczny Squeezebox™  Touch\nWi-Fi
+	RU	Музыкальный плеер Wi-Fi\nSqueezebox™ Touch
+	SV	Squeezebox™ Touch\nWi-Fi-spelare
+
+SLIDE_02
+	CS	Objevte svět digitální hudby.
+	DA	Gå på opdagelse i den digitale musikverden.
+	DE	Entdecken Sie die Welt der digitalen Musik.
+	EN	Discover a world of digital music.
+	ES	Descubra un mundo de música digital.
+	FI	Löydä digitaalinen musiikkimaailma.
+	FR	Découvrez un univers de musique numérique.
+	IT	Scopri un mondo di musica digitale.
+	NL	Ontdek een wereld van digitale muziek.
+	NO	Oppdag en verden av digital musikk.
+	PL	Odkryj świat muzyki cyfrowej.
+	RU	Откройте мир цифровой музыки.
+	SV	Upptäck en värld av digital musik.
+
+SLIDE_03
+	CS	Z tisíců bezplatných internetových radiostanic...
+	DA	Fra tusindvis af gratis radiostationer på internetet...
+	DE	Von Tausenden kostenlosen Internetradiosendern ...
+	EN	From thousands of free Internet radio stations...
+	ES	Desde miles de emisoras de radio por Internet gratuitas...
+	FI	Tuhansista ilmaisista internet-radioasemista
+	FR	De milliers de radios Internet gratuites...
+	IT	Da migliaia di stazioni radio Internet gratuite...
+	NL	Van duizenden gratis internetradiostations...
+	NO	Fra tusenvis av gratis Internett-radiostasjoner...
+	PL	Od tysięcy bezpłatnych internetowych stacji radiowych...
+	RU	От тысяч бесплатных интернет-радиостанций
+	SV	Från tusentals gratis webbradiostationer...
+
+SLIDE_04
+	CS	...k vaší osobní hudební sbírce...
+	DA	... til din egen personlige musiksamling
+	DE	...zu Ihrer eigenen Musiksammlung...
+	EN	...to your own personal music collection...
+	ES	...hasta su colección de música personal...
+	FI	henkilökohtaista musiikkikokoelmaasi varten
+	FR	...à votre collection musicale personnelle...
+	IT	...alla propria raccolta di musica personale...
+	NL	...naar je persoonlijke muziekcollectie...
+	NO	...til din personlige musikksamling...
+	PL	...do swojej kolekcji muzyki...
+	RU	до вашей личной музыкальной коллекции
+	SV	...till din egen personliga musiksamling...
+
+SLIDE_05
+	CS	...k nejzajímavějším hudebním službám online.
+	DA	... til de bedste musiktjenester på nettet.
+	DE	...zu den angesagtesten Online-Musikdiensten.
+	EN	...to the hottest online music services.
+	ES	...o los mejores servicios de música en línea.
+	FI	suosituimpiin online-musiikkipalveluihin.
+	FR	...aux meilleurs services de musique en ligne.
+	IT	...ai servizi di musica online più richiesti.
+	NL	...naar de beste onlinemuziekservices.
+	NO	...til de beste musikktjenestene på nett.
+	PL	...do najnowszych usług muzycznych w trybie online.
+	RU	до самых горячих сетевых музыкальных служб.
+	SV	...till de senaste onlinemusiktjänsterna.
+
+SLIDE_06
+	CS	Snadný přístup k nekončícímu výběru hudby přes intuitivní dotykovou obrazovku.
+	DA	Hurtig adgang til et væld af musik via det smarte berøringsfølsomme display.
+	DE	Einfacher Zugriff auf eine unbegrenzte Musikauswahl über den intuitiven Touchscreen.
+	EN	Easy access to endless music choices via intuitive touch screen.
+	ES	Acceso fácil a opciones musicales ilimitadas mediante una pantalla táctil de uso sencillo.
+	FI	Nauti rajattomasta musiikkivalikoimasta helposti intuitiivisen kosketusnäytön avulla.
+	FR	Accès facile à un choix musical infini via un écran tactile intuitif.
+	IT	Facile accesso a un'infinità di brani musicali tramite l'intuitivo touch screen.
+	NL	Vlotte toegang tot eindeloze muziekopties via intuïtief touchscreen.
+	NO	Enkel tilgang til uendelige mengder musikk via en intuitiv berøringsskjerm.
+	PL	Prosty dostęp do nieograniczonego wyboru muzyki za pomocą intuicyjnego ekranu dotykowego.
+	RU	Простой доступ к неограниченному количеству музыки через интуитивно понятный сенсорный интерфейс.
+	SV	Välj den musik du lyssnar på eller upptäck nya favoriter via den lättanvända pekskärmen.
+
+SLIDE_07
+	CS	Jednoduché nastavení. Plně se integruje do vaší stávající domácí sítě.
+	DA	Enkel installation. Perfekt integration i dit nuværende hjemmenetværk.
+	DE	Einfache Einrichtung. Lässt sich ganz einfach in Ihr Heimnetzwerk integrieren.
+	EN	Simple set-up. Seamlessly integrates with your existing home network.
+	ES	Instalación sencilla. Se integra a la perfección con la red doméstica existente.
+	FI	Tietokoneesi yhdistetään saumattomasti nykyiseen kotiverkkoon yksinkertaisella asennustoimenpiteellä.
+	FR	Configuration simple. S'intègre parfaitement à votre réseau domestique existant.
+	IT	Semplicità di configurazione: si integra perfettamente con la rete domestica esistente.
+	NL	Eenvoudig in te stellen. Naadloos te integreren in je bestaande thuisnetwerk.
+	NO	Enkelt oppsett. Smidig integrering med det eksisterende hjemmenettverket.
+	PL	Bardzo prosta instalacja. Bezproblemowa integracja z istniejącą siecią domową.
+	RU	Простая настройка. Удобная интеграция с домашней сетью.
+	SV	Installationen går både snabbt och smidigt. Anslut bara spelaren till ditt hemnätverk.
+
+SLIDE_08
+	CS	Plná, cele digitální hudba přes vaši stereo soustavu.
+	DA	Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
+	DE	Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
+	EN	Rich, full digital music through your stereo system.
+	ES	Música de calidad y totalmente digital a través de su sistema estéreo.
+	FI	Täyteläistä ja rikasta digitaalimusiikkia stereojärjestelmän kautta.
+	FR	Son numérique pur et riche via votre système stéréo.
+	IT	Musica digitale ricca e avvolgente tramite l'impianto stereo esistente.
+	NL	Rijke, volle digitale muziek via je stereosysteem.
+	NO	Fyldig digitalmusikk fra stereoanlegget.
+	PL	Wspaniale brzmiąca, w pełni cyfrowa muzyka odtwarzana przez system stereo.
+	RU	Богатый, насыщенный цифровой звук на вашей стереосистеме.
+	SV	Fylligt och rikt ljud via din stereoanläggning.
+
+SLIDE_09
+	CS	Prohlížejte obaly alb a spořiče obrazovky na 4.3 palcovém barevném displeji.
+	DA	Du kan se albumcovere og pauseskærme på det 4,3" store farvedisplay.
+	DE	Anzeige von CD-Covern und Bildschirmschonern auf dem 6-cm-Farbdisplay.
+	EN	View album art and screensavers on the 4.3 inch color display.
+	ES	Vea protectores de pantalla y carátulas de álbumes en la pantalla en color de 11 cm.
+	FI	Nauti kansitaiteesta ja näytönsäästäjistä 4,3 tuuman värinäytöllä.
+	FR	Visualisez les pochettes d'album et les écrans de veille sur l'écran couleur 4,3 pouces.
+	IT	Display a colori da 4,3 pollici per la visualizzazione di copertine di album e screen saver.
+	NL	Bekijk hoesafbeeldingen en schermbeveiligers op de 4,3-inch kleurendisplay.
+	NO	Se albumgrafikk og skjermsparere på fargeskjermen på 4,3 tommer.
+	PL	Wyświetlaj okładki albumów i wygaszacze ekranu na kolorowym wyświetlaczu o przekątnej 4,3 cala.
+	RU	Цветной экран диагональю 4,3 дюйма позволяет просматривать обложки альбомов и экранные заставки.
+	SV	Skärmen är rejält tilltagen (4,3 tum) och perfekt för skivomslag och skärmsläckare.
+
+SLIDE_10
+	CS	A získejte přístup k hudbě a fotkám přímo z USB pamětí a SD karet.
+	DA	Samt direkte adgang til din musik og dine billeder på USB-drev og SD-kort.
+	DE	Zugriff auf Ihre Musik und Fotos direkt von USB-Laufwerken und SD-Karten.
+	EN	And access your music and photos directly from USB drives and SD cards.
+	ES	Y acceda a música y fotos directamente desde las unidades USB y tarjetas SD.
+	FI	Voit soittaa musiikkia ja katsella valokuvia suoraan USB-asemalta ja SD-kortilta.
+	FR	Vous pouvez également accéder à votre musique et vos photos directement depuis un lecteur USB ou une carte SD.
+	IT	Accesso a musica e foto direttamente da unità USB e schede SD.
+	NL	En roep je muziek en foto's rechtstreeks op vanaf USB-drives en SD-kaarten.
+	NO	Du får også tilgang til musikk og bilder direkte fra usb-stasjoner og sd-kort.
+	PL	Możesz też uzyskać dostęp do muzyki i zdjęć bezpośrednio z dysków USB i kart SD.
+	RU	И наконец, доступ к музыке и фото непосредственно с USB-дисков и SD-карт.
+	SV	Du får dessutom tillgång till musik och bilder från USB-enheter och SD-kort.
+
+SLIDE_11
+	CS	Wi-Fi hudba na dosah prstů.
+	DA	Musik via Wi-Fi – lige ved hånden.
+	DE	Musik über WLAN zum Greifen nah.
+	EN	Wi-Fi music at your fingertips.
+	ES	Música Wi-Fi en sus manos.
+	FI	Wi-Fi-musiikkia sormenpäidesi ulottuvilla.
+	FR	De la musique en Wi-Fi à la portée de vos doigts.
+	IT	Musica Wi-Fi a portata di mano.
+	NL	Wi-Fi-muziek binnen handbereik.
+	NO	Trådløs musikk ved fingerspissene.
+	PL	Muzyka Wi-Fi w zasięgu ręki.
+	RU	Музыка по Wi-Fi — у вас под рукой.
+	SV	Musik via trådlöst nätverk – alltid nära till hands.
+
+SLIDE_12
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
+SLIDE_13
+	CS	Žádejte podrobnosti o rodině produktů Squeezebox.
+	DA	Bed om flere oplysninger om Squeezebox-familien.
+	DE	Fragen Sie nach weiteren Informationen zu den Squeezebox-Produkten.
+	EN	Ask for details about the Squeezebox family.
+	ES	Solicite información detallada sobre la familia Squeezebox.
+	FI	Kysy lisää Squeezebox-perheestä.
+	FR	Demandez des informations sur la gamme Squeezebox.
+	IT	Richiedi ulteriori informazioni sui prodotti della famiglia Squeezebox.
+	NL	Vraag om informatie over de Squeezebox-reeks.
+	NO	Få mer informasjon om Squeezebox-serien.
+	PL	Zapytaj o szczegółowe informacje o rodzinie produktów Squeezebox.
+	RU	Узнайте больше о семействе Squeezebox.
+	SV	Ställ frågor om Squeezebox-sortimentet.
+

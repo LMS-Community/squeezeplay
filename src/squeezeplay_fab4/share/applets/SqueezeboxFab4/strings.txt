@@ -1,0 +1,230 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+#
+
+INVALID_MAC_TITLE
+	CS	Chyba
+	DA	Fejl
+	DE	Fehler
+	EN	Error
+	ES	Error
+	FI	Virhe
+	FR	Erreur
+	IT	Errore
+	NL	Fout
+	NO	Feil
+	PL	Błąd
+	RU	Ошибка
+	SV	Fel
+
+INVALID_MAC_TEXT
+	CS	Neplatná adresa mac nebo uuid. Kontaktujte zákaznickou podporu.
+	DA	Ugyldig MAC-adresse eller UUID. Kontakt supportafdelingen.
+	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
+	EN	Invalid mac address or uuid. Please contact support.
+	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
+	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
+	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
+	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
+	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
+	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
+	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
+	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
+
+INVALID_MAC_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+SCREEN_INPUT_CONTROL_TITLE
+	CS	Řízení vstupu
+	DA	Betjening
+	DE	Eingabesteuerung
+	EN	Input Control
+	ES	Control de entrada
+	FI	Tulon hallinta
+	FR	Contrôle des entrées
+	IT	Controllo input
+	NL	Regeling van ingang
+	NO	Innsignalkontroll
+	PL	Sterowanie wejściem
+	RU	Управление вводом
+	SV	Ingångskontroll
+
+SCREEN_INPUT_CONTROL_BOTH
+	CS	Obojí (dotykové a dálkové)
+	DA	Begge (berøring og fjernbetjening)
+	DE	Drücken und Fernbedienung
+	EN	Both (Touch and Remote)
+	ES	Ambos (táctil y mando a distancia)
+	FI	Molemmat (kosketus ja etä)
+	FR	Toucher et Télécommande
+	IT	Entrambi (tocco e telecomando)
+	NL	Beide (Aanraken en afstandsbediening)
+	NO	Begge (berøring og fjernkontroll)
+	PL	Obydwa (urządzenie Touch i pilot zdalnego sterowania)
+	RU	Оба (сенсорное и пульт)
+	SV	Båda (pekskärm och fjärrkontroll)
+
+SCREEN_INPUT_CONTROL_IR
+	CS	Dálkové ovládání
+	DA	Fjernbetjening
+	DE	Fernbedienung
+	EN	Remote
+	ES	Mando a distancia
+	FI	Kaukosäädin
+	FR	Télécommande
+	IT	Telecomando
+	NL	Afstandsbediening
+	NO	Fjernkontroll
+	PL	Pilot zdalnego sterowania
+	RU	Пульт
+	SV	Fjärr
+
+SCREEN_INPUT_CONTROL_TOUCH
+	CS	Dotyk
+	DA	Berøring
+	DE	Drücken
+	EN	Touch
+	ES	Táctil
+	FI	Kosketa
+	FR	Toucher
+	IT	Tocco
+	NL	Aanraken
+	NO	Berøring
+	PL	Urządzenie Touch
+	RU	Сенсорное
+	SV	Pekskärm
+
+BSP_BRIGHTNESS
+	CS	Jas
+	DA	Lysstyrke
+	DE	Helligkeit
+	EN	Brightness
+	ES	Brillo
+	FI	Kirkkaus
+	FR	Luminosité
+	IT	Luminosità
+	NL	Helderheid
+	NO	Lysstyrke
+	PL	Jasność
+	RU	Яркость
+	SV	Ljusstyrka
+
+BSP_BRIGHTNESS_CTRL
+	CS	Ovládání jasu
+	DA	Lysstyrkeregulering
+	DE	Helligkeitsregelung
+	EN	Brightness Control
+	ES	Control de brillo
+	FI	Kirkkauden säätö
+	FR	Contrôle de luminosité
+	IT	Controllo della luminosità
+	NL	Helderheidscontrole
+	NO	Lysstyrke
+	PL	Regulacja jasności
+	RU	Управление яркостью
+	SV	Ljusstyrka
+
+BSP_BRIGHTNESS_AUTOMATIC
+	CS	Automatický jas
+	DA	Automatisk lysstyrke
+	DE	Automatische Helligkeit
+	EN	Automatic Brightness
+	ES	Brillo automático
+	FI	Automaattinen kirkkaus
+	FR	Luminosité automatique
+	IT	Luminosità automatica
+	NL	Automatische helderheid
+	NO	Automatisk lysstyrke
+	PL	Automatyczna regulacja jasności
+	RU	Автонастройка яркости
+	SV	Automatisk ljusstyrka
+
+BSP_BRIGHTNESS_MANUAL
+	CS	Manuální jas
+	DA	Manuel lysstyrke
+	DE	Manuelle Helligkeit
+	EN	Manual Brightness
+	ES	Brillo manual
+	FI	Manuaalinen kirkkaus
+	FR	Luminosité manuelle
+	IT	Luminosità manuale
+	NL	Handmatige helderheid
+	NO	Manuell lysstyrke
+	PL	Ręczna regulacja jasności
+	RU	Ручная настройка яркости
+	SV	Manuell ljusstyrka
+
+BSP_BRIGHTNESS_MIN
+	CS	Minimální jas (Auto)
+	DA	Mindste lysstyrke (automatisk)
+	DE	Minimale Helligkeit (automatisch)
+	EN	Minimal Brightness (Auto)
+	ES	Brillo mínimo (automático)
+	FI	Vähimmäiskirkkaus (autom.)
+	FR	Luminosité minimale (Auto)
+	IT	Luminosità minima (auto)
+	NL	Minimale helderheid (automatisch)
+	NO	Minimal lysstyrke (Automatisk)
+	PL	Minimalna jasność (automatycznie)
+	RU	Минимальная яркость (Авто)
+	SV	Minsta ljusstyrka (auto)
+
+BSP_BRIGHTNESS_ADJUST_HELP
+	CS	K nastavení jasu použijte kolečko.
+	DA	Brug drejeknappen til at justere lysstyrken.
+	DE	Sie können die Helligkeit mit dem Rad anpassen.
+	EN	Use the wheel to adjust the brightness.
+	ES	Use la rueda para ajustar el brillo.
+	FI	Voit säätää kirkkautta kiekolla.
+	FR	Utilisez la molette pour régler la luminosité.
+	IT	Usare la rotellina per regolare la luminosità.
+	NL	Gebruik het wiel om de helderheid aan te passen.
+	NO	Bruk hjulet til å justere lysstyrken.
+	PL	Użyj pokrętła, aby ustawić jasność.
+	RU	Используйте колесико для регулировки яркости.
+	SV	Justera ljusstyrkan med rullningshjulet.
+
+SERVER_HAS_BEEN_STOPPED
+	CS	Místní hudební služba byla zastavena
+	DA	Den lokale musiktjeneste er stoppet
+	DE	Lokaler Musikdienst wurde beendet
+	EN	Local music service stopped
+	ES	Servicio de música local detenido
+	FI	Paikallinen musiikkipalvelu keskeytetty
+	FR	Le service de musique local s'est arrêté
+	IT	Servizio locale di musica interrotto
+	NL	Lokale muziekservice gestopt
+	NO	Den lokale musikktjenesten stoppet
+	PL	Lokalna usługa muzyczna została zatrzymana
+	RU	Локальная музыкальная служба остановлена
+	SV	Lokal musiktjänst stoppades
+
+SERVER_HAS_BEEN_STOPPED_INFO
+	CS	Místní hudební služba byla zastavena kvůli problému.
+	DA	Den lokale musiktjeneste er stoppet pga. et problem.
+	DE	Lokaler Musikdienst wurde aufgrund eines Problems beendet.
+	EN	Local music service has been stopped due to a problem.
+	ES	El servicio de música local se ha detenido debido a un problema.
+	FI	Paikallinen musiikkipalvelu on keskeytetty ongelman takia.
+	FR	Le service de musique local a été arrêté en raison d'un problème.
+	IT	Il servizio locale di musica è stato interrotto a causa di un problema.
+	NL	Lokale muziekservice is vanwege een probleem gestopt.
+	NO	Den lokale musikktjenesten ble stoppet pga. et problem.
+	PL	Lokalna usługa muzyczna została zatrzymana ze względu na problem.
+	RU	Локальная музыкальная служба остановлена из-за неполадок.
+	SV	Lokal musiktjänst har stoppats på grund av problem.
+

@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Checkbox - A checkbox widget</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_checkbox_style__closure__isselected_">jive.ui.Checkbox(style, closure, isSelected)</a></li>
+		<li><a href="#jive_ui_checkbox_isselected__">jive.ui.Checkbox:isSelected()</a></li>
+		<li><a href="#jive_ui_checkbox_setselected_isselected_">jive.ui.Checkbox:setSelected(isSelected)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A checkbox widget, extends <em>jive.ui.Widget</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- New checkbox
+ local checkbox = jive.ui.Checkbox(
+        &quot;checkbox&quot;, 
+        function(object, isSelected)
+                print(&quot;Checkbox is selected: &quot; .. tostring(isSelected))
+        end,
+        true)</pre>
+<pre>
+ -- Change checkbox state
+ checkbox:setSelected(false)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Checkbox includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>imgOn</strong> : the image when the checkbox is checked.</p>
+<p><strong>imgOff</strong> : the image when the checkbox is not checked.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_checkbox_style__closure__isselected_">jive.ui.Checkbox(style, closure, isSelected)</a></h2>
+<p>Constructs a Checkbox widget. <em>style</em> is the widgets style. <em>isSelected</em> is true if the checkbox is selected, false otherwise (default). <em>closure</em> is a function that will get called whenever the 
+checkbox value changes; the function prototype is:
+ function(checkboxObject, isSelected)</p>
+<p>
+</p>
+<h2><a name="jive_ui_checkbox_isselected__">jive.ui.Checkbox:isSelected()</a></h2>
+<p>Returns true if the checkbox is selected, or false otherwise.</p>
+<p>
+</p>
+<h2><a name="jive_ui_checkbox_setselected_isselected_">jive.ui.Checkbox:setSelected(isSelected)</a></h2>
+<p>Sets the state of the checkbox. <em>selected</em> true if the checkbox is selected, false otherwise.</p>
+<p>Note that using this function calls the defined closure.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

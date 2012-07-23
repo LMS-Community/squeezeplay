@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.Applet - The applet base class.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_applet_free__">jive.Applet:free()</a></li>
+		<li><a href="#jive_applet_displayname__">jive.Applet:displayName()</a></li>
+		<li><a href="#jive_applet_setsettings_settings_">jive.Applet:setSettings(settings)</a></li>
+		<li><a href="#jive_applet_defaultsettings__">jive.Applet:defaultSettings()</a></li>
+		<li><a href="#jive_applet_getsettings__">jive.Applet:getSettings()</a></li>
+		<li><a href="#jive_applet_string_token_">jive.Applet:string(token)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>!! WORK IN PROGRESS. THIS API IS NOT FINAL !!</strong></p>
+<p>jive.Applet is the base class for all Jive applets. In Jive,
+applets are very flexible in the methods they implement; this
+class implements a very simple framework to manage localization,
+settings and memory management.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_applet_free__">jive.Applet:free()</a></h2>
+<p>This is called when the Applet will be freed. It must make sure all
+data is unreferenced to allow for garbage collection. The method
+should return true if the applet can be freed, or false if it should
+be left loaded into memory. The default return value in jive.Applet is
+true.</p>
+<p>
+</p>
+<h2><a name="jive_applet_displayname__">jive.Applet:displayName()</a></h2>
+<p>Should be overridden by applets to return the applet name.
+Required.</p>
+<p>
+</p>
+<h2><a name="jive_applet_setsettings_settings_">jive.Applet:setSettings(settings)</a></h2>
+<p>Sets the applet settings to <em>settings</em>.</p>
+<p>
+</p>
+<h2><a name="jive_applet_defaultsettings__">jive.Applet:defaultSettings()</a></h2>
+<p>Should return the applet default settings.</p>
+<p>
+</p>
+<h2><a name="jive_applet_getsettings__">jive.Applet:getSettings()</a></h2>
+<p>Returns a table with the applet settings</p>
+<p>
+</p>
+<h2><a name="jive_applet_string_token_">jive.Applet:string(token)</a></h2>
+<p>Returns a localised version of token</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.utils.debug - Debug utilities.</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#trace__"><code>trace()</code></a></li>
+		<li><a href="#dump_table__depth_">dump(table, depth)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Provides a utility to trace lua functions and another to dump
+tables. This modules extends the lua debug module.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- require us
+ local debug = require(&quot;jive.utils.debug&quot;)</pre>
+<pre>
+ -- Turn on line tracing
+ debug.trace()</pre>
+<pre>
+ -- Dump a table
+ local aTable = {a = 'bla', c = {}}
+ debug.dump(aTable)
+ 
+ -- print:
+ { --table: 0x11aedd0
+   a = &quot;bla&quot;,
+   c = { --table: 0x11aee30 },
+ }</pre>
+<pre>
+ -- Trackback (from lua debug module)
+ debug.traceback()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="trace__"><code>trace()</code></a></h2>
+<p>Traces Lua calls, line by line. There is no way to stop tracing. This is very verbose,
+but can help trace performance or strange behavioral issues. It also gives a glimpse on
+the inner working of the Lua engine.</p>
+<p>
+</p>
+<h2><a name="dump_table__depth_">dump(table, depth)</a></h2>
+<p>Dumps a table. Default depth is 2.
+Quick and dirty way of using loop.debug.Viewer, which offers
+many more options.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

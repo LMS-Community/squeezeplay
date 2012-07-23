@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Widget - Base class for UI widgets.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_widget_iterate_closure_">jive.ui.Widget:iterate(closure)</a></li>
+		<li><a href="#jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></li>
+		<li><a href="#jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></li>
+		<li><a href="#jive_ui_widget_getsize__">jive.ui.Widget:getSize()</a></li>
+		<li><a href="#jive_ui_widget_setsize_w__h_">jive.ui.Widget:setSize(w, h)</a></li>
+		<li><a href="#jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></li>
+		<li><a href="#jive_ui_widget_setposition_x__y_">jive.ui.Widget:setPosition(x, y)</a></li>
+		<li><a href="#jive_ui_widget_getstyle__">jive.ui.Widget:getStyle()</a></li>
+		<li><a href="#jive_ui_widget_setstyle_style_">jive.ui.Widget:setStyle(style)</a></li>
+		<li><a href="#jive_ui_widget_setstyle_stylemodifier_">jive.ui.Widget:setStyle(styleModifier)</a></li>
+		<li><a href="#jive_ui_widget_isvisible__">jive.ui.Widget:isVisible()</a></li>
+		<li><a href="#jive_ui_widget_hide__">jive.ui.Widget:hide()</a></li>
+		<li><a href="#jive_ui_widget_getparent__">jive.ui.Widget:getParent()</a></li>
+		<li><a href="#jive_ui_widget_getwindow__">jive.ui.Widget:getWindow()</a></li>
+		<li><a href="#jive_ui_widget_reskin__">jive.ui.Widget:reSkin()</a></li>
+		<li><a href="#jive_ui_widget_reprepare__">jive.ui.Widget:rePrepare()</a></li>
+		<li><a href="#jive_ui_widget_relayout__">jive.ui.Widget:reLayout()</a></li>
+		<li><a href="#jive_ui_widget_redraw__">jive.ui.Widget:reDraw()</a></li>
+		<li><a href="#jive_ui_widget_doskin__">jive.ui.Widget:doSkin()</a></li>
+		<li><a href="#jive_ui_widget_dolayout__">jive.ui.Widget:doLayout()</a></li>
+		<li><a href="#jive_ui_widget_addlistener_mask__listener_">jive.ui.Widget:addListener(mask, listener)</a></li>
+		<li><a href="#jive_ui_widget_removelistener_handle_">jive.ui.Widget:removeListener(handle)</a></li>
+		<li><a href="#jive_ui_widget_addanimation_animation__framerate_">jive.ui.Widget:addAnimation(animation, frameRate)</a></li>
+		<li><a href="#jive_ui_widget_removeanimation_handle_">jive.ui.Widget:removeAnimation(handle)</a></li>
+		<li><a href="#jive_ui_widget_dispatchnewevent_eventtype_">jive.ui.Widget:dispatchNewEvent(eventType)</a></li>
+		<li><a href="#jive_ui_widget_dispatchupdateevent_value_">jive.ui.Widget:dispatchUpdateEvent(value)</a></li>
+		<li><a href="#jive_ui_widget_addtimer_interval__closure_">jive.ui.Widget:addTimer(interval, closure)</a></li>
+		<li><a href="#jive_ui_widget_removetimer_timer_">jive.ui.Widget:removeTimer(timer)</a></li>
+		<li><a href="#jive_ui_widget_playsound_sound_">jive.ui.Widget:playSound(sound)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Base class for UI widgets.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>See examples in subclasses.</p>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>All widgets support the following style parameters that can be set in the skin.</p>
+<p><strong>x</strong> : absolute x co-ordinate in pixels</p>
+<p><strong>y</strong> : absolute y co-ordinate in pixels</p>
+<p><strong>w</strong> : width in pixels</p>
+<p><strong>h</strong> : height in pixels</p>
+<p><strong>padding</strong> : padding around the widget content in pixels. Defaults to 0.</p>
+<p><strong>padding-left</strong> : padding on the left of the widget in pixels. Overrides padding is specified.</p>
+<p><strong>padding-top</strong> : padding on the top of the widget in pixels. Overrides padding is specified.</p>
+<p><strong>padding-right</strong> : padding on the right of the widget in pixels. Overrides padding is specified.</p>
+<p><strong>padding-bottom</strong> : padding on the bottom of the widget in pixels. Overrides padding is specified.</p>
+<p><strong>layer</strong> : the layer can be one of the following values.</p>
+<dl>
+<dt><strong><a name="item_layer_frame"><strong>LAYER_FRAME</strong></a></strong><br />
+</dt>
+<dd>
+Widgets in the Frame layer are not animated during window transitions.
+</dd>
+<p></p>
+<dt><strong><a name="item_layer_content"><strong>LAYER_CONTENT</strong></a></strong><br />
+</dt>
+<dd>
+Widgets in the Content layer are animated during window transitions. This is the default value.
+</dd>
+<p></p>
+<dt><strong><a name="item_layer_content_off_stage"><strong>LAYER_CONTENT_OFF_STAGE</strong></a></strong><br />
+</dt>
+<dd>
+Widgets in  the Content Off Stage layer are only animated when moving off stage. These widgets are not drawn when moving on stage.
+</dd>
+<p></p>
+<dt><strong><a name="item_layer_content_on_stage"><strong>LAYER_CONTENT_ON_STAGE</strong></a></strong><br />
+</dt>
+<dd>
+Widgets in  the Content On Stage layer are only animated when moving on stage. These widgets are not drawn when moving off stage.
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_widget_iterate_closure_">jive.ui.Widget:iterate(closure)</a></h2>
+<p>Calls the function closure for all widgets contained by this widget. This
+is overridden by subclasses.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></h2>
+<p>Returns <em>x, y</em> the widgets position.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setbounds_x__y__w__h_">jive.ui.Widget:setBounds(x, y, w, h)</a></h2>
+<p>Sets the widgets bounds to <em>x, y, w, h</em></p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getsize__">jive.ui.Widget:getSize()</a></h2>
+<p>Returns <em>w, h</em> the widgets size.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setsize_w__h_">jive.ui.Widget:setSize(w, h)</a></h2>
+<p>Sets the widgets size to <em>w, h</em></p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getposition__">jive.ui.Widget:getPosition()</a></h2>
+<p>Returns the widgets x,y position.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setposition_x__y_">jive.ui.Widget:setPosition(x, y)</a></h2>
+<p>Sets the widgets x,y position.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getstyle__">jive.ui.Widget:getStyle()</a></h2>
+<p>Returns the widgets style.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setstyle_style_">jive.ui.Widget:setStyle(style)</a></h2>
+<p>Sets the widgets style.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_setstyle_stylemodifier_">jive.ui.Widget:setStyle(styleModifier)</a></h2>
+<p>Sets the widgets style modifier.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_isvisible__">jive.ui.Widget:isVisible()</a></h2>
+<p>Returns true if the widget is visible, otherwise returns false.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_hide__">jive.ui.Widget:hide()</a></h2>
+<p>Hides the window containing this widget.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getparent__">jive.ui.Widget:getParent()</a></h2>
+<p>Returns the widgets parent.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_getwindow__">jive.ui.Widget:getWindow()</a></h2>
+<p>Returns the window containing this widget, or nil if the widget is not in a window.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_reskin__">jive.ui.Widget:reSkin()</a></h2>
+<p>Called when the widget content or appearence has changed. This will make sure the
+widget is packed and any layout updated before it is redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_reprepare__">jive.ui.Widget:rePrepare()</a></h2>
+<p>Called when the widget content has changed. This will make sure the
+widget is packed and any layout updated before it is redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_relayout__">jive.ui.Widget:reLayout()</a></h2>
+<p>Called when the widget has change position or size. This will make sure the widget
+is layout is updated before it is redrawn.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_redraw__">jive.ui.Widget:reDraw()</a></h2>
+<p>Marks the bounding box of this widget for redrawing.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_doskin__">jive.ui.Widget:doSkin()</a></h2>
+<p>Updates the widgets skin if required.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_dolayout__">jive.ui.Widget:doLayout()</a></h2>
+<p>Prepares the widgets contents and performs layout if required. Also calls do
+layout on any child widgets.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_addlistener_mask__listener_">jive.ui.Widget:addListener(mask, listener)</a></h2>
+<p>Add a listener <em>listener</em> to the widget. The listener is called for events that match the event mask <em>mask</em>. Returns a <em>handle</em> to use in removeListener().</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_removelistener_handle_">jive.ui.Widget:removeListener(handle)</a></h2>
+<p>Removes the listener <em>handle</em> from the widget.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_addanimation_animation__framerate_">jive.ui.Widget:addAnimation(animation, frameRate)</a></h2>
+<p>Add an animation function <em>animation</em> to the widget. This function will be called before the frame is drawn at the requested <em>frameRate</em>. Returns a <em>handle</em> to use in removeAnimation().</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_removeanimation_handle_">jive.ui.Widget:removeAnimation(handle)</a></h2>
+<p>Remove the animation function <em>handle</em> from the widget.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_dispatchnewevent_eventtype_">jive.ui.Widget:dispatchNewEvent(eventType)</a></h2>
+<p>Send a new event of type <em>type</em> with value <em>value</em> to this widgets listeners.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_dispatchupdateevent_value_">jive.ui.Widget:dispatchUpdateEvent(value)</a></h2>
+<p>Send an EVENT_UPDATE with value <em>value</em> to this widgets listeners.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_addtimer_interval__closure_">jive.ui.Widget:addTimer(interval, closure)</a></h2>
+<p>Add a timer to this timer that calls <em>closure</em> in <em>interval</em> milliseconds. The timer is only called while the widget is shown on the screen.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_removetimer_timer_">jive.ui.Widget:removeTimer(timer)</a></h2>
+<p>Remove timer <em>timer</em> from this Widget.</p>
+<p>
+</p>
+<h2><a name="jive_ui_widget_playsound_sound_">jive.ui.Widget:playSound(sound)</a></h2>
+<p>Play the sound when the widget is visible.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+#
+
+INFOBROWSER
+	CS	Prohlížeč informací
+	DA	Informationsaflæser
+	DE	Info-Browser
+	EN	Information Browser
+	ES	Navegador de información
+	FI	Informaatioselain
+	FR	Navigateur info
+	IT	Browser informazioni
+	NL	Infobrowser
+	NO	Informasjonsleser
+	PL	Przeglądarka informacji
+	RU	Обозреватель информации
+	SV	Infoläsaren
+
+INFOBROWSER_NORESPONSE
+	CS	Nenalezeny žádné informační kanály. Ověřte, zda je povolen zásuvný modul pro Prohlížeč informací na vašem serveru.
+	DA	Der blev ikke fundet nogen informationsfeeds. Kontroller at udvidelsesmodulet Informationsaflæser er slået til på serveren.
+	DE	Keine Info-Feeds gefunden. Prüfen Sie, ob das Plug-In 'Info-Browser' auf dem Server aktiviert ist.
+	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.
+	ES	No se ha encontrado ninguna fuente de información. Compruebe si el complemento Navegador de información está activado en el servidor.
+	FI	Informaatiosyötteitä ei löytynyt.  Tarkista, että informaatioselaimen laajennus on käytössä palvelimessa.
+	FR	Aucun flux d'informations n'a été trouvé. Vérifiez que le plugin Navigateur info est activé sur votre serveur.
+	IT	Nessun feed di informazioni trovato. Verificare che il plugin del Browser informazioni sia attivato nel server.
+	NL	Geen informatiekanalen gevonden. Controleer of de plug-in Infobrowser op je server is ingeschakeld.
+	NO	Fant ingen informasjonsfeeder. Kontroller at plugin-modulen Informasjonsleser er aktivert på serveren.
+	PL	Nie znaleziono żadnych kanałów informacji. Sprawdź, czy na serwerze włączono wtyczkę Przeglądarka informacji.
+	RU	Не найдены каналы информации. Убедитесь, что модуль информационного браузера включен на вашем сервере.
+	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
+
+INFOBROWSER_NOINFO_SN
+	CS	Nenalezeny žádné informační kanály. Přihlaste se ke svému účtu mysqueezebox.com a přidejte informační kanály.
+	DA	Der blev ikke fundet nogen informationsfeeds. Log på din mysqueezebox.com-konto, og tilføj nogen.
+	DE	Keine Info-Feeds gefunden. Melden Sie sich bei Ihrem mysqueezebox.com-Konto an und fügen Sie Info-Feeds hinzu.
+	EN	No information feeds found.  Please login to your mysqueezebox.com account and add information feeds.
+	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta mysqueezebox.com y agregue fuentes de información.
+	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu mysqueezebox.com-tiliisi ja lisää syötteitä.
+	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte mysqueezebox.com et ajoutez des flux d'informations.
+	IT	Nessun feed di informazioni trovato. Accedere all'account mysqueezebox.com e aggiungere i feed di informazioni.
+	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op mysqueezebox.com en voeg informatiekanalen toe.
+	NO	Fant ingen informasjonsfeeder. Logg på mysqueezebox.com-kontoen og legg til informasjonsfeeder.
+	PL	Nie znaleziono żadnych kanałów informacji. Zaloguj się na konto mysqueezebox.com i dodaj kanały informacji.
+	RU	Каналы информации не найдены. Войдите в учетную запись mysqueezebox.com и добавьте каналы информации.
+	SV	Inga informationsflöden hittades. Logga in på mysqueezebox.com-kontot och lägg till informationsflöden.
+
+INFOBROWSER_NOINFO_SC
+	CS	Nenalezeny žádné informační kanály. K přidání infokanálů pod nabídku Extra/Prohlížeč informací použijte webové rozhraní Logitech Media Server.
+	DA	Der blev ikke fundet nogen informationsfeeds. Du kan tilføje nogen via den webbaserede brugerflade til Logitech Media Server under Ekstra/Informationsaflæser.
+	DE	Keine Info-Feeds gefunden. In der Logitech Media Server-Web-Benutzeroberfläche können Sie unter Extras/Info-Browser Info-Feeds hinzufügen.
+	EN	No information feeds found.  Please use the Logitech Media Server web interface to add information feeds under Extras/Info Browser.
+	ES	No se ha encontrado ninguna fuente de información. Utilice la interfaz Web de Logitech Media Server para agregar fuentes de información (vaya a Extras/Navegador de información).
+	FI	Informaatiosyötteitä ei löytynyt.  Lisää syötteitä Logitech Media Serverin internet-käyttöliittymän kohdassa Muut/Informaatioselain.
+	FR	Aucun flux d'informations n'a été trouvé. Utilisez l'interface Web Logitech Media Server pour ajouter des flux d'informations sous Extras/Navigateur info.
+	IT	Nessun feed di informazioni trovato. Utilizzare l'interfaccia Web di Logitech Media Server per aggiungere i feed di informazioni in Extra/Browser informazioni.
+	NL	Geen informatiekanalen gevonden. Gebruik de webinterface van Logitech Media Server om informatiekanalen onder 'Extra's/Infobrowser' toe te voegen.
+	NO	Fant ingen informasjonsfeeder. Bruk Logitech Media Server-webgrensesnittet for å legge til informasjonsfeeder under Tillegg/Informasjonsleser.
+	PL	Nie znaleziono żadnych kanałów informacji. Użyj interfejsu internetowego programu Logitech Media Server, aby dodać kanały informacji na ekranie Dodatki/Przeglądarka informacji.
+	RU	Не найдены каналы информации. Используйте веб-интерфейс Logitech Media Server, чтобы добавить каналы информации в группе "Дополнения/Информационный браузер".
+	SV	Inga informationsflöden hittades. Använd Logitech Media Servers webbgränssnitt för att lägga till informationsflöden under Extrafunktioner/Infoläsaren.
+

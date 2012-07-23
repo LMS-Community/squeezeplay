@@ -1,0 +1,64 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+TEST_TONES
+	CS	Otestovat tóny
+	DA	Testtoner
+	DE	Testtöne
+	EN	Test tones
+	ES	Tonos de prueba
+	FI	Testiäänet
+	FR	Tester sons
+	IT	Prova toni
+	NL	Testtonen
+	NO	Testtoner
+	PL	Testuj dźwięki
+	RU	Тестировать тона
+	SV	Testtoner
+
+TONE_STOP
+	CS	Zastavit
+	DA	Stop
+	DE	Stopp
+	EN	Stop
+	ES	Detener
+	FI	Pysäytä
+	FR	Arrêt
+	IT	Arresta
+	NL	Stoppen
+	NO	Stopp
+	PL	Zatrzymaj
+	RU	Стоп
+	SV	Stopp
+
+TONE_1KHZ_44100_1S_STEREO_MP3
+	CS	1KHz 44.1k
+	DA	1KHz 44.1k
+	DE	1KHz 44.1k
+	EN	1KHz 44.1k
+	ES	1 kHz 44,1 kHz
+	FI	1 KHz, 44,1 kt
+	FR	1 KHz 44,1 k
+	IT	1 KHz 44,1 k
+	NL	1KHz 44.1k
+	NO	1 kHz 44.1k
+	PL	1 kHz 44,1 kb
+	RU	1 кГц 44.1 кГц
+	SV	1 kHz 44,1 k
+
+TONE_1KHZ_48000_1S_STEREO_MP3
+	CS	1KHz 48k
+	DA	1KHz 48k
+	DE	1KHz 48k
+	EN	1KHz 48k
+	ES	1 kHz 48 kHz
+	FI	1 KHz, 48 kt
+	FR	1 KHz 48 k
+	IT	1 KHz 48 k
+	NL	1KHz 48k
+	NO	1 kHz 48k
+	PL	1 kHz 48 kb
+	RU	1 кГц 48 кГц
+	SV	1 kHz 48 k
+

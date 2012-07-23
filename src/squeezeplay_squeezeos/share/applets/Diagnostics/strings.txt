@@ -1,0 +1,1732 @@
+
+DIAGNOSTICS
+	CS	Diagnostika
+	DA	Diagnosticering
+	DE	Diagnose
+	EN	Diagnostics
+	ES	Diagnósticos
+	FI	Diagnostiikka
+	FR	Diagnostic
+	IT	Diagnostica
+	NL	Diagnostische gegevens
+	NO	Diagnose
+	PL	Diagnostyka
+	RU	Диагностика
+	SV	Diagnostik
+
+NOT_CONNECTED
+	CS	Nepřipojeno
+	DA	Ikke tilsluttet
+	DE	Nicht verbunden
+	EN	Not connected
+	ES	No conectado
+	FI	Ei yhdistetty
+	FR	Non connecté
+	IT	Non connesso
+	NL	Niet verbonden
+	NO	Ikke koplet til
+	PL	Niepołączony
+	RU	Не подключено
+	SV	Ej ansluten
+
+PORT_FAIL
+# SLT: please keep these messages as short as possible
+	CS	Nelze připojit
+	DA	Der kan ikke etableres forbindelse
+	DE	Keine Verbindung möglich
+	EN	Can't connect
+	ES	No se puede conectar
+	FI	Ei voi yhdistää
+	FR	Connexion impossible
+	IT	Impossibile connettersi
+	NL	Kan geen verbinding maken
+	NO	Kan ikke kople til
+	PL	Nie można nawiązać połączenia
+	RU	Подключение невозможно
+	SV	Det gick inte att ansluta
+
+PORT_OK
+	CS	OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	PL	OK
+	RU	ОК
+	SV	OK
+
+DNS_FAIL
+	CS	DNS selhalo
+	DA	DNS mislykkedes
+	DE	DNS-Fehler
+	EN	DNS failed
+	ES	Fallo en DNS
+	FI	DNS epäonnistui
+	FR	Echec du DNS
+	IT	Errore DNS
+	NL	DNS mislukt
+	NO	DNS mislyktes
+	PL	Niepowodzenie DNS
+	RU	Ошибка DNS
+	SV	DNS misslyckades
+
+PING_OK
+	CS	OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	PL	OK
+	RU	ОК
+	SV	OK
+
+PING_FAIL
+# SLT: please keep these messages as short as possible
+	CS	Nelze zvonit
+	DA	Ping-kommando mislykkedes
+	DE	Ping-Fehler
+	EN	Can't ping
+	ES	No se puede hacer ping
+	FI	Ei voi suorittaa ping-toimintoa
+	FR	PING Impossible
+	IT	Impossibile eseguire ping
+	NL	Kan de opdracht Ping niet uitvoeren
+	NO	Kan ikke sende ping
+	PL	Nie można użyć funkcji ping
+	RU	Невозможно выполнить проверку связи
+	SV	Det gick inte att skicka ping
+
+PLAYER_TYPE
+	CS	Typ přehrávače\n%s
+	DA	Afspillertype\n%s
+	DE	Gerätetyp\n%s
+	EN	Player Type\n%s
+	ES	Tipo de reproductor\n%s
+	FI	Soittimen tyyppi\n%s
+	FR	Type de platine\n%s
+	IT	Tipo lettore\n%s
+	NL	Type muzieksysteem\n%s
+	NO	Spillertype\n%s
+	PL	Typ odtwarzacza\n%s
+	RU	Тип плеера\n%s
+	SV	Typ av spelare\n%s
+
+CURRENT_PLAYER
+	CS	Stávající přehrávač\n%s
+	DA	Nuværende afspiller\n%s
+	DE	Aktueller Player\n%s
+	EN	Current player\n%s
+	ES	Reproductor actual\n%s
+	FI	Nykyinen soitin\n%s
+	FR	Platine actuelle\n%s
+	IT	Lettore corrente\n%s
+	NL	Huidig muzieksysteem\n%s
+	NO	Aktiv spiller\n%s
+	PL	Bieżący odtwarzacz\n%s
+	PT	Cliente Actual\n%s
+	RU	Текущий плеер\n%s
+	SV	Aktuell spelare\n%s
+
+DIAGNOSTICS_NONE
+	CS	Žádný
+	DA	Ingen
+	DE	Keine
+	EN	None
+	ES	Ninguno
+	FI	Ei mitään
+	FR	Aucun
+	IT	Nessuna
+	NL	Geen
+	NO	Ingen
+	PL	Brak
+	RU	Нет
+	SV	Inget
+
+DIAGNOSTICS_REMOTE
+	CS	Dálkové ovládání
+	DA	Fjernbetjening
+	DE	Fernbedienung
+	EN	Remote
+	ES	Mando a distancia
+	FI	Kaukosäädin
+	FR	Télécommande
+	IT	Telecomando
+	NL	Afstandsbediening
+	NO	Fjernkontroll
+	PL	Pilot zdalnego sterowania
+	RU	Пульт
+	SV	Fjärr
+
+DIAGNOSTICS_LOCAL
+	CS	Místní
+	DA	Lokale
+	DE	Lokal
+	EN	Local
+	ES	Local
+	FI	Paikallinen
+	FR	Local
+	IT	Locale
+	NL	Lokaal
+	NO	Lokal
+	PL	Lokalnie
+	RU	Местные
+	SV	Lokal
+
+SN_REG
+	CS	registrace mysqueezebox.com\n%s
+	DA	registrering på mysqueezebox.com\n%s
+	DE	mysqueezebox.com-Registrierung\n%s
+	EN	mysqueezebox.com registration\n%s
+	ES	Registro en mysqueezebox.com\n%s
+	FI	mysqueezebox.com-rekisteröinti\n%s
+	FR	Enregistrement à mysqueezebox.com\n%s
+	IT	Registrazione mysqueezebox.com\n%s
+	NL	Registratie bij mysqueezebox.com\n%s
+	NO	mysqueezebox.com-registrering\n%s
+	PL	Rejestracja w witrynie mysqueezebox.com\n%s
+	RU	Регистрация mysqueezebox.com\n%s
+	SV	registrering av mysqueezebox.com\n%s
+
+SN_REG_YES
+	CS	Registrován
+	DA	Registreret
+	DE	Registriert
+	EN	Registered
+	ES	Registrado
+	FI	Rekisteröity
+	FR	Enregistré
+	IT	Registrato
+	NL	Geregistreerd
+	NO	Registrert
+	PL	Zarejestrowany
+	RU	Зарегистрировано
+	SV	Registrerad
+
+SN_REG_NO
+	CS	Není registrace
+	DA	Ikke registreret
+	DE	Nicht registriert
+	EN	Not Registered
+	ES	Sin registrar
+	FI	Ei rekisteröity
+	FR	Non enregistré
+	IT	Non registrato
+	NL	Niet geregistreerd
+	NO	Ikke registrert
+	PL	Niezarejestrowany
+	RU	Не зарегистрировано
+	SV	Inte registrerad
+
+ETH_FULL_DUPLEX
+	CS	%sMb/s
+	DA	%s Mbps
+	DE	%sMbit/s
+	EN	%sMbps
+	ES	%s Mbps
+	FI	%sMbps
+	FR	%sMbps
+	IT	%s Mbps
+	NL	%sMbps
+	NO	%s Mbps
+	PL	%s Mb/s
+	RU	%s Мбит/с
+	SV	%s Mbps
+
+ETH_HALF_DUPLEX
+	CS	%sMb/s HD
+	DA	%s Mbps HD
+	DE	%sMbit/s HD
+	EN	%sMbps HD
+	ES	%s Mbps HD
+	FI	%sMbps HD
+	FR	HD %sMbps
+	IT	HD da %s Mbps
+	NL	%sMbps vaste schijf
+	NO	%s Mbps HD
+	PL	%s Mb/s HD
+	RU	%s Мбит/с HD
+	SV	%s Mbps (HD)
+
+FIRMWARE_VERSION
+	CS	Firmware verze\n%s
+	DA	Firmwareversion\n%s
+	DE	Firmware-Version\n%s
+	EN	Firmware Version\n%s
+	ES	Versión de firmware\n%s
+	FI	Laitteisto-ohjelmiston versio\n%s
+	FR	Version du micrologiciel\n%s
+	IT	Versione firmware\n%s
+	NL	Firmwareversie\n%s
+	NO	Fastvareversjon\n%s
+	PL	Wersja oprogramowania układowego\n%s
+	RU	Версия микропрограммы\n%s
+	SV	Inbyggd programvaruversion\n%s
+
+MAC_ADDRESS
+	CS	MAC adresa\n%s
+	DA	MAC-adresse\n%s
+	DE	MAC-Adresse\n%s
+	EN	MAC Address\n%s
+	ES	Dirección MAC\n%s
+	FI	MAC-osoite\n%s
+	FR	Adresse MAC\n%s
+	IT	Indirizzo MAC\n%s
+	NL	MAC-adres\n%s
+	NO	MAC-adresse\n%s
+	PL	Adres MAC\n%s
+	RU	MAC-адрес\n%s
+	SV	MAC-adress\n%s
+
+WLAN_SSID
+	CS	Bezdrátová síť\n%s
+	DA	Trådløst netværk\n%s
+	DE	Kabelloses Netzwerk\n%s
+	EN	Wireless network\n%s
+	ES	Red inalámbrica\n%s
+	FI	Langaton verkko\n%s
+	FR	Réseau sans fil\n%s
+	IT	Rete senza fili\n%s
+	NL	Draadloos netwerk\n%s
+	NO	Trådløst nettverk\n%s
+	PL	Sieć bezprzewodowa\n%s
+	RU	Беспроводная сеть\n%s
+	SV	Trådlöst nätverk\n%s
+
+WLAN_ENCRYPTION
+	CS	Bezdrátové šifrování\n%s
+	DA	Kryptering af trådløst netværk\n%s
+	DE	Kabellos-Verschlüsselung\n%s
+	EN	Wireless encryption\n%s
+	ES	Cifrado inalámbrico\n%s
+	FI	Langaton salaus\n%s
+	FR	Cryptage sans fil\n%s
+	IT	Crittografia rete senza fili\n%s
+	NL	Draadloze codering\n%s
+	NO	Trådløs kryptering\n%s
+	PL	Szyfrowanie w sieci bezprzewodowej\n%s
+	RU	Шифрование беспроводной сети\n%s
+	SV	Trådlös kryptering\n%s
+
+WLAN_STRENGTH
+	CS	Bezdrátový signál\n%s
+	DA	Trådløst signal\n%s
+	DE	Kabellos-Signal\n%s
+	EN	Wireless signal\n%s
+	ES	Señal inalámbrica\n%s
+	FI	Langaton signaali\n%s
+	FR	Signal sans fil\n%s
+	IT	Segnale rete senza fili\n%s
+	NL	Draadloos signaal\n%s
+	NO	Trådløst signal\n%s
+	PL	Sygnał sieci bezprzewodowej\n%s
+	RU	Беспроводной сигнал\n%s
+	SV	Trådlös signal\n%s
+
+ETH_CONNECTION
+	CS	Ethernet\n%s
+	DA	Ethernet\n%s
+	DE	Ethernet\n%s
+	EN	Ethernet\n%s
+	ES	Ethernet\n%s
+	FI	Ethernet\n%s
+	FR	Ethernet\n%s
+	IT	Ethernet\n%s
+	NL	Ethernet\n%s
+	NO	Ethernet\n%s
+	PL	Ethernet\n%s
+	RU	Ethernet\n%s
+	SV	Ethernet\n%s
+
+IP_ADDRESS
+	CS	IP Adresa:\n%s
+	DA	IP-adresse\n%s
+	DE	IP-Adresse\n%s
+	EN	IP Address\n%s
+	ES	Dirección IP\n%s
+	FI	IP-osoite\n%s
+	FR	Adresse IP\n%s
+	IT	Indirizzo IP\n%s
+	NL	IP-adres\n%s
+	NO	IP-adresse\n%s
+	PL	Adres IP\n%s
+	RU	IP-адрес\n%s
+	SV	IP-address\n%s
+
+SUBNET_MASK
+	CS	IP podsítě\n%s
+	DA	IP-undernet\n%s
+	DE	IP-Subnetzmaske\n%s
+	EN	IP Subnet\n%s
+	ES	Subred IP\n%s
+	FI	IP-aliverkko\n%s
+	FR	Sous-réseau IP\n%s
+	IT	Subnet IP\n%s
+	NL	IP-subnet\n%s
+	NO	IP-delnett\n%s
+	PL	Podsieć IP\n%s
+	RU	Подсеть IP\n%s
+	SV	IP-delnät\n%s
+
+GATEWAY
+# SLT: please keep these messages as short as possible, max. like EN
+	CS	IP brána:\n%s
+	DA	Gatewayens IP-adresse\n%s
+	DE	IP-Gateway\n%s
+	EN	IP Gateway\n%s
+	ES	Puerta de enlace IP\n%s
+	FI	IP-yhdyskäytävä\n%s
+	FR	Passerelle IP\n%s
+	IT	Gateway IP\n%s
+	NL	IP-gateway\n%s
+	NO	Gateway-IP\n%s
+	PL	Brama IP\n%s
+	RU	Шлюз IP\n%s
+	SV	IP-gateway\n%s
+
+DNS_SERVER
+	CS	DNS Server\n%s
+	DA	DNS-server\n%s
+	DE	DNS-Server\n%s
+	EN	DNS Server\n%s
+	ES	Servidor DNS\n%s
+	FI	DNS-palvelin\n%s
+	FR	Serveur DNS\n%s
+	IT	Server DNS\n%s
+	NL	DNS-server\n%s
+	NO	DNS-server\n%s
+	PL	Serwer DNS\n%s
+	RU	DNS-сервер\n%s
+	SV	DNS-server\n%s
+
+SN_ADDRESS
+	CS	mysqueezebox.com\n%s
+	DA	mysqueezebox.com\n%s
+	DE	mysqueezebox.com\n%s
+	EN	mysqueezebox.com\n%s
+	ES	mysqueezebox.com\n%s
+	FI	mysqueezebox.com\n%s
+	FR	mysqueezebox.com\n%s
+	IT	mysqueezebox.com\n%s
+	NL	mysqueezebox.com\n%s
+	NO	mysqueezebox.com\n%s
+	PL	mysqueezebox.com\n%s
+	RU	mysqueezebox.com\n%s
+	SV	mysqueezebox.com\n%s
+
+SN_PING
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
+
+SN_PORT_3483
+	CS	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
+
+SN_PORT_9000
+	CS	TCP port 9000\n%s
+	DA	TCP-port 9000\n%s
+	DE	TCP-Anschluss 9000\n%s
+	EN	TCP port 9000\n%s
+	ES	Puerto TCP 9000\n%s
+	FI	TCP-portti 9000\n%s
+	FR	Port TCP 9000\n%s
+	IT	Porta TCP 9000\n%s
+	NL	TCP-poort 9000\n%s
+	NO	TCP-port 9000\n%s
+	PL	Port TCP 9000\n%s
+	RU	TCP-порт 9000\n%s
+	SV	TCP-port 9000\n%s
+
+SC_ADDRESS
+	CS	Logitech Media Server\n%s
+	DA	Logitech Media Server\n%s
+	DE	Logitech Media Server\n%s
+	EN	Logitech Media Server\n%s
+	ES	Logitech Media Server\n%s
+	FI	Logitech Media Server\n%s
+	FR	Logitech Media Server\n%s
+	IT	Logitech Media Server\n%s
+	NL	Logitech Media Server\n%s
+	NO	Logitech Media Server\n%s
+	PL	Logitech Media Server\n%s
+	RU	Logitech Media Server\n%s
+	SV	Logitech Media Server\n%s
+
+SC_NAME
+	CS	Název knihovny\n%s
+	DA	Bibliotekets navn\n%s
+	DE	Name der Musiksammlung\n%s
+	EN	Library name\n%s
+	ES	Nombre de biblioteca\n%s
+	FI	Kirjaston nimi\n%s
+	FR	Nom de la collection\n%s
+	IT	Nome libreria\n%s
+	NL	Naam van muziekcollectie\n%s
+	NO	Navn på bibliotek\n%s
+	PL	Nazwa biblioteki\n%s
+	RU	Имя медиатеки\n%s
+	SV	Bibliotekets namn\n%s
+
+SC_PING
+	CS	Zvonění\n%s
+	DA	Ping\n%s
+	DE	Ping\n%s
+	EN	Ping\n%s
+	ES	Ping\n%s
+	FI	Ping\n%s
+	FR	Ping\n%s
+	IT	Ping\n%s
+	NL	Ping\n%s
+	NO	Ping\n%s
+	PL	Ping\n%s
+	RU	Ping\n%s
+	SV	Ping\n%s
+
+SC_PORT_3483
+	CS	TCP port 3483\n%s
+	DA	TCP-port 3483\n%s
+	DE	TCP-Anschluss 3483\n%s
+	EN	TCP port 3483\n%s
+	ES	Puerto TCP 3483\n%s
+	FI	TCP-portti 3483\n%s
+	FR	Port TCP 3483\n%s
+	IT	Porta TCP 3483\n%s
+	NL	TCP-poort 3483\n%s
+	NO	TCP-port 3483\n%s
+	PL	Port TCP 3483\n%s
+	RU	TCP-порт 3483\n%s
+	SV	TCP-port 3483\n%s
+
+SC_PORT_9000
+	CS	Port TCP %\n%s
+	DA	TCP-port %s\n%s
+	DE	TCP-Anschluss %s\n%s
+	EN	TCP port %s\n%s
+	ES	Puerto TCP %s\n%s
+	FI	TCP-portti %s\n%s
+	FR	Port TCP %s\n%s
+	IT	Porta TCP %s\n%s
+	NL	TCP-poort %s\n%s
+	NO	TCP-port %s\n%s
+	PL	Port TCP %s\n%s
+	RU	TCP-порт %s\n%s
+	SV	TCP-port %s\n%s
+
+SUPPORT
+	CS	Další nápověda
+	DA	Mere hjælp
+	DE	Weitere Hilfe
+	EN	More Help
+	ES	Más ayuda
+	FI	Lisäohjeita
+	FR	Aide supplémentaire
+	IT	Ulteriore assistenza
+	NL	Meer Help
+	NO	Ytterligere hjelp
+	PL	Więcej pomocy
+	RU	Дополнительная справка
+	SV	Ytterligare hjälp
+
+SUPPORT_HELP
+	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.mysqueezebox.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
+	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.mysqueezebox.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
+	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.mysqueezebox.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
+	EN	For more help and customer support, please visit \nwww.mysqueezebox.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
+	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.mysqueezebox.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
+	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.mysqueezebox.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
+	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.mysqueezebox.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
+	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.mysqueezebox.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
+	NL	Ga naar \nwww.mysqueezebox.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
+	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.mysqueezebox.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
+	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.mysqueezebox.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
+	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.mysqueezebox.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
+	SV	Mer information och kundsupport finns på \nwww.mysqueezebox.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
+
+SOFTWARE_UPDATE
+	CS	Aktualizace softwaru
+	DA	Softwareopdatering
+	DE	Software-Update
+	EN	Software Update
+	ES	Actualización de software
+	FI	Ohjelmiston päivitys
+	FR	Mise à jour du logiciel
+	IT	Aggiornamento software
+	NL	Software-update
+	NO	Programvareoppdatering
+	PL	Aktualizacja oprogramowania
+	RU	Обновление ПО
+	SV	Programvaruuppdatering
+
+DIAGNOSTICS_NETWORKING
+	CS	Připojování do sítě
+	DA	Netværk
+	DE	Netzwerke
+	EN	Networking
+	ES	Redes
+	FI	Verkko
+	FR	Mise en réseau
+	IT	Connessione alla rete in corso
+	NL	Netwerken
+	NO	Nettverk
+	PL	Sieć
+	RU	Работа в сети
+	SV	Nätverk
+
+HARDWARE_VERSION
+	CS	Hardware verze\n%s
+	DA	Hardwareversion\n%s
+	DE	Hardware-Version\n%s
+	EN	Hardware version\n%s
+	ES	Versión de hardware\n%s
+	FI	Laitteistoversio\n%s
+	FR	Version du matériel\n%s
+	IT	Versione hardware\n%s
+	NL	Hardwareversie\n%s
+	NO	Maskinvareversjon\n%s
+	PL	Wersja sprzętowa\n%s
+	RU	Версия оборудования\n%s
+	SV	Maskinvaruversion\n%s
+
+UPTIME
+	CS	Rozběh\n%s
+	DA	Oppetid\n%s
+	DE	Zeit aktiv\n%s
+	EN	Uptime\n%s
+	ES	Tiempo de actividad\n%s
+	FI	Toiminta-aika\n%s
+	FR	Temps d'utilisation\n%s
+	IT	Tempo di attività\n%s
+	NL	Tijd actief\n%s
+	NO	Oppetid\n%s
+	PL	Czas pracy\n%s
+	RU	Время работы\n%s
+	SV	Har körts i\n%s
+
+UPTIME_DAYS
+	CS	%s dnů
+	DA	%s dage
+	DE	%s Tage
+	EN	%s days
+	ES	%s días
+	FI	%s päivää
+	FR	%s jours
+	IT	%s giorni
+	NL	%s dagen
+	NO	%s dager
+	PL	%s dni
+	RU	%s дн.
+	SV	%s dagar
+
+UPTIME_HOURS
+	CS	%s hodiny
+	DA	%s timer
+	DE	%s Stunden
+	EN	%s hours
+	ES	%s horas
+	FI	%s tuntia
+	FR	%s heures
+	IT	%s ore
+	NL	%s uren
+	NO	%s timer
+	PL	%s godz.
+	RU	%s ч
+	SV	%s timmar
+
+UPTIME_MINUTES
+	CS	%s minut
+	DA	%s minutter
+	DE	%s Minuten
+	EN	%s minutes
+	ES	%s minutos
+	FI	%s minuuttia
+	FR	%s minutes
+	IT	%s minuti
+	NL	%s minuten
+	NO	%s minutter
+	PL	%s min
+	RU	%s мин
+	SV	%s minuter
+
+MEMORY
+	CS	Použitá paměť\n%s
+	DA	Anvendt hukommelse\n%s
+	DE	Belegter Speicher\n%s
+	EN	Memory used\n%s
+	ES	Memoria utilizada\n%s
+	FI	Käytetty muisti\n%s
+	FR	Mémoire utilisée\n%s
+	IT	Memoria utilizzata\n%s
+	NL	Gebruik geheugen\n%s
+	NO	Brukt minne\n%s
+	PL	Wykorzystana pamięć\n%s
+	RU	Использованная память\n%s
+	SV	Minne som används\n%s
+
+POWER
+#SLT: This is "power" as in "power supply"
+	CS	Napájení
+	EN	Power
+	ES	Encendido
+	FI	Virta
+	FR	Mise sous tension
+	IT	Accensione
+	NL	Voeding
+	NO	Strøm
+	PL	Zasilanie
+	RU	Питание
+
+MSP_VERSION
+	CS	MSP verze\n%s
+	DA	MSP-version\n%s
+	DE	MSP-Version\n%s
+	EN	MSP version\n%s
+	ES	Versión MSP\n%s
+	FI	MSP-versio\n%s
+	FR	Version MSP\n%s
+	IT	Versione MSP\n%s
+	NL	MSP-versie\n%s
+	NO	MSP-versjon\n%s
+	PL	Wersja MSP\n%s
+	RU	Версия MSP\n%s
+	SV	MSP-version\n%s
+
+BATTERY_VOLTAGE
+	CS	Napětí baterie\n%s
+	DA	Batteriets spænding\n%s
+	DE	Akkuspannung\n%s
+	EN	Battery voltage\n%s
+	ES	Voltaje de la batería\n%s
+	FI	Akun jännite\n%s
+	FR	Tension de la batterie\n%s
+	IT	Voltaggio batteria\n%s
+	NL	Batterijvoltage\n%s
+	NO	Batterispenning\n%s
+	PL	Napięcie baterii\n%s
+	RU	Напряжение аккумулятора\n%s
+	SV	Batterispänning\n%s
+
+BATTERY_VMON1
+# SLT: no need to translate vmon1
+	CS	Baterie vmon1\n%s
+	DA	Batteri vmon1\n%s
+	DE	Akku vmon1\n%s
+	EN	Battery vmon1\n%s
+	ES	Batería vmon1\n%s
+	FI	Akku vmon1\n%s
+	FR	Batterie (vmon1)\n%s
+	IT	vmon1 batteria\n%s
+	NL	Batterij vmon1\n%s
+	NO	Batteri vmon1\n%s
+	PL	Bateria — vmon1\n%s
+	RU	vmon1 аккумулятора\n%s
+	SV	Batteri: vmon1\n%s
+
+BATTERY_VMON2
+# SLT: no need to translate vmon2
+	CS	Baterie vmon2\n%s
+	DA	Batteri vmon2\n%s
+	DE	Akku vmon2\n%s
+	EN	Battery vmon2\n%s
+	ES	Batería vmon2\n%s
+	FI	Akku vmon2\n%s
+	FR	Batterie (vmon2)\n%s
+	IT	vmon2 batteria\n%s
+	NL	Batterij vmon2\n%s
+	NO	Batteri vmon2\n%s
+	PL	Bateria — vmon2\n%s
+	RU	vmon2 аккумулятора\n%s
+	SV	Batteri: vmon2\n%s
+
+WALL_VOLTAGE
+	CS	Napětí v zásuvce\n%s
+	DA	Tilsluttet lysnettet\n%s
+	DE	Netzspannung\n%s
+	EN	Wall voltage\n%s
+	ES	Voltaje de la toma\n%s
+	FI	Pistorasian jännite\n%s
+	FR	Tension du secteur\n%s
+	IT	Voltaggio corrente\n%s
+	NL	Voltage stopcontact\n%s
+	NO	Nettspenning\n%s
+	PL	Napięcie w gniazdku\n%s
+	RU	Сеть питания\n%s
+	SV	Spänning för nätdrift\n%s
+
+BATTERY_TEMPERATURE
+	CS	Teplota baterie\n%s
+	DA	Batteriets temperatur\n%s
+	DE	Akkutemperatur\n%s
+	EN	Battery temperature\n%s
+	ES	Temperatura de la batería\n%s
+	FI	Akun lämpötila\n%s
+	FR	Température de la batterie\n%s
+	IT	Temperatura batteria\n%s
+	NL	Temperatuur van batterij\n%s
+	NO	Batteritemperatur\n%s
+	PL	Temperatura baterii\n%s
+	RU	Температура аккумулятора\n%s
+	SV	Batteritemperatur\n%s
+
+POWER_MODE
+# SLT: power mode refers to either AC or battery 
+	CS	Režim napájení\n%s
+	DA	Strømforsyning\n%s
+	DE	Stromversorgungsmodus\n%s
+	EN	Power mode\n%s
+	ES	Modo de energía\n%s
+	FI	Virtatila\n%s
+	FR	Mode d'alimentation\n%s
+	IT	Modalità alimentazione\n%s
+	NL	Energiemodus\n%s
+	NO	Strømmodus\n%s
+	PL	Tryb zasilania\n%s
+	RU	Режим питания\n%s
+	SV	Energiläge\n%s
+
+POWER_ON_AC
+	CS	Napájení ze zásuvky
+	DA	Tilsluttet lysnettet
+	DE	Netzbetrieb
+	EN	Wall power
+	ES	Toma de corriente
+	FI	Pistorasiavirta
+	FR	Alimentation secteur
+	IT	Alimentazione a corrente
+	NL	Netvoeding
+	NO	Strømstyrke fra stikkontakt
+	PL	Zasilanie z gniazdka
+	RU	Питание от сети
+	SV	Nätdrift
+
+POWER_ON_BATT
+	CS	Napájení z baterie
+	DA	Kører på batteri
+	DE	Akkubetrieb
+	EN	Battery power
+	ES	Batería
+	FI	Akkuvirta
+	FR	Charge de la batterie
+	IT	Alimentazione a batteria
+	NL	Batterijvermogen
+	NO	Batteristyrke
+	PL	Poziom naładowania baterii
+	RU	Питание от аккумулятора
+	SV	Batteridrift
+
+BATT_NONE
+	CS	Není baterie
+	DA	Ingen batteri
+	DE	Akku leer
+	EN	No Battery
+	ES	Sin batería
+	FI	Ei akkua
+	FR	Pas de batterie
+	IT	Batteria non presente
+	NL	Geen batterij
+	NO	Tomt batteri
+	PL	Brak baterii
+	RU	Нет аккумулятора
+	SV	Inget batteri
+
+BATT_IDLE
+	CS	Baterie se nedobíjí
+	DA	Batteriet oplades ikke
+	DE	Akku wird nicht geladen
+	EN	Battery not charging
+	ES	La batería no está cargando
+	FI	Akku ei lataudu
+	FR	La batterie n'est pas en cours de chargement.
+	IT	La batteria non si sta ricaricando
+	NL	Batterij wordt niet opgeladen
+	NO	Batteriet lader ikke
+	PL	Bateria nie ładuje się
+	RU	Аккумулятор не заряжается
+	SV	Batteriet laddas inte
+
+BATT_DISCHARGING
+	CS	Vybíjení baterie
+	DA	Batteriet aflades
+	DE	Akku wird entladen
+	EN	Battery discharging
+	ES	Descarga de la batería
+	FI	Akun latausta puretaan
+	FR	Déchargement de la batterie
+	IT	La batteria si sta scaricando
+	NL	Batterij ontlaadt zich
+	NO	Batteriet lader ut
+	PL	Rozładowywanie baterii
+	RU	Аккумулятор разряжается
+	SV	Batteriet laddar ur
+
+BATT_DISCHARGING_WARNING
+	CS	Vybíjení baterie. Stav baterie je nízký
+	DA	Batteriet aflades: Det er næsten fladt
+	DE	Akku wird entladen. Akku ist schwach.
+	EN	Battery discharging.  Battery is low
+	ES	Descarga de la batería, nivel bajo de batería
+	FI	Akun latausta puretaan. Akun lataus on alhainen.
+	FR	Déchargement de la batterie: batterie faible
+	IT	La batteria si sta scaricando. Livello di carica basso
+	NL	Batterij ontlaadt zich: laag batterijvermogen
+	NO	Batteriet lader ut. Lavt batteri.
+	PL	Rozładowywanie baterii. Niski poziom naładowania baterii
+	RU	Аккумулятор разряжается. Низкий заряд батареи.
+	SV	Batteriet laddar ur och batterinivån är låg
+
+BATT_CHARGING
+	CS	Nabíjení baterie
+	DA	Batteriet oplades
+	DE	Batterie wird geladen
+	EN	Battery charging
+	ES	Carga de pila en curso
+	FI	Akku latautuu...
+	FR	Chargement de la batterie
+	IT	Carica della batteria in corso
+	NL	Batterij wordt opgeladen
+	NO	Batteriet lades
+	PL	Ładowanie baterii
+	RU	Зарядка аккумулятора
+	SV	Batteriet laddas
+
+BATT_CHARGING_PAUSED
+	CS	Nabíjení baterie přerušeno. Chlazení
+	DA	Opladningen af batteriet afbrudt midlertidigt. Enheden køler af.
+	DE	Ladevorgang des Akkus wurde angehalten. Abkühlen
+	EN	Battery charging paused.  Cooling down
+	ES	Carga de la batería en pausa. Periodo de enfriamiento
+	FI	Akun lataus keskeytetty.  Jäähtyy.
+	FR	Interruption du chargement de la batterie. Refroidissement en cours
+	IT	Ricarica batteria sospesa. Raffreddamento in corso.
+	NL	Opladen batterij gepauzeerd. Koelt af
+	NO	Batterilading midlertidig stanset. Kjøler ned.
+	PL	Wstrzymano łądowanie baterii. Chłodzenie
+	RU	Зарядка аккумулятора приостановлена. Охлаждение
+	SV	Batteriladdningen har pausats. Nedkylning pågår.
+
+POWER_ON_AC_AND_BATT
+	CS	Napájení ze zásuvky & baterie
+	DA	Kører på batteri og er tilsluttet lysnettet
+	DE	Netz- und Akkubetrieb
+	EN	Wall & battery power
+	ES	Toma de corriente y batería
+	FI	Pistorasia- ja akkuvirta
+	FR	Alimentation secteur et batterie
+	IT	Alimentazione a batteria e a corrente
+	NL	Netvoeding en batterijvermogen
+	NO	Stikkontakt- og batteristyrke
+	PL	Zasilanie z gniazdka i baterii
+	RU	Питание от сети и аккумулятора
+	SV	Nät- och batteridrift
+
+CHARGE_STATE
+	CS	Stav nabíječky\n%s
+	DA	Opladerens status\n%s
+	DE	Ladestatus\n%s
+	EN	Charger state\n%s
+	ES	Estado del cargador\n%s
+	FI	Laturin tila\n%s
+	FR	Etat du chargeur\n%s
+	IT	Stato caricatore\n%s
+	NL	Opladerstatus\n%s
+	NO	Ladestatus\n%s
+	PL	Stan ładowarki\n%s
+	RU	Состояние устройства зарядки\n%s
+	SV	Laddningsstatus\n%s
+
+MENU_GENERAL
+	CS	Obecné informace
+	DA	Generelle oplysninger
+	DE	Allgemeine Informationen
+	EN	General Info
+	ES	Información general
+	FI	Yleiset tiedot
+	FR	Infos générales
+	IT	Informazioni generali
+	NL	Algemene info
+	NO	Generell informasjon
+	PL	Informacje ogólne
+	RU	Общая информация
+	SV	Allmän information
+
+MENU_NETWORK_HEALTH
+	CS	Zdraví sítě
+	DA	Netværksstatus
+	DE	Netzwerkstatus
+	EN	Network Health
+	ES	Estado de red
+	FI	Verkon kunto
+	FR	Contrôle réseau
+	IT	Stato rete
+	NL	Netwerkstatus
+	NO	Nettverkstilstand
+	PL	Kondycja sieci
+	RU	Состояние сети
+	SV	Nätverksfunktionalitet
+
+MENU_WIRELESS
+	CS	Informace o bezdrátové síti
+	DA	Oplysninger om trådløs forbindelse
+	DE	WLAN-Informationen
+	EN	Wireless Info
+	ES	Información inalámbrica
+	FI	Langattoman yhteyden tiedot
+	FR	Infos de connexion sans fil
+	IT	Informazioni dispositivi senza fili
+	NL	Info over draadloos
+	NO	Trådløs informasjon
+	PL	Informacje o łączności bezprzewodowej
+	RU	Сведения о беспроводной связи
+	SV	Information om trådlös anslutning
+
+MENU_ETHERNET
+	CS	Informace o síti Ethernet
+	DA	Oplysninger om Ethernet
+	DE	Ethernet-Informationen
+	EN	Ethernet Info
+	ES	Información de Ethernet
+	FI	Ethernet-tiedot
+	FR	Infos connexion Ethernet
+	IT	Informazioni Ethernet
+	NL	Ethernetinfo
+	NO	Ethernet-informasjon
+	PL	Informacje o sieci Ethernet
+	RU	Сведения о сети Ethernet
+	SV	Information om Ethernet
+
+MENU_SERVER
+	CS	Informace o serveru
+	DA	Serverinformation
+	DE	Server-Informationen
+	EN	Server Info
+	ES	Información de servidor
+	FI	Palvelintiedot
+	FR	Infos du serveur
+	IT	Informazioni server
+	NL	Serverinfo
+	NO	Informasjon om server
+	PL	Informacje o serwerze
+	RU	Сведения о сервере
+	SV	Serverinformation
+
+NETWORK_STATUS
+	CS	Stav sítě
+	DA	Netværksstatus
+	DE	Netzwerkstatus
+	EN	Network Status
+	ES	Estado de red
+	FI	Verkon tila
+	FR	Etat du réseau
+	IT	Stato della rete
+	NL	Netwerkstatus
+	NO	Nettverksstatus
+	PL	Stan sieci
+	RU	Статус сети
+	SV	Nätverksstatus
+
+REPAIR_NETWORK
+	CS	Opravit síť
+	DA	Reparer netværk
+	DE	Netzwerk reparieren
+	EN	Repair Network
+	ES	Reparar red
+	FI	Korjaa verkko
+	FR	Réparer le réseau
+	IT	Ripara rete
+	NL	Netwerk herstellen
+	NO	Reparer nettverk
+	PL	Napraw sieć
+	RU	Исправление неполадок в сети
+	SV	Reparera nätverk
+
+CHECK_NETWORK
+	CS	Zkontrolovat síť
+	DA	Kontroller netværk
+	DE	Netzwerk prüfen
+	EN	Check Network
+	ES	Comprobar red
+	FI	Tarkista verkko
+	FR	Vérifier le réseau
+	IT	Verifica rete
+	NL	Netwerk controleren
+	NO	Kontroller nettverk
+	PL	Sprawdź sieć
+	RU	Проверьте сеть
+	SV	Kontrollera nätverk
+
+CHECK_NETWORK_PART
+	CS	Zkontrolovat síť (část)
+	DA	Kontroller netværk (delvist)
+	DE	Netzwerk prüfen (teilweise)
+	EN	Check Network (part)
+	ES	Comprobación de red parcial
+	FI	Tarkista verkko (osittain)
+	FR	Vérifier partiellement le réseau
+	IT	Verifica parziale rete
+	NL	Gedeeltelijke netwerkcontrole
+	NO	Delvis nettverkskontroll
+	PL	Sprawdź sieć (część)
+	RU	Проверьте сеть (часть)
+	SV	Kontrollera del av nätverk
+
+STATUS_MSG
+	CS	%s
+	DA	%s
+	DE	%s
+	EN	%s
+	ES	%s
+	FI	%s
+	FR	%s
+	IT	%s
+	NL	%s
+	NO	%s
+	PL	%s
+	RU	%s
+	SV	%s
+
+NET_HEALTH_HINT
+	CS	Výběrem „Zkontrolovat síť“ proveďte kontrolu zdraví sítě.
+	DA	Vælg 'Kontroller netværk' hvis du vil foretage et netværkstjek.
+	DE	Wählen Sie 'Netzwerk prüfen', um eine Netzwerkdiagnose durchzuführen.
+	EN	Select 'Check Network' to perfom a network health check.
+	ES	Seleccione 'Comprobar red' para realizar una prueba del estado de la red.
+	FI	Tarkista verkon kunto valitsemalla Tarkista verkko.
+	FR	Sélectionnez Vérifier réseau pour effectuer un contrôle du réseau.
+	IT	Selezionare Verifica rete per verificare lo stato della rete.
+	NL	Selecteer 'Netwerk controleren' om een statuscontrole voor het netwerk uit te voeren.
+	NO	Velg Kontroller nettverk for å utføre en kontroll av nettverkstilstanden.
+	PL	Wybierz pozycję „Sprawdź sieć”, aby sprawdzić kondycję sieci.
+	RU	Выберите «Проверить сеть» для выполнения проверки состояния сети.
+	SV	Välj Kontrollera nätverk för att utföra en kontroll av nätverksfunktionaliteten.
+
+NET_BRINGING_NETWORK_DOWN
+	CS	Probíhá shazování sítě...
+	DA	Lukker netværk ned...
+	DE	Verbindung zum Netzwerk wird getrennt...
+	EN	Bringing network down ...
+	ES	Desactivando red...
+	FI	Verkkoa suljetaan...
+	FR	Déconnexion du réseau...
+	IT	Disattivazione della rete in corso...
+	NL	Netwerk wordt gestopt...
+	NO	Kopler ut nettverket ...
+	PL	Trwa wyłączanie sieci...
+	RU	Завершение работы сети...
+	SV	Stänger nätverket ...
+
+NET_BRINGING_NETWORK_UP
+	CS	Probíhá nahazování sítě ...
+	DA	Starter netværket op...
+	DE	Netzwerk wird geladen...
+	EN	Bringing network up ...
+	ES	Activando red...
+	FI	Verkkoa palautetaan...
+	FR	Connexion au réseau...
+	IT	Riattivazione della rete in corso...
+	NL	Netwerk wordt gestart...
+	NO	Kopler opp nettverket ...
+	PL	Trwa włączanie sieci...
+	RU	Инициализация сети...
+	SV	Startar nätverket ...
+
+NET_REPAIR_NETWORK_DONE
+	CS	Oprava sítě dokončena
+	DA	Reparationen af netværket er fuldført
+	DE	Netzwerkreparatur abgeschlossen
+	EN	Repair network done
+	ES	Reparación de red finalizada
+	FI	Verkon korjaus suoritettu
+	FR	Réparation du réseau terminée
+	IT	Riparazione rete completata
+	NL	Netwerkherstel voltooid
+	NO	Reparasjon av nettverk fullført
+	PL	Ukończono naprawę sieci
+	RU	Исправление неполадок в сети завершено
+	SV	Reparation av nätverk har utförts
+
+NET_INTERFACE
+	CS	Zkontrolovat rozhraní sítě
+	DA	Kontroller netværkskort
+	DE	Netzwerkschnittstelle prüfen
+	EN	Check network interface
+	ES	Comprobar interfaz de red
+	FI	Tarkista verkon käyttöliittymä
+	FR	Vérifier l'interface réseau
+	IT	Verifica interfaccia di rete
+	NL	Netwerkinterface controleren
+	NO	Kontroller nettverksgrensesnitt
+	PL	Sprawdź interfejs sieciowy
+	RU	Проверьте сетевой интерфейс
+	SV	Kontrollera nätverksgränssnitt
+
+NET_INTERFACE_NOK
+	CS	Žádné rozhraní sítě
+	DA	Intet netværkskort
+	DE	Keine Netzwerkschnittstelle
+	EN	No network interface
+	ES	No hay interfaz de red
+	FI	Ei verkon käyttöliittymää
+	FR	Aucune interface réseau
+	IT	Nessuna interfaccia di rete
+	NL	Geen netwerkinterface
+	NO	Nettverksgrensesnitt mangler
+	PL	Brak interfejsu sieciowego
+	RU	Отсутствует сетевой интерфейс
+	SV	Inget nätverksgränssnitt
+
+NET_LINK
+	CS	Zkontrolovat připojení sítě
+	DA	Kontroller netværksforbindelse
+	DE	Netzwerkverbindung prüfen
+	EN	Check network link
+	ES	Comprobar vínculo de red
+	FI	Tarkista verkkolinkki
+	FR	Vérifier la connectivité du réseau
+	IT	Verifica collegamento rete
+	NL	Netwerkaansluiting controleren
+	NO	Kontroller nettverkstilkopling
+	PL	Sprawdź łącze sieciowe
+	RU	Проверьте сетевое соединение
+	SV	Kontrollera nätverkslänk
+
+NET_LINK_WIRELESS_OK
+	CS	Bezdrátová síť - připojení v pořádku
+	DA	Trådløs forbindelse fungerer
+	DE	WLAN – Verbindung OK
+	EN	Wireless - link ok
+	ES	Inalámbrica - vínculo correcto
+	FI	Langaton yhteys - linkki kunnossa
+	FR	Connexion sans fil établie
+	IT	Connessione senza fili - Il collegamento funziona correttamente
+	NL	Draadloze verbinding OK
+	NO	Trådløs: tilkopling OK
+	PL	Łączność bezprzewodowe — łącze działa poprawnie
+	RU	Беспроводная связь: соединение успешно
+	SV	Trådlös – länk OK
+
+NET_LINK_WIRELESS_NOK
+	CS	Bezdrátová síť - bez připojení
+	DA	Trådløs - ingen forbindelse
+	DE	WLAN – keine Verbindung
+	EN	Wireless - no link
+	ES	Inalámbrica - no hay vínculo
+	FI	Langaton, ei linkkiä
+	FR	Aucune connexion sans fil
+	IT	Senza fili - Nessun collegamento
+	NL	Draadloos - geen aansluiting
+	NO	Trådløs: ingen forbindelse
+	PL	Połączenie bezprzewodowe — brak łącza
+	RU	Беспроводная связь: отсутствует соединение
+	SV	Trådlös – ingen länk
+
+NET_LINK_WIRELESS_NOK_HELP
+	CS	Přehrávač Squeezebox hlásí, že připojení k bezdrátové síti bylo přerušeno.\nMožné řešení:\n - Zkontrolujte, zda je bezdrátový router zapnutý\n - Restartujte bezdrátový router\n - Změňte umístění přehrávače Squeezebox nebo bezdrátového routeru tak, aby se zařízení nacházela ve vzájemném dosahu
+	DA	Din squeezeboxs trådløse forbindelse er tilsyneladende nede.\nMulige løsninger:\n - Kontroller at den trådløse router er tændt\n - Genstart den trådløse router\n - Flyt din Squeezebox og/eller din trådløse router så de er inden for rækkevidde af hinanden
+	DE	Die Drahtlosverbindung Ihrer Squeezebox wurde unterbrochen.\nMögliche Lösungen:\n – Überprüfen Sie, ob Ihr WLAN-Router eingeschaltet ist.\n - Starten Sie den Router neu.\n – Verringern Sie den Abstand zwischen Squeezebox und Router.
+	EN	Your Squeezebox's wireless connection is reporting itself to be down.\nPossible solutions:\n - Check that your wireless router is powered on\n - Reboot your wireless router\n - Reposition your Squeezebox and/or your wireless router so thay are in range of one another
+	ES	La conexión inalámbrica de su dispositivo Squeezebox indica que está inactiva.\nSoluciones posibles:\n - Comprobar que el enrutador inalámbrico está encendido\n - Reiniciar el enrutador inalámbrico\n - Cambiar la ubicación de Squeezebox o del enrutador inalámbrico para que estén dentro del radio de alcance
+	FI	Squeezebox on ilmoittanut langattoman yhteyden katkeamisesta.\nMahdolliset ratkaisut:\n - Tarkista, että langaton reititin saa virtaa.\n - Käynnistä langaton reititin uudelleen.\n - Vaihda Squeezeboxin ja/tai langattoman reitittimen paikkaa, jotta ne ovat toistensa kantoalueella.
+	FR	La connexion sans fil de votre Squeezebox est interrompue.\nSolutions possibles:\n - Vérifiez que votre routeur sans fil est sous tension\n - Réinitialisez votre routeur sans fil\n - Repositionnez votre Squeezebox et/ou votre routeur sans fil de manière à ce qu'ils se trouvent dans le rayon de portée l'un de l'autre.
+	IT	La connessione senza fili dello Squeezebox è inattiva.\nPossibili soluzioni:\n - Verificare che il router senza fili sia acceso\n - Riavviare il router senza fili\n - Riposizionare lo Squeezebox e/o il router senza fili affinché rientrino nel raggio d'azione reciproco
+	NL	De draadloze netwerkverbinding van je Squeezebox wordt weergegeven als niet-actief.\nMogelijke oplossingen:\n - Controleer of de draadloze router is ingeschakeld\n - Start je draadloze router opnieuw op\n - Zet je Squeezebox en draadloze router dichter bij elkaar
+	NO	Den trådløse tilkoplingen til Squeezebox-spilleren rapporterer at den er nede.\nMulige løsninger:\n - Kontroller at den trådløse ruteren er slått på.\n - Start den trådløse ruteren på nytt.\n - Flytt Squeezebox-spilleren og/eller den trådløse ruteren, slik at de er innen rekkevidde av hverandre
+	PL	Połączenie bezprzewodowe urządzenia Squeezebox zgłasza awarię.\nMożliwe rozwiązania:\n - Sprawdź, czy router bezprzewodowy jest włączony.\n - Uruchom ponownie router bezprzewodowy.\n - Ustaw urządzenie Squeezebox i router bezprzewodowy tak, aby były w swoim zasięgu.
+	RU	Сообщается об отсутствии беспроводной связи плеера Squeezebox.\nВарианты решений:\n — убедитесь в том, что беспроводной маршрутизатор включен;\n — перезагрузите беспроводной маршрутизатор;\n — измените положение плеера Squeezebox и/или беспроводного маршрутизатора так, чтобы они попадали в радиус действия друг друга.
+	SV	Squeezebox-enhetens Ethernet-anslutning rapporterar att den ligger nere.\nMöjliga lösningar:\n – Kontrollera att den trådlösa routern är påslagen\n – Starta om den trådlösa routern\n – Placera om Squeezebox-enheten och/eller den trådlösa routern så att de befinner sig inom varandras räckvidd.
+
+NET_LINK_ETHERNET_OK
+	CS	Připojení sítě Ethernet v pořádku
+	DA	Ethernet-forbindelsen fungerer
+	DE	Ethernet-Verknüpfung OK
+	EN	Ethernet link ok
+	ES	El vínculo Ethernet es correcto
+	FI	Ethernet-linkki kunnossa
+	FR	Connexion Ethernet établie
+	IT	Il collegamento Ethernet funziona correttamente
+	NL	Ethernetaanlsuiting OK
+	NO	Ethernet-kopling OK
+	PL	Łącze sieci Ethernet działa prawidłowo
+	RU	Соединение Ethernet работает
+	SV	Ethernet-länken är OK
+
+NET_LINK_ETHERNET_NOK
+	CS	Síť Ethernet - bez připojení
+	DA	Ethernet - ingen forbindelse
+	DE	Ethernet – keine Verbindung
+	EN	Ethernet - no link
+	ES	Ethernet - no hay vínculo
+	FI	Ethernet - ei linkkiä
+	FR	Aucune connexion Ethernet
+	IT	Ethernet - Nessun collegamento
+	NL	Ethernet - geen aansluiting
+	NO	Ethernet: ingen tilkopling
+	PL	Sieć Ethernet — brak łącza
+	RU	Ethernet: отсутствует соединение
+	SV	Ethernet – ingen länk
+
+NET_LINK_ETHERNET_NOK_HELP
+	CS	Přehrávač Squeezebox hlásí, že připojení k síti Ethernet bylo přerušeno.\nMožné řešení:\n - Přesvědčte se, zda je kabel sítě ethernet řádně zapojen do zadní části přehrávače Squeezebox\n - Přesvědčte se, zda svítí kontrolka připojení sítě v místě zapojení kabelu přehrávače Squeezebox do přepínače sítě Ethernet\n - Vyměňte kabel sítě Ethernet
+	DA	Din squeezeboxs Ethernet-forbindelse er tilsyneladende nede.\nMulige løsninger:\n - Kontroller at ethernet-kablet er sat rigtigt i din Squeezebox\n - Kontroller at statusindikatoren for forbindelsen på din Ethernet-switch lyser når Squeezebox-kablet er sat i\n - Udskift Ethernet-kablet
+	DE	Die Ethernet-Verbindung Ihrer Squeezebox wurde unterbrochen.\nMögliche Lösungen:\n – Vergewissern Sie sich, dass das Ethernet-Kabel auf der Rückseite der Squeezebox fest eingesteckt ist.\n – Überprüfen Sie, ob die LED für die Ethernet-Verbindung leuchtet, wenn das Kabel der Squeezebox eingesteckt wird.\n – Tauschen Sie das Ethernet-Kabel aus.
+	EN	Your Squeezebox's Ethernet connection is reporting itself to be down.\nPossible solutions:\n - Confirm that the ethernet cable is plugged into the back of your Squeezebox firmly\n - Confirm that the link light on the Ethernet switch is lit where your Squeezebox cable is plugged in\n - Replace the Ethernet cable
+	ES	La conexión Ethernet de su dispositivo Squeezebox indica que no está activa.\nSoluciones posibles:\n - Confirmar que el cable Ethernet está conectado correctamente a la parte posterior de Squeezebox\n - Confirmar que la luz de vínculo en el conmutador de Ethernet está encendida cuando se conecta el cable de Squeezebox\n - Sustituir el cable Ethernet
+	FI	Squeezebox ilmoittaa ethernet-yhteyden katkeamisesta.\nMahdolliset ratkaisut:\n - Tarkista, että ethernet-kaapeli on liitetty Squeezeboxin takaosaan tukevasti.\n - Tarkista, että ethernet-kytkimessä palaa valo liitetyn Squeezebox-kaapelin kohdalla.\n - Vaihda ethernet-kaapeli.
+	FR	La connexion Ethernet de votre Squeezebox est interrompue.\nSolutions possibles:\n - Vérifiez que le câble Ethernet est correctement branché à l'arrière de votre Squeezebox\n - Vérifiez que le témoin de connexion du commutateur Ethernet est allumé à l'endroit où le câble de votre Squeezebox est branché\n - Remplacez le câble Ethernet
+	IT	La connessione Ethernet dello Squeezebox è inattiva.\nPossibili soluzioni:\n - Verificare che il cavo Ethernet sia ben collegato alla parte posteriore dello Squeezebox\n - Verificare che la spia di collegamento dello switch Ethernet sia accesa quando il cavo dello Squeezebox è collegato\n - Sostituire il cavo Ethernet
+	NL	De ethernetverbinding van je Squeezebox wordt weergegeven als niet-actief.\nMogelijke oplossingen:\n - Controleer of de ethernetdraad goed is aangesloten op de achterkant van je Squeezebox\n - Controleer of het statuslampje op de ethernetschakelaar brandt waar de draad van je Squeezebox is aangesloten\n - Vervang de ethernetdraad
+	NO	Ethernet-tilkoplingen til Squeezebox-spilleren rapporterer at den er nede.\nMulige løsninger:\n - Kontroller at Ethernet-kabelen er koplet ordentlig til på baksiden av Squeezebox-spilleren\n - Kontroller at tilkoplingslampen på Ethernet-bryteren lyser når Squeezebox-kabelen koples til.\n - Bytt ut Ethernet-kabelen
+	PL	Połączenie sieci Ethernet urządzenia Squeezebox zgłasza awarię.\nMożliwe rozwiązania:\n - Sprawdź, czy kabel sieciowy jest podłączony prawidłowo z tyłu urządzenia Squeezebox.\n - Sprawdź, czy wskaźnik świetlny łącza na przełączniku sieci Ethernet, do którego jest podłączony kabel urządzenia Squeezebox, jest włączony.\n - Wymień kabel sieci Ethernet.
+	RU	Сообщается об отсутствии соединения плеера Squeezebox с сетью Ethernet.\nВарианты решений:\n — проверить, плотно ли подключен кабель Ethernet в соответствующий разъем на задней панели плеера Squeezebox;\n — проверить, светится ли индикатор соединения на коммутаторе Ethernet для разъема, к которому подключен кабель плеера Squeezebox;\n — заменить кабель Ethernet.
+	SV	Squeezebox-enhetens Ethernet-anslutning rapporterar att den ligger nere.\nMöjliga lösningar:\n – Kontrollera att Ethernet-kabeln är ordentligt ansluten på baksidan av Squeezebox-enheten\n – Kontrollera att länkindikatorn på Ethernet-växeln är tänd där Squeezebox-enhetens kabel är ansluten\n – Byt ut Ethernet-kabeln
+
+NET_IP_OK
+	CS	IP: %s
+	DA	IP-adresse: %s
+	DE	IP: %s
+	EN	IP: %s
+	ES	IP: %s
+	FI	IP: %s
+	FR	Adresse IP: %s
+	IT	IP: %s
+	NL	IP-adres: %s
+	NO	IP: %s
+	PL	Adres IP: %s
+	RU	IP-адрес: %s
+	SV	IP-adress: %s
+
+NET_IP_NOK
+	CS	Neplatná IP
+	DA	Ingen gyldig IP-adresse
+	DE	Keine gültige IP
+	EN	No valid IP
+	ES	IP no válido
+	FI	Ei kelvollista IP-osoitetta
+	FR	Aucune adresse IP valide
+	IT	IP non valido
+	NL	Ongeldig IP-adres
+	NO	Ingen gyldig IP
+	PL	Brak prawidłowego adresu IP
+	RU	Отсутствует действительный IP-адрес
+	SV	Ingen giltig IP-adress
+
+NET_IP_NOK_HELP
+	CS	Přehrávač Squeezebox neobsahuje platnou síťovou adresu.\nMožné řešení:\n - Restartujte zařízení, které poskytuje síťovou konfiguraci pro zařízení ve vaší domácí síti. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox har ikke en gyldig netværksadresse.\nMulige løsninger:\n - Genstart den enhed som indeholder netværkskonfiguration for enhederne i dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Ihre Squeezebox hat keine gültige Netzwerkadresse.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das die Netzwerkkonfiguration für die Geräte in Ihrem Heimnetzwerk enthält. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox does not have a valid network address.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox no tiene una dirección de red válida.\nSoluciones posibles:\n Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezeboxilla ei ole kelvollista verkko-osoitetta.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, joka tarjoaa kotiverkkosi laitteiden verkkomääritykset. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox ne dispose d'aucune adresse de réseau valide.\nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Lo Squeezebox non dispone di un indirizzo di rete valido.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox heeft geen geldig netwerkadres.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren har ikke en gyldig nettverksadresse.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Urządzenie Squeezebox nie ma prawidłowego adresu sieciowego.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie zapewniające konfigurację sieci urządzeniom w sieci domowej. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	В плеере Squeezebox отсутствует правильный сетевой адрес.\nВариант решения:\n — перезагрузить устройство, предоставляющее сетевую конфигурацию устройствам в вашей домашней сети. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten har inte en giltig nätverksadress till Internet.\nMöjliga lösningar:\n – Starta om den enhet som tillhandahåller nätverkskonfiguration för enheterna i ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
+
+NET_GATEWAY_OK
+	CS	IP brány: %s
+	DA	Gateway-IP-adresse: %s
+	DE	Gateway-IP: %s
+	EN	Gateway IP: %s
+	ES	IP de puerta de enlace: %s
+	FI	Yhdyskäytävän IP-osoite: %s
+	FR	Adresse IP de passerelle: %s
+	IT	IP gateway: %s
+	NL	IP-adres van gateway: %s
+	NO	Gateway-IP: %s
+	PL	Adres IP bramy: %s
+	RU	IP-адрес шлюза: %s
+	SV	IP-adress för gateway: %s
+
+NET_GATEWAY_NOK
+	CS	Neplatná IP brány
+	DA	Ingen gyldig gateway-IP-adresse
+	DE	Keine gültige Gateway-IP
+	EN	No valid gateway IP
+	ES	IP de puerta de enlace no válido
+	FI	Ei kelvollista yhdyskäytävän IP-osoitetta
+	FR	Aucune adresse IP de passerelle valide
+	IT	IP gateway non valido
+	NL	Ongeldig IP-adres van gateway
+	NO	Ingen gyldig gateway-IP
+	PL	Brak prawidłowego adresu IP bramy
+	RU	Отсутствует действительный IP-адрес шлюза
+	SV	Ingen giltig IP-adress för gateway
+
+NET_GATEWAY_NOK_HELP
+	CS	Přehrávač Squeezebox neobsahuje platnou adresu brány k internetu.\nMožné řešení:\n - Restartujte zařízení, které poskytuje síťovou konfiguraci pro zařízení ve vaší domácí síti. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox har ikke en gyldig gateway-adresse til internettet.\nMulige løsninger:\n - Genstart den enhed der indeholder netværkskonfiguration for enhederne i dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Ihre Squeezebox hat keine gültige Gateway-Adresse für das Internet.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das die Netzwerkkonfiguration für die Geräte in Ihrem Heimnetzwerk enthält. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox does not have a valid gateway address to the internet.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox no tiene una dirección de puerta de enlace a Internet válida.\nSoluciones posibles:\n - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezeboxilla ei ole kelvollista yhdyskäytävän osoitetta internetiin.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, joka tarjoaa kotiverkkosi laitteiden verkkomääritykset. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox ne dispose d'aucune adresse de passerelle valide pour se connecter à Internet.\nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Lo Squeezebox non dispone di un indirizzo gateway per Internet valido.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox heeft geen geldig gateway-adres voor internet.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren har ikke en gyldig gateway-adresse til Internett.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Urządzenie Squeezebox nie ma prawidłowego adresu bramy do Internetu.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie zapewniające konfigurację sieci urządzeniom w sieci domowej. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	В плеере Squeezebox отсутствует правильный адрес шлюза для соединения с Интернетом.\nВариант решения:\n — перезагрузить устройство, предоставляющее сетевую конфигурацию устройствам в вашей домашней сети. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten har inte en giltig gatewayadress till Internet.\nMöjliga lösningar:\n – Starta om den enhet som tillhandahåller nätverkskonfiguration för enheterna i ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
+
+NET_DNS_OK
+	CS	DNS IP: %s
+	DA	DNS-IP-adresse: %s
+	DE	DNS-IP: %s
+	EN	DNS IP: %s
+	ES	IP de DNS: %s
+	FI	DNS IP: %s
+	FR	Adresse IP du serveur DNS: %s
+	IT	IP DNS: %s
+	NL	IP-adres van DNS: %s
+	NO	DNS-IP: %s
+	PL	Adres IP serwera DNS: %s
+	RU	IP-адрес DNS-сервера: %s
+	SV	DNS IP-adress: %s
+
+NET_DNS_NOK
+	CS	Neplatná IP DNS
+	DA	Ingen gyldig DNS-IP-adresse
+	DE	Keine gültige DNS-IP
+	EN	No valid DNS IP
+	ES	IP de DNS no válido
+	FI	Ei kelvollista DNS IP -osoitetta
+	FR	Aucune adresse IP de serveur DNS valide
+	IT	Nessun IP DNS valido
+	NL	Geen geldig IP-adres van DNS
+	NO	Gyldig DNS-IP mangler
+	PL	Brak prawidłowego adresu IP serwera DNS
+	RU	Отсутствует действительный IP-адрес DNS-сервера
+	SV	Ingen giltig DNS IP-adress
+
+NET_DNS_NOK_HELP
+	CS	Přehrávač Squeezebox neobsahuje platnou adresu serveru DNS pro přidělení internetových adres.\nMožné řešení:\n - Restartujte zařízení, které poskytuje síťovou konfiguraci pro zařízení ve vaší domácí síti. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox har ikke et gyldigt domænenavn for serveradressen til at løse problemer med internetadresser.\nMulige løsninger:\n - Genstart den enhed der indeholder netværkskonfiguration til enhederne i dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Ihre Squeezebox hat keine gültige Domänennamenserver-Adresse zum Auflösen von Internetadressen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das die Netzwerkkonfiguration für die Geräte in Ihrem Heimnetzwerk enthält. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox does not have a valid domain name server address for resolving internet addresses.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox no tiene una dirección de servidor de nombres de dominio válida para resolver direcciones de Internet.\nSoluciones posibles: - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezeboxillasi ei ole kelvollista toimialueen palvelinosoitetta, jotta internet-osoitteita voitaisiin selvittää.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, jossa kotiverkkosi verkkomääritykset tehdään. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox ne dispose d'aucune adresse de serveur DNS valide pour résoudre les adresses Internet. \nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Lo Squeezebox non dispone di un indirizzo DNS valido per la risoluzione degli indirizzi Internet.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox heeft geen geldig adres voor een domeinnaamserver om internetadressen om te zetten.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren har ikke en gyldig domeneserveradresse for løsing av Internett-adresser.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Urządzenie Squeezebox nie ma prawidłowego adresu serwera nazw domenowych do rozpoznawania adresów internetowych.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie zapewniające konfigurację sieci urządzeniom w sieci domowej. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	В плеере Squeezebox отсутствует правильный адрес DNS-сервера для разрешения интернет-адресов.\nВариант решения:\n — перезагрузить устройство, предоставляющее сетевую конфигурацию устройствам в вашей домашней сети. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten har inte en giltig serveradress med domännamn för att matcha Internetadresser.\nMöjliga lösningar:\n – Starta om den enhet som tillhandahåller nätverkskonfiguration för enheterna i ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
+
+NET_ARPING
+	CS	Arping %s ...
+	DA	Arping %s ...
+	DE	Arping für %s wird ausgeführt...
+	EN	Arping %s ...
+	ES	Arping %s ...
+	FI	Arping %s...
+	FR	Commande Arping %s...
+	IT	Richiesta ARP in corso per %s...
+	NL	Arping %s...
+	NO	Arping %s ...
+	PL	Arping %s...
+	RU	Arping: %s...
+	SV	Arping %s ...
+
+NET_ARPING_OK
+	CS	Arping v pořádku
+	DA	Arping fungerer
+	DE	Arping OK
+	EN	Arping ok
+	ES	Arping correcto
+	FI	Arping kunnossa
+	FR	Succès de la commande Arping
+	IT	Le richieste ARP funzionano correttamente
+	NL	Arping OK
+	NO	Arping OK
+	PL	Arping — wynik pomyślny
+	RU	Arping: ОК
+	SV	Arping OK
+
+NET_ARPING_NOK
+	CS	IP %s je již použita.
+	DA	IP-adressen %s er allerede i brug.
+	DE	IP %s wird bereits verwendet.
+	EN	IP %s already in use.
+	ES	IP %s ya está en uso.
+	FI	IP-osoite %s on jo käytössä.
+	FR	Adresse IP %s déjà utilisée.
+	IT	L'IP %s è già in uso.
+	NL	IP-adres %s al in gebruik.
+	NO	IP %s er allerede i bruk.
+	PL	Adres IP %s jest już w użyciu.
+	RU	IP-адрес %s уже используется.
+	SV	IP-adressen %s används redan.
+
+NET_SERVER_NOK
+	CS	Žádný server
+	DA	Ingen server
+	DE	Kein Server
+	EN	No server
+	ES	No hay servidor
+	FI	Ei palvelinta
+	FR	Aucun serveur
+	IT	Nessun server
+	NL	Geen server
+	NO	Ingen server
+	PL	Brak serwera
+	RU	Отсутствует сервер
+	SV	Ingen server
+
+NET_RESOLVE
+	CS	Získávání IP pro %s ...
+	DA	Henter IP-adresse til %s ...
+	DE	IP für %s wird abgerufen...
+	EN	Getting IP for %s ...
+	ES	Obteniendo IP para %s...
+	FI	Haetaan IP-osoitetta kohteelle %s ...
+	FR	Obtention de l'adresse IP pour %s...
+	IT	Recupero dell'IP di %s in corso...
+	NL	IP-adres wordt opgehaald voor %s ...
+	NO	Henter IP for %s ...
+	PL	Trwa uzyskiwanie adresu IP %s...
+	RU	Получение IP-адреса для %s...
+	SV	Hämtar IP-adress för %s ...
+
+NET_RESOLVE_OK
+	CS	IP pro %s
+	DA	IP-adresse for %s
+	DE	IP für %s
+	EN	IP for %s
+	ES	IP para %s
+	FI	IP-osoite: %s
+	FR	Adresse IP pour %s
+	IT	IP per %s
+	NL	IP-adres voor %s
+	NO	IP for %s
+	PL	Adres IP %s
+	RU	IP-адрес для %s
+	SV	IP-adress för %s
+
+NET_RESOLVE_NOK
+	CS	Chyba při přidělení DNS pro %s
+	DA	DNS-opløsningen mislykkedes for %s
+	DE	DNS-Auflösung für %s fehlgeschlagen
+	EN	DNS resolution failed for %s
+	ES	Fallo de resolución de DNS para %s
+	FI	Verkkotunnusjärjestelmän selvittäminen epäonnistui kohteessa %s
+	FR	Echec de la résolution du serveur DNS pour %s
+	IT	Risoluzione DNS non eseguita per %s
+	NL	DNS-omzetting mislukt voor %s
+	NO	DNS-løsning mislyktes for %s
+	PL	Niepowodzenie rozpoznawania nazwy DNS w przypadku %s
+	RU	Не удалось разрешение имени DNS для %s
+	SV	DNS-matchning misslyckades för %s
+
+NET_RESOLVE_NOK_HELP
+	CS	Přehrávač Squeezebox nebyl schopen přidělit síťovou adresu pro %s.\nMožné řešení:\n - Restartujte zařízení, které přiděluje internetové adresy pro vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox kunne ikke løse problemet med netværksadressen for %s.\nMulige løsninger:\n - Genstart den enhed der løser problemer med internetadresser for hjemmenetværket. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Ihre Squeezebox konnte die Netzwerkadresse für %s nicht auflösen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das die Internetadressen für Ihr Heimnetzwerk auflöst. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox was unable to resolve the network address for %s.\nPossible solutions:\n - Reboot the device that resolves internet addresses for your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox no pudo resolver la dirección de red para %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que resuelve las direcciones de Internet para su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezebox ei voinut selvittää kohteen %s verkko-osoitetta.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, joka selvittää internet-osoitteet kotiverkossasi. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox n'a pas pu résoudre l'adresse réseau de %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui résout les adresses Internet de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Impossibile risolvere l'indirizzo di rete di %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che risolve gli indirizzi Internet della rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox kan de netwerkadressen voor %s niet omzetten.\nMogelijke oplossingen:\n - Start het apparaat dat internetadressen voor je thuisnetwerk omzet, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren kunne ikke løse nettverksadressen til %s.\nMulige løsninger:\n - Start enheten som løser Internett-adresser for hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Urządzenie Squeezebox nie może rozpoznać adresu sieciowego %s.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie, które rozpoznaje adresy internetowe w sieci domowej. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	Плеер Squeezebox не может разрешить сетевой адрес для %s.\nВариант решения:\n — перезагрузить устройство, разрешающее интернет-адреса для вашей домашней сети. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten kunde inte matcha nätverksadressen för %s.
+
+NET_PING
+	CS	Ping %s ...
+	DA	Sender pingkommando %s ...
+	DE	Ping für %s wird ausgeführt...
+	EN	Pinging %s ...
+	ES	Haciendo ping a %s...
+	FI	Ping käynnissä %s ...
+	FR	Commande Ping %s...
+	IT	Ping di %s in corso...
+	NL	Pingen naar %s...
+	NO	Pinger %s ...
+	PL	Trwa pingowanie %s...
+	RU	Проверка связи с %s...
+	SV	Pingar %s ...
+
+NET_PING_OK
+	CS	Ping %s v pořádku
+	DA	Der kan sendes Ping %s-kommandoer
+	DE	Ping %s OK
+	EN	Ping %s ok
+	ES	Ping %s correcto
+	FI	Ping %s kunnossa
+	FR	Succès de la commande Ping %s
+	IT	Il ping %s funziona correttamente
+	NL	Ping %s OK
+	NO	Ping %s OK
+	PL	Pingowanie %s powiodło się
+	RU	Проверка связи с %s успешна
+	SV	Ping %s OK
+
+NET_PING_NOK
+	CS	Ping %s není v pořádku
+	DA	Der kan ikke sendes Ping %s-kommandoer
+	DE	Ping %s nicht OK
+	EN	Ping %s not ok
+	ES	Ping %s no es correcto
+	FI	Ping %s epäkunnossa
+	FR	Echec de la commande Ping %s
+	IT	Problemi con il ping %s
+	NL	Ping %s niet OK
+	NO	Ping %s er ikke OK
+	PL	Pingowanie %s nie powiodło się
+	RU	Проверка связи с %s не удалась
+	SV	Ping %s inte OK
+
+NET_PING_NOK_HELP
+	CS	Přehrávač Squeezebox neobdržel síťovou odezvu od %s.\nMožné řešení:\n - Restartujte zařízení, které spravuje vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox kunne ikke få et ping-svar fra %s.\nMulige løsninger:\n - Genstart den enhed der administrerer dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.\n - Kontroller at pc'er på dit hjemmenetværk kan oprette forbindelse til internettet.
+	DE	Ihre Squeezebox konnte keine Pingantwort von %s abrufen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das Ihr Heimnetzwerk verwaltet. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.\n – Vergewissern Sie sich, dass ein PC in Ihrem Heimnetzwerk eine Verbindung mit dem Internet herstellen kann.
+	EN	Your Squeezebox was unsuccessful in getting a ping response from %s.\nPossible solutions:\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.\n - Confirm that a PC on your home network can connect to the internet.
+	ES	Su dispositivo Squeezebox no logró obtener una respuesta de ping de %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.\n - Confirmar que un PC de su red doméstica puede conectarse a Internet.
+	FI	Squeezebox ei saanut ping-vastausta kohteesta %s.\nMahdolliset ratkaisut:\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.\n - Tarkista, että kotiverkkosi tietokoneilla on yhteys internetiin.
+	FR	Votre Squeezebox n'a reçu aucune réponse à la commande Ping envoyée pour %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.\n - Vérifiez qu'un ordinateur PC de votre réseau domestique peut se connecter à Internet.
+	IT	Impossibile ottenere una risposta Ping da %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.\n - Verificare che un PC della rete domestica sia in grado di connettersi a Internet.
+	NL	Je Squeezebox kan geen ping-reactie krijgen van %s.\nMogelijke oplossingen:\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.\n - Controleer of een pc op je thuisnetwerk verbinding kan maken met internet.
+	NO	Squeezebox-spilleren fikk ikke noe ping-svar fra %s.\nMulige løsninger:\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.\n - Prøv å kople til Internett fra en av datamaskinene på hjemmenettverket.
+	PL	Urządzenie Squeezebox nie może odebrać odpowiedzi ping od %s.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie zarządzające siecią domową. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.\n -Sprawdź, czy komputer w sieci domowej może połączyć się z Internetem.
+	RU	Плеер Squeezebox не получил от %s ответа на запрос проверки связи.\nВариант решения:\n — перезагрузить устройство, управляющее вашей домашней сетью. Обычно это беспроводной маршрутизатор или широкополосный модем.\n — проверить, устанавливается ли связь с Интернетом с компьютера в домашней сети.
+	SV	Squeezebox-enheten lyckades inte få ett ping-svar från %s.\nMöjliga lösningar:\n – Starta om den enhet som hanterar ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.\n – Kontrollera att en dator i ditt hemnätverk kan ansluta till Internet.
+
+NET_PORT
+	CS	Test připojení k %s
+	DA	Kontroller forbindelsen til %s
+	DE	Verbindung zu %s testen
+	EN	Test connection to %s
+	ES	Probar conexión a %s
+	FI	Testataan yhteyttä kohteeseen %s
+	FR	Test de connexion à %s
+	IT	Verifica connessione a %s
+	NL	Verbinding met %s testen
+	NO	Test forbindelsen til %s
+	PL	Testuj połączenie z %s
+	RU	Проверка подключения к %s
+	SV	Testa anslutning till %s
+
+NET_PORT_OK
+	CS	Připojení k %s v pořádku
+	DA	Der er forbindelse til %s
+	DE	Verbindung zu %s OK
+	EN	Connection to %s ok
+	ES	La conexión a %s es correcta
+	FI	Yhteys kohteeseen %s kunnossa
+	FR	Connexion à %s établie
+	IT	La connessione a %s funziona correttamente
+	NL	Verbinding met %s OK
+	NO	Forbindelsen til %s er som den skal
+	PL	Połączenie z %s jest prawidłowe
+	RU	Подключение к %s работает
+	SV	Anslutning till %s OK
+
+NET_PORT_NOK
+	CS	Připojení k %s není v pořádku
+	DA	Forbindelsen til %s fungerer ikke ordentlig
+	DE	Verbindung zu %s nicht OK
+	EN	Connection to %s not ok
+	ES	La conexión a %s no es correcta
+	FI	Yhteys kohteeseen %s epäkunnossa
+	FR	Aucune connexion à %s
+	IT	Problemi di connessione a %s
+	NL	Verbinding met %s niet OK
+	NO	Forbindelsen til %s er ikke som den skal
+	PL	Połączenie z %s jest nieprawidłowe
+	RU	Подключение к %s не работает
+	SV	Anslutning till %s inte OK
+
+NET_PORT_NOK_HELP
+	CS	Přehrávač Squeezebox se nemohl připojit k %s.\nMožné řešení:\n - Restartujte zařízení, které spravuje vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox kunne ikke forbindes til %s.\nMulige løsninger:\n - Genstart den enhed der administrerer dit hjemmenetværk. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Ihre Squeezebox konnte keine Verbindung zu %s herstellen.\nMögliche Lösungen:\n – Starten Sie das Gerät neu, das Ihr Heimnetzwerk verwaltet. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox could not connect to %s.\nPossible solutions:\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox no pudo conectarse a %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezebox ei saanut yhteyttä kohteeseen %s.\nMahdolliset ratkaisut:\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox n'a pas pu se connecter à %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Impossibile eseguire la connessione a %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox kan geen verbinding maken met %s.\nMogelijke oplossingen:\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren kunne ikke kople til %s.\nMulige løsninger:\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Urządzenie Squeezebox nie może połączyć się z %s.\nMożliwe rozwiązania:\n - Uruchom ponownie urządzenie, które zarządza siecią domową. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	Плеер Squeezebox не может подключиться к %s.\nВариант решения:\n — перезагрузить устройство, управляющее вашей домашней сетью. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten gick inte att ansluta till %s.\nMöjliga lösningar:\n – Starta om den enhet som hanterar ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
+
+NET_SUCCESS
+	CS	Všechny testy sítě proběhly úspěšně
+	DA	Alle netværkstest blev bestået
+	DE	Alle Netzwerktests bestanden
+	EN	All network tests passed successfully
+	ES	Todas las pruebas de red se han superado correctamente
+	FI	Kaikki verkkotarkistuksen on läpäisty.
+	FR	Succès de tous les tests du réseau
+	IT	Tutte le verifiche della rete sono state superate
+	NL	Alle netwerktests met goed gevolg voltooid
+	NO	Alle nettverkstester var vellykkede
+	PL	Wszystkie testy sieci zakończyły się pomyślnie
+	RU	Все проверки сети успешно выполнены
+	SV	Alla nätverkstester har genomförts utan fel
+
+NETWORK_PROBLEM
+	CS	Problém v síti
+	DA	Netværksproblem
+	DE	Netzwerkproblem
+	EN	Network Problem
+	ES	Problema de red
+	FI	Verkon ongelma
+	FR	Problème réseau
+	IT	Problema di rete
+	NL	Netwerkprobleem
+	NO	Nettverksproblem
+	PL	Problem z siecią
+	RU	Ошибка сети
+	SV	Nätverksproblem
+
+# for a generic troubleshooting message when no specific help is available
+NETWORK_PROBLEM_HELP
+	CS	U přehrávače Squeezebox se vyskytl problém se sítí.\nMožné řešení:\n - Přesvědčte se, zda počítač ve vaší domácí síti je schopen se připojit k internetu.\n - Restartujte zařízení, které spravuje vaši domácí síť. Obvykle se jedná o bezdrátový router nebo širokopásmový modem.
+	DA	Din Squeezebox har et netværksproblem.\nMulige løsninger:\n - Kontroller at en pc'er dit hjemmenetværk kan oprette forbindelse til internettet.\n - Genstart den enhed der administrerer hjemmenetværket. Det er typisk en trådløs router eller et bredbåndsmodem.
+	DE	Es besteht ein Netzwerkproblem mit Ihrer Squeezebox.\nMögliche Lösungen:\n – Vergewissern Sie sich, dass ein PC in Ihrem Heimnetzwerk eine Verbindung mit dem Internet herstellen kann.\n – Starten Sie das Gerät neu, das Ihr Heimnetzwerk verwaltet. Dabei handelt es sich typischerweise um einen WLAN-Router oder ein Breitbandmodem.
+	EN	Your Squeezebox is experiencing a network problem.\nPossible solutions:\n - Confirm that a PC on your home network can connect to the internet.\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.
+	ES	Su dispositivo Squeezebox está teniendo un problema de red.\nSoluciones posibles:\n - Confirmar que un PC de su red doméstica puede conectarse a Internet.\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
+	FI	Squeezeboxissa on verkko-ongelma.\nMahdolliset ratkaisut:\n - Tarkista, että kotiverkkosi tietokoneilla on yhteys internetiin.\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.
+	FR	Votre Squeezebox rencontre des problèmes de réseau.\nSolutions possibles:\n - Vérifiez qu'un ordinateur PC de votre réseau domestique peut se connecter à Internet.\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	IT	Si è verificato un problema di rete con lo Squeezebox.\nPossibili soluzioni:\n - Verificare che un PC della rete domestica sia in grado di connettersi a Internet.\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router senza fili o un modem a banda larga.
+	NL	Je Squeezebox heeft een netwerkprobleem.\nMogelijke oplossingen:\n - Controleer of een pc op je thuisnetwerk verbinding kan maken met internet.\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
+	NO	Squeezebox-spilleren har et nettverksproblem.\nMulige løsninger:\n - Prøv å kople til Internett fra en av datamaskinene på hjemmenettverket.\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
+	PL	Wystąpił problem sieciowy dotyczący urządzenia Squeezebox.\nMożliwe rozwiązania:\n - Sprawdź, czy komputer w sieci domowej może połączyć się z Internetem.\n - Uruchom ponownie urządzenie zarządzające siecią domową. Jest to zazwyczaj bezprzewodowy router lub modem szerokopasmowy.
+	RU	Неполадки связи Squeezebox с сетью.\nВарианты решений:\n — проверить, устанавливается ли связь с Интернетом с компьютера в домашней сети.\n — перезагрузить устройство, управляющее вашей домашней сетью. Обычно это беспроводной маршрутизатор или широкополосный модем.
+	SV	Squeezebox-enheten har nätverksproblem.\nMöjliga lösningar:\n – Kontrollera att en dator i ditt hemnätverk kan anslutas till Internet.\n – Starta om den enhet som hanterar ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
+

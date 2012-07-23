@@ -1,0 +1,151 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Framework - User interface framework</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_framework_init__">jive.ui.Framework.init()</a></li>
+		<li><a href="#jive_ui_framework_quit__">jive.ui.Framework.quit()</a></li>
+		<li><a href="#jive_ui_framework_run__">jive.ui.Framework.run()</a></li>
+		<li><a href="#jive_ui_framework_dirty_r_">jive.ui.Framework.dirty(r)</a></li>
+		<li><a href="#jive_ui_framework_pushevent_event_">jive.ui.Framework.pushEvent(event)</a></li>
+		<li><a href="#jive_ui_framework_dispatchevent_widget__event_">jive.ui.Framework.dispatchEvent(widget, event)</a></li>
+		<li><a href="#jive_ui_framework_findfile_path_">jive.ui.Framework.findFile(path)</a></li>
+		<li><a href="#jive_ui_framework_getticks__">jive.ui.Framework:getTicks()</a></li>
+		<li><a href="#jive_ui_framework_getbackground__">jive.ui.Framework:getBackground()</a></li>
+		<li><a href="#jive_ui_framework_setbackground_image_">jive.ui.Framework:setBackground(image)</a></li>
+		<li><a href="#jive_ui_framework_stylechanged__">jive.ui.Framework:styleChanged()</a></li>
+		<li><a href="#jive_ui_framework_setemulation_w__h__bpp_">jive.ui.Framework:setEmulation(w, h, bpp)</a></li>
+		<li><a href="#jive_ui_framework_getscreensize__">jive.ui.Framework:getScreenSize()</a></li>
+		<li><a href="#jive_ui_framework_addwidget_widget_">jive.ui.Framework:addWidget(widget)</a></li>
+		<li><a href="#jive_ui_framework_removewidget_widget_">jive.ui.Framework:removeWidget(widget)</a></li>
+		<li><a href="#jive_ui_framework_layoutdirty__">jive.ui.Framework:layoutDirty()</a></li>
+		<li><a href="#jive_ui_framework_addlistener_mask__listener_">jive.ui.Framework:addListener(mask, listener)</a></li>
+		<li><a href="#jive_ui_framework_removelistener_handle_">jive.ui.Framework:removeListener(handle)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>User interface framework</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Called from the mail application
+ jive.ui.Framework:init()
+ jive.ui.Framework:run()
+ jive.ui.Framework:quit()</pre>
+<pre>
+ -- Add a global event listener
+ jive.ui.Framework:addListener(jive.ui.EVENT_KEY_PRESS,
+                               function(event)
+                                       print(&quot;key pressed:&quot; .. event.getKeyCode()
+                               end)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_framework_init__">jive.ui.Framework.init()</a></h2>
+<p>Initialise the ui.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_quit__">jive.ui.Framework.quit()</a></h2>
+<p>Free all ui resources.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_run__">jive.ui.Framework.run()</a></h2>
+<p>The main display and event loop.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_dirty_r_">jive.ui.Framework.dirty(r)</a></h2>
+<p>Mark an area of the screen as dirty, of the while screen if r is nil.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_pushevent_event_">jive.ui.Framework.pushEvent(event)</a></h2>
+<p>Push an event onto the event queue for later processing. This can be called from any thread.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_dispatchevent_widget__event_">jive.ui.Framework.dispatchEvent(widget, event)</a></h2>
+<p>Dispatch an event <em>event</em> to the listeners of the widget <em>widget</em>. Any global event listeners are called first. This can only be called from the main thread.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_findfile_path_">jive.ui.Framework.findFile(path)</a></h2>
+<p>Find a file on the lua path. Returns the full path of the file, or nil if it was not found.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_getticks__">jive.ui.Framework:getTicks()</a></h2>
+<p>Return the number of milliseconds since the Jive initialization.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_getbackground__">jive.ui.Framework:getBackground()</a></h2>
+<p>Returns the current background image.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_setbackground_image_">jive.ui.Framework:setBackground(image)</a></h2>
+<p>Sets the background image <em>image</em>.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_stylechanged__">jive.ui.Framework:styleChanged()</a></h2>
+<p>Indicates the style parameters have changed, this clears any caching of the style values used.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_setemulation_w__h__bpp_">jive.ui.Framework:setEmulation(w, h, bpp)</a></h2>
+<p>Sets the screen size <em>w, h</em>, and bbp <em>bpp</em>. This must be called before jive.ui.Framework:init(). This has no effect on a hardware platform.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_getscreensize__">jive.ui.Framework:getScreenSize()</a></h2>
+<p>Returns <em>w, h</em> the current screen size.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_addwidget_widget_">jive.ui.Framework:addWidget(widget)</a></h2>
+<p>Add a global widget <em>widget</em> to the screen. The global widgets are shown on all windows.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_removewidget_widget_">jive.ui.Framework:removeWidget(widget)</a></h2>
+<p>Remove the global widget <em>widget</em> from the screen.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_layoutdirty__">jive.ui.Framework:layoutDirty()</a></h2>
+<p>Mark the layout as dirty.</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_addlistener_mask__listener_">jive.ui.Framework:addListener(mask, listener)</a></h2>
+<p>Add a global event listener <em>listener</em>. The listener is called for events that match the event mask <em>mask</em>. The listener is called before any widget event listeners, and can stop event processing by returned EVENT_CONSUME. Returns a <em>handle</em> to use in removeEventListener().</p>
+<p>
+</p>
+<h2><a name="jive_ui_framework_removelistener_handle_">jive.ui.Framework:removeListener(handle)</a></h2>
+<p>Removes the listener <em>handle</em> from the widget.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

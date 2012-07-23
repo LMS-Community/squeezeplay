@@ -1,0 +1,94 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+CRASH_TITLE
+	CS	Chyba systému
+	DA	Systemfejl
+	DE	Systemfehler
+	EN	System Error
+	ES	Error del sistema
+	FI	Järjestelmävirhe
+	FR	Erreur système
+	IT	Errore di sistema
+	NL	Systeemfout
+	NO	Systemfeil
+	PL	Błąd systemu
+	RU	Системная ошибка
+	SV	Systemfel
+
+CRASH_TEXT
+	CS	Byl zjištěn pád systému. Protokolový soubor se zasílá Logitech k analýze.
+	DA	Systemet gik ned, og der er sendt en logfil til analyse hos Logitech.
+	DE	Es wurde ein Systemabsturz erkannt. Eine Protokolldatei wird an Logitech zur Analyse gesendet.
+	EN	A system crash has been detected. A log file is being sent to Logitech for analysis.
+	ES	Se ha detectado un bloqueo del sistema. Se está enviando un archivo de registro a Logitech para analizarlo.
+	FI	Havaittiin järjestelmän kaatuminen. Logitechille lähetetään lokitiedosto analysoitavaksi.
+	FR	Une panne du système a été détectée. Un fichier journal a été envoyé à Logitech pour analyse.
+	IT	È stato rilevato un arresto anomalo del sistema. Verrà inviato un file di registro a Logitech per essere analizzato.
+	NL	Er is een systeemcrash gedetecteerd. Er wordt een logbestand naar Logitech gestuurd ter analyse.
+	NO	Vi har registrert et systemkrasj. En loggfil sendes til Logitech for analyse.
+	PL	Wykryto zawieszenie systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
+	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
+	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
+
+CRASH_TEXT_QUESTION
+	CS	Omlouváme se, vaše zařízení muselo být restartováno z důvodu systémové chyby. Souhlasíte s tím, abychom v souvislosti s tímto problémem získali diagnostické informace, které nám mohou pomoci při nápravě?
+	DA	Enheden genstartede på grund af en systemfejl. Må vi indsamle diagnosticeringsoplysninger om problemet, så vi kan forsøge at rette det?
+	DE	Das Gerät musste aufgrund eines Systemfehlers neu gestartet werden. Dürfen Informationen zu diesem Fehler zwecks Fehlerbehebung gesammelt werden?
+	EN	Sorry, your device had to restart due to a system error. Is it OK if we collect diagnostic information on this issue to help us fix it?
+	ES	El dispositivo ha tenido que reiniciarse debido a un error del sistema. ¿Nos permite recopilar información de diagnóstico sobre este problema para que podamos solucionarlo?
+	FI	Laite on käynnistettävä uudelleen järjestelmävirheen vuoksi. Sallitko ongelmaa koskevien diagnostiikkatietojen keräämisen, jotta voimme ratkaista ongelman?
+	FR	Votre dispositif doit être redémarré suite à une erreur système. Pouvons-nous rassembler des informations de diagnostic qui nous permettront de résoudre ce problème?
+	IT	Spiacenti, è stato necessario riavviare il dispositivo a causa di un errore di sistema. Si acconsente a raccogliere dati su questo problema a fini diagnostici per contribuire a risolverlo?
+	NL	Sorry, je apparaat moet opnieuw opstarten vanwege een systeemfout. Is het goed als wij diagnostische gegevens verzamelen zodat we het probleem mogelijk kunnen verhelpen?
+	NO	Beklager, enheten måtte starte på nytt på grunn av en systemfeil. Er det greit hvis vi henter inn diagnostiseringsinformasjon om dette problemet, så vi kan fikse det?
+	PL	Niestety z powodu błędu systemu urządzenie musiało zostać ponownie uruchomione. Czy możemy pobrać informacje diagnostyczne, które pomogą nam w rozwiązaniu tego problemu?
+	RU	Из-за системной ошибки устройство пришлось перезапустить. Вы разрешаете нам получить диагностическую информацию, чтобы устранить эту ошибку?
+	SV	Enheten fick tyvärr startas om på grund av ett systemfel. Går det bra om vi samlar in diagnostisk information om det här problemet som kan hjälpa oss att åtgärda det?
+
+CRASH_YES_SEND
+	CS	Ano, odesílat vždy
+	DA	Ja, send altid
+	DE	Immer senden
+	EN	Yes, always send
+	ES	Sí, enviar siempre
+	FI	Kyllä, lähetä aina
+	FR	Oui, toujours envoyer
+	IT	Sì, invia sempre
+	NL	Ja, altijd verzenden
+	NO	Ja, send alltid
+	PL	Tak, zawsze wysyłaj
+	RU	Да, всегда отправлять
+	SV	Ja, skicka alltid
+
+CRASH_NO_NEVER_SEND
+	CS	Ne, nikdy neodesílat
+	DA	Nej, send aldrig
+	DE	Nie senden
+	EN	No, never send
+	ES	No, no enviar nunca
+	FI	Ei, älä lähetä koskaan diagnostiikkatietoja
+	FR	Non, ne jamais envoyer
+	IT	No, non inviare mai
+	NL	Nee, nooit verzenden
+	NO	Nei, send aldri
+	PL	Nie, nigdy nie wysyłaj
+	RU	Нет, никогда не отправлять
+	SV	Nej, skicka aldrig
+
+CRASH_CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+

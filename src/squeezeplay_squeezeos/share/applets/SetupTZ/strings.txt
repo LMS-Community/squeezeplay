@@ -1,0 +1,1144 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+TZ_TIMEZONE
+	CS	Časové pásmo
+	DA	Tidszone
+	DE	Zeitzone
+	EN	Timezone
+	ES	Zona horaria
+	FI	Aikavyöhyke
+	FR	Fuseau horaire
+	IT	Fuso orario
+	NL	Tijdzone
+	NO	Tidssone
+	PL	Strefa czasowa
+	RU	Часовой пояс
+	SV	Tidszon
+
+TZ_PACIFIC_APIA
+	CS	(GMT-11:00) ostrov Midway, Samoa
+	DA	(GMT-11:00) Midwayøerne, Samoa
+	DE	(GMT-11:00) Midway-Inseln, Samoa
+	EN	(GMT-11:00) Midway Island, Samoa
+	ES	(GMT-11:00) Isla Midway, Samoa
+	FI	(GMT-11.00) Midwaysaaret, Samoa
+	FR	(GMT-11:00) Iles Midway, Samoa
+	IT	(GMT-11:00) Isole Midway, Samoa
+	NL	(GMT-11:00) Midwayeilanden, Samoa
+	NO	(GMT-11:00) Midwayøyene, Samoa
+	PL	(GMT-11:00) Wyspa Midway, Samoa
+	RU	(GMT-11:00) – остров Мидуэй, Самоа
+	SV	(GMT – 11:00) Midwayöarna, Samoa
+
+TZ_PACIFIC_HONOLULU
+	CS	(GMT-10:00) Havaj
+	DA	(GMT-10:00) Hawaii
+	DE	(GMT-10:00) Hawaii
+	EN	(GMT-10:00) Hawaii
+	ES	(GMT-10:00) Hawaii
+	FI	(GMT-10.00) Havaiji
+	FR	(GMT-10:00) Hawaï
+	IT	(GMT-10:00) Hawaii
+	NL	(GMT-10:00) Hawaï
+	NO	(GMT – 10.00) Hawaii
+	PL	(GMT-10:00) Hawaje
+	RU	(GMT-10:00) – Гавайские острова
+	SV	(GMT – 10:00) Hawaii
+
+TZ_PACIFIC_PITCAIRN
+	CS	(GMT-08:00) Pitcairnovy ostrovy
+	DA	(GMT-08:00) Pitcairn Islands
+	DE	(GMT-08:00) Pitcairn-Inseln
+	EN	(GMT-08:00) Pitcairn Islands
+	ES	(GMT-08:00) Islas Pitcairn
+	FI	(GMT-08.00) Pitcairn
+	FR	(GMT-08:00) Iles Pitcairn
+	IT	(GMT-08:00) Isole Pitcairn
+	NL	(GMT-08:00) Pitcairneilanden
+	NO	(GMT-08:00) Pitcairn
+	PL	(GMT-08:00) Wyspy Pitcairn
+	RU	(GMT-08:00) – о-ва Питкерн
+	SV	(GMT – 08:00) Pitcairnöarna
+
+TZ_AMERICA_ANCHORAGE
+	CS	(GMT-09:00) Aljaška
+	DA	(GMT-09:00) Alaska
+	DE	(GMT-09:00) Alaska
+	EN	(GMT-09:00) Alaska
+	ES	(GMT-09:00) Alaska
+	FI	(GMT-09.00) Alaska
+	FR	(GMT-09:00) Alaska
+	IT	(GMT-09:00) Alaska
+	NL	(GMT-09:00) Alaska
+	NO	(GMT – 09.00) Alaska
+	PL	(GMT-09:00) Alaska
+	RU	(GMT-09:00) – Аляска
+	SV	(GMT – 9:00) Alaska
+
+TZ_AMERICA_LOS_ANGELES
+	CS	(GMT-08:00) Pacifický čas (USA a Kanada); Tijuana
+	DA	(GMT-08:00) Pacific Time (USA og Canada); Tijuana
+	DE	(GMT-08:00) Pacific Time (USA und Kanada); Tijuana
+	EN	(GMT-08:00) Pacific Time (US & Canada); Tijuana
+	ES	(GMT-08:00) Hora del Pacífico (EE.UU. y Canadá); Tijuana
+	FI	(GMT-08.00) Tyynenmeren normaaliaika (Yhdysvallat ja Kanada), Tijuana
+	FR	(GMT-08:00) Heure du Pacifique (Etats-Unis et Canada), Tijuana
+	IT	(GMT-08:00) Ora costa pacifica (USA e Canada); Tijuana
+	NL	(GMT-08:00) Pacific Time (VS en Canada); Tijuana
+	NO	(GMT-08:00) Stillehavskysten (USA og Canada); Tijuana
+	PL	(GMT-08:00) Czas pacyficzny (Stany Zjednoczone i Kanada); Tijuana
+	RU	(GMT-08:00) – Тихоокеанское время (США и Канада); Тихуана
+	SV	(GMT – 8:00) Stilla havstid (USA och Kanada), Tijuana
+
+TZ_AMERICA_PHOENIX
+	CS	(GMT-07:00) Arizóna
+	DA	(GMT-07:00) Arizona
+	DE	(GMT-07:00) Arizona
+	EN	(GMT-07:00) Arizona
+	ES	(GMT-07:00) Arizona
+	FI	(GMT-07.00) Arizona
+	FR	(GMT-07:00) Arizona
+	IT	(GMT-07:00) Arizona
+	NL	(GMT-07:00) Arizona
+	NO	(GMT – 07.00) Arizona
+	PL	(GMT-07:00) Arizona
+	RU	(GMT-07:00) – Аризона
+	SV	(GMT – 7:00) Arizona
+
+TZ_AMERICA_DENVER
+	CS	(GMT-07:00) Horský čas (USA a Kanada)
+	DA	(GMT-07:00) Mountain Time (USA og Canada)
+	DE	(GMT-07:00) Mountain Time (USA u. Kanada)
+	EN	(GMT-07:00) Mountain Time (US & Canada)
+	ES	(GMT-07:00) Hora de las Montañas Rocosas (EE UU y Canadá)
+	FI	(GMT-07.00) Kalliovuorten normaaliaika (Yhdysvallat ja Kanada)
+	FR	(GMT-07:00) Heure normale des Rocheuses (Etats-Unis et Canada)
+	IT	(GMT-07:00) Fuso occidentale (USA e Canada)
+	NL	(GMT-07:00) Mountain Time (VS en Canada)
+	NO	(GMT-07:00) Mountain Time (USA og Canada)
+	PL	(GMT-07:00) Czas górski (Stany Zjednoczone i Kanada)
+	RU	(GMT-07:00) – Горное время (США и Канада)
+	SV	(GMT – 7:00) Mountain Time (USA och Kanada)
+
+TZ_AMERICA_CHIHUAHUA
+	CS	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	DA	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	DE	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	EN	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	ES	(GMT-07:00) Chihuahua, La Paz, Mazatlán
+	FI	(GMT-07.00) Chihuahua, La Paz, Mazatlan
+	FR	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	IT	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	NL	(GMT-07:00) Chihuahua, La Paz, Mazatlán
+	NO	(GMT – 07.00) Chihuahua, La Paz, Mazatlan
+	PL	(GMT-07:00) Chihuahua, La Paz, Mazatlan
+	RU	(GMT-07:00) – Чиуауа, Ла-Пас, Масатлан
+	SV	(GMT – 7:00) Chihuahua, La Paz, Mazatlan
+
+TZ_AMERICA_REGINA
+	CS	(GMT-06:00) Saskatchewan
+	DA	(GMT-06:00) Saskatchewan
+	DE	(GMT-06:00) Saskatchewan
+	EN	(GMT-06:00) Saskatchewan
+	ES	(GMT-06:00) Saskatchewan
+	FI	(GMT-06.00) Saskatchewan
+	FR	(GMT-06:00) Saskatchewan
+	IT	(GMT-06:00) Saskatchewan
+	NL	(GMT-06:00) Saskatchewan
+	NO	(GMT – 06.00) Saskatchewan
+	PL	(GMT-06:00) Saskatchewan
+	RU	(GMT-06:00) – Саскачеван
+	SV	(GMT – 6:00) Saskatchewan
+
+TZ_AMERICA_MEXICO_CITY
+	CS	(GMT-06:00) Guadalajara, Mexico City, Monterrey
+	DA	(GMT-06:00) Guadalajara, Mexico City, Monterrey
+	DE	(GMT-06:00) Guadalajara, Mexiko-Stadt, Monterrey
+	EN	(GMT-06:00) Guadalajara, Mexico City, Monterrey
+	ES	(GMT-06:00) Guadalajara, Ciudad de México, Monterrey
+	FI	(GMT-06.00) Guadalajara, Mexico City, Monterrey
+	FR	(GMT-06:00) Guadalajara, Mexico, Monterrey
+	IT	(GMT-06:00) Guadalajara, Città del Messico, Monterrey
+	NL	(GMT-06:00) Guadalajara, Mexico-stad, Monterrey
+	NO	(GMT – 06.00) Guadalajara, Mexico by, Monterrey
+	PL	(GMT-06:00) Guadalajara, Mexico City, Monterrey
+	RU	(GMT-06:00) — Гвадалахара, Мехико, Монтеррей
+	SV	(GMT – 6:00) Guadalajara, Mexico City, Monterrey
+
+TZ_AMERICA_CHICAGO
+	CS	(GMT-06:00) Středoamerický čas (USA a Kanada)
+	DA	(GMT-06:00) Central Time (USA og Canada)
+	DE	(GMT-06:00) Central Time (USA u. Kanada)
+	EN	(GMT-06:00) Central Time (US & Canada)
+	ES	(GMT-06:00) Hora central (EE UU y Canadá)
+	FI	(GMT-06.00) Keskinen normaaliaika (Yhdysvallat ja Kanada)
+	FR	(GMT-06:00) Heure normale du Centre (Etats-Unis et Canada)
+	IT	(GMT-06:00) Fuso centrale (USA e Canada)
+	NL	(GMT-06:00) Central Time (VS en Canada)
+	NO	(GMT-06:00) Central Time (USA & Canada)
+	PL	(GMT-06:00) Czas środkowy (Stany Zjednoczone i Kanada)
+	RU	(GMT-06:00) – Центральное время (США и Канада)
+	SV	(GMT – 7:00) Central Time (USA och Kanada)
+
+TZ_AMERICA_INDIANAPOLIS
+	CS	(GMT-05:00) Indiana (Východ)
+	DA	(GMT-05:00) Indiana (øst)
+	DE	(GMT-05:00) Indiana (East)
+	EN	(GMT-05:00) Indiana (East)
+	ES	(GMT-05:00) Indiana (Este)
+	FI	(GMT-05.00) Indiana (Itä)
+	FR	(GMT-05:00) Indiana (Est)
+	IT	(GMT-05:00) Indiana (Est)
+	NL	(GMT-05:00) Indiana (East)
+	NO	(GMT-05:00) Indiana (øst)
+	PL	(GMT-05:00) Indiana (Wschód)
+	RU	(GMT-05:00) – Индиана (восток)
+	SV	(GMT – 5:00) Indiana (öst)
+
+TZ_AMERICA_BOGOTA
+	CS	(GMT-05:00) Bogota, Lima, Quito
+	DA	(GMT-05:00) Bogota, Lima, Quito
+	DE	(GMT-05:00) Bogota, Lima, Quito
+	EN	(GMT-05:00) Bogota, Lima, Quito
+	ES	(GMT-05:00) Bogotá, Lima, Quito
+	FI	(GMT-05.00) Bogota, Lima, Quito
+	FR	(GMT-05:00) Bogota, Lima, Quito
+	IT	(GMT-05:00) Bogotà, Lima, Quito
+	NL	(GMT-05:00) Bogotá, Lima, Quito
+	NO	(GMT-05:00) Bogotá, Lima, Quito
+	PL	(GMT-05:00) Bogota, Lima, Quito
+	RU	(GMT-05:00) – Богота, Лима, Кито
+	SV	(GMT – 5:00) Bogotá, Lima, Quito
+
+TZ_AMERICA_NEW_YORK
+	CS	(GMT-05:00) Východní čas (USA & Kanada)
+	DA	(GMT-05:00) Eastern Time (USA og Canada)
+	DE	(GMT-05:00) Eastern Time (USA u. Kanada)
+	EN	(GMT-05:00) Eastern Time (US & Canada)
+	ES	(GMT-05:00) Hora oriental (EE UU y Canadá)
+	FI	(GMT-05.00) Itäinen normaaliaika (Yhdysvallat ja Kanada)
+	FR	(GMT-05:00) Heure normale de l'Est (Etats-Unis et Canada)
+	IT	(GMT-05:00) Fuso orientale (USA e Canada)
+	NL	(GMT-05:00) Eastern Time (VS en Canada)
+	NO	(GMT-05:00) Eastern Time (USA og Canada)
+	PL	(GMT-05:00) Czas wschodni (USA i Kanada)
+	RU	(GMT-05:00) – Восточное время (США и Канада)
+	SV	(GMT – 5:00) Eastern Time (USA och Kanada)
+
+TZ_AMERICA_CARACAS
+	CS	(GMT-04:00) Caracas, La Paz
+	DA	(GMT-04:00) Caracas, La Paz
+	DE	(GMT-04:00) Caracas, La Paz
+	EN	(GMT-04:00) Caracas, La Paz
+	ES	(GMT-04:00) Caracas, La Paz
+	FI	(GMT-04.00) Caracas, La Paz
+	FR	(GMT-04:00) Caracas, La Paz
+	IT	(GMT-04:00) Caracas, La Paz
+	NL	(GMT-04:00) Caracas, La Paz
+	NO	(GMT – 04.00) Caracas, La Paz
+	PL	(GMT-04:00) Caracas, La Paz
+	RU	(GMT-04:00) – Каракас, Ла-Пас
+	SV	(GMT – 4:00) Caracas, La Paz
+
+TZ_AMERICA_SANTIAGO
+	CS	(GMT-04:00) Santiago
+	DA	(GMT-04:00) Santiago
+	DE	(GMT-04:00) Santiago
+	EN	(GMT-04:00) Santiago
+	ES	(GMT-04:00) Santiago
+	FI	(GMT-04.00) Santiago
+	FR	(GMT-04:00) Santiago
+	IT	(GMT-04:00) Santiago
+	NL	(GMT-04:00) Santiago
+	NO	(GMT – 04.00) Santiago
+	PL	(GMT-04:00) Santiago
+	RU	(GMT-04:00) – Сантьяго
+	SV	(GMT – 4:00) Santiago
+
+TZ_AMERICA_HALIFAX
+	CS	(GMT-04:00) Atlantický čas (Kanada)
+	DA	(GMT-04:00) Atlantic Time (Canada)
+	DE	(GMT-04:00) Atlantic Time (Kanada)
+	EN	(GMT-04:00) Atlantic Time (Canada)
+	ES	(GMT-04:00) Hora del Atlántico (Canadá)
+	FI	(GMT-04.00) Atlantin normaaliaika (Kanada)
+	FR	(GMT-04:00) Heure de l'Atlantique (Canada)
+	IT	(GMT-04:00) Ora costa atlantica (Canada)
+	NL	(GMT-04:00) Atlantic Time (Canada)
+	NO	(GMT-04:00) Atlanterhavskysten
+	PL	(GMT-04:00) Czas atlantycki (Kanada)
+	RU	(GMT-04:00) – Атлантическое время (Канада)
+	SV	(GMT – 4:00) Atlantic Time (Kanada)
+
+TZ_AMERICA_ST_JOHNS
+	CS	(GMT-03:30) Newfoundland
+	DA	(GMT-03:30) Newfoundland
+	DE	(GMT-03:30) Neufundland
+	EN	(GMT-03:30) Newfoundland
+	ES	(GMT-03:30) Terranova
+	FI	(GMT-03.30) Newfoundland
+	FR	(GMT-03:30) Terre-Neuve
+	IT	(GMT-03:30) Terranova
+	NL	(GMT-03:30) Newfoundland
+	NO	(GMT – 03.30) Newfoundland
+	PL	(GMT-03:30) Nowa Fundlandia
+	RU	(GMT-03:30) – Ньюфаундленд
+	SV	(GMT – 3:30) Newfoundland
+
+TZ_AMERICA_BUENOS_AIRES
+	CS	(GMT-03:00) Buenos Aires, Georgetown
+	DA	(GMT-03:00) Buenos Aires, Georgetown
+	DE	(GMT-03:00) Buenos Aires, Georgetown
+	EN	(GMT-03:00) Buenos Aires, Georgetown
+	ES	(GMT-03:00) Buenos Aires, Georgetown
+	FI	(GMT-03.00) Buenos Aires, Georgetown
+	FR	(GMT-03:00) Buenos Aires, Georgetown
+	IT	(GMT-03:00) Buenos Aires, Georgetown
+	NL	(GMT-03:00) Buenos Aires, Georgetown
+	NO	(GMT – 03.00) Brasilia, Buenos Aires, Georgetown
+	PL	(GMT-03:00) Buenos Aires, Georgetown
+	RU	(GMT-03:00) – Буэнос-Айрес, Джорджтаун
+	SV	(GMT – 3:00) Buenos Aires, Georgetown
+
+TZ_AMERICA_GODTHAB
+	CS	(GMT-03:00) Grónsko
+	DA	(GMT-03:00) Grønland
+	DE	(GMT-03:00) Grönland
+	EN	(GMT-03:00) Greenland
+	ES	(GMT-03:00) Groenlandia
+	FI	(GMT-03.00) Grönlanti
+	FR	(GMT-03:00) Groenland
+	IT	(GMT-03:00) Groenlandia
+	NL	(GMT-03:00) Groenland
+	NO	(GMT-03:00) Grønland
+	PL	(GMT-03:00) Grenlandia
+	RU	(GMT-03:00) – Гренландия
+	SV	(GMT – 3:00) Grönland
+
+TZ_AMERICA_SAO_PAULO
+	CS	(GMT-03:00) Brasilia
+	DA	(GMT-03:00) Brasilia
+	DE	(GMT-03:00) Brasilia
+	EN	(GMT-03:00) Brasilia
+	ES	(GMT-03:00) Brasilia
+	FI	(GMT-03.00) Brasilia
+	FR	(GMT-03:00) Brasilia
+	IT	(GMT-03:00) Brasilia
+	NL	(GMT-03:00) Brasilia
+	NO	(GMT – 03.00) Brasilia
+	PL	(GMT-03:00) Brazylia
+	RU	(GMT-03:00) – Бразилиа
+	SV	(GMT – 3:00) Brasilia
+
+TZ_AMERICA_NORONHA
+	CS	(GMT-02:00) Středoatlantický čas
+	DA	(GMT-02:00) Mid-Atlantic
+	DE	(GMT-02:00) Mittelatlantik
+	EN	(GMT-02:00) Mid-Atlantic
+	ES	(GMT-02:00) Atlántico Central
+	FI	(GMT-02.00) Keski-Atlantti
+	FR	(GMT-02:00) Centre de l'Atlantique
+	IT	(GMT-02:00) Medioatlantico
+	NL	(GMT-02:00) Mid-Atlantic
+	NO	(GMT-02:00) Midt-Atlanteren
+	PL	(GMT-02:00) Środkowy Atlantyk
+	RU	(GMT-02:00) – Центральная Атлантика
+	SV	(GMT – 2:00) Centralatlantisk tid
+
+TZ_ATLANTIC_CAPE_VERDE
+	CS	(GMT-01:00) Kapverdy
+	DA	(GMT-01:00) Kap Verde
+	DE	(GMT-01:00) Kapverdische Inseln
+	EN	(GMT-01:00) Cape Verde Is.
+	ES	(GMT-01:00) Islas de Cabo Verde
+	FI	(GMT-01.00) Kap Verde
+	FR	(GMT-01:00) Iles du Cap-Vert.
+	IT	(GMT-01:00) Capo Verde.
+	NL	(GMT-01:00) Kaapverdische eilanden
+	NO	(GMT-01:00) Kapp Verdeøyene
+	PL	(GMT-01:00) Wyspy Zielonego Przylądka
+	RU	(GMT-01:00) – острова Зеленого Мыса
+	SV	(GMT – 1:00) Kap Verde
+
+TZ_ATLANTIC_AZORES
+	CS	(GMT-01:00) Azorské ostrovy
+	DA	(GMT-01:00) Azorerne
+	DE	(GMT-01:00) Azoren
+	EN	(GMT-01:00) Azores
+	ES	(GMT-01:00) Azores
+	FI	(GMT-01.00) Azorit
+	FR	(GMT-01:00) Açores
+	IT	(GMT-01:00) Azzorre
+	NL	(GMT-01:00) Azoren
+	NO	(GMT-01:00) Azorene
+	PL	(GMT-01:00) Azory
+	RU	(GMT-01:00) – Азорские острова
+	SV	(GMT – 1:00) Azorerna
+
+TZ_AFRICA_CASABLANCA
+	CS	(GMT) Casablanca, Monrovia
+	DA	(GMT) Casablanca, Monrovia
+	DE	(GMT) Casablanca, Monrovia
+	EN	(GMT) Casablanca, Monrovia
+	ES	(GMT) Casablanca, Monrovia
+	FI	(GMT) Casablanca, Monrovia
+	FR	(GMT) Casablanca, Monrovia
+	IT	(GMT) Casablanca, Monrovia
+	NL	(GMT) Casablanca, Monrovia
+	NO	(GMT) Casablanca, Monrovia
+	PL	(GMT) Casablanca, Monrowia
+	RU	(GMT) – Касабланка, Монровия
+	SV	(GMT) Casablanca, Monrovia
+
+TZ_EUROPE_LONDON
+	CS	(GMT) Greenwichský čas: Dublin, Edinburgh, Lisabon, Londýn
+	DA	(GMT) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London
+	DE	(GMT) Greenwich Mean Time : Dublin, Edinburgh, Lissabon, London
+	EN	(GMT) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London
+	ES	(GMT) Hora media de Greenwich: Dublín, Edimburgo, Lisboa, Londres
+	FI	(GMT) Greenwichin aika: Dublin, Edinburgh, Lissabon, Lontoo
+	FR	(GMT) Temps universel: Dublin, Edimbourg, Lisbonne, Londres
+	IT	(GMT) Ora di Greenwich: Dublino, Edimburgo, Lisbona, Londra
+	NL	(GMT) Greenwich Mean Time : Dublin, Edinburgh, Lissabon, Londen
+	NO	(GMT) Greenwich middeltid : Dublin, Edinburgh, Lisboa, London
+	PL	(GMT) Czas uniwersalny Greenwich: Dublin, Edynburg, Lizbona, Londyn
+	RU	(GMT) – время по Гринвичу: Дублин, Лиссабон, Лондон, Эдинбург
+	SV	(GMT) Greenwichtid: Dublin, Edinburgh, Lissabon, London
+
+TZ_AFRICA_LAGOS
+	CS	(GMT+01:00) Středozápadní Afrika
+	DA	(GMT+01:00) Vestlige Centralafrika
+	DE	(GMT+01:00) West-Zentralafrika
+	EN	(GMT+01:00) West Central Africa
+	ES	(GMT+01:00) África Central Occidental
+	FI	(GMT+01.00) Läntinen Keski-Afrikka
+	FR	(GMT+01:00) Afrique du centre-ouest
+	IT	(GMT+01:00) Repubblica centrafricana occidentale
+	NL	(GMT+01:00) West-Centraal-Afrika
+	NO	(GMT+01:00) Vestlige Sentral-Afrika
+	PL	(GMT+01:00) Afryka Środkowozachodnia
+	RU	(GMT+01:00) – Западная и Центральная Африка
+	SV	(GMT + 1:00) Västra Centralafrika
+
+TZ_EUROPE_BERLIN
+	CS	(GMT+01:00) Amsterdam, Berlín, Bern, Řím, Stockholm, Vídeň
+	DA	(GMT+01:00) Amsterdam, Berlin, Bern, Rom, Stockholm, Wien
+	DE	(GMT+01:00) Amsterdam, Berlin, Bern, Rom, Stockholm, Wien
+	EN	(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+	ES	(GMT+01:00) Amsterdam, Berlín, Berna, Roma, Estocolmo, Viena
+	FI	(GMT+01.00) Amsterdam, Berliini, Bern, Rooma, Tukholma, Wien
+	FR	(GMT+01:00) Amsterdam, Berlin, Berne, Rome, Stockholm, Vienne
+	IT	(GMT+01:00) Amsterdam, Berlino, Berna, Roma, Stoccolma, Vienna
+	NL	(GMT+01:00) Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen
+	NO	(GMT+01:00) Amsterdam, Berlin, Bern, Roma, Stockholm, Wien
+	PL	(GMT+01:00) Amsterdam, Berlin, Berno, Rzym, Sztokholm, Wiedeń
+	RU	(GMT+01:00) – Амстердам, Берлин, Берн, Рим, Стокгольм, Вена
+	SV	(GMT + 1:00) Amsterdam, Berlin, Bern, Rom, Stockholm, Wien
+
+TZ_EUROPE_PARIS
+	CS	(GMT+01:00) Brussel, Kodaň, Madrid, Paříž
+	DA	(GMT+01:00) København, Brüxelles, Madrid, Paris
+	DE	(GMT+01:00) Brüssel, Kopenhagen, Madrid, Paris
+	EN	(GMT+01:00) Brussels, Copenhagen, Madrid, Paris
+	ES	(GMT+01:00) Bruselas, Copenhague, Madrid, París
+	FI	(GMT+01.00) Bryssel, Kööpenhamina, Madrid, Pariisi
+	FR	(GMT+01:00) Bruxelles, Copenhague, Madrid, Paris
+	IT	(GMT+01:00) Bruxelles, Copenhagen, Madrid, Parigi
+	NL	(GMT+01:00) Brussel, Kopenhagen, Madrid, Parijs
+	NO	(GMT+01:00) Brussel, København, Madrid, Paris
+	PL	(GMT+01:00) Bruksela, Kopenhaga, Madryt, Paryż
+	RU	(GMT+01:00) – Брюссель, Копенгаген, Мадрид, Париж
+	SV	(GMT + 1:00) Bryssel, Köpenhamn, Madrid, Paris
+
+TZ_EUROPE_SARAJEVO
+	CS	(GMT+01:00) Sarajevo, Skopje, Varšava, Záhřeb
+	DA	(GMT+01:00) Sarajevo, Skopje, Warszawa, Zagreb
+	DE	(GMT+01:00) Sarajewo, Skopje, Warschau, Zagreb
+	EN	(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb
+	ES	(GMT+01:00) Sarajevo, Skopje, Varsovia, Zagreb
+	FI	(GMT+01.00) Sarajevo, Skopje, Varsova, Zagreb
+	FR	(GMT+01:00) Sarajevo, Skopje, Varsovie, Zagreb
+	IT	(GMT+01:00) Sarajevo, Skopje, Varsavia, Zagabria
+	NL	(GMT+01:00) Sarajevo, Skopje, Warschau, Zagreb
+	NO	(GMT+01:00) Sarajevo, Skopje, Warsawa, Zagreb
+	PL	(GMT+01:00) Sarajewo, Skopie, Warszawa, Zagrzeb
+	RU	(GMT+01:00) – Сараево, Скопье, Варшава, Загреб
+	SV	(GMT + 1:00) Sarajevo, Skopje, Warszawa, Zagreb
+
+TZ_EUROPE_BELGRADE
+	CS	(GMT+01:00) Bělehrad, Bratislava, Budapešť, Ljubljana, Praha
+	DA	(GMT+01:00) Beograd, Bratislava, Budapest, Ljubljana, Prag
+	DE	(GMT+01:00) Belgrad, Bratislava, Budapest, Ljubljana, Prag
+	EN	(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
+	ES	(GMT+01:00) Belgrado, Bratislava, Budapest, Lubiana, Praga
+	FI	(GMT+01.00) Belgrad, Bratislava, Budapest, Ljubljana, Praha
+	FR	(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague
+	IT	(GMT+01:00) Belgrado, Bratislava, Budapest, Lubiana, Praga
+	NL	(GMT+01:00) Belgrado, Bratislava, Boedapest, Ljubljana, Praag
+	NO	(GMT+01:00) Beograd, Bratislava, Budapest, Ljubljana, Praha
+	PL	(GMT+01:00) Belgrad, Bratysława, Budapeszt, Ljubljana, Praga
+	RU	(GMT+01:00) – Белград, Братислава, Будапешт, Любляна, Прага
+	SV	(GMT + 1:00) Belgrad, Bratislava, Budapest, Ljubljana, Prag
+
+TZ_AFRICA_JOHANNESBURG
+	CS	(GMT+02:00) Harare, Pretoria
+	DA	(GMT+02:00) Harare, Pretoria
+	DE	(GMT+02:00) Harare, Pretoria
+	EN	(GMT+02:00) Harare, Pretoria
+	ES	(GMT+02:00) Harare, Pretoria
+	FI	(GMT+02.00) Harare, Pretoria
+	FR	(GMT+02:00) Harare, Pretoria
+	IT	(GMT+02:00) Harare, Pretoria
+	NL	(GMT+02:00) Harare, Pretoria
+	NO	(GMT + 02.00) Harare, Pretoria
+	PL	(GMT+02:00) Harare, Pretoria
+	RU	(GMT+02:00) – Хараре, Претория
+	SV	(GMT + 2:00) Harare, Pretoria
+
+TZ_ASIA_JERUSALEM
+	CS	(GMT+02:00) Jeruzalém
+	DA	(GMT+02:00) Jerusalem
+	DE	(GMT+02:00) Jerusalem
+	EN	(GMT+02:00) Jerusalem
+	ES	(GMT+02:00) Jerusalén
+	FI	(GMT+02.00) Jerusalem
+	FR	(GMT+02:00) Jérusalem
+	IT	(GMT+02:00) Gerusalemme
+	NL	(GMT+02:00) Jeruzalem
+	NO	(GMT + 02.00) Jerusalem
+	PL	(GMT+02:00) Jerozolima
+	RU	(GMT+02:00) – Иерусалим
+	SV	(GMT + 2:00) Jerusalem
+
+TZ_EUROPE_ISTANBUL
+	CS	(GMT+02:00) Atény, Istanbul, Minsk
+	DA	(GMT+02:00) Athen, Istanbul, Minsk
+	DE	(GMT+02:00) Athen, Istanbul, Minsk
+	EN	(GMT+02:00) Athens, Istanbul, Minsk
+	ES	(GMT+02:00) Atenas, Estambul, Minsk
+	FI	(GMT+02.00) Ateena, Istanbul, Minsk
+	FR	(GMT+02:00) Athènes, Istanbul, Minsk
+	IT	(GMT+02:00) Atene, Istanbul, Minsk
+	NL	(GMT+02:00) Athene, Istanbul, Minsk
+	NO	(GMT+02:00) Athen, Istanbul, Minsk
+	PL	(GMT+02:00) Ateny, Stambuł, Mińsk
+	RU	(GMT+02:00) – Афины, Стамбул, Минск
+	SV	(GMT + 2:00) Athen, Istanbul, Minsk
+
+TZ_EUROPE_HELSINKI
+	CS	(GMT+02:00) Helsinki, Kyjev, Riga, Sofia, Tallinn, Vilnius
+	DA	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
+	DE	(GMT+02:00) Helsinki, Kiew, Riga, Sofia, Tallinn, Wilna
+	EN	(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius
+	ES	(GMT+02:00) Helsinki, Kiev, Riga, Sofía, Tallinn, Vilnius
+	FI	(GMT+02.00) Helsinki, Kiova, Riika, Sofia, Tallinna, Vilna
+	FR	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
+	IT	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
+	NL	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
+	NO	(GMT+02:00) Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius
+	PL	(GMT+02:00) Helsinki, Kijów, Ryga, Sofia, Talin, Wilno
+	RU	(GMT+02:00) – Хельсинки, Киев, Рига, София, Таллин, Вильнюс
+	SV	(GMT + 2:00) Helsingfors, Kiev, Riga, Sofia, Tallinn, Vilnius
+
+TZ_AFRICA_CAIRO
+	CS	(GMT+02:00) Káhira
+	DA	(GMT+02:00) Kairo
+	DE	(GMT+02:00) Kairo
+	EN	(GMT+02:00) Cairo
+	ES	(GMT+02:00) El Cairo
+	FI	(GMT+02.00) Kairo
+	FR	(GMT+02:00) Le Caire
+	IT	(GMT+02:00) Cairo
+	NL	(GMT+02:00) Caïro
+	NO	(GMT+02:00) Kairo
+	PL	(GMT+02:00) Kair
+	RU	(GMT+02:00) – Каир
+	SV	(GMT + 2:00) Kairo
+
+TZ_EUROPE_BUCHAREST
+	CS	(GMT+02:00) Bukurešť
+	DA	(GMT+02:00) Bukarest
+	DE	(GMT+02:00) Bukarest
+	EN	(GMT+02:00) Bucharest
+	ES	(GMT+02:00) Bucarest
+	FI	(GMT+02.00) Bukarest
+	FR	(GMT+02:00) Bucarest
+	IT	(GMT+02:00) Bucarest
+	NL	(GMT+02:00) Boekarest
+	NO	(GMT+02:00) Bucuresti
+	PL	(GMT+02:00) Bukareszt
+	RU	(GMT+02:00) – Будапешт
+	SV	(GMT + 2:00) Bukarest
+
+TZ_AFRICA_NAIROBI
+	CS	(GMT+03:00) Nairobi
+	DA	(GMT+03:00) Nairobi
+	DE	(GMT+03:00) Nairobi
+	EN	(GMT+03:00) Nairobi
+	ES	(GMT+03:00) Nairobi
+	FI	(GMT+03.00) Nairobi
+	FR	(GMT+03:00) Nairobi
+	IT	(GMT+03:00) Nairobi
+	NL	(GMT+03:00) Nairobi
+	NO	(GMT + 03.00) Nairobi
+	PL	(GMT+03:00) Nairobi
+	RU	(GMT+03:00) – Найроби
+	SV	(GMT + 3:00) Nairobi
+
+TZ_ASIA_RIYADH
+	CS	(GMT+03:00) Kuvajt, Rijád
+	DA	(GMT+03:00) Kuwait, Riyadh
+	DE	(GMT+03:00) Kuwait, Riad
+	EN	(GMT+03:00) Kuwait, Riyadh
+	ES	(GMT+03:00) Kuwait, Riad
+	FI	(GMT+03.00) Kuwait, Riad
+	FR	(GMT+03:00) Koweït, Riyad
+	IT	(GMT+03:00) Kuwait, Riyadh
+	NL	(GMT+03:00) Koeweit, Riyadh
+	NO	(GMT + 03.00) Kuwait, Riyadh
+	PL	(GMT+03:00) Kuwejt, Riad
+	RU	(GMT+03:00) – Кувейт, Эр-Рияд
+	SV	(GMT + 3:00) Kuwait, Riyadh
+
+TZ_EUROPE_MOSCOW
+	CS	(GMT+03:00) Moskva, Sankt Petěrburg, Volgograd
+	DA	(GMT+03:00) Moskva, Skt. Petersborg, Volgograd
+	DE	(GMT+03:00) Moskau, St. Petersburg, Volgograd
+	EN	(GMT+03:00) Moscow, St. Petersburg, Volgograd
+	ES	(GMT+03:00) Moscú, San Petersburgo, Volgogrado
+	FI	(GMT+03.00) Moskova, Pietari, Volgograd
+	FR	(GMT+03:00) Moscou, Saint Pétersbourg, Volgograd
+	IT	(GMT+03:00) Mosca, S. Pietroburgo, Volgograd
+	NL	(GMT+03:00) Moskou, St. Petersburg, Wolgograd
+	NO	(GMT+03:00) Moskva, St. Petersburg, Volgograd
+	PL	(GMT+03:00) Moskwa, St. Petersburg, Wołgograd
+	RU	(GMT+03:00) – Москва, Санкт-Петербург, Волгоград
+	SV	(GMT + 3:00) Moskva, Sankt Petersburg, Volgograd
+
+TZ_ASIA_BAGHDAD
+	CS	(GMT+03:00) Bagdád
+	DA	(GMT+03:00) Baghdad
+	DE	(GMT+03:00) Bagdad
+	EN	(GMT+03:00) Baghdad
+	ES	(GMT+03:00) Baghdad
+	FI	(GMT+03.00) Bagdad
+	FR	(GMT+03:00) Bagdad
+	IT	(GMT+03:00) Baghdad
+	NL	(GMT+03:00) Bagdad
+	NO	(GMT+03:00) Bagdad
+	PL	(GMT+03:00) Bagdad
+	RU	(GMT+03:00) – Багдад
+	SV	(GMT + 3:00) Bagdad
+
+TZ_ASIA_TEHRAN
+	CS	(GMT+03:30) Teherán
+	DA	(GMT+03:30) Tehran
+	DE	(GMT+03:30) Teheran
+	EN	(GMT+03:30) Tehran
+	ES	(GMT+03:30) Teherán
+	FI	(GMT+03.30) Teheran
+	FR	(GMT+03:30) Téhéran
+	IT	(GMT+03:30) Tehran
+	NL	(GMT+03:30) Teheran
+	NO	(GMT+03:30) Teheran
+	PL	(GMT+03:30) Teheran
+	RU	(GMT+03:30) – Тегеран
+	SV	(GMT + 3:30) Teheran
+
+TZ_ASIA_MUSCAT
+	CS	(GMT+04:00) Abu Dhabi, Maskat
+	DA	(GMT+04:00) Abu Dhabi, Muscat
+	DE	(GMT+04:00) Abu Dhabi, Maskat
+	EN	(GMT+04:00) Abu Dhabi, Muscat
+	ES	(GMT+04:00) Abu Dhabi, Muscat
+	FI	(GMT+04.00) Abu Dhabi, Muscat
+	FR	(GMT+04:00) Abu Dhabi, Muscat
+	IT	(GMT+04:00) Abu Dhabi, Muscat
+	NL	(GMT+04:00) Abu Dhabi, Masqat
+	NO	(GMT + 04.00) Abu Dhabi, Muscat, Baku, Tbilisi, Jerevan
+	PL	(GMT+04:00) Abu Dabi, Maskat
+	RU	(GMT+04:00) – Абу-Даби, Маскат
+	SV	(GMT + 4:00) Abu Dhabi, Muskat
+
+TZ_ASIA_TBILISI
+	CS	(GMT+04:00) Baku, Tbilisi, Jerevan
+	DA	(GMT+04:00) Baku, Tbilisi, Yerevan
+	DE	(GMT+04:00) Baku, Tiflis, Eriwan
+	EN	(GMT+04:00) Baku, Tbilisi, Yerevan
+	ES	(GMT+04:00) Baku, Tbilisi, Yerevan
+	FI	(GMT+04.00) Baku, Tbilisi, Jerevan
+	FR	(GMT+04:00) Bakou, Tbilissi, Erevan
+	IT	(GMT+04:00) Baku, Tbilisi, Yerevan
+	NL	(GMT+04:00) Bakoe, Tbilisi, Jerevan
+	NO	(GMT + 04.00) Abu Dhabi, Muscat, Baku, Tbilisi, Jerevan
+	PL	(GMT+04:00) Baku, Tbilisi, Erewań
+	RU	(GMT+04:00) – Баку, Тбилиси, Ереван
+	SV	(GMT + 4:00) Baku, Tbilisi, Jerevan
+
+TZ_ASIA_KABUL
+	CS	(GMT+04:30) Kábul
+	DA	(GMT+04:30) Kabul
+	DE	(GMT+04:30) Kabul
+	EN	(GMT+04:30) Kabul
+	ES	(GMT+04:30) Kabul
+	FI	(GMT+04.30) Kabul
+	FR	(GMT+04:30) Kaboul
+	IT	(GMT+04:30) Kabul
+	NL	(GMT+04:30) Kaboel
+	NO	(GMT + 04.30) Kabul
+	PL	(GMT+04:30) Kabul
+	RU	(GMT+04:30) – Кабул
+	SV	(GMT + 4.30) Kabul
+
+TZ_ASIA_KARACHI
+	CS	(GMT+05:00) Islámábád, Káráčí, Taškent
+	DA	(GMT+05:00) Islamabad, Karachi, Tasjkent
+	DE	(GMT+05:00) Islamabad, Karatschi, Taschkent
+	EN	(GMT+05:00) Islamabad, Karachi, Tashkent
+	ES	(GMT+05:00) Islamabad, Karachi, Tashkent
+	FI	(GMT+05.00) Islamabad, Karachi, Taškent
+	FR	(GMT+05:00) Islamabad, Karachi, Tachkent
+	IT	(GMT+05:00) Islamabad, Karachi, Tashkent
+	NL	(GMT+05:00) Islamabad, Karachi, Tasjkent
+	NO	(GMT + 05.00) Islamabad, Karachi, Tasjkent
+	PL	(GMT+05:00) Islamabad, Karaczi, Taszkient
+	RU	(GMT+05:00) — Исламабад, Карачи, Ташкент
+	SV	(GMT + 5:00) Islamabad, Karachi, Tasjkent
+
+TZ_ASIA_YEKATERINBURG
+	CS	(GMT+05:00) Jekatěrinburg
+	DA	(GMT+05:00) Ekaterinburg
+	DE	(GMT+05:00) Jekaterinburg
+	EN	(GMT+05:00) Ekaterinburg
+	ES	(GMT+05:00) Ekaterinburgo
+	FI	(GMT+05.00) Jekaterinburg
+	FR	(GMT+05:00) Ekaterinbourg
+	IT	(GMT+05:00) Ekaterinburg
+	NL	(GMT+05:00) Jekaterinenburg
+	NO	(GMT+05:00) Jekaterinburg
+	PL	(GMT+05:00) Jekaterynburg
+	RU	(GMT+05:00) – Екатеринбург
+	SV	(GMT + 5:00) Jekaterinburg
+
+TZ_ASIA_CALCUTTA
+	CS	(GMT+05:30) Čennaí, Kalkata, Bombaj, New Delhi
+	DA	(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi
+	DE	(GMT+05:30) Chennai, Kalkutta, Mumbai, New Delhi
+	EN	(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi
+	ES	(GMT+05:30) Chennai, Calcuta, Mumbai, Nueva Delhi
+	FI	(GMT+05.30) Chennai, Kolkata, Mumbai, New Delhi
+	FR	(GMT+05:30) Chennai, Calcutta, Mumbai, New Delhi
+	IT	(GMT+05:30) Chennai, Kolkata (Calcutta), Mumbai, Nuova Delhi
+	NL	(GMT+05:30) Madras, Calcutta, Bombay, New Delhi
+	NO	(GMT + 05.30) Chennai, Kolkata, Mumbai, New Delhi
+	PL	(GMT+05:30) Chennai, Kalkuta, Mumbaj (Bombaj), New Delhi
+	RU	(GMT+05:30) – Ченнай, Калькутта, Бомбей, Нью-Дели
+	SV	(GMT + 5:30) Chennai (Madras), Kolkata (Calcutta), Mumbai (Bombay), New Delhi
+
+TZ_ASIA_KATMANDU
+	CS	(GMT+05:45) Káthmandú
+	DA	(GMT+05:45) Kathmandu
+	DE	(GMT+05:45) Kathmandu
+	EN	(GMT+05:45) Kathmandu
+	ES	(GMT+05:45) Katmandú
+	FI	(GMT+05.45) Kathmandu
+	FR	(GMT+05:45) Katmandou
+	IT	(GMT+05:45) Kathmandu
+	NL	(GMT+05:45) Kathmandu
+	NO	(GMT+05:45) Katmandu
+	PL	(GMT+05:45) Kathmandu
+	RU	(GMT+05:45) – Катманду
+	SV	(GMT + 5:45) Katmandu
+
+TZ_ASIA_COLOMBO
+	CS	(GMT+06:00) Sri Jayawardenepura
+	DA	(GMT+06:00) Sri Jayawardenepura
+	DE	(GMT+06:00) Sri Jayawardenepura
+	EN	(GMT+06:00) Sri Jayawardenepura
+	ES	(GMT+06:00) Sri Jayawardenepura
+	FI	(GMT+06.00) Sri Jayawardenepura
+	FR	(GMT+06:00) Sri Jayawardenepura
+	IT	(GMT+06:00) Sri Jayawardenepura
+	NL	(GMT+06:00) Sri Jayawardenepura
+	NO	(GMT + 06.00) Sri Jayawardenepura
+	PL	(GMT+06:00) Sri Jayawardenepura
+	RU	(GMT+06:00) – Шри Джаяварденепура
+	SV	(GMT + 6:00) Sri Jayawardenepura
+
+TZ_ASIA_DHAKA
+	CS	(GMT+06:00) Astana, Dhaka
+	DA	(GMT+06:00) Astana, Dhaka
+	DE	(GMT+06:00) Astana, Dhaka
+	EN	(GMT+06:00) Astana, Dhaka
+	ES	(GMT+06:00) Astana, Dacca
+	FI	(GMT+06.00) Astana, Dhaka
+	FR	(GMT+06:00) Astana, Dhaka
+	IT	(GMT+06:00) Astana, Dhaka
+	NL	(GMT+06:00) Astana, Dhaka
+	NO	(GMT + 06.00) Astana, Dhaka
+	PL	(GMT+06:00) Astana, Dakka
+	RU	(GMT+06:00) – Астана, Дакка
+	SV	(GMT + 6:00) Astana, Dhaka
+
+TZ_ASIA_NOVOSIBIRSK
+	CS	(GMT+06:00) Almaty, Novosibirsk
+	DA	(GMT+06:00) Almaty, Novosibirsk
+	DE	(GMT+06:00) Almaty, Nowosibirsk
+	EN	(GMT+06:00) Almaty, Novosibirsk
+	ES	(GMT+06:00) Almaty, Novosibirsk
+	FI	(GMT+06.00) Almaty, Novosibirsk
+	FR	(GMT+06:00) Almaty, Novosibirsk
+	IT	(GMT+06:00) Almaty, Novosibirsk
+	NL	(GMT+06:00) Alma-Atay, Novosibirsk
+	NO	(GMT + 06.00) Almaty, Novosibirsk
+	PL	(GMT+06:00) Ałma-Ata, Nowosybirsk
+	RU	(GMT+06:00) – Алма-Ата, Новосибирск
+	SV	(GMT + 6:00) Alma-ata, Novosibirsk
+
+TZ_ASIA_RANGOON
+	CS	(GMT+06:30) Rangoon
+	DA	(GMT+06:30) Rangoon
+	DE	(GMT+06:30) Rangun
+	EN	(GMT+06:30) Rangoon
+	ES	(GMT+06:30) Rangún
+	FI	(GMT+06.30) Rangoon
+	FR	(GMT+06:30) Rangoon
+	IT	(GMT+06:30) Rangoon
+	NL	(GMT+06:30) Rangoon
+	NO	(GMT + 06.30) Rangoon
+	PL	(GMT+06:30) Rangun
+	RU	(GMT+06:30) – Рангун
+	SV	(GMT + 6:30) Rangoon
+
+TZ_ASIA_BANGKOK
+	CS	(GMT+07:00) Bangkok, Hanoi, Jakarta
+	DA	(GMT+07:00) Bangkok, Hanoi, Jakarta
+	DE	(GMT+07:00) Bangkok, Hanoi, Jakarta
+	EN	(GMT+07:00) Bangkok, Hanoi, Jakarta
+	ES	(GMT+07:00) Bangkok, Hanoi, Yakarta
+	FI	(GMT+07.00) Bangkok, Hanoi, Jakarta
+	FR	(GMT+07:00) Bangkok, Hanoï, Djakarta
+	IT	(GMT+07:00) Bangkok, Hanoi, Giacarta
+	NL	(GMT+07:00) Bangkok, Hanoi, Djakarta
+	NO	(GMT + 07.00) Bangkok, Hanoi, Djakarta, Krasnojarsk
+	PL	(GMT+07:00) Bangkok, Hanoi, Dżakarta
+	RU	(GMT+07:00) – Бангкок, Ханой, Джакарта
+	SV	(GMT + 7:00) Bangkok, Hanoi, Jakarta
+
+TZ_ASIA_KRASNOYARSK
+	CS	(GMT+07:00) Krasnojarsk
+	DA	(GMT+07:00) Krasnoyarsk
+	DE	(GMT+07:00) Krasnojarsk
+	EN	(GMT+07:00) Krasnoyarsk
+	ES	(GMT+07:00) Krasnoyarsk
+	FI	(GMT+07.00) Krasnojarsk
+	FR	(GMT+07:00) Krasnoïarsk
+	IT	(GMT+07:00) Krasnoyarsk
+	NL	(GMT+07:00) Kraj Krasnojarsk
+	NO	(GMT + 07.00) Krasnojarsk
+	PL	(GMT+07:00) Krasnojarsk
+	RU	(GMT+07:00) – Красноярск
+	SV	(GMT + 7:00) Krasnojarsk
+
+TZ_AUSTRALIA_PERTH
+	CS	(GMT+08:00) Perth
+	DA	(GMT+08:00) Perth
+	DE	(GMT+08:00) Perth
+	EN	(GMT+08:00) Perth
+	ES	(GMT+08:00) Perth
+	FI	(GMT+08.00) Perth
+	FR	(GMT+08:00) Perth
+	IT	(GMT+08:00) Perth
+	NL	(GMT+08:00) Perth
+	NO	(GMT + 08.00) Perth
+	PL	(GMT+08:00) Perth
+	RU	(GMT+08:00) – Перт
+	SV	(GMT + 8:00) Perth
+
+TZ_ASIA_TAIPEI
+	CS	(GMT+08:00) Tchajpej
+	DA	(GMT+08:00) Taipei
+	DE	(GMT+08:00) Taipeh
+	EN	(GMT+08:00) Taipei
+	ES	(GMT+08:00) Taipei
+	FI	(GMT+08.00) Taipei
+	FR	(GMT+08:00) Taipei
+	IT	(GMT+08:00) Taipei
+	NL	(GMT+08:00) Taipei
+	NO	(GMT + 08.00) Taipei
+	PL	(GMT+08:00) Tajpej
+	RU	(GMT+08:00) – Тайбэй
+	SV	(GMT + 8:00) Taipei
+
+TZ_ASIA_SINGAPORE
+	CS	(GMT+08:00) Kuala Lumpur, Singapur
+	DA	(GMT+08:00) Kuala Lumpur, Singapore
+	DE	(GMT+08:00) Kuala Lumpur, Singapur
+	EN	(GMT+08:00) Kuala Lumpur, Singapore
+	ES	(GMT+08:00) Kuala Lumpur, Singapur
+	FI	(GMT+08.00) Kuala Lumpur, Singapore
+	FR	(GMT+08:00) Kuala Lumpur, Singapour
+	IT	(GMT+08:00) Kuala Lumpur, Singapore
+	NL	(GMT+08:00) Kuala Lumpur, Singapore
+	NO	(GMT + 08.00) Kuala Lumpur, Singapore
+	PL	(GMT+08:00) Kuala Lumpur, Singapur
+	RU	(GMT+08:00) – Куала-Лумпур, Сингапур
+	SV	(GMT + 8:00) Kuala Lumpur, Singapore
+
+TZ_ASIA_HONG_KONG
+	CS	(GMT+08:00) Peking, Chongqing, Hong Kong, Urumqi
+	DA	(GMT+08:00) Beijing, Chongqing, Hongkong, Urumqi
+	DE	(GMT+08:00) Peking, Chongqing, Hongkong, Urumqi
+	EN	(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi
+	ES	(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi
+	FI	(GMT+08.00) Peking, Chongqing, Hongkong, Ürümqi
+	FR	(GMT+08:00) Pekin, Chongqing, Hong Kong, Urumqi
+	IT	(GMT+08:00) Pechino, Chongqing, Hong Kong, Urumqi
+	NL	(GMT+08:00) Peking, Tsjoengking, Hongkong, Ürümqi
+	NO	(GMT + 08.00) Beijing, Chongqing, Hongkong, Ürümqi
+	PL	(GMT+08:00) Pekin, Chongqing, Hongkong, Urumqi
+	RU	(GMT+08:00) – Пекин, Чунцин, Гонконг, Урумчи
+	SV	(GMT + 8:00) Beijing, Chongqing, Hong Kong, Urumqi
+
+TZ_ASIA_IRKUTSK
+	CS	(GMT+08:00) Irkutsk, Ulánbátar
+	DA	(GMT+08:00) Irkutsk, Ulaanbataar
+	DE	(GMT+08:00) Irkutsk, Ulaanbataar
+	EN	(GMT+08:00) Irkutsk, Ulaan Bataar
+	ES	(GMT+08:00) Irkutsk, Ulan Bator
+	FI	(GMT+08.00) Irkutsk, Ulan Bator
+	FR	(GMT+08:00) Irkoutsk, Oulan Bator
+	IT	(GMT+08:00) Irkutsk, Ulaan Bataar
+	NL	(GMT+08:00) Irkoetsk, Ulaan Bataar
+	NO	(GMT+08:00) Irkutsk, Ulan Bator
+	PL	(GMT+08:00) Irkuck, Ułan Bator
+	RU	(GMT+08:00) – Иркутск, Улан-Батор
+	SV	(GMT + 8:00) Irkutsk, Ulan Bator
+
+TZ_ASIA_TOKYO
+	CS	(GMT+09:00) Ósaka, Sapporo, Tokio
+	DA	(GMT+09:00) Osaka, Sapporo, Tokyo
+	DE	(GMT+09:00) Osaka, Sapporo, Tokio
+	EN	(GMT+09:00) Osaka, Sapporo, Tokyo
+	ES	(GMT+09:00) Osaka, Sapporo, Tokio
+	FI	(GMT+09.00) Osaka, Sapporo, Tokio
+	FR	(GMT+09:00) Osaka, Sapporo, Tokyo
+	IT	(GMT+09:00) Osaka, Sapporo, Tokyo
+	NL	(GMT+09:00) Osaka, Sapporo, Tokio
+	NO	(GMT + 09.00) Osaka, Sapporo, Tokyo, Seoul, Jakutsk
+	PL	(GMT+09:00) Osaka, Sapporo, Tokio
+	RU	(GMT+09:00) – Осака, Саппоро, Токио
+	SV	(GMT + 9:00) Osaka, Sapporo, Tokyo
+
+TZ_ASIA_SEOUL
+	CS	(GMT+09:00) Soul
+	DA	(GMT+09:00) Seoul
+	DE	(GMT+09:00) Seoul
+	EN	(GMT+09:00) Seoul
+	ES	(GMT+09:00) Seul
+	FI	(GMT+09.00) Soul
+	FR	(GMT+09:00) Séoul
+	IT	(GMT+09:00) Seoul
+	NL	(GMT+09:00) Seoel
+	NO	(GMT + 09.00) Seoul
+	PL	(GMT+09:00) Seul
+	RU	(GMT+09:00) – Сеул
+	SV	(GMT + 9:00) Seoul
+
+TZ_ASIA_YAKUTSK
+	CS	(GMT+09:00) Jakutsk
+	DA	(GMT+09:00) Yakutsk
+	DE	(GMT+09:00) Jakutsk
+	EN	(GMT+09:00) Yakutsk
+	ES	(GMT+09:00) Yakutsk
+	FI	(GMT+09.00) Jakutsk
+	FR	(GMT+09:00) Iakoutsk
+	IT	(GMT+09:00) Yakutsk
+	NL	(GMT+09:00) Jakoetsk
+	NO	(GMT + 09.00) Jakutsk
+	PL	(GMT+09:00) Jakuck
+	RU	(GMT+09:00) – Якутск
+	SV	(GMT + 9:00) Jakutsk
+
+TZ_AUSTRALIA_DARWIN
+	CS	(GMT+09:30) Darwin
+	DA	(GMT+09:30) Darwin
+	DE	(GMT+09:30) Darwin
+	EN	(GMT+09:30) Darwin
+	ES	(GMT+09:30) Darwin
+	FI	(GMT+09.30) Darwin
+	FR	(GMT+09:30) Darwin
+	IT	(GMT+09:30) Darwin
+	NL	(GMT+09:30) Darwin
+	NO	(GMT + 09.30) Adelaide, Darwin
+	PL	(GMT+09:30) Darwin
+	RU	(GMT+09:30) – Дарвин
+	SV	(GMT + 9:30) Darwin
+
+TZ_AUSTRALIA_ADELAIDE
+	CS	(GMT+09:30) Adelaide
+	DA	(GMT+09:30) Adelaide
+	DE	(GMT+09:30) Adelaide
+	EN	(GMT+09:30) Adelaide
+	ES	(GMT+09:30) Adelaida
+	FI	(GMT+09.30) Adelaide
+	FR	(GMT+09:30) Adelaïde
+	IT	(GMT+09:30) Adelaide
+	NL	(GMT+09:30) Adelaide
+	NO	(GMT + 09.30) Adelaide
+	PL	(GMT+09:30) Adelajda
+	RU	(GMT+09:30) – Аделаида
+	SV	(GMT + 9:30) Adelaide
+
+TZ_PACIFIC_GUAM
+	CS	(GMT+10:00) Guam, Port Moresby
+	DA	(GMT+10:00) Guam, Port Moresby
+	DE	(GMT+10:00) Guam, Port Moresby
+	EN	(GMT+10:00) Guam, Port Moresby
+	ES	(GMT+10:00) Guam, Port Moresby
+	FI	(GMT+10.00) Guam, Port Moresby
+	FR	(GMT+10:00) Guam, Port Moresby
+	IT	(GMT+10:00) Guam, Port Moresby
+	NL	(GMT+10:00) Guam, Port Moresby
+	NO	(GMT + 10.00) Guam, Port Moresby
+	PL	(GMT+10:00) Guam, Port Moresby
+	RU	(GMT+10:00) – Гуам, Порт-Морсби
+	SV	(GMT + 10:00) Guam, Port Moresby
+
+TZ_AUSTRALIA_BRISBANE
+	CS	(GMT+10:00) Brisbane
+	DA	(GMT+10:00) Brisbane
+	DE	(GMT+10:00) Brisbane
+	EN	(GMT+10:00) Brisbane
+	ES	(GMT+10:00) Brisbane
+	FI	(GMT+10.00) Brisbane
+	FR	(GMT+10:00) Brisbane
+	IT	(GMT+10:00) Brisbane
+	NL	(GMT+10:00) Brisbane
+	NO	(GMT + 10.00) Brisbane
+	PL	(GMT+10:00) Brisbane
+	RU	(GMT+10:00) – Брисбен
+	SV	(GMT + 10:00) Brisbane
+
+TZ_ASIA_VLADIVOSTOK
+	CS	(GMT+10:00) Vladivostok
+	DA	(GMT+10:00) Vladivostok
+	DE	(GMT+10:00) Wladiwostok
+	EN	(GMT+10:00) Vladivostok
+	ES	(GMT+10:00) Vladivostok
+	FI	(GMT+10.00) Vladivostok
+	FR	(GMT+10:00) Vladivostok
+	IT	(GMT+10:00) Vladivostok
+	NL	(GMT+10:00) Wladiwostok
+	NO	(GMT + 10.00) Vladivostok
+	PL	(GMT+10:00) Władywostok
+	RU	(GMT+10:00) – Владивосток
+	SV	(GMT + 10:00) Vladivostok
+
+TZ_AUSTRALIA_HOBART
+	CS	(GMT+10:00) Hobart
+	DA	(GMT+10:00) Hobart
+	DE	(GMT+10:00) Hobart
+	EN	(GMT+10:00) Hobart
+	ES	(GMT+10:00) Hobart
+	FI	(GMT+10.00) Hobart
+	FR	(GMT+10:00) Hobart
+	IT	(GMT+10:00) Hobart
+	NL	(GMT+10:00) Hobart
+	NO	(GMT + 10.00) Hobart
+	PL	(GMT+10:00) Hobart
+	RU	(GMT+10:00) – Хобарт
+	SV	(GMT + 10:00) Hobart
+
+TZ_AUSTRALIA_SYDNEY
+	CS	(GMT+10:00) Canberra, Melbourne, Sydney
+	DA	(GMT+10:00) Canberra, Melbourne, Sydney
+	DE	(GMT+10:00) Canberra, Melbourne, Sydney
+	EN	(GMT+10:00) Canberra, Melbourne, Sydney
+	ES	(GMT+10:00) Canberra, Melbourne, Sidney
+	FI	(GMT+10.00) Canberra, Melbourne, Sydney
+	FR	(GMT+10:00) Canberra, Melbourne, Sydney
+	IT	(GMT+10:00) Canberra, Melbourne, Sydney
+	NL	(GMT+10:00) Canberra, Melbourne, Sydney
+	NO	(GMT + 10.00) Canberra, Melbourne, Sydney
+	PL	(GMT+10:00) Canberra, Melbourne, Sydney
+	RU	(GMT+10:00) – Канберра, Мельбурн, Сидней
+	SV	(GMT + 10:00) Canberra, Melbourne, Sydney
+
+TZ_ASIA_MAGADAN
+	CS	(GMT+11:00) Magadan, Šalamounovy ostrovy, Nová Kaledonie
+	DA	(GMT+11:00) Magadan, Solomonøerne, Ny Caledonien
+	DE	(GMT+11:00) Magadan, Solomoninseln, Neukaledonien
+	EN	(GMT+11:00) Magadan, Solomon Is., New Caledonia
+	ES	(GMT+11:00) Magadán, Islas Salomón, Nueva Caledonia
+	FI	(GMT+11.00) Magadan, Salomonsaaret, Uusi-Kaledonia
+	FR	(GMT+11:00) Magadan, Iles Salomon, Nouvelle-Calédonie
+	IT	(GMT+11:00) Magadan, Isole Salomone, Nuova Caledonia
+	NL	(GMT+11:00) Magadan, Salomonseilanden, Nieuw-Caledonië
+	NO	(GMT+11:00) Magadan, Solomonøyene, Ny-Caledonia
+	PL	(GMT+11:00) Magadan, Wyspy Salomona, Nowa Kaledonia
+	RU	(GMT+11:00) – Магадан, Соломоновы Острова, Новая Каледония
+	SV	(GMT + 11:00) Magadan, Salomonöarna, Nya Kaledonien
+
+TZ_PACIFIC_NORFOLK
+	CS	(GMT+11:30) ostrov Norfolk
+	DA	(GMT+11:30) Norfolk Island
+	DE	(GMT+11:30) Norfolk-Insel
+	EN	(GMT+11:30) Norfolk Island
+	ES	(GMT+11:30) Isla Norfolk
+	FI	(GMT+11.30) Norfolkinsaari
+	FR	(GMT+11:30) Ile Norfolk
+	IT	(GMT+11:30) Norfolk
+	NL	(GMT+11:30) Norfolkeiland
+	NO	(GMT+11:30) Norfolkøya
+	PL	(GMT+11:30) Wyspa Norfolk
+	RU	(GMT+11:30) – остров Норфолк
+	SV	(GMT + 11:30) Norfolk Island
+
+TZ_PACIFIC_FIJI
+	CS	(GMT+12:00) Fidži, Kamčatka, Marshallovy ostrovy
+	DA	(GMT+12:00) Fiji, Kamchatka, Marshalløerne.
+	DE	(GMT+12:00) Fidschi, Kamtschatka, Marshallinseln
+	EN	(GMT+12:00) Fiji, Kamchatka, Marshall Is.
+	ES	(GMT+12:00) Fiji, Kamchatka, Islas Marshall
+	FI	(GMT+12.00) Fidži, Kamtšatka, Marshallinsaaret
+	FR	(GMT+12:00) Fidji, Kamchatka, Iles Marshall.
+	IT	(GMT+12:00) Figi, Kamchatka, Is. Marshal
+	NL	(GMT+12:00) Fiji, Kamtsjatka, Marshalleilanden.
+	NO	(GMT+12:00) Fiji, Kamtsjatka, Marshalløyene
+	PL	(GMT+12:00) Fidżi, Kamczatka, Wyspy Marshalla
+	RU	(GMT+12:00) – Фиджи, Камчатка, Маршалловы острова.
+	SV	(GMT + 12:00) Fiji, Kamtjatka, Marshallöarna
+
+TZ_PACIFIC_AUCKLAND
+	CS	(GMT+12:00) Auckland, Wellington
+	DA	(GMT+12:00) Auckland, Wellington
+	DE	(GMT+12:00) Auckland, Wellington
+	EN	(GMT+12:00) Auckland, Wellington
+	ES	(GMT+12:00) Auckland, Wellington
+	FI	(GMT+12.00) Auckland, Wellington
+	FR	(GMT+12:00) Auckland, Wellington
+	IT	(GMT+12:00) Auckland, Wellington
+	NL	(GMT+12:00) Auckland, Wellington
+	NO	(GMT + 12.00) Auckland, Wellington
+	PL	(GMT+12:00) Auckland, Wellington
+	RU	(GMT+12:00) – Окленд, Веллингтон
+	SV	(GMT + 12:00) Auckland, Wellington
+
+TZ_PACIFIC_TONGATAPU
+	CS	(GMT+13:00) Nuku'alofa
+	DA	(GMT+13:00) Nuku'alofa
+	DE	(GMT+13:00) Nuku'alofa
+	EN	(GMT+13:00) Nuku'alofa
+	ES	(GMT+13:00) Nuku'alofa
+	FI	(GMT+13.00) Nuku'alofa
+	FR	(GMT+13:00) Nuku'alofa
+	IT	(GMT+13:00) Nuku'alofa
+	NL	(GMT+13:00) Nuku'alofa
+	NO	(GMT + 13.00) Nuku'alofa
+	PL	(GMT+13:00) Nuku'alofa
+	RU	(GMT+13:00) – Нукуалофа
+	SV	(GMT + 13:00) Nukualofa
+

@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.util.log - logging facility</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#levels">LEVELS</a></li>
+	<li><a href="#categories">CATEGORIES</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#logger_category_"><code>logger(category)</code></a></li>
+		<li><a href="#addcategory_category__initiallevel_">addCategory(category, initialLevel)</a></li>
+		<li><a href="#logger_log_level__message______">logger:log(level, message, ...)</a></li>
+		<li><a href="#logger__level__message______">logger:&lt;level&gt;(message, ...)</a></li>
+		<li><a href="#logger_getlevel__">logger:getLevel()</a></li>
+		<li><a href="#logger_isdebug__">logger:isDebug()</a></li>
+		<li><a href="#getcategories__"><code>getCategories()</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A basic logging facility by category and level. Functionality based on improved lualogging.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a log of a given category (screensaver.flickr) and at a given level (DEBUG)
+ local log = jive.utils.log.addCategory(&quot;screensaver.flickr&quot;, jive.utils.log.DEBUG)</pre>
+<pre>
+ -- get the logger for a category that should exist
+ local log = jive.utils.log.logger(&quot;net.http&quot;)</pre>
+<pre>
+ -- typically at the top of a module, you'd do
+ local log = require(&quot;jive.utils.log&quot;).logger(&quot;net.http&quot;)</pre>
+<pre>
+ -- log something
+ log:debug(&quot;hello world&quot;)</pre>
+<pre>
+ -- prints
+ 161845:39202 DEBUG (somefile.lua:45) - Hello world</pre>
+<pre>
+ -- format is
+ -- Time (HHMMSS) : ticks (ms) LEVEL (source <a href="file:line">file:line</a>) - message</pre>
+<p>The logging functions concatenate data more efficiently than operator .. does, so
+for best performance, do</p>
+<pre>
+ log:debug(&quot;Welcome &quot;, first_name, &quot;, thanks for visiting us &quot;, time_of_day)</pre>
+<p>rather than</p>
+<pre>
+ log:debug(&quot;Welcome &quot; .. first_name .. &quot;, thanks for visiting us &quot; .. time_of_day)</pre>
+<p>If the first parameter is a table, it is rendered as a string.</p>
+<p>
+</p>
+<hr />
+<h1><a name="levels">LEVELS</a></h1>
+<p>The following levels are defined: DEBUG, INFO, WARN, ERROR and FATAL.
+They are defined in the module and can therefore be accessed using jive.utils.log.LEVEL,
+for example jive.utils.log.DEBUG.</p>
+<p>
+</p>
+<hr />
+<h1><a name="categories">CATEGORIES</a></h1>
+<p>Categories are strings. The following are the default categories:</p>
+<pre>
+ -- browser
+ -- applets
+ -- screensavers</pre>
+<pre>
+ -- slimserver
+ -- slimserver.cache
+ -- player</pre>
+<pre>
+ -- net.cli
+ -- net.thread
+ -- net.socket
+ -- net.http</pre>
+<pre>
+ -- ui
+=cut
+--]]</pre>
+<p>-- table to contain all the loggers indexed by category
+local categories = {
+	[``browser'']          = jiveLogger(logging.WARN),
+	[``applets'']          = jiveLogger(logging.WARN),
+	[``screensavers'']     = jiveLogger(logging.WARN),</p>
+<pre>
+        [&quot;slimserver&quot;]       = jiveLogger(logging.WARN),
+        [&quot;slimserver.cache&quot;] = jiveLogger(logging.DEBUG),
+        [&quot;player&quot;]           = jiveLogger(logging.WARN),
+                         
+        [&quot;net.cli&quot;]          = jiveLogger(logging.WARN),
+        [&quot;net.thread&quot;]       = jiveLogger(logging.WARN),
+        [&quot;net.socket&quot;]       = jiveLogger(logging.WARN),
+        [&quot;net.http&quot;]         = jiveLogger(logging.WARN),
+        
+        [&quot;ui&quot;]               = jiveLogger(logging.WARN),
+}</pre>
+<p>--[[</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="logger_category_"><code>logger(category)</code></a></h2>
+<p>Returns the logger of the given category. It is an error if the category does not exist and
+a default logger is returned in that case.</p>
+<p>
+</p>
+<h2><a name="addcategory_category__initiallevel_">addCategory(category, initialLevel)</a></h2>
+<p>Creates and returns a logger of the given category.</p>
+<p>
+</p>
+<h2><a name="logger_log_level__message______">logger:log(level, message, ...)</a></h2>
+<p>Logs a message at the given level in the given logger. message and ... are concatenated before
+output. If message is a table, it is rendered as string; tables that refer to themselves are not
+supported however.</p>
+<p>
+</p>
+<h2><a name="logger__level__message______">logger:&lt;level&gt;(message, ...)</a></h2>
+<p>Utility functions that call log(&lt;level&gt;, message, ...), for example</p>
+<pre>
+ log:debug(&quot;bla&quot;)</pre>
+<p>This are defined dynamically depending on the current log level, so
+are faster than log(level, messsage).
+=cut
+--]]</p>
+<p>--[[</p>
+<p>
+</p>
+<h2><a name="logger_getlevel__">logger:getLevel()</a></h2>
+<p>Returns the level of the logger (one of jive.log.DEBUG, etc.)</p>
+<p>
+</p>
+<h2><a name="logger_isdebug__">logger:isDebug()</a></h2>
+<p>Returns true if the level of the logger is DEBUG, this enables diagnostic code
+to be run only when in debug. Particularly useful if the code is expensive.</p>
+<p>
+</p>
+<h2><a name="getcategories__"><code>getCategories()</code></a></h2>
+<p>Returns all loggers in an array with categories as keys.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

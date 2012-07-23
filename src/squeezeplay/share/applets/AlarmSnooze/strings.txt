@@ -1,0 +1,51 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+ALARM_SNOOZE_ALARM
+	CS	Budík
+	DA	Vækkeur
+	DE	Wecker
+	EN	Alarm
+	ES	Alarma
+	FI	Herätys
+	FR	Réveil
+	IT	Sveglia
+	NL	Wekker
+	NO	Alarm
+	PL	Alarm
+	RU	Будильник
+	SV	Alarm
+
+ALARM_SNOOZE_SNOOZE
+# SLT: menu item to make the alarm snooze for a few minutes
+	CS	Opakované buzení
+	DA	Udsæt
+	DE	Weckwiederholung
+	EN	Snooze
+	ES	Repetición
+	FI	Torku
+	FR	Répétition
+	IT	Snooze
+	NL	Snoozen
+	NO	Slumre
+	PL	Wyciszanie
+	RU	Повтор сигнала
+	SV	Snooze-funktion
+
+ALARM_SNOOZE_TURN_OFF_ALARM
+	CS	Vypnout budík
+	DA	Sluk vækkeuret
+	DE	Wecker ausschalten
+	EN	Turn Off Alarm
+	ES	Desactivar alarma
+	FI	Kytke herätys pois
+	FR	Désactiver l'alarme
+	IT	Disattiva sveglia
+	NL	Wekker uitzetten
+	NO	Slå av alarm
+	PL	Wyłącz alarm
+	RU	Выключить будильник
+	SV	Stäng av alarm
+

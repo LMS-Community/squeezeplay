@@ -1,0 +1,334 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+DEMO
+	CS	Demonstrace v obchodě
+	DA	Butiksdemo
+	DE	Verfügbare Demo
+	EN	In-store Demo
+	ES	Demostración en tienda
+	FI	Liikkeessä näytettävä esittely
+	FR	Démo intégrée
+	IT	Demo
+	NL	Winkeldemo
+	NO	Butikkdemonstrasjon
+	PL	Prezentacja sklepu
+	RU	Внутренняя демонстрация
+	SV	Demonstration i butik
+
+DEMO_START_DEMO
+	CS	Spustit demonstraci
+	DA	Start demo
+	DE	Demo starten
+	EN	Start Demo
+	ES	Iniciar demostración
+	FI	Aloitusesittely
+	FR	Lancer la démo
+	IT	Avvia demo
+	NL	Demo starten
+	NO	Start demoversjon
+	PL	Uruchom prezentację
+	RU	Запустить демонстрацию
+	SV	Starta demonstration
+
+DEMO_START_DEMO_WARNING
+	CS	VAROVÁNÍ: po spuštění demonstrace její vypnutí vyžaduje obnovení do továrního nastavení. Podržte tlačítko + při spuštění.
+	DA	ADVARSEL: Når demoen er startet, må den ikke afbrydes, da afspilleren i så fald skal nulstilles bagefter. Hold + (knappen) nede mens afspilleren startes.
+	DE	Warnung: Nachdem Sie die Demo gestartet haben, müssen Sie die Standardeinstellungen wiederherstellen, um die Demo zu deaktivieren. Halten Sie beim Einschalten die Taste '+' gedrückt.
+	EN	WARNING: after starting the demo, disabling the demo requires a factory reset. Hold the + button down while powering up.
+	ES	ADVERTENCIA: una vez iniciada la demostración, ésta sólo se podrá desactivar con la configuración de fábrica. Mantenga pulsado el botón + al encender el dispositivo.
+	FI	Varoitus: jos esittely on käynnistetty, sen käytöstä poisto vaatii tehdasasetuksen palautuksen. Pidä plus (+) -näppäintä painettuna virtaa kytkettäessä.
+	FR	ATTENTION: une fois démarrée, la démonstration ne pourra être désactivée que par une réinitialisation des réglages d'usine. Appuyez sur le bouton + pendant la mise sous tension.
+	IT	ATTENZIONE: dopo avere avviato il demo, per disattivarlo è necessario effettuare una reimpostazione di fabbrica. Tenere premuto il pulsante + durante l'accensione.
+	NL	WAARSCHUWING: Wanneer u de demo uitschakelt nadat deze is gestart, moeten de fabrieksinstellingen worden hersteld. Houd de  plusknop (+) ingedrukt tijdens het aanzetten.
+	NO	ADVARSEL: når demoversjonen er i gang, må du tilbakestille til fabrikkinnstillinger for å stanse den. Hold nede + mens den starter opp.
+	PL	OSTRZEŻENIE: Po uruchomieniu tej prezentacji jej wyłączenie wymaga przywrócenia ustawień fabrycznych. W tym celu przy włączaniu urządzenia należy przytrzymać przycisk +.
+	RU	Предупреждение. После запуска демонстрации для ее отключения потребуется возврат заводских настроек. Нажмите и удерживайте кнопку + при включении питания.
+	SV	VARNING! När du har startat demonstrationen måste du återställa standardinställningarna för att inaktivera den. Håll ned plusknappen vid uppstart.
+
+DEMO_ERROR
+	CS	Chyba
+	DA	Fejl
+	DE	Fehler
+	EN	Error
+	ES	Error
+	FI	Virhe
+	FR	Erreur
+	IT	Errore
+	NL	Fout
+	NO	Feil
+	PL	Błąd
+	RU	Ошибка
+	SV	Fel
+
+DEMO_WRONG_CODE
+	CS	Chybný kód
+	DA	Forkert kode
+	DE	Falscher Code
+	EN	Wrong code
+	ES	Código incorrecto
+	FI	Väärä koodi
+	FR	Code erroné
+	IT	Codice errato
+	NL	Verkeerde code
+	NO	Feil kode
+	PL	Nieprawidłowy kod
+	RU	Неверный код
+	SV	Fel kod
+
+DEMO_ENTER_CODE
+	CS	Demonstrace v obchodě: Zadejte kód
+	DA	Butiksdemo: Indtast kode
+	DE	Verfügbare Demo: Code eingeben
+	EN	In-store Demo: Enter Code
+	ES	Demostración en tienda: introduzca el código
+	FI	Liikkeessä näytettävä esittely: Anna koodi
+	FR	Démo intégrée: saisissez le code
+	IT	Demo: immettere il codice
+	NL	Winkeldemo: code invoeren
+	NO	Butikkdemonstrasjon: angi kode
+	PL	Prezentacja sklepu: wprowadź kod
+	RU	Внутренняя демонстрация: введите код
+	SV	Demonstration i butik: Ange kod
+
+DEMO_VOLUME
+	CS	Hlasitost (%s)
+	DA	Volumen (%s)
+	DE	Lautstärke (%s)
+	EN	Volume (%s)
+	ES	Volumen (%s)
+	FI	Äänenvoimakkuus (%s)
+	FR	Volume (%s)
+	IT	Volume (%s)
+	NL	Volume (%s)
+	NO	Volum (%s)
+	PL	Głośność (%s)
+	RU	Громкость (%s)
+	SV	Volym (%s)
+
+DEMO_VOLUME_MUTED
+	CS	Hlasitost  (ztlumeno)
+	DA	Volumen (lyden er slået fra)
+	DE	Lautstärke (Stumm)
+	EN	Volume (Muted)
+	ES	Volumen (silenciado)
+	FI	Äänenvoimakkuus (mykistetty)
+	FR	Volume (SOURDINE)
+	IT	Volume (DISATTIVATO)
+	NL	Volume (gedempt)
+	NO	Volum (av)
+	PL	Głośność (wyciszona)
+	RU	Громкость (приглушенная)
+	SV	Volym (av)
+
+SLIDE_01
+	CS	Hudební přehrávač Squeezebox™ Duet\nWi-Fi
+	DA	Squeezebox™ Duet\nWi-Fi-musikafspiller
+	DE	Squeezebox™ Duet\nWLAN-Musikplayer
+	EN	Squeezebox™ Duet\nWi-Fi Music Player
+	ES	Squeezebox™ Duet\nReproductor de música Wi-Fi
+	FI	Squeezebox™ Duet\nWi-Fi -soitin
+	FR	Lecteur de musique sans fil Squeezebox™ Duet
+	IT	Lettore musicale Wi-Fi\nSqueezebox™ Duet
+	NL	Squeezebox™ Duet\nWi-Fi-muzieksysteem
+	NO	Squeezebox™ Duet\nWi-Fi Music Player
+	PL	Odtwarzacz muzyczny Squeezebox™ Duet\nWi-Fi
+	RU	Музыкальный плеер Wi-Fi\nSqueezebox™ Duet
+	SV	Squeezebox™ Duet\nWi-Fi-spelare
+
+SLIDE_02
+	CS	Objevte svět digitální hudby.
+	DA	Gå på opdagelse i den digitale musikverden.
+	DE	Entdecken Sie die Welt der digitalen Musik.
+	EN	Discover a world of digital music.
+	ES	Descubra un mundo de música digital.
+	FI	Löydä digitaalinen musiikkimaailma.
+	FR	Découvrez un univers de musique numérique.
+	IT	Scopri un mondo di musica digitale.
+	NL	Ontdek een wereld van digitale muziek.
+	NO	Oppdag en verden av digital musikk.
+	PL	Odkryj świat muzyki cyfrowej.
+	RU	Откройте мир цифровой музыки.
+	SV	Upptäck en värld av digital musik.
+
+SLIDE_03
+	CS	Z tisíců bezplatných internetových radiostanic...
+	DA	Fra tusindvis af gratis radiostationer på internetet...
+	DE	Von Tausenden kostenlosen Internetradiosendern ...
+	EN	From thousands of free Internet radio stations...
+	ES	Desde miles de emisoras de radio por Internet gratuitas...
+	FI	Tuhansista ilmaisista internet-radioasemista
+	FR	De milliers de radios Internet gratuites...
+	IT	Da migliaia di stazioni radio Internet gratuite...
+	NL	Van duizenden gratis internetradiostations...
+	NO	Fra tusenvis av gratis Internett-radiostasjoner...
+	PL	Od tysięcy bezpłatnych internetowych stacji radiowych...
+	RU	От тысяч бесплатных интернет-радиостанций
+	SV	Från tusentals gratis webbradiostationer...
+
+SLIDE_04
+	CS	...k vaší osobní hudební sbírce...
+	DA	... til din egen personlige musiksamling
+	DE	...zu Ihrer eigenen Musiksammlung...
+	EN	...to your own personal music collection...
+	ES	...hasta su colección de música personal...
+	FI	henkilökohtaista musiikkikokoelmaasi varten
+	FR	...à votre collection musicale personnelle...
+	IT	...alla propria raccolta di musica personale...
+	NL	...naar je persoonlijke muziekcollectie...
+	NO	...til din personlige musikksamling...
+	PL	...do swojej kolekcji muzyki...
+	RU	до вашей личной музыкальной коллекции
+	SV	...till din egen personliga musiksamling...
+
+SLIDE_05
+	CS	...k nejzajímavějším hudebním službám online.
+	DA	... til de bedste musiktjenester på nettet.
+	DE	...zu den angesagtesten Online-Musikdiensten.
+	EN	...to the hottest online music services.
+	ES	...o los mejores servicios de música en línea.
+	FI	suosituimpiin online-musiikkipalveluihin.
+	FR	...aux meilleurs services de musique en ligne.
+	IT	...ai servizi di musica online più richiesti.
+	NL	...naar de beste onlinemuziekservices.
+	NO	...til de beste musikktjenestene på nett.
+	PL	...do najnowszych usług muzycznych w trybie online.
+	RU	до самых горячих сетевых музыкальных служб.
+	SV	...till de senaste onlinemusiktjänsterna.
+
+SLIDE_06
+	CS	Snadný přístup k nekonečnému množství hudby vám leží v dlani.
+	DA	En genvej til at få et væld af musik i din hule hånd.
+	DE	Einfacher Zugriff auf ein unbegrenztes Musikangebot und Steuerung direkt aus der Handfläche.
+	EN	Easy access to endless music all in the palm of your hand.
+	ES	Acceso fácil a música ilimitada en la palma de la mano.
+	FI	Nautit rajattomasta musiikkivalikoimasta vähällä vaivalla.
+	FR	Accès facile à un choix musical infini dans le creux de la main.
+	IT	Semplicità di accesso a un'infinità di brani musicali dal palmo della mano.
+	NL	Vlotte toegang tot eindeloze muziekopties vanuit de palm van je hand.
+	NO	Enkel tilgang til ubegrensede mengder musikk, rett fra fjernkontrollen.
+	PL	Prosty dostęp do nieograniczonej muzyki w zasięgu Twojej ręki.
+	RU	Бескрайнее море музыки — у вас под рукой.
+	SV	Tryck på en knapp och musiken strömmar från en outsinlig källa.
+
+SLIDE_07
+	CS	Plná, cele digitální hudba přes vaši stereo soustavu.
+	DA	Flot gengivelse af digitaliseret musik gennem dit stereoanlæg.
+	DE	Kräftiger, voller digitaler Klang über Ihre Stereoanlage.
+	EN	Rich, full digital music through your stereo system.
+	ES	Música de calidad y totalmente digital a través de su sistema estéreo.
+	FI	Täyteläistä ja rikasta digitaalimusiikkia stereojärjestelmän kautta.
+	FR	Son numérique pur et riche via votre système stéréo.
+	IT	Musica digitale ricca e avvolgente tramite l'impianto stereo esistente.
+	NL	Rijke, volle digitale muziek via je stereosysteem.
+	NO	Fyldig digitalmusikk fra stereoanlegget.
+	PL	Wspaniale brzmiąca, w pełni cyfrowa muzyka odtwarzana przez system stereo.
+	RU	Богатый, насыщенный цифровой звук на вашей стереосистеме.
+	SV	Fylligt och rikt ljud via din stereoanläggning.
+
+SLIDE_08
+	CS	Prohlédněte si obaly alb a dokonce vlastní fotky na 2,4" barevném displeji
+	DA	Du kan se albumcovere og dine egne billeder på det 2,4" store farvedisplay
+	DE	Zeigen Sie Cover und sogar eigene Fotos auf dem 6-cm-Farbdisplay an.
+	EN	View album art and even your own photos on the 2.4-inch color display
+	ES	Vea carátulas de álbumes y hasta sus propias fotos en la pantalla en color de 6 cm.
+	FI	Nauti kansitaiteesta ja jopa omista valokuvistasi 2,4 tuuman värinäytöllä
+	FR	Visualisez les pochettes d'album et même vos propres photos sur l'écran couleur 2,4 pouces
+	IT	Display a colori da 2,4 pollici per la visualizzazione di copertine di album e foto
+	NL	Bekijk hoesafbeeldingen en zelfs je eigen foto's op de 2,4-inch kleurendisplay.
+	NO	Se albumgrafikk og egne bilder på fargeskjermen på 2,4 tommer
+	PL	Wyświetla okładki albumów, a nawet własne zdjęcia na kolorowym wyświetlaczu o przekątnej 2,4 cala
+	RU	Цветной экран диагональю 2,4 дюйма позволяет просматривать обложки альбомов и даже фотографии.
+	SV	Titta på skivomslag på 2,4-tumsskärmen. Du kan också titta på dina egna bilder.
+
+SLIDE_09
+	CS	Snadné nastavení. Plně se integruje do vaší stávající domácí sítě.
+	DA	Hurtig installation uden bøvl. Perfekt integration i dit nuværende hjemmenetværk.
+	DE	Einfaches Einrichten. Problemlos in Ihr Heimnetzwerk zu integrieren.
+	EN	Simple setup. Integrates easily with your existing home network.
+	ES	Instalación sencilla. Fácil integración con la red doméstica existente.
+	FI	Yksinkertainen asentaa. Helposti yhdistettävissä nykyiseen kotiverkkoon.
+	FR	Configuration simple. S'intègre facilement à votre réseau domestique existant.
+	IT	Configurazione semplificata: si integra facilmente con la rete domestica esistente.
+	NL	Eenvoudige set-up. Kan gemakkelijk in je bestaande thuisnetwerk geïntegreerd worden.
+	NO	Enkelt oppsett. Smidig integrering med det eksisterende hjemmenettverket.
+	PL	Łatwa instalacja. Prosta integracja z istniejącą siecią domową.
+	RU	Удобная установка. Простая интеграция с  домашней сетью.
+	SV	Snabb och smidig installation. Det är bara att ansluta spelaren till ditt hemnätverk.
+
+SLIDE_10
+	CS	Přidejte přehrávače Squeezebox nebo Přijímače a vytvořte si vícepokojový systém.
+	DA	Tilføj flere Squeezebox-modtagere eller -afspillere hvis du vil have et system der dækker flere rum.
+	DE	Fügen Sie Squeezebox-Player oder -Receiver hinzu und richten Sie so ein Musiksystem in mehreren Räumen ein.
+	EN	Add Squeezebox players or Receivers to create a multi-room system.
+	ES	Agregue más reproductores o receptores Squeezebox para crear un sistema para varias habitaciones.
+	FI	Lisäämällä Squeezebox-soittimia tai -vastaanottimia voit kuunnella musiikkia useissa huoneissa.
+	FR	Ajoutez des platines ou des récepteurs Squeezebox pour créer un système multipièce.
+	IT	Aggiungere altri lettori o ricevitori Squeezebox per creare un sistema per più locali.
+	NL	Voeg meer Squeezebox-spelers of Squeezebox Receivers toe om een systeem voor meerdere kamers te maken.
+	NO	Du kan legge til flere Squeezebox-mottakere eller -spillere for å spre musikken rundt i hele huset.
+	PL	Dodaj więcej odtwarzaczy lub odbiorników Squeezebox, aby stworzyć system obejmujący wiele pomieszczeń.
+	RU	Вы сможете создать многокомнатную аудиосистему, добавляя приемники или плееры Squeezebox.
+	SV	Du kan lägga till fler mottagare och spelare och förvandla hela din bostad till en musikanläggning.
+
+SLIDE_11
+	CS	Bezdrátový ovladač funguje s celou rodinu produktů Squeezebox.
+	DA	Squeezebox Controller fungerer med alle afspillerne i Squeezebox-familien.
+	DE	Der kabellose Controller funktioniert mit allen Squeezebox-Produkten.
+	EN	The wireless Controller works with the entire Squeezebox family.
+	ES	El Controller inalámbrico funciona con toda la familia de productos Squeezebox.
+	FI	Langaton kaukosäädin toimii kaikkien Squeezebox-tuotteiden kanssa.
+	FR	Le contrôleur sans fil est compatible avec l'ensemble de la gamme de produits Squeezebox.
+	IT	Il Controller senza fili funziona con tutta la famiglia di prodotti Squeezebox.
+	NL	De draadloze Controller werkt met de hele Squeezebox-reeks.
+	NO	Den trådløse fjernkontrollen kan brukes til å styre alle produktene i Squeezebox-serien.
+	PL	Bezprzewodowy kontroler działa z całą rodziną produktów Squeezebox.
+	RU	Беспроводной контроллер Squeezebox работает со всем семейством Squeezebox.
+	SV	Med fjärrkontrollen kan du styra alla produkter i Squeezebox-sortimentet.
+
+SLIDE_12
+	CS	Otoč. Klepni. Vychutnej.
+	DA	Drej, klik og rock
+	DE	Drehen. Klicken. Grooven.
+	EN	Spin. Click. Groove.
+	ES	Seleccionar, hacer clic y disfrutar.
+	FI	Pyöritä, napsauta ja kuuntele.
+	FR	Naviguez. Cliquez. Vibrez.
+	IT	Ruota. Clicca. Ascolta.
+	NL	Draaien. Klikken. Swingen.
+	NO	Snurr. Klikk. Groove.
+	PL	Podkręcaj. Klikaj. Dyryguj.
+	RU	Поверните, щелкните и наслаждайтесь.
+	SV	Snurra. Klicka. Rocka.
+
+SLIDE_13
+	CS	\n
+	DA	\n
+	DE	\n
+	EN	\n
+	ES	\n
+	FI	\n
+	FR	\n
+	IT	\n
+	NL	\n
+	NO	\n
+	PL	\n
+	RU	\n
+	SV	\n
+
+SLIDE_14
+	CS	Žádejte podrobnosti o rodině produktů Squeezebox.
+	DA	Bed om flere oplysninger om Squeezebox-familien.
+	DE	Fragen Sie nach weiteren Informationen zu den Squeezebox-Produkten.
+	EN	Ask for details about the Squeezebox family.
+	ES	Solicite información detallada sobre la familia Squeezebox.
+	FI	Kysy lisää Squeezebox-perheestä.
+	FR	Demandez des informations sur la gamme Squeezebox.
+	IT	Richiedi ulteriori informazioni sui prodotti della famiglia Squeezebox.
+	NL	Vraag om informatie over de Squeezebox-reeks.
+	NO	Få mer informasjon om Squeezebox-serien.
+	PL	Zapytaj o szczegółowe informacje o rodzinie produktów Squeezebox.
+	RU	Узнайте больше о семействе Squeezebox.
+	SV	Ställ frågor om Squeezebox-sortimentet.
+

@@ -1,0 +1,19 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SCREENSAVER_BLANKSCREEN
+	CS	Obrazovka vypnuta
+	DA	Ingen pauseskærm
+	DE	LCD aus
+	EN	Screen off
+	ES	Pantalla desactivada
+	FI	Näyttö pois päältä
+	FR	Affichage éteint
+	IT	Schermo spento
+	NL	Scherm uit
+	NO	Skjerm av
+	PL	Ekran wyłączony
+	RU	Отключить экран
+	SV	Display av
+

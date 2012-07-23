@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.Socket - An abstract socket that sends/receives data using a NetworkThread.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_socket_jnt__name_">jive.net.Socket(jnt, name)</a></li>
+		<li><a href="#jive_net_socket_free__">jive.net.Socket:free()</a></li>
+		<li><a href="#jive_net_socket_getsafesinkgenerator__">jive.net.Socket:getSafeSinkGenerator()</a></li>
+		<li><a href="#jive_net_socket_safesink__">jive.net.Socket:safeSink()</a></li>
+		<li><a href="#tostring_asocket_"><code>tostring(aSocket)</code></a></li>
+		<li><a href="#jive_net_socket_perform_func_">jive.net.Socket:perform(func)</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>An abstract socket that sends/receives data using a NetworkThread. It proposes
+services to close/free sockets and interface with the main thread, along with 
+convenient proxy functions.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- jive.net.Socket is abstract so this is not a useful example
+ local mySocket = Socket(jnt, &quot;mySocket&quot;)</pre>
+<pre>
+ -- FROM THE MAIN THREAD
+ -- transform a sink into a network thread one
+ local t_Sink = mySocket:safeSink(sink)</pre>
+<pre>
+ -- information about the socket
+ log:debug(&quot;Freeing: &quot;, mySocket)
+ -- print
+ Freeing: Socket {mySocket}</pre>
+<pre>
+ -- free the socket
+ mySocket:free()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_socket_jnt__name_">jive.net.Socket(jnt, name)</a></h2>
+<p>Creates a socket named <em>name</em> to interface with the given <em>jnt</em> 
+(a <em>jive.net.NetworkThread</em> instance). <em>name</em> is used for debugging and
+defaults to ``''.
+Must be called by subclasses.</p>
+<p>
+</p>
+<h2><a name="jive_net_socket_free__">jive.net.Socket:free()</a></h2>
+<p>Frees and closes the socket including any reference in the jnt.
+Must be called by subclasses.</p>
+<p>
+</p>
+<h2><a name="jive_net_socket_getsafesinkgenerator__">jive.net.Socket:getSafeSinkGenerator()</a></h2>
+<p>Returns a function that transforms a main thread sink in 
+a network thread sink. The function accepts an optional boolean
+indicating if nil must be sent (i.e. standard source behaviour)</p>
+<p>
+</p>
+<h2><a name="jive_net_socket_safesink__">jive.net.Socket:safeSink()</a></h2>
+<p>Transforms a main thread sink in a network thread sink.</p>
+<p>
+</p>
+<h2><a name="tostring_asocket_"><code>tostring(aSocket)</code></a></h2>
+<p>if <em>aSocket</em> is a <em>jive.net.Socket</em>, prints
+ Socket {name}</p>
+<p>
+</p>
+<h2><a name="jive_net_socket_perform_func_">jive.net.Socket:perform(func)</a></h2>
+<p>A proxy for the <em>perform</em> method of <em>jive.net.NetworkThread</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

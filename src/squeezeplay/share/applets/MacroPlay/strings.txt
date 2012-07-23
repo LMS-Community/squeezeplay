@@ -1,0 +1,121 @@
+
+MACRO_PLAY
+	CS	Otestovat makra
+	DA	Test makroer
+	DE	Makros testen
+	EN	Test macros
+	ES	Macros de prueba
+	FI	Testaa makrot
+	FR	Tester les macros
+	IT	Verifica macro
+	NL	Macro's testen
+	NO	Testmakroer
+	PL	Testuj makra
+	RU	Тестировать макросы
+	SV	Testa makron
+
+MACRO_AUTOPLAY
+	CS	Automatické testy
+	DA	Automatiske test
+	DE	Automatische Tests
+	EN	Automatic tests
+	ES	Pruebas automáticas
+	FI	Automaattiset testit
+	FR	Tests automatiques
+	IT	Verifiche automatiche
+	NL	Automatische tests
+	NO	Automatiske tester
+	PL	Testy automatyczne
+	RU	Автоматические тесты
+	SV	Automatiska tester
+
+MACRO_AUTOPLAY_HELP
+	CS	Spustit automatické testy.
+	DA	Start automatiske test.
+	DE	Automatische Tests starten.
+	EN	Start automatic tests.
+	ES	Iniciar pruebas automáticas.
+	FI	Aloita automaattiset testit.
+	FR	Lancer les tests automatiques.
+	IT	Avvia verifiche automatiche.
+	NL	Start automatische tests.
+	NO	Start automatiske tester.
+	PL	Rozpocznij testy automatyczne.
+	RU	Запустить автоматические тесты.
+	SV	Starta automatiska tester
+
+MACRO_AUTOSTART
+	CS	Automatické testy
+	DA	Automatiske test
+	DE	Automatische Tests
+	EN	Automatic tests
+	ES	Pruebas automáticas
+	FI	Automaattiset testit
+	FR	Tests automatiques
+	IT	Verifiche automatiche
+	NL	Automatische tests
+	NO	Automatiske tester
+	PL	Testy automatyczne
+	RU	Автоматические тесты
+	SV	Automatiska tester
+
+MACRO_AUTOSTART_HELP
+	CS	Spuštění za %s vteřin.
+	DA	Starter om %s sekunder.
+	DE	Start in %s Sekunden.
+	EN	Starting in %s seconds.
+	ES	Inicio en %s segundos.
+	FI	Käynnistyy %s sekunnissa.
+	FR	Démarrage dans %s secondes.
+	IT	Inizio previsto tra %s secondo/i.
+	NL	Begint over %s seconden.
+	NO	Starter om %s sekunder.
+	PL	Rozpoczęcie za %s s.
+	RU	Запуск через %s с.
+	SV	Startar om %s sekunder.
+
+MACRO_AUTOSTART_COMPLETE
+	CS	Testování ukončeno.
+	DA	Testen er gennemført.
+	DE	Tests abgeschlossen.
+	EN	Tests complete.
+	ES	Pruebas completadas.
+	FI	Testi suoritettu.
+	FR	Tests terminés.
+	IT	Verifiche completate.
+	NL	Tests voltooid.
+	NO	Testene er fullført.
+	PL	Testy zostały ukończone.
+	RU	Тесты завершены.
+	SV	Test har slutförts.
+
+MACRO_START
+	CS	Spustit
+	DA	Start
+	DE	Start
+	EN	Start
+	ES	Iniciar
+	FI	Aloita
+	FR	Démarrage
+	IT	Inizia
+	NL	Starten
+	NO	Start
+	PL	Rozpocznij
+	RU	Пуск
+	SV	Starta
+
+MACRO_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+

@@ -1,0 +1,18 @@
+# Installation directories
+# System's libraries directory (where binary libraries are installed)
+LUA_LIBDIR= ${PREFIX}/lib/lua/5.1
+# Lua includes directory
+LUA_INC= ${PREFIX}/include
+
+# OS dependent
+
+LIBNAME= $T.so.$V
+#COMPAT_DIR= ../compat/src
+
+# Compilation directives
+WARN= -O2 -Wall -fPIC -W -Waggregate-return -Wcast-align -Wmissing-prototypes -Wnested-externs -Wshadow -Wwrite-strings
+INCS= -I$(LUA_INC) 
+CFLAGS= $(WARN) $(INCS)
+CC ?= gcc
+
+# $Id: config,v 1.14 2005/06/24 01:49:16 tomas Exp $

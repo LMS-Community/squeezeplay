@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.Tile - A tiled image.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_tile_fillcolor_color_">jive.ui.Tile:fillColor(color)</a></li>
+		<li><a href="#jive_ui_tile_loadimage_path_">jive.ui.Tile:loadImage(path)</a></li>
+		<li><a href="#jive_ui_tile_loadtiles___p1__p2__p3__p4__p5________">jive.ui.Tile:loadTiles({ p1, p2, p3, p4, p5, ... })</a></li>
+		<li><a href="#jive_ui_tile_loadvtiles___p1__p2__p3___">jive.ui.Tile:loadVTiles({ p1, p2, p3 })</a></li>
+		<li><a href="#jive_ui_tile_loadhtiles___p1__p2__p3___">jive.ui.Tile:loadHTiles({ p1, p2, p3 })</a></li>
+		<li><a href="#tile_blit_srf__x__y__w__h_">tile:blit(srf, x, y, w, h)</a></li>
+		<li><a href="#tile_getminsize__">tile:getMinSize()</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A tiled image used to fill an area.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Fill with a transparnet red
+ local tile = jive.ui.Tile:fillColor(0xff00007f)</pre>
+<pre>
+ -- Horizontal bar filled with images
+ tile = Tile:loadHTiles({
+                                &quot;iconbar_l.png&quot;,
+                                &quot;iconbar.png&quot;,
+                                &quot;iconbar_r.png&quot;,
+                        })
+ -- Blit tile</pre>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_tile_fillcolor_color_">jive.ui.Tile:fillColor(color)</a></h2>
+<p>Create a tile with a fill colour.</p>
+<p>
+</p>
+<h2><a name="jive_ui_tile_loadimage_path_">jive.ui.Tile:loadImage(path)</a></h2>
+<p>Create a tile with a single image, this is repeated to fill the area if required.</p>
+<p>
+</p>
+<h2><a name="jive_ui_tile_loadtiles___p1__p2__p3__p4__p5________">jive.ui.Tile:loadTiles({ p1, p2, p3, p4, p5, ... })</a></h2>
+<p>Create a rectangular tile with nine images:</p>
+<pre>
+ ----------------
+ | p2 | p3 | p4 |
+ ----------------
+ | p9 | p1 | p5 |
+ ----------------
+ | p8 | p7 | p6 |
+ ----------------</pre>
+<p>
+</p>
+<h2><a name="jive_ui_tile_loadvtiles___p1__p2__p3___">jive.ui.Tile:loadVTiles({ p1, p2, p3 })</a></h2>
+<p>Create a vertical tile with three images:</p>
+<pre>
+ ------
+ | p1 |
+ ------
+ | p2 |
+ ------
+ | p3 |
+ ------</pre>
+<p>
+</p>
+<h2><a name="jive_ui_tile_loadhtiles___p1__p2__p3___">jive.ui.Tile:loadHTiles({ p1, p2, p3 })</a></h2>
+<p>Create a horizontal tile with three images:</p>
+<pre>
+ ----------------
+ | p1 | p2 | p3 |
+ ----------------</pre>
+<p>
+</p>
+<h2><a name="tile_blit_srf__x__y__w__h_">tile:blit(srf, x, y, w, h)</a></h2>
+<p>Blit the tile to surface at <em>x, y</em>, the area <em>w, h</em> is filled.</p>
+<p>
+</p>
+<h2><a name="tile_getminsize__">tile:getMinSize()</a></h2>
+<p>Returns the minimum <em>width</em>,<em>height</em> the tile can be painted.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

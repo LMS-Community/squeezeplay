@@ -1,0 +1,50 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+TEST_MOTION
+	CS	Detektor pohybu
+	DA	Bevægelsessensor
+	DE	Bewegungsmelder
+	EN	Motion Detector
+	ES	Detector de movimiento
+	FI	Liikkeenhavaitsin
+	FR	Détecteur de mouvement
+	IT	Sensore movimento
+	NL	Bewegingsdetector
+	NO	Bevegelsessensor
+	PL	Wykrywacz ruchu
+	RU	Детектор движения
+	SV	Rörelseavkänning
+
+TEST_MOTION_VALUE
+	CS	Hodnota
+	DA	Værdi
+	DE	Wert
+	EN	Value
+	ES	Valor
+	FI	Arvo
+	FR	Valeur
+	IT	Valore
+	NL	Waarde
+	NO	Verdi
+	PL	Wartość
+	RU	Значение
+	SV	Värde
+
+TEST_MOTION_MAX
+	CS	Max.
+	DA	Maks
+	DE	Max.
+	EN	Max
+	ES	Máx.
+	FI	Suurin
+	FR	Max
+	IT	Max
+	NL	Max
+	NO	Maks
+	PL	Maks.
+	RU	Максимум
+	SV	Max
+

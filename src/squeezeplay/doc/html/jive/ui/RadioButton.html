@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.ui.RadioButton - A radio button widget.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#style">STYLE</a></li>
+	<li><a href="#methods">METHODS</a></li>
+	<ul>
+
+		<li><a href="#jive_ui_radiobutton_style__group__selected_">jive.ui.RadioButton(style, group, selected)</a></li>
+		<li><a href="#jive_ui_radiobutton_isselected__">jive.ui.RadioButton:isSelected()</a></li>
+		<li><a href="#jive_ui_radiobutton_setselected__">jive.ui.RadioButton:setSelected()</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>A radio button widget, extends <em>jive.ui.Widget</em>. The radio button must be a member of a <em>jive.ui.RadioGroup</em>. Only one radio button in the radio group may be selected at any time.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- Create a new radio group
+ local group = jive.ui.RadioGroup()
+ 
+ -- Create buttons in the group
+ local button1 = jive.ui.RadioButton(
+        &quot;radio1&quot;, 
+        group, 
+        function(object)
+                print(&quot;radio1 selected&quot;)
+        end,
+        false)
+ 
+ local button2 = jive.ui.RadioButton(
+        &quot;radio2&quot;, 
+        group, 
+        function(object)
+                print(&quot;radio2 selected&quot;)
+        end,
+        true)</pre>
+<pre>
+ -- Set button as selected
+ button1:setSelected()</pre>
+<p>
+</p>
+<hr />
+<h1><a name="style">STYLE</a></h1>
+<p>The Radio Button includes the following style parameters in addition to the widgets basic parameters.</p>
+<p><strong>imgOn</strong> : the image when the Radio Button is selected.</p>
+<p><strong>imgOff</strong> : the image when the Radio Button is not selected.</p>
+<p>
+</p>
+<hr />
+<h1><a name="methods">METHODS</a></h1>
+<p>
+</p>
+<h2><a name="jive_ui_radiobutton_style__group__selected_">jive.ui.RadioButton(style, group, selected)</a></h2>
+<p>Constructs a new RadioButton widget. <em>style</em> is the widgets style. The RadioButton belongs to the <em>jive.ui.RadioGroup</em> <em>group</em>. <em>selected</em> is an optional boolean to set if this RadioButton is selected, it defaults to false.  <em>closure</em> is a function that will get called whenever this RadioButton
+is selected by the user; the function prototype is:
+ <code>function(radioButtonObject)</code></p>
+<p>
+</p>
+<h2><a name="jive_ui_radiobutton_isselected__">jive.ui.RadioButton:isSelected()</a></h2>
+<p>Returns true if this radio button is selected, otherwise return false.</p>
+<p>
+</p>
+<h2><a name="jive_ui_radiobutton_setselected__">jive.ui.RadioButton:setSelected()</a></h2>
+<p>Sets this radio button. The closure is called.</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.</p>
+
+</body>
+
+</html>

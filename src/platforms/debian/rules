@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+# $Id$
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+package=squeezeplay
+base=$(CURDIR)/debian/$(package)
+source=$(CURDIR)/../../build/linux/
+squeezeplay=$(base)/opt/$(package)
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -rf ${base}
+	rm -f $(CURDIR)/debian/files
+
+install:
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+
+	# Copy all of the files into the base dir
+	cp -r $(source)/* $(squeezeplay)/
+	
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_install
+	dh_installlogrotate
+	dh_installinit
+	dh_installman
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep
+.PHONY: build clean binary-indep binary install configure

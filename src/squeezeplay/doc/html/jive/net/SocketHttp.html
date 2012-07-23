@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.SocketHttp - An HTTP socket.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_sockethttp_jnt__ip__port__name_">jive.net.SocketHttp(jnt, ip, port, name)</a></li>
+		<li><a href="#jive_net_sockethttp_fetch_request_">jive.net.SocketHttp:fetch(request)</a></li>
+		<li><a href="#tostring_asocket_"><code>tostring(aSocket)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>This class implements a HTTP socket running in a <em>jive.net.NetworkThread</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a HTTP socket to communicate with <a href="http://192.168.1.1:9000/">http://192.168.1.1:9000/</a>
+ local http = jive.net.SocketHttp(jnt, &quot;192.168.1.1&quot;, 9000, &quot;slimserver&quot;)</pre>
+<pre>
+ -- create a request (see L&lt;jive.net.RequestHttp)
+ local req = RequestHttp(sink, 'GET', '/xml/status.xml')</pre>
+<pre>
+ -- go get it!
+ <a href="http:fetch">http:fetch</a>(req)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_sockethttp_jnt__ip__port__name_">jive.net.SocketHttp(jnt, ip, port, name)</a></h2>
+<p>Creates an HTTP socket named <em>name</em> to interface with the given <em>jnt</em> 
+(a <em>jive.net.NetworkThread</em> instance). <em>name</em> is used for debugging and
+defaults to ``''. <em>ip</em> and <em>port</em> are the IP address and port of the HTTP server.</p>
+<p>
+</p>
+<h2><a name="jive_net_sockethttp_fetch_request_">jive.net.SocketHttp:fetch(request)</a></h2>
+<p>Use the socket to fetch an HTTP request.
+<em>request</em> must be an instance of class <em>jive.net.RequestHttp</em>.
+The class maintains an internal queue of requests to fetch.</p>
+<p>
+</p>
+<h2><a name="tostring_asocket_"><code>tostring(aSocket)</code></a></h2>
+<p>if <em>aSocket</em> is a <em>jive.net.SocketHttp</em>, prints
+ SocketHttp {name}
+
+</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

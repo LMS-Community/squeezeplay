@@ -1,0 +1,200 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+WELCOME
+	CS	Vítejte
+	DA	Velkommen
+	DE	Willkommen
+	EN	Welcome
+	ES	Bienvenido
+	FI	Tervetuloa
+	FR	Bienvenue
+	IT	Benvenuti
+	NL	Welkom
+	NO	Velkommen
+	PL	Zapraszamy
+	RU	Добро пожаловать
+	SV	Välkommen
+
+WELCOME_WALKTHROUGH
+	CS	Vítejte do Squeezebox Radio. Začněme připojením k vaší síti.
+	DA	Velkommen til Squeezebox Radio. Lad os begynde med at slutte afspilleren til netværket.
+	DE	Willkommen! Jetzt stellen wir die Verbindung zum Netzwerk her.
+	EN	Welcome to Squeezebox Radio. Let's start by getting you connected to your network.
+	ES	Bienvenido a Squeezebox Radio. Para empezar, nos conectaremos a la red.
+	FI	Tervetuloa Squeezebox Radioon. Aloitetaan muodostamalla yhteys verkkoosi.
+	FR	Bienvenue dans Squeezebox Radio. Commençons par vous connecter à votre réseau.
+	IT	Benvenuti in Squeezebox Radio. Iniziamo con il collegamento alla rete.
+	NL	Welkom bij Squeezebox Radio. Ga aan de slag door een verbinding te maken met je netwerk.
+	NO	Velkommen til Squeezebox Radio. La oss starte med å kople deg til nettverket.
+	PL	Squeezebox Touch — Zapraszamy! Rozpocznij od nawiązania połączenia z siecią.
+	RU	Добро пожаловать в Squeezebox Touch. Для начала нужно настроить подключение к сети.
+	SV	Välkommen till Squeezebox Radio. Vi börjar med att ansluta till nätverket.
+
+CONTINUE
+	CS	Pokračovat
+	DA	Fortsæt
+	DE	Weiter
+	EN	Continue
+	ES	Continuar
+	FI	Jatka
+	FR	Continuer
+	IT	Continua
+	NL	Verdergaan
+	NO	Fortsett
+	PL	Kontynuuj
+	RU	Продолжить
+	SV	Fortsätt
+
+DONE
+	CS	A je to!
+	DA	Det var det!
+	DE	Fertig!
+	EN	That's it!
+	ES	¡Ya está!
+	FI	Siinä kaikki!
+	FR	Vous avez terminé!
+	IT	Fatto!
+	NL	Klaar!
+	NO	Ferdig!
+	PL	To już wszystko!
+	RU	Сделано!
+	SV	Klart!
+
+DONE_HELP
+	CS	Nyní můžete použít váš Squeezebox pro přístup k vaší hudbě!
+	DA	Nu kan du bruge din Squeezebox til at høre al din musik!
+	DE	Jetzt können Sie mit der Squeezebox auf Ihre Musik zugreifen!
+	EN	You can now use your Squeezebox to access all your music!
+	ES	Ya puede utilizar Squeezebox para acceder a toda su música!
+	FI	Nyt pääset käyttämään Squeezeboxilla kaikkia musiikkitiedostojasi!
+	FR	Vous pouvez maintenant utiliser votre Squeezebox pour accéder à toute votre musique!
+	IT	Ora è possibile utilizzare Squeezebox per accedere alla musica!
+	NL	Met je Squeezebox kun je nu naar je al je muziek luisteren!
+	NO	Nå kan du få tilgang til all musikken din via Squeezebox!
+	PL	Teraz możesz używać urządzenia Squeezebox, aby uzyskać dostęp do całej swojej muzyki!
+	RU	Теперь вся ваша музыка доступна в Squeezebox!
+	SV	Nu har du tillgång till all din musik via Squeezebox!
+
+CONNECTING_TO_SN
+# SLT: please keep this short
+	CS	Připojování k
+	DA	Etablerer forbindelse til
+	DE	Verbinden mit
+	EN	Connecting to
+	ES	Conectando a
+	FI	Yhdistää kohteeseen
+	FR	Connexion à
+	IT	Collegamento a
+	NL	Verbinden met
+	NO	Kopler til
+	PL	Trwa łączenie z
+	RU	Подключение к
+	SV	Ansluts till
+
+MYSQUEEZEBOX_DOT_COM
+	CS	mysqueezebox.com
+	DA	mysqueezebox.com
+	DE	mysqueezebox.com
+	EN	mysqueezebox.com
+	ES	mysqueezebox.com
+	FI	mysqueezebox.com
+	FR	mysqueezebox.com
+	IT	mysqueezebox.com
+	NL	mysqueezebox.com
+	NO	mysqueezebox.com
+	PL	mysqueezebox.com
+	RU	mysqueezebox.com
+	SV	mysqueezebox.com
+
+CANT_CONNECT
+	CS	Nemohu připojit
+	DA	Der kan ikke etableres forbindelse
+	DE	Verbindung kann nicht hergestellt werden
+	EN	Can't Connect
+	ES	No se puede conectar
+	FI	Ei voi yhdistää
+	FR	Connexion impossible
+	IT	Impossibile connettersi
+	NL	Kan geen verbinding maken
+	NO	Kan ikke kople til
+	PL	Nie można nawiązać połączenia
+	RU	Не удалось подключиться
+	SV	Det går inte att ansluta
+
+SN_DNS_WORKED
+	CS	Vypadá to, že firewall nebo jiný mechanismus blokuje vaše připojení. Pro další asistenci kontaktujte laskavě výrobce vašeho routeru nebo administrátora sítě nebo navštivte www.mysqueezebox.com/support.
+	DA	En firewall eller en anden mekanisme blokerer tilsyneladende forbindelsen. Kontakt forhandleren eller tjek routerproducentens hjemmeside, bed netværksadministratoren om hjælp, eller kig på www.mysqueezebox.com/support.
+	DE	Die Verbindung wird möglicherweise durch eine Firewall oder andere Programme blockiert. Wenden Sie sich für weitere Informationen an den Router-Hersteller oder Netzwerkadministrator oder besuchen Sie die Webseite unseres Kundendiensts unter www.mysqueezebox.com/support.
+	EN	A firewall or other mechanism seems to be blocking your connection. Please contact your router manufacturer or network admin for further assistance, or visit www.mysqueezebox.com/support.
+	ES	Parece que un servidor de seguridad o algún otro mecanismo está bloqueando la conexión. Póngase en contacto con el fabricante del enrutador o el administrador de la red para obtener ayuda o visite www.mysqueezebox.com/support.
+	FI	Vaikuttaa siltä, että palomuuri tai muu mekanismi estää yhteyden muodostamisen. Ota yhteys reitittimen valmistajaan tai verkon järjestelmänvalvojaan avun saamiseksi tai siirry osoitteeseen www.mysqueezebox.com/support.
+	FR	Un pare-feu ou autre mécanisme semble bloquer votre connexion. Contactez le fabricant de votre routeur ou l'administrateur réseau pour obtenir de l'aide, ou rendez-vous sur le site www.mysqueezebox.com/support.
+	IT	La connessione sembra essere bloccata da un firewall o da un altro meccanismo. Contattare il produttore del router o l'amministratore di rete per assistenza o visitare www.mysqueezebox.com/support.
+	NL	Een firewall of ander mechanisme lijkt je verbinding te blokkeren. Neem voor extra hulp contact op met de fabrikant van je router of met je netwerkbeheerder, of bezoek www.mysqueezebox.com/support.
+	NO	Det ser ut til at en brannmur eller liknende blokkerer tilkoplingen. Kontakt ruterprodusenten eller nettverksansvarlig hvis du trenger hjelp, eller gå til www.mysqueezebox.com/support.
+	PL	Połączenie jest blokowane przez zaporę lub inny mechanizm. Skontaktuj się z producentem routera lub administratorem sieci, aby uzyskać dalszą pomoc, albo odwiedź stronę www.mysqueezebox.com/support.
+	RU	По-видимому, брандмауэр или другой механизм блокирует подключение. Обратитесь за помощью к изготовителю маршрутизатора или администратору сети либо посетите  www.mysqueezebox.com/support.
+	SV	Det verkar som om anslutningen blockeras av en brandvägg (eller av något annat skydd). Ta kontakt med routerns tillverkare eller nätverksadministratören. Du kan också gå in på www.mysqueezebox.com/support.
+
+SN_DNS_FAILED
+	CS	Zdá se, že vaše internetové připojení nefunguje. Zkontrolujte vaši síť a ujistěte se, že je připojena a pracuje správně.
+	DA	Din internetforbindelse fungerer tilsyneladende ikke. Kontroller netværket, og undersøg om internetforbindelsen fungerer ordentligt.
+	DE	Es scheint ein Fehler an Ihrer Internetverbindung vorzuliegen. Überprüfen Sie, ob die Netzwerkverbindung funktionstüchtig ist.
+	EN	It appears your internet connection is not working. Please check your network to make sure it is connected and running properly.
+	ES	Parece que su conexión a Internet no funciona. Compruebe que la red está conectada y que funciona correctamente.
+	FI	Internet-yhteytesi ei ilmeisesti toimi. Tarkista onko verkkosi liitetty, ja että se toimii oikein.
+	FR	Votre connexion à Internet semble ne pas fonctionner. Vérifiez que votre réseau est connecté et qu'il fonctionne correctement.
+	IT	La connessione a Internet non sembra funzionare. Verificare che la rete sia collegata e che funzioni correttamente.
+	NL	Je internetverbinding lijkt niet te werken. Controleer of je netwerk verbonden is en correct functioneert.
+	NO	Det ser ut til at Internett-tilkoplingen din ikke fungerer. Kontroller at nettverket er tilkoplet og påslått.
+	PL	Wydaje się, że połączenie internetowe nie działa. Sprawdź, czy sieć jest podłączona i działa poprawnie.
+	RU	По-видимому, интернет-подключение не работает. Проверьте сеть и убедитесь, что она подключена и правильно работает.
+	SV	Det verkar som om Internetanslutningen inte fungerar. Kontrollera att nätverket är i gång och fungerar som det ska.
+
+SN_SYSTEM_ERROR
+	CS	Došlo k systémové chybě. Zkuste znovu později.
+	DA	Der opstod en systemfejl. Prøv igen senere.
+	DE	Ein Systemfehler ist aufgetreten. Versuchen Sie es später noch einmal.
+	EN	A system error has happened. Please try again later.
+	ES	Se ha producido un error del sistema. Vuelva a intentarlo más tarde.
+	FI	Tapahtui järjestelmävirhe. Yritä myöhemmin uudelleen.
+	FR	Une erreur système s'est produite. Réessayez plus tard.
+	IT	Si è verificato un errore di sistema. Riprovare più tardi.
+	NL	Er heeft zich een systeemfout voorgedaan. Probeer het later opnieuw.
+	NO	Det har oppstått en systemfeil. Prøv igjen senere.
+	PL	Wystąpił błąd systemowy. Spróbuj ponownie później.
+	RU	Произошла системная ошибка. Повторите попытку позднее.
+	SV	Ett systemfel har inträffat. Försök igen senare.
+
+SN_TRY_AGAIN
+	CS	Zkuste připojit znovu
+	DA	Prøv at etablere forbindelse igen
+	DE	Versuchen Sie erneut, die Verbindung herzustellen
+	EN	Try connecting again
+	ES	Vuelva a intentar la conexión
+	FI	Yritä yhteydenmuodostusta uudelleen
+	FR	Tentez de vous connecter à nouveau
+	IT	Riprovare a connettersi
+	NL	Opnieuw proberen verbinding te maken
+	NO	Prøv å kople til på nytt
+	PL	Spróbuj połączyć się ponownie
+	RU	Повторить попытку подключения
+	SV	Försök att ansluta på nytt
+
+SN_CHOOSE_DIFFERENT
+	CS	Zvolte jinou síť
+	DA	Vælg et andet netværk
+	DE	Wählen Sie ein anderes Netzwerk
+	EN	Choose a different network
+	ES	Elija otra red
+	FI	Valitse eri verkko
+	FR	Sélectionner un réseau différent
+	IT	Scegli una rete diversa
+	NL	Een ander netwerk kiezen
+	NO	Velg et annet nettverk
+	PL	Wybierz inną sieć
+	RU	Выбрать другую сеть
+	SV	Välj ett annat nätverk
+

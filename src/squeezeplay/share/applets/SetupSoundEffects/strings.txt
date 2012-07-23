@@ -1,0 +1,334 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+SOUND_EFFECTS
+	CS	Zvukové efekty
+	DA	Lydeffekter
+	DE	Soundeffekte
+	EN	Sound Effects
+	ES	Efectos de sonido
+	FI	Äänitehosteet
+	FR	Effets sonores
+	IT	Effetti sonori
+	NL	Geluidseffecten
+	NO	Lydeffekter
+	PL	Efekty dźwiękowe
+	RU	Звуковые эффекты
+	SV	Ljudeffekter
+
+SOUND_SCROLL
+	CS	Posun
+	DA	Rul
+	DE	Scroll
+	EN	Scroll
+	ES	Desplazarse
+	FI	Vieritä
+	FR	Défiler
+	IT	Scorri
+	NL	Scrollen
+	NO	Bla
+	PL	Przewijanie
+	RU	Прокрутка
+	SV	Rullning
+
+SOUND_NAVIGATION
+	CS	Navigace
+	DA	Navigation
+	DE	Navigation
+	EN	Navigation
+	ES	Navegación
+	FI	Siirtyminen
+	FR	Navigation
+	IT	Esplorazione
+	NL	Navigatie
+	NO	Navigasjon
+	PL	Nawigacja
+	RU	Навигация
+	SV	Navigering
+
+SOUND_PLAYBACK
+	CS	Přehrávání
+	DA	Afspilning
+	DE	Wiedergabe
+	EN	Playback
+	ES	Reproducción
+	FI	Toisto
+	FR	Lecture
+	IT	Riproduzione
+	NL	Afspelen
+	NO	Avspilling
+	PL	Odtwarzanie
+	RU	Воспроизведение
+	SV	Uppspelning
+
+SOUND_VOLUME
+	CS	Hlasitost
+	DA	Lydstyrke
+	DE	Lautstärke
+	EN	Volume
+	ES	Volumen
+	FI	Äänenvoimakkuus
+	FR	Volume
+	IT	Volume
+	NL	Volume
+	NO	Volum
+	PL	Głośność
+	RU	Громкость
+	SV	Volym
+
+SOUND_CHARGING
+	CS	Nabíjení
+	DA	Oplader
+	DE	Wird aufgeladen
+	EN	Charging
+	ES	Cargando
+	FI	Latauksessa
+	FR	Chargement en cours
+	IT	Caricamento
+	NL	Bezig met opladen
+	NO	Lader
+	PL	Ładowanie
+	RU	Зарядка
+	SV	Laddar
+
+SOUND_NONE
+	CS	Žádný
+	DA	Ingen
+	DE	Keine
+	EN	None
+	ES	Ninguno
+	FI	Ei mitään
+	FR	Aucun
+	IT	Nessuno
+	NL	Geen
+	NO	Ingen
+	PL	Brak
+	RU	Нет
+	SV	Ingen
+
+SOUND_EFFECTS_VOLUME
+	CS	Hlasitost efektů
+	DA	Lydstyrke for effekter
+	DE	Effektlautstärke
+	EN	Effects Volume
+	ES	Volumen de efectos
+	FI	Tehosteiden äänenvoimakkuus
+	FR	Volume des effets
+	IT	Volume effetti
+	NL	Volume van effecten
+	NO	Effektvolum
+	PL	Głośność efektów
+	RU	Громкость эффектов
+	SV	Effektvolym
+
+SOUND_VOLUME_HELP
+	CS	K nastavení hlasitosti zvukových efektů použijte kolečko.
+	DA	Brug drejeknappen til at justere styrken af lydeffekter.
+	DE	Passen Sie die Lautstärke der Effekte mit dem Rad an.
+	EN	Use the wheel to adjust the volume of the sound effects.
+	ES	Use la rueda para ajustar el volumen de los efectos de sonido.
+	FI	Säädä äänitehosteiden äänenvoimakkuutta kiekolla.
+	FR	Utilisez la molette pour régler le volume des effets sonores.
+	IT	Usare la rotellina per regolare il volume degli effetti sonori.
+	NL	Gebruik het wiel om het volume van de geluidseffecten aan te passen.
+	NO	Bruk hjulet til å justere volumet på lydeffektene.
+	PL	Użyj pokrętła, aby ustawić głośność efektów dźwiękowych.
+	RU	Для настройки громкости звуковых эффектов используйте колесико.
+	SV	Justera volymen på ljudeffekterna med hjälp av rullningshjulet
+
+SOUND_CUSTOMIZE
+	CS	Upravit zvuk
+	DA	Tilpas lyde
+	DE	Sounds anpassen
+	EN	Customize Sounds
+	ES	Personalizar sonidos
+	FI	Mukauta äänet
+	FR	Personnaliser les sons
+	IT	Personalizza suoni
+	NL	Geluiden aanpassen
+	NO	Tilpass lyder
+	PL	Dostosuj dźwięki
+	RU	Настройка звуков
+	SV	Anpassa ljud
+
+SOUND_DEFAULT
+	CS	Výchozí
+	DA	Standard
+	DE	Standard
+	EN	Default
+	ES	Predeterminada
+	FI	Oletus
+	FR	Défaut
+	IT	Predefinito
+	NL	Standaard
+	NO	Standard
+	PL	Domyślne
+	RU	По умолчанию
+	SV	Standard
+
+SOUND_BUMP
+	CS	Menu "Rána"
+	DA	Menubump
+	DE	Menü-Bump
+	EN	Menu Bump
+	ES	Menú Choque
+	FI	Valikon tönäisy
+	FR	Bip de menu
+	IT	Voce di menu respinta
+	NL	Menu-bump
+	NO	Menystopp
+	PL	Wybór menu
+	RU	Выбор меню
+	SV	Ogiltigt menyval
+
+SOUND_CLICK
+	CS	Typ klepnutí
+	DA	Klik på
+	DE	Klicken
+	EN	Click
+	ES	Clic
+	FI	Napsauta
+	FR	Cliquer
+	IT	Clic
+	NL	Klikken
+	NO	Klikk
+	PL	Kliknięcie
+	RU	Щелчок
+	SV	Klickning
+
+SOUND_JUMP
+	CS	Přeskočit
+	DA	Spring
+	DE	Jump (Springen)
+	EN	Jump
+	ES	Salto
+	FI	Hyppy
+	FR	Jump (Saut)
+	IT	Jump (Salta)
+	NL	Springen
+	NO	Hopp
+	PL	Skocz
+	RU	Переход
+	SV	Hopp
+
+SOUND_WINDOWSHOW
+	CS	Zobrazit nové okno
+	DA	Vis nyt vindue
+	DE	Neues Fenster anzeigen
+	EN	Show New Window
+	ES	Mostrar nueva ventana
+	FI	Näytä uusi ikkuna
+	FR	Afficher une nouvelle fenêtre
+	IT	Mostra nuova finestra
+	NL	Nieuw venster weergeven
+	NO	Vis nytt vindu
+	PL	Pokaż nowe okno
+	RU	Показать новое окно
+	SV	Visa nytt fönster
+
+SOUND_WINDOWHIDE
+	CS	Skrýt okno
+	DA	Skjul vindue
+	DE	Fenster ausblenden
+	EN	Hide Window
+	ES	Ocultar ventana
+	FI	Piilota ikkuna
+	FR	Masquer la fenêtre
+	IT	Nascondi finestra
+	NL	Venster verbergen
+	NO	Skjul vindu
+	PL	Ukryj okno
+	RU	Скрыть окно
+	SV	Dölj fönster
+
+SOUND_SELECT
+	CS	Položka v menu
+	DA	Vælg menupunkt
+	DE	Im Menü ausgewähltes Element
+	EN	Menu Select Item
+	ES	Seleccionar elemento de menú
+	FI	Valikkokohdan valinta
+	FR	Menu Sélectionner un élément
+	IT	Selezione voce di menu
+	NL	Item voor menuselectie
+	NO	Menyvalg
+	PL	Pozycja menu do wyboru
+	RU	Выбранный элемент меню
+	SV	Val av menyalternativ
+
+SOUND_DOCKING
+	CS	Dokování
+	DA	Fastgørelse
+	DE	Docking
+	EN	Docking
+	ES	Acoplamiento
+	FI	Telakointi
+	FR	Connexion
+	IT	Alloggiamento
+	NL	Bezig met docken
+	NO	Dokking
+	PL	Dokowanie
+	RU	Закрепление
+	SV	Dockning
+
+SOUND_STARTUP
+	CS	Spuštění
+	DA	Programstart
+	DE	Start
+	EN	Startup
+	ES	Inicio
+	FI	Käynnistys
+	FR	Démarrage
+	IT	Avvio
+	NL	Opstarten
+	NO	Oppstart
+	PL	Uruchomienie
+	RU	Запуск
+	SV	Start
+
+SOUND_SHUTDOWN
+	CS	Vypnout
+	DA	Luk
+	DE	Herunterfahren
+	EN	Shutdown
+	ES	Apagar
+	FI	Sammuta
+	FR	Arrêter
+	IT	Chiusura
+	NL	Afsluiten
+	NO	Slå av
+	PL	Wyłącz
+	RU	Выключение
+	SV	Avstängning
+
+SOUND_CUSTOM_HELP
+	CS	Vyberte úkon, který si přejete upravit.
+	DA	Vælg den handling der skal tilpasses.
+	DE	Wählen Sie die anzupassende Aktion aus.
+	EN	Select the action that you would like to customize.
+	ES	Seleccione la acción que desea personalizar.
+	FI	Valitse toiminto, jota haluat mukauttaa.
+	FR	Sélectionnez l'action que vous souhaitez personnaliser.
+	IT	Selezionare l'azione da personalizzare.
+	NL	Selecteer de actie die je wilt aanpassen.
+	NO	Velg hendelsen du ønsker å tilpasse.
+	PL	Wybierz dźwięk, który chcesz dostosować.
+	RU	Выберите действие для настройки.
+	SV	Välj den åtgärd du vill anpassa.
+
+SOUND_CUSTOMSOUND_HELP
+	CS	Vyberte zvuk, který chcete použít pro tento úkon.
+	DA	Vælg den lyd der skal bruges ved denne handling.
+	DE	Wählen Sie den Sound, der für diese Aktion verwendet werden soll.
+	EN	Select the sound you would like to use for this action.
+	ES	Seleccione el sonido que desea utilizar para esta acción.
+	FI	Valitse ääni, jota haluat käyttää tämän toiminnon kanssa.
+	FR	Sélectionnez le son que vous souhaitez utiliser pour cette action.
+	IT	Selezionare il suono da utilizzare per questa azione.
+	NL	Selecteer het geluid dat je voor deze actie wilt gebruiken.
+	NO	Velg lyden du vil bruke for denne hendelsen.
+	PL	Wybierz dźwięk, który ma być używany dla tej czynności.
+	RU	Выберите звук для использования с этим действием.
+	SV	Välj ljud för den här åtgärden.
+

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.RequestHttp - An HTTP request.</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_requesthttp_sink__method__uri__options_">jive.net.RequestHttp(sink, method, uri, options)</a></li>
+		<li><a href="#tostring_arequest_"><code>tostring(aRequest)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>jive.net.RequestHttp implements an HTTP request to be processed
+by a <em>jive.net.SocketHttp</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+ -- create a sink to receive XML
+ local function sink(chunk, err)
+   if err then
+     print(&quot;error!: &quot; .. err)
+   elseif chunk then
+     print(&quot;received: &quot; .. chunk)
+   end
+ end
+ 
+ -- create a HTTP socket (see L&lt;jive.net.SocketHttp&gt;)
+ local http = jive.net.SocketHttp(jnt, &quot;192.168.1.1&quot;, 9000, &quot;slimserver&quot;)</pre>
+<pre>
+ -- create a request to GET <a href="http://192.168.1.1:9000/xml/status.xml">http://192.168.1.1:9000/xml/status.xml</a>
+ local req = RequestHttp(sink, 'GET', '/xml/status.xml')</pre>
+<pre>
+ -- go get it!
+ <a href="http:fetch">http:fetch</a>(req)</pre>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_requesthttp_sink__method__uri__options_">jive.net.RequestHttp(sink, method, uri, options)</a></h2>
+<p>Creates a RequestHttp. Parameters:</p>
+<p><em>sink</em> : a main thread lnt12 sink. Will be called with nil when data is complete,
+in order to be compatible with filters and other ltn12 stuff. However for performance
+reasons, data is concatenated on the network thread side.</p>
+<p><em>method</em> : the HTTP method to use, 'POST' or 'GET'. If POST, a POST body source must be provided in <em>options</em>.</p>
+<p><em>uri</em> : the URI to GET/POST to</p>
+<p><em>options</em> : table with optional parameters: <em>t_bodySource</em> is a lnt12 source required for POST operation;
+<em>headers</em> is a table with aditional headers to use for the request.</p>
+<p>
+</p>
+<h2><a name="tostring_arequest_"><code>tostring(aRequest)</code></a></h2>
+<p>If <em>aRequest</em> is a <em>jive.net.RequestHttp</em>, prints
+ RequestHttp {name}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

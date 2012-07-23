@@ -1,0 +1,7 @@
+This applet and accompanying files were written to provide a means for Point of Sale displays in Europe to run a Squeezebox Controller in a demo mode: a slideshow of fixed images, all keys disabled, backlight dimming off, sleep/suspend disabled. In other words, a constantly running slideshow for display purposes.
+
+The contents of this folder can be loaded on to an SD card and it should install automatically and run on boot. In the case of the special demo units, the startPOS.sh script is run on boot. Otherwise, jiveboot.sh is executed. Both files are included in this folder.
+
+To change the delay between image transitions, edit Slideshow/settings.lua before installing.
+
+-bklaas 03.08

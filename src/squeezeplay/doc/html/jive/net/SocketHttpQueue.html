@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jive.net.SocketHttpQueue - A SocketHttp that uses an external queue</title>
+<link rev="made" href="mailto:root@b48.apple.com" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#functions">FUNCTIONS</a></li>
+	<ul>
+
+		<li><a href="#jive_net_sockethttpqueue_jnt__ip__port__queueobj__name_">jive.net.SocketHttpQueue(jnt, ip, port, queueObj, name)</a></li>
+		<li><a href="#tostring_asocket_"><code>tostring(aSocket)</code></a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>jive.net.SocketHttpQueue is a subclass of <em>jive.net.SocketHttp</em> designed
+to use an external request queue, such as the one proposed by <em>jive.net.HttpPool</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>None provided.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">FUNCTIONS</a></h1>
+<p>
+</p>
+<h2><a name="jive_net_sockethttpqueue_jnt__ip__port__queueobj__name_">jive.net.SocketHttpQueue(jnt, ip, port, queueObj, name)</a></h2>
+<p>Same as <em>jive.net.SocketHttp</em>, save for the <em>queueObj</em> parameter
+which must refer to an object implementing a <strong>t_dequeue</strong> function
+that returns a request from its queue and a boolean indicating if
+the connection must close.</p>
+<p>
+</p>
+<h2><a name="tostring_asocket_"><code>tostring(aSocket)</code></a></h2>
+<p>if <em>aSocket</em> is a <em>jive.net.SocketHttpQueue</em>, prints
+ SocketHttpQueue {name}</p>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<p>Copyright 2007 Logitech. All Rights Reserved.
+
+</p>
+<p>This file is subject to the Logitech Public Source License Version 1.0. Please see the LICENCE file for details.
+
+</p>
+
+</body>
+
+</html>

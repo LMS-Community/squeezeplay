@@ -1,0 +1,104 @@
+=pod
+
+=head1 Jive Code Style Guide
+
+This document describes the conventions used in the Jive Lua source code. Coherence has more
+value than minimal improvements in readability, so all developers should strive to check in
+code that adheres to these guidelines when appropriate.
+
+=head2 Code lay-out
+
+=head3 Indentation
+
+Use TABs to indent the code. Tabs worth 4 spaces work best.
+
+Do NOT use tabs to make columns (for example, when aligning = signs). This just breaks on
+everyone else's terminal. Use spaces instead.
+
+ local oo......spaces...= require("loop.simple")
+ local table...spaces...= require("table")
+
+=head3 Line Length
+
+No maximum value is provided, but long lines should be broken up at natural
+boundaries. With Lua you can pretty much break the line wherever you want, no special 
+line continuation mark is required.
+
+ menuItem:addListener(EVENT_ACTION,
+     function()
+         local window, r = self:openWindow(appletName, method, menuItem, unpack(args))
+         return r
+     end
+ )
+
+=head3 Blank Lines
+
+Separate functions by 2 blank lines, and use 2 blank lines to distinguish
+any group (like between requires and module(...), or from the last function in
+the file to the Logitech license at the end of the file)
+
+Use blank lines in functions to indicate logical sections.
+
+=head3 Encodings
+
+Code files should use UTF-8.
+
+=head3 requires
+
+Modules should require what they need from global space before the
+module(...) declaration. First copy global functions from Lua:
+
+ local pairs, ipairs = pairs, ipairs
+
+then any Lua or external module:
+
+ local debug = require("debug")
+ local socket = require("socket")
+
+then Jive modules/classes:
+
+ local Window = require("jive.ui.Window")
+
+ending with the log if used:
+
+ local log = require("jive.utils.log").logger("ui")
+
+finally, Jive globals or identifiers:
+
+ local EVENT_UNUSED = jive.ui.EVENT_UNUSED
+ local jnt = jnt
+
+=head2 Identifiers
+
+=head3 General convention
+
+Identifiers (for variables, functions and methods) start with a lower case letter and 
+words are concatenated using a capital letter.
+
+ function getSelected()
+ local likeThisConvention
+
+=head3 Private variables and functions
+
+Lua has very few privacy restrictions. Instance variables of objects, for example, can be
+easily accessed the outside of the objet code. Functions and variables starting with an 
+underscore denote privacy, they should not be used outside of the core code that uses it.
+
+ local _privateVariable
+ local function _doTheWork()
+
+In general, identifiers starting with an underscore should be declared C<local>.
+
+=head3 Threads
+
+Jive uses a separate thread for networking I/O. Functions and variables with are designed
+to be called from code running in the network thread use a prefix of t_. Mutual exclusion should
+be addressed when using or writing code identified as network thread side.
+
+ function t_getHeaders()
+
+
+
+
+
+

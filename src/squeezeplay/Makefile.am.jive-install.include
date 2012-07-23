@@ -1,0 +1,11 @@
+#Note: This include file is duplicated in squeezeplay/, squeezeplay_jive/, and squeezeplay_desktop/, so
+# if you are making changes to it consider making the changes in each of the locations.
+# The reason for the duplication (rather than a shared file) is that Poky checks out just subdirectory not the top level
+
+
+jive-static-install:
+	##Copy selectively, currently overwrites all, not just newer
+	mkdir -p $(JIVE_BUILD_DIR)
+	cd share; tar -pcf  - \
+		`find . \( -name "*.mp3" -o -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+	    | tar -C $(JIVE_BUILD_DIR) -pxf -

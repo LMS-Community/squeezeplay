@@ -1,0 +1,12 @@
+To build RPM use:
+
+tar cvzf SDL_gfx-2.0.15.tar.gz SDL_gfx-2.0.15
+
+cp SDL_gfx-2.0.15.tar.gz /usr/src/RPM/SOURCES/SDL_gfx-2.0.15.tar.gz
+or
+cp SDL_gfx-2.0.15.tar.gz /usr/src/redhat/SOURCES/SDL_gfx-2.0.15.tar.gz
+
+rpm -ba SDL_gfx-2.0.15/SDL_gfx.spec
+or
+rpmbuild -ba SDL_gfx-2.0.15/SDL_gfx.spec
+

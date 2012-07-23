@@ -1,0 +1,50 @@
+#
+# The two letter codes are defined by ISO 639-1
+# http://en.wikipedia.org/wiki/List_of_ISO_639_codes
+
+
+TEST_KEYPAD
+	CS	Klávesnice
+	DA	Tastatur
+	DE	Tastenfeld
+	EN	Keypad
+	ES	Teclado
+	FI	Näppäimistö
+	FR	Pavé numérique
+	IT	Tastierino numerico
+	NL	Toetsenblok
+	NO	Taster
+	PL	Klawiatura
+	RU	Клавиатура
+	SV	Knappsats
+
+TEST_KEYPAD_HELP
+	CS	K ukončení stiskněte všechny klávesy a pootočte kolečkem.
+	DA	Tryk på alle knapperne og drej på hjulet for at færdiggøre konfigurationen.
+	DE	Zum Abschluss alle Tasten und Rad betätigen.
+	EN	Press all keys and scroll the wheel to complete.
+	ES	Pulse todos los botones y gire la rueda para completar la operación.
+	FI	Suorita loppuun painamalla kaikkia näppäimiä ja vierittämällä kiekolla.
+	FR	Appuyez sur toutes les touches et faites défiler la molette pour terminer.
+	IT	Premere tutti i tasti e far scorrere la rotellina per completare.
+	NL	Druk op alle toetsen en scroll met het wiel om te voltooien.
+	NO	Trykk ned alle tastene og rull med hjulet for å fullføre.
+	PL	Naciśnij wszystkie przyciski i obróć pokrętło, aby zakończyć.
+	RU	Для завершения нажмите все кнопки и колесико прокрутки.
+	SV	Slutför genom att trycka på samtliga knappar och rulla på hjulet.
+
+TEST_COMPLETE
+	CS	Test ukončen
+	DA	Test fuldført
+	DE	Test abgeschlossen
+	EN	Test Complete
+	ES	Prueba completada
+	FI	Testi suoritettu
+	FR	Test terminé
+	IT	Test completato
+	NL	Test voltooid
+	NO	Testing fullført
+	PL	Test został ukończony
+	RU	Тесты завершены
+	SV	Test slutfört
+
