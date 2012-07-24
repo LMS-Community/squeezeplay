@@ -475,6 +475,7 @@ end
 
 
 function _connectToAddr(self, serverip)
+	self.reconnectTimer:stop()
 	Task("slimprotoConnect", self, connectTask):addTask(serverip)
 end
 
