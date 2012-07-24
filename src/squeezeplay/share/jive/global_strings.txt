@@ -20,6 +20,9 @@ SETTINGS
 INTERNET_RADIO
 	EN	Live Radio
 
+RADIO_TITLE
+	EN	Radio by TuneIn
+
 MY_MUSIC
 	CS	Hudba
 	DA	Musik

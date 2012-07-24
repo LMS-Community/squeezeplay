@@ -471,7 +471,7 @@ function JiveMain:jiveMainNodes(globalStrings)
 
 	jiveMain:addNode( { id = 'hidden', node = 'nowhere' } )
 	jiveMain:addNode( { id = 'extras', node = 'home', text = _globalStrings:str("EXTRAS"), weight = 50, hiddenWeight = 91  } )
-	jiveMain:addNode( { id = 'radios', iconStyle = 'hm_radio', node = 'home', text = _globalStrings:str("INTERNET_RADIO"), weight = 20  } )
+	jiveMain:addNode( { id = 'radios', iconStyle = 'hm_radio', node = 'home', text = _globalStrings:str("INTERNET_RADIO"), weight = 20, windowTitle = _globalStrings:str("RADIO_TITLE")  } )
 	jiveMain:addNode( { id = '_myMusic', iconStyle = 'hm_myMusic', node = 'hidden', text = _globalStrings:str("MY_MUSIC"), synthetic = true , hiddenWeight = 2  } )
 	jiveMain:addNode( { id = 'games', node = 'extras', text = _globalStrings:str("GAMES"), weight = 70  } )
 	jiveMain:addNode( { id = 'settings', iconStyle = 'hm_settings', node = 'home', noCustom = 1, text = _globalStrings:str("SETTINGS"), weight = 1005, })

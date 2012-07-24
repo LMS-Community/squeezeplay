@@ -482,7 +482,12 @@ function addNode(self, item)
 
 	if not item.callback then
 		item.callback = function ()
-			window:setTitle(item.text)
+			log:info("item windowTitle is: ", item.windowTitle)
+			if item.windowTitle then
+				window:setTitle(item.windowTitle)
+			else
+				window:setTitle(item.text)
+			end
 			window:show()
 		end
 	end
