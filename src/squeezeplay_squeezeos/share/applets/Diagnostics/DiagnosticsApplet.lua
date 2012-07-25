@@ -76,10 +76,13 @@ function init(self)
 	      "SN_PORT_3483",
 	      "SN_PORT_9000",
 	      "SN_REG",
+	}
+
+	self.uemlTests = {
 	      "SC_ADDRESS",
 	      "SC_NAME",
+	      "SC_VERSION",
 	      "SC_PING",
-	      "SC_PORT_3483",
 	      "SC_PORT_9000",
 	}
 
@@ -466,26 +469,20 @@ function doServerValues(self, menu)
 		end
 	end
 
-	local sc = SlimServer:getCurrentServer()
-
 	self:serverPing(sn, "SN_ADDRESS", "SN_PING", "SN_REG")
 	self:serverPort(sn, 3483, "SN_PORT_3483")
 	self:serverPort(sn, 9000, "SN_PORT_9000")
+end
 
-	if not sc or sc:isSqueezeNetwork() then
-		-- connected to SN
-		self:setValue("SC_NAME", self.notConnected)
-		self:setValue("SC_ADDRESS", self.notConnected)
-		self:setValue("SC_PING", self.notConnected)
-		self:setValue("SC_PORT_3483", self.notConnected)
-		self:setValue("SC_PORT_9000", self.notConnected, "9000") -- guess at 9000 here 
-	else
-		self:setValue("SC_NAME", sc:getName())
-		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
-		self:serverPort(sc, 3483, "SC_PORT_3483")
-		local ip, port = sc:getIpPort()
-		self:serverPort(sc, port, "SC_PORT_9000", port)
-	end
+
+function doUemlValues(self, menu, server)
+	self.menu = menu
+
+	self:setValue("SC_NAME", server:getName())
+	self:setValue("SC_VERSION", server:getVersion())
+	self:serverPing(server, "SC_ADDRESS", "SC_PING")
+	local ip, port = server:getIpPort()
+	self:serverPort(server, port, "SC_PORT_9000", port)
 end
 
 
@@ -635,6 +632,48 @@ function showServerDiagnosticsMenu(self)
 	self.labels = {}
 
 	for i,name in ipairs(self.serverTests) do
+		self.labels[name] = {
+			text = self:string(name, '-'),
+			style = 'item_info',
+		}
+		menu:addItem(self.labels[name])
+	end
+
+	for name, server in SlimServer:iterate() do
+		if server:isSqueezeNetwork() == false then
+			menu:addItem({
+				text = server:getName(),
+				sound = "WINDOWSHOW",
+				style = 'item',
+				callback = function ()
+					self:showUemlDiagnosticsMenu(server)
+				end
+			})
+		end
+	end
+
+	doServerValues(self, menu)
+	menu:addTimer(5000, function()
+		doServerValues(self, menu)
+	end)
+
+	window:addWidget(menu)
+
+	self:tieAndShowWindow(window)
+	return window
+end
+
+
+function showUemlDiagnosticsMenu(self, server)
+	local window = Window("text_list", self:string("MENU_SERVER"))
+	window:setAllowScreensaver(false)
+	window:setButtonAction("rbutton", nil)
+
+	local menu = SimpleMenu("menu")
+
+	self.labels = {}
+
+	for i,name in ipairs(self.uemlTests) do
 		local label
 		if name == 'SC_PORT_9000' then
 			label = self:string(name, '9000', '-')
@@ -649,9 +688,9 @@ function showServerDiagnosticsMenu(self)
 		menu:addItem(self.labels[name])
 	end
 
-	doServerValues(self, menu)
+	doUemlValues(self, menu, server)
 	menu:addTimer(5000, function()
-		doServerValues(self, menu)
+		doUemlValues(self, menu, server)
 	end)
 
 	window:addWidget(menu)

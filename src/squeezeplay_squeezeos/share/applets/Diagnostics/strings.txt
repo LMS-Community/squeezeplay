@@ -498,6 +498,9 @@ SC_NAME
 	RU	Имя медиатеки\n%s
 	SV	Bibliotekets namn\n%s
 
+SC_VERSION
+	EN	Version\n%s
+
 SC_PING
 	CS	Zvonění\n%s
 	DA	Ping\n%s
