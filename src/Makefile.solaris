@@ -272,7 +272,7 @@ clean_generated:
 clean:
 	-rm -rf generated
 	-cd freetype-2.1.10; make distclean
-	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
+	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
@@ -289,9 +289,9 @@ clean:
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd portaudio_v18_1; make -f Makefile.solaris clean
 	-cd Tremor; make distclean
-	-cd flac-1.2.1; make distclean
+	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	-cd luartmp-squeezeplay; rm *.so
-	-cd squeezeplay; make distclean
+	-cd squeezeplay; make distclean; rm src/version.h
 	-cd squeezeplay_desktop; make distclean
 	-cd $(BASE_DIR)build; rm -rf solaris
 	# -cd squeezeplay_private; make distclean
