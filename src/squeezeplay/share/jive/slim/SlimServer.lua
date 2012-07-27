@@ -1302,6 +1302,8 @@ function isMoreRecent(self, new, old)
 	for i,v in ipairs(newVer) do
 		if oldVer[i] and tonumber(v) > tonumber(oldVer[i]) then
 			return true
+		elseif oldVer[i] and tonumber(v) < tonumber(oldVer[i]) then
+			return false
 		end
 	end
 
