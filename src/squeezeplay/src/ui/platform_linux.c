@@ -4,7 +4,7 @@
 ** This file is licensed under BSD. Please see the LICENSE file for details.
 */
 
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(sun)
 
 #include "common.h"
 #include "version.h"

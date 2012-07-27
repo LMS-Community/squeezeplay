@@ -31,7 +31,7 @@ INSTALL_DATA= $(CP)
 # Utilities.
 CP= cp
 FIND= find
-INSTALL= install
+INSTALL= ginstall
 MKDIR= mkdir
 #RANLIB= ranlib
 

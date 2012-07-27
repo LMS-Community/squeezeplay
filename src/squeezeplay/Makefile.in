@@ -83,7 +83,7 @@ libnet_la_OBJECTS = $(am_libnet_la_OBJECTS)
 libui_la_DEPENDENCIES =
 am_libui_la_OBJECTS = jive_event.lo jive_font.lo jive_framework.lo \
 	jive_group.lo jive_icon.lo jive_label.lo jive_menu.lo \
-	platform_osx.lo platform_linux.lo jive_slider.lo jive_style.lo \
+	platform_osx.lo platform_linux.lo platform_solaris.lo jive_slider.lo jive_style.lo \
 	jive_surface.lo system.lo jive_textarea.lo jive_textinput.lo \
 	jive_utils.lo jive_widget.lo jive_window.lo \
 	lua_jiveui.lo
@@ -300,6 +300,7 @@ libui_la_SOURCES = \
 	src/ui/jive_menu.c \
 	src/ui/platform_osx.c \
 	src/ui/platform_linux.c \
+	src/ui/platform_solaris.c \
 	src/ui/jive_slider.c \
 	src/ui/jive_style.c \
 	src/ui/jive_surface.c \
@@ -547,6 +548,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mp4.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mqueue.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_linux.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_solaris.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform_osx.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/streambuf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system.Plo@am__quote@
@@ -790,6 +792,13 @@ platform_linux.lo: src/ui/platform_linux.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/platform_linux.c' object='platform_linux.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o platform_linux.lo `test -f 'src/ui/platform_linux.c' || echo '$(srcdir)/'`src/ui/platform_linux.c
+
+platform_solaris.lo: src/ui/platform_solaris.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT platform_solaris.lo -MD -MP -MF "$(DEPDIR)/platform_solaris.Tpo" -c -o platform_solaris.lo `test -f 'src/ui/platform_solaris.c' || echo '$(srcdir)/'`src/ui/platform_solaris.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/platform_solaris.Tpo" "$(DEPDIR)/platform_solaris.Plo"; else rm -f "$(DEPDIR)/platform_solaris.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/ui/platform_solaris.c' object='platform_solaris.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o platform_solaris.lo `test -f 'src/ui/platform_solaris.c' || echo '$(srcdir)/'`src/ui/platform_solaris.c
 
 jive_slider.lo: src/ui/jive_slider.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT jive_slider.lo -MD -MP -MF "$(DEPDIR)/jive_slider.Tpo" -c -o jive_slider.lo `test -f 'src/ui/jive_slider.c' || echo '$(srcdir)/'`src/ui/jive_slider.c; \

@@ -1,4 +1,4 @@
-AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
+AM_CFLAGS = -D_GNU_SOURCE
 
 lib_LTLIBRARIES = json.la
 

@@ -14,7 +14,7 @@
 #include "SDL_gfxPrimitives.h"
 #include "SDL_gfxPrimitives_font.h"
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(sun)
 // FIXME need portable lrint
 #define lrint(a) ((int)(a))
 #endif

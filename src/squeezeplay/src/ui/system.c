@@ -355,8 +355,11 @@ static int system_atomic_write(lua_State *L)
 	if (!(dp = opendir(dirname(tname)))) {
 		return luaL_error(L, "opendir: %s", strerror(errno));
 	}
-	
+#ifdef sun
+	if (fsync(dp->dd_fd) != 0) {
+#else	
 	if (fsync(dirfd(dp)) != 0) {
+#endif
 		closedir(dp);
 		return luaL_error(L, "fsync: %s", strerror(errno));
 	}

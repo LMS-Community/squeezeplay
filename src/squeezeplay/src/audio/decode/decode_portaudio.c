@@ -17,6 +17,47 @@
 
 #include "portaudio.h"
 
+typedef int PaDeviceIndex;
+typedef double PaTime;
+
+typedef struct PaStreamParameters
+{
+    /** A valid device index in the range 0 to (Pa_GetDeviceCount()-1)
+     specifying the device to be used or the special constant
+     paUseHostApiSpecificDeviceSpecification which indicates that the actual
+     device(s) to use are specified in hostApiSpecificStreamInfo.
+     This field must not be set to paNoDevice.
+    */
+    PaDeviceIndex device;
+    
+    /** The number of channels of sound to be delivered to the
+     stream callback or accessed by Pa_ReadStream() or Pa_WriteStream().
+     It can range from 1 to the value of maxInputChannels in the
+     PaDeviceInfo record for the device specified by the device parameter.
+    */
+    int channelCount;
+
+    /** The sample format of the buffer provided to the stream callback,
+     a_ReadStream() or Pa_WriteStream(). It may be any of the formats described
+     by the PaSampleFormat enumeration.
+    */
+    PaSampleFormat sampleFormat;
+
+    /** The desired latency in seconds. Where practical, implementations should
+     configure their latency based on these parameters, otherwise they may
+     choose the closest viable latency instead. Unless the suggested latency
+     is greater than the absolute upper limit for the device implementations
+     should round the suggestedLatency up to the next practical value - ie to
+     provide an equal or higher latency than suggestedLatency wherever possible.
+     Actual latency values for an open stream may be retrieved using the
+     inputLatency and outputLatency fields of the PaStreamInfo structure
+     returned by Pa_GetStreamInfo().
+     @see default*Latency in PaDeviceInfo, *Latency in PaStreamInfo
+    */
+    PaTime suggestedLatency;
+
+} PaStreamParameters;
+
 /* Portaudio stream */
 static PaStreamParameters outputParam;
 static PaStream *stream;
@@ -26,6 +67,11 @@ static u32_t stream_sample_rate;
 
 static void decode_portaudio_openstream(void);
 
+static int paContinue=0; /* < Signal that the stream should continue invoking the callback and processing audio. */
+static int paComplete=0; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
+
+static unsigned long paFramesPerBuffer = 0L; 
+static unsigned long paNumberOfBuffers = 3L;
 
 /*
  * This function is called by portaudio when the stream is active to request
@@ -34,8 +80,8 @@ static void decode_portaudio_openstream(void);
 static int callback(const void *inputBuffer,
 		    void *outputBuffer,
 		    unsigned long framesPerBuffer,
-		    const PaStreamCallbackTimeInfo *timeInfo,
-		    PaStreamCallbackFlags statusFlags,
+		    PaTimestamp outTime,
+		    /* const PaStreamCallbackTimeInfo *timeInfo, */
 		    void *userData) {
 	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
 	int add_silence_ms;
@@ -43,10 +89,6 @@ static int callback(const void *inputBuffer,
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 	u32_t delay;
 	int ret = paContinue;
-
-	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
-		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
-	}
 
 	// XXXX full port from ip3k
 
@@ -82,7 +124,9 @@ static int callback(const void *inputBuffer,
 
 	/* sync accurate playpoint */
 	decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
-	delay = (timeInfo->outputBufferDacTime - Pa_GetStreamTime(stream)) * decode_audio->track_sample_rate;
+
+	delay = 0;
+	/* delay = (timeInfo->outputBufferDacTime - Pa_GetStreamTime(stream)) * decode_audio->track_sample_rate; */
 
 	if (decode_audio->sync_elapsed_samples > delay) {
 		decode_audio->sync_elapsed_samples -= delay;
@@ -325,28 +369,36 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
+	paFramesPerBuffer = (unsigned long) (set_sample_rate/6.0);
+
 	if ((err = Pa_OpenStream(
 			&stream,
+			paNoDevice,
+			0,
+			0,
 			NULL,
-			&outputParam,
+			outputParam.device,
+			outputParam.channelCount,
+			outputParam.sampleFormat,
+			NULL,
 			set_sample_rate,
-			paFramesPerBufferUnspecified,
-			paPrimeOutputBuffersUsingStreamCallback,
+			paFramesPerBuffer,
+			paNumberOfBuffers,
+			paNoFlag,
 			callback,
 			NULL)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
 
 	stream_sample_rate = set_sample_rate;
-
+#if 0
 	/* playout to the end of this stream before changing the sample rate */
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
-
 	LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
 	LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
-
+#endif
 	if ((err = Pa_StartStream(stream)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 		return;
@@ -358,28 +410,30 @@ static int decode_portaudio_init(lua_State *L) {
 	PaError err;
 	int num_devices, i;
 	const PaDeviceInfo *device_info;
-	const PaHostApiInfo *host_info;
+	/* const PaHostApiInfo *host_info; */
 	void *buf;
+
+	LOG_DEBUG(log_audio_output, "Portaudio version v18.1");
 
 	if ((err = Pa_Initialize()) != paNoError) {
 		goto err0;
 	}
 
-	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
-
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
 
-	num_devices = Pa_GetDeviceCount();
+	/* num_devices = Pa_GetDeviceCount(); */
+	num_devices = Pa_CountDevices();
 	for (i = 0; i < num_devices; i++) {
 		device_info = Pa_GetDeviceInfo(i);
-		host_info = Pa_GetHostApiInfo(device_info->hostApi);
+		/* host_info = Pa_GetHostApiInfo(device_info->hostApi); */
 
-		LOG_DEBUG(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name);
+		/* LOG_DEBUG(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name); */
+		LOG_DEBUG(log_audio_output, "%d: %s", i, device_info->name);
 
 		outputParam.device = i;
-
+#if 0
 		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
 		if (err == paFormatIsSupported) {
 			LOG_DEBUG(log_audio_output, "\tsupported");
@@ -388,6 +442,7 @@ static int decode_portaudio_init(lua_State *L) {
 		else {
 			LOG_DEBUG(log_audio_output, "\tnot supported");
 		}
+#endif	
 	}
 
 	if (i >= num_devices) {
@@ -396,7 +451,7 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	/* high latency for robust playback */
-	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
+	/* outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency; */
 
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
@@ -405,7 +460,7 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	decode_init_buffers(buf, false);
-	decode_audio->max_rate = 48000;
+	decode_audio->max_rate = 96000;
 
 	/* open stream */
 	decode_audio_lock();

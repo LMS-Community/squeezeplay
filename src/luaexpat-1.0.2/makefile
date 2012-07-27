@@ -9,7 +9,7 @@ include $(CONFIG)
 lib: src/$(LIBNAME)
 
 src/$(LIBNAME) : src/lxplib.o
-	export MACOSX_DEPLOYMENT_TARGET="10.3"; $(CC) -o src/$(LIBNAME) $(LIB_OPTION) src/lxplib.o -lexpat
+	$(CC) -o src/$(LIBNAME) $(LIB_OPTION) src/lxplib.o -lexpat
 
 #$(COMPAT_DIR)/compat-5.1.o: $(COMPAT_DIR)/compat-5.1.c
 #	$(CC) -c $(CFLAGS) -o $@ $(COMPAT_DIR)/compat-5.1.c
@@ -17,7 +17,7 @@ src/$(LIBNAME) : src/lxplib.o
 install:
 	mkdir -p $(LUA_LIBDIR)
 	cp src/$(LIBNAME) $(LUA_LIBDIR)
-	cd $(LUA_LIBDIR); ln -f -s $(LIBNAME) $T.so
+	cd $(LUA_LIBDIR); rm $T.so; ln -s $(LIBNAME) $T.so
 	mkdir -p $(LUA_DIR)/$T
 	cp src/$T/lom.lua $(LUA_DIR)/$T
 

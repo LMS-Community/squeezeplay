@@ -94,16 +94,16 @@ ansi:
 	$(MAKE) all MYCFLAGS=-DLUA_ANSI
 
 bsd:
-	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E"
+	$(MAKE) all MYCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS=""
 
 generic:
 	$(MAKE) all MYCFLAGS=
 
 linux:
-	$(MAKE) all MYCFLAGS="-O2 -Wall -fpic -DLUA_USE_LINUX" MYLIBS="-Wl,-E -ldl -lreadline -lhistory -lncurses" OSXPREFIX="pwd"
+	$(MAKE) all MYCFLAGS="-O2 -Wall -fpic -DLUA_USE_LINUX" MYLIBS="-ldl -lreadline -lhistory -lcurses" OSXPREFIX="pwd"
 
 squeezeos:
-	$(MAKE) all MYCFLAGS="-Os -Wall -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-Wl,-E -ldl" OSXPREFIX="pwd"
+	$(MAKE) all MYCFLAGS="-Os -Wall -fpic -DLUA_USE_POSIX -DLUA_USE_DLOPEN" MYLIBS="-ldl" OSXPREFIX="pwd"
 
 macosx:
 	$(MAKE) all MYCFLAGS=-DLUA_USE_MACOSX

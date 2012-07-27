@@ -14,12 +14,12 @@ OBJS= src/$T.o
 lib: src/$(LIBNAME)
 
 src/$(LIBNAME): $(OBJS)
-	export MACOSX_DEPLOYMENT_TARGET="10.3"; $(CC) $(CFLAGS) $(LIB_OPTION) -o src/$(LIBNAME) $(OBJS)
+	$(CC) $(CFLAGS) $(LIB_OPTION) -o src/$(LIBNAME) $(OBJS)
 
 install: src/$(LIBNAME)
 	mkdir -p $(LUA_LIBDIR)
 	cp src/$(LIBNAME) $(LUA_LIBDIR)
-	cd $(LUA_LIBDIR); ln -f -s $(LIBNAME) $T.so
+	cd $(LUA_LIBDIR); rm $T.so; ln -s $(LIBNAME) $T.so
 
 clean:
 	rm -f src/$(LIBNAME) $(OBJS)

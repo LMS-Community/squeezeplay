@@ -1,13 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 ##
 ## This script is a basic startup script for the SqueezePlay binary (jive) that requires a few environment variables be set.
 ##
 
 ## Change these if you changed your install path
-INSTALL_DIR=/opt/squeezeplay/
+INSTALL_DIR=/opt/squeezeplay
 LIB_DIR=$INSTALL_DIR/lib
-INC_DIR=$INSTALL_DIR/inc
+INC_DIR=$INSTALL_DIR/include
 
 ## Start up
 export LD_LIBRARY_PATH=$LIB_DIR:$LD_LIBRARY_PATH

@@ -123,7 +123,7 @@ const char * system_get_version(void);
 const char * system_get_uuid_char(void);
 
 /* time */
-#if HAVE_CLOCK_GETTIME
+#if HAVE_CLOCK_GETTIME && !defined(sun)
 static inline u32_t jive_jiffies(void)
 {
 	struct timespec now;
