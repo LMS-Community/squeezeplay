@@ -97,11 +97,11 @@ end
 
 Clock  = oo.class()
 
-function Clock:notify_playerAlarmState(player, alarmSet)
-	if not player:isLocal() then
+function Clock:notify_playerAlarmStateClock(alarmState)
+	if self.alarmSet == alarmState then
 		return
 	end
-	self.alarmSet = player:getAlarmState()
+	self.alarmSet = alarmState
 	log:debug('Setting self.alarmSet to ', self.alarmSet)
 
 	self:Draw()

@@ -336,7 +336,7 @@ function __init(self, jnt, playerId)
 		browseHistory = {},
 
 		-- alarm state
-		alarmState = 'none'
+		alarmState = nil
 	})
 
 	playerIds[obj.id] = obj
