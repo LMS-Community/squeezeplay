@@ -174,11 +174,28 @@ function _connectionType(self)
 	if self.ethIface then
 		Task("halfDuplexBugVerification", self,
 			function()
+				local pingOK = false
 				local status = self.ethIface:t_wpaStatus()
-				if status.link then
+				if status.link and status.ip_dns then
+					local window = Popup("waiting_popup")
+					window:setAllowScreensaver(false)
+
+					window:addWidget(Icon("icon_connecting"))
+					window:addWidget(Label("text", self:string("NETWORK_ETHERNET_CHECK")))
+					self:tieAndShowWindow(window)
+
+					-- First ping dns server to prevent long
+					--  delays while trying to resolve mysb.com
+					if self.ethIface:pingServer(status.ip_dns) then
+						-- Then ping mysb.com
+						pingOK = self.ethIface:pingServer(jnt:getSNHostname())
+					end
+				end
+
+				if pingOK then
 					return _halfDuplexBugVerification(self, self.ethIface)
 				else
-					-- Ethernet available but no link - do a wireless scan
+					-- Ethernet available but no link or ping failed - do a wireless scan
 					return _networkScan(self, self.wlanIface)
 				end
 			end
