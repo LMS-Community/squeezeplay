@@ -425,26 +425,6 @@ function soundFallbackAlarm(self)
 	self.localPlayer:setAlarmState("active_fallback")
 	self.localPlayer:playFileInLoop(self.alarmTone)
 	self.localPlayer:volumeLocal(self.alarmVolume)
-
-	local alarmTimeoutSeconds = self.localPlayer:getAlarmTimeoutSeconds() or ( 60 * 60 ) -- defaults to 1 hour
-	if alarmTimeoutSeconds ~= 0 then
-		local alarmTimeoutMsecs = alarmTimeoutSeconds * 1000
-		log:info("*** Alarm: Fallback alarm will timeout in ", alarmTimeoutSeconds, " seconds")
-		self.fallbackAlarmTimeout = Timer(alarmTimeoutMsecs,
-				function ()
-					if self.alarmInProgress then
-						log:warn("*** Alarm: RTC alarm has timed out")
-						self:_alarmOff()
-					end
-				end,
-				true
-		)
-		if self.fallbackAlarmTimeout:isRunning() then
-			self.fallbackAlarmTimeout:restart()
-		else
-			self.fallbackAlarmTimeout:start()
-		end
-	end
 end
 
 
@@ -642,6 +622,26 @@ function openAlarmWindow(self)
 	self:_setWakeupTime('none')
 
 	self:_startDecodeStatePoller()
+
+	local alarmTimeoutSeconds = self.localPlayer:getAlarmTimeoutSeconds() or ( 60 * 60 ) -- defaults to 1 hour
+	if alarmTimeoutSeconds ~= 0 then
+		local alarmTimeoutMsecs = alarmTimeoutSeconds * 1000
+		log:info("*** Alarm: Fallback alarm will timeout in ", alarmTimeoutSeconds, " seconds")
+		self.fallbackAlarmTimeout = Timer(alarmTimeoutMsecs,
+				function ()
+					if self.alarmInProgress then
+						log:warn("*** Alarm: RTC alarm has timed out")
+						self:_alarmOff()
+					end
+				end,
+				true
+		)
+		if self.fallbackAlarmTimeout:isRunning() then
+			self.fallbackAlarmTimeout:restart()
+		else
+			self.fallbackAlarmTimeout:start()
+		end
+	end
 
 	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
 	-- Calling _alarmThroughSpeakers() here works for regular, fallback alarm and snooze
