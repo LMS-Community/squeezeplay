@@ -421,7 +421,7 @@ function _networkScanComplete(self, iface)
 	menu:addItem({
 -- fm+
 --		text = self:string("NETWORK_ENTER_ANOTHER_NETWORK"),
-		text = self:string("NETWORK_ENTER_SSID"),
+		text = "[" .. tostring(self:string("NETWORK_NETWORK_NAME")) .. "]",
 -- fm-
 		sound = "WINDOWSHOW",
 		callback = function()
@@ -430,7 +430,7 @@ function _networkScanComplete(self, iface)
 			_enterSSID(self, iface)
 -- fm-
 		end,
-		weight = 3
+		weight = 10
 	})
 
 -- fm+
@@ -549,11 +549,25 @@ function _scanResults(self, iface)
 
 			-- Update wireless signal quality
 			item.arrow:setStyle("wirelessLevel" .. (entry.quality or 0))
+
+-- fm+
+			item.weight = 4 - (entry.quality or 0)
+			item.text = ssid
+-- fm-
+
 			if self.scanMenu then
 				self.scanMenu:updatedItem(item)
 			end
 		end
 	end
+
+-- fm+
+	if self.scanMenu then
+		self.scanMenu:setComparator(SimpleMenu.itemComparatorWeightAlpha)
+	end
+-- fm-
+
+
 end
 
 -- fm+
