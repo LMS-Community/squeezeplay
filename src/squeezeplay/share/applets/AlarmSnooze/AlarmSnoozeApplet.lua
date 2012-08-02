@@ -432,7 +432,6 @@ function soundFallbackAlarm(self)
 	self.localPlayer:stop(true)
 	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
 	-- We need to set a valid alarm state for the fallback case
-	self:_changeAlarmState("active")
 	self.localPlayer:playFileInLoop(self.alarmTone)
 	self.localPlayer:volumeLocal(self.alarmVolume)
 end
@@ -913,10 +912,10 @@ function _changeAlarmState(self, action)
 			changedState = 'active'
 		elseif action == 'cancel' then
 			-- Transition 12
-			changedState = 'active'
+			changedState = 'snooze'
 		elseif action == 'set' then
 			-- Transition 13
-			changedState = 'active'
+			changedState = 'snooze'
 		end
 	end
 	log:info("alarmState changed to: ", changedState)
