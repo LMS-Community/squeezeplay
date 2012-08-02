@@ -372,17 +372,10 @@ function  _addNode(self, node, isCurrentServer)
 	end
 end
 --add item to home menu only if this is for the current server or it doesn't exist. Only current server responses may replace existing items.
-function  _addItem(self, item, isCurrentServer, addToHome)
+function  _addItem(self, item, isCurrentServer)
 	if isCurrentServer or not _playerMenus[item.id] then
 		 _playerMenus[item.id] = item
 		 jiveMain:addItem(item)
-		if addToHome then
-			local customHomeItem = _uses(item, {
-				id = 'hm_' .. item.id,
-				node = 'home',
-			})
-			jiveMain:addItem(customHomeItem)
-		end
 	else
 		log:debug("item already present: ", item.id)
 	end
@@ -456,19 +449,6 @@ function _getAppType(request)
 end
 
 
-function _addMyAppsNode(self)
-	local version = _player and _player:getSlimServer() and _player:getSlimServer():getVersion()
-	local myApps = { id = 'myApps', iconStyle = 'hm_myApps', node = 'hidden', text = self:string('MENUS_MY_APPS'), weight = 30  }
-	jiveMain:addNode( myApps )
-	_playerMenus['myApps'] = myApps
-
-	-- remove the old style My Apps item, if it exists
-	jiveMain:removeItemById('opmlmyapps')
-	self.myAppsNode = true
-	return
-end
-
-
 -- _menuSink
 -- returns a sink with a closure to self
 -- cmd is passed in so we know what process function to call
@@ -517,7 +497,6 @@ local function _menuSink(self, isCurrentServer, server)
 
 		for k, v in pairs(menuItems) do
 
-			local addAppToHome = false
 			local item = {
 					id = v.id,
 					node = v.node,
@@ -532,14 +511,11 @@ local function _menuSink(self, isCurrentServer, server)
 					screensavers = v.screensavers
 			}
 
+			-- TODO: remove when server sends correct sorting order
 			if item.isApp == 1 then
-				if not self.myAppsNode then
-					self:_addMyAppsNode()
-				end
-				if item.node == 'home' then
-					addAppToHome = true
-				end
-				item.node = 'myApps'
+				-- sorting of apps (Music Services) is sent incorrect by the server
+				--  set all weights to the same and let the menu do the alpha sorting
+				item.weight = 25
 			end
 
 			local itemIcon
@@ -617,8 +593,8 @@ local function _menuSink(self, isCurrentServer, server)
 
 			if not item.id then
 				log:info("no id for menu item: ", item.text)
-			elseif item.id == 'opmlmyapps' and self.myAppsNode then
-				--ignore, if self.myAppsNode is set that means we're delivering My Apps via a node and opml home menu items
+			elseif item.id == 'opmlmyapps' then
+				--ignore, not shown anymore
 			elseif item.id == 'opmlappgallery' then
 				--If opmlappgallery is present replace with hint
 				local itemMusicServices = {
@@ -632,7 +608,7 @@ local function _menuSink(self, isCurrentServer, server)
 						self:_menuMusicServices(menuItem)
 					end
 				}
-				self:_addItem(itemMusicServices, isCurrentServer, addAppToHome)
+				self:_addItem(itemMusicServices, isCurrentServer)
 			elseif item.id == "playerpower" and System:hasSoftPower() and System:getMachine() ~= 'squeezeplay' then
 				--ignore, playerpower no longer shown to users since we use power button, unless this is a device without a power button
 			elseif item.id == "settingsPIN" then
@@ -688,7 +664,7 @@ local function _menuSink(self, isCurrentServer, server)
 				item.removeOnServerChange = true
 
 				--add the item to the menu
-				self:_addItem(item, isCurrentServer, addAppToHome)
+				self:_addItem(item, isCurrentServer)
 
 			else
 				local actionInternal = function (noLocking)
@@ -822,7 +798,7 @@ local function _menuSink(self, isCurrentServer, server)
 					end
 				end
 
-				self:_addItem(item, isCurrentServer, addAppToHome)
+				self:_addItem(item, isCurrentServer)
 			end
 		end
 
@@ -1196,9 +1172,6 @@ function notify_playerCurrent(self, player)
 				log:debug("player and server didn't change , not changing menus: ", player)
 				return
 			else
-				-- Bug 17172
-				self.myAppsNode = false
-
 				-- server changed, ergo playerMenus may also be different. Remove the existing ones
 				for id, v in pairs(_playerMenus) do
 					jiveMain:removeItem(v)
@@ -1437,9 +1410,6 @@ function free(self)
 
 	-- remove player menus
 	jiveMain:setTitle(nil)
-
-	-- Bug 17172
-	self.myAppsNode = false
 
 	for id, v in pairs(_playerMenus) do
 		jiveMain:removeItem(v)
