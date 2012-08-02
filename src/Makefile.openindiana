@@ -1,0 +1,343 @@
+################################################################################
+# Squeezeplay makefile for OpenIndiana
+# Copyright 2007 Logitech
+# Copyright 2012 Duane Paddock
+################################################################################
+
+#
+# Absolute path to top of SQUEEZEPLAY directories
+#
+# These steps are required for a successful build
+#
+# cd /usr/bin; sudo ln -s ginstall install
+# svn checkout https://subversion.assembla.com/svn/portaudio/portaudio/trunk portaudio_v19
+# cd portaudio_v19
+# Apply this patch to portaudio configure.
+#
+#Index: configure
+#===================================================================
+#--- configure	(revision 1857)
+#+++ configure	(working copy)
+#@@ -16109,8 +16109,8 @@
+#         ## support sun cc compiler flags
+#         case "${host_os}" in
+#            solaris*)
+#-              SHARED_FLAGS="-G"
+#-              THREAD_CFLAGS="-mt"
+#+              SHARED_FLAGS=""
+#+              THREAD_CFLAGS=""
+#               ;;
+#            *)
+#               SHARED_FLAGS="-fPIC"
+#
+
+SRC_DIR = $(realpath ${PWD})
+BASE_DIR = $(dir ${SRC_DIR})
+
+export BUILD_TOP=$(BASE_DIR)build/openindiana
+
+DESTDIR=${BUILD_TOP}
+export PREFIX=${DESTDIR}
+
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
+export LDFLAGS=-s -L${PREFIX}/lib -R${PREFIX}/lib -L/usr/sfw/lib -R/usr/sfw/lib -lsocket -lresolv -lrt
+
+export TOOLPATH = $(shell dirname `which gcc`)
+
+export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
+
+ENABLE_PROFILING=--disable-shared
+USE_MMX=--disable-mmx
+
+# Override to yes to build closed source squeezeplay libraries 
+SPPRIVATE=no
+
+ifeq ($(SPPRIVATE),yes)
+	ENABLE_SPPRIVATE=--with-spprivate
+	SPPRIVATE_TARGETS=axtls squeezeplay_private
+endif
+
+
+#
+# Top level targets
+#
+.PHONY: all
+all: sdl-all lua-all app
+
+
+
+#####
+# SDL
+#####
+
+.PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
+sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+
+generated:
+	mkdir -p generated
+
+# freetype
+freetype-2.1.10/config.mk:
+	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+
+freetype: freetype-2.1.10/config.mk
+	cd freetype-2.1.10; make; make install
+
+# png also add clean
+libpng-1.2.32/Makefile:
+	cd libpng-1.2.32; ./configure --enable-static=no --prefix=${PREFIX}
+
+libpng: libpng-1.2.32/Makefile
+	cd libpng-1.2.32; make && make install
+
+# jpeg
+jpeg-6b/Makefile:
+	-mkdir -p ${BUILD_TOP}/man/man1
+	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
+        
+
+# sdl
+SDL-1.2.13/Makefile:
+	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX}
+
+sdl: SDL-1.2.13/Makefile
+	cd SDL-1.2.13; make && make install
+
+# sdl_image (requires jpeg tiff png)
+SDL_image-1.2.5/Makefile:
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif ${ENABLE_PROFILING} --prefix=${PREFIX} ${LIBPNG} ${LIBJPEG}
+
+sdl-image: SDL_image-1.2.5/Makefile
+	cd SDL_image-1.2.5; make && make install
+
+# sdl_ttf
+SDL_ttf-2.0.8/Makefile:
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
+
+sdl-ttf: SDL_ttf-2.0.8/Makefile
+	cd SDL_ttf-2.0.8; make && make install
+
+# sdl_gfx
+SDL_gfx-2.0.15/Makefile:
+	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
+
+sdl-gfx: SDL_gfx-2.0.15/Makefile
+	cd SDL_gfx-2.0.15; make && make install
+
+
+#####
+# lua
+#####
+
+.PHONY: lua-all lua luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+
+lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+
+# lua (requires readline ncurses)
+lua:
+	cd lua-5.1.1; make solaris INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
+
+# luasocket (requires lua)
+luasocket: lua
+	cd luasocket-2.0.2; make install LD="gcc -shared" INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
+
+slnunicode: lua
+	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
+
+luajson/Makefile:
+	cd luajson; ./configure --prefix=${PREFIX}
+
+luajson: luajson/Makefile
+	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+
+luazipfilter/Makefile:
+	cd luazipfilter; ./configure --prefix=${PREFIX}
+
+luazipfilter: luazipfilter/Makefile
+	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
+
+luamd5:
+	cd luamd5; make LUA=${PREFIX} MYNAME=sha1
+	cd luamd5; make LUA=${PREFIX} MYNAME=md5
+	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
+	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
+
+loop:
+	-mkdir ${PREFIX}/share/lua/5.1/loop
+	-mkdir ${PREFIX}/share/lua/5.1/loop/collection
+	-mkdir ${PREFIX}/share/lua/5.1/loop/debug
+	cd loop-2.2-alpha; install loop/base.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/simple.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/table.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
+	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
+
+luaexpat: lua
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
+
+luafilesystem:
+	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
+
+luaprofiler:
+	cd luaprofiler-2.0.2 && make -f Makefile.solaris install PREFIX=${PREFIX} PLATFORM=linux
+
+# just compile the library for to tolua++
+.PHONY: tolua++
+tolua++: lua
+	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
+	mkdir -p ${PREFIX}/lib
+	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
+	ranlib ${PREFIX}/lib/libtolua++.a
+
+#
+# squeezeplay
+#
+
+.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+
+# portaudio
+portaudio_v19/Makefile:
+	cd portaudio_v19; ./configure CC= --prefix=${PREFIX} --enable-shared=no
+
+portaudio: portaudio_v19/Makefile
+	cd portaudio_v19; make && make install
+
+# flac
+flac-1.2.1/Makefile:
+	cd flac-1.2.1; ./configure --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
+
+flac: flac-1.2.1/Makefile
+	cd flac-1.2.1; make && make install
+
+#libmad
+LIBMAD_DIR=libmad-0.15.1b
+generated/${LIBMAD_DIR}/Makefile.am:
+	mkdir -p generated; cd generated; wget ftp://ftp.mars.org/pub/mpeg/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
+
+		
+generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
+	cd generated/${LIBMAD_DIR}; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING} --enable-fpm=64bit
+
+libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
+	cd generated/${LIBMAD_DIR}; make && make install
+
+
+# ogg
+Tremor/Makefile:
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
+
+tremor: Tremor/Makefile
+	cd Tremor; make && make install
+
+
+# axTLS
+AXTLS_DIR = generated/axTLS
+AXTLS_TAR = axTLS-1.2.0.tar.gz
+${AXTLS_DIR}/Makefile: generated
+	cd generated; tar xvf ../${AXTLS_TAR}
+	cp axTLS.config ${AXTLS_DIR}/config/.config
+	echo "PREFIX=\"${PREFIX}\"" >> ${AXTLS_DIR}/config/.config
+
+axtls: ${AXTLS_DIR}/Makefile
+	cd ${AXTLS_DIR}; make oldconfig && make && make install
+
+rtmp: squeezeplay
+	cd luartmp-squeezeplay; make
+	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
+
+
+# squeezeplay
+squeezeplay/Makefile:
+	cd squeezeplay; LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --prefix=${PREFIX}
+
+squeezeplay: squeezeplay/Makefile
+	cd squeezeplay; make && make install
+
+squeezeplay_desktop/Makefile:
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+
+squeezeplay_desktop: squeezeplay_desktop/Makefile
+	cd squeezeplay_desktop; make install
+	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
+	chmod +x ${PREFIX}/bin/squeezeplay.sh
+	# cp /usr/lib/libgcc_s.so.1 ${PREFIX}/lib/
+	# cd ${PREFIX}/lib ; ln -s libgcc_s.so.1 libgcc_s.so
+
+squeezeplay_contrib: squeezeplay/Makefile
+	cd squeezeplay_contrib; make PREFIX=${PREFIX}
+
+squeezeplay_private/Makefile:
+	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX} --enable-wma --enable-aac
+
+squeezeplay_private: squeezeplay_private/Makefile
+	cd squeezeplay_private; make PREFIX=${PREFIX} install
+
+# freefont
+freefont:
+	mkdir -p ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+
+# 
+# This builds the .tarball. It's called by 'all' so no need to run it manually
+# 
+squeezeplay-tgz: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-tgz
+
+#
+# Allow user to call the -deb build and it runs both the 'all' and then packages it
+#
+
+.PHONY: squeezeplay-deb
+squeezeplay-deb: all squeezeplay-deb-make
+
+squeezeplay-deb-make: squeezeplay/Makefile
+	cd squeezeplay; make squeezeplay-deb
+
+.PHONY: clean_generated
+clean_generated:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated
+
+
+#
+# clean
+#
+
+.PHONY: clean
+clean:
+	-rm -rf generated
+	-cd freetype-2.1.10; make distclean
+	-cd libpng-1.2.32; make distclean
+	-cd jpeg-6b; make distclean
+	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h sdl.pc;
+	-cd SDL_image-1.2.5; make distclean
+	-cd SDL_ttf-2.0.8; make distclean
+	-cd SDL_gfx-2.0.15; make distclean
+	-cd lua-5.1.1; make clean
+	-cd luasocket-2.0.2; make clean PLATFORM=linux
+	-cd slnunicode-1.1; make clean PLATFORM=linux
+	-cd luaexpat-1.0.2; make clean PLATFORM=linux
+	-cd luafilesystem-1.2; make clean PLATFORM=linux
+	-cd luajson; make distclean
+	-cd luazipfilter; make distclean
+	-cd luaprofiler-2.0.2; make -f Makefile.solaris clean
+	-cd luamd5; make MYNAME=sha1 clean
+	-cd luamd5; make MYNAME=md5 clean
+	-cd tolua++-1.0.92/src/lib; rm libtolua++.*; rm *.o
+	-cd portaudio_v19; make distclean
+	-cd Tremor; make distclean
+	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
+	-cd luartmp-squeezeplay; rm *.so
+	-cd squeezeplay; make distclean; rm src/version.h
+	-cd squeezeplay_desktop; make distclean
+	-cd $(BASE_DIR)build; rm -rf openindiana
+	# -cd squeezeplay_private; make distclean
+	-rm -rf generated

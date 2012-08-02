@@ -444,8 +444,8 @@ static int decode_thread_execute(void *unused) {
 				dbuf = (decode_full * 100) / (double)decode_size;
 				obuf = (output_full * 100) / (double)output_size;
 
-
-				printf("elapsed:%llu buffers: %0.1f%%/%0.1f%%\n", (long long unsigned int)elapsed, dbuf, obuf);
+				LOG_DEBUG(log_audio_decode, "elapsed:%llu buffers: %0.1f%%/%0.1f%%\n",
+					(long long unsigned int)elapsed, dbuf, obuf);
 			}
 		}
 
