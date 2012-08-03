@@ -3,12 +3,12 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 MENUS_MY_MUSIC
-	CS	Hudba
+	CS	Moje hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Omat musiikkitiedostot
+	FI	Oma musiikki
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -63,16 +63,16 @@ MENUS_OTHER_LIBRARY
 	SV	Byt bibliotek
 
 MENUS_ATTACH_CABLE_DETAILED
-	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a k dostupná.
+	CS	Nemůžeme nalézt kabelové připojení. Zkontrolujte prosím ethernetový kabel a ujistěte se, že je vaše síť v provozu a dostupná.
 	DA	Der blev ikke fundet en kabelforbindelse. Kontroller Ethernet-kablet, at netværket er i drift og at der kan etableres forbindelse til det.
 	DE	Es konnte keine verkabelte Verbindung erkannt werden. Prüfen Sie das Ethernet-Kabel und vergewissern Sie sich, dass das Netzwerk verfügbar und aktiviert ist.
 	EN	Wired connection not detected. Please check your Ethernet cable, and ensure your network is running and available.
 	ES	No se puede detectar una conexión con cable. Compruebe el cable Ethernet y asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista ethernet-kaapeli ja varmista, että verkko on käytössä ja että se on saatavilla.
 	FR	Nous ne détectons aucune connexion filaire. Veuillez vérifier votre câble Ethernet et contrôler que le réseau est disponible et opérationnel.
-	IT	Impossibile rilevare una connessione cablata. Verificare il cavo Ethernet e accertarsi che la rete sia in esecuzione e accessibile.
+	IT	Impossibile rilevare una connessione cablata. Controllare il cavo Ethernet e accertarsi che la rete sia attiva e accessibile.
 	NL	Er is geen bedrade aansluiting gedetecteerd. Controleer je ethernetdraad en zorg ervoor dat je netwerk actief en beschikbaar is.
-	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre
+	NO	Finner ikke en trådet tilkopling. Kontroller Ethernet-kabelen, og forsikre deg om at nettverket er oppe og tilgjengelig.
 	PL	Nie można wykryć połączenia przewodowego. Sprawdź, czy kabel Ethernet jest prawidłowo podłączony oraz czy sieć działa i jest dostępna.
 	RU	Не удалось обнаружить проводное подключение. Проверьте кабель Ethernet и убедитесь, что сеть работает нормально.
 	SV	Ingen kabelanslutning upptäcktes. Kontrollera Ethernet-kabeln och se till att nätverket är igång och tillgängligt.
@@ -85,8 +85,8 @@ MENUS_NO_WIRELESS_DETAILED
 	ES	No se puede detectar una conexión inalámbrica. Asegúrese de que la red funciona correctamente y está disponible.
 	FI	Langallista yhteyttä ei havaita. Tarkista, että verkko on käytössä ja että se on saatavilla.
 	FR	Aucune connexion sans fil n'a été détectée. Veuillez vérifier que votre réseau est disponible et opérationnel.
-	IT	Impossibile rilevare una connessione senza fili. Verificare che la rete sia in esecuzione e accessibile.
-	NL	Er kan geen bedrade aansluiting worden gedetecteerd. Controleer of je netwerk actief en beschikbaar is.
+	IT	Impossibile rilevare una connessione wireless. Verificare che la rete sia in esecuzione e accessibile.
+	NL	Er kan geen draadloze verbinding worden gedetecteerd. Controleer of je netwerk actief en beschikbaar is.
 	NO	Finner ikke en trådløs tilkopling. Kontroller at nettverket er oppe og tilgjengelig.
 	PL	Nie można wykryć połączenia bezprzewodowego. Sprawdź, czy sieć działa i jest dostępna.
 	RU	Не удается обнаружить беспроводное подключение. Убедитесь, что сеть работает и доступна.
@@ -153,12 +153,12 @@ MENUS_CONTINUE_WITHOUT_NETWORK
 	SV	Fortsätt utan nätverk
 
 SLIMBROWSER_UPDATING_FIRMWARE_SQUEEZEBOX
-	CS	Aktualizuji firmware Smart Radiou
+	CS	Aktualizuji firmware Smart Radio
 	DA	Opdaterer Smart Radio-firmwaren
 	DE	Smart Radio-Firmware wird aktualisiert
 	EN	Updating Smart Radio firmware
 	ES	Actualizando firmware de Smart Radio
-	FI	Smart Radioin laitteisto-ohjelmiston päivitys
+	FI	Smart Radion laiteohjelmiston päivitys
 	FR	Mise à jour du micrologiciel Smart Radio
 	IT	Aggiornamento firmware Smart Radio
 	NL	Smart Radio-firmware wordt bijgewerkt
@@ -183,46 +183,46 @@ SLIMBROWSER_PLAYER_UPDATE_REQUIRED
 	SV	Spelaruppdatering
 
 SLIMBROWSER_USER_UPDATE_FIRMWARE_SQUEEZEBOX
-	CS	Pro %s je připravena aktualizace softwaru. K jejímu spuštění stiskněte a přidržte tlačítko Brightness (jas) na  originálním dálkovém ovládání IR.
+	CS	Pro %s je připravena aktualizace softwaru. K jejímu spuštění stiskněte a přidržte tlačítko Brightness (jas) na originálním dálkovém ovládání IR.
 	DA	Softwareopdateringen til %s er klar. Hold lysstyrkeknappen (Brightness) på den originale fjernbetjening nede for at starte.
 	DE	Software-Update bereit für %s. Halten Sie die Helligkeitstaste auf der Original-Fernbedienung gedrückt.
 	EN	Software Update ready for %s. To begin, press and hold the Brightness button on your original IR remote.
 	ES	La actualización de software para %s está lista. Para iniciarla, mantenga pulsado el botón de brillo en el mando a distancia IR original.
-	FI	Ohjelmistopäivitys valmiina kohteelle %s. Aloita pitämällä alkuperäisen infrapunakaukosäätimen Brightness-painike pohjassa.
+	FI	Ohjelmistopäivitys on saatavilla kohteelle %s. Aloita pitämällä alkuperäisen infrapunakaukosäätimen Kirkkaus-painike pohjassa.
 	FR	Mise à jour du logiciel prête pour %s. Pour commencer, appuyez sur le bouton Brightness de votre télécommande infrarouge d'origine et maintenez-le enfoncé.
 	IT	Aggiornamento software pronto per %s. Per iniziare, tenere premuto il tasto BRIGHTNESS sul telecomando IR originale.
 	NL	Software-update gereed voor %s. Houd de helderheidsknop op je oorspronkelijke IR-afstandsbediening ingedrukt om te beginnen.
 	NO	Programvareoppdatering er klar for %s. Trykk og hold nede Brightness-knappen på den opprinnelige ir-fjernkontrollen for å starte.
 	PL	Aktualizacja oprogramowania jest dostępna dla urządzenia %s. Aby rozpocząć, naciśnij i przytrzymaj przycisk Brightness na oryginalnym pilocie zdalnego sterowania.
-	RU	Подготовлено обновление ПО для %s. Чтобы начать, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
+	RU	Готово обновление ПО для %s. Чтобы начать обновление, нажмите кнопку BRIGHTNESS на своем ИК-пульте.
 	SV	Det finns en programuppdatering för %s tillgänglig. Om du vill påbörja uppdateringen håller du knappen för ljusstyrka på originalfjärrkontrollen nedtryckt.
 
 INSTALL_SC_TEXT
 	CS	Pro aktivaci "Moje hudba" vyzkoušejte následující: \n\n- Stáhněte si software UE Music Library z adresy www.uesmartradio.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.\n\n- Vložte SD kartu do slotu SD.\n\n- Připojte úložné zařízení k portu USB.
-	DA	Hvis du vil aktivere Musik, kan du prøve følgende:\n\n- Hent UE Music Library-softwaren på www.uesmartradio.com, og sørg for at den er installeret og kører på en computer som er på netværket.\n\n- Sæt et SD-kort i SD-kortpladsen.\n\n- Slut en lagerenhed til USB-porten.
-	DE	Führen Sie zum Aktivieren von 'Eigene Musik' die folgenden Schritte aus:\n\n- Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.\n\n- Stecken Sie eine SD-Karte in das Fach ein.\n\n- Schließen Sie an der USB-Schnittstelle ein Speichergerät an.
+	DA	Hent UE Music Library-softwaren på www.uesmartradio.com, og sørg for at den er installeret og kører på en computer som er på netværket.
+	DE	Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter, um 'Eigene Musik' zu aktivieren.
 	EN	To enable "My Music", download the UE Music Library software from www.uesmartradio.com and make sure it is installed and running on a computer on your network.
-	ES	Para activar "Mi música", haga lo siguiente:\n\n- Descargue el software de UE Music Library desde www.uesmartradio.com e instálelo y ejecútelo en un ordenador de la red.\n\n- Inserte una tarjeta SD en la ranura SD.\n\n- Conecte un dispositivo de almacenamiento al puerto USB.
-	FI	Ota käyttöön Oma musiikki seuraavasti: \n\n- Lataa UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com. Tarkista, että ohjelmisto asennettu ja että se suoritetaan verkossa olevassa tietokoneessa.\n\n- Aseta SD-kortti SD-paikkaan.\n\n- Yhdistä tallennuslaite USB-porttiin.
+	ES	Para activar "Mi música", descargue el software UE Music Library desde www.uesmartradio.com, instálelo y ejecútelo en un ordenador de la red.
+	FI	Ota Oma musiikki käyttöön lataamalla UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com ja asenna se tietokoneeseen, josta on toimiva yhteys verkkoon.
 	FR	Pour activer «Ma musique», essayez de procéder comme suit:\n\n- Téléchargez le logiciel du UE Music Library à partir du site www.uesmartradio.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.\n\n- Insérez une carte SD dans la fente correspondante.\n\n- Connectez un dispositif de stockage au port USB.
-	IT	Per attivare Musica, provare quanto segue:\n\n- Scaricare il software di UE Music Library da www.uesmartradio.com e accertarsi che sia installato e in esecuzione su un computer della rete.\n\n- Inserire una scheda SD nell'apposito slot.\n\n- Connettere un dispositivo di memorizzazione a una porta USB.
-	NL	Doe het volgende om Mijn muziek te activeren:\n\n- Download de UE Music Library-software van www.uesmartradio.com en zorg dat deze op een computer in het netwerk geïnstalleerd en actief is.\n\n- Plaats een SD-kaart in de SD-sleuf.\n\n- Sluit een opslagapparaat op de USB-poort aan.
-	NO	Hvis du vil aktivere Min musikk, gjør du som følger:\n\n- Last ned UE Music Library-programvaren fra www.uesmartradio.com. Installer den på en datamaskin på nettverket, og sørg for at den er i gang.\n\n- Sett inn et SD-kort i SD-inngangen.\n\n- Kople en lagringsenhet til usb-porten.
-	PL	Aby włączyć opcję „Moja muzyka”, spróbuj wykonać następujące czynności:\n\n- Pobierz oprogramowanie UE Music Library z witryny www.uesmartradio.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.\n\n- Włóż kartę SD do gniazda kart SD.\n\n- Podłącz urządzenie pamięci masowej do portu USB.
-	RU	Чтобы активировать сервис "Моя музыка", попробуйте выполнить следующее:\n\n- загрузите программное обеспечение UE Music Library с сайта www.uesmartradio.com; убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети;\n\n- вставьте SD-карту в SD-гнездо;\n\n- подключите накопитель к USB-порту.
+	IT	Per attivare Musica, scaricare il software di UE Music Library da www.uesmartradio.com e accertarsi che sia installato e in esecuzione su un computer della rete.
+	NL	Download de UE Music Library-software van www.uesmartradio.com en zorg dat deze op een computer in het netwerk geïnstalleerd en actief is.
+	NO	Hvis du vil aktivere Min musikk, laster du ned UE Music Library-programvaren fra www.uesmartradio.com.
+	PL	Aby włączyć opcję „Moja muzyka”, pobierz oprogramowanie UE Music Library z witryny www.uesmartradio.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.
+	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение UE Music Library с сайта www.uesmartradio.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 	SV	Om du vill inaktivera Min musik kan du prova följande:\n\n- Ladda ned UE Music Library-programvaran från www.uesmartradio.com och se till att den är installerad och körs på en dator i nätverket.\n\n- Sätt i ett SD-kort i SD-kortfacket.\n\n- Anslut en lagringsenhet till USB-porten.
 
 INSTALL_SC_TEXT_BABY
 	CS	Pro aktivaci "Moje hudba" si stáhněte software UE Music Library z adresy www.uesmartradio.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.
 	DA	Hent UE Music Library-softwaren på www.uesmartradio.com, og sørg for at den er installeret og kører på en computer som er på netværket.
-	DE	Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter, um 'Eigene Musik' zu aktivieren. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.
+	DE	Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter, um 'Eigene Musik' zu aktivieren.
 	EN	To enable "My Music", download the UE Music Library software from www.uesmartradio.com and make sure it is installed and running on a computer on the network.
-	ES	Para activar "Mi música", descargue el software de UE Music Library desde www.uesmartradio.com e instálelo y ejecútelo en un ordenador de la red.
-	FI	Ota Oma musiikki käyttöön lataamalla UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com. Tarkista, että se on asennettu ja että sitä suoritetaan verkossa olevalla tietokoneella.
+	ES	Para activar "Mi música", descargue el software UE Music Library desde www.uesmartradio.com, instálelo y ejecútelo en un ordenador de la red.
+	FI	Ota Oma musiikki käyttöön lataamalla UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com ja asenna se tietokoneeseen, josta on toimiva yhteys verkkoon.
 	FR	Pour activer «Ma musique», téléchargez le logiciel du UE Music Library à partir du site www.uesmartradio.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.
 	IT	Per attivare Musica, scaricare il software di UE Music Library da www.uesmartradio.com e accertarsi che sia installato e in esecuzione su un computer della rete.
 	NL	Download de UE Music Library-software van www.uesmartradio.com en zorg ervoor dat deze op een computer in het netwerk geïnstalleerd en actief is om Mijn muziek te activeren.
-	NO	Hvis du vil aktivere Min musikk, laster du ned UE Music Library-programvaren fra www.uesmartradio.com. Installer den på en datamaskin på nettverket, og sørg for at den er i gang.
+	NO	Hvis du vil aktivere Min musikk, laster du ned UE Music Library-programvaren fra www.uesmartradio.com.
 	PL	Aby włączyć opcję „Moja muzyka”, pobierz oprogramowanie UE Music Library z witryny www.uesmartradio.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.
 	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение UE Music Library с сайта www.uesmartradio.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 	SV	Om du vill aktivera Min musik laddar du ned UE Music Library-programvaran från www.uesmartradio.com och se till att den är installerad och körs på en dator i nätverket.
@@ -230,23 +230,47 @@ INSTALL_SC_TEXT_BABY
 INSTALL_SC_TEXT_JIVE
 	CS	Pro aktivaci "Moje hudba" si stáhněte software UE Music Library z adresy www.uesmartradio.com a ujistěte se, že je nainstalovaný a spuštěný na počítači na síti.
 	DA	Hent UE Music Library-softwaren på www.uesmartradio.com, og sørg for at den er installeret og kører på en computer som er på netværket.
-	DE	Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter, um 'Eigene Musik' zu aktivieren. Vergewissern Sie sich, dass die Software auf einem Computer im Netzwerk installiert und ausgeführt wird.
+	DE	Laden Sie sich unter www.uesmartradio.com die UE Music Library-Software herunter, um 'Eigene Musik' zu aktivieren.
 	EN	To enable "My Music", download the UE Music Library software from www.uesmartradio.com and make sure it is installed and running on a computer on the network.
-	ES	Para activar "Mi música", descargue el software de UE Music Library desde www.uesmartradio.com e instálelo y ejecútelo en un ordenador de la red.
-	FI	Ota Oma musiikki käyttöön lataamalla UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com. Tarkista, että se on asennettu ja että sitä suoritetaan verkossa olevalla tietokoneella.
+	ES	Para activar "Mi música", descargue el software de UE Music Library desde www.uesmartradio.com, instálelo y ejecútelo en un ordenador de la red.
+	FI	Ota Oma musiikki käyttöön lataamalla UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com ja asenna se tietokoneeseen, josta on toimiva yhteys verkkoon.
 	FR	Pour activer «Ma musique», téléchargez le logiciel du UE Music Library à partir du site www.uesmartradio.com et vérifiez qu'il est installé et exécuté sur un ordinateur du réseau.
 	IT	Per attivare Musica, scaricare il software di UE Music Library da www.uesmartradio.com e accertarsi che sia installato e in esecuzione su un computer della rete.
 	NL	Download de UE Music Library-software van www.uesmartradio.com en zorg ervoor dat deze op een computer in het netwerk geïnstalleerd en actief is om Mijn muziek te activeren.
-	NO	Hvis du vil aktivere Min musikk, laster du ned UE Music Library-programvaren fra www.uesmartradio.com. Installer den på en datamaskin på nettverket, og sørg for at den er i gang.
+	NO	Hvis du vil aktivere Min musikk, laster du ned UE Music Library-programvaren fra www.uesmartradio.com.
 	PL	Aby włączyć opcję „Moja muzyka”, pobierz oprogramowanie UE Music Library z witryny www.uesmartradio.com, zainstaluj je i uruchom na komputerze podłączonym do sieci.
 	RU	Чтобы активизировать сервис "Моя музыка", загрузите программное обеспечение UE Music Library с сайта www.uesmartradio.com и убедитесь, что оно установлено и выполняется на компьютере, подключенном к сети.
 	SV	Om du vill aktivera Min musik laddar du ned UE Music Library-programvaran från www.uesmartradio.com och se till att den är installerad och körs på en dator i nätverket.
 
 MUSIC_SERVICES_ADD
+	CS	Přidat hudební služby
+	DA	Tilføj musiktjenester
+	DE	Musikdienste hinzufügen
 	EN	Add Music Services
+	ES	Agregar servicios de música
+	FI	Lisää musiikkipalveluita
+	FR	Ajouter des services musicaux
+	IT	Aggiungi servizi di musica
+	NL	Muziekservices toevoegen
+	NO	Legg til musikktjenester
+	PL	Dodaj usługi muzyczne
+	RU	Добавить музыкальные службы
+	SV	Lägg till musiktjänster
 
 MUSIC_SERVICES_HINT
-	EN	Enhance your Smart Radio with music services like Pandora, Deezer, Spotify, MOG and many more! To get started, download the Smart Radio Controller mobile app or go to UEsmartradio.com.
+	CS	Vylepšete váš přehrávač Smart Radio přidáním hudebních služeb typu Pandora, Deezer, Spotify, MOG a mnoha dalších! Začněte stažením aplikace Smart Radio Controller pro mobilní telefony nebo přejděte na stránku uesmartradio.com.
+	DA	Udvid din Smart Radio med musiktjenester som Pandora, Deezer, Spotify, MOG og mange andre! Kom i gang ved at hente Smart Radio Controller-mobilapplikationen, eller besøg uesmartradio.com.
+	DE	Nutzen Sie Ihr Smart Radio optimal mit Musikdiensten wie Pandora, Deezer, Spotify, MOG und vielen mehr! Laden Sie zunächst die Smart Radio Controller Mobile-App herunter oder navigieren Sie zu uesmartradio.com.
+	EN	Enhance your Smart Radio with music services like Pandora, Deezer, Spotify, MOG and many more! To get started, download the Smart Radio Controller mobile app or go to uesmartradio.com.
+	ES	Mejore su Smart Radio con servicios de música como Pandora, Deezer, Spotify o MOG, entre muchos otros. Para empezar, descargue la aplicación móvil Smart Radio Controller o vaya a uesmartradio.com.
+	FI	Voi parantaa Smart Radiota entisestään erilaisilla musiikkipalveluilla, kuten Pandora, Deezer, Spotify ja MOG. Aloita lataamalla Smart Radio Controller -mobiilisovellus tai käymällä osoitteessa uesmartradio.com.
+	FR	Améliorez votre Smart Radio grâce à des services musicaux tels que Pandora, Deezer, Spotify, MOG et bien d'autres! Pour commencer, téléchargez l'application mobile Smart Radio Controller ou accédez à uesmartradio.com.
+	IT	Ottimizza la tua Smart Radio con servizi musicali quali Pandora, Deezer, Spotify, MOG e altri ancora! Per iniziare, scarica l'app per dispositivi mobili Smart Radio Controller o visita il sito uesmartradio.com.
+	NL	Verbeter je Smart Radio met muziekservices zoals Pandora, Deezer, Spotify, MOG en veel meer! Download de mobiele app Smart Radio Controller of ga naar uesmartradio.com om aan de slag te gaan!
+	NO	Gjør Smart Radio bedre med musikktjenester som Pandora, Deezer, Spotify, MOG og mange flere! Du kommer i gang ved å laste ned mobilapplikasjonen Smart Radio Controller eller ved å besøke uesmartradio.com.
+	PL	Zwiększ możliwości urządzenia Smart Radio dzięki usługom muzycznym, takim jak Pandora, Deezer, Spotify, MOG i nie tylko! Aby rozpocząć, pobierz aplikację Smart Radio Controller dla urządzeń przenośnych lub przejdź do witryny uesmartradio.com.
+	RU	Расширьте возможности Smart Radio с помощью таких музыкальных служб, как Pandora, Deezer, Spotify, MOG и многие другие! Чтобы начать работу, загрузите мобильное приложение Smart Radio Controller или перейдите на uesmartradio.com.
+	SV	Förbättra din Smart Radio med musiktjänster som Pandora, Deezer, Spotify och MOG! Kom igång genom att ladda ner den mobila styrappen för Smart Radio eller gå till uesmartradio.com.
 
 MUSIC_SERVICES_GO_BACK
 	CS	Jít zpět
@@ -262,5 +286,4 @@ MUSIC_SERVICES_GO_BACK
 	PL	Wstecz
 	RU	Назад
 	SV	Tillbaka
-
 

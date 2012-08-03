@@ -153,19 +153,19 @@ CONNECTING_TO_SN
 	SV	Ansluts till
 
 MYSERVICE_DOT_COM
-	CS	UEsmartradio.com
-	DA	UEsmartradio.com
-	DE	UEsmartradio.com
-	EN	UEsmartradio.com
-	ES	UEsmartradio.com
-	FI	UEsmartradio.com
-	FR	UEsmartradio.com
-	IT	UEsmartradio.com
-	NL	UEsmartradio.com
-	NO	UEsmartradio.com
-	PL	UEsmartradio.com
-	RU	UEsmartradio.com
-	SV	UEsmartradio.com
+	CS	uesmartradio.com
+	DA	uesmartradio.com
+	DE	uesmartradio.com
+	EN	uesmartradio.com
+	ES	uesmartradio.com
+	FI	uesmartradio.com
+	FR	uesmartradio.com
+	IT	uesmartradio.com
+	NL	uesmartradio.com
+	NO	uesmartradio.com
+	PL	uesmartradio.com
+	RU	uesmartradio.com
+	SV	uesmartradio.com
 
 CANT_CONNECT
 	CS	Nemohu připojit

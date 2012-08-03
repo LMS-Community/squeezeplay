@@ -45,8 +45,8 @@ WALLPAPER_HELP_NO_PLAYER
 	DE	Wählen Sie den Standard-Hintergrund
 	EN	Choose the default screen background for your Smart Radios
 	ES	Elija el fondo de pantalla que se mostrará de forma predeterminada
-	FI	Valitse näytön oletustausta
-	FR	Sélectionnez l'arrière-plan d'écran à afficher par défaut.
+	FI	Valitse Smart Radion näytön oletustausta
+	FR	Sélectionnez l'arrière-plan d'écran à afficher par défaut
 	IT	Scegliere lo sfondo della schermata predefinito
 	NL	Kies de standaard schermachtergrond die moet worden weergegeven
 	NO	Velg standardbakgrunnen som skal vises

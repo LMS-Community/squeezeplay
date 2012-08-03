@@ -24,13 +24,13 @@ INVALID_MAC_TEXT
 	DE	Ungültige MAC-Adresse oder UUID. Wenden Sie sich an den Kundendienst.
 	EN	Invalid mac address or uuid. Please contact support.
 	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
-	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tekniseen tukeen.
+	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tukeen.
 	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
 	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
 	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
-	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
-	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem pomocy technicznej.
+	RU	Недопустимый MAC-адрес или UUID. Обратитесь в службу поддержки.
 	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
@@ -221,7 +221,7 @@ BETA_HARDWARE_TEXT
 	ES	Esta es una unidad de pre-producción, revisión de hardware %s.\n\nPuede que algunas características no funcionen.
 	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nKaikki ominaisuudet eivät välttämättä toimi.
 	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCertaines fonctionnalités risquent de ne pas fonctionner.
-	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nAlcune funzioni potrebbero non funzionare.
+	IT	Questa è un'unità non ancora rilasciata. %s.\n\nAlcune funzioni potrebbero non funzionare.
 	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nSommige functies werken mogelijk niet.
 	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nIkke alle funksjoner fungerer nødvendigvis.
 	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nNiektóre funkcje mogą nie działać.
@@ -230,14 +230,14 @@ BETA_HARDWARE_TEXT
 
 BETA_HARDWARE_EUTHANIZE
 	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nTato jednotka již není podporována, vraťte laskavě Logitech.
-	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere. Send den tilbage til Logitech.
-	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt. Bitte geben Sie es an Logitech zurück.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt.
 	EN	This is a pre-production unit, hardware revision %s.\n\nThis unit is no longer supported, please return to Logitech.
 	ES	Ésta es una unidad de pre-producción, revisión de hardware %s.\n\nEsta unidad ya no es compatible, devuélvala a Logitech.
 	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nYksikköä ei enää tueta, palauta yksikkö Logitechille.
-	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge. Veuillez la renvoyer à Logitech.
-	IT	Questa è un'unità non ancora rilasciata. Revisione hardware %s.\n\nQuesta unità non è più supportata. Restituirla a Logitech.
-	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund. Gelieve deze aan Logitech te retourneren.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge.
+	IT	Questa è un'unità non ancora rilasciata. %s.\n\nQuesta unità non è più supportata. Restituirla a Logitech.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund.
 	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nDenne enheten støttes ikke lenger, returner den til Logitech.
 	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nTo urządzenie nie jest już obsługiwane, prosimy zwrócić je do firmy Logitech.
 	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nЭто устройство больше не поддерживается, верните его в Logitech.

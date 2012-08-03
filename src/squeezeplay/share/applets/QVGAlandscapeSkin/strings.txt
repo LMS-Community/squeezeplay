@@ -20,7 +20,7 @@ QVGALANDSCAPE_SKIN
 
 SMALL_ART
 	CS	Malý obal alba
-	DA	Små albumcovere
+	DA	Små coverbilleder
 	DE	Kleine Plattenhüllen
 	EN	Small Artwork
 	ES	Carátula de álbum pequeña
@@ -39,7 +39,7 @@ LARGE_ART
 	DE	Große Plattenhüllen
 	EN	Large Artwork
 	ES	Carátula de álbum grande
-	FI	Suuri kuva
+	FI	Suuri kansikuva
 	FR	Grandes pochettes
 	IT	Copertina grande
 	NL	Grote hoesafbeeldingen

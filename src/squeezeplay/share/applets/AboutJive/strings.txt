@@ -19,19 +19,19 @@ ABOUT_JIVE
 	SV	Om
 
 ABOUT_COPYRIGHT
-	CS	Copyright 2007-2011 Logitech
-	DA	Copyright 2007-2011, Logitech.
-	DE	Copyright 2007–2011, Logitech.
+	CS	Copyright 2007-2012 Logitech.
+	DA	Copyright 2007-2012, Logitech.
+	DE	Copyright 2007–2012, Logitech.
 	EN	Copyright 2007-2012, Logitech.
-	ES	Copyright 2007-2011, Logitech.
-	FI	Copyright 2007-2011, Logitech.
-	FR	Copyright 2007-2011, Logitech.
-	IT	Copyright 2007-2011, Logitech.
-	NL	Copyright 2007-2011, Logitech.
-	NO	Opphavsrett 2007–2011, Logitech.
-	PL	Copyright 2007-2011, Logitech.
-	RU	© Logitech, 2007–2011.
-	SV	© 2007–2011 Logitech.
+	ES	Copyright 2007-2012, Logitech.
+	FI	Copyright 2007-2012, Logitech.
+	FR	Copyright 2007-2012, Logitech.
+	IT	Copyright 2007-2012, Logitech.
+	NL	Copyright 2007-2012, Logitech.
+	NO	Opphavsrett 2007–2012, Logitech.
+	PL	Copyright 2007-2012, Logitech.
+	RU	© Logitech, 2007–2012.
+	SV	© 2007–2012 Logitech.
 
 ABOUT_MAC_ADDRESS
 	CS	Adresa MAC: %s
@@ -85,7 +85,7 @@ UPTIME
 	EN	Uptime:
 	ES	Tiempo de actividad:
 	FI	Toiminta-aika:
-	FR	Temps d'utilisation :
+	FR	Temps d'utilisation:
 	IT	Tempo di attività:
 	NL	Actieve tijdsduur:
 	NO	Oppetid:
@@ -105,7 +105,7 @@ UPTIME_DAYS
 	NL	%s dagen
 	NO	%s dager
 	PL	%s dni
-	RU	%s дн.
+	RU	%s дн
 	SV	%s dagar
 
 UPTIME_HOURS
@@ -119,7 +119,7 @@ UPTIME_HOURS
 	IT	%s ore
 	NL	%s uren
 	NO	%s timer
-	PL	%s godz.
+	PL	%s godz
 	RU	%s ч
 	SV	%s timmar
 

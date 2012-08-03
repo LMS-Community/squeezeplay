@@ -65,7 +65,7 @@ FORMAT
 DECODE_BUFFER
 	CS	Dekódovat vyrovnávací paměť:
 	DA	Afkodningsbuffer:
-	DE	Decode-Puffer
+	DE	Decode-Puffer:
 	EN	Decode buffer:
 	ES	Búfer de descodificador:
 	FI	Purkupuskuri:
@@ -80,7 +80,7 @@ DECODE_BUFFER
 OUTPUT_BUFFER
 	CS	Výstup vyrovnávací paměti:
 	DA	Outputbuffer:
-	DE	Ausgabe-Puffer
+	DE	Ausgabe-Puffer:
 	EN	Output buffer:
 	ES	Búfer de salida:
 	FI	Toistopuskuri:
@@ -95,7 +95,7 @@ OUTPUT_BUFFER
 ELAPSED_SECS
 	CS	Uplynulý čas:
 	DA	Forløbet (sek.):
-	DE	Vergangene Sek.:
+	DE	Vergangene Sek:
 	EN	Elapsed Secs:
 	ES	Segundos transcurridos:
 	FI	Kuluneet sekunnit:
@@ -113,11 +113,11 @@ NUM_TRACKS
 	DE	Anzahl Titel:
 	EN	Num Tracks:
 	ES	Número de pistas:
-	FI	Raitojen määrä:
+	FI	Kappaleiden määrä:
 	FR	Pistes num:
-	IT	N. brani:
+	IT	N:
 	NL	Tracknummers:
-	NO	Ant. spor:
+	NO	Ant:
 	PL	Ścieżki Num:
 	RU	Номера дорожек:
 	SV	Antal spår:

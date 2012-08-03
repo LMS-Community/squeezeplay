@@ -3,7 +3,19 @@
 # http://en.wikipedia.org/wiki/List_of_ISO_639_codes
 
 EXIT_DEVELOPER_MODE
+	CS	Zakázat režim vývojáře
+	DA	Deaktiver udviklertilstand
+	DE	Entwicklermodus deaktivieren
 	EN	Disable Developer Mode
+	ES	Desactivar modo Desarrollador
+	FI	Poista kehittäjätila käytöstä
+	FR	Désactiver le mode développeur
+	IT	Disattiva la modalità sviluppatore
+	NL	Ontwikkelaarsmodus uitschakelen
+	NO	Deaktiver utviklermodus
+	PL	Wyłącz tryb programisty
+	RU	Отключить режим создателя
+	SV	Inaktivera utvecklarläge
 
 EXIT_CANCEL
 	CS	Storno
@@ -36,10 +48,47 @@ EXIT_CONTINUE
 	SV	Fortsätt
 
 LOCAL_STRING_TRACE_ENABLE
+	CS	Povolit tagy řetězců
+	DA	Aktiver mærkning af streng
+	DE	String-Tagging aktivieren
 	EN	Enable String Tagging
+	ES	Activar etiquetado de cadena
+	FI	Ota merkkijonon tunnistus käyttöön
+	FR	Activer l'étiquetage de chaîne
+	IT	Attiva il tagging delle stringhe
+	NL	Stringtagging inschakelen
+	NO	Aktiver strengtagging
+	PL	Włącz oznaczanie ciągów
+	RU	Включить теги строк
+	SV	Aktivera strängtaggning
 
 STR_TRACE_HOWTO
+	CS	K místním řetězcům je připojeno „.“
+	DA	Der føjes et "." til lokale strenge
+	DE	Lokale Strings werden mit einem "." versehen
 	EN	Local strings are appended with a "."
+	ES	Las cadenas locales tienen "." anexado
+	FI	Paikallisiin merkkijonoihin lisätään "."
+	FR	Les chaînes locales sont liées par le caractère "."
+	IT	Alle stringhe locali viene aggiunto un "."
+	NL	Aan lokale strings wordt een "." toegevoegd
+	NO	Lokale strenger etterfølges av et "."
+	PL	Do ciągów lokalnych dodano znak „.”
+	RU	Локальные строки дополняются точкой (.).
+	SV	Lokala strängar är märkta med "."
 
 STR_TRACE
+	CS	Tag řetězce
+	DA	Strengmærke
+	DE	String-Tag
 	EN	String Tag
+	ES	Etiqueta de cadena
+	FI	Merkkijonon tunniste
+	FR	Etiquette de chaîne
+	IT	Tag della stringa
+	NL	Stringtag
+	NO	Strengtagg
+	PL	Etykieta ciągu
+	RU	Тег строки
+	SV	Strängtagg
+

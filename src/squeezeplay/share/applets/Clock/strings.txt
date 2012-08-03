@@ -99,7 +99,7 @@ SCREENSAVER_CLOCK_MONTH_01
 	DE	Januar
 	EN	January
 	ES	Enero
-	FI	Tammikuu
+	FI	tammikuu
 	FR	Janvier
 	IT	Gennaio
 	NL	januari
@@ -114,7 +114,7 @@ SCREENSAVER_CLOCK_MONTH_02
 	DE	Februar
 	EN	February
 	ES	Febrero
-	FI	Helmikuu
+	FI	helmikuu
 	FR	Février
 	IT	Febbraio
 	NL	februari
@@ -129,7 +129,7 @@ SCREENSAVER_CLOCK_MONTH_03
 	DE	März
 	EN	March
 	ES	Marzo
-	FI	Maaliskuu
+	FI	maaliskuu
 	FR	Mars
 	IT	Marzo
 	NL	maart
@@ -144,7 +144,7 @@ SCREENSAVER_CLOCK_MONTH_04
 	DE	April
 	EN	April
 	ES	Abril
-	FI	Huhtikuu
+	FI	huhtikuu
 	FR	Avril
 	IT	Aprile
 	NL	april
@@ -159,7 +159,7 @@ SCREENSAVER_CLOCK_MONTH_05
 	DE	Mai
 	EN	May
 	ES	Mayo
-	FI	Toukokuu
+	FI	toukokuu
 	FR	Mai
 	IT	Maggio
 	NL	mei
@@ -174,7 +174,7 @@ SCREENSAVER_CLOCK_MONTH_06
 	DE	Juni
 	EN	June
 	ES	Junio
-	FI	Kesäkuu
+	FI	kesäkuu
 	FR	Juin
 	IT	Giugno
 	NL	juni
@@ -189,7 +189,7 @@ SCREENSAVER_CLOCK_MONTH_07
 	DE	Juli
 	EN	July
 	ES	Julio
-	FI	Heinäkuu
+	FI	heinäkuu
 	FR	Juillet
 	IT	Luglio
 	NL	juli
@@ -204,7 +204,7 @@ SCREENSAVER_CLOCK_MONTH_08
 	DE	August
 	EN	August
 	ES	Agosto
-	FI	Elokuu
+	FI	elokuu
 	FR	Août
 	IT	Agosto
 	NL	augustus
@@ -219,7 +219,7 @@ SCREENSAVER_CLOCK_MONTH_09
 	DE	September
 	EN	September
 	ES	Septiembre
-	FI	Syyskuu
+	FI	syyskuu
 	FR	Septembre
 	IT	Settembre
 	NL	september
@@ -234,7 +234,7 @@ SCREENSAVER_CLOCK_MONTH_10
 	DE	Oktober
 	EN	October
 	ES	Octubre
-	FI	Lokakuu
+	FI	lokakuu
 	FR	Octobre
 	IT	Ottobre
 	NL	oktober
@@ -249,7 +249,7 @@ SCREENSAVER_CLOCK_MONTH_11
 	DE	November
 	EN	November
 	ES	Noviembre
-	FI	Marraskuu
+	FI	marraskuu
 	FR	Novembre
 	IT	Novembre
 	NL	november
@@ -264,7 +264,7 @@ SCREENSAVER_CLOCK_MONTH_12
 	DE	Dezember
 	EN	December
 	ES	Diciembre
-	FI	Joulukuu
+	FI	joulukuu
 	FR	Décembre
 	IT	Dicembre
 	NL	december
@@ -298,7 +298,7 @@ SCREENSAVER_CLOCK_DAY_1
 	FR	Lundi
 	IT	Lunedì
 	NL	Maandag
-	NO	Mandag
+	NO	mandag
 	PL	Poniedziałek
 	RU	Понедельник
 	SV	Måndag
@@ -313,7 +313,7 @@ SCREENSAVER_CLOCK_DAY_2
 	FR	Mardi
 	IT	Martedì
 	NL	Dinsdag
-	NO	Tirsdag
+	NO	tirsdag
 	PL	Wtorek
 	RU	Вторник
 	SV	Tisdag
@@ -324,11 +324,11 @@ SCREENSAVER_CLOCK_DAY_3
 	DE	Mittwoch
 	EN	Wednesday
 	ES	Miércoles
-	FI	Keskiviikko
+	FI	keskiviikko
 	FR	Mercredi
 	IT	Mercoledì
 	NL	Woensdag
-	NO	Onsdag
+	NO	onsdag
 	PL	Środa
 	RU	Среда
 	SV	Onsdag
@@ -358,7 +358,7 @@ SCREENSAVER_CLOCK_DAY_5
 	FR	Vendredi
 	IT	Venerdì
 	NL	Vrijdag
-	NO	Fredag
+	NO	fredag
 	PL	Piątek
 	RU	Пятница
 	SV	Fredag
@@ -373,7 +373,7 @@ SCREENSAVER_CLOCK_DAY_6
 	FR	Samedi
 	IT	Sabato
 	NL	Zaterdag
-	NO	Lørdag
+	NO	lørdag
 	PL	Sobota
 	RU	Суббота
 	SV	Lördag

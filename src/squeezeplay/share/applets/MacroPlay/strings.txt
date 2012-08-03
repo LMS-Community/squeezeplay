@@ -42,7 +42,7 @@ MACRO_AUTOPLAY_HELP
 	NO	Start automatiske tester.
 	PL	Rozpocznij testy automatyczne.
 	RU	Запустить автоматические тесты.
-	SV	Starta automatiska tester
+	SV	Starta automatiska tester.
 
 MACRO_AUTOSTART
 	CS	Automatické testy

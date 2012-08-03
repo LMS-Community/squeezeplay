@@ -8,7 +8,7 @@ HTTP_AUTH
 	DE	UE Music Library-Kennwortschutz
 	EN	UE Music Library Password Protection
 	ES	Protección por contraseña de UE Music Library
-	FI	UE Music Libraryin salasanasuojaus
+	FI	UE Music Libraryn salasanasuojaus
 	FR	Protection par mot de passe du UE Music Library
 	IT	Protezione con password UE Music Library
 	NL	Wachtwoordbeveiliging voor UE Music Library
@@ -67,8 +67,8 @@ HTTP_AUTH_USERNAME_HELP
 	DA	Angiv det brugernavn som bruges sammen med adgangskoden til at beskytte UE Music Library
 	DE	Geben Sie den für den UE Music Library-Kennwortschutz konfigurierten Benutzernamen ein
 	EN	Enter your UE Music Library username
-	ES	Introduzca el nombre de usuario tal y como se haya configurado para protección por contraseña en UE Music Library
-	FI	Anna käyttäjätunnus, joka määritettiin salasanasuojausta varten UE Music Libraryissä
+	ES	Introduzca su nombre de usuario de UE Music Library
+	FI	Anna käyttäjätunnus, joka määritettiin salasanasuojausta varten UE Music Libraryssa
 	FR	Saisissez le nom d'utilisateur configuré pour la protection par mot de passe du UE Music Library
 	IT	Inserire il nome utente configurato per la protezione con password in UE Music Library
 	NL	Voer de gebruikersnaam die voor wachtwoordbeveiliging is ingesteld, op je UE Music Library in
@@ -82,8 +82,8 @@ HTTP_AUTH_PASSWORD_HELP
 	DA	Indtast den adgangskode som bruges til at beskytte UE Music Library
 	DE	Geben Sie das für den UE Music Library-Kennwortschutz konfigurierte Kennwort ein
 	EN	Enter your UE Music Library password
-	ES	Introduzca la contraseña tal y como se haya configurado para protección por contraseña en UE Music Library
-	FI	Anna salasana, joka määritettiin salasanasuojausta varten UE Music Libraryissä
+	ES	Introduzca su contraseña de UE Music Library
+	FI	Anna salasana, joka määritettiin salasanasuojausta varten UE Music Libraryssa
 	FR	Saisissez le mot de passe configuré pour la protection par mot de passe du UE Music Library
 	IT	Inserire la password configurata per la protezione con password in UE Music Library
 	NL	Voer het wachtwoord dat voor wachtwoordbeveiliging is ingesteld, op je UE Music Library in
@@ -114,7 +114,7 @@ HTTP_AUTH_PASSWORD_WRONG
 	DE	Benutzername/Kennwort ungültig
 	EN	Username or Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
-	FI	Käyttäjätunnus/salasana ei kelpaa
+	FI	Käyttäjätunnus tai salasana on virheellinen
 	FR	Nom d'utilisateur/mot de passe non valide
 	IT	Nome utente/password non validi
 	NL	Gebruikersnaam/wachtwoord ongeldig
@@ -129,7 +129,7 @@ HTTP_AUTH_PASSWORD_WRONG_BODY
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
-	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
+	FI	Käyttäjänimi tai salasana on virheellinen.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
 	IT	Il nome utente o la password immessi non sono validi.
 	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.

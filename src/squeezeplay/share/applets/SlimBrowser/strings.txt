@@ -108,17 +108,17 @@ SLIMBROWSER_STOPPED
 	SV	Stoppad
 
 SLIMBROWSER_SEARCH_HELP
-	CS	Pomocí kolečka měňte písmena a stisknutím prostředního tlačítka proveďte výběr. Chcete-li spustit hledání, stiskněte znovu prostřední tlačítko.
-	DA	Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på midterknappen igen for at begynde søgningen.
+	CS	Pomocí rolovacího kolečka měňte písmena a stisknutím prostředního tlačítka proveďte výběr. Chcete-li spustit hledání, stiskněte Přehrát.
+	DA	Brug drejeknappen til at skifte bogstav, og tryk på midterknappen for at vælge det. Tryk på Afspil for at begynde søgningen.
 	DE	Wählen Sie den gewünschten Buchstaben mit dem Rad und drücken Sie zum Bestätigen die mittlere Taste. Drücken Sie zum Starten der Suche die mittlere Taste erneut.
 	EN	Use the scroll wheel to change letters, then press the center button to select that letter. Press Play to start your search.
 	ES	Cambie de letra con la rueda de desplazamiento y pulse el botón central para seleccionarla. Pulse de nuevo el botón central para iniciar la búsqueda.
-	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla keskipainiketta uudelleen.
+	FI	Voit vaihtaa kirjainta vierityskiekolla ja valita kirjaimen keskipainikkeella. Käynnistä haku painamalla toistopainiketta.
 	FR	Utiliser la molette pour choisir une lettre, puis appuyer sur le bouton central afin de la sélectionner. Appuyer à nouveau sur le bouton central pour démarrer la recherche.
-	IT	Utilizzare la rotellina per cambiare le lettere, quindi premere il pulsante centrale per selezionarle. Premere nuovamente il pulsante centrale per avviare la ricerca.
+	IT	Utilizzare la rotellina per cambiare le lettere, quindi premere il pulsante centrale per selezionarle. Premere Riproduci per avviare la ricerca.
 	NL	Gebruik het scrollwiel om naar een andere letter te gaan. Druk dan op de middelste knop om die letter te selecteren. Druk nogmaals op de middelste knop om je zoekopdracht te starten.
-	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på midtknappen på nytt for å starte søket.
-	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij ponownie środkowy przycisk, aby rozpocząć wyszukiwanie.
+	NO	Du kan endre bokstav med rullehjulet, og velge bokstav med midtknappen. Trykk på avspillingsknappen på nytt for å starte søket.
+	PL	Użyj pokrętła, aby zmienić litery, a następnie naciśnij środkowy przycisk w celu wybrania litery. Naciśnij przycisk odtwarzania, aby rozpocząć wyszukiwanie.
 	RU	Прокручивая колесико, дойдите до нужной буквы и нажмите центральную кнопку, чтобы выбрать букву. Затем нажмите центральную кнопку еще раз, чтобы запустить поиск.
 	SV	Markera en bokstav med rullningshjulet och tryck sedan på mittenknappen för att välja bokstaven. Tryck på mittenknappen igen när du vill börja söka.
 
@@ -195,7 +195,7 @@ SLIMBROWSER_PROBLEM_CONNECTING_HELP
 	NO	Klarer ikke å kople til %s
 	PL	Wystąpił problem podczas nawiązywania połączenia z %s
 	RU	Ошибка при подключении к %s
-	SV	Det går inte att ansluta till %s.
+	SV	Det går inte att ansluta till %s
 
 SLIMBROWSER_NOTHING
 	CS	Žádná
@@ -223,8 +223,8 @@ SLIMBROWSER_OFF
 	IT	Disattivato
 	NL	Uit
 	NO	Av
-	PL	wył.
-	RU	Выкл.
+	PL	Wył.
+	RU	Выкл
 	SV	Av
 
 SLIMBROWSER_VOLUME
@@ -285,7 +285,7 @@ SLIMBROWSER_ADD_NEXT_1
 	NL	Volgende afspelen
 	NO	Spill av neste
 	PL	Odtwórz następny
-	RU	След. дорожка
+	RU	След
 	SV	Spela härnäst
 
 SLIMBROWSER_ADD_NEXT_2
@@ -310,7 +310,7 @@ SLIMBROWSER_PASSWORD_WRONG
 	DE	Benutzername/Kennwort ungültig
 	EN	Username/Password Invalid
 	ES	Nombre de usuario/contraseña no válidos
-	FI	Käyttäjätunnus/salasana ei kelpaa
+	FI	Virheellinen käyttäjätunnus tai salasana
 	FR	Nom d'utilisateur/mot de passe non valide
 	IT	Nome utente/password non validi
 	NL	Gebruikersnaam/wachtwoord ongeldig
@@ -325,7 +325,7 @@ SLIMBROWSER_PASSWORD_WRONG_BODY
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
-	FI	Antamasi käyttäjänimi tai salasana ei kelpaa.
+	FI	Käyttäjänimi tai salasana on virheellinen.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
 	IT	Il nome utente o la password immessi non sono validi.
 	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
@@ -370,7 +370,7 @@ SLIMBROWSER_ALARM_PREVIEW
 	DE	Alarmvorschau
 	EN	Alarm Preview
 	ES	Vista previa de alarma
-	FI	Hälytyksen esikuuntelu
+	FI	Herätyksen esikuuntelu
 	FR	Ecoute du réveil
 	IT	Anteprima sveglia
 	NL	Voorbeeld van weksignaal
@@ -381,13 +381,13 @@ SLIMBROWSER_ALARM_PREVIEW
 
 SLIMBROWSER_DONE
 	CS	Hotovo
-	DA	OK
+	DA	Afslut
 	DE	Fertig
 	EN	Done
 	ES	Listo
 	FI	Valmis
 	FR	Terminé
-	IT	Fatto
+	IT	Fine
 	NL	Gereed
 	NO	Fullført
 	PL	Gotowe
@@ -397,12 +397,12 @@ SLIMBROWSER_DONE
 SLIMBROWSER_ALARM_SOUND_HELP
 	CS	V těchto nabídkách vyberte položku jako zvuk budíku nebo stiskem play přehrajte ukázku zvuku.
 	DA	I disse menuer skal du vælge en lyd til vækkeuret og trykke på Afspil for at høre et eksempel.
-	DE	Wählen Sie in diesen Menüs ein Element für einen Alarmton aus.  Drücken Sie 'Play', um eine Vorschau anzuzeigen.
+	DE	Wählen Sie in diesen Menüs ein Element für einen Alarmton aus.
 	EN	In these menus, select an item for an alarm sound, or press Play to preview.
 	ES	En estos menús, seleccione un elemento para un sonido de alarma o pulse el botón de reproducción para obtener una vista previa.
-	FI	Näissä valikoissa valitset kohteen hälytysäänelle tai esikuuntelet painamalla soita.
+	FI	Näissä valikoissa valitset kohteen herätysäänelle tai esikuuntelet painamalla toistopainiketta.
 	FR	Dans ces menus, choisissez un son pour le réveil, ou appuyez sur le bouton Play pour lancer la lecture.
-	IT	In questi menu, selezionare un elemento per il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
+	IT	In questi menu, selezionare un elemento per il suono della sveglia.
 	NL	In deze menu's selecteer je een item als weksignaal of druk je op PLAY voor een voorbeeld.
 	NO	I disse menyene velger du et element du vil bruke som alarmlyd, eller trykker på avspillingsknappen for å høre lyden.
 	PL	W tych menu można wybrać element odpowiadający dźwiękowi alarmu i nacisnąć opcję odtwarzania, aby włączyć podgląd.
@@ -412,12 +412,12 @@ SLIMBROWSER_ALARM_SOUND_HELP
 SLIMBROWSER_ALARM_SOUND_HELP_FAB4
 	CS	V těchto nabídkách můžete dotykem zvolit zvuk budíku a dotykem a podržením přehrát ukázku zvuku.
 	DA	I disse menuer skal du trykke for at vælge en lyd til vækkeuret og holde for at høre et eksempel.
-	DE	Wählen Sie in diesen Menüs einen Alarmton durch Berühren aus. Durch Berühren und Halten können Sie eine Vorschau anzeigen.
+	DE	Wählen Sie in diesen Menüs einen Alarmton durch Berühren aus.
 	EN	In these menus, touch to select an alarm sound, touch-hold to preview.
 	ES	En estos menús, toque para seleccionar un sonido de alarma y mantenga la pulsación para obtener una vista previa.
-	FI	Näissä valikoissa valitset hälytysäänen koskettamalla, esikuuntelet koskettamalla pitkään.
+	FI	Näissä valikoissa valitset herätysäänen koskettamalla ja esikuuntelet säilyttämällä kosketuksen.
 	FR	Dans ces menus, appuyez pour sélectionner un son de réveil et laissez la touche enfoncée pour écouter le son.
-	IT	In questi menu, toccare per selezionare il suono della sveglia. Toccare a lungo per riprodurlo.
+	IT	In questi menu, toccare per selezionare il suono della sveglia.
 	NL	In deze menu's kun je een weksignaal selecteren door middel van een aanraking, en houd je deze ingedrukt voor een voorbeeld.
 	NO	I disse menyene berører du en alarm for å velge den, og holder fingeren presset mot den for å høre den.
 	PL	W tych menu można wybrać dźwięk alarmu przez dotknięcie oraz włączyć podgląd, dotykając i przytrzymując opcję.
@@ -426,13 +426,13 @@ SLIMBROWSER_ALARM_SOUND_HELP_FAB4
 
 SLIMBROWSER_ALARM_SOUND_HELP_BABY
 	CS	V těchto nabídkách můžete stiskem ovladače zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
-	DA	I disse menuer kan du trykke på drejeknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
-	DE	Drücken Sie in diesen Menüs den Knopf zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
+	DA	I disse menuer kan du trykke på drejeknappen for at vælge en lyd til vækkeuret.
+	DE	Drücken Sie in diesen Menüs den Knopf zum Auswählen eines Alarmtons.
 	EN	In these menus, press the knob to select an alarm sound, or press Play to preview.
 	ES	En estos menús, pulse el control para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
-	FI	Näissä valikoissa valitset hälytysäänen painamalla nuppia, esikuuntelet painamalla soita.
+	FI	Näissä valikoissa valitset herätysäänen painamalla kiekkoa ja esikuuntelet painamalla toistopainiketta.
 	FR	Dans ces menus, appuyez sur le bouton de commande pour sélectionner un son de réveil et appuyez sur le bouton Play pour l'écouter.
-	IT	In questi menu, premere la manopola per selezionare il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
+	IT	In questi menu, premere la manopola per selezionare il suono della sveglia.
 	NL	In deze menu's druk je op de regelaar om een weksignaal te selecteren, en druk je op PLAY voor een voorbeeld.
 	NO	I disse menyene trykker du på knappen for å velge en alarmlyd, og avspillingsknappen for å høre den.
 	PL	W tych menu można nacisnąć pokrętło, aby wybrać dźwięk alarmu, lub nacisnąć przycisk odtwarzania w celu włączenia podglądu.
@@ -441,13 +441,13 @@ SLIMBROWSER_ALARM_SOUND_HELP_BABY
 
 SLIMBROWSER_ALARM_SOUND_HELP_JIVE
 	CS	V těchto nabídkách můžete stiskem středového tlačítka zvolit zvuk budíku a stiskem play přehrát ukázku zvuku.
-	DA	I disse menuer kan du trykke på midterknappen for at vælge en lyd til vækkeuret. Tryk på afspil for at høre et eksempel.
-	DE	Drücken Sie in diesen Menüs die mittlere Taste zum Auswählen eines Alarmtons. Drücken Sie 'Play', um eine Vorschau anzuzeigen.
+	DA	I disse menuer kan du trykke på midterknappen for at vælge en lyd til vækkeuret.
+	DE	Drücken Sie in diesen Menüs die mittlere Taste zum Auswählen eines Alarmtons.
 	EN	In these menus, press the center button to select an alarm sound, or press Play to preview.
 	ES	En estos menús, pulse el botón central para seleccionar un sonido de alarma y el botón de reproducción para obtener una vista previa.
-	FI	Näissä valikoissa valitset hälytysäänen painamalla keskipainiketta, esikuuntelet painamalla soita.
+	FI	Näissä valikoissa valitset herätysäänen painamalla keskipainiketta tai esikuuntelet painamalla toistopainiketta.
 	FR	Dans ces menus, appuyez sur le bouton central pour sélectionner un son de réveil, puis appuyez sur le bouton Play pour l'écouter.
-	IT	In questi menu, premere il pulsante centrale per selezionare il suono della sveglia. Premere il tasto di riproduzione per riprodurlo.
+	IT	In questi menu, premere il pulsante centrale per selezionare il suono della sveglia.
 	NL	In deze menu's druk je op de middelste knop om een weksignaal te selecteren, en druk je op PLAY voor een voorbeeld.
 	NO	I disse menyene trykker du på midtknappen for å velge en alarmlyd, og avspillingsknappen for å høre den.
 	PL	W tych menu można nacisnąć środkowy przycisk, aby wybrać dźwięk alarmu, i nacisnąć opcję odtwarzania w celu włączenia podglądu.

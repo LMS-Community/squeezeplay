@@ -79,7 +79,7 @@ DOOMSDAY_OPTION4
 
 DOOMSDAY_MESSAGE0
 	CS	Ve vzduchu visí strach!
-	DA	Der er frygt i luften.
+	DA	Der er frygt i luften!
 	DE	Fear is in the air!
 	EN	Fear is in the air!
 	ES	Fear is in the air!

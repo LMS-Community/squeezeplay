@@ -18,18 +18,30 @@ SETTINGS
 	SV	Inställningar
 
 INTERNET_RADIO
+	CS	Live Radio
+	DA	Live-radio
+	DE	Live Radio
 	EN	Live Radio
+	ES	Radio en directo
+	FI	Suora radiolähetys
+	FR	Live Radio
+	IT	Live Radio
+	NL	Live radio
+	NO	Direktesendt radio
+	PL	Radio na żywo
+	RU	Live Radio
+	SV	Direktsänd radio
 
 RADIO_TITLE
 	EN	Radio by TuneIn
 
 MY_MUSIC
-	CS	Hudba
+	CS	Moje hudba
 	DA	Musik
 	DE	Eigene Musik
 	EN	My Music
 	ES	Mi música
-	FI	Omat musiikkitiedostot
+	FI	Oma musiikki
 	FR	Ma musique
 	IT	Musica
 	NL	Mijn muziek
@@ -115,7 +127,7 @@ SCREEN_SETTINGS
 
 HOME
 	CS	Domů
-	DA	Startside
+	DA	Start
 	DE	Hauptmenü
 	EN	Home
 	ES	Inicio
@@ -144,7 +156,19 @@ ADVANCED_SETTINGS
 	SV	Avancerat
 
 AUDIO_SETTINGS
+	CS	Nastavení zvuku
+	DA	Lydindstillinger
+	DE	Audioeinstellungen
 	EN	Audio Settings
+	ES	Configuración de audio
+	FI	Ääniasetukset
+	FR	Paramètres audio
+	IT	Impostazioni audio
+	NL	Geluidsinstellingen
+	NO	Lydinnstillinger
+	PL	Ustawienia audio
+	RU	Настройки аудиоканала
+	SV	Ljudinställningar
 
 BETA_FEATURES
 	CS	Beta vlastnosti
@@ -368,7 +392,7 @@ SHORTCUTS_RESET
 	NL	Standaardwaarden
 	NO	Tilbakestill til standardinnstillinger
 	PL	Resetuj do wartości domyślnych
-	RU	Восстановление стандартных настроек
+	RU	Восстановить настройки по умолчанию
 	SV	Återställ standardinställningarna
 
 KEYBOARD_DONE
@@ -976,13 +1000,49 @@ DAYSHORT_7
 	SV	lör
 
 DEVELOPER_MENU
+	CS	Vývojář
+	DA	Udvikler
+	DE	Entwickler
 	EN	Developer
+	ES	Desarrollador
+	FI	Kehittäjä
+	FR	Développeur
+	IT	Sviluppatore
+	NL	Ontwikkelaar
+	NO	Utvikler
+	PL	Programista
+	RU	Создатель
+	SV	Utvecklare
 
 SETTINGS_SMART_RADIO
+	CS	Smart Radio
+	DA	Smart Radio
+	DE	Smart Radio
 	EN	Smart Radio
+	ES	Smart Radio
+	FI	Smart Radio
+	FR	Smart Radio
+	IT	Smart Radio
+	NL	Smart Radio
+	NO	Smart Radio
+	PL	Smart Radio
+	RU	Smart Radio
+	SV	Smart Radio
 
 SETTINGS_TIME
+	CS	Čas
+	DA	Klokkeslæt
+	DE	Zeit
 	EN	Time
+	ES	Hora
+	FI	Aika
+	FR	Temps
+	IT	Ora
+	NL	Tijd
+	NO	Klokkeslett
+	PL	Czas
+	RU	Время
+	SV	Kl
 
 POWER_TO_MUSIC
 	CS	POWER TO THE MUSIC

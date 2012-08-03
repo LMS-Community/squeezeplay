@@ -24,10 +24,10 @@ TEST_KEYPAD_HELP
 	DE	Zum Abschluss alle Tasten und Rad betätigen.
 	EN	Press all keys and scroll the wheel to complete.
 	ES	Pulse todos los botones y gire la rueda para completar la operación.
-	FI	Suorita loppuun painamalla kaikkia näppäimiä ja vierittämällä kiekolla.
-	FR	Appuyez sur toutes les touches et faites défiler la molette pour terminer.
+	FI	Suorita loppuun painamalla kaikkia painikkeita ja vierittämällä kiekkoa.
+	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
-	NL	Druk op alle toetsen en scroll met het wiel om te voltooien.
+	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
 	NO	Trykk ned alle tastene og rull med hjulet for å fullføre.
 	PL	Naciśnij wszystkie przyciski i obróć pokrętło, aby zakończyć.
 	RU	Для завершения нажмите все кнопки и колесико прокрутки.
@@ -35,13 +35,13 @@ TEST_KEYPAD_HELP
 
 TEST_COMPLETE
 	CS	Test ukončen
-	DA	Testen er gennemført
+	DA	Test fuldført
 	DE	Test abgeschlossen
 	EN	Test Complete
 	ES	Prueba completada
 	FI	Testi suoritettu
 	FR	Test terminé
-	IT	Verifica completata
+	IT	Test completato
 	NL	Test voltooid
 	NO	Testing fullført
 	PL	Test został ukończony

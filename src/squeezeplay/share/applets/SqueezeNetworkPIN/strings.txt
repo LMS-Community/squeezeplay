@@ -30,8 +30,8 @@ SQUEEZENETWORK_PIN
 
 SQUEEZENETWORK_PIN_HELP
 	CS	Navštivte\n%s\na zadejte svůj PIN pro připojení k vašemu účtu. Po zadání PIN kódu stiskněte prostřední tlačítko.
-	DA	Gå til\n%s\nog indtast pinkoden, så oprettes der forbindelse til din konto.  Tryk på midterknappen når du har indtastet pinkoden.
-	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
+	DA	Gå til\n%s\nog indtast pinkoden, så oprettes der forbindelse til din konto. Tryk på midterknappen når du har indtastet pinkoden.
+	DE	Gehen Sie zu\n%s\n und geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
 	ES	Visite\n%s\ne introduzca el PIN para conectarse a su cuenta. Cuando haya introducido el PIN, pulse el botón central.
 	FI	Muodosta yhteys tiliin käymällä osoitteessa\n%s\nja antamalla PIN-koodi.  Paina keskipainiketta, kun olet antanut PIN-koodin.
@@ -39,24 +39,24 @@ SQUEEZENETWORK_PIN_HELP
 	IT	Visitare il sito Web\n%s\ne inserire il PIN per accedere all'account. Premere il pulsante centrale dopo avere inserito il PIN.
 	NL	Ga naar\n%s\nen voer je pincode in om naar je account te gaan. Druk op de middelste knop nadat je je pincode hebt ingevoerd.
 	NO	Gå til\n%s\n og skriv inn PIN-koden for å kople til kontoen din.  Trykk på midtknappen etter at du har oppgitt PIN-koden.
-	PL	Odwiedź\n%s\ni wprowadź kod PIN, aby połączyć się z kontem. Naciśnij środkowy przycisk po wprowadzeniu kodu PIN.
+	PL	Odwiedź\n%s\ni wprowadź kod PIN, aby połączyć się z kontem. Naciśnij przycisk na środku po wprowadzeniu kodu PIN.
 	RU	Посетите\n%s\nи введите PIN-код, чтобы подключиться к своей учетной записи. После ввода PIN-кода нажмите центральную кнопку.
 	SV	Gå till\n%s\noch ange din PIN-kod för att ansluta till kontot.  Tryck på mittenknappen när du har angett PIN-koden.
 
 SQUEEZENETWORK_NOT_LINKED
-	CS	Nemohu ověřit váš PIN.  Zadali jste jej na webu?
-	DA	Pinkoden kunne ikke verificeres.  Har du angivet den på websiden?
-	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben?
+	CS	Váš kód PIN nebyl ověřen. Ujistěte se, že jste jej dříve zadali na webové stránce.
+	DA	Pinkoden kunne ikke verificeres. Har du angivet den på websiden.
+	DE	Ihre PIN konnte nicht bestätigt werden. Haben Sie sie auf der Website eingegeben.
 	EN	Could not verify your PIN. Make sure you have recently entered it on the website.
 	ES	No se ha podido verificar el PIN. ¿Lo ha introducido en el sitio Web?
-	FI	PIN-koodia ei voi vahvistaa.  Annoitko sen WWW-sivustolla?
+	FI	PIN-koodia ei voitu vahvistaa.  Varmista, että se on annettu verkkosivustolla.
 	FR	Impossible de vérifier le code PIN. Spécifiez le code sur le site Web.
-	IT	Impossibile verificare il PIN. È stato inserito nel sito Web?
+	IT	Impossibile verificare il PIN. È stato immesso di recente nel sito Web?
 	NL	Pincode kan niet worden geverifieerd. Heb je deze op de website ingevoerd?
-	NO	PIN-koden ble ikke godkjent. Har du tastet den inn på nettsiden?
-	PL	Nie można zweryfikować kodu PIN. Czy został on wprowadzony w witrynie internetowej?
-	RU	Не удалось проверить PIN-код. Вы ввели его на веб-сайте?
-	SV	Det gick inte att verifiera PIN-koden.  Har du angett koden på webbplatsen?
+	NO	PIN-koden ble ikke godkjent. Har du tastet den inn på nettsiden nylig?
+	PL	Nie można zweryfikować kodu PIN. Sprawdź, czy został on niedawno wprowadzony w witrynie internetowej.
+	RU	Не удалось проверить PIN-код. Убедитесь, что вы ввели его на веб-сайте.
+	SV	Det gick inte att verifiera PIN-koden.  Har du angett koden på webbplatsen.
 
 SQUEEZENETWORK_GO_BACK
 	CS	Jít zpět

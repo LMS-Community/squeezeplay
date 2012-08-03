@@ -37,14 +37,14 @@ DEMO_START_DEMO_WARNING
 	DA	ADVARSEL: Du slår demoen fra ved at trykke på BACK og PLAY samtidigt.
 	DE	Warnung: Drücken Sie zum Deaktivieren der Demo gleichzeitig BACK und PLAY.
 	EN	WARNING: To disable the demo, press the BACK and PLAY buttons at the same time.
-	ES	ADVERTENCIA: para desactivar la demostración, pulse los botones BACK y PLAY al mismo tiempo.
+	ES	ADVERTENCIA: Para desactivar la demostración, pulse los botones BACK y PLAY al mismo tiempo.
 	FI	VAROITUS: jos haluat poistaa demon käytöstä, paina BACK- ja PLAY-painikkeita samanaikaisesti.
 	FR	AVERTISSEMENT: pour désactiver la démo, appuyez simultanément sur les boutons BACK et PLAY.
 	IT	ATTENZIONE: per disattivare il demo, premere contemporaneamente i pulsanti BACK e PLAY.
 	NL	WAARSCHUWING: druk tegelijkertijd op de knoppen BACK en PLAY om de demo uit te schakelen.
 	NO	ADVARSEL: Du deaktiverer demoen ved å trykke på knappene BACK og PLAY AV samtidig.
-	PL	UWAGA: Aby wyłączyć wersję demonstracyjną, naciśnij jednocześnie przyciski BACK i PLAY.	
-	RU	ПРЕДУПРЕЖДЕНИЕ. Для отключения демонстрации одновременно нажмите кнопки BACK (Назад) и PLAY (Воспроизведение).
+	PL	UWAGA: Aby wyłączyć wersję demonstracyjną, naciśnij jednocześnie przyciski BACK i PLAY.
+	RU	ПРЕДУПРЕЖДЕНИЕ.
 	SV	VARNING: Tryck på BACK och PLAY samtidigt för att aktivera demonstrationen.
 
 DEMO_ERROR
@@ -119,7 +119,7 @@ DEMO_VOLUME_MUTED
 	NL	Volume (gedempt)
 	NO	Volum (av)
 	PL	Głośność (wyciszona)
-	RU	Громкость (приглушенная)
+	RU	Громкость (без звука)
 	SV	Volym (av)
 
 SLIDE_01CENTER
@@ -141,7 +141,7 @@ SLIDE_02
 	CS	\n
 	DA	\n
 	DE	\n
-	EN	\n	
+	EN	\n
 	ES	\n
 	FI	\n
 	FR	\n
@@ -151,7 +151,6 @@ SLIDE_02
 	PL	\n
 	RU	\n
 	SV	\n
-
 
 SLIDE_03
 	CS	Logitech UE Smart Radio
@@ -168,14 +167,13 @@ SLIDE_03
 	RU	Logitech UE Smart Radio
 	SV	Logitech UE Smart Radio
 
-
 SLIDE_04CENTER
 	CS	Tisíce internetových radiostanicí zdarma
 	DA	Tusindvis af gratis internetradiostationer
 	DE	Tausende kostenlose Internetradiosender
 	EN	Thousands of free internet radio stations
 	ES	Miles de emisoras de radio por Internet gratuitas
-	FI	Tuhansia ilmaisia internet-radiokanavia
+	FI	Tuhansia ilmaisia verkkoradiokanavia
 	FR	Des milliers de radio Internet gratuites
 	IT	Migliaia di stazioni radio Internet gratuite
 	NL	Duizenden gratis internetradiostations
@@ -199,7 +197,6 @@ SLIDE_05
 	RU	\n
 	SV	\n
 
-
 SLIDE_06CENTER
 	CS	Přístup ke špičkovým hudebním službám online
 	DA	Adgang til de bedste musiktjenester online
@@ -219,7 +216,7 @@ SLIDE_07
 	CS	\n
 	DA	\n
 	DE	\n
-	EN	\n 
+	EN	\n
 	ES	\n
 	FI	\n
 	FR	\n
@@ -229,7 +226,6 @@ SLIDE_07
 	PL	\n
 	RU	\n
 	SV	\n
-
 
 SLIDE_08CENTER
 	CS	Umožňuje také poslech vaší oblíbené hudby uložené v počítači
@@ -260,7 +256,6 @@ SLIDE_09
 	PL	\n
 	RU	\n
 	SV	\n
-
 
 SLIDE_10CENTER
 	CS	Připojte rádio k vaší síti Wi-Fi a můžete okamžitě přehrávat hudbu
@@ -313,7 +308,7 @@ SLIDE_13
 	DE	Oder Tablet-PC und Smartphone
 	EN	Or tablet and smart phone
 	ES	O tablet y smartphone
-	FI	Tai muusta älylaitteesta
+	FI	Tai taulutietokoneesta tai älypuhelimesta
 	FR	Ou de votre tablette ou smartphone
 	IT	O dal tablet e dallo smartphone
 	NL	Of tablet en smartphone
@@ -321,6 +316,7 @@ SLIDE_13
 	PL	Lub tabletu albo smartfonu
 	RU	или с помощью ПК, смартфона
 	SV	Eller en surfplatta eller smartphone
+
 SLIDE_14CENTER
 	CS	Zařízení je dobíjecí, takže si jej můžete brát s sebou
 	DA	Den kan oplades og tages med
@@ -378,6 +374,6 @@ SLIDE_17
 	NL	POWER TO THE MUSIC
 	NO	POWER TO THE MUSIC
 	PL	POWER TO THE MUSIC
-	RU	POWER TO THE MUSIC
+	RU	ВООРУЖИТЕСЬ МУЗЫКОЙ
 	SV	POWER TO THE MUSIC
 

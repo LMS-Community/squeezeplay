@@ -39,12 +39,12 @@ SSH_HOWTO
 	DE	Root-Kennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen
 	EN	The root password for this device is %s and you can connect to it on address %s
 	ES	La contraseña de root para este dispositivo es %s y se puede conectar en la dirección %s
-	FI	Käyttäjän root-salasana on %s. Voit yhdistää laitteen osoitteeseen %s
+	FI	Laitteen root-salasana on %s ja siihen voidaan muodostaa yhteys osoitteessa %s
 	FR	Le mot de passe de l'utilisateur root pour ce dispositif est %s et vous pouvez vous y connecter à l'adresse %s
 	IT	La password dell'utente root di questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
 	NL	Het wachtwoord voor de gebruiker-root van dit apparaat is %s en je kunt er verbinding mee maken via het adres %s
 	NO	Passordet for brukeren root på denne enheten er %s, og du kan kople til den på adressen %s
-	PL	Hasło użytkownika głównego (root) dla tego urządzenia to %s. Z urządzeniem można połączyć się pod adresem %s.
+	PL	Hasło użytkownika głównego (root) dla tego urządzenia to %s i można się z nim połączyć pod adresem %s
 	RU	Пароль пользователя root этого устройства %s, и вы можете подключиться к нему по адресу %s
 	SV	Enhetens rootlösenord är %s, och du kan ansluta till den på adressen: %s
 

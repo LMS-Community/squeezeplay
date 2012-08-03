@@ -9,7 +9,7 @@ WQVGA_SMALL_SKIN
 	DE	WQVGA-Skin – Kleine Schrift
 	EN	WQVGA Small Print Skin
 	ES	Máscara con letra pequeña WQVGA
-	FI	Pieni WQVGA-tulostuspinta
+	FI	Pieni WQVGA-tulostusolemus
 	FR	Habillage à petits caractères WQVGA
 	IT	Skin WQVGA a caratteri piccoli
 	NL	WQVGA Small Print-skin
@@ -50,13 +50,13 @@ ENTER_SMALL
 
 ENTER
 	CS	Hotovo
-	DA	OK
+	DA	Afslut
 	DE	Fertig
 	EN	Done
 	ES	Listo
 	FI	Valmis
 	FR	Terminé
-	IT	Fatto
+	IT	Fine
 	NL	Gereed
 	NO	Fullført
 	PL	Gotowe
