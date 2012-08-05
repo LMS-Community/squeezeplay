@@ -15,8 +15,8 @@ export BUILD_TOP=$(BASE_DIR)build/solaris
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-D__solaris__ -I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
-export LDFLAGS=-L${PREFIX}/lib -R${PREFIX}/lib -L/usr/sfw/lib -R/usr/sfw/lib -lsocket -lresolv -lrt
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
+export LDFLAGS=-s -L${PREFIX}/lib -R${PREFIX}/lib -L/usr/sfw/lib -R/usr/sfw/lib -lsocket -lresolv -lrt
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
@@ -47,11 +47,10 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: freetype sdl sdl-ttf sdl-image sdl-gfx
+sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
-
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -59,6 +58,22 @@ freetype-2.1.10/config.mk:
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
+
+# png
+libpng-1.2.32/Makefile:
+	cd libpng-1.2.32; ./configure --enable-static=no --prefix=${PREFIX}
+
+libpng: libpng-1.2.32/Makefile
+	cd libpng-1.2.32; make && make install
+
+# jpeg
+jpeg-6b/Makefile:
+	-mkdir -p ${BUILD_TOP}/man/man1
+	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
+
 
 # sdl
 SDL-1.2.13/Makefile:
@@ -148,11 +163,12 @@ luaprofiler:
 # just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
+	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
 	mkdir -p ${PREFIX}/lib
-	ginstall tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
-	ginstall tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
-
+	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
+	ranlib ${PREFIX}/lib/libtolua++.a
 
 #
 # squeezeplay
@@ -167,7 +183,7 @@ portaudio:
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-xmms-plugin --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -179,7 +195,7 @@ generated/${LIBMAD_DIR}/Makefile.am:
 
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
-	cd generated/${LIBMAD_DIR}; ./configure --prefix=${PREFIX} --enable-fpm=64bit
+	cd generated/${LIBMAD_DIR}; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING} --enable-fpm=64bit
 
 libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
@@ -187,7 +203,7 @@ libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --prefix=${PREFIX}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY" ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
@@ -272,6 +288,8 @@ clean_generated:
 clean:
 	-rm -rf generated
 	-cd freetype-2.1.10; make distclean
+	-cd libpng-1.2.32; make distclean
+	-cd jpeg-6b; make distclean
 	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
@@ -286,7 +304,7 @@ clean:
 	-cd luaprofiler-2.0.2; make -f Makefile.solaris clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
-	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
+	-cd tolua++-1.0.92/src/lib; rm libtolua++.*; rm *.o
 	-cd portaudio_v18_1; make -f Makefile.solaris clean
 	-cd Tremor; make distclean
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
