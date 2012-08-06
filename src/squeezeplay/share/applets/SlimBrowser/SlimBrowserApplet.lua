@@ -3300,6 +3300,8 @@ function _problemConnectingInternal(self, server)
 			     sound = "WINDOWSHOW",
 		     })
 
+-- Defect 198 - Disable menu options not used / suitable for Belsonic
+--[[
 	if server:isPasswordProtected() then
 		-- password protection has been enabled
 		menu:addItem({
@@ -3381,6 +3383,15 @@ function _problemConnectingInternal(self, server)
 			        sound = "WINDOWSHOW",
 			})
 	end
+--]]
+
+	menu:addItem({
+		text = self:string("SLIMBROWSER_GO_HOME"),
+		callback = function()
+			self:_removeRequestAndUnlock(server)
+			goHome()
+		end,
+	})
 
 	local cancelAction =    function ()
 					self:_removeRequestAndUnlock(server)
@@ -3391,7 +3402,7 @@ function _problemConnectingInternal(self, server)
 	menu:addActionListener("back", self, cancelAction)
 	menu:addActionListener("go_home", self,  cancelAction )
 
-	menu:setHeaderWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(_server:getName()))))
+	menu:setHeaderWidget(Textarea("help_text", self:string("SLIMBROWSER_PROBLEM_CONNECTING_HELP", tostring(server:getName()))))
 	window:addWidget(menu)
 
 	self.serverErrorWindow = window
