@@ -77,7 +77,7 @@ function addLineInMenuItem(self)
 		style = 'item_choice',
 		iconStyle = 'hm_linein',
 		check = self.checkbox,
-		weight = 50,
+		weight = 105,
 	})
 --	local popup = Popup("toast_popup_icon")
 --	local icon  = Icon("icon_popup_lineIn")
