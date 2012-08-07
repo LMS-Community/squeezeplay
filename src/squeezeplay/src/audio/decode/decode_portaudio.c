@@ -382,7 +382,7 @@ static int decode_portaudio_init(lua_State *L) {
 		device_info = Pa_GetDeviceInfo(i);
 		host_info = Pa_GetHostApiInfo(device_info->hostApi);
 
-		LOG_DEBUG(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name);
+		LOG_INFO(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name);
 
 		if ( (padevname != NULL) && (device_info->name != NULL) )
 		{
@@ -395,11 +395,11 @@ static int decode_portaudio_init(lua_State *L) {
 
 		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
 		if (err == paFormatIsSupported) {
-			LOG_DEBUG(log_audio_output, "\tsupported");
+			LOG_INFO(log_audio_output, "\tsupported");
 			break;
 		}
 		else {
-			LOG_DEBUG(log_audio_output, "\tnot supported");
+			LOG_INFO(log_audio_output, "\tnot supported");
 		}
 	}
 
