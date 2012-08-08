@@ -40,13 +40,14 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
-export LDFLAGS=-s -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib -R${PREFIX}/lib -lsocket -lresolv -lrt
+# export LDFLAGS=-s -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib -R${PREFIX}/lib -lsocket -lresolv -lrt
+export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
-ENABLE_PROFILING=--enable-shared=yes --enable-static=no
+ENABLE_PROFILING=--enable-shared=no --enable-static=yes
 USE_MMX=--disable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
@@ -78,11 +79,11 @@ generated:
 
 # zlib123
 zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --prefix=${PREFIX}
+	cd zlib-1.2.7; ./configure --static --prefix=${PREFIX}
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
-	cd zlib-1.2.7; rm -f ${PREFIX}/lib/libz.a
+	cd zlib-1.2.7; rm -f libz.la
 
 freetype-2.1.10/config.mk:
 	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
