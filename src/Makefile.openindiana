@@ -40,7 +40,7 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
-export LDFLAGS=-s -L${PREFIX}/lib -R${PREFIX}/lib -R/opt/squeezeplay/lib -lsocket -lresolv -lrt
+export LDFLAGS=-s -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib -R${PREFIX}/lib -lsocket -lresolv -lrt
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
@@ -71,7 +71,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib freetype sdl libpng sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -98,17 +98,17 @@ libpng: libpng-1.2.32/Makefile
 	cd libpng-1.2.32; make && make install
 
 # jpeg
-jpeg-6b/Makefile:
-	-mkdir -p ${BUILD_TOP}/man/man1
-	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
-
-libjpeg: jpeg-6b/Makefile
-	cd jpeg-6b; make && make install
+#jpeg-6b/Makefile:
+#	-mkdir -p ${BUILD_TOP}/man/man1
+#	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
+#
+#libjpeg: jpeg-6b/Makefile
+#	cd jpeg-6b; make && make install
         
 
 # sdl
 SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX} --disable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --disable-esd --disable-arts --enable-clock_gettime
+	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
 
 sdl: SDL-1.2.13/Makefile
 	cd SDL-1.2.13; make && make install
@@ -129,7 +129,7 @@ sdl-ttf: SDL_ttf-2.0.8/Makefile
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
+	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make && make install
@@ -204,8 +204,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
-app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
 portaudio_v19/Makefile:
@@ -214,15 +214,15 @@ portaudio_v19/Makefile:
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
 # libogg
-libogg-1.2.2/Makefile:
-	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-static=no
-
-libogg: libogg-1.2.2/Makefile
-	cd libogg-1.2.2; make && make install
+#libogg-1.2.2/Makefile:
+#	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-static=no
+#
+#libogg: libogg-1.2.2/Makefile
+#	cd libogg-1.2.2; make && make install
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd flac-1.2.1; ./configure --disable-cpplibs --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -278,8 +278,11 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
-	# cp /usr/lib/libgcc_s.so.1 ${PREFIX}/lib/
-	# cd ${PREFIX}/lib ; ln -s libgcc_s.so.1 libgcc_s.so
+	cd ${PREFIX} && rm -rf man
+	cd ${PREFIX}/share && rm -rf man
+	cd ${PREFIX}/lib && rm -f *.la
+	cd /usr/sfw/lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
+	cd /usr/lib; tar -cf - libogg\.* | (cd ${PREFIX}/lib; tar -xf -)
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
