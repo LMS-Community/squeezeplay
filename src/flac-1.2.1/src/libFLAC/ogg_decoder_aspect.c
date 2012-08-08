@@ -33,6 +33,8 @@
 #  include <config.h>
 #endif
 
+#ifdef FLAC__HAS_OGG
+
 #include <string.h> /* for memcpy() */
 #include "FLAC/assert.h"
 #include "private/ogg_decoder_aspect.h"
@@ -251,3 +253,6 @@ FLAC__OggDecoderAspectReadStatus FLAC__ogg_decoder_aspect_read_callback_wrapper(
 
 	return FLAC__OGG_DECODER_ASPECT_READ_STATUS_OK;
 }
+
+#endif // #ifdef FLAC__HAS_OGG
+// eof

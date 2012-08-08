@@ -33,6 +33,8 @@
 #  include <config.h>
 #endif
 
+#ifdef FLAC__HAS_OGG
+
 #include "private/ogg_mapping.h"
 
 const unsigned FLAC__OGG_MAPPING_PACKET_TYPE_LEN = 8; /* bits */
@@ -45,3 +47,6 @@ const unsigned FLAC__OGG_MAPPING_VERSION_MAJOR_LEN = 8; /* bits */
 const unsigned FLAC__OGG_MAPPING_VERSION_MINOR_LEN = 8; /* bits */
 
 const unsigned FLAC__OGG_MAPPING_NUM_HEADERS_LEN = 16; /* bits */
+
+#endif // #ifdef FLAC__HAS_OGG
+// eof

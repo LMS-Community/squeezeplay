@@ -195,11 +195,12 @@ luaprofiler:
 # just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
+	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
 	mkdir -p ${PREFIX}/lib
-	ginstall tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
-	ginstall tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
-
+	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
+	ranlib ${PREFIX}/lib/libtolua++.a
 
 #
 # squeezeplay
@@ -214,16 +215,10 @@ portaudio_v19/Makefile:
 
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
-# libogg
-#libogg-1.2.2/Makefile:
-#	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-static=no
-#
-#libogg: libogg-1.2.2/Makefile
-#	cd libogg-1.2.2; make && make install
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-cpplibs --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd flac-1.2.1; ./configure --disable-ogg --disable-oggtest --disable-cpplibs --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -283,7 +278,6 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd ${PREFIX}/share && rm -rf man
 	cd ${PREFIX}/lib && rm -f *.la
 	cd /usr/sfw/lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
-	cd /usr/lib; tar -cf - libogg\.* | (cd ${PREFIX}/lib; tar -xf -)
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}

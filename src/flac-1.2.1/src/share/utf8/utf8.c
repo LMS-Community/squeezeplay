@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "share/alloc.h"
-#include "utf8.h"
+#include "share/utf8.h"
 #include "charset.h"
 
 

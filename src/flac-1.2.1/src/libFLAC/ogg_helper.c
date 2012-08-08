@@ -33,6 +33,8 @@
 #  include <config.h>
 #endif
 
+#ifdef FLAC__HAS_OGG
+
 #include <stdlib.h> /* for malloc() */
 #include <string.h> /* for memcmp(), memcpy() */
 #include "FLAC/assert.h"
@@ -207,3 +209,6 @@ FLAC__bool simple_ogg_page__set_at(FLAC__StreamEncoder *encoder, FLAC__uint64 po
 
 	return true;
 }
+
+#endif // #ifdef FLAC__HAS_OGG
+// eof

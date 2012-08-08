@@ -98,7 +98,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "replaygain_analysis.h"
+#include "share/replaygain_analysis.h"
 
 Float_t ReplayGainReferenceLoudness = 89.0; /* in dB SPL */
 
