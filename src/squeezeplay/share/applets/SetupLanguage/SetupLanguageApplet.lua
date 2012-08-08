@@ -56,7 +56,7 @@ local locales = {
 	FR = {'Français', 4},
 	IT = {'Italiano', 10},
 	NL = {'Nederlands', 3},
-	RU = {'русский', 10},
+	--RU = {'русский', 10},
 	PL = {'Polski', 10},
 	CS = {'Čeština', 10},
 }

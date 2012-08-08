@@ -42,10 +42,16 @@ end
 
 
 function registerApplet(meta)
+	local currentLanguage = meta:getSettings().locale
+
+	if currentLanguage == "RU" then
+		currentLanguage = "EN"
+		meta:getSettings().locale = currentLanguage
+		meta:storeSettings()
+	end
 
 	-- set the current locale from the applet settings
-	locale:setLocale(meta:getSettings().locale)
-	
+	locale:setLocale(currentLanguage)
 	meta:registerService("setupShowSetupLanguage")
 
 	-- add ourselves to the main menu
