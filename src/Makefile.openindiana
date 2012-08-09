@@ -40,8 +40,7 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
-# export LDFLAGS=-s -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib -R${PREFIX}/lib -lsocket -lresolv -lrt
-export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -L${PREFIX}/lib
+export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
@@ -72,7 +71,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib freetype sdl libpng sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -99,12 +98,12 @@ libpng: libpng-1.2.32/Makefile
 	cd libpng-1.2.32; make && make install
 
 # jpeg
-#jpeg-6b/Makefile:
-#	-mkdir -p ${BUILD_TOP}/man/man1
-#	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
-#
-#libjpeg: jpeg-6b/Makefile
-#	cd jpeg-6b; make && make install
+jpeg-6b/Makefile:
+	-mkdir -p ${BUILD_TOP}/man/man1
+	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
         
 
 # sdl
