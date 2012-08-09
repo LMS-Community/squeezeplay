@@ -878,10 +878,7 @@ function showNetworkHealthDiagnosticsMenu(self)
 
 	self.labels = {}
 	self.labels["NETWORK_STATUS"] = {
--- For some reason (I have no idea why) the second line is not show anymore in this label
---  and since the second line is the important one the quick fix is to swap the two lines
---		text = self:string("NETWORK_STATUS", tostring(self:string("NET_HEALTH_HINT"))),
-		text = self:string(tostring(self:string("NET_HEALTH_HINT")), ''),
+		text = self:string("NETWORK_STATUS", tostring(self:string("NET_HEALTH_HINT"))),
 		style = 'item_info',
 	}
 	menu:addItem(self.labels["NETWORK_STATUS"])
@@ -949,10 +946,7 @@ function setResult(self, index, result, msgStr)
 		myItem.style = "item_info_red"
 	end
 
--- For some reason (I have no idea why) the second line is not show anymore in this label
---  and since the second line is the important one the quick fix is to swap the two lines
---	self.networkHealthMenu:setText(self.labels[index], self:string(index, msgStr))
-	self.networkHealthMenu:setText(self.labels[index], self:string(msgStr, ''))
+	self.networkHealthMenu:setText(self.labels[index], self:string(index, msgStr))
 	self.networkHealthMenu:setSelectedIndex(1)
 
 -- TODO: needed?
