@@ -15,6 +15,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/utsname.h>
 
 #include <netdb.h>
 #include <netinet/in.h>
@@ -108,8 +109,13 @@ int strnicmp(const char *s1, const char *s2, size_t n)
 }
 
 char *platform_get_arch() {
-    // FIXME
-    return "unknown";
+    struct utsname name;
+    char *arch;
+
+    uname(&name);
+
+    arch = strdup(name.machine);
+    return arch;
 }
 
 int watchdog_get() {

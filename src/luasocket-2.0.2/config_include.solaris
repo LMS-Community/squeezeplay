@@ -1,0 +1,15 @@
+#------
+# LuaSocket makefile platform specific configuration
+#
+
+
+#------
+# Compiler and linker settings
+# for Solaris
+DEF=-DLUASOCKET_DEBUG 
+MYCFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fPIC
+MYLDFLAGS=-O -fPIC
+
+#------
+# End of makefile platform specific configuration
+#

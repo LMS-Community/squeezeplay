@@ -1,6 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Solaris 9
 # Copyright 2007 Logitech
+# Copyright 2012 Duane Paddock
 ################################################################################
 
 #
@@ -16,13 +17,13 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
-export LDFLAGS=-s -L${PREFIX}/lib -R${PREFIX}/lib -L/usr/sfw/lib -R/usr/sfw/lib -lsocket -lresolv -lrt
+export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
-ENABLE_PROFILING=--disable-shared
+ENABLE_PROFILING=--enable-shared=no --enable-static=yes
 USE_MMX=--disable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
@@ -47,10 +48,18 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
+
+# zlib123
+zlib-1.2.7/Makefile:
+	cd zlib-1.2.7; ./configure --static --prefix=${PREFIX}
+
+zlib: zlib-1.2.7/Makefile
+	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+	# cd zlib-1.2.7; rm -f libz.la
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -77,7 +86,7 @@ libjpeg: jpeg-6b/Makefile
 
 # sdl
 SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettim
 
 sdl: SDL-1.2.13/Makefile
 	cd SDL-1.2.13; make && make install
@@ -98,7 +107,7 @@ sdl-ttf: SDL_ttf-2.0.8/Makefile
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
+	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make && make install
@@ -118,7 +127,7 @@ lua:
 
 # luasocket (requires lua)
 luasocket: lua
-	cd luasocket-2.0.2; make install LD="gcc -shared" INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
+	cd luasocket-2.0.2; make install LD="gcc -shared" INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=solaris
 
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
@@ -175,7 +184,7 @@ tolua++: lua
 #
 
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz
 
 # portaudio
 portaudio:
@@ -183,7 +192,7 @@ portaudio:
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd flac-1.2.1; ./configure --disable-ogg --disable-oggtest --disable-cpplibs --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -239,8 +248,10 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
-	cp /usr/lib/libgcc_s.so.1 ${PREFIX}/lib/
-	cd ${PREFIX}/lib ; ln -s libgcc_s.so.1 libgcc_s.so
+	cd ${PREFIX} && rm -rf man
+	cd ${PREFIX}/share && rm -rf man
+	# cd ${PREFIX}/lib && rm -f *.la
+	cd /usr/lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
@@ -287,6 +298,7 @@ clean_generated:
 .PHONY: clean
 clean:
 	-rm -rf generated
+	-cd zlib-1.2.7; make distclean; rm -f Makefile
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
 	-cd jpeg-6b; make distclean
@@ -295,7 +307,7 @@ clean:
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
 	-cd lua-5.1.1; make clean
-	-cd luasocket-2.0.2; make clean PLATFORM=linux
+	-cd luasocket-2.0.2; make clean PLATFORM=solaris
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
