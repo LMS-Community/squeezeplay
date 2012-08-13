@@ -12,7 +12,7 @@
 
 
 struct fifo {
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && ! defined(SDL_FIFOS)
 	/* linux multi-process locking */
 	pthread_mutex_t mutex;
 	pthread_cond_t cond;

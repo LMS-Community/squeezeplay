@@ -56,7 +56,7 @@ static void print_trace(void)
 
 
 int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 
 #ifndef _POSIX_THREAD_PROCESS_SHARED
 #error "no _POSIX_THREAD_PROCESS_SHARED"
@@ -115,7 +115,7 @@ int fifo_init(struct fifo *fifo, size_t size, bool_t prio_inherit) {
 }
 
 void fifo_free(struct fifo *fifo) {
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	/* linux multi-process locking */
 	pthread_cond_destroy(&fifo->cond);
 	pthread_mutex_destroy(&fifo->mutex);
@@ -191,7 +191,7 @@ int fifo_lock(struct fifo *fifo) {
 	}
 #endif
 
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	r = pthread_mutex_lock(&fifo->mutex);
 #else
 	r = SDL_LockMutex(fifo->mutex);
@@ -211,7 +211,7 @@ int fifo_unlock(struct fifo *fifo) {
 #endif
 
 	fifo->lock--;
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	/* linux multi-process locking */
 	return pthread_mutex_unlock(&fifo->mutex);
 #else
@@ -223,7 +223,7 @@ int fifo_unlock(struct fifo *fifo) {
 int fifo_signal(struct fifo *fifo) {
 	ASSERT_FIFO_LOCKED(fifo);
 
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	/* linux multi-process locking */
 	return pthread_cond_signal(&fifo->cond);
 #else
@@ -233,7 +233,7 @@ int fifo_signal(struct fifo *fifo) {
 }
 
 int fifo_wait_timeout(struct fifo *fifo, Uint32 ms) {
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	struct timeval delta;
 	struct timespec abstime;
 #endif
@@ -242,7 +242,7 @@ int fifo_wait_timeout(struct fifo *fifo, Uint32 ms) {
 	ASSERT_FIFO_LOCKED(fifo);
 	fifo->lock--;
 
-#ifdef HAVE_LIBPTHREAD
+#if defined(HAVE_LIBPTHREAD) && !defined(SDL_FIFOS)
 	/* linux multi-process locking */
 	gettimeofday(&delta, NULL);
 
