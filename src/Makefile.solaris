@@ -86,7 +86,7 @@ libjpeg: jpeg-6b/Makefile
 
 # sdl
 SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure  ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
+	cd SDL-1.2.13; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime=no
 
 sdl: SDL-1.2.13/Makefile
 	cd SDL-1.2.13; make && make install
@@ -236,7 +236,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --prefix=${PREFIX}
+	cd squeezeplay; CFLAGS="-DSDL_FIFOS=1 ${CFLAGS}" LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
