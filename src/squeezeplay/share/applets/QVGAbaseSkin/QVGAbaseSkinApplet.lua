@@ -2173,14 +2173,8 @@ function skin(self, s, reload, useDefaultSize)
 	s.hm_settingsAlarm = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_alarm" .. skinSuffix),
 	})
-	s.hm_settingsPlayerNameChange = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_settings_name" .. skinSuffix),
-	})
 	s.hm_settingsBrightness = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_settings_brightness" .. skinSuffix),
-	})
-	s.hm_settingsSync = _uses(s._buttonicon, {
-		img = _loadImage(self, "IconsResized/icon_sync" .. skinSuffix),
 	})
 	s.hm_selectPlayer = _uses(s._buttonicon, {
 		img = _loadImage(self, "IconsResized/icon_choose_player" .. skinSuffix),

@@ -94,9 +94,6 @@ local itemMap = {
 	-- TODO: This list can be removed as soon as the server side has been fixed
 	-- Delivered from backend but wrong order / location
 	favorites = { "favorites", "home", 1},
-	settingsPlayerNameChange = { "settingsPlayerNameChange", "settingsSmartRadio" },
-	settingsSync = { "settingsSync", "settingsSmartRadio" },
-	settingsInformation = { "settingsInformation", "developerSettings" },
 }
 
 

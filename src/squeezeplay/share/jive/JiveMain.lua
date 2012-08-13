@@ -482,7 +482,6 @@ function JiveMain:jiveMainNodes(globalStrings)
 	jiveMain:addNode( { id = 'networkSettings', iconStyle = "hm_settingsNetworking", node = 'advancedSettings', noCustom = 1, text = _globalStrings:str("NETWORK_NETWORKING"), weight = 100, windowStyle = 'text_only' })
 	jiveMain:addNode( { id = 'settingsAudio', iconStyle = "hm_settingsAudio", node = 'settings', noCustom = 1, text = _globalStrings:str("AUDIO_SETTINGS"), weight = 40, windowStyle = 'text_only' })
 	jiveMain:addNode( { id = 'settingsBrightness', iconStyle = "hm_settingsBrightness", node = 'settings', noCustom = 1, text = _globalStrings:str("BRIGHTNESS_SETTINGS"), weight = 45, windowStyle = 'text_only' })
-	jiveMain:addNode( { id = 'settingsSmartRadio', iconStyle = 'hm_settingsSmartRadio', node = 'settings', text = _globalStrings:str("SETTINGS_SMART_RADIO"), weight = 75, windowStyle = 'text_only' })
 	jiveMain:addNode( { id = 'settingsTime', iconStyle = 'hm_settingsTime', node = 'settings', text = _globalStrings:str("SETTINGS_TIME"), weight = 85, windowStyle = 'text_only' })
 	jiveMain:addNode( { id = 'developerSettings', iconStyle = 'hm_settingsDeveloper', node = 'hidden',noCustom = 1, text = _globalStrings:str("DEVELOPER_MENU"), weight = 110, windowStyle = 'text_only' })
 
