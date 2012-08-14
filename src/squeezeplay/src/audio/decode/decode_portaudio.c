@@ -362,6 +362,8 @@ static int decode_portaudio_init(lua_State *L) {
 	const char *padevname;
 	int devnamelen;
 	void *buf;
+	const char *palatency;
+	unsigned int userlatency;
 
 	LOG_WARN(log_audio_output, "decode_portaudio_init called\n");
 
@@ -410,6 +412,18 @@ static int decode_portaudio_init(lua_State *L) {
 
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
+
+	/* override default latency? */
+	palatency = getenv("USEPALATENCY");
+	if ( palatency != NULL )
+	{
+		userlatency = strtoul(palatency, NULL, 0);
+
+		if ( (userlatency > 0) && (userlatency < 1000) )
+			outputParam.suggestedLatency = (float) userlatency / 1000.0;
+	}
+
+	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
 
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);

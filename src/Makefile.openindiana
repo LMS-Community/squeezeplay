@@ -90,7 +90,7 @@ freetype-2.1.10/config.mk:
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
 
-# png also add clean
+# png
 libpng-1.2.32/Makefile:
 	cd libpng-1.2.32; ./configure --enable-static=no --prefix=${PREFIX}
 
@@ -149,7 +149,7 @@ lua:
 
 # luasocket (requires lua)
 luasocket: lua
-	cd luasocket-2.0.2; make install LD="gcc -shared" INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
+	cd luasocket-2.0.2; make install LD="gcc -shared" INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=solaris
 
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
@@ -332,7 +332,7 @@ clean:
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
 	-cd lua-5.1.1; make clean
-	-cd luasocket-2.0.2; make clean PLATFORM=linux
+	-cd luasocket-2.0.2; make clean PLATFORM=solaris
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
