@@ -360,7 +360,9 @@ static int decode_portaudio_init(lua_State *L) {
 	const PaDeviceInfo *device_info;
 	const PaHostApiInfo *host_info;
 	const char *padevname;
+	const char *paapiname;
 	int devnamelen;
+	int apinamelen;
 	void *buf;
 	const char *palatency;
 	unsigned int userlatency;
@@ -378,13 +380,21 @@ static int decode_portaudio_init(lua_State *L) {
 	outputParam.sampleFormat = paInt32;
 
 	padevname = getenv("USEPADEVICE");
+	paapiname = getenv("USEPAHOSTAPI");
 
 	num_devices = Pa_GetDeviceCount();
 	for (i = 0; i < num_devices; i++) {
 		device_info = Pa_GetDeviceInfo(i);
 		host_info = Pa_GetHostApiInfo(device_info->hostApi);
 
-		LOG_INFO(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name);
+		LOG_INFO(log_audio_output, "%d:%s (%s)", i, device_info->name, host_info->name);
+
+		if ( (paapiname != NULL) && (host_info->name != NULL) )
+		{
+			apinamelen = strlen (paapiname);
+			if ( strnicmp(host_info->name, paapiname, apinamelen) != 0 )
+				continue;
+		}
 
 		if ( (padevname != NULL) && (device_info->name != NULL) )
 		{
