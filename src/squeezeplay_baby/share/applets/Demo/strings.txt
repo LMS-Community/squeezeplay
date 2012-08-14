@@ -306,7 +306,7 @@ SLIDE_13
 	CS	Nebo tabletu či chytrého telefonu
 	DA	Eller tablet og smartphone
 	DE	Oder Tablet-PC und Smartphone
-	EN	Or tablet and smart phone
+	EN	Or tablet and smartphone
 	ES	O tablet y smartphone
 	FI	Tai taulutietokoneesta tai älypuhelimesta
 	FR	Ou de votre tablette ou smartphone
@@ -321,7 +321,7 @@ SLIDE_14CENTER
 	CS	Zařízení je dobíjecí, takže si jej můžete brát s sebou
 	DA	Den kan oplades og tages med
 	DE	Laden Sie es einfach auf und nehmen Sie es überallhin mit
-	EN	Its rechargeable, so you can take it with you
+	EN	It's rechargeable, so you can take it with you
 	ES	Es recargable, puede llevársela a todas partes
 	FI	Laite on ladattava, joten voit ottaa sen mukaasi
 	FR	Rechargeable, vous pouvez l'emporter partout
