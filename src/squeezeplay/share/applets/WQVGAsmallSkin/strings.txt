@@ -35,7 +35,7 @@ WQVGA_SMALL_SKIN_FAB4
 
 ENTER_SMALL
 	CS	hotovo
-	DA	udført
+	DA	afslut
 	DE	Fertig
 	EN	done
 	ES	listo
@@ -43,7 +43,7 @@ ENTER_SMALL
 	FR	terminé
 	IT	fine
 	NL	gereed
-	NO	ferdig
+	NO	fullført
 	PL	gotowe
 	RU	готово
 	SV	klart

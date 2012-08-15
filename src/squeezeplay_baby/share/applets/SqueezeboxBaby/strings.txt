@@ -25,12 +25,12 @@ INVALID_MAC_TEXT
 	EN	Invalid mac address or uuid. Please contact support.
 	ES	Dirección MAC o UUID no válidos. Contacte con asistencia técnica.
 	FI	Virheellinen MAC-osoite tai UUID. Ota yhteyttä tukeen.
-	FR	Adresse MAC ou uuid non valide. Veuillez contacter le service de support.
+	FR	Adresse MAC ou UUID non valide. Veuillez contacter le service de support.
 	IT	Indirizzo MAC o UUID non valido. Contattare il servizio di assistenza.
 	NL	Ongeldig mac-adres of uuid. Neem contact op met ondersteuning.
 	NO	Ugyldig mac-adresse eller uuid. Ta kontakt med kundestøtte.
-	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem pomocy technicznej.
-	RU	Недопустимый MAC-адрес или UUID. Обратитесь в службу поддержки.
+	PL	Nieprawidłowy adres MAC lub identyfikator UUID. Skontaktuj się z działem wsparcia.
+	RU	Недопустимый mac-адрес или uuid. Обратитесь в службу поддержки.
 	SV	Ogiltig MAC-adress eller ogiltigt UUID. Kontakta supportavdelningen.
 
 INVALID_MAC_CONTINUE
@@ -144,7 +144,7 @@ BSP_BRIGHTNESS_MIN_ADJUST_HELP
 	DE	Sie können die minimale Helligkeit mit dem Rad anpassen.
 	EN	Use the wheel to adjust the minimal brightness.
 	ES	Use la rueda para ajustar el brillo al mínimo.
-	FI	Voit säätää kirkkautta kiekolla.
+	FI	Voit säätää vähimmäiskirkkautta kiekolla.
 	FR	Utilisez la molette pour régler la luminosité minimale.
 	IT	Usare la rotellina per regolare la luminosità minima.
 	NL	Gebruik het wiel om de minimale helderheid aan te passen.
@@ -166,7 +166,7 @@ GOODBYE
 	NO	Farvel
 	PL	Do widzenia
 	RU	До свидания
-	SV	Hej då
+	SV	Hej då!
 
 BATTERY_LOW
 	CS	Nízký stav baterie
@@ -175,7 +175,7 @@ BATTERY_LOW
 	EN	Battery Low
 	ES	Carga de pila baja
 	FI	Heikko paristojännite
-	FR	Niveau faible des piles
+	FR	Niveau de la batterie faible
 	IT	Batteria quasi scarica
 	NL	Laag batterijvermogen
 	NO	Dårlig batteri
@@ -230,14 +230,14 @@ BETA_HARDWARE_TEXT
 
 BETA_HARDWARE_EUTHANIZE
 	CS	Toto je předprodukční jednotka, revize hardwaru %s.\n\nTato jednotka již není podporována, vraťte laskavě Logitech.
-	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere.
-	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt.
+	DA	Denne enhed er en prototype, hardwareversion %s.\n\nEnheden understøttes ikke længere. Send den tilbage til Logitech.
+	DE	Dieses Gerät gehört einer veralteten Produktionsreihe an, Hardware-Version %s.\n\nDieses Gerät wird nicht mehr unterstützt. Bitte geben Sie es an Logitech zurück.
 	EN	This is a pre-production unit, hardware revision %s.\n\nThis unit is no longer supported, please return to Logitech.
 	ES	Ésta es una unidad de pre-producción, revisión de hardware %s.\n\nEsta unidad ya no es compatible, devuélvala a Logitech.
 	FI	Tämä on testiyksikkö, laitteistoversio %s.\n\nYksikköä ei enää tueta, palauta yksikkö Logitechille.
-	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge.
+	FR	Cette unité est une unité de pré-production, révision matérielle %s.\n\nCette unité n'est plus prise en charge. Veuillez la renvoyer à Logitech.
 	IT	Questa è un'unità non ancora rilasciata. %s.\n\nQuesta unità non è più supportata. Restituirla a Logitech.
-	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund.
+	NL	Dit is een preproductie-eenheid, hardwarerevisie %s.\n\nDeze eenheid wordt niet langer ondersteund. Gelieve deze aan Logitech te retourneren.
 	NO	Dette er en forproduksjonsenhet, maskinvarerevisjon %s.\n\nDenne enheten støttes ikke lenger, returner den til Logitech.
 	PL	To jest urządzenie przedprodukcyjne, wersja sprzętowa %s.\n\nTo urządzenie nie jest już obsługiwane, prosimy zwrócić je do firmy Logitech.
 	RU	Это предварительная версия устройства, выпуск оборудования %s.\n\nЭто устройство больше не поддерживается, верните его в Logitech.

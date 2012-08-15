@@ -105,7 +105,7 @@ UPTIME_DAYS
 	NL	%s dagen
 	NO	%s dager
 	PL	%s dni
-	RU	%s дн
+	RU	%s дн.
 	SV	%s dagar
 
 UPTIME_HOURS
@@ -119,7 +119,7 @@ UPTIME_HOURS
 	IT	%s ore
 	NL	%s uren
 	NO	%s timer
-	PL	%s godz
+	PL	%s godz.
 	RU	%s ч
 	SV	%s timmar
 

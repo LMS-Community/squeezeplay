@@ -44,7 +44,7 @@ DEMO_START_DEMO_WARNING
 	NL	WAARSCHUWING: druk tegelijkertijd op de knoppen BACK en PLAY om de demo uit te schakelen.
 	NO	ADVARSEL: Du deaktiverer demoen ved å trykke på knappene BACK og PLAY AV samtidig.
 	PL	UWAGA: Aby wyłączyć wersję demonstracyjną, naciśnij jednocześnie przyciski BACK i PLAY.
-	RU	ПРЕДУПРЕЖДЕНИЕ.
+	RU	ПРЕДУПРЕЖДЕНИЕ. Для отключения демонстрации одновременно нажмите кнопки BACK (Назад) и PLAY (Воспроизведение).
 	SV	VARNING: Tryck på BACK och PLAY samtidigt för att aktivera demonstrationen.
 
 DEMO_ERROR
@@ -119,7 +119,7 @@ DEMO_VOLUME_MUTED
 	NL	Volume (gedempt)
 	NO	Volum (av)
 	PL	Głośność (wyciszona)
-	RU	Громкость (без звука)
+	RU	Громкость (приглушенная)
 	SV	Volym (av)
 
 SLIDE_01CENTER
@@ -326,7 +326,7 @@ SLIDE_14CENTER
 	FI	Laite on ladattava, joten voit ottaa sen mukaasi
 	FR	Rechargeable, vous pouvez l'emporter partout
 	IT	È ricaricabile, per portarla con te
-	NL	De radio is oplaadbaar, dus u kunt hem meenemen
+	NL	De radio is oplaadbaar, dus makkelijk mee te nemen
 	NO	Den er oppladbar, slik at du kan ta den med deg
 	PL	Dzięki możliwości doładowywania akumulatora możesz zabrać odtwarzacz ze sobą
 	RU	Питание от аккумуляторов позволяет взять радио с собой

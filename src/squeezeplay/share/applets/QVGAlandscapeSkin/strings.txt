@@ -20,7 +20,7 @@ QVGALANDSCAPE_SKIN
 
 SMALL_ART
 	CS	Malý obal alba
-	DA	Små coverbilleder
+	DA	Små albumcovere
 	DE	Kleine Plattenhüllen
 	EN	Small Artwork
 	ES	Carátula de álbum pequeña

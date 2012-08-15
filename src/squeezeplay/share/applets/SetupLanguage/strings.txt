@@ -34,19 +34,19 @@ LANGUAGE
 	SV	Språk
 
 CHOOSE_LANGUAGE_HELP
-	CS	Pro výběr vašeho jazyka použijte kolečko.
-	DA	Brug drejeknappen til at vælge sprog.
+	CS	Otočením voliče vyberte jazyk a pokračujte jeho stisknutím.
+	DA	Brug drejeknappen til at vælge sprog, og tryk derefter på knappen for at fortsætte.
 	DE	Wählen Sie Ihre Sprache mit dem Rad aus.
 	EN	Spin the dial to choose your language, then press the dial to proceed.
-	ES	Use el botón rueda para elegir el idioma.
-	FI	Valitse kieli vierityskiekolla ja jatka painamalla vierityskiekkoa.
-	FR	Utilisez la roulette pour choisir une langue.
-	IT	Utilizzare la ghiera per scegliere la lingua.
-	NL	Gebruik het wiel om je taal te kiezen.
-	NO	Bruk hjulet for å velge språk.
-	PL	Użyj pokrętła, aby zmienić język.
-	RU	Используйте колесико для выбора языка.
-	SV	Välj språk med hjälp av rullningshjulet.
+	ES	Gire el mando para elegir el idioma y púlselo para continuar.
+	FI	Valitse kieli valitsinta kääntämällä ja jatka painamalla valitsinta.
+	FR	Utilisez la roulette pour choisir une langue, puis appuyez dessus pour continuer.
+	IT	Girare la manopola per scegliere la lingua, quindi premerla per continuare.
+	NL	Draai de knop om je taal te kiezen en druk vervolgens op de knop om door te gaan.
+	NO	Snurr hjulet for å velge språk, og trykk så på hjulet for å fortsette.
+	PL	Obróć pokrętło, aby wybrać język, a następnie je naciśnij, aby kontynuować.
+	RU	Выберите язык с помощью колесика и нажмите колесико, чтобы продолжить.
+	SV	Vrid på ratten för att välja ditt språk och tryck sedan på ratten för att gå vidare.
 
 LOADING_LANGUAGE
 	CS	Nahrávám angličtinu

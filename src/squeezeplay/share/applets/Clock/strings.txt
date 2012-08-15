@@ -189,7 +189,7 @@ SCREENSAVER_CLOCK_MONTH_07
 	DE	Juli
 	EN	July
 	ES	Julio
-	FI	heinäkuu
+	FI	Heinäkuu
 	FR	Juillet
 	IT	Luglio
 	NL	juli

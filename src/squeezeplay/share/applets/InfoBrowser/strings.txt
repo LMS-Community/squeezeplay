@@ -22,12 +22,12 @@ INFOBROWSER_NORESPONSE
 	EN	No information feeds found.  Please check the Information Browser plugin is enabled on your server.
 	ES	No se ha encontrado ninguna fuente de información. Compruebe si el complemento Navegador de información está activado en el servidor.
 	FI	Informaatiosyötteitä ei löytynyt.  Tarkista, että informaatioselaimen laajennus on käytössä palvelimessa.
-	FR	Aucun flux d'informations n'a été trouvé. Vérifiez que le plugin Navigateur info est activé sur votre serveur.
+	FR	Aucun flux d'informations n'a été trouvé. Vérifiez que le plug-in Navigateur info est activé sur votre serveur.
 	IT	Nessun feed di informazioni trovato. Verificare che il plugin del Browser informazioni sia attivato nel server.
 	NL	Geen informatiekanalen gevonden. Controleer of de plug-in Infobrowser op je server is ingeschakeld.
 	NO	Fant ingen informasjonsfeeder. Kontroller at plugin-modulen Informasjonsleser er aktivert på serveren.
 	PL	Nie znaleziono żadnych kanałów informacji. Sprawdź, czy na serwerze włączono wtyczkę Przeglądarka informacji.
-	RU	Каналы информации не найдены. Убедитесь, что подключаемый модуль "Обозреватель информации" включен на вашем сервере.
+	RU	Не найдены каналы информации. Убедитесь, что модуль информационного браузера включен на вашем сервере.
 	SV	Inga informationsflöden hittades. Kontrollera att plugin-programmet Infoläsaren har aktiverats på servern.
 
 INFOBROWSER_NOINFO_SN
@@ -37,7 +37,7 @@ INFOBROWSER_NOINFO_SN
 	EN	No information feeds found.  Please login to your uesmartradio.com account and add information feeds.
 	ES	No se ha encontrado ninguna fuente de información. Inicie sesión en su cuenta uesmartradio.com y agregue fuentes de información.
 	FI	Informaatiosyötteitä ei löytynyt.  Kirjaudu uesmartradio.com-tiliisi ja lisää syötteitä.
-	FR	Aucun flux d'informations n'a été trouvé. Utilisez votre compte uesmartradio.com et ajoutez des flux d'informations.
+	FR	Aucun flux d'informations n'a été trouvé. Connectez-vous à votre compte uesmartradio.com et ajoutez des flux d'informations.
 	IT	Nessun feed di informazioni trovato. Accedere all'account uesmartradio.com e aggiungere i feed di informazioni.
 	NL	Geen informatiekanalen gevonden. Meld je aan bij je account op uesmartradio.com en voeg informatiekanalen toe.
 	NO	Fant ingen informasjonsfeeder. Logg på uesmartradio.com-kontoen og legg til informasjonsfeeder.

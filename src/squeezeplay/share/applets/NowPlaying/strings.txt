@@ -52,7 +52,7 @@ SCREENSAVER_OFF
 	DA	Fra
 	DE	Aus
 	EN	Off
-	ES	Apagado
+	ES	Desactivado
 	FI	Ei käytössä
 	FR	Désactivé
 	IT	Disattivato
@@ -124,7 +124,7 @@ SCREENSAVER_ARTWORK_MEDIUM
 
 SCREENSAVER_ARTWORK_LARGE
 	CS	Velký
-	DA	Stort
+	DA	Stor
 	DE	Groß
 	EN	Large
 	ES	Grande
@@ -219,11 +219,11 @@ NOW_PLAYING_VIEWS_HELP
 	EN	The Now Playing screen has several "views". Choose the views you want to see for this Smart Radio here.
 	ES	La pantalla Reproduciendo tiene varias configuraciones o "vistas" de ventana entre las que se puede alternar. Seleccione aquí las vistas que desee para este reproductor.
 	FI	Nyt soi -näytössä on erilaisia näkymiä. Valitse näkymät, joita haluat käytettävän tässä Smart Radiossa.
-	FR	L'écran de lecture en cours vous permet de basculer d'une fenêtre ("affichage") à une autre, selon votre choix. Sélectionnez ici les affichages que vous souhaitez utiliser pour ce lecteur.
+	FR	L'écran de lecture en cours vous permet de basculer d'une fenêtre ("affichage") à une autre, selon votre choix. Sélectionnez ici les affichages que vous souhaitez utiliser pour cette Smart Radio.
 	IT	Nella schermata Riproduzione in corso sono disponibili diverse configurazioni di visualizzazione o "viste". Selezionare qui le viste desiderate per questa Smart Radio.
 	NL	Het scherm Speelt nu biedt een aantal verschillende vensterconfiguraties of 'weergaven' waartussen je kunt schakelen. Selecteer hier de weergaven die je voor dit muzieksysteem wenst.
 	NO	Det er flere "visninger" tilgjengelige på skjermen Spilles nå. Velg visningene du vil bruke for denne Smart Radio-spilleren, her.
 	PL	Ekran Teraz odtwarzane oferuje kilka różnych „widoków. Wybierz widoki dla tego urządzenia Smart Radio tutaj.
 	RU	Существует несколько видов экрана воспроизведения, между которыми можно переключаться. Выберите здесь несколько видов для этого Smart Radio.
-	SV	Skärmbilden Nu spelas har några olika fönsterkonfigurationer eller vyer som du kan växla mellan. Här väljer du vilken vy du vill ha i den här spelaren.
+	SV	Skärmen Nu spelas har några olika fönsterkonfigurationer eller vyer som du kan växla mellan. Här väljer du vilken vy du vill ha i den här spelaren.
 

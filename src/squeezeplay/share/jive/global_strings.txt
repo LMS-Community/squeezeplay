@@ -25,7 +25,7 @@ INTERNET_RADIO
 	ES	Radio en directo
 	FI	Suora radiolähetys
 	FR	Live Radio
-	IT	Live Radio
+	IT	Radio in diretta
 	NL	Live radio
 	NO	Direktesendt radio
 	PL	Radio na żywo
@@ -382,22 +382,22 @@ RETURN_TO_SETUP
 
 SHORTCUTS_RESET
 	CS	Opětovně nastavit na výchozí
-	DA	Nulstil
-	DE	Zurücksetzen
+	DA	Gendan standardindsitllinger
+	DE	Standardeinstellungen wiederherstellen
 	EN	Reset to Defaults
-	ES	Restablecer a valores predeterminados
+	ES	Restablecer configuración predeterminada
 	FI	Palauta oletuksiin
 	FR	Restauration des valeurs par défaut
-	IT	Impostazioni predefinite
-	NL	Standaardwaarden
-	NO	Tilbakestill til standardinnstillinger
-	PL	Resetuj do wartości domyślnych
-	RU	Восстановить настройки по умолчанию
+	IT	Reimposta valori predefiniti
+	NL	Standaardinstellingen herstellen
+	NO	Tilbakestill til standard
+	PL	Przywróć domyślne
+	RU	Восстановление стандартных настроек
 	SV	Återställ standardinställningarna
 
 KEYBOARD_DONE
 	CS	hotovo
-	DA	udført
+	DA	afslut
 	DE	Fertig
 	EN	done
 	ES	listo
@@ -405,7 +405,7 @@ KEYBOARD_DONE
 	FR	terminé
 	IT	fine
 	NL	gereed
-	NO	ferdig
+	NO	fullført
 	PL	gotowe
 	RU	готово
 	SV	klart
@@ -506,7 +506,7 @@ MONTH_7
 	DE	Juli
 	EN	July
 	ES	Julio
-	FI	heinäkuu
+	FI	Heinäkuu
 	FR	Juillet
 	IT	Luglio
 	NL	juli
@@ -661,7 +661,7 @@ MONTHSHORT_5
 	DE	Mai
 	EN	May
 	ES	Mayo
-	FI	tou
+	FI	toukokuu
 	FR	Mai
 	IT	Maggio
 	NL	mei
@@ -678,7 +678,7 @@ MONTHSHORT_6
 	EN	Jun
 	ES	Jun
 	FI	kes
-	FR	Jan
+	FR	Jun
 	IT	Giu
 	NL	jun
 	NO	jun
@@ -694,7 +694,7 @@ MONTHSHORT_7
 	EN	Jul
 	ES	Jul
 	FI	hei
-	FR	Jui
+	FR	Jul
 	IT	Lug
 	NL	jul
 	NO	jul

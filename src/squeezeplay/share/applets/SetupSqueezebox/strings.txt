@@ -35,17 +35,17 @@ SQUEEZEBOX_NETWORK_CONNECTION
 
 SQUEEZEBOX_CONNECT_HELP
 	CS	Vyberte, jakým způsobem by se měl Smart Radio připojit k vaší síti.
-	DA	Vælg hvordan Squeezebox skal tilsluttes netværket.
-	DE	Bestimmen Sie, wie die Squeezebox mit dem Netzwerk verbunden werden soll.
+	DA	Vælg hvordan Smart Radio skal tilsluttes netværket.
+	DE	Bestimmen Sie, wie die Smart Radio mit dem Netzwerk verbunden werden soll.
 	EN	Choose how your Smart Radio should connect to your network.
-	ES	Elija cómo se conecta Squeezebox a la red.
+	ES	Elija cómo se conecta Smart Radio a la red.
 	FI	Valitse, miten Smart Radiosta muodostetaan verkkoyhteys.
-	FR	Sélectionnez le type de connexion de la Squeezebox au réseau.
+	FR	Sélectionnez le type de connexion de la Smart Radio au réseau.
 	IT	Scegliere in che modo Squeezebox verrà connesso alla rete.
-	NL	Kies hoe je Squeezebox verbinding met je netwerk moet maken.
-	NO	Velg hvordan Squeezebox skal kople til nettverket.
-	PL	Wybierz sposób podłączenia urządzenia Squeezebox do sieci.
-	RU	Выберите способ подключения Squeezebox к вашей сети.
+	NL	Kies hoe je Smart Radio verbinding met je netwerk moet maken.
+	NO	Velg hvordan Smart Radio skal kople til nettverket.
+	PL	Wybierz sposób podłączenia urządzenia Smart Radio do sieci.
+	RU	Выберите способ подключения Smart Radio к вашей сети.
 	SV	Välj hur du vill att Squeezebox ska anslutas till nätverket.
 
 SQUEEZEBOX_WIRELESS
@@ -80,18 +80,18 @@ SQUEEZEBOX_ETHERNET
 
 SQUEEZEBOX_HELP
 	CS	Vyberte přehrávač Smart Radio, který chcete nastavit. Jestliže není vidět, stiskněte a přidržte tlačítko na přední straně, dokud nezačne blikat.
-	DA	Vælg den Squeezebox Radio der skal konfigureres. Hvis du ikke kan se den her, skal du holde knappen på forsiden nede indtil den blinker.
-	DE	Wählen Sie den gewünschten Squeezebox Receiver. Wird er nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
+	DA	Vælg den Smart Radio der skal konfigureres. Hvis du ikke kan se den her, skal du holde knappen på forsiden nede indtil den blinker.
+	DE	Wählen Sie den gewünschten Smart Radio. Wird er nicht angezeigt, halten Sie die Taste an der Vorderseite gedrückt, bis sie blinkt.
 	EN	Choose the Smart Radio you want to set up. If you don't see it here, press and hold the button on the front until it flashes.
 	ES	Seleccione el Smart Radio que desee configurar. Si no lo encuentra aquí, mantenga pulsado el botón en la parte frontal hasta que empiece a emitir destellos.
 	FI	Valitse Smart Radio, jonka haluat ottaa käyttöön. Jos sitä ei näy tässä, pidä laitteen etuosassa olevaa painiketta pohjassa, kunnes sen valo vilkkuu.
-	FR	Sélectionnez le Squeezebox Receiver à configurer. S'il ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
+	FR	Sélectionnez la Smart Radio à configurer. S'il ne s'affiche pas, maintenez le bouton frontal enfoncé jusqu'à ce qu'il clignote.
 	IT	Selezionare il dispositivo Smart Radio che si desidera configurare. Se non è visualizzato, tenere premuto il pulsante sulla parte anteriore finché non lampeggia.
 	NL	Kies de Smart Radio die je wilt instellen. Staat deze niet in de lijst, houd dan de knop aan de voorkant ingedrukt totdat deze knippert.
 	NO	Velg den Smart Radio-spilleren du vil konfigurere. Hvis du ikke ser den her, trykker du og holder nede knappen foran til den begynner å blinke.
 	PL	Wybierz urządzenie Smart Radio, które chcesz skonfigurować. Jeśli nie jest ono widoczny w tym miejscu, naciśnij i przytrzymaj przycisk z przodu do momentu, kiedy zamiga.
 	RU	Выберите Smart Radio для настройки. Если вы не видите его здесь, нажмите и удерживайте кнопку на передней панели, пока кнопка не начнет мигать.
-	SV	Välj den Squeezebox Receiver du vill konfigurera. Om den inte visas här, håller du knappen framtill på mottagaren nedtryckt till den börjar blinka.
+	SV	Välj den Squeezebox Receiver du vill konfigurera. Om den inte visas här, håller du knappen framtill på mottagaren nedtryckt tills den börjar blinka.
 
 SQUEEZEBOX_FINDING_SOURCES
 	CS	Hledám zdroje hudby
@@ -126,17 +126,17 @@ SQUEEZEBOX_CONNECTING_TO
 
 SQUEEZEBOX_SETUP_COMPLETE
 	CS	Váš Smart Radio je nyní nastaven.
-	DA	Nu er din Squeezebox konfigureret.
-	DE	Die Squeezebox ist eingerichtet.
+	DA	Nu er din Smart Radio konfigureret.
+	DE	Die Smart Radio ist eingerichtet.
 	EN	Your Smart Radio is now set up.
-	ES	Se ha configurado Squeezebox.
+	ES	Se ha configurado Smart Radio.
 	FI	Smart Radio on nyt valmiina käyttöön.
-	FR	Votre Squeezebox est configurée.
+	FR	Votre Smart Radio est configurée.
 	IT	Squeezebox è stato configurato.
-	NL	Je Squeezebox is nu ingesteld.
-	NO	Squeezebox er nå konfigurert.
-	PL	Urządzenie Squeezebox zostało skonfigurowane.
-	RU	Настройка Squeezebox выполнена.
+	NL	Je Smart Radio is nu ingesteld.
+	NO	Smart Radio er nå konfigurert.
+	PL	Urządzenie Smart Radio zostało skonfigurowane.
+	RU	Настройка Smart Radio выполнена.
 	SV	Nu är Squeezebox konfigurerad.
 
 SQUEEZEBOX_PROBLEM
@@ -182,21 +182,21 @@ SQUEEZEBOX_PROBLEM_SKIP
 	NO	Hopp over dette
 	PL	Pomiń ten krok
 	RU	Пропустить данный этап
-	SV	Hoppa över det här steget
+	SV	Hoppa över det här steget.
 
 SQUEEZEBOX_ETHERNET_PROBLEM_HELP
 	CS	Nemohl jsem připojit váš Smart Radio k ethernetové síti.
-	DA	Squeezebox kunne ikke sluttes til dit Ethernet-netværk.
-	DE	Die Squeezebox konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
+	DA	Smart Radio kunne ikke sluttes til dit Ethernet-netværk.
+	DE	Die Smart Radio konnte nicht mit dem Ethernet-Netzwerk verbunden werden.
 	EN	Couldn't connect your Smart Radio to your Ethernet network.
-	ES	No se pudo conectar Squeezebox a la red Ethernet.
+	ES	No se pudo conectar Smart Radio a la red Ethernet.
 	FI	Smart Radiota ei voitu yhdistää ethernet-verkkoon.
-	FR	Impossible de connecter votre Squeezebox à votre réseau Ethernet.
-	IT	Impossibile connettere Squeezebox alla rete Ethernet.
-	NL	Kan je Squeezebox niet met je ethernetnetwerk verbinden.
-	NO	Kunne ikke kople Squeezebox til Ethernet-nettverket.
-	PL	Nie można podłączyć urządzenia Squeezebox do sieci Ethernet.
-	RU	Не удалось подключить Squeezebox к вашей сети Ethernet.
+	FR	Impossible de connecter votre Smart Radio à votre réseau Ethernet.
+	IT	Impossibile connettere Smart Radio alla rete Ethernet.
+	NL	Kan je Smart Radio niet met je ethernetnetwerk verbinden.
+	NO	Kunne ikke kople Smart Radio til Ethernet-nettverket.
+	PL	Nie można podłączyć urządzenia Smart Radio do sieci Ethernet.
+	RU	Не удалось подключить Smart Radio к вашей сети Ethernet.
 	SV	Det gick inte att ansluta Squeezebox till Ethernet-nätverket.
 
 SQUEEZEBOX_PROBLEM_HELP
@@ -217,7 +217,7 @@ SQUEEZEBOX_PROBLEM_HELP
 SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	CS	(Spojení ztraceno).
 	DA	(Har mistet forbindelsen).
-	DE	(Verbindung unterbrochen).
+	DE	(Verbindung unterbrochen)
 	EN	(Lost connection).
 	ES	(Se ha perdido la conexión).
 	FI	(Yhteys katkesi).
@@ -226,13 +226,13 @@ SQUEEZEBOX_PROBLEM_LOST_CONNECTION
 	NL	(Verbinding is verloren gegaan).
 	NO	(Mistet tilkopling).
 	PL	(utracone połączenie).
-	RU	(Потеряно подключение.).
+	RU	(Потеряно подключение.)
 	SV	(Anslutningen avbröts).
 
 SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
 	CS	(Ztracený Squeezebox).
 	DA	(Har mistet forbindelsen til Squeezebox).
-	DE	(Squeezebox nicht verbunden).
+	DE	(Squeezebox nicht verbunden)
 	EN	(Lost Squeezebox).
 	ES	(Squeezebox perdido).
 	FI	(Squeezeboxin yhteys katkesi).
@@ -241,13 +241,13 @@ SQUEEZEBOX_PROBLEM_LOST_SQUEEZEBOX
 	NL	(Squeezebox is verloren gegaan).
 	NO	(Mistet tilkopling til Squeezebox).
 	PL	(utracone urządzenie Squeezebox).
-	RU	(Потерян Squeezebox.).
+	RU	(Потерян Squeezebox.)
 	SV	(Anslutningen till Squeezebox avbröts).
 
 SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	CS	(chyba DHCP).
 	DA	(DHCP-fejl).
-	DE	(DHCP-Fehler).
+	DE	(DHCP-Fehler)
 	EN	(DHCP error).
 	ES	(Error de DHCP).
 	FI	(DHCP-virhe).
@@ -256,13 +256,13 @@ SQUEEZEBOX_PROBLEM_DHCP_ERROR
 	NL	(DHCP-foutmelding).
 	NO	(DHCP-feil).
 	PL	(błąd DHCP).
-	RU	(Ошибка DHCP.).
+	RU	(Ошибка DHCP.)
 	SV	(DHCP-fel).
 
 SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	CS	(Síť ztracena).
 	DA	(Har mistet forbindelsen til netværket).
-	DE	(Netzwerkverbindung unterbrochen).
+	DE	(Netzwerkverbindung unterbrochen)
 	EN	(Lost network).
 	ES	(Se ha perdido la red).
 	FI	(Verkkoyhteys katkesi).
@@ -271,13 +271,13 @@ SQUEEZEBOX_PROBLEM_LOST_NETWORK
 	NL	(Netwerk is verloren gegaan).
 	NO	(Mistet nettverk).
 	PL	(utracona sieć).
-	RU	(Потеряна сеть.).
+	RU	(Потеряна сеть.)
 	SV	(Anslutningen avbröts).
 
 SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
 	CS	(Chyba připojení).
 	DA	(Forbindelsesfejl).
-	DE	(Verbindungsfehler).
+	DE	(Verbindungsfehler)
 	EN	(Connection error).
 	ES	(Error de conexión).
 	FI	(Yhteysvirhe).
@@ -286,7 +286,7 @@ SQUEEZEBOX_PROBLEM_CONNECTION_ERROR
 	NL	(Verbindingsfout).
 	NO	(Tilkoplingsfeil).
 	PL	(błąd połączenia).
-	RU	(Ошибка подключения.).
+	RU	(Ошибка подключения.)
 	SV	(Anslutningsfel).
 
 SQUEEZEBOX_MUSIC_SOURCE
@@ -307,11 +307,11 @@ SQUEEZEBOX_MUSIC_SOURCE
 SQUEEZEBOX_MUSIC_SOURCE_HELP
 	CS	Smart Radio %s je připojen k vaší síti. Vyberte zdroj hudby.
 	DA	Smart Radioen %s er sluttet til netværket. Vælg en musikkilde.
-	DE	Die Squeezebox %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
+	DE	Die Smart Radio %s ist mit dem Netzwerk verbunden. Wählen Sie eine Musikquelle.
 	EN	The Smart Radio %s is connected to your network. Choose a music source.
 	ES	Smart Radio %s está conectado a la red. Elija un origen de música.
 	FI	Smart Radio %s on yhdistetty verkkoon. Valitse musiikkilähde.
-	FR	La Squeezebox %s est connectée au réseau. Sélectionnez une source musicale.
+	FR	La Smart Radio %s est connectée au réseau. Sélectionnez une source musicale.
 	IT	Smart Radio %s è connessa alla rete. Scegliere una sorgente musicale.
 	NL	De Smart Radio %s is met je netwerk verbonden. Kies een muziekbron.
 	NO	Smart Radio-spilleren %s er tilkoplet nettverket. Velg en musikkilde.
@@ -336,17 +336,17 @@ SQUEEZEBOX_IP_ADDRESS
 
 SQUEEZEBOX_IP_ADDRESS_HELP
 	CS	Zadejte IP adresu pro tento Smart Radio.
-	DA	Angiv IP-adressen som denne Squeezebox-afspiller skal benytte.
-	DE	Geben Sie die IP-Adresse für diese Squeezebox ein.
+	DA	Angiv IP-adressen som denne Smart Radio-afspiller skal benytte.
+	DE	Geben Sie die IP-Adresse für diese Smart Radio ein.
 	EN	Enter the IP address for this Smart Radio to use.
-	ES	Escriba la dirección IP que debe usar este Squeezebox.
+	ES	Escriba la dirección IP que debe usar este Smart Radio.
 	FI	Anna IP-osoite, jota Smart Radio käyttää.
-	FR	Spécifiez l'adresse IP à utiliser pour la Squeezebox.
+	FR	Spécifiez l'adresse IP à utiliser pour la Smart Radio.
 	IT	Inserire l'indirizzo IP da utilizzare con questo Squeezebox.
-	NL	Voer het IP-adres in voor de Squeezebox die gebruikt moet worden.
-	NO	Skriv inn IP-adressen som denne Squeezebox kan bruke.
-	PL	Wprowadź adres IP, który ma być używany przez to urządzenie Squeezebox.
-	RU	Введите IP-адрес для использования Squeezebox.
+	NL	Voer het IP-adres in voor de Smart Radio die gebruikt moet worden.
+	NO	Skriv inn IP-adressen som denne Smart Radio kan bruke.
+	PL	Wprowadź adres IP, który ma być używany przez to urządzenie Smart Radio.
+	RU	Введите IP-адрес для использования Smart Radio.
 	SV	Ange IP-adressen som ska användas för den här Squeezebox-spelaren.
 
 SQUEEZEBOX_BRIDGED_NAME
@@ -366,16 +366,16 @@ SQUEEZEBOX_BRIDGED_NAME
 
 SQUEEZEBOX_UPDATING_FIRMWARE_SQUEEZEBOX
 	CS	Aktualizuji firmware Smart Radio
-	DA	Opdaterer Squeezebox-firmware
+	DA	Opdaterer Smart Radio-firmware
 	DE	Smart Radio-Firmware wird aktualisiert
 	EN	Updating Smart Radio firmware
 	ES	Actualizando firmware de Smart Radio
 	FI	Smart Radion laiteohjelmiston päivitys
-	FR	Mise à jour du micrologiciel Squeezebox
+	FR	Mise à jour du micrologiciel Smart Radio
 	IT	Aggiornamento firmware Smart Radio
 	NL	Smart Radio-firmware wordt bijgewerkt
 	NO	Oppdaterer Smart Radio-fastvare
 	PL	Aktualizowanie oprogramowania układowego urządzenia Smart Radio.
 	RU	Обновление микропрограмм Smart Radio
-	SV	Uppdaterar Squeezebox-spelarens inbyggda programvara
+	SV	Uppdaterar Smart Radio inbyggda programvara.
 

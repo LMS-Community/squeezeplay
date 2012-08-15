@@ -40,19 +40,19 @@ WALLPAPER_HELP_PLAYER
 	SV	Välj skärmbakgrund för %s
 
 WALLPAPER_HELP_NO_PLAYER
-	CS	Zvolte pozadí obrazovky, které se zobrazí jako výchozí
-	DA	Vælg den baggrund der skal vises som standard
+	CS	Vyberte výchozí pozadí obrazovky pro vaše Smart Radios
+	DA	Vælg den baggrund der som standard skal vises til dine Smart Radioer
 	DE	Wählen Sie den Standard-Hintergrund
 	EN	Choose the default screen background for your Smart Radios
-	ES	Elija el fondo de pantalla que se mostrará de forma predeterminada
-	FI	Valitse Smart Radion näytön oletustausta
-	FR	Sélectionnez l'arrière-plan d'écran à afficher par défaut
-	IT	Scegliere lo sfondo della schermata predefinito
-	NL	Kies de standaard schermachtergrond die moet worden weergegeven
-	NO	Velg standardbakgrunnen som skal vises
-	PL	Wybierz domyślne tło ekranu do wyświetlenia
+	ES	Elija el fondo de pantalla predeterminado para sus Smart Radios
+	FI	Valitse näytön oletustausta älyradioille
+	FR	Choisissez l'arrière-plan d'écran par défaut de vos Smart Radios
+	IT	Scegliere lo sfondo della schermata predefinito per le Smart Radio
+	NL	Kies de standaard achtergrondafbeelding voor je Smart Radio's.
+	NO	Velg standard skjermbakgrunn for Smart Radio-enhetene
+	PL	Wybierz domyślne tło ekranu dla urządzeń Smart Radio
 	RU	Выберите фоновый рисунок экрана, отображаемый по умолчанию
-	SV	Välj standardbakgrund för skärmen
+	SV	Välj bakgrund till standardskärmen för din Smart Radio
 
 ALLEGRO
 	CS	Allegro

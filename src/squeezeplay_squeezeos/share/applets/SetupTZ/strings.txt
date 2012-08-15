@@ -657,7 +657,7 @@ TZ_ASIA_MUSCAT
 	FR	(GMT+04:00) Abu Dhabi, Muscat
 	IT	(GMT+04:00) Abu Dhabi, Muscat
 	NL	(GMT+04:00) Abu Dhabi, Masqat
-	NO	(GMT + 04.00) Abu Dhabi, Muscat, Baku, Tbilisi, Jerevan
+	NO	(GMT+04:00) Abu Dhabi, Muscat
 	PL	(GMT+04:00) Abu Dabi, Maskat
 	RU	(GMT+04:00) – Абу-Даби, Маскат
 	SV	(GMT + 4:00) Abu Dhabi, Muskat
@@ -672,7 +672,7 @@ TZ_ASIA_TBILISI
 	FR	(GMT+04:00) Bakou, Tbilissi, Erevan
 	IT	(GMT+04:00) Baku, Tbilisi, Yerevan
 	NL	(GMT+04:00) Bakoe, Tbilisi, Jerevan
-	NO	(GMT + 04.00) Abu Dhabi, Muscat, Baku, Tbilisi, Jerevan
+	NO	(GMT+04:00) Baku, Tbilisi, Yerevan
 	PL	(GMT+04:00) Baku, Tbilisi, Erewań
 	RU	(GMT+04:00) – Баку, Тбилиси, Ереван
 	SV	(GMT + 4:00) Baku, Tbilisi, Jerevan

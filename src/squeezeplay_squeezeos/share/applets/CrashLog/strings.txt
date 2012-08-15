@@ -28,7 +28,7 @@ CRASH_TEXT
 	IT	È stato rilevato un arresto anomalo del sistema. Verrà inviato un file di registro a Logitech per essere analizzato.
 	NL	Er is een systeemcrash gedetecteerd. Er wordt een logbestand naar Logitech gestuurd ter analyse.
 	NO	Vi har registrert et systemkrasj. En loggfil sendes til Logitech for analyse.
-	PL	Wykryto awarię systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
+	PL	Wykryto zawieszenie systemu. Plik dziennika jest wysyłany do firmy Logitech w celu przeprowadzenia analizy.
 	RU	Обнаружен сбой системы. Файл журнала отправлен в компанию Logitech для анализа.
 	SV	En systemkrasch upptäcktes. En loggfil har skickats till Logitech för analys.
 

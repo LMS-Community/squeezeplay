@@ -24,7 +24,7 @@ NOT_CONNECTED
 	FR	Non connecté
 	IT	Non connesso
 	NL	Niet verbonden
-	NO	Ikke koplet til
+	NO	Ikke tilkoplet
 	PL	Niepołączony
 	RU	Не подключено
 	SV	Ej ansluten
@@ -42,7 +42,7 @@ PORT_FAIL
 	NL	Kan geen verbinding maken
 	NO	Kan ikke kople til
 	PL	Nie można nawiązać połączenia
-	RU	Не удалось подключиться
+	RU	Подключение невозможно
 	SV	Det gick inte att ansluta
 
 PORT_OK
@@ -104,7 +104,7 @@ PING_FAIL
 	NO	Kan ikke sende ping
 	PL	Nie można użyć funkcji ping
 	RU	Невозможно выполнить проверку связи
-	SV	Det gick inte att skicka ping
+	SV	Går ej att pinga
 
 PLAYER_TYPE
 	CS	Typ přehrávače\n%s
@@ -113,7 +113,7 @@ PLAYER_TYPE
 	EN	Player Type\n%s
 	ES	Tipo de reproductor\n%s
 	FI	Soittimen tyyppi\n%s
-	FR	Type de platine\n%s
+	FR	Type de lecteur\n%s
 	IT	Tipo lettore\n%s
 	NL	Type muzieksysteem\n%s
 	NO	Spillertype\n%s
@@ -128,7 +128,7 @@ CURRENT_PLAYER
 	EN	Current player\n%s
 	ES	Reproductor actual\n%s
 	FI	Nykyinen soitin\n%s
-	FR	Platine actuelle\n%s
+	FR	Lecteur actuel\n%s
 	IT	Lettore corrente\n%s
 	NL	Huidig muzieksysteem\n%s
 	NO	Aktiv spiller\n%s
@@ -469,19 +469,19 @@ SN_PORT_9000
 	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
-	CS	Hudební knihovna Logitech UE\n%s
-	DA	Logitech UE-musikbibliotek\n%s
-	DE	Logitech UE-Musiksammlung\n%s
+	CS	Logitech UE Music Library\n%s
+	DA	Logitech UE Music Library\n%s
+	DE	Logitech UE Music Library\n%s
 	EN	Logitech UE Music Library\n%s
 	ES	Logitech UE Music Library\n%s
 	FI	Logitech UE Music Library\n%s
-	FR	Bibliothèque musicale Logitech UE\n%s
-	IT	Libreria musicale Logitech UE\n%s
-	NL	Logitech UE-muziekcollectie\n%s
-	NO	Logitech UE musikkbibliotek\n%s
-	PL	Biblioteka muzyki Logitech UE\n%s
+	FR	Logitech UE Music Library\n%s
+	IT	Logitech UE Music Library\n%s
+	NL	Logitech UE Music Library\n%s
+	NO	Logitech UE Music Library\n%s
+	PL	Logitech UE Music Library\n%s
 	RU	Музыкальная библиотека Logitech UE\n%s
-	SV	Logitechs UE-musikbibliotek\n%s
+	SV	Logitech UE Music Library\n%s
 
 SC_NAME
 	CS	Název knihovny\n%s
@@ -562,18 +562,18 @@ SUPPORT
 	SV	Ytterligare hjälp
 
 SUPPORT_HELP
-	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.uesmartradio.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
+	CS	Další nápovědu a zákaznickou podporu naleznete na\nwww.UEsmartradio.com/support.\n\nPokud budete kontaktovat zákaznickou podporu, můžete být požádáni o informace z obrazovky\n "Diagnostika", kterou naleznete níže.
 	DA	Du kan få mere hjælp og oplysninger om at kontakte supportafdelingen på \nwww.uesmartradio.com/support.\n\nHvis du kontakter supportafdelingen, bliver du muligvis bedt om oplysningerne på \nskærmbilledet Diagnosticering som er vist nedenfor.
-	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.uesmartradio.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
-	EN	For more help and customer support, please visit \nwww.uesmartradio.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
+	DE	Weitere Informationen und Kundendienst erhalten Sie auf \nwww.UEsmartradio.com/support.\n\nWenn Sie sich an den Kundendienst wenden, werden Sie eventuell gebeten, Informationen\naus dem Dialogfeld "Diagnose" (siehe unten) anzugeben.
+	EN	For more help and customer support, please visit \nwww.UEsmartradio.com/support.\n\nIf contacting customer support, you may be asked for information from\nthe "Diagnostics" screen, which can be found below.
 	ES	Para obtener más ayuda y asistencia al cliente, visite\nwww.uesmartradio.com/support.\n\nSi se pone en contacto con asistencia al cliente, es posible que le pidan información de\nla pantalla "Diagnósticos", que puede encontrar a continuación.
 	FI	Lisäohjeita ja asiakastuen yhteystiedot löydät osoitteesta \nwww.uesmartradio.com/support.\n\nJos otat yhteyttä asiakastukeen, sinua saatetaan pyytää antamaan tietoja\nDiagnostiikka-ruudusta, joka näkyy alla.
-	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.uesmartradio.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
-	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.uesmartradio.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
+	FR	Pour obtenir de l'aide et un service client avancés, rendez-vous à la page \nwww.UEsmartradio.com/support.\n\nSi vous contactez le service client, les informations de\nl'écran "Diagnostic", visibles ci-dessous, peuvent vous être demandées.
+	IT	Per ulteriori informazioni e per contattare il servizio di assistenza tecnica, visitare \nwww.UEsmartradio.com/support.\n\nSe si contatta il servizio di assistenza tecnica potrebbero venire richieste informazioni contenute nella\nschermata Diagnostica, visualizzata di seguito.
 	NL	Ga naar \nwww.uesmartradio.com/support voor verdere hulp en klantensupport.\n\nWanneer je contact opneemt met klantensupport, kun je worden gevraagd om gegevens uit het onderstaande \nscherm Diagnostische gegevens.
-	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.uesmartradio.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
-	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.uesmartradio.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
-	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.uesmartradio.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
+	NO	Hvis du trenger mer hjelp eller vil ta kontakt med kundestøtte, kan du besøke \nwww.UEsmartradio.com/support.\n\nHvis du tar kontakt med kundestøtteavdelingen, kan du bli nødt til å oppgi informasjon fra\nDiagnose-skjermen, som du ser nedenfor.
+	PL	Aby uzyskać dodatkową pomoc i skontaktować się z działem obsługi klienta, odwiedź witrynę \nwww.UEsmartradio.com/support.\n\nW przypadku kontaktu z działem obsługi klienta może być konieczne podanie informacji\nz ekranu „Diagnostyka”, który znajduje się poniżej.
+	RU	Чтобы получить дополнительную справочную информацию или обратиться в службу поддержки, посетите страницу \nwww.UEsmartradio.com/support.\n\nПри обращении в службу поддержки может потребоваться информация с экрана\n"Диагностика", которая приводится ниже.
 	SV	Mer information och kundsupport finns på \nwww.uesmartradio.com/support.\n\nOm du kontaktar kundsupport kan du bli ombedd att lämna information som\nvisas i fönstret Diagnostik nedan.
 
 SOFTWARE_UPDATE
@@ -648,7 +648,7 @@ UPTIME_DAYS
 	NL	%s dagen
 	NO	%s dager
 	PL	%s dni
-	RU	%s дн
+	RU	%s дн.
 	SV	%s dagar
 
 UPTIME_HOURS
@@ -662,7 +662,7 @@ UPTIME_HOURS
 	IT	%s ore
 	NL	%s uren
 	NO	%s timer
-	PL	%s godz
+	PL	%s godz.
 	RU	%s ч
 	SV	%s timmar
 
@@ -872,7 +872,7 @@ BATT_IDLE
 	EN	Battery not charging
 	ES	La batería no está cargando
 	FI	Akku ei lataudu
-	FR	La batterie n'est pas en cours de chargement
+	FR	La batterie n'est pas en cours de chargement.
 	IT	La batteria non si sta ricaricando
 	NL	Batterij wordt niet opgeladen
 	NO	Batteriet lader ikke
@@ -898,15 +898,15 @@ BATT_DISCHARGING
 BATT_DISCHARGING_WARNING
 	CS	Vybíjení baterie. Stav baterie je nízký
 	DA	Batteriet aflades: Det er næsten fladt
-	DE	Akku wird entladen. Akku ist schwach
+	DE	Akku wird entladen. Akku ist schwach.
 	EN	Battery discharging.  Battery is low
 	ES	Descarga de la batería, nivel bajo de batería
 	FI	Akun latausta puretaan. Akun lataus on alhainen.
-	FR	Déchargement de la batterie: batterie faible
+	FR	Déchargement de la batterie. La batterie est faible.
 	IT	La batteria si sta scaricando. Livello di carica basso
 	NL	Batterij ontlaadt zich: laag batterijvermogen
 	NO	Batteriet lader ut. Lite batteri.
-	PL	Rozładowywanie akumulatora. Niski poziom naładowania akumulatora
+	PL	Rozładowywanie baterii. Niski poziom naładowania baterii
 	RU	Аккумулятор разряжается. Низкий заряд батареи.
 	SV	Batteriet laddar ur och batterinivån är låg
 
@@ -916,7 +916,7 @@ BATT_CHARGING
 	DE	Batterie wird geladen
 	EN	Battery charging
 	ES	Carga de pila en curso
-	FI	Akku latautuu
+	FI	Akku latautuu...
 	FR	Chargement de la batterie
 	IT	Carica della batteria in corso
 	NL	Batterij wordt opgeladen
@@ -927,16 +927,16 @@ BATT_CHARGING
 
 BATT_CHARGING_PAUSED
 	CS	Nabíjení baterie přerušeno. Chlazení
-	DA	Opladningen af batteriet afbrudt midlertidigt. Enheden køler af
+	DA	Opladningen af batteriet afbrudt midlertidigt. Enheden køler af.
 	DE	Ladevorgang des Akkus wurde angehalten. Abkühlen
 	EN	Battery charging paused.  Cooling down
 	ES	Carga de la batería en pausa. Periodo de enfriamiento
 	FI	Akun lataus keskeytetty.  Jäähtyy.
-	FR	Interruption du chargement de la batterie. Refroidissement en cours
+	FR	Interruption de la charge de la batterie. Refroidissement en cours.
 	IT	Ricarica batteria sospesa. Raffreddamento in corso.
 	NL	Opladen batterij gepauzeerd. Bezig met afkoelen
 	NO	Batterilading midlertidig stanset. Kjøler ned.
-	PL	Wstrzymano ładowanie akumulatora. Chłodzenie
+	PL	Wstrzymano łądowanie baterii. Chłodzenie
 	RU	Зарядка аккумулятора приостановлена. Охлаждение
 	SV	Batteriladdningen har pausats. Nedkylning pågår
 
@@ -1132,37 +1132,37 @@ NET_HEALTH_HINT
 	NL	Selecteer 'Netwerk controleren' om een statuscontrole voor het netwerk uit te voeren.
 	NO	Velg Kontroller nettverk for å utføre en kontroll av nettverkstilstanden.
 	PL	Wybierz pozycję „Sprawdź sieć”, aby sprawdzić kondycję sieci.
-	RU	Выберите "Проверить сеть" для выполнения проверки состояния сети.
+	RU	Выберите «Проверить сеть» для выполнения проверки состояния сети.
 	SV	Välj Kontrollera nätverk för att utföra en kontroll av nätverksfunktionaliteten.
 
 NET_BRINGING_NETWORK_DOWN
-	CS	Probíhá shazování sítě ...
-	DA	Lukker netværk ned ...
-	DE	Verbindung zum Netzwerk wird getrennt ...
+	CS	Probíhá shazování sítě...
+	DA	Lukker netværk ned...
+	DE	Verbindung zum Netzwerk wird getrennt...
 	EN	Bringing network down ...
-	ES	Desactivando red ...
-	FI	Verkkoa suljetaan ...
-	FR	Déconnexion du réseau ...
-	IT	Disattivazione della rete in corso ...
-	NL	Netwerk wordt gestopt ...
+	ES	Desactivando red...
+	FI	Verkkoa suljetaan...
+	FR	Déconnexion du réseau...
+	IT	Disattivazione della rete in corso...
+	NL	Netwerk wordt gestopt...
 	NO	Kopler ut nettverket ...
-	PL	Trwa wyłączanie sieci ...
-	RU	Завершение работы сети ...
+	PL	Trwa wyłączanie sieci...
+	RU	Завершение работы сети...
 	SV	Stänger nätverket ...
 
 NET_BRINGING_NETWORK_UP
 	CS	Probíhá nahazování sítě ...
-	DA	Starter netværket op ...
-	DE	Netzwerk wird geladen ...
+	DA	Starter netværket op...
+	DE	Netzwerk wird geladen...
 	EN	Bringing network up ...
-	ES	Activando red ...
-	FI	Verkkoa palautetaan ...
-	FR	Connexion au réseau ...
-	IT	Riattivazione della rete in corso ...
-	NL	Netwerk wordt gestart ...
+	ES	Activando red...
+	FI	Verkkoa palautetaan...
+	FR	Connexion au réseau...
+	IT	Riattivazione della rete in corso...
+	NL	Netwerk wordt gestart...
 	NO	Kopler opp nettverket ...
-	PL	Trwa włączanie sieci ...
-	RU	Инициализация сети ...
+	PL	Trwa włączanie sieci...
+	RU	Инициализация сети...
 	SV	Startar nätverket ...
 
 NET_REPAIR_NETWORK_DONE
@@ -1258,7 +1258,7 @@ NET_LINK_WIRELESS_NOK
 NET_LINK_WIRELESS_NOK_HELP
 	CS	Přehrávač Smart Radio hlásí, že připojení k bezdrátové síti bylo přerušeno.\nMožné řešení:\n - Zkontrolujte, zda je bezdrátový router zapnutý\n - Restartujte bezdrátový router\n - Změňte umístění přehrávače Smart Radio nebo bezdrátového routeru tak, aby se zařízení nacházela ve vzájemném dosahu
 	DA	Din Smart Radios trådløse forbindelse er tilsyneladende nede.\nMulige løsninger:\n - Kontroller at den trådløse router er tændt\n - Genstart den trådløse router\n - Flyt din Smart Radio og/eller din trådløse router så de er inden for rækkevidde af hinanden
-	DE	Die Drahtlosverbindung Ihres Smart Radios wurde unterbrochen.\nMögliche Lösungen:\n – Überprüfen Sie, ob Ihr WLAN-Router eingeschaltet ist.\n - Starten Sie den Router neu.\n – Verringern Sie den Abstand zwischen Smart Radio und Router
+	DE	Die Drahtlosverbindung Ihrer Smart Radio wurde unterbrochen.\nMögliche Lösungen:\n – Überprüfen Sie, ob Ihr WLAN-Router eingeschaltet ist.\n - Starten Sie den Router neu.\n – Verringern Sie den Abstand zwischen Smart Radio und Router
 	EN	Your Smart Radio's wireless connection is reporting itself to be down.\nPossible solutions:\n - Check that your wireless router is powered on\n - Reboot your wireless router\n - Reposition your Smart Radio and/or your wireless router so thay are in range of one another
 	ES	La conexión inalámbrica de su dispositivo Smart Radio indica que está inactiva.\nSoluciones posibles:\n - Comprobar que el enrutador inalámbrico está encendido\n - Reiniciar el enrutador inalámbrico\n - Cambiar la ubicación de Smart Radio o del enrutador inalámbrico para que estén dentro del radio de alcance
 	FI	Smart Radio on ilmoittanut langattoman yhteyden katkeamisesta.\nMahdolliset ratkaisut:\n - Tarkista, että langaton reititin saa virtaa.\n - Käynnistä langaton reititin uudelleen.\n - Vaihda Smart Radion ja/tai langattoman reitittimen paikkaa, jotta ne ovat toistensa kantoalueella.
@@ -1303,7 +1303,7 @@ NET_LINK_ETHERNET_NOK
 NET_LINK_ETHERNET_NOK_HELP
 	CS	Přehrávač Smart Radio hlásí, že připojení k síti Ethernet bylo přerušeno.\nMožné řešení:\n - Přesvědčte se, zda je kabel sítě ethernet řádně zapojen do zadní části přehrávače Smart Radio\n - Přesvědčte se, zda svítí kontrolka připojení sítě v místě zapojení kabelu přehrávače Smart Radio do přepínače sítě Ethernet\n - Vyměňte kabel sítě Ethernet
 	DA	Din Smart Radio Ethernet-forbindelse er tilsyneladende nede.\nMulige løsninger:\n - Kontroller at ethernet-kablet er sat rigtigt i din Smart Radio\n - Kontroller at statusindikatoren for forbindelsen på din Ethernet-switch lyser når Smart Radio-kablet er sat i\n - Udskift Ethernet-kablet
-	DE	Die Ethernet-Verbindung Ihres Smart Radios wurde unterbrochen.\nMögliche Lösungen:\n – Vergewissern Sie sich, dass das Ethernet-Kabel auf der Rückseite der Smart Radio fest eingesteckt ist.\n – Überprüfen Sie, ob die LED für die Ethernet-Verbindung leuchtet, wenn das Kabel der Smart Radio eingesteckt wird.\n – Tauschen Sie das Ethernet-Kabel aus
+	DE	Die Ethernet-Verbindung Ihrer Smart Radio wurde unterbrochen.\nMögliche Lösungen:\n – Vergewissern Sie sich, dass das Ethernet-Kabel auf der Rückseite der Smart Radio fest eingesteckt ist.\n – Überprüfen Sie, ob die LED für die Ethernet-Verbindung leuchtet, wenn das Kabel der Smart Radio eingesteckt wird.\n – Tauschen Sie das Ethernet-Kabel aus
 	EN	Your Smart Radio's Ethernet connection is reporting itself to be down.\nPossible solutions:\n - Confirm that the ethernet cable is plugged into the back of your Smart Radio firmly\n - Confirm that the link light on the Ethernet switch is lit where your Smart Radio cable is plugged in\n - Replace the Ethernet cable
 	ES	La conexión Ethernet de su dispositivo Smart Radio indica que no está activa.\nSoluciones posibles:\n - Confirmar que el cable Ethernet está conectado correctamente a la parte posterior de Smart Radio\n - Confirmar que la luz de vínculo en el conmutador de Ethernet está encendida cuando se conecta el cable de Smart Radio\n - Sustituir el cable Ethernet
 	FI	Smart Radio ilmoittaa ethernet-yhteyden katkeamisesta.\nMahdolliset ratkaisut:\n - Tarkista, että ethernet-kaapeli on liitetty Smart Radion takaosaan tukevasti.\n - Tarkista, että ethernet-kytkimessä palaa valo liitetyn Smart Radio -kaapelin kohdalla.\n - Vaihda ethernet-kaapeli
@@ -1352,7 +1352,7 @@ NET_IP_NOK_HELP
 	EN	Your Smart Radio does not have a valid network address.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio no tiene una dirección de red válida.\nSoluciones posibles:\n Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radiolla ei ole kelvollista verkko-osoitetta.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, jossa kotiverkkosi laitteiden asetukset määritetään. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio ne dispose d'aucune adresse de réseau valide.\nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio ne dispose d'aucune adresse réseau valide.\nSolutions possibles:\n - Réinitialisez le dispositif qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	La Smart Radio non dispone di un indirizzo di rete valido.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio heeft geen geldig netwerkadres.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren har ikke en gyldig nettverksadresse.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
@@ -1397,7 +1397,7 @@ NET_GATEWAY_NOK_HELP
 	EN	Your Smart Radio does not have a valid gateway address to the internet.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio no tiene una dirección de puerta de enlace a Internet válida.\nSoluciones posibles:\n - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radiolla ei ole kelvollista yhdyskäytävän osoitetta verkkoon.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, jossa kotiverkkosi laitteiden asetukset määritetään. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio ne dispose d'aucune adresse de passerelle valide pour se connecter à Internet.\nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio ne dispose d'aucune adresse de passerelle valide pour se connecter à Internet.\nSolutions possibles:\n - Réinitialisez le dispositif qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	La Smart Radio non dispone di un indirizzo gateway per Internet valido.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio heeft geen geldig gateway-adres voor internet.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren har ikke en gyldig gateway-adresse til Internett.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
@@ -1442,7 +1442,7 @@ NET_DNS_NOK_HELP
 	EN	Your Smart Radio does not have a valid domain name server address for resolving internet addresses.\nPossible solutions:\n - Reboot the device that provides network configuration for the devices in your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio no tiene una dirección de servidor de nombres de dominio válida para resolver direcciones de Internet.\nSoluciones posibles:\n - Reiniciar el dispositivo que proporciona la configuración de red para los dispositivos de su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radiollasi ei ole kelvollista toimialueen palvelinosoitetta, jotta verkko-osoitteita voitaisiin selvittää.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, jossa kotiverkkosi asetukset määritetään. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio ne dispose d'aucune adresse de serveur DNS valide pour résoudre les adresses Internet. \nSolutions possibles:\n - Réinitialisez l'appareil qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio ne dispose d'aucune adresse DNS valide pour résoudre les adresses Internet. \nSolutions possibles:\n - Réinitialisez le dispositif qui fournit la configuration réseau des dispositifs de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	La Smart Radio non dispone di un indirizzo DNS valido per la risoluzione degli indirizzi Internet.\nPossibili soluzioni:\n - Riavviare il dispositivo che fornisce la configurazione di rete ai dispositivi della rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio heeft geen geldig adres voor een domeinnaamserver om internetadressen om te zetten.\nMogelijke oplossingen:\n - Start het apparaat dat de netwerkconfiguratie voor apparaten op je thuisnetwerk verzorgt, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren har ikke en gyldig domeneserveradresse for løsing av Internett-adresser.\nMulige løsninger:\n - Start enheten som brukes til nettverkskonfigurasjon av enhetene på hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
@@ -1453,16 +1453,16 @@ NET_DNS_NOK_HELP
 NET_ARPING
 	CS	Arping %s ...
 	DA	Arping %s ...
-	DE	Arping für %s wird ausgeführt ...
+	DE	Arping für %s wird ausgeführt...
 	EN	Arping %s ...
 	ES	Arping %s ...
-	FI	Arping %s ...
-	FR	Commande Arping %s ...
-	IT	Richiesta ARP in corso per %s ...
-	NL	Arping %s ...
+	FI	Arping %s...
+	FR	Commande Arping %s...
+	IT	Richiesta ARP in corso per %s...
+	NL	Arping %s...
 	NO	Arping %s ...
-	PL	Arping %s ...
-	RU	Arping: %s ...
+	PL	Arping %s...
+	RU	Arping: %s...
 	SV	Arping %s ...
 
 NET_ARPING_OK
@@ -1513,16 +1513,16 @@ NET_SERVER_NOK
 NET_RESOLVE
 	CS	Získávání IP pro %s ...
 	DA	Henter IP-adresse til %s ...
-	DE	IP für %s wird abgerufen ...
+	DE	IP für %s wird abgerufen...
 	EN	Getting IP for %s ...
-	ES	Obteniendo IP para %s ...
+	ES	Obteniendo IP para %s...
 	FI	Haetaan IP-osoitetta kohteelle %s ...
-	FR	Obtention de l'adresse IP pour %s ...
-	IT	Recupero dell'IP di %s in corso ...
+	FR	Obtention de l'adresse IP pour %s...
+	IT	Recupero dell'IP di %s in corso...
 	NL	IP-adres wordt opgehaald voor %s ...
 	NO	Henter IP for %s ...
-	PL	Trwa uzyskiwanie adresu IP %s ...
-	RU	Получение IP-адреса для %s ...
+	PL	Trwa uzyskiwanie adresu IP %s...
+	RU	Получение IP-адреса для %s...
 	SV	Hämtar IP-adress för %s ...
 
 NET_RESOLVE_OK
@@ -1562,7 +1562,7 @@ NET_RESOLVE_NOK_HELP
 	EN	Your Smart Radio was unable to resolve the network address for %s.\nPossible solutions:\n - Reboot the device that resolves internet addresses for your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio no pudo resolver la dirección de red para %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que resuelve las direcciones de Internet para su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radio ei voinut selvittää kohteen %s verkko-osoitetta.\nMahdolliset ratkaisut:\n - Käynnistä se laite uudelleen, joka selvittää verkko-osoitteet kotiverkossasi. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio n'a pas pu résoudre l'adresse réseau de %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui résout les adresses Internet de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio n'a pas pu résoudre l'adresse réseau de %s.\nSolutions possibles:\n - Réinitialisez le dispositif qui résout les adresses Internet de votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	Impossibile risolvere l'indirizzo di rete di %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che risolve gli indirizzi Internet della rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio kan de netwerkadressen voor %s niet omzetten.\nMogelijke oplossingen:\n - Start het apparaat dat internetadressen voor je thuisnetwerk omzet, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren kunne ikke løse nettverksadressen til %s.\nMulige løsninger:\n - Start enheten som løser Internett-adresser for hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
@@ -1573,16 +1573,16 @@ NET_RESOLVE_NOK_HELP
 NET_PING
 	CS	Ping %s ...
 	DA	Sender pingkommando %s ...
-	DE	Ping für %s wird ausgeführt ...
+	DE	Ping für %s wird ausgeführt...
 	EN	Pinging %s ...
-	ES	Haciendo ping a %s ...
+	ES	Haciendo ping a %s...
 	FI	Ping käynnissä %s ...
-	FR	Commande Ping %s ...
-	IT	Ping di %s in corso ...
-	NL	Pingen naar %s ...
+	FR	Commande Ping %s...
+	IT	Ping di %s in corso...
+	NL	Pingen naar %s...
 	NO	Pinger %s ...
-	PL	Trwa pingowanie %s ...
-	RU	Проверка связи с %s ...
+	PL	Trwa pingowanie %s...
+	RU	Проверка связи с %s...
 	SV	Pingar %s ...
 
 NET_PING_OK
@@ -1622,7 +1622,7 @@ NET_PING_NOK_HELP
 	EN	Your Smart Radio could not contact %s.\nPossible solutions:\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.\n - Confirm that a PC on your home network can connect to the internet.
 	ES	Su dispositivo Smart Radio no ha podido establecer contacto con %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.\n - Confirmar que un PC de su red doméstica puede conectarse a Internet.
 	FI	Smart Radio ei saanut ping-vastausta kohteesta %s.\nMahdolliset ratkaisut:\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.\n - Tarkista, että kotiverkkosi tietokoneilla on verkkoyhteys.
-	FR	Votre Smart Radio n'a reçu aucune réponse à la commande Ping envoyée pour %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.\n - Vérifiez qu'un ordinateur PC de votre réseau domestique peut se connecter à Internet.
+	FR	Votre Smart Radio n'est pas parvenue à contacter %s.\nSolutions possibles:\n - Réinitialisez le dispositif qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.\n - Vérifiez que vous pouvez vous connecter à Internet à partir d'un ordinateur de votre réseau.
 	IT	Smart Radio non è in grado di contattare %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router wireless o un modem a banda larga.\n - Verificare che un PC della rete domestica sia in grado di connettersi a Internet.
 	NL	Je Smart Radio krijgt geen contact met %s.\nMogelijke oplossingen:\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.\n - Controleer of een pc op je thuisnetwerk verbinding kan maken met internet.
 	NO	Smart Radio-spilleren fikk ikke kontakt med %s.\nMulige løsninger:\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.\n - Prøv å kople til Internett fra en av datamaskinene på hjemmenettverket.
@@ -1682,7 +1682,7 @@ NET_PORT_NOK_HELP
 	EN	Your Smart Radio could not connect to %s.\nPossible solutions:\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio no pudo conectarse a %s.\nSoluciones posibles:\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radio ei saanut yhteyttä kohteeseen %s.\nMahdolliset ratkaisut:\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio n'a pas pu se connecter à %s.\nSolutions possibles:\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio n'a pas pu se connecter à %s.\nSolutions possibles:\n - Réinitialisez le dispositif qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	Impossibile eseguire la connessione a %s.\nPossibili soluzioni:\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio kan geen verbinding maken met %s.\nMogelijke oplossingen:\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren kunne ikke kople til %s.\nMulige løsninger:\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.
@@ -1696,7 +1696,7 @@ NET_SUCCESS
 	DE	Alle Netzwerktests bestanden
 	EN	All network tests passed successfully
 	ES	Todas las pruebas de red se han superado correctamente
-	FI	Kaikki verkkotarkistuksen on läpäisty
+	FI	Kaikki verkkotarkistuksen on läpäisty.
 	FR	Succès de tous les tests du réseau
 	IT	Tutte le verifiche della rete sono state superate
 	NL	Alle netwerktests met goed gevolg voltooid
@@ -1728,7 +1728,7 @@ NETWORK_PROBLEM_HELP
 	EN	Your Smart Radio is experiencing a network problem.\nPossible solutions:\n - Confirm that a PC on your home network can connect to the internet.\n - Reboot the device that manages your home network. This is typically a wireless router or broadband modem.
 	ES	Su dispositivo Smart Radio está teniendo un problema de red.\nSoluciones posibles:\n - Confirmar que un PC de su red doméstica puede conectarse a Internet.\n - Reiniciar el dispositivo que gestiona su red doméstica. Suele ser un enrutador inalámbrico o un módem de banda ancha.
 	FI	Smart Radiossa on verkko-ongelma.\nMahdolliset ratkaisut:\n - Tarkista, että kotiverkkosi tietokoneilla on verkkoyhteys.\n - Käynnistä kotiverkkoasi ohjaava laite uudelleen. Laite on yleensä langaton reititin tai laajakaistamodeemi.
-	FR	Votre Smart Radio rencontre des problèmes de réseau.\nSolutions possibles:\n - Vérifiez qu'un ordinateur PC de votre réseau domestique peut se connecter à Internet.\n - Réinitialisez l'appareil qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
+	FR	Votre Smart Radio rencontre des problèmes de réseau.\nSolutions possibles:\n - Vérifiez que vous pouvez vous connecter à Internet à partir d'un ordinateur de votre réseau.\n - Réinitialisez le dispositif qui gère votre réseau domestique. Il s'agit généralement d'un routeur sans fil ou d'un modem haut débit.
 	IT	Si è verificato un problema di rete con la Smart Radio.\nPossibili soluzioni:\n - Verificare che un PC della rete domestica sia in grado di connettersi a Internet.\n - Riavviare il dispositivo che gestisce la rete domestica. In genere si tratta di un router wireless o un modem a banda larga.
 	NL	Je Smart Radio heeft een netwerkprobleem.\nMogelijke oplossingen:\n - Controleer of een pc op je thuisnetwerk verbinding kan maken met internet.\n - Start het apparaat dat je thuisnetwerk beheert, opnieuw op. Dit is meestal een draadloze router of breedbandmodem.
 	NO	Smart Radio-spilleren har et nettverksproblem.\nMulige løsninger:\n - Prøv å kople til Internett fra en av datamaskinene på hjemmenettverket.\n - Start enheten som håndterer hjemmenettverket, på nytt. Dette vil som regel være en trådløs ruter eller et bredbåndsmodem.

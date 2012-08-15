@@ -83,7 +83,7 @@ SWITCH_PASSWORD_WRONG_BODY
 	DE	Der eingegebene Benutzername bzw. das Kennwort ist ungültig.
 	EN	Either the username or password is not valid.
 	ES	La contraseña o el nombre de usuario que ha introducido no es válido.
-	FI	Käyttäjänimi tai salasana on virheellinen.
+	FI	Käyttäjätunnus tai salasana on virheellinen.
 	FR	Le nom d'utilisateur ou le mot de passe saisi n'est pas valide.
 	IT	Il nome utente o la password immessi non sono validi.
 	NL	Ingevoerde gebruikersnaam of ingevoerd wachtwoord is niet geldig.
@@ -326,22 +326,22 @@ SQUEEZEBOX_PROBLEM_HELP_GENERIC
 	EN	Unable to connect to %s.  Check that your UE Music Library is running properly, and that you have a reliable network connection.
 	ES	No se ha podido establecer conexión con %s. Si el problema continúa, asegúrese de que UE Music Library se está ejecutando correctamente y de que la conexión de red es fiable.
 	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista UE Music Libraryn ja verkkoyhteyden toiminta.
-	FR	Connexion à %s impossible. Si le problème persiste, veuillez vérifier que le UE Music Library est correctement exécuté et que la connexion au réseau est fiable.
+	FR	Connexion à %s impossible. Vérifiez qu'UE Music Library est correctement exécuté et que la connexion au réseau est fiable.
 	IT	Impossibile connettersi a %s. Verificare che UE Music Library sia in esecuzione in modo corretto e che la connessione alla rete sia affidabile.
 	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of de UE Music Library goed functioneert en of je een betrouwbare netwerkverbinding hebt.
 	NO	Kan ikke kople til %s. Kontroller at UE Music Library kjører som den skal, og at du har en stabil nettverkstilkopling.
 	PL	Nie można nawiązać połączenia z %s. Sprawdź działanie programu UE Music Library i połączenia sieciowego.
 	RU	Не удалось подключиться к %s. Проверьте правильность работы UE Music Library и наличие надежного сетевого подключения.
-	SV	Det gick inte att ansluta till %s.  Om problemet kvarstår kontrollerar du UE Music Library och kontrollerar att den är igång, och att du har en stabil nätverksanslutning.
+	SV	Det gick inte att ansluta till %s. Kontrollera att UE Music Library körs som det ska och att du har en stabil nätverksanslutning.
 
 SQUEEZEBOX_PROBLEM_HELP
 	CS	Připojení k %s nebylo možné. Ujistěte se, že je váš počítač zapnutý a připojený k místní síti, a že je UE Music Library spuštěn.
 	DA	Der kunne ikke oprettes forbindelse til %s. Kontroller at computeren er tændt, at den er sluttet til det lokale netværk, og at UE Music Library kører.
 	DE	Verbindung mit %s nicht möglich. Vergewissern Sie sich, dass Ihr Computer eingeschaltet ist und mit dem lokalen Netzwerk verbunden ist. Stellen Sie sicher, das die UE Music Library ausgeführt wird.
-	EN	Unable to connect to %s.  Check that your UE Music Library is running properly, and that you have a reliable network connection.
+	EN	We couldn't connect to %s.  Make sure your computer is turned on and connected to your local network, and that UE Music Library is currently running.
 	ES	No se ha podido establecer conexión con %s. Asegúrese de que el ordenador está encendido y conectado a la red local, y de que UE Music Library se está ejecutando en este momento.
 	FI	Yhteyttä kohteeseen %s ei voitu muodostaa. Tarkista, että tietokone on päällä ja että se on yhdistetty lähiverkkoon. Tarkista myös, että UE Music Library on käynnissä.
-	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et que le UE Music Library est en cours d'exécution.
+	FR	Connexion à %s impossible. Vérifiez que votre ordinateur est sous tension et connecté à votre réseau local et qu'UE Music Library est en cours d'exécution.
 	IT	Impossibile connettersi a %s. Verificare che il computer sia acceso e connesso alla rete locale e che UE Music Library sia in esecuzione.
 	NL	Er kan geen verbinding worden gemaakt met %s. Controleer of je computer aanstaat en met je lokale netwerk is verbonden, en of UE Music Library actief is.
 	NO	Kunne ikke kople til %s. Kontroller at datamaskinen er slått på og koplet til det lokale nettverket, og at UE Music Library kjører.
@@ -356,10 +356,10 @@ SQUEEZECENTER_VERSION
 	EN	Update Software
 	ES	Actualizar software
 	FI	Päivitä ohjelma
-	FR	MàJ logicielle
+	FR	Mise à jour logicielle
 	IT	Aggiorna il software
 	NL	Software bijwerken
-	NO	Oppdater
+	NO	Oppdater programvare
 	PL	Aktualizuj oprogramowanie
 	RU	Обновить ПО
 	SV	Uppgradera
@@ -371,7 +371,7 @@ SQUEEZECENTER_VERSION_HELP
 	EN	%s needs to be updated to a newer version of the UE Music Library.\n\nPlease visit uesmartradio.com/downloads to download the latest version.
 	ES	%s debe actualizarse a una versión nueva de UE Music Library.\n\nVisite uesmartradio.com/downloads para descargar la versión más reciente.
 	FI	%s on päivitettävä UE Music Libraryn uudempaan versioon.\n\nLataa uusin versio osoitteesta uesmartradio.com/downloads.
-	FR	Vous devez mettre %s à jour à la dernière version du UE Music Library.\n\nVisitez uesmartradio.com/downloads pour télécharger la dernière version.
+	FR	Vous devez mettre %s à jour à la dernière version d'UE Music Library.\n\nVisitez uesmartradio.com/downloads pour télécharger la dernière version.
 	IT	È necessario aggiornare %s a una versione più recente di UE Music Library.\n\nVisitare uesmartradio.com/downloads per scaricarla.
 	NL	%s moet worden bijgewerkt naar een recentere versie van de UE Music Library.\n\nGa naar uesmartradio.com/downloads om de nieuwste versie te downloaden.
 	NO	%s må oppdateres til en nyere versjon av UE Music Library.\n\nGå til uesmartradio.com/downloads for å laste ned den nyeste versjonen.

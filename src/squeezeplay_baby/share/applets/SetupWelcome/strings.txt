@@ -18,19 +18,19 @@ WELCOME
 	SV	Välkommen
 
 WELCOME_WALKTHROUGH
-	CS	Vítejte do UE Smart Radio.
-	DA	Velkommen til UE Smart Radio.
-	DE	Willkommen.
+	CS	Začneme tím, že Vás připojíme k vaší síti a hudbě.
+	DA	Lad os begynde med at slutte afspilleren til netværket og din musiksamling.
+	DE	Jetzt stellen wir die Verbindung zum Netzwerk und Ihrer Musik her.
 	EN	Let's get started by getting you connected to your network and music.
-	ES	Bienvenido a UE Smart Radio.
-	FI	Tervetuloa UE Smart Radioon.
-	FR	Bienvenue dans UE Smart Radio.
-	IT	Benvenuti in UE Smart Radio.
-	NL	Welkom bij UE Smart Radio.
-	NO	Velkommen til UE Smart Radio.
-	PL	UE Smart Touch — Zapraszamy.
-	RU	Добро пожаловать в UE Smart Touch.
-	SV	Välkommen till UE Smart Radio.
+	ES	Comencemos por realizar la conexión a la red y música.
+	FI	Aloitetaan yhdistämällä sinut verkkoon ja musiikkitiedostoihisi.
+	FR	Commençons par vous connecter au réseau.
+	IT	Iniziamo con il collegamento alla rete e alla musica.
+	NL	We gaan je eerst met je netwerk en muziek verbinden.
+	NO	La oss starte med å kople deg til nettverket ditt og musikken din.
+	PL	Rozpocznij od nawiązania połączenia z siecią i muzyką.
+	RU	Начнем работу, подключив вас к сети и музыке.
+	SV	Vi börjar med att ansluta till nätverket och musiksamlingen.
 
 CONTINUE
 	CS	Pokračovat
@@ -69,7 +69,7 @@ DONE_HELP
 	EN	You can now use your UE Smart Radio to access all your music!
 	ES	Ya puede utilizar UE Smart Radio para acceder a toda su música. Pulse el botón central para continuar.
 	FI	Nyt pääset käyttämään UE Smart Radiolla kaikkia musiikkitiedostojasi. Jatka painamalla keskipainiketta.
-	FR	Vous pouvez maintenant utiliser votre UE Smart Radio pour accéder à toute votre musique!
+	FR	Vous pouvez maintenant utiliser votre Smart Radio pour accéder à toute votre musique. Appuyez sur le bouton central pour continuer.
 	IT	Ora è possibile utilizzare il controller Smart Radio per accedere alla musica! Premere il pulsante centrale per continuare.
 	NL	Met je UE Smart Radio kun je nu naar al je muziek luisteren!
 	NO	Nå kan du få tilgang til all musikken din via Smart Radio Controller! Trykk på midtknappen for å gå videre.
@@ -94,24 +94,24 @@ CONNECTING_TO_SN
 	SV	Ansluts till
 
 MYSERVICE_DOT_COM
-	CS	uesmartradio.com
+	CS	UEsmartradio.com
 	DA	uesmartradio.com
-	DE	uesmartradio.com
-	EN	uesmartradio.com
+	DE	UEsmartradio.com
+	EN	UEsmartradio.com
 	ES	uesmartradio.com
 	FI	uesmartradio.com
-	FR	uesmartradio.com
-	IT	uesmartradio.com
+	FR	UEsmartradio.com
+	IT	UEsmartradio.com
 	NL	uesmartradio.com
-	NO	uesmartradio.com
-	PL	uesmartradio.com
-	RU	uesmartradio.com
+	NO	UEsmartradio.com
+	PL	UEsmartradio.com
+	RU	UEsmartradio.com
 	SV	uesmartradio.com
 
 CANT_CONNECT
-	CS	Nemohu připojit
+	CS	Nelze připojit
 	DA	Der kan ikke etableres forbindelse
-	DE	Verbindung kann nicht hergestellt werden
+	DE	Keine Verbindung möglich
 	EN	Can't Connect
 	ES	No se puede conectar
 	FI	Ei voi yhdistää
@@ -130,7 +130,7 @@ SN_DNS_WORKED
 	EN	A firewall or other mechanism seems to be blocking your connection. Please contact your router manufacturer or network admin for further assistance, or visit www.logitech.com/support.
 	ES	Parece que un servidor de seguridad o algún otro mecanismo está bloqueando la conexión. Póngase en contacto con el fabricante del enrutador o el administrador de la red para obtener ayuda o visite www.logitech.com/support.
 	FI	Vaikuttaa siltä, että palomuuri tai muu mekanismi estää yhteyden muodostamisen. Ota yhteys reitittimen valmistajaan tai verkon järjestelmänvalvojaan avun saamiseksi tai siirry osoitteeseen www.logitech.com/support.
-	FR	Un pare-feu ou autre mécanisme semble bloquer votre connexion. Contactez le fabricant de votre routeur ou l'administrateur réseau pour obtenir de l'aide, ou rendez-vous sur le site www.logitech.com/support.
+	FR	Un pare-feu ou un autre mécanisme semble bloquer votre connexion. Contactez le fabricant de votre routeur ou l'administrateur réseau pour obtenir de l'aide, ou rendez-vous sur le site www.logitech.com/support.
 	IT	La connessione sembra essere bloccata da un firewall o da un altro meccanismo. Contattare il produttore del router o l'amministratore di rete per assistenza o visitare www.logitech.com/support.
 	NL	Een firewall of ander mechanisme lijkt je verbinding te blokkeren. Neem voor extra hulp contact op met de fabrikant van je router of met je netwerkbeheerder, of bezoek www.logitech.com/support.
 	NO	Det ser ut til at en brannmur eller liknende blokkerer tilkoplingen. Kontakt ruterprodusenten eller nettverksansvarlig hvis du trenger hjelp, eller gå til www.logitech.com/support.
@@ -145,7 +145,7 @@ SN_DNS_FAILED
 	EN	Unable to connect. Please check your network to make sure it is connected and running properly.
 	ES	Parece que su conexión a Internet no funciona. Compruebe que la red está conectada y que funciona correctamente.
 	FI	Yhteyttä ei voida muodostaa. Tarkista verkkoyhteys.
-	FR	Votre connexion à Internet semble ne pas fonctionner. Vérifiez que votre réseau est connecté et qu'il fonctionne correctement.
+	FR	Connexion impossible. Vérifiez que votre réseau est connecté et qu'il fonctionne correctement.
 	IT	Impossibile eseguire la connessione. Verificare che la rete sia collegata e che funzioni correttamente.
 	NL	Je internetverbinding lijkt niet te werken. Controleer of je netwerk verbonden is en correct functioneert.
 	NO	Kan ikke kople til. Kontroller at nettverket er tilkoplet og påslått.
@@ -205,7 +205,7 @@ BATTERY_TITLE
 	EN	Remove Battery Tab
 	ES	Retirar lengüeta de batería
 	FI	Poista paristoliuska
-	FR	Retirez la languette de protection des piles
+	FR	Retirez la languette de protection de la batterie
 	IT	Rimuovere la linguetta della batteria
 	NL	Batterijlipje verwijderen
 	NO	Ta av batterifliken
@@ -219,14 +219,14 @@ BATTERY_HELP
 	DE	Entfernen Sie zum Aktivieren des Akkus den Schutzstreifen vom Akkufachdeckel an der Unterseite des Logitech UE Smart Radio.
 	EN	Please remove the battery tab. You can find it on the battery door on the bottom of your Logitech UE Smart Radio. This will activate your battery.
 	ES	Retire la lengüeta de la batería. La encontrará en la tapa de la batería en la parte inferior de Logitech UE Smart Radio. Así se activará la batería.
-	FI	Poista paristoliuska, jotta paristo aktivoituu. Liuska on Logitech UE Smart Radion pohjassa olevassa paristoluukussa.﻿
-	FR	Pour activer les piles, retirez la languette de protection située sur le couvercle du compartiment des piles sur la face inférieure de votre Logitech UE Smart Radio.
+	FI	Poista paristoliuska, jotta paristo aktivoituu. Liuska on Logitech UE Smart Radion pohjassa olevassa paristoluukussa.
+	FR	Pour activer la batterie, retirez la languette de protection située sur le couvercle du compartiment de la batterie sur la face inférieure de votre Logitech UE Smart Radio.
 	IT	Per attivare la batteria, estrarre la linguetta dal coperchio del vano batteria posto nella parte inferiore di Logitech UE Smart Radio.
 	NB	Fjern batterifliken. Du finner den på batteriluken på undersiden av Smart Radio. Dette aktiverer batteriet.
 	NL	Verwijder het batterijlipje op het klepje aan de onderkant van je Logitech UE Smart Radio. Hiermee wordt de batterij geactiveerd.
 	NO	Fjern batterifliken. Du finner den på batteriluken på undersiden av Logitech UE Smart Radio. Dette aktiverer batteriet.
-	PL	Wyciągnij zaczep akumulatora, który znajduje się przy klapce na dole urządzenia Logitech UE Smart Radio. Spowoduje to włączenie akumulatora.
-	RU	Удалите ярлычок батареи. Он находится под крышкой батареи в нижней части Logitech UE Smart Radio. При этом батарея будет активирована.
+	PL	Wyciągnij zaczep akumulatora, który znajduje się przy klapce na dole odtwarzacza Logitech UE Smart Radio. Spowoduje to włączenie akumulatora.
+	RU	Удалите ярлычок батареи. Он находится под крышкой батарейного отсека на нижней панели Smart Radio. При этом батарея будет активирована.
 	SV	Ta bort batteriets skyddsflik. Den finns på batteriluckan längst ned på din Logitech UE Smart Radio. Batteriet börjar då att fungera.
 
 CHECK_FIRMWARE_UPDATE
@@ -241,11 +241,11 @@ CHECK_FIRMWARE_UPDATE
 	NL	Firmware-update controleren
 	NO	Kontroller fastvareoppdatering
 	PL	Dostępność aktualizacji oprogramowania
-	RU	Проверка обновл
+	RU	Проверка обновл. микропрограм. обеспеч.
 	SV	Kontrollera uppdat av inb programvara
 
 PLEASE_WAIT
-	CS	Počkejte prosím
+	CS	Čekejte, prosím
 	DA	Vent lidt
 	DE	Bitte warten
 	EN	Please wait

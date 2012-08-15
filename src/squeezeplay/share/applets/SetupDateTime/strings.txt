@@ -8,7 +8,7 @@ DATETIME_TITLE
 	EN	Date & Time
 	ES	Fecha & Hora
 	FI	Pvm ja aika
-	FR	Date & Heure
+	FR	Date et heure
 	IT	Data & ora
 	NL	Datum & tijd
 	NO	Tid og dato

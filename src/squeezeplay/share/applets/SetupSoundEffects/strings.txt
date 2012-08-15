@@ -135,7 +135,7 @@ SOUND_VOLUME_HELP
 	NO	Bruk hjulet til å justere volumet på lydeffektene.
 	PL	Użyj pokrętła, aby ustawić głośność efektów dźwiękowych.
 	RU	Для настройки громкости звуковых эффектов используйте колесико.
-	SV	Justera volymen på ljudeffekterna med hjälp av rullningshjulet.
+	SV	Justera volymen på ljudeffekterna med hjälp av rullningshjulet
 
 SOUND_CUSTOMIZE
 	CS	Upravit zvuk
@@ -159,7 +159,7 @@ SOUND_DEFAULT
 	EN	Default
 	ES	Predeterminada
 	FI	Oletus
-	FR	Défaut
+	FR	Par défaut
 	IT	Predefinito
 	NL	Standaard
 	NO	Standard

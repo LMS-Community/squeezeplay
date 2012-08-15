@@ -44,7 +44,7 @@ SSH_HOWTO
 	IT	La password dell'utente root di questo dispositivo è %s ed è possibile connettersi al dispositivo tramite l'indirizzo %s
 	NL	Het wachtwoord voor de gebruiker-root van dit apparaat is %s en je kunt er verbinding mee maken via het adres %s
 	NO	Passordet for brukeren root på denne enheten er %s, og du kan kople til den på adressen %s
-	PL	Hasło użytkownika głównego (root) dla tego urządzenia to %s i można się z nim połączyć pod adresem %s
+	PL	Hasło użytkownika głównego (root) dla tego urządzenia to %s. Z urządzeniem można połączyć się pod adresem %s.
 	RU	Пароль пользователя root этого устройства %s, и вы можете подключиться к нему по адресу %s
 	SV	Enhetens rootlösenord är %s, och du kan ansluta till den på adressen: %s
 

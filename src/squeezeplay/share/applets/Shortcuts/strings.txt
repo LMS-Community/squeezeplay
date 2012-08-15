@@ -36,7 +36,7 @@ SHORTCUTS_RESTORE_DEFAULTS
 SHORTCUTS_RESTORE_DEFAULTS_HELP
 	CS	Zvolte "Pokračovat" k obnovení výchozího nastavení všech uživatelských zkratek
 	DA	Vælg Fortsæt hvis du vil gendanne standardværdierne for alle tilpassede genveje
-	DE	Wählen Sie 'Weiter', um die Standardwerte für alle benutzerdefinierten Shortcuts wiederherzustellen
+	DE	Wählen Sie 'Weiter', um die Standardwerte für alle benutzerdefinierten Shortcuts wiederherzustellen.
 	EN	Select "Continue" to restore all custom shortcuts to their default value
 	ES	Seleccione "Continuar" para restaurar los métodos abreviados a sus valores predeterminados
 	FI	Palauta kaikki mukautetut pikatoiminnot oletuksiin valitsemalla Jatka
@@ -46,7 +46,7 @@ SHORTCUTS_RESTORE_DEFAULTS_HELP
 	NO	Velg Fortsett for å gjenopprette alle egendefinerte snarveier til standardinnstillinger
 	PL	Kliknij przycisk Kontynuuj, aby przywrócić domyślne wartości wszystkich skrótów niestandardowych
 	RU	Нажмите кнопку "Продолжить", чтобы восстановить значения по умолчанию для сочетаний клавиш
-	SV	Välj Fortsätt om du vill återställa alla anpassade genvägar till standardgenvägarna
+	SV	Välj Fortsätt om du vill återställa alla anpassade genvägar till standardgenvägarna.
 
 SHORTCUTS_CANCEL
 	CS	Storno
@@ -370,7 +370,7 @@ SHORTCUTS_OUTPUT_GO_HOME
 	SV	Startsida
 
 SHORTCUTS_OUTPUT_GO_NOW_PLAYING
-	CS	Právě hraje
+	CS	Právě hraje...
 	DA	Nu spiller
 	DE	Aktueller Titel
 	EN	Now Playing
@@ -552,7 +552,7 @@ SHORTCUTS_OUTPUT_SLEEP
 
 SHORTCUTS_OUTPUT_MORE
 	CS	Další
-	DA	Mere
+	DA	Mere...
 	DE	Mehr
 	EN	More
 	ES	Más
@@ -626,17 +626,17 @@ SHORTCUTS_OUTPUT_SET_PRESET
 	SV	Ställ in förinställning %s
 
 SHORTCUTS_OUTPUT_SEARCH
-	CS	Vyhledat
+	CS	Hledat
 	DA	Søg
 	DE	Suchen
 	EN	Search
 	ES	Buscar
 	FI	Etsi
-	FR	Recherche
+	FR	Rechercher
 	IT	Cerca
 	NL	Zoeken
 	NO	Søk
-	PL	Wyszukaj
+	PL	Szukaj
 	RU	Поиск
 	SV	Sök
 
