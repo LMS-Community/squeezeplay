@@ -3067,7 +3067,15 @@ function browserActionRequest(self, server, v, loadedCallback)
 				else
 					from, qty = _decideFirstChunk(step, jsonAction)
 
+					-- Store step which is in progress, but not yet pushed to the stack
+					self.stepInProgress = step
+					-- Store callback which removes the little spinny when called
+					self.loadedCallback = loadedCallback
+
 					step.loaded = function()
+						self.stepInProgress = nil
+						self.loadedCallback = nil
+
 						--if lastBrowseIndex then defer callback until lastBrowseIndex chunk received.
 						local lastBrowseIndex = _player:getLastBrowseIndex(step.commandString)
 						if not lastBrowseIndex and loadedCallback then
@@ -3134,6 +3142,11 @@ function notify_serverConnected(self, server)
 	local attachedServer = nil
 	local step = _getCurrentStep()
 
+	-- No current step, try to use a not yet pushed step
+	if not step and self.stepInProgress then
+		step = self.stepInProgress
+	end
+
 	if step and step.server and step.server != _server then
 		attachedServer = step.server
 	end
@@ -3162,6 +3175,11 @@ function notify_serverDisconnected(self, server, numUserRequests)
 	local connectedServer = _server
 	local attachedServer = nil
 	local step = _getCurrentStep()
+
+	-- No current step, try to use a not yet pushed step
+	if not step and self.stepInProgress then
+		step = self.stepInProgress
+	end
 
 	if step and step.server and step.server != _server then
 		attachedServer = step.server
@@ -3194,12 +3212,21 @@ function _removeRequestAndUnlock(self, server)
 									currentStep.menu:unlock()
 								end
 							end
-
+							self.stepInProgress = nil
+							self.loadedCallback = nil
 end
 
 
 function _problemConnectingPopup(self, server)
 	log:debug("_problemConnectingPopup")
+
+	-- Calling the callback removes the little spinny
+	if self.loadedCallback then
+		local loadedCallback = self.loadedCallback
+		self.loadedCallback = nil
+		loadedCallback()
+	end
+
 	local successCallback = function()
 					self:_problemConnectingPopupInternal(server)
 				end
