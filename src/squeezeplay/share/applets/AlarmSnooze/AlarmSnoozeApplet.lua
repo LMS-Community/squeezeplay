@@ -31,6 +31,10 @@ local jnt               = jnt
 module(..., Framework.constants)
 oo.class(_M, Applet)
 
+--[[The alarm time in the player is always 2 secs earlier than the actual alarm time. This is done to ensure the
+player alarm always fires before the server alarm and the player does not stop the next alarm sound started by the
+server accidentally(in case of multiple alarms in active state Defect #97).]]
+local epochSecAdvanced = 2
 --[[
 New alarm code with less server dependency
 
@@ -276,14 +280,21 @@ function notify_playerAlarmState(self, player, alarmState, alarmNext, alarmVersi
 	end
 
 	-- New alarm code
-	-- need to check alarmState too to prevent overriding values when it is 'active' or 'snooze'
-	if alarmVersion and alarmVersion == 2 and (alarmState == 'none' or alarmState == 'set') then
+	-- need to check alarmState too to prevent overriding values when it is 'snooze'
+	if alarmVersion and alarmVersion == 2 and ((alarmState == 'none' or alarmState == 'set') or (alarmState == 'active' and alarmNext2)) then
 		log:debug("*** NEW ALARM CODE ***")
 		-- store alarmNext2 as epoch seconds
 		if alarmNext2 and alarmNext2 > 0 then
+			log:debug("*** Alarm self.alarmNext is :", self.alarmNext," alarmNext is: ", alarmNext2)
+			log:debug("*** Alarm self.alarmRepeat is :", self.alarmRepeat," alarmRepeat is: ", alarmRepeat)
+			log:debug("*** Alarm self.alarmDays is :", self.alarmDays," alarmDays is: ", alarmDays)
 			if alarmNext2 > os.time() then
 				log:info("*** Alarm: Storing epochseconds of next alarm: ", alarmNext2, " now: ", os.time())
-
+				-- avoid re setting the in case of repeating alarms
+				if(alarmState == 'active' and (self.alarmNext + epochSecAdvanced) == alarmNext2 and self.alarmRepeat == alarmRepeat and self.alarmDays == alarmDays) then
+					log:info("*** Alarm did not set the RTC")
+					return
+				end
 				-- use existing variable
 				self.alarmNext = alarmNext2
 				self.alarmRepeat = alarmRepeat
@@ -418,8 +429,13 @@ function _alarmOff(self, stopStream)
 
 	-- Inform server
 	if self.localPlayer:isConnected() then
-		log:warn("*** Alarm: _alarmOff: tell server alarm is off, and only pause if stopStream is true")
-		self.localPlayer:stopAlarm(not stopStream)
+		if self.localPlayer:getAlarmState() == 'set' and self.alarmNext and (0 <= self.alarmNext - os.time()) and (self.alarmNext -os.time() <= epochSecAdvanced ) then
+			--Ugly hack to get rid of the race condition between the server and player
+			log:info("*** Alarm: skipping server notification")
+		else
+			log:warn("*** Alarm: _alarmOff: tell server alarm is off, and only pause if stopStream is true alarmState is: ", self.localPlayer:getAlarmState())
+			self.localPlayer:stopAlarm(not stopStream)
+		end
 	end
 end
 
@@ -799,7 +815,7 @@ end
 -- returns default of 1000ms if epochsecs is in the past...
 function _deltaMsecs(self, epochsecs)
 
-	local deltaSecs = epochsecs - os.time() 
+	local deltaSecs = epochsecs - epochSecAdvanced - os.time()
 	if deltaSecs <= 0 then
 		log:warn("*** Alarm: _deltaMsecs: epochsecs is in the past, deltaSecs: ", deltaSecs)
 		return(1000)
@@ -892,7 +908,9 @@ function _changeAlarmState(self, action)
 			-- Transition 6
 			changedState = "snooze"
 		elseif action == 'none' then
-			if self.RTCAlarmTimer:isRunning() then
+			if self.alarmNext and ( 0 <= self.alarmNext - os.time()) and (self.alarmNext -os.time() <= epochSecAdvanced) then
+				changedState = 'set'
+			elseif self.RTCAlarmTimer:isRunning() then
 				-- Transition 7
 				changedState = 'set'
 			else
