@@ -191,6 +191,7 @@ static int decode_alsa_init(lua_State *L) {
 	const char *capture_device;
 	const char *effects_device;
 	const char *alsadevname;
+	const char *alsacapname;
 	const char *alsasamplesize;
 	unsigned int user_sample_size;
 	unsigned int buffer_time;
@@ -224,6 +225,7 @@ static int decode_alsa_init(lua_State *L) {
 	decode_init_buffers(buf, true);
 
 	alsadevname = getenv("USEALSADEVICE");
+	alsacapname = getenv("USEALSACAPTURE");
 	alsasamplesize = getenv("USEALSASAMPLESIZE");
 
 	if ( alsasamplesize != NULL )
@@ -255,8 +257,11 @@ static int decode_alsa_init(lua_State *L) {
 	lua_getfield(L, 2, "alsaCaptureDevice");
 	capture_device = luaL_optstring(L, -1, ALSA_DEFAULT_DEVICE);
 
-	if ( alsadevname != NULL )
-		capture_device = alsadevname ;
+	if ( alsacapname != NULL )
+		capture_device = alsacapname ;
+	else
+		if ( alsadevname != NULL )
+			 capture_device = alsadevname;
 
 	lua_getfield(L, 2, "alsaEffectsDevice");
 	effects_device = luaL_optstring(L, -1, NULL);
