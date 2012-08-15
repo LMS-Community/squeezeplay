@@ -1,4 +1,3 @@
-
 --[[
 =head1 NAME
 
@@ -102,7 +101,6 @@ local _string
 -- The player we're browsing and it's server
 local _player = false
 local _server = false
-
 local _networkError = false
 local _serverError  = false
 local _diagWindow   = false
@@ -133,6 +131,7 @@ local styleMap = {
 }
 
 
+local _serverLinkFlag = false
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -2078,13 +2077,7 @@ _actionHandler = function(menu, menuItem, db, dbIndex, event, actionName, item, 
 				elseif nextWindow == 'playlist' then
 					_goPlaylist(true)
 				elseif nextWindow == 'home' then
-					-- bit of a hack to notify serverLinked after factory reset SN menu
-					if item['serverLinked'] then
-						log:info("serverlinked: pin: ", _server:getPin())
-						_server.jnt:notify('serverLinked', _server, true)
-					end
 					goHome()
-					
 				elseif nextWindow == 'parentNoRefresh' then
 					_hideMe(true, _, setSelectedIndex)
 				elseif nextWindow == 'parent' then
@@ -2979,31 +2972,23 @@ function squeezeNetworkRequest(self, request, inSetup, successCallback)
 	self.inSetup = inSetup
 
 	_server = squeezenetwork
-
-	-- create a window for SN signup
-	local step, sink = _newDestination(
-		nil,
-		nil,
-		{
-			text = self:string("SN_SIGNUP"),
-			menuStyle = 'menu',
-			labelItemStyle   = "item",
-			windowStyle = 'text_list',
-			disableBackButton = true,
-		},
-		_browseSink
-	)
-	local sinkWrapper = sink
+	local sinkWrapper
 	if successCallback then
 		sinkWrapper =  function(...)
-				sink(...)
-				log:info("Calling successCallback after initial SN request succeeded")
-				--first request is always a welcome screen. return success callback including whether this is an already registered SP 
-				successCallback(squeezenetwork:isSpRegisteredWithSn())
-			end
+					log:info("Calling successCallback after initial SN request succeeded")
+					--first request is always a welcome screen. return success callback including whether this is an already registered SP
+					successCallback(squeezenetwork:isSpRegisteredWithSn())
+					_serverLinkFlag = true
+					local timer = Timer(2000, function()
+								log:debug("Serverlinked update called from callback")
+								if _serverLinkFlag == true then
+									_updateServerLinked()
+								end
+								end,true)
+					timer:start()
+				end
 	end
-	_pushToNewWindow(step)
-        squeezenetwork:userRequest( sinkWrapper, nil, request )
+	squeezenetwork:userRequest( sinkWrapper, nil, request )
 
 end
 
@@ -3132,6 +3117,15 @@ function notify_networkAndServerOK(self, iface)
 	end
 end
 
+function _updateServerLinked(self)
+	log:debug("_updateServerLinked is called _serverLinkFlag: ", _serverLinkFlag)
+	if _serverLinkFlag == false then
+		return
+	end
+	_server.jnt:notify('serverLinked', _server, true)
+	_serverLinkFlag = false
+	goHome()
+end
 
 function notify_serverConnected(self, server)
 	-- connectedServer: server the player is connected to, normally SN
@@ -3149,6 +3143,7 @@ function notify_serverConnected(self, server)
 
 	if connectedServer == server then
 		iconbar:setServerError("OK")
+		_updateServerLinked()
 	end
 
 	if connectedServer == server or attachedServer and attachedServer == server then
