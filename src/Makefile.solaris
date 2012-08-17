@@ -85,11 +85,11 @@ libjpeg: jpeg-6b/Makefile
 
 
 # sdl
-SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime=no
+SDL-1.2.15/Makefile:
+	cd SDL-1.2.15; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime=no
 
-sdl: SDL-1.2.13/Makefile
-	cd SDL-1.2.13; make && make install
+sdl: SDL-1.2.15/Makefile
+	cd SDL-1.2.15; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
@@ -302,7 +302,7 @@ clean:
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
 	-cd jpeg-6b; make distclean
-	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h sdl.pc;
+	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
