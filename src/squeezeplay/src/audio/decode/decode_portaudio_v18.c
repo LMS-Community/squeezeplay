@@ -352,9 +352,9 @@ static void decode_portaudio_stop(void) {
 static void decode_portaudio_openstream(void) {
 	PaError err;
 	u32_t set_sample_rate;
-#ifndef sun
+
 	ASSERT_AUDIO_LOCKED();
-#endif
+
 	set_sample_rate = decode_audio->set_sample_rate;
 	decode_audio->set_sample_rate = 0;
 
@@ -413,13 +413,11 @@ static int decode_portaudio_init(lua_State *L) {
 	/* const PaHostApiInfo *host_info; */
 	void *buf;
 
-	LOG_WARN(log_audio_output, "decode_portaudio_init called\n");
-
 	if ((err = Pa_Initialize()) != paNoError) {
 		goto err0;
 	}
 
-	LOG_DEBUG(log_audio_output, "Portaudio version v18.1");
+	LOG_WARN(log_audio_output, "Portaudio version v18.1");
 
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
@@ -435,6 +433,7 @@ static int decode_portaudio_init(lua_State *L) {
 		LOG_INFO(log_audio_output, "%d: %s", i, device_info->name);
 
 		outputParam.device = i;
+		break;
 #if 0
 		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
 		if (err == paFormatIsSupported) {
@@ -462,17 +461,13 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	decode_init_buffers(buf, false);
-	decode_audio->max_rate = 96000;
+	decode_audio->max_rate = 48000;
 
 	/* open stream */
-#ifndef sun	
 	decode_audio_lock();
-#endif
 	decode_portaudio_openstream();
-#ifndef sun
 	decode_audio_unlock();
-#endif
-
+	
 	return 1;
 
  err0:
