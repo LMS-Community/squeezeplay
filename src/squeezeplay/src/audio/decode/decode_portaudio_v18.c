@@ -77,11 +77,10 @@ static unsigned long paNumberOfBuffers = 3L;
  * This function is called by portaudio when the stream is active to request
  * audio samples
  */
-static int callback(const void *inputBuffer,
+static int callback(void *inputBuffer,
 		    void *outputBuffer,
 		    unsigned long framesPerBuffer,
 		    PaTimestamp outTime,
-		    /* const PaStreamCallbackTimeInfo *timeInfo, */
 		    void *userData) {
 	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
 	int add_silence_ms;
@@ -391,14 +390,7 @@ static void decode_portaudio_openstream(void) {
 	}
 
 	stream_sample_rate = set_sample_rate;
-#if 0
-	/* playout to the end of this stream before changing the sample rate */
-	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
-		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
-	}
-	LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-	LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
-#endif
+
 	if ((err = Pa_StartStream(stream)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 		return;
@@ -410,7 +402,8 @@ static int decode_portaudio_init(lua_State *L) {
 	PaError err;
 	int num_devices, i;
 	const PaDeviceInfo *device_info;
-	/* const PaHostApiInfo *host_info; */
+	const char *padevname;
+	int devnamelen;
 	void *buf;
 
 	if ((err = Pa_Initialize()) != paNoError) {
@@ -423,36 +416,39 @@ static int decode_portaudio_init(lua_State *L) {
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
 
-	/* num_devices = Pa_GetDeviceCount(); */
-	num_devices = Pa_CountDevices();
-	for (i = 0; i < num_devices; i++) {
-		device_info = Pa_GetDeviceInfo(i);
-		/* host_info = Pa_GetHostApiInfo(device_info->hostApi); */
+	padevname = getenv("USEPADEVICE");
 
-		/* LOG_INFO(log_audio_output, "%d: %s (%s)", i, device_info->name, host_info->name); */
+	num_devices = Pa_CountDevices();
+
+	for (i = 0; i < num_devices; i++)
+	{
+		device_info = Pa_GetDeviceInfo(i);
+
 		LOG_INFO(log_audio_output, "%d: %s", i, device_info->name);
 
-		outputParam.device = i;
-		break;
-#if 0
-		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
-		if (err == paFormatIsSupported) {
-			LOG_INFO(log_audio_output, "\tsupported");
-			break;
+		if ( (padevname != NULL) && (device_info->name != NULL) )
+		{
+			devnamelen = strlen (padevname);
+			if ( strnicmp(device_info->name, padevname, devnamelen) == 0 )
+			{
+				outputParam.device = i;
+				break;
+			}
 		}
-		else {
-			LOG_INFO(log_audio_output, "\tnot supported");
-		}
-#endif	
 	}
 
-	if (i >= num_devices) {
+	/* No match found, use default device */
+	if (i >= num_devices)
+	{
+		outputParam.device = Pa_GetDefaultOutputDeviceID();
+
 		/* no suitable audio device found */
-		return 0;
+		if ( outputParam.device == paNoDevice )
+		{
+			LOG_WARN(log_audio_output,"No default audio device found-playback disabled");
+			return 0;
+		}
 	}
-
-	/* high latency for robust playback */
-	/* outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency; */
 
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
