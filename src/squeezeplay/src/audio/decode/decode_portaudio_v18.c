@@ -70,7 +70,7 @@ static void decode_portaudio_openstream(void);
 static int paContinue=0; /* < Signal that the stream should continue invoking the callback and processing audio. */
 static int paComplete=0; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
 
-static unsigned long paFramesPerBuffer = 0L; 
+static unsigned long paFramesPerBuffer = 7350L;  /* 44100/6 */
 static unsigned long paNumberOfBuffers = 3L;
 
 /*
@@ -368,8 +368,6 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
-	paFramesPerBuffer = (unsigned long) (set_sample_rate/6.0);
-
 	if ((err = Pa_OpenStream(
 			&stream,
 			paNoDevice,
@@ -404,6 +402,8 @@ static int decode_portaudio_init(lua_State *L) {
 	const PaDeviceInfo *device_info;
 	const char *padevname;
 	int devnamelen;
+	const char *pabuffersize;
+	const char *panumbufs;
 	void *buf;
 
 	if ((err = Pa_Initialize()) != paNoError) {
@@ -449,6 +449,27 @@ static int decode_portaudio_init(lua_State *L) {
 			return 0;
 		}
 	}
+
+	pabuffersize = getenv("USEPAFRAMESPERBUFFER");
+
+	if ( pabuffersize != NULL )
+	{
+		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
+		if ( ( paFramesPerBuffer < 7350L ) || ( paFramesPerBuffer > 65536L ) )
+			paFramesPerBuffer = 7350L;
+	}
+
+	panumbufs = getenv("USEPANUMBEROFBUFFERS");
+
+	if ( panumbufs != NULL )
+	{
+		paNumberOfBuffers = strtoul(panumbufs, NULL, 0);
+		if ( ( paNumberOfBuffers < 2L ) || ( paNumberOfBuffers > 8L ) )
+			paNumberOfBuffers = 3L;
+	}
+
+	LOG_INFO(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
+			paNumberOfBuffers, paFramesPerBuffer);
 
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
