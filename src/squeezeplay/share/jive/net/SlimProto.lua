@@ -509,7 +509,7 @@ function connectTask(self, serverip)
 		-- We got a packet so we must be connected
 		self.state = CONNECTED
 		
-		if self.connectionFailed then
+		if self.reconnecting then
 			local subscriptions = self.subscriptions["reconnect"]
 			if subscriptions then
 				for i, subscription in ipairs(subscriptions) do
@@ -519,6 +519,7 @@ function connectTask(self, serverip)
 		end
 		
 		self.connectionFailed = false
+		self.reconnecting = false
 
 		log:debug("read opcode=", opcode, " #", #data)
 
@@ -595,6 +596,11 @@ function connectTask(self, serverip)
 	end
 
 	log:info("connect to ", self.serverip, " (", ip, ")")
+
+	-- Flag so that we know whether to invoke reconnect subscriptions
+	-- (we could just use a local variable for this state
+	--  but it is probably clearer to stash it in self).
+	self.reconnecting = self.reconnect
 
 	self.socket = SocketTcp(self.jnt, ip, PORT, "SlimProto")
 

@@ -316,7 +316,7 @@ function _serverstatusSink(self, event, err)
 	for k,v in pairs(selfPlayers) do
 		player = self.players[k]
 		-- wave player bye bye
-		player:free(self)
+		player:free(self, player:isLocal())
 		self.players[k] = nil
 	end
 	
