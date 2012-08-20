@@ -398,10 +398,13 @@ static void decode_portaudio_openstream(void) {
 
 static int decode_portaudio_init(lua_State *L) {
 	PaError err;
-	int num_devices, i;
+	PaDeviceIndex num_devices;
+	PaDeviceIndex i;
+	PaDeviceIndex user_deviceid;
 	const PaDeviceInfo *device_info;
 	const char *padevname;
 	int devnamelen;
+	const char *padevid;
 	const char *pabuffersize;
 	const char *panumbufs;
 	void *buf;
@@ -415,8 +418,9 @@ static int decode_portaudio_init(lua_State *L) {
 	memset(&outputParam, 0, sizeof(outputParam));
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
-
+ 
 	padevname = getenv("USEPADEVICE");
+	padevid  = getenv("USEPADEVICEID");
 
 	num_devices = Pa_CountDevices();
 
@@ -435,10 +439,20 @@ static int decode_portaudio_init(lua_State *L) {
 				break;
 			}
 		}
+
+		if ( padevid != NULL )
+		{
+			user_deviceid = (PaDeviceIndex) strtoul ( padevid, NULL, 0 );
+			if ( user_deviceid == i )
+			{
+				outputParam.device = i;
+				break;
+			}
+		}
 	}
 
 	/* No match found, use default device */
-	if (i >= num_devices)
+	if ( (i >= num_devices) || ( outputParam.device >= num_devices ) )
 	{
 		outputParam.device = Pa_GetDefaultOutputDeviceID();
 

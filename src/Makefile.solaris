@@ -1,8 +1,13 @@
 ################################################################################
-# Squeezeplay makefile for Solaris 9
+# Squeezeplay makefile for Solaris 9/10
 # Copyright 2007 Logitech
 # Copyright 2012 Duane Paddock
 ################################################################################
+#
+# These steps are required for a successful build
+#
+# svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
+#
 
 #
 # Absolute path to top of SQUEEZEPLAY directories
