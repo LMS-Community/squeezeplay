@@ -36,7 +36,7 @@ SSH_HOWTO
 # SLT: don't translate "root" it's a username which needs to be used litterally
 	CS	Kořenové heslo pro toto zařízení je %s a můžete se k němu připojit na adrese %s
 	DA	Root-adgangskoden til denne enhed er %s, og du kan oprette forbindelse til den på adressen %s
-	DE	Root-Kennwort dieses Geräts ist %s. Sie können über Adresse %s eine Verbindung herstellen
+	DE	Das Root-Kennwort für dieses Geräts ist %s, und Sie können eine Verbindung zu ihm über die Adresse %s herstellen.
 	EN	The root password for this device is %s and you can connect to it on address %s
 	ES	La contraseña de root para este dispositivo es %s y se puede conectar en la dirección %s
 	FI	Laitteen root-salasana on %s ja siihen voidaan muodostaa yhteys osoitteessa %s

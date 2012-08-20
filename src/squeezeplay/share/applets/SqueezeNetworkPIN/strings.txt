@@ -31,7 +31,7 @@ SQUEEZENETWORK_PIN
 SQUEEZENETWORK_PIN_HELP
 	CS	Navštivte\n%s\na zadejte svůj PIN pro připojení k vašemu účtu. Po zadání PIN kódu stiskněte prostřední tlačítko.
 	DA	Gå til\n%s\nog indtast pinkoden, så oprettes der forbindelse til din konto. Tryk på midterknappen når du har indtastet pinkoden.
-	DE	Gehen Sie zu\n%s\n und geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
+	DE	Gehen Sie zu\n%s\nund geben Sie Ihre PIN ein, um eine Verbindung zum Konto herzustellen. Drücken Sie anschließend die mittlere Taste.
 	EN	Visit\n%s\nand enter your PIN to connect to your account.  Press the center button after you have entered your PIN.
 	ES	Visite\n%s\ne introduzca el PIN para conectarse a su cuenta. Cuando haya introducido el PIN, pulse el botón central.
 	FI	Muodosta yhteys tiliin käymällä osoitteessa\n%s\nja antamalla PIN-koodi.  Paina keskipainiketta, kun olet antanut PIN-koodin.

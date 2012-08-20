@@ -354,7 +354,7 @@ TZ_ATLANTIC_CAPE_VERDE
 	EN	(GMT-01:00) Cape Verde Is.
 	ES	(GMT-01:00) Islas de Cabo Verde
 	FI	(GMT-01.00) Kap Verde
-	FR	(GMT-01:00) Iles du Cap-Vert.
+	FR	(GMT-01:00) Iles du Cap-Vert
 	IT	(GMT-01:00) Capo Verde.
 	NL	(GMT-01:00) Kaapverdische eilanden
 	NO	(GMT-01:00) Kapp Verdeøyene
@@ -612,7 +612,7 @@ TZ_EUROPE_MOSCOW
 	FR	(GMT+03:00) Moscou, Saint Pétersbourg, Volgograd
 	IT	(GMT+03:00) Mosca, S. Pietroburgo, Volgograd
 	NL	(GMT+03:00) Moskou, St. Petersburg, Wolgograd
-	NO	(GMT+03:00) Moskva, St. Petersburg, Volgograd
+	NO	(GMT+03.00) Moskva, St. Petersburg, Volgograd
 	PL	(GMT+03:00) Moskwa, St. Petersburg, Wołgograd
 	RU	(GMT+03:00) – Москва, Санкт-Петербург, Волгоград
 	SV	(GMT + 3:00) Moskva, Sankt Petersburg, Volgograd
@@ -1104,7 +1104,7 @@ TZ_PACIFIC_FIJI
 	EN	(GMT+12:00) Fiji, Kamchatka, Marshall Is.
 	ES	(GMT+12:00) Fiji, Kamchatka, Islas Marshall
 	FI	(GMT+12.00) Fidži, Kamtšatka, Marshallinsaaret
-	FR	(GMT+12:00) Fidji, Kamchatka, Iles Marshall.
+	FR	(GMT+12:00) Fidji, Kamchatka, Iles Marshall
 	IT	(GMT+12:00) Figi, Kamchatka, Is. Marshal
 	NL	(GMT+12:00) Fiji, Kamtsjatka, Marshalleilanden.
 	NO	(GMT+12:00) Fiji, Kamtsjatka, Marshalløyene

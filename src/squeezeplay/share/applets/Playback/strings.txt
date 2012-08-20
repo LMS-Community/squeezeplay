@@ -115,9 +115,9 @@ NUM_TRACKS
 	ES	Número de pistas:
 	FI	Kappaleiden määrä:
 	FR	Pistes num:
-	IT	N:
+	IT	N. brani:
 	NL	Tracknummers:
-	NO	Ant:
+	NO	Ant. spor:
 	PL	Ścieżki Num:
 	RU	Номера дорожек:
 	SV	Antal spår:

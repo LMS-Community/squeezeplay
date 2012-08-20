@@ -22,7 +22,7 @@ SETUPNETTEST_NOSERVER
 	EN	Network tests are not supported by the server which this player is currently attached to.  Please ensure the Network Test plugin is enabled on your server.
 	ES	El servidor al cual se ha adjuntado el reproductor no admite pruebas de red. Asegúrese de que el complemento de estado de servidor y red está activado en su servidor.
 	FI	Palvelin, johon soitin on tällä hetkellä yhdistettynä, ei tue verkkotestejä.  Varmista, että verkkotestin laajennus on käytössä palvelimessa.
-	FR	Les tests réseau ne sont pas pris en charge par le serveur auquel ce lecteur est actuellement connectée. Veuillez vérifier que le plug-in Test réseau est activé sur votre serveur.
+	FR	Les tests réseau ne sont pas pris en charge par le serveur auquel ce lecteur est actuellement connecté. Veuillez vérifier que le plug-in Test réseau est activé sur votre serveur.
 	IT	Le verifiche di rete non sono supportate dal server correntemente collegato al lettore. Assicurarsi che il plugin delle verifiche di rete sia attivato nel server.
 	NL	Netwerktests worden niet ondersteund door de server waarmee dit muzieksysteem momenteel verbonden is. Zorg ervoor dat de plug-in Netwerktest op je server is ingeschakeld.
 	NO	Nettverkstester støttes ikke av serveren som denne spilleren er koplet til for øyeblikket. Forsikre deg om at plugin-modulen Nettverkstesting er aktivert på serveren.

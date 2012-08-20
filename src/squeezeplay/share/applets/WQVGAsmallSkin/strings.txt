@@ -56,7 +56,7 @@ ENTER
 	ES	Listo
 	FI	Valmis
 	FR	Terminé
-	IT	Fine
+	IT	Fatto
 	NL	Gereed
 	NO	Fullført
 	PL	Gotowe

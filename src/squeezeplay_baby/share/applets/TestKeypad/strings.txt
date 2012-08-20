@@ -25,7 +25,7 @@ TEST_KEYPAD_HELP
 	EN	Press all keys and scroll the wheel to complete.
 	ES	Pulse todos los botones y gire la rueda para completar la operación.
 	FI	Suorita loppuun painamalla kaikkia painikkeita ja vierittämällä kiekkoa.
-	FR	Appuyez sur tous les boutons et sur la molette pour terminer le test.
+	FR	Appuyez sur toutes les touches et faites défiler la molette pour terminer.
 	IT	Premere tutti i tasti e scorrere la rotellina per completare.
 	NL	Druk alle knoppen in en druk op het wiel om de test te voltooien.
 	NO	Trykk ned alle tastene og rull med hjulet for å fullføre.

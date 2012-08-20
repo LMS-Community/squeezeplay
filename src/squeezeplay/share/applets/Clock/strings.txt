@@ -99,7 +99,7 @@ SCREENSAVER_CLOCK_MONTH_01
 	DE	Januar
 	EN	January
 	ES	Enero
-	FI	tammikuu
+	FI	Tammikuu
 	FR	Janvier
 	IT	Gennaio
 	NL	januari
@@ -114,7 +114,7 @@ SCREENSAVER_CLOCK_MONTH_02
 	DE	Februar
 	EN	February
 	ES	Febrero
-	FI	helmikuu
+	FI	Helmikuu
 	FR	Février
 	IT	Febbraio
 	NL	februari
@@ -129,7 +129,7 @@ SCREENSAVER_CLOCK_MONTH_03
 	DE	März
 	EN	March
 	ES	Marzo
-	FI	maaliskuu
+	FI	Maaliskuu
 	FR	Mars
 	IT	Marzo
 	NL	maart
@@ -144,7 +144,7 @@ SCREENSAVER_CLOCK_MONTH_04
 	DE	April
 	EN	April
 	ES	Abril
-	FI	huhtikuu
+	FI	Huhtikuu
 	FR	Avril
 	IT	Aprile
 	NL	april
@@ -159,7 +159,7 @@ SCREENSAVER_CLOCK_MONTH_05
 	DE	Mai
 	EN	May
 	ES	Mayo
-	FI	toukokuu
+	FI	Toukokuu
 	FR	Mai
 	IT	Maggio
 	NL	mei
@@ -174,7 +174,7 @@ SCREENSAVER_CLOCK_MONTH_06
 	DE	Juni
 	EN	June
 	ES	Junio
-	FI	kesäkuu
+	FI	Kesäkuu
 	FR	Juin
 	IT	Giugno
 	NL	juni
@@ -204,7 +204,7 @@ SCREENSAVER_CLOCK_MONTH_08
 	DE	August
 	EN	August
 	ES	Agosto
-	FI	elokuu
+	FI	Elokuu
 	FR	Août
 	IT	Agosto
 	NL	augustus
@@ -219,7 +219,7 @@ SCREENSAVER_CLOCK_MONTH_09
 	DE	September
 	EN	September
 	ES	Septiembre
-	FI	syyskuu
+	FI	Syyskuu
 	FR	Septembre
 	IT	Settembre
 	NL	september
@@ -234,7 +234,7 @@ SCREENSAVER_CLOCK_MONTH_10
 	DE	Oktober
 	EN	October
 	ES	Octubre
-	FI	lokakuu
+	FI	Lokakuu
 	FR	Octobre
 	IT	Ottobre
 	NL	oktober
@@ -249,7 +249,7 @@ SCREENSAVER_CLOCK_MONTH_11
 	DE	November
 	EN	November
 	ES	Noviembre
-	FI	marraskuu
+	FI	Marraskuu
 	FR	Novembre
 	IT	Novembre
 	NL	november
@@ -264,7 +264,7 @@ SCREENSAVER_CLOCK_MONTH_12
 	DE	Dezember
 	EN	December
 	ES	Diciembre
-	FI	joulukuu
+	FI	Joulukuu
 	FR	Décembre
 	IT	Dicembre
 	NL	december
@@ -324,7 +324,7 @@ SCREENSAVER_CLOCK_DAY_3
 	DE	Mittwoch
 	EN	Wednesday
 	ES	Miércoles
-	FI	keskiviikko
+	FI	Keskiviikko
 	FR	Mercredi
 	IT	Mercoledì
 	NL	Woensdag

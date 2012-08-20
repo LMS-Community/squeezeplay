@@ -234,7 +234,7 @@ UPDATE_BEGIN_REINSTALL_JIVE
 	EN	The software for this controller is up to date. If you'd like to reinstall version %s, choose Begin Update.
 	ES	El software de este controlador está actualizado. Si desea volver a instalar la versión %s, elija Iniciar actualización.
 	FI	Tämän ohjaimen ohjelmisto on ajan tasalla. Jos haluat asentaa version %s uudelleen, valitse Aloita päivitys.
-	FR	Le logiciel de ce contrôleur est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
+	FR	Le logiciel de ce contrôleur est à jour. Si vous souhaitez réinstaller la version %s, sélectionnez Commencer la mise à jour.
 	IT	Il software di questo telecomando è aggiornato. Per reinstallare la versione %s, scegliere Inizia aggiornamento.
 	NL	De software voor deze controller is bijgewerkt. Als je versie %s opnieuw wilt installeren, selecteer je Updates starten.
 	NO	Programvaren for denne kontrolleren er oppdatert. Hvis du vil installere versjon %s på nytt, velger du Start oppdatering.

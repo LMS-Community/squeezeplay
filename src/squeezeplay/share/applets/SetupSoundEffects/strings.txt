@@ -159,7 +159,7 @@ SOUND_DEFAULT
 	EN	Default
 	ES	Predeterminada
 	FI	Oletus
-	FR	Par défaut
+	FR	Défaut
 	IT	Predefinito
 	NL	Standaard
 	NO	Standard

@@ -128,7 +128,7 @@ CURRENT_PLAYER
 	EN	Current player\n%s
 	ES	Reproductor actual\n%s
 	FI	Nykyinen soitin\n%s
-	FR	Lecteur actuel\n%s
+	FR	Lecteur utilisé\n%s
 	IT	Lettore corrente\n%s
 	NL	Huidig muzieksysteem\n%s
 	NO	Aktiv spiller\n%s
@@ -932,7 +932,7 @@ BATT_CHARGING_PAUSED
 	EN	Battery charging paused.  Cooling down
 	ES	Carga de la batería en pausa. Periodo de enfriamiento
 	FI	Akun lataus keskeytetty.  Jäähtyy.
-	FR	Interruption de la charge de la batterie. Refroidissement en cours.
+	FR	Interruption du chargement de la batterie. Refroidissement en cours
 	IT	Ricarica batteria sospesa. Raffreddamento in corso.
 	NL	Opladen batterij gepauzeerd. Bezig met afkoelen
 	NO	Batterilading midlertidig stanset. Kjøler ned.

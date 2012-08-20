@@ -492,7 +492,7 @@ MONTH_6
 	EN	June
 	ES	Junio
 	FI	kesäkuu
-	FR	Juin
+	FR	Jun
 	IT	Giugno
 	NL	juni
 	NO	juni
@@ -506,7 +506,7 @@ MONTH_7
 	DE	Juli
 	EN	July
 	ES	Julio
-	FI	Heinäkuu
+	FI	heinäkuu
 	FR	Juillet
 	IT	Luglio
 	NL	juli
@@ -661,7 +661,7 @@ MONTHSHORT_5
 	DE	Mai
 	EN	May
 	ES	Mayo
-	FI	toukokuu
+	FI	tou
 	FR	Mai
 	IT	Maggio
 	NL	mei
@@ -694,7 +694,7 @@ MONTHSHORT_7
 	EN	Jul
 	ES	Jul
 	FI	hei
-	FR	Jul
+	FR	Jui
 	IT	Lug
 	NL	jul
 	NO	jul

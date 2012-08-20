@@ -174,7 +174,7 @@ SLIDE_04CENTER
 	EN	Thousands of free internet radio stations
 	ES	Miles de emisoras de radio por Internet gratuitas
 	FI	Tuhansia ilmaisia verkkoradiokanavia
-	FR	Des milliers de radio Internet gratuites
+	FR	Des milliers de radios Internet gratuites
 	IT	Migliaia di stazioni radio Internet gratuite
 	NL	Duizenden gratis internetradiostations
 	NO	Tusenvis av gratis nettradiostasjoner
@@ -374,6 +374,6 @@ SLIDE_17
 	NL	POWER TO THE MUSIC
 	NO	POWER TO THE MUSIC
 	PL	POWER TO THE MUSIC
-	RU	ВООРУЖИТЕСЬ МУЗЫКОЙ
+	RU	POWER TO THE MUSIC
 	SV	POWER TO THE MUSIC
 

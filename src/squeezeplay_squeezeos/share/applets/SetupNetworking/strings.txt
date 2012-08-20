@@ -1010,6 +1010,7 @@ NETWORK_CONNECTION_TYPE_WIRELESS
 	SV	Anslut till trådlöst nätverk
 
 NETWORK_CONNECTION_TYPE_WIRED
+# SLT: please keep this message short, preferebly no longer than 25 characters
 	CS	Připojit k ethernetové síti
 	DA	Opret forbindelse til Ethernet-netværk
 	DE	Mit Ethernet-Netzwerk verbinden

@@ -230,6 +230,7 @@ BATTERY_HELP
 	SV	Ta bort batteriets skyddsflik. Den finns på batteriluckan längst ned på din Logitech UE Smart Radio. Batteriet börjar då att fungera.
 
 CHECK_FIRMWARE_UPDATE
+# SLT: please keep this message short, preferebly no longer than 25 characters
 	CS	Vyhledat aktualizace firmwaru
 	DA	Kontroller firmware-opdatering
 	DE	Nach Firmware-Update suchen

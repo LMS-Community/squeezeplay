@@ -233,7 +233,7 @@ DELAY_1_MIN
 	DE	1 Minute
 	EN	1 minute
 	ES	1 minuto
-	FI	yksi minuutti
+	FI	1 minuutti
 	FR	1 minute
 	IT	1 minuto
 	NL	1 minuut
@@ -248,7 +248,7 @@ DELAY_2_MIN
 	DE	2 Minuten
 	EN	2 minutes
 	ES	2 minutos
-	FI	kaksi minuuttia
+	FI	2 minuuttia
 	FR	2 minutes
 	IT	2 minuti
 	NL	2 minuten
@@ -263,7 +263,7 @@ DELAY_5_MIN
 	DE	5 Minuten
 	EN	5 minutes
 	ES	5 minutos
-	FI	viisi minuuttia
+	FI	5 minuuttia
 	FR	5 minutes
 	IT	5 minuti
 	NL	5 minuten
@@ -310,10 +310,10 @@ SCREENSAVER_NONE
 	ES	Ninguno
 	FI	Ei mitään
 	FR	Aucun
-	IT	Nessuna
+	IT	Nessuno
 	NL	Geen
 	NO	Ingen
 	PL	Brak
 	RU	Нет
-	SV	Inget
+	SV	Ingen
 
