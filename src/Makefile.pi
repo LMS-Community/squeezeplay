@@ -62,7 +62,7 @@ freetype: freetype-2.1.10/config.mk
 
 # sdl
 SDL-1.2.13/Makefile:
-	cd SDL-1.2.13; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --enable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --enable-clock_gettime --host=${TARGET} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd SDL-1.2.13; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --enable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --enable-clock_gettime --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl: SDL-1.2.13/Makefile
 	cd SDL-1.2.13; make && make install
