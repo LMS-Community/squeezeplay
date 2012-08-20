@@ -52,7 +52,7 @@ extern void _VDBG_free(void *ptr,char *file,long line);
 #define inline __inline	 
 #endif //defined(_MSC_VER)
 
-#if BYTE_ORDER==LITTLE_ENDIAN
+#if defined(__LITTLE_ENDIAN__)
 union magic {
   struct {
     ogg_int32_t lo;
