@@ -20,6 +20,15 @@
 #include "ivorbiscodec.h"
 #include "os_types.h"
 
+#if defined(__sun)
+#include <alloca.h>
+#if defined(__sparc)
+#define BIG_ENDIAN 1
+#undef BYTE_ORDER
+#define BYTE_ORDER BIG_ENDIAN
+#endif /* __sparch */
+#endif /* __sun */
+
 /*#define _VDBG_GRAPHFILE "_0.m"*/
 
 
@@ -52,7 +61,7 @@ extern void _VDBG_free(void *ptr,char *file,long line);
 #define inline __inline	 
 #endif //defined(_MSC_VER)
 
-#if defined(__LITTLE_ENDIAN__)
+#if BYTE_ORDER==LITTLE_ENDIAN
 union magic {
   struct {
     ogg_int32_t lo;
