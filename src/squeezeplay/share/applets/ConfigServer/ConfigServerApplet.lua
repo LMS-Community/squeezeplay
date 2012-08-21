@@ -8,6 +8,7 @@ local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 local Framework              = require("jive.ui.Framework")
 local Timer                  = require("jive.ui.Timer")
+local Networking             = require("jive.net.Networking")
 
 local SlimServer	= require("jive.slim.SlimServer")
 local Task		= require("jive.ui.Task")
@@ -186,6 +187,13 @@ function fetchConfigServerData(self, doSet, doRegister, doRequiredFirmwareUpgrad
 	self.firmwarePrompt = false
 
 	Task("fetchConfigServerData", abc, function()
+
+		-- Wait for the network to be ready before trying to contact the config server
+		-- Proceed if after 3 seconds the network is still not ready
+		if Networking:waitNetworkReady(3) == false then
+			log:info("Network still not ready after waiting 3 minutes. Proceeding... ")
+		end
+
 		local url = false
 		local weAreDone = false
 		local socket = SocketHttp(jnt, self.configServer, CONFIG_PORT, "getconfig")

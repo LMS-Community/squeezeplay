@@ -67,6 +67,7 @@ local ltn12       = require("ltn12")
 local debug       = require("jive.utils.debug")
 local log         = require("jive.utils.log").logger("net.socket")
 
+local Timer       = require("jive.ui.Timer")
 local System      = require("jive.System")
 local Framework   = require("jive.ui.Framework")
 local Socket      = require("jive.net.Socket")
@@ -2355,6 +2356,48 @@ function pingServer(self, serverNameOrIP)
 	return pingOK
 end
 
+
+--[[
+
+=head2 jive.net.Networking:waitNetworkReady()
+
+Waits until we have a gateway ip or the timeout occurred
+
+Returns true when network is ready
+Returns false when timeout occurred
+
+class		- Networking class
+timeout		- timeout in seconds
+
+=cut
+--]]
+function waitNetworkReady(class, timeout)
+	assert(Task:running(), "Networking:waitNetworkReady must be called in a Task")
+
+	local networkReadyTimeout = false
+	if timeout and (timeout > 0) then
+		local timer = Timer(timeout * 1000,
+			function ()
+				networkReadyTimeout = true
+			end,
+			true	-- once
+		)
+		timer:start()
+	end
+
+	local ifObj = class:activeInterface()
+	local status = ifObj:t_wpaStatus()
+	while status.ip_gateway == nil and networkReadyTimeout == false do
+		Task:yield()
+		status = ifObj:t_wpaStatus()
+	end
+
+	if networkReadyTimeout == true then
+		return false
+	end
+
+	return true
+end
 
 --[[
 
