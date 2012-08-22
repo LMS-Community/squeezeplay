@@ -40,7 +40,7 @@ MYMUSIC_HINT
 	ES	Para reproducir música desde su ordenador, descargue e instale el software UE Music Library desde www.uesmartradio.com.
 	FI	Lataa ja asenna UE Music Library -ohjelmisto osoitteesta www.uesmartradio.com, jotta voit soittaa musiikkia omalta tietokoneeltasi.
 	FR	Pour lire de la musique depuis votre ordinateur, téléchargez et installez le logiciel UE Music Library depuis www.uesmartradio.com.
-	IT	Per riprodurre musica dal computer, scaricare e installare il software della libreria musicale UE da www.uesmartradio.com.
+	IT	Per riprodurre musica dal computer, scaricare e installare il software della UE Music Library da www.uesmartradio.com.
 	NL	Download en installeer de UE Music Library-software van www.uesmartradio.com om muziek af te spelen via je computer.
 	NO	Hvis du vil spille musikk fra datamaskinen din, må du laste ned og installere UE Music Library-programmet fra www.uesmartradio.com.
 	PL	Aby odtwarzać muzykę z komputera, pobierz i zainstaluj oprogramowanie UE Music Library z witryny www.uesmartradio.com.
