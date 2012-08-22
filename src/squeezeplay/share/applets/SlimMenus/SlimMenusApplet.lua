@@ -152,6 +152,9 @@ function notify_serverLinked(self, server)
 		local currentPlayer = appletManager:callService("getCurrentPlayer")
 		if currentPlayer and not (currentPlayer:getSlimServer() and currentPlayer:getSlimServer():isSqueezeNetwork()) then
 			self:_addSwitchToSnMenuItem()
+			-- delete existing menu items and fetch the new menu items from the backend
+			self:_removeStaleHomeMenus()
+			self:_fetchServerMenu(server)
 		end
 	end
 end
@@ -238,7 +241,6 @@ function notify_serverConnected(self, server)
 		_server:userRequest(_sinkSetServerMenuChunk(self, server, true) , _player:getId(), { 'menu', 0, 100, "direct:1" })
 	end
 end
-
 
 
 -- goHome
@@ -1211,7 +1213,6 @@ function notify_playerDelete(self, player)
 	end
 end
 
-
 function _fetchServerMenu(self, server)
 	log:debug("Fetching menu for server: ", server)
 
@@ -1291,6 +1292,25 @@ function _menuMusicServices(self)
 	return window
 end
 
+function _removeStaleHomeMenus(self)
+	if self.serverHomeMenuItems or _playerMenus then
+		self.serverHomeMenuItems = {}
+		self.waitingForPlayerMenuStatus = true
+		jiveMain:setTitle(nil)
+
+		for id, v in pairs(_playerMenus) do
+			jiveMain:removeItem(v)
+		end
+		_playerMenus = {}
+		-- make sure any home menu items are unlocked
+		if _lockedItem then
+			jiveMain:unlockItem(_lockedItem)
+			_lockedItem = false
+		end
+
+		_hidePlayerUpdating()
+	end
+end
 
 function free(self)
 
