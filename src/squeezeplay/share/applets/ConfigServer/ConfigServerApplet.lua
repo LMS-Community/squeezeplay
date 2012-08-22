@@ -189,8 +189,8 @@ function fetchConfigServerData(self, doSet, doRegister, doRequiredFirmwareUpgrad
 	Task("fetchConfigServerData", abc, function()
 
 		-- Wait for the network to be ready before trying to contact the config server
-		-- Proceed if after 3 seconds the network is still not ready
-		if Networking:waitNetworkReady(3) == false then
+		-- Proceed if after 3 minutes the network is still not ready
+		if Networking:waitNetworkReady(3*60) == false then
 			log:info("Network still not ready after waiting 3 minutes. Proceeding... ")
 		end
 
