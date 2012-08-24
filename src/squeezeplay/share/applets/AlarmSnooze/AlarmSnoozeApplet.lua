@@ -414,7 +414,7 @@ end
 
 function _alarmOff(self, stopStream)
 	log:warn("*** Alarm: _alarmOff: RTC alarm canceled")
-	
+	appletManager:callService("setWakeupAlarm", 'none')
 	self:_silenceFallbackAlarm()
 	self.alarmInProgress = nil
 	self:_changeAlarmState('none')
