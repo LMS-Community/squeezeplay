@@ -68,10 +68,36 @@ static u32_t stream_sample_rate;
 static void decode_portaudio_openstream(void);
 
 static int paContinue=0; /* < Signal that the stream should continue invoking the callback and processing audio. */
-static int paComplete=0; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
+static int paComplete=1; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
 
 static unsigned long paFramesPerBuffer = 7350L;  /* 44100/6 */
 static unsigned long paNumberOfBuffers = 3L;
+
+static void finished_handler(void) {
+	mqueue_read_complete(&decode_mqueue);
+
+	decode_audio_lock();
+	decode_portaudio_openstream();
+	decode_audio_unlock();
+}
+
+/*
+ * This function is called when the stream needs to be reopened at a
+ * different sample rate.
+ */
+static void finished(void *userData) {
+	if (decode_audio->set_sample_rate) {
+		/* We can't change the sample rate in this thread, so queue a request for
+		 * the decoder thread to service
+		 */
+		if (mqueue_write_request(&decode_mqueue, finished_handler, 0)) {
+			mqueue_write_complete(&decode_mqueue);
+		}
+		else {
+			LOG_DEBUG(log_audio_output, "Full message queue, dropped finished message");
+		}
+	}
+}
 
 /*
  * This function is called by portaudio when the stream is active to request
@@ -273,9 +299,10 @@ static int callback(void *inputBuffer,
 		decode_audio->transition_gain_step = 0;
 		
 		if (decode_audio->track_sample_rate != stream_sample_rate) {
-			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
+			LOG_WARN(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
 			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 			ret = paComplete; // will trigger the finished callback to change the samplerate
+			finished (userData);
 		}
 	}
 
@@ -287,35 +314,6 @@ static int callback(void *inputBuffer,
 
 	return ret;
 }
-
-
-static void finished_handler(void) {
-	mqueue_read_complete(&decode_mqueue);
-
-	decode_audio_lock();
-	decode_portaudio_openstream();
-	decode_audio_unlock();
-}
-
-
-/*
- * This function is called when the stream needs to be reopened at a
- * different sample rate.
- */
-static void finished(void *userData) {
-	if (decode_audio->set_sample_rate) {
-		/* We can't change the sample rate in this thread, so queue a request for
-		 * the decoder thread to service
-		 */
-		if (mqueue_write_request(&decode_mqueue, finished_handler, 0)) {
-			mqueue_write_complete(&decode_mqueue);
-		}
-		else {
-			LOG_DEBUG(log_audio_output, "Full message queue, dropped finished message");
-		}
-	}
-}
-
 
 static void decode_portaudio_start(void) {
 	LOG_DEBUG(log_audio_output, "decode_portaudio_start");
@@ -367,6 +365,8 @@ static void decode_portaudio_openstream(void) {
 			LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 		}
 	}
+
+	LOG_WARN(log_audio_output, "Setting sample rate %lu", set_sample_rate);
 
 	if ((err = Pa_OpenStream(
 			&stream,
@@ -428,7 +428,7 @@ static int decode_portaudio_init(lua_State *L) {
 	{
 		device_info = Pa_GetDeviceInfo(i);
 
-		LOG_INFO(log_audio_output, "%d: %s", i, device_info->name);
+		LOG_WARN(log_audio_output, "%d: %s", i, device_info->name);
 
 		if ( (padevname != NULL) && (device_info->name != NULL) )
 		{
@@ -482,7 +482,7 @@ static int decode_portaudio_init(lua_State *L) {
 			paNumberOfBuffers = 3L;
 	}
 
-	LOG_INFO(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
+	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
 			paNumberOfBuffers, paFramesPerBuffer);
 
 	/* allocate output memory */

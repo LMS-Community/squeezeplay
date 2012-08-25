@@ -26,7 +26,7 @@
 #define BIG_ENDIAN 1
 #undef BYTE_ORDER
 #define BYTE_ORDER BIG_ENDIAN
-#endif /* __sparch */
+#endif /* __sparc */
 #endif /* __sun */
 
 /*#define _VDBG_GRAPHFILE "_0.m"*/
