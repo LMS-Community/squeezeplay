@@ -407,6 +407,8 @@ static int decode_portaudio_init(lua_State *L) {
 	const char *padevid;
 	const char *pabuffersize;
 	const char *panumbufs;
+	const char *pamaxrate;
+	u32_t user_pamaxrate;
 	void *buf;
 
 	if ((err = Pa_Initialize()) != paNoError) {
@@ -469,8 +471,8 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pabuffersize != NULL )
 	{
 		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
-		if ( ( paFramesPerBuffer < 7350L ) || ( paFramesPerBuffer > 65536L ) )
-			paFramesPerBuffer = 7350L;
+		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 65536L ) )
+			paFramesPerBuffer = 8192L;
 	}
 
 	panumbufs = getenv("USEPANUMBEROFBUFFERS");
@@ -485,6 +487,21 @@ static int decode_portaudio_init(lua_State *L) {
 	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
 			paNumberOfBuffers, paFramesPerBuffer);
 
+	pamaxrate = getenv("USEMAXSAMPLERATE");
+
+	if ( pamaxrate != NULL )
+	{
+		user_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
+		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 192000L ) )
+			user_pamaxrate = 48000;
+	}
+	else
+	{
+		user_pamaxrate = 48000;
+	}
+
+	LOG_WARN(log_audio_output, "Setting maximum samplerate to (%lu)", user_pamaxrate );
+
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
 	if (!buf) {
@@ -492,7 +509,7 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	decode_init_buffers(buf, false);
-	decode_audio->max_rate = 48000;
+	decode_audio->max_rate = user_pamaxrate;
 
 	/* open stream */
 	decode_audio_lock();
