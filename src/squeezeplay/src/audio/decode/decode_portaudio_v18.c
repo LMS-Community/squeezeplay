@@ -70,7 +70,7 @@ static void decode_portaudio_openstream(void);
 static int paContinue=0; /* < Signal that the stream should continue invoking the callback and processing audio. */
 static int paComplete=1; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
 
-static unsigned long paFramesPerBuffer = 7350L;  /* 44100/6 */
+static unsigned long paFramesPerBuffer = 8192L;
 static unsigned long paNumberOfBuffers = 3L;
 
 static void finished_handler(void) {

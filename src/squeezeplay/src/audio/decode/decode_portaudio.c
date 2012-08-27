@@ -308,9 +308,9 @@ static void decode_portaudio_stop(void) {
 static void decode_portaudio_openstream(void) {
 	PaError err;
 	u32_t set_sample_rate;
-#ifndef sun
+
 	ASSERT_AUDIO_LOCKED();
-#endif
+
 	set_sample_rate = decode_audio->set_sample_rate;
 	decode_audio->set_sample_rate = 0;
 
@@ -363,11 +363,11 @@ static int decode_portaudio_init(lua_State *L) {
 	const char *paapiname;
 	int devnamelen;
 	int apinamelen;
-	void *buf;
 	const char *palatency;
 	unsigned int userlatency;
-
-	LOG_WARN(log_audio_output, "decode_portaudio_init called\n");
+	const char *pamaxrate;
+	u32_t user_pamaxrate;
+	void *buf;
 
 	if ((err = Pa_Initialize()) != paNoError) {
 		goto err0;
@@ -425,6 +425,7 @@ static int decode_portaudio_init(lua_State *L) {
 
 	/* override default latency? */
 	palatency = getenv("USEPALATENCY");
+
 	if ( palatency != NULL )
 	{
 		userlatency = strtoul(palatency, NULL, 0);
@@ -435,6 +436,21 @@ static int decode_portaudio_init(lua_State *L) {
 
 	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
 
+	pamaxrate = getenv("USEMAXSAMPLERATE");
+
+	if ( pamaxrate != NULL )
+	{
+		user_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
+		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 192000L ) )
+			user_pamaxrate = 48000;
+	}
+	else
+	{
+		user_pamaxrate = 48000;
+	}
+
+	LOG_WARN(log_audio_output, "Setting maximum samplerate to (%lu)", user_pamaxrate );
+
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
 	if (!buf) {
@@ -442,16 +458,12 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	decode_init_buffers(buf, false);
-	decode_audio->max_rate = 192000;
+	decode_audio->max_rate = user_pamaxrate;
 
 	/* open stream */
-#ifndef sun
 	decode_audio_lock();
-#endif
 	decode_portaudio_openstream();
-#ifndef sun
 	decode_audio_unlock();
-#endif
 
 	return 1;
 
