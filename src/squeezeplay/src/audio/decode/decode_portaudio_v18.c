@@ -487,7 +487,7 @@ static int decode_portaudio_init(lua_State *L) {
 	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
 			paNumberOfBuffers, paFramesPerBuffer);
 
-	pamaxrate = getenv("USEMAXSAMPLERATE");
+	pamaxrate = getenv("USEPAMAXSAMPLERATE");
 
 	if ( pamaxrate != NULL )
 	{

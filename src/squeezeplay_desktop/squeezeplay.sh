@@ -17,7 +17,7 @@ export PATH=$PATH:$INSTALL_DIR/bin
 # Portaudio
 #
 # export USEPADEVICE=null
-# export USEMAXSAMPLERATE=48000
+# export USEPAMAXSAMPLERATE=48000
 #
 # Portaudio v19
 #

@@ -436,7 +436,7 @@ static int decode_portaudio_init(lua_State *L) {
 
 	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
 
-	pamaxrate = getenv("USEMAXSAMPLERATE");
+	pamaxrate = getenv("USEPAMAXSAMPLERATE");
 
 	if ( pamaxrate != NULL )
 	{
