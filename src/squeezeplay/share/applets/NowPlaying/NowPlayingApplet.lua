@@ -735,6 +735,15 @@ function _updateAll(self)
 	self:_updateVolume()
 end
 
+function _getButtons(self, playerStatus)
+	if not playerStatus then playerStatus = self.player:getPlayerStatus() end
+	
+	if playerStatus then
+		return playerStatus.buttons or
+			(playerStatus.remoteMeta and playerStatus.remoteMeta.buttons)
+	end
+end
+
 function _updateButtons(self, playerStatus)
 	log:debug('_updateButtons')
 	-- no sense updating the transport buttons unless
@@ -743,20 +752,23 @@ function _updateButtons(self, playerStatus)
 		return
 	end
 
-	local remoteMeta = playerStatus.remoteMeta
+	local buttons = self:_getButtons(playerStatus)
 
-	local buttons = remoteMeta and remoteMeta.buttons
-	-- if we have buttons data, the remoteMeta is remapping some buttons
+	-- if we have buttons data we are remapping some buttons
 	if buttons then
-		log:debug('remap buttons to whatever remoteMeta needs')
+		log:debug('remap buttons')
+		local button
+		
 		-- disable rew or fw as needed
-		if buttons.rew and tonumber(buttons.rew) == 0 then
+		button = buttons.rew
+		if button and tonumber(button) == 0 then
 			self:_remapButton('rew', 'rewDisabled', nil)
 		else
 			self.controlsGroup:setWidget('rew', self.rewButton)
 		end
 
-		if buttons.fwd and tonumber(buttons.fwd) == 0 then
+		button = buttons.fwd
+		if button and tonumber(button) == 0 then
 			-- Bug 15336: in order for a skip limit showBriefly to be generated, we still need to
 			-- allow the jump_fwd action to be sent for the disabled button
 			-- this could have implications for services that expect a disabled button to not send the action
@@ -764,28 +776,30 @@ function _updateButtons(self, playerStatus)
 		else
 			self.controlsGroup:setWidget('fwd', self.fwdButton)
 		end
-
-		if buttons.shuffle then
+		
+		button = buttons.like or buttons.shuffle	-- backwards compatible
+		if button then
+			local command = button.command or function() return EVENT_CONSUME end
 			local callback = function()
 				local id      = self.player:getId()
 				local server  = self.player:getSlimServer()
-				local command = buttons.shuffle.command or function() return EVENT_CONSUME end
 				server:userRequest(nil, id, command)
 			end
-			self:_remapButton('shuffleMode', buttons.shuffle.jiveStyle, callback)
+			self:_remapButton('shuffleMode', button.jiveStyle, callback)
 		end
-
-		if buttons['repeat'] then
+		
+		button = buttons.dislike or buttons['repeat']	-- backwards compatible
+		if button then
+			local command = button.command or function() return EVENT_CONSUME end
 			local callback = function()
 				local id      = self.player:getId()
 				local server  = self.player:getSlimServer()
-				local command = buttons['repeat'].command or function() return EVENT_CONSUME end
 				server:userRequest(nil, id, command)
 			end
-			self:_remapButton('repeatMode', buttons['repeat'].jiveStyle, callback)
+			self:_remapButton('repeatMode', button.jiveStyle, callback)
 		end
 
-	-- if we don't have remoteMeta and button remapping, go back to defaults
+	-- if we don't have button remapping, go back to defaults
 	else
 		local playlistSize = self.player and self.player:getPlaylistSize()
 		-- bug 15085, gray out buttons under certain circumstances
@@ -1060,11 +1074,8 @@ function _updateShuffle(self, mode)
 	log:debug("_updateShuffle(): ", mode)
 	-- don't update this if SC/SN has remapped shuffle button
 	if self.player then
-		local playerStatus = self.player:getPlayerStatus()
-		if playerStatus and 
-			playerStatus.remoteMeta and 
-			playerStatus.remoteMeta.buttons and 
-			playerStatus.remoteMeta.shuffle then
+		local buttons = self:_getButtons()
+		if buttons and buttons.shuffle then
 			return
 		end
 	end
@@ -1084,11 +1095,8 @@ function _updateRepeat(self, mode)
 	log:debug("_updateRepeat(): ", mode)
 	-- don't update this if SC/SN has remapped repeat button
 	if self.player then
-		local playerStatus = self.player:getPlayerStatus()
-		if playerStatus and 
-			playerStatus.remoteMeta and 
-			playerStatus.remoteMeta.buttons and 
-			playerStatus.remoteMeta['repeat'] then
+		local buttons = self:_getButtons()
+		if buttons and buttons['repeat'] then
 			return
 		end
 	end
@@ -1322,7 +1330,7 @@ function replaceNPWindow(self)
 
 	self.window = _createUI(self)
 	if self.player and self.player:getPlayerStatus() then
-		self:_updateButtons(self.player:getPlayerStatus())
+		self:_updateButtons()
 		self:_updateRepeat(self.player:getPlayerStatus()['playlist repeat'])
 		self:_updateShuffle(self.player:getPlayerStatus()['playlist shuffle'])
 	end
