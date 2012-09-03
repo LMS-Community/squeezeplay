@@ -214,7 +214,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} LDFLAGS="-logg ${LDFLAGS}" ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
