@@ -12,6 +12,7 @@ INC_DIR=$INSTALL_DIR/include
 ## Start up
 export LD_LIBRARY_PATH=$LIB_DIR:$LD_LIBRARY_PATH
 export LD_INCLUDE_PATH=$INC_DIR:$LD_INCLUDE_PATH
+# export PATH=$PATH:$INSTALL_DIR/bin:/usr/sbin
 export PATH=$PATH:$INSTALL_DIR/bin
 
 # Portaudio

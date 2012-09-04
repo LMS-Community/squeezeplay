@@ -1,0 +1,11 @@
+--- libmad-0.15.1b/configure.orig	2004-02-05 09:34:07.000000000 +0000
++++ libmad-0.15.1b/configure	2009-10-25 19:27:30.000000000 +0000
+@@ -19087,7 +19087,7 @@
+     then
+ 	case "$host" in
+ 	    i386-*)           ;;
+-	    i?86-*)           arch="-march=i486" ;;
++	    i?86-*)           ;;
+ 	    arm*-empeg-*)     arch="-march=armv4 -mtune=strongarm1100" ;;
+ 	    armv4*-*)         arch="-march=armv4 -mtune=strongarm" ;;
+ 	    powerpc-*)        ;;
