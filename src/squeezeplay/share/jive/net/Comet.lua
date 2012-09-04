@@ -567,6 +567,8 @@ _state = function(self, state)
 		-- Reset error count
 		self.failures = 0
 
+		self:_resetIdleTimer()
+
 		self.jnt:notify('cometConnected', self)
 
 	elseif state == UNCONNECTED then
@@ -789,6 +791,10 @@ end
 
 
 function _resetIdleTimer(self)
+	if not self.idleTimeout then
+		self.idleTimeout = 30
+	end
+
 	if not self.idleTimeout or self.idleTimeout == 0 then
 		return
 	end
