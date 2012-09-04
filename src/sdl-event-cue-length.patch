@@ -1,0 +1,28 @@
+--- SDL-1.2.15/include/SDL_events.h.orig	2012-01-19 01:30:05.000000000 -0500
++++ SDL-1.2.15/include/SDL_events.h	2012-08-16 11:09:43.000000000 -0400
+@@ -347,6 +347,11 @@
+ */
+ extern DECLSPEC Uint8 SDLCALL SDL_EventState(Uint8 type, int state);
+ 
++/*
++ *   Added for jive - return number of events in the event queue
++ */
++extern DECLSPEC int SDLCALL SDL_EventQueueLength(void);
++
+ /* Ends C function definitions when using C++ */
+ #ifdef __cplusplus
+ }
+--- SDL-1.2.15/src/events/SDL_events.c.orig	2012-01-19 01:30:06.000000000 -0500
++++ SDL-1.2.15/src/events/SDL_events.c	2012-08-16 11:08:02.000000000 -0400
+@@ -500,3 +500,11 @@
+ 	/* Update internal event state */
+ 	return(posted);
+ }
++
++/* Added for jive - return number of events in the event queue
++*/
++int SDL_EventQueueLength(void)
++{
++	return (SDL_EventQ.tail - SDL_EventQ.head + MAXEVENTS) % MAXEVENTS;
++}
++
