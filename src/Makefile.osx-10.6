@@ -300,19 +300,22 @@ clean:
 	-cd libmad-0.15.1b; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
-	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf x86_64
+	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf x86_64; rm a.out
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libflac"
-	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
+	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64; rm -rf src/libFLAC/x86_64; rm -rf src/libFLAC/x86; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libjpeg"
 	-cd jpeg-6b; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: squeezeplay"
-	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf x86_64
+	-cd squeezeplay; make distclean ; rm src/version.h; rm -rf autom4te.cache; rm -rf x86; rm -rf x86_64; rm -f SqueezePlay.dmg; rm -f SqueezePlay; rm -rf SqueezePlay.app
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: squeezeplay_desktop"
+	-cd squeezeplay_desktop; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
-	-cd SDL-1.2.15; rm -f include/SDL_config.h;  rm -rf build/x86; rm -rf build/x86_64
+	-cd SDL-1.2.15; rm -f include/SDL_config.h;  rm -rf build
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_image"
 	-cd SDL_image-1.2.5; make distclean ; rm -rf x86; rm -rf x86_64
@@ -324,7 +327,7 @@ clean:
 	-cd SDL_gfx-2.0.15; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: freetype"
-	-cd freetype-2.1.10; make distclean ; rm -rf builds/unix/x86; rm -rf builds/unix/x86_64
+	-cd freetype-2.1.10; make distclean ; rm -rf x86; rm -rf x86_64; rm -rf builds/unix/x86; rm -rf builds/unix/x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
 	-cd lua-5.1.1; make clean ; rm -rf src/x86; rm -rf src/x86_64
@@ -362,3 +365,4 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: generated dir"
 	-rm -rf generated
+	find . -type d -name a.out.dSYM -exec rm -rf {} \;
