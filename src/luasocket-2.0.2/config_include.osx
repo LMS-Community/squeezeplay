@@ -10,7 +10,7 @@
 DEF=-DLUASOCKET_DEBUG -DUNIX_HAS_SUN_LEN
 MYCFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fno-common
 MYLDFLAGS=-bundle -undefined dynamic_lookup
-LD=gcc -arch i386 -arch ppc
+LD=gcc -arch i386 -arch x86_64
 
 #------
 # End of makefile platform specific configuration

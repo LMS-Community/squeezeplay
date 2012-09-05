@@ -6,7 +6,7 @@
 # PowerPC compiler flags (10.3 runtime compatibility)
 
 # Intel compiler flags (10.5 runtime compatibility)
-GCC_COMPILE_X86="gcc-4.0 -arch i386 -mmacosx-version-min=10.5 \
+GCC_COMPILE_X86="gcc-4.2 -arch i386 -mmacosx-version-min=10.5 \
 -DMAC_OS_X_VERSION_MIN_REQUIRED=1050 \
 -nostdinc \
 -F/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks \
@@ -17,7 +17,7 @@ GCC_LINK_X86="\
 -L/Developer/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1 \
 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
 
-GCC_COMPILE_X86_64="gcc-4.0 -arch x86_64 -mmacosx-version-min=10.5 \
+GCC_COMPILE_X86_64="gcc-4.2 -arch x86_64 -mmacosx-version-min=10.5 \
 -DMAC_OS_X_VERSION_MIN_REQUIRED=1050 \
 -nostdinc \
 -F/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks \

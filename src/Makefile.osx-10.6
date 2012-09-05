@@ -6,7 +6,8 @@
 #
 # User specific stuff
 #
-
+# svn checkout -r1857 https://subversion.assembla.com/svn/portaudio/portaudio/trunk portaudio_v19
+#
 #
 # OS X specific stuff
 #
@@ -93,11 +94,11 @@ libjpeg: jpeg-6b/Makefile
 	cd jpeg-6b; make && make install
 	
 # sdl - check for existance of just one of the Makefiles to determine if we should reconfigure for each
-SDL-1.2.13/build/x86/Makefile:
-	cd SDL-1.2.13; sh build-scripts/fatbuild-10.6.sh configure CONFIGURE_FLAGS_EXTRA="--disable-video-x11 --disable-nasm"
+SDL-1.2.15/build/x86/Makefile:
+	cd SDL-1.2.15; sh build-scripts/fatbuild-10.6.sh configure CONFIGURE_FLAGS_EXTRA="--disable-video-x11 --disable-nasm"
 
-sdl: SDL-1.2.13/build/x86/Makefile
-	cd SDL-1.2.13; sh build-scripts/fatbuild-10.6.sh make && sh build-scripts/fatbuild-10.6.sh install
+sdl: SDL-1.2.15/build/x86/Makefile
+	cd SDL-1.2.15; sh build-scripts/fatbuild-10.6.sh make && sh build-scripts/fatbuild-10.6.sh install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
@@ -155,8 +156,8 @@ luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
 
 luamd5:
-	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-bundle -undefined dynamic_lookup" CC="${CC}"
-	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-bundle -undefined dynamic_lookup" CC="${CC}"
+	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
+	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-undefined dynamic_lookup" CC="${CC}"
 	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
 	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
 
@@ -197,11 +198,11 @@ tolua++:
 app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
 
 # portaudio
-portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure CC= --prefix=${PREFIX}
+portaudio_v19/Makefile:
+	cd portaudio_v19; ./configure CC= --prefix=${PREFIX}
 
-portaudio: portaudio_v19_1360/Makefile
-	cd portaudio_v19_1360; make && make install
+portaudio: portaudio_v19/Makefile
+	cd portaudio_v19; make && make install
 
 # flac
 flac-1.2.1/Makefile:
@@ -290,7 +291,7 @@ clean:
 	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: portaudio"
-	-cd portaudio_v19_1360; make distclean
+	-cd portaudio_v19; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tremor"
 	-cd Tremor; make distclean ; rm -rf x86; rm -rf x86_64
@@ -302,7 +303,7 @@ clean:
 	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libflac"
-	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64
+	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libjpeg"
 	-cd jpeg-6b; make distclean ; rm -rf x86; rm -rf x86_64
@@ -311,7 +312,7 @@ clean:
 	-cd squeezeplay; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL"
-	-cd SDL-1.2.13; rm -f include/SDL_config.h;  rm -rf build/x86; rm -rf build/x86_64
+	-cd SDL-1.2.15; rm -f include/SDL_config.h;  rm -rf build/x86; rm -rf build/x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_image"
 	-cd SDL_image-1.2.5; make distclean ; rm -rf x86; rm -rf x86_64
