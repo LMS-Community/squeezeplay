@@ -136,7 +136,14 @@ loop:
 	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
 
-luaexpat: lua
+lualogging:
+	cd lualogging-1.1.2; make install LUA_DIR=${PREFIX}/share/lua/5.1
+
+lsyslog: lsyslog-4/Makefile
+	cd lsyslog-4; make LUA_SRC=${PREFIX} syslog.so
+	install lsyslog-4/syslog.so ${PREFIX}/lib/lua/5.1
+
+luaexpat:
 	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luafilesystem:
@@ -153,17 +160,16 @@ tolua++: lua
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
 
-
 #
 # squeezeplay
 #
-
 .PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
 app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
+
 # portaudio
 portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd portaudio_v19_1360; ./configure --without-jack --without-oss --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
@@ -214,10 +220,23 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-tests
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
+
+
+squeezeplay_jive/Makefile:
+	cd squeezeplay_jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=/usr
+
+squeezeplay_jive: squeezeplay_jive/Makefile
+	cd squeezeplay_jive; make && make DESTDIR=${BUILDDIR} install
+	rm ${PREFIX}/lib/jiveBSP.*
+	cp squeezeplay_jive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
+	rm ${PREFIX}/lib/jiveWireless.*
+	cp squeezeplay_jive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
+	rm ${PREFIX}/lib/jiveWatchdog.*
+	cp squeezeplay_jive/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
