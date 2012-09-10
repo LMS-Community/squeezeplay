@@ -60,9 +60,9 @@ freetype-2.1.10/config.mk:
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
 
-# sdl
+# sdl --disable-video-directfb --enable-alsa --enable-audio
 SDL-1.2.15/Makefile:
-	cd SDL-1.2.15; ./configure --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --enable-alsa --disable-esd --disable-arts --disable-video-x11 --disable-video-directfb --enable-clock_gettime --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd SDL-1.2.15; ./configure --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --disable-esd --disable-arts --disable-video-x11 --enable-clock_gettime --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 sdl: SDL-1.2.15/Makefile
 	cd SDL-1.2.15; make && make install
@@ -162,11 +162,11 @@ tolua++: lua
 app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
-portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+portaudio_v19_20111121/Makefile:
+	cd portaudio_v19_20111121; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
-portaudio: portaudio_v19_1360/Makefile
-	cd portaudio_v19_1360; make && make install
+portaudio: portaudio_v19_20111121/Makefile
+	cd portaudio_v19_20111121; make && make install
 
 # flac
 flac-1.2.1/Makefile:
@@ -218,6 +218,18 @@ squeezeplay/Makefile:
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
+
+squeezeplay_jive/Makefile:
+	cd squeezeplay_jive; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --host=${TARGET} --target=${TARGET} --prefix=${PREFIX}
+
+squeezeplay_jive: squeezeplay_jive/Makefile
+	cd squeezeplay_jive; make && make DESTDIR=${BUILDDIR} install
+	rm ${PREFIX}/lib/jiveBSP.*
+	cp squeezeplay_jive/.libs/jiveBSP.so ${PREFIX}/lib/lua/5.1/jiveBSP.so
+	rm ${PREFIX}/lib/jiveWireless.*
+	cp squeezeplay_jive/.libs/jiveWireless.so ${PREFIX}/lib/lua/5.1/jiveWireless.so
+	rm ${PREFIX}/lib/jiveWatchdog.*
+	cp squeezeplay_jive/.libs/jiveWatchdog.so ${PREFIX}/lib/lua/5.1/jiveWatchdog.so
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
@@ -288,10 +300,11 @@ clean:
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd portaudio_v19_1360; make distclean
+	-cd portaudio_v19_20111121; make distclean
 	-cd flac-1.2.1; make distclean
 	-cd libmad-0.15.1b; make distclean
 	-cd Tremor; make distclean
 	-cd squeezeplay; make distclean
 	-cd squeezeplay_private; make distclean
+	-cd squeezeplay_desktop; make distclean
 	-rm -rf generated
