@@ -274,11 +274,15 @@ function _delete(self, alwaysBackspace)
 
 	elseif cursor > 1 then
 		-- backspace
+		local v = self:_getChars()
 		local s1 = string.sub(str, 1, cursor - 2)
 		local s3 = string.sub(str, cursor)
 
 		self:setValue(s1 .. s3)
 		self.cursor = cursor - 1
+		if #v == 0 then
+			_scroll(self, 1)
+		end
 		return true
 
 	else
@@ -433,7 +437,12 @@ end
 
 
 function _doneAction(self)
-	self:setValue(string.sub(tostring(self.value), 1, #tostring(self.value)-1))
+	-- _getChars() is empty when we reached the maximum allowed number of characters
+	local v = self:_getChars()
+	-- Only cut the last char in case we have not yet reached the maximum
+	if #v > 0 then
+		self:setValue(string.sub(tostring(self.value), 1, #tostring(self.value)-1))
+	end
 	self:_goToEndAction()
 	return self:_goAction()
 end
