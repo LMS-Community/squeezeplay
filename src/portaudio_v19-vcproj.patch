@@ -1,6 +1,6 @@
 Index: build/msvc/portaudio.vcproj
 ===================================================================
---- build/msvc/portaudio.vcproj	(revision 1858)
+--- build/msvc/portaudio.vcproj	(revision 1871)
 +++ build/msvc/portaudio.vcproj	(working copy)
 @@ -1,10 +1,11 @@
  <?xml version="1.0" encoding="Windows-1252"?>
@@ -29,7 +29,7 @@ Index: build/msvc/portaudio.vcproj
  				FavorSizeOrSpeed="1"
  				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
 -				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
-+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=1;PA_USE_DS=1;PA_USE_WMME=0;PA_USE_WASAPI=1;PA_USE_WDMKS=0"
++				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=1;PA_USE_DS=1;PA_USE_WMME=0;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
  				StringPooling="true"
  				RuntimeLibrary="2"
  				EnableFunctionLevelLinking="true"
