@@ -145,16 +145,8 @@ end
 function settingsNetworking(self)
 	self.mode = "settings"
 
-	local topWindow = Framework.windowStack[1]
 	self.setupNext = function()
-		local stack = Framework.windowStack
-		for i=1,#stack do
-			if stack[i] == topWindow then
-				for j=i-1,1,-1 do
-					stack[j]:hide(Window.transitionPushLeft)
-				end
-			end
-		end
+		jiveMain:goHome()
 	end
 
 	_wirelessRegion(self, self.wlanIface)
