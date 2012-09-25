@@ -348,6 +348,7 @@ function upgradeSink(self)
 				string.match(filename, "^Image") then
 				if not self:verifyPlatformRevision() then
 					self.sinkErr = "Incompatible firmware"
+					_action = nil
 					return nil
 				end
 
@@ -355,12 +356,14 @@ function upgradeSink(self)
 				_fhsink, err = self:updatevol("kernel_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
 					self.sinkErr = err
+					_action = nil
 					return nil
 				end
 
 			elseif filename == "root.cramfs" then
 				if not self:verifyPlatformRevision() then
 					self.sinkErr = "Incompatible firmware"
+					_action = nil
 					return nil
 				end
 
@@ -368,6 +371,7 @@ function upgradeSink(self)
 				_fhsink = self:updatevol("cramfs_upg", filename, chunk.uncompressed_size)
 				if not _fhsink then
 					self.sinkErr = err
+					_action = nil
 					return nil
 				end
 
