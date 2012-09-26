@@ -232,16 +232,6 @@ function setLang(self, choice, next)
 
 	self:getSettings().locale = choice
 
-	-- FIXME SlimBrowser should use notification
-	-- if connected to a player, ask for the menu again
-	local player = appletManager:callService("getCurrentPlayer")
-	if player then
-		local server = player:getSlimServer()
-		if server then
-			 server:userRequest(nil, player:getId(), { 'menu', 0, 100 })
-		end
-	end
-
 	-- changing the locale is slow, do this in a task with a spinny
 	if choice ~= locale:getLocale() then
 		self.popup = Popup("waiting_popup")
@@ -261,6 +251,16 @@ function setLang(self, choice, next)
 				-- FIXME jiveMainNodes should use notification
 				jiveMain:jiveMainNodes()
 				Framework:styleChanged()
+
+				-- FIXME SlimBrowser should use notification
+				-- if connected to a player, ask for the menu again
+				local player = appletManager:callService("getCurrentPlayer")
+				if player then
+					local server = player:getSlimServer()
+					if server then
+						 server:userRequest(nil, player:getId(), { 'menu', 0, 100 })
+					end
+				end
 
 				if next then
 					-- Hiding works automatically when next screen is loaded
