@@ -210,7 +210,7 @@ static int callback(const void *inputBuffer,
 			}
 		}
 	
-		// FIXME Cast aligment Errors on armrh 
+		// FIXME Cast aligment Errors on arm 
 		output_ptr = (void *) outputArray;
 		decode_ptr = (void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 		while (samples_write--) {
