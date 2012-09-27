@@ -905,8 +905,8 @@ static void *audio_thread_execute(void *data) {
 			}
 			else {
 				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
-					LOG_WARN("xrun (snd_pcm_wait)");
-					if ((err = snd_pcm_recover(state->pcm, avail, 1)) < 0) {
+					LOG_WARN("xrun (snd_pcm_wait) err=%d",err);
+					if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
 						LOG_ERROR("PCM wait failed: %s", snd_strerror(err));
 					}
 					first = 1;
@@ -932,7 +932,7 @@ static void *audio_thread_execute(void *data) {
 
 			if (state->has_mmap) {
 				if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
-					LOG_WARN("xrun (snd_pcm_mmap_begin)");
+					LOG_WARN("xrun (snd_pcm_mmap_begin) err=%d",err);
 					if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
 						LOG_ERROR("mmap begin failed: %s", snd_strerror(err));
 					}
@@ -1192,6 +1192,7 @@ int main(int argv, char **argc)
 		exit(-1);
 	}
 	if (strstr(utsname.version, "PREEMPT") != NULL) {
+		LOG_INFO("PREEMPT Dectected");
 		decode_lock_memory();
 	}
 
