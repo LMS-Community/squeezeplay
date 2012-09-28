@@ -347,6 +347,11 @@ extern DECLSPEC SDL_EventFilter SDLCALL SDL_GetEventFilter(void);
 */
 extern DECLSPEC Uint8 SDLCALL SDL_EventState(Uint8 type, int state);
 
+/*
+ *   Added for jive - return number of events in the event queue
+ */
+extern DECLSPEC int SDLCALL SDL_EventQueueLength(void);
+
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }

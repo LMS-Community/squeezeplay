@@ -500,3 +500,11 @@ int SDL_PrivateSysWMEvent(SDL_SysWMmsg *message)
 	/* Update internal event state */
 	return(posted);
 }
+
+/* Added for jive - return number of events in the event queue
+*/
+int SDL_EventQueueLength(void)
+{
+	return (SDL_EventQ.tail - SDL_EventQ.head + MAXEVENTS) % MAXEVENTS;
+}
+
