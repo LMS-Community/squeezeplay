@@ -344,6 +344,7 @@ void jive_queue_event(JiveEvent *evt);
 int jive_traceback (lua_State *L);
 
 /* Surface functions */
+bool jive_surface_isSDLFullScreen(SDL_Surface *sdl_surface);
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen);
 JiveSurface *jive_surface_newRGB(Uint16 w, Uint16 h);
 JiveSurface *jive_surface_newRGBA(Uint16 w, Uint16 h);
