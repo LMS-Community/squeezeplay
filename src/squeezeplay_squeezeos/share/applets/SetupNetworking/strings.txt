@@ -1595,3 +1595,41 @@ NETWORK_ENTER_SSID_HINT
 	RU	Убедитесь, что сеть работает и находится в диапазоне доступа. Если сеть скрыта, необходимо ввести имя сети вручную.
 	SV	Kontrollera att nätverket är i gång och att det är inom räckvidden. Om nätverket är dolt måste du ange namnet manuellt.
 
+NETWORK_RESET_WIRELESS_SETTINGS
+	EN	Reset Wireless Settings
+
+NETWORK_CANCEL
+	CS	Storno
+	DA	Annuller
+	DE	Abbrechen
+	EN	Cancel
+	ES	Cancelar
+	FI	Peruuta
+	FR	Annuler
+	IT	Annulla
+	NL	Annuleren
+	NO	Avbryt
+	PL	Anuluj
+	RU	Отмена
+	SV	Avbryt
+
+NETWORK_OK
+	CS	OK
+	DA	OK
+	DE	OK
+	EN	OK
+	ES	Correcto
+	FI	OK
+	FR	OK
+	IT	OK
+	NL	OK
+	NO	OK
+	PL	OK
+	RU	ОК
+	SV	OK
+
+NETWORK_RESET_WIRELESS_SETTINGS_HINT
+	EN	This will erase the settings of all wireless networks this Smart Radio has been connected to. You will have to re-enter the password in order to reconnect to each of these networks.
+
+NETWORK_RESET_WIRELESS_SETTINGS_DONE
+	EN	Wireless network settings have been reset.
