@@ -209,9 +209,10 @@ static int callback(const void *inputBuffer,
 				}
 			}
 		}
-
-		output_ptr = (sample_t *)outputArray;
-		decode_ptr = (sample_t *)(decode_fifo_buf + decode_audio->fifo.rptr);
+	
+		// FIXME Cast aligment Errors on arm 
+		output_ptr = (void *) outputArray;
+		decode_ptr = (void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 		while (samples_write--) {
 			*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
 			*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));

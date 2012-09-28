@@ -27,6 +27,8 @@ SDL_Surface *makeSurface(Uint16 width, Uint16 height, Uint16 bpp, Uint16 R, Uint
 	Uint32 Gmask = 0;
 	Uint32 Bmask = 0;
 	Uint32 Amask = 0;
+	SDL_Surface *img;
+	SDL_Rect r;
 
 	if (bpp == 32) {
 		/*
@@ -49,13 +51,12 @@ SDL_Surface *makeSurface(Uint16 width, Uint16 height, Uint16 bpp, Uint16 R, Uint
 	}
 
 
-	SDL_Surface *img = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, Rmask, Gmask, Bmask, Amask);
+	img = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, bpp, Rmask, Gmask, Bmask, Amask);
 
 	printf("\tImage is %d bbp mask: %x %x %x %x\n", img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
 	printf("\tImage hardware is %d\n", (img->flags & SDL_HWSURFACE));
 
 
-	SDL_Rect r;
 
 	r.x = 0;
 	r.y = 0;
@@ -90,19 +91,22 @@ void timedBlit(SDL_Surface *srf, SDL_Surface *img) {
 	FPSmanager manager;
 	struct tms tms0, tms1;
 	clock_t clk0, clk1;
+	SDL_Surface *bg;
+	SDL_Rect r;
+	Uint32 t0,t1;
+	int i,j;
+	
 
 	printf("\tstart.. \n");
-	SDL_Rect r;
 	
-	SDL_Surface *bg = loadImage("/usr/share/jive/applets/SetupWallpaper/wallpaper/Chapple_1.jpg", 0);
+	bg = loadImage("/usr/share/jive/applets/SetupWallpaper/wallpaper/Chapple_1.jpg", 0);
 
 	SDL_initFramerate(&manager);
 	SDL_setFramerate(&manager, 20);
 
-	Uint32 t0 = SDL_GetTicks();
+	t0 = SDL_GetTicks();
 	clk0 = times(&tms0);
 
-	int i,j;
 	for (i=0; i<LOOP; i++) {
 		//SDL_Delay(10);
 
@@ -129,7 +133,7 @@ void timedBlit(SDL_Surface *srf, SDL_Surface *img) {
 #endif
 	}
 
-	Uint32 t1 = SDL_GetTicks();
+	t1 = SDL_GetTicks();
 	clk1 = times(&tms1);
 
 	printf("\t... took %dms %0.2ffps %0.2f%% user %0.2f%% system %0.2f%% cpu\n",
@@ -143,6 +147,15 @@ void timedBlit(SDL_Surface *srf, SDL_Surface *img) {
 
 
 int main(int argc, char *args[]) {
+	SDL_Surface *srf;
+        SDL_Surface *img;
+        SDL_Rect r;
+	TTF_Font *font;
+        SDL_Color black = { 255, 255, 255 ,0 };
+#if 0
+        SDL_Color white = { 0, 0, 0 , 0};
+#endif 
+
 
 	if (SDL_Init(SDL_INIT_VIDEO) == -1) {
 		printf("SDL Init failed %s\n", SDL_GetError());
@@ -155,7 +168,7 @@ int main(int argc, char *args[]) {
 
 
 	/* double buffered hardware surface */
-	SDL_Surface *srf = SDL_SetVideoMode(240, 320, 16, /*SDL_HWSURFACE | SDL_DOUBLEBUF*/ 0);
+	srf = SDL_SetVideoMode(240, 320, 16, /*SDL_HWSURFACE | SDL_DOUBLEBUF*/ 0);
 	if (!srf) {
 		printf("No surface\n");
 		exit(-1);
@@ -165,18 +178,12 @@ int main(int argc, char *args[]) {
 	printf("Screen hardware is %d\n", (srf->flags & SDL_HWSURFACE));
 
 
-	SDL_Surface *img;
-	SDL_Rect r;
-	SDL_Color black = { 255, 255, 255 };
-#if 0
-	SDL_Color white = { 0, 0, 0 };
-#endif
 	r.x = 0;
 	r.y = 0;
 	r.w = 320;
 
 
-	TTF_Font *font = TTF_OpenFont("/usr/share/jive/fonts/FreeSans.ttf", 60);
+	font = TTF_OpenFont("/usr/share/jive/fonts/FreeSans.ttf", 60);
 	if (!font) {
 		printf("Can't open font %s\n", TTF_GetError());
 		exit(-1);
