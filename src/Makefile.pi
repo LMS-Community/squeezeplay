@@ -60,7 +60,7 @@ freetype-2.1.10/config.mk:
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
 
-# sdl --disable-video-directfb --enable-alsa --enable-audio
+# sdl --disable-video-directfb --enable-alsa --enable-audio --disable-assembly
 SDL-1.2.15/Makefile:
 	cd SDL-1.2.15; ./configure --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --disable-oss --disable-esd --disable-arts --disable-video-x11 --enable-clock_gettime --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
