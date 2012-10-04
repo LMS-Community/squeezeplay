@@ -859,6 +859,12 @@ function _strm(self, data)
 		log:debug("strm ", data.command)
 	end
 
+	if data.command == 'q' and self.lastCommand == 'q' then
+		log:debug("strm-q: ignoring duplicate")
+		return true
+	end
+	self.lastCommand = data.command
+
 	if data.command == 's' then
 		-- start
 		
