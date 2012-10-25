@@ -47,6 +47,9 @@ module(..., oo.class)
 
 local BLOCK_SIZE = 200
 
+-- Limits the maximum number of elements in a list. This helps preventing OOM situations in SP.
+local MAX_LIST_SIZE = 5000
+
 -- init
 -- creates an empty database object
 function __init(self, windowSpec)
@@ -105,6 +108,13 @@ end
 function updateStatus(self, chunk)
 	-- sanity check on the chunk
 	_assert(chunk["count"], "chunk must have count field")
+
+	-- Reduce count to MAX_LIST_SIZE in case the list reported by the backend is bigger.
+	-- This helps prepenting OOM situations in SP.
+	if tonumber(chunk["count"]) > MAX_LIST_SIZE then
+		log:warn("List is too big (", tonumber(chunk["count"]), ") - only showing ", MAX_LIST_SIZE, " items.")
+		chunk["count"] = MAX_LIST_SIZE
+	end
 
 	-- keep the chunk as header, in all cases
 	self.last_chunk = chunk

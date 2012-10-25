@@ -19,6 +19,7 @@ TODO
 -- stuff we use
 local tostring, tonumber, type, sort = tostring, tonumber, type, sort
 local pairs, ipairs, select, _assert = pairs, ipairs, select, _assert
+local collectgarbage = collectgarbage
 
 local oo                     = require("loop.simple")
 local math                   = require("math")
@@ -30,6 +31,7 @@ local Applet                 = require("jive.Applet")
 local System                 = require("jive.System")
 local Player                 = require("jive.slim.Player")
 local SlimServer             = require("jive.slim.SlimServer")
+local Task                   = require("jive.ui.Task")
 local Framework              = require("jive.ui.Framework")
 local Window                 = require("jive.ui.Window")
 local Popup                  = require("jive.ui.Popup")
@@ -352,6 +354,24 @@ local function _popStep()
 	end
 
 	local popped = table.remove(_stepStack)
+
+	-- Explicitly mark step element db as not used anymore to help GC cleanup
+	popped["db"] = nil
+
+	-- Run GC explicitly to speed up process
+	Task("SlimBrowserPopStepGC", nil, function()
+		log:debug("Lua memory usage (before cleanup): ", collectgarbage("count"))
+
+		local i
+		-- Experiments show that despite the collectgarbage return value is reported as true
+		--  indicating the clean up is done it takes at least three rounds to actually
+		--  do all the clean up. (Note: A single round with a higher step value doesn't work.)
+		for i = 0, 2, 1 do
+			collectgarbage("step", 10000)
+		end
+
+		log:debug("Lua memory usage (after cleanup): ", collectgarbage("count"))
+	end):addTask()
 
 	if log:isDebug() then
 		log:debug("Popped")
