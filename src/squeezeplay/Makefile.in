@@ -271,7 +271,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libnet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libui.a $(JIVE_DEPENDENCIES_LIB_DIR)/libdecode.a
 
 BUNDLE_NAME = SqueezePlay.app
-APP_NAME = SqueezePlay Beta
+APP_NAME = SqueezePlay
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 VERSION_TEXT = $(shell cat ../squeezeplay.version)r$(shell svnversion -n .. | sed -e 's/[MS]//g')

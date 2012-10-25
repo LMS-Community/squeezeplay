@@ -191,7 +191,7 @@ static int jiveL_initSDL(lua_State *L) {
 #ifndef JIVE_NO_DISPLAY
 
 	/* open window */
-	SDL_WM_SetCaption("SqueezePlay Beta", "SqueezePlay Beta");
+	SDL_WM_SetCaption("SqueezePlay", "SqueezePlay");
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_EnableKeyRepeat (100, 100);
 	SDL_EnableUNICODE(1);

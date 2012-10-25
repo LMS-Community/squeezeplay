@@ -59,7 +59,7 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-lz -lresolv
 
 BUNDLE_NAME = SqueezePlay.app
-APP_NAME = SqueezePlay Beta
+APP_NAME = SqueezePlay
 BUNDLE_CONTENTS = $(BUNDLE_NAME)/Contents
 PLIST_FILE = $(BUNDLE_CONTENTS)/Info.plist
 
