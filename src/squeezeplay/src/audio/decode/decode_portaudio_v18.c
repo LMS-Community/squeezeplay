@@ -70,8 +70,8 @@ static void decode_portaudio_openstream(void);
 static int paContinue=0; /* < Signal that the stream should continue invoking the callback and processing audio. */
 static int paComplete=1; /* < Signal that the stream should stop invoking the callback and finish once all output samples have played. */
 
-static unsigned long paFramesPerBuffer = 8192L;
-static unsigned long paNumberOfBuffers = 3L;
+static unsigned long paFramesPerBuffer = 65536L;
+static unsigned long paNumberOfBuffers = 4L;
 
 static void finished_handler(void) {
 	mqueue_read_complete(&decode_mqueue);
@@ -471,8 +471,8 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pabuffersize != NULL )
 	{
 		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
-		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 65536L ) )
-			paFramesPerBuffer = 8192L;
+		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 131072L ) )
+			paFramesPerBuffer = 65536L;
 	}
 
 	panumbufs = getenv("USEPANUMBEROFBUFFERS");
@@ -481,7 +481,7 @@ static int decode_portaudio_init(lua_State *L) {
 	{
 		paNumberOfBuffers = strtoul(panumbufs, NULL, 0);
 		if ( ( paNumberOfBuffers < 2L ) || ( paNumberOfBuffers > 8L ) )
-			paNumberOfBuffers = 3L;
+			paNumberOfBuffers = 4L;
 	}
 
 	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
