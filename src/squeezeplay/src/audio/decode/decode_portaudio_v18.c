@@ -471,7 +471,7 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pabuffersize != NULL )
 	{
 		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
-		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 131072L ) )
+		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 262144L ) )
 			paFramesPerBuffer = 65536L;
 	}
 
