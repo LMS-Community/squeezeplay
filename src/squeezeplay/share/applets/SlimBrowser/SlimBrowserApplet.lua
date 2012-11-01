@@ -503,15 +503,17 @@ local function _artworkItem(step, item, group, menuAccel)
 		-- Extract server from artwork path
 		local serverId = string.match(iconId, "^lms://([%x%-]*)/")
 		if serverId then
-                        server = SlimServer:getServerById(serverId)
+			server = SlimServer:getServerById(serverId)
 		end
 
-		if menuAccel and not step.server:artworkThumbCached(iconId, iconSize) then
-			-- Don't load artwork while accelerated
-			server:cancelArtwork(icon)
-		else
-			-- Fetch an image from SlimServer
-			server:fetchArtwork(iconId, icon, iconSize)
+		if server then
+			if menuAccel and not step.server:artworkThumbCached(iconId, iconSize) then
+				-- Don't load artwork while accelerated
+				server:cancelArtwork(icon)
+			else
+				-- Fetch an image from SlimServer
+				server:fetchArtwork(iconId, icon, iconSize)
+			end
 		end
 	elseif item["trackType"] == 'radio' and item["params"] and item["params"]["track_id"] then
 		if menuAccel and not step.server:artworkThumbCached(item["params"]["track_id"], iconSize) then
