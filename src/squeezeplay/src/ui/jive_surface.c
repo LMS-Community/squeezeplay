@@ -97,7 +97,8 @@ static int _new_image(const char *path) {
 		}
 	}
 
-	for (i = 0; i < n_images; i++) {
+	// Zero is invaild! so start at one... yes we waste an entry... but there is alot of code that relies on this
+	for (i = 1; i < n_images; i++) {
 		if (images[i].ref_count <= 0)
 			break;
 		if (images[i].path && strcmp(path, images[i].path) == 0) {
@@ -820,10 +821,27 @@ void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16
 #endif //JIVE_PROFILE_BLIT
 }
 
+// Helper function to mainain status on screen changes
+bool jive_surface_isSDLFullScreen(SDL_Surface *surface)
+{
+    if (surface == NULL) surface = SDL_GetVideoSurface();
+
+    if (surface == NULL) {
+		LOG_ERROR(log_ui_draw, "GetVideoSurface unavailable");
+		return false;
+    }
+
+    // Return true if fullscreen
+    if (surface->flags & SDL_FULLSCREEN) return true;
+  
+    // Return false if windowed
+    return false;
+}
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {
 	JiveSurface *srf;
 	SDL_Surface *sdl;
+	const SDL_VideoInfo *video_info;
 	Uint32 flags;
 
 #ifdef SCREEN_ROTATION_ENABLED
@@ -836,21 +854,30 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 	}
 #endif
 
-	if (fullscreen) {
+        
+        video_info = SDL_GetVideoInfo();
+	LOG_INFO(log_ui_draw, "Window Manager %s available", video_info->wm_available?"is":"is not");
+	LOG_INFO(log_ui_draw, "Video Setup for %sfullscreen", fullscreen?"":"non-");
+
+	if (fullscreen ) {
 	    flags = SDL_FULLSCREEN;
 	}
 	else {
-	    flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+	    if (video_info->wm_available) {
+	        // Note these options will break some HW! raspberry pi in full screen...
+	    	flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
+	    } else {
+		LOG_INFO(log_ui_draw, "SDL Flags forced as windowing not available");
+	        flags = SDL_FULLSCREEN;
+	    }
 	}
 
 	sdl = SDL_GetVideoSurface();
 
 	if (sdl) {
-		const SDL_VideoInfo *video_info;
 		Uint32 mask;
 
 		/* check if we can reuse the existing suface? */
-		video_info = SDL_GetVideoInfo();
 		if (video_info->wm_available) {
 			mask = (SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
 		}
@@ -861,6 +888,7 @@ JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fu
 		if ((sdl->w != w) || (sdl->h != h)
 		    || (bpp && sdl->format->BitsPerPixel != bpp)
 		    || ((sdl->flags & mask) != (flags & mask))) {
+			LOG_INFO(log_ui_draw, "SDL Video surface Cannot be reused");
 			sdl = NULL;
 		}
 	}
@@ -1312,11 +1340,12 @@ void jive_surface_get_size(JiveSurface *srf, Uint16 *w, Uint16 *h) {
 			*h = 0;
 		return;
 	}
+	//FIXME sdl uses int not uint16!
 	if (w) {
-		*w = srf->sdl->w;
+		*w = (Uint16) srf->sdl->w;
 	}
 	if (h) {
-		*h = srf->sdl->h;
+		*h = (Uint16) srf->sdl->h;
 	}
 }
 
@@ -1678,6 +1707,8 @@ void jive_surface_get_tile_blit(JiveSurface *srf, SDL_Surface **sdl, Sint16 *x, 
 void jive_tile_blit(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {return;}
 
 void jive_tile_blit_centered(JiveTile *tile, JiveSurface *dst, Uint16 dx, Uint16 dy, Uint16 dw, Uint16 dh) {return;}
+
+bool jive_surface_isSDLFullScreen(SDL_Surface *surface) {return true;}
 
 JiveSurface *jive_surface_set_video_mode(Uint16 w, Uint16 h, Uint16 bpp, bool fullscreen) {return DUMMY_SURFACE;}
 

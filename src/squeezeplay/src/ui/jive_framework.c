@@ -154,8 +154,10 @@ int jive_traceback (lua_State *L) {
 static int jiveL_initSDL(lua_State *L) {
 	const SDL_VideoInfo *video_info;
 #ifndef JIVE_NO_DISPLAY
-	JiveSurface *srf, *splash, *icon;
+	JiveSurface *srf, *splash;
 	Uint16 splash_w, splash_h;
+	bool fullscreen = false;
+	char splashfile[32] = "jive/splash.png";
 #endif
 	/* logging */
 	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
@@ -180,12 +182,14 @@ static int jiveL_initSDL(lua_State *L) {
 	if ((video_info = SDL_GetVideoInfo())) {
 		LOG_INFO(log_ui_draw, "%d,%d %d bits/pixel %d bytes/pixel [R<<%d G<<%d B<<%d]", video_info->current_w, video_info->current_h, video_info->vfmt->BitsPerPixel, video_info->vfmt->BytesPerPixel, video_info->vfmt->Rshift, video_info->vfmt->Gshift, video_info->vfmt->Bshift);
 		LOG_INFO(log_ui_draw, "Hardware acceleration %s available", video_info->hw_available?"is":"is not");
+		LOG_INFO(log_ui_draw, "Window Manager %s available", video_info->wm_available?"is":"is not");
 	}
 
 	/* Register callback for additional events (used for multimedia keys)*/
 	SDL_EventState(SDL_SYSWMEVENT,SDL_ENABLE);
 	SDL_SetEventFilter(filter_events);
 
+	// Secific magic for windows|linux|macos
 	platform_init(L);
 
 #ifndef JIVE_NO_DISPLAY
@@ -196,12 +200,6 @@ static int jiveL_initSDL(lua_State *L) {
 	SDL_EnableKeyRepeat (100, 100);
 	SDL_EnableUNICODE(1);
 
-	/* load the icon */
-	icon = jive_surface_load_image("jive/app.png");
-	if (icon) {
-		jive_surface_set_wm_icon(icon);
-		jive_surface_free(icon);
-	}
 
 #ifdef SCREEN_ROTATION_ENABLED
 	screen_w = video_info->current_h;
@@ -214,35 +212,52 @@ static int jiveL_initSDL(lua_State *L) {
 
 	if (video_info->wm_available) {
 		/* desktop build */
-		splash = jive_surface_load_image("jive/splash.png");
+		JiveSurface *icon;
+
+		/* load the icon */
+		icon = jive_surface_load_image("jive/app.png");
+		if (icon) {
+			jive_surface_set_wm_icon(icon);
+			jive_surface_free(icon);
+		}
+
+		splash = jive_surface_load_image(splashfile);
 		if (splash) {
 			jive_surface_get_size(splash, &splash_w, &splash_h);
 
 			screen_w = splash_w;
 			screen_h = splash_h;
 		}
-	}
-	else {
-		/* product build */
-		char splashfile[40];
+	} else {
+		/* product build and full screen...*/
 
 		sprintf(splashfile, "jive/splash%dx%d.png", screen_w, screen_h);
 
 		splash = jive_surface_load_image(splashfile);
+		if(!splash) {
+			sprintf(splashfile,"jive/splash.png");
+			splash = jive_surface_load_image(splashfile);
+		}
+
 		if (splash) {
 			jive_surface_get_size(splash, &splash_w, &splash_h);
 		}
+
+		fullscreen = true;
 	}
 
-	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, false);
+	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, fullscreen);
 	if (!srf) {
+		LOG_ERROR(log_ui_draw, "Splash Video Mode Fail.");
+
 		SDL_Quit();
 		exit(-1);
 	}
 
 	if (splash) {
-		jive_surface_blit(splash, srf, MIN(0, (screen_w - splash_w) / 2), MIN(0, (screen_h - splash_h) / 2));
+		jive_surface_blit(splash, srf, (screen_w - splash_w) > 0 ?((screen_w - splash_w) / 2):0, (screen_w - splash_w) > 0 ?((screen_w - splash_w) / 2):0);
 		jive_surface_flip(srf);
+		LOG_INFO(log_ui_draw, "Splash %s %dx%d Screen %dx%d", splashfile,splash_w,splash_h,screen_w,screen_h);
 	}
 
 	lua_getfield(L, 1, "screen");
@@ -850,7 +865,6 @@ int jiveL_set_video_mode(lua_State *L) {
 		return 0;
 	}
 
-
 	/* update video mode */
 	srf = jive_surface_set_video_mode(w, h, bpp, isfull);
 
@@ -1261,7 +1275,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		screen_w = event->resize.w;
 		screen_h = event->resize.h;
 
-		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, false);
+		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, jive_surface_isSDLFullScreen(NULL));
 
 		lua_getfield(L, 1, "screen");
 
