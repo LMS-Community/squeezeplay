@@ -254,7 +254,7 @@ static void decode_flac_stop(void *data) {
 
 struct decode_module decode_flac = {
 	'f',
-	"ogf,flc",
+	"flc",
 	decode_flac_start,
 	decode_flac_stop,
 	decode_flac_samples,
