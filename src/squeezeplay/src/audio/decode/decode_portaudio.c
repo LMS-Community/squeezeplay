@@ -356,7 +356,8 @@ static void decode_portaudio_openstream(void) {
 
 static int decode_portaudio_init(lua_State *L) {
 	PaError err;
-	int num_devices, i;
+	int num_devices;
+	int i;
 	const PaDeviceInfo *device_info;
 	const PaHostApiInfo *host_info;
 	const char *padevname;
@@ -382,42 +383,71 @@ static int decode_portaudio_init(lua_State *L) {
 	padevname = getenv("USEPADEVICE");
 	paapiname = getenv("USEPAHOSTAPI");
 
-	num_devices = Pa_GetDeviceCount();
-	for (i = 0; i < num_devices; i++) {
-		device_info = Pa_GetDeviceInfo(i);
-		host_info = Pa_GetHostApiInfo(device_info->hostApi);
+	/* Match device */
+	if ( padevname || paapiname )
+	{
+		num_devices = Pa_GetDeviceCount();
+		for (i = 0; i < num_devices; i++) {
+			device_info = Pa_GetDeviceInfo(i);
+			host_info = Pa_GetHostApiInfo(device_info->hostApi);
 
-		LOG_INFO(log_audio_output, "%d:%s (%s)", i, device_info->name, host_info->name);
+			LOG_INFO(log_audio_output, "%d:%s (%s)", i, device_info->name, host_info->name);
 
-		if ( (paapiname != NULL) && (host_info->name != NULL) )
+			if ( (paapiname != NULL) && (host_info->name != NULL) )
+			{
+				apinamelen = strlen (paapiname);
+				if ( strnicmp(host_info->name, paapiname, apinamelen) != 0 )
+					continue;
+			}
+
+			if ( (padevname != NULL) && (device_info->name != NULL) )
+			{
+				devnamelen = strlen (padevname);
+				if ( strnicmp(device_info->name, padevname, devnamelen) != 0 )
+					continue;
+			}
+
+			outputParam.device = i;
+
+			err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
+			if (err == paFormatIsSupported) {
+				LOG_INFO(log_audio_output, "\tsupported");
+				break;
+			}
+			else {
+				LOG_INFO(log_audio_output, "\tnot supported");
+			}
+		}
+
+		if (i >= num_devices)
 		{
-			apinamelen = strlen (paapiname);
-			if ( strnicmp(host_info->name, paapiname, apinamelen) != 0 )
-				continue;
-		}
-
-		if ( (padevname != NULL) && (device_info->name != NULL) )
-		{
-			devnamelen = strlen (padevname);
-			if ( strnicmp(device_info->name, padevname, devnamelen) != 0 )
-				continue;
-		}
-
-		outputParam.device = i;
-
-		err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
-		if (err == paFormatIsSupported) {
-			LOG_INFO(log_audio_output, "\tsupported");
-			break;
-		}
-		else {
-			LOG_INFO(log_audio_output, "\tnot supported");
+			LOG_INFO(log_audio_output, "No suitable audio device found");
+			return 0;
 		}
 	}
+	else
+	{
+		i = Pa_GetDefaultOutputDevice();
 
-	if (i >= num_devices) {
-		/* no suitable audio device found */
-		return 0;
+		if ( i != paNoDevice )
+		{
+			outputParam.device = i;
+			err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
+			if (err == paFormatIsSupported) {
+				device_info = Pa_GetDeviceInfo(i);
+				host_info = Pa_GetHostApiInfo(device_info->hostApi);
+				LOG_INFO(log_audio_output, "Using default device %d:%s (%s)",
+					i, device_info->name, host_info->name);
+			}
+			else
+			{
+				goto err0;
+			}
+		}
+		else
+		{
+			goto err0;
+		}
 	}
 
 	/* high latency for robust playback */
