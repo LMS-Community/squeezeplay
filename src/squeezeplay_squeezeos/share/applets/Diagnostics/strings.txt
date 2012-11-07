@@ -499,7 +499,19 @@ SC_NAME
 	SV	Bibliotekets namn\n%s
 
 SC_VERSION
+	CS	Verze\n%s
+	DA	Version\n%s
+	DE	Version\n%s
 	EN	Version\n%s
+	ES	Versión\n%s
+	FI	Versio\n%s
+	FR	Version\n%s
+	IT	Versione\n%s
+	NL	Versie\n%s
+	NO	Versjon\n%s
+	PL	Wersja\n%s
+	RU	Версия\n%s
+	SV	Version\n%s
 
 SC_PING
 	CS	Zvonění\n%s

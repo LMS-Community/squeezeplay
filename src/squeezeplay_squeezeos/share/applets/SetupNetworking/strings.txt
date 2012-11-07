@@ -1596,7 +1596,19 @@ NETWORK_ENTER_SSID_HINT
 	SV	Kontrollera att nätverket är i gång och att det är inom räckvidden. Om nätverket är dolt måste du ange namnet manuellt.
 
 NETWORK_RESET_WIRELESS_SETTINGS
+	CS	Resetovat nastavení bezdrátové
+	DA	Nulstilling af de trådløse indstillinger
+	DE	Einstellungen für kabellose Netzwerke zurücksetzen
 	EN	Reset Wireless Settings
+	ES	Restablecer configuración inalámbrica
+	FI	Palauta langattoman verkon asetukset
+	FR	Réinitialiser les paramètres sans fil
+	IT	Reimposta impostazioni wireless
+	NL	Draadloze instellingen opnieuw instellen
+	NO	Tilbakestill trådløsinnstillinger
+	PL	Zresetuj ustawienia sieci bezprzewodowej
+	RU	Сброс беспроводных настроек
+	SV	Återställ inställningarna för trådlöst nätverk
 
 NETWORK_CANCEL
 	CS	Storno
@@ -1629,7 +1641,33 @@ NETWORK_OK
 	SV	OK
 
 NETWORK_RESET_WIRELESS_SETTINGS_HINT
+	CS	Tímto dojde k vymazání nastavení všech bezdrátových sítí, ke kterým byl tento Smart Radio připojen. Pro opakované připojení ke každé z těchto sítí budete muset zadat heslo.
+	DA	Dette vil rydde indstillingerne for alle trådløse netværk, som denne Smart Radio har været forbundet til. Du skal genindtaste adgangskoden for igen at oprette forbindelse til et af disse netværk.
+	DE	Dadurch werden die Einstellungen aller kabellosen Netzwerke gelöscht, zu denen dieses Smart Radio eine Verbindung hergestellt hat. Sie müssen das Kennwort erneut eingeben, um zu jedem dieser Netzwerke erneut eine Verbindung herzustellen.
 	EN	This will erase the settings of all wireless networks this Smart Radio has been connected to. You will have to re-enter the password in order to reconnect to each of these networks.
+	ES	Esto borrará la configuración de todas las redes inalámbricas a las que se ha conectado este dispositivo Smart Radio. Tendrá que volver a introducir la contraseña para volver a establecer la conexión con cada una de estas redes.
+	FI	Tämä valinta tyhjentää kaikki asetukset, jotka on määritetty niille verkoille, joihin tämä Smart Radio on joskus yhdistetty. Jos haluat jälleen muodostaa yhteyden joihinkin näistä verkoista, sinun on annettava kyseisen verkon salasana.
+	FR	Les paramètres de tous les réseaux sans fil auxquels cette Smart Radio a été connectée seront réinitialisés. Vous devrez saisir à nouveau votre mot de passe afin de vous reconnecter à chacun de ces réseaux.
+	IT	Verranno cancellate le impostazioni di tutte le reti wireless a cui è stata connessa questa Smart Radio. Per riconnettersi a queste reti sarà necessario immettere di nuovo la password.
+	NL	Hiermee wis je de instellingen van alle draadloze netwerken waarmee deze Smart Radio is verbonden. Je moet het wachtwoord opnieuw invoeren om opnieuw verbinding te maken met deze netwerken.
+	NO	Dette vil slette innstillingene for alle trådløse nettverk som Smart Radio-enheten har vært tilkoplet. Du må taste inn passordet på nytt for å kople til nettverkene igjen.
+	PL	Spowoduje to wymazanie ustawień wszystkich sieci bezprzewodowych, z którymi połączone jest to urządzenie Smart Radio. W celu ponownego połączenia z każdą z tych sieci konieczne będzie wprowadzenie hasła.
+	RU	При этом будут стерты настройки всех беспроводных сетей, к которым подключалось это Smart Radio. Для повторного подключения к каждой сети потребуется повторный ввод пароля.
+	SV	Inställningarna för alla trådlösa nätverk som denna Smart Radio har anslutit till raderas. Du måste ange lösenordet på nytt för att kunna ansluta till vart och ett av nätverken.
+
 
 NETWORK_RESET_WIRELESS_SETTINGS_DONE
+	CS	Nastavení bezdrátové sítě byla resetována.
+	DA	De trådløse netværksindstillinger er blevet nulstillet.
+	DE	Einstellungen für kabellose Netzwerke wurden zurückgesetzt.
 	EN	Wireless network settings have been reset.
+	ES	Se ha restablecido la configuración de redes inalámbricas.
+	FI	Langattoman verkon asetukset on palautettu.
+	FR	Les paramètres de réseau sans fil ont été réinitialisés.
+	IT	Le impostazioni della rete wireless sono state reimpostate.
+	NL	Draadloze netwerkinstellingen zijn opnieuw ingesteld.
+	NO	Innstillinger for trådløse nettverk har blitt tilbakestilt.
+	PL	Ustawienia sieci bezprzewodowej zostały zresetowane.
+	RU	Настройки беспроводной сети были сброшены.
+	SV	Inställningarna för det trådlösa nätverket har återställts.
+
