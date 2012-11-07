@@ -33,7 +33,19 @@ INTERNET_RADIO
 	SV	Radio
 
 RADIO_TITLE
+	CS	Radio od TuneIn
+	DA	Radio fra TuneIn
+	DE	Radio von TuneIn
 	EN	Radio by TuneIn
+	ES	Radio de TuneIn
+	FI	Radio by TuneIn
+	FR	Radio par TuneIn
+	IT	Radio di TuneIn
+	NL	Radio van TuneIn
+	NO	Radio fra TuneIn
+	PL	Radio usługi TuneIn
+	RU	Радио TuneIn
+	SV	Radio från TuneIn
 
 MY_MUSIC
 	CS	Moje hudba
