@@ -416,43 +416,43 @@ static ogg_int64_t oggbyte_read8(oggbyte_buffer *b,int pos){
 
 /* Now we get to the actual framing code */
 
-int ogg_page_version(ogg_page *og){
+int tremorogg_page_version(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return -1;
   return oggbyte_read1(&ob,4);
 }
 
-int ogg_page_continued(ogg_page *og){
+int tremorogg_page_continued(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return -1;
   return oggbyte_read1(&ob,5)&0x01;
 }
 
-int ogg_page_bos(ogg_page *og){
+int tremorogg_page_bos(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return -1;
   return oggbyte_read1(&ob,5)&0x02;
 }
 
-int ogg_page_eos(ogg_page *og){
+int tremorogg_page_eos(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return -1;
   return oggbyte_read1(&ob,5)&0x04;
 }
 
-ogg_int64_t ogg_page_granulepos(ogg_page *og){
+ogg_int64_t tremorogg_page_granulepos(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return -1;
   return oggbyte_read8(&ob,6);
 }
 
-ogg_uint32_t ogg_page_serialno(ogg_page *og){
+ogg_uint32_t tremorogg_page_serialno(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header)) return 0xffffffffUL;
   return oggbyte_read4(&ob,14);
 }
 
-ogg_uint32_t ogg_page_pageno(ogg_page *og){
+ogg_uint32_t tremorogg_page_pageno(ogg_page *og){
   oggbyte_buffer ob;
   if(oggbyte_init(&ob,og->header))return 0xffffffffUL;
   return oggbyte_read4(&ob,18);
@@ -465,17 +465,17 @@ ogg_uint32_t ogg_page_pageno(ogg_page *og){
 /* NOTE:
 If a page consists of a packet begun on a previous page, and a new
 packet begun (but not completed) on this page, the return will be:
-  ogg_page_packets(page)   ==1,
-  ogg_page_continued(page) !=0
+  tremorogg_page_packets(page)   ==1,
+  tremorogg_page_continued(page) !=0
 
 If a page happens to be a single packet that was begun on a
 previous page, and spans to the next page (in the case of a three or
 more page packet), the return will be:
-  ogg_page_packets(page)   ==0,
-  ogg_page_continued(page) !=0
+  tremorogg_page_packets(page)   ==0,
+  tremorogg_page_continued(page) !=0
 */
 
-int ogg_page_packets(ogg_page *og){
+int tremorogg_page_packets(ogg_page *og){
   int i;
   int n;
   int count=0;
@@ -564,9 +564,9 @@ ogg_sync_state *ogg_sync_create(void){
   return oy;
 }
 
-int ogg_sync_destroy(ogg_sync_state *oy){
+int tremorogg_sync_destroy(ogg_sync_state *oy){
   if(oy){
-    ogg_sync_reset(oy);
+    tremorogg_sync_reset(oy);
     ogg_buffer_destroy(oy->bufferpool);
     memset(oy,0,sizeof(*oy));
     _ogg_free(oy);
@@ -618,7 +618,7 @@ unsigned char *ogg_sync_bufferin(ogg_sync_state *oy, long bytes){
   return oy->fifo_head->buffer->data;
 }
 
-int ogg_sync_wrote(ogg_sync_state *oy, long bytes){
+int tremorogg_sync_wrote(ogg_sync_state *oy, long bytes){
   if(!oy->fifo_head)return OGG_EINVAL;
   if(oy->fifo_head->buffer->size-oy->fifo_head->length-oy->fifo_head->begin <
      bytes)return OGG_EINVAL;
@@ -655,7 +655,7 @@ static ogg_uint32_t _checksum(ogg_reference *or, int bytes){
 
 */
 
-long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
+long tremorogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
   oggbyte_buffer page;
   long           bytes,ret=0;
 
@@ -771,14 +771,14 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
    Returns pointers into buffered data; invalidated by next call to
    _stream, _clear, _init, or _buffer */
 
-int ogg_sync_pageout(ogg_sync_state *oy, ogg_page *og){
+int tremorogg_sync_pageout(ogg_sync_state *oy, ogg_page *og){
 
   /* all we need to do is verify a page at the head of the stream
      buffer.  If it doesn't verify, we look for the next potential
      frame */
 
   while(1){
-    long ret=ogg_sync_pageseek(oy,og);
+    long ret=tremorogg_sync_pageseek(oy,og);
     if(ret>0){
       /* have a page */
       return 1;
@@ -800,7 +800,7 @@ int ogg_sync_pageout(ogg_sync_state *oy, ogg_page *og){
 }
 
 /* clear things to an initial state.  Good to call, eg, before seeking */
-int ogg_sync_reset(ogg_sync_state *oy){
+int tremorogg_sync_reset(ogg_sync_state *oy){
 
   ogg_buffer_release(oy->fifo_tail);
   oy->fifo_tail=0;
@@ -820,7 +820,7 @@ ogg_stream_state *ogg_stream_create(int serialno){
   return os;
 }
 
-int ogg_stream_destroy(ogg_stream_state *os){
+int tremorogg_stream_destroy(ogg_stream_state *os){
   if(os){
     ogg_buffer_release(os->header_tail);
     ogg_buffer_release(os->body_tail);
@@ -874,7 +874,7 @@ static void _span_queued_page(ogg_stream_state *os){
       oggbyte_buffer ob;
       ogg_page og;               /* only for parsing header values */
       og.header=os->header_tail; /* only for parsing header values */
-      pageno=ogg_page_pageno(&og);
+      pageno=tremorogg_page_pageno(&og);
 
       oggbyte_init(&ob,os->header_tail);
       os->lacing_fill=oggbyte_read1(&ob,26);
@@ -893,7 +893,7 @@ static void _span_queued_page(ogg_stream_state *os){
 
       }
 
-      if(ogg_page_continued(&og)){
+      if(tremorogg_page_continued(&og)){
         if(os->body_fill==0){
           /* continued packet, but no preceeding data to continue */
           /* dump the first partial packet on the page */
@@ -919,7 +919,7 @@ static void _span_queued_page(ogg_stream_state *os){
       }
 
       if(os->laceptr<os->lacing_fill){
-        os->granulepos=ogg_page_granulepos(&og);
+        os->granulepos=tremorogg_page_granulepos(&og);
 
         /* get current packet size & flag */
         _next_lace(&ob,os);
@@ -931,8 +931,8 @@ static void _span_queued_page(ogg_stream_state *os){
       }
 
       os->pageno=pageno+1;
-      os->e_o_s=ogg_page_eos(&og);
-      os->b_o_s=ogg_page_bos(&og);
+      os->e_o_s=tremorogg_page_eos(&og);
+      os->b_o_s=tremorogg_page_bos(&og);
 
     }
   }
@@ -941,10 +941,10 @@ static void _span_queued_page(ogg_stream_state *os){
 /* add the incoming page to the stream state; we decompose the page
    into packet segments here as well. */
 
-int ogg_stream_pagein(ogg_stream_state *os, ogg_page *og){
+int tremorogg_stream_pagein(ogg_stream_state *os, ogg_page *og){
 
-  int serialno=ogg_page_serialno(og);
-  int version=ogg_page_version(og);
+  int serialno=tremorogg_page_serialno(og);
+  int version=tremorogg_page_version(og);
 
   /* check the serial number */
   if(serialno!=os->serialno){
@@ -975,7 +975,7 @@ int ogg_stream_pagein(ogg_stream_state *os, ogg_page *og){
   return OGG_SUCCESS;
 }
 
-int ogg_stream_reset(ogg_stream_state *os){
+int tremorogg_stream_reset(ogg_stream_state *os){
 
   ogg_buffer_release(os->header_tail);
   ogg_buffer_release(os->body_tail);
@@ -1000,8 +1000,8 @@ int ogg_stream_reset(ogg_stream_state *os){
   return OGG_SUCCESS;
 }
 
-int ogg_stream_reset_serialno(ogg_stream_state *os,int serialno){
-  ogg_stream_reset(os);
+int tremorogg_stream_reset_serialno(ogg_stream_state *os,int serialno){
+  tremorogg_stream_reset(os);
   os->serialno=serialno;
   return OGG_SUCCESS;
 }
@@ -1084,11 +1084,11 @@ static int _packetout(ogg_stream_state *os,ogg_packet *op,int adv){
   return 1;
 }
 
-int ogg_stream_packetout(ogg_stream_state *os,ogg_packet *op){
+int tremorogg_stream_packetout(ogg_stream_state *os,ogg_packet *op){
   return _packetout(os,op,1);
 }
 
-int ogg_stream_packetpeek(ogg_stream_state *os,ogg_packet *op){
+int tremorogg_stream_packetpeek(ogg_stream_state *os,ogg_packet *op){
   return _packetout(os,op,0);
 }
 

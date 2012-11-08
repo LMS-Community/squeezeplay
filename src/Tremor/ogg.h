@@ -160,35 +160,35 @@ extern int   oggpack_eop(oggpack_buffer *b);
 /* Ogg BITSTREAM PRIMITIVES: decoding **************************/
 
 extern ogg_sync_state *ogg_sync_create(void);
-extern int      ogg_sync_destroy(ogg_sync_state *oy);
-extern int      ogg_sync_reset(ogg_sync_state *oy);
+extern int      tremorogg_sync_destroy(ogg_sync_state *oy);
+extern int      tremorogg_sync_reset(ogg_sync_state *oy);
 
 extern unsigned char *ogg_sync_bufferin(ogg_sync_state *oy, long size);
-extern int      ogg_sync_wrote(ogg_sync_state *oy, long bytes);
-extern long     ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og);
-extern int      ogg_sync_pageout(ogg_sync_state *oy, ogg_page *og);
-extern int      ogg_stream_pagein(ogg_stream_state *os, ogg_page *og);
-extern int      ogg_stream_packetout(ogg_stream_state *os,ogg_packet *op);
-extern int      ogg_stream_packetpeek(ogg_stream_state *os,ogg_packet *op);
+extern int      tremorogg_sync_wrote(ogg_sync_state *oy, long bytes);
+extern long     tremorogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og);
+extern int      tremorogg_sync_pageout(ogg_sync_state *oy, ogg_page *og);
+extern int      tremorogg_stream_pagein(ogg_stream_state *os, ogg_page *og);
+extern int      tremorogg_stream_packetout(ogg_stream_state *os,ogg_packet *op);
+extern int      tremorogg_stream_packetpeek(ogg_stream_state *os,ogg_packet *op);
 
 /* Ogg BITSTREAM PRIMITIVES: general ***************************/
 
 extern ogg_stream_state *ogg_stream_create(int serialno);
-extern int      ogg_stream_destroy(ogg_stream_state *os);
-extern int      ogg_stream_reset(ogg_stream_state *os);
-extern int      ogg_stream_reset_serialno(ogg_stream_state *os,int serialno);
+extern int      tremorogg_stream_destroy(ogg_stream_state *os);
+extern int      tremorogg_stream_reset(ogg_stream_state *os);
+extern int      tremorogg_stream_reset_serialno(ogg_stream_state *os,int serialno);
 extern int      ogg_stream_eos(ogg_stream_state *os);
 
 extern int      ogg_page_checksum_set(ogg_page *og);
 
-extern int      ogg_page_version(ogg_page *og);
-extern int      ogg_page_continued(ogg_page *og);
-extern int      ogg_page_bos(ogg_page *og);
-extern int      ogg_page_eos(ogg_page *og);
-extern ogg_int64_t  ogg_page_granulepos(ogg_page *og);
-extern ogg_uint32_t ogg_page_serialno(ogg_page *og);
-extern ogg_uint32_t ogg_page_pageno(ogg_page *og);
-extern int      ogg_page_packets(ogg_page *og);
+extern int      tremorogg_page_version(ogg_page *og);
+extern int      tremorogg_page_continued(ogg_page *og);
+extern int      tremorogg_page_bos(ogg_page *og);
+extern int      tremorogg_page_eos(ogg_page *og);
+extern ogg_int64_t  tremorogg_page_granulepos(ogg_page *og);
+extern ogg_uint32_t tremorogg_page_serialno(ogg_page *og);
+extern ogg_uint32_t tremorogg_page_pageno(ogg_page *og);
+extern int      tremorogg_page_packets(ogg_page *og);
 extern int      ogg_page_getbuffer(ogg_page *og, unsigned char **buffer);
 
 extern int      ogg_packet_release(ogg_packet *op);

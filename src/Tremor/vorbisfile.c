@@ -78,7 +78,7 @@ static long _get_data(OggVorbis_File *vf){
   if(vf->datasource){
     unsigned char *buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
     long bytes=(vf->callbacks.read_func)(buffer,1,CHUNKSIZE,vf->datasource);
-    if(bytes>0)ogg_sync_wrote(vf->oy,bytes);
+    if(bytes>0)tremorogg_sync_wrote(vf->oy,bytes);
     if(bytes==0 && errno)return -1;
     return bytes;
   }else
@@ -90,7 +90,7 @@ static void _seek_helper(OggVorbis_File *vf,ogg_int64_t offset){
   if(vf->datasource){ 
     (vf->callbacks.seek_func)(vf->datasource, offset, SEEK_SET);
     vf->offset=offset;
-    ogg_sync_reset(vf->oy);
+    tremorogg_sync_reset(vf->oy);
   }else{
     /* shouldn't happen unless someone writes a broken callback */
     return;
@@ -119,7 +119,7 @@ static ogg_int64_t _get_next_page(OggVorbis_File *vf,ogg_page *og,
     long more;
 
     if(boundary>0 && vf->offset>=boundary)return OV_FALSE;
-    more=ogg_sync_pageseek(vf->oy,og);
+    more=tremorogg_sync_pageseek(vf->oy,og);
     
     if(more<0){
       /* skipped n bytes */
@@ -222,7 +222,7 @@ static int _bisect_forward_serialno(OggVorbis_File *vf,
     _seek_helper(vf,bisect);
     ret=_get_next_page(vf,&og,-1);
     if(ret==OV_EREAD)return OV_EREAD;
-    if(ret<0 || ogg_page_serialno(&og)!=currentno){
+    if(ret<0 || tremorogg_page_serialno(&og)!=currentno){
       endsearched=bisect;
       if(ret>=0)next=ret;
     }else{
@@ -243,7 +243,7 @@ static int _bisect_forward_serialno(OggVorbis_File *vf,
     vf->offsets[m+1]=searched;
   }else{
     ret=_bisect_forward_serialno(vf,next,vf->offset,
-				 end,ogg_page_serialno(&og),m+1);
+				 end,tremorogg_page_serialno(&og),m+1);
     ogg_page_release(&og);
     if(ret==OV_EREAD)return OV_EREAD;
   }
@@ -291,7 +291,7 @@ static int _fetch_headers(OggVorbis_File *vf,
     og_ptr=&og;
   }
 
-  ogg_stream_reset_serialno(vf->os,ogg_page_serialno(og_ptr));
+  tremorogg_stream_reset_serialno(vf->os,tremorogg_page_serialno(og_ptr));
   if(serialno)*serialno=vf->os->serialno;
   
   /* extract the initial header from the first page and verify that the
@@ -302,9 +302,9 @@ static int _fetch_headers(OggVorbis_File *vf,
   
   i=0;
   while(i<3){
-    ogg_stream_pagein(vf->os,og_ptr);
+    tremorogg_stream_pagein(vf->os,og_ptr);
     while(i<3){
-      int result=ogg_stream_packetout(vf->os,&op);
+      int result=tremorogg_stream_packetout(vf->os,&op);
       if(result==0)break;
       if(result==-1){
 	ret=OV_EBADHEADER;
@@ -344,7 +344,7 @@ static int _set_link_number(OggVorbis_File *vf,int link){
   if(link != vf->current_link) _decode_clear(vf);
   if(vf->ready_state<STREAMSET){
     _seek_helper(vf,vf->offsets[link]);
-    ogg_stream_reset_serialno(vf->os,vf->serialnos[link]);
+    tremorogg_stream_reset_serialno(vf->os,vf->serialnos[link]);
     vf->current_serialno=vf->serialnos[link];
     vf->current_link=link;
     return _fetch_headers(vf,&vf->vi,&vf->vc,&vf->current_serialno,NULL);
@@ -404,7 +404,7 @@ static void _prefetch_all_offsets(OggVorbis_File *vf, ogg_int64_t dataoffset){
       long        lastblock=-1;
       int         result;
 
-      ogg_stream_reset_serialno(vf->os,vf->serialnos[i]);
+      tremorogg_stream_reset_serialno(vf->os,vf->serialnos[i]);
 
       while(1){
 	ogg_packet op={0,0,0,0,0,0};
@@ -415,14 +415,14 @@ static void _prefetch_all_offsets(OggVorbis_File *vf, ogg_int64_t dataoffset){
              truncated/mangled */
 	  break;
        
-	if(ogg_page_serialno(&og)!=vf->serialnos[i])
+	if(tremorogg_page_serialno(&og)!=vf->serialnos[i])
 	  break;
 	
-	pos=ogg_page_granulepos(&og);
+	pos=tremorogg_page_granulepos(&og);
 
 	/* count blocksizes of all frames in the page */
-	ogg_stream_pagein(vf->os,&og);
-	while((result=ogg_stream_packetout(vf->os,&op))){
+	tremorogg_stream_pagein(vf->os,&og);
+	while((result=tremorogg_stream_packetout(vf->os,&op))){
 	  if(result>0){ /* ignore holes */
 	    long thisblock=vorbis_packet_blocksize(&vf->vi,&op);
 	    if(lastblock!=-1)
@@ -460,8 +460,8 @@ static void _prefetch_all_offsets(OggVorbis_File *vf, ogg_int64_t dataoffset){
 	  vorbis_comment_clear(&vf->vc);
 	  break;
 	}
-	if(ogg_page_granulepos(&og)!=-1){
-	  vf->pcmlengths[i*2+1]=ogg_page_granulepos(&og)-vf->pcmlengths[i*2];
+	if(tremorogg_page_granulepos(&og)!=-1){
+	  vf->pcmlengths[i*2+1]=tremorogg_page_granulepos(&og)-vf->pcmlengths[i*2];
 	  break;
 	}
 	vf->offset=ret;
@@ -513,7 +513,7 @@ static int _open_seekable2(OggVorbis_File *vf){
   if(end<0)return end;
 
   /* more than one logical bitstream? */
-  tempserialno=ogg_page_serialno(&og);
+  tempserialno=tremorogg_page_serialno(&og);
   ogg_page_release(&og);
 
   if(tempserialno!=serialno){
@@ -560,7 +560,7 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
        neither is a page */
     if(vf->ready_state==INITSET){
       while(1) {
-	int result=ogg_stream_packetout(vf->os,&op);
+	int result=tremorogg_stream_packetout(vf->os,&op);
 	ogg_int64_t granulepos;
 
 	if(result<0){
@@ -648,8 +648,8 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
       
       /* has our decoding just traversed a bitstream boundary? */
       if(vf->ready_state==INITSET){
-	if(vf->current_serialno!=ogg_page_serialno(&og)){
-	  LOG_DEBUG("serialno change: %x -> %x\n", vf->current_serialno, ogg_page_serialno(&og));
+	if(vf->current_serialno!=tremorogg_page_serialno(&og)){
+	  LOG_DEBUG("serialno change: %x -> %x\n", vf->current_serialno, tremorogg_page_serialno(&og));
 	  if(!spanp){
 	    ret=OV_EOF;
 	    goto cleanup;
@@ -677,7 +677,7 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
 
       if(vf->ready_state<STREAMSET){
 	if(vf->seekable){
-	  vf->current_serialno=ogg_page_serialno(&og);
+	  vf->current_serialno=tremorogg_page_serialno(&og);
 	  
 	  /* match the serialno to bitstream section.  We use this rather than
 	     offset positions to avoid problems near logical bitstream
@@ -711,7 +711,7 @@ static int _fetch_and_process_packet(OggVorbis_File *vf,
       
       if(_make_decode_ready(vf)) return OV_EBADLINK;
     }
-    ogg_stream_pagein(vf->os,&og);
+    tremorogg_stream_pagein(vf->os,&og);
   }
  cleanup:
   ogg_packet_release(&op);
@@ -750,7 +750,7 @@ static int _ov_open1(void *f,OggVorbis_File *vf,char *initial,
   if(initial){
     unsigned char *buffer=ogg_sync_bufferin(vf->oy,ibytes);
     memcpy(buffer,initial,ibytes);
-    ogg_sync_wrote(vf->oy,ibytes);
+    tremorogg_sync_wrote(vf->oy,ibytes);
   }
 
   /* can we seek? Stevens suggests the seek test was portable */
@@ -790,14 +790,14 @@ int ov_clear(OggVorbis_File *vf){
   if(vf){
     vorbis_dsp_destroy(vf->vd);
     vf->vd=0;
-    ogg_stream_destroy(vf->os);
+    tremorogg_stream_destroy(vf->os);
     vorbis_info_clear(&vf->vi);
     vorbis_comment_clear(&vf->vc);
     if(vf->dataoffsets)_ogg_free(vf->dataoffsets);
     if(vf->pcmlengths)_ogg_free(vf->pcmlengths);
     if(vf->serialnos)_ogg_free(vf->serialnos);
     if(vf->offsets)_ogg_free(vf->offsets);
-    ogg_sync_destroy(vf->oy);
+    tremorogg_sync_destroy(vf->oy);
 
     if(vf->datasource)(vf->callbacks.close_func)(vf->datasource);
     memset(vf,0,sizeof(*vf));
@@ -1021,7 +1021,7 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
      let _fetch_and_process_packet deal with a potential bitstream
      boundary */
   vf->pcm_offset=-1;
-  ogg_stream_reset_serialno(vf->os,
+  tremorogg_stream_reset_serialno(vf->os,
 			    vf->current_serialno); /* must set serialno */
   vorbis_dsp_restart(vf->vd);
     
@@ -1052,19 +1052,19 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
     while(1){
       if(vf->ready_state>=STREAMSET){
 	/* snarf/scan a packet if we can */
-	int result=ogg_stream_packetout(work_os,&op);
+	int result=tremorogg_stream_packetout(work_os,&op);
       
 	if(result>0){
 
 	  if(vf->vi.codec_setup){
 	    thisblock=vorbis_packet_blocksize(&vf->vi,&op);
 	    if(thisblock<0){
-	      ogg_stream_packetout(vf->os,NULL);
+	      tremorogg_stream_packetout(vf->os,NULL);
 	      thisblock=0;
 	    }else{
 	      
 	      if(eosflag)
-		ogg_stream_packetout(vf->os,NULL);
+		tremorogg_stream_packetout(vf->os,NULL);
 	      else
 		if(lastblock)accblock+=(lastblock+thisblock)>>2;
 	    }	    
@@ -1082,7 +1082,7 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
 	    lastblock=thisblock;
 	    continue;
 	  }else
-	    ogg_stream_packetout(vf->os,NULL);
+	    tremorogg_stream_packetout(vf->os,NULL);
 	}
       }
       
@@ -1099,15 +1099,15 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
       
       /* did we just grab a page from other than current link? */
       if(vf->ready_state>=STREAMSET)
-	if(vf->current_serialno!=ogg_page_serialno(&og)){
+	if(vf->current_serialno!=tremorogg_page_serialno(&og)){
 	  _decode_clear(vf); /* clear out stream state */
-	  ogg_stream_destroy(work_os);
+	  tremorogg_stream_destroy(work_os);
 	}
 
       if(vf->ready_state<STREAMSET){
 	int link;
 	
-	vf->current_serialno=ogg_page_serialno(&og);
+	vf->current_serialno=tremorogg_page_serialno(&og);
 	for(link=0;link<vf->links;link++)
 	  if(vf->serialnos[link]==vf->current_serialno)break;
 	if(link==vf->links)
@@ -1119,8 +1119,8 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
 	  int ret=_set_link_number_preserve_pos(vf,link);
 	  if(ret) goto seek_error;
 	}
-	ogg_stream_reset_serialno(vf->os,vf->current_serialno);
-	ogg_stream_reset_serialno(work_os,vf->current_serialno); 
+	tremorogg_stream_reset_serialno(vf->os,vf->current_serialno);
+	tremorogg_stream_reset_serialno(work_os,vf->current_serialno); 
 	
 	
       }
@@ -1128,16 +1128,16 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
       {
 	ogg_page dup;
 	ogg_page_dup(&dup,&og);
-	eosflag=ogg_page_eos(&og);
-	ogg_stream_pagein(vf->os,&og);
-	ogg_stream_pagein(work_os,&dup);
+	eosflag=tremorogg_page_eos(&og);
+	tremorogg_stream_pagein(vf->os,&og);
+	tremorogg_stream_pagein(work_os,&dup);
       }
     }
   }
 
   ogg_packet_release(&op);
   ogg_page_release(&og);
-  ogg_stream_destroy(work_os);
+  tremorogg_stream_destroy(work_os);
   vf->bittrack=0;
   vf->samptrack=0;
   return 0;
@@ -1148,7 +1148,7 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
 
   /* dump the machine so we're in a known state */
   vf->pcm_offset=-1;
-  ogg_stream_destroy(work_os);
+  tremorogg_stream_destroy(work_os);
   _decode_clear(vf);
   return OV_EBADLINK;
 }
@@ -1184,7 +1184,7 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
     vorbis_dsp_restart(vf->vd);
   }
 
-  ogg_stream_reset_serialno(vf->os,vf->serialnos[link]);
+  tremorogg_stream_reset_serialno(vf->os,vf->serialnos[link]);
 
   /* search within the logical bitstream for the page with the highest
      pcm_pos preceeding (or equal to) pos.  There is a danger here;
@@ -1229,7 +1229,7 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
 	    _seek_helper(vf,bisect);
 	  }
 	}else{
-	  ogg_int64_t granulepos=ogg_page_granulepos(&og);
+	  ogg_int64_t granulepos=tremorogg_page_granulepos(&og);
 	  if(granulepos==-1)continue;
 	  if(granulepos<target){
 	    best=result;  /* raw offset of packet with granulepos */ 
@@ -1271,11 +1271,11 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
 	return OV_EOF; /* shouldn't happen */
       }
 
-      ogg_stream_pagein(vf->os,&og);
+      tremorogg_stream_pagein(vf->os,&og);
 
       /* pull out all but last packet; the one with granulepos */
       while(1){
-	result=ogg_stream_packetpeek(vf->os,&op);
+	result=tremorogg_stream_packetpeek(vf->os,&op);
 	if(result==0){
 	  /* !!! the packet finishing this page originated on a
              preceeding page. Keep fetching previous pages until we
@@ -1287,8 +1287,8 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
 	  while(1){
 	    result=_get_prev_page(vf,&og);
 	    if(result<0) goto seek_error;
-	    if(ogg_page_granulepos(&og)>-1 ||
-	       !ogg_page_continued(&og)){
+	    if(tremorogg_page_granulepos(&og)>-1 ||
+	       !tremorogg_page_continued(&og)){
 	      return ov_raw_seek(vf,result);
 	    }
 	    vf->offset=result;
@@ -1304,7 +1304,7 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
 	  vf->pcm_offset+=total;
 	  break;
 	}else
-	  result=ogg_stream_packetout(vf->os,NULL);
+	  result=tremorogg_stream_packetout(vf->os,NULL);
       }
     }
   }
@@ -1348,11 +1348,11 @@ int ov_pcm_seek(OggVorbis_File *vf,ogg_int64_t pos){
 
   while(1){
 
-    int ret=ogg_stream_packetpeek(vf->os,&op);
+    int ret=tremorogg_stream_packetpeek(vf->os,&op);
     if(ret>0){
       thisblock=vorbis_packet_blocksize(&vf->vi,&op);
       if(thisblock<0){
-	ogg_stream_packetout(vf->os,NULL);
+	tremorogg_stream_packetout(vf->os,NULL);
 	continue; /* non audio packet */
       }
       if(lastblock)vf->pcm_offset+=(lastblock+thisblock)>>2;
@@ -1361,7 +1361,7 @@ int ov_pcm_seek(OggVorbis_File *vf,ogg_int64_t pos){
 			  vorbis_info_blocksize(&vf->vi,1))>>2)>=pos)break;
       
       /* remove the packet from packet queue and track its granulepos */
-      ogg_stream_packetout(vf->os,NULL);
+      tremorogg_stream_packetout(vf->os,NULL);
       vorbis_dsp_synthesis(vf->vd,&op,0);  /* set up a vb with
 					      only tracking, no
 					      pcm_decode */
@@ -1385,12 +1385,12 @@ int ov_pcm_seek(OggVorbis_File *vf,ogg_int64_t pos){
       
       /* suck in a new page */
       if(_get_next_page(vf,&og,-1)<0)break;
-      if(vf->current_serialno!=ogg_page_serialno(&og))_decode_clear(vf);
+      if(vf->current_serialno!=tremorogg_page_serialno(&og))_decode_clear(vf);
       
       if(vf->ready_state<STREAMSET){
 	int link,ret;
 	
-	vf->current_serialno=ogg_page_serialno(&og);
+	vf->current_serialno=tremorogg_page_serialno(&og);
 	for(link=0;link<vf->links;link++)
 	  if(vf->serialnos[link]==vf->current_serialno)break;
 	if(link==vf->links){
@@ -1407,7 +1407,7 @@ int ov_pcm_seek(OggVorbis_File *vf,ogg_int64_t pos){
 	lastblock=0;
       }
 
-      ogg_stream_pagein(vf->os,&og);
+      tremorogg_stream_pagein(vf->os,&og);
     }
   }
 
