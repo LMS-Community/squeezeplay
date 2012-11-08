@@ -1,0 +1,12 @@
+--- squeezeplay/share/jive/jive/slim/SlimServer.lua.orig	2012-11-02 11:00:39.370449000 -0400
++++ squeezeplay/share/jive/jive/slim/SlimServer.lua	2012-11-02 10:55:36.928201000 -0400
+@@ -1248,7 +1248,8 @@
+ 		return nil
+ 	end
+ 	
+-	return self:isMoreRecent(self.state.version, minimumVersion)
++--	return self:isMoreRecent(self.state.version, minimumVersion)
++	return true
+ end
+ 
+ function isMoreRecent(self, new, old)
