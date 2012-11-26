@@ -26,6 +26,7 @@ static u32_t stream_sample_rate;
 
 static void decode_portaudio_openstream(void);
 
+#ifndef _WIN32
 static int strnicmp(const char *s1, const char *s2, size_t n)
 {
 	if (n == 0)
@@ -39,6 +40,7 @@ static int strnicmp(const char *s1, const char *s2, size_t n)
 
 	return 0;
 }
+#endif
 
 /*
  * This function is called by portaudio when the stream is active to request

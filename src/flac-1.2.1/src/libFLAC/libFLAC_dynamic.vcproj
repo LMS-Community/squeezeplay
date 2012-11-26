@@ -120,8 +120,8 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\include;..\..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__CPU_IA32;FLAC__USE_3DNOW;VERSION=\&quot;1.2.0\&quot;"
+				AdditionalIncludeDirectories=".\include;..\..\include;&quot;$(SolutionDir)libogg-1.2.2\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;FLAC_API_EXPORTS;FLAC__HAS_OGG;FLAC__CPU_IA32;FLAC__USE_3DNOW;VERSION=\&quot;1.2.1\&quot;"
 				RuntimeLibrary="2"
 				BufferSecurityCheck="false"
 				UsePrecompiledHeader="0"
@@ -185,11 +185,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\private\all.h"
+				RelativePath=".\include\protected\all.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\protected\all.h"
+				RelativePath=".\include\private\all.h"
 				>
 			</File>
 			<File
@@ -347,7 +347,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -367,12 +366,15 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\ogg_helper.c"
+				>
 			</File>
 			<File
 				RelativePath=".\ogg_mapping.c"
@@ -387,7 +389,6 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
