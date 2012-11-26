@@ -191,16 +191,22 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz
+.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont freefont-debian axtls rtmp
+app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz
 
 # portaudio
 portaudio:
 	cd portaudio_v18_1; make -f Makefile.openindiana install
+# libogg       
+libogg-1.2.2/Makefile:         
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+
+libogg: libogg-1.2.2/Makefile          
+	cd libogg-1.2.2; make && make install
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-ogg --disable-oggtest --disable-cpplibs --disable-xmms-plugin --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd flac-1.2.1; ./configure --enable-shared=no --disable-oggtest --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -326,6 +332,7 @@ clean:
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.*; rm *.o
 	-cd portaudio_v18_1; make -f Makefile.openindiana clean
+	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	-cd luartmp-squeezeplay; rm *.so
