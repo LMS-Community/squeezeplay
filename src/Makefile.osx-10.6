@@ -194,8 +194,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
-app: portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
+.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
+app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
 
 # portaudio
 portaudio_v19/Makefile:
@@ -204,9 +204,16 @@ portaudio_v19/Makefile:
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
 
+# libogg
+libogg-1.2.2/Makefile:
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+
+libogg: libogg-1.2.2/Makefile
+	cd libogg-1.2.2; make && make install
+
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-ogg --disable-asm-optimizations --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --enable-shared=no --disable-oggtest --disable-asm-optimizations --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -301,6 +308,9 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
 	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf x86_64; rm a.out
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libogg"
+	-cd libogg-1.2.2; make distclean; rm -rf src/x86; rm -rf src/x86_64; rm a.out
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libflac"
 	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64; rm -rf src/libFLAC/x86_64; rm -rf src/libFLAC/x86; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
