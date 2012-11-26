@@ -10,7 +10,7 @@ decode_packed_entry_number_REALSTART:
 dpen_nobits:
 	MOV	r0,r5		@ r0 = b
 	MOV	r1,#1		@ r1 = 1
-	BL	oggpack_adv	@ oggpack_adv(b,1)      /* Force eop */
+	BL	tremoroggpack_adv	@ tremoroggpack_adv(b,1)      /* Force eop */
 duff:
 	MVN	r0,#0		@ return -1
 	LDMFD	r13!,{r4-r8,r10,PC}
@@ -21,7 +21,7 @@ dpen_readfailed:
 	MOV	r0,r5		@ r0 = b
 	MOV	r1,r4		@ r1 = read
 	ADR	r14,dpen_read_return
-	B	oggpack_look
+	B	tremoroggpack_look
 
 decode_packed_entry_number:
 	@ r0 = codebook       *book
@@ -35,7 +35,7 @@ decode_packed_entry_number:
 
 	MOV	r0,r5		@ r0 = b
 	MOV	r1,r4		@ r1 = read
-	BL	oggpack_look
+	BL	tremoroggpack_look
 dpen_read_return:
 	CMP	r0,#0
 	BLT	dpen_readfailed
@@ -68,7 +68,7 @@ m0_loop:
 	MVNGT	r7, #0			@ if (i >= read) value to return = -1
 	ADD	r1, r1, r4		@ r1 = i-read+read+1 = i +1
 	MOV	r0, r5			@ r0 = b
-	BL	oggpack_adv		@ oggpack_adv(b, i+1);
+	BL	tremoroggpack_adv		@ tremoroggpack_adv(b, i+1);
 	MOV	r0, r7			@ return chase
 	LDMFD	r13!,{r4-r8,r10,PC}
 
@@ -91,7 +91,7 @@ m1_loop:
 
 	ADD	r1, r1, r4		@ r1 = i+read
 	MOV	r0, r5			@ r0 = b
-	BL	oggpack_adv		@ oggpack_adv(b, i)
+	BL	tremoroggpack_adv		@ tremoroggpack_adv(b, i)
 
 	CMP	r10,#0x80
 	BLT	duff
@@ -125,7 +125,7 @@ m2_loop:
 	MVNGT	r7, #0			@ if (i >= read) value to return = -1
 	ADD	r1, r1, r4		@ r1 = i-read+read+1 = i +1
 	MOV	r0, r5			@ r0 = b
-	BL	oggpack_adv		@ oggpack_adv(b, i+1);
+	BL	tremoroggpack_adv		@ tremoroggpack_adv(b, i+1);
 	MOV	r0, r7			@ return chase
 	LDMFD	r13!,{r4-r8,r10,PC}
 
@@ -149,7 +149,7 @@ m3_loop:
 
 	ADD	r1, r1, r4		@ r1 = i+read
 	MOV	r0, r5			@ r0 = b
-	BL	oggpack_adv		@ oggpack_adv(b, i)
+	BL	tremoroggpack_adv		@ tremoroggpack_adv(b, i)
 
 	CMP	r10,#0x8000
 	BLT	duff
@@ -183,7 +183,7 @@ m4_loop:
 	MVNGT	r7, #0			@ if (i >= read) value to return = -1
 	ADD	r1, r1, r4		@ r1 = i-read+read+1 = i +1
 	MOV	r0, r5			@ r0 = b
-	BL	oggpack_adv		@ oggpack_adv(b, i+1);
+	BL	tremoroggpack_adv		@ tremoroggpack_adv(b, i+1);
 	MOV	r0, r7			@ return chase
 	LDMFD	r13!,{r4-r8,r10,PC}
 

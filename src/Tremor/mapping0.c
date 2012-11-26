@@ -53,19 +53,19 @@ int mapping_info_unpack(vorbis_info_mapping *info,vorbis_info *vi,
   codec_setup_info     *ci=(codec_setup_info *)vi->codec_setup;
   memset(info,0,sizeof(*info));
 
-  if(oggpack_read(opb,1))
-    info->submaps=oggpack_read(opb,4)+1;
+  if(tremoroggpack_read(opb,1))
+    info->submaps=tremoroggpack_read(opb,4)+1;
   else
     info->submaps=1;
 
-  if(oggpack_read(opb,1)){
-    info->coupling_steps=oggpack_read(opb,8)+1;
+  if(tremoroggpack_read(opb,1)){
+    info->coupling_steps=tremoroggpack_read(opb,8)+1;
     info->coupling=
       _ogg_malloc(info->coupling_steps*sizeof(*info->coupling));
     
     for(i=0;i<info->coupling_steps;i++){
-      int testM=info->coupling[i].mag=oggpack_read(opb,ilog(vi->channels));
-      int testA=info->coupling[i].ang=oggpack_read(opb,ilog(vi->channels));
+      int testM=info->coupling[i].mag=tremoroggpack_read(opb,ilog(vi->channels));
+      int testA=info->coupling[i].ang=tremoroggpack_read(opb,ilog(vi->channels));
 
       if(testM<0 || 
 	 testA<0 || 
@@ -76,22 +76,22 @@ int mapping_info_unpack(vorbis_info_mapping *info,vorbis_info *vi,
 
   }
 
-  if(oggpack_read(opb,2)>0)goto err_out; /* 2,3:reserved */
+  if(tremoroggpack_read(opb,2)>0)goto err_out; /* 2,3:reserved */
     
   if(info->submaps>1){
     info->chmuxlist=_ogg_malloc(sizeof(*info->chmuxlist)*vi->channels);
     for(i=0;i<vi->channels;i++){
-      info->chmuxlist[i]=oggpack_read(opb,4);
+      info->chmuxlist[i]=tremoroggpack_read(opb,4);
       if(info->chmuxlist[i]>=info->submaps)goto err_out;
     }
   }
 
   info->submaplist=_ogg_malloc(sizeof(*info->submaplist)*info->submaps);
   for(i=0;i<info->submaps;i++){
-    int temp=oggpack_read(opb,8);
-    info->submaplist[i].floor=oggpack_read(opb,8);
+    int temp=tremoroggpack_read(opb,8);
+    info->submaplist[i].floor=tremoroggpack_read(opb,8);
     if(info->submaplist[i].floor>=ci->floors)goto err_out;
-    info->submaplist[i].residue=oggpack_read(opb,8);
+    info->submaplist[i].residue=tremoroggpack_read(opb,8);
     if(info->submaplist[i].residue>=ci->residues)goto err_out;
   }
 

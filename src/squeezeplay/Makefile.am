@@ -35,6 +35,7 @@ JIVE_STATIC_PROGRAM = SqueezePlay
 
 OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(OSX_LIB_DIR)/liblua.a $(OSX_LIB_DIR)/libtolua++.a \
+	$(OSX_LIB_DIR)/libogg.a \
 	$(OSX_LIB_DIR)/libFLAC.a \
 	$(OSX_LIB_DIR)/libfreetype.a \
 	$(OSX_LIB_DIR)/libmad.a \

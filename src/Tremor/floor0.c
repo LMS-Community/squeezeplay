@@ -348,19 +348,19 @@ vorbis_info_floor *floor0_info_unpack (vorbis_info *vi,oggpack_buffer *opb){
   int j;
 
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)_ogg_malloc(sizeof(*info));
-  info->order=oggpack_read(opb,8);
-  info->rate=oggpack_read(opb,16);
-  info->barkmap=oggpack_read(opb,16);
-  info->ampbits=oggpack_read(opb,6);
-  info->ampdB=oggpack_read(opb,8);
-  info->numbooks=oggpack_read(opb,4)+1;
+  info->order=tremoroggpack_read(opb,8);
+  info->rate=tremoroggpack_read(opb,16);
+  info->barkmap=tremoroggpack_read(opb,16);
+  info->ampbits=tremoroggpack_read(opb,6);
+  info->ampdB=tremoroggpack_read(opb,8);
+  info->numbooks=tremoroggpack_read(opb,4)+1;
   
   if(info->order<1)goto err_out;
   if(info->rate<1)goto err_out;
   if(info->barkmap<1)goto err_out;
     
   for(j=0;j<info->numbooks;j++){
-    info->books[j]=oggpack_read(opb,8);
+    info->books[j]=tremoroggpack_read(opb,8);
     if(info->books[j]>=ci->books)goto err_out;
   }
 
@@ -382,11 +382,11 @@ ogg_int32_t *floor0_inverse1(vorbis_dsp_state *vd,vorbis_info_floor *i,
   vorbis_info_floor0 *info=(vorbis_info_floor0 *)i;
   int j,k;
   
-  int ampraw=oggpack_read(&vd->opb,info->ampbits);
+  int ampraw=tremoroggpack_read(&vd->opb,info->ampbits);
   if(ampraw>0){ /* also handles the -1 out of data case */
     long maxval=(1<<info->ampbits)-1;
     int amp=((ampraw*info->ampdB)<<4)/maxval;
-    int booknum=oggpack_read(&vd->opb,_ilog(info->numbooks));
+    int booknum=tremoroggpack_read(&vd->opb,_ilog(info->numbooks));
     
     if(booknum!=-1 && booknum<info->numbooks){ /* be paranoid */
       codec_setup_info  *ci=(codec_setup_info *)vd->vi->codec_setup;

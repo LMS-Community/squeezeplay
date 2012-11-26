@@ -1,11 +1,11 @@
 	.text
 
-	.global	oggpack_look
-	.global	oggpack_adv
-	.global	oggpack_readinit
-	.global	oggpack_read
+	.global	tremoroggpack_look
+	.global	tremoroggpack_adv
+	.global	tremoroggpack_readinit
+	.global	tremoroggpack_read
 
-oggpack_look:
+tremoroggpack_look:
 	@ r0 = oggpack_buffer *b
 	@ r1 = int             bits
 	STMFD	r13!,{r10,r11,r14}
@@ -121,7 +121,7 @@ look_overrun_next_segment:
 	MOV	r10,#0
 	B	look_slow_loop
 
-oggpack_adv:
+tremoroggpack_adv:
 	@ r0 = oggpack_buffer *b
 	@ r1 = bits
 	LDMIA	r0,{r2,r3,r12}
@@ -172,7 +172,7 @@ adv_end:
 
 	LDMFD	r13!,{r10,PC}
 
-oggpack_readinit:
+tremoroggpack_readinit:
 	@ r0 = oggpack_buffer *b
 	@ r1 = oggreference   *r
 	STR	r1,[r0,#12]		@ b->head = r1
@@ -192,7 +192,7 @@ oggpack_readinit:
 	STR	r12,[r0,#20]
 	MOV	PC,R14
 
-oggpack_read:
+tremoroggpack_read:
 	@ r0 = oggpack_buffer *b
 	@ r1 = int             bits
 	STMFD	r13!,{r10,r11,r14}

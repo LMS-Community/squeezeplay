@@ -56,7 +56,7 @@ static ogg_uint32_t decpack(long entry,long used_entry,long quantvals,
       }
     }else{
       for(j=0;j<b->dim;j++)
-	ret|=oggpack_read(opb,b->q_bits)<<(b->q_bits*j);
+	ret|=tremoroggpack_read(opb,b->q_bits)<<(b->q_bits*j);
     }
     return ret;
 
@@ -366,33 +366,33 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
   memset(s,0,sizeof(*s));
 
   /* make sure alignment is correct */
-  if(oggpack_read(opb,24)!=0x564342)goto _eofout;
+  if(tremoroggpack_read(opb,24)!=0x564342)goto _eofout;
 
   /* first the basic parameters */
-  s->dim=oggpack_read(opb,16);
+  s->dim=tremoroggpack_read(opb,16);
   s->dec_buf=_ogg_malloc(sizeof(ogg_int32_t)*s->dim);
   if (s->dec_buf == NULL)
       goto _errout;
-  s->entries=oggpack_read(opb,24);
+  s->entries=tremoroggpack_read(opb,24);
   if(s->entries<=0)goto _eofout;
   if(s->dim<=0)goto _eofout;
   if(_ilog(s->dim)+_ilog(s->entries)>24)goto _eofout; 
   if (s->dim > INT_MAX/s->entries) goto _eofout;
 
   /* codeword ordering.... length ordered or unordered? */
-  switch((int)oggpack_read(opb,1)){
+  switch((int)tremoroggpack_read(opb,1)){
   case 0:
     /* unordered */
     lengthlist=(char *)alloca(sizeof(*lengthlist)*s->entries);
     if(!lengthlist) goto _eofout;
 
     /* allocated but unused entries? */
-    if(oggpack_read(opb,1)){
+    if(tremoroggpack_read(opb,1)){
       /* yes, unused entries */
 
       for(i=0;i<s->entries;i++){
-	if(oggpack_read(opb,1)){
-	  long num=oggpack_read(opb,5);
+	if(tremoroggpack_read(opb,1)){
+	  long num=tremoroggpack_read(opb,5);
 	  if(num==-1)goto _eofout;
 	  lengthlist[i]=(char)(num+1);
 	  s->used_entries++;
@@ -404,7 +404,7 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
       /* all entries used; no tagging */
       s->used_entries=s->entries;
       for(i=0;i<s->entries;i++){
-	long num=oggpack_read(opb,5);
+	long num=tremoroggpack_read(opb,5);
 	if(num==-1)goto _eofout;
 	lengthlist[i]=(char)(num+1);
 	if(num+1>s->dec_maxlength)s->dec_maxlength=num+1;
@@ -415,14 +415,14 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
   case 1:
     /* ordered */
     {
-      long length=oggpack_read(opb,5)+1;
+      long length=tremoroggpack_read(opb,5)+1;
 
       s->used_entries=s->entries;
       lengthlist=(char *)alloca(sizeof(*lengthlist)*s->entries);
       if (!lengthlist) goto _eofout;
 
       for(i=0;i<s->entries;){
-	long num=oggpack_read(opb,_ilog(s->entries-i));
+	long num=tremoroggpack_read(opb,_ilog(s->entries-i));
 	if(num<0)goto _eofout;
 	for(j=0;j<num && i<s->entries;j++,i++)
 	  lengthlist[i]=(char)length;
@@ -439,11 +439,11 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
 
   /* Do we have a mapping to unpack? */
 
-  if((maptype=oggpack_read(opb,4))>0){
-    s->q_min=_float32_unpack(oggpack_read(opb,32),&s->q_minp);
-    s->q_del=_float32_unpack(oggpack_read(opb,32),&s->q_delp);
-    s->q_bits=oggpack_read(opb,4)+1;
-    s->q_seq=oggpack_read(opb,1);
+  if((maptype=tremoroggpack_read(opb,4))>0){
+    s->q_min=_float32_unpack(tremoroggpack_read(opb,32),&s->q_minp);
+    s->q_del=_float32_unpack(tremoroggpack_read(opb,32),&s->q_delp);
+    s->q_bits=tremoroggpack_read(opb,4)+1;
+    s->q_seq=tremoroggpack_read(opb,1);
 
     s->q_del>>=s->q_bits;
     s->q_delp+=s->q_bits;
@@ -489,7 +489,7 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
 	s->q_val=alloca(sizeof(ogg_uint16_t)*quantvals);
 	if (!s->q_val) goto _eofout;
 	for(i=0;i<quantvals;i++)
-	  ((ogg_uint16_t *)s->q_val)[i]=(ogg_uint16_t)oggpack_read(opb,s->q_bits);
+	  ((ogg_uint16_t *)s->q_val)[i]=(ogg_uint16_t)tremoroggpack_read(opb,s->q_bits);
 
 	if(oggpack_eop(opb)){
 	  s->q_val=0; /* cleanup must not free alloca memory */
@@ -517,12 +517,12 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
 	  s->q_val=_ogg_malloc(quantvals);
 	  if (!s->q_val) goto _eofout;
 	  for(i=0;i<quantvals;i++)
-	    ((unsigned char *)s->q_val)[i]=(unsigned char)oggpack_read(opb,s->q_bits);
+	    ((unsigned char *)s->q_val)[i]=(unsigned char)tremoroggpack_read(opb,s->q_bits);
 	}else{
 	  s->q_val=_ogg_malloc(quantvals*2);
 	  if (!s->q_val) goto _eofout;
 	  for(i=0;i<quantvals;i++)
-	    ((ogg_uint16_t *)s->q_val)[i]=(ogg_uint16_t)oggpack_read(opb,s->q_bits);
+	    ((ogg_uint16_t *)s->q_val)[i]=(ogg_uint16_t)tremoroggpack_read(opb,s->q_bits);
 	}
 
 	if(oggpack_eop(opb))goto _eofout;
@@ -566,10 +566,10 @@ int vorbis_book_unpack(oggpack_buffer *opb,codebook *s){
 
       if(s->q_bits<=8){
 	for(i=0;i<s->used_entries*s->dim;i++)
-	  ((unsigned char *)(s->q_val))[i]=(unsigned char)oggpack_read(opb,s->q_bits);
+	  ((unsigned char *)(s->q_val))[i]=(unsigned char)tremoroggpack_read(opb,s->q_bits);
       }else{
 	for(i=0;i<s->used_entries*s->dim;i++)
-	  ((ogg_uint16_t *)(s->q_val))[i]=(ogg_uint16_t)oggpack_read(opb,s->q_bits);
+	  ((ogg_uint16_t *)(s->q_val))[i]=(ogg_uint16_t)tremoroggpack_read(opb,s->q_bits);
       }
     }
     break;
@@ -607,13 +607,13 @@ static inline ogg_uint32_t decode_packed_entry_number(codebook *book,
 						      oggpack_buffer *b){
   ogg_uint32_t chase=0;
   int  read=book->dec_maxlength;
-  long lok = oggpack_look(b,read),i;
+  long lok = tremoroggpack_look(b,read),i;
 
   while(lok<0 && read>1)
-    lok = oggpack_look(b, --read);
+    lok = tremoroggpack_look(b, --read);
 
   if(lok<0){
-    oggpack_adv(b,1); /* force eop */
+    tremoroggpack_adv(b,1); /* force eop */
     return -1;
   }
 
@@ -695,10 +695,10 @@ static inline ogg_uint32_t decode_packed_entry_number(codebook *book,
   }
 
   if(i<read){
-    oggpack_adv(b,i+1);
+    tremoroggpack_adv(b,i+1);
     return chase;
   }
-  oggpack_adv(b,read+1);
+  tremoroggpack_adv(b,read+1);
   return(-1);
 }
 #endif

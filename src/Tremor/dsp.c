@@ -147,10 +147,10 @@ long vorbis_packet_blocksize(vorbis_info *vi,ogg_packet *op){
   int modebits=0;
   int v=ci->modes;
  
-  oggpack_readinit(&opb,op->packet);
+  tremoroggpack_readinit(&opb,op->packet);
 
   /* Check the packet type */
-  if(oggpack_read(&opb,1)!=0){
+  if(tremoroggpack_read(&opb,1)!=0){
     /* Oops.  This is not an audio data packet */
     return(OV_ENOTAUDIO);
   }
@@ -161,7 +161,7 @@ long vorbis_packet_blocksize(vorbis_info *vi,ogg_packet *op){
   }
 
   /* read our mode and pre/post windowsize */
-  mode=oggpack_read(&opb,modebits);
+  mode=tremoroggpack_read(&opb,modebits);
   if(mode==-1)return(OV_EBADPACKET);
   return(ci->blocksizes[ci->mode_param[mode].blockflag]);
 }
@@ -182,16 +182,16 @@ int vorbis_dsp_synthesis(vorbis_dsp_state *vd,ogg_packet *op,int decodep){
   codec_setup_info     *ci=(codec_setup_info *)vi->codec_setup;
   int                   mode,i;
 
-  oggpack_readinit(&vd->opb,op->packet);
+  tremoroggpack_readinit(&vd->opb,op->packet);
 
   /* Check the packet type */
-  if(oggpack_read(&vd->opb,1)!=0){
+  if(tremoroggpack_read(&vd->opb,1)!=0){
     /* Oops.  This is not an audio data packet */
     return OV_ENOTAUDIO ;
   }
 
   /* read our mode and pre/post windowsize */
-  mode=oggpack_read(&vd->opb,ilog(ci->modes));
+  mode=tremoroggpack_read(&vd->opb,ilog(ci->modes));
   if(mode==-1 || mode>=ci->modes) return OV_EBADPACKET;
 
   /* shift information we still need from last window */
@@ -202,8 +202,8 @@ int vorbis_dsp_synthesis(vorbis_dsp_state *vd,ogg_packet *op,int decodep){
   
   if(vd->W){
     int temp;
-    oggpack_read(&vd->opb,1);
-    temp=oggpack_read(&vd->opb,1);
+    tremoroggpack_read(&vd->opb,1);
+    temp=tremoroggpack_read(&vd->opb,1);
     if(temp==-1) return OV_EBADPACKET;
   }
   

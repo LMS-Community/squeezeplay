@@ -45,7 +45,7 @@ ARCH = $(shell uname -m | grep i386)
 SRC_DIR=$(shell perl -e "use Cwd 'realpath'; print realpath('$(PWD)');")
 BASE_DIR = $(dir $(SRC_DIR))
 
-export BUILD_TOP=$(BASE_DIR)/build/osx
+export BUILD_TOP=$(BASE_DIR)build/osx
 
 export PREFIX=${BUILD_TOP}
 
@@ -310,7 +310,7 @@ clean:
 	-cd libpng-1.2.32; make distclean ; rm -rf x86; rm -rf x86_64; rm a.out
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libogg"
-	-cd libogg-1.2.2; make distclean; rm -rf src/x86; rm -rf src/x86_64; rm a.out
+	-cd libogg-1.2.2; make distclean; rm -rf src/x86; rm -rf src/x86_64; rm -rf x86; rm -rf x86_64; rm a.out
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libflac"
 	-cd flac-1.2.1; make distclean ; rm -rf x86; rm -rf x86_64; rm -rf src/libFLAC/x86_64; rm -rf src/libFLAC/x86; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;

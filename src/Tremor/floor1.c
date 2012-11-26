@@ -90,11 +90,11 @@ vorbis_info_floor *floor1_info_unpack (vorbis_info *vi,oggpack_buffer *opb){
 
   vorbis_info_floor1 *info=(vorbis_info_floor1 *)_ogg_calloc(1,sizeof(*info));
   /* read partitions */
-  info->partitions=oggpack_read(opb,5); /* only 0 to 31 legal */
+  info->partitions=tremoroggpack_read(opb,5); /* only 0 to 31 legal */
   info->partitionclass=
     (char *)_ogg_malloc(info->partitions*sizeof(*info->partitionclass));
   for(j=0;j<info->partitions;j++){
-    info->partitionclass[j]=oggpack_read(opb,4); /* only 0 to 15 legal */
+    info->partitionclass[j]=tremoroggpack_read(opb,4); /* only 0 to 15 legal */
     if(maxclass<info->partitionclass[j])maxclass=info->partitionclass[j];
   }
 
@@ -102,24 +102,24 @@ vorbis_info_floor *floor1_info_unpack (vorbis_info *vi,oggpack_buffer *opb){
   info->class=
     (floor1class *)_ogg_malloc((maxclass+1)*sizeof(*info->class));
   for(j=0;j<maxclass+1;j++){
-    info->class[j].class_dim=oggpack_read(opb,3)+1; /* 1 to 8 */
-    info->class[j].class_subs=oggpack_read(opb,2); /* 0,1,2,3 bits */
+    info->class[j].class_dim=tremoroggpack_read(opb,3)+1; /* 1 to 8 */
+    info->class[j].class_subs=tremoroggpack_read(opb,2); /* 0,1,2,3 bits */
     if(oggpack_eop(opb)<0) goto err_out;
     if(info->class[j].class_subs)
-      info->class[j].class_book=oggpack_read(opb,8);
+      info->class[j].class_book=tremoroggpack_read(opb,8);
     else
       info->class[j].class_book=0;
     if(info->class[j].class_book>=ci->books)goto err_out;
     for(k=0;k<(1<<info->class[j].class_subs);k++){
-      info->class[j].class_subbook[k]=oggpack_read(opb,8)-1;
+      info->class[j].class_subbook[k]=tremoroggpack_read(opb,8)-1;
       if(info->class[j].class_subbook[k]>=ci->books &&
 	 info->class[j].class_subbook[k]!=0xff)goto err_out;
     }
   }
 
   /* read the post list */
-  info->mult=oggpack_read(opb,2)+1;     /* only 1,2,3,4 legal now */
-  rangebits=oggpack_read(opb,4);
+  info->mult=tremoroggpack_read(opb,2)+1;     /* only 1,2,3,4 legal now */
+  rangebits=tremoroggpack_read(opb,4);
 
   for(j=0,k=0;j<info->partitions;j++)
     count+=info->class[info->partitionclass[j]].class_dim;
@@ -136,7 +136,7 @@ vorbis_info_floor *floor1_info_unpack (vorbis_info *vi,oggpack_buffer *opb){
   for(j=0,k=0;j<info->partitions;j++){
     count+=info->class[info->partitionclass[j]].class_dim;
     for(;k<count;k++){
-      int t=info->postlist[k+2]=oggpack_read(opb,rangebits);
+      int t=info->postlist[k+2]=tremoroggpack_read(opb,rangebits);
       if(t>=(1<<rangebits))goto err_out;
     }
   }
@@ -271,9 +271,9 @@ ogg_int32_t *floor1_inverse1(vorbis_dsp_state *vd,vorbis_info_floor *in,
   int quant_q=quant_look[info->mult-1];
 
   /* unpack wrapped/predicted values from stream */
-  if(oggpack_read(&vd->opb,1)==1){
-    fit_value[0]=oggpack_read(&vd->opb,ilog(quant_q-1));
-    fit_value[1]=oggpack_read(&vd->opb,ilog(quant_q-1));
+  if(tremoroggpack_read(&vd->opb,1)==1){
+    fit_value[0]=tremoroggpack_read(&vd->opb,ilog(quant_q-1));
+    fit_value[1]=tremoroggpack_read(&vd->opb,ilog(quant_q-1));
 
     /* partition by partition */
     /* partition by partition */

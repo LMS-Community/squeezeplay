@@ -40,26 +40,26 @@ static unsigned long mask[]=
 #ifdef ARM_LITTLE_ENDIAN
 
 #ifdef DEBUGGING_BITWISE
-extern void oggpack_readinitARM(oggpack_buffer *b,ogg_reference *r);
+extern void tremoroggpack_readinitARM(oggpack_buffer *b,ogg_reference *r);
 
-void oggpack_readinit(oggpack_buffer *b,ogg_reference *r){
-    oggpack_readinitARM(b,r);
+void tremoroggpack_readinit(oggpack_buffer *b,ogg_reference *r){
+    tremoroggpack_readinitARM(b,r);
     //fprintf(stderr, "Init: buffer=(%d,%x,%d,%d) %08x%08x\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord, b->count,
     //        b->ptr[1], b->ptr[0]);
     //fflush(stderr);
 }
 
-extern long oggpack_lookARM(oggpack_buffer *b,int bits);
+extern long tremoroggpack_lookARM(oggpack_buffer *b,int bits);
 
-long oggpack_look(oggpack_buffer *b,int bits){
+long tremoroggpack_look(oggpack_buffer *b,int bits){
     long l;
 
     //fprintf(stderr, "PreLook: buffer=(%x,%x,%x) %08x%08x (%d bits)\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord,
     //        b->ptr[1], b->ptr[0], bits);
     //fflush(stderr);
-    l = oggpack_lookARM(b,bits);
+    l = tremoroggpack_lookARM(b,bits);
     //fprintf(stderr, "Look: buffer=(%d,%x,%d,%d) %08x%08x (%d bits) (result=%x)\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord, b->count,
     //        b->ptr[1], b->ptr[0], bits, l);
@@ -68,31 +68,31 @@ long oggpack_look(oggpack_buffer *b,int bits){
     return l;
 }
 
-extern void oggpack_advARM(oggpack_buffer *b,int bits);
+extern void tremoroggpack_advARM(oggpack_buffer *b,int bits);
 
-void oggpack_adv(oggpack_buffer *b,int bits){
+void tremoroggpack_adv(oggpack_buffer *b,int bits){
     //fprintf(stderr, "Adv before: buffer=(%x,%x,%x) %08x%08x (%d bits)\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord,
     //        b->ptr[1], b->ptr[0],bits);
     //fflush(stderr);
-    oggpack_advARM(b,bits);
+    tremoroggpack_advARM(b,bits);
     //fprintf(stderr, "Adv: buffer=(%d,%x,%d,%d) %08x%08x\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord, b->count,
     //        b->ptr[1], b->ptr[0]);
     //fflush(stderr);
 }
 
-extern long oggpack_readARM(oggpack_buffer *b,int bits);
+extern long tremoroggpack_readARM(oggpack_buffer *b,int bits);
 
 /* bits <= 32 */
-long oggpack_read(oggpack_buffer *b,int bits){
+long tremoroggpack_read(oggpack_buffer *b,int bits){
     long l;
 
     //fprintf(stderr, "PreRead: buffer=(%d,%x,%d,%d) %08x%08x (%d bits)\n",
     //        b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord, b->count,
     //        b->ptr[1], b->ptr[0], bits);
     //fflush(stderr);
-    l = oggpack_readARM(b,bits);
+    l = tremoroggpack_readARM(b,bits);
     //fprintf(stderr, "Read: buffer=(%d,%x,%d,%d) %08x%08x (%d bits) (result=%x)\n",
     //       b->bitsLeftInSegment, b->ptr, b->bitsLeftInWord, b->count,
     //       b->ptr[1], b->ptr[0], bits, l);
@@ -111,7 +111,7 @@ int oggpack_eop(oggpack_buffer *b){
   return ret;
 }
 
-long oggpack_bytes(oggpack_buffer *b){
+long tremoroggpack_bytes(oggpack_buffer *b){
   long ret;
   if(b->bitsLeftInSegment<0) ret = b->count+b->head->length;
   else ret = b->count + b->head->length - (b->bitsLeftInSegment)/8;
@@ -121,7 +121,7 @@ long oggpack_bytes(oggpack_buffer *b){
   return ret;
 }
 
-long oggpack_bits(oggpack_buffer *b){
+long tremoroggpack_bits(oggpack_buffer *b){
   long ret;
   if(b->bitsLeftInSegment<0) ret=(b->count+b->head->length)*8;
   else ret = b->count*8 + b->head->length*8 - b->bitsLeftInSegment;
@@ -162,7 +162,7 @@ static void _span(oggpack_buffer *b){
   }
 }
 
-void oggpack_readinit(oggpack_buffer *b,ogg_reference *r){
+void tremoroggpack_readinit(oggpack_buffer *b,ogg_reference *r){
   memset(b,0,sizeof(*b));
 
   b->tail=b->head=r;
@@ -187,7 +187,7 @@ void oggpack_readinit(oggpack_buffer *b,ogg_reference *r){
                       }
 
 /* Read in bits without advancing the bitptr; bits <= 32 */
-long oggpack_look(oggpack_buffer *b,int bits){
+long tremoroggpack_look(oggpack_buffer *b,int bits){
   unsigned long m=mask[bits];
   unsigned long ret;
   int BITS = bits;
@@ -255,7 +255,7 @@ long oggpack_look(oggpack_buffer *b,int bits){
 }
 
 /* limited to 32 at a time */
-void oggpack_adv(oggpack_buffer *b,int bits){
+void tremoroggpack_adv(oggpack_buffer *b,int bits){
     int BITS=bits;
   bits+=b->headbit;
   b->headbit=bits&7;
@@ -279,7 +279,7 @@ int oggpack_eop(oggpack_buffer *b){
   return ret;
 }
 
-long oggpack_bytes(oggpack_buffer *b){
+long tremoroggpack_bytes(oggpack_buffer *b){
   long ret;
   if(b->headend<0) ret = b->count+b->head->length;
   ret = b->count + b->head->length-b->headend + (b->headbit+7)/8;
@@ -292,7 +292,7 @@ long oggpack_bytes(oggpack_buffer *b){
   return ret;
 }
 
-long oggpack_bits(oggpack_buffer *b){
+long tremoroggpack_bits(oggpack_buffer *b){
   long ret;
   if(b->headend<0) ret = (b->count+b->head->length)*8;
   else ret = (b->count + b->head->length-b->headend)*8 + b->headbit;
@@ -306,9 +306,9 @@ long oggpack_bits(oggpack_buffer *b){
 }
 
 /* bits <= 32 */
-long oggpack_read(oggpack_buffer *b,int bits){
-  long ret=oggpack_look(b,bits);
-  oggpack_adv(b,bits);
+long tremoroggpack_read(oggpack_buffer *b,int bits){
+  long ret=tremoroggpack_look(b,bits);
+  tremoroggpack_adv(b,bits);
   return(ret);
 }
 
@@ -366,17 +366,17 @@ void cliptest(unsigned long *b,int vals,int bits,int *comp,int compsize){
     or->buffer->data[i]= comp[i];
   or->length=i;
 
-  oggpack_readinit(&r,or);
+  tremoroggpack_readinit(&r,or);
   for(i=0;i<vals;i++){
     unsigned long test;
     int tbit=bits?bits:ilog(b[i]);
-    if((test=oggpack_look(&r,tbit))==0xffffffff)
+    if((test=tremoroggpack_look(&r,tbit))==0xffffffff)
       report("out of data!\n");
     if(test!=(b[i]&mask[tbit])){
       fprintf(stderr,"%ld) %lx %lx\n",i,(b[i]&mask[tbit]),test);
       report("looked at incorrect value!\n");
     }
-    if((test=oggpack_read(&r,tbit))==0xffffffff){
+    if((test=tremoroggpack_read(&r,tbit))==0xffffffff){
       report("premature end of data when reading!\n");
     }
     if(test!=(b[i]&mask[tbit])){
@@ -385,14 +385,14 @@ void cliptest(unsigned long *b,int vals,int bits,int *comp,int compsize){
     }
     bitcount+=tbit;
 
-    if(bitcount!=oggpack_bits(&r))
+    if(bitcount!=tremoroggpack_bits(&r))
       report("wrong number of bits while reading!\n");
-    if((bitcount+7)/8!=oggpack_bytes(&r))
+    if((bitcount+7)/8!=tremoroggpack_bytes(&r))
       report("wrong number of bytes while reading!\n");
 
   }
-  if(oggpack_bytes(&r)!=(bitcount+7)/8){
-      fprintf(stderr, "%d vs %d\n", oggpack_bytes(&r), (bitcount+7)/8);
+  if(tremoroggpack_bytes(&r)!=(bitcount+7)/8){
+      fprintf(stderr, "%d vs %d\n", tremoroggpack_bytes(&r), (bitcount+7)/8);
       report("leftover bytes after read!\n");
   }
   ogg_buffer_release(or);
@@ -402,27 +402,27 @@ void _end_verify(int count){
   int i;
 
   /* are the proper number of bits left over? */
-  int leftover=count*8-oggpack_bits(&o);
+  int leftover=count*8-tremoroggpack_bits(&o);
   if(leftover>7)
     report("\nERROR: too many bits reported left over.\n");
 
   /* does reading to exactly byte alignment *not* trip EOF? */
-  if(oggpack_read(&o,leftover)==-1)
+  if(tremoroggpack_read(&o,leftover)==-1)
     report("\nERROR: read to but not past exact end tripped EOF.\n");
-  if(oggpack_bits(&o)!=count*8)
+  if(tremoroggpack_bits(&o)!=count*8)
     report("\nERROR: read to but not past exact end reported bad bitcount.\n");
 
   /* does EOF trip properly after a single additional bit? */
-  if(oggpack_read(&o,1)!=-1)
+  if(tremoroggpack_read(&o,1)!=-1)
     report("\nERROR: read past exact end did not trip EOF.\n");
-  if(oggpack_bits(&o)!=count*8)
+  if(tremoroggpack_bits(&o)!=count*8)
     report("\nERROR: read past exact end reported bad bitcount.\n");
 
   /* does EOF stay set over additional bit reads? */
   for(i=0;i<=32;i++){
-    if(oggpack_read(&o,i)!=-1)
+    if(tremoroggpack_read(&o,i)!=-1)
       report("\nERROR: EOF did not stay set on stream.\n");
-    if(oggpack_bits(&o)!=count*8)
+    if(tremoroggpack_bits(&o)!=count*8)
       report("\nERROR: read past exact end reported bad bitcount.\n");
   }
 }
@@ -431,42 +431,42 @@ void _end_verify2(int count){
   int i;
 
   /* are the proper number of bits left over? */
-  int leftover=count*8-oggpack_bits(&o);
+  int leftover=count*8-tremoroggpack_bits(&o);
   if(leftover>7)
     report("\nERROR: too many bits reported left over.\n");
 
   /* does reading to exactly byte alignment *not* trip EOF? */
-  oggpack_adv(&o,leftover);
+  tremoroggpack_adv(&o,leftover);
 #ifdef ARM_LITTLE_ENDIAN
     if(o.bitsLeftInSegment!=0)
 #else
   if(o.headend!=0)
 #endif
     report("\nERROR: read to but not past exact end tripped EOF.\n");
-  if(oggpack_bits(&o)!=count*8)
+  if(tremoroggpack_bits(&o)!=count*8)
     report("\nERROR: read to but not past exact end reported bad bitcount.\n");
 
   /* does EOF trip properly after a single additional bit? */
-  oggpack_adv(&o,1);
+  tremoroggpack_adv(&o,1);
 #ifdef ARM_LITTLE_ENDIAN
     if(o.bitsLeftInSegment>=0)
 #else
   if(o.headend>=0)
 #endif
     report("\nERROR: read past exact end did not trip EOF.\n");
-  if(oggpack_bits(&o)!=count*8)
+  if(tremoroggpack_bits(&o)!=count*8)
     report("\nERROR: read past exact end reported bad bitcount.\n");
 
   /* does EOF stay set over additional bit reads? */
   for(i=0;i<=32;i++){
-    oggpack_adv(&o,i);
+    tremoroggpack_adv(&o,i);
 #ifdef ARM_LITTLE_ENDIAN
     if(o.bitsLeftInSegment>=0)
 #else
     if(o.headend>=0)
 #endif
       report("\nERROR: EOF did not stay set on stream.\n");
-    if(oggpack_bits(&o)!=count*8)
+    if(tremoroggpack_bits(&o)!=count*8)
       report("\nERROR: read past exact end reported bad bitcount.\n");
   }
 }
@@ -580,20 +580,20 @@ int main(void){
     or->buffer->data[i*4+3]  = (large[i]>>24)&0xff;
   }
   or->length=test2size*4;
-  oggpack_readinit(&r,or);
+  tremoroggpack_readinit(&r,or);
   for(i=0;i<test2size;i++){
     unsigned long test;
-    if((test=oggpack_look(&r,32))==0xffffffffUL)report("out of data. failed!");
+    if((test=tremoroggpack_look(&r,32))==0xffffffffUL)report("out of data. failed!");
     if(test!=large[i]){
       fprintf(stderr,"%ld != %ld (%lx!=%lx):",test,large[i],
               test,large[i]);
       report("read incorrect value!\n");
     }
-    oggpack_adv(&r,32);
+    tremoroggpack_adv(&r,32);
   }
   ogg_buffer_release(or);
-  if(oggpack_bytes(&r)!=test2size*4){
-    fprintf(stderr, "%d vs %d\n", oggpack_bytes(&r), test2size*4);
+  if(tremoroggpack_bytes(&r)!=test2size*4){
+    fprintf(stderr, "%d vs %d\n", tremoroggpack_bytes(&r), test2size*4);
     report("leftover bytes after read!\n");
   }
   fprintf(stderr,"ok.");
@@ -616,15 +616,15 @@ int main(void){
     ogg_buffer lob={dda,8,0,{0}};
     ogg_reference lor={&lob,0,8,0};
 
-    oggpack_readinit(&r,&lor);
+    tremoroggpack_readinit(&r,&lor);
     for(i=0;i<64;i++){
-      if(oggpack_read(&r,1)<0){
+      if(tremoroggpack_read(&r,1)<0){
         fprintf(stderr,"failed; got -1 prematurely.\n");
         exit(1);
       }
     }
-    if(oggpack_look(&r,1)!=-1 ||
-       oggpack_read(&r,1)!=-1){
+    if(tremoroggpack_look(&r,1)!=-1 ||
+       tremoroggpack_read(&r,1)!=-1){
       fprintf(stderr,"failed; read past end without -1.\n");
       exit(1);
     }
@@ -635,22 +635,22 @@ int main(void){
     ogg_reference lor={&lob,0,8,0};
     unsigned long test;
 
-    oggpack_readinit(&r,&lor);
-    if((test=oggpack_read(&r,30))==0xffffffffUL ||
-       (test=oggpack_read(&r,16))==0xffffffffUL){
+    tremoroggpack_readinit(&r,&lor);
+    if((test=tremoroggpack_read(&r,30))==0xffffffffUL ||
+       (test=tremoroggpack_read(&r,16))==0xffffffffUL){
       fprintf(stderr,"failed 2; got -1 prematurely.\n");
       exit(1);
     }
 
-    if((test=oggpack_look(&r,18))==0xffffffffUL){
+    if((test=tremoroggpack_look(&r,18))==0xffffffffUL){
       fprintf(stderr,"failed 3; got -1 prematurely.\n");
       exit(1);
     }
-    if((test=oggpack_look(&r,19))!=0xffffffffUL){
+    if((test=tremoroggpack_look(&r,19))!=0xffffffffUL){
       fprintf(stderr,"failed; read past end without -1.\n");
       exit(1);
     }
-    if((test=oggpack_look(&r,32))!=0xffffffffUL){
+    if((test=tremoroggpack_look(&r,32))!=0xffffffffUL){
       fprintf(stderr,"failed; read past end without -1.\n");
       exit(1);
     }
@@ -745,24 +745,24 @@ int main(void){
           exit(1);
         }
 
-        oggpack_readinit(&o,or);
+        tremoroggpack_readinit(&o,or);
 
         /* verify bit count */
-        if(oggpack_bits(&o)!=0){
+        if(tremoroggpack_bits(&o)!=0){
           fprintf(stderr,"\nERROR: Read bitcounter not zero!\n");
           exit(1);
         }
-        if(oggpack_bytes(&o)!=0){
+        if(tremoroggpack_bytes(&o)!=0){
           fprintf(stderr,"\nERROR: Read bytecounter not zero!\n");
           exit(1);
         }
 
         bitcount=bitoffset;
-        oggpack_read(&o,bitoffset);
+        tremoroggpack_read(&o,bitoffset);
 
         /* read and compare to original list */
         for(j=begin;j<begin+ilen;j++){
-	  temp=oggpack_read(&o,len[j]);
+	  temp=tremoroggpack_read(&o,len[j]);
           if(temp==0xffffffffUL){
             fprintf(stderr,"\nERROR: End of stream too soon! word: %ld,%d\n",
                     j-begin,ilen);
@@ -775,14 +775,14 @@ int main(void){
             exit(1);
           }
           bitcount+=len[j];
-          if(oggpack_bits(&o)!=bitcount){
+          if(tremoroggpack_bits(&o)!=bitcount){
             fprintf(stderr,"\nERROR: Read bitcounter %d != %ld!\n",
-                    bitcount,oggpack_bits(&o));
+                    bitcount,tremoroggpack_bits(&o));
             exit(1);
           }
-          if(oggpack_bytes(&o)!=(bitcount+7)/8){
+          if(tremoroggpack_bytes(&o)!=(bitcount+7)/8){
             fprintf(stderr,"\nERROR: Read bytecounter %d != %ld!\n",
-                    (bitcount+7)/8,oggpack_bytes(&o));
+                    (bitcount+7)/8,tremoroggpack_bytes(&o));
             exit(1);
           }
 
@@ -790,13 +790,13 @@ int main(void){
         _end_verify(count);
 
         /* look/adv version */
-        oggpack_readinit(&o,or);
+        tremoroggpack_readinit(&o,or);
         bitcount=bitoffset;
-        oggpack_adv(&o,bitoffset);
+        tremoroggpack_adv(&o,bitoffset);
 
         /* read and compare to original list */
         for(j=begin;j<begin+ilen;j++){
-	  temp=oggpack_look(&o,len[j]);
+	  temp=tremoroggpack_look(&o,len[j]);
 
           if(temp==0xffffffffUL){
             fprintf(stderr,"\nERROR: End of stream too soon! word: %ld\n",
@@ -809,16 +809,16 @@ int main(void){
                     values[j]&mask[len[j]],temp,j-begin,len[j]);
             exit(1);
           }
-	  oggpack_adv(&o,len[j]);
+	  tremoroggpack_adv(&o,len[j]);
           bitcount+=len[j];
-          if(oggpack_bits(&o)!=bitcount){
+          if(tremoroggpack_bits(&o)!=bitcount){
             fprintf(stderr,"\nERROR: Look/Adv bitcounter %d != %ld!\n",
-                    bitcount,oggpack_bits(&o));
+                    bitcount,tremoroggpack_bits(&o));
             exit(1);
           }
-          if(oggpack_bytes(&o)!=(bitcount+7)/8){
+          if(tremoroggpack_bytes(&o)!=(bitcount+7)/8){
             fprintf(stderr,"\nERROR: Look/Adv bytecounter %d != %ld!\n",
-                    (bitcount+7)/8,oggpack_bytes(&o));
+                    (bitcount+7)/8,tremoroggpack_bytes(&o));
             exit(1);
           }
 
