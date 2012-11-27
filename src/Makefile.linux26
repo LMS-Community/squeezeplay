@@ -70,7 +70,7 @@ zlib: zlib-1.2.7/Makefile
 
 # freetype
 freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure --enable-shared ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
@@ -188,8 +188,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
-app: portaudio flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
+app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -198,9 +198,16 @@ portaudio_v19_1360/Makefile:
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
 
+# libogg
+libogg-1.2.2/Makefile:
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+
+libogg: libogg-1.2.2/Makefile
+	cd libogg-1.2.2; make && make install
+
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --disable-xmms-plugin --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd flac-1.2.1; ./configure --enable-shared=no --disable-oggtest --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -324,6 +331,7 @@ clean:
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
+	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	-cd squeezeplay; make distclean; rm src/version.h
