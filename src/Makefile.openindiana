@@ -6,6 +6,7 @@
 #
 # These steps are required for a successful build
 #
+# Revision 384+ required.
 # svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
 #
 # cp -p squeezeplay/src/audio/decode/decode_portaudio_v18.c squeezeplay/src/audio/decode/decode_portaudio.c
@@ -262,8 +263,9 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
-	cd ${PREFIX} && rm -rf man
-	cd ${PREFIX}/share && rm -rf man
+	cd ${PREFIX} && gpatch -p1 -i ../../src/disable-server-version-check.patch
+	# cd ${PREFIX} && rm -rf man
+	# cd ${PREFIX}/share && rm -rf man
 	# cd ${PREFIX}/lib && rm -f *.la
 	cd /usr/sfw/lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
 
