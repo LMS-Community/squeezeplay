@@ -203,6 +203,7 @@ portaudio_v19/Makefile:
 
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
+	cd portaudio_v19; cp include/pa_mac_core.h $(BUILD_TOP)/include/
 
 # libogg
 libogg-1.2.2/Makefile:
@@ -371,7 +372,7 @@ clean:
 	-cd luamd5; make MYNAME=md5 clean; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: Build dir"
-	-cd $(BASE_DIR)/build; rm -rf osx
+	-cd $(BASE_DIR)build; rm -rf osx
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: generated dir"
 	-rm -rf generated
