@@ -12,12 +12,13 @@
 #include "audio/decode/decode.h"
 #include "audio/decode/decode_priv.h"
 
-
 #ifdef HAVE_LIBPORTAUDIO
 
 #include "portaudio.h"
+
 #if defined(__APPLE__) && defined(__MACH__)
 #include "pa_mac_core.h"
+static PaMacCoreStreamInfo macInfo;
 #endif
 
 /* Portaudio stream */
@@ -351,8 +352,14 @@ static void decode_portaudio_openstream(void) {
 			paFramesPerBufferUnspecified,
 			paPrimeOutputBuffersUsingStreamCallback,
 			callback,
-			NULL)) != paNoError) {
+			NULL)) != paNoError)
+	{
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+	}
+	else
+	{
+		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
+		LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
 	}
 
 	stream_sample_rate = set_sample_rate;
@@ -361,9 +368,6 @@ static void decode_portaudio_openstream(void) {
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
-
-	LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-	LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
 
 	if ((err = Pa_StartStream(stream)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
@@ -378,9 +382,6 @@ static int decode_portaudio_init(lua_State *L) {
 	int i;
 	const PaDeviceInfo *device_info;
 	const PaHostApiInfo *host_info;
-#if defined(__APPLE__) && defined(__MACH__)
-	PaMacCoreStreamInfo macInfo;
-#endif
 	const char *padevname;
 	const char *paapiname;
 	int devnamelen;
@@ -405,7 +406,7 @@ static int decode_portaudio_init(lua_State *L) {
 	PaMacCore_SetupStreamInfo(&macInfo, paMacCorePro);
 	outputParam.hostApiSpecificStreamInfo = &macInfo;
 
-	LOG_INFO(log_audio_output, "Mac CoreAudio Pro Mode enabled" );
+	LOG_INFO(log_audio_output, "CoreAudio Pro Mode enabled" );
 #endif
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
