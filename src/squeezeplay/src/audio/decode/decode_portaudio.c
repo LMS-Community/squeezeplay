@@ -502,7 +502,7 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pamaxrate != NULL )
 	{
 		user_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
-		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 192000L ) )
+		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 384000L ) )
 			user_pamaxrate = 48000;
 	}
 	else

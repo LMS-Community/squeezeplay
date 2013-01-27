@@ -8,7 +8,7 @@
 #
 # sudo apt-get install libx11-dev
 # sudo apt-get install libxext-dev
-# sudo apt-get install libreadline-gplv2-dev
+# sudo apt-get install libreadline-gplv2-dev (armhf) / libreadline-dev (armel)
 # sudo apt-get install libexpat1-dev
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
@@ -265,6 +265,7 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
+	cd ${PREFIX} && patch -p1 -i ../../src/disable-server-version-check.patch
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}

@@ -485,8 +485,8 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pabuffersize != NULL )
 	{
 		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
-		if ( ( paFramesPerBuffer < 8192L ) || ( paFramesPerBuffer > 262144L ) )
-			paFramesPerBuffer = 8192L;
+		if ( ( paFramesPerBuffer < 1024L ) || ( paFramesPerBuffer > 262144L ) )
+			paFramesPerBuffer = 1024L;
 	}
 
 	panumbufs = getenv("USEPANUMBEROFBUFFERS");
@@ -495,7 +495,7 @@ static int decode_portaudio_init(lua_State *L) {
 	{
 		paNumberOfBuffers = strtoul(panumbufs, NULL, 0);
 		if ( ( paNumberOfBuffers < 2L ) || ( paNumberOfBuffers > 32L ) )
-			paNumberOfBuffers = 3L;
+			paNumberOfBuffers = 2L;
 	}
 
 	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
@@ -506,7 +506,7 @@ static int decode_portaudio_init(lua_State *L) {
 	if ( pamaxrate != NULL )
 	{
 		user_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
-		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 192000L ) )
+		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 384000L ) )
 			user_pamaxrate = 48000;
 	}
 	else
