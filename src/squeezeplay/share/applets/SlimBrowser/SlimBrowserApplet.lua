@@ -134,6 +134,10 @@ local styleMap = {
 
 
 local _serverLinkFlag = false
+
+-- current playlist
+local _statusStep = false
+
 --==============================================================================
 -- Local functions
 --==============================================================================
@@ -355,8 +359,10 @@ local function _popStep()
 
 	local popped = table.remove(_stepStack)
 
-	-- Explicitly mark step element db as not used anymore to help GC cleanup
-	popped["db"] = nil
+	if not (_statusStep and popped == _statusStep) then
+		-- Explicitly mark step element db as not used anymore to help GC cleanup
+		popped["db"] = nil
+	end
 
 	-- Run GC explicitly to speed up process
 	Task("SlimBrowserPopStepGC", nil, function()
@@ -3487,7 +3493,6 @@ This section includes the volume and scanner popups.
 --]]
 
 
-local _statusStep = false
 local _emptyStep = false
 
 -- _requestStatus
