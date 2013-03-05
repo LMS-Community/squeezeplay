@@ -284,6 +284,15 @@ function lowBattery(self)
 	popup:setAutoHide(false)
 	popup:ignoreAllInputExcept({})
 
+	-- Allow turning off while on low batt screen
+	popup:addListener(EVENT_KEY_HOLD, function(event)
+		if event:getKeycode() == KEY_POWER then
+			popup:setAlwaysOnTop(false)
+			popup:setAutoHide(true)
+			self:poweroff()
+		end
+	end)
+
 	popup:show()
 
 	-- FIXME jive made sure the brightness was on (do we really
