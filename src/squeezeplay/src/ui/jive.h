@@ -376,6 +376,7 @@ void jive_surface_release(JiveSurface *srf);
 JiveSurface *jive_surface_rotozoomSurface(JiveSurface *srf, double angle, double zoom, int smooth);
 JiveSurface *jive_surface_zoomSurface(JiveSurface *srf, double zoomx, double zoomy, int smooth);
 JiveSurface *jive_surface_shrinkSurface(JiveSurface *srf, int factorx, int factory);
+JiveSurface *jive_surface_resize(JiveSurface *srf, int w, int h, bool keep_aspect);
 void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 col);
 void jive_surface_hlineColor(JiveSurface *srf, Sint16 x1, Sint16 x2, Sint16 y, Uint32 color);
 void jive_surface_vlineColor(JiveSurface *srf, Sint16 x, Sint16 y1, Sint16 y2, Uint32 color);
@@ -549,10 +550,12 @@ int jiveL_style_color(lua_State *L);
 int jiveL_style_array_color(lua_State *L);
 int jiveL_style_font(lua_State *L);
 
+int jiveL_surface_resize(lua_State *L);
 
 #define JIVEL_STACK_CHECK_BEGIN(L) { int _sc = lua_gettop((L));
 #define JIVEL_STACK_CHECK_ASSERT(L) assert(_sc == lua_gettop((L)));
 #define JIVEL_STACK_CHECK_END(L) JIVEL_STACK_CHECK_ASSERT(L) }
 
+void copyResampled (SDL_Surface *dst, SDL_Surface *src, int dstX, int dstY, int srcX, int srcY,	int dstW, int dstH, int srcW, int srcH);
 
 #endif // JIVE_H

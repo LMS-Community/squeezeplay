@@ -92,7 +92,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(testdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 testPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS) $(test_PROGRAMS)
-am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) log.$(OBJEXT)
+am_jive_OBJECTS = jive.$(OBJEXT) jive_debug.$(OBJEXT) resize.$(OBJEXT) log.$(OBJEXT)
 jive_OBJECTS = $(am_jive_OBJECTS)
 am__DEPENDENCIES_1 =
 jive_DEPENDENCIES = libui.la libdecode.la libnet.la \
@@ -351,6 +351,7 @@ testdir = $(bindir)
 jive_SOURCES = \
 	src/jive.c \
 	src/jive_debug.c \
+	src/resize.c \
 	src/log.c
 
 jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
@@ -522,6 +523,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_vorbis.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_debug.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_dns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_event.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jive_font.Plo@am__quote@
@@ -898,6 +900,20 @@ jive_debug.obj: src/jive_debug.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/jive_debug.c' object='jive_debug.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o jive_debug.obj `if test -f 'src/jive_debug.c'; then $(CYGPATH_W) 'src/jive_debug.c'; else $(CYGPATH_W) '$(srcdir)/src/jive_debug.c'; fi`
+
+resize.o: src/resize.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT resize.o -MD -MP -MF "$(DEPDIR)/resize.Tpo" -c -o resize.o `test -f 'src/resize.c' || echo '$(srcdir)/'`src/resize.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/resize.Tpo" "$(DEPDIR)/resize.Po"; else rm -f "$(DEPDIR)/resize.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/resize.c' object='resize.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o resize.o `test -f 'src/resize.c' || echo '$(srcdir)/'`src/resize.c
+
+resize.obj: src/resize.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT resize.obj -MD -MP -MF "$(DEPDIR)/resize.Tpo" -c -o resize.obj `if test -f 'src/resize.c'; then $(CYGPATH_W) 'src/resize.c'; else $(CYGPATH_W) '$(srcdir)/src/resize.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/resize.Tpo" "$(DEPDIR)/resize.Po"; else rm -f "$(DEPDIR)/resize.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/resize.c' object='resize.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o resize.obj `if test -f 'src/resize.c'; then $(CYGPATH_W) 'src/resize.c'; else $(CYGPATH_W) '$(srcdir)/src/resize.c'; fi`
 
 log.o: src/log.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT log.o -MD -MP -MF "$(DEPDIR)/log.Tpo" -c -o log.o `test -f 'src/log.c' || echo '$(srcdir)/'`src/log.c; \
