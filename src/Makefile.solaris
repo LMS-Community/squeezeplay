@@ -22,7 +22,7 @@ export BUILD_TOP=$(BASE_DIR)build/solaris
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC -DPA18API=1
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
 export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -248,7 +248,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; CFLAGS="-DSDL_FIFOS=1 ${CFLAGS}" LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --prefix=${PREFIX}
+	cd squeezeplay; CFLAGS="-DSDL_FIFOS=1 -DPA18API=1 ${CFLAGS}" LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install

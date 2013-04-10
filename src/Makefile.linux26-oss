@@ -27,7 +27,7 @@ export BUILD_TOP=$(BASE_DIR)build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC -DPA18API=1
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -253,7 +253,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; CFLAGS="-DPA18API=1 ${CFLAGS}" LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
