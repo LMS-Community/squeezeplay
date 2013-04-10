@@ -9,8 +9,6 @@
 # Revision 384+ required.
 # svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
 #
-# cp -p squeezeplay/src/audio/decode/decode_portaudio_v18.c squeezeplay/src/audio/decode/decode_portaudio.c
-#
 
 #
 # Absolute path to top of SQUEEZEPLAY directories
@@ -24,7 +22,7 @@ export BUILD_TOP=$(BASE_DIR)build/solaris
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -I/usr/sfw/include -D_POSIX_PTHREAD_SEMANTICS -s -fPIC -DPA18API=1
 export LDFLAGS=-s -lsocket -lresolv -lrt -L/opt/squeezeplay/lib -R/opt/squeezeplay/lib -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)

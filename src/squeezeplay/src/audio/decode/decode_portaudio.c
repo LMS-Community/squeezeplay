@@ -21,6 +21,28 @@
 static PaMacCoreStreamInfo macInfo;
 #endif
 
+#ifdef PA18API
+typedef int PaDeviceIndex;
+typedef double PaTime;
+
+typedef struct PaStreamParameters
+{
+	PaDeviceIndex device;
+	int channelCount;
+	PaSampleFormat sampleFormat;
+	PaTime suggestedLatency;
+
+} PaStreamParameters;
+
+static int paContinue=0; /* Signal that the stream should continue invoking the callback and processing audio. */
+static int paComplete=1; /* Signal that the stream should stop invoking the callback and finish once all output */
+			 /* samples have played. */
+
+static unsigned long paFramesPerBuffer = 8192L;
+static unsigned long paNumberOfBuffers = 3L;
+
+#endif /* PA18API */
+
 /* Portaudio stream */
 static PaStreamParameters outputParam;
 static PaStream *stream;
@@ -29,6 +51,32 @@ static PaStream *stream;
 static u32_t stream_sample_rate;
 
 static void decode_portaudio_openstream(void);
+
+static void finished_handler(void) {
+	mqueue_read_complete(&decode_mqueue);
+
+	decode_audio_lock();
+	decode_portaudio_openstream();
+	decode_audio_unlock();
+}
+
+/*
+ * This function is called when the stream needs to be reopened at a
+ * different sample rate.
+ */
+static void finished(void *userData) {
+	if (decode_audio->set_sample_rate) {
+		/* We can't change the sample rate in this thread, so queue a request for
+		* the decoder thread to service
+		*/
+		if (mqueue_write_request(&decode_mqueue, finished_handler, 0)) {
+			mqueue_write_complete(&decode_mqueue);
+		}
+		else {
+			LOG_DEBUG(log_audio_output, "Full message queue, dropped finished message");
+		}
+	}
+}
 
 #ifndef _WIN32
 static int strnicmp(const char *s1, const char *s2, size_t n)
@@ -50,12 +98,20 @@ static int strnicmp(const char *s1, const char *s2, size_t n)
  * This function is called by portaudio when the stream is active to request
  * audio samples
  */
+#ifndef PA18API
 static int callback(const void *inputBuffer,
 		    void *outputBuffer,
 		    unsigned long framesPerBuffer,
 		    const PaStreamCallbackTimeInfo *timeInfo,
 		    PaStreamCallbackFlags statusFlags,
 		    void *userData) {
+#else
+static int callback(void *inputBuffer,
+                    void *outputBuffer,
+                    unsigned long framesPerBuffer,
+                    PaTimestamp outTime,
+                    void *userData) {
+#endif /* PA18API */
 	size_t bytes_used, len, skip_bytes = 0, add_bytes = 0;
 	int add_silence_ms;
 	bool_t reached_start_point;
@@ -63,9 +119,11 @@ static int callback(const void *inputBuffer,
 	u32_t delay;
 	int ret = paContinue;
 
+#ifndef PA18API
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
 		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
 	}
+#endif /* PA18API */
 
 	// XXXX full port from ip3k
 
@@ -101,7 +159,11 @@ static int callback(const void *inputBuffer,
 
 	/* sync accurate playpoint */
 	decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
+#ifndef PA18API
 	delay = (timeInfo->outputBufferDacTime - Pa_GetStreamTime(stream)) * decode_audio->track_sample_rate;
+#else
+	delay = 0;
+#endif /* PA18API */
 
 	if (decode_audio->sync_elapsed_samples > delay) {
 		decode_audio->sync_elapsed_samples -= delay;
@@ -249,9 +311,13 @@ static int callback(const void *inputBuffer,
 		decode_audio->transition_gain_step = 0;
 		
 		if (decode_audio->track_sample_rate != stream_sample_rate) {
-			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n", stream_sample_rate, decode_audio->track_sample_rate);
+			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n",
+				stream_sample_rate, decode_audio->track_sample_rate);
 			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 			ret = paComplete; // will trigger the finished callback to change the samplerate
+#ifdef PA18API
+			finished (userData);
+#endif /* PA18API */
 		}
 	}
 
@@ -263,35 +329,6 @@ static int callback(const void *inputBuffer,
 
 	return ret;
 }
-
-
-static void finished_handler(void) {
-	mqueue_read_complete(&decode_mqueue);
-
-	decode_audio_lock();
-	decode_portaudio_openstream();
-	decode_audio_unlock();
-}
-
-
-/*
- * This function is called when the stream needs to be reopened at a
- * different sample rate.
- */
-static void finished(void *userData) {
-	if (decode_audio->set_sample_rate) {
-		/* We can't change the sample rate in this thread, so queue a request for
-		 * the decoder thread to service
-		 */
-		if (mqueue_write_request(&decode_mqueue, finished_handler, 0)) {
-			mqueue_write_complete(&decode_mqueue);
-		}
-		else {
-			LOG_DEBUG(log_audio_output, "Full message queue, dropped finished message");
-		}
-	}
-}
-
 
 static void decode_portaudio_start(void) {
 	LOG_DEBUG(log_audio_output, "decode_portaudio_start");
@@ -344,7 +381,8 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
-	if ((err = Pa_OpenStream(
+#ifndef PA18API
+	err = Pa_OpenStream(
 			&stream,
 			NULL,
 			&outputParam,
@@ -352,22 +390,48 @@ static void decode_portaudio_openstream(void) {
 			paFramesPerBufferUnspecified,
 			paPrimeOutputBuffersUsingStreamCallback,
 			callback,
-			NULL)) != paNoError)
+			NULL);
+#else
+	LOG_DEBUG(log_audio_output, "Setting sample rate %lu", set_sample_rate);
+
+        err = Pa_OpenStream(
+                        &stream,
+                        paNoDevice,
+                        0,
+                        0,
+                        NULL,
+                        outputParam.device,
+                        outputParam.channelCount,
+                        outputParam.sampleFormat,
+                        NULL,
+                        set_sample_rate,
+                        paFramesPerBuffer,
+                        paNumberOfBuffers,
+                        paNoFlag,
+                        callback,
+                        NULL);
+#endif /* PA18API */
+
+	if ( err == paNoError )
 	{
-		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+#ifndef PA18API
+		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
+		LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
+#endif /* PA18API */
 	}
 	else
 	{
-		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-		LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
+		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
 
 	stream_sample_rate = set_sample_rate;
 
+#ifndef PA18API
 	/* playout to the end of this stream before changing the sample rate */
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
 	}
+#endif /* PA18API */
 
 	if ((err = Pa_StartStream(stream)) != paNoError) {
 		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
@@ -378,27 +442,35 @@ static void decode_portaudio_openstream(void) {
 
 static int decode_portaudio_init(lua_State *L) {
 	PaError err;
-	int num_devices;
-	int i;
+	PaDeviceIndex num_devices;
+	PaDeviceIndex i;
 	const PaDeviceInfo *device_info;
-	const PaHostApiInfo *host_info;
 	const char *padevname;
-	const char *paapiname;
 	int devnamelen;
-	int apinamelen;
-	const char *palatency;
-	unsigned int userlatency;
 	const char *pamaxrate;
 	u32_t user_pamaxrate;
 	void *buf;
+#ifndef PA18API
+	const PaHostApiInfo *host_info;
+	const char *paapiname;
+	int apinamelen;
+	const char *palatency;
+	unsigned int userlatency;
+#else
+	PaDeviceIndex user_deviceid;
+	const char *padevid;
+	const char *pabuffersize;
+	const char *panumbufs;
+#endif /* PA18API */
 
 	if ((err = Pa_Initialize()) != paNoError) {
 		goto err0;
 	}
 
-	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
-
 	memset(&outputParam, 0, sizeof(outputParam));
+
+#ifndef PA18API
+	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
 
 #if defined(__APPLE__) && defined(__MACH__)
 	/* Enable CoreAudio Pro mode to avoid resampling, if possible */
@@ -407,10 +479,15 @@ static int decode_portaudio_init(lua_State *L) {
 	outputParam.hostApiSpecificStreamInfo = &macInfo;
 
 	LOG_INFO(log_audio_output, "CoreAudio Pro Mode enabled" );
-#endif
+#endif /* APPLE */
+#else
+	LOG_DEBUG(log_audio_output, "Portaudio version v18.1");
+#endif /* PA18API */
+
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
 
+#ifndef PA18API
 	padevname = getenv("USEPADEVICE");
 	paapiname = getenv("USEPAHOSTAPI");
 
@@ -480,7 +557,54 @@ static int decode_portaudio_init(lua_State *L) {
 			goto err0;
 		}
 	}
+#else
+	padevname = getenv("USEPADEVICE");
+	padevid  = getenv("USEPADEVICEID");
 
+	num_devices = Pa_CountDevices();
+
+	for (i = 0; i < num_devices; i++)
+	{
+		device_info = Pa_GetDeviceInfo(i);
+
+		LOG_WARN(log_audio_output, "%d: %s", i, device_info->name);
+
+		if ( (padevname != NULL) && (device_info->name != NULL) )
+		{
+			devnamelen = strlen (padevname);
+			if ( strnicmp(device_info->name, padevname, devnamelen) == 0 )
+			{
+				outputParam.device = i;
+				break;
+			}
+		}
+
+		if ( padevid != NULL )
+		{
+			user_deviceid = (PaDeviceIndex) strtoul ( padevid, NULL, 0 );
+			if ( user_deviceid == i )
+			{
+				outputParam.device = i;
+				break;
+			}
+		}
+	}
+
+	/* No match found, use default device */
+	if ( (i >= num_devices) || ( outputParam.device >= num_devices ) )
+	{
+		outputParam.device = Pa_GetDefaultOutputDeviceID();
+
+		/* no suitable audio device found */
+		if ( outputParam.device == paNoDevice )
+		{
+			LOG_WARN(log_audio_output,"No default audio device found-playback disabled");
+			return 0;
+		}
+	}
+#endif /* PA18API */
+
+#ifndef PA18API
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
 
@@ -496,6 +620,29 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
+#else
+	pabuffersize = getenv("USEPAFRAMESPERBUFFER");
+
+	if ( pabuffersize != NULL )
+	{
+		paFramesPerBuffer = strtoul(pabuffersize, NULL, 0);
+		if ( ( paFramesPerBuffer < 1024L ) || ( paFramesPerBuffer > 262144L ) )
+			paFramesPerBuffer = 1024L;
+	}
+
+	panumbufs = getenv("USEPANUMBEROFBUFFERS");
+
+	if ( panumbufs != NULL )
+	{
+		paNumberOfBuffers = strtoul(panumbufs, NULL, 0);
+		if ( ( paNumberOfBuffers < 2L ) || ( paNumberOfBuffers > 32L ) )
+			paNumberOfBuffers = 2L;
+	}
+
+	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
+		paNumberOfBuffers, paFramesPerBuffer);
+
+#endif /* PA18API */
 
 	pamaxrate = getenv("USEPAMAXSAMPLERATE");
 
