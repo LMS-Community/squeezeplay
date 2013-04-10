@@ -43,14 +43,11 @@ char *platform_get_home_dir() {
 
 char *platform_get_mac_address()
 {
-	int                     i;
 	struct  arpreq          parpreq;
-	struct  sockaddr_in     sa;
 	struct  sockaddr_in     *psa;
 	struct  in_addr         inaddr;
 	struct  hostent         *phost;
 	char                    hostname[MAXHOSTNAMELEN];
-	unsigned char           *ptr;
 	char                    **paddrs;
 	int			sock;
 	char 			*macaddr = NULL;
