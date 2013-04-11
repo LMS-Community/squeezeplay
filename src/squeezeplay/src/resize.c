@@ -104,6 +104,9 @@ void copyResampled (SDL_Surface *dst, SDL_Surface *src,
 				do {
 					double xportion;
 					double pcontribution;
+					Uint8 R, G, B, A;
+					Uint32 pixel;
+
 					if (floor2 (sx) == floor2 (sx1)) {
 						xportion = 1.0 - (sx - floor2 (sx));
 						if (xportion > sx2 - sx1) {
@@ -117,8 +120,7 @@ void copyResampled (SDL_Surface *dst, SDL_Surface *src,
 					}
 					pcontribution = xportion * yportion;
 
-					Uint32 pixel = *((Uint32 *)src->pixels + ((int) sy + srcY) * src->pitch / 4 + ((int) sx + srcX));
-					Uint8 R, G, B, A;
+					pixel = *((Uint32 *)src->pixels + ((int) sy + srcY) * src->pitch / 4 + ((int) sx + srcX));
 					SDL_GetRGBA(pixel, src->format, &R, &G, &B, &A);
 
 					red   += R * pcontribution;
