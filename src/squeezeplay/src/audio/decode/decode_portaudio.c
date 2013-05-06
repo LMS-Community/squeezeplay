@@ -38,8 +38,8 @@ static int paContinue=0; /* Signal that the stream should continue invoking the 
 static int paComplete=1; /* Signal that the stream should stop invoking the callback and finish once all output */
 			 /* samples have played. */
 
-static unsigned long paFramesPerBuffer = 8192L;
-static unsigned long paNumberOfBuffers = 3L;
+static unsigned long paFramesPerBuffer = 7350L;
+static unsigned long paNumberOfBuffers = 4L;
 
 #endif /* PA18API */
 
