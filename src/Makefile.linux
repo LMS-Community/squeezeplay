@@ -178,7 +178,7 @@ flac: flac-1.2.1/Makefile
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
 generated/${LIBMAD_DIR}/Makefile.am:
-	mkdir -p generated; cd generated; wget ftp://ftp.mars.org/pub/mpeg/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
+	mkdir -p generated; cd generated; wget http://duanep.dyndns.org/~paddockd/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
 
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
