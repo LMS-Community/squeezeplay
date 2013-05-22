@@ -6,7 +6,7 @@
 #
 # These steps are required for a successful build
 #
-# Revision 384+ required.
+# Revision 403+ required.
 # svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
 #
 
