@@ -1382,28 +1382,6 @@ int jiveL_perfwarn(lua_State *L) {
 	return 0;
 }
 
-int jiveL_surface_resize(lua_State *L) {
-	/*
-	  surface
-	  w
-	  h
-	*/
-	JiveSurface *srf1 = *(JiveSurface **)lua_touserdata(L, 1);
-	int w = luaL_checkint(L, 2);
-	int h = luaL_checkint(L, 3);
-	bool keep_aspect = lua_toboolean(L, 4);
-
-	JiveSurface *srf2 = jive_surface_resize(srf1, w, h, keep_aspect);
-	if (srf2) {
-		JiveSurface **p = (JiveSurface **)lua_newuserdata(L, sizeof(JiveSurface *));
-		*p = srf2;
-		luaL_getmetatable(L, "JiveSurface");
-		lua_setmetatable(L, -2);
-		return 1;
-	}
-
-	return 0;
-}
 
 static const struct luaL_Reg icon_methods[] = {
 	{ "getPreferredBounds", jiveL_icon_get_preferred_bounds },
@@ -1536,7 +1514,6 @@ static const struct luaL_Reg core_methods[] = {
 	{ "setBackground", jiveL_set_background },
 	{ "styleChanged", jiveL_style_changed },
 	{ "perfwarn", jiveL_perfwarn },
-	{ "resize", jiveL_surface_resize },
 	{ "_event", jiveL_event },
 	{ NULL, NULL }
 };

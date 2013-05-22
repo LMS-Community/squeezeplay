@@ -364,10 +364,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\audio\kiss_fft.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\log.c"
 				>
 			</File>
@@ -384,10 +380,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\resize.c"
-				>
-			</File>
-			<File
 				RelativePath="..\src\audio\streambuf.c"
 				>
 			</File>
@@ -401,6 +393,10 @@
 			</File>
 			<File
 				RelativePath="..\src\audio\decode\visualizer_vumeter.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\kiss_fft.c"
 				>
 			</File>
 		</Filter>

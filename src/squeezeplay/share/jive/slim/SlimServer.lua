@@ -893,7 +893,7 @@ local function _loadArtworkImage(self, cacheKey, chunk, size)
 	-- size than the original.  This is intentional so smaller cover
 	-- art will still fill the space properly on the Now Playing screen
 	if w ~= sizeW and h ~= sizeH then
-		local tmp = image:resize(sizeW, sizeH, true)
+		local tmp = image:rotozoom(0, sizeW / w, 1)
 		image:release()
 		image = tmp
 		if logcache:isDebug() then
@@ -1137,9 +1137,19 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 		 	url = url .. "." .. imgFormat
 		end
 	else
+		-- Use the SN image resizer on all remote URLs until SP can resize images with better quality
 		if string.find(iconId, "^http") then
-			-- fetch image direct (previously used SN image resizer)
-			url = iconId
+			-- Bug 13937, if URL references a private IP address, don't use imageproxy
+			-- Tests for a numeric IP first to avoid extra string.find calls
+			if string.find(iconId, "^http://%d") and (
+				string.find(iconId, "^http://192%.168") or
+				string.find(iconId, "^http://172%.16%.") or
+				string.find(iconId, "^http://10%.")
+			) then
+				url = iconId
+			else
+				url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. sizeW .. '&h=' .. sizeH .. '&f=' .. (imgFormat or '') .. '&u=' .. string.urlEncode(iconId)
+			end
 		else
 			url = string.gsub(iconId, "(.+)(%.%a+)", "%1" .. resizeFrag .. "%2")
 

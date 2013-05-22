@@ -239,7 +239,6 @@ endif
 jive_SOURCES = \
 	src/jive.c \
 	src/jive_debug.c \
-	src/resize.c \
 	src/log.c
 
 jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}

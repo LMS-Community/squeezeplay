@@ -1436,47 +1436,6 @@ JiveSurface *jive_surface_shrinkSurface(JiveSurface *srf, int factorx, int facto
 	return srf2;
 }
 
-JiveSurface *jive_surface_resize(JiveSurface *srf, int w, int h, bool keep_aspect) {
-	SDL_Surface *srf1_sdl;
-	JiveSurface *srf2;
-	int sw, sh, dw, dh;
-	int ox = 0, oy = 0;
-
-	srf1_sdl = _resolve_SDL_surface(srf);
-
-	if (!srf1_sdl) {
-		LOG_ERROR(log_ui, "Underlying sdl surface already freed, possibly with release()");
-		return NULL;
-	}
-
-	sw = srf1_sdl->w;
-	sh = srf1_sdl->h;
-
-	srf2 = jive_surface_newRGBA(w, h);
-
-	if (keep_aspect) {
-		float w_aspect = (float)w/(float)sw;
-		float h_aspect = (float)h/(float)sh;
-		if (w_aspect <= h_aspect) {
-			dw = w;
-			dh = sh * w_aspect;
-			oy = (h - dh)/2;
-		} else {
-			dh = h;
-			dw = sw * h_aspect;
-			ox = (w - dw)/2;
-		}
-	} else {
-		dh = h;
-		dw = w;
-	}
-
-	LOG_DEBUG(log_ui, "Resize ox: %d oy: %d dw: %d dh: %d sw: %d sh: %d", ox, oy, dw, dh, sw, sh);
-
-	copyResampled(srf2->sdl, srf1_sdl, ox, oy, 0, 0, dw, dh, sw, sh);
-
-	return srf2;
-}
 
 void jive_surface_pixelColor(JiveSurface *srf, Sint16 x, Sint16 y, Uint32 color) {
 	if (!srf->sdl) {
