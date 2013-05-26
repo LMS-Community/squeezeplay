@@ -13,7 +13,8 @@
 #
 # Absolute path to top of SQUEEZEPLAY directories
 #
-
+SED = gsed
+PATCH = gpatch
 SRC_DIR = $(realpath ${PWD})
 BASE_DIR = $(dir ${SRC_DIR})
 
@@ -29,7 +30,7 @@ export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
-ENABLE_PROFILING=--enable-shared=no --enable-static=yes
+ENABLE_PROFILING=--enable-shared=yes --enable-static=no
 USE_MMX=--disable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
@@ -61,11 +62,10 @@ generated:
 
 # zlib123
 zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --static --prefix=${PREFIX}
+	cd zlib-1.2.7; ./configure --prefix=${PREFIX}
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
-	# cd zlib-1.2.7; rm -f libz.la
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -178,12 +178,11 @@ luaprofiler:
 # just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
-	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
+	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
 	mkdir -p ${PREFIX}/lib
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
-	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
-	ranlib ${PREFIX}/lib/libtolua++.a
+	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
+
 
 #
 # squeezeplay
@@ -197,14 +196,14 @@ portaudio:
 	cd portaudio_v18_1; make -f Makefile.solaris install
 # libogg 	 
 libogg-1.2.2/Makefile: 	 
-	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libogg: libogg-1.2.2/Makefile 	 
 	cd libogg-1.2.2; make && make install
 
 # flac
 flac-1.2.1/Makefile:
-	cd flac-1.2.1; ./configure --enable-shared=no --disable-oggtest --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd flac-1.2.1; ./configure --disable-oggtest --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
@@ -260,10 +259,11 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
-	cd ${PREFIX} && gpatch -p1 -i ../../src/disable-server-version-check.patch
-	# cd ${PREFIX} && rm -rf man
-	# cd ${PREFIX}/share && rm -rf man
-	# cd ${PREFIX}/lib && rm -f *.la
+	cd ${PREFIX} && $(PATCH) -p1 -i ../../src/disable-server-version-check.patch
+	cd ${PREFIX}/lib && for f in *\.la; do $(SED) -i "s: -L/home/paddockd/source/squeezeplay/build/solaris/lib::g" $$f; done
+	cd ${PREFIX}/lib && for f in *\.la; do $(SED) -i "s: -R/home/paddockd/source/squeezeplay/build/solaris/lib: -R/opt/squeezeplay/lib:g" $$f; done
+	cd ${PREFIX}/lib && for f in *\.la; do $(SED) -i "s:libdir='/home/paddockd/source/squeezeplay/build/solaris/lib':libdir='/opt/squeezeplay/lib':" $$f; done
+	cd ${PREFIX}/lib && for f in *\.la; do $(SED) -i "s: /home/paddockd/source/squeezeplay/build/solaris/lib: /opt/squeezeplay/lib:g" $$f; done
 	cd /usr/lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
 
 squeezeplay_contrib: squeezeplay/Makefile
