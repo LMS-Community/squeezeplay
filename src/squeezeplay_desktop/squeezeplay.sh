@@ -28,14 +28,18 @@ export PATH=$PATH:$INSTALL_DIR/bin
 # Portaudio v18
 #
 # export USEPADEVICEID=null
-# export USEPAFRAMESPERBUFFER=8192
-# export USEPANUMBEROFBUFFERS=3
+# export USEPAFRAMESPERBUFFER=4096
+# export USEPANUMBEROFBUFFERS=4
 #
 # ALSA
 #
 # export USEALSADEVICE=default
 # export USEALSACAPTURE=default
 # export USEALSASAMPLESIZE=16
+#
+# Allow screensaver to start
+#
+# export SDL_VIDEO_ALLOW_SCREENSAVER=1
 #
 # Squeezeplay Debug
 #
