@@ -19,6 +19,7 @@
 #if defined(__APPLE__) && defined(__MACH__)
 #include "pa_mac_core.h"
 static PaMacCoreStreamInfo macInfo;
+static unsigned long streamInfoFlags;
 #endif
 
 #ifdef PA18API
@@ -470,16 +471,7 @@ static int decode_portaudio_init(lua_State *L) {
 	memset(&outputParam, 0, sizeof(outputParam));
 
 #ifndef PA18API
-	LOG_DEBUG(log_audio_output, "Portaudio version %s", Pa_GetVersionText());
-
-#if defined(__APPLE__) && defined(__MACH__)
-	/* Enable CoreAudio Pro mode to avoid resampling, if possible */
-
-	PaMacCore_SetupStreamInfo(&macInfo, paMacCorePro);
-	outputParam.hostApiSpecificStreamInfo = &macInfo;
-
-	LOG_INFO(log_audio_output, "CoreAudio Pro Mode enabled" );
-#endif /* APPLE */
+	LOG_DEBUG(log_audio_output, "Portaudio version v19.%d", Pa_GetVersion());
 #else
 	LOG_DEBUG(log_audio_output, "Portaudio version v18.1");
 #endif /* PA18API */
@@ -620,6 +612,24 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
+
+#if defined(__APPLE__) && defined(__MACH__)
+	/* Enable CoreAudio Pro mode to avoid resampling if possible, unless USEPAPLAYNICE defined */
+	if ( getenv("USEPAPLAYNICE") )
+	{
+		streamInfoFlags = paMacCorePlayNice;
+		LOG_INFO(log_audio_output, "CoreAudio PlayNice enabled" );
+	}
+	else
+	{
+		streamInfoFlags = paMacCorePro;
+		LOG_INFO(log_audio_output, "CoreAudio Pro Mode enabled" );
+	}
+
+	PaMacCore_SetupStreamInfo(&macInfo, streamInfoFlags);
+	outputParam.hostApiSpecificStreamInfo = &macInfo;
+
+#endif /* APPLE */
 #else
 	pabuffersize = getenv("USEPAFRAMESPERBUFFER");
 
