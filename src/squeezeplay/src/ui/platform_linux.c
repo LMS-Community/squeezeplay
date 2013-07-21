@@ -42,6 +42,7 @@ static char *iface_mac_address(int sock, char *name) {
     struct ifreq ifr;
     unsigned char *ptr;
     char *macaddr = NULL;
+    char *utmac;
 
     strcpy(ifr.ifr_name, name);
     if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0) {
@@ -60,7 +61,18 @@ static char *iface_mac_address(int sock, char *name) {
 
     macaddr = malloc(18);
     sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
-	
+
+    utmac = getenv("UTMAC");
+
+    if (utmac)
+    {
+        if ( strlen(utmac) == 17 )
+        {
+            strncpy ( macaddr, utmac, 17 );
+            macaddr[17] = '\0';
+        }
+    }
+
     return macaddr;
 }
 

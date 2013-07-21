@@ -51,6 +51,7 @@ char *platform_get_mac_address()
 	char                    **paddrs;
 	int			sock;
 	char 			*macaddr = NULL;
+	char 			*utmac;
 	int			status=0;
 
 	gethostname(hostname,  MAXHOSTNAMELEN);
@@ -87,6 +88,17 @@ char *platform_get_mac_address()
                 (unsigned char) parpreq.arp_ha.sa_data[3],
                 (unsigned char) parpreq.arp_ha.sa_data[4],
                 (unsigned char) parpreq.arp_ha.sa_data[5]);
+
+	utmac = getenv("UTMAC");
+
+	if (utmac)
+	{
+		if ( strlen(utmac) == 17 )
+		{
+			strncpy ( macaddr, utmac, 17 );
+			macaddr[17] = '\0';
+		}
+	}
 
 	return macaddr;
 }
