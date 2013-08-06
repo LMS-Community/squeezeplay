@@ -389,7 +389,7 @@ static void decode_portaudio_openstream(void) {
 			&outputParam,
 			set_sample_rate,
 			paFramesPerBufferUnspecified,
-			paPrimeOutputBuffersUsingStreamCallback,
+			paPrimeOutputBuffersUsingStreamCallback | paDitherOff,
 			callback,
 			NULL);
 #else
@@ -408,7 +408,7 @@ static void decode_portaudio_openstream(void) {
                         set_sample_rate,
                         paFramesPerBuffer,
                         paNumberOfBuffers,
-                        paNoFlag,
+                        paDitherOff,
                         callback,
                         NULL);
 #endif /* PA18API */
