@@ -642,18 +642,28 @@ int readL(lua_State *L) {
 
 				int t0len = (*(inbuf.pos+4) << 16) | (*(inbuf.pos+5) << 8) | *(inbuf.pos+6);
 				int read  = min(t0len, recv_chunksize) + 12;
+				unsigned ts = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
+				int header = 12;
+
+				if (ts == 0xffffff) {
+					if (inbuf.len >= 16) {
+						ts = (*(inbuf.pos+12) << 24) | (*(inbuf.pos+13) << 16) | (*(inbuf.pos+14) << 8) | *(inbuf.pos+15);
+					}
+					read += 4;
+					header += 4;
+				}
 				
 				if (inbuf.len >= read) {
 					entry->type = *(inbuf.pos + 7);
 					entry->len  = t0len;
-					entry->ts   = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
-					if (t0len == read - 12) {
-						dpos = inbuf.pos + 12;
+					entry->ts   = ts;
+					if (t0len == read - header) {
+						dpos = inbuf.pos + header;
 					} else {
 						if (entry->buf) free(entry->buf);
 						entry->buf  = malloc(t0len);
-						memcpy(entry->buf, inbuf.pos + 12, read - 12);
-						entry->rem  = t0len + 12 - read;
+						memcpy(entry->buf, inbuf.pos + header, read - header);
+						entry->rem  = t0len + header - read;
 					}
 					inbuf.pos += read;
 					inbuf.len -= read;
@@ -664,40 +674,60 @@ int readL(lua_State *L) {
 
 				int t1len = (*(inbuf.pos+4) << 16) | (*(inbuf.pos+5) << 8) | *(inbuf.pos+6);
 				int read  = min(t1len, recv_chunksize) + 8;
-				
+				unsigned dts = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
+				int header = 8;
+
+				if (dts == 0xffffff) {
+					if (inbuf.len >= 12) {
+						dts = (*(inbuf.pos+8) << 24) | (*(inbuf.pos+9) << 16) | (*(inbuf.pos+10) << 8) | *(inbuf.pos+11);
+					}
+					read += 4;
+					header += 4;
+				}
+
 				if (inbuf.len >= read) {
 					entry->type = *(inbuf.pos + 7);
 					entry->len  = t1len;
-					entry->dts  = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
+					entry->dts  = dts;
 					entry->ts   += entry->dts;
-					if (t1len == read - 8) {
-						dpos  = inbuf.pos + 8;
+					if (t1len == read - header) {
+						dpos  = inbuf.pos + header;
 					} else {
 						if (entry->buf) free(entry->buf);
 						entry->buf  = malloc(t1len);
-						memcpy(entry->buf, inbuf.pos + 8, read - 8);
-						entry->rem  = t1len + 8 - read;
+						memcpy(entry->buf, inbuf.pos + header, read - header);
+						entry->rem  = t1len + header - read;
 					}
 					inbuf.pos += read;
 					inbuf.len -= read;
 					readmore = true;
 				}
 				
-			} else if (fmt == 2 && entry->type) {
+			} else if (fmt == 2 && inbuf.len >= 4 && entry->type) {
 				
 				int t2len = entry->len;
 				int read  = min(t2len, recv_chunksize) + 4;
+				unsigned dts = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
+				int header = 4;
+
+				if (dts == 0xffffff) {
+					if (inbuf.len >= 8) {
+						dts = (*(inbuf.pos+4) << 24) | (*(inbuf.pos+5) << 16) | (*(inbuf.pos+6) << 8) | *(inbuf.pos+7);
+					}
+					read += 4;
+					header += 4;
+				}
 				
 				if (inbuf.len >= read) {
-					entry->dts  = (*(inbuf.pos+1) << 16) | (*(inbuf.pos+2) << 8) | *(inbuf.pos+3);
+					entry->dts  = dts;
 					entry->ts   += entry->dts;
-					if (t2len == read - 4) {
-						dpos  = inbuf.pos + 4;
+					if (t2len == read - header) {
+						dpos  = inbuf.pos + header;
 					} else {
 						if (entry->buf) free(entry->buf);
 						entry->buf  = malloc(t2len);
-						memcpy(entry->buf, inbuf.pos + 4, read - 4);
-						entry->rem  = t2len + 4 - read;
+						memcpy(entry->buf, inbuf.pos + header, read - header);
+						entry->rem  = t2len + header - read;
 					}
 					inbuf.pos += read;
 					inbuf.len -= read;
