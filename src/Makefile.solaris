@@ -55,7 +55,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib expat freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -66,6 +66,13 @@ zlib-1.2.7/Makefile:
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+
+# expat
+expat-2.0.1/Makefile:
+	cd expat-2.0.1; ./configure --prefix=${PREFIX}
+
+expat: expat-2.0.1/Makefile
+	cd expat-2.0.1; make; make prefix=${PREFIX} install
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -166,8 +173,8 @@ loop:
 	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
 
-luaexpat: lua
-	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
+luaexpat: lua expat
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=solaris && make install PREFIX=${PREFIX} PLATFORM=solaris
 
 luafilesystem:
 	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
@@ -211,7 +218,7 @@ flac: flac-1.2.1/Makefile
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
 generated/${LIBMAD_DIR}/Makefile.am:
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
+	mkdir -p generated; cd generated; wget http://duanep.dyndns.org/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
 
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
@@ -312,6 +319,7 @@ clean_generated:
 clean:
 	-rm -rf generated
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
+	-cd expat-2.0.1; make distclean
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
 	-cd jpeg-6b; make distclean
