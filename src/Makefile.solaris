@@ -119,11 +119,11 @@ sdl-ttf: SDL_ttf-2.0.8/Makefile
 	cd SDL_ttf-2.0.8; make && make install
 
 # sdl_gfx
-SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
+SDL_gfx-2.0.24/Makefile:
+	cd SDL_gfx-2.0.24; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
 
-sdl-gfx: SDL_gfx-2.0.15/Makefile
-	cd SDL_gfx-2.0.15; make && make install
+sdl-gfx: SDL_gfx-2.0.24/Makefile
+	cd SDL_gfx-2.0.24; make && make install
 
 
 #####
@@ -185,7 +185,7 @@ luaprofiler:
 # just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
+	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -R/opt/squeezeplay/lib -o libtolua++.so -I../../include -I${PREFIX}/include *.c
 	mkdir -p ${PREFIX}/lib
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
@@ -201,6 +201,7 @@ app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeez
 # portaudio
 portaudio:
 	cd portaudio_v18_1; make -f Makefile.solaris install
+
 # libogg 	 
 libogg-1.2.2/Makefile: 	 
 	cd libogg-1.2.2; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
@@ -218,7 +219,7 @@ flac: flac-1.2.1/Makefile
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
 generated/${LIBMAD_DIR}/Makefile.am:
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
+	mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
 
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
@@ -326,7 +327,7 @@ clean:
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
-	-cd SDL_gfx-2.0.15; make distclean
+	-cd SDL_gfx-2.0.24; make distclean
 	-cd lua-5.1.1; make clean
 	-cd luasocket-2.0.2; make clean PLATFORM=solaris
 	-cd slnunicode-1.1; make clean PLATFORM=linux
