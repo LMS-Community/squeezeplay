@@ -195,8 +195,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
-app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg
+.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg rtmp
+app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay_dmg
 
 # portaudio
 portaudio_v19/Makefile:
@@ -249,6 +249,9 @@ Tremor/Makefile:
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
 
+rtmp: squeezeplay
+	cd luartmp-squeezeplay; make -f Makefile.osx 
+	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
 
 # squeezeplay
 squeezeplay/Makefile:
@@ -364,6 +367,9 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning luazipfilter"
 	-cd luazipfilter; make distclean ; rm -rf x86; rm -rf x86_64
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: rtmp"
+	-cd luartmp-squeezeplay; rm rtmp.so; rm -rf rtmp.so.dSYM; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tolua++"
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o ; rm -rf x86; rm -rf x86_64
