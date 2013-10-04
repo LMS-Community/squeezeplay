@@ -11,6 +11,7 @@
 #include <SDL_syswm.h>
 #include <intrin.h>
 #include <iphlpapi.h>
+#include <ws2tcpip.h>
 
 #ifndef WM_APPCOMMAND
 #define WM_APPCOMMAND	0x0319
@@ -28,25 +29,52 @@ char *platform_get_home_dir() {
 }
 
 char *platform_get_mac_address() {
-    PIP_ADAPTER_INFO pAdapterInfo;
-    IP_ADAPTER_INFO AdapterInfo[32];
-    DWORD dwBufLen = sizeof( AdapterInfo );
+    WSADATA info; 
+    struct hostent *phost;
+    struct in_addr inaddr;
+    IPAddr srcip;
+    ULONG MacAddr[2];
+    unsigned char *bMacAddr;
+    ULONG PhyAddrLen = 6;
+    char hostname[NI_MAXHOST];
     char *macaddr = NULL;
-    
-    DWORD dwStatus = GetAdaptersInfo( AdapterInfo, &dwBufLen );
-    if ( dwStatus != ERROR_SUCCESS )
-      return NULL; // no adapters.
-    
-    pAdapterInfo = AdapterInfo;
-    while ( pAdapterInfo )
+    char *utmac;
+
+    srcip = 0;
+    macaddr = malloc(18);
+
+    utmac = getenv("UTMAC");
+    if (utmac)
     {
-        //take the first found address. 
-        //todo: can we be smarter about which is the correct address
-        unsigned char * ptr = (unsigned char *) pAdapterInfo->Address;
-	macaddr = malloc(18);
-        sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
-        break;
-        //pAdapterInfo = pAdapterInfo->Next;
+        if ( strlen(utmac) == 17 )
+        {
+            strncpy ( macaddr, utmac, 17 );
+            macaddr[17] = '\0';
+            return macaddr;
+        }
+
+    }
+
+    /* Set a fake macaddr to start */
+    sprintf(macaddr, "00:00:00:00:99:01");
+
+    if (WSAStartup(MAKEWORD(2,2), &info) == 0)
+    {
+        gethostname(hostname, NI_MAXHOST);
+
+        phost = gethostbyname(hostname);
+
+        inaddr.S_un.S_addr = *((unsigned long*) phost->h_addr);
+
+        SendARP((IPAddr) inaddr.S_un.S_addr, srcip , MacAddr , &PhyAddrLen);
+
+        bMacAddr = (unsigned char *) &MacAddr;
+
+        if (PhyAddrLen)
+            sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x",*bMacAddr,
+                *(bMacAddr+1),*(bMacAddr+2),*(bMacAddr+3),*(bMacAddr+4),*(bMacAddr+5));
+
+        WSACleanup();
     }
 
     return macaddr;
