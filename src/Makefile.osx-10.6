@@ -13,7 +13,7 @@
 # OS X specific stuff
 #
 
-#DEPLOYMEN_TARGET handled in ./gcc-fat
+#DEPLOYMENT_TARGET handled in ./gcc-fat-10.6
 #export MACOSX_DEPLOYMENT_TARGET=10.5
 ARCH = $(shell uname -m | grep i386)
 
@@ -200,7 +200,7 @@ app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeeze
 
 # portaudio
 portaudio_v19/Makefile:
-	cd portaudio_v19; ./configure CC= --prefix=${PREFIX}
+	cd portaudio_v19; ./configure CC= --prefix=${PREFIX} --enable-mac-debug=yes --enable-debug-output=yes
 
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
@@ -384,3 +384,4 @@ clean:
 	@echo "Cleaning: generated dir"
 	-rm -rf generated
 	find . -type d -name a.out.dSYM -exec rm -rf {} \;
+

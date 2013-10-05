@@ -403,7 +403,7 @@ static void decode_portaudio_openstream(void) {
 	{
 #ifndef PA18API
 		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-		LOG_DEBUG(log_audio_output, "Sample rate %f", Pa_GetStreamInfo(stream)->sampleRate);
+		LOG_DEBUG(log_audio_output, "Stream samplerate %f", Pa_GetStreamInfo(stream)->sampleRate);
 #endif /* PA18API */
 	}
 	else
@@ -514,9 +514,9 @@ PaDeviceIndex get_padevice_id(void)
 		pdi = Pa_GetDeviceInfo(DefaultDevice);
 #ifndef PA18API
 		info = Pa_GetHostApiInfo(pdi->hostApi);
-		LOG_INFO(log_audio_output, "Using device %d:%s (%s)", DefaultDevice, pdi->name, info->name);
+		LOG_INFO(log_audio_output, "Using device %d. %s (%s)", DefaultDevice, pdi->name, info->name);
 #else
-		LOG_INFO(log_audio_output, "Using device %d:%s", DefaultDevice, pdi->name);
+		LOG_INFO(log_audio_output, "Using device %d. %s", DefaultDevice, pdi->name);
 #endif
 	}
 
@@ -550,10 +550,11 @@ u32_t get_padevice_maxrate (void)
 		/* check supported sample rates by opening the device */
 		for (i = 0; rates[i]; ++i) {
 			err = Pa_OpenStream(&stream, NULL, &outputParam, (double)rates[i],
-				paFramesPerBufferUnspecified, paNoFlag, pa_callback, NULL);
+				paFramesPerBufferUnspecified, paNoFlag, callback, NULL);
+
 			if (err == paNoError) {
 				Pa_CloseStream(&stream);
-				*max_rate = rates[i];
+				use_pamaxrate = rates[i];
 				break;
 			}
 		}
@@ -561,12 +562,19 @@ u32_t get_padevice_maxrate (void)
 		if (!rates[i]) {
 			use_pamaxrate = 48000;
 		}
-#endif
 
-	LOG_WARN(log_audio_output, "Setting maximum samplerate to (%lu)", use_pamaxrate );
+/* Core Audio returns success for any sample rate, use a sane default unless USEPAMAXSAMPLERATE set */
+#if defined(__APPLE__) && defined(__MACH__)
+		use_pamaxrate = 48000;	
+#endif
+	}
+
+#endif
+	LOG_INFO(log_audio_output, "Setting maximum samplerate to %lu", use_pamaxrate );
 
 	return use_pamaxrate;
 }
+
 static int decode_portaudio_init(lua_State *L) {
 	PaError err;
 	void *buf;
@@ -614,7 +622,7 @@ static int decode_portaudio_init(lua_State *L) {
 			outputParam.suggestedLatency = (float) userlatency / 1000.0;
 	}
 
-	LOG_INFO(log_audio_output, "Using latency: (%f)", outputParam.suggestedLatency);
+	LOG_INFO(log_audio_output, "Using latency %f", outputParam.suggestedLatency);
 
 #if defined(__APPLE__) && defined(__MACH__)
 	/* Enable CoreAudio Pro mode to avoid resampling if possible, unless USEPAPLAYNICE defined */
@@ -652,7 +660,7 @@ static int decode_portaudio_init(lua_State *L) {
 			paNumberOfBuffers = 2L;
 	}
 
-	LOG_WARN(log_audio_output, "Using (%lu) buffers of (%lu) frames per buffer",
+	LOG_INFO(log_audio_output, "Using %lu buffers of %lu frames per buffer",
 		paNumberOfBuffers, paFramesPerBuffer);
 
 #endif /* PA18API */
