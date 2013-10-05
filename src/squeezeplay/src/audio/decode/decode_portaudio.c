@@ -22,6 +22,8 @@ static PaMacCoreStreamInfo macInfo;
 static unsigned long streamInfoFlags;
 #endif
 
+#define PA_DEFAULT_DEVICE       (-1)
+
 #ifdef PA18API
 typedef int PaDeviceIndex;
 typedef double PaTime;
@@ -78,22 +80,6 @@ static void finished(void *userData) {
 		}
 	}
 }
-
-#ifndef _WIN32
-static int strnicmp(const char *s1, const char *s2, size_t n)
-{
-	if (n == 0)
-		return 0;
-	do {
-		if (toupper(*s1) != toupper(*s2++))
-			return toupper(*(unsigned const char *)s1) - toupper(*(unsigned const char *)--s2);
-		if (*s1++ == 0)
-			break;
-	} while (--n != 0);
-
-	return 0;
-}
-#endif
 
 /*
  * This function is called by portaudio when the stream is active to request
@@ -440,26 +426,154 @@ static void decode_portaudio_openstream(void) {
 	}
 }
 
+PaDeviceIndex get_padevice_id(void)
+{
+	int i;
+	const PaDeviceInfo *pdi;
+#ifndef PA18API
+	const PaHostApiInfo *info;
+#endif
+	PaDeviceIndex DefaultDevice;
+	PaDeviceIndex DeviceCount;
+	
+	char *default_hostapi;
+	char *default_device_name;
+	char *default_device_id;
 
+	default_device_id = getenv("USEPADEVICEID");
+	default_device_name = getenv("USEPADEVICE");
+	default_hostapi = getenv("USEPAHOSTAPI");
+
+#ifndef PA18API
+	DeviceCount = Pa_GetDeviceCount();
+#else
+	DeviceCount = Pa_CountDevices();
+#endif
+
+	if ( DeviceCount < 0 )
+	{
+		LOG_WARN(log_audio_output, "No soundcards detected. %s", Pa_GetErrorText(DeviceCount) );
+		DefaultDevice = paNoDevice;
+	}
+	else
+	{
+		/* If name not set, use device index */
+		if ( default_device_name == NULL )
+			if ( default_device_id != NULL )
+				DefaultDevice = (PaDeviceIndex) strtoul ( default_device_id, NULL, 0 );
+			else	
+				DefaultDevice = PA_DEFAULT_DEVICE;
+		else
+		{
+			/* Set the initial device to the default.
+			 * If we find a match the device index will be applied.
+			 */
+			DefaultDevice = PA_DEFAULT_DEVICE;
+
+		        for ( i = 0; i < DeviceCount; i++ )
+		        {
+		                pdi = Pa_GetDeviceInfo( i );
+		                if ( pdi->name != NULL )
+				{
+#ifndef PA18API
+					/* Match on audio system if specified */
+					if ( default_hostapi != NULL )
+					{
+						info = Pa_GetHostApiInfo ( pdi->hostApi );
+						if ( info->name != NULL )
+						{
+							/* No match, next */
+							if ( strncasecmp (info->name, default_hostapi, strlen (info->name)) != 0 )
+								continue;
+						}
+					}
+#endif
+					if ( strncasecmp (pdi->name, default_device_name, strlen (pdi->name)) == 0 )
+					{
+						DefaultDevice = i;
+						break;
+					}
+				}
+	                }
+		}
+	}
+
+	if ( (DefaultDevice >= DeviceCount) || (DefaultDevice == PA_DEFAULT_DEVICE) )
+	{
+#ifndef PA18API
+		DefaultDevice = Pa_GetDefaultOutputDevice();
+#else
+		DefaultDevice = Pa_GetDefaultOutputDeviceID();
+#endif
+	}
+
+	if ( DefaultDevice == paNoDevice )
+		LOG_WARN(log_audio_output, "No output devices found. %s", Pa_GetErrorText(DefaultDevice) );
+	else
+	{
+		pdi = Pa_GetDeviceInfo(DefaultDevice);
+#ifndef PA18API
+		info = Pa_GetHostApiInfo(pdi->hostApi);
+		LOG_INFO(log_audio_output, "Using device %d:%s (%s)", DefaultDevice, pdi->name, info->name);
+#else
+		LOG_INFO(log_audio_output, "Using device %d:%s", DefaultDevice, pdi->name);
+#endif
+	}
+
+	return (DefaultDevice) ;
+}
+
+
+u32_t get_padevice_maxrate (void)
+{
+#ifndef PA18API
+	int i;
+#endif
+	PaError err;
+	const char *pamaxrate;
+	u32_t use_pamaxrate;
+	u32_t rates[] = { 384000, 352800, 192000, 176400, 96000, 88200, 48000, 44100, 0 };
+
+	use_pamaxrate = 48000;
+
+	pamaxrate = getenv("USEPAMAXSAMPLERATE");
+
+	if ( pamaxrate != NULL )
+	{
+		use_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
+		if ( ( use_pamaxrate < 32000L ) || ( use_pamaxrate > 384000L ) )
+			use_pamaxrate = 48000;
+	}
+#ifndef PA18API
+	else
+	{
+		/* check supported sample rates by opening the device */
+		for (i = 0; rates[i]; ++i) {
+			err = Pa_OpenStream(&stream, NULL, &outputParam, (double)rates[i],
+				paFramesPerBufferUnspecified, paNoFlag, pa_callback, NULL);
+			if (err == paNoError) {
+				Pa_CloseStream(&stream);
+				*max_rate = rates[i];
+				break;
+			}
+		}
+
+		if (!rates[i]) {
+			use_pamaxrate = 48000;
+		}
+#endif
+
+	LOG_WARN(log_audio_output, "Setting maximum samplerate to (%lu)", use_pamaxrate );
+
+	return use_pamaxrate;
+}
 static int decode_portaudio_init(lua_State *L) {
 	PaError err;
-	PaDeviceIndex num_devices;
-	PaDeviceIndex i;
-	const PaDeviceInfo *device_info;
-	const char *padevname;
-	int devnamelen;
-	const char *pamaxrate;
-	u32_t user_pamaxrate;
 	void *buf;
 #ifndef PA18API
-	const PaHostApiInfo *host_info;
-	const char *paapiname;
-	int apinamelen;
 	const char *palatency;
 	unsigned int userlatency;
 #else
-	PaDeviceIndex user_deviceid;
-	const char *padevid;
 	const char *pabuffersize;
 	const char *panumbufs;
 #endif /* PA18API */
@@ -468,135 +582,24 @@ static int decode_portaudio_init(lua_State *L) {
 		goto err0;
 	}
 
-	memset(&outputParam, 0, sizeof(outputParam));
-
 #ifndef PA18API
 	LOG_DEBUG(log_audio_output, "Portaudio version v19.%d", Pa_GetVersion());
 #else
 	LOG_DEBUG(log_audio_output, "Portaudio version v18.1");
 #endif /* PA18API */
 
+	memset(&outputParam, 0, sizeof(outputParam));
+
+	outputParam.device = get_padevice_id();
+	if ( outputParam.device == paNoDevice )
+		goto err0;
+
 	outputParam.channelCount = 2;
 	outputParam.sampleFormat = paInt32;
 
 #ifndef PA18API
-	padevname = getenv("USEPADEVICE");
-	paapiname = getenv("USEPAHOSTAPI");
+	outputParam.hostApiSpecificStreamInfo = NULL;
 
-	/* Match device */
-	if ( padevname || paapiname )
-	{
-		num_devices = Pa_GetDeviceCount();
-		for (i = 0; i < num_devices; i++) {
-			device_info = Pa_GetDeviceInfo(i);
-			host_info = Pa_GetHostApiInfo(device_info->hostApi);
-
-			LOG_INFO(log_audio_output, "%d:%s (%s)", i, device_info->name, host_info->name);
-
-			if ( (paapiname != NULL) && (host_info->name != NULL) )
-			{
-				apinamelen = strlen (paapiname);
-				if ( strnicmp(host_info->name, paapiname, apinamelen) != 0 )
-					continue;
-			}
-
-			if ( (padevname != NULL) && (device_info->name != NULL) )
-			{
-				devnamelen = strlen (padevname);
-				if ( strnicmp(device_info->name, padevname, devnamelen) != 0 )
-					continue;
-			}
-
-			outputParam.device = i;
-
-			err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
-			if (err == paFormatIsSupported) {
-				LOG_INFO(log_audio_output, "\tsupported");
-				break;
-			}
-			else {
-				LOG_INFO(log_audio_output, "\tnot supported");
-			}
-		}
-
-		if (i >= num_devices)
-		{
-			LOG_INFO(log_audio_output, "No suitable audio device found");
-			return 0;
-		}
-	}
-	else
-	{
-		i = Pa_GetDefaultOutputDevice();
-
-		if ( i != paNoDevice )
-		{
-			outputParam.device = i;
-			err = Pa_IsFormatSupported(NULL, &outputParam, 44100);
-			if (err == paFormatIsSupported) {
-				device_info = Pa_GetDeviceInfo(i);
-				host_info = Pa_GetHostApiInfo(device_info->hostApi);
-				LOG_INFO(log_audio_output, "Using default device %d:%s (%s)",
-					i, device_info->name, host_info->name);
-			}
-			else
-			{
-				goto err0;
-			}
-		}
-		else
-		{
-			goto err0;
-		}
-	}
-#else
-	padevname = getenv("USEPADEVICE");
-	padevid  = getenv("USEPADEVICEID");
-
-	num_devices = Pa_CountDevices();
-
-	for (i = 0; i < num_devices; i++)
-	{
-		device_info = Pa_GetDeviceInfo(i);
-
-		LOG_WARN(log_audio_output, "%d: %s", i, device_info->name);
-
-		if ( (padevname != NULL) && (device_info->name != NULL) )
-		{
-			devnamelen = strlen (padevname);
-			if ( strnicmp(device_info->name, padevname, devnamelen) == 0 )
-			{
-				outputParam.device = i;
-				break;
-			}
-		}
-
-		if ( padevid != NULL )
-		{
-			user_deviceid = (PaDeviceIndex) strtoul ( padevid, NULL, 0 );
-			if ( user_deviceid == i )
-			{
-				outputParam.device = i;
-				break;
-			}
-		}
-	}
-
-	/* No match found, use default device */
-	if ( (i >= num_devices) || ( outputParam.device >= num_devices ) )
-	{
-		outputParam.device = Pa_GetDefaultOutputDeviceID();
-
-		/* no suitable audio device found */
-		if ( outputParam.device == paNoDevice )
-		{
-			LOG_WARN(log_audio_output,"No default audio device found-playback disabled");
-			return 0;
-		}
-	}
-#endif /* PA18API */
-
-#ifndef PA18API
 	/* high latency for robust playback */
 	outputParam.suggestedLatency = Pa_GetDeviceInfo(outputParam.device)->defaultHighOutputLatency;
 
@@ -654,21 +657,6 @@ static int decode_portaudio_init(lua_State *L) {
 
 #endif /* PA18API */
 
-	pamaxrate = getenv("USEPAMAXSAMPLERATE");
-
-	if ( pamaxrate != NULL )
-	{
-		user_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
-		if ( ( user_pamaxrate < 32000L ) || ( user_pamaxrate > 384000L ) )
-			user_pamaxrate = 48000;
-	}
-	else
-	{
-		user_pamaxrate = 48000;
-	}
-
-	LOG_WARN(log_audio_output, "Setting maximum samplerate to (%lu)", user_pamaxrate );
-
 	/* allocate output memory */
 	buf = malloc(DECODE_AUDIO_BUFFER_SIZE);
 	if (!buf) {
@@ -676,7 +664,7 @@ static int decode_portaudio_init(lua_State *L) {
 	}
 
 	decode_init_buffers(buf, false);
-	decode_audio->max_rate = user_pamaxrate;
+	decode_audio->max_rate = get_padevice_maxrate();
 
 	/* open stream */
 	decode_audio_lock();
@@ -686,7 +674,7 @@ static int decode_portaudio_init(lua_State *L) {
 	return 1;
 
  err0:
-	LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+	LOG_WARN(log_audio_output,"No audio device found-playback disabled");
 	return 0;
 }
 
