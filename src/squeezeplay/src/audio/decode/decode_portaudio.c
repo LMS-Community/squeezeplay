@@ -22,6 +22,10 @@ static PaMacCoreStreamInfo macInfo;
 static unsigned long streamInfoFlags;
 #endif
 
+#ifdef _WIN32
+#define strncasecmp	strnicmp
+#endif
+
 #define PA_DEFAULT_DEVICE       (-1)
 
 #ifdef PA18API
