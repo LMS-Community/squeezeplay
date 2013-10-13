@@ -492,6 +492,10 @@ PaDeviceIndex get_padevice_id(void)
 						}
 					}
 #endif
+					/* Need at least stereo output */
+					if ( pdi->maxOutputChannels < 2 )
+						continue;
+
 					if ( strncasecmp (pdi->name, default_device_name, strlen (pdi->name)) == 0 )
 					{
 						DefaultDevice = i;
