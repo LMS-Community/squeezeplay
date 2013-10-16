@@ -112,7 +112,7 @@ static int callback(void *inputBuffer,
 
 #ifndef PA18API
 	if (statusFlags & (paOutputUnderflow | paOutputOverflow)) {
-		LOG_DEBUG(log_audio_output, "pa status %x\n", (unsigned int)statusFlags);
+		LOG_DEBUG(log_audio_output, "pa status %x", (unsigned int)statusFlags);
 	}
 #endif /* PA18API */
 
@@ -302,7 +302,7 @@ static int callback(void *inputBuffer,
 		decode_audio->transition_gain_step = 0;
 		
 		if (decode_audio->track_sample_rate != stream_sample_rate) {
-			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d\n",
+			LOG_DEBUG(log_audio_output, "Sample rate changed from %d to %d",
 				stream_sample_rate, decode_audio->track_sample_rate);
 			decode_audio->set_sample_rate = decode_audio->track_sample_rate;
 			ret = paComplete; // will trigger the finished callback to change the samplerate
@@ -368,9 +368,14 @@ static void decode_portaudio_openstream(void) {
 
 	if (stream) {
 		if ((err = Pa_CloseStream(stream)) != paNoError) {
-			LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+			LOG_WARN(log_audio_output, "Pa_CloseStream error %s", Pa_GetErrorText(err));
+		}
+		else {
+			LOG_DEBUG(log_audio_output, "Stream closed");
 		}
 	}
+
+	LOG_DEBUG(log_audio_output, "Using sample rate %lu in Pa_OpenStream", set_sample_rate);
 
 #ifndef PA18API
 	err = Pa_OpenStream(
@@ -383,8 +388,6 @@ static void decode_portaudio_openstream(void) {
 			callback,
 			NULL);
 #else
-	LOG_DEBUG(log_audio_output, "Setting sample rate %lu", set_sample_rate);
-
         err = Pa_OpenStream(
                         &stream,
                         paNoDevice,
@@ -403,29 +406,29 @@ static void decode_portaudio_openstream(void) {
                         NULL);
 #endif /* PA18API */
 
-	if ( err == paNoError )
+	if ( err != paNoError )
 	{
-#ifndef PA18API
-		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
-		LOG_DEBUG(log_audio_output, "Stream samplerate %f", Pa_GetStreamInfo(stream)->sampleRate);
-#endif /* PA18API */
+		LOG_WARN(log_audio_output, "Pa_OpenStream error %s", Pa_GetErrorText(err));
 	}
+#ifndef PA18API
 	else
 	{
-		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+		LOG_DEBUG(log_audio_output, "Stream latency %f", Pa_GetStreamInfo(stream)->outputLatency);
+		LOG_DEBUG(log_audio_output, "Stream samplerate %f", Pa_GetStreamInfo(stream)->sampleRate);
 	}
+#endif /* PA18API */
 
 	stream_sample_rate = set_sample_rate;
 
 #ifndef PA18API
 	/* playout to the end of this stream before changing the sample rate */
 	if ((err = Pa_SetStreamFinishedCallback(stream, finished)) != paNoError) {
-		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+		LOG_WARN(log_audio_output, "Pa_SetStreamFinishedCallback error %s", Pa_GetErrorText(err));
 	}
 #endif /* PA18API */
 
 	if ((err = Pa_StartStream(stream)) != paNoError) {
-		LOG_WARN(log_audio_output, "PA error %s", Pa_GetErrorText(err));
+		LOG_WARN(log_audio_output, "Pa_StartStream error %s", Pa_GetErrorText(err));
 		return;
 	}
 }

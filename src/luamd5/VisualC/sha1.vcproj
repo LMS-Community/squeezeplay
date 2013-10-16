@@ -118,7 +118,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.1\src&quot;;..\..\luamd5\libstdcrypto"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SHA1_EXPORTS;MYNAME=sha1;USE_SHA1_SKALIBS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SHA1_EXPORTS;MYNAME=sha1;USE_SHA1_SKALIBS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
