@@ -141,12 +141,13 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\WMSDK\WMFSDK11\lib"
 				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				SupportUnloadOfDelayLoadedDLL="true"
 				TargetMachine="1"
 			/>
 			<Tool

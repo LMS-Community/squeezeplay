@@ -51,8 +51,8 @@ static unsigned long paNumberOfBuffers = 4L;
 #endif /* PA18API */
 
 /* Portaudio stream */
-static PaStreamParameters outputParam;
 static PaStream *stream;
+static PaStreamParameters outputParam;
 
 /* Stream sample rate */
 static u32_t stream_sample_rate;
@@ -355,6 +355,9 @@ static void decode_portaudio_stop(void) {
 static void decode_portaudio_openstream(void) {
 	PaError err;
 	u32_t set_sample_rate;
+#ifndef PA18API
+	const PaHostErrorInfo* HostErrorInfo;
+#endif
 
 	ASSERT_AUDIO_LOCKED();
 
@@ -367,6 +370,10 @@ static void decode_portaudio_openstream(void) {
 	}
 
 	if (stream) {
+		if ((err = Pa_StopStream(stream)) != paNoError) {
+			LOG_WARN(log_audio_output, "Pa_StopStream error %s", Pa_GetErrorText(err));
+		}
+
 		if ((err = Pa_CloseStream(stream)) != paNoError) {
 			LOG_WARN(log_audio_output, "Pa_CloseStream error %s", Pa_GetErrorText(err));
 		}
@@ -376,8 +383,13 @@ static void decode_portaudio_openstream(void) {
 	}
 
 	LOG_DEBUG(log_audio_output, "Using sample rate %lu in Pa_OpenStream", set_sample_rate);
+        LOG_DEBUG(log_audio_output, "Using device %d", outputParam.device );
+        LOG_DEBUG(log_audio_output, "Using %d channels", outputParam.channelCount);
+        LOG_DEBUG(log_audio_output, "Using format %d", outputParam.sampleFormat);
 
 #ifndef PA18API
+        LOG_DEBUG(log_audio_output, "Using latency %f", outputParam.suggestedLatency);
+
 	err = Pa_OpenStream(
 			&stream,
 			NULL,
@@ -409,6 +421,12 @@ static void decode_portaudio_openstream(void) {
 	if ( err != paNoError )
 	{
 		LOG_WARN(log_audio_output, "Pa_OpenStream error %s", Pa_GetErrorText(err));
+#ifndef PA18API
+		HostErrorInfo = Pa_GetLastHostErrorInfo();
+		LOG_DEBUG(log_audio_output, "API (%d) Code (%d) Msg (%s)", HostErrorInfo->hostApiType,
+			HostErrorInfo->errorCode, HostErrorInfo->errorText );
+#endif
+		stream = NULL;
 	}
 #ifndef PA18API
 	else
@@ -429,7 +447,6 @@ static void decode_portaudio_openstream(void) {
 
 	if ((err = Pa_StartStream(stream)) != paNoError) {
 		LOG_WARN(log_audio_output, "Pa_StartStream error %s", Pa_GetErrorText(err));
-		return;
 	}
 }
 
@@ -564,7 +581,7 @@ u32_t get_padevice_maxrate (void)
 				paFramesPerBufferUnspecified, paNoFlag, callback, NULL);
 
 			if (err == paNoError) {
-				Pa_CloseStream(&stream);
+				Pa_CloseStream(stream);
 				use_pamaxrate = rates[i];
 				break;
 			}
@@ -581,6 +598,8 @@ u32_t get_padevice_maxrate (void)
 	}
 
 #endif
+	stream = NULL;
+
 	LOG_INFO(log_audio_output, "Setting maximum samplerate to %lu", use_pamaxrate );
 
 	return use_pamaxrate;
