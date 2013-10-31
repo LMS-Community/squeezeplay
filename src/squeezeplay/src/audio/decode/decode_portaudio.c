@@ -23,6 +23,9 @@ static unsigned long streamInfoFlags;
 #endif
 
 #ifdef _WIN32
+#include "pa_win_wasapi.h"
+static PaWasapiStreamInfo wasapiInfo;
+
 #define strncasecmp	strnicmp
 #endif
 
@@ -551,6 +554,26 @@ PaDeviceIndex get_padevice_id(void)
 	return (DefaultDevice) ;
 }
 
+#ifndef PA18API
+PaHostApiTypeId get_padevice_apitype ( PaDeviceIndex device )
+{
+	PaHostApiTypeId apitype;
+	const PaDeviceInfo *pdi;
+	const PaHostApiInfo *info;
+
+	apitype = paInDevelopment;
+
+	pdi = Pa_GetDeviceInfo( device );
+	if ( pdi->name != NULL )
+	{
+		info = Pa_GetHostApiInfo ( pdi->hostApi );
+		if ( info != NULL )
+			apitype = info->type;
+	}
+
+	return (apitype);	
+}
+#endif
 
 u32_t get_padevice_maxrate (void)
 {
@@ -671,6 +694,19 @@ static int decode_portaudio_init(lua_State *L) {
 	outputParam.hostApiSpecificStreamInfo = &macInfo;
 
 #endif /* APPLE */
+#if defined(_WIN32)
+	/* Use exclusive mode for WASAPI device, default is shared which doesn't support sample rate changes */
+	if ( get_padevice_apitype(outputParam.device) == paWASAPI )
+	{
+		wasapiInfo.size = sizeof(PaWasapiStreamInfo);
+		wasapiInfo.hostApiType = paWASAPI;
+		wasapiInfo.version = 1;
+		wasapiInfo.flags = paWinWasapiExclusive;
+		outputParam.hostApiSpecificStreamInfo = &wasapiInfo;
+
+		LOG_INFO(log_audio_output, "WASAPI Exclusive Mode enabled" );
+	}
+#endif /* _WIN32 */
 #else
 	pabuffersize = getenv("USEPAFRAMESPERBUFFER");
 
