@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL_gfx", "SDL_gfx-2.0.15\VisualC\SDL_gfx.vcproj", "{8B52C509-C13F-4E3F-9744-FF110B2746E1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL_gfx", "SDL_gfx-2.0.24\VisualC\SDL_gfx.vcproj", "{8B52C509-C13F-4E3F-9744-FF110B2746E1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68} = {81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}
 	EndProjectSection
