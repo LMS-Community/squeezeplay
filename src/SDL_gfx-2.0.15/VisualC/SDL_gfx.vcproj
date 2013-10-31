@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.13\VisualC\include&quot;;&quot;..\..\SDL-1.2.13\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.15\VisualC\include&quot;;&quot;..\..\SDL-1.2.15\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;BUILD_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -114,7 +114,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.13\VisualC\include&quot;;&quot;..\..\SDL-1.2.13\include&quot;"
+				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.15\VisualC\include&quot;;&quot;..\..\SDL-1.2.15\include&quot;"
 				PreprocessorDefinitions="WIN32;_CONSOLE;BUILD_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

@@ -48,7 +48,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.13\include&quot;;&quot;..\..\SDL-1.2.13\VisualC\include&quot;;freetype\include"
+				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.15\include&quot;;&quot;..\..\SDL-1.2.15\VisualC\include&quot;;freetype\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				RuntimeLibrary="3"
@@ -143,7 +143,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.13\include&quot;;&quot;..\..\SDL-1.2.13\VisualC\include&quot;;freetype\include"
+				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.15\include&quot;;&quot;..\..\SDL-1.2.15\VisualC\include&quot;;freetype\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
