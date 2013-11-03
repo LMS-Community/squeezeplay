@@ -358,9 +358,6 @@ static void decode_portaudio_stop(void) {
 static void decode_portaudio_openstream(void) {
 	PaError err;
 	u32_t set_sample_rate;
-#ifndef PA18API
-	const PaHostErrorInfo* HostErrorInfo;
-#endif
 
 	ASSERT_AUDIO_LOCKED();
 
@@ -385,10 +382,7 @@ static void decode_portaudio_openstream(void) {
 		}
 	}
 
-	LOG_DEBUG(log_audio_output, "Using sample rate %lu in Pa_OpenStream", set_sample_rate);
-        LOG_DEBUG(log_audio_output, "Using device %d", outputParam.device );
-        LOG_DEBUG(log_audio_output, "Using %d channels", outputParam.channelCount);
-        LOG_DEBUG(log_audio_output, "Using format %d", outputParam.sampleFormat);
+	LOG_DEBUG(log_audio_output, "Using sample rate %lu", set_sample_rate);
 
 #ifndef PA18API
         LOG_DEBUG(log_audio_output, "Using latency %f", outputParam.suggestedLatency);
@@ -424,11 +418,7 @@ static void decode_portaudio_openstream(void) {
 	if ( err != paNoError )
 	{
 		LOG_WARN(log_audio_output, "Pa_OpenStream error %s", Pa_GetErrorText(err));
-#ifndef PA18API
-		HostErrorInfo = Pa_GetLastHostErrorInfo();
-		LOG_DEBUG(log_audio_output, "API (%d) Code (%d) Msg (%s)", HostErrorInfo->hostApiType,
-			HostErrorInfo->errorCode, HostErrorInfo->errorText );
-#endif
+
 		stream = NULL;
 	}
 #ifndef PA18API
@@ -694,7 +684,7 @@ static int decode_portaudio_init(lua_State *L) {
 	outputParam.hostApiSpecificStreamInfo = &macInfo;
 
 #endif /* APPLE */
-#if defined(_WIN32)
+#ifdef _WIN32
 	/* Use exclusive mode for WASAPI device, default is shared which doesn't support sample rate changes */
 	if ( get_padevice_apitype(outputParam.device) == paWASAPI )
 	{
