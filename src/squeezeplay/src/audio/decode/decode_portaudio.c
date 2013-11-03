@@ -347,7 +347,6 @@ static void decode_portaudio_stop(void) {
 
 	ASSERT_AUDIO_LOCKED();
 
-	decode_audio->set_sample_rate = 44100;
 	decode_audio->samples_to_fade = 0;
 	decode_audio->transition_gain_step = 0;
 
@@ -729,6 +728,7 @@ static int decode_portaudio_init(lua_State *L) {
 
 	decode_init_buffers(buf, false);
 	decode_audio->max_rate = get_padevice_maxrate();
+	decode_audio->set_sample_rate = 44100;
 
 	/* open stream */
 	decode_audio_lock();
