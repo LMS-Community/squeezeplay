@@ -1,0 +1,36 @@
+Index: src/common/pa_front.c
+===================================================================
+--- src/common/pa_front.c	(revision 1911)
++++ src/common/pa_front.c	(working copy)
+@@ -77,7 +77,7 @@
+ #include "pa_debugprint.h"
+ 
+ 
+-#define PA_VERSION_  1899
++#define PA_VERSION_  1911
+ #define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  " " __TIME__ ")"
+ 
+ 
+Index: src/os/win/pa_win_hostapis.c
+===================================================================
+--- src/os/win/pa_win_hostapis.c	(revision 1911)
++++ src/os/win/pa_win_hostapis.c	(working copy)
+@@ -72,14 +72,14 @@
+ PaUtilHostApiInitializer *paHostApiInitializers[] =
+     {
+ 
++#if PA_USE_DS
++        PaWinDs_Initialize,
++#endif
++
+ #if PA_USE_WMME
+         PaWinMme_Initialize,
+ #endif
+ 
+-#if PA_USE_DS
+-        PaWinDs_Initialize,
+-#endif
+-
+ #if PA_USE_ASIO
+         PaAsio_Initialize,
+ #endif

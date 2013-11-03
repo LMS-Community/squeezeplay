@@ -1,6 +1,6 @@
 Index: build/msvc/portaudio.vcproj
 ===================================================================
---- build/msvc/portaudio.vcproj	(revision 1871)
+--- build/msvc/portaudio.vcproj	(revision 1911)
 +++ build/msvc/portaudio.vcproj	(working copy)
 @@ -1,10 +1,11 @@
  <?xml version="1.0" encoding="Windows-1252"?>
@@ -15,29 +15,29 @@ Index: build/msvc/portaudio.vcproj
  	>
  	<Platforms>
  		<Platform
-@@ -21,7 +22,7 @@
- 			Name="Release|Win32"
- 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
- 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
--			ConfigurationType="2"
-+			ConfigurationType="4"
- 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
- 			UseOfMFC="0"
- 			ATLMinimizesCRunTimeLibraryUsage="false"
-@@ -54,7 +55,7 @@
+@@ -54,14 +55,14 @@
  				EnableIntrinsicFunctions="true"
  				FavorSizeOrSpeed="1"
  				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
 -				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
-+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=1;PA_USE_DS=1;PA_USE_WMME=0;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
  				StringPooling="true"
  				RuntimeLibrary="2"
  				EnableFunctionLevelLinking="true"
-@@ -77,24 +78,12 @@
- 				Name="VCPreLinkEventTool"
+ 				PrecompiledHeaderFile="$(PlatformName)\$(ConfigurationName)/portaudio.pch"
+-				AssemblerListingLocation="$(PlatformName)\$(ConfigurationName)\"
+-				ObjectFile="$(PlatformName)\$(ConfigurationName)\"
+-				ProgramDataBaseFileName="$(PlatformName)\$(ConfigurationName)\"
++				AssemblerListingLocation="$(IntDir)\"
++				ObjectFile="$(IntDir)\"
++				ProgramDataBaseFileName="$(IntDir)\vc90.pdb"
+ 				WarningLevel="3"
+ 				SuppressStartupBanner="true"
+ 			/>
+@@ -78,15 +79,9 @@
  			/>
  			<Tool
--				Name="VCLinkerTool"
+ 				Name="VCLinkerTool"
 -				AdditionalDependencies="ksuser.lib"
 -				OutputFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.dll"
 -				LinkIncremental="1"
@@ -47,25 +47,16 @@ Index: build/msvc/portaudio.vcproj
 -				ProgramDatabaseFile="$(PlatformName)\$(ConfigurationName)\portaudio_x86.pdb"
 -				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
 -				TargetMachine="1"
-+				Name="VCLibrarianTool"
++				OutputFile="$(ProjectDir)\..\..\..\$(ConfigurationName)\$(ProjectName).dll"
++				ModuleDefinitionFile="$(ProjectName).def"
++				ImportLibrary="$(IntDir)\$(ProjectName).lib"
  			/>
  			<Tool
  				Name="VCALinkTool"
+@@ -109,14 +104,11 @@
+ 				Name="VCAppVerifierTool"
  			/>
  			<Tool
--				Name="VCManifestTool"
--			/>
--			<Tool
- 				Name="VCXDCMakeTool"
- 			/>
- 			<Tool
-@@ -106,17 +95,11 @@
- 				Name="VCFxCopTool"
- 			/>
- 			<Tool
--				Name="VCAppVerifierTool"
--			/>
--			<Tool
 -				Name="VCWebDeploymentTool"
 -			/>
 -			<Tool
@@ -78,7 +69,7 @@ Index: build/msvc/portaudio.vcproj
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
  			ConfigurationType="2"
-@@ -138,37 +121,35 @@
+@@ -138,37 +130,35 @@
  			/>
  			<Tool
  				Name="VCMIDLTool"
@@ -105,7 +96,7 @@ Index: build/msvc/portaudio.vcproj
 -				RuntimeLibrary="2"
 -				EnableFunctionLevelLinking="true"
 -				PrecompiledHeaderFile="$(PlatformName)\$(ConfigurationName)\portaudio.pch"
-+				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
 +				MinimalRebuild="true"
 +				BasicRuntimeChecks="3"
 +				RuntimeLibrary="3"
@@ -127,7 +118,7 @@ Index: build/msvc/portaudio.vcproj
  				Culture="1033"
  			/>
  			<Tool
-@@ -176,15 +157,17 @@
+@@ -176,15 +166,17 @@
  			/>
  			<Tool
  				Name="VCLinkerTool"
@@ -152,7 +143,7 @@ Index: build/msvc/portaudio.vcproj
  			/>
  			<Tool
  				Name="VCALinkTool"
-@@ -198,7 +181,7 @@
+@@ -198,7 +190,7 @@
  			<Tool
  				Name="VCBscMakeTool"
  				SuppressStartupBanner="true"
@@ -161,7 +152,7 @@ Index: build/msvc/portaudio.vcproj
  			/>
  			<Tool
  				Name="VCFxCopTool"
-@@ -207,14 +190,11 @@
+@@ -207,14 +199,11 @@
  				Name="VCAppVerifierTool"
  			/>
  			<Tool
@@ -177,7 +168,7 @@ Index: build/msvc/portaudio.vcproj
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
  			ConfigurationType="2"
-@@ -236,35 +216,37 @@
+@@ -236,35 +225,37 @@
  			/>
  			<Tool
  				Name="VCMIDLTool"
@@ -202,7 +193,7 @@ Index: build/msvc/portaudio.vcproj
 -				MinimalRebuild="true"
 -				BasicRuntimeChecks="3"
 -				RuntimeLibrary="3"
-+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
 +				StringPooling="true"
 +				RuntimeLibrary="0"
 +				EnableFunctionLevelLinking="true"
@@ -224,7 +215,7 @@ Index: build/msvc/portaudio.vcproj
  				Culture="1033"
  			/>
  			<Tool
-@@ -272,13 +254,15 @@
+@@ -272,13 +263,15 @@
  			/>
  			<Tool
  				Name="VCLinkerTool"
@@ -243,7 +234,7 @@ Index: build/msvc/portaudio.vcproj
  				ImportLibrary="$(PlatformName)\$(ConfigurationName)\portaudio_x86.lib"
  				TargetMachine="1"
  			/>
-@@ -303,14 +287,11 @@
+@@ -303,14 +296,11 @@
  				Name="VCAppVerifierTool"
  			/>
  			<Tool
@@ -259,7 +250,7 @@ Index: build/msvc/portaudio.vcproj
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
  			ConfigurationType="2"
-@@ -332,35 +313,37 @@
+@@ -332,35 +322,37 @@
  			/>
  			<Tool
  				Name="VCMIDLTool"
@@ -285,7 +276,7 @@ Index: build/msvc/portaudio.vcproj
 +				EnableIntrinsicFunctions="true"
 +				FavorSizeOrSpeed="1"
 +				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
-+				PreprocessorDefinitions="_WIN64;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="_WIN64;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
 +				StringPooling="true"
 +				RuntimeLibrary="2"
 +				EnableFunctionLevelLinking="true"
@@ -307,7 +298,7 @@ Index: build/msvc/portaudio.vcproj
  				Culture="1033"
  			/>
  			<Tool
-@@ -368,14 +351,14 @@
+@@ -368,14 +360,14 @@
  			/>
  			<Tool
  				Name="VCLinkerTool"
@@ -326,7 +317,7 @@ Index: build/msvc/portaudio.vcproj
  				TargetMachine="17"
  			/>
  			<Tool
-@@ -390,7 +373,7 @@
+@@ -390,7 +382,7 @@
  			<Tool
  				Name="VCBscMakeTool"
  				SuppressStartupBanner="true"
@@ -335,7 +326,7 @@ Index: build/msvc/portaudio.vcproj
  			/>
  			<Tool
  				Name="VCFxCopTool"
-@@ -406,7 +389,7 @@
+@@ -406,7 +398,7 @@
  			/>
  		</Configuration>
  		<Configuration
@@ -344,7 +335,7 @@ Index: build/msvc/portaudio.vcproj
  			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
  			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
  			ConfigurationType="2"
-@@ -428,37 +411,35 @@
+@@ -428,37 +420,35 @@
  			/>
  			<Tool
  				Name="VCMIDLTool"
@@ -372,7 +363,7 @@ Index: build/msvc/portaudio.vcproj
 -				PrecompiledHeaderFile="$(PlatformName)\$(ConfigurationName)/portaudio.pch"
 +				Optimization="0"
 +				AdditionalIncludeDirectories="..\..\src\common,..\..\include,.\,..\..\src\os\win"
-+				PreprocessorDefinitions="_WIN64;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="_WIN64;_DEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
 +				MinimalRebuild="true"
 +				BasicRuntimeChecks="3"
 +				RuntimeLibrary="3"
@@ -394,7 +385,7 @@ Index: build/msvc/portaudio.vcproj
  				Culture="1033"
  			/>
  			<Tool
-@@ -466,15 +447,15 @@
+@@ -466,15 +456,15 @@
  			/>
  			<Tool
  				Name="VCLinkerTool"
@@ -417,7 +408,7 @@ Index: build/msvc/portaudio.vcproj
  			/>
  			<Tool
  				Name="VCALinkTool"
-@@ -488,7 +469,7 @@
+@@ -488,7 +478,7 @@
  			<Tool
  				Name="VCBscMakeTool"
  				SuppressStartupBanner="true"
@@ -426,7 +417,16 @@ Index: build/msvc/portaudio.vcproj
  			/>
  			<Tool
  				Name="VCFxCopTool"
-@@ -625,7 +606,7 @@
+@@ -540,7 +530,7 @@
+ 				EnableIntrinsicFunctions="true"
+ 				FavorSizeOrSpeed="1"
+ 				AdditionalIncludeDirectories="..\..\src\common;..\..\include;.\;..\..\src\os\win"
+-				PreprocessorDefinitions="_WIN64;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=0;PA_USE_WMME=1;PA_USE_WASAPI=1;PA_USE_WDMKS=1"
++				PreprocessorDefinitions="_WIN64;NDEBUG;_USRDLL;PA_ENABLE_DEBUG_OUTPUT;_CRT_SECURE_NO_DEPRECATE;PAWIN_USE_WDMKS_DEVICE_INFO;PA_WDMKS_NO_KSGUID_LIB;PA_USE_ASIO=0;PA_USE_DS=1;PA_USE_WMME=1;PA_USE_WASAPI=0;PA_USE_WDMKS=1"
+ 				StringPooling="true"
+ 				RuntimeLibrary="0"
+ 				EnableFunctionLevelLinking="true"
+@@ -625,7 +615,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -435,7 +435,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -634,7 +615,7 @@
+@@ -634,7 +624,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -444,7 +444,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -643,7 +624,7 @@
+@@ -643,7 +633,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -453,7 +453,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -652,7 +633,7 @@
+@@ -652,7 +642,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -462,7 +462,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -683,7 +664,7 @@
+@@ -683,7 +673,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -471,7 +471,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -692,7 +673,7 @@
+@@ -692,7 +682,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -480,7 +480,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -701,7 +682,7 @@
+@@ -701,7 +691,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -489,7 +489,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -710,7 +691,7 @@
+@@ -710,7 +700,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -498,7 +498,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -741,7 +722,7 @@
+@@ -741,7 +731,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -507,7 +507,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -750,7 +731,7 @@
+@@ -750,7 +740,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -516,7 +516,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -759,7 +740,7 @@
+@@ -759,7 +749,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -525,7 +525,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -768,7 +749,7 @@
+@@ -768,7 +758,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -534,7 +534,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -799,7 +780,7 @@
+@@ -799,7 +789,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -543,7 +543,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -808,7 +789,7 @@
+@@ -808,7 +798,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -552,7 +552,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -817,7 +798,7 @@
+@@ -817,7 +807,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -561,7 +561,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -826,7 +807,7 @@
+@@ -826,7 +816,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -570,7 +570,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -857,7 +838,7 @@
+@@ -857,7 +847,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -579,7 +579,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -866,7 +847,7 @@
+@@ -866,7 +856,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -588,7 +588,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -875,7 +856,7 @@
+@@ -875,7 +865,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -597,7 +597,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -884,7 +865,7 @@
+@@ -884,7 +874,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -606,7 +606,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -915,7 +896,7 @@
+@@ -915,7 +905,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -615,7 +615,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -924,7 +905,7 @@
+@@ -924,7 +914,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -624,7 +624,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -933,7 +914,7 @@
+@@ -933,7 +923,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -633,7 +633,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -942,7 +923,7 @@
+@@ -942,7 +932,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -642,7 +642,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -973,7 +954,7 @@
+@@ -973,7 +963,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -651,7 +651,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -982,7 +963,7 @@
+@@ -982,7 +972,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -660,7 +660,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -991,7 +972,7 @@
+@@ -991,7 +981,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -669,7 +669,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1000,7 +981,7 @@
+@@ -1000,7 +990,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -678,7 +678,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1031,7 +1012,7 @@
+@@ -1031,7 +1021,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -687,7 +687,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1040,7 +1021,7 @@
+@@ -1040,7 +1030,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -696,7 +696,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1049,7 +1030,7 @@
+@@ -1049,7 +1039,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -705,7 +705,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1058,7 +1039,7 @@
+@@ -1058,7 +1048,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -714,7 +714,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1089,7 +1070,7 @@
+@@ -1089,7 +1079,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -723,7 +723,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1098,7 +1079,7 @@
+@@ -1098,7 +1088,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -732,7 +732,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1107,7 +1088,7 @@
+@@ -1107,7 +1097,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -741,7 +741,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1116,7 +1097,7 @@
+@@ -1116,7 +1106,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -750,7 +750,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1147,7 +1128,7 @@
+@@ -1147,7 +1137,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -759,7 +759,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1156,7 +1137,7 @@
+@@ -1156,7 +1146,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -768,7 +768,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1165,7 +1146,7 @@
+@@ -1165,7 +1155,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -777,7 +777,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1174,7 +1155,7 @@
+@@ -1174,7 +1164,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -786,7 +786,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1205,7 +1186,7 @@
+@@ -1205,7 +1195,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -795,7 +795,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1214,7 +1195,7 @@
+@@ -1214,7 +1204,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -804,7 +804,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1223,7 +1204,7 @@
+@@ -1223,7 +1213,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -813,7 +813,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1232,7 +1213,7 @@
+@@ -1232,7 +1222,7 @@
  						/>
  					</FileConfiguration>
  					<FileConfiguration
@@ -822,7 +822,7 @@ Index: build/msvc/portaudio.vcproj
  						>
  						<Tool
  							Name="VCCLCompilerTool"
-@@ -1270,7 +1251,7 @@
+@@ -1270,7 +1260,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -831,7 +831,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1279,7 +1260,7 @@
+@@ -1279,7 +1269,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -840,7 +840,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1288,7 +1269,7 @@
+@@ -1288,7 +1278,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -849,7 +849,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1297,7 +1278,7 @@
+@@ -1297,7 +1287,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -858,7 +858,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1331,7 +1312,7 @@
+@@ -1331,7 +1321,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -867,7 +867,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1340,7 +1321,7 @@
+@@ -1340,7 +1330,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -876,7 +876,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1349,7 +1330,7 @@
+@@ -1349,7 +1339,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -885,7 +885,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1358,7 +1339,7 @@
+@@ -1358,7 +1348,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -894,7 +894,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1389,7 +1370,7 @@
+@@ -1389,7 +1379,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -903,7 +903,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1398,7 +1379,7 @@
+@@ -1398,7 +1388,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -912,7 +912,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1407,7 +1388,7 @@
+@@ -1407,7 +1397,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -921,7 +921,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1416,7 +1397,7 @@
+@@ -1416,7 +1406,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -930,7 +930,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1447,7 +1428,7 @@
+@@ -1447,7 +1437,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -939,7 +939,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1456,7 +1437,7 @@
+@@ -1456,7 +1446,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -948,7 +948,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1465,7 +1446,7 @@
+@@ -1465,7 +1455,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -957,7 +957,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1474,7 +1455,7 @@
+@@ -1474,7 +1464,7 @@
  								/>
  							</FileConfiguration>
  							<FileConfiguration
@@ -966,7 +966,7 @@ Index: build/msvc/portaudio.vcproj
  								>
  								<Tool
  									Name="VCCLCompilerTool"
-@@ -1510,7 +1491,7 @@
+@@ -1510,7 +1500,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -975,7 +975,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1519,7 +1500,7 @@
+@@ -1519,7 +1509,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -984,7 +984,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1528,7 +1509,7 @@
+@@ -1528,7 +1518,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -993,7 +993,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1537,7 +1518,7 @@
+@@ -1537,7 +1527,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1002,7 +1002,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1568,7 +1549,7 @@
+@@ -1568,7 +1558,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1011,7 +1011,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1577,7 +1558,7 @@
+@@ -1577,7 +1567,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1020,7 +1020,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1586,7 +1567,7 @@
+@@ -1586,7 +1576,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1029,7 +1029,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1595,7 +1576,7 @@
+@@ -1595,7 +1585,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1038,7 +1038,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1630,7 +1611,7 @@
+@@ -1630,7 +1620,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1047,7 +1047,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1639,7 +1620,7 @@
+@@ -1639,7 +1629,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1056,7 +1056,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1648,7 +1629,7 @@
+@@ -1648,7 +1638,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1065,7 +1065,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1657,7 +1638,7 @@
+@@ -1657,7 +1647,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1074,7 +1074,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1716,7 +1697,7 @@
+@@ -1716,7 +1706,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1083,7 +1083,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1725,7 +1706,7 @@
+@@ -1725,7 +1715,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1092,7 +1092,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1734,7 +1715,7 @@
+@@ -1734,7 +1724,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1101,7 +1101,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1743,7 +1724,7 @@
+@@ -1743,7 +1733,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1110,7 +1110,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1774,7 +1755,7 @@
+@@ -1774,7 +1764,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1119,7 +1119,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1783,7 +1764,7 @@
+@@ -1783,7 +1773,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1128,7 +1128,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1792,7 +1773,7 @@
+@@ -1792,7 +1782,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1137,7 +1137,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1801,7 +1782,7 @@
+@@ -1801,7 +1791,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1146,7 +1146,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1840,7 +1821,7 @@
+@@ -1840,7 +1830,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1155,7 +1155,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1849,7 +1830,7 @@
+@@ -1849,7 +1839,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1164,7 +1164,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1858,7 +1839,7 @@
+@@ -1858,7 +1848,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
@@ -1173,7 +1173,7 @@ Index: build/msvc/portaudio.vcproj
  							>
  							<Tool
  								Name="VCCLCompilerTool"
-@@ -1867,7 +1848,7 @@
+@@ -1867,7 +1857,7 @@
  							/>
  						</FileConfiguration>
  						<FileConfiguration
