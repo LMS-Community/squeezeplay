@@ -200,7 +200,7 @@ app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeeze
 
 # portaudio
 portaudio_v19/Makefile:
-	cd portaudio_v19; ./configure CC= --prefix=${PREFIX} --enable-mac-debug=yes --enable-debug-output=yes
+	cd portaudio_v19; ./configure CC= --prefix=${PREFIX}
 
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
