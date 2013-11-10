@@ -1,0 +1,119 @@
+Index: configure
+===================================================================
+--- configure	(revision 1911)
++++ configure	(working copy)
+@@ -3386,7 +3386,7 @@
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS="-s"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3417,7 +3417,7 @@
+ 
+ else
+   ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS="-s"
+ 	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3445,9 +3445,9 @@
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-s -O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS="-s"
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -3735,7 +3735,7 @@
+   ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+    ac_cxx_werror_flag=yes
+    ac_cv_prog_cxx_g=no
+-   CXXFLAGS="-g"
++   CXXFLAGS="-s"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3766,7 +3766,7 @@
+ 
+ else
+   ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+-	 CXXFLAGS="-g"
++	 CXXFLAGS="-s"
+ 	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3794,9 +3794,9 @@
+   CXXFLAGS=$ac_save_CXXFLAGS
+ elif test $ac_cv_prog_cxx_g = yes; then
+   if test "$GXX" = yes; then
+-    CXXFLAGS="-g -O2"
++    CXXFLAGS="-s -O2"
+   else
+-    CXXFLAGS="-g"
++    CXXFLAGS="-s"
+   fi
+ else
+   if test "$GXX" = yes; then
+@@ -15654,7 +15654,6 @@
+ 
+ 
+ cat >>confdefs.h <<_ACEOF
+-#define SIZEOF_LONG $ac_cv_sizeof_long
+ _ACEOF
+ 
+ 
+@@ -15739,7 +15738,7 @@
+        [ "$enable_mac_debug" != "yes" ] ; then
+    CFLAGS="-O2 -Wall -pedantic -pipe -fPIC -DNDEBUG"
+ else
+-   CFLAGS=${CFLAGS:-"-g -O2 -Wall -pedantic -pipe -fPIC"}
++   CFLAGS=${CFLAGS:-"-s -O2 -Wall -pedantic -pipe -fPIC"}
+ fi
+ 
+ if [ $ac_cv_c_bigendian = "yes" ] ; then
+@@ -15765,7 +15764,7 @@
+         $as_echo "#define PA_USE_COREAUDIO 1" >>confdefs.h
+ 
+ 
+-        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Werror"
++        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -DNDEBUG"
+         LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
+ 
+         if test "x$enable_mac_universal" = "xyes" ; then
+Index: src/common/pa_front.c
+===================================================================
+--- src/common/pa_front.c	(revision 1911)
++++ src/common/pa_front.c	(working copy)
+@@ -77,7 +77,7 @@
+ #include "pa_debugprint.h"
+ 
+ 
+-#define PA_VERSION_  1899
++#define PA_VERSION_  1911
+ #define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  " " __TIME__ ")"
+ 
+ 
+Index: src/common/pa_types.h
+===================================================================
+--- src/common/pa_types.h	(revision 1911)
++++ src/common/pa_types.h	(working copy)
+@@ -62,7 +62,11 @@
+ #endif
+ 
+ #ifndef SIZEOF_LONG
++#ifdef __LP64__
++#define SIZEOF_LONG 8
++#else
+ #define SIZEOF_LONG 4
++#endif /* __LP64__ */
+ #endif
+ 
+ 
