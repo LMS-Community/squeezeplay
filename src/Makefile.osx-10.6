@@ -50,12 +50,12 @@ export BUILD_TOP=$(BASE_DIR)build/osx
 
 export PREFIX=${BUILD_TOP}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -g
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -s
 export LDFLAGS=-L${PREFIX}/lib -L/usr/lib
 
-export TOOLPATH = $(shell dirname `which gcc`)
+export TOOLPATH=$(shell dirname `which gcc`)
 
-export SDL_CONFIG = sdl-config
+export SDL_CONFIG=${PREFIX}/bin/sdl-config
 export CC=sh ${BASE_DIR}src/gcc-fat-10.6.sh
 
 #
@@ -103,7 +103,7 @@ sdl: SDL-1.2.15/build/x86/Makefile
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; ./configure  --disable-sdltest --disable-tif --prefix=${PREFIX} SDL_CONFIG=${PREFIX}/bin/sdl-config
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  --disable-sdltest --disable-tif --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
