@@ -1,0 +1,89 @@
+#!/bin/ksh
+#
+PKGNAME=SUNWsqueezeplay
+SVNVER=`cd $HOME/source/squeezeplay; (svnversion | gsed -e 's/[MS]//g')`
+VERSION=7.8.0.${SVNVER}
+SAVEDIR=`pwd`
+HOSTNAME=`uname -n`
+startdir=$HOME/source/squeezeplay/build/openindiana
+
+cd $startdir
+mkdir squeezeplay
+mv bin include lib man share squeezeplay
+
+setrpath squeezeplay/bin/cjpeg "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/djpeg "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/jive "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/jpegtran "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/lua "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/luac "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/rdjpgcom "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/wrjpgcom "/opt/squeezeplay/lib"
+setrpath squeezeplay/bin/xmlwf "/opt/squeezeplay/lib"
+
+setrpath squeezeplay/lib/libexpat.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libFLAC.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libfreetype.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libjpeg.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libmad.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libogg.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libpng.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libpng12.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libSDL_gfx.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libSDL_image.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libSDL_ttf.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libSDL.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libtolua++.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libvorbisidec.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/libz.so "/opt/squeezeplay/lib"
+
+setrpath squeezeplay/lib/lua/5.1/mime/core.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/rtmp.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/lxp.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/socket/core.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/sha1.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/unicode/core.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/zipfilter.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/json.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/lfs.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/md5.so "/opt/squeezeplay/lib"
+setrpath squeezeplay/lib/lua/5.1/profiler.so "/opt/squeezeplay/lib"
+
+echo "CLASSES=none" > pkginfo
+echo "BASEDIR=/opt" >> pkginfo
+echo "LANG=C" >> pkginfo
+echo "TZ=Canada/Eastern" >> pkginfo
+echo "PATH=/sbin:/usr/sbin:/usr/bin:/usr/sadm/install/bin" >> pkginfo
+echo "OAMBASE=/usr/sadm/sysadm" >> pkginfo
+echo "ARCH=sparc" >> pkginfo
+echo "PKG=${PKGNAME}" >> pkginfo
+echo "NAME=squeezeplay - client for the logitech streaming media server" >> pkginfo
+echo "VERSION=${VERSION},REV=`date '+%Y.%m.%d'`" >> pkginfo
+echo "CATEGORY=application" >> pkginfo
+echo "VENDOR=https://github.com/ralph-irving packaged by Ralph Irving" >> pkginfo
+echo "HOTLINE=https://github.com/ralph-irving/squeezeplay/issues" >> pkginfo
+echo "EMAIL=ralph_irving@hotmail.com" >> pkginfo
+echo "PSTAMP=${HOSTNAME%%.*}`date +'%Y%m%d%H%M%S'`" >> pkginfo
+echo "PKGSAV=/var/sadm/pkg/${PKGNAME}/save" >> pkginfo
+
+echo 'i pkginfo=pkginfo' > prototype
+id | awk '{print $1 " " $2}' | sed 's/uid=[0-9]*(//' | sed 's/).*//' > uid.tmp
+id | awk '{print $1 " " $2}' | sed 's/.*(//' | sed 's/)//' > gid.tmp
+find . \! -name pkginfo -a \! -name prototype | \
+pkgproto | sed "s/ `cat uid.tmp`/ root/" | \
+sed "s| `cat gid.tmp`| bin|" | \
+sed "s|f none uid.tmp 0644 root bin||" | \
+sed "s|f none gid.tmp 0644 root bin||" \
+>> prototype
+rm -f uid.tmp gid.tmp
+
+pkgmk -o -r `pwd` -a `uname -m` -v ${VERSION}
+cd /var/spool/pkg
+echo "1" | pkgtrans -s `pwd` ${HOME}/source/packages/${PKGNAME}-${VERSION}.pkg
+rm -rf ${PKGNAME}
+cd $startdir
+mv squeezeplay/* .
+rmdir squeezeplay
+rm pkginfo
+rm prototype
+cd ${SAVEDIR}
