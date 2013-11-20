@@ -1,5 +1,5 @@
 ################################################################################
-# Squeezeplay makefile for Linux 3.2 raspberry pi armhf
+# Squeezeplay makefile for Linux armel and raspberry pi armhf
 # Copyright 2007 Logitech
 # Copyright 2012 Duane Paddock
 ################################################################################
@@ -8,8 +8,8 @@
 #
 # sudo apt-get install libx11-dev
 # sudo apt-get install libxext-dev
+# sudo apt-get install libasound2-dev
 # sudo apt-get install libreadline-gplv2-dev (armhf) / libreadline-dev (armel)
-# sudo apt-get install libexpat1-dev
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
@@ -31,7 +31,7 @@ export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
-ENABLE_PROFILING=--enable-shared=no --enable-static=yes
+ENABLE_PROFILING=--enable-shared=yes --enable-static=no
 USE_MMX=--disable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
@@ -56,7 +56,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib expat freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -68,9 +68,16 @@ zlib-1.2.7/Makefile:
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
 
+# expat
+expat-2.0.1/Makefile:
+	cd expat-2.0.1; ./configure --prefix=${PREFIX}
+
+expat: expat-2.0.1/Makefile
+	cd expat-2.0.1; make; make prefix=${PREFIX} install
+
 # freetype
 freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
@@ -92,28 +99,28 @@ libjpeg: jpeg-6b/Makefile
 
 # sdl
 SDL-1.2.15/Makefile:
-	cd SDL-1.2.15; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-alsa --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
+	cd SDL-1.2.15; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-alsa --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
 
 sdl: SDL-1.2.15/Makefile
 	cd SDL-1.2.15; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif ${ENABLE_PROFILING} --prefix=${PREFIX} ${LIBPNG} ${LIBJPEG}
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-tif  --host=${HOST} --target=${TARGET} ${ENABLE_PROFILING} --prefix=${PREFIX} ${LIBPNG} ${LIBJPEG}
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
 
 sdl-ttf: SDL_ttf-2.0.8/Makefile
 	cd SDL_ttf-2.0.8; make && make install
 
 # sdl_gfx
 SDL_gfx-2.0.24/Makefile:
-	cd SDL_gfx-2.0.24; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure ${ENABLE_PROFILING} ${USE_MMX} --prefix=${PREFIX}
+	cd SDL_gfx-2.0.24; ./configure ${ENABLE_PROFILING} ${USE_MMX} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 sdl-gfx: SDL_gfx-2.0.24/Makefile
 	cd SDL_gfx-2.0.24; make && make install
@@ -139,13 +146,13 @@ slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
 
 luajson/Makefile:
-	cd luajson; ./configure --prefix=${PREFIX}
+	cd luajson; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 luajson: luajson/Makefile
 	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
 
 luazipfilter/Makefile:
-	cd luazipfilter; ./configure --prefix=${PREFIX}
+	cd luazipfilter; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
@@ -166,7 +173,7 @@ loop:
 	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
 
-luaexpat: lua
+luaexpat: lua expat
 	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luafilesystem:
@@ -193,7 +200,7 @@ app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeez
 
 # portaudio
 portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --prefix=${PREFIX} --with-jack=no --enable-shared=no
+	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-jack=no --enable-shared=no
 
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
@@ -229,7 +236,7 @@ libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
@@ -253,13 +260,13 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
 
 squeezeplay_desktop/Makefile:
-	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
@@ -271,7 +278,7 @@ squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
 
 squeezeplay_private/Makefile:
-	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX} --enable-wma --enable-aac
+	cd squeezeplay_private; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-wma --enable-aac
 
 squeezeplay_private: squeezeplay_private/Makefile
 	cd squeezeplay_private; make PREFIX=${PREFIX} install
@@ -313,6 +320,7 @@ clean_generated:
 clean:
 	-rm -rf generated
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
+	-cd expat-2.0.1; make distclean
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
 	-cd jpeg-6b; make distclean
