@@ -55,7 +55,7 @@ char *platform_get_mac_address() {
 
     }
 
-    /* Set a fake macaddr to start */
+    /* Set a fake macaddr to start, return fake instead of NULL on error */
     sprintf(macaddr, "00:00:00:00:99:01");
 
     if (WSAStartup(MAKEWORD(2,2), &info) == 0)

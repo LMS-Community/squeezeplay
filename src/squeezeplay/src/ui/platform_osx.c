@@ -32,9 +32,26 @@ char *platform_get_mac_address() {
     struct ifaddrs* ifaphead;
     struct ifaddrs* ifap;
     char *macaddr = NULL;
+    char *utmac;
+
+    macaddr = malloc(18);
+
+    utmac = getenv("UTMAC");
+    if (utmac)
+    {
+        if ( strlen(utmac) == 17 )
+        {
+            strncpy ( macaddr, utmac, 17 );
+            macaddr[17] = '\0';
+            return macaddr;
+        }
+    }
+
+    /* Set a fake macaddr to start, return fake instead of NULL on error */
+    sprintf(macaddr, "00:00:00:00:99:01");
 
     if ( getifaddrs( &ifaphead ) != 0 )
-      return NULL;
+      return macaddr;
     
     // iterate over the net interfaces
     for ( ifap = ifaphead; ifap; ifap = ifap->ifa_next )
@@ -45,7 +62,6 @@ char *platform_get_mac_address() {
             //take the first found address. 
             //todo: can we be smarter about which is the correct address
             unsigned char * ptr = (unsigned char *)LLADDR(sdl);
-	    macaddr = malloc(18);
             sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
             break;
         }

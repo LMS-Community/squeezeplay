@@ -54,6 +54,22 @@ char *platform_get_mac_address()
 	char 			*utmac;
 	int			status=0;
 
+	macaddr = malloc(18);
+
+	utmac = getenv("UTMAC");
+	if (utmac)
+	{
+		if ( strlen(utmac) == 17 )
+		{
+			strncpy ( macaddr, utmac, 17 );
+			macaddr[17] = '\0';
+			return macaddr;
+		}
+	}
+
+	/* Set a fake macaddr to start, return fake instead of NULL on error */
+	sprintf(macaddr, "00:00:00:00:99:01");
+
 	gethostname(hostname,  MAXHOSTNAMELEN);
 
 	phost = gethostbyname(hostname);
@@ -63,8 +79,9 @@ char *platform_get_mac_address()
 
 	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-	if(sock == -1)
-                return NULL;
+	if ( sock == -1 ) {
+                return macaddr;
+	}
 
 	memset(&parpreq, 0, sizeof(struct arpreq));
 	psa = (struct sockaddr_in *) &parpreq.arp_pa;
@@ -74,12 +91,9 @@ char *platform_get_mac_address()
 
 	status = ioctl(sock, SIOCGARP, &parpreq);
 
-	if(status == -1)
-	{
-		return NULL;
+	if ( status == -1 ) {
+		return macaddr;
 	}
-
-	macaddr = malloc(18);
 
         sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x",
                 (unsigned char) parpreq.arp_ha.sa_data[0],
@@ -88,17 +102,6 @@ char *platform_get_mac_address()
                 (unsigned char) parpreq.arp_ha.sa_data[3],
                 (unsigned char) parpreq.arp_ha.sa_data[4],
                 (unsigned char) parpreq.arp_ha.sa_data[5]);
-
-	utmac = getenv("UTMAC");
-
-	if (utmac)
-	{
-		if ( strlen(utmac) == 17 )
-		{
-			strncpy ( macaddr, utmac, 17 );
-			macaddr[17] = '\0';
-		}
-	}
 
 	return macaddr;
 }

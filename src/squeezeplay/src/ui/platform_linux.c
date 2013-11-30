@@ -42,7 +42,6 @@ static char *iface_mac_address(int sock, char *name) {
     struct ifreq ifr;
     unsigned char *ptr;
     char *macaddr = NULL;
-    char *utmac;
 
     strcpy(ifr.ifr_name, name);
     if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0) {
@@ -60,18 +59,8 @@ static char *iface_mac_address(int sock, char *name) {
     ptr = (unsigned char *) ifr.ifr_hwaddr.sa_data;
 
     macaddr = malloc(18);
+
     sprintf(macaddr, "%02x:%02x:%02x:%02x:%02x:%02x", *ptr,*(ptr+1), *(ptr+2),*(ptr+3), *(ptr+4), *(ptr+5));
-
-    utmac = getenv("UTMAC");
-
-    if (utmac)
-    {
-        if ( strlen(utmac) == 17 )
-        {
-            strncpy ( macaddr, utmac, 17 );
-            macaddr[17] = '\0';
-        }
-    }
 
     return macaddr;
 }
@@ -82,9 +71,21 @@ static char *iface[] = { "eth0", "eth1", "wlan0", "wlan1" };
 char *platform_get_mac_address() {
     FILE *fh;
     char buf[512], *macaddr = NULL;
+    char *utmac;
     size_t i;
     int sock;
 
+    utmac = getenv("UTMAC");
+    if (utmac)
+    {
+        if ( strlen(utmac) == 17 )
+        {
+            macaddr = malloc(18);
+            strncpy ( macaddr, utmac, 17 );
+            macaddr[17] = '\0';
+            return macaddr;
+        }
+    }
 
     sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (sock < 0) {
