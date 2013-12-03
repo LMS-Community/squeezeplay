@@ -72,13 +72,18 @@ function appletInstallerMenu(self, menuItem, action)
 	log:info("requesting applets for version: ", self.version)
 
 	-- find the applet directory
-	for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
-		dir = dir .. "applets"
-		local mode = lfs.attributes(dir, "mode")
-		if mode == "directory" then
-			self.appletdir = dir
-			break
+	if lfs.attributes("/bin/busybox") ~= nil then
+		for dir in package.path:gmatch("([^;]*)%?[^;]*;") do
+			dir = dir .. "applets"
+			local mode = lfs.attributes(dir, "mode")
+			if mode == "directory" then
+				self.appletdir = dir
+				break
+			end
 		end
+	else
+		self.appletdir = System.getUserDir() .. "/applets"
+		log:info("User Applets Path: ", self.appletdir)
 	end
 
 	-- query all non Squeezenetwork servers (will try SN later if no useful response from these)
