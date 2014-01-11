@@ -111,6 +111,7 @@ static int callback(void *inputBuffer,
 	bool_t reached_start_point;
 	Uint8 *outputArray = (u8_t *)outputBuffer;
 	u32_t delay;
+	double stream_time;
 	int ret = paContinue;
 
 #ifndef PA18API
@@ -154,7 +155,17 @@ static int callback(void *inputBuffer,
 	/* sync accurate playpoint */
 	decode_audio->sync_elapsed_samples = decode_audio->elapsed_samples;
 #ifndef PA18API
-	delay = (timeInfo->outputBufferDacTime - Pa_GetStreamTime(stream)) * decode_audio->track_sample_rate;
+	stream_time = Pa_GetStreamTime(stream);
+
+	if (timeInfo->outputBufferDacTime > stream_time)
+	{
+		// workaround for wdm-ks which can return outputBufferDacTime with a different epoch
+		delay = (u32_t)((timeInfo->outputBufferDacTime - stream_time) * decode_audio->track_sample_rate);
+	}
+	else
+	{
+		delay = 0;
+	}
 #else
 	delay = 0;
 #endif /* PA18API */
