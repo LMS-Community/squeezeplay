@@ -23,6 +23,9 @@ local debug                = require("jive.utils.debug")
 local string               = require("jive.utils.string")
 local log                  = require("jive.utils.log").logger("squeezeplay.ui")
 
+local ACTION               = jive.ui.ACTION
+local EVENT_IR_PRESS       = jive.ui.EVENT_IR_PRESS
+
 local EVENT_IR_DOWN        = jive.ui.EVENT_IR_DOWN
 local EVENT_IR_REPEAT      = jive.ui.EVENT_IR_REPEAT
 
@@ -44,6 +47,19 @@ local numberLettersMixed = {
 	[0x7689a857] = 'pqrsPQRS7',  -- 7
 	[0x76896897] = 'tuvTUV8',    -- 8
 	[0x7689e817] = 'wxyzWXYZ9'   -- 9
+}
+
+local numberLettersMixedPreset = {
+	['play_preset_0'] = ' 0',         -- 0
+	['play_preset_1'] = '1.,"?!@-',   -- 1
+	['play_preset_2'] = 'abcABC2',    -- 2
+	['play_preset_3'] = 'defDEF3',    -- 3
+	['play_preset_4'] = 'ghiGHI4',    -- 4
+	['play_preset_5'] = 'jklJKL5',    -- 5
+	['play_preset_6'] = 'mnoMNO6',    -- 6
+	['play_preset_7'] = 'pqrsPQRS7',  -- 7
+	['play_preset_8'] = 'tuvTUV8',    -- 8
+	['play_preset_9'] = 'wxyzWXYZ9'   -- 9
 }
 
 --[[
@@ -77,9 +93,16 @@ end
 function handleEvent(self, event, validChars)
 		local timerWasRunning = self.numberLetterTimer:isRunning()
 
-		local irCode = event:getIRCode()
-		local numberLetters = numberLettersMixed[irCode]
-
+		local irCode, action, numberLetters
+		local evtype = event:getType()
+		
+		if evtype == EVENT_IR_PRESS then
+			irCode = event:getIRCode()
+			numberLetters = numberLettersMixed[irCode]
+		elseif evtype == ACTION then
+			action = event:getAction()
+			numberLetters = numberLettersMixedPreset[action]
+		end
 
 		log:debug("validChars: ", validChars)
 

@@ -644,13 +644,30 @@ function _eventHandler(self, event)
 		self.numberLetterAccel:stopCurrentCharacter()
 		local keycode = event:getKeycode()
 
-		if keycode == KEY_REW then
+		if keycode == KEY_UP or keycode == KEY_DOWN then
+			if self.locked == nil then
+				-- for ui input types like ir and for input like ip or date, down/up scroll polarity will be reversed
+				local polarityModifier = 1
+				if self:_reverseScrollPolarityOnUpDownInput() then
+					polarityModifier = -1
+				end
+				_scroll(self, polarityModifier * (keycode == KEY_DOWN and 1 or -1))
+			end
+
+		elseif keycode == KEY_LEFT then
+			return _deleteAction(self)
+		elseif keycode == KEY_RIGHT then
+			if self:_cursorAtEnd() then
+				return _goAction(self)
+			else
+				return _cursorRightAction(self)
+			end
+		elseif keycode == KEY_REW then
 			return _cursorLeftAction(self)
 		elseif keycode == KEY_FWD then
 			return _cursorRightAction(self)
 		elseif keycode == KEY_BACK then
 			return _deleteAction(self)
-
 		end
 	elseif type == EVENT_KEY_HOLD then
 		self.numberLetterAccel:stopCurrentCharacter()

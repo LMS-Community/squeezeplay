@@ -534,6 +534,24 @@ local function _eventHandler(self, event)
 					self:getWindow():bumpLeft()
 					return EVENT_CONSUME
 				end
+
+			elseif string.match(action, "play_preset") then
+				-- within menus treat preset button presses as special case to allow number keyboard based menu scrolling
+				if self.textIndexHandler then
+					local consume, switchCharacters, scrollLetter = 
+						self.numberLetterAccel:handleEvent(event, self.textIndexHandler.getValidChars())
+					if consume then
+						if scrollLetter then
+							local newIndex = self.textIndexHandler.getIndex(scrollLetter)
+							self:setSelectedIndex(newIndex)
+							
+							self.accelKey = scrollLetter
+							self.accelKeyTimer:restart()
+						end
+
+						return EVENT_CONSUME
+					end
+				end
 			end
 		end
 
