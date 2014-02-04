@@ -903,10 +903,12 @@ local function _renderSlider(step, item)
 			end
 			_performJSONAction(jsonAction, nil, nil, nil, nil)
 
+			--[[ FIXME - this would never have worked!
                         if done then
                                 window:playSound("WINDOWSHOW")
                                 window:hide(Window.transitionPushLeft)
                         end
+			--]]
                 end)
 	local help, text
 	if item.text then

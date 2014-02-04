@@ -366,6 +366,11 @@ function _eventHandler(self, event)
 	elseif type == EVENT_KEY_PRESS then
 		local keycode = event:getKeycode()
 
+		if keycode == KEY_UP then
+			self:_moveSlider(-1)
+		elseif keycode == KEY_DOWN then
+			self:_moveSlider(1)
+		end
 
 		if keycode == KEY_FWD then
 			return _callClosureAction(self, event)
