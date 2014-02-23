@@ -155,7 +155,7 @@ src/version.h: FORCE
 	@echo '#define SQUEEZEPLAY_RELEASE "'`cat ../squeezeplay.version`'"' >> src/version.h
 	@echo '#endif' >> src/version.h
 	@echo '#ifndef SQUEEZEPLAY_REVISION' >> src/version.h
-	@echo '#define SQUEEZEPLAY_REVISION "'`svnversion -n ..`'"' >> src/version.h
+	@echo '#define SQUEEZEPLAY_REVISION "'`svnversion -n .. | sed -e 's/[MS]//g'`'"' >> src/version.h
 	@echo '#endif' >> src/version.h
 	@echo '#define JIVE_VERSION SQUEEZEPLAY_RELEASE" r"SQUEEZEPLAY_REVISION' >> src/version.h
 
