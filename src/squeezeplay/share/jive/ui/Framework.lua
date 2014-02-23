@@ -225,8 +225,11 @@ function constants(module)
 	module.KEY_PLAY = jive.ui.KEY_PLAY
 	module.KEY_ADD = jive.ui.KEY_ADD
 	module.KEY_PAUSE = jive.ui.KEY_PAUSE
+	module.KEY_STOP = jive.ui.KEY_STOP
 	module.KEY_REW = jive.ui.KEY_REW
 	module.KEY_FWD = jive.ui.KEY_FWD 
+	module.KEY_REW_SCAN = jive.ui.KEY_REW_SCAN
+	module.KEY_FWD_SCAN = jive.ui.KEY_FWD_SCAN
 	module.KEY_PAGE_UP = jive.ui.KEY_PAGE_UP
 	module.KEY_PAGE_DOWN = jive.ui.KEY_PAGE_DOWN
 	module.KEY_VOLUME_UP = jive.ui.KEY_VOLUME_UP

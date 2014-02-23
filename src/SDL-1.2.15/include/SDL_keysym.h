@@ -363,6 +363,9 @@ typedef enum {
 	SDLK_LaunchE            = 371,
 	SDLK_LaunchF            = 372,
 
+	SDLK_LeftMouse          = 373,
+	SDLK_RightMouse         = 374,
+
 	SDLK_LAST
 } SDLKey;
 
@@ -387,5 +390,7 @@ typedef enum {
 #define KMOD_SHIFT	(KMOD_LSHIFT|KMOD_RSHIFT)
 #define KMOD_ALT	(KMOD_LALT|KMOD_RALT)
 #define KMOD_META	(KMOD_LMETA|KMOD_RMETA)
+
+#define SDL_MEDIAKEYS_DEFINED
 
 #endif /* _SDL_keysym_h */

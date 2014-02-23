@@ -36,6 +36,8 @@ local KEY_GO                 = jive.ui.KEY_GO
 local KEY_BACK               = jive.ui.KEY_BACK
 local KEY_FWD                = jive.ui.KEY_FWD
 local KEY_REW                = jive.ui.KEY_REW
+local KEY_FWD_SCAN           = jive.ui.KEY_FWD_SCAN
+local KEY_REW_SCAN           = jive.ui.KEY_REW_SCAN
 
 local appletManager          = appletManager
 
@@ -320,7 +322,7 @@ function event(self, event)
 		local keycode = event:getKeycode()
 
 		-- we're only interested in volume keys
-		if keycode & (KEY_FWD|KEY_REW) == 0 then
+		if bit.band(keycode, bit.bor(KEY_FWD, KEY_REW, KEY_FWD_SCAN, KEY_REW_SCAN)) == 0 then
 			return EVENT_CONSUME
 		end
 
@@ -337,10 +339,10 @@ function event(self, event)
 		-- in which case the hold-fwd/hold-rew used to enter this mode
 		-- would immediately start scanning, but I think that it is better
 		-- without this.
-		if type == EVENT_KEY_DOWN then
-			if keycode == KEY_FWD then
+		if type == EVENT_KEY_DOWN or type == EVENT_KEY_HOLD then
+			if keycode == KEY_FWD or keycode == KEY_FWD_SCAN then
 				self.delta = 1
-			elseif keycode == KEY_REW then
+			elseif keycode == KEY_REW or keycode == KEY_REW_SCAN then
 				self.delta = -1
 			else
 				self.delta = 0

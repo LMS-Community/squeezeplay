@@ -2296,6 +2296,9 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"KEY_PLAY",JIVE_KEY_PLAY);
    tolua_constant(tolua_S,"KEY_ADD",JIVE_KEY_ADD);
    tolua_constant(tolua_S,"KEY_PAUSE",JIVE_KEY_PAUSE);
+   tolua_constant(tolua_S,"KEY_STOP",JIVE_KEY_STOP);
+   tolua_constant(tolua_S,"KEY_REW_SCAN",JIVE_KEY_REW_SCAN);
+   tolua_constant(tolua_S,"KEY_FWD_SCAN",JIVE_KEY_FWD_SCAN);
    tolua_constant(tolua_S,"KEY_REW",JIVE_KEY_REW);
    tolua_constant(tolua_S,"KEY_FWD",JIVE_KEY_FWD);
    tolua_constant(tolua_S,"KEY_VOLUME_UP",JIVE_KEY_VOLUME_UP);

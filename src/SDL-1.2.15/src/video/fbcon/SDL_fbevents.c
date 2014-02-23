@@ -61,8 +61,8 @@
 /* The translation tables from a console scancode to a SDL keysym */
 #define NUM_VGAKEYMAPS	(1<<KG_CAPSSHIFT)
 static Uint16 vga_keymap[NUM_VGAKEYMAPS][NR_KEYS];
-static SDLKey keymap[128];
-static Uint16 keymap_temp[128]; /* only used at startup */
+static SDLKey keymap[210];
+static Uint16 keymap_temp[210]; /* only used at startup */
 static SDL_keysym *TranslateKey(int scancode, SDL_keysym *keysym);
 
 /* Ugh, we have to duplicate the kernel's keysym mapping code...
@@ -998,14 +998,29 @@ static void handle_keyboard(_THIS)
 	int pressed;
 	int scancode;
 	SDL_keysym keysym;
-
 	nread = read(keyboard_fd, keybuf, BUFSIZ);
-	for ( i=0; i<nread; ++i ) {
-		scancode = keybuf[i] & 0x7F;
-		if ( keybuf[i] & 0x80 ) {
-			pressed = SDL_RELEASED;
+	for ( i = 0; i<nread; ++i ) {
+		if ( ((keybuf[i] == 0) || keybuf[i] == 128) && (nread-i >= 2) && (keybuf[i + 1] == 129 || keybuf[i + 1] == 130) ) {
+			/* FIXME: handle extended codes 129 and 130 differently?
+			   is extended character (scancode>128), comes in as three codes,
+			   first code: 0(pressed) or 128(released), second code:129 or 130
+			   third code: actual extended scancode value
+			*/
+			scancode = keybuf[i + 2];
+			if (keybuf[i] == 0) {
+				pressed = SDL_PRESSED;
+			} else {
+				pressed = SDL_RELEASED;
+			}
+			//push past next 2 since the set of 3 are the extended character representation
+			i += 2;
 		} else {
-			pressed = SDL_PRESSED;
+			scancode = keybuf[i] & 0x7F;
+			if ( keybuf[i] & 0x80 ) {
+				pressed = SDL_RELEASED;
+			} else {
+				pressed = SDL_PRESSED;
+			}
 		}
 		TranslateKey(scancode, &keysym);
 		/* Handle Ctrl-Alt-FN for vt switch */
@@ -1133,6 +1148,40 @@ void FB_InitOSKeymap(_THIS)
 	  case 127:
 	    keymap[i] = SDLK_MENU;
 	    break;
+	  case 113:
+	    keymap[i] = SDLK_AudioMute;
+	    break;
+	  case 114:
+	    keymap[i] = SDLK_AudioLowerVolume;
+	    break;
+	  case 115:
+	    keymap[i] = SDLK_AudioRaiseVolume;
+	    break;
+	  case 116:
+	  case 142:
+	    keymap[i] = SDLK_POWER;
+	    break;
+	  case 144:
+	    keymap[i] = SDLK_LeftMouse;
+	    break;
+	  case 145:
+	    keymap[i] = SDLK_RightMouse;
+	    break;
+	  case 163:
+	    keymap[i] = SDLK_AudioNext;
+	    break;
+	  case 164:
+	    keymap[i] = SDLK_AudioPlay;
+	    break;
+	  case 165:
+	    keymap[i] = SDLK_AudioPrev;
+	    break;
+	  case 166:
+	    keymap[i] = SDLK_AudioStop;
+	    break;
+	  case 172:
+	    keymap[i] = SDLK_WWW;
+	    break;
 	  /* this should take care of all standard ascii keys */
 	  default:
 	    keymap[i] = KVAL(vga_keymap[0][i]);
@@ -1199,7 +1248,7 @@ void FB_InitOSKeymap(_THIS)
 	    case K_NUM:  keymap[i] = SDLK_NUMLOCK;   break;
 	    case K_CAPS: keymap[i] = SDLK_CAPSLOCK;  break;
 
-	    case K_F13:   keymap[i] = SDLK_PRINT;     break;
+	    //case K_F13:   keymap[i] = SDLK_PRINT;     break;
 	    case K_HOLD:  keymap[i] = SDLK_SCROLLOCK; break;
 	    case K_PAUSE: keymap[i] = SDLK_PAUSE;     break;
 

@@ -79,6 +79,7 @@ local KEY_LEFT          = jive.ui.KEY_LEFT
 local KEY_RIGHT         = jive.ui.KEY_RIGHT
 local KEY_PLAY          = jive.ui.KEY_PLAY
 local KEY_PAUSE         = jive.ui.KEY_PAUSE
+local KEY_STOP          = jive.ui.KEY_STOP
 local KEY_VOLUME_UP     = jive.ui.KEY_VOLUME_UP
 local KEY_VOLUME_DOWN   = jive.ui.KEY_VOLUME_DOWN
 local KEY_ADD           = jive.ui.KEY_ADD
