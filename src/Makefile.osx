@@ -212,8 +212,10 @@ flac: flac-1.2.1/Makefile
 
 # libmad
 LIBMAD_DIR=libmad-0.15.1b
+
 generated/${LIBMAD_DIR}/_patched.txt:
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
+	mkdir -p generated
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz; \
 	touch ${LIBMAD_DIR}/aclocal.m4; \
 	patch -p0 < ../libmad-0.15.1b-universal-configure.ac.patch; \
 	patch -p0 < ../libmad-0.15.1b-universal-config.h.in.patch; \
@@ -223,15 +225,11 @@ generated/${LIBMAD_DIR}/_patched.txt:
 	patch -p0 < ../libmad-0.15.1b-universal-configure.patch; \
 	touch ${LIBMAD_DIR}/_patched.txt
 
-		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt 
 	cd generated/${LIBMAD_DIR}; ./configure  --enable-fpm=default  --prefix=${PREFIX}
-	#cd generated/${LIBMAD_DIR}; ./configure  --enable-fpm=default  --prefix=${PREFIX}
 
 libmad: generated/${LIBMAD_DIR}/_patched.txt generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
-#	cd generated/${LIBMAD_DIR}; make --debug=a && make install
-
 
 # ogg
 Tremor/Makefile:

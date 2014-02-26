@@ -11,8 +11,8 @@
 # sudo apt-get install libreadline5-dev
 # sudo apt-get install expat-dev
 #
-# Revision 403+ required.
-# svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
+# Revision 373+ required.
+# svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
@@ -214,9 +214,10 @@ flac: flac-1.2.1/Makefile
 
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
-generated/${LIBMAD_DIR}/Makefile.am:
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
 
+generated/${LIBMAD_DIR}/Makefile.am:
+	mkdir -p generated
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-forcemem.patch
@@ -310,7 +311,6 @@ clean_generated:
 
 .PHONY: clean
 clean:
-	-rm -rf generated
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean

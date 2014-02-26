@@ -177,10 +177,12 @@ flac: flac-1.2.1/Makefile
 
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
-generated/${LIBMAD_DIR}/Makefile.am:
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; tar xvf ./${LIBMAD_DIR}.tar.gz; \
+LIBMAD_TAR=${LIBMAD_DIR}.tar.gz
 
-		
+generated/${LIBMAD_DIR}/Makefile.am:
+	mkdir -p generated
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
+
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
 	cd generated/${LIBMAD_DIR}; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} 
 
@@ -271,7 +273,6 @@ clean_generated:
 
 .PHONY: clean
 clean:
-	-rm -rf generated
 	-cd freetype-2.1.10; make distclean
 	-cd SDL-1.2.13; make distclean; rm -f include/SDL_config.h;
 	-cd SDL_image-1.2.5; make distclean

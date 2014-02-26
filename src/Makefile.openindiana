@@ -6,8 +6,8 @@
 #
 # These steps are required for a successful build
 #
-# Revision 403+ required.
-# svn checkout https://squeezeslave.googlecode.com/svn/squeezeslave/trunk/squeezeslave/lib/portaudio portaudio_v18_1
+# Revision 373+ required.
+# svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # cd /usr/bin; sudo ln -s ginstall install
 
@@ -220,11 +220,11 @@ flac: flac-1.2.1/Makefile
 
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
+LIBMAD_TAR=${LIBMAD_DIR}.tar.gz
 generated/${LIBMAD_DIR}/Makefile.am:
-	#mkdir -p generated; cd generated; wget http://duanep.dyndns.org:8100/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
-	mkdir -p generated; cd generated; wget http://duanep.dyndns.org/~paddockd/${LIBMAD_DIR}.tar.gz; gunzip -c ./${LIBMAD_DIR}.tar.gz | tar -xf -; \
+	mkdir -p generated
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
 
-		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am 
 	cd generated/${LIBMAD_DIR}; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING} --enable-fpm=64bit
 
@@ -321,7 +321,6 @@ clean_generated:
 
 .PHONY: clean
 clean:
-	-rm -rf generated
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
 	-cd expat-2.0.1; make distclean
 	-cd freetype-2.1.10; make distclean
