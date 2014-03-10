@@ -6,9 +6,9 @@
 #------
 # Compiler and linker settings
 # for Solaris
-DEF=-DLUASOCKET_DEBUG 
+DEF=
 MYCFLAGS= $(LUAINC) -I$(COMPAT) $(DEF) -pedantic -Wall -O2 -fPIC
-MYLDFLAGS=-O -fPIC
+MYLDFLAGS=$(LDFLAGS) -O -fPIC
 
 #------
 # End of makefile platform specific configuration
