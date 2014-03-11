@@ -1,0 +1,17 @@
+Index: src/squeezeplay/Makefile.in
+===================================================================
+--- src/squeezeplay/Makefile.in	(revision 372)
++++ src/squeezeplay/Makefile.in	(working copy)
+@@ -1244,9 +1244,9 @@
+ 
+ jive-static-install:
+ 	mkdir -p $(JIVE_BUILD_DIR)
+-	cd share; tar -pcf  - \
+-		`find . \( -name "*.mp3" -o -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \)` \
+-	    | tar -C $(JIVE_BUILD_DIR) -pxf -
++	cd share; find . \( -name "*.mp3" -o -name "*.jpg" -o -name "*.gif" -o -name "*.png" -o -name "*.wav" -o -name "*.txt" -o -name "*.lua" \) -print > /var/tmp/jive-file-list
++	cd share; tar -pcf - --files-from /var/tmp/jive-file-list | tar -C $(JIVE_BUILD_DIR) -pxf -
++	rm /var/tmp/jive-file-list
+ 
+ install-data-local: jive-static-install
+ 	rm -rf $(JIVE_BUILD_DIR)/strict.lua

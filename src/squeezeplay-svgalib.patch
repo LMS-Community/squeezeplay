@@ -1,0 +1,31 @@
+Index: src/squeezeplay/src/ui/jive_framework.c
+===================================================================
+--- src/squeezeplay/src/ui/jive_framework.c	(revision 372)
++++ src/squeezeplay/src/ui/jive_framework.c	(working copy)
+@@ -196,7 +196,7 @@
+ 	log_ui = LOG_CATEGORY_GET("squeezeplay.ui");
+ 
+ 	/* linux fbcon does not need a mouse */
+-	SDL_putenv("SDL_NOMOUSE=1");
++	/* SDL_putenv("SDL_NOMOUSE=1"); */
+ 
+ #ifdef JIVE_NO_DISPLAY
+ #   define JIVE_SDL_FEATURES (SDL_INIT_EVENTLOOP)
+@@ -240,8 +240,17 @@
+ 	screen_w = video_info->current_w;
+ 	screen_h = video_info->current_h;
+ #endif
++	if ( screen_w == 0 )
++		screen_w = 640;
++
++	if ( screen_h == 0 )
++		screen_h = 480;
++		
+ 	screen_bpp = video_info->vfmt->BitsPerPixel;
+ 
++	if ( screen_bpp <= 8 )
++		screen_bpp = 16 ;
++
+ 	if (video_info->wm_available) {
+ 		/* desktop build */
+ 		JiveSurface *icon;
