@@ -1,15 +1,12 @@
 ################################################################################
-# Squeezeplay makefile for Linux
+# Squeezeplay makefile for Linux 2.4 OSS
 # Copyright 2007 Logitech
-# Copyright 2012 Duane Paddock
+# Copyright 2014 Duane Paddock
 ################################################################################
 
-# Additional packages required to build
 #
-# sudo apt-get install libx11-dev
-# sudo apt-get install libxext-dev
-# sudo apt-get install libreadline5-dev
-# sudo apt-get install expat-dev
+# Revision 410+ required.
+# svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
@@ -24,7 +21,7 @@ export BUILD_TOP=$(BASE_DIR)build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -71,7 +68,7 @@ zlib: zlib-1.2.7/Makefile
 
 # freetype
 freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd freetype-2.1.10; ./configure --enable-shared ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 freetype: freetype-2.1.10/config.mk
 	cd freetype-2.1.10; make; make install
@@ -93,7 +90,7 @@ libjpeg: jpeg-6b/Makefile
 
 # sdl
 SDL-1.2.15/Makefile:
-	cd SDL-1.2.15; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-alsa --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
+	cd SDL-1.2.15; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-alsa=no --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime=no
 
 sdl: SDL-1.2.15/Makefile
 	cd SDL-1.2.15; make && make install
@@ -190,14 +187,12 @@ tolua++: lua
 #
 
 .PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
-app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+app: portaudio tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+# app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
-portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-jack=no --enable-shared=no
-
-portaudio: portaudio_v19_1360/Makefile
-	cd portaudio_v19_1360; make && make install
+portaudio:
+	cd portaudio_v18_1; make -f Makefile.linux26 install
 
 # libogg
 libogg-1.2.2/Makefile:
@@ -219,7 +214,7 @@ LIBMAD_DIR=libmad-0.15.1b
 generated/${LIBMAD_DIR}/Makefile.am:
 	mkdir -p generated
 	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
-
+		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-forcemem.patch
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-i486.patch
@@ -235,7 +230,6 @@ Tremor/Makefile:
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
-
 
 # axTLS
 AXTLS_DIR = generated/axTLS
@@ -255,7 +249,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; CFLAGS="-DSDL_FIFOS=1 -DPA18API=1 ${CFLAGS}" LIBS=-lnsl SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	cd squeezeplay; make && make install
@@ -331,7 +325,7 @@ clean:
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
+	-cd portaudio_v18_1; make -f Makefile.linux26 clean
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;

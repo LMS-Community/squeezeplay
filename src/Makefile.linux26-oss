@@ -1,5 +1,5 @@
 ################################################################################
-# Squeezeplay makefile for Linux
+# Squeezeplay makefile for Linux 2.6 OSS
 # Copyright 2007 Logitech
 # Copyright 2012 Duane Paddock
 ################################################################################
@@ -11,7 +11,7 @@
 # sudo apt-get install libreadline5-dev
 # sudo apt-get install expat-dev
 #
-# Revision 373+ required.
+# Revision 410+ required.
 # svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
@@ -34,7 +34,7 @@ export TOOLPATH = $(shell dirname `which gcc`)
 
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
-ENABLE_PROFILING=--enable-shared
+ENABLE_PROFILING=--enable-shared=yes --enable-static=no
 USE_MMX=--enable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
@@ -66,10 +66,11 @@ generated:
 
 # zlib
 zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --static --prefix=${PREFIX}
+	cd zlib-1.2.7; ./configure --shared --prefix=${PREFIX}
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+	-rm -f ${PREFIX}/lib/libz.a
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -200,7 +201,7 @@ portaudio:
 
 # libogg
 libogg-1.2.2/Makefile:
-	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libogg: libogg-1.2.2/Makefile
 	cd libogg-1.2.2; make && make install
@@ -222,7 +223,7 @@ generated/${LIBMAD_DIR}/Makefile.am:
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-forcemem.patch
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-i486.patch
-	cd generated/${LIBMAD_DIR}; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} 
+	cd generated/${LIBMAD_DIR}; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
@@ -230,7 +231,7 @@ libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
