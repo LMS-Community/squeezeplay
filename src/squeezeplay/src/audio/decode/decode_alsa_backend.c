@@ -806,7 +806,7 @@ static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 		sample_rate = decode_audio->set_sample_rate;
 		decode_audio_unlock();
 
-		if (sample_rate == 0) {
+		if (sample_rate == 0 || sample_rate > 384000) {
 			LOG_ERROR("invalid sample rate\n");
 			sample_rate = 44100;
 		}
