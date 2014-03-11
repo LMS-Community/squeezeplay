@@ -628,6 +628,8 @@ static int _pcm_open(struct decode_alsa *state,
 	snd_ctl_elem_id_t *id;
 	snd_pcm_hw_params_t *hw_params;
 
+	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
+
 	/* Close existing pcm (if any) */
 	if (*pcmp) {
 		pcm_close(state, pcmp, mode);
@@ -639,17 +641,69 @@ static int _pcm_open(struct decode_alsa *state,
 		return err;
 	}
 
-	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
 	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
 	if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
 		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
 		return err;
 	}
 
-	/* set hardware resampling */
-	if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 1)) < 0) {
-		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
-		return err;
+	/* for hw devices - try exact rate first without resampling, otherwise reopen in plug mode with resampling */
+	if (!strncmp(device, "hw:", 3)) {
+
+		/* no hardware resampling */
+		if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 0)) < 0) {
+			LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
+			return err;
+		}
+
+		/* try exact rate, otherwise reopen as plughw: with reampling */
+		if ((err = snd_pcm_hw_params_set_rate(*pcmp, hw_params, sample_rate, 0)) < 0) {
+
+			char *plug_device = alloca(strlen(device) + 4 + 1);
+			strcpy(plug_device, "plug");
+			strcat(plug_device, device);
+
+			LOG_INFO("Reopening device %s in plug mode as %s", device, plug_device);
+			device = plug_device;
+
+			snd_pcm_close(*pcmp);
+			if ((err = snd_pcm_open(pcmp, device, mode, 0)) < 0) {
+				LOG_ERROR("Playback open error: %s", snd_strerror(err));
+				return err;
+			}
+
+			memset(hw_params, 0, snd_pcm_hw_params_sizeof());
+			if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
+				LOG_ERROR("hwparam init error: %s", snd_strerror(err));
+				return err;
+			}
+
+			if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 1)) < 0) {
+				LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
+				return err;
+			}
+
+			val = sample_rate;
+			if ((err = snd_pcm_hw_params_set_rate_near(*pcmp, hw_params, &val, 0)) < 0) {
+				LOG_ERROR("Rate not available: %s", snd_strerror(err));
+				return err;
+			}
+		}
+
+	/* default device */
+	} else {
+
+		/* hardware resampling enabled  */
+		if ((err = snd_pcm_hw_params_set_rate_resample(*pcmp, hw_params, 1)) < 0) {
+			LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
+			return err;
+		}
+
+		val = sample_rate;
+		if ((err = snd_pcm_hw_params_set_rate_near(*pcmp, hw_params, &val, 0)) < 0) {
+			LOG_ERROR("Rate not available: %s", snd_strerror(err));
+			return err;
+		}
 	}
 
 	/* set mmap interleaved access format */
@@ -677,13 +731,6 @@ static int _pcm_open(struct decode_alsa *state,
 	/* set the channel count */
 	if ((err = snd_pcm_hw_params_set_channels(*pcmp, hw_params, 2)) < 0) {
 		LOG_ERROR("Channel count not available: %s", snd_strerror(err));
-		return err;
-	}
-
-	/* set the stream rate */
-	val = sample_rate;
-	if ((err = snd_pcm_hw_params_set_rate_near(*pcmp, hw_params, &val, 0)) < 0) {
-		LOG_ERROR("Rate not available: %s", snd_strerror(err));
 		return err;
 	}
 
