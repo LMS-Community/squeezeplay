@@ -806,6 +806,22 @@ static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 }
 
 
+static int pcm_probe(const char *device) {
+	snd_pcm_t *pcm;
+	int err;
+
+	if ((err = snd_pcm_open(&pcm, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
+		return err;
+	}
+
+	if ((err = snd_pcm_close(pcm)) < 0) {
+		LOG_ERROR("snd_pcm_close error: %s", snd_strerror(err));
+	}
+
+	return 0;
+}
+
+
 static int pcm_test(struct decode_alsa *state) {
 	snd_pcm_t *pcm;
 	snd_pcm_hw_params_t *hw_params;
@@ -871,6 +887,14 @@ static void *audio_thread_execute(void *data) {
 
 	while (1) {
 		TIMER_INIT(10.0f); /* 10 ms limit */
+
+		if (do_open == 2) {
+			// wait until device returns - to allow usb audio devices to be turned off
+			while (pcm_probe(state->playback_device) < 0) {
+				LOG_DEBUG("waiting for device %s to return", state->playback_device);
+				sleep(2);
+			}
+		}
 
 		if (do_open) {
 			bool_t loopback = ((decode_audio->state & DECODE_STATE_LOOPBACK) != 0);
@@ -940,6 +964,11 @@ static void *audio_thread_execute(void *data) {
 			LOG_WARN("xrun (avail_update)");
 			if ((err = snd_pcm_recover(state->pcm, avail, 1)) < 0) {
 				LOG_ERROR("Avail update failed: %s", snd_strerror(err));
+				if (err == -ENODEV) {
+					LOG_WARN("Device %s no longer available - waiting for it to return", state->playback_device);
+					do_open = 2;
+					continue;
+				}
 			}
 			first = 1;
 			continue;
@@ -1054,7 +1083,7 @@ static void *audio_thread_execute(void *data) {
 				 * fifo is locked, so we don't need to lock it twice
 				 * per loop.
 				 */
-				do_open = decode_audio->set_sample_rate && (decode_audio->set_sample_rate != state->pcm_sample_rate);
+				do_open = (decode_audio->set_sample_rate && (decode_audio->set_sample_rate != state->pcm_sample_rate)) ? 1 : 0;
 
 				/* start or stop loopback? */
 				if (state->capture_device && decode_audio->state & DECODE_STATE_LOOPBACK) {
