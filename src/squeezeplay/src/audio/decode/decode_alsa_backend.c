@@ -151,6 +151,7 @@ static snd_output_t *output;
 /* player state */
 static struct decode_alsa state;
 
+static int randomise_cpu = 0;
 
 #define	timerspecsub(a, b, result) \
 do { \
@@ -927,6 +928,8 @@ static void *audio_thread_execute(void *data) {
 
 	LOG_DEBUG("audio_thread_execute");
 
+	if (randomise_cpu) LOG_INFO("cpu randomisation enabled");
+
 	/* assume we'll be 44.1k to start with */
 	decode_audio->set_sample_rate = 44100;
 
@@ -1043,14 +1046,24 @@ static void *audio_thread_execute(void *data) {
 				}
 			}
 			else {
-				if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
-					LOG_WARN("xrun (snd_pcm_wait) err=%d",err);
-					if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
-						LOG_ERROR("PCM wait failed: %s", snd_strerror(err));
-					}
-					first = 1;
+				if (randomise_cpu) {
+					// apply jitter to wait period to avoid metronomic scheduling of this process
+					// wait = time until full period_size would be available + then add 0-90% of period of jitter
+					unsigned wait_us = (state->period_size - avail) * 1000000 / state->pcm_sample_rate;
+					unsigned jitter = rand() % (state->period_size * 900000 / state->pcm_sample_rate);
+					usleep(wait_us + jitter);
+					avail = snd_pcm_avail_update(state->pcm);
 				}
-
+		
+				if (avail < state->period_size) {
+					if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
+						LOG_WARN("xrun (snd_pcm_wait) err=%d",err);
+						if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
+							LOG_ERROR("PCM wait failed: %s", snd_strerror(err));
+						}
+						first = 1;
+					}
+				}
 			}
 			continue;
 		}
@@ -1292,6 +1305,11 @@ int main(int argv, char **argc)
 		}
 		else if (strcmp(argc[i], "-p") == 0) {
 			state.period_count = strtoul(argc[++i], NULL, 0);
+			// period_count > 100 used to enable cpu randomisation
+			if (state.period_count > 100) {
+				state.period_count -= 100;
+				randomise_cpu = 1;
+			}
 		}
 		else if (strcmp(argc[i], "-f") == 0) {
 			state.flags = strtoul(argc[++i], NULL, 0);
