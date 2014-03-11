@@ -628,6 +628,7 @@ static int _pcm_open(struct decode_alsa *state,
 	snd_pcm_uframes_t size;
 	snd_ctl_elem_id_t *id;
 	snd_pcm_hw_params_t *hw_params;
+	int plug = 0;
 
 	hw_params = (snd_pcm_hw_params_t *) alloca(snd_pcm_hw_params_sizeof());
 
@@ -666,6 +667,7 @@ static int _pcm_open(struct decode_alsa *state,
 
 			LOG_INFO("Reopening device %s in plug mode as %s", device, plug_device);
 			device = plug_device;
+			plug = 1;
 
 			snd_pcm_close(*pcmp);
 			if ((err = snd_pcm_open(pcmp, device, mode, 0)) < 0) {
@@ -736,14 +738,14 @@ static int _pcm_open(struct decode_alsa *state,
 	}
 
 	/* set buffer and period times */
-	val = state->period_count;
+	val = !plug ? state->period_count : 2;  // safe value when plug layer used, else snd_pcm_close can crash
 	if ((err = snd_pcm_hw_params_set_periods_near(*pcmp, hw_params, &val, 0)) < 0) {
 		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
 	state->period_count = val;
 
-	val = state->buffer_time;
+	val = !plug ? state->buffer_time : 20000; // safe value when plug layer used, else snd_pcm_close can crash
 	dir = 1;
 	if ((err = snd_pcm_hw_params_set_buffer_time_near(*pcmp, hw_params, &val, &dir)) < 0) {
 		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
