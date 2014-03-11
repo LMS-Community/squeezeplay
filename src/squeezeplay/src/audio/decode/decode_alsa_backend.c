@@ -103,6 +103,9 @@ struct decode_audio *decode_audio;
 #define FLAG_STREAM_NOISE    0x04
 #define FLAG_STREAM_LOOPBACK 0x08
 
+/* format list to try in order when opening device - each requires explicit support in playback callback */
+static snd_pcm_format_t fmts[] = { SND_PCM_FORMAT_S32_LE, SND_PCM_FORMAT_S24_LE, SND_PCM_FORMAT_S24_3LE, SND_PCM_FORMAT_S16_LE,
+								   SND_PCM_FORMAT_UNKNOWN };
 
 struct decode_alsa {
 	/* device configuration */
@@ -426,48 +429,106 @@ static void playback_callback(struct decode_alsa *state,
 			}
 		}
 
-		if (PCM_SAMPLE_WIDTH() == 24) {
-			if (state->format == SND_PCM_FORMAT_S24_LE) {
-				/* handle SND_PCM_FORMAT_S24_LE case */
+		switch (state->format) {
+		case SND_PCM_FORMAT_S16_LE:
+			{
+				sample_t *decode_ptr;
+				Sint16 *output_ptr;
+
+				output_ptr = (Sint16 *)(void *)output_buffer;
+				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
+
+				if (lgain == FIXED_ONE && rgain == FIXED_ONE) {
+					while (frames_cnt--) {
+						*(output_ptr++) = *(decode_ptr++) >> 16;
+						*(output_ptr++) = *(decode_ptr++) >> 16;
+					}
+				}
+				else {
+					while (frames_cnt--) {
+						*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 16;
+						*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 16;
+					}
+				}
+			}
+			break;
+		case SND_PCM_FORMAT_S24_LE: 
+			{
 				sample_t *decode_ptr;
 				Sint32 *output_ptr;
 				
 				output_ptr = (Sint32 *)(void *)output_buffer;
 				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-				while (frames_cnt--) {
-					*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 8;
-					*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 8;
+
+				if (lgain == FIXED_ONE && rgain == FIXED_ONE) {
+					while (frames_cnt--) {
+						*(output_ptr++) = *(decode_ptr++) >> 8;
+						*(output_ptr++) = *(decode_ptr++) >> 8;
+					}
 				}
-			} else {
-				/* handle SND_PCM_FORMAT_S24_3LE case */
+				else {
+					while (frames_cnt--) {
+						*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 8;
+						*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 8;
+					}
+				}
+			}
+			break;
+		case SND_PCM_FORMAT_S24_3LE:
+			{
 				sample_t *decode_ptr;
 				u8_t *output_ptr;
 				
 				output_ptr = (u8_t *)(void *)output_buffer;
 				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-				while (frames_cnt--) {
-					sample_t lsample = fixed_mul(lgain, *(decode_ptr++));
-					sample_t rsample = fixed_mul(rgain, *(decode_ptr++));
-					*(output_ptr++) = (lsample & 0x0000ff00) >>  8;
-					*(output_ptr++) = (lsample & 0x00ff0000) >> 16;
-					*(output_ptr++) = (lsample & 0xff000000) >> 24;
-					*(output_ptr++) = (rsample & 0x0000ff00) >>  8;
-					*(output_ptr++) = (rsample & 0x00ff0000) >> 16;
-					*(output_ptr++) = (rsample & 0xff000000) >> 24;
+
+				if (lgain == FIXED_ONE && rgain == FIXED_ONE) {
+					while (frames_cnt--) {
+						sample_t lsample = *(decode_ptr++);
+						sample_t rsample = *(decode_ptr++);
+						*(output_ptr++) = (lsample & 0x0000ff00) >>  8;
+						*(output_ptr++) = (lsample & 0x00ff0000) >> 16;
+						*(output_ptr++) = (lsample & 0xff000000) >> 24;
+						*(output_ptr++) = (rsample & 0x0000ff00) >>  8;
+						*(output_ptr++) = (rsample & 0x00ff0000) >> 16;
+						*(output_ptr++) = (rsample & 0xff000000) >> 24;
+					}
+				}
+				else {
+					while (frames_cnt--) {
+						sample_t lsample = fixed_mul(lgain, *(decode_ptr++));
+						sample_t rsample = fixed_mul(rgain, *(decode_ptr++));
+						*(output_ptr++) = (lsample & 0x0000ff00) >>  8;
+						*(output_ptr++) = (lsample & 0x00ff0000) >> 16;
+						*(output_ptr++) = (lsample & 0xff000000) >> 24;
+						*(output_ptr++) = (rsample & 0x0000ff00) >>  8;
+						*(output_ptr++) = (rsample & 0x00ff0000) >> 16;
+						*(output_ptr++) = (rsample & 0xff000000) >> 24;
+					}
 				}
 			}
-		}
-		else {
-			/* handle SND_PCM_FORMAT_S16_LE case */
-			sample_t *decode_ptr;
-			Sint16 *output_ptr;
+			break;
+		case SND_PCM_FORMAT_S32_LE:
+			{
+				sample_t *decode_ptr;
+				Sint32 *output_ptr;
+				
+				output_ptr = (Sint32 *)(void *)output_buffer;
+				decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
 
-			output_ptr = (Sint16 *)(void *)output_buffer;
-			decode_ptr = (sample_t *)(void *)(decode_fifo_buf + decode_audio->fifo.rptr);
-			while (frames_cnt--) {
-				*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++)) >> 16;
-				*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++)) >> 16;
+				if (lgain == FIXED_ONE && rgain == FIXED_ONE) {
+					memcpy(output_ptr, decode_ptr, frames_cnt * 8);
+				}
+				else {
+					while (frames_cnt--) {
+						*(output_ptr++) = fixed_mul(lgain, *(decode_ptr++));
+						*(output_ptr++) = fixed_mul(rgain, *(decode_ptr++));
+					}
+				}
 			}
+			break;
+		default:
+			break;
 		}
 
 		fifo_rptr_incby(&decode_audio->fifo, SAMPLES_TO_BYTES(frames_write));
@@ -559,7 +620,7 @@ static int _pcm_open(struct decode_alsa *state,
 		     snd_pcm_access_t access,
 		     u32_t sample_rate)
 {
-	int err, dir;
+	int err, dir, fmt;
 	unsigned int val;
 	snd_pcm_uframes_t size;
 	snd_ctl_elem_id_t *id;
@@ -596,19 +657,19 @@ static int _pcm_open(struct decode_alsa *state,
 	}
 
 	/* set the sample format */
-	if ((err = snd_pcm_hw_params_set_format(*pcmp, hw_params, state->format)) < 0) {
-
-		/* for 24bit try S24_LE and S24_3LE */
-		if (state->format == SND_PCM_FORMAT_S24_LE) {
-			state->format = SND_PCM_FORMAT_S24_3LE;
-			LOG_INFO("S24_LE unavailable trying S24_3LE");
-			err = snd_pcm_hw_params_set_format(*pcmp, hw_params, state->format);
+	fmt = 0;
+	while (fmts[fmt] != SND_PCM_FORMAT_UNKNOWN) {
+		if (snd_pcm_hw_params_set_format(*pcmp, hw_params, fmts[fmt]) >= 0) {
+			LOG_INFO("Opened device %s using format: %s sample rate: %u", device, snd_pcm_format_name(fmts[fmt]), sample_rate);
+			state->format = fmts[fmt];
+			break;
 		}
+		++fmt;
+	}
 
-		if (err < 0) {
-			LOG_ERROR("Sample format not available: %s", snd_strerror(err));
-			return err;
-		}
+	if (fmts[fmt] == SND_PCM_FORMAT_UNKNOWN) {
+		LOG_ERROR("Unable to open audio device with any supported format");
+		return -1;
 	}
 
 	/* set the channel count */
@@ -1154,21 +1215,13 @@ int main(int argv, char **argc)
 		else if (strcmp(argc[i], "-p") == 0) {
 			state.period_count = strtoul(argc[++i], NULL, 0);
 		}
-		else if (strcmp(argc[i], "-s") == 0) {
-			if (strcmp(argc[++i], "24") == 0) {
-				state.format = SND_PCM_FORMAT_S24_LE;
-			}
-			else {
-				state.format = SND_PCM_FORMAT_S16_LE;
-			}
-		}
 		else if (strcmp(argc[i], "-f") == 0) {
 			state.flags = strtoul(argc[++i], NULL, 0);
 		}
 	}
 
 	if (!state.playback_device || !state.buffer_time || !state.period_count || !state.flags) {
-		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -s <sample_size:24|16> -f <flags>\n", argc[0]);
+		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
 		exit(-1);
 	}
 
