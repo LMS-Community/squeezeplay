@@ -283,10 +283,12 @@ static void playback_callback(struct decode_alsa *state,
 
 	decode_frames = BYTES_TO_SAMPLES(fifo_bytes_used(&decode_audio->fifo));
 
-	/* Should we start the audio now based on having enough decoded data? */
+	/* Should we start the audio now based on having enough decoded data?
+	   - override output_thresh for 176/192k and wait for 1 sec of data before starting */
 	if (decode_audio->state & DECODE_STATE_AUTOSTART
 			&& decode_frames > (output_frames * (3 + state->period_count))
-			&& decode_frames > (decode_audio->output_threshold * state->pcm_sample_rate / 10)
+			&& decode_frames > (state->pcm_sample_rate <= 96000 ? (decode_audio->output_threshold * state->pcm_sample_rate / 10) :
+								state->pcm_sample_rate)
 		)
 	{
 		u32_t now = jive_jiffies();
