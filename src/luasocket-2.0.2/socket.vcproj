@@ -122,7 +122,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;..\lua-5.1.1\src&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUASOCKET_EXPORTS;LUASOCKET_API=__declspec(dllexport);  LUASOCKET_DEBUG"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUASOCKET_EXPORTS;LUASOCKET_API=__declspec(dllexport)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
