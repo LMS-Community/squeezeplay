@@ -65,10 +65,11 @@ zlib-1.2.7/Makefile:
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+	-rm -f ${PREFIX}/lib/libz.a
 
 # expat
 expat-2.0.1/Makefile:
-	cd expat-2.0.1; ./configure --prefix=${PREFIX}
+	cd expat-2.0.1; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
 
 expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
