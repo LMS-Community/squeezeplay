@@ -7,7 +7,7 @@
 # These steps are required for a successful build
 #
 #
-# Revision 373+ required.
+# Revision 413+ required.
 # svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # Absolute path to top of SQUEEZEPLAY directories
