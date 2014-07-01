@@ -6,7 +6,7 @@
 #
 # These steps are required for a successful build
 #
-# Revision 373+ required.
+# Revision 413+ required.
 # svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
 #
 # cd /usr/bin; sudo ln -s ginstall install
@@ -68,10 +68,11 @@ zlib-1.2.7/Makefile:
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+	-rm -f ${PREFIX}/lib/libz.a
 
 # expat
 expat-2.0.1/Makefile:
-	cd expat-2.0.1; ./configure --prefix=${PREFIX}
+	cd expat-2.0.1; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
 
 expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
@@ -160,8 +161,8 @@ luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
 
 luamd5:
-	cd luamd5; make LUA=${PREFIX} MYNAME=sha1
-	cd luamd5; make LUA=${PREFIX} MYNAME=md5
+	cd luamd5; make LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS=-R/opt/squeezeplay/lib
+	cd luamd5; make LUA=${PREFIX} MYNAME=md5 MYLDFLAGS=-R/opt/squeezeplay/lib
 	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
 	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
 
@@ -176,13 +177,13 @@ loop:
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
 
 luaexpat: lua expat
-	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
+	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=solaris && make install PREFIX=${PREFIX} PLATFORM=solaris
 
 luafilesystem:
-	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
+	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=solaris
 
 luaprofiler:
-	cd luaprofiler-2.0.2 && make -f Makefile.solaris install PREFIX=${PREFIX} PLATFORM=linux
+	cd luaprofiler-2.0.2 && make -f Makefile.solaris install PREFIX=${PREFIX} PLATFORM=solaris
 
 # just compile the library for to tolua++
 .PHONY: tolua++
@@ -220,7 +221,7 @@ flac: flac-1.2.1/Makefile
 
 #libmad
 LIBMAD_DIR=libmad-0.15.1b
-LIBMAD_TAR=${LIBMAD_DIR}.tar.gz
+
 generated/${LIBMAD_DIR}/Makefile.am:
 	mkdir -p generated
 	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
@@ -252,7 +253,7 @@ axtls: ${AXTLS_DIR}/Makefile
 	cd ${AXTLS_DIR}; make oldconfig && make && make install
 
 rtmp: squeezeplay
-	cd luartmp-squeezeplay; make
+	cd luartmp-squeezeplay; make -f Makefile.solaris
 	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
 
 
@@ -334,7 +335,7 @@ clean:
 	-cd luasocket-2.0.2; make clean PLATFORM=solaris
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
-	-cd luafilesystem-1.2; make clean PLATFORM=linux
+	-cd luafilesystem-1.2; make clean PLATFORM=solaris
 	-cd luajson; make distclean
 	-cd luazipfilter; make distclean
 	-cd luaprofiler-2.0.2; make -f Makefile.solaris clean
