@@ -63,14 +63,15 @@ generated:
 
 # zlib
 zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --static --prefix=${PREFIX}
+	cd zlib-1.2.7; ./configure --shared --prefix=${PREFIX}
 
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+	-rm -f ${PREFIX}/lib/libz.a
 
 # expat
 expat-2.0.1/Makefile:
-	cd expat-2.0.1; ./configure --prefix=${PREFIX}
+	cd expat-2.0.1; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
@@ -207,7 +208,7 @@ portaudio: portaudio_v19_1360/Makefile
 
 # libogg
 libogg-1.2.2/Makefile:
-	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libogg: libogg-1.2.2/Makefile
 	cd libogg-1.2.2; make && make install
@@ -229,7 +230,7 @@ generated/${LIBMAD_DIR}/Makefile.am:
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-forcemem.patch
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-i486.patch
-	cd generated/${LIBMAD_DIR}; ./configure --enable-fpm=arm ${ENABLE_PROFILING} --prefix=${PREFIX} 
+	cd generated/${LIBMAD_DIR}; ./configure --enable-fpm=arm --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
@@ -237,7 +238,7 @@ libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 
 # ogg
 Tremor/Makefile:
-	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 tremor: Tremor/Makefile
 	cd Tremor; make && make install
@@ -273,6 +274,7 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
+	# cd /lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
 	cd ${PREFIX} && patch -p1 -i ../../src/disable-server-version-check.patch
 
 squeezeplay_contrib: squeezeplay/Makefile
