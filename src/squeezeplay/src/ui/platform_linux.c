@@ -299,6 +299,8 @@ static void quit_handler(int signum) {
 
 	/* set handler hook */
 	lua_sethook(Lsig, quit_hook, LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE, 0);
+
+	SDL_Quit();
 }
 
 
@@ -312,6 +314,8 @@ static void segv_handler(int signum) {
 
 	LOG_ERROR(log_sp, "SIGSEGV squeezeplay %s", JIVE_VERSION);
 	print_trace();
+
+	SDL_Quit();
 
 	/* dump core */
 	raise(signum);
