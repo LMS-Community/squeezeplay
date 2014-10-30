@@ -102,10 +102,12 @@ struct decode_audio *decode_audio;
 #define FLAG_STREAM_EFFECTS  0x02
 #define FLAG_STREAM_NOISE    0x04
 #define FLAG_STREAM_LOOPBACK 0x08
+#define FLAG_NOMMAP          0x10
+
+#define PCM_WAIT_TIMEOUT     500
 
 /* format list to try in order when opening device - each requires explicit support in playback callback */
-static snd_pcm_format_t fmts[] = { SND_PCM_FORMAT_S32_LE, SND_PCM_FORMAT_S24_LE, SND_PCM_FORMAT_S24_3LE, SND_PCM_FORMAT_S16_LE,
-								   SND_PCM_FORMAT_UNKNOWN };
+static snd_pcm_format_t fmts[] = { SND_PCM_FORMAT_S32_LE, SND_PCM_FORMAT_S24_LE, SND_PCM_FORMAT_S24_3LE, SND_PCM_FORMAT_S16_LE, SND_PCM_FORMAT_UNKNOWN };
 
 struct decode_alsa {
 	/* device configuration */
@@ -138,6 +140,8 @@ struct decode_alsa {
 
 	/* MMAP output available? */
 	char has_mmap;
+
+	int pcm_wait_timeout;
 };
 
 #define PCM_FRAMES_TO_BYTES(frames) (snd_pcm_frames_to_bytes(state->pcm, (frames)))
@@ -639,13 +643,13 @@ static int _pcm_open(struct decode_alsa *state,
 
 	/* Open pcm */
 	if ((err = snd_pcm_open(pcmp, device, mode, 0)) < 0) {
-		LOG_ERROR("Playback open error: %s", snd_strerror(err));
+		LOG_ERROR("Playback open error: %s(%s)", snd_strerror(err), device);
 		return err;
 	}
 
 	memset(hw_params, 0, snd_pcm_hw_params_sizeof());
 	if ((err = snd_pcm_hw_params_any(*pcmp, hw_params)) < 0) {
-		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
+		LOG_ERROR("hwparam init error: %s(%s)", snd_strerror(err), device);
 		return err;
 	}
 
@@ -709,7 +713,7 @@ static int _pcm_open(struct decode_alsa *state,
 		}
 	}
 
-	/* set mmap interleaved access format */
+	/* set access format */
 	if ((err = snd_pcm_hw_params_set_access(*pcmp, hw_params, access)) < 0) {
 		LOG_ERROR("Access type not available: %s", snd_strerror(err));
 		return err;
@@ -800,10 +804,11 @@ static int _pcm_open(struct decode_alsa *state,
 
 static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 {
-	int err;
+	int err = 0;
 
 	if (mode == SND_PCM_STREAM_PLAYBACK) {
 		u32_t sample_rate;
+
 
 		decode_audio_lock();
 		sample_rate = decode_audio->set_sample_rate;
@@ -814,15 +819,22 @@ static int pcm_open(struct decode_alsa *state, bool_t loopback, int mode)
 			sample_rate = 44100;
 		}
 
-		err = _pcm_open(state,
+		if ( !(state->flags & FLAG_NOMMAP) ) {
+			LOG_DEBUG("PCM Open %X %s",state->flags,state->playback_device);
+			err = _pcm_open(state,
 				&state->pcm,
 				mode,
 				state->playback_device,
 				SND_PCM_ACCESS_MMAP_INTERLEAVED,
 				sample_rate);
-		state->has_mmap = 1;
+			state->has_mmap = 1;
+		}
 
-		if (err < 0) {
+		if (err < 0 || (state->flags & FLAG_NOMMAP) ) {
+                        if (err < 0) {
+			   LOG_WARN("PCM Open with mmap failed trying to continue,%s\n",snd_strerror(err));
+                        }
+			LOG_DEBUG("PCM Open NOMMAP %X %s",state,state->playback_device);
 			/* Retry without MMAP */
 			err = _pcm_open(state,
 					&state->pcm,
@@ -879,7 +891,7 @@ static int pcm_test(struct decode_alsa *state) {
 
 	/* Open pcm */
 	if ((err = snd_pcm_open(&pcm, state->playback_device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-		LOG_ERROR("Playback open error: %s", snd_strerror(err));
+		LOG_ERROR("Playback open error: %s (%s)", snd_strerror(err),state->playback_device);
 		return err;
 	}
 
@@ -889,16 +901,17 @@ static int pcm_test(struct decode_alsa *state) {
 
 	/* get maxmimum supported rate */
 	if ((err = snd_pcm_hw_params_any(pcm, hw_params)) < 0) {
-		LOG_ERROR("hwparam init error: %s", snd_strerror(err));
+		LOG_ERROR("hwparam init error: %s(%s)", snd_strerror(err),state->playback_device);
 		goto err;
 	}
 
 	if ((err = snd_pcm_hw_params_set_rate_resample(pcm, hw_params, 0)) < 0) {
-		LOG_ERROR("Resampling setup failed: %s", snd_strerror(err));
+		LOG_ERROR("Resampling setup failed: %s(%s)", snd_strerror(err),state->playback_device);
 		goto err;
 	}
 
 	if ((err = snd_pcm_hw_params_get_rate_max(hw_params, &decode_audio->max_rate, 0)) < 0) {
+		LOG_ERROR("Get Rate max failed: %s(%s)", snd_strerror(err),state->playback_device);
 		goto err;
 	}
 	LOG_DEBUG("max sample rate %d", decode_audio->max_rate);
@@ -949,6 +962,7 @@ static void *audio_thread_execute(void *data) {
 		}
 
 		if (do_open) {
+			
 			bool_t loopback = ((decode_audio->state & DECODE_STATE_LOOPBACK) != 0);
 
 			do_open = 0;
@@ -961,6 +975,7 @@ static void *audio_thread_execute(void *data) {
 				LOG_ERROR("Playback open failed: %s", snd_strerror(err));
 				goto thread_error;
 			}
+			assert(state->pcm);
 
 			if (state->capture_device && loopback) {
 				if ((err = pcm_open(state, loopback, SND_PCM_STREAM_CAPTURE)) < 0) {
@@ -1058,14 +1073,19 @@ static void *audio_thread_execute(void *data) {
 				}
 		
 				if (avail < state->period_size) {
-					if ((err = snd_pcm_wait(state->pcm, 500)) < 0) {
-						LOG_WARN("xrun (snd_pcm_wait) err=%d",err);
+					if ((err = snd_pcm_wait(state->pcm, state->pcm_wait_timeout)) < 0) {
+						LOG_WARN("xrun (snd_pcm_wait) err=%s",snd_strerror(err));
 						if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
-							LOG_ERROR("PCM wait failed: %s", snd_strerror(err));
+							LOG_ERROR("PCM wait recover failed: %s", snd_strerror(err));
 						}
 						first = 1;
 					}
 				}
+
+				if (err == 0) {
+					LOG_INFO("snd_pcm_wait timeout(%d)",state->pcm_wait_timeout);
+				}
+
 			}
 			continue;
 		}
@@ -1185,14 +1205,13 @@ static void *audio_thread_execute(void *data) {
 			} else {
 				commitres = snd_pcm_writei(state->pcm, buf, frames); 
 				if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
-					LOG_WARN("xrun (snd_pcm_writei) err=%ld", commitres);
+					LOG_WARN("xrun (snd_pcm_writei) err=%s", snd_strerror(commitres));
 					if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
-						LOG_ERROR("sound write failed: %s", snd_strerror(err));
+						LOG_ERROR("PCM recover failed sound writei failed: %s", snd_strerror(err));
 					}
 					first = 1;
 				}
 			}
-
 
 			size -= frames;
 
@@ -1249,9 +1268,12 @@ static int decode_lock_memory()
 
 	/* Turn off malloc trimming.*/
    	mallopt(M_TRIM_THRESHOLD, -1);
+	LOG_DEBUG("malloc trim");
    
    	/* Turn off mmap usage. */
    	mallopt(M_MMAP_MAX, 0);
+	LOG_DEBUG("mmap max");
+
 
 	page_size = sysconf(_SC_PAGESIZE);
 
@@ -1264,6 +1286,7 @@ static int decode_lock_memory()
 	debug_pagefaults();
 #endif
 	
+	LOG_DEBUG("decode_lock_memory done");
 	return 0;
 }
 
@@ -1291,6 +1314,10 @@ int main(int argv, char **argc)
 	struct utsname utsname;
 	int err, i;
 
+#ifdef HAVE_SYSLOG
+	openlog("squeezeplay_alsa", LOG_ODELAY | LOG_CONS | LOG_PID, LOG_USER);
+#endif
+        LOG_DEBUG("Parse Args")
 	/* parse args */
 	for (i=1; i<argv; i++) {
 		if (strcmp(argc[i], "-v") == 0) {
@@ -1316,20 +1343,40 @@ int main(int argv, char **argc)
 		else if (strcmp(argc[i], "-f") == 0) {
 			state.flags = strtoul(argc[++i], NULL, 0);
 		}
+		else if (strcmp(argc[i], "-t") == 0) {
+			state.pcm_wait_timeout = strtoul(argc[++i], NULL, 0);
+                }
+                else if (strcmp(argc[i], "-s") == 0) {
+                        if (strcmp(argc[++i], "0") == 0) {
+				// NoOp... Auto
+                        }
+                        else if (strcmp(argc[i], "32") == 0) {
+                                fmts[0] = SND_PCM_FORMAT_S32_LE;
+                                fmts[1] = SND_PCM_FORMAT_UNKNOWN;
+                        }
+                        else if (strcmp(argc[i], "24") == 0) {
+                                fmts[0] = SND_PCM_FORMAT_S24_LE;
+                                fmts[1] = SND_PCM_FORMAT_UNKNOWN;
+                        }
+                        else if (strcmp(argc[i], "24_3") == 0) {
+                                fmts[0] = SND_PCM_FORMAT_S24_3LE;
+                                fmts[1] = SND_PCM_FORMAT_UNKNOWN;
+                        }
+                        else if (strcmp(argc[i], "16") == 0) {
+                                fmts[0] = SND_PCM_FORMAT_S16_LE;
+                                fmts[1] = SND_PCM_FORMAT_UNKNOWN;
+                        }
+                }
 	}
 
 	if (!state.playback_device || !state.buffer_time || !state.period_count || !state.flags) {
-		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
+		printf("Usage: %s [-v] -d <playback_device> [-c <capture_device>] [ -t <pcm_timeout>] [ -s <sample_size>] -b <buffer_time> -p <period_count> -f <flags>\n", argc[0]);
 		exit(-1);
 	}
 
-	if (!state.format) {
-		state.format = SND_PCM_FORMAT_S16_LE;
+	if(!state.pcm_wait_timeout) {
+		state.pcm_wait_timeout = PCM_WAIT_TIMEOUT;
 	}
-
-#ifdef HAVE_SYSLOG
-	openlog("squeezeplay", LOG_ODELAY | LOG_CONS, LOG_USER);
-#endif
 
 	/* attach to shared memory buffer */
 	if (decode_alsa_shared_mem_attach() != 0) {
@@ -1343,8 +1390,9 @@ int main(int argv, char **argc)
 		exit(-1);
 	}
 	if (strstr(utsname.version, "PREEMPT") != NULL) {
-		LOG_INFO("PREEMPT Dectected");
 		decode_lock_memory();
+	} else {
+		LOG_INFO("PREEMPT Not Detected");
 	}
 
 	/* who is our parent */
@@ -1358,6 +1406,7 @@ int main(int argv, char **argc)
 
 	/* test audio device */
 	if (pcm_test(&state) < 0) {
+		LOG_ERROR("exit, pcm_test failed");
 		exit(0);
 	}
 
@@ -1373,6 +1422,7 @@ int main(int argv, char **argc)
 	/* start thread */
 	audio_thread_execute(&state);
 
+	LOG_INFO("Audio Thread Exited");
 	exit(0);
 }
 
