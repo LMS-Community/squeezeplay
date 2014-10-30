@@ -48,7 +48,7 @@ function _layout(self)
 	local l,t,r,b = self:getPadding()
 
 	-- When used in NP screen _layout gets called with strange values
-	if (w <= 0 or w > 480) and (h <= 0 or h > 272) then
+	if (w <= 0) and (h <= 0) then
 		return
 	end
 
