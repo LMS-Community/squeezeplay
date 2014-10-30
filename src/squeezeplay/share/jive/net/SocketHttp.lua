@@ -64,8 +64,11 @@ oo.class(_M, SocketTcp)
 local BLOCKSIZE = 4096
 
 -- timeout for socket operations
-local SOCKET_CONNECT_TIMEOUT = 10 -- connect in 10 seconds
+local SOCKET_CONNECT_TIMEOUT = 15 -- connect in 15 seconds and send headers!
 local SOCKET_BODY_TIMEOUT = 70 -- response in 70 seconds
+local SOCKET_IDLE_TIMEOUT = SOCKET_CONNECT_TIMEOUT + SOCKET_BODY_TIMEOUT  -- one full connect cycle
+
+
 
 -- http authentication credentials
 local credentials = {}
@@ -458,7 +461,7 @@ function t_recvDequeue(self)
 				     self:close("idle close")
 			     end
 
-		self:t_addRead(pump)
+		self:t_addRead(pump,SOCKET_IDLE_TIMEOUT)
 	end
 end
 
