@@ -64,3 +64,11 @@ SELECT_SKIN_REMOTE_SKIN
 	RU	Обложка пульта
 	SV	Fjärrskal
 
+CONFIRM_SKIN
+	EN	Confirm Skin Change
+
+REVERT_SKIN
+	EN	Revert to previous skin
+
+KEEP_SKIN
+	EN	Keep this skin

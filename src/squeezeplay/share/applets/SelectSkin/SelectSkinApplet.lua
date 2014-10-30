@@ -34,6 +34,8 @@ local debug            = require("jive.utils.debug")
 local SimpleMenu      = require("jive.ui.SimpleMenu")
 local Window          = require("jive.ui.Window")
 local Framework       = require("jive.ui.Framework")
+local Timer            = require("jive.ui.Timer")
+
 local appletManager   = appletManager
 
 local JiveMain        = jiveMain
@@ -74,7 +76,14 @@ function selectSkinEntryPoint(self, menuItem)
 			end
 			
 		})
-
+		menu:addItem({
+			text = self:string("SELECT_SKIN_BOOT_SKIN"),
+			sound = "WINDOWSHOW",
+			callback = function(event, menuItem)
+				self:selectSkin(self:string("SELECT_SKIN_BOOT_SKIN"), "skin", JiveMain:getSelectedSkin()["skin"] or JiveMain:getSelectedSkin())
+			end
+			
+		})
 		window:addWidget(menu)
 	
 		self:tieAndShowWindow(window)
@@ -86,7 +95,12 @@ function selectSkinEntryPoint(self, menuItem)
 end
 
 
-function selectSkin(self, title, skinType, previouslySelectedSkin)
+function selectSkinStartup(self, setupNext)
+	return selectSkin(self, self:string("SELECT_SKIN"), "skin", JiveMain:getSelectedSkin(), setupNext)
+end
+
+
+function selectSkin(self, title, skinType, previouslySelectedSkin, setupNext)
 	local window = Window("text_list", title, 'settingstitle')
 	local menu = SimpleMenu("menu")
 	menu:setComparator(menu.itemComparatorAlpha)
@@ -103,6 +117,7 @@ function selectSkin(self, title, skinType, previouslySelectedSkin)
 				group, 
 				function()
 					local activeSkinType = appletManager:callService("getActiveSkinType") or "skin"
+					local currentSkin = JiveMain:getSelectedSkin()
 					if activeSkinType == skinType then
 						--current type is active, so immediately switch the overall selected skin
 						JiveMain:setSelectedSkin(appletName)
@@ -110,6 +125,51 @@ function selectSkin(self, title, skinType, previouslySelectedSkin)
 
 					self:getSettings()[skinType] = appletName
 					self.changed = true
+
+					-- FIXME for no Fixed res displays capability in desktop?
+					-- display dialog to confirm skin setting, reverts to previous after 10 second otherwise
+					local timer
+					local confirmGroup = RadioGroup()
+					local window = Window("text_list", self:string("CONFIRM_SKIN"))
+					local menu = SimpleMenu("menu",
+						{
+							{
+								text = self:string("REVERT_SKIN"),
+								style = 'item_choice',
+								check = RadioButton("radio", confirmGroup, function()
+																			   log:info("revert skin choice")
+																			   JiveMain:setSelectedSkin(currentSkin)
+																			   self:getSettings()[skinType] = currentSkin
+																			   window:hide()
+																		   end, true)
+							},
+							{
+								text = self:string("KEEP_SKIN"),
+								style = 'item_choice',
+								check = RadioButton("radio", confirmGroup, function(event, menuItem)
+																			   log:info("keep skin choice")
+																			   timer:stop()
+																			   if setupNext then
+																				   setupNext()
+																				   setupNext = nil
+																			   else
+																				   window:hide()
+																			   end
+																		   end, false)
+							},
+						}
+					)
+
+					timer = Timer(10000, function()
+											 log:info("no selection - reverting skin choice")
+											 JiveMain:setSelectedSkin(currentSkin)
+											 self:getSettings()[skinType] = currentSkin
+											 window:hide()
+										 end, true)
+					timer:start()
+
+					window:addWidget(menu)
+					self:tieAndShowWindow(window)
 				end,
 				appletName == previouslySelectedSkin
 			)
@@ -122,6 +182,9 @@ function selectSkin(self, title, skinType, previouslySelectedSkin)
 		function()
 			if self.changed then
 				self:storeSettings()
+			end
+			if setupNext then
+				setupNext()
 			end
 		end
 	)
