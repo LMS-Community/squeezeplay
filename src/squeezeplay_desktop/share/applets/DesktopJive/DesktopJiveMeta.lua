@@ -120,7 +120,9 @@ function registerApplet(meta)
 	appletManager:addDefaultSetting("ScreenSavers", "whenStopped", "false:false")
 	appletManager:addDefaultSetting("Playback", "enableAudio", 1)
 
-	jiveMain:setDefaultSkin("WQVGAsmallSkin")
+	if jiveMain:getDefaultSkin() == 'QVGAportraitSkin' then
+		jiveMain:setDefaultSkin("WQVGAsmallSkin")
+	end
 
 	Framework:addActionListener("soft_reset", self, _softResetAction, true)
 
@@ -133,6 +135,7 @@ end
 function _softResetAction(self, event)
 	LocalPlayer:disconnectServerAndPreserveLocalPlayer()
 	jiveMain:goHome()
+	log:debug(self,"Jive Desktop Soft Reset")
 end
 
 --[[
