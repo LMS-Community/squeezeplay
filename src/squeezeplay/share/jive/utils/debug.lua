@@ -100,13 +100,20 @@ many more options.
 --]]
 function dump(table, depth)
 	local viewer = Viewer({
-		maxdepth = depth,
+		maxdepth = depth and depth or 2,
 	})
 	viewer:print(table)
 end
 
---[[
 
+function view(table, depth, linebreak)
+	local viewer = Viewer({
+		maxdepth = depth and depth or 2,
+		linebreak = linebreak and linebreak or " ",
+	})
+	return viewer:tostring(table)
+end
+--[[
 =head1 LICENSE
 
 Copyright 2010 Logitech. All Rights Reserved.
