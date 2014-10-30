@@ -64,6 +64,10 @@ SELECT_SKIN_REMOTE_SKIN
 	RU	Обложка пульта
 	SV	Fjärrskal
 
+SELECT_SKIN_REMOTE_SKIN
+# Startup with this skin 
+	EN	Skin to start with
+
 CONFIRM_SKIN
 	EN	Confirm Skin Change
 
