@@ -75,6 +75,7 @@ static Uint32 mouse_long_timeout = 0;
 static Uint32 mouse_timeout_arg;
 
 static Uint32 pointer_timeout = 0;
+static bool pointer_enable = true;
 
 static Uint16 mouse_origin_x, mouse_origin_y;
 
@@ -195,9 +196,12 @@ static int jiveL_initSDL(lua_State *L) {
 	log_ui_draw = LOG_CATEGORY_GET("squeezeplay.ui.draw");
 	log_ui = LOG_CATEGORY_GET("squeezeplay.ui");
 
-	/* linux fbcon does not need a mouse */
+	/* linux fbcon does not need a mouse so allow mouse open to fail and continue */
 	SDL_putenv("SDL_NOMOUSE=1");
 
+        if(SDL_getenv("JIVE_NOCURSOR")) {
+            pointer_enable = false;
+        }
 #ifdef JIVE_NO_DISPLAY
 #   define JIVE_SDL_FEATURES (SDL_INIT_EVENTLOOP)
 #else
@@ -1117,7 +1121,7 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	case SDL_MOUSEMOTION:
 
 		/* show mouse cursor */
-		if (pointer_timeout == 0) {
+		if (pointer_enable && pointer_timeout == 0) {
 			SDL_ShowCursor(SDL_ENABLE);
 		}
 		pointer_timeout = now + POINTER_TIMEOUT;
