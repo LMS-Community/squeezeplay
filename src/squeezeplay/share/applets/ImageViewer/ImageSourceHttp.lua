@@ -72,7 +72,7 @@ function readImageList(self)
 				for l in string.gmatch(chunk, "[^\r\n]*\r*\n*") do
 					l = string.gsub(l, "\n*", "")
 					l = string.gsub(l, "\r*", "")
-					if l != "" then
+					if l ~= "" then
 						self.imgFiles[#self.imgFiles+1] = l 
 						log:debug(l)
 					end
@@ -177,7 +177,7 @@ function _fixImageListURL(self)
 	local urlString  = self.applet:getSettings()["http.path"]
 	local defaultUrl = self.applet:getDefaultSettings()["http.path"]
 	
-	if (urlString != defaultUrl and string.find(defaultUrl, urlString, 1, true)) then
+	if (urlString ~= defaultUrl and string.find(defaultUrl, urlString, 1, true)) then
 		log:warn("Invalid URL: " .. urlString)
 		log:warn("Replacing with default value")
 		self.applet:getSettings()["http.path"] = defaultUrl

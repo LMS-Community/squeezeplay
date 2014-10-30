@@ -10,7 +10,7 @@ Reads image list from SC or SN, currently just continuous photo streams, not fix
 
 =head1 FUNCTIONS
 
-Applet related methods are described in L<jive.Applet>. 
+Applet related methods are described in L<jive.Applet>.
 
 =cut
 --]]

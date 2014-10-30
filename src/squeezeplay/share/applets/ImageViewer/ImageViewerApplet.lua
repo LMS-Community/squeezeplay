@@ -317,7 +317,7 @@ end
 
 function startSlideshowWhenReady(self)
 	-- stop timer
-	if self.nextSlideTimer != nil then
+	if self.nextSlideTimer ~= nil then
 		self.nextSlideTimer:stop()
 	end
 
@@ -327,7 +327,7 @@ function startSlideshowWhenReady(self)
 		log:debug("self.listCheckCount: ", self.listCheckCount)
 
 		if self.listCheckCount == 50 then
-			if self.nextSlideTimer != nil then
+			if self.nextSlideTimer ~= nil then
 				self.nextSlideTimer:stop()
 			end
 			self.imgSource:listNotReadyError()
