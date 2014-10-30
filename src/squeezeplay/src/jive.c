@@ -189,7 +189,25 @@ static void paths_setup(lua_State *L, char *app) {
 
 		luaL_addstring(&b, path);
 		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
-		
+
+		// script path relative to CWD
+		getcwd(temp, PATH_MAX+1);
+		strcat(temp, "/" LUA_DEFAULT_PATH );
+		realpath(temp, path);
+
+		luaL_addstring(&b, path);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
+
+		// lua path relative to CWD
+		getcwd(temp, PATH_MAX+1);
+		strcat(temp, "/../share/lua/5.1");
+		realpath(temp, path);
+
+		luaL_addstring(&b, path);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?.lua;");
+		luaL_addstring(&b, path);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?" DIR_SEPARATOR_STR "?.lua;");
+
 		// set lua path
 		luaL_pushresult(&b);
 		lua_setfield(L, -2, "path");
@@ -216,6 +234,14 @@ static void paths_setup(lua_State *L, char *app) {
 		// cpath relative to executable
 		strcpy(temp, binpath);
 		strcat(temp, "/" LUA_DEFAULT_PATH);
+		realpath(temp, path);
+
+		luaL_addstring(&b, path);
+		luaL_addstring(&b, DIR_SEPARATOR_STR "?." LIBRARY_EXT ";");
+
+		// cpath relative to CWD
+		getcwd(temp, PATH_MAX+1);
+		strcat(temp, "/../lib/lua/5.1");
 		realpath(temp, path);
 
 		luaL_addstring(&b, path);
