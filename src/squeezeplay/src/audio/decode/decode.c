@@ -1004,6 +1004,7 @@ static int decode_init_audio(lua_State *L) {
 
 static int decode_audio_open(lua_State *L) {
 	struct decode_audio_func *f = NULL;
+	char *errstr = NULL;
 
 	if (decode_audio || decode_thread) {
 		/* already initialized */
@@ -1011,30 +1012,39 @@ static int decode_audio_open(lua_State *L) {
 		return 1;
 	}
 
-	/* initialise audio output */
+	/* initialise audio output - try in order: null, alsa, portaudio */
+	/* this allows fallback from alsa to portaudio on systems where this fails - e.g. ubuntu desktop */
+
+#ifdef HAVE_NULLAUDIO
+	f = &decode_null;
+	if (!f->init(L)) {
+		errstr = "null audio init failed";
+		f = NULL;
+	}
+#endif
 #ifdef HAVE_LIBASOUND
-	f = &decode_alsa;
+	if (!f) {
+		f = &decode_alsa;
+		if (!f->init(L)) {
+			errstr = "alsa audio init failed";
+			f = NULL;
+		}
+	}
 #endif
 #ifdef HAVE_LIBPORTAUDIO
 	if (!f) {
 		f = &decode_portaudio;
+		if (!f->init(L)) {
+			errstr = "port audio init failed";
+			f = NULL;
+		}
 	}
 #endif
-#ifdef HAVE_NULLAUDIO
-	f = &decode_null;
-#endif
-	if (!f) {
-		/* no audio support */
-		lua_pushnil(L);
-		lua_pushstring(L, "No audio support");
-		return 2;
-	}
 
-	/* audio initialization */
-	if (!f->init(L)) {
-		/* audio init failed */
+	/* no audio device available */
+	if (!f) {
 		lua_pushnil(L);
-		lua_pushstring(L, "Error in audio init");
+		lua_pushstring(L, errstr ? errstr : "No audio support");
 		return 2;
 	}
 
