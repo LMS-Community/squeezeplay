@@ -72,7 +72,7 @@ local allowedApplets = {
 }
 --]]
 
-
+local inhibitedApplets = {} 
 
 -- _init
 -- creates an AppletManager object
@@ -235,7 +235,11 @@ end
 -- pcall of _loadMeta
 local function _ploadMeta(entry)
 --	log:debug("_ploadMeta: ", entry.appletName)
-	
+	if inhibitedApplets and inhibitedApplets[entry.appletName] then
+		log:info("Inhibited: ", entry.appletName)
+		return
+	end
+
 	local ok, resOrErr = pcall(_loadMeta, entry)
 	if not ok then
 		entry.metaLoaded = false
@@ -522,6 +526,20 @@ local function _pevalApplet(entry)
 	return resOrErr
 end
 
+-- inhibit
+-- inhibit loading of meta and hence applet
+function inhibitApplet(self, appletName)
+	log:debug("AppletManager:inhibitApplet: ", appletName)
+	local entry = _appletsDb[appletName]
+
+	-- exists?
+	if not entry then
+		log:error("Unknown applet: ", appletName)
+		return nil
+	end
+	inhibitedApplets[appletName] = true
+        return true
+end
 
 -- load
 -- loads an applet. returns an instance of the applet
