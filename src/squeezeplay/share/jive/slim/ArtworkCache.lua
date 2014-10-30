@@ -19,19 +19,30 @@ local log         = require("jive.utils.log").logger("squeezebox.server.cache")
 module(..., oo.class)
 
 
--- Limit artwork cache to 8 Mbytes
+-- Default artwork cache to 8 Mbytes
 local ARTWORK_LIMIT = 8 * 1024 * 1024
 
+function setDefaultLimit(limit)
+	if (limit and limit > 0) then
+		ARTWORK_LIMIT = limit
+	end
+end
 
-function __init(self)
+function __init(self, limit)
 	local obj = oo.rawnew(self, {})
 
 	-- initialise state
 	obj:free()
+	self.limit = limit and limit or ARTWORK_LIMIT
 
 	return obj
 end
 
+function setLimit(self, limit)
+	if (limit and limit > 0) then
+		self.limit = limit
+	end
+end
 
 function free(self)
 	-- artwork cache
@@ -60,7 +71,7 @@ function dump(self)
 		v = v.prev
 	end
 
-	log:debug("artworkThumbCache items=", items, " citems=", citems, " bytes=", self.total, " fullness=", (self.total / ARTWORK_LIMIT) * 100)
+	log:debug("artworkThumbCache items=", items, " citems=", citems, " bytes=", self.total, " fullness=", (self.total / self.limit) * 100, " capacity=",self.limit/1024/1024,"MB")
 end
 
 
