@@ -527,18 +527,22 @@ function JiveMain:reload()
 end
 
 
-function JiveMain:registerSkin(name, appletName, method)
-	log:debug("registerSkin(", name, ",", appletName, ")")
-	self.skins[appletName] = { name, method }
+function JiveMain:registerSkin(name, appletName, method, skinId)
+       log:debug("registerSkin(", name, ",", appletName, ", ", skinId or "", ")")
+       -- skinId allows multiple entry methods to single applet to give multiple skins
+       if skinId == nil then
+               skinId = appletName
+       end
+       self.skins[skinId] = { appletName, name, method }
 end
 
 
 function JiveMain:skinIterator()
 	local _f,_s,_var = pairs(self.skins)
 	return function(_s,_var)
-		local appletName, entry = _f(_s,_var)
-		if appletName then
-			return appletName, entry[1]
+               local skinId, entry = _f(_s,_var)
+               if skinId then
+                       return skinId, entry[2]
 		else
 			return nil
 		end
@@ -551,12 +555,12 @@ function JiveMain:getSelectedSkin()
 end
 
 
-local function _loadSkin(self, appletName, reload, useDefaultSize)
-	if not self.skins[appletName] then
+local function _loadSkin(self, skinId, reload, useDefaultSize)
+	if not self.skins[skinId] then
 		return false
 	end
 
-	local name, method = unpack(self.skins[appletName])
+	local appletName, name, method = unpack(self.skins[skinId])
 	local obj = appletManager:loadApplet(appletName)
 	assert(obj, "Cannot load skin " .. appletName)
 
@@ -582,11 +586,16 @@ function JiveMain:setFullscreen(fullscreen)
 end
 
 
-function JiveMain:setSelectedSkin(appletName)
-	log:info("select skin: ", appletName)
-	if _loadSkin(self, appletName, false, true) then
-		self.selectedSkin = appletName
+function JiveMain:setSelectedSkin(skinId)
+        log:info("select skin: ", skinId)
+        local oldSkinId = self.selectedSkin
+        if _loadSkin(self, skinId, false, true) then
+                self.selectedSkin = skinId
 		jnt:notify("skinSelected")
+                if oldSkinId and self.skins[oldSkinId] and self.skins[oldSkinId][1] ~= self.skins[skinId][1] then
+                        jiveMain:freeSkin(oldSkinId)
+                end
+
 	end
 end
 
@@ -611,18 +620,23 @@ function JiveMain:reloadSkin(reload)
 	_loadSkin(self, self.selectedSkin, true);
 end
 
-function JiveMain:freeSkin()
-	log:info("freeSkin: self.selectedSkin: ", self.selectedSkin)
 
-	if not self.skins[self.selectedSkin] then
+function JiveMain:freeSkin(skinId)
+        if skinId == nil then
+                skinId = self.selectedSkin
+        end
+        log:info("freeSkin: ", skinId)
+	
+	if not self.skins[skinId] then
 		return false
 	end
-	appletManager:freeApplet(self.selectedSkin)
+	appletManager:freeApplet(self.skins[skinId][1])
 end
 
-function JiveMain:setDefaultSkin(appletName)
-	log:debug("setDefaultSkin(", appletName, ")")
-	_defaultSkin = appletName
+
+function JiveMain:setDefaultSkin(skinId)
+        log:debug("setDefaultSkin(", skinId, ")")
+        _defaultSkin = skinId
 end
 
 
