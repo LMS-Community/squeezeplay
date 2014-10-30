@@ -600,7 +600,7 @@ function JiveMain:setSelectedSkin(skinId)
 end
 
 
-function JiveMain:getSkinParam(key)
+function JiveMain:getSkinParam(key,warn)
 	if self._skin then
 		local param = self._skin:param()
 
@@ -609,7 +609,9 @@ function JiveMain:getSkinParam(key)
 		end
 	end
 
-	log:error('no value for skinParam ', key, ' found') 
+	if warn then log:warn('no value for skinParam ', key, ' found') else
+           log:error('no value for skinParam ', key, ' found') 
+	end
 	return nil
 end
 
