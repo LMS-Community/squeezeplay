@@ -124,6 +124,7 @@ function changeSkin(self, skinType)
 		return false
 	end
 
+        log:info(self,":changeSkin ",skinName,":",skinType)
 	local img1 = _capture("foo")
 
 	self.mode = skinType
