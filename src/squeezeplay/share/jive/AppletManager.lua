@@ -172,7 +172,7 @@ local function _findApplets()
 		log:debug("..in ", dir)
 		
 		local mode = lfs.attributes(dir, "mode")
-		if mode ~= "directory" then
+		if mode ~= "directory" and mode ~= "link" then
 			break
 		end
 
