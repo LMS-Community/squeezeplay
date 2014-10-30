@@ -56,7 +56,7 @@ module(..., Framework.constants)
 oo.class(_M, Applet)
 
 
-local CONNECT_TIMEOUT = 20
+local CONNECT_TIMEOUT = 40
 
 
 --temp during dev
@@ -631,7 +631,7 @@ function _showConnectToServer(self, player, server)
 
 					timeout = timeout + 1
 					if timeout > CONNECT_TIMEOUT or player:hasConnectionFailed() then
-						log:warn("Connection failure or Timeout, current count: ", timeout)
+						log:warn("Connection failure or Timeout, current count: ", timeout,"(",CONNECT_TIMEOUT,")")
 						cancelAction()
 					end
 				end)
