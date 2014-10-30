@@ -17,7 +17,7 @@ Applet related methods are described in L<jive.Applet>.
 
 
 -- stuff we use
-local ipairs = ipairs
+local ipairs,type = ipairs,type
 
 local oo			= require("loop.simple")
 local table			= require("jive.utils.table")
@@ -178,14 +178,16 @@ function requestImage(self, imageData)
 	
 	-- Bug 13937, if URL references a private IP address, don't use imageproxy
 	-- Tests for a numeric IP first to avoid extra string.find calls
-	if string.find(urlString, "^http://%d") and (
-		string.find(urlString, "^http://192%.168") or
-		string.find(urlString, "^http://172%.16%.") or
-		string.find(urlString, "^http://10%.")
+	if string.find(urlString, "^https?://%d") and (
+		string.find(urlString, "^https?://192%.168") or
+		string.find(urlString, "^https?://172%.1[6-9]%.") or
+		string.find(urlString, "^https?://172%.2[0-9]%.") or
+		string.find(urlString, "^https?://172%.3[0-1]%.") or
+		string.find(urlString, "^https?://10%.")
 	) then
 		-- use raw urlString
 	
-	elseif not string.find(urlString, "^http://") then
+	elseif not string.find(urlString, "^https?://") then
 		-- url on current server
 		local server = SlimServer:getCurrentServer()
 		
@@ -211,19 +213,19 @@ function requestImage(self, imageData)
 		
 	else
 		--use SN image proxy for resizing
-		urlString = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)
+		urlString = 'https://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. screenWidth .. '&h=' .. screenHeight .. '&f=' .. ''  .. '&u=' .. string.urlEncode(urlString)
 	end
 
 	self.currentImageFile = urlString
 
 	local textLines = {}
-	if imageData.caption and imageData.caption ~= "" then
+	if imageData.caption and imageData.caption ~= "" and type(imageData.caption) == "string" then
 		table.insert(textLines, imageData.caption)
 	end
-	if imageData.date and imageData.date ~= "" then
+	if imageData.date and imageData.date ~= "" and type(imageData.date) == "string" then
 		table.insert(textLines, imageData.date)
 	end
-	if imageData.owner and imageData.owner ~= "" then
+	if imageData.owner and imageData.owner ~= "" and type(imageData.owner) == "string" then
 		table.insert(textLines, imageData.owner)
 	end
 
