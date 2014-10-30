@@ -80,7 +80,7 @@ function selectSkinEntryPoint(self, menuItem)
 			text = self:string("SELECT_SKIN_BOOT_SKIN"),
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self:selectSkin(self:string("SELECT_SKIN_BOOT_SKIN"), "skin", JiveMain:getSelectedSkin()["skin"] or JiveMain:getSelectedSkin())
+				self:selectSkin(self:string("SELECT_SKIN_BOOT_SKIN"), "skin", self:getSettings()["skin"] or JiveMain:getSelectedSkin())
 			end
 			
 		})
