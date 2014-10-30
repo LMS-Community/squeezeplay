@@ -38,14 +38,14 @@ static void decode_alsa_check_pids(void) {
 	if (effect_pid >= 0) {
 		if (waitpid(effect_pid, NULL, WNOHANG) == effect_pid) {
 			/* child is dead, exit */
-			LOG_ERROR(log_audio_output, "exit, effect child is dead");
+			LOG_ERROR(log_audio_output, "exit, effect child is dead(%d)",effect_pid);
 			exit(-1);
 		}
 	}
 	if (playback_pid >= 0) {
 		if (waitpid(playback_pid, NULL, WNOHANG) == playback_pid) {
 			/* child is dead, exit */
-			LOG_ERROR(log_audio_output, "exit, playback child is dead");
+			LOG_ERROR(log_audio_output, "exit, playback child is dead(%d)",playback_pid);
 			exit(-1);
 		}
 	}
@@ -166,7 +166,7 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 
 	/* wait for backend process to start */
 	while (1) {
-		fifo_wait_timeout(&decode_audio->fifo, 500);
+		fifo_wait_timeout(&decode_audio->fifo, 1500);
 
 		if (decode_audio->running) {
 			break;
@@ -197,6 +197,7 @@ static int decode_alsa_init(lua_State *L) {
 	unsigned int buffer_time;
 	unsigned int period_count;
 	unsigned int sample_size;
+	unsigned int flags;
 	int shmid;
 	void *buf;
 
@@ -269,6 +270,9 @@ static int decode_alsa_init(lua_State *L) {
 	lua_getfield(L, 2, "alsaSampleSize");
 	sample_size = luaL_optinteger(L, -1, 16);
 
+	lua_getfield(L, 2, "alsaFlags");
+	flags = luaL_optinteger(L, -1, 16);
+
 	if ( user_sample_size != 0 )
 		sample_size = user_sample_size;
 
@@ -295,7 +299,7 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, 16, FLAG_STREAM_EFFECTS);
+		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, 16, FLAG_STREAM_EFFECTS|flags);
 	}
 
 
@@ -309,11 +313,11 @@ static int decode_alsa_init(lua_State *L) {
 	lua_pop(L, 2);
 
 	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, sample_size,
-					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS /*| FLAG_STREAM_NOISE*/);
+					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS | flags /*| FLAG_STREAM_NOISE*/);
 
 	lua_pop(L, 2);
 
-	return 1;
+	return playback_pid > 0 ? 1 : 0;
 }
 
 
