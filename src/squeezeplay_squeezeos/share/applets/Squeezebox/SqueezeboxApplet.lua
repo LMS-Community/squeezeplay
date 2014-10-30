@@ -52,7 +52,7 @@ function sysOpen(self, path, attr, mode)
 	if mode and string.match(mode, "w") then
 		local fh = io.open(path .. attr, "w")
 		if not fh then
-			log:warn("Can't open (read) ", path, attr)
+			log:warn("Can't open (wite) ", path, attr)
 			return
 		end
 
