@@ -66,10 +66,22 @@ local keyboardButtonText = {
         emailNumeric = '123-&',
 }
 
+-- FIXME this should be in the styles... But this is really difficult
+-- as the keybaord does its own layout
 local default = {
+	-- key size defaults
 	width = 46,
 	height = 44,
+	width_large = 92,
+	-- Keyboard default
+	row_boarder = 20,
+	x = 10,
 }
+
+-- Scale keyboard as it does its own layout for keys bypassing any style bounds 
+function setDefault(key,value)
+	default[key] = value
+end
 
 --[[
 
@@ -121,9 +133,9 @@ function _predefinedKeyboards(self)
 				{ self:_shiftKey('qwerty'), 'Z', 'X', 'C', 'V', 'B', 'N', 'M',
 				 self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['qwertyUpper_FR']  = { 
@@ -133,9 +145,9 @@ function _predefinedKeyboards(self)
 					self:_shiftKey('qwerty_FR'), self:_spacer(), 'W', 'X', 'C', 'V', 'B', 'N', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['qwertyUpper_DE']  = { 
@@ -145,9 +157,9 @@ function _predefinedKeyboards(self)
 					self:_shiftKey('qwerty'), 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['qwerty']  = { 
@@ -157,9 +169,9 @@ function _predefinedKeyboards(self)
 					self:_shiftKey('qwertyUpper', 'qwerty'), 'z', 'x', 'c', 'v', 'b', 'n', 'm', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['qwerty_DE']  = { 
@@ -169,9 +181,9 @@ function _predefinedKeyboards(self)
 					self:_shiftKey('qwertyUpper_DE', 'qwerty_DE'), 'y', 'x', 'c', 'v', 'b', 'n', 'm', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), },
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['qwerty_FR']  = { 
@@ -182,9 +194,9 @@ function _predefinedKeyboards(self)
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
 				},
 				{
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, 92, 'qwerty'), 
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numeric, default.width_large, 'qwerty'), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 
@@ -252,7 +264,7 @@ function _predefinedKeyboards(self)
 				{
 					self:_switchKeyboardButton('email', keyboardButtonText.qwerty),
 					{ keyWidth = 0, text = '.' },
-					{ keyWidth = 92, text = '@' },
+					{ keyWidth = default.width_large, text = '@' },
 					'_', '-',
 					self:_go() 
 				},
@@ -263,34 +275,34 @@ function _predefinedKeyboards(self)
 		},
 		['ip']     = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' } ,
-				{ '.', self:_spacer(), self:_arrow('left', 'bottom'), self:_arrow('right', 'bottom'), self:_go(92) },
+				{ '.', self:_spacer(), self:_arrow('left', 'bottom'), self:_arrow('right', 'bottom'), self:_go(default.width_large) },
 		},
 		['numeric'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ '.', '-', '+', '/', '=', '_', '@', '#', '$', '%' },
 				{ 
-					self:_switchKeyboardButton('numericShift', keyboardButtonText.numericMore, 92),
+					self:_switchKeyboardButton('numericShift', keyboardButtonText.numericMore, default.width_large),
 					':', '&', ',', '?', '!', '*', 
 					self:_arrow('left', 'middle'), self:_arrow('right', 'right'), 
 				},
 				{
-					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, default.width_large), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		['numericShift'] = { 
 				{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' },
 				{ ';', '"', '`', "'", '~', '^', '\\', '|', '[', ']' },
 				{ 
-					self:_switchKeyboardButton('numeric', keyboardButtonText.numericBack, 92),
+					self:_switchKeyboardButton('numeric', keyboardButtonText.numericBack, default.width_large),
 					'<', '>', '{', '}', '(', ')', 
 					self:_spacer(), self:_arrow('left', 'middle'), self:_arrow('right', 'right')
 				},
 				{
-					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, 92), 
+					self:_switchKeyboardButton('qwerty', keyboardButtonText.qwerty, default.width_large), 
 					self:_spaceBar(),
-					self:_go(92),
+					self:_go(default.width_large),
 				},
 		},
 		}
@@ -321,7 +333,7 @@ function _layout(self)
 	local screenWidth, screenHeight = Framework:getScreenSize()
 
 	local keyWidth
-	local rowWidth = 460
+	local rowWidth = screenWidth - default.row_boarder
 
 	-- self.keyboard has the keyboard, table of rows of key objects
 	-- self.rowInfo has metadata about the keyboard, e.g., keyWidth or spacer
@@ -334,6 +346,8 @@ function _layout(self)
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth = default.width
+			local w,h = key:getSize()
+			log:debug(self," Key Style (NS) ",key,":",style," ",w,"-",h)
 			if rowInfo[j].keyWidth == 0 then 
 				spacers = spacers + 1
 			else
@@ -347,10 +361,12 @@ function _layout(self)
 		local extraSpacerPixels = ( rowWidth - nonSpacerKeyWidth) % spacers
 		spacerWidth = math.floor( ( rowWidth - nonSpacerKeyWidth ) / spacers )
 
-		x = 10
+		x = default.x
 		local numberOfSpacers = 0
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
+			local w,h = key:getSize()
+			log:debug(self," Key Style ",key,":",style," ",w,"-",h)
 			local keyWidth
 			if rowInfo[j].keyWidth == 0 then 
 				numberOfSpacers = numberOfSpacers + 1
