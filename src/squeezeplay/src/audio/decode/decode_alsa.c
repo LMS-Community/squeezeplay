@@ -192,10 +192,6 @@ static int decode_alsa_init(lua_State *L) {
 	const char *playback_device;
 	const char *capture_device;
 	const char *effects_device;
-	const char *alsadevname;
-	const char *alsacapname;
-	const char *alsasamplesize;
-	unsigned int user_sample_size;
 	unsigned int buffer_time;
 	unsigned int period_count;
 	unsigned int sample_size;
@@ -227,44 +223,13 @@ static int decode_alsa_init(lua_State *L) {
 
 	decode_init_buffers(buf, true);
 
-	alsadevname = getenv("USEALSADEVICE");
-	alsacapname = getenv("USEALSACAPTURE");
-	alsasamplesize = getenv("USEALSASAMPLESIZE");
-
-	if ( alsasamplesize != NULL )
-	{
-		user_sample_size = (unsigned int) strtoul (alsasamplesize, NULL, 0);
-		switch (user_sample_size)
-		{
-			case 16:
-			case 24:
-			case 32:
-				break;
-			default:
-				user_sample_size = 16;
-				break;
-		}
-	}
-	else
-	{
-		user_sample_size = 0;
-	}
 
 	/* start threads */
 	lua_getfield(L, 2, "alsaPlaybackDevice");
 	playback_device = luaL_optstring(L, -1, ALSA_DEFAULT_DEVICE);
 
-	if ( alsadevname != NULL )
-		playback_device = alsadevname ;
-
 	lua_getfield(L, 2, "alsaCaptureDevice");
 	capture_device = luaL_optstring(L, -1, ALSA_DEFAULT_DEVICE);
-
-	if ( alsacapname != NULL )
-		capture_device = alsacapname ;
-	else
-		if ( alsadevname != NULL )
-			 capture_device = alsadevname;
 
 	lua_getfield(L, 2, "alsaEffectsDevice");
 	effects_device = luaL_optstring(L, -1, NULL);
@@ -274,10 +239,6 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_getfield(L, 2, "alsaFlags");
 	flags = luaL_optinteger(L, -1, 0);
-
-	if ( user_sample_size != 0 )
-		sample_size = user_sample_size;
-
 #if 0
 	/* test if device is available */
 	if (pcm_test(playback_device, &playback_max_rate) < 0) {
