@@ -280,7 +280,7 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_pop(L, 2);
 
-	return playback_pid > 0 ? 1 : 0;
+	return playback_pid > 0 ? 1 : -1;
 }
 
 
