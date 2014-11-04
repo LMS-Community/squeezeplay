@@ -92,16 +92,16 @@ static void decode_alsa_stop(void) {
 }
 
 
-static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, unsigned int sample_size, u32_t flags)
+static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, const char *sample_size, u32_t flags)
 {
-	char *path, b[10], p[10], f[10], s[10];
+	char *path, b[10], p[10], f[10];
 	char *cmd[20];
 	pid_t pid;
 	int i, idx = 0, ret;
 
 	path = alloca(PATH_MAX);
 
-	/* jive_alsa [-v] -d <device> -b <buffer_time> -p <period_count> -f <flags> */
+	/* jive_alsa [-v] -d <device> -b <buffer_time> -p <period_count> -s "<0|16|24|24_3|32>" -f <flags> */
 
 	cmd[idx++] = "jive_alsa";
 
@@ -125,9 +125,8 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	cmd[idx++] = "-p";
 	cmd[idx++] = p;
 
-	snprintf(s, sizeof(s), "%d", sample_size);
 	cmd[idx++] = "-s";
-	cmd[idx++] = s;
+	cmd[idx++] = (char *)sample_size;
 
 	snprintf(f, sizeof(f), "%d", flags);
 
@@ -198,7 +197,7 @@ static int decode_alsa_init(lua_State *L) {
 	unsigned int user_sample_size;
 	unsigned int buffer_time;
 	unsigned int period_count;
-	unsigned int sample_size;
+	const char *sample_size;
 	unsigned int flags;
 	int shmid;
 	void *buf;
@@ -231,25 +230,6 @@ static int decode_alsa_init(lua_State *L) {
 	alsacapname = getenv("USEALSACAPTURE");
 	alsasamplesize = getenv("USEALSASAMPLESIZE");
 
-	if ( alsasamplesize != NULL )
-	{
-		user_sample_size = (unsigned int) strtoul (alsasamplesize, NULL, 0);
-		switch (user_sample_size)
-		{
-			case 16:
-			case 24:
-			case 32:
-				break;
-			default:
-				user_sample_size = 16;
-				break;
-		}
-	}
-	else
-	{
-		user_sample_size = 0;
-	}
-
 	/* start threads */
 	lua_getfield(L, 2, "alsaPlaybackDevice");
 	playback_device = luaL_optstring(L, -1, ALSA_DEFAULT_DEVICE);
@@ -270,10 +250,23 @@ static int decode_alsa_init(lua_State *L) {
 	effects_device = luaL_optstring(L, -1, NULL);
 
 	lua_getfield(L, 2, "alsaSampleSize");
-	sample_size = luaL_optinteger(L, -1, 0);
+	sample_size = luaL_optstring(L, -1, "16");
 
-	if ( user_sample_size != 0 )
-		sample_size = user_sample_size;
+	if ( alsasamplesize != NULL )
+	{
+		if ( ( strcmp ( alsasamplesize, "0" ) == 0 ) ||
+			( strcmp ( alsasamplesize, "16" ) == 0 ) ||
+			( strcmp ( alsasamplesize, "24" ) == 0 ) ||
+			( strcmp ( alsasamplesize, "24_3" ) == 0 ) ||
+			( strcmp ( alsasamplesize, "32" ) == 0 ) )
+		{
+			sample_size = luaL_optstring(L, -1, alsasamplesize);
+		}
+		else
+		{
+			sample_size = luaL_optstring(L, -1, "0");
+		}
+	}
 
 	lua_getfield(L, 2, "alsaFlags");
 	flags = luaL_optinteger(L, -1, 0);
@@ -301,7 +294,7 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, 16, FLAG_STREAM_EFFECTS|flags);
+		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, "16", FLAG_STREAM_EFFECTS|flags);
 	}
 
 

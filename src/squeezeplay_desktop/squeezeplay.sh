@@ -33,9 +33,12 @@ export PATH=$PATH:$INSTALL_DIR/bin
 #
 # ALSA
 #
+# Supported sample sizes 0=autodetect, default=16
+# "<0|16|24|24_3|32>"
+#
+# export USEALSASAMPLESIZE=16
 # export USEALSADEVICE=default
 # export USEALSACAPTURE=default
-# export USEALSASAMPLESIZE=16
 #
 # Allow screensaver to start
 #
