@@ -202,6 +202,7 @@ static int decode_alsa_init(lua_State *L) {
 	const char *alsasamplesize;
 	const char *alsapcmtimeout;
 	const char *alsabuffertime;
+	const char *alsaperiodcount;
 	unsigned int buffer_time;
 	unsigned int period_count;
 	unsigned int pcm_timeout;
@@ -240,6 +241,7 @@ static int decode_alsa_init(lua_State *L) {
 	alsasamplesize = getenv("USEALSASAMPLESIZE");
 	alsapcmtimeout = getenv("USEALSAPCMTIMEOUT");
 	alsabuffertime = getenv("USEALSABUFFERTIME");
+	alsaperiodcount = getenv("USEALSAPERIODCOUNT");
 
 	/* start threads */
 	lua_getfield(L, 2, "alsaPlaybackDevice");
@@ -306,6 +308,14 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_getfield(L, 2, "alsaPlaybackPeriodCount");
 	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
+
+	if ( alsaperiodcount != NULL )
+	{
+		period_count = (unsigned int) strtoul (alsaperiodcount, NULL, 0);
+		if ( period_count < 1 )
+			period_count = ALSA_DEFAULT_PERIOD_COUNT;
+	}
+
 	lua_pop(L, 2);
 
 	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, pcm_timeout,
