@@ -198,9 +198,9 @@ static int decode_alsa_init(lua_State *L) {
 	const char *effects_device;
 	const char *alsadevname;
 	const char *alsacapname;
+	const char *alsaeffname;
 	const char *alsasamplesize;
 	const char *alsapcmtimeout;
-	unsigned int user_sample_size;
 	unsigned int buffer_time;
 	unsigned int period_count;
 	unsigned int pcm_timeout;
@@ -235,6 +235,7 @@ static int decode_alsa_init(lua_State *L) {
 
 	alsadevname = getenv("USEALSADEVICE");
 	alsacapname = getenv("USEALSACAPTURE");
+	alsaeffname = getenv("USEALSAEFFECTS");
 	alsasamplesize = getenv("USEALSASAMPLESIZE");
 	alsapcmtimeout = getenv("USEALSAPCMTIMEOUT");
 
@@ -256,6 +257,9 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_getfield(L, 2, "alsaEffectsDevice");
 	effects_device = luaL_optstring(L, -1, NULL);
+
+	if ( alsaeffname != NULL )
+		effects_device = alsaeffname;
 
 	lua_getfield(L, 2, "alsaPcmTimeout");
 	pcm_timeout = luaL_optinteger(L, -1, ALSA_PCM_WAIT_TIMEOUT);
@@ -285,6 +289,18 @@ static int decode_alsa_init(lua_State *L) {
 	lua_getfield(L, 2, "alsaFlags");
 	flags = luaL_optinteger(L, -1, 0);
 
+	/* playback device */
+	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
+
+	lua_getfield(L, 2, "alsaPlaybackBufferTime");
+	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
+	lua_getfield(L, 2, "alsaPlaybackPeriodCount");
+	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
+	lua_pop(L, 2);
+
+	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, pcm_timeout,
+		sample_size, (FLAG_STREAM_PLAYBACK|flags));
+
 	/* effects device */
 	if (effects_device) {
 		LOG_DEBUG(log_audio_output, "Effects device: %s", effects_device);
@@ -295,19 +311,9 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout, "16", FLAG_STREAM_EFFECTS|flags);
+		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout,
+			"16", (FLAG_STREAM_EFFECTS|flags));
 	}
-
-	/* playback device */
-	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
-
-	lua_getfield(L, 2, "alsaPlaybackBufferTime");
-	buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
-	lua_getfield(L, 2, "alsaPlaybackPeriodCount");
-	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
-	lua_pop(L, 2);
-
-	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, pcm_timeout, sample_size, (effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS | flags /*| FLAG_STREAM_NOISE*/);
 
 	lua_pop(L, 2);
 
