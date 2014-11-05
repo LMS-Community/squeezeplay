@@ -278,11 +278,7 @@ static int decode_alsa_init(lua_State *L) {
 			( strcmp ( alsasamplesize, "24_3" ) == 0 ) ||
 			( strcmp ( alsasamplesize, "32" ) == 0 ) )
 		{
-			sample_size = luaL_optstring(L, -1, alsasamplesize);
-		}
-		else
-		{
-			sample_size = luaL_optstring(L, -1, "0");
+			sample_size = alsasamplesize;
 		}
 	}
 
