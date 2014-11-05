@@ -285,19 +285,6 @@ static int decode_alsa_init(lua_State *L) {
 	lua_getfield(L, 2, "alsaFlags");
 	flags = luaL_optinteger(L, -1, 0);
 
-#if 0
-	/* test if device is available */
-	if (pcm_test(playback_device, &playback_max_rate) < 0) {
-		lua_pop(L, 2);
-		return 0;
-	}
-
-	if (effects_device && pcm_test(effects_device, NULL) < 0) {
-		effects_device = NULL;
-	}
-#endif
-
-
 	/* effects device */
 	if (effects_device) {
 		LOG_DEBUG(log_audio_output, "Effects device: %s", effects_device);
@@ -310,7 +297,6 @@ static int decode_alsa_init(lua_State *L) {
 
 		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout, "16", FLAG_STREAM_EFFECTS|flags);
 	}
-
 
 	/* playback device */
 	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);
