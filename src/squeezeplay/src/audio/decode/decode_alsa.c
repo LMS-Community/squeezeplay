@@ -332,7 +332,7 @@ static int decode_alsa_init(lua_State *L) {
 		lua_pop(L, 2);
 
 		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout,
-			"16", (FLAG_STREAM_EFFECTS|flags));
+			sample_size, (FLAG_STREAM_EFFECTS|flags));
 	}
 
 	lua_pop(L, 2);
