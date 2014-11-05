@@ -24,6 +24,7 @@
 #define ALSA_DEFAULT_DEVICE "default"
 #define ALSA_DEFAULT_BUFFER_TIME 30000
 #define ALSA_DEFAULT_PERIOD_COUNT 3
+#define ALSA_PCM_WAIT_TIMEOUT 500
 
 #define FLAG_STREAM_PLAYBACK 0x01
 #define FLAG_STREAM_EFFECTS  0x02
@@ -92,16 +93,16 @@ static void decode_alsa_stop(void) {
 }
 
 
-static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, const char *sample_size, u32_t flags)
+static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned int buffer_time, unsigned int period_count, unsigned int pcm_timeout, const char *sample_size, u32_t flags)
 {
-	char *path, b[10], p[10], f[10];
+	char *path, b[10], p[10], f[10], t[10];
 	char *cmd[20];
 	pid_t pid;
 	int i, idx = 0, ret;
 
 	path = alloca(PATH_MAX);
 
-	/* jive_alsa [-v] -d <device> -b <buffer_time> -p <period_count> -s "<0|16|24|24_3|32>" -f <flags> */
+	/* jive_alsa [-v] -d <device> -b <buffer_time> -p <period_count> -t <pcm_timeout> -s "<0|16|24|24_3|32>" -f <flags> */
 
 	cmd[idx++] = "jive_alsa";
 
@@ -124,6 +125,10 @@ static pid_t decode_alsa_fork(const char *device, const char *capture, unsigned 
 	snprintf(p, sizeof(p), "%d", period_count);
 	cmd[idx++] = "-p";
 	cmd[idx++] = p;
+
+	snprintf(t, sizeof(t), "%d", pcm_timeout);
+	cmd[idx++] = "-t";
+	cmd[idx++] = t;
 
 	cmd[idx++] = "-s";
 	cmd[idx++] = (char *)sample_size;
@@ -194,9 +199,11 @@ static int decode_alsa_init(lua_State *L) {
 	const char *alsadevname;
 	const char *alsacapname;
 	const char *alsasamplesize;
+	const char *alsapcmtimeout;
 	unsigned int user_sample_size;
 	unsigned int buffer_time;
 	unsigned int period_count;
+	unsigned int pcm_timeout;
 	const char *sample_size;
 	unsigned int flags;
 	int shmid;
@@ -229,6 +236,7 @@ static int decode_alsa_init(lua_State *L) {
 	alsadevname = getenv("USEALSADEVICE");
 	alsacapname = getenv("USEALSACAPTURE");
 	alsasamplesize = getenv("USEALSASAMPLESIZE");
+	alsapcmtimeout = getenv("USEALSAPCMTIMEOUT");
 
 	/* start threads */
 	lua_getfield(L, 2, "alsaPlaybackDevice");
@@ -248,6 +256,16 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_getfield(L, 2, "alsaEffectsDevice");
 	effects_device = luaL_optstring(L, -1, NULL);
+
+	lua_getfield(L, 2, "alsaPcmTimeout");
+	pcm_timeout = luaL_optinteger(L, -1, ALSA_PCM_WAIT_TIMEOUT);
+
+	if ( alsapcmtimeout != NULL )
+	{
+		pcm_timeout = (unsigned int) strtoul (alsapcmtimeout, NULL, 0);
+		if ( (pcm_timeout < 10) || ( pcm_timeout > ( ALSA_PCM_WAIT_TIMEOUT * 3 ) ) )
+			pcm_timeout = ALSA_PCM_WAIT_TIMEOUT;
+	}	
 
 	lua_getfield(L, 2, "alsaSampleSize");
 	sample_size = luaL_optstring(L, -1, "16");
@@ -294,7 +312,7 @@ static int decode_alsa_init(lua_State *L) {
 		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 		lua_pop(L, 2);
 
-		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, "16", FLAG_STREAM_EFFECTS|flags);
+		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout, "16", FLAG_STREAM_EFFECTS|flags);
 	}
 
 
@@ -307,8 +325,7 @@ static int decode_alsa_init(lua_State *L) {
 	period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
 	lua_pop(L, 2);
 
-	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, sample_size,
-					(effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS | flags /*| FLAG_STREAM_NOISE*/);
+	playback_pid = decode_alsa_fork(playback_device, capture_device, buffer_time, period_count, pcm_timeout, sample_size, (effects_device) ? FLAG_STREAM_PLAYBACK : FLAG_STREAM_PLAYBACK | FLAG_STREAM_EFFECTS | flags /*| FLAG_STREAM_NOISE*/);
 
 	lua_pop(L, 2);
 

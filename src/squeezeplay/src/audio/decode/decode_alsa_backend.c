@@ -139,9 +139,9 @@ struct decode_alsa {
 	pid_t parent_pid;
 
 	/* MMAP output available? */
-	char has_mmap;
+	int has_mmap;
 
-	int pcm_wait_timeout;
+	u32_t pcm_wait_timeout;
 };
 
 #define PCM_FRAMES_TO_BYTES(frames) (snd_pcm_frames_to_bytes(state->pcm, (frames)))
