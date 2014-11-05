@@ -386,13 +386,14 @@ void decode_keepalive(int ticks) {
 
 
 static int decode_thread_execute(void *unused) {
-	int decode_debug;
+	int decode_debug = 0;
 
 	LOG_DEBUG(log_audio_decode, "decode_thread_execute");
 
 	decode_watchdog = watchdog_get();
 
-	decode_debug = getenv("SQUEEZEPLAY_DECODE_DEBUG") != NULL;
+	if ( getenv("SQUEEZEPLAY_DECODE_DEBUG") != NULL )
+		decode_debug = 1;
 
 	while (true) {
 		mqueue_func_t handler;
