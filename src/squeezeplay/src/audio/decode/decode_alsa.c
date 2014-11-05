@@ -325,10 +325,30 @@ static int decode_alsa_init(lua_State *L) {
 	if (effects_device) {
 		LOG_DEBUG(log_audio_output, "Effects device: %s", effects_device);
 
-		lua_getfield(L, 2, "alsaEffectsBufferTime");
-		buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
-		lua_getfield(L, 2, "alsaEffectsPeriodCount");
-		period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
+		if ( alsabuffertime != NULL )
+		{
+			buffer_time = (unsigned int) strtoul (alsabuffertime, NULL, 0);
+			if ( buffer_time < 10 )
+				buffer_time = ALSA_DEFAULT_BUFFER_TIME;
+		}
+		else
+		{
+			lua_getfield(L, 2, "alsaEffectsBufferTime");
+			buffer_time = luaL_optinteger(L, -1, ALSA_DEFAULT_BUFFER_TIME);
+		}
+
+		if ( alsaperiodcount != NULL )
+		{
+			period_count = (unsigned int) strtoul (alsaperiodcount, NULL, 0);
+			if ( period_count < 1 )
+				period_count = ALSA_DEFAULT_PERIOD_COUNT;
+		}
+		else
+		{
+			lua_getfield(L, 2, "alsaEffectsPeriodCount");
+			period_count = luaL_optinteger(L, -1, ALSA_DEFAULT_PERIOD_COUNT);
+		}
+
 		lua_pop(L, 2);
 
 		effect_pid = decode_alsa_fork(effects_device, NULL, buffer_time, period_count, pcm_timeout,
