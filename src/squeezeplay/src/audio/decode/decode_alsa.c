@@ -203,6 +203,7 @@ static int decode_alsa_init(lua_State *L) {
 	const char *alsapcmtimeout;
 	const char *alsabuffertime;
 	const char *alsaperiodcount;
+	const char *alsausenommap;
 	unsigned int buffer_time;
 	unsigned int period_count;
 	unsigned int pcm_timeout;
@@ -242,6 +243,7 @@ static int decode_alsa_init(lua_State *L) {
 	alsapcmtimeout = getenv("USEALSAPCMTIMEOUT");
 	alsabuffertime = getenv("USEALSABUFFERTIME");
 	alsaperiodcount = getenv("USEALSAPERIODCOUNT");
+	alsausenommap = getenv("USEALSANOMMAP");
 
 	/* start threads */
 	lua_getfield(L, 2, "alsaPlaybackDevice");
@@ -292,6 +294,9 @@ static int decode_alsa_init(lua_State *L) {
 
 	lua_getfield(L, 2, "alsaFlags");
 	flags = luaL_optinteger(L, -1, 0);
+
+	if ( alsausenommap != NULL )
+		flags |= FLAG_NOMMAP ;
 
 	/* playback device */
 	LOG_DEBUG(log_audio_output, "Playback device: %s", playback_device);

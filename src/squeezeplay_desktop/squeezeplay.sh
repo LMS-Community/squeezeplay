@@ -43,6 +43,7 @@ export PATH=$PATH:$INSTALL_DIR/bin
 # export USEALSAPCMTIMEOUT=500
 # export USEALSABUFFERTIME=30000
 # export USEALSAPERIODCOUNT=3
+# export USEALSANOMMAP=null
 #
 # Allow screensaver to start
 #
