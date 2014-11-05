@@ -41,6 +41,7 @@ export PATH=$PATH:$INSTALL_DIR/bin
 # export USEALSACAPTURE=default
 # export USEALSAEFFECTS=null
 # export USEALSAPCMTIMEOUT=500
+# export USEALSABUFFERTIME=30000
 #
 # Allow screensaver to start
 #
