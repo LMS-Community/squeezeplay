@@ -44,9 +44,9 @@ function init(self, ...)
 	local remoteSkin = "remote"
 
 	--temp workaround, until it is resolved how to avoid self.mode being null on startup
-	if not self.mode then
-		self.mode = touchSkin
-	end
+	--if not self.mode then
+	--	self.mode = nil
+	--end
 	
 	if not self.irBlacklist then
 		self.irBlacklist = {}
@@ -120,6 +120,7 @@ function changeSkin(self, skinType)
 
 	local skinName = appletManager:callService("getSelectedSkinNameForType", skinType)
 	if jiveMain:getSelectedSkin() == skinName then
+		self.mode = skinType -- needed for inital setting of mode at start.
 		log:debug("skin already selected, not switching: ", skinName)
 		return false
 	end
