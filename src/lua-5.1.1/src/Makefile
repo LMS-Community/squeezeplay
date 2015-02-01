@@ -10,7 +10,7 @@ PLAT= none
 # commented out things exported by main mainfile
 
 CC ?= gcc
-CFLAGS ?= -O2 -Wall $(MYCFLAGS)
+CFLAGS ?= -s -fPIC -O2 -Wall $(MYCFLAGS)
 AR ?= ar
 ARFLAGS ?= rcu
 RANLIB ?= ranlib
@@ -18,7 +18,7 @@ RM= rm -f
 LIBS= -lm $(MYLIBS)
 
 MYCFLAGS=
-MYLDFLAGS=
+MYLDFLAGS= -R /opt/jivelite/lib
 MYLIBS=
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
@@ -26,11 +26,12 @@ MYLIBS=
 PLATS= aix ansi bsd generic linux macosx mingw posix solaris
 
 LUA_A=	liblua.a
+LUA_SO= liblua.so
 CORE_O=	lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o \
 	lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o  \
 	lundump.o lvm.o lzio.o
 LIB_O=	lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o \
-	lstrlib.o loadlib.o linit.o
+	lstrlib.o loadlib.o linit.o bit.o
 
 LUA_T=	lua
 LUA_O=	lua.o
@@ -41,7 +42,7 @@ LUAC_O=	luac.o print.o
 LUATHREAD_O=
 
 ALL_O= $(CORE_O) $(LIB_O) $(LUA_O) $(LUAC_O)
-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
+ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_SO)
 ALL_A= $(LUA_A)
 
 default: $(PLAT)
@@ -55,6 +56,9 @@ a:	$(ALL_A)
 $(LUA_A): $(CORE_O) $(LIB_O)
 	$(AR) $(ARFLAGS) $@ $?
 	$(RANLIB) $@
+
+$(LUA_SO): $(CORE_O) $(LIB_O)
+	$(CC) -o $@ $(MYLDFLAGS) -shared $(CORE_O) $(LIB_O)
 
 $(LUA_T): $(LUA_O) $(LUA_A)
 	$(CC) -o $@ $(LDFLAGS) $(CFLAGS) $(MYLDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
