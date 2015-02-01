@@ -17,8 +17,8 @@ RANLIB ?= ranlib
 RM= rm -f
 LIBS= -lm $(MYLIBS)
 
-MYCFLAGS=
-MYLDFLAGS= -R /opt/jivelite/lib
+MYCFLAGS=-Wl,rpath,/opt/squeezeplay/lib
+MYLDFLAGS=
 MYLIBS=
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
