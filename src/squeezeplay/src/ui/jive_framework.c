@@ -494,7 +494,7 @@ static int _draw_screen(lua_State *L) {
 	/* Exit if we have no windows, nothing to draw */
 	lua_getfield(L, 1, "windowStack");
 	if (lua_objlen(L, -1) == 0) {
-		lua_pop(L, 2);
+		lua_pop(L, 1);
 
 		JIVEL_STACK_CHECK_ASSERT(L);
 		return 0;
