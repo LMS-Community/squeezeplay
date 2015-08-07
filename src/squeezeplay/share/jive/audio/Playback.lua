@@ -445,9 +445,12 @@ function _timerCallback(self)
 			local dbuf = (status.decodeFull * 100) / status.decodeSize
 			local obuf = (status.outputFull * 100) / status.outputSize
 
-			log:info(string.format('%0.1f%%/%0.1f%%', dbuf, obuf))
-
-			iconbar:showDebug(string.format('%0.1f%%/%0.1f%%', dbuf, obuf), 10)
+			if self.dbuf ~= dbuf or obuf ~= self.obuf then
+				self.dbuf = dbuf
+				self.obuf = obuf
+				log:debug(string.format('%0.1f%%/%0.1f%%', dbuf, obuf))
+				iconbar:showDebug(string.format('%0.1f%%/%0.1f%%', dbuf, obuf), 10)
+			end
 		end
 	end
 
