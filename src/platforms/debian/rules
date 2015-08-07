@@ -23,6 +23,8 @@ install:
 
 	# Copy all of the files into the base dir
 	cp -r $(source)/* $(squeezeplay)/
+	find $(squeezeplay)/lib -type f -name '*so*' -exec patchelf --set-rpath "/opt/squeezeplay/lib" {} \;
+	find $(squeezeplay)/bin -type f -exec patchelf --set-rpath "/opt/squeezeplay/lib" {} \;
 	
 binary-indep: install
 	dh_testdir
