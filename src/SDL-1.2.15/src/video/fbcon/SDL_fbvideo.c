@@ -85,7 +85,7 @@ static const SDL_Rect checkres[] = {
 	{  0, 0,  640,  400 },		/*  8 bpp: 0x100, or 256 */
 	{  0, 0,  512,  384 },
 	{  0, 0,  480,  320 },		// HVGA   3:2 = 1.5
-	{  0, 0,  480,  275 },		// WQVGA?
+	{  0, 0,  480,  272 },		// WQVGA
 	{  0, 0,  320,  240 },		// QVGA	  4:3 = 1.3
 	{  0, 0,  320,  200 }		// CGA    4:3 = 1.3
 };
@@ -184,7 +184,9 @@ static int SDL_getpagesize(void)
 #endif
 }
 
+#ifdef FBCON_DEBUG
 static void print_finfo(struct fb_fix_screeninfo *finfo);
+#endif
 
 
 /* Small wrapper for mmap() so we can play nicely with no-mmu hosts
@@ -1061,7 +1063,7 @@ static SDL_Surface *FB_SetVideoMode(_THIS, SDL_Surface *current,
 #endif
 		SDL_memset(&vinfo, 0, sizeof(vinfo));
 		vinfo.activate = FB_ACTIVATE_NOW;
-		vinfo.accel_flags = 0; //?
+		vinfo.accel_flags = 0;
 		vinfo.bits_per_pixel = bpp;
 		vinfo.xres = width;
 		vinfo.xres_virtual = width;
@@ -1218,7 +1220,7 @@ static SDL_Surface *FB_SetVideoMode(_THIS, SDL_Surface *current,
 			flip_page = 0;
 			flip_address[0] = (char *)current->pixels;
 			flip_address[1] = (char *)current->pixels+
-					current->h*current->pitch;
+				current->h*current->pitch;
 			this->screen = current;
 			FB_FlipHWSurface(this, current);
 			this->screen = NULL;
@@ -1459,8 +1461,8 @@ static void FB_UnlockHWSurface(_THIS, SDL_Surface *surface)
 
 static void FB_WaitVBL(_THIS)
 {
-#ifdef FBIOWAITRETRACE /* Heheh, this didn't make it into the main kernel */
-	ioctl(console_fd, FBIOWAITRETRACE, 0);
+#ifdef FBIO_WAITFORVSYNC
+	ioctl(console_fd, FBIO_WAITFORVSYNC, 0);
 #endif
 	return;
 }
