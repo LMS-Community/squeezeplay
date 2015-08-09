@@ -284,7 +284,7 @@ static int jiveL_initSDL(lua_State *L) {
 
 	srf = jive_surface_set_video_mode(screen_w, screen_h, screen_bpp, fullscreen);
 	if (!srf) {
-		LOG_ERROR(log_ui_draw, "Splash Video Mode Fail.");
+		LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", screen_w, screen_h);
 
 		SDL_Quit();
 		exit(-1);
@@ -904,6 +904,13 @@ int jiveL_set_video_mode(lua_State *L) {
 	/* update video mode */
 	srf = jive_surface_set_video_mode(w, h, bpp, isfull);
 
+	if (!srf) {
+		LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", w, h);
+
+		SDL_Quit();
+		exit(-1);
+	}
+
 	/* store new screen surface */
 	lua_getfield(L, 1, "screen");
 	tolua_pushusertype(L, srf, "Surface");
@@ -1321,6 +1328,13 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		screen_h = event->resize.h;
 
 		srf = jive_surface_set_video_mode(screen_w, screen_h, bpp, jive_surface_isSDLFullScreen(NULL));
+
+		if (!srf) {
+			LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", screen_w, screen_h);
+
+			SDL_Quit();
+			exit(-1);
+		}
 
 		lua_getfield(L, 1, "screen");
 
