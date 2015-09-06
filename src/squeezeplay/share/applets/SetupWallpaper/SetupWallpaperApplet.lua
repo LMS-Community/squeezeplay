@@ -127,6 +127,24 @@ function settingsShow(self)
 		self:_readFile(downloadPrefix .. img, screenWidth, screenHeight)
 	end
 
+	-- add no wallpaper item
+	self.menu:addItem({
+		weight = 1,
+		text  = self:string("BLACK"), 
+		style = 'item_choice',
+		sound = "WINDOWSHOW",
+		check = RadioButton("radio", 
+			self.group, 
+			function()
+				self:setBackground('black', self.currentPlayerId)
+			end,
+			wallpaper == 'black'
+		),
+		focusGained = function(event)
+			self:showBackground('black', self.currentPlayerId)
+		end
+	})
+
 	for name, details in pairs(self.wallpapers) do
 		log:debug(name, "|", details.token)
 		
@@ -225,9 +243,13 @@ function _readFile(self, img, screenWidth, screenHeight)
 			pattern = 'JIVE_'
 		elseif screenWidth == 480 and screenHeight == 272 then
 			pattern = 'FAB4_'
+		else
+			pattern = 'HD_'
 		end
 
-		if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
+		-- black now handled by special case so ignored
+		if not self.wallpapers[name] and stringToken ~= 'BLACK' and 
+			( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
 			self.wallpapers[name] = {
 				token    = stringToken,
 				name     = splitFurther[#splitFurther],
@@ -393,7 +415,7 @@ function showBackground(self, wallpaper, playerId, force)
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
 		
 
-	elseif wallpaper then
+	elseif wallpaper and wallpaper ~= 'black' then
 		if not string.match(wallpaper, "/") then
 			-- try firmware wallpaper
 			wallpaper = firmwarePrefix .. wallpaper
@@ -418,7 +440,7 @@ function setBackground(self, wallpaper, playerId, force)
 		playerId = jiveMain:getSelectedSkin()
 	end
 
-	log:debug('SetupWallpaper, setting wallpaper for ', playerId)
+	log:debug('SetupWallpaper, setting wallpaper for ', playerId, ' ', wallpaper)
 
 	-- set the new wallpaper, or use the existing setting
 	if wallpaper then
