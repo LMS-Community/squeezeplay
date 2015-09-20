@@ -415,7 +415,10 @@ function showBackground(self, wallpaper, playerId, force)
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
 		
 
-	elseif wallpaper and wallpaper ~= 'black' then
+	elseif wallpaper == 'black' then
+		srf = Tile:fillColor(0x000000ff)
+
+	elseif wallpaper then
 		if not string.match(wallpaper, "/") then
 			-- try firmware wallpaper
 			wallpaper = firmwarePrefix .. wallpaper
