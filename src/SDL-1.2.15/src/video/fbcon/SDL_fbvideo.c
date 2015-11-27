@@ -1487,11 +1487,11 @@ static int FB_FlipHWSurface(_THIS, SDL_Surface *surface)
 	if ( FB_IsSurfaceBusy(this->screen) ) {
 		FB_WaitBusySurfaces(this);
 	}
-	wait_vbl(this);
 	if ( ioctl(console_fd, FBIOPAN_DISPLAY, &cache_vinfo) < 0 ) {
 		SDL_SetError("ioctl(FBIOPAN_DISPLAY) failed");
 		return(-1);
 	}
+	wait_vbl(this);
 	flip_page = !flip_page;
 
 	surface->pixels = flip_address[flip_page];
