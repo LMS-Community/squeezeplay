@@ -20,6 +20,8 @@ local oo            = require("loop.simple")
 
 local AppletMeta    = require("jive.AppletMeta")
 
+local Framework     = require("jive.ui.Framework")
+
 local appletManager = appletManager
 local jiveMain      = jiveMain
 
@@ -49,6 +51,8 @@ function configureApplet(self)
 		callback = function() 
 			-- disconnect from Player/SqueezeCenter
 			appletManager:callService("disconnectPlayer")
+
+			Framework:quit()
 
 			return (EVENT_CONSUME | EVENT_QUIT)
 		end,
