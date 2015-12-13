@@ -127,24 +127,6 @@ function settingsShow(self)
 		self:_readFile(downloadPrefix .. img, screenWidth, screenHeight)
 	end
 
-	-- add no wallpaper item
-	self.menu:addItem({
-		weight = 1,
-		text  = self:string("BLACK"), 
-		style = 'item_choice',
-		sound = "WINDOWSHOW",
-		check = RadioButton("radio", 
-			self.group, 
-			function()
-				self:setBackground('black', self.currentPlayerId)
-			end,
-			wallpaper == 'black'
-		),
-		focusGained = function(event)
-			self:showBackground('black', self.currentPlayerId)
-		end
-	})
-
 	for name, details in pairs(self.wallpapers) do
 		log:debug(name, "|", details.token)
 		
@@ -245,13 +227,9 @@ function _readFile(self, img, screenWidth, screenHeight)
 			pattern = 'FAB4_'
 		elseif screenWidth == 800 and screenHeight == 480 then
 			pattern = 'PCP_'
-		else
-			pattern = 'HD_'
 		end
 
-		-- black now handled by special case so ignored
-		if not self.wallpapers[name] and stringToken ~= 'BLACK' and 
-			( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
+		if not self.wallpapers[name] and ( not pattern or ( pattern and string.match(patternMatch, pattern) ) ) then
 			self.wallpapers[name] = {
 				token    = stringToken,
 				name     = splitFurther[#splitFurther],
@@ -417,7 +395,7 @@ function showBackground(self, wallpaper, playerId, force)
 		srf = Tile:loadImage(downloadPrefix .. playerId:gsub(":", "-"))
 		
 
-	elseif wallpaper and wallpaper ~= 'black' then
+	elseif wallpaper then
 		if not string.match(wallpaper, "/") then
 			-- try firmware wallpaper
 			wallpaper = firmwarePrefix .. wallpaper

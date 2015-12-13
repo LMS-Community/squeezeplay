@@ -35,7 +35,7 @@ end
 
 function defaultSettings(meta)
 	return { 
-		JogglerSkin = "jive_black.png",
+		JogglerSkin = "pcp_black.png",
 		WQVGAsmallSkin = "fab4_encore.png",
 		WQVGAlargeSkin = "fab4_encore.png",
 		FullscreenSkin = "jive_black.png",
