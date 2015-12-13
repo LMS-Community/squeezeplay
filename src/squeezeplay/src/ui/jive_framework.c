@@ -183,6 +183,9 @@ int jive_traceback (lua_State *L) {
 	return 1;
 }
 
+void jive_quit(void) {
+	SDL_Quit();
+}
 
 static int jiveL_initSDL(lua_State *L) {
 	const SDL_VideoInfo *video_info;
@@ -207,10 +210,15 @@ static int jiveL_initSDL(lua_State *L) {
 #else
 #   define JIVE_SDL_FEATURES (SDL_INIT_VIDEO)
 #endif
+
+	LOG_INFO(log_ui_draw, "initSDL");
+	if (atexit(jive_quit) != 0) {
+		LOG_ERROR(log_ui,"jive_quit atexit failed");
+	}
+
 	/* initialise SDL */
 	if (SDL_Init(JIVE_SDL_FEATURES) < 0) {
 		LOG_ERROR(log_ui_draw, "SDL_Init(V|T|A): %s\n", SDL_GetError());
-		SDL_Quit();
 		exit(-1);
 	}
 
@@ -286,7 +294,6 @@ static int jiveL_initSDL(lua_State *L) {
 	if (!srf) {
 		LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", screen_w, screen_h);
 
-		SDL_Quit();
 		exit(-1);
 	}
 
@@ -299,8 +306,6 @@ static int jiveL_initSDL(lua_State *L) {
 	lua_getfield(L, 1, "screen");
 	if (lua_isnil(L, -1)) {
 		LOG_ERROR(log_ui_draw, "no screen table");
-
-		SDL_Quit();
 		exit(-1);
 	}
 
@@ -373,7 +378,7 @@ void jive_send_char_press_event(Uint16 unicode) {
 }
 
 
-static int jiveL_quit(lua_State *L) {
+int jiveL_quit(lua_State *L) {
 
 	/* de-reference all windows */
 	jiveL_getframework(L);
@@ -383,9 +388,6 @@ static int jiveL_quit(lua_State *L) {
 
 	/* force lua GC */
 	lua_gc(L, LUA_GCCOLLECT, 0);
-
-	/* quit SDL */
-	SDL_Quit();
 
 	return 0;
 }
@@ -438,6 +440,7 @@ static int jiveL_process_events(lua_State *L) {
 
 	if (r & JIVE_EVENT_QUIT) {
 		lua_pushboolean(L, 0);
+		LOG_WARN(log_ui,"JIVE_EVENT_QUIT");
 		return 1;
 	}
 
@@ -906,8 +909,6 @@ int jiveL_set_video_mode(lua_State *L) {
 
 	if (!srf) {
 		LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", w, h);
-
-		SDL_Quit();
 		exit(-1);
 	}
 
@@ -1060,8 +1061,8 @@ static int process_event(lua_State *L, SDL_Event *event) {
 	switch (event->type) {
 	case SDL_QUIT:
 		jiveL_quit(L);
-		exit(0);
-		break;
+		return JIVE_EVENT_QUIT;
+
 
 	case SDL_MOUSEBUTTONDOWN:
 		/* map the mouse scroll wheel to up/down */
@@ -1332,7 +1333,6 @@ static int process_event(lua_State *L, SDL_Event *event) {
 		if (!srf) {
 			LOG_ERROR(log_ui_draw, "Video mode not supported: %dx%d\n", screen_w, screen_h);
 
-			SDL_Quit();
 			exit(-1);
 		}
 
