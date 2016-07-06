@@ -101,10 +101,6 @@ function param(self)
 		-- 2 is for a two line track, artist+album (e.g., SBradio, SBcontroller)
 		NOWPLAYING_TRACKINFO_LINES = 3,
 		POPUP_THUMB_SIZE = 120,
-		radialClock = {
-			hourTickPath     = 'applets/JogglerSkin/images/Clocks/Radial/radial_ticks_hr_on.png',
-			minuteTickPath   = 'applets/JogglerSkin/images/Clocks/Radial/radial_ticks_min_on.png',
-		},
 		nowPlayingScreenStyles = { 
 			-- every skin needs to start off with a nowplaying style
 			{
@@ -282,7 +278,9 @@ function skin(self, s)
 	local deleteKeyPressedBackground = _loadImageTile(self,  imgpath .. "Buttons/button_delete_text_entry_press.png")
         local helpTextBackground  = _loadImageTile(self, imgpath .. "Titlebar/tbar_dropdwn_bkrgd.png")
 
-	local nocturneWallpaper = _loadImageTile(self, "applets/SetupWallpaper/wallpaper/fab4_black.png")
+
+	local blackBackground   = Tile:fillColor(0x000000ff)
+	local nocturneWallpaper = _loadImageTile(self, "applets/SetupWallpaper/wallpaper/pcp_nocturne.png")
 
 	--FIXME, _r asset here doesn't work...it's supposed to have a fadeout effect and it doesn't appear on screen
 	local fiveItemBox             = _loadHTile(self, {
@@ -642,7 +640,7 @@ function skin(self, s)
 					imgpath .. "Scroll_Bar/scrollbar_body_b.png",
 			       })
 
-	local popupBackground = Tile:fillColor(0x000000ff)
+	local popupBackground = blackBackground
 
 	local textinputCursor = _loadImageTile(self, imgpath .. "Text_Entry/Keyboard_Touch/tch_cursor.png")
 
@@ -836,7 +834,7 @@ function skin(self, s)
 	})
 
 	s.text_block_black = {
-		bgImg = Tile:fillColor(0x000000ff),
+		bgImg = blackBackground,
 		position = LAYOUT_NORTH,
 		h = 100,
 		order = { 'text' },
@@ -3129,7 +3127,7 @@ function skin(self, s)
 	
 	s.nowplaying_art_only = _uses(s.nowplaying, {
 
-		bgImg            = nocturneWallpaper,
+		bgImg            = blackBackground,
 		title            = { hidden = 1 },
 		nptitle          = { hidden = 1 },
 		npcontrols       = { hidden = 1 },
