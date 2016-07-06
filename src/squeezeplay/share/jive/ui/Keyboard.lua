@@ -34,7 +34,7 @@ The Keyboard includes the following style parameters in addition to the widgets 
 --]]
 
 
-local _assert, pairs, tostring, tonumber, type, ipairs, math = _assert, pairs, tostring, tonumber, type, ipairs, math
+local _assert, pairs, tonumber, type, ipairs, math = _assert, pairs, tonumber, type, ipairs, math
 
 local oo                = require("loop.simple")
 local Event             = require("jive.ui.Event")
@@ -55,6 +55,11 @@ module(..., Framework.constants)
 
 oo.class(_M, Group)
 
+local row_border = 20
+local row_offset_x
+local row_number_of_keys = 10
+local keyboardWidth
+
 local keyboardButtonText = {
         qwerty = 'abc',
         numeric = '123-&',
@@ -66,22 +71,11 @@ local keyboardButtonText = {
         emailNumeric = '123-&',
 }
 
--- FIXME this should be in the styles... But this is really difficult
--- as the keybaord does its own layout
 local default = {
-	-- key size defaults
-	width = 46,
-	height = 44,
-	width_large = 92,
-	-- Keyboard default
-	row_boarder = 20,
-	x = 10,
+	width,
+	height,
+	width_large,
 }
-
--- Scale keyboard as it does its own layout for keys bypassing any style bounds 
-function setDefault(key,value)
-	default[key] = value
-end
 
 --[[
 
@@ -92,6 +86,18 @@ Constructs a new Keyboard widget. I<style> is the widgets style.
 =cut
 --]]
 function __init(self, style, kbType, textinput)
+	
+	local screenWidth, screenHeight = Framework:getScreenSize()
+
+	-- make sure we have no fractions
+	keyboardWidth = (screenWidth - row_border) - ((screenWidth - row_border) % row_number_of_keys)
+	row_border = (screenWidth - keyboardWidth) - ((screenWidth - keyboardWidth) % 2)
+	row_offset_x = row_border / 2
+
+	default.width = keyboardWidth / row_number_of_keys
+	default.height = (keyboardWidth / row_number_of_keys) - 3
+	default.width_large = (keyboardWidth / row_number_of_keys) * 2
+	
 	_assert(type(style) == "string")
 
 	local obj = oo.rawnew(self, Group(style, {}))
@@ -330,10 +336,8 @@ end
 function _layout(self)
 
 	local x, y, w, h = self:getBounds()
-	local screenWidth, screenHeight = Framework:getScreenSize()
-
 	local keyWidth
-	local rowWidth = screenWidth - default.row_boarder
+	local rowWidth = keyboardWidth
 
 	-- self.keyboard has the keyboard, table of rows of key objects
 	-- self.rowInfo has metadata about the keyboard, e.g., keyWidth or spacer
@@ -346,8 +350,6 @@ function _layout(self)
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
 			local keyWidth = default.width
-			local w,h = key:getSize()
-			log:debug(self," Key Style (NS) ",key,":",style," ",w,"-",h)
 			if rowInfo[j].keyWidth == 0 then 
 				spacers = spacers + 1
 			else
@@ -361,12 +363,10 @@ function _layout(self)
 		local extraSpacerPixels = ( rowWidth - nonSpacerKeyWidth) % spacers
 		spacerWidth = math.floor( ( rowWidth - nonSpacerKeyWidth ) / spacers )
 
-		x = default.x
+		x = row_offset_x
 		local numberOfSpacers = 0
 		for j, key in ipairs(row) do
 			local style = key:getStyle()
-			local w,h = key:getSize()
-			log:debug(self," Key Style ",key,":",style," ",w,"-",h)
 			local keyWidth
 			if rowInfo[j].keyWidth == 0 then 
 				numberOfSpacers = numberOfSpacers + 1
