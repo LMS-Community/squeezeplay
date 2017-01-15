@@ -514,6 +514,7 @@ local function _menuSink(self, isCurrentServer, server)
 					homeMenuText = v.homeMenuText,
 					weight = v.weight,
 					window = v.window,
+					windowStyle = v.windowStyle,
 					sound = "WINDOWSHOW",
 					screensavers = v.screensavers
 			}
