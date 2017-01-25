@@ -9,24 +9,24 @@
 GCC_COMPILE_X86="gcc-4.2 -arch i386 -mmacosx-version-min=10.5 \
 -DMAC_OS_X_VERSION_MIN_REQUIRED=1050 \
 -nostdinc \
--F/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks \
--I/Developer/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include \
--isystem /Developer/SDKs/MacOSX10.5.sdk/usr/include"
+-F/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks \
+-I/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include \
+-isystem /Developer/SDKs/MacOSX10.6.sdk/usr/include"
 
 GCC_LINK_X86="\
--L/Developer/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1 \
--Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+-L/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1 \
+-Wl,-syslibroot,/Developer/SDKs/MacOSX10.6.sdk"
 
 GCC_COMPILE_X86_64="gcc-4.2 -arch x86_64 -mmacosx-version-min=10.5 \
 -DMAC_OS_X_VERSION_MIN_REQUIRED=1050 \
 -nostdinc \
--F/Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks \
--I/Developer/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include \
--isystem /Developer/SDKs/MacOSX10.5.sdk/usr/include"
+-F/Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks \
+-I/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1/include \
+-isystem /Developer/SDKs/MacOSX10.6.sdk/usr/include"
 
 GCC_LINK_X86_64="\
--L/Developer/SDKs/MacOSX10.5.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1 \
--Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+-L/Developer/SDKs/MacOSX10.6.sdk/usr/lib/gcc/i686-apple-darwin10/4.2.1 \
+-Wl,-syslibroot,/Developer/SDKs/MacOSX10.6.sdk"
 
 # Output both PowerPC and Intel object files
 args="$*"

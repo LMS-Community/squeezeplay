@@ -1,8 +1,8 @@
-Index: configure
-===================================================================
---- configure	(revision 1911)
-+++ configure	(working copy)
-@@ -3386,7 +3386,7 @@
+diff --git a/configure b/configure
+index 52314fe..d72e067 100755
+--- a/configure
++++ b/configure
+@@ -3409,7 +3409,7 @@ else
    ac_save_c_werror_flag=$ac_c_werror_flag
     ac_c_werror_flag=yes
     ac_cv_prog_cc_g=no
@@ -11,7 +11,7 @@ Index: configure
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -3417,7 +3417,7 @@
+@@ -3440,7 +3440,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
  
  else
    ac_c_werror_flag=$ac_save_c_werror_flag
@@ -20,7 +20,7 @@ Index: configure
  	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -3445,9 +3445,9 @@
+@@ -3468,9 +3468,9 @@ if test "$ac_test_CFLAGS" = set; then
    CFLAGS=$ac_save_CFLAGS
  elif test $ac_cv_prog_cc_g = yes; then
    if test "$GCC" = yes; then
@@ -32,7 +32,7 @@ Index: configure
    fi
  else
    if test "$GCC" = yes; then
-@@ -3735,7 +3735,7 @@
+@@ -3757,7 +3757,7 @@ else
    ac_save_cxx_werror_flag=$ac_cxx_werror_flag
     ac_cxx_werror_flag=yes
     ac_cv_prog_cxx_g=no
@@ -41,7 +41,7 @@ Index: configure
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -3766,7 +3766,7 @@
+@@ -3788,7 +3788,7 @@ if ac_fn_cxx_try_compile "$LINENO"; then :
  
  else
    ac_cxx_werror_flag=$ac_save_cxx_werror_flag
@@ -50,7 +50,7 @@ Index: configure
  	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
-@@ -3794,9 +3794,9 @@
+@@ -3816,9 +3816,9 @@ if test "$ac_test_CXXFLAGS" = set; then
    CXXFLAGS=$ac_save_CXXFLAGS
  elif test $ac_cv_prog_cxx_g = yes; then
    if test "$GXX" = yes; then
@@ -62,7 +62,7 @@ Index: configure
    fi
  else
    if test "$GXX" = yes; then
-@@ -15654,7 +15654,6 @@
+@@ -15711,7 +15711,6 @@ $as_echo "$ac_cv_sizeof_long" >&6; }
  
  
  cat >>confdefs.h <<_ACEOF
@@ -70,7 +70,7 @@ Index: configure
  _ACEOF
  
  
-@@ -15739,7 +15738,7 @@
+@@ -15796,7 +15795,7 @@ if ( echo "${host_os}" | grep ^darwin >> /dev/null ) &&
         [ "$enable_mac_debug" != "yes" ] ; then
     CFLAGS="-O2 -Wall -pedantic -pipe -fPIC -DNDEBUG"
  else
@@ -79,32 +79,43 @@ Index: configure
  fi
  
  if [ $ac_cv_c_bigendian = "yes" ] ; then
-@@ -15765,7 +15764,7 @@
+@@ -15821,8 +15820,7 @@ case "${host_os}" in
+ 
          $as_echo "#define PA_USE_COREAUDIO 1" >>confdefs.h
  
- 
--        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Werror"
-+        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -DNDEBUG"
+-
+-        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Wno-deprecated -Werror"
++        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -DNDEBUG -DAUDIO_COMPONENT_FIX=1"
          LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
  
          if test "x$enable_mac_universal" = "xyes" ; then
-Index: src/common/pa_front.c
-===================================================================
---- src/common/pa_front.c	(revision 1911)
-+++ src/common/pa_front.c	(working copy)
-@@ -77,7 +77,7 @@
- #include "pa_debugprint.h"
+@@ -15839,11 +15837,8 @@ case "${host_os}" in
+               ;;
  
+            *)
+-                                                                                    if xcodebuild -version -sdk macosx10.5 Path >/dev/null 2>&1 ; then
+-                 mac_version_min="-mmacosx-version-min=10.3"
+-                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.5 Path`"
+-              elif xcodebuild -version -sdk macosx10.6 Path >/dev/null 2>&1 ; then
+-                 mac_version_min="-mmacosx-version-min=10.4"
++              if xcodebuild -version -sdk macosx10.6 Path >/dev/null 2>&1 ; then
++                 mac_version_min="-mmacosx-version-min=10.5"
+                  mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.6 Path`"
+               elif xcodebuild -version -sdk macosx10.7 Path >/dev/null 2>&1 ; then
+                  mac_version_min="-mmacosx-version-min=10.4"
+@@ -15869,7 +15864,7 @@ case "${host_os}" in
+            esac
  
--#define PA_VERSION_  1899
-+#define PA_VERSION_  1911
- #define PA_VERSION_TEXT_ "PortAudio V19-devel (built " __DATE__  " " __TIME__ ")"
- 
- 
-Index: src/common/pa_types.h
-===================================================================
---- src/common/pa_types.h	(revision 1911)
-+++ src/common/pa_types.h	(working copy)
+                                  mac_arches=""
+-           for arch in i386 x86_64 ppc ppc64
++           for arch in i386 x86_64
+            do
+               save_CFLAGS="$CFLAGS"
+               CFLAGS="$CFLAGS -arch $arch"
+diff --git a/src/common/pa_types.h b/src/common/pa_types.h
+index 5b647d6..88a3df7 100644
+--- a/src/common/pa_types.h
++++ b/src/common/pa_types.h
 @@ -62,7 +62,11 @@
  #endif
  
@@ -117,3 +128,144 @@ Index: src/common/pa_types.h
  #endif
  
  
+diff --git a/src/hostapi/coreaudio/pa_mac_core.c b/src/hostapi/coreaudio/pa_mac_core.c
+index 257e9de..2921c8b 100644
+--- a/src/hostapi/coreaudio/pa_mac_core.c
++++ b/src/hostapi/coreaudio/pa_mac_core.c
+@@ -299,7 +299,11 @@ static PaError OpenAndSetupOneAudioUnit(
+                                    UInt32 *actualInputFramesPerBuffer,
+                                    UInt32 *actualOutputFramesPerBuffer,
+                                    const PaMacAUHAL *auhalHostApi,
++#ifndef AUDIO_COMPONENT_FIX
+                                    AudioUnit *audioUnit,
++#else
++                                   AudioComponentInstance *audioUnit,
++#endif
+                                    AudioConverterRef *srConverter,
+                                    AudioDeviceID *audioDevice,
+                                    const double sampleRate,
+@@ -314,7 +318,11 @@ static PaError OpenAndSetupOneAudioUnit(
+  */
+ static void startStopCallback(
+    void *               inRefCon,
++#ifndef AUDIO_COMPONENT_FIX
+    AudioUnit            ci,
++#else
++   AudioComponentInstance            ci,
++#endif
+    AudioUnitPropertyID  inID,
+    AudioUnitScope       inScope,
+    AudioUnitElement     inElement )
+@@ -1167,14 +1175,23 @@ static PaError OpenAndSetupOneAudioUnit(
+                                    UInt32 *actualInputFramesPerBuffer,
+                                    UInt32 *actualOutputFramesPerBuffer,
+                                    const PaMacAUHAL *auhalHostApi,
++#ifndef AUDIO_COMPONENT_FIX
+                                    AudioUnit *audioUnit,
++#else
++                                   AudioComponentInstance *audioUnit,
++#endif
+                                    AudioConverterRef *srConverter,
+                                    AudioDeviceID *audioDevice,
+                                    const double sampleRate,
+                                    void *refCon )
+ {
++#ifndef AUDIO_COMPONENT_FIX
+     ComponentDescription desc;
+     Component comp;
++#else
++    AudioComponentDescription desc;
++    AudioComponent comp;
++#endif
+     /*An Apple TN suggests using CAStreamBasicDescription, but that is C++*/
+     AudioStreamBasicDescription desiredFormat;
+     OSStatus result = noErr;
+@@ -1244,8 +1261,13 @@ static PaError OpenAndSetupOneAudioUnit(
+     desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+     desc.componentFlags        = 0;
+     desc.componentFlagsMask    = 0;
++
+     /* -- find the component -- */
++#ifndef AUDIO_COMPONENT_FIX
+     comp = FindNextComponent( NULL, &desc );
++#else
++    comp = AudioComponentFindNext( NULL, &desc );
++#endif
+     if( !comp )
+     {
+        DBUG( ( "AUHAL component not found." ) );
+@@ -1254,7 +1276,11 @@ static PaError OpenAndSetupOneAudioUnit(
+        return paUnanticipatedHostError;
+     }
+     /* -- open it -- */
+-    result = OpenAComponent( comp, audioUnit );
++#ifndef AUDIO_COMPONENT_FIX
++		result = OpenAComponent(comp, audioUnit);
++#else
++		result = AudioComponentInstanceNew(comp, audioUnit);
++#endif
+     if( result )
+     {
+        DBUG( ( "Failed to open AUHAL component." ) );
+@@ -1607,7 +1633,11 @@ static PaError OpenAndSetupOneAudioUnit(
+ #undef ERR_WRAP
+ 
+     error:
++#ifndef AUDIO_COMPONENT_FIX
+        CloseComponent( *audioUnit );
++#else
++       AudioComponentInstanceDispose( *audioUnit );
++#endif
+        *audioUnit = NULL;
+        if( result )
+           return PaMacCore_SetError( result, line, 1 );
+@@ -2645,13 +2675,21 @@ static PaError CloseStream( PaStream* s )
+        }
+        if( stream->outputUnit && stream->outputUnit != stream->inputUnit ) {
+           AudioUnitUninitialize( stream->outputUnit );
++#ifndef AUDIO_COMPONENT_FIX
+           CloseComponent( stream->outputUnit );
++#else
++          AudioComponentInstanceDispose( stream->outputUnit );
++#endif
+        }
+        stream->outputUnit = NULL;
+        if( stream->inputUnit )
+        {
+           AudioUnitUninitialize( stream->inputUnit );
++#ifndef AUDIO_COMPONENT_FIX
+           CloseComponent( stream->inputUnit );
++#else
++          AudioComponentInstanceDispose( stream->inputUnit );
++#endif
+           stream->inputUnit = NULL;
+        }
+        if( stream->inputRingBuffer.buffer )
+diff --git a/src/hostapi/coreaudio/pa_mac_core_internal.h b/src/hostapi/coreaudio/pa_mac_core_internal.h
+index 14e3d07..292b884 100644
+--- a/src/hostapi/coreaudio/pa_mac_core_internal.h
++++ b/src/hostapi/coreaudio/pa_mac_core_internal.h
+@@ -63,6 +63,9 @@
+ 
+ #include <CoreAudio/CoreAudio.h>
+ #include <CoreServices/CoreServices.h>
++#ifdef AUDIO_COMPONENT_FIX
++#include <AudioUnit/AudioComponent.h>
++#endif
+ #include <AudioUnit/AudioUnit.h>
+ #include <AudioToolbox/AudioToolbox.h>
+ 
+@@ -139,8 +142,13 @@ typedef struct PaMacCoreStream
+ 
+     /* implementation specific data goes here */
+     bool bufferProcessorIsInitialized;
++#ifndef AUDIO_COMPONENT_FIX
+     AudioUnit inputUnit;
+     AudioUnit outputUnit;
++#else
++    AudioComponentInstance inputUnit;
++    AudioComponentInstance outputUnit;
++#endif
+     AudioDeviceID inputDevice;
+     AudioDeviceID outputDevice;
+     size_t userInChan;
