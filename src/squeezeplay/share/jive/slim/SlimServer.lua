@@ -1147,6 +1147,12 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 				string.find(iconId, "^http://10%.")
 			) then
 				url = iconId
+
+			-- if we're dealing with a recent LMS, we can have it do the heavy lifting
+			elseif self:isMoreRecent(self:getVersion(), '7.8.0') then
+				url = '/imageproxy/' .. string.urlEncode(iconId) .. '/image' .. resizeFrag
+
+			-- use SN image resizer
 			else
 				url = 'http://' .. jnt:getSNHostname() .. '/public/imageproxy?w=' .. sizeW .. '&h=' .. sizeH .. '&f=' .. (imgFormat or '') .. '&u=' .. string.urlEncode(iconId)
 			end
@@ -1258,6 +1264,8 @@ function isMoreRecent(self, new, old)
 	for i,v in ipairs(newVer) do
 		if oldVer[i] and tonumber(v) > tonumber(oldVer[i]) then
 			return true
+		elseif oldVer[i] and tonumber(v) < tonumber(oldVer[i]) then
+			return false
 		end
 	end
 
