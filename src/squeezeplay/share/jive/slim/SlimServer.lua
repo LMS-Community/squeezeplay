@@ -1148,9 +1148,10 @@ function fetchArtwork(self, iconId, icon, size, imgFormat)
 			) then
 				url = iconId
 
-			-- if we're dealing with a recent LMS, we can have it do the heavy lifting
-			elseif self:isMoreRecent(self:getVersion(), '7.8.0') then
-				url = '/imageproxy/' .. string.urlEncode(iconId) .. '/image' .. resizeFrag
+			-- don't use LMS resizer while SN resizer is online since it's faster.
+			-- -- if we're dealing with a recent LMS, we can have it do the heavy lifting
+			-- elseif self:isMoreRecent(self:getVersion(), '7.8.0') then
+			--	url = '/imageproxy/' .. string.urlEncode(iconId) .. '/image' .. resizeFrag
 
 			-- use SN image resizer
 			else
