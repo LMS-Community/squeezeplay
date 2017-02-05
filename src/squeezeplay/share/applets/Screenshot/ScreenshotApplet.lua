@@ -42,19 +42,26 @@ oo.class(_M, Applet)
 local function _takeScreenshotAction(self)
 	Framework:playSound("CLICK")
 
-	-- write to /media/*/squeezeplayXXXX.bmp or userpath
+	-- write to userpath or /tmp/squeezeplayXXXX.bmp
 	local path = System.getUserDir()
-	if lfs.attributes("/media", "mode") ~= nil then
-		for dir in lfs.dir("/media") do
-			if not string.match(dir, "^%.") then
-				local tmp = "/media/" .. dir 
-				if lfs.attributes(tmp, "mode") == "directory" then
-					path = tmp
-					break
-				end
-			end
-		end
+
+	-- use /tmp instead, if it exists
+        if lfs.attributes("/tmp", "mode") == "directory" then
+		path = "/tmp"
 	end
+
+	-- disable old squeezeplay behaviour writing to /media
+	-- if lfs.attributes("/media", "mode") ~= nil then
+	-- 	for dir in lfs.dir("/media") do
+	-- 		if not string.match(dir, "^%.") then
+	-- 			local tmp = "/media/" .. dir 
+	-- 			if lfs.attributes(tmp, "mode") == "directory" then
+	-- 				path = tmp
+	-- 				break
+	-- 			end
+	-- 		end
+	-- 	end
+	-- end
 
 	local file = path .. string.format("/squeezeplay%04d.bmp", self.number)
 	self.number = self.number + 1
