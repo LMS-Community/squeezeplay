@@ -1299,5 +1299,9 @@ static SDL_keysym *TranslateKey(int scancode, SDL_keysym *keysym)
 			keysym->unicode = KVAL(vga_keymap[map][scancode]);
 		}
 	}
+
+	if ( keysym->sym > SDLK_LAST )
+		keysym->sym = SDLK_UNKNOWN;
+
 	return(keysym);
 }
