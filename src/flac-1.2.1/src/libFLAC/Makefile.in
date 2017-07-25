@@ -97,6 +97,7 @@ libFLAC_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libFLAC_la_OBJECTS = bitmath.lo bitreader.lo bitwriter.lo cpu.lo \
 	crc.lo fixed.lo float.lo format.lo lpc.lo md5.lo memory.lo \
 	metadata_iterators.lo metadata_object.lo stream_decoder.lo \
+	stream_encoder.lo stream_encoder_framing.lo \
 	ogg_decoder_aspect.lo ogg_helper.lo ogg_mapping.lo
 libFLAC_la_OBJECTS = $(am_libFLAC_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -352,6 +353,8 @@ libFLAC_la_SOURCES = \
 	metadata_iterators.c \
 	metadata_object.c \
 	stream_decoder.c \
+	stream_encoder.c \
+	stream_encoder_framing.c \
 	window.c \
 	$(extra_ogg_sources)
 
@@ -440,6 +443,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/metadata_iterators.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/metadata_object.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_decoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_encoder.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stream_encoder_framing.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_decoder_aspect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_helper.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ogg_mapping.Plo@am__quote@
