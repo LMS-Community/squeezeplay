@@ -13,11 +13,10 @@
 ##### Build defaults #####
 LUA_VERSION =       5.1
 TARGET =            cjson.so
-PREFIX =            /opt/jivelite
-#CFLAGS =            -g -Wall -pedantic -fno-inline
+PREFIX =            /opt/squeezeplay
 CFLAGS =            -s -O3 -Wall -pedantic -DNDEBUG
 CJSON_CFLAGS =      -fpic
-#CJSON_LDFLAGS =     -shared
+CJSON_LDFLAGS =     -shared -s
 LUA_INCLUDE_DIR =   $(PREFIX)/include
 LUA_CMODULE_DIR =   $(PREFIX)/lib/lua/$(LUA_VERSION)
 LUA_MODULE_DIR =    $(PREFIX)/share/lua/$(LUA_VERSION)
