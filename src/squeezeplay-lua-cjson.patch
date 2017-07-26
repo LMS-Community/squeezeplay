@@ -1,0 +1,52 @@
+Index: src/squeezeplay/share/applets/SlimBrowser/SlimBrowserApplet.lua
+===================================================================
+--- src/squeezeplay/share/applets/SlimBrowser/SlimBrowserApplet.lua	(revision 988)
++++ src/squeezeplay/share/applets/SlimBrowser/SlimBrowserApplet.lua	(working copy)
+@@ -25,7 +25,7 @@
+ local math                   = require("math")
+ local table                  = require("jive.utils.table")
+ local string                 = require("string")
+-local json                   = require("json")
++local json                   = require("cjson")
+                              
+ local Applet                 = require("jive.Applet")
+ local System                 = require("jive.System")
+Index: src/squeezeplay/share/applets/ImageViewer/ImageSourceServer.lua
+===================================================================
+--- src/squeezeplay/share/applets/ImageViewer/ImageSourceServer.lua	(revision 988)
++++ src/squeezeplay/share/applets/ImageViewer/ImageSourceServer.lua	(working copy)
+@@ -22,7 +22,7 @@
+ local oo			= require("loop.simple")
+ local table			= require("jive.utils.table")
+ local string		= require("jive.utils.string")
+-local json          = require("json")
++local json          = require("cjson")
+ local math			= require("math")
+ local debug         = require("jive.utils.debug")
+ local SocketHttp	= require("jive.net.SocketHttp")
+Index: src/squeezeplay/share/jive/utils/jsonfilters.lua
+===================================================================
+--- src/squeezeplay/share/jive/utils/jsonfilters.lua	(revision 988)
++++ src/squeezeplay/share/jive/utils/jsonfilters.lua	(working copy)
+@@ -28,7 +28,7 @@
+ =cut
+ --]]
+ 
+-local json = require("json")
++local json = require("cjson")
+ 
+ module(...)
+ 
+Index: src/squeezeplay/share/jive/slim/Player.lua
+===================================================================
+--- src/squeezeplay/share/jive/slim/Player.lua	(revision 988)
++++ src/squeezeplay/share/jive/slim/Player.lua	(working copy)
+@@ -41,7 +41,7 @@
+ local os             = require("os")
+ local math           = require("math")
+ local table          = require("jive.utils.table")
+-local json           = require("json")
++local json           = require("cjson")
+ 
+ local oo             = require("loop.base")
+ 
