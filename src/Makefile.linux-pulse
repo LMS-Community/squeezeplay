@@ -21,7 +21,7 @@
 #
 # Apply the patch to use cjson instead of json
 # 
-# patch -p0 -i squeezeplay-lua-cjson.patch from the src/ directory.
+# patch -p1 -i squeezeplay-lua-cjson.patch from the src/ directory.
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
