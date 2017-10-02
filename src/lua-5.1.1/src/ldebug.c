@@ -149,9 +149,7 @@ LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
 
 static void funcinfo (lua_Debug *ar, Closure *cl) {
   if (cl->c.isC) {
-
-    ar->source = malloc(20);
-    sprintf(ar->source, "=[C %p]", cl->c.f);
+    ar->source = "=[C]";
     ar->linedefined = -1;
     ar->lastlinedefined = -1;
     ar->what = "C";
