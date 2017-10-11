@@ -574,13 +574,12 @@ PaHostApiTypeId get_padevice_apitype ( PaDeviceIndex device )
 
 u32_t get_padevice_maxrate (void)
 {
-#ifndef PA18API
 	int i;
-#endif
+
 	PaError err;
 	const char *pamaxrate;
 	u32_t use_pamaxrate;
-	u32_t rates[] = { 384000, 352800, 192000, 176400, 96000, 88200, 48000, 44100, 0 };
+	u32_t rates[] = { 384000, 352800, 192000, 176400, 96000, 88200, 48000, 44100, 32000, 24000, 22500, 16000, 12000, 11025, 8000, 0 };
 
 	use_pamaxrate = 48000;
 
@@ -589,17 +588,21 @@ u32_t get_padevice_maxrate (void)
 	if ( pamaxrate != NULL )
 	{
 		use_pamaxrate = (u32_t) strtoul(pamaxrate, NULL, 0);
-		if ( ( use_pamaxrate < 32000L ) || ( use_pamaxrate > 384000L ) )
+		if ( ( use_pamaxrate < 8000L ) || ( use_pamaxrate > rates[0] ) )
 			use_pamaxrate = 48000;
 	}
-#ifndef PA18API
 	else
 	{
 		/* check supported sample rates by opening the device */
 		for (i = 0; rates[i]; ++i) {
+#ifndef PA18API
 			err = Pa_OpenStream(&stream, NULL, &outputParam, (double)rates[i],
 				paFramesPerBufferUnspecified, paNoFlag, callback, NULL);
-
+#else
+			err = Pa_OpenStream(&stream, paNoDevice, 0, 0, NULL, outputParam.device,
+				outputParam.channelCount, outputParam.sampleFormat, NULL, (double)rates[i],
+				paFramesPerBuffer, paNumberOfBuffers, paNoFlag, callback, NULL);
+#endif
 			if (err == paNoError) {
 				Pa_CloseStream(stream);
 				use_pamaxrate = rates[i];
@@ -610,14 +613,7 @@ u32_t get_padevice_maxrate (void)
 		if (!rates[i]) {
 			use_pamaxrate = 48000;
 		}
-
-/* Core Audio returns success for any sample rate, use a sane default unless USEPAMAXSAMPLERATE set */
-#if defined(__APPLE__) && defined(__MACH__)
-		use_pamaxrate = 48000;	
-#endif
 	}
-
-#endif
 	stream = NULL;
 
 	LOG_INFO(log_audio_output, "Setting maximum samplerate to %lu", use_pamaxrate );
