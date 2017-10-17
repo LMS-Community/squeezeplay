@@ -79,7 +79,7 @@
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../../external-src/lua50/lib/dll"
+				AdditionalLibraryDirectories=""
 				ModuleDefinitionFile=".\lfs.def"
 				ProgramDatabaseFile=".\../lib/vc6/lfs.pdb"
 				RandomizedBaseAddress="1"

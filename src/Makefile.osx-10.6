@@ -11,7 +11,6 @@
 # ./update_gitrevision.sh
 # patch -p1 -i../portaudio_v19-osx.patch
 #
-#
 # OS X specific stuff
 #
 
@@ -130,9 +129,9 @@ sdl-gfx: SDL_gfx-2.0.24/Makefile
 # lua
 #####
 
-.PHONY: lua-all tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+.PHONY: lua-all tolua++ luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
-lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+lua-all: lua tolua++ luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
 # lua (requires readline ncurses)
 lua:
@@ -146,11 +145,8 @@ luasocket:
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=osx
 
-luajson/Makefile:
-	cd luajson; ./configure --prefix=${PREFIX}
-
-luajson: luajson/Makefile
-	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+luacjson: lua
+	cd lua-cjson-2.1.0; make PREFIX=${PREFIX} CJSON_LDFLAGS="-bundle -undefined dynamic_lookup" && cp -p cjson.so ${PREFIX}/lib/lua/5.1/cjson.so
 
 luazipfilter/Makefile:
 	cd luazipfilter; ./configure --prefix=${PREFIX}
@@ -259,8 +255,10 @@ squeezeplay/Makefile:
 	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-alsa --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
+	patch -p1 -i squeezeplay-lua-cjson.patch
 	export PATH=$(BUILD_TOP)/bin:$(PATH); \
 	cd squeezeplay; make && make install
+	patch -p1 -R -i squeezeplay-lua-cjson.patch
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
@@ -363,8 +361,8 @@ clean:
 	@echo "Cleaning: luafilesystem"
 	-cd luafilesystem-1.2; make clean PLATFORM=osx ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
-	@echo "Cleaning: luajson"
-	-cd luajson; make distclean ; rm -rf x86; rm -rf x86_64
+	@echo "Cleaning: luacjson"
+	-cd lua-cjson-2.1.0; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning luazipfilter"
 	-cd luazipfilter; make distclean ; rm -rf x86; rm -rf x86_64
