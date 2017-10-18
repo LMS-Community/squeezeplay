@@ -103,11 +103,11 @@ sdl: SDL-1.2.15/build/x86/Makefile
 	cd SDL-1.2.15; sh build-scripts/fatbuild-10.6.sh make && sh build-scripts/fatbuild-10.6.sh install
 
 # sdl_image (requires jpeg tiff png)
-SDL_image-1.2.12/Makefile:
-	cd SDL_image-1.2.12; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-sdltest --disable-tif --enable-tif-shared=no --disable-imageio --enable-shared=no --enable-jpg-shared=no --enable-png-shared=no --enable-tif-shared=no --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
+SDL_image-1.2.5/Makefile:
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  --disable-sdltest --disable-tif --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
 
-sdl-image: SDL_image-1.2.12/Makefile
-	cd SDL_image-1.2.12; make && make install
+sdl-image: SDL_image-1.2.5/Makefile
+	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
 SDL_ttf-2.0.8/Makefile:
@@ -332,7 +332,7 @@ clean:
 	-cd SDL-1.2.15; rm -f include/SDL_config.h;  rm -rf build
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_image"
-	-cd SDL_image-1.2.12; make distclean ; rm -rf x86; rm -rf x86_64
+	-cd SDL_image-1.2.5; make distclean ; rm -rf x86; rm -rf x86_64
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_ttf"
 	-cd SDL_ttf-2.0.8; make distclean ; rm -rf x86; rm -rf x86_64
