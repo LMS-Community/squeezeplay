@@ -1259,7 +1259,6 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-framework CoreAudio \
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
-	-lSystemStubs \
 	-lz -lresolv
 
 #todo: make clean work the right way(not the rm -rf hackery seen below)

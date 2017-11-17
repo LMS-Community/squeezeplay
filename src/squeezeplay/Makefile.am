@@ -56,7 +56,6 @@ SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
 	-framework CoreAudio \
 	-o $(JIVE_STATIC_PROGRAM) $(jive_OBJECTS)   \
 	$(OSX_STATIC_LIBS) \
-	-lSystemStubs \
 	-lz -lresolv
 
 BUNDLE_NAME = SqueezePlay.app
