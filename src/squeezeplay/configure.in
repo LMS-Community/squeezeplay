@@ -168,7 +168,7 @@ AC_MSG_RESULT(${enable_profiling-no})
 dnl Be pedantic when compiling
 if test x"$GCC" = x"yes"
 then
-	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-unused-function -Wno-unused-but-set-variable"
+	CFLAGS="$CFLAGS -Wall -Wextra -Werror -Wdeclaration-after-statement -Wpointer-arith -Wcast-align -Wno-unused-parameter -Wno-unused-function"
 fi
 
 CFLAGS="$CFLAGS -DSQUEEZEPLAY"
