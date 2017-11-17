@@ -349,7 +349,7 @@ static int json_tokener_do_parse(struct json_tokener *this)
 	state = json_tokener_state_eatws;
       } else {
 	err = json_tokener_do_parse(this);
-	if (err < 0) {
+	if (err != json_tokener_success) {
 	  goto out;
 	}
 	len = lua_objlen(this->L, -2);
@@ -422,7 +422,7 @@ static int json_tokener_do_parse(struct json_tokener *this)
 
     case json_tokener_state_object_value:
       err = json_tokener_do_parse(this);
-      if (err < 0) {
+      if (err != json_tokener_success) {
 	goto out;
       }
       lua_settable(this->L, -3);
