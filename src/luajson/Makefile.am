@@ -1,4 +1,6 @@
 AM_CFLAGS = -D_GNU_SOURCE
+ACLOCAL_AMFLAGS = -I m4
+AUTOMAKE_OPTIONS = subdir-objects
 
 lib_LTLIBRARIES = json.la
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-autoreconf -f -i -I `pwd`/m4
+autoreconf -f -i
 exit $?
 
 echo -n "Libtoolize..."
