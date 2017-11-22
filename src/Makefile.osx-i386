@@ -1,0 +1,362 @@
+################################################################################
+# Squeezeplay makefile for OS X 10.4+ i386
+# Copyright 2007 Logitech
+################################################################################
+
+#
+# User specific stuff
+#
+# git clone https://git.assembla.com/portaudio.git portaudio_v19
+# cd portaudio_v19
+# ./update_gitrevision.sh
+# patch -p1 -i../portaudio_v19-osx-10.3.patch
+#
+# OS X specific stuff
+#
+ARCH = i386
+
+#
+# Absolute path to top of SQUEEZEPLAY directories
+#
+SRC_DIR = $(realpath ${PWD})
+BASE_DIR = $(dir $(SRC_DIR))
+
+export BUILD_TOP=$(BASE_DIR)build/osx
+
+export PREFIX=${BUILD_TOP}
+
+ARCHFLAGS=-arch $(ARCH)
+export CFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Developer/SDKs/MacOSX10.6.sdk/ -mmacosx-version-min=10.4
+export LDFLAGS=$(ARCHFLAGS) -Wl,-syslibroot,/Developer/SDKs/MacOSX10.6.sdk/ -mmacosx-version-min=10.4 -L${PREFIX}/lib -L/usr/lib
+
+export TOOLPATH=$(shell dirname `which gcc`)
+
+export SDL_CONFIG=${PREFIX}/bin/sdl-config
+
+#
+# Top level targets
+#
+.PHONY: all
+all: sdl-all lua-all app
+
+
+#####
+# SDL
+#####
+
+.PHONY: sdl-all freetype libpng libjpeg sdl sdl-image sdl-ttf sdl-gfx
+sdl-all: freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+
+# freetype
+freetype-2.1.10/config.mk:
+	cd freetype-2.1.10; ./configure --enable-shared=no --prefix=${PREFIX}
+
+freetype: freetype-2.1.10/config.mk
+	cd freetype-2.1.10; make; make DESTDIR= install
+
+# png also add clean
+libpng-1.2.32/Makefile:
+	cd libpng-1.2.32; ./configure  --prefix=${PREFIX}
+
+libpng: libpng-1.2.32/Makefile
+	cd libpng-1.2.32; make && make install
+
+# jpeg
+jpeg-6b/Makefile:
+	-mkdir -p ${BUILD_TOP}/man/man1
+	cd jpeg-6b; ./configure --enable-shared --enable-static --prefix=${PREFIX}
+
+libjpeg: jpeg-6b/Makefile
+	cd jpeg-6b; make && make install
+	
+# sdl - check for existance of just one of the Makefiles to determine if we should reconfigure for each
+SDL-1.2.15/Makefile:
+	cd SDL-1.2.15; ./configure --prefix=${PREFIX} --disable-video-x11 --disable-nasm
+
+sdl: SDL-1.2.15/Makefile
+	patch -p0 -i sdl-osx-usecps.patch
+	cd SDL-1.2.15; make && make install
+	patch -R -p0 -i sdl-osx-usecps.patch
+
+# sdl_image (requires jpeg tiff png)
+SDL_image-1.2.5/Makefile:
+	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-sdltest --disable-tif --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
+
+sdl-image: SDL_image-1.2.5/Makefile
+	cd SDL_image-1.2.5; make && make install
+
+# sdl_ttf
+SDL_ttf-2.0.8/Makefile:
+	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+
+sdl-ttf: SDL_ttf-2.0.8/Makefile
+	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
+
+# sdl_gfx
+SDL_gfx-2.0.24/Makefile:
+	cd SDL_gfx-2.0.24; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX} --disable-mmx
+
+sdl-gfx: SDL_gfx-2.0.24/Makefile
+	cd SDL_gfx-2.0.24; make SDL_CONFIG=${PREFIX}/bin/sdl-config && make install
+
+
+#####
+# lua
+#####
+
+.PHONY: lua-all tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+
+lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+
+# lua (requires readline ncurses)
+lua:
+	cd lua-5.1.1; make macosx CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" MYLDFLAGS="${LDFLAGS}" INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
+	ranlib ${PREFIX}/lib/liblua.a
+
+# luasocket (requires lua)
+luasocket:
+	cd luasocket-2.0.2; make install INSTALL_TOP=${PREFIX} PLATFORM=osx
+
+slnunicode: lua
+	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=osx
+
+luajson/Makefile:
+	cd luajson; CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${PREFIX}
+
+luajson: luajson/Makefile
+	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+
+luazipfilter/Makefile:
+	cd luazipfilter; CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ./configure --prefix=${PREFIX}
+
+luazipfilter: luazipfilter/Makefile
+	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
+
+luamd5:
+	cd luamd5; make -f Makefile.osx G="${CFLAGS}" LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="-bundle -undefined dynamic_lookup ${LDFLAGS}"
+	cd luamd5; make -f Makefile.osx G="${CFLAGS}" LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="-bundle -undefined dynamic_lookup ${LDFLAGS}"
+	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
+	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
+
+loop:
+	-mkdir ${PREFIX}/share/lua/5.1/loop
+	-mkdir ${PREFIX}/share/lua/5.1/loop/collection
+	-mkdir ${PREFIX}/share/lua/5.1/loop/debug
+	cd loop-2.2-alpha; install loop/base.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/simple.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/table.lua ${PREFIX}/share/lua/5.1/loop/.
+	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
+	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
+
+luaexpat: lua
+	cd luaexpat-1.0.2; make CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX} PLATFORM=osx && make install PREFIX=${PREFIX} PLATFORM=osx
+
+luafilesystem:
+	cd luafilesystem-1.2; make CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX} PLATFORM=osx install
+
+luaprofiler:
+	cd luaprofiler-2.0 && make -f Makefile.darwin install CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX}
+
+# just compile the library for to tolua++
+tolua++:
+	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
+	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
+	mkdir -p ${PREFIX}/lib
+	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	install tolua++-1.0.92/src/lib/libtolua++.a ${PREFIX}/lib
+	ranlib ${PREFIX}/lib/libtolua++.a
+
+
+#
+# squeezeplay
+#
+
+.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg rtmp
+app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay_dmg
+
+# portaudio
+portaudio_v19/Makefile:
+	cd portaudio_v19; ./configure --prefix=${PREFIX} --enable-mac-universal=no
+
+portaudio: portaudio_v19/Makefile
+	cd portaudio_v19; make && make install
+	cd portaudio_v19; cp include/pa_mac_core.h $(BUILD_TOP)/include/
+
+# libogg
+libogg-1.2.2/Makefile:
+	cd libogg-1.2.2; ./configure --prefix=${PREFIX} --enable-shared=no
+
+libogg: libogg-1.2.2/Makefile
+	cd libogg-1.2.2; make && make install
+
+# flac
+flac-1.2.1/Makefile:
+	cd flac-1.2.1; ./configure --enable-shared=no --disable-oggtest --disable-asm-optimizations --disable-cpplibs --disable-xmms-plugin --with-ogg-libraries=${PREFIX}/lib --with-ogg-includes=${PREFIX}/include --prefix=${PREFIX}
+
+flac: flac-1.2.1/Makefile
+	cd flac-1.2.1; make && make install
+
+# libmad
+LIBMAD_DIR=libmad-0.15.1b
+
+generated/${LIBMAD_DIR}/_patched.txt:
+	mkdir -p generated
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz; \
+	touch ${LIBMAD_DIR}/aclocal.m4; \
+	patch -p0 < ../libmad-0.15.1b-universal-configure.ac.patch; \
+	patch -p0 < ../libmad-0.15.1b-universal-config.h.in.patch; \
+	touch ${LIBMAD_DIR}/Makefile.am ; \
+	touch ${LIBMAD_DIR}/config.h ; \
+	touch ${LIBMAD_DIR}/Makefile.in ; \
+	patch -p0 < ../libmad-0.15.1b-universal-configure.patch; \
+	touch ${LIBMAD_DIR}/_patched.txt
+		
+generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt 
+	cd generated/${LIBMAD_DIR}; ./configure --enable-shared=no --enable-fpm=default --prefix=${PREFIX}
+
+libmad: generated/${LIBMAD_DIR}/_patched.txt generated/${LIBMAD_DIR}/Makefile
+	cd generated/${LIBMAD_DIR}; make && make install
+
+# ogg
+Tremor/Makefile:
+	cd Tremor; CFLAGS="-DSQUEEZEPLAY ${CFLAGS}" ./configure --enable-shared=no --prefix=${PREFIX}
+
+tremor: Tremor/Makefile
+	cd Tremor; make && make install
+
+rtmp: squeezeplay
+	cd luartmp-squeezeplay; make -f Makefile.osx 
+	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
+
+# squeezeplay
+squeezeplay/Makefile:
+	cd squeezeplay; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-alsa --prefix=${PREFIX}
+
+squeezeplay: squeezeplay/Makefile
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
+	cd squeezeplay; make && make install
+
+squeezeplay_desktop/Makefile:
+	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --prefix=${PREFIX}
+
+squeezeplay_desktop: squeezeplay_desktop/Makefile
+	cd squeezeplay_desktop; make install
+
+squeezeplay_contrib:
+	cd squeezeplay_contrib; make PREFIX=${PREFIX}
+
+#squeezeplay "quick" - for faster development of most frequently compiled module - non-universal binary and no file copying
+sq:
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
+	CC=gcc \
+	cd squeezeplay; make && cp jive $(BUILD_TOP)/bin/
+
+# freefont
+freefont:
+	mkdir -p ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSans.ttf ${PREFIX}/share/jive/fonts
+	cp freefont-20090104/FreeSansBold.ttf ${PREFIX}/share/jive/fonts
+
+squeezeplay_dmg: squeezeplay/Makefile
+	cd squeezeplay; make SqueezePlay_dmg
+
+.PHONY: clean_generated
+clean_generated:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated
+	
+
+#
+# clean
+#
+
+.PHONY: clean
+clean:
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: squeezeplay"
+	-cd squeezeplay; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: portaudio"
+	-cd portaudio_v19; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tremor"
+	-cd Tremor; make distclean ; rm -rf autom4te.cache; rm -f debian/Makefile.in
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: mad"
+	-cd libmad-0.15.1b; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libpng"
+	-cd libpng-1.2.32; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libogg"
+	-cd libogg-1.2.2; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libflac"
+	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: libjpeg"
+	-cd jpeg-6b; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: squeezeplay"
+	-cd squeezeplay; make distclean ; rm src/version.h; rm -rf autom4te.cache; rm -f SqueezePlay.dmg; rm -f SqueezePlay; rm -rf SqueezePlay.app
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: squeezeplay_desktop"
+	-cd squeezeplay_desktop; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL"
+	-cd SDL-1.2.15; make distclean ; rm -f include/SDL_config.h sdl.pc
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_image"
+	-cd SDL_image-1.2.5; make distclean ; rm -rf autom4te.cache
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_ttf"
+	-cd SDL_ttf-2.0.8; make distclean ; rm -rf autom4te.cache
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: SDL_gfx"
+	-cd SDL_gfx-2.0.24; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: freetype"
+	-cd freetype-2.1.10; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: lua"
+	-cd lua-5.1.1; make clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luasocket"
+	-cd luasocket-2.0.2; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luaprofiler"
+	-cd luaprofiler-2.0; make -f Makefile.darwin clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: slnunicode"
+	-cd slnunicode-1.1; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luaexpat"
+	-cd luaexpat-1.0.2; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luafilesystem"
+	-cd luafilesystem-1.2; make clean PLATFORM=osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: luajson"
+	-cd luajson; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning luazipfilter"
+	-cd luazipfilter; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: rtmp"
+	-cd luartmp-squeezeplay; rm rtmp.so; rm -rf rtmp.so.dSYM
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tolua++"
+	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: tolua++"
+	-cd luamd5; make MYNAME=sha1 clean
+	-cd luamd5; make MYNAME=md5 clean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: Build dir"
+	-cd $(BASE_DIR)build; rm -rf osx
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: generated dir"
+	-rm -rf generated
+	find . -type d -name a.out.dSYM -exec rm -rf {} \;
+

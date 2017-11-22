@@ -1,0 +1,26 @@
+Index: lua-5.1.1/Makefile
+===================================================================
+--- lua-5.1.1/Makefile.orig	(revision 1032)
++++ lua-5.1.1/Makefile	(working copy)
+@@ -43,7 +43,7 @@
+ # What to install.
+ TO_BIN= lua luac
+ TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp ltconf.h
+-TO_LIB= liblua.a liblua.so
++TO_LIB= liblua.a # liblua.so
+ TO_MAN= lua.1 luac.1
+ TO_LMOD= 
+ 
+Index: lua-5.1.1/src/Makefile
+===================================================================
+--- lua-5.1.1/src/Makefile.orig	(revision 1032)
++++ lua-5.1.1/src/Makefile	(working copy)
+@@ -42,7 +42,7 @@
+ LUATHREAD_O=
+ 
+ ALL_O= $(CORE_O) $(LIB_O) $(LUA_O) $(LUAC_O)
+-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_SO)
++ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) # $(LUA_SO)
+ ALL_A= $(LUA_A)
+ 
+ default: $(PLAT)

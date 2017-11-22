@@ -1,0 +1,119 @@
+diff --git a/configure b/configure
+index 52314fe..49ab882 100755
+--- a/configure
++++ b/configure
+@@ -3409,7 +3409,7 @@ else
+   ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   CFLAGS="-s"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3440,7 +3440,7 @@ if ac_fn_c_try_compile "$LINENO"; then :
+ 
+ else
+   ac_c_werror_flag=$ac_save_c_werror_flag
+-	 CFLAGS="-g"
++	 CFLAGS="-s"
+ 	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3468,9 +3468,9 @@ if test "$ac_test_CFLAGS" = set; then
+   CFLAGS=$ac_save_CFLAGS
+ elif test $ac_cv_prog_cc_g = yes; then
+   if test "$GCC" = yes; then
+-    CFLAGS="-g -O2"
++    CFLAGS="-s -O2"
+   else
+-    CFLAGS="-g"
++    CFLAGS="-s"
+   fi
+ else
+   if test "$GCC" = yes; then
+@@ -3757,7 +3757,7 @@ else
+   ac_save_cxx_werror_flag=$ac_cxx_werror_flag
+    ac_cxx_werror_flag=yes
+    ac_cv_prog_cxx_g=no
+-   CXXFLAGS="-g"
++   CXXFLAGS="-s"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3788,7 +3788,7 @@ if ac_fn_cxx_try_compile "$LINENO"; then :
+ 
+ else
+   ac_cxx_werror_flag=$ac_save_cxx_werror_flag
+-	 CXXFLAGS="-g"
++	 CXXFLAGS="-s"
+ 	 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+@@ -3816,9 +3816,9 @@ if test "$ac_test_CXXFLAGS" = set; then
+   CXXFLAGS=$ac_save_CXXFLAGS
+ elif test $ac_cv_prog_cxx_g = yes; then
+   if test "$GXX" = yes; then
+-    CXXFLAGS="-g -O2"
++    CXXFLAGS="-s -O2"
+   else
+-    CXXFLAGS="-g"
++    CXXFLAGS="-s"
+   fi
+ else
+   if test "$GXX" = yes; then
+@@ -15711,7 +15711,6 @@ $as_echo "$ac_cv_sizeof_long" >&6; }
+ 
+ 
+ cat >>confdefs.h <<_ACEOF
+-#define SIZEOF_LONG $ac_cv_sizeof_long
+ _ACEOF
+ 
+ 
+@@ -15796,7 +15795,7 @@ if ( echo "${host_os}" | grep ^darwin >> /dev/null ) &&
+        [ "$enable_mac_debug" != "yes" ] ; then
+    CFLAGS="-O2 -Wall -pedantic -pipe -fPIC -DNDEBUG"
+ else
+-   CFLAGS=${CFLAGS:-"-g -O2 -Wall -pedantic -pipe -fPIC"}
++   CFLAGS=${CFLAGS:-"-s -O2 -Wall -pedantic -pipe -fPIC"}
+ fi
+ 
+ if [ $ac_cv_c_bigendian = "yes" ] ; then
+@@ -15821,8 +15820,7 @@ case "${host_os}" in
+ 
+         $as_echo "#define PA_USE_COREAUDIO 1" >>confdefs.h
+ 
+-
+-        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -Wno-deprecated -Werror"
++        CFLAGS="$CFLAGS -I\$(top_srcdir)/src/os/unix -DNDEBUG"
+         LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
+ 
+         if test "x$enable_mac_universal" = "xyes" ; then
+@@ -15839,11 +15837,8 @@ case "${host_os}" in
+               ;;
+ 
+            *)
+-                                                                                    if xcodebuild -version -sdk macosx10.5 Path >/dev/null 2>&1 ; then
+-                 mac_version_min="-mmacosx-version-min=10.3"
+-                 mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.5 Path`"
+-              elif xcodebuild -version -sdk macosx10.6 Path >/dev/null 2>&1 ; then
+-                 mac_version_min="-mmacosx-version-min=10.4"
++              if xcodebuild -version -sdk macosx10.6 Path >/dev/null 2>&1 ; then
++                 mac_version_min="-mmacosx-version-min=10.5"
+                  mac_sysroot="-isysroot `xcodebuild -version -sdk macosx10.6 Path`"
+               elif xcodebuild -version -sdk macosx10.7 Path >/dev/null 2>&1 ; then
+                  mac_version_min="-mmacosx-version-min=10.4"
+--- a/src/common/pa_types.h
++++ b/src/common/pa_types.h
+@@ -62,7 +62,11 @@
+ #endif
+ 
+ #ifndef SIZEOF_LONG
++#ifdef __LP64__
++#define SIZEOF_LONG 8
++#else
+ #define SIZEOF_LONG 4
++#endif /* __LP64__ */
+ #endif
+ 
+ 
