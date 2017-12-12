@@ -80,9 +80,11 @@ SqueezePlay_bundle: SqueezePlay
 	mkdir -p $(BUNDLE_CONTENTS)/MacOS
 	mkdir -p $(BUNDLE_CONTENTS)/Resources
 	mkdir -p $(BUNDLE_CONTENTS)/lib
+	mkdir -p $(BUNDLE_CONTENTS)/share
 	echo "APPLSQPL" > $(BUNDLE_CONTENTS)/PkgInfo
-	cp -R $(OSX_BUILD_DIR)/share/ $(BUNDLE_CONTENTS)/share
-	cp -R $(OSX_BUILD_DIR)/lib/lua/ $(BUNDLE_CONTENTS)/lib/lua
+	cp -R $(OSX_BUILD_DIR)/share/lua $(BUNDLE_CONTENTS)/share
+	cp -R $(OSX_BUILD_DIR)/share/jive $(BUNDLE_CONTENTS)/share
+	cp -R $(OSX_BUILD_DIR)/lib/lua $(BUNDLE_CONTENTS)/lib
 	cp rsc/$(ICNS_NAME) $(BUNDLE_CONTENTS)/Resources
 	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $(PLIST_FILE)
 	echo "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> $(PLIST_FILE)
