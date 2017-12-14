@@ -961,7 +961,7 @@ void _rotozoomSurfaceSizeTrig(int width, int height, double angle, double zoomx,
 	*sanglezoom = sin(radangle);
 	*canglezoom = cos(radangle);
 	*sanglezoom *= zoomx;
-	*canglezoom *= zoomx;
+	*canglezoom *= zoomy;
 	x = (double)(width / 2);
 	y = (double)(height / 2);
 	cx = *canglezoom * x;
