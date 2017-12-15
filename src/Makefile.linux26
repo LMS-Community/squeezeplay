@@ -1,9 +1,9 @@
 ################################################################################
 # Squeezeplay makefile for Linux
 # Copyright 2007 Logitech
-# Copyright 2012 Duane Paddock
+# Copyright 2017 Ralph Irving
 ################################################################################
-
+#
 # Additional packages required to build
 #
 # sudo apt-get install libx11-dev
@@ -24,7 +24,7 @@ export BUILD_TOP=$(BASE_DIR)build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC -march=pentium4
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -106,11 +106,11 @@ sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
-SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
+SDL_ttf-2.0.11/Makefile:
+	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
 
-sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make && make install
+sdl-ttf: SDL_ttf-2.0.11/Makefile
+	cd SDL_ttf-2.0.11; make && make install
 
 # sdl_gfx
 SDL_gfx-2.0.24/Makefile:
@@ -124,9 +124,9 @@ sdl-gfx: SDL_gfx-2.0.24/Makefile
 # lua
 #####
 
-.PHONY: lua-all lua luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+.PHONY: lua-all lua luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
-lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+lua-all: lua tolua++ luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
 # lua (requires readline ncurses)
 lua:
@@ -139,11 +139,8 @@ luasocket: lua
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
 
-luajson/Makefile:
-	cd luajson; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
-
-luajson: luajson/Makefile
-	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
+luacjson: lua
+	cd lua-cjson-2.1.0; make PREFIX=${PREFIX} && cp -p cjson.so ${PREFIX}/lib/lua/5.1/cjson.so
 
 luazipfilter/Makefile:
 	cd luazipfilter; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
@@ -258,7 +255,10 @@ squeezeplay/Makefile:
 	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
+	patch -p1 -i squeezeplay-lua-cjson.patch
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
 	cd squeezeplay; make && make install
+	patch -p1 -R -i squeezeplay-lua-cjson.patch
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
@@ -318,14 +318,14 @@ clean:
 	-cd jpeg-6b; make distclean
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
-	-cd SDL_ttf-2.0.8; make distclean
+	-cd SDL_ttf-2.0.11; make distclean
 	-cd SDL_gfx-2.0.24; make distclean
 	-cd lua-5.1.1; make clean
 	-cd luasocket-2.0.2; make clean PLATFORM=linux
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
-	-cd luajson; make distclean
+	-cd lua-cjson-2.1.0; make clean
 	-cd luazipfilter; make distclean
 	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
