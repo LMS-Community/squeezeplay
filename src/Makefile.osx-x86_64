@@ -84,11 +84,11 @@ sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
-SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+SDL_ttf-2.0.11/Makefile:
+	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
 
-sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
+sdl-ttf: SDL_ttf-2.0.11/Makefile
+	cd SDL_ttf-2.0.11; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
 # sdl_gfx
 SDL_gfx-2.0.24/Makefile:
@@ -309,7 +309,7 @@ clean:
 	-cd SDL_image-1.2.5; make distclean ; rm -rf autom4te.cache
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_ttf"
-	-cd SDL_ttf-2.0.8; make distclean ; rm -rf autom4te.cache
+	-cd SDL_ttf-2.0.11; make distclean ; rm -rf autom4te.cache
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_gfx"
 	-cd SDL_gfx-2.0.24; make distclean
