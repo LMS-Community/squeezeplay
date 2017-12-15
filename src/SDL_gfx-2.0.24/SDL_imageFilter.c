@@ -46,7 +46,7 @@ him for his work.
    provide ASM-grade performances, and lift the PUSHA/POPA issues. */
 #ifdef __GNUC__
 #  ifdef USE_MMX
-#    include <mmintrin.h>
+#    include <x86intrin.h>
 #  endif
 #endif
 #include <SDL_cpuinfo.h>
