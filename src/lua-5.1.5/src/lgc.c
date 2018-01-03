@@ -1,5 +1,5 @@
 /*
-** $Id: lgc.c,v 2.38 2006/05/24 14:34:06 roberto Exp $
+** $Id: lgc.c,v 2.38.1.2 2011/03/18 18:05:38 roberto Exp $
 ** Garbage Collector
 ** See Copyright Notice in lua.h
 */
@@ -627,7 +627,6 @@ void luaC_step (lua_State *L) {
     }
   }
   else {
-    lua_assert(g->totalbytes >= g->estimate);
     setthreshold(g);
   }
 }

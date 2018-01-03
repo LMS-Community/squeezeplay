@@ -7,68 +7,69 @@
 # Your platform. See PLATS for possible values.
 PLAT= none
 
-# Where to install. The installation starts in the src directory, so take care
-# if INSTALL_TOP is not an absolute path. (Man pages are installed from the
-# doc directory.)
-#
-INSTALL_TOP= /please_set_INSTALL_TOP_to_some_sensible_value/
-
+# Where to install. The installation starts in the src and doc directories,
+# so take care if INSTALL_TOP is not an absolute path.
+INSTALL_TOP= /usr/local
 INSTALL_BIN= $(INSTALL_TOP)/bin
 INSTALL_INC= $(INSTALL_TOP)/include
 INSTALL_LIB= $(INSTALL_TOP)/lib
 INSTALL_MAN= $(INSTALL_TOP)/man/man1
+#
+# You probably want to make INSTALL_LMOD and INSTALL_CMOD consistent with
+# LUA_ROOT, LUA_LDIR, and LUA_CDIR in luaconf.h (and also with etc/lua.pc).
 INSTALL_LMOD= $(INSTALL_TOP)/share/lua/$V
 INSTALL_CMOD= $(INSTALL_TOP)/lib/lua/$V
 
-# How to install. You may prefer "install" instead of "cp" if you have it.
-# To remove debug information from binaries, use "install -s" in INSTALL_EXEC.
+# How to install. If your install program does not support "-p", then you
+# may have to run ranlib on the installed liblua.a (do "make ranlib").
+INSTALL= install -p
+INSTALL_EXEC= $(INSTALL) -m 0755
+INSTALL_DATA= $(INSTALL) -m 0644
 #
-INSTALL_EXEC= $(CP)
-INSTALL_DATA= $(CP)
-#INSTALL_EXEC= $(INSTALL) -m 0755
-#INSTALL_DATA= $(INSTALL) -m 0644
+# If you don't have install you can use cp instead.
+# INSTALL= cp -p
+# INSTALL_EXEC= $(INSTALL)
+# INSTALL_DATA= $(INSTALL)
 
 # Utilities.
-CP= cp
-FIND= find
-INSTALL= ginstall
-MKDIR= mkdir
-#RANLIB= ranlib
+MKDIR= mkdir -p
+RANLIB= ranlib
 
 # == END OF USER SETTINGS. NO NEED TO CHANGE ANYTHING BELOW THIS LINE =========
 
 # Convenience platforms targets.
-PLATS= aix ansi bsd generic linux squeezeos macosx mingw posix solaris
+PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
 
 # What to install.
 TO_BIN= lua luac
 TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp ltconf.h
 TO_LIB= liblua.a liblua.so
 TO_MAN= lua.1 luac.1
-TO_LMOD= 
 
 # Lua version and release.
 V= 5.1
-R= 5.1.1
+R= 5.1.5
 
 all:	$(PLAT)
 
 $(PLATS) clean:
-	cd src && $(MAKE) $@ TARGET=$(TARGET)
+	cd src && $(MAKE) $@
 
 test:	dummy
 	src/lua test/hello.lua
 
 install: dummy
-	cd src && $(MKDIR) -p $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
+	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
 	cd src && $(INSTALL_EXEC) $(TO_BIN) $(INSTALL_BIN)
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
 	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
-#	$(RANLIB) $(INSTALL_LIB)/$(TO_LIB)
+
+ranlib:
+	cd src && cd $(INSTALL_LIB) && $(RANLIB) $(TO_LIB)
 
 local:
-	$(MAKE) install INSTALL_TOP=.. INSTALL_EXEC="cp -p" INSTALL_DATA="cp -p"
+	$(MAKE) install INSTALL_TOP=..
 
 none:
 	@echo "Please do"
@@ -121,11 +122,7 @@ lecho:
 	@$(MAKE) echo | grep = | sed -e 's/= /= "/' -e 's/$$/"/' #-e 's/""/nil/'
 	@echo "-- EOF"
 
-# show what has changed since we unpacked
-newer:
-	@$(FIND) . -newer MANIFEST -type f
-
 # list targets that do not create files (but not all makes understand .PHONY)
-.PHONY: all $(PLATS) clean test install local none dummy echo pecho lecho newer
+.PHONY: all $(PLATS) clean test install local none dummy echo pecho lecho
 
 # (end of Makefile)
