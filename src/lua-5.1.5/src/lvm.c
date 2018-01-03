@@ -58,7 +58,7 @@ static int try_mulint( StkId ra, lua_Integer ib, lua_Integer ic ) {
    * route, but later fall back to integer without accuracy loss. :)
    */
   if (ib!=LUA_INTEGER_MIN && ic!=LUA_INTEGER_MIN) {
-    lua_Integer b= abs(ib), c= abs(ic);
+    lua_Integer b= labs(ib), c= labs(ic);
     if ( (ib==0) || (LUA_INTEGER_MAX/b > c) ||
                    ((LUA_INTEGER_MAX/b == c) && (LUA_INTEGER_MAX%b == 0)) ) {
       setivalue(ra, ib*ic);  /* no overflow */
