@@ -38,7 +38,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\include;&quot;..\..\lua-5.1.1\src&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;..\..\lua-5.1.5\src&quot;"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="3"
 			/>
@@ -93,7 +93,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\include;&quot;..\..\lua-5.1.1\src&quot;"
+				AdditionalIncludeDirectories="..\include;&quot;..\..\lua-5.1.5\src&quot;"
 				PreprocessorDefinitions="WIN32;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 			/>

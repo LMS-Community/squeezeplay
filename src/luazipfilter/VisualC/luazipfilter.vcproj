@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.1\src&quot;;include;graphics\include"
+				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.5\src&quot;;include;graphics\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUAZIPFILTER_EXPORTS;LUAZIP_API=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.1\src&quot;;graphics\include;include"
+				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.5\src&quot;;graphics\include;include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUAZIPFILTER_EXPORTS;LUAZIP_API=__declspec(dllexport);_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"

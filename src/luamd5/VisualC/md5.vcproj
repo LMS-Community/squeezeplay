@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.1\src&quot;;..\..\luamd5\libstdcrypto;libstdcrypto"
+				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.5\src&quot;;..\..\luamd5\libstdcrypto;libstdcrypto"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;SHA1_EXPORTS;MYNAME=MD5;USE_MD5_SKALIBS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.1\src&quot;;..\..\luamd5\libstdcrypto;libstdcrypto"
+				AdditionalIncludeDirectories="&quot;..\..\lua-5.1.5\src&quot;;..\..\luamd5\libstdcrypto;libstdcrypto"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SHA1_EXPORTS;MYNAME=MD5;USE_MD5_SKALIBS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
