@@ -25,7 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tolua++", "tolua++-1.0.92\V
 		{432D23FC-5507-446F-AA7A-689166AA92EF} = {432D23FC-5507-446F-AA7A-689166AA92EF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua-5.1.1\VisualC\lua.vcproj", "{432D23FC-5507-446F-AA7A-689166AA92EF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "lua-5.1.5\VisualC\lua.vcproj", "{432D23FC-5507-446F-AA7A-689166AA92EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "socket", "luasocket-2.0.2\socket.vcproj", "{66E3CE14-884D-4AEA-9F20-15A0BEAF8C5A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -111,7 +111,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luaexpat_dll", "luaexpat-1.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libogg", "libogg-1.2.2\win32\VS2008\libogg_dynamic.vcproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cjson", "lua-cjson-2.1.0\cjson.vcproj", "{F0908DD3-027C-4616-B3DC-C570C1ADE310}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "json", "luajson\VisualC\json.vcproj", "{18DC63A2-81C0-4E3C-B3DD-F6EDB7B084A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
