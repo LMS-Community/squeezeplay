@@ -193,7 +193,7 @@ static int os_time (lua_State *L) {
       * Note: there are some known processors, where 'time_t' is i.e. 'double',
       *       in such cases the (original) way of pushing a number is better.
      */
-   #if LUA_NUMBER==float
+   #if (LUA_NUMBER_MODE % 10) == 1	/* float */
      lua_pushinteger(L, t);
    #else
       lua_pushnumber(L, (lua_Number)t);
@@ -204,7 +204,7 @@ static int os_time (lua_State *L) {
 
 
 static int os_difftime (lua_State *L) {
-#if LUA_NUMBER==float
+#if (LUA_NUMBER_MODE % 10) == 1		/* float */
     lua_pushinteger(L, difftime((time_t)(luaL_checkinteger(L, 1)),
                                 (time_t)(luaL_optinteger(L, 2, 0))));
 #else
