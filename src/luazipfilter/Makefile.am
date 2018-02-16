@@ -1,6 +1,4 @@
 AM_CFLAGS = -Wall -Werror -D_GNU_SOURCE
-ACLOCAL_AMFLAGS = -I m4
-AUTOMAKE_OPTIONS = subdir-objects
 
 lib_LTLIBRARIES = zipfilter.la
 
