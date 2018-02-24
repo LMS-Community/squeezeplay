@@ -11,7 +11,7 @@ elif 'msvc' in env['TOOLS']:
 else:
 	options_file = "posix"
 
-opts = Options(["config_"+options_file+".py", "custom.py", "custom_"+options_file+".py"], ARGUMENTS)
+opts = Variables(["config_"+options_file+".py", "custom.py", "custom_"+options_file+".py"], ARGUMENTS)
 opts.Add('CC', 'The C compiler.')
 opts.Add('CXX', 'The C++ compiler (for the tests)')
 opts.Add('CCFLAGS', 'Flags for the compiler.', ['-O2', '-Wall'])
