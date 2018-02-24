@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Linux 2.6 OSS
 # Copyright 2007 Logitech
-# Copyright 2012 Duane Paddock
+# Copyright 2018 Duane Paddock
 ################################################################################
 
 # Additional packages required to build
@@ -10,6 +10,7 @@
 # sudo apt-get install libxext-dev
 # sudo apt-get install libreadline5-dev
 # sudo apt-get install expat-dev
+# sudo apt-get install scons
 #
 # Revision 410+ required.
 # svn checkout https://github.com/ralph-irving/squeezeslave/trunk/lib/portaudio portaudio_v18_1
@@ -28,7 +29,7 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC -march=core2
-export LDFLAGS=-s -L${PREFIX}/lib
+export LDFLAGS=-s -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
@@ -176,14 +177,11 @@ luafilesystem:
 luaprofiler:
 	cd luaprofiler-2.0 && make -f Makefile.linux install
 
-# just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
-	mkdir -p ${PREFIX}/lib
-	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	cd tolua++-1.0.92; scons prefix="$(PREFIX)" LINKFLAGS="$(LDFLAGS)" CCFLAGS="$(CFLAGS)" install
+	cd tolua++-1.0.92/src/lib; $(CC) $(CFLAGS) -shared -o libtolua++.so -I../../include *.c
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
-
 
 #
 # squeezeplay
@@ -330,7 +328,7 @@ clean:
 	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
-	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
+	-cd tolua++-1.0.92; scons -c; rm .sconsign.dblite; rm src/lib/libtolua++.so
 	-cd portaudio_v18_1; make -f Makefile.linux26 clean
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean

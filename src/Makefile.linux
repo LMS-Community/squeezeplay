@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Linux
 # Copyright 2007 Logitech
-# Copyright 2017 Ralph Irving
+# Copyright 2018 Ralph Irving
 ################################################################################
 #
 # Additional packages required to build
@@ -10,6 +10,7 @@
 # sudo apt-get install libxext-dev
 # sudo apt-get install libreadline5-dev
 # sudo apt-get install expat-dev
+# sudo apt-get install scons
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
@@ -25,7 +26,7 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC -march=core2
-export LDFLAGS=-s -L${PREFIX}/lib
+export LDFLAGS=-s -L${PREFIX}/lib -Wl,-rpath,${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
 
@@ -173,14 +174,11 @@ luafilesystem:
 luaprofiler:
 	cd luaprofiler-2.0 && make -f Makefile.linux install
 
-# just compile the library for to tolua++
 .PHONY: tolua++
 tolua++: lua
-	cd tolua++-1.0.92/src/lib; ${CC} -shared -fPIC -o libtolua++.so -I../../include -I${PREFIX}/include *.c
-	mkdir -p ${PREFIX}/lib
-	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
+	cd tolua++-1.0.92; scons prefix="$(PREFIX)" LINKFLAGS="$(LDFLAGS)" CCFLAGS="$(CFLAGS)" install
+	cd tolua++-1.0.92/src/lib; $(CC) $(CFLAGS) -shared -o libtolua++.so -I../../include *.c
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
-
 
 #
 # squeezeplay
@@ -252,7 +250,7 @@ rtmp: squeezeplay
 
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
 	patch -p1 -i squeezeplay-lua-cjson.patch
@@ -330,7 +328,7 @@ clean:
 	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
-	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
+	-cd tolua++-1.0.92; scons -c; rm .sconsign.dblite; rm src/lib/libtolua++.so
 	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
