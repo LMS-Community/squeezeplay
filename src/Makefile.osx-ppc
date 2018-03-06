@@ -1,6 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for OS X 10.3+ ppc
 # Copyright 2007 Logitech
+# Copyright 2018 Ralph Irving
 ################################################################################
 
 #
@@ -9,7 +10,6 @@
 # git clone https://git.assembla.com/portaudio.git portaudio_v19
 # cd portaudio_v19
 # ./update_gitrevision.sh
-# patch -p1 -i../portaudio_v19-osx-10.3.patch
 #
 # OS X specific stuff
 #
@@ -95,11 +95,11 @@ sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
-SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+SDL_ttf-2.0.11/Makefile:
+	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
 
-sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
+sdl-ttf: SDL_ttf-2.0.11/Makefile
+	cd SDL_ttf-2.0.11; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
 # sdl_gfx
 SDL_gfx-2.0.24/Makefile:
@@ -120,7 +120,7 @@ lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem lu
 # lua (requires readline ncurses)
 lua:
 	patch -p0 -i lua-nosharedlibrary.patch
-	cd lua-5.1.1; make macosx CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" MYLDFLAGS="${LDFLAGS}" INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
+	cd lua-5.1.5; make macosx CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" MYLDFLAGS="${LDFLAGS}" INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
 	ranlib ${PREFIX}/lib/liblua.a
 	patch -R -p0 -i lua-nosharedlibrary.patch
 
@@ -325,7 +325,7 @@ clean:
 	-cd SDL_image-1.2.5; make distclean ; rm -rf autom4te.cache
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_ttf"
-	-cd SDL_ttf-2.0.8; make distclean ; rm -rf autom4te.cache
+	-cd SDL_ttf-2.0.11; make distclean ; rm -rf autom4te.cache
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: SDL_gfx"
 	-cd SDL_gfx-2.0.24; make distclean
@@ -334,7 +334,7 @@ clean:
 	-cd freetype-2.1.10; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
-	-cd lua-5.1.1; make clean
+	-cd lua-5.1.5; make clean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luasocket"
 	-cd luasocket-2.0.2; make clean PLATFORM=osx

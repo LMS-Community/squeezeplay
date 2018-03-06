@@ -1,7 +1,7 @@
-Index: lua-5.1.1/Makefile
+Index: lua-5.1.5/Makefile
 ===================================================================
---- lua-5.1.1/Makefile.orig	(revision 1032)
-+++ lua-5.1.1/Makefile	(working copy)
+--- lua-5.1.5/Makefile.orig	(revision 1032)
++++ lua-5.1.5/Makefile	(working copy)
 @@ -43,7 +43,7 @@
  # What to install.
  TO_BIN= lua luac
@@ -11,10 +11,10 @@ Index: lua-5.1.1/Makefile
  TO_MAN= lua.1 luac.1
  TO_LMOD= 
  
-Index: lua-5.1.1/src/Makefile
+Index: lua-5.1.5/src/Makefile
 ===================================================================
---- lua-5.1.1/src/Makefile.orig	(revision 1032)
-+++ lua-5.1.1/src/Makefile	(working copy)
+--- lua-5.1.5/src/Makefile.orig	(revision 1032)
++++ lua-5.1.5/src/Makefile	(working copy)
 @@ -42,7 +42,7 @@
  LUATHREAD_O=
  
