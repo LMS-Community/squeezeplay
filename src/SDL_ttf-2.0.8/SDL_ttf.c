@@ -895,6 +895,7 @@ int TTF_SizeUNICODE(TTF_Font *font, const Uint16 *text, int *w, int *h)
 
 		error = Find_Glyph(font, c, CACHED_METRICS);
 		if ( error ) {
+			TTF_SetFTError("Couldn't find glyph", error);
 			return -1;
 		}
 		glyph = font->current;
@@ -1096,6 +1097,7 @@ SDL_Surface *TTF_RenderUNICODE_Solid(TTF_Font *font,
 
 		error = Find_Glyph(font, c, CACHED_METRICS|CACHED_BITMAP);
 		if( error ) {
+			TTF_SetFTError("Couldn't find glyph", error);
 			SDL_FreeSurface( textbuf );
 			return NULL;
 		}
@@ -1172,6 +1174,7 @@ SDL_Surface *TTF_RenderGlyph_Solid(TTF_Font *font, Uint16 ch, SDL_Color fg)
 	/* Get the glyph itself */
 	error = Find_Glyph(font, ch, CACHED_METRICS|CACHED_BITMAP);
 	if ( error ) {
+		TTF_SetFTError("Couldn't find glyph", error);
 		return(NULL);
 	}
 	glyph = font->current;
@@ -1358,6 +1361,7 @@ SDL_Surface* TTF_RenderUNICODE_Shaded( TTF_Font* font,
 
 		error = Find_Glyph(font, c, CACHED_METRICS|CACHED_PIXMAP);
 		if( error ) {
+			TTF_SetFTError("Couldn't find glyph", error);
 			SDL_FreeSurface( textbuf );
 			return NULL;
 		}
@@ -1440,6 +1444,7 @@ SDL_Surface* TTF_RenderGlyph_Shaded( TTF_Font* font,
 	/* Get the glyph itself */
 	error = Find_Glyph(font, ch, CACHED_METRICS|CACHED_PIXMAP);
 	if( error ) {
+		TTF_SetFTError("Couldn't find glyph", error);
 		return NULL;
 	}
 	glyph = font->current;
@@ -1619,6 +1624,7 @@ SDL_Surface *TTF_RenderUNICODE_Blended(TTF_Font *font,
 		}
 		error = Find_Glyph(font, c, CACHED_METRICS|CACHED_PIXMAP);
 		if( error ) {
+			TTF_SetFTError("Couldn't find glyph", error);
 			SDL_FreeSurface( textbuf );
 			return NULL;
 		}
@@ -1703,6 +1709,7 @@ SDL_Surface *TTF_RenderGlyph_Blended(TTF_Font *font, Uint16 ch, SDL_Color fg)
 	/* Get the glyph itself */
 	error = Find_Glyph(font, ch, CACHED_METRICS|CACHED_PIXMAP);
 	if ( error ) {
+		TTF_SetFTError("Couldn't find glyph", error);
 		return(NULL);
 	}
 	glyph = font->current;
