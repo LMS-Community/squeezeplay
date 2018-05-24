@@ -2306,12 +2306,16 @@ TOLUA_API int tolua_jive_open (lua_State* tolua_S)
    tolua_constant(tolua_S,"KEY_MUTE",JIVE_KEY_MUTE);
    tolua_constant(tolua_S,"KEY_ALARM",JIVE_KEY_ALARM);
    tolua_constant(tolua_S,"KEY_POWER",JIVE_KEY_POWER);
+   tolua_constant(tolua_S,"KEY_PRESET_0",JIVE_KEY_PRESET_0);
    tolua_constant(tolua_S,"KEY_PRESET_1",JIVE_KEY_PRESET_1);
    tolua_constant(tolua_S,"KEY_PRESET_2",JIVE_KEY_PRESET_2);
    tolua_constant(tolua_S,"KEY_PRESET_3",JIVE_KEY_PRESET_3);
    tolua_constant(tolua_S,"KEY_PRESET_4",JIVE_KEY_PRESET_4);
    tolua_constant(tolua_S,"KEY_PRESET_5",JIVE_KEY_PRESET_5);
    tolua_constant(tolua_S,"KEY_PRESET_6",JIVE_KEY_PRESET_6);
+   tolua_constant(tolua_S,"KEY_PRESET_7",JIVE_KEY_PRESET_7);
+   tolua_constant(tolua_S,"KEY_PRESET_8",JIVE_KEY_PRESET_8);
+   tolua_constant(tolua_S,"KEY_PRESET_9",JIVE_KEY_PRESET_9);
    tolua_constant(tolua_S,"KEY_PAGE_UP",JIVE_KEY_PAGE_UP);
    tolua_constant(tolua_S,"KEY_PAGE_DOWN",JIVE_KEY_PAGE_DOWN);
    tolua_constant(tolua_S,"KEY_PRINT",JIVE_KEY_PRINT);
