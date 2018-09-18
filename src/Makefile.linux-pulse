@@ -273,10 +273,10 @@ squeezeplay/Makefile:
 	cd squeezeplay; LIBS="-lpulse -lrt" SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
-        patch -p1 -i squeezeplay-lua-cjson.patch
-        export PATH=$(BUILD_TOP)/bin:$(PATH); \
-        cd squeezeplay; make && make install
-        patch -p1 -R -i squeezeplay-lua-cjson.patch
+	patch -p1 -i squeezeplay-lua-cjson.patch
+	export PATH=$(BUILD_TOP)/bin:$(PATH); \
+	cd squeezeplay; make && make install
+	patch -p1 -R -i squeezeplay-lua-cjson.patch
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
