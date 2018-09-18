@@ -57,7 +57,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib expat freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -69,6 +69,12 @@ zlib-1.2.7/Makefile:
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
 	-rm -f ${PREFIX}/lib/libz.a
+# expat
+expat-2.0.1/Makefile:
+	cd expat-2.0.1; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+
+expat: expat-2.0.1/Makefile
+	cd expat-2.0.1; make; make prefix=${PREFIX} install
 
 # freetype
 freetype-2.1.10/config.mk:
@@ -165,7 +171,7 @@ loop:
 	cd loop-2.2-alpha; install loop/collection/ObjectCache.lua ${PREFIX}/share/lua/5.1/loop/collection/.
 	cd loop-2.2-alpha; install loop/debug/Viewer.lua ${PREFIX}/share/lua/5.1/loop/debug/.
 
-luaexpat: lua
+luaexpat: lua expat
 	cd luaexpat-1.0.2; make PREFIX=${PREFIX} PLATFORM=linux && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luafilesystem:
@@ -311,6 +317,7 @@ clean_generated:
 .PHONY: clean
 clean:
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
+	-cd expat-2.0.1; make distclean
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
 	-cd jpeg-6b; make distclean
