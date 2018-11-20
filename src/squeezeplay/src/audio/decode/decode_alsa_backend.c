@@ -1073,7 +1073,6 @@ static void *audio_thread_execute(void *data) {
 				}
 		
 				if (avail < state->period_size) {
-					usleep(10000);
 					if ((err = snd_pcm_wait(state->pcm, state->pcm_wait_timeout)) < 0) {
 						LOG_WARN("xrun (snd_pcm_wait) err=%s",snd_strerror(err));
 						if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
