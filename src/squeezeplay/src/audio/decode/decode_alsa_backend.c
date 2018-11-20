@@ -123,6 +123,7 @@ struct decode_alsa {
 	snd_pcm_t *capture_pcm;
 	snd_pcm_format_t format;
 	snd_pcm_sframes_t period_size;
+	snd_pcm_sframes_t buffer_size;
 
 	/* alsa control state */
 	snd_hctl_t *hctl;
@@ -768,6 +769,12 @@ static int _pcm_open(struct decode_alsa *state,
 	}
 	state->period_size = size;
 
+	if ((err = snd_pcm_hw_params_get_buffer_size(hw_params, &size)) < 0) {
+		LOG_ERROR("Unable to get buffer size: %s", snd_strerror(err));
+		return err;
+	}
+	state->buffer_size = size;
+
 	/* iec958 control for playback device only */
 	if (!(state->flags & FLAG_STREAM_PLAYBACK) || mode != SND_PCM_STREAM_PLAYBACK) {
 		goto skip_iec958;	  
@@ -1038,6 +1045,14 @@ static void *audio_thread_execute(void *data) {
 				}
 			}
 			first = 1;
+			continue;
+		}
+
+		if (avail > state->buffer_size) {
+			LOG_WARN( "snd_pcm_avail_update returned %#lx frames, but buffer "
+			          "size is only %#lx frames. Re-opening pcm device.",
+			          avail, state->buffer_size);
+			do_open = 1;
 			continue;
 		}
 
