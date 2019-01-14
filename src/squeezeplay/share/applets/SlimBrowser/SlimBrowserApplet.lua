@@ -1727,6 +1727,12 @@ local _globalActionsNEW = {
 	["scanner_fwd"] = function(self, event)
 		return self.scanner:event(event)
 	end,
+
+	["quit"] = function()
+		-- disconnect from Player/SqueezeCenter
+		appletManager:callService("disconnectPlayer")
+		return (EVENT_CONSUME | EVENT_QUIT)
+	end,
 }
 
 
