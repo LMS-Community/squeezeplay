@@ -663,7 +663,7 @@ static int _pcm_open(struct decode_alsa *state,
 			return err;
 		}
 
-		/* try exact rate, otherwise reopen as plughw: with reampling */
+		/* try exact rate, otherwise reopen as plughw: with resampling */
 		if ((err = snd_pcm_hw_params_set_rate(*pcmp, hw_params, sample_rate, 0)) < 0) {
 
 			char *plug_device = alloca(strlen(device) + 4 + 1);
