@@ -748,6 +748,10 @@ static int _pcm_open(struct decode_alsa *state,
 		LOG_ERROR("Unable to set period size %s", snd_strerror(err));
 		return err;
 	}
+	else
+	{
+		LOG_INFO("Using buffer period count: %d", val);
+	}
 	state->period_count = val;
 
 	val = !plug ? state->buffer_time : 20000; // safe value when plug layer used, else snd_pcm_close can crash
@@ -755,6 +759,10 @@ static int _pcm_open(struct decode_alsa *state,
 	if ((err = snd_pcm_hw_params_set_buffer_time_near(*pcmp, hw_params, &val, &dir)) < 0) {
 		LOG_ERROR("Unable to set  buffer time %s", snd_strerror(err));
 		return err;
+	}
+	else
+	{
+		LOG_INFO("Using buffer time: %d", val);
 	}
 
 	/* set hardware parameters */
@@ -1058,7 +1066,7 @@ static void *audio_thread_execute(void *data) {
 
 		/* this is needed to ensure the sound works on resume */
 		if (( err = snd_pcm_status(state->pcm, status)) < 0) {
-			LOG_ERROR("snd_pcm_status err=%d", err);
+			LOG_ERROR("snd_pcm_status err=%s", snd_strerror(err));
 		}
 
 		TIMER_CHECK("STATE");
@@ -1121,7 +1129,7 @@ static void *audio_thread_execute(void *data) {
 
 			if (state->has_mmap) {
 				if ((err = snd_pcm_mmap_begin(state->pcm, &areas, &offset, &frames)) < 0) {
-					LOG_WARN("xrun (snd_pcm_mmap_begin) err=%d",err);
+					LOG_WARN("xrun (snd_pcm_mmap_begin) err=%s", snd_strerror(err));
 					if ((err = snd_pcm_recover(state->pcm, err, 1)) < 0) {
 						LOG_ERROR("mmap begin failed: %s", snd_strerror(err));
 					}
@@ -1211,7 +1219,7 @@ static void *audio_thread_execute(void *data) {
 			if (state->has_mmap) {
 				commitres = snd_pcm_mmap_commit(state->pcm, offset, frames); 
 				if (commitres < 0 || (snd_pcm_uframes_t)commitres != frames) { 
-					LOG_WARN("xrun (snd_pcm_mmap_commit) err=%ld", commitres);
+					LOG_WARN("xrun (snd_pcm_mmap_commit) err=%s", snd_strerror(commitres));
 					if ((err = snd_pcm_recover(state->pcm, commitres, 1)) < 0) {
 						LOG_ERROR("mmap commit failed: %s", snd_strerror(err));
 					}
