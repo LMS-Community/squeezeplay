@@ -1059,6 +1059,11 @@ static int decode_audio_open(lua_State *L) {
 	mqueue_init(&metadata_mqueue, metadata_mqueue_buffer, sizeof(metadata_mqueue_buffer));
 
 	decode_thread = SDL_CreateThread(decode_thread_execute, NULL);
+        if (decode_thread == NULL) {
+		lua_pushnil(L);
+		lua_pushstring(L, errstr ? errstr : "Thread creation failed");
+		return 2;
+        }
 
 	lua_pushboolean(L, 1);
 	return 1;
