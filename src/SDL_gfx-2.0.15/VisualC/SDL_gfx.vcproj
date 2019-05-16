@@ -115,11 +115,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;..\..\SDL-1.2.15\VisualC\include&quot;;&quot;..\..\SDL-1.2.15\include&quot;"
-				PreprocessorDefinitions="WIN32;_CONSOLE;BUILD_DLL"
+				PreprocessorDefinitions="WIN32;_CONSOLE;BUILD_DLL;DLL_EXPORT"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -134,12 +134,15 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				GenerateDebugInformation="true"
+				ModuleDefinitionFile=""
+				GenerateDebugInformation="false"
+				MapExports="false"
 				SubSystem="1"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)\$(TargetName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
