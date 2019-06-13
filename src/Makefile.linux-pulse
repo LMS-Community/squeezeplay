@@ -88,26 +88,26 @@ expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
 
 # freetype
-freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+freetype-2.4.2/config.mk:
+	cd freetype-2.4.2; ./configure ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
-freetype: freetype-2.1.10/config.mk
-	cd freetype-2.1.10; make; make install
+freetype: freetype-2.4.2/config.mk
+	cd freetype-2.4.2; make; make install
 
 # png
-libpng-1.2.32/Makefile:
-	cd libpng-1.2.32; ./configure --enable-static=no --prefix=${PREFIX}
+libpng-1.2.59/Makefile:
+	cd libpng-1.2.59; ./configure --enable-static=no --prefix=${PREFIX}
 
-libpng: libpng-1.2.32/Makefile
-	cd libpng-1.2.32; make && make install
+libpng: libpng-1.2.59/Makefile
+	cd libpng-1.2.59; make && make install
 
 # jpeg
-jpeg-6b/Makefile:
+jpeg-9c/Makefile:
 	-mkdir -p ${BUILD_TOP}/man/man1
-	cd jpeg-6b; ./configure --enable-shared --prefix=${PREFIX}
+	cd jpeg-9c; ./configure --enable-shared --prefix=${PREFIX}
 
-libjpeg: jpeg-6b/Makefile
-	cd jpeg-6b; make && make install
+libjpeg: jpeg-9c/Makefile
+	cd jpeg-9c; make && make install
 
 # sdl
 SDL-1.2.15/Makefile:
@@ -148,7 +148,7 @@ lua-all: lua tolua++ luasocket slnunicode luacjson loop luaexpat luafilesystem l
 
 # lua (requires readline ncurses)
 lua:
-	cd lua-5.1.1; make linux INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
+	cd lua-5.1.5; make linux INSTALL_TOP=${PREFIX} && make install INSTALL_TOP=${PREFIX}
 
 # luasocket (requires lua)
 luasocket: lua
@@ -189,7 +189,7 @@ luafilesystem:
 	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luaprofiler:
-	cd luaprofiler-2.0 && make -f Makefile.linux install
+	cd luaprofiler-2.0.2 && make -f Makefile.linux install
 
 # just compile the library for to tolua++
 .PHONY: tolua++
@@ -332,21 +332,21 @@ clean_generated:
 clean:
 	-cd zlib-1.2.7; make distclean; rm -f Makefile
 	-cd expat-2.0.1; make distclean
-	-cd freetype-2.1.10; make distclean
-	-cd libpng-1.2.32; make distclean
-	-cd jpeg-6b; make distclean
+	-cd freetype-2.4.2; make distclean
+	-cd libpng-1.2.59; make distclean
+	-cd jpeg-9c; make distclean
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.8; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
-	-cd lua-5.1.1; make clean
+	-cd lua-5.1.5; make clean
 	-cd luasocket-2.0.2; make clean PLATFORM=linux
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
 	-cd lua-cjson-2.1.0; make clean
 	-cd luazipfilter; make distclean
-	-cd luaprofiler-2.0; make -f Makefile.linux clean
+	-cd luaprofiler-2.0.2; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o

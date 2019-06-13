@@ -57,26 +57,26 @@ expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
 
 # freetype
-freetype-2.1.10/config.mk:
-	cd freetype-2.1.10; ./configure --enable-shared=no --prefix=${PREFIX}
+freetype-2.4.2/config.mk:
+	cd freetype-2.4.2; ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --enable-shared=no --prefix=${PREFIX}
 
-freetype: freetype-2.1.10/config.mk
-	cd freetype-2.1.10; make; make DESTDIR= install
+freetype: freetype-2.4.2/config.mk
+	cd freetype-2.4.2; make; make DESTDIR= install
 
 # png also add clean
-libpng-1.2.32/Makefile:
-	cd libpng-1.2.32; ./configure  --prefix=${PREFIX}
+libpng-1.2.59/Makefile:
+	cd libpng-1.2.59; ./configure  --prefix=${PREFIX}
 
-libpng: libpng-1.2.32/Makefile
-	cd libpng-1.2.32; make && make install
+libpng: libpng-1.2.59/Makefile
+	cd libpng-1.2.59; make && make install
 
 # jpeg
-jpeg-6b/Makefile:
+jpeg-9c/Makefile:
 	-mkdir -p ${BUILD_TOP}/man/man1
-	cd jpeg-6b; ./configure --enable-shared --enable-static --prefix=${PREFIX}
+	cd jpeg-9c; ./configure --enable-shared --enable-static --prefix=${PREFIX}
 
-libjpeg: jpeg-6b/Makefile
-	cd jpeg-6b; make && make install
+libjpeg: jpeg-9c/Makefile
+	cd jpeg-9c; make && make install
 	
 # sdl - check for existance of just one of the Makefiles to determine if we should reconfigure for each
 SDL-1.2.15/Makefile:
@@ -166,7 +166,7 @@ luafilesystem:
 	cd luafilesystem-1.2; make CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX} PLATFORM=osx install
 
 luaprofiler:
-	cd luaprofiler-2.0 && make -f Makefile.darwin install CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX}
+	cd luaprofiler-2.0.2 && make -f Makefile.darwin install CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX}
 
 # just compile the library for to tolua++
 tolua++:
@@ -301,7 +301,7 @@ clean:
 	-cd libmad-0.15.1b; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
-	-cd libpng-1.2.32; make distclean
+	-cd libpng-1.2.59; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libogg"
 	-cd libogg-1.2.2; make distclean
@@ -310,7 +310,7 @@ clean:
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libjpeg"
-	-cd jpeg-6b; make distclean
+	-cd jpeg-9c; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: squeezeplay"
 	-cd squeezeplay; make distclean ; rm src/version.h; rm -rf autom4te.cache; rm -f SqueezePlay.dmg; rm -f SqueezePlay; rm -rf SqueezePlay.app
@@ -331,7 +331,7 @@ clean:
 	-cd SDL_gfx-2.0.15; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: freetype"
-	-cd freetype-2.1.10; make distclean
+	-cd freetype-2.4.2; make distclean; rm config.mk
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: lua"
 	-cd lua-5.1.5; make clean
@@ -340,7 +340,7 @@ clean:
 	-cd luasocket-2.0.2; make clean PLATFORM=osx
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: luaprofiler"
-	-cd luaprofiler-2.0; make -f Makefile.darwin clean
+	-cd luaprofiler-2.0.2; make -f Makefile.darwin clean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: slnunicode"
 	-cd slnunicode-1.1; make clean PLATFORM=osx

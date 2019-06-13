@@ -1,7 +1,6 @@
 ################################################################################
 # Squeezeplay makefile for OpenIndiana
 # Copyright 2007 Logitech
-# Copyright 2012 Duane Paddock
 ################################################################################
 #
 # These steps are required for a successful build
