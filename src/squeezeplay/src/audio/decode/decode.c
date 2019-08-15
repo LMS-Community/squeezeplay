@@ -84,6 +84,8 @@ static struct decode_module *all_decoders[] = {
 	&decode_wma,
 	&decode_aac,
 	&decode_spotify,
+#else
+	&decode_aac,
 #endif
 	&decode_vorbis,
 	&decode_flac,
@@ -773,7 +775,7 @@ static int decode_song_ended(lua_State *L) {
 	 * 1: self
 	 */
 
-	LOG_DEBUG(log_audio_decode, "decode_sond_ended");
+	LOG_DEBUG(log_audio_decode, "decode_song_ended");
 
 	if (mqueue_write_request(&decode_mqueue, decode_song_ended_handler, 0)) {
 		mqueue_write_complete(&decode_mqueue);

@@ -73,6 +73,7 @@ libaudio_la_OBJECTS = $(am_libaudio_la_OBJECTS)
 libdecode_la_DEPENDENCIES = libaudio.la
 am_libdecode_la_OBJECTS = mp4.lo mqueue.lo streambuf.lo alac.lo \
 	decode.lo decode_alsa.lo decode_flac.lo decode_mad.lo \
+	decode_aac.lo \
 	decode_output.lo decode_pcm.lo decode_portaudio.lo \
 	decode_sample.lo decode_vorbis.lo decode_alac.lo \
 	visualizer_vumeter.lo visualizer_spectrum.lo kiss_fft.lo
@@ -269,6 +270,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(OSX_LIB_DIR)/libSDLmain.a \
 	$(OSX_LIB_DIR)/libpng.a \
 	$(OSX_LIB_DIR)/libjpeg.a \
+	$(OSX_LIB_DIR)/libfdk-aac.a \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libnet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libui.a $(JIVE_DEPENDENCIES_LIB_DIR)/libdecode.a
 
 BUNDLE_NAME = SqueezePlay.app
@@ -328,6 +330,7 @@ libdecode_la_SOURCES = \
 	src/audio/alac/alac.c \
 	src/audio/decode/decode.c \
 	src/audio/decode/decode_alsa.c \
+	src/audio/decode/decode_aac.c \
 	src/audio/decode/decode_flac.c \
 	src/audio/decode/decode_mad.c \
 	src/audio/decode/decode_output.c \
@@ -353,7 +356,7 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
+jive_LDADD = libui.la libdecode.la libnet.la -lfdk-aac -llua ${SPPRIVATE_LIB}
 jive_alsa_SOURCES = \
 	src/audio/decode/decode_alsa_backend.c
 
@@ -513,6 +516,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alsa.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_alsa_backend.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_aac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_flac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_mad.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode_output.Plo@am__quote@
@@ -646,6 +650,13 @@ decode_alsa.lo: src/audio/decode/decode_alsa.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_alsa.c' object='decode_alsa.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_alsa.lo `test -f 'src/audio/decode/decode_alsa.c' || echo '$(srcdir)/'`src/audio/decode/decode_alsa.c
+
+decode_aac.lo: src/audio/decode/decode_aac.c
+@am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_aac.lo -MD -MP -MF "$(DEPDIR)/decode_aac.Tpo" -c -o decode_aac.lo `test -f 'src/audio/decode/decode_aac.c' || echo '$(srcdir)/'`src/audio/decode/decode_aac.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/decode_aac.Tpo" "$(DEPDIR)/decode_aac.Plo"; else rm -f "$(DEPDIR)/decode_aac.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/audio/decode/decode_aac.c' object='decode_aac.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o decode_aac.lo `test -f 'src/audio/decode/decode_aac.c' || echo '$(srcdir)/'`src/audio/decode/decode_aac.c
 
 decode_flac.lo: src/audio/decode/decode_flac.c
 @am__fastdepCC_TRUE@	if $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT decode_flac.lo -MD -MP -MF "$(DEPDIR)/decode_flac.Tpo" -c -o decode_flac.lo `test -f 'src/audio/decode/decode_flac.c' || echo '$(srcdir)/'`src/audio/decode/decode_flac.c; \

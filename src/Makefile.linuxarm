@@ -24,6 +24,7 @@ DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
 export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC
+export CXXFLAGS=${CFLAGS}
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -112,11 +113,11 @@ sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
-SDL_ttf-2.0.8/Makefile:
-	cd SDL_ttf-2.0.8; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
+SDL_ttf-2.0.11/Makefile:
+	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-freetype-prefix=${PREFIX} --without-opengl
 
-sdl-ttf: SDL_ttf-2.0.8/Makefile
-	cd SDL_ttf-2.0.8; make && make install
+sdl-ttf: SDL_ttf-2.0.11/Makefile
+	cd SDL_ttf-2.0.11; make && make install
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
@@ -195,8 +196,8 @@ tolua++: lua
 # squeezeplay
 #
 
-.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
-app: portaudio libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
+.PHONY: app portaudio fdkaac libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
+app: portaudio fdkaac libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
 portaudio_v19_1360/Makefile:
@@ -204,6 +205,13 @@ portaudio_v19_1360/Makefile:
 
 portaudio: portaudio_v19_1360/Makefile
 	cd portaudio_v19_1360; make && make install
+
+# fdkaac
+fdk-aac-2.0.0/Makefile:
+	cd fdk-aac-2.0.0; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+
+fdkaac: fdk-aac-2.0.0/Makefile
+	cd fdk-aac-2.0.0; make; make install
 
 # libogg
 libogg-1.2.2/Makefile:
@@ -327,7 +335,7 @@ clean:
 	-cd jpeg-9c; make distclean
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
-	-cd SDL_ttf-2.0.8; make distclean
+	-cd SDL_ttf-2.0.11; make distclean
 	-cd SDL_gfx-2.0.15; make distclean
 	-cd lua-5.1.5; make clean
 	-cd luasocket-2.0.2; make clean PLATFORM=linux
@@ -341,6 +349,7 @@ clean:
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
 	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
+	-cd fdk-aac-2.0.0; make distclean
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;

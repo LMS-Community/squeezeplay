@@ -87,6 +87,8 @@ extern struct decode_module decode_alac;
 extern struct decode_module decode_wma;
 extern struct decode_module decode_aac;
 extern struct decode_module decode_spotify;
+#else
+extern struct decode_module decode_aac;
 #endif
 
 

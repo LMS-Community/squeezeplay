@@ -27,6 +27,7 @@ export PREFIX=${BUILD_TOP}
 
 ARCHFLAGS=-arch $(ARCH)
 export CFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.7
+export CXXFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.7
 export LDFLAGS=$(ARCHFLAGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.7 -L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH=$(shell dirname `which gcc`)
@@ -169,8 +170,8 @@ tolua++:
 # squeezeplay
 #
 
-.PHONY: app portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg rtmp
-app: portaudio libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay_dmg
+.PHONY: app portaudio fdkaac libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont squeezeplay_dmg rtmp
+app: portaudio fdkaac libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay_dmg
 
 # portaudio
 portaudio_v19/Makefile:
@@ -179,6 +180,12 @@ portaudio_v19/Makefile:
 portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
 	cd portaudio_v19; cp include/pa_mac_core.h $(BUILD_TOP)/include/
+
+fdk-aac-2.0.0/Makefile:
+	cd fdk-aac-2.0.0; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+
+fdkaac: fdk-aac-2.0.0/Makefile
+	cd fdk-aac-2.0.0; make; make install
 
 # libogg
 libogg-1.2.2/Makefile:
@@ -277,6 +284,9 @@ clean:
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: portaudio"
 	-cd portaudio_v19; make distclean
+	@echo "----------------------------------------------------------"
+	@echo "Cleaning: fdk-aac"
+	-cd fdk-aac-2.0.0; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tremor"
 	-cd Tremor; make distclean ; rm -rf autom4te.cache; rm -f debian/Makefile.in

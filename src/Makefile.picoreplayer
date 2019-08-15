@@ -1,27 +1,17 @@
 ################################################################################
-# Squeezeplay pulseaudio makefile for linux.
+# Squeezeplay makefile for picoreplayer raspberry pi armhf
 # Copyright 2007 Logitech
-# Copyright 2017 Ralph Irving
+# Copyright 2019 Ralph Irving
 ################################################################################
-#
+
 # Additional packages required to build
 #
-# sudo apt-get install libx11-dev
-# sudo apt-get install libxext-dev
-# sudo apt-get install libreadline5-dev
-# sudo apt-get install expat-dev
+# sudo apt-get install libasound2-dev
+# sudo apt-get install libreadline-gplv2-dev (armhf) / libreadline-dev (armel)
 #
-# Checkout the latest portaudio pulseaudio hostapi branch
+# Checkout the touchscreen library
 #
-# git clone git://git.assembla.com/portaudio-pulseaudio.git pulseaudio
-# cd pulseaudio
-# git checkout PulseAudioHostAPI
-# autoreconfig -if
-# ./update_gitrevision.sh
-#
-# Apply the patch to use cjson instead of json
-# 
-# patch -p1 -i squeezeplay-lua-cjson.patch from the src/ directory.
+# svn checkout https://github.com/ralph-irving/tcz-libts.git/trunk/libts-1.0
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
 #
@@ -36,8 +26,8 @@ export BUILD_TOP=$(BASE_DIR)build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O3 -fPIC
-export CXXFLAGS=${CFLAGS}
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -O2 -fPIC -march=armv6 -mfloat-abi=hard -mfpu=vfp
+export CXXFLAGS=-s -O2 -fPIC -march=armv6 -mfloat-abi=hard -mfpu=vfp
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
@@ -45,7 +35,7 @@ export TOOLPATH = $(shell dirname `which gcc`)
 export SDL_CONFIG = ${BUILD_TOP}/bin/sdl-config
 
 ENABLE_PROFILING=--enable-shared=yes --enable-static=no
-USE_MMX=--enable-mmx
+USE_MMX=--disable-mmx
 
 # Override to yes to build closed source squeezeplay libraries 
 SPPRIVATE=no
@@ -69,7 +59,7 @@ all: sdl-all lua-all app
 #####
 
 .PHONY: sdl-all freetype sdl sdl-image sdl-tff sdl-gfx c-ares
-sdl-all: zlib expat freetype sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
+sdl-all: zlib expat freetype tslib sdl libpng libjpeg sdl-image sdl-ttf sdl-gfx
 
 generated:
 	mkdir -p generated
@@ -81,9 +71,10 @@ zlib-1.2.7/Makefile:
 zlib: zlib-1.2.7/Makefile
 	cd zlib-1.2.7; make; make prefix=${PREFIX} install
 	-rm -f ${PREFIX}/lib/libz.a
+
 # expat
 expat-2.0.1/Makefile:
-	cd expat-2.0.1; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+	cd expat-2.0.1; ./configure --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 expat: expat-2.0.1/Makefile
 	cd expat-2.0.1; make; make prefix=${PREFIX} install
@@ -110,9 +101,16 @@ jpeg-9c/Makefile:
 libjpeg: jpeg-9c/Makefile
 	cd jpeg-9c; make && make install
 
+# tslib
+libts-1.0/Makefile:
+	cd libts-1.0; ./autogen-clean.sh; ./autogen.sh; ./configure --prefix=${PREFIX} --enable-shared=yes --enable-static=no
+
+tslib: libts-1.0/Makefile
+	cd libts-1.0; make && make install
+
 # sdl
 SDL-1.2.15/Makefile:
-	cd SDL-1.2.15; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-audio --enable-video --enable-events --disable-joystick --disable-cdrom --enable-threads --enable-timers --enable-file --enable-loadso --enable-oss=no --enable-alsa=no --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime
+	cd SDL-1.2.15; ./configure  ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-audio=no --enable-video --enable-events --enable-joystick=no --enable-cdrom=no --enable-threads --enable-timers --enable-file --enable-loadso --enable-esd=no --enable-arts=no --enable-esd-shared=no --enable-clock_gettime --enable-video-x11=no --enable-video-opengl=no --enable-video-dummy=no --enable-video-directfb=no --enable-pulseaudio=no --enable-input-tslib=yes
 
 sdl: SDL-1.2.15/Makefile
 	cd SDL-1.2.15; make && make install
@@ -143,9 +141,9 @@ sdl-gfx: SDL_gfx-2.0.15/Makefile
 # lua
 #####
 
-.PHONY: lua-all lua luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+.PHONY: lua-all lua luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
-lua-all: lua tolua++ luasocket slnunicode luacjson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
+lua-all: lua tolua++ luasocket slnunicode luajson loop luaexpat luafilesystem luaprofiler luazipfilter luamd5
 
 # lua (requires readline ncurses)
 lua:
@@ -158,8 +156,11 @@ luasocket: lua
 slnunicode: lua
 	cd slnunicode-1.1; make install INSTALL_TOP=${PREFIX} TARGET=$(TARGET) PLATFORM=linux
 
-luacjson: lua
-	cd lua-cjson-2.1.0; make PREFIX=${PREFIX} && cp -p cjson.so ${PREFIX}/lib/lua/5.1/cjson.so
+luajson/Makefile:
+	cd luajson; ./configure --prefix=${PREFIX}
+
+luajson: luajson/Makefile
+	cd luajson; make && cp .libs/json.so ${PREFIX}/lib/lua/5.1/json.so
 
 luazipfilter/Makefile:
 	cd luazipfilter; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
@@ -168,8 +169,8 @@ luazipfilter: luazipfilter/Makefile
 	cd luazipfilter; make && cp .libs/zipfilter.so ${PREFIX}/lib/lua/5.1/zipfilter.so
 
 luamd5:
-	cd luamd5; make LUA=${PREFIX} MYNAME=sha1
-	cd luamd5; make LUA=${PREFIX} MYNAME=md5
+	cd luamd5; make G="${CFLAGS}" LUA=${PREFIX} MYNAME=sha1 MYLDFLAGS="${LDFLAGS}"
+	cd luamd5; make G="${CFLAGS}" LUA=${PREFIX} MYNAME=md5 MYLDFLAGS="${LDFLAGS}"
 	cp luamd5/md5.so ${PREFIX}/lib/lua/5.1/md5.so
 	cp luamd5/sha1.so ${PREFIX}/lib/lua/5.1/sha1.so
 
@@ -190,7 +191,7 @@ luafilesystem:
 	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luaprofiler:
-	cd luaprofiler-2.0.2 && make -f Makefile.linux install
+	cd luaprofiler-2.0 && make -f Makefile.linux install
 
 # just compile the library for to tolua++
 .PHONY: tolua++
@@ -200,7 +201,6 @@ tolua++: lua
 	install tolua++-1.0.92/include/tolua++.h ${PREFIX}/include
 	install tolua++-1.0.92/src/lib/libtolua++.so ${PREFIX}/lib
 
-
 #
 # squeezeplay
 #
@@ -209,13 +209,12 @@ tolua++: lua
 app: portaudio fdkaac libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
 # portaudio
-pulseaudio/Makefile:
-	cd pulseaudio; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --without-jack --enable-shared=no --enable-cxx=no --with-pulseaudio --without-alsa --without-oss
+portaudio_v19_1360/Makefile:
+	cd portaudio_v19_1360; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --with-jack=no --enable-shared=no
 
-portaudio: pulseaudio/Makefile
-	cd pulseaudio; make && make install
+portaudio: portaudio_v19_1360/Makefile
+	cd portaudio_v19_1360; make && make install
 
-# fdkaac
 fdk-aac-2.0.0/Makefile:
 	cd fdk-aac-2.0.0; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
 
@@ -246,7 +245,7 @@ generated/${LIBMAD_DIR}/Makefile.am:
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-forcemem.patch
 	cd generated/${LIBMAD_DIR}; patch -p1 -i ../../libmad-i486.patch
-	cd generated/${LIBMAD_DIR}; ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${ENABLE_PROFILING}
+	cd generated/${LIBMAD_DIR}; ./configure --enable-fpm=arm --prefix=${PREFIX} ${ENABLE_PROFILING}
 
 libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
@@ -275,16 +274,12 @@ rtmp: squeezeplay
 	cd luartmp-squeezeplay; make
 	cp luartmp-squeezeplay/rtmp.so ${PREFIX}/lib/lua/5.1/rtmp.so 
 
-
 # squeezeplay
 squeezeplay/Makefile:
-	cd squeezeplay; LIBS="-lpulse -lrt" SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --disable-alsa --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
+	cd squeezeplay; SDL_CONFIG=${SDL_CONFIG} ./configure ${ENABLE_SPPRIVATE} ${ENABLE_PROFILING} --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
 
 squeezeplay: squeezeplay/Makefile
-	patch -p1 -i squeezeplay-lua-cjson.patch
-	export PATH=$(BUILD_TOP)/bin:$(PATH); \
 	cd squeezeplay; make && make install
-	patch -p1 -R -i squeezeplay-lua-cjson.patch
 
 squeezeplay_desktop/Makefile:
 	cd squeezeplay_desktop; SDL_CONFIG=${SDL_CONFIG} ./configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX}
@@ -293,6 +288,8 @@ squeezeplay_desktop: squeezeplay_desktop/Makefile
 	cd squeezeplay_desktop; make install
 	cp squeezeplay_desktop/squeezeplay.sh ${PREFIX}/bin/
 	chmod +x ${PREFIX}/bin/squeezeplay.sh
+	# cd /lib; tar -cf - libgcc_s\.* | (cd ${PREFIX}/lib; tar -xf -)
+	cd ${PREFIX} && patch -p1 -i ../../src/disable-server-version-check.patch
 
 squeezeplay_contrib: squeezeplay/Makefile
 	cd squeezeplay_contrib; make PREFIX=${PREFIX}
@@ -343,6 +340,7 @@ clean:
 	-cd freetype-2.4.2; make distclean
 	-cd libpng-1.2.59; make distclean
 	-cd jpeg-9c; make distclean
+	-cd libts-1.0; make distclean; rm -f Makefile
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.11; make distclean
@@ -352,13 +350,13 @@ clean:
 	-cd slnunicode-1.1; make clean PLATFORM=linux
 	-cd luaexpat-1.0.2; make clean PLATFORM=linux
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
-	-cd lua-cjson-2.1.0; make clean
+	-cd luajson; make distclean
 	-cd luazipfilter; make distclean
-	-cd luaprofiler-2.0.2; make -f Makefile.linux clean
+	-cd luaprofiler-2.0; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd pulseaudio; make distclean
+	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
 	-cd fdk-aac-2.0.0; make distclean
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean

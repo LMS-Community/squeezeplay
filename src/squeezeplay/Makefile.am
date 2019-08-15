@@ -48,6 +48,7 @@ OSX_STATIC_LIBS = `$(SDL_CONFIG) --static-libs` \
 	$(OSX_LIB_DIR)/libSDLmain.a \
 	$(OSX_LIB_DIR)/libpng.a \
 	$(OSX_LIB_DIR)/libjpeg.a \
+	$(OSX_LIB_DIR)/libfdk-aac.a \
 	$(JIVE_DEPENDENCIES_LIB_DIR)/libaudio.a $(JIVE_DEPENDENCIES_LIB_DIR)/libnet.a $(JIVE_DEPENDENCIES_LIB_DIR)/libui.a $(JIVE_DEPENDENCIES_LIB_DIR)/libdecode.a
 
 SqueezePlay: $(jive_OBJECTS) $(jive_DEPENDENCIES)
@@ -200,6 +201,7 @@ libdecode_la_SOURCES = \
 	src/audio/alac/alac.c \
 	src/audio/decode/decode.c \
 	src/audio/decode/decode_alsa.c \
+	src/audio/decode/decode_aac.c \
 	src/audio/decode/decode_flac.c \
 	src/audio/decode/decode_mad.c \
 	src/audio/decode/decode_output.c \
@@ -242,7 +244,7 @@ jive_SOURCES = \
 	src/jive_debug.c \
 	src/log.c
 
-jive_LDADD = libui.la libdecode.la libnet.la -llua ${SPPRIVATE_LIB}
+jive_LDADD = libui.la libdecode.la libnet.la -lfdk-aac -llua ${SPPRIVATE_LIB}
 
 jive_alsa_SOURCES = \
 	src/audio/decode/decode_alsa_backend.c
