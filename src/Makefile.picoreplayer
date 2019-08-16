@@ -191,7 +191,7 @@ luafilesystem:
 	cd luafilesystem-1.2 && make install PREFIX=${PREFIX} PLATFORM=linux
 
 luaprofiler:
-	cd luaprofiler-2.0 && make -f Makefile.linux install
+	cd luaprofiler-2.0.2 && make -f Makefile.linux install
 
 # just compile the library for to tolua++
 .PHONY: tolua++
@@ -352,7 +352,7 @@ clean:
 	-cd luafilesystem-1.2; make clean PLATFORM=linux
 	-cd luajson; make distclean
 	-cd luazipfilter; make distclean
-	-cd luaprofiler-2.0; make -f Makefile.linux clean
+	-cd luaprofiler-2.0.2; make -f Makefile.linux clean
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
