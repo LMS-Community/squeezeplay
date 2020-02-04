@@ -1268,17 +1268,21 @@ function isCompatible(self)
 	if not self.state.version then
 		return nil
 	end
+	
+	return self:isMoreRecent(self.state.version, minimumVersion)
+end
 
-	local serVer = string.split("%.", self.state.version)
-	local minVer = string.split("%.", minimumVersion)
+function isMoreRecent(self, new, old)
+	local newVer = string.split("%.", new)
+	local oldVer = string.split("%.", old)
 
-	for i,v in ipairs(serVer) do
-		if minVer[i] and v < minVer[i] then
-			return false
+	for i,v in ipairs(newVer) do
+		if oldVer[i] and tonumber(v) > tonumber(oldVer[i]) then
+			return true
 		end
 	end
 
-	return true
+	return false
 end
 
 
