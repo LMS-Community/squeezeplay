@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay pulseaudio makefile for linux.
 # Copyright 2007 Logitech
-# Copyright 2017 Ralph Irving
+# Copyright 2020 Ralph Irving
 ################################################################################
 #
 # Additional packages required to build
@@ -9,13 +9,13 @@
 # sudo apt-get install libx11-dev
 # sudo apt-get install libxext-dev
 # sudo apt-get install libreadline5-dev
-# sudo apt-get install expat-dev
+# sudo apt-get install scons
 #
 # Checkout the latest portaudio pulseaudio hostapi branch
 #
 # git clone git://git.assembla.com/portaudio-pulseaudio.git pulseaudio
 # cd pulseaudio
-# git checkout PulseAudioHostAPI
+# git checkout PulseAudioHostAPImulti
 # autoreconfig -if
 # ./update_gitrevision.sh
 #

@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Linux
 # Copyright 2007 Logitech
-# Copyright 2018 Ralph Irving
+# Copyright 2020 Ralph Irving
 ################################################################################
 #
 # Additional packages required to build
@@ -9,7 +9,6 @@
 # sudo apt-get install libx11-dev
 # sudo apt-get install libxext-dev
 # sudo apt-get install libreadline5-dev
-# sudo apt-get install expat-dev
 # sudo apt-get install scons
 #
 # Need to uncomment the PATH line which includes /usr/sbin in squeezeplay.sh for the arp command
