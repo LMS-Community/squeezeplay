@@ -312,6 +312,50 @@ function _serverstatusSink(self, event, err)
 end
 
 
+function _isBabyUpgradeOlderThanSRtoSBMigrationFirmware(self, url)
+	-- Baby only
+	-- SR to SB migration firmware: 7.7.3 r16667
+	-- Returns true if older
+	-- Returns false if same or newer or no version info in url
+	local major, minor, patch, revision = string.match(url, "\/baby_(%d+)\.(%d+)\.(%d+)_r(%d+)\.bin")
+
+	major = tonumber(major)
+	minor = tonumber(minor)
+	patch = tonumber(patch)
+	revision = tonumber(revision)
+
+	log:info("Major: ", major, " Minor: ", minor, " Patch: ", patch, " Revision: ", revision)
+
+	if major and minor and patch and revision then
+		if major < 7 then
+			log:info("FW upgrade check: major < 7")
+			return true
+		end
+		if major == 7 then
+			if minor < 7 then
+				log:info("FW upgrade check: minor < 7")
+				return true
+			end
+			if minor == 7 then
+				if patch < 3 then
+					log:info("FW upgrade check: patch < 3")
+					return true
+				end
+				if patch == 3 then
+					if revision < 16667 then
+						log:info("FW upgrade check: revision < 16667")
+						return true
+					end
+				end
+			end
+		end
+		return false
+	end
+	-- No info - can't tell
+	return false
+end
+
+
 function _upgradeSink(self, chunk, err)
 	local url
 
@@ -326,6 +370,17 @@ function _upgradeSink(self, chunk, err)
 		url = 'http://' .. self.ip .. ':' .. self.port .. chunk.data.relativeFirmwareUrl
 	elseif chunk.data.firmwareUrl then
 		url = chunk.data.firmwareUrl
+	end
+
+	log:info("Firmware URL: ", url)
+
+	if url then
+		if _isBabyUpgradeOlderThanSRtoSBMigrationFirmware(self, url) then
+			log:warn("Firmware version older than SR to SB migration firmware - ignore!")
+			return
+		else
+			log:info("Firmware version newer than SR to SB migration firmware - ok!")
+		end
 	end
 
 	local oldUpgradeUrl = self.upgradeUrl
