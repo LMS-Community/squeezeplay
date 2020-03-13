@@ -1444,6 +1444,9 @@ function _createUI(self)
 
 	self.trackTitle.textStopCallback = 
 		function(label) 
+			-- work around scrolling labels not returning to home - refer jive.ui.Label
+			label:reDraw()
+
 			if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() then
 				log:debug('trackTitle animation done, animate artistalbum/artistTitle')
 				self.artistalbumTitle:animate(true)
@@ -1457,6 +1460,9 @@ function _createUI(self)
 	if hasArtistAlbum then
 		self.artistalbumTitle.textStopCallback = 
 			function(label)
+				-- work around scrolling labels not returning to home - refer jive.ui.Label
+				label:reDraw()
+
 				self.artistalbumTitle:animate(false)
 				self.trackTitle:animate(false)
 				if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() and 
@@ -1469,6 +1475,9 @@ function _createUI(self)
 	else
 		self.artistTitle.textStopCallback =
 			function(label)
+				-- work around scrolling labels not returning to home - refer jive.ui.Label
+				label:reDraw()
+
 				if self.scrollSwitchTimer and not self.scrollSwitchTimer:isRunning() then
 					log:debug('artist animation done, animate album text')
 					self.trackTitle:animate(false)
@@ -1479,6 +1488,9 @@ function _createUI(self)
 	
 		self.albumTitle.textStopCallback =
 			function(label)
+				-- work around scrolling labels not returning to home - refer jive.ui.Label
+				label:reDraw()
+
 				log:debug('in albumTitle textStop callback')
 				self.artistTitle:animate(false)
 				self.albumTitle:animate(false)
