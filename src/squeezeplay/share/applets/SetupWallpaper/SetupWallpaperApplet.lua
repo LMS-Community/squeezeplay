@@ -159,7 +159,7 @@ function settingsShow(self)
 	
 
 	local screen = screenWidth .. "x" .. screenHeight
-	if screen ~= "800x480" and screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" then
+	if screen ~= "800x480" and screen ~= "480x272" and screen ~= "240x320" and screen ~= "320x240" and screen ~= "240x240" then
 		screen = nil
 	end
 
@@ -221,6 +221,8 @@ function _readFile(self, img, screenWidth, screenHeight)
 		local pattern = nil
 		if screenWidth == 320 and screenHeight == 240 then
 			pattern = 'BB_'
+		elseif screenWidth == 240 and screenHeight == 240 then
+			pattern = 'PIR_'
 		elseif screenWidth == 240 and screenHeight == 320 then
 			pattern = 'JIVE_'
 		elseif screenWidth == 480 and screenHeight == 272 then

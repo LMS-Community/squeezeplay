@@ -122,6 +122,7 @@ end
 
 function openImageViewer(self)
 	local window = Window("text_list", self:string('IMAGE_VIEWER'))
+	local imgpath = self:getSettings()["card.path"] or "/media"
 	
 	local menu = SimpleMenu("menu", {
 		{
@@ -147,7 +148,7 @@ function openImageViewer(self)
 			text = self:string("IMAGE_VIEWER_BROWSE_MEDIA"), 
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self:browseFolder("/media")
+				self:browseFolder(imgpath)
 				return EVENT_CONSUME
 			end
 		}, 1)
