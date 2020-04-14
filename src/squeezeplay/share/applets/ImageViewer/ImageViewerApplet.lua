@@ -2,7 +2,7 @@
 --[[
 =head1 NAME
 
-applets.ImageViewer.ImageViewerApplet - Slideshow of images from /media/*/images directory
+applets.ImageViewer.ImageViewerApplet - Slideshow of images from a directory
 
 =head1 DESCRIPTION
 
@@ -122,6 +122,7 @@ end
 
 function openImageViewer(self)
 	local window = Window("text_list", self:string('IMAGE_VIEWER'))
+	local imgpath = self:getSettings()["card.path"] or "/media"
 	
 	local menu = SimpleMenu("menu", {
 		{
@@ -147,7 +148,7 @@ function openImageViewer(self)
 			text = self:string("IMAGE_VIEWER_BROWSE_MEDIA"), 
 			sound = "WINDOWSHOW",
 			callback = function(event, menuItem)
-				self:browseFolder("/media")
+				self:browseFolder(imgpath)
 				return EVENT_CONSUME
 			end
 		}, 1)
@@ -596,13 +597,17 @@ end
 
 -- callbacks called from media manager
 function mmImageViewerMenu(self, devName)
-	log:info('mmImageViewerMenu: ', devName)
-	self:startSlideshow(false, ImageSourceLocalStorage(self, { path = '/media/' .. devName }))
+	local imgpath = self:getSettings()["card.path"] or "/media"
+
+	log:info('mmImageViewerMenu: ', imgpath .. devName)
+	self:startSlideshow(false, ImageSourceLocalStorage(self, { path = imgpath .. devName }))
 end
 
 function mmImageViewerBrowse(self, devName)
-	log:info('mmImageViewerBrowse: ', devName)
-	self:browseFolder('/media/' .. devName)
+	local imgpath = self:getSettings()["card.path"] or "/media"
+
+	log:info('mmImageViewerBrowse: ', imgpath .. devName)
+	self:browseFolder(imgpath .. devName)
 end
 
 function free(self)
