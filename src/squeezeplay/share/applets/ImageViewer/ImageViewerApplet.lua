@@ -393,10 +393,14 @@ function _setWallpaper(self, window)
 	local prefix
 	if screenWidth == 320 and screenHeight == 240 then
 		prefix = 'bb_'
+	elseif screenWidth == 240 and screenHeight == 240 then
+		prefix = 'pir_'
 	elseif screenWidth == 240 and screenHeight == 320 then
 		prefix = 'jive_'
 	elseif screenWidth == 480 and screenHeight == 272 then
 		prefix = 'fab4_'
+	elseif screenWidth == 800 and screenHeight == 480 then
+		prefix = 'pcp_'
 	else
 		prefix = System:getMachine() .. '_'
 	end
