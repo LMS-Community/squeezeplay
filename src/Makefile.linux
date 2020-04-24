@@ -91,12 +91,12 @@ libpng: libpng-1.2.59/Makefile
 	cd libpng-1.2.59; make && make install
 
 # jpeg
-jpeg-9c/Makefile:
+jpeg-9d/Makefile:
 	-mkdir -p ${BUILD_TOP}/man/man1
-	cd jpeg-9c; ./configure --enable-shared --prefix=${PREFIX}
+	cd jpeg-9d; ./configure --enable-shared --prefix=${PREFIX}
 
-libjpeg: jpeg-9c/Makefile
-	cd jpeg-9c; make && make install
+libjpeg: jpeg-9d/Makefile
+	cd jpeg-9d; make && make install
 
 # sdl
 SDL-1.2.15/Makefile:
@@ -327,7 +327,7 @@ clean:
 	-cd expat-2.0.1; make distclean
 	-cd freetype-2.4.2; make distclean
 	-cd libpng-1.2.59; make distclean
-	-cd jpeg-9c; make distclean
+	-cd jpeg-9d; make distclean
 	-cd SDL-1.2.15; make distclean; rm -f include/SDL_config.h sdl.pc;
 	-cd SDL_image-1.2.5; make distclean
 	-cd SDL_ttf-2.0.11; make distclean
