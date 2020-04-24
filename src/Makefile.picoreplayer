@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for picoreplayer raspberry pi armhf
 # Copyright 2007 Logitech
-# Copyright 2019 Ralph Irving
+# Copyright 2020 Ralph Irving
 ################################################################################
 
 # Additional packages required to build
@@ -25,8 +25,8 @@ export BUILD_TOP=$(BASE_DIR)build/linux
 DESTDIR=${BUILD_TOP}
 export PREFIX=${DESTDIR}
 
-export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -O2 -s -pipe -march=armv6zk -mtune=arm1176jzf-s -mfpu=vfp
-export CXXFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -O2 -s -pipe -fno-exceptions -march=armv6zk -mtune=arm1176jzf-s -mfpu=vfp
+export CFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -pipe -O2 -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
+export CXXFLAGS=-I${PREFIX}/include -I${PREFIX}/include/SDL -I${PREFIX}/include/freetype2 -s -pipe -O2 -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s -fno-exceptions
 export LDFLAGS=-s -L${PREFIX}/lib
 
 export TOOLPATH = $(shell dirname `which gcc`)
