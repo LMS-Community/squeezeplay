@@ -208,13 +208,6 @@ tolua++: lua
 .PHONY: app fdkaac libogg flac libmad tremor squeezeplay squeezeplay_desktop squeezeplay_contrib squeezeplay_private freefont freefont-debian axtls rtmp
 app: fdkaac libogg flac libmad tremor ${SPPRIVATE_TARGETS} squeezeplay squeezeplay_desktop squeezeplay_contrib freefont rtmp squeezeplay-tgz 
 
-# portaudio
-portaudio_v19_1360/Makefile:
-	cd portaudio_v19_1360; ./configure --prefix=${PREFIX} ${ENABLE_SHAREDLIBS} --with-jack=no
-
-portaudio: portaudio_v19_1360/Makefile
-	cd portaudio_v19_1360; make && make install
-
 fdk-aac-2.0.0/Makefile:
 	cd fdk-aac-2.0.0; ./configure --prefix=${PREFIX} ${ENABLE_SHAREDLIBS}
 
@@ -356,7 +349,6 @@ clean:
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.so; rm *.o
-	-cd portaudio_v19_1360; make distclean; rmdir src/os/mac_osx
 	-cd fdk-aac-2.0.0; make distclean
 	-cd libogg-1.2.2; make distclean
 	-cd Tremor; make distclean
