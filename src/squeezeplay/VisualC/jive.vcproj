@@ -183,6 +183,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\src\audio\alac\alac.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\common.h"
 				>
 			</File>
@@ -245,6 +249,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\audio\alac\alac.c"
+				>
+			</File>
+			<File
 				RelativePath="..\src\audio\decode\audio_helper.c"
 				>
 			</File>
@@ -254,6 +262,10 @@
 			</File>
 			<File
 				RelativePath="..\src\audio\decode\decode_aac.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\audio\decode\decode_alac.c"
 				>
 			</File>
 			<File
@@ -283,18 +295,6 @@
 			<File
 				RelativePath="..\src\audio\decode\decode_vorbis.c"
 				>
-			</File>
-			<File
-				RelativePath="..\src\audio\decode\decode_wma_win.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						CompileAs="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\src\audio\fifo.c"

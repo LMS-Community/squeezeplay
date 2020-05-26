@@ -1,6 +1,6 @@
 #define SpAppName "SqueezePlay"
-#define SpAppVerName "SqueezePlay 7.8.0r1235"
-#define SpAppPublisher "Logitech"
+#define SpAppVerName "SqueezePlay 7.8.0r1247"
+#define SpAppPublisher "Ralph Irving"
 #define SpAppURL "http://www.slimdevices.com"
 #define SpAppExeName "squeezeplay.exe"
 

@@ -71,18 +71,13 @@ struct decode_module {
 };
 
 
-/* todo: fix win32 alac compile */
 /* Built-in decoders */ 
 extern struct decode_module decode_tones;
 extern struct decode_module decode_pcm;
 extern struct decode_module decode_flac;
 extern struct decode_module decode_mad;
 extern struct decode_module decode_vorbis;
-#ifdef _WIN32
-extern struct decode_module decode_wma_win;
-#else
 extern struct decode_module decode_alac;
-#endif
 #ifdef WITH_SPPRIVATE
 extern struct decode_module decode_wma;
 extern struct decode_module decode_aac;

@@ -74,12 +74,8 @@ static void *decoder_data;
 
 /* installed decoders */
 static struct decode_module *all_decoders[] = {
-	/* in order of perference */
-#ifdef _WIN32
-	&decode_wma_win,
-#else
+	/* in order of preference */
 	&decode_alac,
-#endif
 #ifdef WITH_SPPRIVATE
 	&decode_wma,
 	&decode_aac,

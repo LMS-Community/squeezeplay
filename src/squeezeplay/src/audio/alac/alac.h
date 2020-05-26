@@ -5,8 +5,13 @@
 #include "common.h"
 
 /* compatibility with libavformat */
+#if defined(WIN32)
+#define inline __inline
+#define av_always_inline __inline
+#else
 #define inline inline
 #define av_always_inline inline
+#endif
 #define av_cold
 #define av_const
 
