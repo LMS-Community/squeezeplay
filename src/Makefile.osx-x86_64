@@ -1,15 +1,14 @@
 ################################################################################
 # Squeezeplay makefile for OS X 10.7+ x86_64
-# Copyright 2007 Logitech
+# Copyright 2020 Ralph Irving
 ################################################################################
 
 #
 # User specific stuff
 #
-# git clone https://git.assembla.com/portaudio.git portaudio_v19
+# git clone https://github.com/PortAudio/portaudio portaudio_v19
 # cd portaudio_v19
 # ./update_gitrevision.sh
-# patch -p1 -i../portaudio_v19-osx.patch
 #
 # OS X specific stuff
 #
@@ -57,7 +56,7 @@ freetype: freetype-2.4.2/config.mk
 
 # png also add clean
 libpng-1.2.59/Makefile:
-	cd libpng-1.2.59; ./configure  --prefix=${PREFIX}
+	cd libpng-1.2.59; ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --prefix=${PREFIX}
 
 libpng: libpng-1.2.59/Makefile
 	cd libpng-1.2.59; make && make install
@@ -65,35 +64,35 @@ libpng: libpng-1.2.59/Makefile
 # jpeg
 jpeg-9d/Makefile:
 	-mkdir -p ${BUILD_TOP}/man/man1
-	cd jpeg-9d; ./configure --enable-shared --enable-static --prefix=${PREFIX}
+	cd jpeg-9d; ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --enable-shared --enable-static --prefix=${PREFIX}
 
 libjpeg: jpeg-9d/Makefile
 	cd jpeg-9d; make && make install
 	
 # sdl - check for existance of just one of the Makefiles to determine if we should reconfigure for each
 SDL-1.2.15/Makefile:
-	cd SDL-1.2.15; ./configure --prefix=${PREFIX} --disable-video-x11 --disable-nasm
+	cd SDL-1.2.15; ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --prefix=${PREFIX} --disable-video-x11 --disable-nasm
 
 sdl: SDL-1.2.15/Makefile
 	cd SDL-1.2.15; make && make install
 
 # sdl_image (requires jpeg tiff png)
 SDL_image-1.2.5/Makefile:
-	cd SDL_image-1.2.5; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --disable-sdltest --disable-tif --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
+	cd SDL_image-1.2.5; ./configure SDL_CONFIG=${PREFIX}/bin/sdl-config CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --disable-sdltest --disable-tif --prefix=${PREFIX} --with-sdl-prefix=${PREFIX}
 
 sdl-image: SDL_image-1.2.5/Makefile
 	cd SDL_image-1.2.5; make && make install
 
 # sdl_ttf
 SDL_ttf-2.0.11/Makefile:
-	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure --prefix=${PREFIX}
+	cd SDL_ttf-2.0.11; SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --prefix=${PREFIX}
 
 sdl-ttf: SDL_ttf-2.0.11/Makefile
 	cd SDL_ttf-2.0.11; make SDL_CONFIG=${PREFIX}/bin/sdl-config FREETYPE_CONFIG=${PREFIX}/bin/freetype-config && make install
 
 # sdl_gfx
 SDL_gfx-2.0.15/Makefile:
-	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure --prefix=${PREFIX} --disable-mmx
+	cd SDL_gfx-2.0.15; SDL_CONFIG=${PREFIX}/bin/sdl-config ./configure CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" --prefix=${PREFIX} --disable-mmx
 
 sdl-gfx: SDL_gfx-2.0.15/Makefile
 	cd SDL_gfx-2.0.15; make SDL_CONFIG=${PREFIX}/bin/sdl-config && make install
@@ -181,11 +180,11 @@ portaudio: portaudio_v19/Makefile
 	cd portaudio_v19; make && make install
 	cd portaudio_v19; cp include/pa_mac_core.h $(BUILD_TOP)/include/
 
-fdk-aac-2.0.0/Makefile:
-	cd fdk-aac-2.0.0; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
+fdk-aac-2.0.1/Makefile:
+	cd fdk-aac-2.0.1; ./configure ${ENABLE_PROFILING} --prefix=${PREFIX}
 
-fdkaac: fdk-aac-2.0.0/Makefile
-	cd fdk-aac-2.0.0; make; make install
+fdkaac: fdk-aac-2.0.1/Makefile
+	cd fdk-aac-2.0.1; make; make install
 
 # libogg
 libogg-1.2.2/Makefile:
@@ -286,7 +285,7 @@ clean:
 	-cd portaudio_v19; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: fdk-aac"
-	-cd fdk-aac-2.0.0; make distclean
+	-cd fdk-aac-2.0.1; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tremor"
 	-cd Tremor; make distclean ; rm -rf autom4te.cache; rm -f debian/Makefile.in
