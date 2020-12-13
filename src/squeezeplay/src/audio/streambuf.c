@@ -371,6 +371,7 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 			/* we're reading the metadata */
 			u8_t *icy_buf;
 			size_t icy_len = -icy_meta_remaining;
+			size_t icy_r   = 0;
 
 			if (avail < icy_len) {
 				/* wait for more data */
@@ -378,8 +379,14 @@ ssize_t streambuf_icy_filter(u8_t *buf, size_t min, size_t max, bool_t *streamin
 			}
 
 			icy_buf = alloca(icy_len);
-			r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
-			assert(r == icy_len);
+			icy_r = streambuf_fast_read(icy_buf, icy_len, icy_len, NULL);
+			if (icy_r < icy_len) {
+				/* icy data wrapped around in fifo buffer - needs two reads */
+				assert(streambuf_fifo.rptr == 0);
+				r = streambuf_fast_read(icy_buf + icy_r, icy_len - icy_r, icy_len - icy_r, NULL);
+				icy_r += r;
+			}
+			assert(icy_r == icy_len);
 			LOG_DEBUG(log_audio_decode, "got icy metadata: %s", (char *) icy_buf);
 
 			decode_queue_metadata(SHOUTCAST, icy_buf, icy_len);
