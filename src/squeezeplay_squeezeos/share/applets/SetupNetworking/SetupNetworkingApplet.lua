@@ -526,9 +526,21 @@ function _scanResults(self, iface)
 	local scanTable = iface:scanResults()
 
 	for ssid, entry in pairs(scanTable) do
-		-- hide squeezebox ad-hoc networks
-		if not string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
 
+		if string.match(ssid, "logitech[%-%+%*]squeezebox[%-%+%*](%x+)") then
+			-- hide squeezebox ad-hoc networks
+
+		elseif string.match(ssid, "^\\x00") then
+			-- hide "hidden" SSIDs
+			-- Note: wpa_supplicant >= v2.0 changed its SSID output to use
+			-- printf-escaped strings for non-ASCII characters instead of
+			-- masking with '_'.
+			-- Immediate impact is that "hidden" SSIDs are now visible.
+			-- We recognize these by their 'null' first byte which will
+			-- show up as '\x00'.
+			log:debug("hiding SSID: " .. ssid)
+
+		else
 			if not self.scanResults[ssid] then
 				_addNetwork(self, iface, ssid)
 			end
