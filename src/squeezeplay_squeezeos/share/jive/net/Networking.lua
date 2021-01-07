@@ -626,10 +626,18 @@ function _wirelessScanTask(self, callback)
 	local now = Framework:getTicks()
 
 	-- Process scan results
-	for bssid, level, flags, ssid in string.gmatch(scan, "([%x:]+)\t%d+\t(%d+)\t(%S*)\t([^\n]+)\n") do
+	-- note: Newer versions of wpa_supplicant may return 'signal level'
+	--       strictly in dBm (a negative number).
+	for bssid, level, flags, ssid in string.gmatch(scan, "([%x:]+)\t%d+\t([-]?%d+)\t(%S*)\t([^\n]+)\n") do
 
 		local quality = 1
 		level = tonumber(level)
+		if level < 0 then
+			-- Undo the conversion made by newer versions of wpa_supplicant.
+			-- This restates 'level' into 'old style', and the following
+			-- quality assessment will then work as expected.
+			level = level + 256
+		end
 		for i, l in ipairs(WIRELESS_LEVEL) do
 			if level < l then
 				break
