@@ -483,8 +483,6 @@ function _networkScanComplete(self, iface)
 	-- process existing scan results
 	_scanResults(self, iface)
 
--- fm+
---[[
 	-- schedule network scan 
 	self.scanMenu:addTimer(5000,
 		function()
@@ -495,14 +493,17 @@ function _networkScanComplete(self, iface)
 
 			window:setTitle(self:string("NETWORK_FINDING_NETWORKS"))
 			iface:scan(function()
-				window:setTitle(self:string("NETWORK_WIRELESS_NETWORKS"))
+				-- Restore window title, but after an interval, otherwise flashes by too fast on baby.
+				window:addTimer(500,
+								function()
+									window:setTitle(self:string("NETWORK_WIRELESS_NETWORKS"))
+								end,
+								true)	-- once
 				_scanResults(self, iface)
 			end)
 		end,
 		false	-- repeat
 	)
---]]
--- fm-
 	_helpAction(self, window, "NETWORK_LIST_HELP", "NETWORK_LIST_HELP_BODY", self.scanMenu)
 
 	self:tieAndShowWindow(window)
