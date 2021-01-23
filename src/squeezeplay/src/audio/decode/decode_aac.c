@@ -135,7 +135,7 @@ static u32_t decode_aac_callback_heaac(struct decode_aac *self)
 		return FALSE;
 	}
 
-	err = aacDecoder_DecodeFrame(self->heaacdec, (INT_PCM *)self->output_buffer, OUTPUT_BUFFER_SIZE, 0);
+	err = aacDecoder_DecodeFrame(self->heaacdec, (INT_PCM *)self->output_buffer, OUTPUT_BUFFER_SIZE / sizeof(INT_PCM), 0);
 
 	if (err == AAC_DEC_NOT_ENOUGH_BITS) {
 		LOG_DEBUG(log_audio_codec, "not enough bits");
@@ -150,14 +150,14 @@ static u32_t decode_aac_callback_heaac(struct decode_aac *self)
 	/* Do concealment of corrupted frames */
 	if (IS_DECODE_ERROR(err)) {
 		LOG_WARN(log_audio_codec, "concealing corrupted frames %x", err);
-		err = aacDecoder_DecodeFrame(self->heaacdec, (INT_PCM *)self->output_buffer, OUTPUT_BUFFER_SIZE, AACDEC_CONCEAL);
+		err = aacDecoder_DecodeFrame(self->heaacdec, (INT_PCM *)self->output_buffer, OUTPUT_BUFFER_SIZE / sizeof(INT_PCM), AACDEC_CONCEAL);
 	}
 
 	/* Give up decoded on any other error */
 	if (err != AAC_DEC_OK) {
-		LOG_DEBUG(log_audio_codec, "error %x", err);
+		LOG_DEBUG(log_audio_codec, "decode aac frame error %x", err);
 
-		current_decoder_state |= DECODE_STATE_ERROR;
+		current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED ;
 		return FALSE;
 	}
 
