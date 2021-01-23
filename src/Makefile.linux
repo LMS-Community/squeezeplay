@@ -1,7 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Linux
 # Copyright 2007 Logitech
-# Copyright 2020 Ralph Irving
+# Copyright 2021 Ralph Irving
 ################################################################################
 #
 # Additional packages required to build
@@ -63,11 +63,11 @@ generated:
 	mkdir -p generated
 
 # zlib
-zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --shared --prefix=${PREFIX}
+zlib-1.2.11/Makefile:
+	cd zlib-1.2.11; ./configure --shared --prefix=${PREFIX}
 
-zlib: zlib-1.2.7/Makefile
-	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+zlib: zlib-1.2.11/Makefile
+	cd zlib-1.2.11; make; make prefix=${PREFIX} install
 	-rm -f ${PREFIX}/lib/libz.a
 # expat
 expat-2.0.1/Makefile:
@@ -316,7 +316,7 @@ clean_generated:
 
 .PHONY: clean
 clean:
-	-cd zlib-1.2.7; make distclean; rm -f Makefile
+	-cd zlib-1.2.11; make distclean; rm -f Makefile
 	-cd expat-2.0.1; make distclean
 	-cd freetype-2.4.2; make distclean
 	-cd libpng-1.2.59; make distclean

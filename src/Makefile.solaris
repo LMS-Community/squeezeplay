@@ -1,6 +1,7 @@
 ################################################################################
 # Squeezeplay makefile for Solaris 9/10
 # Copyright 2007 Logitech
+# Copyright 2021 Ralph Irving
 ################################################################################
 #
 # These steps are required for a successful build
@@ -59,11 +60,11 @@ generated:
 	mkdir -p generated
 
 # zlib123
-zlib-1.2.7/Makefile:
-	cd zlib-1.2.7; ./configure --prefix=${PREFIX}
+zlib-1.2.11/Makefile:
+	cd zlib-1.2.11; ./configure --prefix=${PREFIX}
 
-zlib: zlib-1.2.7/Makefile
-	cd zlib-1.2.7; make; make prefix=${PREFIX} install
+zlib: zlib-1.2.11/Makefile
+	cd zlib-1.2.11; make; make prefix=${PREFIX} install
 	-rm -f ${PREFIX}/lib/libz.a
 
 # expat
@@ -318,7 +319,7 @@ clean_generated:
 
 .PHONY: clean
 clean:
-	-cd zlib-1.2.7; make distclean; rm -f Makefile
+	-cd zlib-1.2.11; make distclean; rm -f Makefile
 	-cd expat-2.0.1; make distclean
 	-cd freetype-2.1.10; make distclean
 	-cd libpng-1.2.32; make distclean
