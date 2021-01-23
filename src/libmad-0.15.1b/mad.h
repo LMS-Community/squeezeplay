@@ -320,12 +320,25 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 	 : "+r" (lo), "+r" (hi)  \
 	 : "%r" (x), "r" (y))
 
+#ifdef __thumb__
+/* In Thumb-2, the RSB-immediate instruction is only allowed with a zero
+	operand.  If needed this code can also support Thumb-1 
+	(simply append "s" to the end of the second two instructions). */
+#  define MAD_F_MLN(hi, lo)  \
+    asm ("rsbs        %0, %0, #0\n\t"  \
+	 "sbc   %1, %1, %1\n\t"  \
+	 "sub   %1, %1, %2"  \
+	 : "+&r" (lo), "=&r" (hi)  \
+	 : "r" (hi)  \
+	 : "cc")
+#else /* ! __thumb__ */
 #  define MAD_F_MLN(hi, lo)  \
     asm ("rsbs	%0, %2, #0\n\t"  \
 	 "rsc	%1, %3, #0"  \
-	 : "=r" (lo), "=r" (hi)  \
+	 : "=&r" (lo), "=r" (hi)  \
 	 : "0" (lo), "1" (hi)  \
 	 : "cc")
+#endif /* __thumb__ */
 
 #  define mad_f_scale64(hi, lo)  \
     ({ mad_fixed_t __result;  \
@@ -342,6 +355,14 @@ mad_fixed_t mad_f_mul_inline(mad_fixed_t x, mad_fixed_t y)
 
 /* --- MIPS ---------------------------------------------------------------- */
 
+# elif defined(FPM_MIPS) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4))
+   typedef unsigned int u64_di_t __attribute__ ((mode (DI))); 
+#  define MAD_F_MLX(hi, lo, x, y) \
+   do { \
+      u64_di_t __ll = (u64_di_t) (x) * (y); \
+      hi = __ll >> 32; \
+      lo = __ll; \
+   } while (0)
 # elif defined(FPM_MIPS)
 
 /*
