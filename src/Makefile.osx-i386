@@ -197,18 +197,18 @@ flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
 
 # libmad
-LIBMAD_DIR=libmad-0.15.1b
+LIBMAD_DIR=libmad-0.15.1b-10
 
 generated/${LIBMAD_DIR}/_patched.txt:
 	mkdir -p generated
 	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz; \
 	touch ${LIBMAD_DIR}/aclocal.m4; \
-	patch -p0 < ../libmad-0.15.1b-universal-configure.ac.patch; \
-	patch -p0 < ../libmad-0.15.1b-universal-config.h.in.patch; \
+	patch -p0 < ../libmad-0.15.1b-10-universal-configure.ac.patch; \
+	patch -p0 < ../libmad-0.15.1b-10-universal-config.h.in.patch; \
 	touch ${LIBMAD_DIR}/Makefile.am ; \
 	touch ${LIBMAD_DIR}/config.h ; \
 	touch ${LIBMAD_DIR}/Makefile.in ; \
-	patch -p0 < ../libmad-0.15.1b-universal-configure.patch; \
+	patch -p0 < ../libmad-0.15.1b-10-universal-configure.patch; \
 	touch ${LIBMAD_DIR}/_patched.txt
 		
 generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt 
@@ -284,7 +284,7 @@ clean:
 	-cd Tremor; make distclean ; rm -rf autom4te.cache; rm -f debian/Makefile.in
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: mad"
-	-cd libmad-0.15.1b; make distclean
+	-cd libmad-0.15.1b-10; make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
 	-cd libpng-1.2.59; make distclean

@@ -222,7 +222,7 @@ flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
 
 #libmad
-LIBMAD_DIR=libmad-0.15.1b
+LIBMAD_DIR=libmad-0.15.1b-10
 
 generated/${LIBMAD_DIR}/Makefile.am:
 	mkdir -p generated
