@@ -145,7 +145,7 @@ static u32_t decode_aac_callback_heaac(struct decode_aac *self)
 
 	if (err == AAC_DEC_TRANSPORT_SYNC_ERROR) {
 		LOG_WARN(log_audio_codec, "sync error %d %d", self->bytes_read, self->bytes_valid);
-		return TRUE;
+		return FALSE;
 	}
 
 	/* Do concealment of corrupted frames */
