@@ -33,9 +33,10 @@
 #define AAC_PCM_MAX_OUTPUT_CHANNELS AAC_PCM_OUTPUT_CHANNELS
 #endif
 
+#define SAMPLES_PER_FRAME  (2048)
 #define NUM_CHANNELS       (2)
 #define INPUT_BUFFER_SIZE  (4096)
-#define OUTPUT_BUFFER_SIZE (NUM_CHANNELS * 4096 * sizeof(sample_t))
+#define OUTPUT_BUFFER_SIZE (NUM_CHANNELS * SAMPLES_PER_FRAME * 2)
 
 struct decode_aac {
 	/* he-aac decoder */
@@ -301,7 +302,7 @@ static void *decode_aac_start(u8_t *params, u32_t num_params) {
 	memset(self, 0, sizeof(struct decode_aac));
 
 	self->input_buffer = malloc(INPUT_BUFFER_SIZE);
-	self->output_buffer = malloc(OUTPUT_BUFFER_SIZE);
+	self->output_buffer = malloc(OUTPUT_BUFFER_SIZE * sizeof(sample_t));
 
 	/* Assume we aren't changing sample rates until proven wrong */
 	self->sample_rate = decode_output_samplerate();
