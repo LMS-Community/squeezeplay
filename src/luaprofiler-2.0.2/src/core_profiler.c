@@ -38,6 +38,7 @@ a depth-first search recursive algorithm).
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <unistd.h>
 
 #include "function_meter.h"
 

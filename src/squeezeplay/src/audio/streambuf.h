@@ -39,6 +39,8 @@ extern void streambuf_flush(void);
 
 extern void streambuf_feed(u8_t *buf, size_t size);
 
+extern void streambuf_set_streaming(bool_t is_streaming);
+
 /* the mutex should be locked when using fast read */
 extern size_t streambuf_fast_read(u8_t *buf, size_t min, size_t max, bool_t *streaming);
 
