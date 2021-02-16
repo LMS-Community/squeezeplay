@@ -129,7 +129,7 @@ SqueezePlay_dmg: SqueezePlay_bundle
 	-rm -rf "/Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)"
 	hdiutil create -fs HFS+ -layout SPUD -volname "$(DMG_IMAGE_DIR_MOUNTPOINT)" -size 100m "$(DMG_TEMP_DIR)"
 	hdiutil mount "$(DMG_TMP_IMAGE_FILENAME)"
-	/Developer/Tools/CpMac -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)
+	cp -r $(BUNDLE_NAME) /Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)
 	hdiutil detach "/Volumes/$(DMG_IMAGE_DIR_MOUNTPOINT)"
 	hdiutil convert -ov -format UDZO "$(DMG_TMP_IMAGE_FILENAME)" -o "$(DMG_IMAGE_FILENAME)"
 	rm -rf $(DMG_IMAGE_DIR)
