@@ -9,6 +9,9 @@
 # git clone https://github.com/PortAudio/portaudio portaudio_v19
 # cd portaudio_v19
 # ./update_gitrevision.sh
+# wget -O portaudio-osx.patch https://sourceforge.net/projects/lmsclients/files/source/portaudio-osx.patch/download
+# patch -p1 -i portaudio-osx.patch
+
 #
 # OS X specific stuff
 #
@@ -156,7 +159,8 @@ luaprofiler:
 	cd luaprofiler-2.0.2 && make -f Makefile.darwin install CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" PREFIX=${PREFIX}
 
 # just compile the library for to tolua++
-tolua++:
+tolua++: lua
+	# cd tolua++-1.0.92; scons prefix="${PREFIX}" LINKFLAGS="${LDFLAGS}" CCFLAGS="${CFLAGS}" install
 	cd tolua++-1.0.92/src/lib; ${CC} -I../../include -pedantic -Wall -O2 -fno-common ${CFLAGS} -c *.c
 	cd tolua++-1.0.92/src/lib; ar -rcu libtolua++.a tolua_event.o tolua_is.o tolua_map.o tolua_push.o tolua_to.o 
 	mkdir -p ${PREFIX}/lib
@@ -201,24 +205,16 @@ flac: flac-1.2.1/Makefile
 	cd flac-1.2.1; make && make install
 
 # libmad
-LIBMAD_DIR=libmad-0.15.1b-10
+LIBMAD_DIR=libmad-0.15.1b-11
 
-generated/${LIBMAD_DIR}/_patched.txt:
+generated/${LIBMAD_DIR}/Makefile.am:
 	mkdir -p generated
-	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz; \
-	touch ${LIBMAD_DIR}/aclocal.m4; \
-	patch -p0 < ../libmad-0.15.1b-10-universal-configure.ac.patch; \
-	patch -p0 < ../libmad-0.15.1b-10-universal-config.h.in.patch; \
-	touch ${LIBMAD_DIR}/Makefile.am ; \
-	touch ${LIBMAD_DIR}/config.h ; \
-	touch ${LIBMAD_DIR}/Makefile.in ; \
-	patch -p0 < ../libmad-0.15.1b-10-universal-configure.patch; \
-	touch ${LIBMAD_DIR}/_patched.txt
-		
-generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/_patched.txt 
-	cd generated/${LIBMAD_DIR}; ./configure --enable-shared=no --enable-fpm=default --prefix=${PREFIX}
+	cd generated; tar -xzf ../${LIBMAD_DIR}.tar.gz
 
-libmad: generated/${LIBMAD_DIR}/_patched.txt generated/${LIBMAD_DIR}/Makefile
+generated/${LIBMAD_DIR}/Makefile: generated/${LIBMAD_DIR}/Makefile.am
+	cd generated/${LIBMAD_DIR}; ./configure --prefix=${PREFIX} ${ENABLE_SHAREDLIBS}
+
+libmad: generated/${LIBMAD_DIR}/Makefile.am generated/${LIBMAD_DIR}/Makefile
 	cd generated/${LIBMAD_DIR}; make && make install
 
 # ogg
@@ -291,7 +287,7 @@ clean:
 	-cd Tremor; make distclean ; rm -rf autom4te.cache; rm -f debian/Makefile.in
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: mad"
-	-cd libmad-0.15.1b-10; make distclean
+	-cd generated/${LIBMAD_DIR} make distclean
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libpng"
 	-cd libpng-1.2.59; make distclean
@@ -303,7 +299,7 @@ clean:
 	-cd flac-1.2.1; make distclean; rm src/libFLAC++/flac++.pc; find . -type f -name Makefile -exec rm {} \; ; find . -type d -name '.deps' -exec rm -rf {} \;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: libjpeg"
-	-cd jpeg-9d; make distclean
+	-cd jpeg-9d; make distclean; find . -type d -name '.deps' -exec rm -rf {} \;
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: squeezeplay"
 	-cd squeezeplay; make distclean ; rm src/version.h; rm -rf autom4te.cache; rm -f SqueezePlay.dmg; rm -f SqueezePlay; rm -rf SqueezePlay.app
@@ -354,9 +350,10 @@ clean:
 	-cd luartmp-squeezeplay; rm rtmp.so; rm -rf rtmp.so.dSYM
 	@echo "----------------------------------------------------------"
 	@echo "Cleaning: tolua++"
+	# -cd tolua++-1.0.92; scons -c; rm .sconsign.dblite; rm src/lib/libtolua++.a
 	-cd tolua++-1.0.92/src/lib; rm libtolua++.a; rm *.o
 	@echo "----------------------------------------------------------"
-	@echo "Cleaning: tolua++"
+	@echo "Cleaning: luamd5"
 	-cd luamd5; make MYNAME=sha1 clean
 	-cd luamd5; make MYNAME=md5 clean
 	@echo "----------------------------------------------------------"
