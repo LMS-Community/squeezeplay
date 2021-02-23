@@ -262,6 +262,7 @@ static void decode_transition_copy_bytes(sample_t *buffer, size_t nbytes) {
 
 void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 	size_t bytes_out;
+	unsigned int i;
 
 	/* Some decoders can pass no samples at the start of the track. Stop
 	 * early, otherwise we may send the track start event at the wrong
@@ -351,18 +352,20 @@ void decode_output_samples(sample_t *buffer, u32_t nsamples, int sample_rate) {
 		return;
 	}
 	
-	/* If output_channels is set, copy left samples to right, or vice versa */
-	if (output_channels) {
-		unsigned int i;
-		if (output_channels & OUTPUT_CHANNEL_LEFT) {
-			for (i = 0; i < nsamples * 2; i += 2) {
-				buffer[i+1] = buffer[i];
-			}
+	/* If output channels is set, copy left samples to right, right to left or downmix to mono when both are set */
+	if ((output_channels & OUTPUT_CHANNEL_LEFT) && (output_channels & OUTPUT_CHANNEL_RIGHT)) {
+		for (i = 0; i < nsamples * 2; i += 2) {
+			buffer[i] = buffer[i+1] = (buffer[i] >> 1) + (buffer[i+1] >> 1);
 		}
-		else {
-			for (i = 0; i < nsamples * 2; i += 2) {
-				buffer[i] = buffer[i+1];
-			}
+	}
+	else if (output_channels & OUTPUT_CHANNEL_LEFT) {
+		for (i = 0; i < nsamples * 2; i += 2) {
+			buffer[i+1] = buffer[i];
+		}
+	}
+	else if (output_channels & OUTPUT_CHANNEL_RIGHT) {
+		for (i = 0; i < nsamples * 2; i += 2) {
+			buffer[i] = buffer[i+1];
 		}
 	}
 
