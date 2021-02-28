@@ -363,7 +363,7 @@ static void decode_aac_stop(void *data) {
 
 
 static size_t decode_aac_samples(void *data) {
-	return BYTES_TO_SAMPLES(OUTPUT_BUFFER_SIZE);
+	return BYTES_TO_SAMPLES(OUTPUT_BUFFER_SIZE * sizeof(sample_t));
 }
 
 
