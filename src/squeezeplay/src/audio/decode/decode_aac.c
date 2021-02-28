@@ -181,34 +181,37 @@ static u32_t decode_aac_callback_heaac(struct decode_aac *self)
 		LOG_DEBUG(log_audio_codec, "Frame size: %d", stream_info->frameSize);
 	}
 
-	/* From decode_alac.c 16bit sample size only, 32bit not included */
-	/* frames = outputsize / samplesize / self->num_channels; */
 	frames = self->samples_per_frame * self->num_channels;
 
 	wptr = ((sample_t *)(void *)self->output_buffer) + (frames * 2);
 
-	if (self->num_channels == 1) {
-		/* mono */
-		rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 1);
+	switch (self->num_channels) {
 
-		for (i = 0; i < frames; i++) {
-			s = (*--rptr) << 16;
-			*--wptr = s;
-			*--wptr = s;
-		}
-	}
-	else if (self->num_channels == 2) {
 		/* stereo */
-		rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 2);
+		case 2:
+			rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 2);
 
-		for (i = 0; i < frames; i++) {
-			*--wptr = (*--rptr) << 16;
-			*--wptr = (*--rptr) << 16;
-		}
-	}
-	else if (self->num_channels > 2) {
-		current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
-		return FALSE;
+			for (i = 0; i < frames; i++) {
+				*--wptr = (*--rptr) << 16;
+				*--wptr = (*--rptr) << 16;
+			}
+			break;
+
+		/* mono */
+		case 1:
+			rptr = ((s16_t *)(void *)self->output_buffer) + (frames * 1);
+
+			for (i = 0; i < frames; i++) {
+				s = (*--rptr) << 16;
+				*--wptr = s;
+				*--wptr = s;
+			}
+			break;
+
+		/* not supported */
+		default:	
+			current_decoder_state |= DECODE_STATE_ERROR | DECODE_STATE_NOT_SUPPORTED;
+			return FALSE;
 	}
 
 	return TRUE;
