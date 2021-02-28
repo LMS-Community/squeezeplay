@@ -50,7 +50,6 @@ struct decode_aac {
 
 	/* stream info */
 	int sample_rate;
-	int bits_per_sample;
 	int samples_per_frame;
 	int num_channels;
 
