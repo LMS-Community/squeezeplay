@@ -1730,3 +1730,33 @@ NETWORK_PROBLEM_HELP
 	RU	Неполадки связи Squeezebox с сетью.\nВарианты решений:\n — проверить, устанавливается ли связь с Интернетом с компьютера в домашней сети.\n — перезагрузить устройство, управляющее вашей домашней сетью. Обычно это беспроводной маршрутизатор или широкополосный модем.
 	SV	Squeezebox-enheten har nätverksproblem.\nMöjliga lösningar:\n – Kontrollera att en dator i ditt hemnätverk kan anslutas till Internet.\n – Starta om den enhet som hanterar ditt hemnätverk. Detta är vanligen en trådlös router eller ett bredbandsmodem.
 
+NETWORK_REPAIR_PROBLEM
+	CS	Problém s opravou sítě
+	DA	Problem med at reparere netværk
+	DE	Problem beim Reparieren des Netzwerks
+	EN	Problem repairing network
+	ES	Problema de reparación de la red
+	FI	Ongelma verkon korjaamisessa
+	FR	Problème de réparation du réseau
+	IT	Problema durante la riparazione della rete
+	NL	Probleem met het repareren van netwerk
+	NO	Problem med å reparere nettverket
+	PL	Problem z naprawą sieci
+	RU	Проблема ремонта сети
+	SV	Problem med att reparera nätverket
+
+NETWORK_REPAIR_COMPLETE
+	CS	Oprava sítě dokončena
+	DA	Netværksreparation afsluttet
+	DE	Netzwerkreparatur abgeschlossen
+	EN	Network repair completed
+	ES	Se completó la reparación de la red
+	FI	Verkon korjaus valmis
+	FR	Réparation du réseau terminée
+	IT	Riparazione di rete completata
+	NL	Netwerk reparatie voltooid
+	NO	Nettverksreparasjon fullført
+	PL	Naprawa sieci zakończona
+	RU	Ремонт сети завершен
+	SV	Nätverksreparation slutförd
+

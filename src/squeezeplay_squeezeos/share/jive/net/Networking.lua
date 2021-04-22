@@ -2306,6 +2306,12 @@ function repairNetwork(class, ifObj, callback)
 	Task("repairnetwork", ifObj, function()
 		log:info("repairNetwork task started")
 
+		-- Check for valid network interface
+		if ifObj == nil then
+			callback(false, -1)
+			return
+		end
+
 		local active = ifObj:_ifstate()
 
 		callback(true, 100)

@@ -927,6 +927,10 @@ function setResult(self, index, result, msgStr)
 	if result >= 0 then
 		-- Replace everything's ok message with a user friendly one
 		msgStr = tostring(self:string("NET_SUCCESS"))
+		-- Hack for 'manualRepairNetwork' - a different success message
+		if result == 104 then
+			msgStr = tostring(self:string("NETWORK_REPAIR_COMPLETE"))
+		end
 		myItem.style = "item_info_green"
 	-- some error
 	else
@@ -1014,6 +1018,21 @@ function manualRepairNetwork(self)
 	local status = Label("subtext", self:string("STATUS_MSG", "-"))
 	popup:addWidget(status)
 
+	-- Backstop timer. Should 'Networking:repairNetwork' fail without
+	-- calling the 'continuation' callback the UI will lock up showing a
+	-- spinny. So explicitly close the popup. Allow 20 seconds.
+	local repairHasCompleted = false
+	popup:addTimer(20000, function()
+		if not repairHasCompleted then
+				log:info("Repair network timed out")
+				-- Update final message.
+				local msgStr = tostring(self:string("NETWORK_REPAIR_PROBLEM"))
+				setResult(self, "NETWORK_STATUS", -1, msgStr)
+				popup:hide()
+		end
+	end,
+	true) -- once only
+
 	local ifObj = Networking:activeInterface()
 
 	Networking:repairNetwork(
@@ -1030,6 +1049,8 @@ function manualRepairNetwork(self)
 			else
 				-- Update final message
 				log:debug("Repair network error: ", result)
+				setResult(self, "NETWORK_STATUS", result, msgStr)
+				repairHasCompleted = true
 
 				popup:hide()
 			end
