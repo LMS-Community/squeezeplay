@@ -322,7 +322,7 @@ function event(self, event)
 		local keycode = event:getKeycode()
 
 		-- we're only interested in volume keys
-		if bit.band(keycode, bit.bor(KEY_FWD, KEY_REW, KEY_FWD_SCAN, KEY_REW_SCAN)) == 0 then
+		if keycode & (KEY_FWD|KEY_REW|KEY_FWD_SCAN|KEY_REW_SCAN) == 0 then
 			return EVENT_CONSUME
 		end
 
