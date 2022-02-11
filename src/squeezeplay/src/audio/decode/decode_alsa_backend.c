@@ -1291,6 +1291,7 @@ static int decode_lock_memory()
 		return -1;
 	}
 
+#ifdef __GLIBC__
 	/* Turn off malloc trimming.*/
    	mallopt(M_TRIM_THRESHOLD, -1);
 	LOG_DEBUG("malloc trim");
@@ -1298,7 +1299,7 @@ static int decode_lock_memory()
    	/* Turn off mmap usage. */
    	mallopt(M_MMAP_MAX, 0);
 	LOG_DEBUG("mmap max");
-
+#endif
 
 	page_size = sysconf(_SC_PAGESIZE);
 

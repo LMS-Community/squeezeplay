@@ -22,8 +22,9 @@
 #include <sys/sem.h>
 #include <netinet/in.h>
 #include <linux/if.h>
+#ifdef __GLIBC__
 #include <execinfo.h>
-
+#endif
 
 char *platform_get_home_dir() {
     char *dir;
@@ -224,11 +225,12 @@ static int Hcount = 0;
 
 static void print_trace(void)
 {
+	int mapfd;
+#ifdef __GLIBC__
 	void *array[50];
 	size_t size;
 	char **strings;
 	size_t i;
-	int mapfd;
 
 	/* backtrace */
 	size = backtrace(array, sizeof(array));
@@ -241,7 +243,7 @@ static void print_trace(void)
 	}
 
 	free(strings);
-
+#endif
 	/* link map */
 	mapfd = open("/proc/self/maps", O_RDONLY);
 	if (mapfd != -1) {
