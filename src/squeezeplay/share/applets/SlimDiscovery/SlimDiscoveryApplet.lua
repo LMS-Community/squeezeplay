@@ -237,9 +237,10 @@ end
 -- init
 -- Initializes the applet
 function init(self, ...)
+	-- Get default udp broadcast poll list from the choose music source applet.
+	local cms = appletManager:loadApplet("ChooseMusicSource")
 
-	-- default poll list, udp broadcast
-	self.poll = { [ "255.255.255.255" ] = "255.255.255.255" }
+	self.poll = cms["getSettings"](cms)["poll"]
 
 	-- slim discovery socket
 	self.socket = SocketUdp(jnt,
