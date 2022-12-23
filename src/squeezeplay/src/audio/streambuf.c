@@ -490,6 +490,10 @@ static int stream_connectL(lua_State *L) {
 	int flags;
 	int err;
 	socket_t fd;
+#if defined(WIN32)
+	int opt;
+	int len = sizeof(opt);
+#endif
 
 	/* Server address and port */
 	memset(&serv_addr, 0, sizeof(serv_addr));
@@ -525,6 +529,11 @@ static int stream_connectL(lua_State *L) {
 	fcntl(fd, F_SETFL, flags);
 #endif
 
+#if defined(WIN32)
+	/* Reduce TCP receive buffer size to avoid WSAECONNRESET socket errors. */
+	getsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*) &opt, &len);
+	setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (void*) &opt, sizeof(opt));
+#endif
 	/* Connect socket */
 	err = connect(fd, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 	if (err != 0
