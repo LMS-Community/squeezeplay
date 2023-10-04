@@ -9,7 +9,7 @@
 # git clone https://github.com/PortAudio/portaudio portaudio_v19
 # cd portaudio_v19
 # ./update_gitrevision.sh
-# wget -O portaudio-osx.patch https://sourceforge.net/projects/lmsclients/files/source/portaudio-osx.patch/download
+# wget -O portaudio-osx.patch https://sourceforge.net/projects/lmsclients/files/source/portaudio-macos.patch/download
 # patch -p1 -i portaudio-osx.patch
 
 #
