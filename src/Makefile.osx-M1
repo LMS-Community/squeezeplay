@@ -1,6 +1,6 @@
 ################################################################################
-# Squeezeplay makefile for OS X 11.0+ M1
-# Copyright 2021 Ralph Irving
+# Squeezeplay makefile for OS X 12.0+ M1
+# Copyright 2023 Ralph Irving
 ################################################################################
 
 #
@@ -32,9 +32,9 @@ export PREFIX=${BUILD_TOP}
 export JIVE_LDFLAGS=-Wl,-framework,CoreAudio
 
 ARCHFLAGS=-arch $(ARCH)
-export CFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -mmacosx-version-min=11.0
-export CXXFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -mmacosx-version-min=11.0
-export LDFLAGS=$(ARCHFLAGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk -mmacosx-version-min=11.0 -L${PREFIX}/lib -L/usr/lib
+export CFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mmacosx-version-min=12.0
+export CXXFLAGS=$(ARCHFLAGS) -I${PREFIX}/include -I${PREFIX}/include/SDL -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mmacosx-version-min=12.0
+export LDFLAGS=$(ARCHFLAGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mmacosx-version-min=12.0 -L${PREFIX}/lib -L/usr/lib
 
 export TOOLPATH=$(shell dirname `which gcc`)
 
