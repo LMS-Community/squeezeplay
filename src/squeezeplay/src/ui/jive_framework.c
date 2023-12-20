@@ -328,6 +328,9 @@ static int jiveL_initSDL(lua_State *L) {
 		jive_surface_blit(splash, srf, (screen_w - splash_w) > 0 ?((screen_w - splash_w) / 2):0, (screen_w - splash_w) > 0 ?((screen_w - splash_w) / 2):0);
 		jive_surface_flip(srf);
 		LOG_INFO(log_ui_draw, "Splash %s %dx%d Screen %dx%d", splashfile,splash_w,splash_h,screen_w,screen_h);
+#if defined(__APPLE__) && defined(__MACH__)
+		SDL_PumpEvents(); // pump event queue to update screen
+#endif
 	}
 
 	lua_getfield(L, 1, "screen");
@@ -445,9 +448,6 @@ static int jiveL_process_events(lua_State *L) {
 	}
 	lua_rawgeti(L, -1, 1);
 
-
-	/* pump keyboard/mouse events once per frame */
-	SDL_PumpEvents();
 
 	if (jive_sdlevent_pump) {
 		jive_sdlevent_pump(L);
