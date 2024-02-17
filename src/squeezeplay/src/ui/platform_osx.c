@@ -72,6 +72,12 @@ char *platform_get_mac_address() {
     return macaddr;
 }
 
+static int macosx_event_pump (lua_State *L) {
+	// pump keyboard/mouse events once per frame
+	SDL_PumpEvents();
+	return 0;
+}
+
 static int macosx_filter_pump(const SDL_Event *event) {
     //handle multimedia button events
     if (event->type == SDL_KEYDOWN)
@@ -113,6 +119,7 @@ int watchdog_keepalive(int watchdog_id, int count) {
 }
 
 void platform_init(lua_State *L) {
+	jive_sdlevent_pump = macosx_event_pump;
 	jive_sdlfilter_pump = macosx_filter_pump;
 }
 
