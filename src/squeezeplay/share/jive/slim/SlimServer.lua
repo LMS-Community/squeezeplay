@@ -861,10 +861,9 @@ function notify_cometHttpError(self, comet, cometRequest)
 end
 
 
--- FIXME  Should we change this to always return false just to be sure?
--- Returns true if the server is SqueezeNetwork
+-- Always false since SqueezeNetwork is gone
 function isSqueezeNetwork(self)
-	return self.name == "mysqueezebox.com"
+	return false
 end
 
 
