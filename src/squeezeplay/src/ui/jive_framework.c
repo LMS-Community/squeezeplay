@@ -449,6 +449,9 @@ static int jiveL_process_events(lua_State *L) {
 	lua_rawgeti(L, -1, 1);
 
 
+	/* pump keyboard/mouse events once per frame */
+	SDL_PumpEvents();
+
 	if (jive_sdlevent_pump) {
 		jive_sdlevent_pump(L);
 	}
