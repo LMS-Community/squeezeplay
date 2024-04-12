@@ -182,51 +182,6 @@ DIAGNOSTICS_LOCAL
 	RU	Местные
 	SV	Lokal
 
-SN_REG
-	CS	registrace mysqueezebox.com\n%s
-	DA	registrering på mysqueezebox.com\n%s
-	DE	mysqueezebox.com-Registrierung\n%s
-	EN	mysqueezebox.com registration\n%s
-	ES	Registro en mysqueezebox.com\n%s
-	FI	mysqueezebox.com-rekisteröinti\n%s
-	FR	Enregistrement à mysqueezebox.com\n%s
-	IT	Registrazione mysqueezebox.com\n%s
-	NL	Registratie bij mysqueezebox.com\n%s
-	NO	mysqueezebox.com-registrering\n%s
-	PL	Rejestracja w witrynie mysqueezebox.com\n%s
-	RU	Регистрация mysqueezebox.com\n%s
-	SV	registrering av mysqueezebox.com\n%s
-
-SN_REG_YES
-	CS	Registrován
-	DA	Registreret
-	DE	Registriert
-	EN	Registered
-	ES	Registrado
-	FI	Rekisteröity
-	FR	Enregistré
-	IT	Registrato
-	NL	Geregistreerd
-	NO	Registrert
-	PL	Zarejestrowany
-	RU	Зарегистрировано
-	SV	Registrerad
-
-SN_REG_NO
-	CS	Není registrace
-	DA	Ikke registreret
-	DE	Nicht registriert
-	EN	Not Registered
-	ES	Sin registrar
-	FI	Ei rekisteröity
-	FR	Non enregistré
-	IT	Non registrato
-	NL	Niet geregistreerd
-	NO	Ikke registrert
-	PL	Niezarejestrowany
-	RU	Не зарегистрировано
-	SV	Inte registrerad
-
 ETH_FULL_DUPLEX
 	CS	%sMb/s
 	DA	%s Mbps
@@ -407,66 +362,6 @@ DNS_SERVER
 	PL	Serwer DNS\n%s
 	RU	DNS-сервер\n%s
 	SV	DNS-server\n%s
-
-SN_ADDRESS
-	CS	mysqueezebox.com\n%s
-	DA	mysqueezebox.com\n%s
-	DE	mysqueezebox.com\n%s
-	EN	mysqueezebox.com\n%s
-	ES	mysqueezebox.com\n%s
-	FI	mysqueezebox.com\n%s
-	FR	mysqueezebox.com\n%s
-	IT	mysqueezebox.com\n%s
-	NL	mysqueezebox.com\n%s
-	NO	mysqueezebox.com\n%s
-	PL	mysqueezebox.com\n%s
-	RU	mysqueezebox.com\n%s
-	SV	mysqueezebox.com\n%s
-
-SN_PING
-	CS	Zvonění\n%s
-	DA	Ping\n%s
-	DE	Ping\n%s
-	EN	Ping\n%s
-	ES	Ping\n%s
-	FI	Ping\n%s
-	FR	Ping\n%s
-	IT	Ping\n%s
-	NL	Ping\n%s
-	NO	Ping\n%s
-	PL	Ping\n%s
-	RU	Ping\n%s
-	SV	Ping\n%s
-
-SN_PORT_3483
-	CS	TCP port 3483\n%s
-	DA	TCP-port 3483\n%s
-	DE	TCP-Anschluss 3483\n%s
-	EN	TCP port 3483\n%s
-	ES	Puerto TCP 3483\n%s
-	FI	TCP-portti 3483\n%s
-	FR	Port TCP 3483\n%s
-	IT	Porta TCP 3483\n%s
-	NL	TCP-poort 3483\n%s
-	NO	TCP-port 3483\n%s
-	PL	Port TCP 3483\n%s
-	RU	TCP-порт 3483\n%s
-	SV	TCP-port 3483\n%s
-
-SN_PORT_9000
-	CS	TCP port 9000\n%s
-	DA	TCP-port 9000\n%s
-	DE	TCP-Anschluss 9000\n%s
-	EN	TCP port 9000\n%s
-	ES	Puerto TCP 9000\n%s
-	FI	TCP-portti 9000\n%s
-	FR	Port TCP 9000\n%s
-	IT	Porta TCP 9000\n%s
-	NL	TCP-poort 9000\n%s
-	NO	TCP-port 9000\n%s
-	PL	Port TCP 9000\n%s
-	RU	TCP-порт 9000\n%s
-	SV	TCP-port 9000\n%s
 
 SC_ADDRESS
 	CS	Logitech Media Server\n%s

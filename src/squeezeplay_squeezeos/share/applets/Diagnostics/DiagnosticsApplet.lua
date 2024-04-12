@@ -71,11 +71,6 @@ function init(self)
 	}
 
 	self.serverTests = {
-	      "SN_ADDRESS",
-	      "SN_PING",
-	      "SN_PORT_3483",
-	      "SN_PORT_9000",
-	      "SN_REG",
 	      "SC_ADDRESS",
 	      "SC_NAME",
 	      "SC_PING",
@@ -203,14 +198,12 @@ function serverPort(self, server, port, key, customLabel)
 end
 
 
-function serverPing(self, server, dnsKey, pingKey, snRegKey)
+function serverPing(self, server, dnsKey, pingKey)
 	local serverip = server and server:getIpPort()
 
 	local dnsFail            = tostring(self:string('DNS_FAIL'))
 	local pingFailString     = tostring(self:string('PING_FAIL'))
 	local pingOkString       = tostring(self:string('PING_OK'))
-	local snRegYesString     = tostring(self:string('SN_REG_YES'))
-	local snRegNoString      = tostring(self:string('SN_REG_NO'))
 
 	if not serverip then
 		self:setValue(dnsKey, self.notConnected)
@@ -247,15 +240,6 @@ function serverPing(self, server, dnsKey, pingKey, snRegKey)
 			else
 				if pingOK then
 					self:setValue(pingKey, pingOkString)
-					if snRegKey then
-						if server:getPin() == false then
-							self:setValue(snRegKey, snRegYesString)
-						elseif server:getPin() == nil then
-							self:setValue(snRegKey, "")
-						else
-							self:setValue(snRegKey, snRegNoString)
-						end
-					end
 				else
 					self:setValue(pingKey, pingFailString)
 				end
@@ -459,33 +443,13 @@ end
 function doServerValues(self, menu)
 	self.menu = menu
 
-	local sn = false
-	for name, server in SlimServer:iterate() do
-		if server:isSqueezeNetwork() then
-			sn = server
-		end
-	end
-
 	local sc = SlimServer:getCurrentServer()
 
-	self:serverPing(sn, "SN_ADDRESS", "SN_PING", "SN_REG")
-	self:serverPort(sn, 3483, "SN_PORT_3483")
-	self:serverPort(sn, 9000, "SN_PORT_9000")
-
-	if not sc or sc:isSqueezeNetwork() then
-		-- connected to SN
-		self:setValue("SC_NAME", self.notConnected)
-		self:setValue("SC_ADDRESS", self.notConnected)
-		self:setValue("SC_PING", self.notConnected)
-		self:setValue("SC_PORT_3483", self.notConnected)
-		self:setValue("SC_PORT_9000", self.notConnected, "9000") -- guess at 9000 here 
-	else
-		self:setValue("SC_NAME", sc:getName())
-		self:serverPing(sc, "SC_ADDRESS", "SC_PING")
-		self:serverPort(sc, 3483, "SC_PORT_3483")
-		local ip, port = sc:getIpPort()
-		self:serverPort(sc, port, "SC_PORT_9000", port)
-	end
+	self:setValue("SC_NAME", sc:getName())
+	self:serverPing(sc, "SC_ADDRESS", "SC_PING")
+	self:serverPort(sc, 3483, "SC_PORT_3483")
+	local ip, port = sc:getIpPort()
+	self:serverPort(sc, port, "SC_PORT_9000", port)
 end
 
 
@@ -967,15 +931,7 @@ function manualCheckNetworkHealth(self, full_check)
 	-- Get current server
 	local server = SlimServer:getCurrentServer()
 
-	-- Get SN if SC is not available
-	if not server then
-		-- Get SN
-		for n, s in SlimServer:iterate() do
-			if s:isSqueezeNetwork() then
-				server = s
-			end
-		end
-	end
+	if server then
 
 	local ifObj = Networking:activeInterface()
 
@@ -1002,6 +958,8 @@ function manualCheckNetworkHealth(self, full_check)
 		full_check,		-- true full check (includes arping, DNS resolution and ping)
 		server
 	)
+
+	end
 
 	self:tieAndShowWindow(popup)
 end
