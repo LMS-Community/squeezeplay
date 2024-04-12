@@ -84,45 +84,6 @@ end
 
 
 --[[
-function notify_serverLinked(meta, server)
-	if not server:isSqueezeNetwork() then
-		return
-	end
-
-	log:info("server linked: ", server, " pin=", server:getPin())
-
-	local settings = meta:getSettings()
-	if server:getPin() == false then
-		settings.registerDone = true
-		meta:storeSettings()
-	end
-
-	if settings.registerDone then
-
-		-- for testing connect the player tosqueezenetwork
-		local player = appletManager:callService("getCurrentPlayer")
-		log:info(player, " is conencted to ", player and player:getSlimServer())
-
-		if player and not player:getSlimServer() then
-			local squeezenetwork = false
-			for name, server in slimServer:iterate() do
-				if server:isSqueezeNetwork() then
-					squeezenetwork = server
-				end
-			end
-
-			log:info("connecting ", player, " to ", squeezenetwork)
-			player:connectToServer(squeezenetwork)
-		end
-
-		jnt:unsubscribe(meta)
-		hackMeta = nil
-	end
-end
---]]
-
-
---[[
 
 =head1 LICENSE
 
