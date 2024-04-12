@@ -69,6 +69,7 @@ function crashLogPrompt(self, file)
 
 	local text = Textarea("help_text", self:string("CRASH_TEXT_QUESTION"))
 	local menu = SimpleMenu("menu", {
+--[[
 		{
 			text = self:string("CRASH_YES_SEND"),
 			sound = "WINDOWHIDE",
@@ -82,6 +83,7 @@ function crashLogPrompt(self, file)
 				_processLogs(self)
 			end
 		},
+--]]
 		{
 			text = self:string("CRASH_NO_NEVER_SEND"),
 			sound = "WINDOWHIDE",
