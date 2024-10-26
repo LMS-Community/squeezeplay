@@ -124,6 +124,7 @@ function _addReturnToSetupToHomeMenu(self)
 		id   = 'returnToSetup',
 		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
+		iconStyle = 'hm_settings',
 		weight = 2,
 		callback = function()
 			self:step1()

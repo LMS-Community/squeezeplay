@@ -82,6 +82,7 @@ function step1(self)
 		id   = 'returnToSetup',
 		node = 'home',
 		text = self:string("RETURN_TO_SETUP"),
+		iconStyle = 'hm_settings',
 		weight = 2,
 		callback = function()
 			--note: don't refer to self here since the applet wil have been freed if this is being called
