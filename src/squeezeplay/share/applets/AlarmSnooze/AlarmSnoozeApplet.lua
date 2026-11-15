@@ -110,6 +110,11 @@ function init(self, ...)
 				self:_alarmOff(true)
 			end
 
+			-- Stop a settings-menu preview (and its timers) before the alarm
+			-- starts: a looping preview would otherwise count as good audio
+			-- and keep the configured fallback from starting.
+			self:_stopTone()
+
 			self.alarmInProgress = 'rtc'
 
 			-- Rearm fallback alarm (if repeating)
@@ -501,16 +506,25 @@ function _startTone(self, file, volume, fadeSecs, alarmState)
 	if fadeSecs and fadeSecs > 0 then
 		local startVolume = math.min(5, volume)
 		local step = 0
+		-- last volume written by the fade; anything else means the user
+		-- changed the volume, which ends the fade
+		local fadeVolume = startVolume
 		self.localPlayer:volumeLocal(startVolume)
 		self.fadeTimer = Timer(1000,
 			function()
+				if self.localPlayer:getVolume() ~= fadeVolume then
+					log:warn("*** Alarm: volume changed by user, stopping fade-in")
+					self:_stopFade()
+					return
+				end
 				step = step + 1
 				local v = startVolume + (volume - startVolume) * step / fadeSecs
 				if step >= fadeSecs then
 					v = volume
 					self:_stopFade()
 				end
-				self.localPlayer:volumeLocal(math.floor(v + 0.5))
+				fadeVolume = math.floor(v + 0.5)
+				self.localPlayer:volumeLocal(fadeVolume)
 			end,
 			false	-- repeat
 		)
