@@ -49,3 +49,103 @@ ALARM_SNOOZE_TURN_OFF_ALARM
 	RU	Выключить будильник
 	SV	Stäng av alarm
 
+
+ALARM_FALLBACK_SETTINGS
+	EN	Alarm fallback
+	NL	Wekker-fallback
+
+FB_HELP
+	EN	Sound played when the alarm music does not start (e.g. server unreachable).
+	NL	Geluid dat speelt als de wekkermuziek niet start (bijv. server onbereikbaar).
+
+FB_ITEM_SOUND
+	EN	Sound: %s
+	NL	Geluid: %s
+
+FB_ITEM_VOLUME
+	EN	Volume: %s
+	NL	Volume: %s
+
+FB_ITEM_FADE
+	EN	Fade-in: %s
+	NL	Fade-in: %s
+
+FB_ITEM_DELAY
+	EN	Wait before fallback: %s
+	NL	Wachttijd: %s
+
+FB_ITEM_TEST
+	EN	Test fallback
+	NL	Fallback testen
+
+FB_TITLE_SOUND
+	EN	Fallback sound
+	NL	Fallback-geluid
+
+FB_TITLE_VOLUME
+	EN	Fallback volume
+	NL	Fallback-volume
+
+FB_TITLE_FADE
+	EN	Fade-in
+	NL	Fade-in
+
+FB_TITLE_DELAY
+	EN	Wait before fallback
+	NL	Wachttijd
+
+FB_SOUND_HELP
+	EN	Select a sound to hear a short preview.
+	NL	Kies een geluid om het kort te horen.
+
+FB_VOLUME_HELP
+	EN	Turn the knob; you hear the sound at this volume.
+	NL	Draai aan de knop; je hoort het geluid op dit volume.
+
+FB_TEST_HELP
+	EN	Playing %s at volume %s (fade-in: %s). Press Back to stop.
+	NL	%s speelt op volume %s (fade-in: %s). Druk op Terug om te stoppen.
+
+FB_TEST_BUSY
+	EN	An alarm is in progress; test not possible.
+	NL	Er loopt een wekker; testen kan nu niet.
+
+FB_OFF
+	EN	Off
+	NL	Uit
+
+FB_SECONDS
+	EN	%s sec
+	NL	%s sec
+
+FB_MINUTES
+	EN	%s min
+	NL	%s min
+
+FB_DEFAULT
+	EN	%s (default)
+	NL	%s (standaard)
+
+FB_SOUND_ORIGINAL
+	EN	Original
+	NL	Origineel
+
+FB_SOUND_BEEP
+	EN	Beep beep
+	NL	Piep-piep
+
+FB_SOUND_RISING
+	EN	Rising tone
+	NL	Oplopende toon
+
+FB_SOUND_GONG
+	EN	Gong
+	NL	Gong
+
+FB_SOUND_SOFT
+	EN	Soft chimes
+	NL	Zachte belletjes
+
+FB_SOUND_SIREN
+	EN	Siren
+	NL	Sirene

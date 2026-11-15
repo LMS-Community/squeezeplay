@@ -20,7 +20,8 @@ function defaultSettings(self)
 end
 
 function registerApplet(self)
-
+	-- Instellingen > Geavanceerd > Wekker-fallback
+	jiveMain:addItem(self:menuItem('appletAlarmFallback', 'advancedSettings', "ALARM_FALLBACK_SETTINGS", function(applet, ...) applet:fallbackSettingsShow(...) end, 105))
 end
 
 function configureApplet(self)

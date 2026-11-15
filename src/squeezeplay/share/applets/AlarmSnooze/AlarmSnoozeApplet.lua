@@ -1,5 +1,9 @@
 local _assert, pairs = _assert, pairs
-local os	       = require("os")	
+local ipairs, tostring = ipairs, tostring
+local math             = require("math")
+local ltable           = require("table")
+local lstring          = require("string")
+local os	       = require("os")
 local io               = require("io")
 local table            = require("jive.utils.table")
 local string	       = require("jive.utils.string")
@@ -15,6 +19,11 @@ local Group            = require("jive.ui.Group")
 local Icon             = require("jive.ui.Icon")
 local Label            = require("jive.ui.Label")
 local StickyMenu       = require("jive.ui.StickyMenu")
+local SimpleMenu       = require("jive.ui.SimpleMenu")
+local RadioGroup       = require("jive.ui.RadioGroup")
+local RadioButton      = require("jive.ui.RadioButton")
+local Slider           = require("jive.ui.Slider")
+local Textarea         = require("jive.ui.Textarea")
 local Window           = require("jive.ui.Window")
 local Popup            = require("jive.ui.Popup")
 local Timer            = require("jive.ui.Timer")
@@ -414,17 +423,125 @@ function _alarmOff(self, stopStream)
 end
 
 
-function soundFallbackAlarm(self)
-	log:warn("*** Alarm: soundFallbackAlarm()")
-	self.alarmVolume = 43 -- forget fade in stuff, just do it - it's an alarm!
-	-- cache previous volume setting
-	self.previousVolume = self.localPlayer:getVolume()
+--[[
+Fallback settings (menu: Instellingen > Geavanceerd > Wekker-fallback)
+  fbSound  : sound file (relative path), default the original alarm.mp3
+  fbVolume : 5-100, default 43 (original fixed value)
+  fbFade   : fade-in seconds, 0 = off (default)
+  fbDelay  : seconds of silence before the fallback starts, default 65 (original)
+]]--
+
+local FB_DEFAULT_SOUND  = "applets/AlarmSnooze/alarm.mp3"
+local FB_DEFAULT_VOLUME = 43
+local FB_DEFAULT_FADE   = 0
+local FB_DEFAULT_DELAY  = 65
+local FB_PREVIEW_MSECS  = 5000
+
+local FB_SOUND_NAMES = {
+	["alarm.mp3"]    = "FB_SOUND_ORIGINAL",
+	["piep.mp3"]     = "FB_SOUND_BEEP",
+	["oplopend.mp3"] = "FB_SOUND_RISING",
+	["gong.mp3"]     = "FB_SOUND_GONG",
+	["zacht.mp3"]    = "FB_SOUND_SOFT",
+	["sirene.mp3"]   = "FB_SOUND_SIREN",
+}
+
+local FB_FADE_CHOICES  = { 0, 15, 30, 60, 120 }
+local FB_DELAY_CHOICES = { 15, 30, 45, 65 }
+
+
+function _fbSettings(self)
+	local s = self:getSettings()
+	local sound = s.fbSound or FB_DEFAULT_SOUND
+	-- file removed? use the original sound
+	if not System:findFile(sound) then
+		sound = FB_DEFAULT_SOUND
+	end
+	return {
+		sound  = sound,
+		volume = s.fbVolume or FB_DEFAULT_VOLUME,
+		fade   = s.fbFade or FB_DEFAULT_FADE,
+		delay  = s.fbDelay or FB_DEFAULT_DELAY,
+	}
+end
+
+
+function _fbSet(self, key, value)
+	self:getSettings()[key] = value
+	self:storeSettings()
+end
+
+
+function _stopFade(self)
+	if self.fadeTimer then
+		self.fadeTimer:stop()
+		self.fadeTimer = nil
+	end
+end
+
+
+-- Play a sound file in a loop at volume, optionally fading in over fadeSecs.
+-- The volume from before the first tone is restored by _stopTone().
+function _startTone(self, file, volume, fadeSecs, alarmState)
+	if not self.toneActive then
+		-- cache previous volume setting
+		self.previousVolume = self.localPlayer:getVolume()
+	end
+	self.toneActive = true
+	self:_stopFade()
+
 	self.localPlayer:stop(true)
-	-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
-	-- We need to set a valid alarm state for the fallback case
-	self.localPlayer:setAlarmState("active_fallback")
-	self.localPlayer:playFileInLoop(self.alarmTone)
-	self.localPlayer:volumeLocal(self.alarmVolume)
+	if alarmState then
+		-- Bug 16100 - Sound comes from headphones although Radio is set to use speaker
+		-- We need to set a valid alarm state for the fallback case
+		self.localPlayer:setAlarmState(alarmState)
+	end
+	self.localPlayer:playFileInLoop(file)
+
+	if fadeSecs and fadeSecs > 0 then
+		local startVolume = math.min(5, volume)
+		local step = 0
+		self.localPlayer:volumeLocal(startVolume)
+		self.fadeTimer = Timer(1000,
+			function()
+				step = step + 1
+				local v = startVolume + (volume - startVolume) * step / fadeSecs
+				if step >= fadeSecs then
+					v = volume
+					self:_stopFade()
+				end
+				self.localPlayer:volumeLocal(math.floor(v + 0.5))
+			end,
+			false	-- repeat
+		)
+		self.fadeTimer:start()
+	else
+		self.localPlayer:volumeLocal(volume)
+	end
+end
+
+
+function _stopTone(self)
+	self:_stopFade()
+	if self.previewTimer then
+		self.previewTimer:stop()
+	end
+	if not self.toneActive then
+		return
+	end
+	self.toneActive = false
+	self.localPlayer:stop(true)
+	if self.previousVolume then
+		log:warn("*** Alarm: setting player back to self.previousVolume: ", self.previousVolume)
+		self.localPlayer:volumeLocal(self.previousVolume)
+	end
+end
+
+
+function soundFallbackAlarm(self)
+	local fb = self:_fbSettings()
+	log:warn("*** Alarm: soundFallbackAlarm() sound: ", fb.sound, " volume: ", fb.volume, " fade: ", fb.fade)
+	self:_startTone(fb.sound, fb.volume, fb.fade, "active_fallback")
 end
 
 
@@ -434,10 +551,7 @@ function _silenceFallbackAlarm(self)
 		return
 	end
 	self.localPlayer:stop(true)
-	if self.previousVolume then
-		log:warn("*** Alarm: setting player back to self.previousVolume: ", self.previousVolume)
-		self.localPlayer:volumeLocal(self.previousVolume)
-	end
+	self:_stopTone()
 	if self.fallbackAlarmTimeout and self.fallbackAlarmTimeout:isRunning() then
 		log:warn("*** Alarm: stopping fallback alarm timeout timer")
 		self.fallbackAlarmTimeout:stop()
@@ -458,7 +572,8 @@ function _pollDecodeState(self)
 		log:warn("*** Alarm: Audio ok -> reset failedAudioTicker: ", self.failedAudioTicker)
 	end
 
-	if self.failedAudioTicker > 12 then
+	-- poller runs every 5 seconds; default 65 s equals the original "> 12 ticks"
+	if self.failedAudioTicker * 5 >= self:_fbSettings().delay then
 		log:warn("*** Alarm: Decode state bad! failedAudioTicker: ", self.failedAudioTicker, " Trigger fallback alarm!")
 
 		self.failedAudioTicker = 0
@@ -753,6 +868,267 @@ function _hideAlarmWindow(self)
 		self.alarmWindow = nil
 		self:_revertAudioEndpointOverride()
 	end
+end
+
+
+--------------------------------------------------------------------------------
+-- Fallback settings menu
+--
+-- Windows are shown with window:show() and NOT tied to the applet: this applet
+-- is resident, and tieWindow() would call free() (clearing alarmWindow) on close.
+-- Previews are never played while an alarm is in progress.
+--------------------------------------------------------------------------------
+
+function _fbCanPreview(self)
+	if self.alarmInProgress then
+		log:warn("*** Alarm: preview skipped, alarm in progress")
+		return false
+	end
+	if not self.localPlayer then
+		self.localPlayer = Player:getLocalPlayer()
+	end
+	return self.localPlayer ~= nil
+end
+
+
+-- Stop a menu preview; never touches a real (fallback) alarm
+function _fbStopPreview(self)
+	if self.alarmInProgress then
+		return
+	end
+	self:_stopTone()
+end
+
+
+function _fbSoundName(self, path)
+	local file = lstring.match(path, "([^/]+)$") or path
+	if FB_SOUND_NAMES[file] then
+		return tostring(self:string(FB_SOUND_NAMES[file]))
+	end
+	return (lstring.gsub(file, "%.[mM][pP]3$", ""))
+end
+
+
+-- All selectable sounds: the original plus every mp3 in applets/AlarmSnooze/sounds/
+function _fbSoundList(self)
+	local list = { FB_DEFAULT_SOUND }
+	local seen = { [FB_DEFAULT_SOUND] = true }
+	for file in self:readdir("sounds") do
+		if lstring.match(file, "%.[mM][pP]3$") and not seen[file] then
+			seen[file] = true
+			list[#list + 1] = file
+		end
+	end
+	ltable.sort(list, function(a, b)
+		if a == FB_DEFAULT_SOUND then return true end
+		if b == FB_DEFAULT_SOUND then return false end
+		return self:_fbSoundName(a) < self:_fbSoundName(b)
+	end)
+	return list
+end
+
+
+function _fbSecondsText(self, secs)
+	if secs == 0 then
+		return tostring(self:string("FB_OFF"))
+	elseif secs >= 60 and secs % 60 == 0 then
+		return self:string("FB_MINUTES", secs / 60)
+	end
+	return self:string("FB_SECONDS", secs)
+end
+
+
+function _fbRefreshMenu(self)
+	if not self.fbMenu then
+		return
+	end
+	local fb = self:_fbSettings()
+	local items = self.fbItems
+	self.fbMenu:setText(items.sound,  self:string("FB_ITEM_SOUND",  self:_fbSoundName(fb.sound)))
+	self.fbMenu:setText(items.volume, self:string("FB_ITEM_VOLUME", fb.volume))
+	self.fbMenu:setText(items.fade,   self:string("FB_ITEM_FADE",   self:_fbSecondsText(fb.fade)))
+	self.fbMenu:setText(items.delay,  self:string("FB_ITEM_DELAY",  self:_fbSecondsText(fb.delay)))
+end
+
+
+function fallbackSettingsShow(self, menuItem)
+	local window = Window("text_list", self:string("ALARM_FALLBACK_SETTINGS"), "settingstitle")
+	local menu = SimpleMenu("menu")
+	menu:setHeaderWidget(Textarea("help_text", self:string("FB_HELP")))
+
+	local items = {
+		sound  = { text = "", callback = function() self:_fbSoundShow() end },
+		volume = { text = "", callback = function() self:_fbVolumeShow() end },
+		fade   = { text = "", callback = function()
+				self:_fbChoiceShow("FB_TITLE_FADE", "fbFade", FB_FADE_CHOICES, self:_fbSettings().fade)
+			end },
+		delay  = { text = "", callback = function()
+				self:_fbChoiceShow("FB_TITLE_DELAY", "fbDelay", FB_DELAY_CHOICES, self:_fbSettings().delay)
+			end },
+		test   = { text = self:string("FB_ITEM_TEST"), callback = function() self:_fbTestShow() end },
+	}
+	for _, key in ipairs({ "sound", "volume", "fade", "delay", "test" }) do
+		menu:addItem(items[key])
+	end
+
+	self.fbMenu = menu
+	self.fbItems = items
+	self:_fbRefreshMenu()
+
+	window:addWidget(menu)
+	window:addListener(EVENT_WINDOW_POP,
+		function()
+			self.fbMenu = nil
+			self.fbItems = nil
+		end)
+	window:show()
+	return window
+end
+
+
+function _fbSoundShow(self)
+	local window = Window("text_list", self:string("FB_TITLE_SOUND"), "settingstitle")
+	local menu = SimpleMenu("menu")
+	local group = RadioGroup()
+	local current = self:_fbSettings().sound
+
+	menu:setHeaderWidget(Textarea("help_text", self:string("FB_SOUND_HELP")))
+
+	for _, file in ipairs(self:_fbSoundList()) do
+		menu:addItem({
+			text = self:_fbSoundName(file),
+			style = 'item_choice',
+			check = RadioButton("radio", group,
+				function()
+					log:info("*** Alarm: fallback sound set to ", file)
+					self:_fbSet("fbSound", file)
+					self:_fbRefreshMenu()
+					self:_fbPreview(file)
+				end,
+				file == current
+			),
+		})
+	end
+
+	window:addWidget(menu)
+	window:addListener(EVENT_WINDOW_POP, function() self:_fbStopPreview() end)
+	window:show()
+	return window
+end
+
+
+-- Play a short preview of a sound at the configured volume (no fade)
+function _fbPreview(self, file)
+	if not self:_fbCanPreview() then
+		return
+	end
+	self:_startTone(file, self:_fbSettings().volume, 0)
+	if not self.previewTimer then
+		self.previewTimer = Timer(FB_PREVIEW_MSECS, function() self:_fbStopPreview() end, true)
+	end
+	self.previewTimer:restart(FB_PREVIEW_MSECS)
+end
+
+
+function _fbVolumeShow(self)
+	local window = Window("text_list", self:string("FB_TITLE_VOLUME"), "settingstitle")
+	local fb = self:_fbSettings()
+	local slider
+
+	local setVolume = function(value)
+		if value < 1 then value = 1 end
+		if value > 20 then value = 20 end
+		local volume = value * 5
+		self:_fbSet("fbVolume", volume)
+		self:_fbRefreshMenu()
+		if self.toneActive and not self.alarmInProgress then
+			self.localPlayer:volumeLocal(volume)
+		end
+		return value
+	end
+
+	slider = Slider("volume_slider", 1, 20, math.max(1, math.floor(fb.volume / 5 + 0.5)),
+		function(slider, value)
+			setVolume(value)
+		end)
+
+	slider:addListener(EVENT_KEY_PRESS,
+		function(event)
+			local code = event:getKeycode()
+			if code == KEY_VOLUME_UP then
+				slider:setValue(setVolume(slider:getValue() + 1))
+				return EVENT_CONSUME
+			elseif code == KEY_VOLUME_DOWN then
+				slider:setValue(setVolume(slider:getValue() - 1))
+				return EVENT_CONSUME
+			end
+			return EVENT_UNUSED
+		end)
+
+	window:addWidget(Textarea("help_text", self:string("FB_VOLUME_HELP")))
+	window:addWidget(Group("slider_group", {
+		min = Icon("button_volume_min"),
+		slider = slider,
+		max = Icon("button_volume_max"),
+	}))
+
+	-- loop the chosen sound while this window is open
+	if self:_fbCanPreview() then
+		self:_startTone(fb.sound, fb.volume, 0)
+	end
+	window:addListener(EVENT_WINDOW_POP, function() self:_fbStopPreview() end)
+
+	window:show()
+	return window
+end
+
+
+function _fbChoiceShow(self, title, key, choices, current)
+	local window = Window("text_list", self:string(title), "settingstitle")
+	local menu = SimpleMenu("menu")
+	local group = RadioGroup()
+
+	for _, secs in ipairs(choices) do
+		local text = self:_fbSecondsText(secs)
+		if key == "fbDelay" and secs == FB_DEFAULT_DELAY then
+			text = self:string("FB_DEFAULT", text)
+		end
+		menu:addItem({
+			text = text,
+			style = 'item_choice',
+			check = RadioButton("radio", group,
+				function()
+					log:info("*** Alarm: ", key, " set to ", secs)
+					self:_fbSet(key, secs)
+					self:_fbRefreshMenu()
+				end,
+				secs == current
+			),
+		})
+	end
+
+	window:addWidget(menu)
+	window:show()
+	return window
+end
+
+
+function _fbTestShow(self)
+	local window = Window("text_list", self:string("FB_ITEM_TEST"), "settingstitle")
+	local fb = self:_fbSettings()
+
+	if self:_fbCanPreview() then
+		window:addWidget(Textarea("help_text", self:string("FB_TEST_HELP",
+			self:_fbSoundName(fb.sound), fb.volume, self:_fbSecondsText(fb.fade))))
+		self:_startTone(fb.sound, fb.volume, fb.fade)
+	else
+		window:addWidget(Textarea("help_text", self:string("FB_TEST_BUSY")))
+	end
+
+	window:addListener(EVENT_WINDOW_POP, function() self:_fbStopPreview() end)
+	window:setAllowScreensaver(false)
+	window:show()
+	return window
 end
 
 
